@@ -543,19 +543,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self _resignMenuCommands];
 }
 
-- (void) windowDidResignMain:(NSNotification *) notification {
-    if( ! [[[[[NSApplication sharedApplication] keyWindow] windowController] className] isEqual:[self className]] )
-		[self _resignMenuCommands];
-}
-
-- (void) windowDidBecomeMain:(NSNotification *) notification {
-	[self _claimMenuCommands];
-	if( _activeViewController ) {
-		[[self window] makeFirstResponder:[_activeViewController firstResponder]];
-		[self reloadListItem:_activeViewController andChildren:NO];
-	}
-}
-
 - (void) windowDidBecomeKey:(NSNotification *) notification {
 	[self _claimMenuCommands];
 	if( _activeViewController ) {
