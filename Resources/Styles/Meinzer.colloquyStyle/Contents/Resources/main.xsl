@@ -15,7 +15,7 @@
 
 	<xsl:template match="event">
 		<div class="event">
-			<xsl:copy-of select="message/child::node()" />
+			<xsl:apply-templates select="message/child::node()" mode="copy" />
 			<xsl:text> (</xsl:text>
 			<xsl:call-template name="short-time">
 				<xsl:with-param name="date" select="@occurred" />
@@ -50,7 +50,7 @@
 				<xsl:value-of select="../sender" />
 				<xsl:text> </xsl:text>
 			</xsl:if>
-			<xsl:copy-of select="child::node()" />
+			<xsl:apply-templates select="child::node()" mode="copy" />
 		</div>
 		<xsl:if test="$subsequent = 'yes'">
 			<div id="consecutiveInsert">&#8203;</div>
@@ -74,7 +74,7 @@
 
 		<div id="{@id}" class="{$messageClass}">
 			<div class="header">
-				<span class="name"><xsl:value-of select="sender" /></span>
+				<a href="member:{sender}" class="name"><xsl:value-of select="sender" /></a>
 			</div>
 			<span class="time">
 				<xsl:call-template name="short-time">
@@ -86,13 +86,21 @@
 				<xsl:value-of select="sender" />
 				<xsl:text> </xsl:text>
 			</xsl:if>
-			<xsl:copy-of select="message[1]/child::node()" />
+			<xsl:apply-templates select="message[1]/child::node()" mode="copy" />
 		</div>
 		<xsl:apply-templates select="message[position() &gt; 1]" />
 		<xsl:if test="position() = last()">
 			<div id="consecutiveInsert">&#8203;</div>
 		</xsl:if>
 		<div class="shadow">&#8203;</div>
+	</xsl:template>
+
+	<xsl:template match="span[@class='member']" mode="copy">
+		<a href="member:{current()}" class="member"><xsl:value-of select="current()" /></a>
+	</xsl:template>
+
+	<xsl:template match="@*|*" mode="copy">
+		<xsl:copy><xsl:apply-templates select="@*|node()" mode="copy" /></xsl:copy>
 	</xsl:template>
 
 	<xsl:template name="short-time">
