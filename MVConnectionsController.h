@@ -38,6 +38,7 @@
 	IBOutlet NSTextField *editPassword;
 	IBOutlet NSTextField *editServerPassword;
 	IBOutlet NSTextField *editAddress;
+	IBOutlet NSPopUpButton *editProxy;
 	IBOutlet NSTextField *editPort;
 	IBOutlet NSButton *editAutomatic;
 	IBOutlet NSTableView *editRooms;

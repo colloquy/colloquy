@@ -228,6 +228,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 		[connection setServer:[editAddress stringValue]];
 		[connection setServerPort:[editPort intValue]];
+		[connection setProxyType:[[editProxy selectedItem] tag]];
 		[connection setNickname:[editNickname stringValue]];
 		[connection setNicknamePassword:[editPassword stringValue]];
 
@@ -670,6 +671,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 		if( ! [[info objectForKey:@"temporary"] boolValue] ) {
 			NSMutableDictionary *data = [NSMutableDictionary dictionary];
 			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"automatic"] boolValue]] forKey:@"automatic"];
+			[data setObject:[NSNumber numberWithInt:(int)[(MVChatConnection *)[info objectForKey:@"connection"] proxyType]] forKey:@"proxy"];
 			[data setObject:[[(MVChatConnection *)[info objectForKey:@"connection"] url] description] forKey:@"url"];
 			if( [info objectForKey:@"rooms"] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 			[data setObject:[info objectForKey:@"created"] forKey:@"created"];
@@ -690,6 +692,8 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	while( ( info = [enumerator nextObject] ) ) {
 		MVChatConnection *connection = nil;
 		connection = [[[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]] autorelease];
+
+		[connection setProxyType:(MVChatConnectionProxy)[info integerForKey:@"proxy"]];
 
 		[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 		[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
@@ -728,11 +732,15 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	if( ! noneSelected ) connected = ! ( [(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] status] == MVChatConnectionDisconnectedStatus );
 	while( ( item = [enumerator nextObject] ) ) {
 		if( [[item itemIdentifier] isEqualToString:MVToolbarConnectToggleItemIdentifier] ) {
-			if( noneSelected || ! connected ) {
+			if( noneSelected ) {
+				[item setLabel:NSLocalizedString( @"New", "new connection title" )];
+				[item setToolTip:NSLocalizedString( @"New Connection", "new connection tooltip" )];
+				[item setAction:@selector( newConnection: )];
+				[item setImage:[NSImage imageNamed:@"connect"]];
+			} else if( ! connected ) {
 				[item setLabel:NSLocalizedString( @"Connect", "connect to server title" )];
 				[item setToolTip:NSLocalizedString( @"Connect to Server", "connect button tooltip" )];
-				if( noneSelected ) [item setAction:@selector( newConnection: )];
-				else [item setAction:@selector( _connect: )];
+				[item setAction:@selector( _connect: )];
 				[item setImage:[NSImage imageNamed:@"connect"]];
 			} else if( connected ) {
 				[item setLabel:NSLocalizedString( @"Disconnect", "disconnect from server title" )];
@@ -741,35 +749,20 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 				[item setImage:[NSImage imageNamed:@"disconnect"]];
 			}
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarJoinRoomItemIdentifier] ) {
-			if( connected ) {
-				[item setAction:@selector( _joinRoom: )];
-			} else {
-				[item setAction:NULL];
-			}
+			if( connected ) [item setAction:@selector( _joinRoom: )];
+			else [item setAction:NULL];
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarQueryUserItemIdentifier] ) {
-			if( connected ) {
-				[item setAction:@selector( _messageUser: )];
-			} else {
-				[item setAction:NULL];
-			}
+			if( connected ) [item setAction:@selector( _messageUser: )];
+			else [item setAction:NULL];
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarEditItemIdentifier] ) {
-			if( noneSelected || [editConnection isVisible] ) {
-				[item setAction:NULL];
-			} else {
-				[item setAction:@selector( _editConnection: )];
-			}
+			if( noneSelected || [editConnection isVisible] ) [item setAction:NULL];
+			else [item setAction:@selector( _editConnection: )];
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarDeleteItemIdentifier] ) {
-			if( noneSelected || [editConnection isVisible] ) {
-				[item setAction:NULL];
-			} else {
-				[item setAction:@selector( _delete: )];
-			}
+			if( noneSelected || [editConnection isVisible] ) [item setAction:NULL];
+			else [item setAction:@selector( _delete: )];
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarConsoleItemIdentifier] ) {
-			if( noneSelected ) {
-				[item setAction:NULL];
-			} else {
-				[item setAction:NULL];
-			}
+			if( noneSelected ) [item setAction:NULL];
+			else [item setAction:NULL];
 		}
 	}
 }
@@ -848,6 +841,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 	[editAutomatic setState:[[info objectForKey:@"automatic"] boolValue]];
 	[editAddress setObjectValue:[connection server]];
+	[editProxy selectItemAtIndex:[editProxy indexOfItemWithTag:(int)[connection proxyType]]];
 	[editPort setIntValue:[connection serverPort]];
 	[editNickname setObjectValue:[connection nickname]];
 	[editPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
@@ -858,7 +852,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	if( ! _editingRooms ) _editingRooms = [[NSMutableArray array] retain];
 	[editRooms reloadData];
 
-	[editConnection setTitle:[NSString stringWithFormat:NSLocalizedString( @"Info for: %@", "connection info window title" ), [connection server]]];
+	[editConnection setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ Info", "connection info window title" ), [connection server]]];
 
 	[editConnection makeKeyAndOrderFront:nil];
 	[self _validateToolbar];
