@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Classes</key>
+	<dict>
+		<key>MVChatConnection</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>isConnected</key>
+				<dict>
+					<key>Description</key>
+					<string>Is connected?</string>
+					<key>Name</key>
+					<string>connected</string>
+				</dict>
+				<key>nickname</key>
+				<dict>
+					<key>Description</key>
+					<string>Current nickname on the server.</string>
+					<key>Name</key>
+					<string>nickname</string>
+				</dict>
+				<key>nicknamePassword</key>
+				<dict>
+					<key>Description</key>
+					<string>The nickname's password (if any). Used for nickname registration.</string>
+					<key>Name</key>
+					<string>nickname password</string>
+				</dict>
+				<key>password</key>
+				<dict>
+					<key>Description</key>
+					<string>Password to conenct to the server.</string>
+					<key>Name</key>
+					<string>password</string>
+				</dict>
+				<key>proxyType</key>
+				<dict>
+					<key>Description</key>
+					<string>What system proxy server to use.</string>
+					<key>Name</key>
+					<string>proxy</string>
+				</dict>
+				<key>server</key>
+				<dict>
+					<key>Description</key>
+					<string>Server IP address or domain name.</string>
+					<key>Name</key>
+					<string>server address</string>
+				</dict>
+				<key>serverPort</key>
+				<dict>
+					<key>Description</key>
+					<string>Port to connect on.</string>
+					<key>Name</key>
+					<string>port number</string>
+				</dict>
+				<key>status</key>
+				<dict>
+					<key>Description</key>
+					<string>Current connection status.</string>
+					<key>Name</key>
+					<string>status</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the connection.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Manages all chat communication with a chat server.</string>
+			<key>Name</key>
+			<string>connection</string>
+			<key>PluralName</key>
+			<string>connections</string>
+		</dict>
+	</dict>
+	<key>Commands</key>
+	<dict>
+		<key>connect</key>
+		<dict>
+			<key>Description</key>
+			<string>Connect to the server.</string>
+			<key>Name</key>
+			<string>connect</string>
+		</dict>
+		<key>disconnect</key>
+		<dict>
+			<key>Description</key>
+			<string>Disconnect from the server.</string>
+			<key>Name</key>
+			<string>disconnect</string>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>commands and classes for Chat Core scripting.</string>
+	<key>Enumerations</key>
+	<dict>
+		<key>ConnectionStatus</key>
+		<dict>
+			<key>Connected</key>
+			<dict>
+				<key>Name</key>
+				<string>conencted</string>
+			</dict>
+			<key>Connecting</key>
+			<dict>
+				<key>Name</key>
+				<string>connecting</string>
+			</dict>
+			<key>Disconnected</key>
+			<dict>
+				<key>Name</key>
+				<string>disconnected</string>
+			</dict>
+			<key>Suspended</key>
+			<dict>
+				<key>Name</key>
+				<string>suspended</string>
+			</dict>
+		</dict>
+		<key>Proxy</key>
+		<dict>
+			<key>None</key>
+			<dict>
+				<key>Name</key>
+				<string>none</string>
+			</dict>
+			<key>HTTPS</key>
+			<dict>
+				<key>Name</key>
+				<string>secure HTTP</string>
+			</dict>
+			<key>SOCKS</key>
+			<dict>
+				<key>Name</key>
+				<string>SOCKS firewall</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>Name</key>
+	<string>Chat Core</string>
+</dict>
+</plist>

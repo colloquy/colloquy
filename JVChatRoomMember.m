@@ -54,7 +54,7 @@
 	[item setTarget:[_parent windowController]];
 	[menu addItem:item];
 
-	if( ! [_memberName isEqualToString:[[_parent connection] nickname]] ) {
+	if( ! [self isLocalUser] ) {
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
@@ -132,6 +132,18 @@
 	_operator = operator;
 }
 
+- (BOOL) voice {
+	return _voice;
+}
+
+- (BOOL) operator {
+	return _operator;
+}
+
+- (BOOL) isLocalUser {
+	return [_memberName isEqualToString:[[_parent connection] nickname]];
+}
+
 - (MVChatConnection *) connection {
 	return [[[_parent connection] retain] autorelease];
 }
@@ -148,14 +160,14 @@
 
 - (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
 	if( [menuItem action] == @selector( voice: ) ) {
-		if( [_parent doesMemberHaveVoiceStatus:_memberName] ) {
+		if( _voice ) {
 			[menuItem setTitle:NSLocalizedString( @"Remove Voice", "remove voice contextual menu - admin only" )];
 		} else {
 			[menuItem setTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" )];
-			if( [_parent doesMemberHaveOperatorStatus:_memberName] ) return NO;
+			if( _operator ) return NO;
 		}
 	} else if( [menuItem action] == @selector( promote: ) ) {
-		if( [_parent doesMemberHaveOperatorStatus:_memberName] ) {
+		if( _operator ) {
 			[menuItem setTitle:NSLocalizedString( @"Demote Operator", "demote operator contextual menu - admin only" )];
 		} else {
 			[menuItem setTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" )];

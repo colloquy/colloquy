@@ -196,7 +196,7 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 - (IBAction) showBuddyList:(id) sender {
-	[[self window] makeKeyAndOrderFront:nil];
+	[[self window] orderFront:nil];
 }
 
 #pragma mark -
@@ -214,9 +214,19 @@ static MVBuddyListController *sharedInstance = nil;
 	return nil;
 }
 
+- (NSArray *) buddies {
+	return [[_buddyOrder retain] autorelease];
+}
+
+- (NSArray *) onlineBuddies {
+	return [_onlineBuddies allObjects];
+}
+
 #pragma mark -
 
 - (IBAction) showBuddyPickerSheet:(id) sender {
+	[self showBuddyList:nil];
+
 	if( [[self window] attachedSheet] ) {
 		[[NSApplication sharedApplication] endSheet:[[self window] attachedSheet]];
 		[[[self window] attachedSheet] orderOut:nil];
@@ -913,5 +923,40 @@ static MVBuddyListController *sharedInstance = nil;
 		JVBuddy *buddy = [JVBuddy buddyWithUniqueIdentifier:identifier];
 		if( [[buddy nicknames] count] ) [self _addBuddyToList:buddy];
 	}
+}
+@end
+
+#pragma mark -
+
+@implementation MVBuddyListController (MVBuddyListControllerScripting)
+- (void) removeFromBuddiesAtIndex:(unsigned) index {
+	JVBuddy *buddy = [[[_buddyOrder objectAtIndex:index] retain] autorelease];
+	[_buddyList removeObject:buddy];
+	[_onlineBuddies removeObject:buddy];
+	[_buddyOrder removeObjectIdenticalTo:buddy];
+	[self _manuallySortAndUpdate];
+	[self _saveBuddyList];
+}
+
+- (JVBuddy *) valueInBuddiesWithUniqueID:(id) identifier {
+	NSEnumerator *enumerator = [_buddyList objectEnumerator];
+	JVBuddy *buddy = nil;
+
+	while( ( buddy = [enumerator nextObject] ) )
+		if( [[buddy uniqueIdentifier] isEqualTo:identifier] )
+			return buddy;
+
+	return nil;
+}
+
+- (JVBuddy *) valueInBuddiesWithName:(NSString *) name {
+	NSEnumerator *enumerator = [_buddyList objectEnumerator];
+	JVBuddy *buddy = nil;
+
+	while( ( buddy = [enumerator nextObject] ) )
+		if( [[buddy compositeName] isEqualToString:name] )
+			return buddy;
+
+	return nil;
 }
 @end

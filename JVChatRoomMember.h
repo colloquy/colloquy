@@ -22,5 +22,10 @@
 - (JVBuddy *) buddy;
 
 - (void) setVoice:(BOOL) voice;
-- (void) setOperator:(BOOL) operator;	
+- (BOOL) voice;
+
+- (void) setOperator:(BOOL) operator;
+- (BOOL) operator;
+
+- (BOOL) isLocalUser;
 @end

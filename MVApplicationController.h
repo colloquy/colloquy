@@ -1,4 +1,5 @@
 #import <Foundation/NSObject.h>
+#import <Foundation/NSKeyValueCoding.h>
 
 @interface MVApplicationController : NSObject {}
 - (IBAction) checkForUpdate:(id) sender;

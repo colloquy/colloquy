@@ -161,7 +161,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"%@.console", [_connection server]];
+	return [NSString stringWithFormat:@"Console %@", [_connection server]];
+}
+
+- (NSString *) uniqueIdentifier {
+	return [self description];
 }
 
 - (MVChatConnection *) connection {

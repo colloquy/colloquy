@@ -18,11 +18,10 @@
 @class ABPeoplePickerController;
 
 typedef enum {
-	MVNoSortOrder = 0,
-	MVAvailabilitySortOrder,
-	MVFirstNameSortOrder,
-	MVLastNameSortOrder,
-	MVServerSortOrder
+	MVAvailabilitySortOrder = 'avlY',
+	MVFirstNameSortOrder = 'fsnM',
+	MVLastNameSortOrder = 'lsnM',
+	MVServerSortOrder = 'serV'
 } MVBuddyListSortOrder;
 
 @interface MVBuddyListController : NSWindowController <JVInspectionDelegator> {
@@ -70,6 +69,8 @@ typedef enum {
 - (IBAction) showBuddyList:(id) sender;
 
 - (JVBuddy *) buddyForNickname:(NSString *) name onServer:(NSString *) address;
+- (NSArray *) buddies;
+- (NSArray *) onlineBuddies;
 
 - (IBAction) showBuddyPickerSheet:(id) sender;
 - (IBAction) cancelBuddySelection:(id) sender;

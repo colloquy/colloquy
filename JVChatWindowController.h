@@ -32,6 +32,8 @@ extern NSString *JVChatViewPboardType;
 	id <JVChatViewController> _activeViewController;
 	BOOL _usesSmallIcons;
 }
+- (NSString *) uniqueIdentifier;
+
 - (void) showChatViewController:(id <JVChatViewController>) controller;
 
 - (void) addChatViewController:(id <JVChatViewController>) controller;
@@ -67,6 +69,7 @@ extern NSString *JVChatViewPboardType;
 - (NSToolbar *) toolbar;
 - (NSString *) windowTitle;
 - (NSString *) identifier;
+- (id) uniqueIdentifier;
 @end
 
 @interface NSObject (JVChatViewControllerOptional)

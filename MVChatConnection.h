@@ -7,16 +7,16 @@
 #define MVURLDecodeString(t) ((NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)(t), NULL))
 
 typedef enum {
-	MVChatConnectionDisconnectedStatus = 0x0,
-	MVChatConnectionConnectingStatus = 0x1,
-	MVChatConnectionConnectedStatus = 0x2,
-	MVChatConnectionSuspendedStatus = 0x3
+	MVChatConnectionDisconnectedStatus = 'disC',
+	MVChatConnectionConnectingStatus = 'conG',
+	MVChatConnectionConnectedStatus = 'conD',
+	MVChatConnectionSuspendedStatus = 'susP'
 } MVChatConnectionStatus;
 
 typedef enum {
-	MVChatConnectionNoProxy = 0x0,
-	MVChatConnectionHTTPSProxy = 0x1,
-	MVChatConnectionSOCKSProxy = 0x2
+	MVChatConnectionNoProxy = 'nonE',
+	MVChatConnectionHTTPSProxy = 'htpS',
+	MVChatConnectionSOCKSProxy = 'sokS'
 } MVChatConnectionProxy;
 
 typedef enum {

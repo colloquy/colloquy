@@ -73,6 +73,24 @@ static BOOL applicationIsTerminating = NO;
 
 #pragma mark -
 
+- (JVChatController *) chatController {
+	return [JVChatController defaultManager];
+}
+
+- (MVConnectionsController *) connectionsController {
+	return [MVConnectionsController defaultManager];
+}
+
+- (MVFileTransferController *) transferManager {
+	return [MVFileTransferController defaultManager];
+}
+
+- (MVBuddyListController *) buddyList {
+	return [MVBuddyListController sharedBuddyList];
+}
+
+#pragma mark -
+
 - (IBAction) newConnection:(id) sender {
 	[[MVConnectionsController defaultManager] newConnection:nil];
 }
@@ -144,5 +162,12 @@ static BOOL applicationIsTerminating = NO;
 
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
+}
+
+- (BOOL) application:(NSApplication *) sender delegateHandlesKey:(NSString *) key {
+	NSLog( @"delegateHandlesKey %@", key );
+	if( [key isEqualToString:@"chatController"] || [key isEqualToString:@"connectionsController"] || [key isEqualToString:@"transferManager"] || [key isEqualToString:@"buddyList"] )
+		return YES;
+	return NO;
 }
 @end

@@ -1126,3 +1126,52 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[[JVChatController defaultManager] chatConsoleForConnection:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] ifExists:NO];
 }
 @end
+
+#pragma mark -
+
+@implementation MVConnectionsController (MVConnectionsControllerScripting)
+- (NSArray *) connectionsArray {
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	id info = nil;
+
+	while( ( info = [enumerator nextObject] ) )
+		[ret addObject:[info objectForKey:@"connection"]];
+
+	return [[ret retain] autorelease];
+}
+
+- (void) addInConnectionsArray:(MVChatConnection *) connection {
+	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+
+	[info setObject:[NSDate date] forKey:@"created"];
+	[info setObject:connection forKey:@"connection"];
+
+	[_bookmarks addObject:info];
+	[connections noteNumberOfRowsChanged];
+	[self _saveBookmarkList];
+	[connections selectRow:[_bookmarks indexOfObject:info] byExtendingSelection:NO];
+}
+
+- (void) insertInConnectionsArray:(MVChatConnection *) connection atIndex:(unsigned) index {
+	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+
+	[info setObject:[NSDate date] forKey:@"created"];
+	[info setObject:connection forKey:@"connection"];
+
+	[_bookmarks insertObject:info atIndex:index];
+	[connections noteNumberOfRowsChanged];
+	[self _saveBookmarkList];
+	[connections selectRow:index byExtendingSelection:NO];
+}
+
+- (void) removeFromConnectionsArrayAtIndex:(unsigned) index {
+	MVChatConnection *connection = [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
+    [connection disconnect];
+	[_bookmarks removeObjectAtIndex:index];
+	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+	[connections noteNumberOfRowsChanged];
+	[self _saveBookmarkList];
+}
+@end

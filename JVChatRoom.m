@@ -100,7 +100,7 @@
 }
 
 - (id) childAtIndex:(int) index {
-	return [[_members objectForKey:[_sortedMembers objectAtIndex:index]] objectForKey:@"listItem"];
+	return [_members objectForKey:[_sortedMembers objectAtIndex:index]];
 }
 
 #pragma mark -
@@ -206,14 +206,9 @@
 	if( ! [_members objectForKey:member] ) {
 		JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] init] autorelease];
 
-		[_members setObject:[NSMutableDictionary dictionary] forKey:member];
-		if( [member isEqualToString:[_connection nickname]] )
-			[[_members objectForKey:member] setObject:[NSNumber numberWithBool:YES] forKey:@"self"];
-
 		[listItem setParent:self];
 		[listItem setMemberName:member];
-
-		[[_members objectForKey:member] setObject:listItem forKey:@"listItem"];
+		[_members setObject:listItem forKey:member];
 
 		[_sortedMembers addObject:member];
 		[_sortedMembers sortUsingSelector:@selector( caseInsensitiveCompare: )];
@@ -232,7 +227,7 @@
 	NSParameterAssert( member != nil );
 	NSParameterAssert( info != nil );
 	if( [_members objectForKey:member] ) {
-		[[_members objectForKey:member] addEntriesFromDictionary:info];
+//		[[_members objectForKey:member] addEntriesFromDictionary:info];
 //		[_windowController reloadListItem:self andChildren:YES];		
 	}
 }
@@ -267,9 +262,9 @@
 		[_sortedMembers addObject:nick];
 		[_sortedMembers sortUsingSelector:@selector( caseInsensitiveCompare: )];
 
-		[(JVChatRoomMember *)[[_members objectForKey:nick] objectForKey:@"listItem"] setMemberName:nick];
+		[(JVChatRoomMember *)[_members objectForKey:nick] setMemberName:nick];
 
-		[_windowController reloadListItem:[[_members objectForKey:nick] objectForKey:@"listItem"] andChildren:NO];		
+		[_windowController reloadListItem:[_members objectForKey:nick] andChildren:NO];		
 
 		member = [self preferredNameForMember:member];
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as %@.", "user has changed nicknames" ), member, nick] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"old", nick, @"new", nil]];
@@ -277,18 +272,21 @@
 }
 
 - (void) changeSelfTo:(NSString *) nick {
-	NSEnumerator *enumerator = [_members objectEnumerator], *keyEnumerator = [_members keyEnumerator];
-	id item = nil, key = nil;
+	NSEnumerator *enumerator = [_members objectEnumerator];
+	id item = nil;
+
 	NSParameterAssert( nick != nil );
-	while( ( item = [enumerator nextObject] ) && ( key = [keyEnumerator nextObject] ) ) {
-		if( [[item objectForKey:@"self"] boolValue] ) {
-			if( ! [nick isEqualToString:key] ) {
+
+	while( ( item = [enumerator nextObject] ) ) {
+		if( [item isLocalUser] ) {
+			if( ! [[item memberName] isEqualToString:nick] ) {
+				NSString *oldNick = [[[item memberName] copy] autorelease];
 				[_members setObject:item forKey:nick];
-				[_members removeObjectForKey:key];
-				[_sortedMembers removeObject:key];
+				[_members removeObjectForKey:oldNick];
+				[_sortedMembers removeObject:oldNick];
 				[_sortedMembers addObject:nick];
 				[_sortedMembers sortUsingSelector:@selector( caseInsensitiveCompare: )];
-				[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as %@.", "you changed nicknames" ), nick] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:key, @"old", nick, @"new", nil]];
+				[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as %@.", "you changed nicknames" ), nick] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:oldNick, @"old", nick, @"new", nil]];
 			}
 			break;
 		}
@@ -300,11 +298,8 @@
 - (void) promoteChatMember:(NSString *) member by:(NSString *) by {
 	NSParameterAssert( member != nil );
 	if( [_members objectForKey:member] ) {
-		[[_members objectForKey:member] setObject:[NSNumber numberWithBool:YES] forKey:@"op"];
-
-		[(JVChatRoomMember *)[[_members objectForKey:member] objectForKey:@"listItem"] setOperator:YES];
-
-		[_windowController reloadListItem:[[_members objectForKey:member] objectForKey:@"listItem"] andChildren:NO];
+		[(JVChatRoomMember *)[_members objectForKey:member] setOperator:YES];
+		[_windowController reloadListItem:[_members objectForKey:member] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
 			NSString *message = nil;
@@ -333,11 +328,8 @@
 - (void) demoteChatMember:(NSString *) member by:(NSString *) by {
 	NSParameterAssert( member != nil );
 	if( [_members objectForKey:member] ) {
-		[[_members objectForKey:member] removeObjectForKey:@"op"];
-
-		[(JVChatRoomMember *)[[_members objectForKey:member] objectForKey:@"listItem"] setOperator:NO];
-
-		[_windowController reloadListItem:[[_members objectForKey:member] objectForKey:@"listItem"] andChildren:NO];
+		[(JVChatRoomMember *)[_members objectForKey:member] setOperator:NO];
+		[_windowController reloadListItem:[_members objectForKey:member] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
 			NSString *message = nil;
@@ -366,11 +358,8 @@
 - (void) voiceChatMember:(NSString *) member by:(NSString *) by {
 	NSParameterAssert( member != nil );
 	if( [_members objectForKey:member] ) {
-		[[_members objectForKey:member] setObject:[NSNumber numberWithBool:YES] forKey:@"voice"];
-
-		[(JVChatRoomMember *)[[_members objectForKey:member] objectForKey:@"listItem"] setVoice:YES];
-
-		[_windowController reloadListItem:[[_members objectForKey:member] objectForKey:@"listItem"] andChildren:NO];
+		[(JVChatRoomMember *)[_members objectForKey:member] setVoice:YES];
+		[_windowController reloadListItem:[_members objectForKey:member] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
 			NSString *message = nil;
@@ -399,11 +388,8 @@
 - (void) devoiceChatMember:(NSString *) member by:(NSString *) by {
 	NSParameterAssert( member != nil );
 	if( [_members objectForKey:member] ) {
-		[[_members objectForKey:member] removeObjectForKey:@"voice"];
-
-		[(JVChatRoomMember *)[[_members objectForKey:member] objectForKey:@"listItem"] setVoice:NO];
-
-		[_windowController reloadListItem:[[_members objectForKey:member] objectForKey:@"listItem"] andChildren:NO];
+		[(JVChatRoomMember *)[_members objectForKey:member] setVoice:NO];
+		[_windowController reloadListItem:[_members objectForKey:member] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
 			NSString *message = nil;
@@ -530,23 +516,23 @@
 #pragma mark -
 
 - (BOOL) doesMemberHaveOperatorStatus:(NSString *) member {
-	NSEnumerator *enumerator = [_members objectEnumerator], *keyEnumerator = [_members keyEnumerator];
-	id item = nil, key = nil;
+	NSEnumerator *enumerator = [_members objectEnumerator];
+	JVChatRoomMember *item = nil;
 
-	while( ( item = [enumerator nextObject] ) && ( key = [keyEnumerator nextObject] ) )
-		if( [member isEqualToString:key] )
-			return [[item objectForKey:@"op"] boolValue];
+	while( ( item = [enumerator nextObject] ) )
+		if( [[item memberName] isEqualToString:member] )
+			return [item operator];
 
 	return NO;
 }
 
 - (BOOL) doesMemberHaveVoiceStatus:(NSString *) member {
-	NSEnumerator *enumerator = [_members objectEnumerator], *keyEnumerator = [_members keyEnumerator];
-	id item = nil, key = nil;
+	NSEnumerator *enumerator = [_members objectEnumerator];
+	JVChatRoomMember *item = nil;
 
-	while( ( item = [enumerator nextObject] ) && ( key = [keyEnumerator nextObject] ) )
-		if( [member isEqualToString:key] )
-			return [[item objectForKey:@"voice"] boolValue];
+	while( ( item = [enumerator nextObject] ) )
+		if( [[item memberName] isEqualToString:member] )
+			return [item voice];
 
 	return NO;
 }
@@ -683,5 +669,31 @@
 		toolTip = [toolTip stringByAppendingFormat:NSLocalizedString( @"Topic set by: %@", "topic author tooltip" ), _topicAuth];
 	}
 	[[topicLine enclosingScrollView] setToolTip:toolTip];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatRoom (JVChatRoomScripting)
+- (NSArray *) chatMembers {
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_sortedMembers count]];
+	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+	id member = nil;
+
+	while( ( member = [enumerator nextObject] ) )
+		[ret addObject:[_members objectForKey:member]];
+
+	return ret;
+}
+
+- (JVChatRoomMember *) valueInChatMembersWithName:(NSString *) name {
+	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+	JVChatRoomMember *member = nil;
+
+	while( ( member = [enumerator nextObject] ) )
+		if( [[member memberName] isEqualToString:name] )
+			return member;
+
+	return nil;
 }
 @end

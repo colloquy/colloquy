@@ -353,3 +353,71 @@ static JVChatController *sharedInstance = nil;
 	[windowController showChatViewController:controller];
 }
 @end
+
+#pragma mark -
+
+@implementation JVChatController (JVChatControllerScripting)
+- (JVChatWindowController *) newChatWindowScriptCommand:(NSScriptCommand *) command {
+	return [self newChatWindowController];
+}
+
+- (NSArray *) chatWindows {
+	return [_chatWindows allObjects];
+}
+
+- (JVChatWindowController *) valueInChatWindowsWithUniqueID:(id) identifier {
+	NSEnumerator *enumerator = [_chatWindows objectEnumerator];
+	JVChatWindowController *window = nil;
+
+	while( ( window = [enumerator nextObject] ) )
+		if( [[window uniqueIdentifier] isEqual:identifier] )
+			return window;
+
+	return nil;
+}
+
+- (void) addInChatWindows:(JVChatWindowController *) window {
+	[self _addWindowController:window];
+}
+
+- (void) insertInChatWindows:(JVChatWindowController *) window atIndex:(unsigned) index {
+	[self _addWindowController:window];
+}
+
+- (void) removeFromChatWindowsAtIndex:(unsigned) index {
+	JVChatWindowController *window = [[self chatWindows] objectAtIndex:index];
+	[[window window] orderOut:nil];
+	[self disposeChatWindowController:window];
+}
+
+- (NSArray *) chatViews {
+	return [_chatControllers allObjects];
+}
+
+- (id <JVChatViewController>) valueInChatViewsWithUniqueID:(id) identifier {
+	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
+	id <JVChatViewController> view = nil;
+
+	while( ( view = [enumerator nextObject] ) )
+		if( [[view uniqueIdentifier] isEqual:identifier] )
+			return view;
+
+	return nil;
+}
+
+- (id <JVChatViewController>) valueInChatViewsWithName:(NSString *) name {
+	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
+	id <JVChatViewController> view = nil;
+
+	while( ( view = [enumerator nextObject] ) )
+		if( [[view title] isEqualToString:name] )
+			return view;
+	
+	return nil;
+}
+
+- (void) removeFromChatViewsAtIndex:(unsigned) index {
+	id <JVChatViewController> view = [[self chatViews] objectAtIndex:index];
+	[self disposeViewController:view];
+}
+@end

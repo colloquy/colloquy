@@ -74,6 +74,8 @@
 	<string>Colloquy</string>
 	<key>CFBundleIdentifier</key>
 	<string>cc.javelin.colloquy</string>
+	<key>NSAppleScriptEnabled</key>
+	<true />
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

@@ -63,6 +63,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		for( i = 0; i < count; i++ ) {
 			url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( [value valueAtIndex:i] ), MVURLEncodeString( [value labelAtIndex:i] )]];
 			[_nicknames addObject:url];
+			[_nicknameStatus setObject:[NSMutableDictionary dictionary] forKey:url];
+			[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyOfflineStatus] forKey:@"status"];
 			if( ! [self activeNickname] ) [self setActiveNickname:url];
 		}
 
@@ -303,6 +305,10 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	return [_person uniqueId];
 }
 
+- (ABPerson *) person {
+	return [[_person retain] autorelease];
+}
+
 - (void) editInAddressBook {
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"addressbook://%@?edit", [_person uniqueId]]];
 	[[NSWorkspace sharedWorkspace] openURL:url];
@@ -517,5 +523,27 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 		if( [[self activeNickname] isEqual:url] ) [self setActiveNickname:urlNew];
 	}
+}
+@end
+
+#pragma mark -
+
+@implementation JVBuddy (JVBuddyScripting)
+- (NSArray *) nicknamesArray {
+	return [_nicknames allObjects];
+}
+
+- (NSArray *) onlineNicknamesArray {
+	return [_onlineNicknames allObjects];
+}
+
+- (void) editInAddressBookScriptCommand:(NSScriptCommand *) command {
+	NSLog( @"editInAddressBookScriptCommand" );
+	[self editInAddressBook];
+}
+
+- (void) viewInAddressBookScriptCommand:(NSScriptCommand *) command {
+	NSLog( @"viewInAddressBookScriptCommand" );
+	[self viewInAddressBook];
 }
 @end

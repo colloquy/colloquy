@@ -19,10 +19,10 @@ extern NSString *JVBuddyActiveNicknameChangedNotification;
 @class NSSet;
 
 typedef enum {
-	JVBuddyOfflineStatus = 0,
-	JVBuddyAvailableStatus,
-	JVBuddyIdleStatus,
-	JVBuddyAwayStatus
+	JVBuddyOfflineStatus = 'oflN',
+	JVBuddyAvailableStatus = 'avaL',
+	JVBuddyIdleStatus = 'idlE',
+	JVBuddyAwayStatus = 'awaY'
 } JVBuddyStatus;
 
 typedef enum {

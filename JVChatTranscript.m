@@ -249,6 +249,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
+	[_toolbarItems release];
+	_toolbarItems = [[NSMutableDictionary dictionary] retain];
 	return [toolbar autorelease];
 }
 
@@ -330,6 +332,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 - (NSString *) identifier {
 	return [NSString stringWithFormat:@"Transcript %@", [[_filePath lastPathComponent] stringByDeletingPathExtension]];
+}
+
+- (NSString *) uniqueIdentifier {
+	return [self description];
 }
 
 - (MVChatConnection *) connection {

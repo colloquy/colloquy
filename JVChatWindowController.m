@@ -30,6 +30,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 @implementation JVChatWindowController
+- (id) init {
+	return ( self = [self initWithWindowNibName:nil] );
+}
+
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"JVChatWindow"] ) ) {
 		viewsDrawer = nil;
@@ -99,6 +103,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( [_activeViewController respondsToSelector:selector] )
 		return [(NSObject *)_activeViewController methodSignatureForSelector:selector];
 	else return [super methodSignatureForSelector:selector];
+}
+
+#pragma mark -
+
+- (NSString *) uniqueIdentifier {
+	return [self description];
 }
 
 #pragma mark -
@@ -570,5 +580,51 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView noteNumberOfRowsChanged];
 	[chatViewsOutlineView sizeLastColumnToFit];
 	[self _refreshSelectionMenu];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatWindowController (JVChatWindowControllerScripting)
+- (NSArray *) views {
+	return _views;
+}
+
+- (id <JVChatViewController>) valueInViewsWithUniqueID:(id) identifier {
+	NSEnumerator *enumerator = [_views objectEnumerator];
+	id <JVChatViewController> view = nil;
+
+	while( ( view = [enumerator nextObject] ) )
+		if( [[view uniqueIdentifier] isEqual:identifier] )
+			return view;
+
+	return nil;
+}
+
+- (id <JVChatViewController>) valueInViewsWithName:(NSString *) name {
+	NSEnumerator *enumerator = [_views objectEnumerator];
+	id <JVChatViewController> view = nil;
+
+	while( ( view = [enumerator nextObject] ) )
+		if( [[view title] isEqualToString:name] )
+			return view;
+
+	return nil;
+}
+
+- (void) insertInViews:(id <JVChatViewController>) view atIndex:(int) index {
+	[self insertChatViewController:view atIndex:index];
+}
+
+- (void) addInViews:(id <JVChatViewController>) view {
+	[self addChatViewController:view];
+}
+
+- (void) removeFromViewsAtIndex:(unsigned) index {
+	[self removeChatViewControllerAtIndex:index];
+}
+
+- (void) replaceInViews:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self replaceChatViewControllerAtIndex:index withController:view];
 }
 @end

@@ -540,7 +540,17 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (id) init {
 	self = [super init];
 
+	_server = @"irc.javelin.cc";
+	_nickname = [NSUserName() copy];
+	_npassword = nil;
+	_password = nil;
+	_cachedDate = nil;
+	_floodIntervals = nil;
+	_backlogDelay = 0;
+	_port = 6667;
+
 	_status = MVChatConnectionDisconnectedStatus;
+	_proxy = MVChatConnectionNoProxy;
 	_chatConnection = firetalk_create_handle( FP_IRC, (void *) self );
 	_joinList = [[NSMutableArray array] retain];
 	_roomsCache = [[NSMutableDictionary dictionary] retain];
@@ -1093,6 +1103,14 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 		[self joinChatForRoom:room];
 
 	[_joinList removeAllObjects];	
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatConnection (MVChatConnectionScripting)
+- (unsigned long) uniqueIdentifier {
+	return (unsigned long) self;
 }
 @end
 
