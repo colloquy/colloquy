@@ -83,8 +83,10 @@
 							path = [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"fscript"];
 							path = [[[[_manager class] pluginSearchPaths] objectAtIndex:0] stringByAppendingPathComponent:path];
 							if( [fm fileExistsAtPath:[path stringByDeletingLastPathComponent] isDirectory:&dir] && dir ) {
-								[fm createFileAtPath:path contents:[NSData data] attributes:nil];
-								[[NSWorkspace sharedWorkspace] openFile:path];
+								if( ! [fm fileExistsAtPath:path] ) {
+									[fm createFileAtPath:path contents:[NSData data] attributes:nil];
+									[[NSWorkspace sharedWorkspace] openFile:path];
+								}
 							}
 						}
 					} else if( plugin ) {
