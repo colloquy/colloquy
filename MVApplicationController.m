@@ -435,6 +435,9 @@ static BOOL applicationIsTerminating = NO;
 	id result = [self callScriptHandler:'cMiX' withArguments:args forSelector:_cmd];
 	NSMutableArray *ret = [NSMutableArray array];
 
+	if( ! [result isKindOfClass:[NSArray class]] )
+		result = [NSArray arrayWithObject:result];
+
 	[self buildMenuInto:ret fromReturnContainer:result withRepresentedObject:object];
 
 	if( [ret count] ) return ret;
