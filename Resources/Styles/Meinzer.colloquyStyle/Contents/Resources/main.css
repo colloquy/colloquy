@@ -95,7 +95,7 @@ body {
 a.member {
 	color: inherit !important;
 	text-decoration: none !important;
-	border-bottom: 1px inherit dotted;
+	border-bottom: 1px black dotted;
 }
 
 a.member.action {
@@ -103,7 +103,7 @@ a.member.action {
 }
 
 .event a.member {
-	border-bottom: 1px inherit dotted;
+	border-bottom: 1px white dotted;
 }
 
 #consecutiveInsert {
