@@ -121,12 +121,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (NSString *) information {
 	if( ! [[self connection] isConnected] && [[self connection] status] != MVChatConnectionConnectingStatus )
-		return [NSString stringWithFormat:NSLocalizedString( @"disconnected", "disconnected status info line in drawer" )];
+		return NSLocalizedString( @"disconnected", "disconnected status info line in drawer" );
 	return nil;
 }
 
 - (NSString *) toolTip {
-	return [NSString stringWithFormat:@"%@\%d ms lag", [self title], [[self connection] lag]];
+	if( ! [[self connection] lag] ) return [self title];
+	return [NSString stringWithFormat:NSLocalizedString( @"%@\n%.3f seconds lag", "console tooltip witg lag (server delay) info in seconds" ), [self title], [[self connection] lag] / 1000.];
 }
 
 #pragma mark -
