@@ -1,9 +1,11 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
 
 #import "MVConnectionsController.h"
 #import "JVConnectionInspector.h"
 #import "MVApplicationController.h"
+#import "MVChatPluginManager.h"
 #import "JVChatController.h"
 #import "JVChatRoomBrowser.h"
 #import "MVKeyChain.h"
@@ -643,6 +645,34 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
+- (void) setConnectCommands:(NSString *) commands forConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSMutableDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [info objectForKey:@"connection"] == connection ) {
+			if( commands ) [info setObject:[[commands mutableCopy] autorelease] forKey:@"commands"];
+			else [info removeObjectForKey:@"commands"];
+			break;
+		}
+	}
+}
+
+- (NSString *) connectCommandsForConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSMutableDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [info objectForKey:@"connection"] == connection ) {
+			return [info objectForKey:@"commands"];
+		}
+	}
+
+	return nil;
+}
+
+#pragma mark -
+
 - (IBAction) cut:(id) sender {
 	MVChatConnection *connection = nil;
 
@@ -1145,6 +1175,7 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[NSNumber numberWithInt:(int)[(MVChatConnection *)[info objectForKey:@"connection"] proxyType]] forKey:@"proxy"];
 			[data setObject:[[(MVChatConnection *)[info objectForKey:@"connection"] url] description] forKey:@"url"];
 			if( [info objectForKey:@"rooms"] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
+			if( [info objectForKey:@"commands"] ) [data setObject:[info objectForKey:@"commands"] forKey:@"commands"];
 			[data setObject:[info objectForKey:@"created"] forKey:@"created"];
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] realName] forKey:@"realName"];
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] username] forKey:@"username"];
@@ -1309,6 +1340,42 @@ static NSMenu *favoritesMenu = nil;
 	if( ! connection ) return;
 
 	[connection joinChatRooms:[info objectForKey:@"rooms"]];
+
+	NSEnumerator *commands = [[[info objectForKey:@"commands"] componentsSeparatedByString:@"\n"] objectEnumerator];
+	NSMutableString *command = nil;
+
+	while( ( command = [commands nextObject] ) ) {
+		command = [[command mutableCopy] autorelease];
+		[command replaceOccurrencesOfString:@"%@" withString:[connection nickname] options:NSLiteralSearch range:NSMakeRange( 0, [command length] )];
+
+		if( [command hasPrefix:@"/"] ) {
+			command = (NSMutableString *)[command substringFromIndex:1];
+
+			NSString *arguments = nil;
+			NSRange range = [command rangeOfString:@" "];
+			if( range.location != NSNotFound ) {
+				if( ( range.location + 1 ) < [command length] )
+					arguments = [command substringFromIndex:( range.location + 1 )];
+				command = (NSMutableString *)[command substringToIndex:range.location];
+			}
+
+			NSAttributedString *args = [[[NSAttributedString alloc] initWithString:arguments] autorelease];
+
+			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), nil];
+			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+			[invocation setSelector:@selector( processUserCommand:withArguments:toConnection: )];
+			[invocation setArgument:&command atIndex:2];
+			[invocation setArgument:&args atIndex:3];
+			[invocation setArgument:&connection atIndex:4];
+
+			NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+			if( ! [[results lastObject] boolValue] )
+				[connection sendRawMessage:[command stringByAppendingFormat:@" %@", arguments]];
+		} else {
+			[connection sendRawMessage:command];
+		}
+	}
 }
 
 - (IBAction) _disconnect:(id) sender {

@@ -58,6 +58,9 @@
 	[editRealName setObjectValue:[_connection realName]];
 	[editUsername setObjectValue:[_connection username]];
 
+	NSString *commands = [[MVConnectionsController defaultManager] connectCommandsForConnection:_connection];
+	if( commands) [connectCommands setString:commands];
+
 	[_editingRooms autorelease];
 	_editingRooms = [[NSMutableArray arrayWithArray:[[MVConnectionsController defaultManager] joinRoomsForConnection:_connection]] retain];
 
@@ -66,6 +69,7 @@
 
 - (void) didUnload {
 	[[MVConnectionsController defaultManager] setJoinRooms:_editingRooms forConnection:_connection];
+	[[MVConnectionsController defaultManager] setConnectCommands:[connectCommands string] forConnection:_connection];
 }
 
 #pragma mark -

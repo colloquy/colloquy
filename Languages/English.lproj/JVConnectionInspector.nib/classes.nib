@@ -13,6 +13,7 @@
             CLASS = JVConnectionInspector; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                connectCommands = NSTextView; 
                 editAddress = NSTextField; 
                 editAutomatic = NSButton; 
                 editNickname = NSTextField; 

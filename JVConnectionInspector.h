@@ -7,6 +7,7 @@
 @class NSPopUpButton;
 @class NSButton;
 @class NSTableView;
+@class NSTextView;
 
 @interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
 - (id <JVInspector>) inspector;
@@ -25,6 +26,7 @@
 	IBOutlet NSButton *editAutomatic;
 	IBOutlet NSTableView *editRooms;
 	IBOutlet NSButton *editRemoveRoom;
+	IBOutlet NSTextView *connectCommands;
 	MVChatConnection *_connection;
 	BOOL _nibLoaded;
 	NSMutableArray *_editingRooms;
