@@ -56,7 +56,7 @@
 			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
 		return NO;
 	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
-		[connection sendRawMessage:[arguments string]];
+		[connection sendRawMessage:[arguments string] immediately:YES];
 		return YES;
 	} else if( [command isEqualToString:@"umode"] ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [connection nickname], [arguments string]]];
@@ -140,7 +140,7 @@
 			return [self handleFileSendWithArguments:[arguments string] forConnection:[room connection]];
 		return NO;
 	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
-		[[room connection] sendRawMessage:[arguments string]];
+		[[room connection] sendRawMessage:[arguments string] immediately:YES];
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
 		return [self handleCTCPWithArguments:[arguments string] forConnection:[room connection]];
@@ -342,7 +342,7 @@
 		[browser showRoomBrowser:nil];
 		return YES;
 	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
-		[[chat connection] sendRawMessage:[arguments string]];
+		[[chat connection] sendRawMessage:[arguments string] immediately:YES];
 		return YES;
 	} else if( [command isEqualToString:@"umode"] ) {
 		[[chat connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [[chat connection] nickname], [arguments string]]];
