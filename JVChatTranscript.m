@@ -41,6 +41,13 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 #pragma mark -
 
+@interface WebView (WebViewPrivate) // WebKit 1.3 pending public API
+- (void) setDrawsBackground:(BOOL) draws;
+- (BOOL) drawsBackground;
+@end
+
+#pragma mark -
+
 @interface NSScrollView (NSScrollViewWebKitPrivate)
 - (void) setAllowsHorizontalScrolling:(BOOL) allow;
 @end
@@ -130,6 +137,9 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 - (void) awakeFromNib {
 	[display setUIDelegate:self];
 	[display setPolicyDelegate:self];
+
+	if( [display respondsToSelector:@selector( setDrawsBackground: )] )
+		[display setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
 
 	if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
 		xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
@@ -661,6 +671,10 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		case WebMenuItemTagOpenLinkInNewWindow:
 		case WebMenuItemTagOpenImageInNewWindow:
 		case WebMenuItemTagOpenFrameInNewWindow:
+		case WebMenuItemTagGoBack:
+		case WebMenuItemTagGoForward:
+		case WebMenuItemTagStop:
+		case WebMenuItemTagReload:
 			[ret removeObjectAtIndex:i];
 			i--;
 			break;
