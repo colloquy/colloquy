@@ -203,7 +203,7 @@
 }
 
 - (void) customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *) view {
-	[self updateTabBarVisibilityAndAnimate:( [[tabView window] isVisible] )];
+	[self updateTabBarVisibilityAndAnimate:NO];
 }
 
 - (void) customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *) view {
@@ -301,7 +301,7 @@
 	} else if( ! _forceTabBarVisible ) _forceTabBarVisible = 1;
 	else if( _forceTabBarVisible > 0 ) _forceTabBarVisible = 0;
 
-	[self updateTabBarVisibilityAndAnimate:YES];
+	[self updateTabBarVisibilityAndAnimate:NO];
 }
 
 // Update the visibility of our tab bar (tab bar is visible if there are 2 or more tabs present)
@@ -345,7 +345,7 @@
 @implementation JVTabbedChatWindowController (JVTabbedChatWindowControllerPrivate)
 - (void) _supressTabBarHiding:(BOOL) supress {
 	_supressHiding = supress; // temporarily suppress bar hiding
-	[self updateTabBarVisibilityAndAnimate:YES];
+	[self updateTabBarVisibilityAndAnimate:NO];
 }
 
 // Smoothly resize the tab bar (calls itself with a timer until the tabbar is correctly positioned)
@@ -366,7 +366,7 @@
 	destHeight = ( _tabIsShowing ? _tabHeight : 0. );
 
 	// move the tab view's height towards this desired height
-	int distance = ( destHeight - tabSize.height ) * 0.8;
+	int distance = ( destHeight - tabSize.height ) * 0.6;
 	if( absolute || ( distance > -1 && distance < 1 ) ) distance = destHeight - tabSize.height;
 
 	tabSize.height += distance;
