@@ -18,6 +18,7 @@
 		_localOnly = NO;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserInfo: ) name:MVChatConnectionGotUserInfoNotification object:[_member connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotAwayStatus: ) name:MVChatConnectionUserAwayStatusNotification object:[_member connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( errorOccurred : ) name:MVChatConnectionErrorNotification object:[_member connection]];
 	}
 	return self;
 }
@@ -99,10 +100,22 @@
 }
 
 - (void) gotAwayStatus:(NSNotification *) notification {
+	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
 	NSData *data = [[notification userInfo] objectForKey:@"message"];
 	NSString *strMsg = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
 	if( ! strMsg ) strMsg = [NSString stringWithCString:[data bytes] length:[data length]];
 	[away setObjectValue:strMsg];
+}
+
+- (void) errorOccurred:(NSNotification *) notification {
+	MVChatError error = (MVChatError) [[[notification userInfo] objectForKey:@"error"] intValue];
+	id target = [[notification userInfo] objectForKey:@"target"];
+	if( ! [target isKindOfClass:[NSString class]] || [target caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
+	if( error == MVChatBadTargetError ) {
+		[progress stopAnimation:nil];
+		[address setObjectValue:NSLocalizedString( @"n/a", "not applicable or not available" )];
+		[address setToolTip:nil];
+	}
 }
 
 - (IBAction) sendPing:(id) sender {
