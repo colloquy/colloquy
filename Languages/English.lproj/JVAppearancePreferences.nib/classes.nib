@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = ASExtendedTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {
@@ -9,6 +10,7 @@
                 changeMinimumFontSize = id; 
                 changePreferences = id; 
                 noGraphicEmoticons = id; 
+                showOptions = id; 
             }; 
             CLASS = JVAppearancePreferences; 
             LANGUAGE = ObjC; 
@@ -18,6 +20,8 @@
                 emoticons = NSPopUpButton; 
                 minimumFontSize = NSTextField; 
                 minimumFontSizeStepper = NSStepper; 
+                optionsDrawer = NSDrawer; 
+                optionsTable = NSTableView; 
                 preview = WebView; 
                 standardFont = JVFontPreviewField; 
                 styles = NSPopUpButton; 
@@ -30,6 +34,7 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSTextField; 
         }, 
+        {CLASS = JVMixedTableColumn; LANGUAGE = ObjC; SUPERCLASS = NSTableColumn; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {
             CLASS = NSPreferencesModule; 

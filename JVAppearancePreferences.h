@@ -8,6 +8,8 @@
 @class NSTextField;
 @class NSStepper;
 @class NSSet;
+@class NSDrawer;
+@class NSTableView;
 
 @interface JVAppearancePreferences : NSPreferencesModule {
 	IBOutlet WebView *preview;
@@ -18,8 +20,12 @@
 	IBOutlet NSStepper *minimumFontSizeStepper;
 	IBOutlet NSTextField *baseFontSize;
 	IBOutlet NSStepper *baseFontSizeStepper;
+	IBOutlet NSDrawer *optionsDrawer;
+	IBOutlet NSTableView *optionsTable;
 	NSSet *_styleBundles;
 	NSSet *_emoticonBundles;
+	NSMutableArray *_styleOptions;
+	NSString *_userStyle;
 }
 - (void) changePreferences:(id) sender;
 
@@ -31,7 +37,13 @@
 - (IBAction) noGraphicEmoticons:(id) sender;
 - (IBAction) changeDefaultEmoticons:(id) sender;
 
+- (IBAction) showOptions:(id) sender;
+
 - (void) updateChatStylesMenu;
 - (void) updateEmoticonsMenu;
 - (void) updatePreview;
+
+- (void) parseUserStyleOptions;
+- (void) changeUserStyleProperty:(NSString *) property ofSelector:(NSString *) selector toValue:(NSString *) value isImportant:(BOOL) important;
+- (void) saveUserStyleOptions;
 @end

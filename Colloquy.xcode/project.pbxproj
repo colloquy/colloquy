@@ -134,7 +134,7 @@
 		};
 		0A60C1600630D96D00DC6280 = {
 			children = (
-				1CEF8F5A064DB2B600564692,
+				1C3B28BD06529E310066197C,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -171,6 +171,7 @@
 				1C3C112E050265AE000001C8,
 				F5FB4CE60393C15601000102,
 				1C6C75450630AD5300698F55,
+				1C3B290706529E720066197C,
 				1C7055C80519E56300A8FE6E,
 				1C7055CA0519E56C00A8FE6E,
 				1C7055C40519E54C00A8FE6E,
@@ -501,6 +502,47 @@
 			path = MVChatPluginManager.m;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1C3B28BD06529E310066197C = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = ChatCore.framework;
+			refType = 3;
+			remoteRef = 1C3B293506529EAE0066197C;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C3B28D906529E340066197C = {
+			fileRef = 1C3B28BD06529E310066197C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3B290706529E720066197C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = ChatCore.framework;
+			path = build/ChatCore.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3B290806529E720066197C = {
+			fileRef = 1C3B290706529E720066197C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3B293406529E900066197C = {
+			fileRef = 1C3B290706529E720066197C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3B293506529EAE0066197C = {
+			containerPortal = 0A60C15F0630D96D00DC6280;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
 		};
 		1C3B4D560427BD5200000102 = {
 			fileEncoding = 4;
@@ -1190,6 +1232,21 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1CA75A260652537A000141D5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = styleOptions.plist;
+			path = Resources/styleOptions.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CA75A270652537A000141D5 = {
+			fileRef = 1CA75A260652537A000141D5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CA7CA6305FEC88500887614 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -1279,7 +1336,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks /Users/Timothy/Projects/Colloquy/build";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
@@ -1606,6 +1663,7 @@
 				CB66DEA20631F8160034F76E,
 				CB66DEA30631F8160034F76E,
 				1CE95886063F3BF90071C9C3,
+				1CA75A270652537A000141D5,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2198,7 +2256,8 @@
 				1CB2CD80052DDC560094AAA4,
 				1CD0201F05758F26000F93B4,
 				1C6C75460630AD5300698F55,
-				1CEF8F92064DB2C000564692,
+				1C3B28D906529E340066197C,
+				1C3B290806529E720066197C,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2256,7 +2315,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1CEF8F93064DB2C600564692,
+				1C3B293406529E900066197C,
 				1C6C75490630AD9500698F55,
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
@@ -3604,33 +3663,6 @@
 			settings = {
 			};
 		};
-		1CEF8F5A064DB2B600564692 = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = ChatCore.framework;
-			refType = 3;
-			remoteRef = 1CEF8F94064DB2DB00564692;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1CEF8F92064DB2C000564692 = {
-			fileRef = 1CEF8F5A064DB2B600564692;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CEF8F93064DB2C600564692 = {
-			fileRef = 1CEF8F5A064DB2B600564692;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CEF8F94064DB2DB00564692 = {
-			containerPortal = 0A60C15F0630D96D00DC6280;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
-			remoteInfo = "Chat Core (Framework)";
-		};
 		1CF038FF062F8DBB009774D8 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -3909,6 +3941,7 @@
 				1C746A95050CF86B000001C8,
 				F5675B8601DB767601EE70DE,
 				1C9982AF0604BEAA006C6417,
+				1CA75A260652537A000141D5,
 				1CC6FD38054AF1940075807C,
 				1CCA510D0598108000F0A4CD,
 				1CCA510E0598108000F0A4CD,

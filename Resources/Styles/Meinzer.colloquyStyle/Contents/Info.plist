@@ -16,5 +16,58 @@
 	<string>coSt</string>
 	<key>JVBaseStyleVariantName</key>
 	<string>Cobalt</string>
+	<key>JVStyleOptions</key>
+	<array>
+		<dict>
+			<key>selector</key>
+			<string>.message.highlight</string>
+			<key>property</key>
+			<string>background-color</string>
+			<key>important</key>
+			<true />
+			<key>default</key>
+			<string>rgba( 255, 191, 78, 0.6 )</string>
+			<key>description</key>
+			<string>Message highlight</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>selector</key>
+			<string>.submessage.highlight</string>
+			<key>property</key>
+			<string>background-color</string>
+			<key>important</key>
+			<true />
+			<key>default</key>
+			<string>rgba( 255, 191, 78, 0.6 )</string>
+			<key>description</key>
+			<string>Submessage highlight</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>selector</key>
+			<string>.time</string>
+			<key>property</key>
+			<string>display</string>
+			<key>default</key>
+			<integer>0</integer>
+			<key>description</key>
+			<string>Timestamp</string>
+			<key>type</key>
+			<string>list</string>
+			<key>options</key>
+			<array>
+				<string>Visible</string>
+				<string>Hidden</string>
+			</array>
+			<key>values</key>
+			<array>
+				<string>block</string>
+				<string>none</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
