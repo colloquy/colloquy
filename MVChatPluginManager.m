@@ -39,7 +39,6 @@ static MVChatPluginManager *sharedInstance = nil;
 				}
 			}
 		}
-
 	}
 	return self;
 }
