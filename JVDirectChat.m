@@ -108,6 +108,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
 - (void) _breakLongLinesInString:(NSMutableAttributedString *) message;
+- (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message;
 - (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
@@ -1298,6 +1299,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 		[messageString makeLinkAttributesAutomatically];
 
+	[self _hyperlinkRoomNames:messageString];
+
 	[self _performEmoticonSubstitutionOnString:messageString];
 
 	BOOL highlight = NO;
@@ -1605,6 +1608,20 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 }
 
+- (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message {
+	// catch IRC rooms like "#room" or "&help" but not HTML colors like "#ab12ef" or HTML entities like "&#135;" or "&amp;"
+	AGRegex *regex = [AGRegex regexWithPattern:@"(?:#(?![\\da-fA-F]{6}|\\d{0,3}(?:\\W|$))|&(?![\\d\\w#]{2,5};))[\\w-_+&#]{2,}(?=\\W|$)" options:AGRegexCaseInsensitive];
+	NSArray *matches = [regex findAllInString:[message string]];
+	NSEnumerator *enumerator = [matches objectEnumerator];
+	AGRegexMatch *match = nil;
+
+	while( ( match = [enumerator nextObject] ) ) {
+		NSRange foundRange = [match range];
+		id currentLink = [message attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
+		if( ! currentLink ) [message addAttribute:NSLinkAttributeName value:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [match group]] range:foundRange];
+	}	
+}
+
 - (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string {
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 	NSEnumerator *keyEnumerator = [_emoticonMappings keyEnumerator];
@@ -1660,6 +1677,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 		[messageString makeLinkAttributesAutomatically];
+
+	[self _hyperlinkRoomNames:messageString];
 
 	[self _performEmoticonSubstitutionOnString:messageString];
 
