@@ -21,4 +21,5 @@
 - (NSString *) informationText;
 
 - (void) setLineBreakMode:(NSLineBreakMode) mode;
+- (NSLineBreakMode) lineBreakMode;
 @end
