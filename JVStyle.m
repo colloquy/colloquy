@@ -56,6 +56,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 				if( ( bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] ) )
 					style = [[JVStyle newWithBundle:bundle] autorelease];
 				if( style ) [styles addObject:style];
+				[style reload];
 			}
 		}
 	}
@@ -161,7 +162,6 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	[self _setStyleOptions:nil];
 	[self _setVariants:nil];
 	[self _setUserVariants:nil];
-	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:[_bundle pathForResource:@"parameters" ofType:@"plist"]]];
 }
 
 #pragma mark -
@@ -437,6 +437,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (void) _setBundle:(NSBundle *) bundle {
 	[_bundle autorelease];
 	_bundle = [bundle retain];
+
+	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:[_bundle pathForResource:@"parameters" ofType:@"plist"]]];
 
 	[_bundle load];
 	[self reload];
