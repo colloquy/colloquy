@@ -1,1 +1,90 @@
-body {	margin: 4px 0 5px 0;	color: black;	background-color: white;}i {	background-color: black;	color: white;	font-style: normal;}.error {	color: #aaa;}.error:before {	content: "[";}.error:after {	content: "]";}.event:before {	color: #c0c;	margin-right: 1ex;	content: "\00BB";	white-space: nowrap;}.envelope {	overflow: hidden;}.envelope.highlight {	background-color: #ccd;}.envelope > .member {	color: #00F;}.envelope > .member.self {	color: #F00;}.envelope > .member:before {	content: "<";	white-space: nowrap;}.envelope > .member:after {	content: ">";	white-space: nowrap;}.action > .member:before {	content: "\2022";	margin-right: 0.5ex;}.action > .member:after {	margin-left: 0;	content: "";}.message > .member {	margin-left: 0;	text-decoration: none !important;	color: inherit !important;}.timestamp {	float: right;	margin-right: 1ex;	margin-left: 1ex;}.itunes {	text-decoration: none !important;	color: inherit !important;}.itunes > *:hover {	text-decoration: underline;}
+body {
+	margin: 4px 0 5px 0;
+	color: black;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: top left;
+	background-color: white;
+}
+
+i {
+	background-color: black;
+	color: white;
+	font-style: normal;
+}
+
+.error {
+	color: #aaa;
+}
+
+.error:before {
+	content: "[";
+}
+
+.error:after {
+	content: "]";
+}
+
+.event:before {
+	color: #c0c;
+	margin-right: 1ex;
+	content: "\00BB";
+	white-space: nowrap;
+}
+
+.envelope {
+	overflow: hidden;
+}
+
+.envelope.highlight {
+	background-color: #ccd;
+}
+
+.envelope > .member {
+	color: #00F;
+}
+
+.envelope > .member.self {
+	color: #F00;
+}
+
+.envelope > .member:before {
+	content: "<";
+	white-space: nowrap;
+}
+
+.envelope > .member:after {
+	content: ">";
+	white-space: nowrap;
+}
+
+.action > .member:before {
+	content: "\2022";
+	margin-right: 0.5ex;
+}
+
+.action > .member:after {
+	margin-left: 0;
+	content: "";
+}
+
+.message > .member {
+	margin-left: 0;
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
+.timestamp {
+	float: right;
+	margin-right: 1ex;
+	margin-left: 1ex;
+}
+
+.itunes {
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
+.itunes > *:hover {
+	text-decoration: underline;
+}

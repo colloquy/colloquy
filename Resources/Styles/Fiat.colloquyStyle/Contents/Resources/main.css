@@ -2,6 +2,9 @@
 
 body {
 	background-color: #e0e0e0;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: top left;
 	margin: 3px 3px;
 }
 

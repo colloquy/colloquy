@@ -18,7 +18,7 @@
 		<key>default</key>
 		<string>#ffffff</string>
 		<key>description</key>
-		<string>Background</string>
+		<string>Background image</string>
 		<key>type</key>
 		<string>color</string>
 	</dict>

@@ -85,24 +85,6 @@
 		<dict>
 			<key>style</key>
 			<array>
-				<string>body { background-image: url( "colloquy.png" ); }</string>
-				<string>body { background-image: none !important; }</string>
-			</array>
-			<key>default</key>
-			<integer>0</integer>
-			<key>description</key>
-			<string>Background image</string>
-			<key>type</key>
-			<string>list</string>
-			<key>options</key>
-			<array>
-				<string>Yes</string>
-				<string>No</string>
-			</array>
-		</dict>
-		<dict>
-			<key>style</key>
-			<array>
 				<string>.envelope { margin-bottom: 1px !important; }</string>
 				<string>.envelope { margin-bottom: 3px !important; }</string>
 				<string>.envelope { margin-bottom: 7px !important; }</string>
