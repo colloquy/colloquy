@@ -146,7 +146,7 @@ void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t mess
 		case kIOMessageSystemWillSleep:
 		case kIOMessageDeviceWillPowerOff:
 			if( [self isConnected] ) {
-				[self _forceDisconnect];
+				[self disconnect];
 				[self _setStatus:MVChatConnectionSuspendedStatus];
 			}
 			IOAllowPowerChange( [self _powerConnection], (long) messageArgument );
