@@ -5,6 +5,9 @@
 	if( ( self = [super initWithFrame:frame] ) ) {
 		_marks = [[NSMutableSet set] retain];
 		_shades = [[NSMutableArray array] retain];
+		_nearestPreviousMark = NSNotFound;
+		_nearestNextMark = NSNotFound;
+		_currentMark = NSNotFound;
 	}
 	return self;
 }
@@ -19,22 +22,21 @@
 	[super dealloc];
 }
 
+#pragma mark -
+
 - (void) drawRect:(NSRect) rect {
-	NSEraseRect( rect );
 	[super drawRect:rect];
 
 	NSAffineTransform *transform = [NSAffineTransform transform];
 	float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
 
-	NSRect clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 6. : 0. ), ( sFlags.isHoriz ? 0. : 6. ) );
-	float scale = NSHeight( clip ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+	float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
 	[transform scaleXBy:( sFlags.isHoriz ? scale : 1. ) yBy:( sFlags.isHoriz ? 1. : scale )];
 
-	float offset = [self rectForPart:NSScrollerKnobSlot].origin.y + 6.;
+	float offset = [self rectForPart:NSScrollerKnobSlot].origin.y;
 	[transform translateXBy:( sFlags.isHoriz ? offset / scale : 0. ) yBy:( sFlags.isHoriz ? 0. : offset / scale )];
 
-	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 0. : 3. ), ( sFlags.isHoriz ? 3. : 0. ) );
-	NSRectClip( clip );
+	NSRectClip( NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 0. : 3. ), ( sFlags.isHoriz ? 3. : 0. ) ) );
 
 	NSBezierPath *shades = [NSBezierPath bezierPath];
 	NSEnumerator *enumerator = [_shades objectEnumerator];
@@ -72,31 +74,50 @@
 	[[[NSColor knobColor] colorWithAlphaComponent:0.45] set];
 	[shades fill];
 
-	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 4. : 3. ), ( sFlags.isHoriz ? 3. : 4. ) );
-	NSRectClip( clip );
+	NSRectClip( NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 4. : 3. ), ( sFlags.isHoriz ? 3. : 4. ) ) );
 
 	NSBezierPath *lines = [NSBezierPath bezierPath];
 	enumerator = [_marks objectEnumerator];
 
+	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * ( NSHeight( [self frame] ) / [self knobProportion] ) );
+	BOOL foundNext = NO, foundPrevious = NO;
+	NSRect knobRect = [self rectForPart:NSScrollerKnob];
+
 	while( ( startNum = [enumerator nextObject] ) ) {
-		NSPoint point = NSMakePoint( ( sFlags.isHoriz ? [startNum unsignedLongLongValue] : 0. ), ( sFlags.isHoriz ? 0. : [startNum unsignedLongLongValue] ) );
+		unsigned long long value = [startNum unsignedLongLongValue];
+
+		if( value < currentPosition && ( ! foundPrevious || value > _nearestPreviousMark ) ) {
+			_nearestPreviousMark = value;
+			foundPrevious = YES;
+		}
+
+		if( value > currentPosition && ( ! foundNext || value < _nearestNextMark ) ) {
+			_nearestNextMark = value;
+			foundNext = YES;
+		}
+
+		NSPoint point = NSMakePoint( ( sFlags.isHoriz ? value : 0. ), ( sFlags.isHoriz ? 0. : value ) );
 		point = [transform transformPoint:point];
 		point.x = ( sFlags.isHoriz ? roundf( point.x ) + 0.5 : point.x );
 		point.y = ( sFlags.isHoriz ? point.y : roundf( point.y ) + 0.5 );
 
-		[lines moveToPoint:point];
+		if( ! NSPointInRect( point, knobRect ) ) {
+			[lines moveToPoint:point];
 
-		point = NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) );
-		[lines relativeLineToPoint:point];
+			point = NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) );
+			[lines relativeLineToPoint:point];
+		}
 	}
+
+	if( ! foundPrevious ) _nearestPreviousMark = NSNotFound;
+	if( ! foundNext ) _nearestNextMark = NSNotFound;
 
 	[[NSColor selectedKnobColor] set];
 	[lines stroke];
-
-	[self drawKnob];
 }
 
 - (void) setFloatValue:(float) position knobProportion:(float) percent {
+	if( ! _jumpingToMark ) _currentMark = NSNotFound;
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 	[super setFloatValue:position knobProportion:percent];
 }
@@ -127,23 +148,57 @@
 		[menu addItem:item];
 	}
 
+	[menu addItem:[NSMenuItem separatorItem]];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Jump to Previous Mark", "jump to previous mark contextual menu") action:@selector( jumpToPreviousMark: ) keyEquivalent:@"["] autorelease];
+	[item setTarget:self];
+	[menu addItem:item];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Jump to Next Mark", "jump to next mark contextual menu") action:@selector( jumpToNextMark: ) keyEquivalent:@"]"] autorelease];
+	[item setTarget:self];
+	[menu addItem:item];
+
 	return menu;
 }
+
+#pragma mark -
 
 - (IBAction) clearMarksHereLess:(id) sender {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
-	NSRect clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 6. : 0. ), ( sFlags.isHoriz ? 0. : 6. ) );
-	float scale = NSHeight( clip ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+	float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
 	[self removeMarksLessThan:( ( sFlags.isHoriz ? where.x : where.y ) / scale )];
 }
 
 - (IBAction) clearMarksHereGreater:(id) sender {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
-	NSRect clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 6. : 0. ), ( sFlags.isHoriz ? 0. : 6. ) );
-	float scale = NSHeight( clip ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+	float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
 	[self removeMarksGreaterThan:( ( sFlags.isHoriz ? where.x : where.y ) / scale )];
+}
+
+#pragma mark -
+
+- (IBAction) jumpToPreviousMark:(id) sender {
+	if( _nearestPreviousMark != NSNotFound ) {
+		_currentMark = _nearestPreviousMark;
+		_jumpingToMark = YES;
+		float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+		float shift = ( NSHeight( [self rectForPart:NSScrollerKnob] ) / 2. ) / scale;
+		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _nearestPreviousMark - shift )];
+		_jumpingToMark = NO;
+	}
+}
+
+- (IBAction) jumpToNextMark:(id) sender {
+	if( _nearestNextMark != NSNotFound ) {
+		_currentMark = _nearestNextMark;
+		_jumpingToMark = YES;
+		float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+		float shift = ( NSHeight( [self rectForPart:NSScrollerKnob] ) / 2. ) / scale;
+		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _nearestNextMark - shift )];
+		_jumpingToMark = NO;
+	}
 }
 
 #pragma mark -

@@ -2,7 +2,14 @@
 @interface JVMarkedScroller : NSScroller {
 	NSMutableSet *_marks;
 	NSMutableArray *_shades;
+	unsigned long long _nearestPreviousMark;
+	unsigned long long _nearestNextMark;
+	unsigned long long _currentMark;
+	BOOL _jumpingToMark;
 }
+- (IBAction) jumpToPreviousMark:(id) sender;
+- (IBAction) jumpToNextMark:(id) sender;
+
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement;
 
 - (void) addMarkAt:(unsigned long long) location;

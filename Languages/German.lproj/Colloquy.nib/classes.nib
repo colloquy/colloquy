@@ -3,11 +3,14 @@
         {
             ACTIONS = {
                 bold = id; 
+                clearDisplay = id; 
                 closeCurrentPanel = id; 
                 detachCurrentPanel = id; 
                 getInfo = id; 
                 italic = id; 
                 joinRoom = id; 
+                jumpToNextHighlight = id; 
+                jumpToPreviousHighlight = id; 
                 newConnection = id; 
                 selectNextActivePanel = id; 
                 selectNextPanel = id; 

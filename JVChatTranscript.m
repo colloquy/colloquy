@@ -672,6 +672,21 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 }
 
 #pragma mark -
+#pragma mark Highlight Jumping
+
+- (IBAction) jumpToPreviousHighlight:(id) sender {
+	JVMarkedScroller *scroller = (JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+	if( [scroller isMemberOfClass:[JVMarkedScroller class]] )
+		[scroller jumpToPreviousMark:sender];
+}
+
+- (IBAction) jumpToNextHighlight:(id) sender {
+	JVMarkedScroller *scroller = (JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+	if( [scroller isMemberOfClass:[JVMarkedScroller class]] )
+		[scroller jumpToNextMark:sender];
+}
+
+#pragma mark -
 #pragma mark WebView
 
 // Allows some simple code to work when not built with WebKit/Safari 1.3
