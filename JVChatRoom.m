@@ -307,9 +307,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has 1 message waiting.", "new single room message bubble text" ), [self title]] forKey:@"description"];
 		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has %d messages waiting.", "new room messages bubble text" ), [self title], [self newMessagesWaiting]] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"room"] forKey:@"image"];
-		[context setObject:_target forKey:@"performedOn"];
-		[context setObject:user forKey:@"performedBy"];
-		[context setObject:_target forKey:@"performedInRoom"];
 		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatRoomActivity"] forKey:@"coalesceKey"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
@@ -321,9 +318,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Replied", "member replied bubble title" ), [member title]] forKey:@"title"];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has possibly replied to your message.", "new room messages bubble text" ), [member title]] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-		[context setObject:_target forKey:@"performedOn"];
-		[context setObject:user forKey:@"performedBy"];
-		[context setObject:_target forKey:@"performedInRoom"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatReplyAfterAddressing" withContextInfo:context];
@@ -472,9 +466,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Room Member Promoted", "member promoted title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was promoted to operator by %@ in %@.", "bubble message member operator promotion string" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by ), _target] forKey:@"description"];
-			[context setObject:member forKey:@"performedOn"];
-			[context setObject:by forKey:@"performedBy"];
-			[context setObject:_target forKey:@"performedInRoom"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberPromoted" withContextInfo:context];
@@ -527,9 +518,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Room Member Demoted", "member demoted title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was demoted from operator by %@ in %@.", "bubble message member operator demotion string" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by ), _target] forKey:@"description"];
-			[context setObject:member forKey:@"performedOn"];
-			[context setObject:by forKey:@"performedBy"];
-			[context setObject:_target forKey:@"performedInRoom"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDemoted" withContextInfo:context];
@@ -582,9 +570,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Room Member Voiced", "member voiced title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was granted voice by %@ in %@.", "bubble message member voiced string" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by ), _target] forKey:@"description"];
-			[context setObject:member forKey:@"performedOn"];
-			[context setObject:by forKey:@"performedBy"];
-			[context setObject:_target forKey:@"performedInRoom"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberVoiced" withContextInfo:context];
@@ -637,9 +622,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Room Member Lost Voice", "member devoiced title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ had voice removed by %@ in %@.", "bubble message member lost voice string" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by ), _target] forKey:@"description"];
-			[context setObject:member forKey:@"performedOn"];
-			[context setObject:by forKey:@"performedBy"];
-			[context setObject:_target forKey:@"performedInRoom"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDevoiced" withContextInfo:context];
@@ -717,9 +699,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Room Member Kicked", "member kicked title" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from %@ by %@.", "bubble message member kicked string" ), ( mbr ? [mbr title] : member ), _target, ( byMbr ? [byMbr title] : by )] forKey:@"description"];
-	[context setObject:member forKey:@"performedOn"];
-	[context setObject:( byMbr ? [byMbr title] : by ) forKey:@"performedBy"];
-	[context setObject:_target forKey:@"performedInRoom"];
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
@@ -784,9 +763,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"You Were Kicked", "member kicked title" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were kicked from %@ by %@.", "bubble message member kicked string" ), _target, ( byMbr ? [byMbr title] : by )] forKey:@"description"];
-	[context setObject:[[self connection] nickname] forKey:@"performedOn"];
-	[context setObject:( byMbr ? [byMbr title] : by ) forKey:@"performedBy"];
-	[context setObject:_target forKey:@"performedInRoom"];
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
@@ -1055,8 +1031,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:NSLocalizedString( @"Room Member Joined", "member joined title" ) forKey:@"title"];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room %@.", "bubble message member joined string" ), name, _target] forKey:@"description"];
-		[context setObject:member forKey:@"performedOn"];
-		[context setObject:_target forKey:@"performedInRoom"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
@@ -1120,8 +1094,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:NSLocalizedString( @"Room Member Left", "member left title" ) forKey:@"title"];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room %@.", "bubble message member left string" ), name, _target] forKey:@"description"];
-		[context setObject:member forKey:@"performedOn"];
-		[context setObject:_target forKey:@"performedInRoom"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];

@@ -382,8 +382,6 @@ static JVChatController *sharedInstance = nil;
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Invited to Chat", "bubble title invited to room" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, by] forKey:@"description"];
-	[context setObject:[connection nickname] forKey:@"performedOn"];
-	[context setObject:by forKey:@"performedBy"];
 	[[JVNotificationController defaultManager] performNotification:@"JVChatRoomInvite" withContextInfo:context];
 }
 
@@ -553,8 +551,6 @@ static JVChatController *sharedInstance = nil;
 			[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:@"%@ on %@", curMsg, [connection server]] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
-			[context setObject:[connection nickname] forKey:@"performedOn"];
-			[context setObject:user forKey:@"performedBy"];
 			[[JVNotificationController defaultManager] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
 		}
 	}
@@ -566,8 +562,6 @@ static JVChatController *sharedInstance = nil;
 			[context setObject:NSLocalizedString( @"You Have New Memos", "new memos bubble title" ) forKey:@"title"];
 			[context setObject:curAMsg forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"Stickies"] forKey:@"image"];
-			[context setObject:[connection nickname] forKey:@"performedOn"];
-			[context setObject:user forKey:@"performedBy"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( _checkMemos: ) ) forKey:@"action"];
 			[context setObject:connection forKey:@"representedObject"];
@@ -599,8 +593,6 @@ static JVChatController *sharedInstance = nil;
 			[context setObject:NSLocalizedString( @"User Message Ignored", "user ignored bubble title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@", name, room] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-			[context setObject:name forKey:@"performedOn"];
-			[context setObject:[connection nickname] forKey:@"performedBy"];
 			[context setObject:connection forKey:@"representedObject"];
 			[[JVNotificationController defaultManager] performNotification:@"JVUserMessageIgnored" withContextInfo:context];
 			wasIgnored = YES;
@@ -611,8 +603,6 @@ static JVChatController *sharedInstance = nil;
 		[context setObject:NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) forKey:@"title"];
 		[context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@", name, room] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-		[context setObject:name forKey:@"performedOn"];
-		[context setObject:[connection nickname] forKey:@"performedBy"];
 		[context setObject:connection forKey:@"representedObject"];
 		[[JVNotificationController defaultManager] performNotification:@"JVMessageIgnored" withContextInfo:context];
 	}
