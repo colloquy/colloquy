@@ -920,7 +920,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		[menuItem setRepresentedObject:[style bundleIdentifier]];
 		[menu addItem:menuItem];
 
-		if( [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] count] ) {
+		NSArray *userVariants = [[NSFileManager defaultManager] directoryContentsAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [style bundleIdentifier]] stringByExpandingTildeInPath]];
+		
+		if( [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] count] || [userVariants count] ) {
 			denumerator = [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] objectEnumerator];
 			subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 			subMenuItem = [[[NSMenuItem alloc] initWithTitle:( [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] ? [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] : NSLocalizedString( @"Normal", "normal style variant menu item title" ) ) action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
@@ -936,6 +938,19 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 				[subMenu addItem:subMenuItem];
 			}
 
+			if( [userVariants count] ) [subMenu addItem:[NSMenuItem separatorItem]];
+			
+			denumerator = [userVariants objectEnumerator];
+			while( ( file = [denumerator nextObject] ) ) {
+				if( [[file pathExtension] isEqualToString:@"css"] ) {
+					NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@", [style bundleIdentifier], file] stringByExpandingTildeInPath];
+					subMenuItem = [[[NSMenuItem alloc] initWithTitle:[[file lastPathComponent] stringByDeletingPathExtension] action:@selector( changeChatStyleVariant: ) keyEquivalent:@""] autorelease];
+					[subMenuItem setTarget:self];
+					[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:[style bundleIdentifier], @"style", path, @"variant", nil]];
+					[subMenu addItem:subMenuItem];
+				}
+			}
+			
 			[menuItem setSubmenu:subMenu];
 		}
 

@@ -9,6 +9,8 @@
                 changeDefaultEmoticons = id; 
                 changeMinimumFontSize = id; 
                 changePreferences = id; 
+                closeNewVariantSheet = id; 
+                createNewVariant = id; 
                 noGraphicEmoticons = id; 
                 showOptions = id; 
             }; 
@@ -20,6 +22,8 @@
                 emoticons = NSPopUpButton; 
                 minimumFontSize = NSTextField; 
                 minimumFontSizeStepper = NSStepper; 
+                newVariantName = NSTextField; 
+                newVariantPanel = NSPanel; 
                 optionsDrawer = NSDrawer; 
                 optionsTable = NSTableView; 
                 preview = WebView; 

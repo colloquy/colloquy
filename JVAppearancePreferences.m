@@ -126,10 +126,10 @@
 	[baseFontSize setIntValue:[prefs defaultFontSize]];
 	[baseFontSizeStepper setIntValue:[prefs defaultFontSize]];
 
-	[self setUserStyle:[NSString stringWithContentsOfFile:[[[preview preferences] userStyleSheetLocation] path]]];
+	if( _variantLocked ) [optionsTable deselectAll:nil];
 
 	[self updatePreview];
-	[self parseUserStyleOptions];
+	[self parseStyleOptions];
 }
 
 - (IBAction) noGraphicEmoticons:(id) sender {
@@ -162,6 +162,8 @@
 		variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", defaultStyle]];
 	}
 
+	_variantLocked = ! ( [variant isAbsolutePath] && [[NSFileManager defaultManager] isWritableFileAtPath:variant] );
+
 	menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
 	while( ( style = [enumerator nextObject] ) ) {
@@ -172,9 +174,11 @@
 			[menuItem setState:NSOnState];
 		[menu addItem:menuItem];
 
-		if( [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] count] ) {
-			denumerator = [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] objectEnumerator];
+		NSArray *userVariants = [[NSFileManager defaultManager] directoryContentsAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [style bundleIdentifier]] stringByExpandingTildeInPath]];
+		
+		if( [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] count] || [userVariants count] ) {
 			subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+
 			subMenuItem = [[[NSMenuItem alloc] initWithTitle:( [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] ? [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] : NSLocalizedString( @"Normal", "normal style variant menu item title" ) ) action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 			[subMenuItem setTarget:self];
 			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:[style bundleIdentifier], @"style", nil]];
@@ -182,6 +186,7 @@
 				[subMenuItem setState:NSOnState];
 			[subMenu addItem:subMenuItem];
 
+			denumerator = [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] objectEnumerator];
 			while( ( file = [denumerator nextObject] ) ) {
 				file = [[file lastPathComponent] stringByDeletingPathExtension];
 				subMenuItem = [[[NSMenuItem alloc] initWithTitle:file action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
@@ -190,6 +195,21 @@
 				if( [defaultStyle isEqualToString:[style bundleIdentifier]] && [variant isEqualToString:file] )
 					[subMenuItem setState:NSOnState];
 				[subMenu addItem:subMenuItem];
+			}
+
+			if( [userVariants count] ) [subMenu addItem:[NSMenuItem separatorItem]];
+
+			denumerator = [userVariants objectEnumerator];
+			while( ( file = [denumerator nextObject] ) ) {
+				if( [[file pathExtension] isEqualToString:@"css"] ) {
+					NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@", [style bundleIdentifier], file] stringByExpandingTildeInPath];
+					subMenuItem = [[[NSMenuItem alloc] initWithTitle:[[file lastPathComponent] stringByDeletingPathExtension] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
+					[subMenuItem setTarget:self];
+					[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:[style bundleIdentifier], @"style", path, @"variant", nil]];
+					if( [defaultStyle isEqualToString:[style bundleIdentifier]] && [variant isEqualToString:path] )
+						[subMenuItem setState:NSOnState];
+					[subMenu addItem:subMenuItem];
+				}
 			}
 
 			[menuItem setSubmenu:subMenu];
@@ -312,12 +332,15 @@
 
 #pragma mark -
 
-- (void) parseUserStyleOptions {
+- (void) parseStyleOptions {
 	NSBundle *bundle = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 	NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [bundle bundleIdentifier]]];
-	NSString *css = _userStyle;
+	NSString *css = nil;
 
-	if( variant ) css = [css stringByAppendingString:[NSString stringWithContentsOfFile:( [variant isAbsolutePath] ? variant : [bundle pathForResource:variant ofType:@"css" inDirectory:@"Variants"] )]];
+	if( variant ) css = [NSString stringWithContentsOfFile:( [variant isAbsolutePath] ? variant : [bundle pathForResource:variant ofType:@"css" inDirectory:@"Variants"] )];
+	[self setUserStyle:css];
+
+	css = _userStyle;
 	css = [css stringByAppendingString:[NSString stringWithContentsOfFile:( bundle ? [bundle pathForResource:@"main" ofType:@"css"] : @"" )]];
 
 	NSEnumerator *enumerator = [_styleOptions objectEnumerator];
@@ -363,14 +386,19 @@
 					if( [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
 						regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
 						NSString *compare = [regex replaceWithString:@"" inString:[propertyInfo objectForKey:@"value"]];
+
 						listOption = count;
+
 						if( ! [value isEqualToString:compare] ) listOption = -1;
 						else [info setObject:[NSNumber numberWithInt:listOption] forKey:@"value"];
 					} else if( [[info objectForKey:@"type"] isEqualToString:@"color"] ) {
 						if( value && [[propertyInfo objectForKey:@"value"] rangeOfString:@"%@"].location != NSNotFound ) {
-							NSString *expression = [NSString stringWithFormat:v, @"(.*)"];
 							regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
-							expression = [regex replaceWithString:@"" inString:expression];
+
+							NSString *expression = [regex replaceWithString:@"" inString:v];
+							expression = [expression stringByEscapingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"]];
+							expression = [NSString stringWithFormat:expression, @"(.*)"];
+
 							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
 							AGRegexMatch *vmatch = [regex findInString:value];
 							if( [vmatch count] ) [info setObject:[vmatch groupAtIndex:1] forKey:@"value"];
@@ -400,7 +428,7 @@
 	return nil;
 }
 
-- (void) setUserStyleProperty:(NSString *) property forSelector:(NSString *) selector toValue:(NSString *) value {
+- (void) setStyleProperty:(NSString *) property forSelector:(NSString *) selector toValue:(NSString *) value {
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 	NSString *rselector = [selector stringByEscapingCharactersInSet:escapeSet];
 	NSString *rproperty = [property stringByEscapingCharactersInSet:escapeSet];
@@ -424,12 +452,15 @@
 	else _userStyle = [style retain];
 }
 
-- (void) saveUserStyleOptions {
-	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Overrides/%@.css", [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]] stringByExpandingTildeInPath];
-	[_userStyle writeToFile:path atomically:NO];
+- (void) saveStyleOptions {
+	if( _variantLocked ) return;
 
-	[[preview preferences] setUserStyleSheetLocation:[NSURL fileURLWithPath:path]];
-	[[preview preferences] setUserStyleSheetEnabled:YES];
+	NSString *path = nil;
+	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
+	NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
+	if( [variant isAbsolutePath] ) path = variant;
+
+	if( path ) [_userStyle writeToFile:path atomically:NO];
 }
 
 - (IBAction) showOptions:(id) sender {
@@ -459,6 +490,8 @@
 }
 
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
+	if( _variantLocked ) return;
+
 	if( [[column identifier] isEqualToString:@"value"] ) {
 		NSMutableDictionary *info = [_styleOptions objectAtIndex:row];
 		NSArray *style = nil;
@@ -472,15 +505,17 @@
 		NSDictionary *styleInfo = nil;
 
 		while( ( styleInfo = [enumerator nextObject] ) ) {
-			[self setUserStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:[styleInfo objectForKey:@"value"]];
+			[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:[styleInfo objectForKey:@"value"]];
 		}
 
-		[self saveUserStyleOptions];
+		[self saveStyleOptions];
 		[self updatePreview];
 	}
 }
 
 - (void) colorWellDidChangeColor:(NSNotification *) notification {
+	if( _variantLocked ) return;
+
 	JVColorWellCell *cell = [notification object];
 	if( ! [[cell representedObject] isKindOfClass:[NSNumber class]] ) return;
 	int row = [[cell representedObject] intValue];
@@ -496,11 +531,21 @@
 
 	while( ( styleInfo = [enumerator nextObject] ) ) {
 		setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], value];
-		[self setUserStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
+		[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
 	}
 
-	[self saveUserStyleOptions];
+	[self saveStyleOptions];
 	[self updatePreview];
+}
+
+- (BOOL) tableView:(NSTableView *) view shouldSelectRow:(int) row {
+	static int lastRow = -1;
+	if( _variantLocked && lastRow != row ) {
+		[self showNewVariantSheet];
+	}
+
+	lastRow = row;
+	return ( ! _variantLocked );
 }
 
 - (id) tableView:(NSTableView *) view dataCellForRow:(int) row tableColumn:(NSTableColumn *) column {
@@ -524,5 +569,31 @@
 	}
 
 	return nil;
+}
+
+#pragma mark -
+
+- (void) showNewVariantSheet {
+	[newVariantName setStringValue:NSLocalizedString( @"Untitled Variant", "new variant name" )];
+	[[NSApplication sharedApplication] beginSheet:newVariantPanel modalForWindow:[preview window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+}
+
+- (IBAction) closeNewVariantSheet:(id) sender {
+	[newVariantPanel orderOut:nil];
+	[[NSApplication sharedApplication] endSheet:newVariantPanel];
+}
+
+- (IBAction) createNewVariant:(id) sender {
+	[self closeNewVariantSheet:sender];
+
+	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
+	[[NSFileManager defaultManager] createDirectoryAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", style] stringByExpandingTildeInPath] attributes:nil];
+
+	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", style, [newVariantName stringValue]] stringByExpandingTildeInPath];
+	[[NSUserDefaults standardUserDefaults] setObject:path forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
+	[_userStyle writeToFile:path atomically:NO];
+
+	[self updateChatStylesMenu];
+	[self updatePreview];
 }
 @end

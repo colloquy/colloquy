@@ -22,6 +22,10 @@
 	IBOutlet NSStepper *baseFontSizeStepper;
 	IBOutlet NSDrawer *optionsDrawer;
 	IBOutlet NSTableView *optionsTable;
+	IBOutlet NSPanel *newVariantPanel;
+	IBOutlet NSTextField *newVariantName;
+	BOOL _variantLocked;
+	BOOL _alertDisplayed;
 	NSSet *_styleBundles;
 	NSSet *_emoticonBundles;
 	NSMutableArray *_styleOptions;
@@ -43,9 +47,13 @@
 - (void) updateEmoticonsMenu;
 - (void) updatePreview;
 
-- (void) parseUserStyleOptions;
+- (void) parseStyleOptions;
 - (NSString *) valueOfProperty:(NSString *) property forSelector:(NSString *) selector inStyle:(NSString *) style;
-- (void) setUserStyleProperty:(NSString *) property forSelector:(NSString *) selector toValue:(NSString *) value;
+- (void) setStyleProperty:(NSString *) property forSelector:(NSString *) selector toValue:(NSString *) value;
 - (void) setUserStyle:(NSString *) style;
-- (void) saveUserStyleOptions;
+- (void) saveStyleOptions;
+
+- (void) showNewVariantSheet;
+- (IBAction) closeNewVariantSheet:(id) sender;
+- (IBAction) createNewVariant:(id) sender;
 @end
