@@ -16,7 +16,6 @@ static WebView *fragmentWebView = nil;
 
 	if( ! renderingFragmentLock )
 		renderingFragmentLock = [[NSConditionLock alloc] initWithCondition:2];
-	fragmentWebView = nil;
 
 	[renderingFragmentLock lockWhenCondition:2]; // wait until any other call to this method finishes
 	[renderingFragmentLock unlockWithCondition:0];
@@ -53,7 +52,7 @@ static WebView *fragmentWebView = nil;
 	NSString *fragment = [info objectForKey:@"fragment"];
 	NSURL *url = [info objectForKey:@"url"];
 
-	fragmentWebView = [[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 2000., 100. ) frameName:nil groupName:nil];
+	if( ! fragmentWebView ) fragmentWebView = [[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 2000., 100. ) frameName:nil groupName:nil];
 	[fragmentWebView setFrameLoadDelegate:self];
 	[[fragmentWebView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", fragment] baseURL:url];
 
@@ -62,15 +61,13 @@ static WebView *fragmentWebView = nil;
 	[renderingFragmentLock lockWhenCondition:2]; // wait until it is safe to release
 	[renderingFragmentLock unlockWithCondition:2];
 
-	[fragmentWebView release];
-	fragmentWebView = nil;
-
 	[pool release];
 }
 
 + (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
 	extern NSConditionLock *renderingFragmentLock;
 	[renderingFragmentLock unlockWithCondition:1]; // rendering is complete
+	[sender setFrameLoadDelegate:nil];
 }
 
 - (NSData *) HTMLWithOptions:(NSDictionary *) options usingEncoding:(NSStringEncoding) encoding allowLossyConversion:(BOOL) loss {
