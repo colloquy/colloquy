@@ -5,10 +5,12 @@
 #import "JVChatTabItem.h"
 
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
+- (void) _refreshList;
+- (void) _claimMenuCommands;
+- (void) _resignMenuCommands;
 - (void) _refreshSelectionMenu;
 - (void) _refreshWindow;
 - (void) _refreshWindowTitle;
-- (void) _refreshList;
 @end
 
 #pragma mark -
@@ -21,40 +23,7 @@
 
 #pragma mark -
 
-@interface AICustomTabsView (AICustomTabsViewPrivate)
-- (void) smoothlyArrangeTabs;
-@end
-
-#pragma mark -
-
 @implementation JVTabbedChatWindowController
-+ (void) initialize {
-	unichar left = NSLeftArrowFunctionKey;
-	unichar right = NSRightArrowFunctionKey;
-
-	NSMenu *windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
-	int index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousPanel: )];
-	id item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&left length:1]];
-
-	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
-	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousActivePanel: )];
-	item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&left length:1]];
-
-	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
-	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextPanel: )];
-	item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&right length:1]];
-
-	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
-	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextActivePanel: )];
-	item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&right length:1]];
-
-	[super initialize];	
-}
-
 - (id) init {
 	return ( self = [self initWithWindowNibName:@"JVTabbedChatWindow"] );
 }
@@ -156,20 +125,24 @@
 
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
 	if( item == _activeViewController ) {
-//		[customTabsView smoothlyArrangeTabs];
-//		[customTabsView resetCursorTracking];
 		[customTabsView redisplayTabForTabViewItem:[tabView selectedTabViewItem]];
 		[self _refreshList];
 		[self _refreshWindowTitle];
 	} else if( [_views containsObject:item] ) {
-//		[customTabsView smoothlyArrangeTabs];
-//		[customTabsView resetCursorTracking];
 		[customTabsView redisplayTabForTabViewItem:[tabView tabViewItemAtIndex:[_views indexOfObjectIdenticalTo:item]]];
 	} else {
+		id selectItem = [self selectedListItem];
+
 		[chatViewsOutlineView reloadItem:item reloadChildren:( children && [chatViewsOutlineView isItemExpanded:item] ? YES : NO )];
 		[chatViewsOutlineView sizeLastColumnToFit];
-		if( item == [self selectedListItem] )
+
+		if( item == selectItem )
 			[self _refreshSelectionMenu];
+
+		if( selectItem ) {
+			int selectedRow = [chatViewsOutlineView rowForItem:selectItem];
+			[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
+		}
 	}
 }
 
@@ -369,6 +342,60 @@
 #pragma mark -
 
 @implementation JVTabbedChatWindowController (JVTabbedChatWindowControllerPrivate)
+- (void) _claimMenuCommands {
+	[super _claimMenuCommands];
+
+	unichar left = NSLeftArrowFunctionKey;
+	unichar right = NSRightArrowFunctionKey;
+
+	NSMenu *windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	int index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousPanel: )];
+	id item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&left length:1]];
+
+	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousActivePanel: )];
+	item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&left length:1]];
+
+	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextPanel: )];
+	item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&right length:1]];
+
+	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextActivePanel: )];
+	item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&right length:1]];
+}
+
+- (void) _resignMenuCommands {
+	[super _resignMenuCommands];
+
+	unichar up = NSUpArrowFunctionKey;
+	unichar down = NSDownArrowFunctionKey;
+
+	NSMenu *windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	int index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousPanel: )];
+	id item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&up length:1]];
+
+	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousActivePanel: )];
+	item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&up length:1]];
+
+	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextPanel: )];
+	item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&down length:1]];
+
+	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextActivePanel: )];
+	item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&down length:1]];
+}
+
 - (void) _supressTabBarHiding:(BOOL) supress {
 	_supressHiding = supress; // temporarily suppress bar hiding
 	[self updateTabBarVisibilityAndAnimate:NO];
@@ -410,12 +437,6 @@
 
 	// return YES when the desired height is reached
 	return ( tabSize.height == destHeight );
-}
-
-- (void) _refreshList {
-	[super _refreshList];
-	[customTabsView smoothlyArrangeTabs];
-	[customTabsView resetCursorTracking];
 }
 
 - (void) _refreshWindow {
