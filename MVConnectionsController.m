@@ -3,7 +3,6 @@
 
 #import "MVConnectionsController.h"
 #import "JVConnectionInspector.h"
-#import "MVApplicationController.h"
 #import "JVNotificationController.h"
 #import "MVChatPluginManager.h"
 #import "JVChatController.h"
@@ -49,7 +48,6 @@ static NSMenu *favoritesMenu = nil;
 @implementation MVConnectionsController
 + (MVConnectionsController *) defaultManager {
 	extern MVConnectionsController *sharedInstance;
-	if( ! sharedInstance && [MVApplicationController isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 

@@ -2,7 +2,6 @@
 #import <ChatCore/NSStringAdditions.h>
 
 #import "JVAppearancePreferences.h"
-#import "MVApplicationController.h"
 #import "JVStyle.h"
 #import "JVChatTranscript.h"
 #import "JVFontPreviewField.h"

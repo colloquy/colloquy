@@ -332,14 +332,6 @@ static BOOL applicationIsTerminating = NO;
 
 	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
 
-	[NSAutoreleasePool enableRelease:NO];
-
-	[[MVBuddyListController sharedBuddyList] release];
-	[[MVFileTransferController defaultManager] release];
-	[[MVChatPluginManager defaultManager] release];
-	[[JVChatController defaultManager] release];
-	[[MVConnectionsController defaultManager] release];
-
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 }

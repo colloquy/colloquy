@@ -3,7 +3,6 @@
 #import <GrowlAppBridge/GrowlApplicationBridge.h>
 #import <GrowlAppBridge/GrowlDefines.h>
 #import "JVNotificationController.h"
-#import "MVApplicationController.h"
 #import "KABubbleWindowController.h"
 #import "KABubbleWindowView.h"
 
@@ -25,7 +24,6 @@ static JVNotificationController *sharedInstance = nil;
 @implementation JVNotificationController
 + (JVNotificationController *) defaultManager {
 	extern JVNotificationController *sharedInstance;
-	if( ! sharedInstance && [MVApplicationController isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
 }
 

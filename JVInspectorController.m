@@ -1,5 +1,4 @@
 #import "JVInspectorController.h"
-#import "MVApplicationController.h"
 
 static JVInspectorController *sharedInstance = nil;
 static NSPoint inspectorLastPoint = { 100., 800. };
@@ -16,7 +15,6 @@ static NSMutableSet *inspectors = nil;
 @implementation JVInspectorController
 + (JVInspectorController *) sharedInspector {
 	extern JVInspectorController *sharedInstance;
-	if( ! sharedInstance && [MVApplicationController isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithObject:nil lockedOn:NO] ) );
 }
 

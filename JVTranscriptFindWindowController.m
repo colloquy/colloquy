@@ -6,7 +6,6 @@
 #import "JVChatMessage.h"
 #import "JVTranscriptFindWindowController.h"
 #import "JVTranscriptCriterionController.h"
-#import "MVApplicationController.h"
 #import "JVViewCell.h"
 
 static JVTranscriptFindWindowController *sharedInstance = nil;
@@ -14,7 +13,6 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 @implementation JVTranscriptFindWindowController
 + (JVTranscriptFindWindowController *) sharedController {
 	extern JVTranscriptFindWindowController *sharedInstance;
-	if( ! sharedInstance && [MVApplicationController isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 

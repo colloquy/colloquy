@@ -6,8 +6,8 @@
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 
-#import "MVApplicationController.h"
 #import "JVTranscriptFindWindowController.h"
+#import "MVApplicationController.h"
 #import "JVChatController.h"
 #import "JVStyle.h"
 #import "JVChatMessage.h"

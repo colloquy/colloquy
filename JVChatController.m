@@ -5,7 +5,6 @@
 #import <ChatCore/NSAttributedStringAdditions.h>
 
 #import "JVChatController.h"
-#import "MVApplicationController.h"
 #import "MVConnectionsController.h"
 #import "JVChatWindowController.h"
 #import "JVTabbedChatWindowController.h"
@@ -30,7 +29,6 @@ static JVChatController *sharedInstance = nil;
 @implementation JVChatController
 + (JVChatController *) defaultManager {
 	extern JVChatController *sharedInstance;
-	if( ! sharedInstance && [MVApplicationController isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
 }
 

@@ -3,7 +3,6 @@
 #import <libxslt/xsltutils.h>
 
 #import "JVStyle.h"
-#import "MVApplicationController.h"
 #import "NSBundleAdditions.h"
 
 @interface JVStyle (JVStylePrivate)
