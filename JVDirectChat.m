@@ -90,8 +90,6 @@ extern char *MVChatIRCToXHTML( const char * const string );
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
-NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
-
 #pragma mark -
 
 @interface JVDirectChat (JVDirectChatPrivate)
