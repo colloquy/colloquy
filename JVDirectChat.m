@@ -205,8 +205,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", _target];
 				else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", _target, [_connection server]];
 			} else if( session == 2 ) {
-				if( org ) logName = [NSString stringWithFormat:@"%@ %@.colloquyTranscript", _target, [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
-				else logName = [NSString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", _target, [_connection server], [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
+				if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", _target, [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
+				else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", _target, [_connection server], [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
+				[(NSMutableString *)logName replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
+				[(NSMutableString *)logName replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
 			}
 
 			logs = [logs stringByAppendingPathComponent:logName];
@@ -220,6 +222,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				[self writeToLog:xmlDocGetRootElement( _xmlLog ) withDoc:_xmlLog initializing:YES continuation:NO];
 			} else { // Use existing file.
 				_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:logs] retain];
+
+				xmlNodePtr sessionNode = xmlNewNode( NULL, "session" );
+				xmlSetProp( sessionNode, "started", [[[NSDate date] description] UTF8String] );
+				xmlAddChild( xmlDocGetRootElement( _xmlLog ), sessionNode );
+
+				[self writeToLog:sessionNode withDoc:_xmlLog initializing:NO continuation:NO];
 			}
 
 			[_filePath autorelease];
@@ -302,7 +310,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[_encodingMenu release];
 	[_spillEncodingMenu release];
 	[_messageQueue release];
+
+	if( ! xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) ) // Log is empty, remove the file.
+		[[NSFileManager defaultManager] removeFileAtPath:_filePath handler:nil];
+
 	// TODO: Read in the logfile and write it back out again after adding the 'ended' attribute to the log node.
+	[_logFile synchronizeFile];
 	[_logFile release];
 
 	NSEnumerator *enumerator = [_waitingAlerts objectEnumerator];
