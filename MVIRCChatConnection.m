@@ -1767,7 +1767,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	NSString *command = [info objectForKey:@"command"];
 	NSString *arguments = [info objectForKey:@"arguments"];
 	MVChatUser *user = [info objectForKey:@"user"];
-	
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeRequestNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser: )];
@@ -1789,15 +1792,15 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		signal_stop();
 		return;
 	}
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeRequestNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 - (void) _processSubcodeReply:(NSDictionary *) info {
 	NSString *command = [info objectForKey:@"command"];
 	NSString *arguments = [info objectForKey:@"arguments"];
 	MVChatUser *user = [info objectForKey:@"user"];
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeReplyNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];	
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -1811,9 +1814,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		signal_stop();
 		return;
 	}
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeReplyNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];	
 }
 
 #pragma mark -
