@@ -198,7 +198,6 @@
 #pragma mark -
 
 - (BOOL) autocomplete {
-	NSLog( @"Here we are" );
 	//get list of suggestions from delegate
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
 		[self complete:nil];
