@@ -39,6 +39,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[send setContinuousSpellCheckingEnabled:NO];
 	[send setUsesFontPanel:NO];
 	[send setUsesRuler:NO];
+	[send setAllowsUndo:YES];
 	[send setImportsGraphics:NO];
 	[send reset:nil];
 
