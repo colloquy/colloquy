@@ -43,7 +43,7 @@
 		if( [subcmd isEqualToString:@"send"] )
 			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
 		return NO;
-	} else if( [command isEqualToString:@"raw"] ) {
+	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
 		[connection sendRawMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
@@ -92,7 +92,7 @@
 		if( [subcmd isEqualToString:@"send"] )
 			return [self handleFileSendWithArguments:[arguments string] forConnection:[room connection]];
 		return NO;
-	} else if( [command isEqualToString:@"raw"] ) {
+	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
 		[[room connection] sendRawMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
@@ -195,7 +195,7 @@
 		return NO;
 	} else if( [command isEqualToString:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
-	} else if( [command isEqualToString:@"raw"] ) {
+	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
 		[[chat connection] sendRawMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
