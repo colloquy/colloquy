@@ -8,7 +8,11 @@
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
+
 #import <libxml/xinclude.h>
+#import <libxml/debugXML.h>
+#import <libxslt/transform.h>
+#import <libxslt/xsltutils.h>
 
 #import "JVChatController.h"
 #import "MVConnectionsController.h"
@@ -82,6 +86,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 + (NSString *) _nameForBundle:(NSBundle *) style;
++ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
++ (void) _freeXsltParamArray:(const char **) params;
 - (void) _changeChatEmoticonsMenuSelection;
 - (void) _updateChatEmoticonsMenu;
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
@@ -117,6 +123,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		_connection = nil;
 		_firstMessage = YES;
 		_newMessage = NO;
+		_requiresFullMessage = NO;
 		_newHighlightMessage = NO;
 		_cantSendMessages = NO;
 		_isActive = NO;
@@ -655,7 +662,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 				[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 				[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); documentAppend( \"%@\" ); scrollToBottomIfNeeded();", messageString]];
+				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
 			}
 		}
 
@@ -676,7 +683,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
 	BOOL highlight = NO;
 	xmlDocPtr doc = NULL, msgDoc = NULL;
-	xmlNodePtr root = NULL, child = NULL;
+	xmlNodePtr root = NULL, child = NULL, parent = NULL;
 	const char *msgStr = NULL;
 	NSMutableData *mutableMsg = [[message mutableCopy] autorelease];
 	NSMutableString *messageString = nil;
@@ -728,51 +735,79 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	}
 
 	doc = xmlNewDoc( "1.0" );
-	root = xmlNewNode( NULL, "envelope" );
-	xmlSetProp( root, "id", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
-	xmlSetProp( root, "received", [[[NSDate date] description] UTF8String] );
-	xmlDocSetRootElement( doc, root );
 
-	if( [user isEqualToString:_target] && _buddy ) {
-		NSString *theirName = user;
-		if( [_buddy preferredNameWillReturn] != JVBuddyActiveNickname ) theirName = [_buddy preferredName];
-		child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
-		if( ! [theirName isEqualToString:user] )
-			xmlSetProp( child, "nickname", [user UTF8String] );
-		xmlSetProp( child, "card", [[_buddy uniqueIdentifier] UTF8String] );
-		[self _saveBuddyIcon:_buddy];
-	} else if( [user isEqualToString:[[self connection] nickname]] ) {
-		NSString *selfName = user;
-		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
-			selfName = [self _selfCompositeName];
-		else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyGivenNickname )
-			selfName = [self _selfStoredNickname];
-		child = xmlNewTextChild( root, NULL, "sender", [selfName UTF8String] );
-		if( ! [selfName isEqualToString:user] )
-			xmlSetProp( child, "nickname", [user UTF8String] );
-		xmlSetProp( child, "self", "yes" );
-		xmlSetProp( child, "card", [[[[ABAddressBook sharedAddressBook] me] uniqueId] UTF8String] );
-		[self _saveSelfIcon];
-	} else {
-		NSString *theirName = user;
-		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:user onServer:[[self connection] server]];
-		if( buddy && [buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-			theirName = [buddy preferredName];
-		child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
-		if( ! [theirName isEqualToString:user] )
-			xmlSetProp( child, "nickname", [user UTF8String] );		
-		if( buddy ) {
-			xmlSetProp( child, "card", [[buddy uniqueIdentifier] UTF8String] );
-			[self _saveBuddyIcon:buddy];
+	xmlXPathObjectPtr result = NULL;
+
+	if( [_logLock tryLock] ) {	
+		xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
+		if( ! ctx ) return;
+		result = xmlXPathEval( [[NSString stringWithFormat:@"/log/*[name() = 'envelope' and position() = last() and (sender = '%@' or sender/@nickname = '%@')]", user, user] UTF8String], ctx );
+		[_logLock unlock];
+	} else _requiresFullMessage = YES;
+
+	if( ! _requiresFullMessage && result && result -> nodesetval -> nodeNr ) {
+		if( ! [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
+			[_styleParams setObject:@"'yes'" forKey:@"subsequent"];
+			if( _params ) [[self class] _freeXsltParamArray:_params];
+			_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
 		}
-	}
 
-	xmlSetProp( child, "classification", [self _classificationForNickname:user] );		
+		parent = result -> nodesetval -> nodeTab[0];
+		root = xmlDocCopyNode( parent, doc, 1 );
+		xmlDocSetRootElement( doc, root );
+	} else {
+		if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
+			[_styleParams removeObjectForKey:@"subsequent"];
+			if( _params ) [[self class] _freeXsltParamArray:_params];
+			_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
+		}
+
+		root = xmlNewNode( NULL, "envelope" );
+		xmlSetProp( root, "id", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
+		xmlDocSetRootElement( doc, root );
+
+		if( [user isEqualToString:_target] && _buddy ) {
+			NSString *theirName = user;
+			if( [_buddy preferredNameWillReturn] != JVBuddyActiveNickname ) theirName = [_buddy preferredName];
+			child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
+			if( ! [theirName isEqualToString:user] )
+				xmlSetProp( child, "nickname", [user UTF8String] );
+			xmlSetProp( child, "card", [[_buddy uniqueIdentifier] UTF8String] );
+			[self _saveBuddyIcon:_buddy];
+		} else if( [user isEqualToString:[[self connection] nickname]] ) {
+			NSString *selfName = user;
+			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
+				selfName = [self _selfCompositeName];
+			else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyGivenNickname )
+				selfName = [self _selfStoredNickname];
+			child = xmlNewTextChild( root, NULL, "sender", [selfName UTF8String] );
+			if( ! [selfName isEqualToString:user] )
+				xmlSetProp( child, "nickname", [user UTF8String] );
+			xmlSetProp( child, "self", "yes" );
+			xmlSetProp( child, "card", [[[[ABAddressBook sharedAddressBook] me] uniqueId] UTF8String] );
+			[self _saveSelfIcon];
+		} else {
+			NSString *theirName = user;
+			JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:user onServer:[[self connection] server]];
+			if( buddy && [buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+				theirName = [buddy preferredName];
+			child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
+			if( ! [theirName isEqualToString:user] )
+				xmlSetProp( child, "nickname", [user UTF8String] );		
+			if( buddy ) {
+				xmlSetProp( child, "card", [[buddy uniqueIdentifier] UTF8String] );
+				[self _saveBuddyIcon:buddy];
+			}
+		}
+
+		xmlSetProp( child, "classification", [self _classificationForNickname:user] );		
+	}
 
 	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 
 	child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
+	xmlSetProp( child, "received", [[[NSDate date] description] UTF8String] );
 	if( action ) xmlSetProp( child, "action", "yes" );
 	if( highlight ) xmlSetProp( child, "highlight", "yes" );
 	xmlAddChild( root, child );
@@ -780,7 +815,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	xmlFreeDoc( msgDoc );
 
 	if( [_logLock tryLock] ) {
-		xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
+		if( parent ) xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
+		else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
 		if( _firstMessage ) { // If we just got a private message and this panel was just opened WebKit hasn't had time load the template.
 			[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[self _applyStyleOnXMLDocument:doc]] baseURL:nil];
@@ -790,7 +826,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 				[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 				[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); documentAppend( \"%@\" ); scrollToBottomIfNeeded();", messageString]];
+				if( parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendConsecutiveMessage( \"%@\" );", messageString]];
+				else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
 			}
 		}
 
@@ -805,6 +842,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	xmlFreeDoc( doc );
 
+	_requiresFullMessage = NO;
 	_firstMessage = NO;
 	_newMessage = YES;
 
@@ -956,6 +994,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (IBAction) clearDisplay:(id) sender {
+	_requiresFullMessage = YES;
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 }
 

@@ -445,7 +445,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	_chatStyleVariant = [variant retain];
 
 	[_styleParams autorelease];
-	_styleParams = [[NSDictionary dictionaryWithContentsOfFile:[_chatStyle pathForResource:@"parameters" ofType:@"plist"]] retain];
+	_styleParams = [[NSMutableDictionary dictionaryWithContentsOfFile:[_chatStyle pathForResource:@"parameters" ofType:@"plist"]] retain];
+	if( ! [_styleParams count] ) _styleParams = [[NSMutableDictionary dictionary] retain];
 
 	if( _params ) [[self class] _freeXsltParamArray:_params];
 	_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];

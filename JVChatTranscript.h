@@ -29,7 +29,7 @@
 	NSString *_chatStyleVariant;
 	NSBundle *_chatEmoticons;
 	NSDictionary *_emoticonMappings;
-	NSDictionary *_styleParams;
+	NSMutableDictionary *_styleParams;
 	NSMutableArray *_messages;
 	NSMutableDictionary *_toolbarItems;
 	const char **_params;

@@ -35,6 +35,7 @@
 	JVBuddy *_buddy;
 	unsigned int _messageId;
 	BOOL _firstMessage;
+	BOOL _requiresFullMessage;
 	BOOL _isActive;
 	BOOL _newMessage;
 	BOOL _newHighlightMessage;
