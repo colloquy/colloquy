@@ -367,6 +367,7 @@ static NSMenu *favoritesMenu = nil;
 	[openConnection orderOut:nil];
 
 	connection = [[[MVChatConnection alloc] init] autorelease];
+	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 	[connection setProxyType:[[newProxy selectedItem] tag]];
 	[connection setPassword:[newServerPassword stringValue]];
 	[connection setUsername:[newUsername stringValue]];
@@ -1199,6 +1200,7 @@ static NSMenu *favoritesMenu = nil;
 		connection = [[[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]] autorelease];
 
 		[connection setProxyType:(MVChatConnectionProxy)[[info objectForKey:@"proxy"] unsignedIntValue]];
+		[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 
 		if( [info objectForKey:@"realName"] ) [connection setRealName:[info objectForKey:@"realName"]];
 		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
