@@ -42,6 +42,24 @@
 	<true/>
 	<key>MVChatNaturalActions</key>
 	<false/>
+	<key>JVChatServers</key>
+	<array>
+		<string>irc.freenode.net</string>
+		<string>irc.macnn.com</string>
+		<string>irc.macgeneration.com</string>
+		<string>irc.efnet.net</string>
+		<string>irc.us.ircnet.net</string>
+		<string>irc.fr.ircnet.net</string>
+		<string>irc.za.ircnet.net</string>
+		<string>us.undernet.org</string>
+		<string>eu.undernet.org</string>
+		<string>irc.quakenet.org</string>
+		<string>uk.quakenet.org</string>
+		<string>irc.icq.com</string>
+		<string>irc.galaxynet.org</string>
+		<string>irc.esper.net</string>
+		<string>irc.mozilla.org</string>
+	</array>
 	<key>JVChatDefaultStyle</key>
 	<string>cc.javelin.colloquy.style.standard</string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.bland</key>
