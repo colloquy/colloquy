@@ -35,6 +35,7 @@
 	[super windowDidLoad];
 
 	[chatViewsOutlineView setRefusesFirstResponder:NO];
+	[chatViewsOutlineView setAllowsEmptySelection:YES];
 
     // Remove any tabs from our tab view, it needs to start out empty
     while( [tabView numberOfTabViewItems] > 0 )
@@ -226,7 +227,7 @@
 @implementation JVTabbedChatWindowController (JVTabbedChatWindowControllerPrivate)
 - (void) _refreshList {
 	[super _refreshList];
-	[customTabsView resizeTabs];
+	[customTabsView smoothlyArrangeTabs];
 }
 
 - (void) _refreshWindow {
