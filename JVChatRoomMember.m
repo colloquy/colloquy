@@ -26,6 +26,13 @@
 	return self;
 }
 
+- (id) initAsLocalUserWithRoom:(JVChatRoom *) room {
+	if( ( self = [self initWithRoom:room andNickname:[[room connection] nickname]] ) ) {
+		_localUser = YES;
+	}
+	return self;
+}
+
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_parent = nil;
@@ -34,6 +41,7 @@
 		_username = nil;
 		_address = nil;
 		_buddy = nil;
+		_localUser = NO;
 		_operator = NO;
 		_halfOperator = NO;
 		_serverOperator = NO;
@@ -113,6 +121,7 @@
 #pragma mark User Info
 
 - (NSString *) nickname {
+	if( _localUser ) return [[_parent connection] nickname];
 	return [[_nickname retain] autorelease];
 }
 
@@ -175,7 +184,7 @@
 }
 
 - (BOOL) isLocalUser {
-	return [_nickname isEqualToString:[[_parent connection] nickname]];
+	return _localUser;
 }
 
 - (MVChatConnection *) connection {
@@ -197,7 +206,7 @@
 			return [self _selfStoredNickname];
 	} else if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [_buddy preferredName];
-	return [[_nickname retain] autorelease];
+	return [[[self nickname] retain] autorelease];
 }
 
 - (NSString *) information {
@@ -227,7 +236,7 @@
 
 - (void) handleDraggedFile:(NSString *) path {
 	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
-	[[MVFileTransferController defaultManager] addFileTransfer:[[self connection] sendFile:path toUser:_nickname passively:passive]];
+	[[MVFileTransferController defaultManager] addFileTransfer:[[self connection] sendFile:path toUser:[self nickname] passively:passive]];
 }
 
 #pragma mark -
@@ -354,7 +363,7 @@
 
 - (IBAction) startChat:(id) sender {
 	if( [self isLocalUser] ) return;
-	[[JVChatController defaultManager] chatViewControllerForUser:_nickname withConnection:[_parent connection] ifExists:NO];
+	[[JVChatController defaultManager] chatViewControllerForUser:[self nickname] withConnection:[_parent connection] ifExists:NO];
 }
 
 - (IBAction) sendFile:(id) sender {
@@ -387,7 +396,7 @@
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		passive = [passiveButton state];
 		while( ( path = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultManager] addFileTransfer:[[_parent connection] sendFile:path toUser:_nickname passively:passive]];
+			[[MVFileTransferController defaultManager] addFileTransfer:[[_parent connection] sendFile:path toUser:[self nickname] passively:passive]];
 	}
 }
 
@@ -402,22 +411,22 @@
 #pragma mark Operator commands/Modifiers
 
 - (IBAction) toggleOperatorStatus:(id) sender {
-	if( _operator ) [[_parent connection] demoteMember:_nickname inRoom:[_parent target]];
-	else [[_parent connection] promoteMember:_nickname inRoom:[_parent target]];
+	if( _operator ) [[_parent connection] demoteMember:[self nickname] inRoom:[_parent target]];
+	else [[_parent connection] promoteMember:[self nickname] inRoom:[_parent target]];
 }
 
 - (IBAction) toggleHalfOperatorStatus:(id) sender {
-	if( _halfOperator ) [[_parent connection] dehalfopMember:_nickname inRoom:[_parent target]];
-	else [[_parent connection] halfopMember:_nickname inRoom:[_parent target]];
+	if( _halfOperator ) [[_parent connection] dehalfopMember:[self nickname] inRoom:[_parent target]];
+	else [[_parent connection] halfopMember:[self nickname] inRoom:[_parent target]];
 }
 
 - (IBAction) toggleVoiceStatus:(id) sender {
-	if( _voice ) [[_parent connection] devoiceMember:_nickname inRoom:[_parent target]];
-	else [[_parent connection] voiceMember:_nickname inRoom:[_parent target]];
+	if( _voice ) [[_parent connection] devoiceMember:[self nickname] inRoom:[_parent target]];
+	else [[_parent connection] voiceMember:[self nickname] inRoom:[_parent target]];
 }
 
 - (IBAction) kick:(id) sender {
-	[[_parent connection] kickMember:_nickname inRoom:[_parent target] forReason:@""];
+	[[_parent connection] kickMember:[self nickname] inRoom:[_parent target] forReason:@""];
 }
 
 - (IBAction) ban:(id) sender {
@@ -471,7 +480,7 @@
 	[banTitle setStringValue:[NSString stringWithFormat:NSLocalizedString( @"Ban %@ from the %@ room.", "ban user from room label" ), [self title], [_parent title]]];
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask label")];
 
-	if( _address) [firstField setStringValue:[NSString stringWithFormat:@"%@!%@", _nickname, _address]];
+	if( _address) [firstField setStringValue:[NSString stringWithFormat:@"%@!%@", [self nickname], _address]];
 	else [firstField setStringValue:@""];
 
 	[banWindow makeFirstResponder:firstField];
@@ -514,7 +523,7 @@
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask" )];
 	[secondTitle setStringValue:NSLocalizedString( @"And reason:", "kick reason (secondary)" )];
 
-	if( _address ) [firstField setStringValue:[NSString stringWithFormat:@"%@!%@", _nickname, _address]];
+	if( _address ) [firstField setStringValue:[NSString stringWithFormat:@"%@!%@", [self nickname], _address]];
 	else [firstField setStringValue:@""];
 	[secondField setStringValue:@""];
 
@@ -549,7 +558,7 @@
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 
-	[[_parent connection] kickMember:_nickname inRoom:[_parent target] forReason:reason];
+	[[_parent connection] kickMember:[self nickname] inRoom:[_parent target] forReason:reason];
 }
 
 - (IBAction) closeBanSheet:(id) sender {
@@ -567,7 +576,7 @@
 	[banWindow orderOut:self];
 
 	[[_parent connection] banMember:hostmask inRoom:[_parent target]];
-	[[_parent connection] kickMember:_nickname inRoom:[_parent target] forReason:reason];
+	[[_parent connection] kickMember:[self nickname] inRoom:[_parent target] forReason:reason];
 }
 
 - (IBAction) cancelSheet:(id) sender {
@@ -579,11 +588,15 @@
 #pragma mark -
 
 @implementation JVChatRoomMember (JVChatMemberPrivate)
+- (void) _setLocalUser:(BOOL) local {
+	_localUser = local;	
+}
+
 - (void) _setNickname:(NSString *) name {
 	[_nickname autorelease];
 	_nickname = [name copy];
 	[_buddy autorelease];
-	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_nickname onServer:[[self connection] server]] retain];
+	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:[self nickname] onServer:[[self connection] server]] retain];
 }
 
 - (void) _setUsernameAndAddress:(NSString *) hostmask {

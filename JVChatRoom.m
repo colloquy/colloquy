@@ -35,6 +35,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (NSString *) _selfStoredNickname;
 - (NSString *) _selfCompositeName;
 
+- (void) _setLocalUser:(BOOL) local;
 - (void) _setNickname:(NSString *) name;
 - (void) _setUsernameAndAddress:(NSString *) address;
 - (void) _setRealName:(NSString *) name;
@@ -60,6 +61,9 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		_kickedFromRoom = NO;
 		_keepAfterPart = NO;
 		_initialBanlistReceived = NO;
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatConnectionGotRoomModeNotification object:[self connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _selfNicknameChanged: ) name:MVChatConnectionNicknameAcceptedNotification object:[self connection]];
 	}
 	return self;
 }
@@ -69,8 +73,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	[topicLine setDrawsBackground:NO];
 	[[topicLine enclosingScrollView] setDrawsBackground:NO];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatConnectionGotRoomModeNotification object:[self connection]];
 
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
 	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Chat Rooms/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath];
@@ -860,7 +862,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	NSEnumerator *enumerator = [_members objectEnumerator];
 	while( ( member = [enumerator nextObject] ) )
-		if( [[member nickname] caseInsensitiveCompare:name] == NSOrderedSame)
+		if( [[member nickname] caseInsensitiveCompare:name] == NSOrderedSame )
 			return member;
 
 	enumerator = [_members objectEnumerator];
@@ -902,6 +904,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		member = [info objectForKey:@"nickname"];
 
 		JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] initWithRoom:self andNickname:member] autorelease];
+		[listItem _setLocalUser:( [[[self connection] nickname] caseInsensitiveCompare:member] == NSOrderedSame )];
 		[listItem _setUsernameAndAddress:[info objectForKey:@"address"]];
 		[listItem _setRealName:[info objectForKey:@"realName"]];
 		[listItem _setOperator:[[info objectForKey:@"operator"] boolValue]];
@@ -957,7 +960,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 - (void) removeChatMember:(NSString *) member withReason:(NSData *) reason {
 	NSParameterAssert( member != nil );
-	
+
 	JVChatRoomMember *mbr = nil;
 	if( ( mbr = [[[self chatRoomMemberWithName:member] retain] autorelease] ) ) {
 		NSMutableAttributedString *rstring = nil;
@@ -1005,17 +1008,13 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	if( ( mbr = [[[self chatRoomMemberWithName:member] retain] autorelease] ) ) {
 		NSString *name = [[[mbr title] copy] autorelease];
 
-		[_members setObject:mbr forKey:nick];
 		[_members removeObjectForKey:member];
+		[_members setObject:mbr forKey:nick];
 		[mbr _setNickname:nick];
 
 		[self resortMembers];
 
-		if( [mbr isLocalUser] ) {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as <span class=\"member\">%@</span>.", "you changed nicknames" ), nick] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[mbr title], @"name", member, @"old", nick, @"new", nil]];
-		} else {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), name, nick] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"name", member, @"old", nick, @"new", nil]];
-		}
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), name, nick] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"name", member, @"old", nick, @"new", nil]];
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( NSString * ), @encode( JVChatRoom * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -1313,6 +1312,15 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 		[self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : member ), @"by", member, @"nickname", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", [[notification userInfo] objectForKey:@"param"], @"parameter", nil]];
 	}
+}
+
+- (void) _selfNicknameChanged:(NSNotification *) notification {
+	if( [notification object] != [self connection] )
+		return; // not our connection
+
+	[self resortMembers];
+
+	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as <span class=\"member\">%@</span>.", "you changed nicknames" ), [[self connection] nickname]] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[[self connection] nickname], @"nickname", nil]];
 }
 
 - (void) _startChatWithNonMember:(id) sender {

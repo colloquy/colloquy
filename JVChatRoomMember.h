@@ -15,7 +15,8 @@
 	BOOL _halfOperator;
 	BOOL _serverOperator;
 	BOOL _voice;
-	
+	BOOL _localUser;
+
 	// Custom ban ivars
 	BOOL _nibLoaded;
 	IBOutlet NSTextField *banTitle;
@@ -28,6 +29,7 @@
 	IBOutlet NSWindow *banWindow;
 }
 - (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name;
+- (id) initAsLocalUserWithRoom:(JVChatRoom *) room;
 
 - (NSComparisonResult) compare:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member;
