@@ -733,10 +733,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[menu addItem:menuItem];
 
 		if( chat == _activeViewController ) [menuItem setState:NSOnState];
-		else if( [chat newMessageWaiting] ) [menuItem setState:NSMixedState];
-		
-		if( [chat newMessageWaiting] && chat != _activeViewController ) newMsg = YES;
-		if( [chat newHighlightMessageWaiting] && chat != _activeViewController ) newHighMsg = YES;
+		else if( [chat newMessagesWaiting] ) [menuItem setState:NSMixedState];
+
+		if( [chat newMessagesWaiting] && chat != _activeViewController ) newMsg = YES;
+		if( [chat newHighlightMessagesWaiting] && chat != _activeViewController ) newHighMsg = YES;
 	}
 
 	if( newHighMsg ) [activityToolbarButton reallySetImage:[NSImage imageNamed:@"activityNewImportant"]];
