@@ -714,6 +714,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		[listener ignore];
 	}
 }
+
+- (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
+	[self _finishStyleSwitch];
+}
 @end
 
 #pragma mark -
@@ -811,18 +815,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	if( ! _chatStyle ) _chatStyle = [style retain];
 }
 
-- (void) _finishStyleSwitch:(id) sender {
-	[display setPreferencesIdentifier:[_chatStyle bundleIdentifier]];
-	// we shouldn't have to post this notification manually, but this seems to make webkit refresh with new prefs
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"WebPreferencesChangedNotification" object:[display preferences]];
-	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:sender] baseURL:nil];
+- (void) _finishStyleSwitch {
+	[display setFrameLoadDelegate:nil];
+	[[display preferences] setJavaScriptEnabled:YES];
 	[_logLock unlock];
 }
 
 - (void) _switchingStyleEnded:(in NSString *) html {
-	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
-	// give webkit some time to load the blank before we switch preferences so we don't double refresh
-	[self performSelector:@selector( _finishStyleSwitch: ) withObject:( html ? html : @"" ) afterDelay:0.];
+	[display setPreferencesIdentifier:[_chatStyle bundleIdentifier]];
+	[display setFrameLoadDelegate:self];
+	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:(html ? html : @"")] baseURL:nil];
 }
 
 - (oneway void) _switchStyle:(id) sender {

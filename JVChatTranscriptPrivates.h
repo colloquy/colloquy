@@ -12,6 +12,7 @@
 
 #pragma mark -
 
+- (void) _finishStyleSwitch;
 - (void) _switchingStyleEnded:(in NSString *) html;
 - (oneway void) _switchStyle:(id) sender;
 - (void) _changeChatStyleMenuSelection;
