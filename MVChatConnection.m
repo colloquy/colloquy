@@ -631,10 +631,15 @@ static void MVChatRawOutgoingMessage( SERVER_REC *server, char *data ) {
 
 static void MVChatNickTaken( IRC_SERVER_REC *server, const char *data, const char *by, const char *address ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
-	NSString *nick = [self nextAlternateNickname];
-	if( nick ) {
-		[self sendRawMessageWithFormat:@"NICK %@", nick];
-		signal_stop();
+	if( ((SERVER_REC *)server) -> connected ) {
+		// error
+		return;
+	} else {
+		NSString *nick = [self nextAlternateNickname];
+		if( nick ) {
+			[self sendRawMessageWithFormat:@"NICK %@", nick];
+			signal_stop();
+		}
 	}
 }
 
@@ -1238,6 +1243,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		_cachedDate = nil;
 		_awayMessage = nil;
 		_nickIdentified = NO;
+		_detachStill = NO;
 		_encoding = NSUTF8StringEncoding;
 
 		_status = MVChatConnectionDisconnectedStatus;
@@ -1814,7 +1820,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ! server -> connrec || ! server -> connrec -> tag || ( server -> connrec -> tag && ! strlen( server -> connrec -> tag ) ) ) return nil;
 
 	MVChatConnection *ret = NULL;
-	sscanf( server -> connrec -> tag, "%8lx", (unsigned long *) &ret );
+	sscanf( server -> connrec -> tag, "%x", (unsigned int *) &ret );
 
 	[ret _setIrssiConnection:server];
 
@@ -2007,9 +2013,11 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 		((SERVER_REC *) _chatConnection) -> no_reconnect = 0;
 
-		const char *tag = [[NSString stringWithFormat:@"%8x", self] UTF8String];
+		const char *tag = [[NSString stringWithFormat:@"%x", self] UTF8String];
 		g_free_not_null( ((SERVER_REC *) _chatConnection) -> tag );
 		((SERVER_REC *) _chatConnection) -> tag = g_strdup( tag );
+
+		_detachStill = NO;
 	}
 
 	if( old ) {
@@ -2031,7 +2039,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( _chatConnectionSettings ) {
 		server_connect_ref( (SERVER_CONNECT_REC *) _chatConnectionSettings );
 
-		const char *tag = [[NSString stringWithFormat:@"%8x", self] UTF8String];
+		const char *tag = [[NSString stringWithFormat:@"%x", self] UTF8String];
 		g_free_not_null( ((SERVER_CONNECT_REC *) _chatConnectionSettings) -> tag );
 		((SERVER_CONNECT_REC *) _chatConnectionSettings) -> tag = g_strdup( tag );
 	}
@@ -2051,7 +2059,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	for( item = list; item; item = item -> next ) {
 		RECONNECT_REC *rec = item -> data;
 		if( ! rec || ! rec -> conn || ! rec -> conn -> chatnet ) continue;
-		sscanf( rec -> conn -> chatnet, "%8lx", (unsigned long *) &test );
+		sscanf( rec -> conn -> chatnet, "%x", (unsigned int *) &test );
 		if( test == self ) server_reconnect_destroy( rec );
 	}
 
@@ -2130,6 +2138,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) _didNotConnect {
 	_status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidNotConnectNotification object:self];
+	_detachStill = YES;
 	[self performSelector:@selector( _detachConnection ) withObject:nil afterDelay:0.]; // wait until the next run loop, so we are done disconnecting
 }
 
@@ -2149,11 +2158,12 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( [self _irssiConnection] -> connection_lost ) _status = MVChatConnectionServerDisconnectedStatus;
 	else _status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
+	_detachStill = YES;
 	[self performSelector:@selector( _detachConnection ) withObject:nil afterDelay:0.]; // wait until the next run loop, so we are done disconnecting
 }
 
 - (void) _detachConnection {
-	[self _setIrssiConnection:NULL];	
+	if( _detachStill ) [self _setIrssiConnection:NULL];	
 }
 
 - (void) _forceDisconnect {

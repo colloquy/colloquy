@@ -165,6 +165,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSArray *_alternateNicks;
 
 	BOOL _nickIdentified;
+	BOOL _detachStill;
 	unsigned int _nextAltNickIndex;
 	unsigned int _sleepNotifier; /* io_object_t */
 	unsigned int _powerConnection; /* io_connect_t */
