@@ -4,12 +4,24 @@
 @class ABPerson;
 @class NSWindow;
 @class NSTableView;
+@class MVTableView;
 @class MVChatConnection;
 @class ABPeoplePickerController;
 
+typedef enum {
+	MVNoSortOrder = 0,
+	MVAvailabilitySortOrder,
+	MVFirstNameSortOrder,
+	MVLastNameSortOrder,
+	MVServerSortOrder
+} MVBuddyListSortOrder;
+
 @interface MVBuddyListController : NSWindowController {
 @private
-	IBOutlet NSTableView *buddies;
+	IBOutlet MVTableView *buddies;
+	IBOutlet NSMenu *actionMenu;
+	IBOutlet NSButton *sendMessageButton;
+	IBOutlet NSButton *infoButton;
 
 	IBOutlet NSWindow *pickerWindow;
 	IBOutlet NSView *pickerView;
@@ -25,9 +37,23 @@
 
 	NSMutableSet *_buddyList;
 	NSMutableSet *_onlineBuddies;
+	NSMutableArray *_buddyOrder;
 	NSMutableDictionary *_buddyInfo;
 	ABPeoplePickerController* _picker;
 	NSString *_addPerson;
+
+	BOOL _showFullNames;
+	BOOL _showNicknameAndServer;
+	BOOL _showIcons;
+	BOOL _showOfflineBuddies;
+	MVBuddyListSortOrder _sortOrder;
+
+	float _animationPosition;
+	NSMutableArray *_oldPositions;
+	NSTimer *_animationTimer;
+	BOOL _viewingTop;
+	BOOL _needsToAnimate;
+	BOOL _animating;
 }
 + (MVBuddyListController *) sharedBuddyList;
 
@@ -42,4 +68,27 @@
 - (IBAction) confirmNewBuddy:(id) sender;
 
 - (IBAction) messageSelectedBuddy:(id) sender;
+
+- (void) setShowFullNames:(BOOL) flag;
+- (BOOL) showFullNames;
+- (IBAction) toggleShowFullNames:(id) sender;
+
+- (void) setShowNicknameAndServer:(BOOL) flag;
+- (BOOL) showNicknameAndServer;
+- (IBAction) toggleShowNicknameAndServer:(id) sender;
+
+- (void) setShowIcons:(BOOL) flag;
+- (BOOL) showIcons;
+- (IBAction) toggleShowIcons:(id) sender;
+
+- (void) setShowOfflineBuddies:(BOOL) flag;
+- (BOOL) showOfflineBuddies;
+- (IBAction) toggleShowOfflineBuddies:(id) sender;
+
+- (void) setSortOrder:(MVBuddyListSortOrder) order;
+- (MVBuddyListSortOrder) sortOrder;
+- (IBAction) sortByAvailability:(id) sender;
+- (IBAction) sortByFirstName:(id) sender;
+- (IBAction) sortByLastName:(id) sender;
+- (IBAction) sortByServer:(id) sender;
 @end
