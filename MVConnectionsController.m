@@ -1183,6 +1183,7 @@ static NSMenu *favoritesMenu = nil;
 		if( ! [[info objectForKey:@"temporary"] boolValue] ) {
 			NSMutableDictionary *data = [NSMutableDictionary dictionary];
 			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"automatic"] boolValue]] forKey:@"automatic"];
+			[data setObject:[NSNumber numberWithBool:[(MVChatConnection *)[info objectForKey:@"connection"] isSecure]] forKey:@"secure"];
 			[data setObject:[NSNumber numberWithInt:(int)[(MVChatConnection *)[info objectForKey:@"connection"] proxyType]] forKey:@"proxy"];
 			[data setObject:[NSNumber numberWithLong:(long)[(MVChatConnection *)[info objectForKey:@"connection"] encoding]] forKey:@"encoding"];
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] server] forKey:@"server"];
@@ -1229,6 +1230,8 @@ static NSMenu *favoritesMenu = nil;
 		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
 		if( [info objectForKey:@"alternateNicknames"] )
 			[connection setAlternateNicknames:[info objectForKey:@"alternateNicknames"]];
+
+		[connection setSecure:[[info objectForKey:@"secure"] boolValue]];
 
 		if( [[info objectForKey:@"automatic"] boolValue] ) {
 			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )

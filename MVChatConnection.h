@@ -218,6 +218,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) setServerPort:(unsigned short) port;
 - (unsigned short) serverPort;
 
+- (void) setSecure:(BOOL) ssl;
+- (BOOL) isSecure;
+
 - (void) setProxyType:(MVChatConnectionProxy) type;
 - (MVChatConnectionProxy) proxyType;
 

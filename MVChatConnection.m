@@ -1598,6 +1598,19 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
+- (void) setSecure:(BOOL) ssl {
+	if( ! [self _irssiConnectSettings] ) return;
+	[self _irssiConnectSettings] -> use_ssl = ssl;
+	[self _irssiConnectSettings] -> ssl_verify = NO;
+}
+
+- (BOOL) isSecure {
+	if( ! [self _irssiConnectSettings] ) return NO;
+	return [self _irssiConnectSettings] -> use_ssl;
+}
+
+#pragma mark -
+
 - (void) setProxyType:(MVChatConnectionProxy) type {
 	if( ! [self _irssiConnectSettings] ) return;
 
