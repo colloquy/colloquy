@@ -26,6 +26,8 @@
 	<false/>
 	<key>MVChatActionOnEnter</key>
 	<true/>
+	<key>MVChatNaturalActions</key>
+	<false/>
 	<key>MVChatBounceIconOnMessage</key>
 	<true/>
 	<key>MVChatActionSounds</key>
