@@ -153,34 +153,6 @@
 			name = "Chat Core (Framework) (from Chat Core.xcode)";
 			targetProxy = 0A60C2B70630DA2C00DC6280;
 		};
-		0AA4CACD0631625F00CC76E0 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Stickies.tiff;
-			path = Resources/Stickies.tiff;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		0AA4CACE0631625F00CC76E0 = {
-			fileRef = 0AA4CACD0631625F00CC76E0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		0AA4CACF0631626A00CC76E0 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = Keychain.tiff;
-			path = Resources/Keychain.tiff;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		0AA4CAD00631626A00CC76E0 = {
-			fileRef = 0AA4CACF0631626A00CC76E0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 //0A0
 //0A1
 //0A2
@@ -1594,8 +1566,8 @@
 				1C2E98C406207AD0000715D8,
 				1CBA4E66062CCDA90082D1BF,
 				1CBA4E67062CCDA90082D1BF,
-				0AA4CACE0631625F00CC76E0,
-				0AA4CAD00631626A00CC76E0,
+				CB66DEA20631F8160034F76E,
+				CB66DEA30631F8160034F76E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3677,6 +3649,34 @@
 //CB2
 //CB3
 //CB4
+		CB66DEA00631F8160034F76E = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = Keychain.png;
+			path = Resources/Keychain.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CB66DEA10631F8160034F76E = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = Stickies.png;
+			path = Resources/Stickies.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CB66DEA20631F8160034F76E = {
+			fileRef = CB66DEA00631F8160034F76E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CB66DEA30631F8160034F76E = {
+			fileRef = CB66DEA10631F8160034F76E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		CB742BFF0630E08200CF2B0E = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -3945,8 +3945,8 @@
 		};
 		F52955590181EB5901EE70DE = {
 			children = (
-				0AA4CACF0631626A00CC76E0,
-				0AA4CACD0631625F00CC76E0,
+				CB66DEA00631F8160034F76E,
+				CB66DEA10631F8160034F76E,
 				1C6075E005138ED600A8FE6E,
 				1CF9BB9A04FBE96D00A8FE6E,
 				1C705701051A830200A8FE6E,
