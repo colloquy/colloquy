@@ -7,6 +7,15 @@
 #import "JVChatController.h"
 #import "JVChatRoom.h"
 #import "JVDirectChat.h"
+#import "JVChatRoomMember.h"
+#import "JVInspectorController.h"
+#import "JVChatMemberInspector.h"
+
+@interface JVChatTranscript (JVChatTranscriptPrivate)
+- (void) _reloadCurrentStyle:(id) sender;
+@end
+
+#pragma mark -
 
 @implementation JVStandardCommands
 - (id) initWithManager:(MVChatPluginManager *) manager {
@@ -46,8 +55,20 @@
 	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
 		[connection sendRawMessage:[arguments string]];
 		return YES;
+	} else if( [command isEqualToString:@"umode"] ) {
+		[connection sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [connection nickname], [arguments string]]];
+		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
 		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
+	} else if( [command isEqualToString:@"wi"] ) {
+		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:YES];
+		return YES;
+	} else if( [command isEqualToString:@"wii"] ) {
+		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:NO];
+		return YES;
+	} else if( [command isEqualToString:@"globops"] ) {
+		[connection sendRawMessage:[NSString stringWithFormat:@"GLOBOPS :%@", [arguments string]]];
+		return YES;
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
@@ -97,13 +118,13 @@
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
 		return [self handleCTCPWithArguments:[arguments string] forConnection:[room connection]];
-	} else if( [command isEqualToString:@"topic"] ) {
+	} else if( [command isEqualToString:@"topic"] || [command isEqualToString:@"t"] ) {
 		if( ! [arguments length] ) return NO;
 		NSStringEncoding encoding = [room encoding];
 		if( ! encoding ) encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 		[[room connection] setTopic:arguments withEncoding:encoding forRoom:[room target]];
 		return YES;
-	} else if( [command isEqualToString:@"mode"] ) {
+/*	} else if( [command isEqualToString:@"mode"] ) {
 		NSRange vrange, orange, vsrange, osrange;
 		BOOL handled = NO;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
@@ -136,8 +157,11 @@
 			else [[room connection] demoteMember:who inRoom:[room target]];
 			handled = YES;
 		}
-		return handled;
-	} else if( [command isEqualToString:@"names"] ) {
+		return handled;*/
+	} else if( [command isEqualToString:@"umode"] ) {
+		[[room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [[room connection] nickname], [arguments string]]];
+		return YES;
+	} else if( [command isEqualToString:@"names"] && ! [[arguments string] length] ) {
 		[[room windowController] openViewsDrawer:nil];
 		[[room windowController] expandListItem:room];
 		return YES;
@@ -161,12 +185,28 @@
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
+	} else if( [command isEqualToString:@"whois"] || [command isEqualToString:@"wi"] ) {
+		id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
+		id info = [NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member];
+		[(id)[info inspector] setFetchLocalServerInfoOnly:YES];
+		[info show:nil];
+		return YES;
+	} else if( [command isEqualToString:@"wii"] ) {
+		id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
+		[[NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member] show:nil];
+		return YES;
+	} else if( [command isEqualToString:@"globops"] ) {
+		[[room connection] sendRawMessage:[NSString stringWithFormat:@"GLOBOPS :%@", [arguments string]]];
+		return YES;
 	} else if( [command isEqualToString:@"disconnect"] ) {
 		[[room connection] disconnect];
 		return YES;
 	} else if( [command isEqualToString:@"reload"] ) {
 		if( [[arguments string] isEqualToString:@"plugins"] ) {
 			[_manager findAndLoadPlugins];
+			return YES;
+		} else if( [[arguments string] isEqualToString:@"style"] ) {
+			[room _reloadCurrentStyle:nil];
 			return YES;
 		}
 	}
@@ -198,6 +238,9 @@
 	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
 		[[chat connection] sendRawMessage:[arguments string]];
 		return YES;
+	} else if( [command isEqualToString:@"umode"] ) {
+		[[chat connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [[chat connection] nickname], [arguments string]]];
+		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
 		return [self handleCTCPWithArguments:[arguments string] forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"dcc"] ) {
@@ -215,9 +258,25 @@
 	} else if( [command isEqualToString:@"disconnect"] ) {
 		[[chat connection] disconnect];
 		return YES;
+	} else if( [command isEqualToString:@"whois"] || [command isEqualToString:@"wi"] ) {
+		id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:(JVChatRoom *)chat andNickname:[arguments string]] autorelease];
+		id info = [NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member];
+		[(id)[info inspector] setFetchLocalServerInfoOnly:YES];
+		[info show:nil];
+		return YES;
+	} else if( [command isEqualToString:@"wii"] ) {
+		id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:(JVChatRoom *)chat andNickname:[arguments string]] autorelease];
+		[[NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member] show:nil];
+		return YES;
+	} else if( [command isEqualToString:@"globops"] ) {
+		[[chat connection] sendRawMessage:[NSString stringWithFormat:@"GLOBOPS :%@", [arguments string]]];
+		return YES;
 	} else if( [command isEqualToString:@"reload"] ) {
 		if( [[arguments string] isEqualToString:@"plugins"] ) {
 			[_manager findAndLoadPlugins];
+			return YES;
+		} else if( [[arguments string] isEqualToString:@"style"] ) {
+			[chat _reloadCurrentStyle:nil];
 			return YES;
 		}
 	}
