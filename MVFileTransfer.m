@@ -276,7 +276,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 - (NSString *) user {
 	if( ! [self _DCCFileRecord] ) return _user;
-	return [NSString stringWithUTF8String:[self _DCCFileRecord] -> nick];
+	return [[self connection] stringWithEncodedBytes:[self _DCCFileRecord] -> nick];
 }
 
 #pragma mark -
@@ -459,7 +459,7 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 - (NSString *) originalFileName {
 	if( ! [self _DCCFileRecord] ) return _originalFileName;
-	return [NSString stringWithUTF8String:[self _DCCFileRecord] -> arg];
+	return [[self connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg];
 }
 
 #pragma mark -
