@@ -74,20 +74,10 @@
 #pragma mark -
 
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
-	NSLog( @"openFile %@", filename );
-
-	[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
-
-	return NO;
-}
-
-- (BOOL) application:(NSApplication *) sender openTempFile:(NSString *) filename {
-	NSLog( @"openTempFile %@", filename );
-	return NO;
-}
-
-- (BOOL) application:(id) sender openFileWithoutUI:(NSString *) filename {
-	NSLog( @"openFileWithoutUI %@", filename );
+	if( [[filename pathExtension] isEqualToString:@"colloquyTranscript"] ) {
+		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
+		return YES;
+	}
 	return NO;
 }
 
@@ -100,7 +90,9 @@
 
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
+}
 
+- (void) applicationDidFinishLaunching:(NSNotification *) notification {
 	[MVCrashCatcher check];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] )
@@ -135,12 +127,16 @@
 	[self autorelease];
 }
 
+#pragma mark -
+
 - (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
 	if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
 		[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Close Panel %@", "close current panel menu title" ), @""]];
 		return NO;
 	} else return YES;
 }
+
+#pragma mark -
 
 - (IBAction) closeCurrentPanel:(id) sender {
 	return;
