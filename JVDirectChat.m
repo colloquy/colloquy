@@ -32,9 +32,9 @@
 #import "MVTextView.h"
 #import "MVMenuButton.h"
 #import "JVMarkedScroller.h"
+#import "JVSplitView.h"
 #import "NSBundleAdditions.h"
 #import "NSURLAdditions.h"
-#import "NSSplitViewAdditions.h"
 #import "NSAttributedStringMoreAdditions.h"
 
 static NSArray *JVAutoActionVerbs = nil;
@@ -308,6 +308,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[send setUsesSystemCompleteOnTab:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
 	[send reset:nil];
 
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
+		[(JVSplitView *)[[[send superview] superview] superview] setIsPaneSplitter:YES];
+
 	[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
 }
 
@@ -482,7 +485,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 - (void) willSelect {
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] ) {
-		[(NSSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
+		[(JVSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
 	} else [self textDidChange:nil];
 }
 
@@ -1070,7 +1073,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}
 
 	if( ! _forceSplitViewPosition && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
-		[[notification object] savePositionUsingName:@"JVChatSplitViewPosition"];
+		[(JVSplitView *)[notification object] savePositionUsingName:@"JVChatSplitViewPosition"];
 
 	_forceSplitViewPosition = NO;
 }

@@ -1,6 +1,6 @@
-#import "NSSplitViewAdditions.h"
+#import "JVSplitView.h"
 
-@implementation NSSplitView (NSSplitViewAdditions)
+@implementation JVSplitView
 - (NSString *) stringWithSavedPosition {
 	NSMutableString *result = [NSMutableString string]; 
 	NSEnumerator *subviews = [[self subviews] objectEnumerator];
@@ -49,5 +49,22 @@
 	}
 
 	return NO;
+}
+
+#pragma amrk -
+
+- (void) resetCursorRects {
+	if( ! [self isPaneSplitter] )
+		[super resetCursorRects];
+}
+
+- (float) dividerThickness {
+	if( [self isPaneSplitter] ) return 4.;
+	return [super dividerThickness];
+}
+
+- (void) drawDividerInRect:(NSRect) rect {
+	if( ! [self isPaneSplitter] )
+		[super drawDividerInRect:rect];
 }
 @end

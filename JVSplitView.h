@@ -1,4 +1,4 @@
-@interface NSSplitView (NSSplitViewAdditions)
+@interface JVSplitView : NSSplitView {}
 - (NSString *) stringWithSavedPosition;
 - (void) setPositionFromString:(NSString *) string;
 

@@ -5,7 +5,7 @@
 #import "JVChatConsole.h"
 #import "JVChatController.h"
 #import "MVTextView.h"
-#import "NSSplitViewAdditions.h"
+#import "JVSplitView.h"
 
 static NSString *JVToolbarToggleVerboseItemIdentifier = @"JVToolbarToggleVerboseItem";
 static NSString *JVToolbarTogglePrivateMessagesItemIdentifier = @"JVToolbarTogglePrivateMessagesItem";
@@ -473,7 +473,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[scrollView reflectScrolledClipView:[scrollView contentView]];
 	}
 
-	[[notification object] savePositionUsingName:@"JVConsoleSplitViewPosition"];
+	[(JVSplitView *)[notification object] savePositionUsingName:@"JVConsoleSplitViewPosition"];
 	_forceSplitViewPosition = NO;
 }
 

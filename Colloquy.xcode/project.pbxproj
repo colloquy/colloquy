@@ -1935,7 +1935,7 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			path = NSSplitViewAdditions.h;
+			path = JVSplitView.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1943,7 +1943,7 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			path = NSSplitViewAdditions.m;
+			path = JVSplitView.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};

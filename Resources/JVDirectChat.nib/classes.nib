@@ -26,6 +26,7 @@
             OUTLETS = {send = MVTextView; }; 
             SUPERCLASS = JVChatTranscript; 
         }, 
+        {CLASS = JVSplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
         {
             CLASS = JVWebView; 
             LANGUAGE = ObjC; 
