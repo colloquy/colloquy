@@ -76,6 +76,7 @@ static NSImage		*tabCloseFrontRollover = nil;
 	
     tabViewItem = [inTabViewItem retain];
     allowsInactiveTabClosing = NO;
+	wasEnabled = YES;
     trackingClose = NO;
     hoveringClose = NO;
     selected = NO;
@@ -252,7 +253,7 @@ static NSImage		*tabCloseFrontRollover = nil;
 	destPoint.y = ceilf( destPoint.y );
 	destPoint.x = ceilf( destPoint.x );
 
-	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
+	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver fraction:( [tabViewItem isEnabled] ? 1. : 0.5 )];
 
 	//Move over for label drawing.  We always move based on the tab icon and not on the close button.  This prevents
 	//tab text from jumping when hovered if the tab icons are a different size from the close button
@@ -275,7 +276,8 @@ static NSImage		*tabCloseFrontRollover = nil;
 {
 	NSString	*label = [tabViewItem label];
 	
-	if(![label isEqualToString:[attributedLabel string]]){
+	if(![label isEqualToString:[attributedLabel string]] || wasEnabled != [tabViewItem isEnabled] ){
+		wasEnabled = [tabViewItem isEnabled];
 		//Paragraph Style (Turn off clipping by word)
 		NSMutableParagraphStyle *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 		[paragraphStyle setAlignment:NSCenterTextAlignment];
@@ -283,9 +285,9 @@ static NSImage		*tabCloseFrontRollover = nil;
 
 		//Update the attributed string
 		[attributedLabel release];
-		attributedLabel = [[NSAttributedString alloc] initWithString:[tabViewItem label] attributes:
+		attributedLabel = [[NSAttributedString alloc] initWithString:label attributes:
 			[NSDictionary dictionaryWithObjectsAndKeys:
-				[NSColor controlTextColor], NSForegroundColorAttributeName,
+				( wasEnabled ? [NSColor controlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.5] ), NSForegroundColorAttributeName,
 				[NSFont systemFontOfSize:11], NSFontAttributeName,
 				paragraphStyle, NSParagraphStyleAttributeName,
 				nil]];

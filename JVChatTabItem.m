@@ -40,6 +40,12 @@
 	return active;
 }
 
+- (BOOL) isEnabled {
+	if( [_controller respondsToSelector:@selector( isEnabled )] )
+		return [(id)_controller isEnabled];
+	return YES;
+}
+
 - (id) view {
 	return [_controller view];
 }

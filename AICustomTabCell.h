@@ -16,9 +16,11 @@
 @interface NSObject (AICustomTabViewItem)
 - (NSString *)label;
 - (NSImage *)icon;
+- (BOOL) isEnabled;
 @end
 
 @interface AICustomTabCell : NSCell {
+	BOOL				wasEnabled;
     BOOL				selected;
     BOOL				highlighted;
     BOOL				allowsInactiveTabClosing;
