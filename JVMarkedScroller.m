@@ -130,6 +130,28 @@
 	[_lines transformUsingAffineTransform:transform];
 	[_shadedAreas transformUsingAffineTransform:transform];
 
+	NSMutableSet *shiftedMarks = [NSMutableSet set];
+	NSEnumerator *enumerator = [_marks objectEnumerator];
+	NSNumber *location = nil;
+
+	while( ( location = [enumerator nextObject] ) ) {
+		long long shifted = ( [location unsignedLongLongValue] + displacement );
+		if( shifted >= 0. ) [shiftedMarks addObject:[NSNumber numberWithUnsignedLongLong:shifted]];
+	}
+
+	[_marks setSet:shiftedMarks];
+
+	NSMutableArray *shiftedShades = [NSMutableArray array];
+	enumerator = [_shades objectEnumerator];
+	location = nil;
+
+	while( ( location = [enumerator nextObject] ) ) {
+		long long shifted = ( [location unsignedLongLongValue] + displacement );
+		[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:shifted]];
+	}
+
+	[_shades setArray:shiftedShades];
+
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
