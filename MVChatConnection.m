@@ -549,21 +549,27 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &target, &message );
 	if( ! address ) address = "";
 
-	if( ! strncasecmp( nick, "NickServ", 8 ) && message ) {
-		if( strstr( message, nick ) && strstr( message, "IDENTIFY" ) ) {
-			if( ! [self nicknamePassword] ) {
-				NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
-				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-			} else irc_send_cmdv( server, "PRIVMSG %s :IDENTIFY %s", nick, [self encodedBytesWithString:[self nicknamePassword]] );
-		} else if( strstr( message, "Password accepted" ) ) {
-			[self _nicknameIdentified:YES];
-		} else if( strstr( message, "authentication required" ) ) {
-			[self _nicknameIdentified:NO];
+	NSNotification *note = nil;
+	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
+
+	if( ischannel( *target ) ) {
+		note = [NSNotification notificationWithName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:target], @"room", [self stringWithEncodedBytes:nick], @"from", [NSNumber numberWithBool:YES], @"auto", msgData, @"message", nil]];
+	} else {
+		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"from", [NSNumber numberWithBool:YES], @"auto", msgData, @"message", nil]];
+		if( ! strncasecmp( nick, "NickServ", 8 ) && message ) {
+			if( strstr( message, nick ) && strstr( message, "IDENTIFY" ) ) {
+				if( ! [self nicknamePassword] ) {
+					NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+					[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+				} else irc_send_cmdv( server, "PRIVMSG %s :IDENTIFY %s", nick, [self encodedBytesWithString:[self nicknamePassword]] );
+			} else if( strstr( message, "Password accepted" ) ) {
+				[self _nicknameIdentified:YES];
+			} else if( strstr( message, "authentication required" ) ) {
+				[self _nicknameIdentified:NO];
+			}
 		}
 	}
 
-	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"from", [NSNumber numberWithBool:YES], @"auto", msgData, @"message", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 	g_free( params );
