@@ -48,6 +48,7 @@
 
 - (IBAction) changeChatEmoticons:(id) sender;
 - (void) setChatEmoticons:(NSBundle *) emoticons;
+- (void) setChatEmoticons:(NSBundle *) emoticons preformRefresh:(BOOL) refresh;
 - (NSBundle *) chatEmoticons;
 
 - (IBAction) leaveChat:(id) sender;

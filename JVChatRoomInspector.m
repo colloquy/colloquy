@@ -79,6 +79,7 @@
 
 	[encodingSelection setMenu:[_room _encodingMenu]];
 	[styleSelection setMenu:[_room _stylesMenu]];
+	[emoticonSelection setMenu:[_room _emoticonsMenu]];
 
 	[self _finishTopicChange:nil];
 }

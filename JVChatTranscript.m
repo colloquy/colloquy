@@ -8,6 +8,8 @@
 #import "JVChatController.h"
 #import "MVFileTransferController.h"
 #import "MVMenuButton.h"
+#import "NSPreferences.h"
+#import "JVAppearancePreferences.h"
 
 #import <libxml/xinclude.h>
 #import <libxml/debugXML.h>
@@ -56,11 +58,15 @@ void MVChatPlaySoundForAction( NSString *action ) {
 - (NSString *) _chatStyleVariantCSSFileURL;
 - (const char *) _chatStyleXSLFilePath;
 + (NSString *) _nameForBundle:(NSBundle *) style;
+- (void) _changeChatEmoticonsMenuSelection;
+- (void) _updateChatEmoticonsMenu;
 + (NSSet *) _emoticonBundles;
 + (void) _scanForEmoticons;
 - (NSString *) _chatEmoticonsMappingFilePath;
 - (NSString *) _chatEmoticonsCSSFileURL;
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
+- (BOOL) _usingSpecificStyle;
+- (BOOL) _usingSpecificEmoticons;
 @end
 
 #pragma mark -
@@ -126,6 +132,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	if( xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" ) )
 		[self setChatStyle:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" )]] withVariant:nil];
 
+	if( xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) )
+		[self setChatEmoticons:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" )]]];
+
 	if( ! _chatStyle ) {
 		NSBundle *style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 		NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [style bundleIdentifier]]];		
@@ -137,7 +146,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		[self setChatStyle:style withVariant:variant];
 	}
 
-	if( ! _chatEmoticons ) {
+	if( ! _chatEmoticons && ! [self _usingSpecificEmoticons] ) {
 		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle bundleIdentifier]]]];
 		if( ! emoticon ) {
 			[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle bundleIdentifier]]];
@@ -146,7 +155,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		[self setChatEmoticons:emoticon];
 	}
 
+	[chooseStyle setMenu:nil];
+	[chooseEmoticon setMenu:nil];
 	[self _updateChatStylesMenu];
+	[self _updateChatEmoticonsMenu];
 
 	if( [chooseStyle superview] ) {
 		[chooseStyle retain];
@@ -337,10 +349,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
+		if( ! _chatEmoticons ) xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", "" );
+		else xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", [[_chatEmoticons bundleIdentifier] UTF8String] );
 		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[_chatStyle bundleIdentifier] UTF8String] );
 		xmlSaveFormatFile( [[sheet filename] fileSystemRepresentation], _xmlLog, (int) [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] );
 		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] atPath:[sheet filename]];
-		xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "style" );
 	}
 }
 
@@ -350,7 +363,14 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSBundle *style = [NSBundle bundleWithIdentifier:[sender representedObject]];
 	if( ! style ) {
 		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatDefaultStyle"]];
+		xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "style" );
+	} else xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[style bundleIdentifier] UTF8String] );
+
+	if( ! [self _usingSpecificEmoticons] ) {
+		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style bundleIdentifier]]]];
+		[self setChatEmoticons:emoticon preformRefresh:NO];		
 	}
+
 	[self setChatStyle:style withVariant:nil];
 }
 
@@ -359,6 +379,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	BOOL manyMessages = NO;
 
 	NSParameterAssert( style != nil );
+
+	if( style == _chatStyle ) {
+		if( ! [variant isEqualToString:_chatStyleVariant] )
+			[self setChatStyleVariant:variant];
+		return;
+	}
 
 	manyMessages = ( xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) > 2000 ? YES : NO );
 
@@ -386,6 +412,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	if( _chatXSLStyle ) xsltFreeStylesheet( _chatXSLStyle );
 	_chatXSLStyle = xsltParseStylesheetFile( (const xmlChar *)[self _chatStyleXSLFilePath] );
 
+	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[_chatStyle bundleIdentifier] UTF8String] );
+	
 	[self _changeChatStyleMenuSelection];
 
 	if( result == NSAlertOtherReturn ) {
@@ -403,8 +431,14 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
 	NSString *style = [[sender representedObject] objectForKey:@"style"];
 
-	if( ! [style isEqualToString:[_chatStyle bundleIdentifier]] ) {
+	if( ! [style isEqual:_chatStyle] ) {
+		if( ! [self _usingSpecificEmoticons] ) {
+			NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]]];
+			[self setChatEmoticons:emoticon preformRefresh:NO];
+		}
+
 		[self setChatStyle:[NSBundle bundleWithIdentifier:style] withVariant:variant];
+		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [style UTF8String] );
 	} else {
 		[self setChatStyleVariant:variant];
 	}
@@ -426,18 +460,40 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 
 - (IBAction) changeChatEmoticons:(id) sender {
+	if( [sender representedObject] && ! [(NSString *)[sender representedObject] length] ) {
+		[self setChatEmoticons:nil];
+		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", "" );
+		return;
+	}
+
 	NSBundle *emoticons = [NSBundle bundleWithIdentifier:[sender representedObject]];
+	if( ! emoticons ) {
+		emoticons = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle bundleIdentifier]]]];
+		xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" );
+	} else xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", [[emoticons bundleIdentifier] UTF8String] );
+
 	[self setChatEmoticons:emoticons];
 }
 
 - (void) setChatEmoticons:(NSBundle *) emoticons {
+	[self setChatEmoticons:emoticons preformRefresh:YES];
+}
+
+- (void) setChatEmoticons:(NSBundle *) emoticons preformRefresh:(BOOL) refresh {
+	if( emoticons == _chatEmoticons ) return;
+
 	[_chatEmoticons autorelease];
 	_chatEmoticons = [emoticons retain];
 
 	[_emoticonMappings autorelease];
 	_emoticonMappings = [[NSDictionary dictionaryWithContentsOfFile:[self _chatEmoticonsMappingFilePath]] retain];
 
-	[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [self _chatEmoticonsCSSFileURL]]];
+	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", [[_chatEmoticons bundleIdentifier] UTF8String] );
+
+	if( refresh )
+		[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [self _chatEmoticonsCSSFileURL]]];
+
+	[self _updateChatEmoticonsMenu];
 }
 
 - (NSBundle *) chatEmoticons {
@@ -468,7 +524,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	} else if( [identifier isEqual:JVToolbarChooseStyleItemIdentifier] /* && willBeInserted */ ) {
 		[_toolbarItems setObject:toolbarItem forKey:identifier];
 
-		[chooseStyle setImage:[NSImage imageNamed:@"chooseStyle"]];
 		[toolbarItem setLabel:NSLocalizedString( @"Style", "choose style toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Style", "choose style toolbar item patlette label" )];
 
@@ -487,7 +542,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	} else if( [identifier isEqual:JVToolbarEmoticonsItemIdentifier] /* && willBeInserted */ ) {
 		[_toolbarItems setObject:toolbarItem forKey:identifier];
 
-		[chooseEmoticon setImage:[NSImage imageNamed:@"emoticon"]];
 		[chooseEmoticon setSmallImage:[NSImage imageNamed:@"emoticonSmall"]];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )];
@@ -642,15 +696,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSEnumerator *enumerator = [[[chooseStyle menu] itemArray] objectEnumerator];
 	NSEnumerator *senumerator = nil;
 	NSMenuItem *menuItem = nil, *subMenuItem = nil;
-	BOOL hasPerRoomStyle = NO;
-	NSString *style = nil;
-
-//	if( [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]] )
-//		hasPerRoomStyle = YES;
-
-	style = [_chatStyle bundleIdentifier];
+	BOOL hasPerRoomStyle = [self _usingSpecificStyle];
+	NSString *style = [_chatStyle bundleIdentifier];
 
 	while( ( menuItem = [enumerator nextObject] ) ) {
+		if( [menuItem tag] ) continue;
 		if( [style isEqualToString:[menuItem representedObject]] && hasPerRoomStyle ) [menuItem setState:NSOnState];
 		else if( ! [menuItem representedObject] && ! hasPerRoomStyle ) [menuItem setState:NSOnState];
 		else if( [style isEqualToString:[menuItem representedObject]] && ! hasPerRoomStyle ) [menuItem setState:NSMixedState];
@@ -689,7 +739,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 			[menu removeItem:menuItem];
 	}
 
-	style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Default", "default style menu item title" ) action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
 	[menuItem setTarget:self];
 	[menu addItem:menuItem];
@@ -723,6 +772,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 		subMenu = nil;
 	}
+
+	[menu addItem:[NSMenuItem separatorItem]];
+	
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Appearance Preferences...", "appearance preferences menu item title" ) action:@selector( _openAppearancePreferences: ) keyEquivalent:@""] autorelease];
+	[menuItem setTarget:self];
+	[menuItem setTag:10];
+	[menu addItem:menuItem];
 
 	[self _changeChatStyleMenuSelection];
 }
@@ -813,6 +869,81 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return [[label retain] autorelease];
 }
 
+- (NSMenu *) _emoticonsMenu {
+	if( ! _nibLoaded ) [self view];
+	if( [[chooseEmoticon menu] itemWithTag:20] )
+		return [[[chooseEmoticon menu] itemWithTag:20] submenu];
+	return [[[chooseEmoticon menu] retain] autorelease];
+}
+
+- (void) _changeChatEmoticonsMenuSelection {
+	NSEnumerator *enumerator = nil;
+	NSMenuItem *menuItem = nil;
+	BOOL hasPerRoomEmoticons = [self _usingSpecificEmoticons];
+	NSString *emoticons = [_chatEmoticons bundleIdentifier];
+
+	enumerator = [[[[[chooseEmoticon menu] itemWithTag:20] submenu] itemArray] objectEnumerator];
+	if( ! enumerator ) enumerator = [[[chooseEmoticon menu] itemArray] objectEnumerator];
+	while( ( menuItem = [enumerator nextObject] ) ) {
+		if( [menuItem tag] ) continue;
+		if( [menuItem representedObject] && ! [(NSString *)[menuItem representedObject] length] && ! _chatEmoticons && hasPerRoomEmoticons ) [menuItem setState:NSOnState];
+		else if( [emoticons isEqualToString:[menuItem representedObject]] && hasPerRoomEmoticons ) [menuItem setState:NSOnState];
+		else if( ! [menuItem representedObject] && ! hasPerRoomEmoticons ) [menuItem setState:NSOnState];
+		else if( [menuItem representedObject] && ! [(NSString *)[menuItem representedObject] length] && ! _chatEmoticons && ! hasPerRoomEmoticons ) [menuItem setState:NSMixedState];
+		else if( [emoticons isEqualToString:[menuItem representedObject]] && ! hasPerRoomEmoticons ) [menuItem setState:NSMixedState];
+		else [menuItem setState:NSOffState];
+	}
+}
+
+- (void) _updateChatEmoticonsMenu {
+	extern NSMutableSet *JVChatEmoticonBundles;
+	NSEnumerator *enumerator = nil;
+	NSMenu *menu = nil;
+	NSMenuItem *menuItem = nil;
+	BOOL new = YES;
+	NSBundle *emoticon = nil;
+
+	if( ! ( menu = [chooseEmoticon menu] ) ) {
+		menu = [[[NSMenu alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar menu title" )] autorelease];
+		[chooseEmoticon setMenu:menu];
+	} else {
+		NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
+		new = NO;
+		while( ( menuItem = [enumerator nextObject] ) )
+			[menu removeItem:menuItem];
+	}
+
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style Default", "default style emoticons menu item title" ) action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
+	[menuItem setTarget:self];
+	[menu addItem:menuItem];
+
+	[menu addItem:[NSMenuItem separatorItem]];
+
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Text Only", "text only emoticons menu item title" ) action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
+	[menuItem setTarget:self];
+	[menuItem setRepresentedObject:@""];
+	[menu addItem:menuItem];
+
+	[menu addItem:[NSMenuItem separatorItem]];
+
+	enumerator = [[[JVChatEmoticonBundles allObjects] sortedArrayUsingFunction:sortBundlesByName context:self] objectEnumerator];
+	while( ( emoticon = [enumerator nextObject] ) ) {
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[[self class] _nameForBundle:emoticon] action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
+		[menuItem setTarget:self];
+		[menuItem setRepresentedObject:[emoticon bundleIdentifier]];
+		[menu addItem:menuItem];
+	}
+
+	[menu addItem:[NSMenuItem separatorItem]];
+
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Appearance Preferences...", "appearance preferences menu item title" ) action:@selector( _openAppearancePreferences: ) keyEquivalent:@""] autorelease];
+	[menuItem setTarget:self];
+	[menuItem setTag:10];
+	[menu addItem:menuItem];
+
+	[self _changeChatEmoticonsMenuSelection];
+}
+
 + (NSSet *) _emoticonBundles {
 	extern NSMutableSet *JVChatEmoticonBundles;
 	return [[JVChatEmoticonBundles retain] autorelease];
@@ -857,6 +988,18 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSString *path = [_chatEmoticons pathForResource:@"emoticons" ofType:@"css"];
 	if( path ) return [[[[NSURL fileURLWithPath:path] absoluteString] retain] autorelease];
 	else return @"";
+}
+
+- (IBAction) _openAppearancePreferences:(id) sender {
+	[[NSPreferences sharedPreferences] showPreferencesPanelForOwner:[JVAppearancePreferences sharedInstance]];
+}
+
+- (BOOL) _usingSpecificStyle {
+	return ( xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" ) ? YES : NO );
+}
+
+- (BOOL) _usingSpecificEmoticons {
+	return ( xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ? YES : NO );
 }
 
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {

@@ -99,18 +99,18 @@
 			sourceTree = "<group>";
 		};
 		089C1672FE841209C02AAC07 = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = Foundation.framework;
 			path = /System/Library/Frameworks/Foundation.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
 		089C167FFE841241C02AAC07 = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = AppKit.framework;
 			path = /System/Library/Frameworks/AppKit.framework;
 			refType = 0;
@@ -145,9 +145,9 @@
 			sourceTree = "<group>";
 		};
 		1058C7ADFEA557BF11CA2CBB = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = Cocoa.framework;
 			path = /System/Library/Frameworks/Cocoa.framework;
 			refType = 0;
@@ -174,17 +174,17 @@
 //1C3
 //1C4
 		1C088A0E04FCFEE700A8FE6E = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVChatRoomMember.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C088A0F04FCFEE700A8FE6E = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVChatRoomMember.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -214,33 +214,33 @@
 			targetProxy = 1C09DFF8052DFF6600D748CF;
 		};
 		1C18CD100528DBBA000001C8 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = NSColorAdditions.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C18CD110528DBBA000001C8 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = NSColorAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C1ACE410533943900F71D4E = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVInspectorController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C1ACE420533943900F71D4E = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVInspectorController.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -261,17 +261,17 @@
 			};
 		};
 		1C1ACFB505344FCC00F71D4E = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVConnectionInspector.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C1ACFB605344FCC00F71D4E = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVConnectionInspector.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -299,8 +299,8 @@
 			sourceTree = "<group>";
 		};
 		1C1AD00A053487ED00F71D4E = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/JVConnectionInspector.nib;
 			refType = 4;
@@ -313,162 +313,162 @@
 			};
 		};
 		1C20B0940424A11100000102 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = French;
 			path = Languages/French.lproj/Colloquy.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C20B0980424A14100000102 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = French;
 			path = Languages/French.lproj/MVBuddyList.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C20B0990424A15300000102 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = French;
 			path = Languages/French.lproj/MVFileTransfer.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C20B09B0424A17700000102 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = French;
 			path = Languages/French.lproj/MVConnections.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C20B09C0424A18B00000102 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = French;
 			path = Languages/French.lproj/MVCrashCatcher.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C20B09D0424A19D00000102 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = French;
 			path = Languages/French.lproj/MVSoftwareUpdate.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C20B09E0424A1B700000102 = {
-			expectedFileType = text.rtf;
 			isa = PBXFileReference;
+			lastKnownFileType = text.rtf;
 			name = French;
 			path = Languages/French.lproj/Credits.rtf;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C20B09F0424A1C500000102 = {
-			expectedFileType = text.plist.strings;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
 			name = French;
 			path = Languages/French.lproj/InfoPlist.strings;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C20B0A00424A1DE00000102 = {
-			expectedFileType = text.plist.strings;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
 			name = French;
 			path = Languages/French.lproj/Localizable.strings;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C258E55050B9656000001C8 = {
-			expectedFileType = folder;
 			fallbackIsa = PBXFileReference;
 			includeInIndex = 1;
 			isa = PBXFolderReference;
+			lastKnownFileType = folder;
 			name = Emoticons;
 			path = Resources/Emoticons;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C2EF7EB0427A40B00000102 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVChatPluginManager.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C2EF7EC0427A40B00000102 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVChatPluginManager.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C3B4D560427BD5200000102 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			name = JVStandardCommands.h;
 			path = "Plug-Ins/Standard Commands/JVStandardCommands.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C3B4D570427BD5200000102 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			name = JVStandardCommands.m;
 			path = "Plug-Ins/Standard Commands/JVStandardCommands.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C3B4DA40428C36400000102 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVChatPlugin.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C3C112E050265AE000001C8 = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = WebKit.framework;
 			path = /System/Library/Frameworks/WebKit.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
 		1C3C116005029DE1000001C8 = {
-			expectedFileType = text.html;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.html;
 			name = template.html;
 			path = Resources/template.html;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C3C116205029E03000001C8 = {
-			expectedFileType = folder;
 			fallbackIsa = PBXFileReference;
 			includeInIndex = 1;
 			isa = PBXFolderReference;
+			lastKnownFileType = folder;
 			name = Styles;
 			path = Resources/Styles;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C51B48A052DE0CB00BB459B = {
-			expectedFileType = text.plist;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
 			name = "Info-ChatCore.plist";
 			path = "Resources/Info-ChatCore.plist";
 			refType = 2;
@@ -611,15 +611,15 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1C51B4CC052DE14B00BB459B = {
-			expectedFileType = text.plist;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
 			name = "Info-StandardCommands.plist";
 			path = "Resources/Info-StandardCommands.plist";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C51B4CD052DE14B00BB459B = {
-			expectedFileType = folder;
+			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Standard Commands.plugin";
@@ -744,15 +744,15 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1C51B504052DE2B800BB459B = {
-			expectedFileType = text.plist;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
 			name = "Info-iTunes.plist";
 			path = "Resources/Info-iTunes.plist";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C51B505052DE2B800BB459B = {
-			expectedFileType = folder;
+			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = iTunes.plugin;
@@ -760,9 +760,9 @@
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1C51B89D052DF91E00BB459B = {
-			expectedFileType = text.plist;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
 			name = Info.plist;
 			path = Resources/Info.plist;
 			refType = 2;
@@ -781,69 +781,69 @@
 			};
 		};
 		1C5959010507803F000001C8 = {
-			expectedFileType = image.icns;
 			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
 			name = Generic.icns;
 			path = Resources/Generic.icns;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C6075E005138ED600A8FE6E = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = "colloquy-alpha.tif";
 			path = "Resources/colloquy-alpha.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C7055C40519E54C00A8FE6E = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = libexslt.framework;
 			path = Frameworks/libexslt.framework;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C7055C60519E55A00A8FE6E = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = libiconv.framework;
 			path = Frameworks/libiconv.framework;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C7055C80519E56300A8FE6E = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = libxml.framework;
 			path = Frameworks/libxml.framework;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C7055CA0519E56C00A8FE6E = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = libxslt.framework;
 			path = Frameworks/libxslt.framework;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C705701051A830200A8FE6E = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = newMessage.tif;
 			path = Resources/newMessage.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1C746A95050CF86B000001C8 = {
-			expectedFileType = text.plist;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
 			name = emoticons.plist;
 			path = Resources/emoticons.plist;
 			refType = 4;
@@ -860,8 +860,8 @@
 			sourceTree = "<group>";
 		};
 		1C8997E6058806DA00F49617 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/JVInterfacePreferences.nib;
 			refType = 4;
@@ -886,17 +886,17 @@
 			};
 		};
 		1C8BDCF1054345160035B84A = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVChatMemberInspector.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1C8BDCF2054345160035B84A = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVChatMemberInspector.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -924,8 +924,8 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		1C8BDD2105436A020035B84A = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/JVChatMemberInspector.nib;
 			refType = 4;
@@ -938,8 +938,8 @@
 			};
 		};
 		1C95D5B6041FA02C00000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = emoticonSmall.tif;
 			path = "Resources/Toolbar Icons/emoticonSmall.tif";
 			refType = 2;
@@ -958,44 +958,44 @@
 			sourceTree = "<group>";
 		};
 		1CA56CCE042A716200000102 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			name = JVTunes.h;
 			path = "Plug-Ins/iTunes/JVTunes.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CA56CCF042A716200000102 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			name = JVTunes.m;
 			path = "Plug-Ins/iTunes/JVTunes.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CA56CE0042A764600000102 = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = Carbon.framework;
 			path = /System/Library/Frameworks/Carbon.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
 		1CA56D18042A83CC00000102 = {
-			expectedFileType = sourcecode.applescript;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.applescript;
 			name = iTunes.applescript;
 			path = "Plug-Ins/iTunes/iTunes.applescript";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CA95D28051B413E00A8FE10 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = newHighlightMessage.tif;
 			path = Resources/newHighlightMessage.tif;
 			refType = 4;
@@ -1310,7 +1310,6 @@
 				1CC6FCD3054A25050075807C,
 				1CC6FCD5054A2BF80075807C,
 				1CC6FD39054AF1940075807C,
-				1CC6FD59054B5B700075807C,
 				1CD02008057588CD000F93B4,
 				1CD02009057588CE000F93B4,
 				1CD0200A057588CF000F93B4,
@@ -1327,6 +1326,8 @@
 				1CDEE48D0583E268000B9075,
 				1CDEE8C505878D30000B9075,
 				1C8997E7058806DA00F49617,
+				1CBA56ED058D202200257832,
+				1CBA5855058D739700257832,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2029,7 +2030,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1CB2CD8C052DDC570094AAA4 = {
-			expectedFileType = wrapper.application;
+			explicitFileType = wrapper.application;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = Colloquy.app;
@@ -2037,8 +2038,8 @@
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1CB35B5B042E1B2500000102 = {
-			expectedFileType = text.rtf;
 			isa = PBXFileReference;
+			lastKnownFileType = text.rtf;
 			name = "Read Me.rtf";
 			path = "Resources/Read Me.rtf";
 			refType = 2;
@@ -2055,8 +2056,8 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		1CB4DCAA053627C00080D36F = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/JVRoomInspector.nib;
 			refType = 4;
@@ -2069,17 +2070,17 @@
 			};
 		};
 		1CB4DCAE0536282B0080D36F = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVChatRoomInspector.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CB4DCAF0536282B0080D36F = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVChatRoomInspector.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -2096,82 +2097,94 @@
 			settings = {
 			};
 		};
+		1CBA56ED058D202200257832 = {
+			fileRef = F5E98659018CB25601EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CBA5855058D739700257832 = {
+			fileRef = 1C95D5B6041FA02C00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CBB23CD04EFE233000001C8 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = drawerAction.tif;
 			path = Resources/drawerAction.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBB23CE04EFE233000001C8 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = drawerActionPressed.tif;
 			path = Resources/drawerActionPressed.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBB23CF04EFE233000001C8 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = drawerAdd.tif;
 			path = Resources/drawerAdd.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBB23D004EFE233000001C8 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = drawerAddPressed.tif;
 			path = Resources/drawerAddPressed.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBB23D504EFE24C000001C8 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = viewAlert.tiff;
 			path = Resources/viewAlert.tiff;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBB23D604EFE24C000001C8 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = viewAlertSelected.tiff;
 			path = Resources/viewAlertSelected.tiff;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBB23D904F03CA7000001C8 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVDetailCell.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CBB23DA04F03CA7000001C8 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVDetailCell.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CBC62E205488C73009E59E1 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVPreferencesController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CBC62E305488C73009E59E1 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVPreferencesController.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -2189,9 +2202,9 @@
 			};
 		};
 		1CBC62E605488CBA009E59E1 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = NSPreferences.h;
 			refType = 4;
 			sourceTree = "<group>";
@@ -2256,17 +2269,17 @@
 			sourceTree = "<group>";
 		};
 		1CBC630905489484009E59E1 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVGeneralPreferences.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CBC630A05489484009E59E1 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVGeneralPreferences.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -2297,8 +2310,8 @@
 			sourceTree = "<group>";
 		};
 		1CBC63180548975E009E59E1 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = GeneralPreferences.tif;
 			path = "Resources/Preference Related/GeneralPreferences.tif";
 			refType = 4;
@@ -2321,8 +2334,8 @@
 			sourceTree = "<group>";
 		};
 		1CBC634805489BEE009E59E1 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/JVGeneralPreferences.nib;
 			refType = 4;
@@ -2335,49 +2348,49 @@
 			};
 		};
 		1CBECD660508C61B000001C8 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = showdrawer.tiff;
 			path = "Resources/Toolbar Icons/showdrawer.tiff";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBECDCF0508C8AB000001C8 = {
-			expectedFileType = text.plist.xml;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
 			name = default.xsl;
 			path = Resources/default.xsl;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBECE380508D58F000001C8 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = JVChatRoom.nib;
 			path = Resources/JVChatRoom.nib;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBECE390508D58F000001C8 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = JVChatWindow.nib;
 			path = Resources/JVChatWindow.nib;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBECE3A0508D58F000001C8 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = JVDirectChat.nib;
 			path = Resources/JVDirectChat.nib;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CBECE5D050A8D21000001C8 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = chooseStyle.tiff;
 			path = "Resources/Toolbar Icons/chooseStyle.tiff";
 			refType = 2;
@@ -2405,17 +2418,17 @@
 			sourceTree = "<group>";
 		};
 		1CC6FC500549FCD70075807C = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVAppearancePreferences.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CC6FC510549FCD70075807C = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVAppearancePreferences.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -2433,17 +2446,17 @@
 			};
 		};
 		1CC6FC540549FDD70075807C = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVAdvancedPreferences.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CC6FC550549FDD70075807C = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVAdvancedPreferences.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -2471,8 +2484,8 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		1CC6FC61054A003C0075807C = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/JVAdvancedPreferences.nib;
 			refType = 4;
@@ -2489,8 +2502,8 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		1CC6FC63054A003C0075807C = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/JVAppearancePreferences.nib;
 			refType = 4;
@@ -2507,8 +2520,8 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		1CC6FC65054A003C0075807C = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/JVFileTransferPreferences.nib;
 			refType = 4;
@@ -2533,8 +2546,8 @@
 			};
 		};
 		1CC6FC6F054A02F70075807C = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = AdvancedPreferences.tif;
 			path = "Resources/Preference Related/AdvancedPreferences.tif";
 			refType = 2;
@@ -2547,8 +2560,8 @@
 			};
 		};
 		1CC6FCD2054A25040075807C = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = FileTransferPreferences.tif;
 			path = "Resources/Preference Related/FileTransferPreferences.tif";
 			refType = 2;
@@ -2561,8 +2574,8 @@
 			};
 		};
 		1CC6FCD4054A2BF80075807C = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = AppearancePreferences.tif;
 			path = "Resources/Preference Related/AppearancePreferences.tif";
 			refType = 2;
@@ -2575,9 +2588,9 @@
 			};
 		};
 		1CC6FD38054AF1940075807C = {
-			expectedFileType = text.plist.xml;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
 			name = preview.colloquyTranscript;
 			path = Resources/preview.colloquyTranscript;
 			refType = 2;
@@ -2589,33 +2602,18 @@
 			settings = {
 			};
 		};
-		1CC6FD58054B5B700075807C = {
-			expectedFileType = text;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = emoticonsHidden.css;
-			path = Resources/emoticonsHidden.css;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		1CC6FD59054B5B700075807C = {
-			fileRef = 1CC6FD58054B5B700075807C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CC6FD62054B70BC0075807C = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVFontPreviewField.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CC6FD63054B70BC0075807C = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVFontPreviewField.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -2644,8 +2642,8 @@
 			sourceTree = "<group>";
 		};
 		1CC7CAAF03C48E8B001C0D62 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/MVBuddyList.nib;
 			refType = 4;
@@ -2663,41 +2661,41 @@
 			sourceTree = "<group>";
 		};
 		1CC7CAB103C48E8B001C0D62 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/MVFileTransfer.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CCB279D04FE93FE00A8FE6E = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVDirectChat.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CCB279E04FE93FE00A8FE6E = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVDirectChat.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CCB3C1505227E74000001C8 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = proxy.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CCB3C1605227E74000001C8 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = proxy.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -2775,41 +2773,41 @@
 			};
 		};
 		1CD6C413051DFA1C00A8FE10 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVChatTranscript.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CD6C414051DFA1D00A8FE10 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVChatTranscript.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CD6C417051E0B3000A8FE10 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = JVChatTranscript.nib;
 			path = Resources/JVChatTranscript.nib;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CDEE25505823C13000B9075 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVFileTransferPreferences.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CDEE25605823C13000B9075 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVFileTransferPreferences.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -2827,17 +2825,17 @@
 			};
 		};
 		1CDEE4770583DC58000B9075 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVBuddyInspector.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CDEE4780583DC58000B9075 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVBuddyInspector.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -2865,8 +2863,8 @@
 			sourceTree = "<group>";
 		};
 		1CDEE48C0583E268000B9075 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/JVBuddyInspector.nib;
 			refType = 4;
@@ -2889,24 +2887,24 @@
 			sourceTree = "<group>";
 		};
 		1CDEE8200586C289000B9075 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVInterfacePreferences.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CDEE8210586C289000B9075 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVInterfacePreferences.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CDEE8260586C723000B9075 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = InterfacePreferences.tif;
 			path = "Resources/Preference Related/InterfacePreferences.tif";
 			refType = 4;
@@ -2919,72 +2917,72 @@
 			};
 		};
 		1CE2BC1D042F4AD300000102 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVChatWindowController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CE2BC1E042F4AD300000102 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVChatWindowController.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CE2BC49042F53AD00000102 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVChatRoom.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CE2BC4A042F53AD00000102 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVChatRoom.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CE2BC53042F75FB00000102 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVChatController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CE2BC54042F75FB00000102 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVChatController.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CE72A95052C745400A8FE6E = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVChatConsole.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CE72A96052C745400A8FE6E = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVChatConsole.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CE72A99052C79E700A8FE6E = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = JVChatConsole.nib;
 			path = Resources/JVChatConsole.nib;
 			refType = 4;
@@ -3004,24 +3002,24 @@
 			sourceTree = "<group>";
 		};
 		1CEE3AFE0578421400AD6DE2 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = statusAvailable.tif;
 			path = Resources/statusAvailable.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CEE3AFF0578421400AD6DE2 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = statusAway.tif;
 			path = Resources/statusAway.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CEE3B000578421400AD6DE2 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = statusIdle.tif;
 			path = Resources/statusIdle.tif;
 			refType = 4;
@@ -3046,8 +3044,8 @@
 			};
 		};
 		1CEE3B160578491B00AD6DE2 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = statusOffline.tif;
 			path = Resources/statusOffline.tif;
 			refType = 4;
@@ -3060,17 +3058,17 @@
 			};
 		};
 		1CEE3F03057AEC0200AD6DE2 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = JVBuddy.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		1CEE3F04057AEC0200AD6DE2 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = JVBuddy.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -3088,16 +3086,16 @@
 			};
 		};
 		1CF9BB9A04FBE96D00A8FE6E = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = room.tif;
 			path = Resources/room.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		1CFA05F6053C960800C702F9 = {
-			expectedFileType = "wrapper.pb-project";
 			isa = PBXFileReference;
+			lastKnownFileType = "wrapper.pb-project";
 			path = "Chat Core.xcode";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
@@ -3234,18 +3232,18 @@
 //F53
 //F54
 		F50AC513037E2E3801A35792 = {
-			expectedFileType = sourcecode.c.c;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
 			name = dummy.c;
 			path = "Other Code/firetalk (cvs)/dummy.c";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F50AC514037E2E3801A35792 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			name = dummy.h;
 			path = "Other Code/firetalk (cvs)/dummy.h";
 			refType = 2;
@@ -3316,7 +3314,6 @@
 				1CBECDCF0508C8AB000001C8,
 				1C3C116005029DE1000001C8,
 				1C746A95050CF86B000001C8,
-				1CC6FD58054B5B700075807C,
 				F5675B8601DB767601EE70DE,
 				1CC6FD38054AF1940075807C,
 				1C3C116205029E03000001C8,
@@ -3337,9 +3334,9 @@
 			sourceTree = "<group>";
 		};
 		F50B0AA20170CAD701A84BDE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = main.m;
 			refType = 4;
 			sourceTree = "<group>";
@@ -3374,85 +3371,85 @@
 			sourceTree = "<group>";
 		};
 		F51A4F2B01C2DDD201EE70DE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVFileTransferController.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F51A4F2C01C2DDD201EE70DE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVFileTransferController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F51A4F3101C2ED2C01EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = download.tif;
 			path = Resources/download.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F51A4F3201C2ED2C01EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = upload.tif;
 			path = Resources/upload.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F51A4F3701C319D801EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = error.tif;
 			path = Resources/error.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F51A4F3801C319D801EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = pending.tif;
 			path = Resources/pending.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F51A4F3B01C3204701EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = done.tif;
 			path = Resources/done.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F51F91D7037967CB01A35792 = {
-			expectedFileType = folder;
 			fallbackIsa = PBXFileReference;
 			includeInIndex = 1;
 			isa = PBXFolderReference;
+			lastKnownFileType = folder;
 			name = Chat.clr;
 			path = Resources/Chat.clr;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F51F91F103796FCD01A35792 = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = Security.framework;
 			path = /System/Library/Frameworks/Security.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
 		F520458E01B1D37701EBB4B5 = {
-			expectedFileType = folder;
 			fallbackIsa = PBXFileReference;
 			includeInIndex = 0;
 			isa = PBXFolderReference;
+			lastKnownFileType = folder;
 			name = Sounds;
 			path = Resources/Sounds;
 			refType = 4;
@@ -3518,66 +3515,66 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F52BA281037C13C201A35792 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = "firetalk-int.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F52BA282037C13C201A35792 = {
-			expectedFileType = sourcecode.c.c;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
 			path = firetalk.c;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F52BA283037C13C201A35792 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = firetalk.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F52BA284037C13C201A35792 = {
-			expectedFileType = text;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text;
 			name = GPL;
 			path = "Other Code/firetalk (cvs)/GPL";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F52BA286037C13C201A35792 = {
-			expectedFileType = sourcecode.c.c;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
 			path = irc.c;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F52BA287037C13C201A35792 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = irc.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F52BA28C037C13C201A35792 = {
-			expectedFileType = sourcecode.c.c;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
 			path = safestring.c;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F52BA28D037C13C201A35792 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = safestring.h;
 			refType = 4;
 			sourceTree = "<group>";
@@ -3598,24 +3595,24 @@
 			name = Deployment;
 		};
 		F52D043001873FC401EE70DE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVChatConnection.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F52D043101873FC401EE70DE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVChatConnection.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5394BB50378DBC301A35792 = {
-			expectedFileType = text.rtf;
 			isa = PBXFileReference;
+			lastKnownFileType = text.rtf;
 			name = Agenda.rtf;
 			path = Resources/Agenda.rtf;
 			refType = 2;
@@ -3653,8 +3650,8 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F5394BEC0378E23701A35792 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/Colloquy.nib;
 			refType = 4;
@@ -3672,8 +3669,8 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F5394BF00378E23701A35792 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/MVCrashCatcher.nib;
 			refType = 4;
@@ -3691,8 +3688,8 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F5394BF20378E23701A35792 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/MVSoftwareUpdate.nib;
 			refType = 4;
@@ -3710,8 +3707,8 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F5394C080378E44D01A35792 = {
-			expectedFileType = text.rtf;
 			isa = PBXFileReference;
+			lastKnownFileType = text.rtf;
 			name = English;
 			path = Languages/English.lproj/Credits.rtf;
 			refType = 4;
@@ -3729,9 +3726,9 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F5394C0A0378E44D01A35792 = {
-			expectedFileType = text.plist.strings;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
 			name = English;
 			path = Languages/English.lproj/InfoPlist.strings;
 			refType = 4;
@@ -3749,9 +3746,9 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F5394C0C0378E44D01A35792 = {
-			expectedFileType = text.plist.strings;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
 			name = English;
 			path = Languages/English.lproj/Localizable.strings;
 			refType = 4;
@@ -3775,300 +3772,300 @@
 			sourceTree = "<group>";
 		};
 		F544999E018E46CB01EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = person.tif;
 			path = Resources/person.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F544999F018E46CB01EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = voice.tif;
 			path = Resources/voice.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F54499A0018E46CB01EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = op.tif;
 			path = Resources/op.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F551EE490209FB3301EE70DE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVKeyChain.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F551EE4A0209FB3301EE70DE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVKeyChain.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F555208701F0DC2B01EE70DE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVCrashCatcher.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F555208801F0DC2B01EE70DE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVCrashCatcher.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F555208B01F0DE0601EE70DE = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = Message.framework;
 			path = /System/Library/Frameworks/Message.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
 		F56539F301C5A91401A35792 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = stop.tif;
 			path = Resources/stop.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F56539F501C5B6C301A35792 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = clear.tif;
 			path = Resources/clear.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F56539F601C5B6C301A35792 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = reveal.tif;
 			path = Resources/reveal.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5675B8601DB767601EE70DE = {
-			expectedFileType = text.plist;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
 			name = verbs.plist;
 			path = Resources/verbs.plist;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F56CD5430191182601EE70DE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = NSStringAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F56CD5440191182601EE70DE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = NSStringAdditions.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5765F9501C6669D01A35792 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = stopped.tif;
 			path = Resources/stopped.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F57D9685018CD26001EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = part.tif;
 			path = "Resources/Toolbar Icons/part.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F57D9686018CD26001EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = hide.tif;
 			path = "Resources/Toolbar Icons/hide.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F588A8F001922CDC01EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = members.tif;
 			path = "Resources/Toolbar Icons/members.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F590EA180190A42101EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = underline.tif;
 			path = "Resources/Toolbar Icons/underline.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F590EA190190A42101EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = italic.tif;
 			path = "Resources/Toolbar Icons/italic.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F590EA1A0190A42101EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = bold.tif;
 			path = "Resources/Toolbar Icons/bold.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F592CABF01824AE801EE70DE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVTableView.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F592CAC001824AE801EE70DE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVTableView.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F599994901890E4601EE70DE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVTextView.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F599994A01890E4601EE70DE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVTextView.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5A6089901979C2C01A35792 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = tag.tif;
 			path = "Resources/Toolbar Icons/tag.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5A6089B0197A3BB01A35792 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = magic.tif;
 			path = "Resources/Toolbar Icons/magic.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5B425E9038C056701000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = edit.tif;
 			path = "Resources/Toolbar Icons/edit.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5BC17DD019655DC01A35792 = {
-			expectedFileType = text.plist;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
 			name = cc.javelin.colloquy.plist;
 			path = Resources/cc.javelin.colloquy.plist;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5BC17DF019656E901A35792 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = info.tif;
 			path = Resources/info.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5BEC20701F13A8601EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = "person-idle.tif";
 			path = "Resources/person-idle.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5BEC20901F13AA201EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = "op-idle.tif";
 			path = "Resources/op-idle.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5BEC20B01F13B0001EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = "voice-idle.tif";
 			path = "Resources/voice-idle.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5BEC20D01F1EF1901EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = admin.tif;
 			path = Resources/admin.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5BEC20E01F1EF1901EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = "admin-idle.tif";
 			path = "Resources/admin-idle.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5BEC21401F2256301EE70DE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVSoftwareUpdate.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5BEC21501F2256301EE70DE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVSoftwareUpdate.h;
 			refType = 4;
 			sourceTree = "<group>";
@@ -4091,53 +4088,53 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F5C3D42303973E7B01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			path = addWidget.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5C3D42403973E7B01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			path = addWidgetSelected.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5C3D42503973E7B01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			path = removeWidget.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5C3D42603973E7B01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			path = removeWidgetSelected.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5C3D46A0398B5B401000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = largePerson.tif;
 			path = Resources/largePerson.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5C497740385713801000102 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVConnectionsController.h;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5C497750385713801000102 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVConnectionsController.m;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
@@ -4154,168 +4151,168 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F5C4977C0385785401000102 = {
-			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
 			name = English;
 			path = Languages/English.lproj/MVConnections.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5C98A8101838CAD01EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = reload.tif;
 			path = "Resources/Toolbar Icons/reload.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5D04C03019489B801A35792 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = encoding.tif;
 			path = "Resources/Toolbar Icons/encoding.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5DD34720382B8AE01000102 = {
-			expectedFileType = text.rtf;
 			isa = PBXFileReference;
+			lastKnownFileType = text.rtf;
 			name = Changes.rtf;
 			path = Resources/Changes.rtf;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5DD34730382E5E501000102 = {
-			expectedFileType = image.icns;
 			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
 			name = Colloquy.icns;
 			path = Resources/Colloquy.icns;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E06408038D6DEB01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = joinRoom.tif;
 			path = "Resources/Toolbar Icons/joinRoom.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E0640A038D703901000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = messageUser.tif;
 			path = "Resources/Toolbar Icons/messageUser.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E2536603874B5601000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = statusHeader.tif;
 			path = Resources/statusHeader.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5E253690387618E01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = connected.tif;
 			path = Resources/connected.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E2536A0387618E01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = connectedSelected.tif;
 			path = Resources/connectedSelected.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E2536D0387657C01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = connecting.tif;
 			path = Resources/connecting.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E2536E0387657C01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = connectingSelected.tif;
 			path = Resources/connectingSelected.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E253710387690301000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = autoHeader.tif;
 			path = Resources/autoHeader.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E2537C038809A201000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = connect.tif;
 			path = "Resources/Toolbar Icons/connect.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E2537D038809A201000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = disconnect.tif;
 			path = "Resources/Toolbar Icons/disconnect.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E253800388194701000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = console.tif;
 			path = "Resources/Toolbar Icons/console.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5E2538403882A8501000102 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVColorPanel.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5E2538503882A8501000102 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVColorPanel.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5E98622018B412B01EE70DE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = NSAttributedStringAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5E98623018B412B01EE70DE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = NSAttributedStringAdditions.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5E98659018CB25601EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = emoticon.tif;
 			path = "Resources/Toolbar Icons/emoticon.tif";
 			refType = 4;
@@ -4352,130 +4349,130 @@
 			sourceTree = "<group>";
 		};
 		F5ED0F58017CD79801EE70DE = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = delete.tif;
 			path = "Resources/Toolbar Icons/delete.tif";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5F9AF410170EE4A01A84BDE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVApplicationController.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5F9AF420170EE4A01A84BDE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVApplicationController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5F9AF5801711CD401A84BDE = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVMenuButton.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5F9AF5901711CD401A84BDE = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVMenuButton.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		F5FB4CE60393C15601000102 = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = AddressBook.framework;
 			path = /System/Library/Frameworks/AddressBook.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
 		F5FB4D0F0393F04701000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = buddyOptions.tif;
 			path = "Resources/Palette Icons/buddyOptions.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5FB4D100393F04701000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = buddyOptionsBlue.tif;
 			path = "Resources/Palette Icons/buddyOptionsBlue.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5FB4D130393F09D01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = buddyNew.tif;
 			path = "Resources/Palette Icons/buddyNew.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5FB4D140393F09D01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = buddyNewBlue.tif;
 			path = "Resources/Palette Icons/buddyNewBlue.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5FB4D170393F0CC01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = buddyInfo.tif;
 			path = "Resources/Palette Icons/buddyInfo.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5FB4D180393F0CC01000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = buddyInfoBlue.tif;
 			path = "Resources/Palette Icons/buddyInfoBlue.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5FB4D1B0393F2D301000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = buddyMessage.tif;
 			path = "Resources/Palette Icons/buddyMessage.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5FB4D1C0393F2D301000102 = {
-			expectedFileType = image.tiff;
 			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
 			name = buddyMessageBlue.tif;
 			path = "Resources/Palette Icons/buddyMessageBlue.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5FB4D1F0393F70E01000102 = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MVBuddyListController.h;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5FB4D200393F70E01000102 = {
-			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
 			path = MVBuddyListController.m;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
