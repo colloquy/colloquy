@@ -39,10 +39,10 @@ NOTIFYLIST_REC *notifylist_add(const char *mask, const char *ircnets,
 {
 	NOTIFYLIST_REC *rec;
 
+	g_return_val_if_fail(mask != NULL, NULL);
+
 	rec = notifylist_find(mask, ircnets);
 	if (rec) return rec;
-
-	g_return_val_if_fail(mask != NULL, NULL);
 
 	rec = g_new0(NOTIFYLIST_REC, 1);
 	rec->mask = g_strdup(mask);
