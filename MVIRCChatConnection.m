@@ -198,8 +198,6 @@ static void MVChatConnectFailed( SERVER_REC *server ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
 	if( ! self ) return;
 
-	[self _setIrssiConnection:NULL];
-
 	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
 	[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:YES];
 	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
@@ -1756,6 +1754,11 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[super _didConnect];
 }
 
+- (void) _didNotConnect {
+	[self _setIrssiConnection:NULL];
+	[super _didNotConnect];
+}
+
 - (void) _didDisconnect {
 	if( _chatConnection -> connection_lost ) {
 		if( _status != MVChatConnectionSuspendedStatus )
@@ -1767,9 +1770,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		_status = MVChatConnectionDisconnectedStatus;
 	}
 
-	[super _didDisconnect];
-
 	[self _setIrssiConnection:NULL];
+	[super _didDisconnect];
 }
 
 - (void) _forceDisconnect {
