@@ -36,14 +36,21 @@
 	NSString *_chatStyleVariant;
 	NSBundle *_chatEmoticons;
 	NSDictionary *_emoticonMappings;
+	NSMutableArray *_waitingAlerts;
+	NSMutableDictionary *_waitingAlertNames;
 	NSStringEncoding _encoding;
 	unsigned int _messageId;
 	BOOL _firstMessage;
 	BOOL _nibLoaded;
-	BOOL _isLog;
+	BOOL _isActive;
+	BOOL _newMessage;
+	BOOL _newHighlightMessage;
+	BOOL _cantSendMessages;
 	int _historyIndex;
 }
 - (void) setTarget:(NSString *) target;
+
+- (void) showAlert:(NSPanel *) alert withName:(NSString *) name;
 
 - (IBAction) changeChatStyle:(id) sender;
 - (void) setChatStyle:(NSBundle *) style withVariant:(NSString *) variant;
@@ -59,7 +66,7 @@
 
 - (IBAction) leaveChat:(id) sender;
 
-- (void) addStatusMessageToDisplay:(NSString *) message;
+- (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
 
 - (IBAction) send:(id) sender;

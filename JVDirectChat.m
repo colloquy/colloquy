@@ -58,6 +58,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 @interface JVDirectChat (JVDirectChatPrivate)
 - (void) _makeHyperlinksInString:(NSMutableString *) string;
+- (void) _breakLongLinesInString:(NSMutableString *) string;
 - (void) _preformEmoticonSubstitutionOnString:(NSMutableString *) string;
 - (void) _updateChatStylesMenu;
 - (void) _scanForChatStyles;	
@@ -88,6 +89,10 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		_target = nil;
 		_connection = nil;
 		_firstMessage = YES;
+		_newMessage = NO;
+		_newHighlightMessage = NO;
+		_cantSendMessages = NO;
+		_isActive = NO;
 		_historyIndex = 0;
 		_chatStyle = nil;
 		_chatStyleVariant = nil;
@@ -119,6 +124,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 		_sendHistory = [[NSMutableArray array] retain];
 		[_sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
+
+		_waitingAlerts = [[NSMutableArray array] retain];
+		_waitingAlertNames = [[NSMutableDictionary dictionary] retain];
 	}
 	return self;
 }
@@ -130,6 +138,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		_connection = [connection retain];
 		source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
 		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
 	}
 	return self;
 }
@@ -164,6 +175,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[self setChatStyle:style withVariant:variant];
 
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
+	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 
 	toolbarItemContainerView = [chooseStyle superview];
 
@@ -191,6 +203,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 - (void) dealloc {
 	extern NSMutableSet *JVChatStyleBundles;
 	extern NSMutableSet *JVChatEmoticonBundles;
+	NSEnumerator *enumerator = nil;
+	id alert = nil;
 
 	[contents autorelease];
 	[chooseStyle autorelease];
@@ -201,9 +215,18 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[_chatStyleVariant autorelease];
 	[_chatEmoticons autorelease];
 	[_emoticonMappings autorelease];
+	[_waitingAlertNames autorelease];
 
 	[JVChatStyleBundles autorelease];
 	[JVChatEmoticonBundles autorelease];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+	enumerator = [_waitingAlerts objectEnumerator];
+	while( ( alert = [enumerator nextObject] ) )
+		NSReleaseAlertPanel( alert );
+
+	[_waitingAlerts release];
 
 	xmlFreeDoc( _xmlLog );
 	_xmlLog = NULL;
@@ -227,6 +250,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	_chatEmoticons = nil;
 	_emoticonMappings = nil;
 	_windowController = nil;
+	_waitingAlerts = nil;
+	_waitingAlertNames = nil;
 
 	[super dealloc];
 }
@@ -326,11 +351,56 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	return [NSImage imageNamed:@"messageUser"];
 }
 
+- (NSImage *) statusImage {
+	return ( _isActive ? nil : ( [_waitingAlerts count] ? [NSImage imageNamed:@"viewAlert"] : ( _newMessage ? ( _newHighlightMessage ? [NSImage imageNamed:@"newHighlightMessage"] : [NSImage imageNamed:@"newMessage"] ) : nil ) ) );
+}
+
+#pragma mark -
+
+- (void) didUnselect {
+	_newMessage = NO;
+	_newHighlightMessage = NO;
+	_isActive = NO;
+}
+
+- (void) didSelect {
+	_newMessage = NO;
+	_newHighlightMessage = NO;
+	_isActive = YES;
+	if( [_waitingAlerts count] ) {
+		[[NSApplication sharedApplication] beginSheet:[_waitingAlerts objectAtIndex:0] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+	}
+}
+
 #pragma mark -
 
 - (void) setTarget:(NSString *) target {
 	[_target autorelease];
 	_target = [target copy];
+	[_windowController reloadChatView:self];
+}
+
+#pragma mark -
+
+- (void) showAlert:(NSPanel *) alert withName:(NSString *) name {
+	if( _isActive && ! [[_windowController window] attachedSheet] ) {
+		if( alert ) [[NSApplication sharedApplication] beginSheet:alert modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+	} else {
+		if( name && [_waitingAlertNames objectForKey:name] ) {
+			NSPanel *sheet = [[[_waitingAlertNames objectForKey:name] retain] autorelease];
+			if( alert ) {
+				[_waitingAlerts replaceObjectAtIndex:[_waitingAlerts indexOfObjectIdenticalTo:[_waitingAlertNames objectForKey:name]] withObject:alert];
+				[_waitingAlertNames setObject:alert forKey:name];
+			} else {
+				[_waitingAlerts removeObjectAtIndex:[_waitingAlerts indexOfObjectIdenticalTo:[_waitingAlertNames objectForKey:name]]];
+				[_waitingAlertNames removeObjectForKey:name];
+			}
+			NSReleaseAlertPanel( sheet );
+		} else {
+			if( name && alert ) [_waitingAlertNames setObject:alert forKey:name];
+			if( alert ) [_waitingAlerts addObject:alert];
+		}
+	}
 	[_windowController reloadChatView:self];
 }
 
@@ -460,8 +530,49 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 #pragma mark -
 
-- (void) addStatusMessageToDisplay:(NSString *) message {
-	NSParameterAssert( message != nil );
+- (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
+	NSEnumerator *enumerator = nil, *kenumerator = nil;
+	NSString *key = nil, *value = nil;
+	xmlDocPtr doc = NULL, msgDoc = NULL;
+	xmlNodePtr root = NULL, child = NULL;
+	const char *msgStr = NULL;
+
+	NSParameterAssert( name != nil );
+	NSParameterAssert( [name length] );
+
+	doc = xmlNewDoc( "1.0" );
+	root = xmlNewNode( NULL, "event" );
+	xmlSetProp( root, "name", [name UTF8String] );
+	xmlSetProp( root, "occurred", [[[NSDate date] description] UTF8String] );
+	xmlDocSetRootElement( doc, root );
+
+	if( message ) {
+		msgStr = [[NSString stringWithFormat:@"<message>%@</message>", message] UTF8String];
+		if( msgStr ) {
+			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
+			xmlAddChild( root, child );
+			xmlFreeDoc( msgDoc );
+		}
+	}
+
+	kenumerator = [attributes keyEnumerator];
+	enumerator = [attributes objectEnumerator];
+	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) && ! [value isMemberOfClass:[NSNull class]] ) {
+		msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+		if( msgStr ) {
+			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
+			xmlAddChild( root, child );
+			xmlFreeDoc( msgDoc );
+		}
+	}
+
+	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
+
+//	xmlDocFormatDump( stdout, doc, 1 );
+
+	xmlFreeDoc( doc );
 }
 
 #pragma mark -
@@ -482,6 +593,35 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[self _makeHyperlinksInString:messageString];
 
 	[self _preformEmoticonSubstitutionOnString:messageString];
+
+	if( [messageString rangeOfString:@"\007"].length )
+		[messageString replaceOccurrencesOfString:@"\007" withString:@"&#266A;" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+
+	if( ! [user isEqualToString:[[self connection] nickname]] ) {
+		NSEnumerator *enumerator = nil;
+		NSMutableArray *names = nil;
+		id item = nil;
+
+//		if( _firstMessage ) MVChatPlaySoundForAction( @"MVChatFisrtMessageAction" );
+//		if( ! _firstMessage ) MVChatPlaySoundForAction( @"MVChatAdditionalMessagesAction" );
+//		if( [messageString rangeOfString:@"\007"].length ) MVChatPlaySoundForAction( @"MVChatInlineMessageBeepAction" );
+
+		names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
+		[names addObject:[[self connection] nickname]];
+		enumerator = [names objectEnumerator];
+		while( ( item = [enumerator nextObject] ) ) {
+			if( [[messageString lowercaseString] rangeOfString:item].length ) {
+				MVChatPlaySoundForAction( @"MVChatMentionedAction" );
+				_newHighlightMessage = YES;
+				highlight = YES;
+				break;
+			}
+		}
+
+//		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatBounceIconUntilFront"] )
+//			[[NSApplication sharedApplication] requestUserAttention:NSCriticalRequest];
+//		else [[NSApplication sharedApplication] requestUserAttention:NSInformationalRequest];
+	}
 
 	doc = xmlNewDoc( "1.0" );
 	root = xmlNewNode( NULL, "envelope" );
@@ -513,12 +653,16 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottom();", messageString]];
 	}
 
-	_firstMessage = NO;
 //	xmlDocFormatDump( stdout, doc, 1 );
 //	NSLog( [self _applyStyleOnXMLDocument:doc] );
 //	NSLog( @"%@", [self _fullDisplayHTMLWithBody:@""] );
 
 	xmlFreeDoc( doc );
+
+	_newMessage = YES;
+	_firstMessage = NO;
+
+	[_windowController reloadChatView:self];
 
 //	if( NSMinY( [[[display mainFrame] frameView] visibleRect] ) >= ( NSHeight( [[[display mainFrame] frameView] bounds] ) - ( NSHeight( [[[display mainFrame] frameView] visibleRect] ) * 1.1 ) ) )
 //	[[[[display mainFrame] frameView] documentView] scrollPoint:NSMakePoint( 0., NSHeight( [[[[display mainFrame] frameView] documentView] bounds] ) )];
@@ -531,7 +675,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	BOOL action = NO;
 	NSRange range;
 
-	if( ! [[self connection] isConnected] ) return;
+	if( ! [[self connection] isConnected] || _cantSendMessages ) return;
 
 	_historyIndex = 0;
 	if( ! [[send textStorage] length] ) return;
@@ -787,7 +931,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSScanner *urlScanner = [NSScanner scannerWithString:string];
 	NSCharacterSet *urlStopSet = [NSCharacterSet characterSetWithCharactersInString:@" \t\n\r\0<>\"'![]{}()|*^!"];
 	NSString *link = nil, *urlHandle = nil;
-	unsigned lastLoc = 0;
+	NSMutableString *mutableLink = nil;
+	unsigned int lastLoc = 0;
 
 	while( ! [urlScanner isAtEnd] ) {
 		while( ! [urlScanner isAtEnd] ) {
@@ -812,7 +957,12 @@ void MVChatPlaySoundForAction( NSString *action ) {
 				if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' )
 					link = [link substringToIndex:([link length] - 1)];
 				link = [urlHandle stringByAppendingString:link];
-				[string replaceCharactersInRange:NSMakeRange( lastLoc, [link length] ) withString:[NSString stringWithFormat:@"<a href=\"%@\">%@</a>", link, link]];
+				mutableLink = [[link mutableCopy] autorelease];
+				[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"%" withString:@"&#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"&amp;" withString:@"&#8203;&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[string replaceCharactersInRange:NSMakeRange( lastLoc, [link length] ) withString:[NSString stringWithFormat:@"<a href=\"%@\">%@</a>", link, mutableLink]];
 			}
 		}
 	}
@@ -862,6 +1012,24 @@ void MVChatPlaySoundForAction( NSString *action ) {
 			}
 		}
 	}	
+}
+
+- (void) _breakLongLinesInString:(NSMutableString *) string { // Not good on strings that have prior HTML or HTML entities
+	NSScanner *scanner = [NSScanner scannerWithString:string];
+	NSCharacterSet *stopSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+	unsigned int lastLoc = 0;
+
+	while( ! [scanner isAtEnd] ) {
+		lastLoc = [scanner scanLocation];
+		[scanner scanUpToCharactersFromSet:stopSet intoString:nil];
+		if( ( [scanner scanLocation] - lastLoc ) > 34 ) { // Who says "supercalifragilisticexpialidocious" anyway?
+			unsigned int times = (unsigned int) ( ( [scanner scanLocation] - lastLoc ) / 34 );
+			while( times > 0 ) {
+				[string insertString:@"&#8203;" atIndex:( lastLoc + ( times * 34 ) )];
+				times--;
+			}
+		}
+	}
 }
 
 - (void) _preformEmoticonSubstitutionOnString:(NSMutableString *) string {
@@ -1086,5 +1254,37 @@ void MVChatPlaySoundForAction( NSString *action ) {
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	return [[[NSString stringWithFormat:shell, _target, [self _chatEmoticonsCSSFileURL], [self _chatStyleCSSFileURL], [self _chatStyleVariantCSSFileURL], html] retain] autorelease];
+}
+
+- (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
+	NSEnumerator *kenumerator = nil, *enumerator = nil;
+	id key = nil, value = nil;
+
+	[[NSApplication sharedApplication] endSheet:sheet];
+	[sheet orderOut:nil];
+
+	[_waitingAlerts removeObjectIdenticalTo:sheet];
+
+	kenumerator = [_waitingAlertNames keyEnumerator];
+	enumerator = [_waitingAlertNames objectEnumerator];
+	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) )
+		if( value == sheet ) break;
+
+	if( key ) [_waitingAlertNames removeObjectForKey:key];
+
+	NSReleaseAlertPanel( sheet );
+
+	if( [_waitingAlerts count] )
+		[[NSApplication sharedApplication] beginSheet:[_waitingAlerts objectAtIndex:0] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+}
+
+- (void) _didConnect:(NSNotification *) notification {
+	[self showAlert:nil withName:@"disconnected"]; // cancel the disconnected alert
+	_cantSendMessages = NO;
+}
+
+- (void) _didDisconnect:(NSNotification *) notification {
+	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You're now offline", "title of the you're offline message sheet" ), NSLocalizedString( @"You are no longer connected to the server where you were chatting. No messages can be sent at this time. Reconnecting might be in progress.", "chat window error description for loosing connection" ), @"OK", nil, nil ) withName:@"disconnected"];
+	_cantSendMessages = YES;
 }
 @end
