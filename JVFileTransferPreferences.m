@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 #import "JVFileTransferPreferences.h"
+#import "MVFileTransferController.h"
 
 @implementation JVFileTransferPreferences
 - (NSString *) preferencesNibName {
@@ -24,33 +25,22 @@
 	[minRate setIntValue:range.location];
 	[maxRate setIntValue:( range.location + range.length )];
 
-	if( [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVTransferSaveLocation"] isEqualToString:@"ask"] ) {
+	NSString *path = [MVFileTransferController userPreferredDownloadFolder];
+	NSMenuItem *menuItem = [saveDownloads itemAtIndex:[saveDownloads indexOfItemWithTag:2]];
+	NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+	[icon setScalesWhenResized:YES];
+	[icon setSize:NSMakeSize( 16., 16. )];
+
+	[menuItem setTitle:[path lastPathComponent]];
+	[menuItem setImage:icon];
+	[menuItem setRepresentedObject:path];
+
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskForTransferSaveLocation"] ) {
 		[saveDownloads selectItemAtIndex:[saveDownloads indexOfItemWithTag:1]];
-
-		NSString *path = [@"~/Desktop" stringByExpandingTildeInPath];
-		NSMenuItem *menuItem = [saveDownloads itemAtIndex:[saveDownloads indexOfItemWithTag:2]];
-		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-		[icon setScalesWhenResized:YES];
-		[icon setSize:NSMakeSize( 16., 16. )];
-
-		[menuItem setTitle:[path lastPathComponent]];
-		[menuItem setImage:icon];
-		[menuItem setRepresentedObject:path];
 	} else {
-		NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVTransferSaveLocation"] stringByExpandingTildeInPath];
-		if( ! [path length] ) path = [@"~/Desktop" stringByExpandingTildeInPath];
-
-		NSMenuItem *menuItem = [saveDownloads itemAtIndex:[saveDownloads indexOfItemWithTag:2]];
-		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-		[icon setScalesWhenResized:YES];
-		[icon setSize:NSMakeSize( 16., 16. )];
-
-		[menuItem setTitle:[path lastPathComponent]];
-		[menuItem setImage:icon];
-		[menuItem setRepresentedObject:path];
-		[saveDownloads selectItem:menuItem];
+		[saveDownloads selectItemAtIndex:[saveDownloads indexOfItemWithTag:2]];
 	}
-
+	
 	[autoAccept selectItemAtIndex:[autoAccept indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"]]];
 	[removeTransfers selectItemAtIndex:[removeTransfers indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"]]];
 	[openSafe setState:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"]];
@@ -73,11 +63,11 @@
 		[openPanel setCanChooseFiles:NO];
 		[openPanel setAllowsMultipleSelection:NO];
 		[openPanel setResolvesAliases:NO];
-		[openPanel beginSheetForDirectory:nil file:nil types:nil modalForWindow:[[self viewForPreferenceNamed:nil] window] modalDelegate:self didEndSelector:@selector( saveDownloadsOpenPanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+		[openPanel beginSheetForDirectory:[MVFileTransferController userPreferredDownloadFolder] file:nil types:nil modalForWindow:[[self viewForPreferenceNamed:nil] window] modalDelegate:self didEndSelector:@selector( saveDownloadsOpenPanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
 	} else if( [sender tag] == 2 ) {
-		[[NSUserDefaults standardUserDefaults] setObject:[sender representedObject] forKey:@"JVTransferSaveLocation"];
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVAskForTransferSaveLocation"];
 	} else {
-		[[NSUserDefaults standardUserDefaults] setObject:@"ask" forKey:@"JVTransferSaveLocation"];
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVAskForTransferSaveLocation"];
 	}
 }
 
@@ -94,10 +84,11 @@
 		[menuItem setRepresentedObject:[sheet directory]];
 		[saveDownloads selectItem:menuItem];
 
-		[[NSUserDefaults standardUserDefaults] setObject:[sheet directory] forKey:@"JVTransferSaveLocation"];
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVAskForTransferSaveLocation"];
+		[MVFileTransferController setUserPreferredDownloadFolder:[sheet directory]];
 	} else {
 		[saveDownloads selectItemAtIndex:[saveDownloads indexOfItemWithTag:1]];
-		[[NSUserDefaults standardUserDefaults] setObject:@"ask" forKey:@"JVTransferSaveLocation"];
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVAskForTransferSaveLocation"];
 	}
 }
 

@@ -70,11 +70,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 @implementation MVFileTransferController
-+ (NSString *) systemDefaultDownloadFolder {
++ (NSString *) userPreferredDownloadFolder {
 	OSStatus err = noErr;
 	ICInstance inst = NULL;
 	ICFileSpec folder;
-	long length = kICFileSpecHeaderSize;
+	unsigned long length = kICFileSpecHeaderSize;
 	FSRef ref;
 	unsigned char path[1024];
 
@@ -100,7 +100,7 @@ finish:
 	return [NSString stringWithUTF8String:path];
 }
 
-+ (void) setSystemDefaultDownloadFolder:(NSString *) path {
++ (void) setUserPreferredDownloadFolder:(NSString *) path {
 	OSStatus err = noErr;
 	ICInstance inst = NULL;
 	ICFileSpec *dir = NULL;
@@ -553,7 +553,7 @@ finish:
 
 - (void) download:(NSURLDownload *) download decideDestinationWithSuggestedFilename:(NSString *) filename {
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskForTransferSaveLocation"] ) {
-		NSString *path = [[[self class] systemDefaultDownloadFolder] stringByAppendingPathComponent:filename];
+		NSString *path = [[[self class] userPreferredDownloadFolder] stringByAppendingPathComponent:filename];
 		NSEnumerator *enumerator = nil;
 		NSMutableDictionary *info = nil;
 
@@ -568,7 +568,7 @@ finish:
 		[self _downloadFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *) [download retain]];
 	} else {
 		NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
-		[savePanel beginSheetForDirectory:[[self class] systemDefaultDownloadFolder] file:filename modalForWindow:nil modalDelegate:self didEndSelector:@selector( _downloadFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [download retain]];
+		[savePanel beginSheetForDirectory:[[self class] userPreferredDownloadFolder] file:filename modalForWindow:nil modalDelegate:self didEndSelector:@selector( _downloadFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [download retain]];
 	}
 }
 
@@ -679,7 +679,7 @@ finish:
 	NSMutableDictionary *info = [(NSMutableDictionary *) contextInfo autorelease]; // for the previous retain in _incomingFile:
 	if( returnCode == NSOKButton ) {
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskForTransferSaveLocation"] ) {
-			NSString *path = [[[self class] systemDefaultDownloadFolder] stringByAppendingPathComponent:[info objectForKey:@"filename"]];
+			NSString *path = [[[self class] userPreferredDownloadFolder] stringByAppendingPathComponent:[info objectForKey:@"filename"]];
 			[sheet close];
 			[info setObject:path forKey:@"filename"];
 			[self _incomingFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *) [info retain]];
@@ -687,7 +687,7 @@ finish:
 			NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
 			[sheet close];
 			[savePanel setDelegate:self];
-			[savePanel beginSheetForDirectory:[[self class] systemDefaultDownloadFolder] file:[info objectForKey:@"filename"] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
+			[savePanel beginSheetForDirectory:[[self class] userPreferredDownloadFolder] file:[info objectForKey:@"filename"] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
 		}
 	}
 }

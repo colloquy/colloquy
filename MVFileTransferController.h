@@ -35,7 +35,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 	NSTimer *_updateTimer;
 	NSSet *_safeFileExtentions;
 }
++ (NSString *) userPreferredDownloadFolder;
++ (void) setUserPreferredDownloadFolder:(NSString *) path;
+
 + (MVFileTransferController *) defaultManager;
+
 - (IBAction) showTransferManager:(id) sender;
 
 - (void) downloadFileAtURL:(NSURL *) url toLocalFile:(NSString *) path;
