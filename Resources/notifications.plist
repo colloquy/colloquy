@@ -140,6 +140,12 @@
 	</dict>
 	<dict>
 		<key>identifier</key>
+		<string>JVChatNoticeMessage</string>
+		<key>title</key>
+		<string>Notice Message</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
 		<string>JVChatMentioned</string>
 		<key>title</key>
 		<string>Someone Mentioned You</string>

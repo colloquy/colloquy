@@ -134,6 +134,11 @@
 		<key>soundPath</key>
 		<string>Stoof.aiff</string>
 	</dict>
+	<key>JVNotificationSettings JVChatNoticeMessage</key>
+	<dict>
+		<key>showBubble</key>
+		<true/>
+	</dict>
 	<key>JVNotificationSettings JVChatMemberDemoted</key>
 	<dict>
 		<key>playSound</key>

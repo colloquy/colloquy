@@ -320,14 +320,14 @@ static JVChatController *sharedInstance = nil;
 		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatAlwaysShowNotices"] ) 
 			hideFromUser = NO;
 
-		if( [[user nickname] isEqualToString:@"NickServ"] || [[user nickname] isEqualToString:@"MemoServ"] ) {
-			NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
-			NSAttributedString *messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
-			if( ! messageString ) {
-				[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
-				messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
-			}
+		NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+		NSAttributedString *messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
+		if( ! messageString ) {
+			[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
+			messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
+		}
 
+		if( [[user nickname] isEqualToString:@"NickServ"] || [[user nickname] isEqualToString:@"MemoServ"] ) {
 			if( [[user nickname] isEqualToString:@"NickServ"] ) {
 				if( [[messageString string] rangeOfString:@"password accepted" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
 					NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -348,6 +348,12 @@ static JVChatController *sharedInstance = nil;
 					[[JVNotificationController defaultManager] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
 				}	
 			}
+		} else {
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Notice from %@", "notice message from user title" ), [user displayName]] forKey:@"title"];
+			[context setObject:messageString forKey:@"description"];
+			[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatNoticeMessage" withContextInfo:context];
 		}
 	}
 
