@@ -1270,11 +1270,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	doc = xmlNewDoc( "1.0" );
 
-	xmlXPathObjectPtr result = NULL;
-
 	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
 	if( ! ctx ) return;
-	result = xmlXPathEval( [[NSString stringWithFormat:@"/log/*[name() = 'envelope' and position() = last() and (sender = '%@' or sender/@nickname = '%@')]", user, user] UTF8String], ctx );
+
+	xmlXPathObjectPtr result = xmlXPathEval( [[NSString stringWithFormat:@"/log/*[name() = 'envelope' and position() = last() and (sender = '%@' or sender/@nickname = '%@')]", user, user] UTF8String], ctx );
 
 	if( ! _requiresFullMessage && result && result -> nodesetval -> nodeNr ) {
 		continuation = YES;
