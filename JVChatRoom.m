@@ -10,6 +10,7 @@
 #import "MVTextView.h"
 
 @interface JVDirectChat (JVDirectChatPrivate)
+- (void) _makeHyperlinksInString:(NSMutableString *) string;
 - (void) _didConnect:(NSNotification *) notification;
 @end
 
@@ -29,6 +30,8 @@
 }
 
 - (void) awakeFromNib {
+	[topicLine setDrawsBackground:NO];
+	[[topicLine enclosingScrollView] setDrawsBackground:NO];
 	[super awakeFromNib];
 	[self changeTopic:nil by:nil];
 }
@@ -369,24 +372,31 @@
 }
 
 - (void) changeTopic:(NSData *) topic by:(NSString *) author {
-	NSString *topicString = [[[NSString alloc] initWithData:topic encoding:_encoding] autorelease];
-	if( ! topicString )
-		topicString = [[[NSString alloc] initWithData:topic encoding:NSNonLossyASCIIStringEncoding] autorelease];
+	if( ! [topic isMemberOfClass:[NSNull class]] ) {
+		NSMutableString *topicString = [[[NSMutableString alloc] initWithData:topic encoding:_encoding] autorelease];
+		if( ! topicString )
+			topicString = [[[NSMutableString alloc] initWithData:topic encoding:NSNonLossyASCIIStringEncoding] autorelease];
 
-	if( ! [topicString length] )
-		topicString = [NSString stringWithFormat:@"<span style=\"color: #6c6c6c\">%@</span>", NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" )];
+		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+			[self _makeHyperlinksInString:topicString];
 
-	topicString = [NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", topicString];
+		if( ! [topicString length] )
+			topicString = [NSString stringWithFormat:@"<span style=\"color: #6c6c6c\">%@</span>", NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" )];
 
-	[[topicRenderer mainFrame] loadHTMLString:topicString baseURL:nil];
+		topicString = [NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", topicString];
 
-	[_topic autorelease];
-	_topic = [topic copy];
+		[[topicRenderer mainFrame] loadHTMLString:topicString baseURL:nil];
+		
+		[_topic autorelease];
+		_topic = [topic copy];
+	}
 
-	[_topicAuth autorelease];
-	_topicAuth = [author retain];
+	if( ! [author isMemberOfClass:[NSNull class]] ) {
+		[_topicAuth autorelease];
+		_topicAuth = [author retain];
+	}
 
-	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _finishTopicChange: ) userInfo:NULL repeats:NO];
+	[NSTimer scheduledTimerWithTimeInterval:0. target:self selector:@selector( _finishTopicChange: ) userInfo:NULL repeats:NO];
 }
 
 #pragma mark -
@@ -455,6 +465,8 @@
 }
 @end
 
+#pragma mark -
+
 @implementation JVChatRoom (JVChatRoomPrivate)
 - (void) _didConnect:(NSNotification *) notification {
 	[[self connection] joinChatForRoom:_target];
@@ -464,9 +476,17 @@
 - (void) _finishTopicChange:(id) sender {
 	NSMutableAttributedString *topic = [[[(id <WebDocumentText>)[[[topicRenderer mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	NSString *toolTip = nil;
 	[paraStyle setMaximumLineHeight:13.];
 	[paraStyle setAlignment:NSCenterTextAlignment];
 	[topic addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange( 0, [topic length] )];
-	[topicLine setAttributedStringValue:topic];
+	[[topicLine textStorage] setAttributedString:topic];
+
+	toolTip = [[[topic string] copy] autorelease];
+	if( _topicAuth ) {
+		toolTip = [toolTip stringByAppendingString:@"\n"];
+		toolTip = [toolTip stringByAppendingFormat:NSLocalizedString( @"Topic set by: %@", "topic author tooltip" ), _topicAuth];
+	}
+	[[topicLine enclosingScrollView] setToolTip:toolTip];
 }
 @end

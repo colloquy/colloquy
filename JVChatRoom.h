@@ -1,7 +1,7 @@
 #import "JVDirectChat.h"
 #import <AppKit/NSNibDeclarations.h>
 
-@class NSTextField;
+@class NSTextView;
 @class WebView;
 @class NSMutableDictionary;
 @class NSMutableArray;
@@ -10,7 +10,7 @@
 
 @interface JVChatRoom : JVDirectChat {
 	@protected
-	IBOutlet NSTextField *topicLine;
+	IBOutlet NSTextView *topicLine;
 	IBOutlet WebView *topicRenderer;
 	NSMutableDictionary *_members;
 	NSMutableArray *_sortedMembers;
