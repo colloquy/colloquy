@@ -195,7 +195,7 @@
 		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] && 
 			[controller respondsToSelector:@selector( numberOfChildren )] && [controller numberOfChildren] ) {
 			[viewsDrawer open:nil];
-		} else [viewsDrawer close:nil];
+		} else if( ! [controller respondsToSelector:@selector( numberOfChildren )] ) [viewsDrawer close:nil];
 	}
 }
 
