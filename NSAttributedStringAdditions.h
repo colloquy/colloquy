@@ -1,6 +1,8 @@
 extern NSString *NSChatWindowsIRCFormatType;
 extern NSString *NSChatCTCPTwoFormatType;
 
+#define JVItalicObliquenessValue 0.16
+
 @interface NSAttributedString (NSAttributedStringHTMLAdditions)
 + (id) attributedStringWithHTMLFragment:(NSString *) fragment baseURL:(NSURL *) url;
 
