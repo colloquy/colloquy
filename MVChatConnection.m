@@ -87,12 +87,13 @@ static BOOL applicationQuitting = NO;
 static GMainLoop *glibMainLoop = NULL;
 
 @interface MVChatConnection (MVChatConnectionPrivate)
-+ (MVChatConnection *) _connectionWithTag:(char *) tag;
++ (MVChatConnection *) _connectionForServer:(SERVER_REC *) server;
 + (void) _registerCallbacks;
 + (void) _deregisterCallbacks;
 + (NSData *) _flattenedHTMLDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc;
 - (io_connect_t) _powerConnection;
 - (SERVER_REC *) _irssiConnection;
+- (void) _setIrssiConnection:(SERVER_REC *) server;
 - (void) _registerForSleepNotifications;
 - (void) _deregisterForSleepNotifications;
 - (void) _postNotification:(NSNotification *) notification;
@@ -551,25 +552,31 @@ char *MVChatIRCToXHTML( const char * const string ) {
 #pragma mark -
 
 static void MVChatConnected( SERVER_REC *server ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:server -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:YES];
 }
 
 static void MVChatDisconnect( SERVER_REC *server ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:server -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
 	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
 }
 
-static void MVChatRawMessage( SERVER_REC *server, char *data ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:server -> tag];
+static void MVChatRawIncomingMessage( SERVER_REC *server, char *data ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSData dataWithBytes:data length:strlen( data )], @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+}
+
+static void MVChatRawOutgoingMessage( SERVER_REC *server, char *data ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSData dataWithBytes:data length:strlen( data )], @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
 
 #pragma mark -
 
 static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:channel -> server -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 
@@ -600,13 +607,13 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 }
 
 static void MVChatLeftRoom( CHANNEL_REC *channel ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:channel -> server -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
 
 static void MVChatRoomTopicChanged( CHANNEL_REC *channel ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:channel -> server -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
 
 	char *topic = MVChatIRCToXHTML( channel -> topic );
 	NSData *msgData = [NSData dataWithBytes:topic length:strlen( topic )];
@@ -617,7 +624,7 @@ static void MVChatRoomTopicChanged( CHANNEL_REC *channel ) {
 #pragma mark -
 
 static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( [[self nickname] isEqualToString:[NSString stringWithUTF8String:nick]] ) return;
 
 	char *channel = NULL;
@@ -645,7 +652,7 @@ static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, cons
 }
 
 static void MVChatUserLeftRoom( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( [[self nickname] isEqualToString:[NSString stringWithUTF8String:nick]] ) return;
 
 	char *channel = NULL;
@@ -658,7 +665,7 @@ static void MVChatUserLeftRoom( IRC_SERVER_REC *server, const char *data, const 
 }
 
 static void MVChatUserQuit( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( [[self nickname] isEqualToString:[NSString stringWithUTF8String:nick]] ) return;
 
 	if( *data == ':' ) data++;
@@ -669,7 +676,7 @@ static void MVChatUserQuit( IRC_SERVER_REC *server, const char *data, const char
 }
 
 static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const char *by, const char *address ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	char *channel = NULL, *nick = NULL, *reason = NULL;
 	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, &channel, &nick, &reason );
@@ -690,7 +697,7 @@ static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const ch
 }
 
 static void MVChatInvited( IRC_SERVER_REC *server, const char *data, const char *by, const char *address ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	char *channel = NULL;
 	char *params = event_get_params( data, 2, NULL, &channel );
@@ -702,7 +709,7 @@ static void MVChatInvited( IRC_SERVER_REC *server, const char *data, const char 
 }
 
 static void MVChatUserAway( IRC_SERVER_REC *server, const char *data ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	char *nick = NULL, *message = NULL;
 	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, NULL, &nick, &message );
@@ -719,7 +726,7 @@ static void MVChatUserAway( IRC_SERVER_REC *server, const char *data ) {
 #pragma mark -
 
 static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	if( ! nick ) return;
 
@@ -745,7 +752,7 @@ static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const ch
 }
 
 static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	if( ! nick ) return;
 
@@ -775,7 +782,7 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 }
 
 static void MVChatGetActionMessage( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	if( ! nick ) return;
 	if( ! address ) address = "";
@@ -796,7 +803,7 @@ static void MVChatGetActionMessage( IRC_SERVER_REC *server, const char *data, co
 #pragma mark -
 
 static void MVChatUserNicknameChanged( CHANNEL_REC *channel, NICK_REC *nick, const char *oldnick ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:channel -> server -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
 	NSNotification *note = nil;
 
 	if( [[self nickname] isEqualToString:[NSString stringWithUTF8String:oldnick]] ) {
@@ -809,7 +816,7 @@ static void MVChatUserNicknameChanged( CHANNEL_REC *channel, NICK_REC *nick, con
 }
 
 static void MVChatGotUserMode( CHANNEL_REC *channel, NICK_REC *nick, char *by, char *mode, char *type ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:channel -> server -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
 	unsigned int m = MVChatMemberNoModes;
 
 	if( *mode == '@' ) m = MVChatMemberOperatorMode;
@@ -823,25 +830,25 @@ static void MVChatGotUserMode( CHANNEL_REC *channel, NICK_REC *nick, char *by, c
 #pragma mark -
 
 static void MVChatBuddyOnline( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBuddyIsOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
 
 static void MVChatBuddyOffline( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBuddyIsOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
 
 static void MVChatBuddyAway( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBuddyIsAwayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
 
 static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBuddyIsIdleNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", [NSNumber numberWithLong:0], @"idle", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
@@ -849,7 +856,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 #pragma mark -
 
 static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	char *channel = NULL, *count = NULL, *topic = NULL;
 	char *params = event_get_params( data, 4 | PARAM_FLAG_GETREST, NULL, &channel, &count, &topic );
@@ -864,7 +871,7 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 #pragma mark -
 
 void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	char *command = NULL, *args = NULL;
 	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &command, &args );
@@ -902,7 +909,7 @@ void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, const char 
 }
 
 void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:((SERVER_REC *) server ) -> tag];
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	char *command = NULL, *args = NULL;
 	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &command, &args );
@@ -1425,18 +1432,24 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 @implementation MVChatConnection (MVChatConnectionPrivate)
-+ (MVChatConnection *) _connectionWithTag:(char *) tag {
-	if( ! tag ) return nil;
++ (MVChatConnection *) _connectionForServer:(SERVER_REC *) server {
+	if( ! server -> tag ) return nil;
 
 	MVChatConnection *ret = NULL;
-	sscanf( tag, "%8lx", (unsigned long *) &ret );
+	sscanf( server -> tag, "%8lx", (unsigned long *) &ret );
+
+	if( ! ret ) return nil;
+	if( [ret _irssiConnection] == server ) return ret;
+
+	[ret _setIrssiConnection:server];
 	return ret;
 }
 
 + (void) _registerCallbacks {
 	signal_add_last( "server connected", (SIGNAL_FUNC) MVChatConnected );
 	signal_add_last( "server disconnected", (SIGNAL_FUNC) MVChatDisconnect );
-	signal_add( "server incoming", (SIGNAL_FUNC) MVChatRawMessage );
+	signal_add( "server incoming", (SIGNAL_FUNC) MVChatRawIncomingMessage );
+	signal_add( "server outgoing", (SIGNAL_FUNC) MVChatRawOutgoingMessage );
 
 	signal_add_last( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
 	signal_add_last( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
@@ -1481,7 +1494,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 + (void) _deregisterCallbacks {
 	signal_remove( "server connected", (SIGNAL_FUNC) MVChatConnected );
 	signal_remove( "server disconnected", (SIGNAL_FUNC) MVChatDisconnect );
-	signal_remove( "server incoming", (SIGNAL_FUNC) MVChatRawMessage );
+	signal_remove( "server incoming", (SIGNAL_FUNC) MVChatRawIncomingMessage );
+	signal_remove( "server outgoing", (SIGNAL_FUNC) MVChatRawOutgoingMessage );
 
 	signal_remove( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
 	signal_remove( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
@@ -1546,8 +1560,18 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	return _powerConnection;
 }
 
+#pragma mark -
+
 - (SERVER_REC *) _irssiConnection {
 	return _chatConnection;
+}
+
+- (void) _setIrssiConnection:(SERVER_REC *) server {
+	SERVER_REC *old = _chatConnection;
+	_chatConnection = server;
+
+	if( _chatConnection ) server_ref( _chatConnection );
+	if( old ) server_unref( old );
 }
 
 #pragma mark -
