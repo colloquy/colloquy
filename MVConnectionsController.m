@@ -1,5 +1,6 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
+#import <ChatCore/NSStringAdditions.h>
 
 #import "MVConnectionsController.h"
 #import "JVConnectionInspector.h"
@@ -632,9 +633,9 @@ static NSMenu *favoritesMenu = nil;
 		BOOL handled = NO;
 
 		if( [url fragment] ) {
-			if( [[url fragment] length] > 0 ) target = [url fragment];
+			if( [[url fragment] length] > 0 ) target = [@"#" stringByAppendingString:[[url fragment] stringByDecodingIllegalURLCharacters]];
 		} else if( [url path] && [[url path] length] > 1 ) {
-			target = [[url path] substringFromIndex:1];
+			target = [[[url path] substringFromIndex:1] stringByDecodingIllegalURLCharacters];
 		}
 
 		NSEnumerator *enumerator = [_bookmarks objectEnumerator];
