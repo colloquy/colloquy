@@ -4,6 +4,7 @@
 
 #import "MVFileTransferController.h"
 #import "MVBuddyListController.h"
+#import "MVApplicationController.h"
 #import "JVBuddy.h"
 #import "JVDetailCell.h"
 
@@ -137,6 +138,7 @@ finish:
 
 + (MVFileTransferController *) defaultManager {
 	extern MVFileTransferController *sharedInstance;
+	if( [[[NSApplication sharedApplication] delegate] isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 

@@ -3,6 +3,7 @@
 
 #import "MVConnectionsController.h"
 #import "JVConnectionInspector.h"
+#import "MVApplicationController.h"
 #import "JVChatController.h"
 #import "MVKeyChain.h"
 
@@ -39,6 +40,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 @implementation MVConnectionsController
 + (MVConnectionsController *) defaultManager {
 	extern MVConnectionsController *sharedInstance;
+	if( [[[NSApplication sharedApplication] delegate] isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 

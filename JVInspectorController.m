@@ -1,5 +1,6 @@
 #import "JVInspectorController.h"
 #import <Cocoa/Cocoa.h>
+#import "MVApplicationController.h"
 
 static JVInspectorController *sharedInstance = nil;
 static NSPoint inspectorLastPoint = { 100., 800. };
@@ -14,6 +15,7 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 @implementation JVInspectorController
 + (JVInspectorController *) sharedInspector {
 	extern JVInspectorController *sharedInstance;
+	if( [[[NSApplication sharedApplication] delegate] isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithObject:nil lockedOn:NO] ) );
 }
 

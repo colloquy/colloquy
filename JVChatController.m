@@ -2,6 +2,7 @@
 #import <ChatCore/MVChatConnection.h>
 
 #import "JVChatController.h"
+#import "MVApplicationController.h"
 #import "JVChatWindowController.h"
 #import "JVChatTranscript.h"
 #import "JVDirectChat.h"
@@ -22,6 +23,7 @@ static JVChatController *sharedInstance = nil;
 @implementation JVChatController
 + (JVChatController *) defaultManager {
 	extern JVChatController *sharedInstance;
+	if( [[[NSApplication sharedApplication] delegate] isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
 }
 

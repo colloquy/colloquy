@@ -5,6 +5,7 @@
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
 #import "JVChatController.h"
+#import "MVApplicationController.h"
 #import "MVConnectionsController.h"
 #import "JVInspectorController.h"
 #import "MVTableView.h"
@@ -68,6 +69,7 @@ static MVBuddyListController *sharedInstance = nil;
 @implementation MVBuddyListController
 + (MVBuddyListController *) sharedBuddyList {
 	extern MVBuddyListController *sharedInstance;
+	if( [[[NSApplication sharedApplication] delegate] isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 

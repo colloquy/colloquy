@@ -84,6 +84,12 @@
 
 #pragma mark -
 
+- (BOOL) isTerminating {
+	return _terminating;
+}
+
+#pragma mark -
+
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
 	if( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame ) {
 		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
@@ -105,6 +111,7 @@
 #pragma mark -
 
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
+	_terminating = NO;
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 }
@@ -136,6 +143,7 @@
 }
 
 - (void) applicationWillTerminate:(NSNotification *) notification {
+	_terminating = YES;
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 	[self release];
