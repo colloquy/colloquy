@@ -704,7 +704,7 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (void) _didDisconnect {
-	if( _status != MVChatConnectionSuspendedStatus ) {
+	if( _status != MVChatConnectionSuspendedStatus && _status != MVChatConnectionServerDisconnectedStatus ) {
 		_status = MVChatConnectionDisconnectedStatus;
 	}
 
