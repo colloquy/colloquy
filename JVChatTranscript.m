@@ -48,6 +48,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
+- (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
+- (void) _freeXsltParamArray:(const char **) params;
 - (void) _changeChatStyleMenuSelection;
 - (void) _updateChatStylesMenu;
 - (void) _scanForChatStyles;
@@ -74,6 +76,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		contents = nil;
 		chooseStyle = nil;
 		_isArchive = NO;
+		_params = NULL;
+		_styleParams = nil;
 		_chatStyle = nil;
 		_chatStyleVariant = nil;
 		_chatEmoticons = nil;
@@ -116,9 +120,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 - (void) awakeFromNib {
 	NSView *toolbarItemContainerView = nil;
-
-	[self _updateChatStylesMenu];
-
+	
 	if( ! _chatEmoticons )
 		[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
 
@@ -126,6 +128,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		NSBundle *style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 		[self setChatStyle:style withVariant:[[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]]];
 	}
+
+	[self _updateChatStylesMenu];
 
 	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 
@@ -156,6 +160,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 	xsltFreeStylesheet( _chatXSLStyle );
 	_chatXSLStyle = NULL;
+
+	[self _freeXsltParamArray:_params];
+	_params = NULL;
 
 	xsltCleanupGlobals();
 	xmlCleanupParser();
@@ -323,6 +330,12 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[_chatStyleVariant autorelease];
 	_chatStyleVariant = [variant retain];
 
+	[_styleParams autorelease];
+	_styleParams = [[NSDictionary dictionaryWithContentsOfFile:[_chatStyle pathForResource:@"parameters" ofType:@"plist"]] retain];
+
+	if( _params ) [self _freeXsltParamArray:_params];
+	_params = [self _xsltParamArrayWithDictionary:_styleParams];
+
 	if( _chatXSLStyle ) xsltFreeStylesheet( _chatXSLStyle );
 	_chatXSLStyle = xsltParseStylesheetFile( (const xmlChar *)[self _chatStyleXSLFilePath] );
 
@@ -485,6 +498,40 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptPrivate)
+- (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
+	NSEnumerator *keyEnumerator = [dictionary keyEnumerator];
+	NSEnumerator *enumerator = [dictionary objectEnumerator];
+	NSString *key = nil;
+	NSString *value = nil;
+	const char **temp = NULL, **ret = NULL;
+
+	if( ! [dictionary count] ) return NULL;
+
+	ret = temp = malloc( ( ( [dictionary count] * 2 ) + 1 ) * sizeof( char * ) );
+
+	while( ( key = [keyEnumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
+		*(temp++) = (char *) strdup( [key UTF8String] );
+		*(temp++) = (char *) strdup( [value UTF8String] );
+	}
+
+	*(temp) = NULL;
+
+	return ret;
+}
+
+- (void) _freeXsltParamArray:(const char **) params {
+	const char **temp = params;
+
+	if( ! params ) return;
+
+	while( *(temp) ) {
+		free( (void *)*(temp++) );
+		free( (void *)*(temp++) );
+	}
+
+	free( params );
+}
+
 - (NSMenu *) _stylesMenu {
 	if( ! chooseStyle ) [self view];
 	return [[[chooseStyle menu] retain] autorelease];
@@ -557,8 +604,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		if( [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] count] ) {
 			denumerator = [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] objectEnumerator];
 			subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-
-			subMenuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Normal", "normal style variant menu item title" ) action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
+			subMenuItem = [[[NSMenuItem alloc] initWithTitle:( [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] ? [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] : NSLocalizedString( @"Normal", "normal style variant menu item title" ) ) action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
 			[subMenuItem setTarget:self];
 			[subMenuItem setRepresentedObject:[style bundleIdentifier]];
 			[subMenu addItem:subMenuItem];
@@ -617,7 +663,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSParameterAssert( doc != NULL );
 	NSAssert( _chatXSLStyle, @"XSL not allocated." );
 
-	if( ( res = xsltApplyStylesheet( _chatXSLStyle, doc, NULL ) ) ) {
+	if( ( res = xsltApplyStylesheet( _chatXSLStyle, doc, _params ) ) ) {
 		xsltSaveResultToString( &result, &len, res, _chatXSLStyle );
 		xmlFreeDoc( res );
 	}
@@ -631,7 +677,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 }
 
 - (NSString *) _chatStyleCSSFileURL {
-	NSString *path = [_chatStyle pathForResource:[_chatStyle objectForInfoDictionaryKey:@"JVStyleName"] ofType:@"css"];
+	NSString *path = [_chatStyle pathForResource:@"main" ofType:@"css"];
 	if( path ) return [[[[NSURL fileURLWithPath:path] absoluteString] retain] autorelease];
 	else return @"";
 }
@@ -647,7 +693,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 }
 
 - (const char *) _chatStyleXSLFilePath {
-	NSString *path = [_chatStyle pathForResource:[_chatStyle objectForInfoDictionaryKey:@"JVStyleName"] ofType:@"xsl"];
+	NSString *path = [_chatStyle pathForResource:@"main" ofType:@"xsl"];
 	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"default" ofType:@"xsl"];
 	return [path fileSystemRepresentation];
 }
@@ -656,7 +702,6 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSDictionary *info = [style localizedInfoDictionary];
 	NSString *label = [info objectForKey:@"CFBundleName"];
 	if( ! label ) label = [style objectForInfoDictionaryKey:@"CFBundleName"];
-	if( ! label ) label = [style objectForInfoDictionaryKey:@"JVStyleName"];
 	if( ! label ) label = [NSString stringWithFormat:@"Style %x", style];
 	return [[label retain] autorelease];
 }
