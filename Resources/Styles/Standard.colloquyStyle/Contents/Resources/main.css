@@ -23,6 +23,7 @@ body {
 .event {
 	color: #aaa;
 	text-align: center;
+	padding-bottom: 2px;
 }
 
 .envelope {
