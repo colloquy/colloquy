@@ -1111,6 +1111,9 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	NSParameterAssert( nickname != nil );
 
 	if( [self isConnected] ) {
+		g_free_not_null( [self _irssiConnection] -> connrec -> nick );
+		[self _irssiConnection] -> connrec -> nick = g_strdup( [nickname UTF8String] );		
+
 		if( ! [nickname isEqualToString:[self nickname]] ) {
 			_nickIdentified = NO;
 			[self sendRawMessageWithFormat:@"NICK %@", nickname];
