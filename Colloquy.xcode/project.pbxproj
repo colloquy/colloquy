@@ -134,7 +134,7 @@
 		};
 		0A60C1600630D96D00DC6280 = {
 			children = (
-				1CB795BA066B94120085A69C,
+				1C2217C3067170DF0083BEA2,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -426,6 +426,21 @@
 			path = Resources/ChatCore.scriptTerminology;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1C2217C3067170DF0083BEA2 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = ChatCore.framework;
+			refType = 3;
+			remoteRef = 1C2217C4067170E50083BEA2;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C2217C4067170E50083BEA2 = {
+			containerPortal = 0A60C15F0630D96D00DC6280;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
 		};
 		1C2462A205F9205900505752 = {
 			fileEncoding = 4;
@@ -2606,21 +2621,6 @@
 			settings = {
 			};
 		};
-		1CB795BA066B94120085A69C = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = ChatCore.framework;
-			refType = 3;
-			remoteRef = 1CB795BB066B94300085A69C;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1CB795BB066B94300085A69C = {
-			containerPortal = 0A60C15F0630D96D00DC6280;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
-			remoteInfo = "Chat Core (Framework)";
-		};
 		1CBA4E64062CCDA90082D1BF = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -3797,6 +3797,7 @@
 		};
 		1CFAFED5053C1BA500C702F9 = {
 			children = (
+				1CE2BC1E042F4AD300000102,
 				1C1ACFB605344FCC00F71D4E,
 				1C1ACFB505344FCC00F71D4E,
 				1CB4DCAF0536282B0080D36F,
@@ -3821,7 +3822,6 @@
 				1CB3716F060CC7E200F6A81F,
 				1CE2BC54042F75FB00000102,
 				1CE2BC53042F75FB00000102,
-				1CE2BC1E042F4AD300000102,
 				1CE2BC1D042F4AD300000102,
 				F5C497750385713801000102,
 				F5C497740385713801000102,

@@ -4,13 +4,14 @@
 #import <libxml/debugXML.h>
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>
+#import <AGRegex/AGRegex.h>
 
 #import "JVChatMessage.h"
 #import "JVChatTranscript.h"
 
 @implementation JVChatMessage
-+ (id) messageWithNode:(/* xmlNode */ void *) node andTranscript:(JVChatTranscript *) transcript {
-	return [[[self alloc] initWithNode:node andTranscript:transcript] autorelease];
++ (id) messageWithNode:(/* xmlNode */ void *) node messageIndex:(unsigned long long) messageNumber andTranscript:(JVChatTranscript *) transcript {
+	return [[[self alloc] initWithNode:node messageIndex:messageNumber andTranscript:transcript] autorelease];
 }
 
 - (id) init {
@@ -18,6 +19,7 @@
 		_loaded = NO;
 		_transcript = nil;
 		_messageNumber = 0;
+		_envelopeNumber = 0;
 		_sender = nil;
 		_htmlMessage = nil;
 		_attributedMessage = nil;
@@ -29,13 +31,14 @@
 	return self;
 }
 
-- (id) initWithNode:(/* xmlNode */ void *) node andTranscript:(JVChatTranscript *) transcript {
+- (id) initWithNode:(/* xmlNode */ void *) node messageIndex:(unsigned long long) messageNumber andTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) ) {
 		_node = node;
 		_transcript = transcript;
+		_messageNumber = messageNumber;
 
-		xmlChar *idStr = xmlGetProp( _node, "id" );
-		_messageNumber = ( idStr ? strtoul( idStr, NULL, 0 ) : 0 );
+		xmlChar *idStr = xmlGetProp( ((xmlNode *) _node ) -> parent, "id" );
+		_envelopeNumber = ( idStr ? strtoul( idStr, NULL, 0 ) : 0 );
 		xmlFree( idStr );
 	}
 
@@ -66,8 +69,21 @@
 	xmlChar *dateStr = xmlGetProp( _node, "received" );
 	_date = ( dateStr ? [NSDate dateWithString:[NSString stringWithUTF8String:dateStr]] : nil );
 	xmlFree( dateStr );
+	
+	xmlBufferPtr buffer = xmlBufferCreate();
+	xmlNodeDump( buffer, ((xmlNode *) _node) -> doc, (xmlNode *) _node, 0, 0 );
+	if( buffer -> content ) _htmlMessage = [NSString stringWithUTF8String:buffer -> content];
+		xmlBufferFree( buffer );
 
-	xmlNode *subNode = ((xmlNode *) _node ) -> children;;
+	AGRegex *regex = [AGRegex regexWithPattern:@"^<message[^>]*>(.*)</message>$" options:AGRegexCaseInsensitive];
+	AGRegexMatch *match = [regex findInString:_htmlMessage];
+	if( [match count] ) _htmlMessage = [match groupAtIndex:1];
+	else _htmlMessage = nil;
+
+	_action = ( xmlHasProp( _node, "action" ) ? YES : NO );
+	_highlighted = ( xmlHasProp( _node, "highlight" ) ? YES : NO );
+	
+	xmlNode *subNode = ((xmlNode *) _node ) -> parent -> children;
 
 	do {
 		if( ! strncmp( "sender", subNode -> name, 6 ) ) {
@@ -75,19 +91,6 @@
 			if( ! senderStr ) senderStr = xmlNodeGetContent( subNode );
 			if( senderStr ) _sender = [NSString stringWithUTF8String:senderStr];
 			xmlFree( senderStr );
-		} else if( ! strncmp( "message", subNode -> name, 7 ) ) {
-			xmlBufferPtr buffer = xmlBufferCreate();
-			xmlNodeDump( buffer, subNode -> doc, subNode, 0, 0 );
-			if( buffer -> content ) _htmlMessage = [NSString stringWithUTF8String:buffer -> content];
-			xmlBufferFree( buffer );
-
-			if( [_htmlMessage length] > 19 ) {
-				_htmlMessage = [_htmlMessage substringToIndex:( [_htmlMessage length] - 10 )]; // length of </message>
-				_htmlMessage = [_htmlMessage substringFromIndex:9]; // length of <message>
-			} else _htmlMessage = nil;
-
-			_action = ( xmlHasProp( subNode, "action" ) ? YES : NO );
-			_highlighted = ( xmlHasProp( subNode, "highlight" ) ? YES : NO );
 		}
 	} while( ( subNode = subNode -> next ) ); 
 
@@ -145,8 +148,12 @@
 	return _transcript;
 }
 
-- (unsigned long) messageNumber {
+- (unsigned long long) messageNumber {
 	return _messageNumber;
+}
+
+- (unsigned long long) envelopeNumber {
+	return _envelopeNumber;
 }
 
 #pragma mark -

@@ -23,6 +23,7 @@
 #import <libxml/debugXML.h>
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>
+#import <libxml/xpathInternals.h>
 
 NSMutableSet *JVChatEmoticonBundles = nil;
 
@@ -473,8 +474,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
 	if( ! ctx ) return 0;
 
-	xmlXPathObjectPtr result = xmlXPathEval( "/log/envelope", ctx );
-	if( ! result ) return 0;
+	xmlXPathObjectPtr result = xmlXPathEval( "/log/envelope/message", ctx );
+	if( ! result || ! result -> nodesetval ) return 0;
 
 	unsigned long ret = result -> nodesetval -> nodeNr;
 
@@ -499,11 +500,17 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 - (NSArray *) messagesInRange:(NSRange) range {
 	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
 	if( ! ctx ) return nil;
+	
+ /* We need to discover all messages which are children of envelope, within the specified range. 
+	We don't have a counter attribute to work with, and the Xpath position() doesn't help us - we need 
+	to get a Nodeset, and then apply the range to that.
+	Note that the nodeset is unsorted by default. */
 
-	xmlXPathObjectPtr result = xmlXPathEval( [[NSString stringWithFormat:@"/log/envelope[@id >= %ld and @id < %ld]", range.location, range.location + range.length] UTF8String], ctx );
-
-	if( ! result || ! result -> nodesetval -> nodeNr )
+	xmlXPathObjectPtr result = xmlXPathEval("/log/envelope/message", ctx );
+	if( ! result || ! result -> nodesetval )
 		return nil;
+
+	xmlXPathNodeSetSort( result -> nodesetval ); // now sort the resultant nodeset in document order
 
 	unsigned int i = 0;
 
@@ -516,17 +523,17 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:size];
 	JVChatMessage *msg = nil;
 
-	for( i = 0; i < size; i++ ) {
+	for( i = range.location; i < ( range.location + range.length ); i++ ) {
 		node = result -> nodesetval -> nodeTab[i];
 		if( ! node ) continue;
-		if( [_messages count] > (range.location + i) && [[_messages objectAtIndex:(range.location + i)] isKindOfClass:[NSNull class]] ) {
-			msg = [JVChatMessage messageWithNode:node andTranscript:self];
-			[_messages replaceObjectAtIndex:(range.location + i) withObject:msg];
-		} else if( [_messages count] > (range.location + i) && [[_messages objectAtIndex:(range.location + i)] isKindOfClass:[JVChatMessage class]] ) {
-			msg = [_messages objectAtIndex:(range.location + i)];
-		} else if( [_messages count] == (range.location + i) ) {
-			msg = [JVChatMessage messageWithNode:node andTranscript:self];
-			[_messages insertObject:msg atIndex:(range.location + i)];
+		if( [_messages count] > (i) && [[_messages objectAtIndex:(i)] isKindOfClass:[NSNull class]] ) {
+			msg = [JVChatMessage messageWithNode:node messageIndex:i andTranscript:self];
+			[_messages replaceObjectAtIndex:(i) withObject:msg];
+		} else if( [_messages count] > (i) && [[_messages objectAtIndex:(i)] isKindOfClass:[JVChatMessage class]] ) {
+			msg = [_messages objectAtIndex:(i)];
+		} else if( [_messages count] == (i) ) {
+			msg = [JVChatMessage messageWithNode:node messageIndex:i andTranscript:self];
+			[_messages insertObject:msg atIndex:(i)];
 		} else continue;
 		if( msg ) [ret addObject:msg];
 	}
