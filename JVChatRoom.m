@@ -320,7 +320,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		// On #gentoo this will be called 800+ times
 		NSMutableString *escapedName = [name mutableCopy];
 		[escapedName escapeCharactersInSet:escapeSet];
-		NSString *pattern = [[NSString alloc] initWithFormat:@"\\b(%@)\\b", escapedName];
+		NSString *pattern = [[NSString alloc] initWithFormat:@"(?:\\W|^)(%@)(?:\\W|$)", escapedName];
 		regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 		[escapedName release];
 		[pattern release];
