@@ -1,4 +1,8 @@
-#import "MVChatConnection.h"
+@class NSMutableData;
+@class NSMutableAttributedString;
+@class NSString;
+@class NSAttributedString;
+@class MVChatConnection;
 
 @protocol MVChatPlugin
 - (id) initWithBundle:(NSBundle *) bundle;
