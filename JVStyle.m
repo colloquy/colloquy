@@ -1,0 +1,314 @@
+#import <Cocoa/Cocoa.h>
+
+#import <libxml/xinclude.h>
+#import <libxslt/transform.h>
+#import <libxslt/xsltutils.h>
+
+#import "JVStyle.h"
+#import "MVApplicationController.h"
+#import "NSBundleAdditions.h"
+
+@interface JVStyle (JVStylePrivate)
++ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
++ (void) _freeXsltParamArray:(const char **) params;
+
+- (void) _setBundle:(NSBundle *) bundle;
+- (void) _setXSLStyle:(NSString *) path;
+- (void) _setStyleOptions:(NSArray *) options;
+@end
+
+#pragma mark -
+
+static NSMutableSet *allStyles = nil;
+
+NSString *JVStylesScannedNotification = @"JVStylesScannedNotification";
+NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotification";
+
+@implementation JVStyle
++ (void) scanForStyles {
+	extern NSMutableSet *allStyles;
+
+	if( ! allStyles ) allStyles = [[NSMutableSet set] retain];
+
+	NSMutableSet *styles = [NSMutableSet set];
+
+	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
+	[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle mainBundle] resourcePath]]];
+	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
+	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
+	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
+
+	NSEnumerator *enumerator = [paths objectEnumerator];
+	NSString *path = nil;
+	while( ( path = [enumerator nextObject] ) ) {
+		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
+		NSString *file = nil;
+		while( ( file = [denumerator nextObject] ) ) {
+			if( [[file pathExtension] isEqualToString:@"colloquyStyle"] ) {
+				NSBundle *bundle = nil;
+				if( ( bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] ) ) {
+					JVStyle *style = [[JVStyle newWithBundle:bundle] autorelease];
+					[styles addObject:style];
+				}
+			}
+		}
+	}
+
+	[allStyles intersectSet:styles];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles]; 
+}
+
++ (id) styleWithIdentifier:(NSString *) identifier {
+	extern NSMutableSet *allStyles;
+	NSEnumerator *enumerator = [allStyles objectEnumerator];
+	JVStyle *style = nil;
+
+	while( ( style = [enumerator nextObject] ) )
+		if( [[style identifier] isEqualToString:identifier] )
+			return style;
+
+	return nil;
+}
+
++ (id) newWithBundle:(NSBundle *) bundle {
+	id ret = [[self styleWithIdentifier:[bundle bundleIdentifier]] retain];
+	if( ! ret ) ret = [[JVStyle alloc] initWithBundle:bundle];
+	return ret;
+}
+
++ (void) initialize {
+	[super initialize];
+	static BOOL tooLate = NO;
+	if( ! tooLate ) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( scanForStyles ) name:JVChatStyleInstalledNotification object:nil];
+		[self scanForStyles];
+		tooLate = YES;
+	}
+}
+
+#pragma mark -
+
+- (id) initWithBundle:(NSBundle *) bundle {
+	if( ( self = [self init] ) ) {
+		_bundle = nil;
+		_XSLStyle = NULL;
+		_styleOptions = nil;
+		[self _setBundle:bundle];
+	}
+
+	return self;
+}
+
+- (void) dealloc {
+	[self _setBundle:nil]; // this will dealloc all other dependant objects
+	[super dealloc];
+}
+
+#pragma mark -
+
+- (NSBundle *) bundle {
+	return _bundle;
+}
+
+- (NSString *) identifier {
+	return [_bundle bundleIdentifier];
+}
+
+#pragma mark -
+
+- (NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters {
+	NSParameterAssert( xml != nil );
+	if( ! [xml length] ) return @"";
+
+	const char *string = [xml UTF8String];
+	if( ! string ) return nil;
+
+	xmlDoc *doc = xmlParseMemory( string, strlen( string ) );
+	NSString *result = [self transformXMLDocument:doc withParameters:parameters];
+	xmlFreeDoc( doc );
+
+	return result;
+}
+
+- (NSString *) transformXMLDocument:(void *) document withParameters:(NSDictionary *) parameters {
+	NSParameterAssert( document != NULL );
+
+	if( ! _XSLStyle ) [self _setXSLStyle:[self XMLStyleSheetFilePath]];
+	NSAssert( _XSLStyle, @"XSL not allocated." );
+
+	xmlDoc *doc = document;
+	const char **params = [[self class] _xsltParamArrayWithDictionary:parameters];
+	xmlDoc *res = NULL;
+	xmlChar *result = NULL;
+	NSString *ret = nil;
+	int len = 0;
+
+	if( ( res = xsltApplyStylesheet( _XSLStyle, doc, params ) ) ) {
+		xsltSaveResultToString( &result, &len, res, _XSLStyle );
+		xmlFreeDoc( res );
+	}
+
+	if( result ) {
+		ret = [NSString stringWithUTF8String:result];
+		free( result );
+	}
+
+	[[self class] _freeXsltParamArray:params];
+
+	return [[ret retain] autorelease];
+}
+
+#pragma mark -
+
+- (NSString *) displayName {
+	return [_bundle displayName];
+}
+
+- (NSString *) defaultVariantDisplayName {
+	NSString *name = [_bundle objectForInfoDictionaryKey:@"JVBaseStyleVariantName"];
+	return ( name ? name : NSLocalizedString( @"Normal", "normal style variant menu item title" ) );
+}
+
+- (NSArray *) variantStyleSheetNames {
+	return [_bundle pathsForResourcesOfType:@"css" inDirectory:@"Variants"];
+}
+
+- (NSArray *) userVariantStyleSheetNames {
+	return [[NSFileManager defaultManager] directoryContentsAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [self identifier]] stringByExpandingTildeInPath]];
+}
+
+- (BOOL) isUserVariantName:(NSString *) name {
+	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [self identifier], name] stringByExpandingTildeInPath];
+	return [[NSFileManager defaultManager] isReadableFileAtPath:path];
+}
+
+- (NSArray *) styleSheetOptions {
+	if( ! _styleOptions ) {
+		_styleOptions = [[NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"styleOptions" ofType:@"plist"]] retain];
+		if( [_bundle objectForInfoDictionaryKey:@"JVStyleOptions"] )
+			[(NSMutableArray *)_styleOptions addObjectsFromArray:[_bundle objectForInfoDictionaryKey:@"JVStyleOptions"]];
+	}
+
+	return _styleOptions;
+}
+
+#pragma mark -
+
+- (NSURL *) baseLocation {
+	NSString *path = [_bundle resourcePath];
+	if( path ) return [NSURL fileURLWithPath:path];
+	return nil;
+}
+
+- (NSURL *) mainStyleSheetLocation {
+	NSString *path = [_bundle pathForResource:@"main" ofType:@"css"];
+	if( path ) return [NSURL fileURLWithPath:path];
+	return nil;
+}
+
+- (NSURL *) variantStyleSheetLocationWithName:(NSString *) name {
+	if( ! [name length] ) return nil;
+
+	NSString *path = [_bundle pathForResource:name ofType:@"css" inDirectory:@"Variants"];
+	if( path ) return [NSURL fileURLWithPath:path];
+
+	path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [self identifier], name] stringByExpandingTildeInPath];
+	if( [[NSFileManager defaultManager] isReadableFileAtPath:path] )
+		return [NSURL fileURLWithPath:path];
+
+	return nil;
+}
+
+- (NSString *) XMLStyleSheetFilePath {
+	NSString *path = [_bundle pathForResource:@"main" ofType:@"xsl"];
+	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"default" ofType:@"xsl"];
+	return path;
+}
+
+- (NSString *) previewTranscriptFilePath {
+	NSString *path = [_bundle pathForResource:@"preview" ofType:@"colloquyTranscript"];
+	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"preview" ofType:@"colloquyTranscript"];
+	return path;
+}
+
+- (NSString *) headerFilePath {
+	return [_bundle pathForResource:@"supplement" ofType:@"html"];
+}
+
+#pragma mark -
+
+- (NSString *) contentsOfMainStyleSheet {
+	NSString *path = [[self mainStyleSheetLocation] path];
+	return ( path ? [NSString stringWithContentsOfFile:path] : nil );
+}
+
+- (NSString *) contentsOfVariantStyleSheetWithName:(NSString *) name {
+	NSString *path = [[self variantStyleSheetLocationWithName:name] path];
+	return ( path ? [NSString stringWithContentsOfFile:path] : nil );
+}
+
+- (NSString *) contentsOfHeaderFile {
+	NSString *path = [self headerFilePath];
+	return ( path ? [NSString stringWithContentsOfFile:path] : nil );
+}
+@end
+
+#pragma mark -
+
+@implementation JVStyle (JVStylePrivate)
++ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
+	NSEnumerator *keyEnumerator = [dictionary keyEnumerator];
+	NSEnumerator *enumerator = [dictionary objectEnumerator];
+	NSString *key = nil;
+	NSString *value = nil;
+	const char **temp = NULL, **ret = NULL;
+
+	if( ! [dictionary count] ) return NULL;
+
+	ret = temp = malloc( ( ( [dictionary count] * 2 ) + 1 ) * sizeof( char * ) );
+
+	while( ( key = [keyEnumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
+		*(temp++) = (char *) strdup( [key UTF8String] );
+		*(temp++) = (char *) strdup( [value UTF8String] );
+	}
+
+	*(temp) = NULL;
+
+	return ret;
+}
+
++ (void) _freeXsltParamArray:(const char **) params {
+	const char **temp = params;
+
+	if( ! params ) return;
+
+	while( *(temp) ) {
+		free( (void *)*(temp++) );
+		free( (void *)*(temp++) );
+	}
+
+	free( params );
+}
+
+#pragma mark -
+
+- (void) _setBundle:(NSBundle *) bundle {
+	[_bundle autorelease];
+	_bundle = [bundle retain];
+	[_bundle load];
+
+	[self _setXSLStyle:nil];
+	[self _setStyleOptions:nil];
+}
+
+- (void) _setXSLStyle:(NSString *) path {
+	if( _XSLStyle ) xsltFreeStylesheet( _XSLStyle );
+	_XSLStyle = ( [path length] ? xsltParseStylesheetFile( (const xmlChar *)[path fileSystemRepresentation] ) : NULL );
+}
+
+- (void) _setStyleOptions:(NSArray *) options {
+	[_styleOptions autorelease];
+	_styleOptions = [options retain];
+}
+@end
