@@ -199,11 +199,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self _refreshWindow];
 
 	if( ! [_views count] ) {
-		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[[JVChatController defaultManager] methodSignatureForSelector:@selector( disposeChatWindowController: )]];
-		[invocation setTarget:[JVChatController defaultManager]];
-		[invocation setSelector:@selector( disposeChatWindowController: )];
-		[invocation setArgument:&self atIndex:2];
-		[NSTimer scheduledTimerWithTimeInterval:0. invocation:invocation repeats:NO];
+		[[JVChatController defaultManager] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
 		[[self window] orderOut:nil];
 	}
 }
@@ -214,8 +210,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) removeAllChatViewControllers {
-	NSInvocation *invocation = nil;
-
 	[_activeViewController autorelease];
 	_activeViewController = nil;
 
@@ -224,11 +218,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self _refreshList];
 	[self _refreshWindow];
 
-	invocation = [NSInvocation invocationWithMethodSignature:[[JVChatController defaultManager] methodSignatureForSelector:@selector( disposeChatWindowController: )]];
-	[invocation setTarget:[JVChatController defaultManager]];
-	[invocation setSelector:@selector( disposeChatWindowController: )];
-	[invocation setArgument:&self atIndex:2];
-	[NSTimer scheduledTimerWithTimeInterval:0. invocation:invocation repeats:NO];
+	[[JVChatController defaultManager] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
 	[[self window] orderOut:nil];
 }
 
@@ -375,11 +365,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 @implementation JVChatWindowController (JVChatWindowControllerDelegate)
 - (void) windowWillClose:(NSNotification *) notification {
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[[JVChatController defaultManager] methodSignatureForSelector:@selector( disposeChatWindowController: )]];
-	[invocation setTarget:[JVChatController defaultManager]];
-	[invocation setSelector:@selector( disposeChatWindowController: )];
-	[invocation setArgument:&self atIndex:2];
-	[NSTimer scheduledTimerWithTimeInterval:0. invocation:invocation repeats:NO];
+	[[JVChatController defaultManager] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
 }
 
 - (void) windowDidBecomeMain:(NSNotification *) notification {
