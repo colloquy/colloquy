@@ -45,6 +45,10 @@
 - (BOOL) appendChatMessage:(JVChatMessage *) message;
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element;
 
+- (void) markScrollbarForMessage:(JVChatMessage *) message;
+- (void) markScrollbarForMessages:(NSArray *) messages;
+- (void) clearScrollbarMarks;
+
 - (JVMarkedScroller *) verticalMarkedScroller;
 - (IBAction) jumpToPreviousHighlight:(id) sender;
 - (IBAction) jumpToNextHighlight:(id) sender;

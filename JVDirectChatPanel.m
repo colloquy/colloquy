@@ -748,6 +748,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	JVChatMessage *newMessage = [[self transcript] appendMessage:cmessage];
 
 	if( [display appendChatMessage:newMessage] ) {
+		if( [cmessage isHighlighted] ) [display markScrollbarForMessage:newMessage];
 		_firstMessage = NO; // not the first message anymore
 	} else if( [cmessage ignoreStatus] == JVNotIgnored ) {
 		// the style decided to excluded this message, decrease the new message counts

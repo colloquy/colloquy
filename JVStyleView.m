@@ -221,6 +221,8 @@
 #pragma mark -
 
 - (BOOL) appendChatMessage:(JVChatMessage *) message {
+	if( ! _webViewReady ) return;
+
 	NSString *result = nil;
 
 #ifdef WebKitVersion146
@@ -250,6 +252,8 @@
 }
 
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element {
+	if( ! _webViewReady ) return;
+
 	NSString *result = nil;
 
 	@try {
@@ -263,6 +267,35 @@
 	if( [result length] ) [self _appendMessage:result];
 
 	return ( [result length] ? YES : NO );
+}
+
+#pragma mark -
+
+- (void) markScrollbarForMessage:(JVChatMessage *) message {
+	if( _switchingStyles || ! _webViewReady ) return;
+	long loc = [self _locationOfMessage:message];
+	if( loc ) [[self verticalMarkedScroller] addMarkAt:loc];
+}
+
+- (void) markScrollbarForMessages:(NSArray *) messages {
+	if( _switchingStyles || ! _webViewReady ) return;
+
+	JVMarkedScroller *scroller = [self verticalMarkedScroller];
+	NSEnumerator *enumerator = [messages objectEnumerator];
+	JVChatMessage *message = nil;
+
+	while( ( message = [enumerator nextObject] ) ) {
+		long loc = [self _locationOfMessage:message];
+		if( loc ) [scroller addMarkAt:loc];
+	}
+}
+
+- (void) clearScrollbarMarks {
+	if( ! _webViewReady ) return;
+
+	JVMarkedScroller *scroller = [self verticalMarkedScroller];
+	[scroller removeAllMarks];
+	[scroller removeAllShadedAreas];	
 }
 
 #pragma mark -
@@ -330,6 +363,8 @@
 }
 
 - (void) scrollToBottom {
+	if( ! _webViewReady ) return;
+
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
@@ -347,7 +382,10 @@
 - (void) _resetDisplay {
 	_webViewReady = NO;
 	[[self class] cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+
 	[self stopLoading:nil];
+	[self clearScrollbarMarks];
+
 	[[self window] disableFlushWindow];
 	[[self mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 }
@@ -362,13 +400,21 @@
 	NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[self styleParameters]];
 	unsigned long elementCount = [transcript elementCount];
 	unsigned long i = elementCount;
+	NSEnumerator *enumerator = nil;
 	NSArray *elements = nil;
+	id element = nil;
 	NSString *result = nil;
+	NSMutableArray *highlightedMsgs = [NSMutableArray arrayWithCapacity:( [self scrollbackLimit] / 8 )];
 
 	[parameters setObject:@"'yes'" forKey:@"bulkTransform"];
 
 	for( i = elementCount; i > ( elementCount - MIN( [self scrollbackLimit], elementCount ) ); i -= MIN( 25, i ) ) {
 		elements = [transcript elementsInRange:NSMakeRange( i - MIN( 25, i ), MIN( 25, i ) )];
+
+		enumerator = [elements objectEnumerator];
+		while( ( element = [enumerator nextObject] ) )
+			if( [element isKindOfClass:[JVChatMessage class]] && [element isHighlighted] )
+				[highlightedMsgs addObject:element];
 
 		@try {
 			result = [style transformChatTranscriptElements:elements withParameters:parameters];
@@ -385,13 +431,20 @@
 		}
 	}
 
+	_switchingStyles = NO;
+	[self performSelectorOnMainThread:@selector( markScrollbarForMessages: ) withObject:highlightedMsgs waitUntilDone:YES];
+
 quickEnd:
+	_switchingStyles = NO;
+
 	[style release];
 	[transcript release];
 	[pool release];
 }
 
 - (void) _appendMessage:(NSString *) message {
+	if( ! _webViewReady ) return;
+
 	unsigned int messageCount = [self _visibleMessageCount];
 	unsigned int scrollbackLimit = [self scrollbackLimit];
 	BOOL subsequent = ( [message rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
@@ -457,6 +510,8 @@ quickEnd:
 }
 
 - (void) _prependMessages:(NSString *) messages {
+	if( ! _webViewReady ) return;
+
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		NSMutableString *result = [messages mutableCopy];
@@ -513,6 +568,7 @@ quickEnd:
 #pragma mark -
 
 - (long) _locationOfMessageWithIdentifier:(NSString *) identifier {
+	if( ! _webViewReady ) return 0;
 	if( ! [identifier length] ) return 0;
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
@@ -532,6 +588,7 @@ quickEnd:
 }
 
 - (long) _locationOfElementAtIndex:(unsigned long) index {
+	if( ! _webViewReady ) return 0;
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
@@ -546,6 +603,7 @@ quickEnd:
 }
 
 - (unsigned long) _visibleMessageCount {
+	if( ! _webViewReady ) return 0;
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		return [[[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] childNodes] length];
@@ -558,6 +616,8 @@ quickEnd:
 #pragma mark -
 
 - (void) _setupMarkedScroller {
+	if( ! _webViewReady ) return;
+
 	NSScrollView *scrollView = [[[[self mainFrame] frameView] documentView] enclosingScrollView];
 	[scrollView setHasHorizontalScroller:NO];
 	[scrollView setAllowsHorizontalScrolling:NO];
