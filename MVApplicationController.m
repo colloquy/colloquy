@@ -450,14 +450,11 @@ static BOOL applicationIsTerminating = NO;
 				if( [iconPath length] ) {
 					NSURL *iconURL;
 					if( iconURL = [NSURL URLWithString:iconPath] ) {
-						//NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingURL:[NSURL URLWithString:iconPath]] autorelease];
+						// NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingURL:[NSURL URLWithString:iconPath]] autorelease];
 						// Lets download the icon with a 1-second timeout
 						// Let's also ask for the cache if it exists rather than using protocol default
-						NSURLRequest *iconRequest = [NSURLRequest requestWithURL:iconURL
-																	 cachePolicy:NSURLRequestReturnCacheDataElseLoad
-																 timeoutInterval:1.0];
-						NSData *iconData = [NSURLConnection sendSynchronousRequest:iconRequest
-																 returningResponse:nil error:nil];
+						NSURLRequest *iconRequest = [NSURLRequest requestWithURL:iconURL cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:1.0];
+						NSData *iconData = [NSURLConnection sendSynchronousRequest:iconRequest returningResponse:nil error:nil];
 						NSImage *icon = [[[NSImage alloc] initWithData:iconData] autorelease];
 						if( icon ) [mitem setImage:icon];
 					} else {
@@ -477,7 +474,7 @@ static BOOL applicationIsTerminating = NO;
 						size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
 					}
 
-					if( [mitem image] && ! NSEqualSizes( size, NSZeroSize ) && [[mitem image] isValid] ) {
+					if( [mitem image] && ! NSEqualSizes( size, NSZeroSize ) ) {
 						[[mitem image] setScalesWhenResized:YES];
 						[[mitem image] setSize:size];
 					}
@@ -516,12 +513,6 @@ static BOOL applicationIsTerminating = NO;
 
 	if( [ret count] ) return ret;
 	return nil;
-}
-
-- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
-	if( [menuItem image] && ! [[menuItem image] isValid] )
-		[menuItem setImage:nil];
-	return [menuItem isEnabled];
 }
 @end
 
