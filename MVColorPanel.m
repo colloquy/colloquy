@@ -24,12 +24,10 @@
 		if( [[destination selectedCell] tag] == 1 ) {
 			while( responder && ! [responder respondsToSelector:@selector( changeColor: )] )
 				responder = [responder nextResponder];
-
 			[responder changeColor:self];
 		} else if( [[destination selectedCell] tag] == 2 ) {
 			while( responder && ! [responder respondsToSelector:@selector( changeBackgroundColor: )] )
 				responder = [responder nextResponder];
-
 			[responder changeBackgroundColor:self];
 		}
 	}
@@ -50,12 +48,12 @@
 	[destination setState:NSOnState atRow:0 column:0];
 
 	cell = [destination cellAtRow:0 column:0];
-	[cell setTitle:@"Foreground Color"];
+	[cell setTitle:NSLocalizedString( @"Foreground Color", "color panel Foreground Color button" )];
 	[cell setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
 	[cell setTag:1];
 
 	cell = [destination cellAtRow:1 column:0];
-	[cell setTitle:@"Background Color"];
+	[cell setTitle:NSLocalizedString( @"Background Color", "color panel Background Color button" )];
 	[cell setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
 	[cell setTag:2];
 
