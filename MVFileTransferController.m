@@ -108,7 +108,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	NSTableColumn *theColumn = nil;
 	id prototypeCell = nil;
 
-	[[self window] setFloatingPanel:NO];
+	[(NSPanel *)[self window] setFloatingPanel:NO];
 
 	[currentFiles setVerticalMotionCanBeginDrag:NO];
 	[currentFiles setDoubleAction:@selector( _openFile: )];
