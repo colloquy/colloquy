@@ -13,11 +13,23 @@
 	[super dealloc];
 }
 
-- (void) keyDown:(NSEvent *) event {
+- (void) forwardSelector:(SEL) selector withObject:(id) object {
 	if( [self nextTextView] ) {
 		[[self window] makeFirstResponder:[self nextTextView]];
-		[[self nextTextView] keyDown:event];
+		[[self nextTextView] tryToPerform:selector with:object];
 	}
+}
+
+- (void) keyDown:(NSEvent *) event {
+	[self forwardSelector:@selector( keyDown: ) withObject:event];
+}
+
+- (void) pasteAsPlainText:(id) sender {
+	[self forwardSelector:@selector( pasteAsPlainText: ) withObject:sender];
+}
+
+- (void) pasteAsRichText:(id) sender {
+	[self forwardSelector:@selector( pasteAsRichText: ) withObject:sender];
 }
 
 - (NSTextView *) nextTextView {
