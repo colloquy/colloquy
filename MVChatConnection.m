@@ -2197,7 +2197,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) _didDisconnect {
 	if( [self _irssiConnection] -> connection_lost ) {
 		_status = MVChatConnectionServerDisconnectedStatus;
-		[self performSelector:@selector( connect ) withObject:nil afterDelay:1.]; // wait until the old connection is detached
+		[self performSelector:@selector( connect ) withObject:nil afterDelay:2.]; // wait until the old connection is detached
 		[self _scheduleReconnectAttemptEvery:30.];
 	} else _status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
