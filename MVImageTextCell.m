@@ -3,7 +3,7 @@
 
 @implementation MVImageTextCell
 - (void) dealloc {
-	[self setImage:nil];
+	image = nil;
 	[super dealloc];
 }
 

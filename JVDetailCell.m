@@ -5,9 +5,9 @@
 - (id) init {
 	self = [super init];
 
-	[self setAlternateImage:nil];
-	[self setMainText:nil];
-	[self setInformationText:nil];
+	_altImage = nil;
+	_mainText = nil;
+	_infoText = nil;
 
 	[self setImageAlignment:NSImageAlignLeft];
 	[self setImageScaling:NSScaleProportionally];
