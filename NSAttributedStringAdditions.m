@@ -126,7 +126,7 @@ static WebView *fragmentWebView = nil;
 	while( limitRange.length > 0 ) {
 		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 
-		NSString *link = [dict objectForKey:NSLinkAttributeName];
+		id link = [dict objectForKey:NSLinkAttributeName];
 		NSFont *currentFont = [dict objectForKey:NSFontAttributeName];
 		NSColor *foregoundColor = [dict objectForKey:NSForegroundColorAttributeName];
 		NSColor *backgroundColor = [dict objectForKey:NSBackgroundColorAttributeName];
@@ -176,11 +176,11 @@ static WebView *fragmentWebView = nil;
 		if( italic ) [ret appendString:@"<i>"];
 		if( underline ) [ret appendString:@"<u>"];
 		if( [htmlStart length] ) [ret appendString:htmlStart];
-		if( [link length] ) [ret appendFormat:@"<a href=\"%@\">", link];
+		if( link ) [ret appendFormat:@"<a href=\"%@\">", link];
 
 		[ret appendString:[[[self attributedSubstringFromRange:effectiveRange] string] stringByEncodingXMLSpecialCharactersAsEntities]];
 
-		if( [link length] ) [ret appendString:@"</a>"];
+		if( link ) [ret appendString:@"</a>"];
 		if( [htmlEnd length] ) [ret appendString:htmlEnd];
 		if( underline ) [ret appendString:@"</u>"];
 		if( italic ) [ret appendString:@"</i>"];
@@ -318,7 +318,7 @@ static WebView *fragmentWebView = nil;
 	while( limitRange.length > 0 ) {
 		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 
-		NSString *link = [dict objectForKey:NSLinkAttributeName];
+		id link = [dict objectForKey:NSLinkAttributeName];
 		NSFont *currentFont = [dict objectForKey:NSFontAttributeName];
 		NSColor *foregroundColor = [dict objectForKey:NSForegroundColorAttributeName];
 		NSColor *backgroundColor = [dict objectForKey:NSBackgroundColorAttributeName];
@@ -363,7 +363,8 @@ static WebView *fragmentWebView = nil;
 		if( ! encoding ) encoding = NSUTF8StringEncoding;
 
 		NSData *data = nil;
-		if( [link length] ) data = [link dataUsingEncoding:encoding allowLossyConversion:YES];
+		if( link && [link isKindOfClass:[NSURL class]] ) data = [[link absoluteString] dataUsingEncoding:encoding allowLossyConversion:YES];
+		else if( link && [link isKindOfClass:[NSString class]] ) data = [link dataUsingEncoding:encoding allowLossyConversion:YES];
 		else data = [text dataUsingEncoding:encoding allowLossyConversion:YES];
 
 		[ret appendData:data];
