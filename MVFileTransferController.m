@@ -76,9 +76,9 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	OSStatus err = noErr;
 	ICInstance inst = NULL;
 	ICFileSpec folder;
-	unsigned long length = kICFileSpecHeaderSize;
+	long length = kICFileSpecHeaderSize;
 	FSRef ref;
-	unsigned char path[1024];
+	char path[1024];
 
 	memset( path, 0, 1024 );
 
@@ -91,7 +91,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	if( ( err = FSpMakeFSRef( &folder.fss, &ref ) ) != noErr )
 		goto finish;
 
-	if( ( err = FSRefMakePath( &ref, path, 1024 ) ) != noErr )
+	if( ( err = FSRefMakePath( &ref, (unsigned char *)path, 1024 ) ) != noErr )
 		goto finish;
 
 finish:
@@ -110,7 +110,7 @@ finish:
 	AliasHandle alias;
 	unsigned long length = 0;
 
-	if( ( err = FSPathMakeRef( [path UTF8String], &ref, NULL ) ) != noErr )
+	if( ( err = FSPathMakeRef( (unsigned char *)[path UTF8String], &ref, NULL ) ) != noErr )
 		return;
 
 	if( ( err = FSNewAliasMinimal( &ref, &alias ) ) != noErr )
@@ -128,7 +128,7 @@ finish:
 	if( ( err = ICStart( &inst, 'coRC' ) ) != noErr )
 		return;
 
-	ICSetPref( inst, kICDownloadFolder, NULL, dir, length );
+	ICSetPref( inst, kICDownloadFolder, kICAttrNoChange, dir, length );
 	ICStop( inst );
 
 	free( dir );
