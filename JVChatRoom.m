@@ -467,7 +467,7 @@
 		_topicAuth = [author retain];
 	}
 
-	[NSTimer scheduledTimerWithTimeInterval:0. target:self selector:@selector( _finishTopicChange: ) userInfo:NULL repeats:NO];
+	[self performSelector:@selector( _finishTopicChange: ) withObject:nil afterDelay:0.];
 }
 
 - (NSAttributedString *) topic {

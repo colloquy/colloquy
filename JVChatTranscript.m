@@ -525,11 +525,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptPrivate)
-- (void) _finishStyleSwitch:(NSTimer *) sender {
+- (void) _finishStyleSwitch:(id) sender {
 	[display setPreferencesIdentifier:[_chatStyle bundleIdentifier]];
 	// we shouldn't have to post this notification manually, but this seems to make webkit refresh with new prefs
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"WebPreferencesChangedNotification" object:[display preferences]];
-	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[sender userInfo]] baseURL:nil];
+	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:sender] baseURL:nil];
 	[_logLock unlock];
 }
 
@@ -544,7 +544,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 	// give webkit some time to load the blank before we switch preferences so we don't double refresh
-	[NSTimer scheduledTimerWithTimeInterval:0. target:self selector:@selector( _finishStyleSwitch: ) userInfo:[( html ? html : @"" ) stringByAppendingString:queueResult] repeats:NO];
+	[self performSelector:@selector( _finishStyleSwitch: ) withObject:[( html ? html : @"" ) stringByAppendingString:queueResult] afterDelay:0.];
 }
 
 - (oneway void) _switchStyle:(id) sender {
