@@ -7,6 +7,8 @@
 	<meta name="formatter" content="libxslt 1.0.30" />
 	<title>%@</title>
 	<script type="text/ecmascript" defer="defer">
+		var scrollToBottomIsNeeded = false;
+
 		function documentAppend( html ) {
 			range = document.createRange();
 			range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
@@ -18,8 +20,12 @@
 			document.body.scrollTop = document.body.offsetHeight;
 		}
 
+		function checkIfScrollToBottomIsNeeded() {
+			scrollToBottomIsNeeded = ( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+		}
+
 		function scrollToBottomIfNeeded() {
-			if( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.1 ) ) )
+			if( scrollToBottomIsNeeded )
 				document.body.scrollTop = document.body.offsetHeight;
 		}
 
