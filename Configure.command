@@ -8,6 +8,9 @@ if [[ ! -d .svn && -x /usr/bin/svk ]]; then
 else
 	svn update irssi
 fi
+if (( $? != 0 )); then
+	exit 2
+fi
 tar xzfk irssi.tar.gz >/dev/null 2>&1
 cd ./irssi
 make distclean
