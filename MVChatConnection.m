@@ -884,7 +884,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		temp = [temp stringByAppendingPathComponent:@"Colloquy/irssi"];
 		temp = [@"--home=" stringByAppendingString:temp];
 		char *args[] = { "Chat Core", (char *)[temp cString] };
-		core_init_paths( sizeof(args) / sizeof(char*), args );
+		core_init_paths( sizeof( args ) / sizeof( char * ), args );
 		core_init();
 		irc_init();
 
