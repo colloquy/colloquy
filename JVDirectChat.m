@@ -806,7 +806,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action {
 	NSMutableAttributedString *encodedMsg = [[message mutableCopy] autorelease];
-	[[encodedMsg mutableString] encodeXMLSpecialCharactersAsEntities];
 
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"]], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"]], @"NSHTMLIgnoreFontTraits", nil];
 	NSMutableData *msgData = [[[encodedMsg HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES] mutableCopy] autorelease];
@@ -911,7 +910,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		if( ! [item isKindOfClass:[MVChatScriptPlugin class]] )
 			[item processMessage:message asAction:action toChat:self];
 
-	if( [[message string] length] ) return;
+	if( [[message string] length] )
 		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
 }
 
