@@ -155,6 +155,7 @@ finish:
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _incomingFile: ) name:MVDownloadFileTransferOfferNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _fileTransferStarted: ) name:MVFileTransferStartedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _fileTransferFinished: ) name:MVFileTransferFinishedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _fileTransferError: ) name:MVFileTransferErrorOccurredNotification object:nil];
 
 		_safeFileExtentions = [[NSSet setWithObjects:@"jpg",@"jpeg",@"gif",@"png",@"tif",@"tiff",@"psd",@"pdf",@"txt",@"rtf",@"html",@"htm",@"swf",@"mp3",@"wma",@"wmv",@"ogg",@"ogm",@"mov",@"mpg",@"mpeg",@"m1v",@"m2v",@"mp4",@"avi",@"vob",@"avi",@"asx",@"asf",@"pls",@"m3u",@"rmp",@"aif",@"aiff",@"aifc",@"wav",@"wave",@"m4a",@"m4p",@"m4b",@"dmg",@"udif",@"ndif",@"dart",@"sparseimage",@"cdr",@"dvdr",@"iso",@"img",@"toast",@"rar",@"sit",@"sitx",@"bin",@"hqx",@"zip",@"gz",@"tgz",@"tar",@"bz",@"bz2",@"tbz",@"z",@"taz",@"uu",@"uue",@"colloquytranscript",@"torrent",nil] retain];
 		_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];
@@ -387,8 +388,8 @@ finish:
 		if( status == MVFileTransferErrorStatus ) imageName = @"error";
 		else if( status == MVFileTransferStoppedStatus ) imageName = @"stopped";
 		else if( status == MVFileTransferDoneStatus ) imageName = @"done";
-		else if( [controller isKindOfClass:[MVUploadFileTransfer class]] ) imageName = @"upload";
-		else if( [controller isKindOfClass:[MVDownloadFileTransfer class]] || [controller isKindOfClass:[WebDownload class]] ) imageName = @"download";
+		else if( status == MVFileTransferNormalStatus && [controller isKindOfClass:[MVUploadFileTransfer class]] ) imageName = @"upload";
+		else if( status == MVFileTransferNormalStatus && ( [controller isKindOfClass:[MVDownloadFileTransfer class]] || [controller isKindOfClass:[WebDownload class]] ) ) imageName = @"download";
 		[cell setImage:[NSImage imageNamed:imageName]];
 	}
 }
@@ -604,6 +605,10 @@ finish:
 
 @implementation MVFileTransferController (MVFileTransferControllerPrivate)
 #pragma mark ChatCore File Transfer Support
+- (void) _fileTransferError:(NSNotification *) notification {
+	[currentFiles reloadData];
+}
+
 - (void) _fileTransferStarted:(NSNotification *) notification {
 	MVDownloadFileTransfer *transfer = [notification object];
 	NSEnumerator *enumerator = nil;
@@ -612,7 +617,7 @@ finish:
 	enumerator = [[[_transferStorage copy] autorelease] objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [[info objectForKey:@"controller"] isEqualTo:transfer] ) {
-			[info setObject:[transfer startDate] forKey:@"startDate"];
+			if( [transfer startDate] ) [info setObject:[transfer startDate] forKey:@"startDate"];
 			break;
 		}
 	}
@@ -872,7 +877,7 @@ finish:
 		MVFileTransfer *transfer = [info objectForKey:@"controller"];
 		[info setObject:[NSNumber numberWithUnsignedLongLong:[transfer transfered]] forKey:@"transfered"];
 		[info setObject:[NSNumber numberWithUnsignedInt:[transfer status]] forKey:@"status"];
-		[info setObject:[(MVDownloadFileTransfer *)transfer user] forKey:@"user"];
+		[info setObject:[transfer user] forKey:@"user"];
 	}
 
 	return info;
