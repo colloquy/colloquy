@@ -15,6 +15,7 @@
 - (id) initWithChatMember:(JVChatRoomMember *) member {
 	if( ( self = [self init] ) ) {
 		_member = [member retain];
+		_localOnly = NO;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserInfo: ) name:MVChatConnectionGotUserInfoNotification object:[_member connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotAwayStatus: ) name:MVChatConnectionUserAwayStatusNotification object:[_member connection]];
 	}
@@ -52,10 +53,14 @@
 - (void) willLoad {
 	[progress startAnimation:nil];
 	[nickname setObjectValue:[_member nickname]];
-	[[_member connection] fetchInformationForUser:[_member nickname] withPriority:NO];
+	[[_member connection] fetchInformationForUser:[_member nickname] withPriority:NO fromLocalServer:_localOnly];
 }
 
 #pragma mark -
+
+- (void) setFetchLocalServerInfoOnly:(BOOL) localOnly {
+	_localOnly = localOnly;
+}
 
 - (void) gotAddress:(NSString *) ip {
 	[address setObjectValue:( ip ? ip : NSLocalizedString( @"n/a", "not applicable or not available" ) )];

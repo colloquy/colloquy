@@ -31,9 +31,12 @@
 	IBOutlet NSTextField *clientInfo;
 	IBOutlet NSButton *requestInfo;
 	JVChatRoomMember *_member;
+	BOOL _localOnly;
 	BOOL _nibLoaded;
 }
 - (id) initWithChatMember:(JVChatRoomMember *) member;
+
+- (void) setFetchLocalServerInfoOnly:(BOOL) localOnly;
 
 - (IBAction) sendPing:(id) sender;
 - (IBAction) requestLocalTime:(id) sender;
