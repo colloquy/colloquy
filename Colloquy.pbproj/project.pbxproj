@@ -464,6 +464,7 @@
 			refType = 4;
 		};
 		1CEE50D10426999E00000102 = {
+			fileEncoding = 4;
 			isa = PBXFileReference;
 			name = French;
 			path = "Preference Panes/Appearance/French.lproj/InfoPlist.strings";
