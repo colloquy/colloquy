@@ -804,6 +804,8 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 						/* chat room subcode */
 						if (safe_strncasecmp(&tempchr[1],"ACTION ",7) == 0)
 							firetalk_callback_chat_getaction(c,args[2],irc_get_nickname(args[0]),0,irc_irc_to_html(&tempchr[8]));
+					} else if (safe_strncasecmp(&tempchr[1],"ACTION ",7) == 0) {
+						firetalk_callback_im_getaction(c,irc_get_nickname(args[0]),0,irc_irc_to_html(&tempchr[8]));
 					} else {
 						char *endcommand;
 						endcommand = strchr(&tempchr[1],' ');
