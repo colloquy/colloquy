@@ -3,19 +3,27 @@
 #import "MVApplicationController.h"
 #import "MVCrashCatcher.h"
 #import "MVSoftwareUpdate.h"
-#import "MVPreferencesController.h"
+//#import "MVPreferencesController.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
 //#import "MVBuddyListController.h"
 #import "MVChatPluginManager.h"
 //#import <AddressBook/AddressBook.h>
+#import "JVChatController.h"
+
+@interface WebCoreCache : NSObject {}
++ (void) setDisabled:(BOOL) disabled;
+@end
+
+#pragma mark -
 
 @implementation MVApplicationController
 - (void) dealloc {
-	[[MVPreferencesController sharedInstance] autorelease];
+//	[[MVPreferencesController sharedInstance] autorelease];
+	[[JVChatController defaultManager] autorelease];
 	[[MVConnectionsController defaultManager] autorelease];
 	[[MVFileTransferController defaultManager] autorelease];
-	//[[MVBuddyListController sharedBuddyList] autorelease];
+//	[[MVBuddyListController sharedBuddyList] autorelease];
 	[[MVChatPluginManager defaultManager] autorelease];
 
 	[super dealloc];
@@ -42,7 +50,7 @@
 #pragma mark -
 
 - (IBAction) showPreferences:(id) sender {
-	[[MVPreferencesController sharedInstance] showPreferences:nil];
+//	[[MVPreferencesController sharedInstance] showPreferences:nil];
 }
 
 - (IBAction) showTransferManager:(id) sender {
@@ -54,7 +62,7 @@
 }
 
 - (IBAction) showBuddyList:(id) sender {
-	//[[MVBuddyListController sharedBuddyList] showBuddyList:nil];
+//	[[MVBuddyListController sharedBuddyList] showBuddyList:nil];
 }
 
 #pragma mark -
@@ -66,10 +74,12 @@
 #pragma mark -
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
-	[MVCrashCatcher check];
-	[MVSoftwareUpdate checkAutomatically:YES];
-
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
+
+	[MVCrashCatcher check];
+
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] )
+		[MVSoftwareUpdate checkAutomatically:YES];
 
 	[MVColorPanel setPickerMode:NSColorListModeColorPanel];
 	[[MVColorPanel sharedColorPanel] attachColorList:[[[NSColorList alloc] initWithName:@"Chat" fromFile:[[NSBundle mainBundle] pathForResource:@"Chat" ofType:@"clr"]] autorelease]];
@@ -86,14 +96,28 @@
 		[[ABAddressBook sharedAddressBook] save];
 	}*/
 
-	[MVChatPluginManager defaultManager];
+	[WebCoreCache setDisabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"]];
 
+	[JVChatController defaultManager];
 //	[MVBuddyListController sharedBuddyList];
 	[MVConnectionsController defaultManager];
 	[MVFileTransferController defaultManager];
 }
 
 - (void) applicationWillTerminate:(NSNotification *) notification {
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 	[self autorelease];
+}
+
+- (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
+	if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
+		[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Close Panel %@", "close current panel menu title" ), @""]];
+		return NO;
+	} else return YES;
+}
+
+- (IBAction) closeCurrentPanel:(id) sender {
+	return;
 }
 @end

@@ -2,7 +2,7 @@
 #import <AppKit/NSNibDeclarations.h>
 
 @class MVPreferencesController;
-@class MVConnectionsController;
+//@class MVConnectionsController;
 @class MVFileTransferController;
 @class MVBuddyListController;
 
