@@ -1,4 +1,5 @@
-<script type="text/javascript">
+<!-- Disabled until we have a better way to toggle things like fade in JS -->
+<!-- <script type="text/javascript">
 	function appendMessage( html ) {
 		checkIfScrollToBottomIsNeeded();
 		removeConsecutiveInsertPoint();
@@ -9,17 +10,18 @@
 		document.body.appendChild( documentFragment );
 
 		var fadeBool = false;
-		var length = document.styleSheets[2].rules.length;
+		var length = document.styleSheets[2].cssRules.length;
 		for( var i = 0; i < length; i++ ) {
-			if( document.styleSheets[2].rules[i].selectorText == ".messageFadeIn" ) {
+			var rule = document.styleSheets[2].cssRules[i];
+			if( rule.selectorText == ".messageFadeIn" ) {
 				regex = /#FFFFFF/g;
-				fadeBool = regex.test( document.styleSheets[2].rules[i].style.cssText );
+				fadeBool = regex.test( rule.style.cssText );
 			}
 		}
 
 		if( fadeBool ) {
-			document.body.lastChild.previousSibling.style.opacity = '1.0';
-			document.body.lastChild.style.opacity = '0.0';
+			setOpacity( document.body.lastChild.previousSibling, '1.0' );
+			setOpacity( document.body.lastChild, '0.0' );
 			step = 0.0;
 			fadeIn();
 		}
@@ -30,8 +32,12 @@
 	function fadeIn() {
 		step += 0.25;
 		if( step < 10 ) {
-			document.body.lastChild.style.opacity = '0.' + step;
+			setOpacity( document.body.lastChild, '0.' + step );
 			setTimeout( 'fadeIn()', 10 );
 		} else document.body.lastChild.style.opacity = '1.0';
 	}
-</script>
+
+	function setOpacity( element, value ) {
+		element.style.setProperty( 'opacity', value, 'important' );
+	}
+</script> -->
