@@ -1134,11 +1134,20 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) connect {
-	if( [self status] == MVChatConnectionConnectingStatus ) return;
+	if( [self status] != MVChatConnectionDisconnectedStatus
+		&& [self status] != MVChatConnectionServerDisconnectedStatus ) return;
+
 	[self _willConnect];
 
-	CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
-	proto -> server_connect( [self _irssiConnection] );
+	if( ! [self _irssiConnection] -> connect_time ) {
+		CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
+		proto -> server_connect( [self _irssiConnection] );
+	} else {
+		CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
+		SERVER_REC *newConnection = proto -> server_init_connect( [self _irssiConnection] -> connrec );
+		proto -> server_connect( newConnection );
+		[self _setIrssiConnection:newConnection];
+	}
 }
 
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname {
@@ -1150,11 +1159,12 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) disconnect {
-	if( [self status] == MVChatConnectionConnectedStatus ) {
-		[self _willDisconnect];
-//		signal_emit( "server quit", 2, [self _irssiConnection], "Quiting" );
-		server_disconnect( [self _irssiConnection] );
-	}
+	if( [self status] != MVChatConnectionConnectedStatus ) return;
+
+	[self _willDisconnect];
+
+//  signal_emit( "server quit", 2, [self _irssiConnection], "Quiting" );
+	server_disconnect( [self _irssiConnection] );
 }
 
 #pragma mark -
@@ -1169,12 +1179,14 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) setRealName:(NSString *) name {
 	NSParameterAssert( name != nil );
+	if( ! [self _irssiConnection] ) return;
 
 	g_free_not_null( [self _irssiConnection] -> connrec -> realname );
 	[self _irssiConnection] -> connrec -> realname = g_strdup( [name UTF8String] );		
 }
 
 - (NSString *) realName {
+	if( ! [self _irssiConnection] ) return nil;
 	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> realname];
 }
 
@@ -1182,6 +1194,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) setNickname:(NSString *) nickname {
 	NSParameterAssert( nickname != nil );
+	if( ! [self _irssiConnection] ) return;
 
 	if( [self isConnected] ) {
 		g_free_not_null( [self _irssiConnection] -> connrec -> nick );
@@ -1201,12 +1214,14 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (NSString *) nickname {
+	if( ! [self _irssiConnection] ) return nil;
 	if( [self isConnected] )
 		return [NSString stringWithUTF8String:[self _irssiConnection] -> nick];
 	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> nick];
 }
 
 - (NSString *) preferredNickname {
+	if( ! [self _irssiConnection] ) return nil;
 	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> nick];
 }
 
@@ -1228,12 +1243,15 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) setPassword:(NSString *) password {
+	if( ! [self _irssiConnection] ) return;
+
 	g_free_not_null( [self _irssiConnection] -> connrec -> password );
 	if( [password length] ) [self _irssiConnection] -> connrec -> password = g_strdup( [password UTF8String] );		
 	else [self _irssiConnection] -> connrec -> password = NULL;		
 }
 
 - (NSString *) password {
+	if( ! [self _irssiConnection] ) return nil;
 	char *pass = [self _irssiConnection] -> connrec -> password;
 	if( pass ) return [NSString stringWithUTF8String:pass];
 	return nil;
@@ -1243,12 +1261,14 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) setUsername:(NSString *) username {
 	NSParameterAssert( username != nil );
+	if( ! [self _irssiConnection] ) return;
 	
 	g_free_not_null( [self _irssiConnection] -> connrec -> username );
 	[self _irssiConnection] -> connrec -> username = g_strdup( [username UTF8String] );		
 }
 
 - (NSString *) username {
+	if( ! [self _irssiConnection] ) return nil;
 	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> username];
 }
 
@@ -1256,22 +1276,26 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) setServer:(NSString *) server {
 	NSParameterAssert( server != nil );
+	if( ! [self _irssiConnection] ) return;
 
 	g_free_not_null( [self _irssiConnection] -> connrec -> address );
 	[self _irssiConnection] -> connrec -> address = g_strdup( [server UTF8String] );		
 }
 
 - (NSString *) server {
+	if( ! [self _irssiConnection] ) return nil;
 	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> address];
 }
 
 #pragma mark -
 
 - (void) setServerPort:(unsigned short) port {
+	if( ! [self _irssiConnection] ) return;
 	[self _irssiConnection] -> connrec -> port = ( port ? port : 6667 );
 }
 
 - (unsigned short) serverPort {
+	if( ! [self _irssiConnection] ) return 0;
 	return [self _irssiConnection] -> connrec -> port;
 }
 
@@ -1694,20 +1718,13 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	SERVER_REC *old = _chatConnection;
 
 	_chatConnection = server;
-	if( _chatConnection ) server_ref( _chatConnection );
+	if( _chatConnection ) {
+		((SERVER_REC *) _chatConnection) -> no_reconnect = 0;
+		server_ref( _chatConnection );
+	}
 
 	if( old ) {
 		old -> no_reconnect = 1;
-
-		g_free_not_null( old -> tag );
-		old -> tag = g_strdup( "detached" );
-
-		g_free_not_null( old -> connrec -> tag );
-		old -> connrec -> tag = g_strdup( "detached" );
-
-		g_free_not_null( old -> connrec -> chatnet );
-		old -> connrec -> chatnet = g_strdup( "detached" );
-
 		server_unref( old );
 	}
 }
