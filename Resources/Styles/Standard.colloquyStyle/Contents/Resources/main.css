@@ -42,8 +42,17 @@ body {
 	text-decoration: none;
 }
 
+.member:hover {
+	text-decoration: underline;
+}
+
 .member.self {
 	color: #a21;
+}
+
+.message .member {
+	color:inherit;
+	font-weight: inherit;
 }
 
 .action > .member:before {
