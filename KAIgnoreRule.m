@@ -59,14 +59,16 @@
 
 - (JVIgnoreMatchResult) matchUser:(NSString *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
 	if( ! [_inRooms count] || ( [view isKindOfClass:[JVDirectChat class]] && [_inRooms containsObject:[(JVDirectChat *)view target]] ) ) {
-		BOOL userFound = NO, messageFound = NO;
-		BOOL userRequired = ( _userRegex || _ignoredUser ), messageRequired = ( _messageRegex || _ignoredMessage );
+		BOOL userFound = NO;
+		BOOL messageFound = NO;
+		BOOL userRequired = ( _userRegex || [_ignoredUser length] );
+		BOOL messageRequired = ( _messageRegex || [_ignoredMessage length] );
 
 		if( _userRegex && [_userRegex findInString:user] ) userFound = YES;
-		else if( _ignoredUser ) userFound = [_ignoredUser isEqualToString:user];
+		else if( [_ignoredUser length] ) userFound = [_ignoredUser isEqualToString:user];
 
 		if( _messageRegex && [_messageRegex findInString:message] ) messageFound = YES;
-		else if( _ignoredMessage ) messageFound = ([message rangeOfString:_ignoredMessage].location != NSNotFound);
+		else if( [_ignoredMessage length] ) messageFound = ( [message rangeOfString:_ignoredMessage].location != NSNotFound );
 
 		if( userRequired ) {
 			if( ! userFound || ( messageRequired && ! messageFound ) ) return JVNotIgnored;
