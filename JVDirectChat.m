@@ -729,9 +729,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 }
 
-- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user {
+- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore {
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
-		if( _firstMessage ) {
+		if( ignore != JVNotIgnored && _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"description"];
@@ -740,7 +740,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
-		} else {
+		} else if( ignore != JVNotIgnored ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
 			if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have 1 message waiting from %@.", "new single message bubble text" ), [self title]] forKey:@"description"];
@@ -1301,6 +1301,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( ! [messageString length] ) 
 		messageString = [NSMutableString stringWithFormat:@"<span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
 
+	JVIgnoreMatchResult ignoreTest = JVNotIgnored;
+	if( ! [user isEqualToString:[[self connection] nickname]] )
+		ignoreTest = [[JVChatController defaultManager] shouldIgnoreUser:user withMessage:[NSAttributedString attributedStringWithHTMLFragment:messageString baseURL:NULL] inView:self];
+	if( ignoreTest != JVNotIgnored ) _newMessageCount--;
+
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
 		AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
 		[messageString setString:[regex replaceWithString:@"" inString:messageString]];
@@ -1361,7 +1366,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 	}
 
-	if( highlight ) {
+	if( highlight && ignoreTest != JVNotIgnored ) {
 		_newHighlightMessageCount++;
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
@@ -1375,7 +1380,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[self _performEmoticonSubstitutionOnString:messageString];
 
-	[self processMessage:messageString asAction:action fromUser:user];
+	[self processMessage:messageString asAction:action fromUser:user ignoreResult:ignoreTest];
 
 	if( ! [messageString length] ) {
 		_newMessageCount--;
@@ -1435,16 +1440,14 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				[self _saveBuddyIcon:buddy];
 			}
 		}
-		 
+
 		xmlSetProp( child, "classification", [self _classificationForNickname:user] );
 	}
 
 	xmlXPathFreeObject( result );
 	xmlXPathFreeContext( ctx );
 
-	JVIgnoreMatchResult ignoreTest = [[JVChatController defaultManager] shouldIgnoreUser:user withMessage:[NSAttributedString attributedStringWithHTMLFragment:messageString baseURL:NULL] inView:self];
 	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
-
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 
 	child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );

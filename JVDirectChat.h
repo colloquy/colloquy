@@ -1,4 +1,5 @@
 #import "JVChatTranscript.h"
+#import "KAIgnoreRule.h"
 #import <AppKit/NSNibDeclarations.h>
 #import <Foundation/NSFileHandle.h>
 
@@ -74,7 +75,7 @@
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
-- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user;
+- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore;
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action;
 
 - (unsigned int) newMessagesWaiting;

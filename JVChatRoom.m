@@ -316,10 +316,10 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	return [[results lastObject] boolValue];
 }
 
-- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user {
+- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore {
 	JVChatRoomMember *member = [self chatRoomMemberWithName:user];
 
-	if( ! [user isEqualToString:[[self connection] nickname]] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
+	if( ignore != JVNotIgnored && ! [user isEqualToString:[[self connection] nickname]] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]] forKey:@"title"];
 		if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has 1 message waiting.", "new single room message bubble text" ), [self title]] forKey:@"description"];
@@ -331,7 +331,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[[JVNotificationController defaultManager] performNotification:@"JVChatRoomActivity" withContextInfo:context];
 	}
 
-	if( [_nextMessageAlertMembers containsObject:member] ) {
+	if( ignore != JVNotIgnored && [_nextMessageAlertMembers containsObject:member] ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Replied", "member replied bubble title" ), [member title]] forKey:@"title"];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has possibly replied to your message.", "new room messages bubble text" ), [member title]] forKey:@"description"];
