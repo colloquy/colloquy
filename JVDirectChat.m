@@ -1621,7 +1621,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (void) _awayStatusChanged:(NSNotification *) notification {
 	if( [[[notification userInfo] objectForKey:@"away"] boolValue] ) {
-		[self addEventMessageToDisplay:NSLocalizedString( @"You have set yourself away.", "self away status set message" ) withName:@"awaySet" andAttributes:nil];
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@.\"", "self away status set message" ), [[_connection awayStatusMessage] string]] withName:@"awaySet" andAttributes:nil];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
 	}
