@@ -3,7 +3,7 @@ cd "`echo $0 | sed 's/[^/]*$//'`"
 
 cd ./Core
 rm -rf ./irssi
-cvs update -dP irssi
+svn update irssi
 tar xzfk irssi.tar.gz >/dev/null 2>&1
 cd ./irssi
 make distclean
