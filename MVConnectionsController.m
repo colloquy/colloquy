@@ -118,6 +118,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[showDetails setCell:[[NSDisclosureButtonCell alloc] initWithCell:[showDetails cell]]];
 
 	[self setWindowFrameAutosaveName:@"Connections"];
+	[self _validateToolbar];
 }
 
 #pragma mark -
@@ -623,7 +624,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 		[menu addItem:[NSMenuItem separatorItem]];
 	
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", "join room contextual menu item title" ) action:@selector( _joinRoom: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", "join room contextual menu item title" ) action:@selector( joinRoom: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		if( ! connected ) [item setAction:NULL];
 		[menu addItem:item];
@@ -969,6 +970,8 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 	[[NSUserDefaults standardUserDefaults] setObject:saveList forKey:@"MVChatBookmarks"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
+
+	[self _validateToolbar];
 }
 
 - (void) _loadBookmarkList {
@@ -1009,6 +1012,8 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 	if( [_bookmarks count] ) [[self window] makeKeyAndOrderFront:nil];
 	else [self newConnection:nil];
+
+	[self _validateToolbar];
 }
 
 - (void) _validateToolbar {
