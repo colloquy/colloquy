@@ -711,7 +711,7 @@ static NSMenu *favoritesMenu = nil;
 - (int) numberOfRowsInTableView:(NSTableView *) view {
 	if( view == connections ) return [_bookmarks count];
 	else if( view == newJoinRooms ) return [_joinRooms count];
-	return nil;
+	return 0;
 }
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
@@ -992,8 +992,7 @@ static NSMenu *favoritesMenu = nil;
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Inspector", "inspector toolbar button in customize palette" )];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Show inspector", "connection info button tooltip" )];
-		//[toolbarItem setImage:[NSImage imageNamed:@"inspector"]];
-		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
+		[toolbarItem setImage:[NSImage imageNamed:@"inspector"]];
 
 		[toolbarItem setTarget:[JVInspectorController class]];
 		[toolbarItem setAction:@selector( showInspector: )];
