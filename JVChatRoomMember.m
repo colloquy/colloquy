@@ -230,7 +230,7 @@
 			[menuItem setTitle:NSLocalizedString( @"Remove Voice", "remove voice contextual menu - admin only" )];
 		} else {
 			[menuItem setTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" )];
-			if( _operator ) return NO;
+			if( _operator || ! [[self connection] isConnected] ) return NO;
 		}
 	} else if( [menuItem action] == @selector( toggleOperatorStatus: ) ) {
 		if( _operator ) {
@@ -239,6 +239,7 @@
 			[menuItem setTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" )];
 		}
 	}
+	if( ! [[self connection] isConnected] ) return NO;
 	return YES;
 }
 
