@@ -3,6 +3,7 @@
 // Copyright Graham Booker and Timothy Hatcher. All rights reserved.
 
 #import <Cocoa/Cocoa.h>
+#import <AGRegex/AGRegex.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSColorAdditions.h>
@@ -140,7 +141,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 			NSData *imgCode = [NSData dataWithBytesNoCopy:buf -> content length:buf -> use freeWhenDone:NO];
 			NSAttributedString *newStr = nil;
 
-			if( NSAppKitVersionNumber >= 700. ) newStr = [[NSMutableAttributedString alloc] initWithHTML:imgCode options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", base, @"BaseURL", nil] documentAttributes:NULL];
+			if( NSAppKitVersionNumber >= 700. ) newStr = [[NSMutableAttributedString alloc] initWithHTML:imgCode options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", ( base ? base : [[NSURL new] autorelease] ), @"BaseURL", nil] documentAttributes:NULL];
 			else newStr = [[NSAttributedString alloc] initWithHTML:imgCode baseURL:base documentAttributes:nil];
 
 			xmlBufferFree( buf );
@@ -291,114 +292,46 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 
 @implementation NSMutableAttributedString (NSMutableAttributedStringHTMLAdditions)
 - (void) makeLinkAttributesAutomatically {
-	/*	unsigned i = 0, c = 0;
-	NSMutableArray *parts = nil;
-	NSMutableString *part = nil;
-	NSScanner *urlScanner = nil;
-	NSCharacterSet *legalSchemeSet = nil;
-	NSCharacterSet *legalAddressSet = nil;
-	NSCharacterSet *legalDomainSet = nil;
-	NSCharacterSet *ircChannels = [NSCharacterSet characterSetWithCharactersInString:@"#&"];
-	NSCharacterSet *trailingPuncuation = [NSCharacterSet characterSetWithCharactersInString:@".!?,])}\\'\"&"];
-	NSCharacterSet *seperaters = [NSCharacterSet characterSetWithCharactersInString:@"<> \t\n\r&"];
-	NSString *link = nil, *urlHandle = nil;
-	NSMutableString *mutableLink = nil;
-	BOOL inTag = NO;
-	NSRange range, srange;
-	
-	for( i = 0, c = [parts count]; i < c; i++ ) {
-		part = [[[parts objectAtIndex:i] mutableCopy] autorelease];
-		
-		if( ! [part length] || ( [part length] >= 1 && [part characterAtIndex:0] == '<' ) )
-			continue;
-		
-		// catch well-formed urls like "http://www.apple.com" or "irc://irc.javelin.cc"
-		legalSchemeSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-"];
-		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;#.,\\/?!&%$-+=_~@*'\"()[]"];
-		legalDomainSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_.!~*'()[]%;:&=+$,"];
-		urlScanner = [NSScanner scannerWithString:part];
-		srange = [part rangeOfString:@"://"];
-		range = [part rangeOfCharacterFromSet:[legalSchemeSet invertedSet] options:( NSLiteralSearch | NSBackwardsSearch ) range:NSMakeRange( 0, ( srange.location != NSNotFound ? srange.location : 0 ) )];
-		if( range.location != NSNotFound ) [urlScanner setScanLocation:range.location];
-		[urlScanner scanUpToCharactersFromSet:legalSchemeSet intoString:NULL];
-		if( [urlScanner scanUpToString:@"://" intoString:&urlHandle] && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
-			link = [link stringByTrimmingCharactersInSet:trailingPuncuation];
-			if( [link length] >= 4 )
-				link = [urlHandle stringByAppendingString:link];
-			if( [link length] >= 7 ) {
-				mutableLink = [[link mutableCopy] autorelease];
-				[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"%" withString:@"&#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"&" withString:@"&#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"%@\">%@</a>", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				goto finish;
-			}
-		}
-		
-		// catch www urls like "www.apple.com"
-		urlScanner = [NSScanner scannerWithString:part];
-		[urlScanner scanUpToString:@"www." intoString:NULL];
-		// Skip them if they come immediately after an alphanumeric character
-		if( [urlScanner scanLocation] == 0 || ! [legalSchemeSet characterIsMember:[part characterAtIndex:[urlScanner scanLocation] - 1]] ) {
-			NSString *domain = @"", *path = @"";
-			if( [urlScanner scanCharactersFromSet:legalDomainSet intoString:&domain] ) {
-				NSRange dotRange = [domain rangeOfString:@".."];
-				if( dotRange.location != NSNotFound )
-					domain = [domain substringWithRange:NSMakeRange( 0, dotRange.location )];
-				if( [[domain componentsSeparatedByString:@"."] count] >= 3 ) {
-					if( [urlScanner scanString:@"/" intoString:nil] ) {
-						[urlScanner scanCharactersFromSet:legalAddressSet intoString:&path];
-						link = [NSString stringWithFormat:@"%@/%@", domain, path];
-					} else link = domain;
-					link = [link stringByTrimmingCharactersInSet:trailingPuncuation];
-					mutableLink = [[link mutableCopy] autorelease];
-					[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-					[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-					[mutableLink replaceOccurrencesOfString:@"%" withString:@"&#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-					[mutableLink replaceOccurrencesOfString:@"&" withString:@"&#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-					[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"http://%@\">%@</a>", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-					goto finish;
-				}
-			}
-		}
-		
-		// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
-		legalSchemeSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890._-+"];
-		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@.-_"];
-		urlScanner = [NSScanner scannerWithString:part];
-		srange = [part rangeOfString:@"@"];
-		range = [part rangeOfCharacterFromSet:[legalSchemeSet invertedSet] options:( NSLiteralSearch | NSBackwardsSearch ) range:NSMakeRange( 0, ( srange.location != NSNotFound ? srange.location : 0 ) )];
-		if( range.location != NSNotFound ) [urlScanner setScanLocation:range.location];
-		[urlScanner scanUpToCharactersFromSet:legalSchemeSet intoString:NULL];
-		if( [urlScanner scanUpToString:@"@" intoString:&urlHandle] && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
-			link = [link stringByTrimmingCharactersInSet:trailingPuncuation];
-			NSRange hasPeriod = [link rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
-			if( [urlHandle length] && [link length] && hasPeriod.location < ([link length] - 1) && hasPeriod.location != NSNotFound ) {
-				link = [urlHandle stringByAppendingString:link];
-				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"mailto:%@\">%@</a>", link, link] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				goto finish;
-			}
-		}
-		
-		// catch well-formed IRC channel names like "#php" or "&admins"
-		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;.,?!%^$@#&*~`\\|+/-_"];
-		urlScanner = [NSScanner scannerWithString:part];
-		if( ( ( [urlScanner scanUpToCharactersFromSet:ircChannels intoString:NULL] && [urlScanner scanLocation] < [part length] && ! [[NSCharacterSet alphanumericCharacterSet] characterIsMember:[part characterAtIndex:( [urlScanner scanLocation] - 1 )]] ) || [part rangeOfCharacterFromSet:ircChannels].location == 0 ) && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&urlHandle] ) {
-			if( [urlHandle length] >= 2 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet letterCharacterSet] options:NSLiteralSearch range:NSMakeRange( 1, [urlHandle length] - 1 )].location != NSNotFound && ! ( [urlHandle length] == 7 && [NSColor colorWithHTMLAttributeValue:urlHandle] ) && ! ( [urlHandle characterAtIndex:0] == '&' && [urlHandle characterAtIndex:([urlHandle length] - 1)] == ';' ) ) {
-				urlHandle = [urlHandle stringByTrimmingCharactersInSet:trailingPuncuation];
-				link = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];
-				mutableLink = [NSMutableString stringWithFormat:@"<a href=\"%@\">%@</a>", link, urlHandle];
-				[mutableLink replaceOccurrencesOfString:@"&" withString:@"~amp;amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				[part replaceOccurrencesOfString:urlHandle withString:mutableLink options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				goto finish;
-			}
-		}
-		
-finish:
-			[parts replaceObjectAtIndex:i withObject:part];
+	// catch well-formed urls like "http://www.apple.com" or "irc://irc.javelin.cc"
+	AGRegex *regex = [AGRegex regexWithPattern:@"[\\w-]+://(?:[\\w-:]+@)?(?:[\\w-]+\\.)+[\\w-]+(?:/[\\w-_+./?%&=]*)?" options:AGRegexCaseInsensitive];
+	NSArray *matches = [regex findAllInString:[self string]];
+	NSEnumerator *enumerator = [matches objectEnumerator];
+	AGRegexMatch *match = nil;
+
+	while( ( match = [enumerator nextObject] ) ) {
+		NSRange foundRange = [match range];
+		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
+		if( ! currentLink ) [self addAttribute:NSLinkAttributeName value:[match group] range:foundRange];
 	}
-	
-	[string setString:[parts componentsJoinedByString:@""]]; */
+
+	// catch www urls like "www.apple.com"
+	regex = [AGRegex regexWithPattern:@"www.(?:[\\w-]+\\.)+[\\w-]+(?:/[\\w-+./?%&=]*)?" options:AGRegexCaseInsensitive];
+	matches = [regex findAllInString:[self string]];
+	enumerator = [matches objectEnumerator];
+	match = nil;
+
+	while( ( match = [enumerator nextObject] ) ) {
+		NSRange foundRange = [match range];
+		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
+		if( ! currentLink ) {
+			NSString *link = [NSString stringWithFormat:@"http://%@", [match group]];
+			[self addAttribute:NSLinkAttributeName value:link range:foundRange];
+		}
+	}
+
+	// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
+	regex = [AGRegex regexWithPattern:@"[\\w-]+@(?:[\\w-]+\\.)+[\\w]{2,}" options:AGRegexCaseInsensitive];
+	matches = [regex findAllInString:[self string]];
+	enumerator = [matches objectEnumerator];
+	match = nil;
+
+	while( ( match = [enumerator nextObject] ) ) {
+		NSRange foundRange = [match range];
+		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
+		if( ! currentLink ) {
+			NSString *link = [NSString stringWithFormat:@"mailto:%@", [match group]];
+			[self addAttribute:NSLinkAttributeName value:link range:foundRange];
+		}
+	}
 }
 @end

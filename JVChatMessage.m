@@ -8,6 +8,7 @@
 
 #import "JVChatMessage.h"
 #import "JVChatTranscript.h"
+#import "NSAttributedStringMoreAdditions.h"
 
 @implementation JVChatMessage
 + (id) messageWithNode:(/* xmlNode */ void *) node messageIndex:(unsigned long long) messageNumber andTranscript:(JVChatTranscript *) transcript {
@@ -69,20 +70,11 @@
 	xmlChar *dateStr = xmlGetProp( _node, "received" );
 	_date = ( dateStr ? [NSDate dateWithString:[NSString stringWithUTF8String:dateStr]] : nil );
 	xmlFree( dateStr );
-	
-	xmlBufferPtr buffer = xmlBufferCreate();
-	xmlNodeDump( buffer, ((xmlNode *) _node) -> doc, (xmlNode *) _node, 0, 0 );
-	if( buffer -> content ) _htmlMessage = [NSString stringWithUTF8String:buffer -> content];
-		xmlBufferFree( buffer );
 
-	AGRegex *regex = [AGRegex regexWithPattern:@"^<message[^>]*>(.*)</message>$" options:AGRegexCaseInsensitive];
-	AGRegexMatch *match = [regex findInString:_htmlMessage];
-	if( [match count] ) _htmlMessage = [match groupAtIndex:1];
-	else _htmlMessage = nil;
-
+	_attributedMessage = [NSTextStorage attributedStringWithXHTMLTree:_node baseURL:nil defaultFont:nil];
 	_action = ( xmlHasProp( _node, "action" ) ? YES : NO );
 	_highlighted = ( xmlHasProp( _node, "highlight" ) ? YES : NO );
-	
+
 	xmlNode *subNode = ((xmlNode *) _node ) -> parent -> children;
 
 	do {
@@ -94,7 +86,7 @@
 		}
 	} while( ( subNode = subNode -> next ) ); 
 
-	[_htmlMessage retain];
+	[_attributedMessage retain];
 	[_sender retain];
 	[_date retain];
 
@@ -116,8 +108,7 @@
 #pragma mark -
 
 - (NSTextStorage *) message {
-	if( ! _attributedMessage )
-		_attributedMessage = [[NSTextStorage attributedStringWithHTMLFragment:[self messageAsHTML] baseURL:nil] retain];
+	[self load];
 	return _attributedMessage;
 }
 
@@ -126,7 +117,10 @@
 }
 
 - (NSString *) messageAsHTML {
-	[self load];
+	if( ! _htmlMessage ) {
+		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+		_htmlMessage = [[[self message] HTMLFormatWithOptions:options] retain];
+	}
 	return _htmlMessage;
 }
 

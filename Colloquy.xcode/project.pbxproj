@@ -496,6 +496,14 @@
 			target = 1C51B4BB052DE14B00BB459B;
 			targetProxy = 1C09DFF6052DFF6600D748CF;
 		};
+		1C15582806BED70000A99C87 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSAttributedStringXMLAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		1C18CD100528DBBA000001C8 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1189,6 +1197,34 @@
 			path = "Resources/colloquy-alpha.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
+		};
+		1C6A112806BC0C9E00A66340 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSAttributedStringMoreAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C6A112906BC0C9E00A66340 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSAttributedStringMoreAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C6A112A06BC0C9E00A66340 = {
+			fileRef = 1C6A112806BC0C9E00A66340;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C6A112B06BC0C9E00A66340 = {
+			fileRef = 1C6A112906BC0C9E00A66340;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C6C75450630AD5300698F55 = {
 			isa = PBXFileReference;
@@ -2086,6 +2122,7 @@
 				1C889DEC0677AC7F00D98F3C,
 				1C2391A90677E6B7000E89A7,
 				1C96E93E06AADBBD0013B0A9,
+				1C6A112A06BC0C9E00A66340,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2829,6 +2866,7 @@
 				1C889DED0677AC7F00D98F3C,
 				1C2391AA0677E6B7000E89A7,
 				1C96E93F06AADBBD0013B0A9,
+				1C6A112B06BC0C9E00A66340,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4536,6 +4574,9 @@
 				1C060779064A5DE8002438AF,
 				1CC6FD63054B70BC0075807C,
 				1CC6FD62054B70BC0075807C,
+				1C6A112906BC0C9E00A66340,
+				1C15582806BED70000A99C87,
+				1C6A112806BC0C9E00A66340,
 				1C0730E30677A63B008D8AD9,
 				1C0730E20677A63B008D8AD9,
 				1CABF8760656414100801C15,

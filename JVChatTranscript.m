@@ -7,6 +7,7 @@
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSURLAdditions.h>
+#import <ChatCore/NSStringAdditions.h>
 
 #import "MVApplicationController.h"
 #import "JVChatController.h"
@@ -19,6 +20,7 @@
 #import "JVAppearancePreferences.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
+#import "unistd.h"
 
 #import <libxml/xinclude.h>
 #import <libxml/debugXML.h>
@@ -383,18 +385,18 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		return;
 	}
 
-	BOOL manyMessages = ( xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) > 2000 ? YES : NO );
+//	BOOL manyMessages = ( xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) > 2000 ? YES : NO );
 
-	NSString *styleswitch = NSLocalizedString( @"Time Consuming Style Switch", "time consuming style switch alert title" );
+//	NSString *styleswitch = NSLocalizedString( @"Time Consuming Style Switch", "time consuming style switch alert title" );
 
-	int result = NSOKButton;
-	if( _isArchive && _previousStyleSwitch && manyMessages ) {
-		result = NSRunInformationalAlertPanel( styleswitch, NSLocalizedString( @"This transcript is large and will take a considerable amount of time to switch the style. Would you like to continue anyway?", "large transcript style switch alert message" ), NSLocalizedString( @"Continue", "continue button name" ), @"Cancel", nil );
-	} else if( ! _isArchive && manyMessages ) {
-		result = NSRunInformationalAlertPanel( styleswitch, NSLocalizedString( @"This converstaion is large and will take a considerable amount of time to switch the style. Would you like to do a full switch and wait until the switch is complete or a quick switch by hiding previous messages and return to the conversation?", "large transcript style switch alert message" ), NSLocalizedString( @"Full Switch", "full switch button name" ), @"Cancel", NSLocalizedString( @"Quick Switch", "clear button name" ) );
-	}
+//	int result = NSOKButton;
+//	if( _isArchive && _previousStyleSwitch && manyMessages ) {
+//		result = NSRunInformationalAlertPanel( styleswitch, NSLocalizedString( @"This transcript is large and will take a considerable amount of time to switch the style. Would you like to continue anyway?", "large transcript style switch alert message" ), NSLocalizedString( @"Continue", "continue button name" ), @"Cancel", nil );
+//	} else if( ! _isArchive && manyMessages ) {
+//		result = NSRunInformationalAlertPanel( styleswitch, NSLocalizedString( @"This converstaion is large and will take a considerable amount of time to switch the style. Would you like to do a full switch and wait until the switch is complete or a quick switch by hiding previous messages and return to the conversation?", "large transcript style switch alert message" ), NSLocalizedString( @"Full Switch", "full switch button name" ), @"Cancel", NSLocalizedString( @"Quick Switch", "clear button name" ) );
+//	}
 
-	if( result == NSCancelButton ) return;
+//	if( result == NSCancelButton ) return;
 
 	if( ! [_logLock tryLock] ) return;
 
@@ -427,9 +429,13 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 	[self _changeChatStyleMenuSelection];
 
-	if( result == NSAlertOtherReturn ) {
-		[self _switchingStyleEnded:@""];
-	} else [NSThread detachNewThreadSelector:@selector( _switchStyle: ) toTarget:self withObject:nil];
+//	if( result == NSAlertOtherReturn ) {
+//		[self _switchingStyleEnded:@""];
+//	} else 
+
+	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
+
+	[NSThread detachNewThreadSelector:@selector( _switchStyle: ) toTarget:self withObject:nil];
 
 	_previousStyleSwitch = YES;
 }
@@ -863,15 +869,61 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *result = nil;
 
-	@try {
-		result = [_chatStyle transformXMLDocument:_xmlLog withParameters:_styleParams];
-	} @catch ( NSException *exception ) {
-		result = nil;
-		[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
+	unsigned long elements = xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) );
+	unsigned long i = elements;
+	xmlNodePtr startNode = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
+
+	for( i = elements; i > ( elements - 300 ) && startNode; i -= 25 ) {
+		NSLog( @"%d %d %x", i, elements, startNode );
+
+		unsigned int j = 25;
+		xmlNodePtr node = startNode;
+		xmlNodePtr nextNode = startNode -> next;
+		xmlNodePtr nodeList = NULL;
+
+		startNode -> next = NULL;
+
+		while( j > 0 && node -> prev ) {
+			node = node -> prev;
+			j--;
+		}
+
+		xmlNodePtr root = xmlNewNode( NULL, "log" );
+		xmlDocPtr doc = xmlNewDoc( "1.0" );
+		xmlDocSetRootElement( doc, root );
+
+		nodeList = xmlCopyNodeList( node );
+		xmlAddChildList( root, nodeList );
+
+		@try {
+			result = [_chatStyle transformXMLDocument:doc withParameters:_styleParams];
+		} @catch ( NSException *exception ) {
+			result = nil;
+			[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
+		}
+
+		xmlFreeDoc( doc );
+
+		startNode -> next = nextNode;
+		startNode = node -> prev;
+
+		if( result ) {
+			[self performSelectorOnMainThread:@selector( _prependMessagesChunk: ) withObject:result waitUntilDone:YES];
+			usleep( 1000 );
+		} else if( ! result ) goto finish;
 	}
 
+finish:
 	[self performSelectorOnMainThread:@selector( _switchingStyleEnded: ) withObject:result waitUntilDone:YES];
 	[pool release];
+}
+
+- (void) _prependMessagesChunk:(NSString *) messages {
+	NSLog( @"_prependMessagesChunk %d", [messages length] );
+	NSMutableString *result = [[messages mutableCopy] autorelease];
+	[result escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
+	[result replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
+	[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"prependMessages( \"%@\" );", result]];
 }
 
 - (void) _styleError:(NSException *) exception {

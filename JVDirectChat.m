@@ -33,6 +33,7 @@
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
 #import "NSSplitViewAdditions.h"
+#import "NSAttributedStringMoreAdditions.h"
 
 static NSArray *JVAutoActionVerbs = nil;
 
@@ -93,9 +94,6 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	(NSStringEncoding) 0x80000505,		// Windows
 	/* End */ 0 };
 
-extern char *MVChatXHTMLToIRC( const char * const string );
-extern char *MVChatIRCToXHTML( const char * const string );
-
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
@@ -109,9 +107,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) writeToLog:(void *) root withDoc:(void *) doc initializing:(BOOL) init continuation:(BOOL) cont;
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
-- (void) _makeHyperlinksInString:(NSMutableString *) string;
 - (void) _breakLongLinesInString:(NSMutableString *) string;
-- (void) _performEmoticonSubstitutionOnString:(NSMutableString *) string;
+- (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string;
+- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
 - (char *) _classificationForNickname:(NSString *) nickname;
 - (void) _saveSelfIcon;
 - (void) _saveBuddyIcon:(JVBuddy *) buddy;
@@ -729,7 +727,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 }
 
-- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore {
+- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore {
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		if( ignore == JVNotIgnored && _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -767,14 +765,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action {
 	NSMutableAttributedString *encodedMsg = [[message mutableCopy] autorelease];
 
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"]], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"]], @"NSHTMLIgnoreFontTraits", nil];
-	NSMutableData *msgData = [[[encodedMsg HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES] mutableCopy] autorelease];
-	[msgData appendBytes:"\0" length:1];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSData *msgData = [encodedMsg IRCFormatWithOptions:options];
 
-	char *msg = MVChatXHTMLToIRC( (const char * const) [msgData bytes] );
-	msg = MVChatIRCToXHTML( msg );
-
-	[self addMessageToDisplay:[NSData dataWithBytes:msg length:strlen( msg )] fromUser:[[self connection] nickname] asAction:action];
+	[self addMessageToDisplay:msgData fromUser:[[self connection] nickname] asAction:action];
 }
 
 - (unsigned int) newMessagesWaiting {
@@ -861,32 +855,17 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
-	NSSet *plugins = [[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toChat: )];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableAttributedString * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	if( [plugins count] ) {
-		NSEnumerator *enumerator = [plugins objectEnumerator];
-		id item = nil;
+	[invocation setSelector:@selector( processMessage:asAction:toChat: )];
+	[invocation setArgument:&message atIndex:2];
+	[invocation setArgument:&action atIndex:3];
+	[invocation setArgument:&self atIndex:4];
 
-		if( [[MVChatPluginManager defaultManager] numberOfPluginsOfClass:[MVChatScriptPlugin class] thatRespondToSelector:@selector( processMessage:asAction:toChat: )] ) {
-			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
-			NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
-			NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
-			[message setAttributedString:[[[NSAttributedString alloc] initWithString:messageString] autorelease]];
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 
-			while( ( item = [enumerator nextObject] ) )
-				if( [item isKindOfClass:[MVChatScriptPlugin class]] )
-					[item processMessage:message asAction:action toChat:self];
-
-			[message setAttributedString:[NSAttributedString attributedStringWithHTMLFragment:[message string] baseURL:nil]];
-		}
-
-		enumerator = [plugins objectEnumerator];
-		while( ( item = [enumerator nextObject] ) )
-			if( ! [item isKindOfClass:[MVChatScriptPlugin class]] )
-				[item processMessage:message asAction:action toChat:self];
-	}
-
-	if( [[message string] length] )
+	if( [message length] )
 		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
 }
 
@@ -1228,6 +1207,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		if( [value isMemberOfClass:[NSNull class]] ) {
 			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
+		} else if( [value isKindOfClass:[NSAttributedString class]] ) {
+			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+			value = [(NSAttributedString *)value HTMLFormatWithOptions:options];
+			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
 		} else {
 			if( encode ) value = [value stringByEncodingXMLSpecialCharactersAsEntities];
 			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
@@ -1278,47 +1261,50 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
 	// DO *NOT* call this method without first acquiring _logLock!
-	BOOL continuation = NO;
-	BOOL highlight = NO;
-	xmlDocPtr doc = NULL, msgDoc = NULL;
-	xmlNodePtr root = NULL, child = NULL, parent = NULL;
-	const char *msgStr = NULL;
-	NSMutableData *mutableMsg = [[message mutableCopy] autorelease];
-	NSMutableString *messageString = nil;
-
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
 
-	if( ! [user isEqualToString:[[self connection] nickname]] )
-		_newMessageCount++;
+	NSFont *baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
+	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
 
-	messageString = [[[NSMutableString alloc] initWithData:mutableMsg encoding:_encoding] autorelease];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableAttributedString *messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
+
 	if( ! messageString ) {
-		messageString = [NSMutableString stringWithCString:[mutableMsg bytes] length:[mutableMsg length]];
-		[messageString appendFormat:@" <span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
+		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
+		messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
+
+		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, nil];
+		NSMutableAttributedString *error = [[[NSMutableAttributedString alloc] initWithString:[@" " stringByAppendingString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )] attributes:attributes] autorelease];
+		[error addAttribute:@"CSSClasses" value:[NSSet setWithObjects:@"error", @"encoding", nil] range:NSMakeRange( 1, ( [error length] - 1 ) )];
+		[messageString appendAttributedString:error];
 	}
 
-	if( ! [messageString length] ) 
-		messageString = [NSMutableString stringWithFormat:@"<span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
+	if( ! [messageString length] ) {
+		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
+		messageString = [[[NSMutableAttributedString alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes] autorelease];
+	}
 
 	JVIgnoreMatchResult ignoreTest = JVNotIgnored;
 	if( ! [user isEqualToString:[[self connection] nickname]] )
-		ignoreTest = [[JVChatController defaultManager] shouldIgnoreUser:user withMessage:[NSAttributedString attributedStringWithHTMLFragment:messageString baseURL:NULL] inView:self];
-	if( ignoreTest != JVNotIgnored ) _newMessageCount--;
+		ignoreTest = [[JVChatController defaultManager] shouldIgnoreUser:user withMessage:messageString inView:self];
 
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
-		AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
-		[messageString setString:[regex replaceWithString:@"" inString:messageString]];
-	}
+	if( ! [user isEqualToString:[[self connection] nickname]] && ignoreTest == JVNotIgnored )
+		_newMessageCount++;
 
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
-		AGRegex *regex = [AGRegex regexWithPattern:@"</?[b|i|u]>" options:AGRegexCaseInsensitive];
-		[messageString setString:[regex replaceWithString:@"" inString:messageString]];
+	[self processMessage:messageString asAction:action fromUser:user ignoreResult:ignoreTest];
+
+	if( ! [messageString length] && ignoreTest == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
+		_newMessageCount--;
+		return;
 	}
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
-		[self _makeHyperlinksInString:messageString];
+		[messageString makeLinkAttributesAutomatically];
 
+	[self _performEmoticonSubstitutionOnString:messageString];
+
+	BOOL highlight = NO;
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 		NSMutableArray *names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
@@ -1334,34 +1320,21 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] && [name length] > 1 ) {
 				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
 			} else {
-				NSString *pattern = [NSString stringWithFormat:@"(?:^|(?<=\\W))%@(?:$|(?=\\W))", [name stringByEscapingCharactersInSet:escapeSet]];
+				NSString *pattern = [NSString stringWithFormat:@"(?<=^|\\W)%@(?=\\W|$)", [name stringByEscapingCharactersInSet:escapeSet]];
 				regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 			}
 
-			NSRange searchRange = NSMakeRange( 0, [messageString length] );
-			NSRange backSearchRange = NSMakeRange( 0, [messageString length] );
-			AGRegexMatch *match = [regex findInString:messageString range:searchRange];
+			NSArray *matches = [regex findAllInString:[messageString string]];
+			NSEnumerator *enumerator = [matches objectEnumerator];
+			AGRegexMatch *match = nil;
 
-			while( match ) {
-				NSRange foundRange = [match rangeAtIndex:0];
-				backSearchRange.length = foundRange.location - backSearchRange.location;
-
-				// Search to see if we're in a tag
-				NSRange leftRange = [messageString rangeOfString:@"<" options:( NSBackwardsSearch | NSLiteralSearch ) range:backSearchRange];
-				NSRange rightRange = [messageString rangeOfString:@">" options:( NSBackwardsSearch | NSLiteralSearch ) range:backSearchRange];
-
-				if( leftRange.location == NSNotFound || ( rightRange.location != NSNotFound && rightRange.location > leftRange.location ) ) {
-					[messageString replaceCharactersInRange:foundRange withString:[NSString stringWithFormat:@"<span class=\"highlight\">%@</span>", [match groupAtIndex:0]]];
-					searchRange.location = NSMaxRange( foundRange ) + 31;
-					searchRange.length = [messageString length] - searchRange.location;
-					backSearchRange.location = searchRange.location;
-					highlight = YES;
-				} else {
-					searchRange.location = NSMaxRange( foundRange );
-					searchRange.length = [messageString length] - searchRange.location;
-				}
-
-				match = [regex findInString:messageString range:searchRange];
+			while( ( match = [enumerator nextObject] ) ) {
+				NSRange foundRange = [match range];
+				NSMutableSet *classes = [messageString attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL];
+				if( ! classes ) classes = [NSMutableSet setWithObject:@"highlight"];
+				else [classes addObject:@"highlight"];
+				[messageString addAttribute:@"CSSClasses" value:classes range:foundRange];
+				highlight = YES;
 			}
 		}
 	}
@@ -1387,31 +1360,18 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[[JVNotificationController defaultManager] performNotification:( ( ignoreTest == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
 
-	[self _performEmoticonSubstitutionOnString:messageString];
-
-	[self processMessage:messageString asAction:action fromUser:user ignoreResult:ignoreTest];
-
-	if( ! [messageString length] ) {
-		_newMessageCount--;
-		return;
-	}
-
-	_firstMessage = NO;
-
-	doc = xmlNewDoc( "1.0" );
-
 	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
 	if( ! ctx ) return;
 
 	xmlXPathObjectPtr result = xmlXPathEval( [[NSString stringWithFormat:@"/log/*[name() = 'envelope' and position() = last() and (sender = '%@' or sender/@nickname = '%@')]", user, user] UTF8String], ctx );
+	xmlDocPtr doc = xmlNewDoc( "1.0" ), msgDoc = NULL;
+	xmlNodePtr root = NULL, child = NULL, parent = NULL;
 
-	if( ! _requiresFullMessage && result && result -> nodesetval -> nodeNr ) {
-		continuation = YES;
-		parent = result -> nodesetval -> nodeTab[0];
+	if( ! _requiresFullMessage && result && ! xmlXPathNodeSetIsEmpty( result -> nodesetval ) ) {
+		parent = xmlXPathNodeSetItem( result -> nodesetval, 0 );
 		root = xmlDocCopyNode( parent, doc, 1 );
 		xmlDocSetRootElement( doc, root );
 	} else {
-		continuation = NO;
 		root = xmlNewNode( NULL, "envelope" );
 		xmlSetProp( root, "id", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
 		xmlDocSetRootElement( doc, root );
@@ -1456,7 +1416,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	xmlXPathFreeObject( result );
 	xmlXPathFreeContext( ctx );
 
-	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
+	options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSString *htmlMessage = [messageString HTMLFormatWithOptions:options];
+	const char *msgStr = [[NSString stringWithFormat:@"<message>%@</message>", htmlMessage] UTF8String];
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 
 	child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
@@ -1467,21 +1429,23 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	else if( ignoreTest == JVUserIgnored ) xmlSetProp( root, "ignored", "yes" );
 	xmlAddChild( root, child );
 
-    [self writeToLog:root withDoc:doc initializing:NO continuation:continuation];
+	[self writeToLog:root withDoc:doc initializing:NO continuation:( parent ? YES : NO )];
 
 	xmlFreeDoc( msgDoc );
 
 	if( parent ) xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
 	else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
+	NSMutableString *transformedMessage = nil;
+
 	@try {
-		messageString = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
+		transformedMessage = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
 	} @catch ( NSException *exception ) {
-		messageString = nil;
+		transformedMessage = nil;
 		[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
 	}
 
-	if( [messageString length] ) {
+	if( [transformedMessage length] ) {
 		[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
 
 		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
@@ -1494,24 +1458,29 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1. )];
 		}
 
-		BOOL subsequent = ( [messageString rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
+		BOOL subsequent = ( [transformedMessage rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
 
-		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
-		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		if( subsequent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, messageString]];
-		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, messageString]];
+		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
+		[transformedMessage replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
+		if( subsequent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
+		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
 
 		if( highlight && [scroller isKindOfClass:[JVMarkedScroller class]] ) {
 			unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", ( _messageId - 1 )]] intValue];
 			if( loc ) [(JVMarkedScroller *)scroller addMarkAt:loc];
 		}
 
-		[[display window] enableFlushWindow];
+		[[display window] enableFlushWindow]; // flush everything we have drawn
+
+		_firstMessage = NO; // not the first message anymore
+		_requiresFullMessage = NO; // next message will not require a new envelope if it is consecutive
+	} else if( ignoreTest == JVNotIgnored ) {
+		// the style decided to excluded this message, decrease the new message counts
+		if( highlight ) _newHighlightMessageCount--;
+		_newMessageCount--;		
 	}
 
 	xmlFreeDoc( doc );
-
-	_requiresFullMessage = NO;
 
 	[_windowController reloadListItem:self andChildren:NO];
 }
@@ -1603,150 +1572,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return [[_encodingMenu retain] autorelease];
 }
 
-- (void) _makeHyperlinksInString:(NSMutableString *) string {
-	unsigned i = 0, c = 0;
-	NSMutableArray *parts = nil;
-	NSMutableString *part = nil;
-	NSScanner *urlScanner = nil;
-	NSCharacterSet *legalSchemeSet = nil;
-	NSCharacterSet *legalAddressSet = nil;
-	NSCharacterSet *legalDomainSet = nil;
-	NSCharacterSet *ircChannels = [NSCharacterSet characterSetWithCharactersInString:@"#&"];
-	NSCharacterSet *trailingPuncuation = [NSCharacterSet characterSetWithCharactersInString:@".!?,])}\\'\"&"];
-	NSCharacterSet *seperaters = [NSCharacterSet characterSetWithCharactersInString:@"<> \t\n\r&"];
-	NSString *link = nil, *urlHandle = nil;
-	NSMutableString *mutableLink = nil;
-	BOOL inTag = NO;
-	NSRange range, srange;
-
-	srange = NSMakeRange( 0, [string length] );
-	range = [string rangeOfCharacterFromSet:seperaters options:NSLiteralSearch range:srange];
-	while( range.location != NSNotFound ) {
-		if( [string characterAtIndex:range.location] == '<' ) {
-			[string insertString:@"\033" atIndex:range.location];
-			inTag = ! inTag;
-		} else if( [string characterAtIndex:range.location] == '>' ) {
-			[string insertString:@"\033" atIndex:range.location + 1];
-			inTag = ! inTag;
-		} else if( [string characterAtIndex:range.location] == ' ' && ! inTag ) {
-			[string insertString:@"\033" atIndex:range.location + 1];
-		}
-
-		if( range.location >= [string length] ) break;
-		srange = NSMakeRange( range.location + 2, [string length] - range.location - 2 );
-		range = [string rangeOfCharacterFromSet:seperaters options:NSLiteralSearch range:srange];
-	}
-
-	parts = [[[string componentsSeparatedByString:@"\033"] mutableCopy] autorelease];
-
-	for( i = 0, c = [parts count]; i < c; i++ ) {
-		part = [[[parts objectAtIndex:i] mutableCopy] autorelease];
-
-		if( ! [part length] || ( [part length] >= 1 && [part characterAtIndex:0] == '<' ) )
-			continue;
-
-		// catch well-formed urls like "http://www.apple.com" or "irc://irc.javelin.cc"
-		legalSchemeSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-"];
-		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;#.,\\/?!&%$-+=_~@*'\"()[]"];
-		legalDomainSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_.!~*'()[]%;:&=+$,"];
-		urlScanner = [NSScanner scannerWithString:part];
-		srange = [part rangeOfString:@"://"];
-		range = [part rangeOfCharacterFromSet:[legalSchemeSet invertedSet] options:( NSLiteralSearch | NSBackwardsSearch ) range:NSMakeRange( 0, ( srange.location != NSNotFound ? srange.location : 0 ) )];
-		if( range.location != NSNotFound ) [urlScanner setScanLocation:range.location];
-		[urlScanner scanUpToCharactersFromSet:legalSchemeSet intoString:NULL];
-		if( [urlScanner scanUpToString:@"://" intoString:&urlHandle] && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
-			link = [link stringByTrimmingCharactersInSet:trailingPuncuation];
-			if( [link length] >= 4 )
-				link = [urlHandle stringByAppendingString:link];
-			if( [link length] >= 7 ) {
-				mutableLink = [[link mutableCopy] autorelease];
-				[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"%" withString:@"&#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"&" withString:@"&#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"%@\">%@</a>", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				goto finish;
-			}
-		}
-
-		// catch www urls like "www.apple.com"
-		urlScanner = [NSScanner scannerWithString:part];
-		[urlScanner scanUpToString:@"www." intoString:NULL];
-		// Skip them if they come immediately after an alphanumeric character
-		if( [urlScanner scanLocation] == 0 || ! [legalSchemeSet characterIsMember:[part characterAtIndex:[urlScanner scanLocation] - 1]] ) {
-			NSString *domain = @"", *path = @"";
-			if( [urlScanner scanCharactersFromSet:legalDomainSet intoString:&domain] ) {
-				NSRange dotRange = [domain rangeOfString:@".."];
-				if( dotRange.location != NSNotFound )
-					domain = [domain substringWithRange:NSMakeRange( 0, dotRange.location )];
-				if( [[domain componentsSeparatedByString:@"."] count] >= 3 ) {
-					if( [urlScanner scanString:@"/" intoString:nil] ) {
-						[urlScanner scanCharactersFromSet:legalAddressSet intoString:&path];
-						link = [NSString stringWithFormat:@"%@/%@", domain, path];
-					} else link = domain;
-					link = [link stringByTrimmingCharactersInSet:trailingPuncuation];
-					mutableLink = [[link mutableCopy] autorelease];
-					[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-					[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-					[mutableLink replaceOccurrencesOfString:@"%" withString:@"&#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-					[mutableLink replaceOccurrencesOfString:@"&" withString:@"&#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-					[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"http://%@\">%@</a>", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-					goto finish;
-				}
-			}
-		}
-
-		// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
-		legalSchemeSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890._-+"];
-		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@.-_"];
-		urlScanner = [NSScanner scannerWithString:part];
-		srange = [part rangeOfString:@"@"];
-		range = [part rangeOfCharacterFromSet:[legalSchemeSet invertedSet] options:( NSLiteralSearch | NSBackwardsSearch ) range:NSMakeRange( 0, ( srange.location != NSNotFound ? srange.location : 0 ) )];
-		if( range.location != NSNotFound ) [urlScanner setScanLocation:range.location];
-		[urlScanner scanUpToCharactersFromSet:legalSchemeSet intoString:NULL];
-		if( [urlScanner scanUpToString:@"@" intoString:&urlHandle] && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
-			link = [link stringByTrimmingCharactersInSet:trailingPuncuation];
-			NSRange hasPeriod = [link rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
-			if( [urlHandle length] && [link length] && hasPeriod.location < ([link length] - 1) && hasPeriod.location != NSNotFound ) {
-				link = [urlHandle stringByAppendingString:link];
-				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"mailto:%@\">%@</a>", link, link] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				goto finish;
-			}
-		}
-
-		[part replaceOccurrencesOfString:@"~" withString:@"~tilde;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"&" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"~amp;amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-
-		// catch well-formed IRC channel names like "#php" or "&admins"
-		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;.,?!%^$@#&*~`\\|+/-_"];
-		urlScanner = [NSScanner scannerWithString:part];
-		if( ( ( [urlScanner scanUpToCharactersFromSet:ircChannels intoString:NULL] && [urlScanner scanLocation] < [part length] && ! [[NSCharacterSet alphanumericCharacterSet] characterIsMember:[part characterAtIndex:( [urlScanner scanLocation] - 1 )]] ) || [part rangeOfCharacterFromSet:ircChannels].location == 0 ) && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&urlHandle] ) {
-			if( [urlHandle length] >= 2 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet letterCharacterSet] options:NSLiteralSearch range:NSMakeRange( 1, [urlHandle length] - 1 )].location != NSNotFound && ! ( [urlHandle length] == 7 && [NSColor colorWithHTMLAttributeValue:urlHandle] ) && ! ( [urlHandle characterAtIndex:0] == '&' && [urlHandle characterAtIndex:([urlHandle length] - 1)] == ';' ) ) {
-				urlHandle = [urlHandle stringByTrimmingCharactersInSet:trailingPuncuation];
-				link = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];
-				mutableLink = [NSMutableString stringWithFormat:@"<a href=\"%@\">%@</a>", link, urlHandle];
-				[mutableLink replaceOccurrencesOfString:@"&" withString:@"~amp;amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				[part replaceOccurrencesOfString:urlHandle withString:mutableLink options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-
-				[part replaceOccurrencesOfString:@"&" withString:@"~amp;amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				[part replaceOccurrencesOfString:@"~amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				[part replaceOccurrencesOfString:@"~tilde;" withString:@"~" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				goto finish;
-			}
-		}
-
-		[part replaceOccurrencesOfString:@"&" withString:@"~amp;amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"~amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"~tilde;" withString:@"~" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-
-	finish:
-		[parts replaceObjectAtIndex:i withObject:part];
-	}
-
-	[string setString:[parts componentsJoinedByString:@""]];
-}
-
 - (void) _breakLongLinesInString:(NSMutableString *) string { // Not good on strings that have prior HTML or HTML entities
 	NSScanner *scanner = [NSScanner scannerWithString:string];
 	NSCharacterSet *stopSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
@@ -1765,12 +1590,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 }
 
-- (void) _performEmoticonSubstitutionOnString:(NSMutableString *) string {
+- (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string {
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 	NSEnumerator *keyEnumerator = [_emoticonMappings keyEnumerator];
 	NSEnumerator *objEnumerator = [_emoticonMappings objectEnumerator];
 	NSEnumerator *srcEnumerator = nil;
-	NSString *result = string;
 	NSString *str = nil;
 	NSString *key = nil;
 	NSArray *obj = nil;
@@ -1779,20 +1603,46 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		srcEnumerator = [obj objectEnumerator];
 		while( ( str = [srcEnumerator nextObject] ) ) {
 			NSMutableString *search = [str mutableCopy];
-			[search encodeXMLSpecialCharactersAsEntities];
 			[search escapeCharactersInSet:escapeSet];
 
-			AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(\\s|^)(%@)", search]]; // Not ideal but this allows consecutive (same) emoticons that share a common space
-			if( [regex findInString:result] ) {
-				NSString *replacement = [NSString stringWithFormat:@"$1<span class=\"emoticon %@\"><samp>$2</samp></span>", key];
-				result = [regex replaceWithString:replacement inString:result];
+			AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", search]];
+			NSArray *matches = [regex findAllInString:[string string]];
+			NSEnumerator *enumerator = [matches objectEnumerator];
+			AGRegexMatch *match = nil;
+
+			while( ( match = [enumerator nextObject] ) ) {
+				NSRange foundRange = [match range];
+				NSString *startHTML = [string attribute:@"XHTMLStart" atIndex:foundRange.location effectiveRange:NULL];
+				NSString *endHTML = [string attribute:@"XHTMLEnd" atIndex:foundRange.location effectiveRange:NULL];
+				if( ! startHTML ) startHTML = @"";
+				if( ! endHTML ) endHTML = @"";
+				[string addAttribute:@"XHTMLStart" value:[startHTML stringByAppendingFormat:@"<span class=\"emoticon %@\"><samp>", key] range:foundRange];
+				[string addAttribute:@"XHTMLEnd" value:[@"</samp></span>" stringByAppendingString:endHTML] range:foundRange];
 			}
 
 			[search release];
 		}
 	}
+}
 
-	[string setString:result];
+- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message {
+	NSFont *baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
+	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
+
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableAttributedString *messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
+
+	if( ! messageString ) {
+		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
+		messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
+	}		
+
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+		[messageString makeLinkAttributesAutomatically];
+
+	[self _performEmoticonSubstitutionOnString:messageString];
+
+	return messageString;
 }
 
 - (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
@@ -1830,25 +1680,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) _awayStatusChanged:(NSNotification *) notification {
 	if( [[[notification userInfo] objectForKey:@"away"] boolValue] ) {
-		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"]], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"]], @"NSHTMLIgnoreFontTraits", nil];
-		NSData *msgData = [[_connection awayStatusMessage] HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
-		NSMutableString *messageString = [[[NSMutableString alloc] initWithData:msgData encoding:_encoding] autorelease];
-
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
-			AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
-			[messageString setString:[regex replaceWithString:@"" inString:messageString]];
-		}
-
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
-			AGRegex *regex = [AGRegex regexWithPattern:@"</?[b|i|u]>" options:AGRegexCaseInsensitive];
-			[messageString setString:[regex replaceWithString:@"" inString:messageString]];
-		}
+		NSMutableAttributedString *messageString = [[[_connection awayStatusMessage] mutableCopy] autorelease];
 
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
-			[self _makeHyperlinksInString:messageString];
-
+			[messageString makeLinkAttributesAutomatically];
+		
 		[self _performEmoticonSubstitutionOnString:messageString];
-
+		
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), messageString] withName:@"awaySet" andAttributes:nil];
 
 		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
@@ -1961,7 +1799,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSFont *baseFont = nil;
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputUsesStyleFont"] ) {
 		WebPreferences *preferences = [display preferences];
-		baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[preferences standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size: [preferences defaultFontSize]];
+		baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[preferences standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[preferences defaultFontSize]];
 	}
 	[send setBaseFont:baseFont];
 }
@@ -2156,11 +1994,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
-- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat {
+- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:action], @"piM1", [chat target], @"piM2", chat, @"piM3", nil];
 	id result = [self callScriptHandler:'piMX' withArguments:args];
 	if( ! result ) [self doesNotRespondToSelector:_cmd];
-	else if( [result isKindOfClass:[NSString class]] ) [message setString:result];
+	else if( [result isKindOfClass:[NSString class]] )
+		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
 }
 
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toChat:(JVDirectChat *) chat {
@@ -2176,5 +2015,4 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( ! [self callScriptHandler:'uNcX' withArguments:args] )
 		[self doesNotRespondToSelector:_cmd];
 }
-
 @end

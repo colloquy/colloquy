@@ -25,8 +25,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 @interface JVDirectChat (JVDirectChatPrivate)
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
-- (void) _makeHyperlinksInString:(NSMutableString *) string;
-- (void) _performEmoticonSubstitutionOnString:(NSMutableString *) string;
+- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
 - (void) _didConnect:(NSNotification *) notification;
 - (void) _didDisconnect:(NSNotification *) notification;
 @end
@@ -318,7 +317,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	return [[results lastObject] boolValue];
 }
 
-- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore {
+- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore {
 	JVChatRoomMember *member = [self chatRoomMemberWithName:user];
 
 	if( ignore == JVNotIgnored && ! [user isEqualToString:[[self connection] nickname]] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
@@ -345,50 +344,30 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[_nextMessageAlertMembers removeObject:member];
 	}
 
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
-	AGRegex *regex = nil;
-	NSString *name = nil;
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+	NSString *name = nil;
 
 	while( ( name = [[enumerator nextObject] nickname] ) ) {
-		// Avoid putting stuff in the autorelease pool if we don't have to
-		// On #gentoo this will be called 800+ times
 		NSMutableString *escapedName = [name mutableCopy];
 		[escapedName escapeCharactersInSet:escapeSet];
-		NSString *pattern = [[NSString alloc] initWithFormat:@"(?:\\W|^)(%@)(?:\\W|$)", escapedName];
-		regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
+
+		NSString *pattern = [[NSString alloc] initWithFormat:@"(?<=^|\\W)%@(?=\\W|$)", escapedName];
+		AGRegex *regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
+
 		[escapedName release];
 		[pattern release];
-		NSRange searchRange = NSMakeRange(0, [message length]);
-		NSRange backSearchRange = NSMakeRange(0, [message length]);
-		AGRegexMatch *match = [regex findInString:message range:searchRange];
-		while ( match ) {
-			NSRange foundRange = [match rangeAtIndex:1];
-			backSearchRange.length = foundRange.location - backSearchRange.location;
-			
-			// Search to see if we're in a tag
-			NSRange leftRange = [message rangeOfString:@"<" options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
-			NSRange rightRange = [message rangeOfString:@">" options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
-			
-			if( leftRange.location == NSNotFound || ( rightRange.location != NSNotFound && rightRange.location > leftRange.location ) ) {
-				// Search to see if we're in a link
-				NSRange openRange = [message rangeOfString:@"<a " options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
-				NSRange closeRange = [message rangeOfString:@"</a>" options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
 
-				if( openRange.location == NSNotFound || ( closeRange.location != NSNotFound && closeRange.location > openRange.location ) ) {
-					[message replaceCharactersInRange:foundRange withString:[NSString stringWithFormat:@"<span class=\"member\">%@</span>", [match groupAtIndex:1]]];
-					searchRange.location = NSMaxRange( foundRange ) + 28;
-					searchRange.length = [message length] - searchRange.location;
-					backSearchRange.location = searchRange.location;
-				} else {
-					searchRange.location = NSMaxRange( foundRange );
-					searchRange.length = [message length] - searchRange.location;
-				}
-			} else {
-				searchRange.location = NSMaxRange( foundRange );
-				searchRange.length = [message length] - searchRange.location;
-			}
-			match = [regex findInString:message range:searchRange];
+		NSArray *matches = [regex findAllInString:[message string]];
+		NSEnumerator *enumerator = [matches objectEnumerator];
+		AGRegexMatch *match = nil;
+
+		while( ( match = [enumerator nextObject] ) ) {
+			NSRange foundRange = [match range];
+			NSMutableSet *classes = [message attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL];
+			if( ! classes ) classes = [NSMutableSet setWithObject:@"member"];
+			else [classes addObject:@"member"];
+			[message addAttribute:@"CSSClasses" value:classes range:foundRange];
 		}
 	}
 
@@ -405,33 +384,18 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
-	NSSet *plugins = [[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableAttributedString * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	if( [plugins count] ) {
-		NSEnumerator *enumerator = [plugins objectEnumerator];
-		id item = nil;
+	[invocation setSelector:@selector( processMessage:asAction:toRoom: )];
+	[invocation setArgument:&message atIndex:2];
+	[invocation setArgument:&action atIndex:3];
+	[invocation setArgument:&self atIndex:4];
 
-		if( [[MVChatPluginManager defaultManager] numberOfPluginsOfClass:[MVChatScriptPlugin class] thatRespondToSelector:@selector( processMessage:asAction:toChat: )] ) {
-			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
-			NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
-			NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
-			[message setAttributedString:[[[NSAttributedString alloc] initWithString:messageString] autorelease]];
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 
-			while( ( item = [enumerator nextObject] ) )
-				if( [item isKindOfClass:[MVChatScriptPlugin class]] )
-					[item processMessage:message asAction:action toRoom:self];
-
-			[message setAttributedString:[NSAttributedString attributedStringWithHTMLFragment:[message string] baseURL:nil]];
-		}
-
-		enumerator = [plugins objectEnumerator];
-		while( ( item = [enumerator nextObject] ) )
-			if( ! [item isKindOfClass:[MVChatScriptPlugin class]] )
-				[item processMessage:message asAction:action toRoom:self];
-	}
-
-	if( [[message string] length] )
-		[[self connection] sendMessage:message withEncoding:_encoding toChatRoom:[self target] asAction:action];
+	if( [message length] )
+		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
 
 	AGRegex *regex = [AGRegex regexWithPattern:@"^(.*?)[:;,-]" options:AGRegexCaseInsensitive];
 	AGRegexMatch *match = [regex findInString:[message string]];
@@ -657,26 +621,9 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSParameterAssert( member != nil );
 	NSParameterAssert( by != nil );
 
-	NSMutableString *rstring = nil;
-	if( reason && ! [reason isMemberOfClass:[NSNull class]] ) {
-		rstring = [[[NSMutableString alloc] initWithData:reason encoding:_encoding] autorelease];
-		if( ! rstring ) rstring = [NSMutableString stringWithCString:[reason bytes] length:[reason length]];
-
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
-			AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
-			[rstring setString:[regex replaceWithString:@"" inString:rstring]];
-		}
-
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
-			AGRegex *regex = [AGRegex regexWithPattern:@"</?[b|i|u]>" options:AGRegexCaseInsensitive];
-			[rstring setString:[regex replaceWithString:@"" inString:rstring]];
-		}
-
-		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
-			[self _makeHyperlinksInString:rstring];
-
-		[self _performEmoticonSubstitutionOnString:rstring];
-	}
+	NSMutableAttributedString *rstring = nil;
+	if( [reason isKindOfClass:[NSData class]] )
+		rstring = [self _convertRawMessage:reason];
 
 	JVChatRoomMember *mbr = [[[self chatRoomMemberWithName:member] retain] autorelease];
 	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
@@ -727,26 +674,9 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (void) kickedFromChatBy:(NSString *) by forReason:(NSData *) reason {
 	NSParameterAssert( by != nil );
 
-	NSMutableString *rstring = nil;
-	if( reason && ! [reason isMemberOfClass:[NSNull class]] ) {
-		rstring = [[[NSMutableString alloc] initWithData:reason encoding:_encoding] autorelease];
-		if( ! rstring ) rstring = [NSMutableString stringWithCString:[reason bytes] length:[reason length]];
-
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
-			AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
-			[rstring setString:[regex replaceWithString:@"" inString:rstring]];
-		}
-
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
-			AGRegex *regex = [AGRegex regexWithPattern:@"</?[b|i|u]>" options:AGRegexCaseInsensitive];
-			[rstring setString:[regex replaceWithString:@"" inString:rstring]];
-		}
-
-		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
-			[self _makeHyperlinksInString:rstring];
-
-		[self _performEmoticonSubstitutionOnString:rstring];
-	}
+	NSMutableAttributedString *rstring = nil;
+	if( [reason isKindOfClass:[NSData class]] )
+		rstring = [self _convertRawMessage:reason];
 
 	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), ( byMbr ? [byMbr title] : by )];
@@ -829,8 +759,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSMutableString *topicString = ( topic ? [[[NSMutableString alloc] initWithData:topic encoding:_encoding] autorelease] : nil );
 	if( ! topicString && topic ) topicString = [NSMutableString stringWithCString:[topic bytes] length:[topic length]];
 
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
-		[self _makeHyperlinksInString:topicString];
+//	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+//		[self _makeHyperlinksInString:topicString];
 
 	if( showChange && author ) {
 		author = [[author componentsSeparatedByString:@"!"] objectAtIndex:0];
@@ -1062,26 +992,9 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	
 	JVChatRoomMember *mbr = nil;
 	if( ( mbr = [[[self chatRoomMemberWithName:member] retain] autorelease] ) ) {
-		NSMutableString *rstring = nil;
-		if( reason && ! [reason isMemberOfClass:[NSNull class]] ) {
-			rstring = [[[NSMutableString alloc] initWithData:reason encoding:_encoding] autorelease];
-			if( ! rstring ) rstring = [NSMutableString stringWithCString:[reason bytes] length:[reason length]];
-
-			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
-				AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
-				[rstring setString:[regex replaceWithString:@"" inString:rstring]];
-			}
-
-			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
-				AGRegex *regex = [AGRegex regexWithPattern:@"</?[b|i|u]>" options:AGRegexCaseInsensitive];
-				[rstring setString:[regex replaceWithString:@"" inString:rstring]];
-			}
-
-			if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
-				[self _makeHyperlinksInString:rstring];
-
-			[self _performEmoticonSubstitutionOnString:rstring];
-		}
+		NSMutableAttributedString *rstring = nil;
+		if( [reason isKindOfClass:[NSData class]] )
+			rstring = [self _convertRawMessage:reason];
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( NSString * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -1485,11 +1398,12 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
-- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:action], @"piM1", [member nickname], @"piM2", room, @"piM3", nil];
+- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"piM1", [member nickname], @"piM2", room, @"piM3", nil];
 	id result = [self callScriptHandler:'piMX' withArguments:args];
 	if( ! result ) [self doesNotRespondToSelector:_cmd];
-	else if( [result isKindOfClass:[NSString class]] ) [message setString:result];
+	else if( [result isKindOfClass:[NSString class]] )
+		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
 }
 
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room {

@@ -77,7 +77,7 @@ extern NSString *MVChatRoomModeChangedNotification;
 @interface NSObject (MVChatPluginRoomSupport)
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(JVChatRoom *) room;
 
-- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room;
+- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room;
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room;
 
 - (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room;

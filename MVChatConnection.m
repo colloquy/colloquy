@@ -116,7 +116,7 @@ typedef struct {
 + (MVChatConnection *) _connectionForServer:(SERVER_REC *) server;
 + (void) _registerCallbacks;
 + (void) _deregisterCallbacks;
-+ (NSData *) _flattenedHTMLDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc;
++ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc;
 - (io_connect_t) _powerConnection;
 - (SERVER_REC *) _irssiConnection;
 - (void) _setIrssiConnection:(SERVER_REC *) server;
@@ -166,353 +166,6 @@ void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t mess
 			if( [self status] == MVChatConnectionSuspendedStatus ) [self connect];
 			break;
 	}
-}
-
-#pragma mark -
-
-static const int MVChatColors[][3] = {
-	{ 0xff, 0xff, 0xff },  /* 00) white */
-	{ 0x00, 0x00, 0x00 },  /* 01) black */
-	{ 0x00, 0x00, 0x7b },  /* 02) blue */
-	{ 0x00, 0x94, 0x00 },  /* 03) green */
-	{ 0xff, 0x00, 0x00 },  /* 04) red */
-	{ 0x7b, 0x00, 0x00 },  /* 05) brown */
-	{ 0x9c, 0x00, 0x9c },  /* 06) purple */
-	{ 0xff, 0x7b, 0x00 },  /* 07) orange */
-	{ 0xff, 0xff, 0x00 },  /* 08) yellow */
-	{ 0x00, 0xff, 0x00 },  /* 09) bright green */
-	{ 0x00, 0x94, 0x94 },  /* 10) cyan */
-	{ 0x00, 0xff, 0xff },  /* 11) bright cyan */
-	{ 0x00, 0x00, 0xff },  /* 12) bright blue */
-	{ 0xff, 0x00, 0xff },  /* 13) bright purple */
-	{ 0x7b, 0x7b, 0x7b },  /* 14) gray */
-	{ 0xd6, 0xd6, 0xd6 }   /* 15) light grey */
-};
-
-static int MVChatRGBToIRC( unsigned int red, unsigned int green, unsigned int blue ) {
-	int distance = 1000, color = 1, i = 0, o = 0;
-	for( i = 0; i < 16; i++ ) {
-		o = abs( red - MVChatColors[i][0] ) +
-		abs( green - MVChatColors[i][1] ) +
-		abs( blue - MVChatColors[i][2] );
-		if( o < distance ) {
-			color = i;
-			distance = o;
-		}
-	}
-	return color;
-}
-
-#define MVChatIRCBold 0x1
-#define MVChatIRCItalic 0x2
-#define MVChatIRCUnderline 0x4
-#define MVChatIRCColor 0x8
-
-char *MVChatXHTMLToIRC( const char * const string ) {
-	static char output[513];
-	unsigned attributes = 0;
-	unsigned colorStack = 0;
-	size_t l = ( string ? strlen( string ) : 0 );
-	size_t ll = 513;
-	size_t i = 0;
-	size_t o = 0;
-
-	while( i < l && o < ll ) {
-		switch( string[i] ) {
-			case '&':
-				if( ! strncasecmp( &string[i], "&amp;", 5 ) ) {
-					output[o++] = '&';
-					i += 5;
-				} else if( ! strncasecmp( &string[i], "&gt;", 4 ) ) {
-					output[o++] = '>';
-					i += 4;
-				} else if( ! strncasecmp( &string[i], "&lt;", 4 ) ) {
-					output[o++] = '<';
-					i += 4;
-				} else if( ! strncasecmp( &string[i], "&nbsp;", 6 ) ) {
-					output[o++] = ' ';
-					i += 6;
-				} else if( ! strncasecmp( &string[i], "&quot;", 6 ) ) {
-					output[o++] = '"';
-					i += 6;
-				} else if( ! strncasecmp( &string[i], "&apos;", 6 ) ) {
-					output[o++] = '\'';
-					i += 6;
-				} else output[o++] = string[i++];
-				break;
-			case '<':
-				if( ! strncasecmp( &string[i], "<b>", 3 ) ) {
-					output[o++] = '\002';
-					i += 3;
-					attributes |= MVChatIRCBold;
-				} else if( ! strncasecmp( &string[i], "</b>", 4 ) ) {
-					output[o++] = '\002';
-					i += 4;
-					attributes &= ~MVChatIRCBold;
-				} else if( ! strncasecmp( &string[i], "<i>", 3 ) ) {
-					output[o++] = '\026';
-					i += 3;
-					attributes |= MVChatIRCItalic;
-				} else if( ! strncasecmp(&string[i], "</i>", 4 ) ) {
-					output[o++] = '\026';
-					i += 4;
-					attributes &= ~MVChatIRCItalic;
-				} else if( ! strncasecmp(&string[i], "<u>", 3 ) ) {
-					output[o++] = '\037';
-					i += 3;
-					attributes |= MVChatIRCUnderline;
-				} else if( ! strncasecmp( &string[i], "</u>", 4 ) ) {
-					output[o++] = '\037';
-					i += 4;
-					attributes &= ~MVChatIRCUnderline;
-				} else if( ! strncasecmp( &string[i], "<br>", 4 ) ) {
-					output[o++] = ' ';
-					i += 4;
-				} else if( ! strncasecmp(&string[i], "<a href=", 8 ) ) {
-					if( string[i + 8] == '"' || string[i + 8] == '\'' ) i += 9;
-					else i += 8;
-					output[o++] = '\037';
-
-					while( i < l && string[i] != '"' && string[i] != '\'' )
-						output[o++] = string[i++];
-
-					while( i < l && strncasecmp(&string[i],"</a>",4) ) i++;
-
-					output[o++] = '\037';
-					i += 4;
-				} else if( ! strncasecmp( &string[i], "<font", 5 ) ) {
-					unsigned int fgcolor[3] = { 0x00, 0x00, 0x00 };
-					unsigned int bgcolor[3] = { 0xff, 0xff, 0xff };
-					char fgfound = 0;
-					char bgfound = 0;
-					int oi = i;
-					int ti = l;
-
-					oi = i;
-					while( i < l && strncasecmp(&string[i],">",1) ) i++;
-					ti = i + 1;
-
-					i = oi;
-					while( i < ti && strncasecmp(&string[i],"color=",6) ) i++;
-					if( string[i + 6] == '"' || string[i + 6] == '\'' ) i += 7;
-					else i += 6;
-					if( string[i] == '#' ) i += 1;
-					fgfound = sscanf( &string[i], "%2x%2x%2x", &fgcolor[0], &fgcolor[1], &fgcolor[2] );
-					fgfound = ( fgfound == 3 ? 1 : 0 );
-
-					i = oi;
-					while( i < ti && strncasecmp(&string[i],"background-color:",17) ) i++;
-					if( string[i + 17] == ' ' ) i += 18;
-					else i += 17;
-					if( string[i] == '#' ) i += 1;
-					bgfound = sscanf( &string[i], "%2x%2x%2x", &bgcolor[0], &bgcolor[1], &bgcolor[2] );
-					bgfound = ( bgfound == 3 ? 1 : 0 );
-					if( bgfound ) fgfound = 1;
-
-					i = ti;
-
-					if( fgfound ) {
-						attributes |= MVChatIRCColor;
-						colorStack++;
-						o += sprintf( &output[o], "\003%02d", MVChatRGBToIRC( fgcolor[0], fgcolor[1], fgcolor[2] ) );
-						if( bgfound ) {
-							o += sprintf( &output[o], ",%02d", MVChatRGBToIRC( bgcolor[0], bgcolor[1], bgcolor[2] ) );
-						}
-					}
-				} else if( ! strncasecmp( &string[i], "</font>", 7 ) ) {
-					colorStack--;
-					if( colorStack < 0 ) colorStack = 0;
-					if( ( attributes & MVChatIRCColor ) && ! colorStack ) {
-						output[o++] = '\003';
-						attributes &= ~MVChatIRCColor;
-					}
-					i += 7;
-				} else output[o++] = string[i++];
-				break;
-			default:
-				output[o++] = string[i++];
-				break;
-		}
-	}
-
-	output[o] = '\0';
-	return output;
-}
-
-char *MVChatIRCToXHTML( const char * const string ) {
-	size_t l = ( string ? strlen( string ) : 0 );
-	size_t i = 0;
-	size_t o = 0;
-	size_t ll = ( 45 * 1024 ); // the maximum size for a 512 byte message with all attributes/entity replacement
-	static char output[( 45 * 1024 ) + 1];
-	const char *attributsCharSet = "\002\003\026\037\017";
-	unsigned attributes = 0;
-	int fgcolor = -1, bgcolor = -1;
-	unsigned int iso2022esc = 0;
-
-	while( i < l && o < ll ) {
-		/* scan for attributes until we hit character data */
-		while( i < l && strspn( &string[i], attributsCharSet ) ) {
-			switch( string[i] ) {
-			case '\017': /* reset all */
-				attributes = 0;
-				fgcolor = -1;
-				bgcolor = -1;
-				i++;
-				break;
-			case '\002': /* toggle bold */
-				attributes ^= MVChatIRCBold;
-				i++;
-				break;
-			case '\003': /* color */
-				fgcolor = -1;
-				attributes &= ~MVChatIRCColor;
-				if( isdigit( string[i + 1] ) ) {
-					if( isdigit( string[i + 2] ) ) {
-						fgcolor = ( string[i + 1] - '0' ) * 10;
-						fgcolor += ( string[i + 2] - '0' );
-						if( string[i + 3] == ',' ) {
-							if( isdigit( string[i + 4] ) ) {
-								if( isdigit( string[i + 5] ) ) {
-									bgcolor = ( string[i + 4] - '0' ) * 10;
-									bgcolor += ( string[i + 5] - '0' );
-									i++;
-								} else bgcolor = ( string[i + 4] - '0' );
-								i++;
-							}
-							i++;
-						}
-						i++;
-					} else if( string[i + 2] == ',' ) {
-						fgcolor = ( string[i + 1] - '0' );
-						if( isdigit( string[i + 3] ) ) {
-							if( isdigit( string[i + 4] ) ) {
-								bgcolor = ( string[i + 3] - '0' ) * 10;
-								bgcolor += ( string[i + 4] - '0' );
-								i++;
-							} else bgcolor = ( string[i + 3] - '0' );
-							i++;
-						}
-						i++;
-					} else fgcolor = ( string[i + 1] - '0' );
-					i++;
-
-					if( fgcolor >= 0 ) {
-						fgcolor %= 16;
-						attributes |= MVChatIRCColor;
-					}
-
-					if( bgcolor == 99 ) bgcolor = -1;
-					if( ( attributes & MVChatIRCColor ) && bgcolor >= 0 )
-						bgcolor %= 16;
-				} else bgcolor = -1;
-				i++;
-				break;
-			case '\026': /* toggle italic */
-				attributes ^= MVChatIRCItalic;
-				i++;
-				break;
-			case '\037': /* toggle underline */
-				attributes ^= MVChatIRCUnderline;
-				i++;
-				break;
-			}
-		}
-
-		/* write attributes to output as XHTML */
-		if( attributes & MVChatIRCColor && fgcolor >= 0 ) {
-			o += sprintf( &output[o], "<font color=\"#%02x%02x%02x\"", MVChatColors[fgcolor][0], MVChatColors[fgcolor][1], MVChatColors[fgcolor][2] );
-			if( bgcolor >= 0 ) {
-				o += sprintf( &output[o], " style=\"background-color: #%02x%02x%02x\"", MVChatColors[bgcolor][0], MVChatColors[bgcolor][1], MVChatColors[bgcolor][2] );
-			}
-			memcpy(&output[o],">",1);
-			o += 1;
-		}
-
-		if( attributes & MVChatIRCBold) {
-			memcpy(&output[o],"<b>",3);
-			o += 3;
-		}
-
-		if( attributes & MVChatIRCItalic) {
-			memcpy(&output[o],"<i>",3);
-			o += 3;
-		}
-
-		if( attributes & MVChatIRCUnderline) {
-			memcpy(&output[o],"<u>",3);
-			o += 3;
-		}
-
-		/* write any character data up until next attribute change */
-		while( i < l && o < ll && strcspn( &string[i], attributsCharSet ) ) {
-			switch( string[i] ) {
-			case '\033':
-				// ISO-2022-JP Support; See RFC 1468.
-				if( string[i+1] == '$' && ( string[i+2] == '@' || string[i+2] == 'B' ) ) iso2022esc = 1;
-				else if( string[i+1] == '(' && ( string[i+2] == 'B' || string[i+2] == 'J' ) ) iso2022esc = 0;
-				output[o++] = string[i++];
-				break;
-			case '&':
-				if( iso2022esc ) goto echo;
-				memcpy( &output[o], "&amp;", 5 );
-				o += 5;
-				i++;
-				break;
-			case '<':
-				if( iso2022esc ) goto echo;
-				memcpy( &output[o], "&lt;", 4 );
-				o += 4;
-				i++;
-				break;
-			case '>':
-				if( iso2022esc ) goto echo;
-				memcpy( &output[o], "&gt;", 4 );
-				o += 4;
-				i++;
-				break;
-			case '"':
-				if( iso2022esc ) goto echo;
-				memcpy( &output[o], "&quot;", 6 );
-				o += 6;
-				i++;
-				break;
-			case '\'':
-				if( iso2022esc ) goto echo;
-				memcpy( &output[o], "&apos;", 6 );
-				o += 6;
-				i++;
-				break;
-			default: echo:
-				if( (unsigned) string[i] >= 0x20 || string[i] == '\t' || string[i] == '\n' || string[i] == '\r' ) output[o++] = string[i++];
-				else i++;
-			}
-		}
-
-		/* close all HTML tags and loop again */
-		if( attributes & MVChatIRCUnderline) {
-			memcpy( &output[o], "</u>", 4 );
-			o += 4;
-		}
-
-		if( attributes & MVChatIRCItalic) {
-			memcpy( &output[o], "</i>", 4 );
-			o += 4;
-		}
-
-		if( attributes & MVChatIRCBold) {
-			memcpy( &output[o], "</b>", 4);
-			o += 4;
-		}
-
-		if( attributes & MVChatIRCColor && fgcolor >= 0 ) {
-			memcpy( &output[o], "</font>", 7);
-			o += 7;
-		}
-	}
-
-	output[o] = '\0';
-	return output;
 }
 
 #pragma mark -
@@ -727,9 +380,9 @@ static void MVChatLeftRoom( CHANNEL_REC *channel ) {
 static void MVChatRoomTopicChanged( CHANNEL_REC *channel ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
 	if( ! self ) return;
+	if( ! channel -> topic ) return;
 
-	char *topic = MVChatIRCToXHTML( channel -> topic );
-	NSData *msgData = [NSData dataWithBytes:topic length:strlen( topic )];
+	NSData *msgData = [NSData dataWithBytes:channel -> topic length:strlen( channel -> topic )];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRoomTopicNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel -> name], @"room", ( channel -> topic_by ? (id) [self stringWithEncodedBytes:channel -> topic_by] : (id) [NSNull null] ), @"author", ( msgData ? (id) msgData : (id) [NSNull null] ), @"topic", [NSDate dateWithTimeIntervalSince1970:channel -> topic_time], @"time", [NSNumber numberWithBool:( ! channel -> synced )], @"justJoined", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
@@ -779,9 +432,7 @@ static void MVChatUserLeftRoom( IRC_SERVER_REC *server, const char *data, const 
 	char *reason = NULL;
 	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &channel, &reason );
 
-	reason = MVChatIRCToXHTML(reason);
 	NSData *reasonData = [NSData dataWithBytes:reason length:strlen( reason )];
-
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel], @"room", [self stringWithEncodedBytes:nick], @"who", [self stringWithEncodedBytes:address], @"address", ( reasonData ? (id) reasonData : (id) [NSNull null] ), @"reason", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
@@ -795,8 +446,8 @@ static void MVChatUserQuit( IRC_SERVER_REC *server, const char *data, const char
 	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) return;
 
 	if( *data == ':' ) data++;
-	char *msg = MVChatIRCToXHTML( data );
-	NSData *msgData = [NSData dataWithBytes:msg length:strlen( msg )];
+
+	NSData *msgData = [NSData dataWithBytes:data length:strlen( data )];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserQuitNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", [self stringWithEncodedBytes:address], @"address", ( msgData ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
@@ -808,8 +459,7 @@ static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const ch
 	char *channel = NULL, *nick = NULL, *reason = NULL;
 	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, &channel, &nick, &reason );
 
-	char *msg = MVChatIRCToXHTML( reason );
-	NSData *msgData = [NSData dataWithBytes:msg length:strlen( msg )];
+	NSData *msgData = [NSData dataWithBytes:reason length:strlen( reason )];
 	NSNotification *note = nil;
 
 	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) {
@@ -843,8 +493,7 @@ static void MVChatUserAway( IRC_SERVER_REC *server, const char *data ) {
 	char *nick = NULL, *message = NULL;
 	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, NULL, &nick, &message );
 
-	char *msg = MVChatIRCToXHTML( message );
-	NSData *msgData = [NSData dataWithBytes:msg length:strlen( msg )];
+	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", msgData, @"message", nil]];		
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -877,7 +526,6 @@ static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const ch
 
 	if( *target == '@' && ischannel( target[1] ) ) target = target + 1;
 
-	message = MVChatIRCToXHTML( message );
 	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
 	NSNotification *note = nil;
 
@@ -914,7 +562,6 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 		}
 	}
 
-	message = MVChatIRCToXHTML( message );
 	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"from", [NSNumber numberWithBool:YES], @"auto", msgData, @"message", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -928,7 +575,6 @@ static void MVChatGetActionMessage( IRC_SERVER_REC *server, const char *data, co
 	if( ! nick ) return;
 	if( ! address ) address = "";
 
-	data = MVChatIRCToXHTML( data );
 	NSData *msgData = [NSData dataWithBytes:data length:strlen( data )];
 	NSNotification *note = nil;
 
@@ -1438,8 +1084,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[self _willDisconnect];
 
 	if( [[reason string] length] ) {
-		NSData *encodedData = [MVChatConnection _flattenedHTMLDataForMessage:reason withEncoding:[self encoding]];
-		[self sendRawMessage:[NSString stringWithFormat:@"QUIT :%s", MVChatXHTMLToIRC( (char *) [encodedData bytes] )] immediately:YES];
+		const char *msg = [MVChatConnection _flattenedIRCStringForMessage:reason withEncoding:[self encoding]];
+		[self sendRawMessage:[NSString stringWithFormat:@"QUIT :%s", msg] immediately:YES];
 	} else [self sendRawMessage:@"QUIT" immediately:YES];
 
 	[self _irssiConnection] -> connection_lost = NO;
@@ -1694,10 +1340,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	NSParameterAssert( user != nil );
 	if( ! [self _irssiConnection] ) return;
 
-	NSData *encodedData = [MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding];
+	const char *msg = [MVChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding];
 
-	if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:user], MVChatXHTMLToIRC( (char *) [encodedData bytes] ), 0 );
-	else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:user], MVChatXHTMLToIRC( (char *) [encodedData bytes] ) );
+	if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:user], msg, 0 );
+	else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:user], msg );
 }
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action {
@@ -1705,10 +1351,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	NSParameterAssert( room != nil );
 	if( ! [self _irssiConnection] ) return;
 
-	NSData *encodedData = [MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding];
+	const char *msg = [MVChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding];
 
-	if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:[room lowercaseString]], MVChatXHTMLToIRC( (char *) [encodedData bytes] ), 0 );
-	else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:[room lowercaseString]], MVChatXHTMLToIRC( (char *) [encodedData bytes] ) );
+	if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:[room lowercaseString]], msg, 0 );
+	else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:[room lowercaseString]], msg );
 }
 
 #pragma mark -
@@ -1796,9 +1442,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	NSParameterAssert( room != nil );
 	if( ! [self _irssiConnection] ) return;
 
-	NSData *encodedData = [MVChatConnection _flattenedHTMLDataForMessage:topic withEncoding:encoding];
-
-	irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "TOPIC %s :%s", [self encodedBytesWithString:room], MVChatXHTMLToIRC( (char *) [encodedData bytes] ) );
+	const char *msg = [MVChatConnection _flattenedIRCStringForMessage:topic withEncoding:encoding];
+	irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "TOPIC %s :%s", [self encodedBytesWithString:room], msg );
 }
 
 #pragma mark -
@@ -1912,8 +1557,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	if( [[message string] length] ) {
 		_awayMessage = [message copy];
-		NSData *encodedData = [MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:[self encoding]];
-		irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "AWAY :%s", MVChatXHTMLToIRC( (char *) [encodedData bytes] ) );
+		const char *msg = [MVChatConnection _flattenedIRCStringForMessage:message withEncoding:[self encoding]];
+		irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "AWAY :%s", msg );
 	} else [self sendRawMessage:@"AWAY"];
 }
 
@@ -2074,11 +1719,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_remove( "event 433", (SIGNAL_FUNC) MVChatNickTaken );
 }
 
-+ (NSData *) _flattenedHTMLDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc {
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"]], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"]], @"NSHTMLIgnoreFontTraits", nil];
-	NSMutableData *encodedData = [[[message HTMLWithOptions:options usingEncoding:enc allowLossyConversion:YES] mutableCopy] autorelease];
-	[encodedData appendBytes:"\0" length:1];
-	return encodedData;
++ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc {
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:enc], @"StringEncoding", [NSNumber numberWithBool:YES], @"NullTerminatedReturn", nil];
+	NSData *data = [message IRCFormatWithOptions:options];
+	return [data bytes];
 }
 
 + (void) _glibRunloop:(id) sender {
