@@ -195,6 +195,8 @@
 				1C7055C80519E56300A8FE6E,
 				1C7055CA0519E56C00A8FE6E,
 				1C7055C40519E54C00A8FE6E,
+				1C5A249106FA6AAA00A51F10,
+				1C5A249206FA6AAA00A51F10,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -1128,6 +1130,62 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1C5A232006FA4FC000A51F10 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVSILCChatConnection.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A232106FA4FC000A51F10 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVSILCChatConnection.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A249106FA6AAA00A51F10 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = libsilc.framework;
+			path = Frameworks/libsilc.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A249206FA6AAA00A51F10 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = libsilcclient.framework;
+			path = Frameworks/libsilcclient.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A249306FA6AAA00A51F10 = {
+			fileRef = 1C5A249106FA6AAA00A51F10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C5A249406FA6AAA00A51F10 = {
+			fileRef = 1C5A249206FA6AAA00A51F10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C5A249506FA6AB600A51F10 = {
+			fileRef = 1C5A249106FA6AAA00A51F10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C5A249606FA6AB600A51F10 = {
+			fileRef = 1C5A249206FA6AAA00A51F10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C6075E005138ED600A8FE6E = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -1909,7 +1967,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks build";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks build /Users/Timothy/Projects/Colloquy/Frameworks";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
@@ -2691,6 +2749,8 @@
 				1C6C75460630AD5300698F55,
 				1C3B290806529E720066197C,
 				1C8D2E72065D0BB600AC28C5,
+				1C5A249306FA6AAA00A51F10,
+				1C5A249406FA6AAA00A51F10,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2741,6 +2801,8 @@
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
 				1CB2CD86052DDC560094AAA4,
+				1C5A249506FA6AB600A51F10,
+				1C5A249606FA6AB600A51F10,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4449,6 +4511,8 @@
 				1C5A1A1106F8F42C00A51F10,
 				F52D043001873FC401EE70DE,
 				F52D043101873FC401EE70DE,
+				1C5A232106FA4FC000A51F10,
+				1C5A232006FA4FC000A51F10,
 				1C8CF8E2066530D60080A2F5,
 				1C8CF8E1066530D60080A2F5,
 				1C2EF7EC0427A40B00000102,

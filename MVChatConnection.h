@@ -113,6 +113,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSArray *_alternateNicks;
 	unsigned int _nextAltNickIndex;
 }
+- (id) initWithType:(MVChatConnectionType) type;
 - (id) initWithURL:(NSURL *) url;
 - (id) initWithServer:(NSString *) server type:(MVChatConnectionType) type port:(unsigned short) port user:(NSString *) nickname;
 

@@ -116,6 +116,8 @@
 				1CB61DB7059D2DC400FE75AD,
 				1058C7ADFEA557BF11CA2CBB,
 				1CCB3C3705228EFD000001C8,
+				1C5A233D06FA4FEE00A51F10,
+				1C5A233E06FA4FEE00A51F10,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -269,6 +271,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = /Users/Timothy/Projects/Colloquy/Frameworks;
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ChatCore.pch;
@@ -345,6 +348,7 @@
 				1C0D8867067D1E7100E851AC,
 				1CF4E5120698E9E900986498,
 				1C5A1A2506F8F4A000A51F10,
+				1C5A230A06FA4F2800A51F10,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -370,6 +374,8 @@
 				1CA66041060EAEBF008FCC95,
 				1CA66045060EAEF3008FCC95,
 				1CA66049060EAF05008FCC95,
+				1C5A233F06FA4FEE00A51F10,
+				1C5A234006FA4FEE00A51F10,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -420,6 +426,56 @@
 		};
 		1C5A1A2506F8F4A000A51F10 = {
 			fileRef = 1C5A1A2306F8F4A000A51F10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C5A230706FA4F2700A51F10 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVSILCChatConnection.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A230806FA4F2700A51F10 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVSILCChatConnection.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A230A06FA4F2800A51F10 = {
+			fileRef = 1C5A230806FA4F2700A51F10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C5A233D06FA4FEE00A51F10 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = libsilc.framework;
+			path = Frameworks/libsilc.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A233E06FA4FEE00A51F10 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = libsilcclient.framework;
+			path = Frameworks/libsilcclient.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A233F06FA4FEE00A51F10 = {
+			fileRef = 1C5A233D06FA4FEE00A51F10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C5A234006FA4FEE00A51F10 = {
+			fileRef = 1C5A233E06FA4FEE00A51F10;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3262,6 +3318,8 @@
 				F52D043101873FC401EE70DE,
 				1C5A1A2306F8F4A000A51F10,
 				1C5A1A2206F8F4A000A51F10,
+				1C5A230806FA4F2700A51F10,
+				1C5A230706FA4F2700A51F10,
 				1C943AAA063C260800618CD9,
 				1C943AA9063C260800618CD9,
 				1C2EF7EC0427A40B00000102,

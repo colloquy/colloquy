@@ -56,7 +56,6 @@ typedef struct {
 - (void) _setIrssiConnection:(SERVER_REC *) server;
 - (SERVER_CONNECT_REC *) _irssiConnectSettings;
 - (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings;
-- (void) _addRoomToCache:(NSMutableDictionary *) info;
 - (void) _nicknameIdentified:(BOOL) identified;
 - (void) _forceDisconnect;
 @end
@@ -829,7 +828,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
 		MVIRCChatConnectionThreadLock = [[NSRecursiveLock alloc] init];
-		[NSThread detachNewThreadSelector:@selector( _connectionRunLoop ) toTarget:self withObject:nil];
+		[NSThread detachNewThreadSelector:@selector( _irssiRunLoop ) toTarget:self withObject:nil];
 		tooLate = YES;
 	}
 }
@@ -1558,7 +1557,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	return [data bytes];
 }
 
-+ (void) _connectionRunLoop {
++ (void) _irssiRunLoop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	[MVIRCChatConnectionThreadLock lock];
@@ -1592,7 +1591,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
 	while( ! MVChatApplicationQuitting || connectionCount ) {
-		usleep( 10 ); // give time for other theads to lock
+		usleep( 50 ); // give time for other theads to lock
 		if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
 			g_main_iteration( TRUE );
 			[MVIRCChatConnectionThreadLock unlock];
@@ -1675,16 +1674,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( old ) server_connect_unref( old );
 
 	[MVIRCChatConnectionThreadLock unlock];
-}
-
-#pragma mark -
-
-- (void) _addRoomToCache:(NSMutableDictionary *) info {
-	[_roomsCache setObject:info forKey:[info objectForKey:@"room"]];
-	[info removeObjectForKey:@"room"];
-
-	NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionGotRoomInfoNotification object:self];
-	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP];
 }
 
 #pragma mark -

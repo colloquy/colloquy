@@ -375,7 +375,7 @@ static NSMenu *favoritesMenu = nil;
 
 	[openConnection orderOut:nil];
 
-	connection = [[[MVChatConnection alloc] init] autorelease];
+	connection = [[[MVChatConnection alloc] initWithType:MVChatConnectionIRCType] autorelease];
 	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 	[connection setProxyType:[[newProxy selectedItem] tag]];
 	[connection setSecure:[sslConnection state]];
@@ -1240,6 +1240,7 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[info objectForKey:@"created"] forKey:@"created"];
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] realName] forKey:@"realName"];
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] username] forKey:@"username"];
+			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] urlScheme] forKey:@"type"];
 
 			NSMutableArray *permIgnores = [NSMutableArray array];
 			NSEnumerator *ie = [[info objectForKey:@"ignores"] objectEnumerator];
@@ -1268,11 +1269,12 @@ static NSMenu *favoritesMenu = nil;
 
 	while( ( info = [enumerator nextObject] ) ) {
 		MVChatConnection *connection = nil;
+		MVChatConnectionType type = ( ! [(NSString *)[info objectForKey:@"type"] length] ? MVChatConnectionIRCType : ( [[info objectForKey:@"type"] isEqualToString:@"irc"] ? MVChatConnectionIRCType : ( [[info objectForKey:@"type"] isEqualToString:@"silc"] ? MVChatConnectionSILCType : MVChatConnectionIRCType ) ) );
 
 		if( [info objectForKey:@"url"] ) {
 			connection = [[[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]] autorelease];
 		} else {
-			connection = [[[MVChatConnection alloc] initWithServer:[info objectForKey:@"server"] type:MVChatConnectionIRCType port:[[info objectForKey:@"port"] unsignedShortValue] user:[info objectForKey:@"nickname"]] autorelease];
+			connection = [[[MVChatConnection alloc] initWithServer:[info objectForKey:@"server"] type:type port:[[info objectForKey:@"port"] unsignedShortValue] user:[info objectForKey:@"nickname"]] autorelease];
 		}
 
 		[connection setProxyType:(MVChatConnectionProxy)[[info objectForKey:@"proxy"] unsignedIntValue]];

@@ -1,5 +1,6 @@
 #import "MVChatConnection.h"
 #import "MVIRCChatConnection.h"
+#import "MVSILCChatConnection.h"
 #import "MVFileTransfer.h"
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
@@ -103,15 +104,23 @@ BOOL MVChatApplicationQuitting = NO;
 	return self;
 }
 
+- (id) initWithType:(MVChatConnectionType) type {
+	NSZone *zone = [self zone];
+	[self release];
+
+	if( type == MVChatConnectionIRCType ) {
+		self = [[MVIRCChatConnection allocWithZone:zone] init];
+	} else if ( type == MVChatConnectionSILCType ) {
+		self = [[MVSILCChatConnection allocWithZone:zone] init];
+	} else self = nil;
+
+	return self;
+}
+
 - (id) initWithURL:(NSURL *) url {
 	int type = 0;
 	if( [[url scheme] isEqualToString:@"irc"] ) type = MVChatConnectionIRCType;
 	else if( [[url scheme] isEqualToString:@"silc"] ) type = MVChatConnectionSILCType;
-
-	if( ! type ) {
-		[self release];
-		return nil;
-	}
 
 	if( ( self = [self initWithServer:[url host] type:type port:[[url port] unsignedShortValue] user:[url user]] ) ) {
 		[self setNicknamePassword:[url password]];
@@ -122,18 +131,12 @@ BOOL MVChatApplicationQuitting = NO;
 			[self joinChatRoom:[[url path] substringFromIndex:1]];
 		}
 	}
+
 	return self;
 }
 
 - (id) initWithServer:(NSString *) server type:(MVChatConnectionType) type port:(unsigned short) port user:(NSString *) nickname {
-	NSZone *zone = [self zone];
-	[self release];
-
-	if( type == MVChatConnectionIRCType ) {
-		self = [[MVIRCChatConnection allocWithZone:zone] init];
-	} else self = nil;
-
-	if( self ) {
+	if( ( self = [self initWithType:type] ) ) {
 		if( [nickname length] ) [self setNickname:nickname];
 		if( [server length] ) [self setServer:server];
 		[self setServerPort:port];
@@ -694,7 +697,6 @@ BOOL MVChatApplicationQuitting = NO;
 - (void) _didNotConnect {
 	_status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidNotConnectNotification object:self];
-	[self performSelector:@selector( _detachConnection ) withObject:nil afterDelay:0.]; // wait until the next run loop, so we are done disconnecting
 	[self _scheduleReconnectAttemptEvery:30.];
 }
 
@@ -718,6 +720,8 @@ BOOL MVChatApplicationQuitting = NO;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
 }
 
+#pragma mark -
+
 - (void) _scheduleReconnectAttemptEvery:(NSTimeInterval) seconds {
 	[_reconnectTimer invalidate];
 	[_reconnectTimer release];
@@ -728,6 +732,16 @@ BOOL MVChatApplicationQuitting = NO;
 	[_reconnectTimer invalidate];
 	[_reconnectTimer release];
 	_reconnectTimer = nil;
+}
+
+#pragma mark -
+
+- (void) _addRoomToCache:(NSMutableDictionary *) info {
+	[_roomsCache setObject:info forKey:[info objectForKey:@"room"]];
+	[info removeObjectForKey:@"room"];
+	
+	NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionGotRoomInfoNotification object:self];
+	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP];
 }
 @end
 
