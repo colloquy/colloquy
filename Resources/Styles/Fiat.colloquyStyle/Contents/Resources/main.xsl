@@ -106,7 +106,7 @@
 				</xsl:call-template>
 			</div>
 			<div class="message">
-			<xsl:copy-of select="message/child::node()" />
+			<xsl:apply-templates select="message/child::node()" mode="copy" />
 			<xsl:if test="reason!=''">
 				<span class="reason">
 					<xsl:text> (</xsl:text>
