@@ -128,7 +128,7 @@
 
 - (void) gotUserChannels:(NSNotification *) notification {
 	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	// We don't really have anything to do here yet until the UI gets fixed
+	[rooms setObjectValue:[[[notification userInfo] objectForKey:@"channels"] componentsJoinedByString:@" "]];
 }
 
 - (void) gotUserOperator:(NSNotification *) notification {
