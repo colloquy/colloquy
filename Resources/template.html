@@ -4,12 +4,27 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="generator" content="Colloquy 2.0" />
-	<meta name="formatter" content="libxslt 1.0.30" />
+	<meta name="formatter" content="libxslt 1.1.0" />
 	<title>%@</title>
 	<script type="text/ecmascript" defer="defer">
 		var scrollToBottomIsNeeded = false;
 		var smoothScroll = false;
 		var scrollBackLimit = 500;
+
+		function prependMessages( html ) {
+			range = document.createRange();
+			range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
+			documentFragment = range.createContextualFragment( html );
+			if( document.body.firstNode ) document.body.insertBefore( documentFragment, document.body.firstNode );
+			else document.body.appendChild( documentFragment );
+		}
+
+		function appendMessages( html ) {
+			range = document.createRange();
+			range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
+			documentFragment = range.createContextualFragment( html );
+			document.body.appendChild( documentFragment );
+		}
 
 		function appendMessage( html ) {
 			checkIfScrollToBottomIsNeeded();
@@ -21,9 +36,7 @@
 			document.body.appendChild( documentFragment );
 
 			enforceScrollBackLimit();
-
 			scrollToBottomIfNeeded();
-
 		}
 
 		function appendConsecutiveMessage( html ) {
@@ -41,7 +54,6 @@
 			insert.parentNode.replaceChild( documentFragment, insert );
 
 			enforceScrollBackLimit();
-
 			scrollToBottomIfNeeded();
 		}
 
