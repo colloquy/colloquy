@@ -549,13 +549,19 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 	for( nickItem = nicks; nickItem != NULL; nickItem = g_slist_next( nickItem ) ) {
 		NICK_REC *nick = nickItem -> data;
 		NSMutableDictionary *info = [NSMutableDictionary dictionary];
+
 		[info setObject:[NSString stringWithUTF8String:nick -> nick] forKey:@"nickname"];
 		[info setObject:[NSNumber numberWithBool:nick -> serverop] forKey:@"serverOperator"];
 		[info setObject:[NSNumber numberWithBool:nick -> op] forKey:@"operator"];
 		[info setObject:[NSNumber numberWithBool:nick -> halfop] forKey:@"halfOperator"];
 		[info setObject:[NSNumber numberWithBool:nick -> voice] forKey:@"voice"];
-		if( nick -> host ) [info setObject:[NSString stringWithUTF8String:nick -> host] forKey:@"address"];
-		if( nick -> realname ) [info setObject:[NSString stringWithUTF8String:nick -> realname] forKey:@"realName"];
+
+		NSString *host = ( nick -> host ? [NSString stringWithUTF8String:nick -> host] : nil );
+		if( host ) [info setObject:host forKey:@"address"];
+
+		NSString *realName = ( nick -> realname ? [NSString stringWithUTF8String:nick -> realname] : nil );
+		if( realName ) [info setObject:realName forKey:@"realName"];
+
 		[nickArray addObject:info];
 	}
 
@@ -571,10 +577,16 @@ static void MVChatJoinedWhoList( CHANNEL_REC *channel ) {
 
 	for( nickItem = nicks; nickItem != NULL; nickItem = g_slist_next( nickItem ) ) {
 		NICK_REC *nick = nickItem -> data;
+
 		NSMutableDictionary *info = [NSMutableDictionary dictionary];
 		[info setObject:[NSString stringWithUTF8String:nick -> nick] forKey:@"nickname"];
-		if( nick -> host ) [info setObject:[NSString stringWithUTF8String:nick -> host] forKey:@"address"];
-		if( nick -> realname ) [info setObject:[NSString stringWithUTF8String:nick -> realname] forKey:@"realName"];
+
+		NSString *host = ( nick -> host ? [NSString stringWithUTF8String:nick -> host] : nil );
+		if( host ) [info setObject:host forKey:@"address"];
+
+		NSString *realName = ( nick -> realname ? [NSString stringWithUTF8String:nick -> realname] : nil );
+		if( realName ) [info setObject:realName forKey:@"realName"];
+
 		[nickArray addObject:info];
 	}
 
