@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 #import "JVChatMemberInspector.h"
+#import "JVBuddy.h"
 #import "MVFileTransferController.h"
 
 @implementation JVChatRoomMember (JVChatRoomMemberInspection)
@@ -54,6 +55,7 @@
 - (void) willLoad {
 	[progress startAnimation:nil];
 	[nickname setObjectValue:[_member nickname]];
+	if( [[_member buddy] picture] ) [image setImage:[[_member buddy] picture]];
 	[[_member connection] fetchInformationForUser:[_member nickname] withPriority:NO fromLocalServer:_localOnly];
 }
 
