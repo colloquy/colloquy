@@ -19,8 +19,8 @@
 
 typedef enum {
 	MVAvailabilitySortOrder = 'avlY',
-	MVFirstNameSortOrder = 'fsnM',
-	MVLastNameSortOrder = 'lsnM',
+	MVFirstNameSortOrder = 'fSnM',
+	MVLastNameSortOrder = 'lSnM',
 	MVServerSortOrder = 'serV'
 } MVBuddyListSortOrder;
 
