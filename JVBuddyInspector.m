@@ -128,19 +128,19 @@
 }
 
 - (IBAction) changeFirstName:(id) sender {
-	[_buddy setFirstName:[sender objectValue]];
+	[_buddy setFirstName:[sender stringValue]];
 }
 
 - (IBAction) changeLastName:(id) sender {
-	[_buddy setLastName:[sender objectValue]];
+	[_buddy setLastName:[sender stringValue]];
 }
 
 - (IBAction) changeNickname:(id) sender {
-	[_buddy setGivenNickname:[sender objectValue]];
+	[_buddy setGivenNickname:[sender stringValue]];
 }
 
 - (IBAction) changeEmail:(id) sender {
-	[_buddy setPrimaryEmail:[sender objectValue]];
+	[_buddy setPrimaryEmail:[sender stringValue]];
 }
 
 #pragma mark -
