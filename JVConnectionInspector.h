@@ -4,6 +4,7 @@
 #import "JVInspectorController.h"
 #import "JVChatConsole.h"
 
+@class NSTabView;
 @class NSTextField;
 @class NSPopUpButton;
 @class NSButton;
@@ -21,6 +22,8 @@
 
 @interface JVConnectionInspector : NSObject <JVInspector> {
 	IBOutlet NSView *view;
+	IBOutlet NSTabView *tabView;
+
 	IBOutlet NSTextField *editNickname;
 	IBOutlet NSTextField *editAltNicknames;
 	IBOutlet NSTextField *editPassword;
@@ -64,6 +67,8 @@
 	NSMutableArray *_ignoreRules;
 }
 - (id) initWithConnection:(MVChatConnection *) connection;
+
+- (void) selectTabWithIdentifier:(NSString *) identifier;
 
 - (void) buildEncodingMenu;
 - (IBAction) changeEncoding:(id) sender;

@@ -99,6 +99,12 @@
 
 #pragma mark -
 
+- (void) selectTabWithIdentifier:(NSString *) identifier {
+	[tabView selectTabViewItemWithIdentifier:identifier];
+}
+
+#pragma mark -
+
 - (void) buildEncodingMenu {
 	extern const NSStringEncoding JVAllowedTextEncodings[];
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
