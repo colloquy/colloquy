@@ -37,7 +37,11 @@
 
 		JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] init] autorelease];
 		[[view windowController] addChatViewController:console];
-		[[view windowController] showChatViewController:console];
+		// For some reason the input field wasn't clearing for me
+		// This should fix that
+#warning TODO: Find a better way to deal with this
+		//[[view windowController] showChatViewController:console];
+		[[view windowController] performSelector:@selector(showChatViewController:) withObject:console afterDelay:0.1];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"fscript"] ) {
 		if( ! _fscriptInstalled ) {
