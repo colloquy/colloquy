@@ -126,6 +126,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		_cantSendMessages = NO;
 		_isActive = NO;
 		_historyIndex = 0;
+		_sendHeight = 30.;
 
 		_encoding = NSASCIIStringEncoding;
 
@@ -1142,6 +1143,38 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 //	return ( roundf( proposedPosition / 15. ) * 15. ) + [splitView dividerThickness] + 2.;
 //	return proposedPosition;
 	return proposedPosition;
+}
+
+- (void) splitViewDidResizeSubviews:(NSNotification *) notification {
+	// Cache the height of the send box so we can keep it constant during window resizes.
+	NSRect frame = [[[send superview] superview] frame];
+	_sendHeight = frame.size.height;
+}
+
+- (void) splitView:(NSSplitView *) sender resizeSubviewsWithOldSize:(NSSize) oldSize {
+	float dividerThickness = [sender dividerThickness];
+	NSRect newFrame = [sender frame];
+
+	// Keep the size of the send box constant during window resizes
+
+	// We need to resize the scroll view frames of the webview and the textview.
+	// The scroll views are two superviews up: NSTextView(WebView) -> NSClipView -> NSScrollView
+	NSRect sendFrame = [[[send superview] superview] frame];
+	NSRect webFrame = [[[display superview] superview] frame];
+
+	// Set size of the web view to the maximum size possible
+	webFrame.size.height = newFrame.size.height - dividerThickness - _sendHeight;
+	webFrame.size.width = newFrame.size.width;
+	webFrame.origin = NSMakePoint(0,0);
+
+	// Keep the send box the same size
+	sendFrame.size.height = _sendHeight;
+	sendFrame.size.width = newFrame.size.width;
+	sendFrame.origin.y = webFrame.size.height + dividerThickness;
+
+	// Commit the changes
+	[[[send superview] superview] setFrame:sendFrame];
+	[[[display superview] superview] setFrame:webFrame];
 }
 
 #pragma mark -

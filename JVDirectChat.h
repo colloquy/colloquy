@@ -41,6 +41,7 @@
 	BOOL _newHighlightMessage;
 	BOOL _cantSendMessages;
 	int _historyIndex;
+	float _sendHeight;
 }
 - (id) initWithTarget:(NSString *) target forConnection:(MVChatConnection *) connection;
 
