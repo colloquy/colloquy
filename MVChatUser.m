@@ -163,15 +163,34 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser {
 	NSParameterAssert( anotherUser != nil );
 	if( anotherUser == self ) return YES;
+
 	if( [self type] != [anotherUser type] ) return NO;
+	if( [self type] == MVChatWildcardUserType ) {
+		if( ! [[self nickname] isEqualToString:[anotherUser nickname]] )
+			return NO;			
+		if( ! [[self username] isEqualToString:[anotherUser username]] )
+			return NO;			
+		if( ! [[self address] isEqualToString:[anotherUser address]] )
+			return NO;			
+		if( ! [[self serverAddress] isEqualToString:[anotherUser serverAddress]] )
+			return NO;			
+		if( ! [[self fingerprint] isEqualToString:[anotherUser fingerprint]] )
+			return NO;			
+		return YES;			
+	}
+
 	if( ! [[self connection] isEqual:[anotherUser connection]] )
 		return NO;
+
 	if( ! [[self uniqueIdentifier] isEqual:[anotherUser uniqueIdentifier]] )
 		return NO;
+
 	return YES;
 }
 
 - (unsigned) hash {
+	if( [self type] == MVChatWildcardUserType )
+		return ( [self type] ^ [[self nickname] hash] ^ [[self username] hash] ^ [[self address] hash] ^ [[self serverAddress] hash] ^ [[self fingerprint] hash] );
 	// this hash assumes the MVChatConnection will return the same instance for equal users
 	return ( [self type] ^ [[self connection] hash] ^ (unsigned long) self );
 }
