@@ -660,7 +660,7 @@ static NSMenu *favoritesMenu = nil;
 		} else if( [[column identifier] isEqualToString:@"address"] ) {
 			return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] server];
 		} else if( [[column identifier] isEqualToString:@"port"] ) {
-			return [NSNumber numberWithUnsignedShort:[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] serverPort]];
+			return [NSNumber numberWithUnsignedInt:[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] serverPort]];
 		} else if( [[column identifier] isEqualToString:@"nickname"] ) {
 			return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] nickname];
 		}
