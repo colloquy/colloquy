@@ -1,10 +1,7 @@
 #import <Foundation/Foundation.h>
-#import <Carbon/Carbon.h>
 #import "JVTunes.h"
 #import "MVChatPluginManager.h"
-#import "MVChatPluginManagerAdditions.h"
 #import "MVChatConnection.h"
-#import "JVChatController.h"
 #import "JVDirectChat.h"
 #import "JVChatRoom.h"
 
@@ -42,26 +39,12 @@
 }
 
 + (NSString *) executeAppleScriptString:(NSString *) string {
-	OSAID theResultID = 0;
-	ComponentInstance component = OpenDefaultComponent( kOSAComponentType, kAppleScriptSubtype );
-	AEDesc theResultDesc = { typeNull, NULL },
-	theScriptDesc = { typeNull, NULL };
-	id theResultObject = nil;
+	NSAppleScript *script = [[[NSAppleScript alloc] initWithSource:string] autorelease];
+	NSAppleEventDescriptor *result = [script executeAndReturnError:NULL];
 
-	if( ( AECreateDesc( typeChar, [string cString], [string cStringLength], &theScriptDesc) ==  noErr ) && ( OSACompileExecute( component, &theScriptDesc, kOSANullScript, kOSAModeNull, &theResultID ) == noErr ) ) {
-		if( OSACoerceToDesc( component, theResultID, 'utxt', kOSAModeNull, &theResultDesc ) == noErr ) {
-			if( theResultDesc.descriptorType != typeNull ) {
-				NSMutableData *theTextData = [NSMutableData dataWithLength:(unsigned int) AEGetDescDataSize( &theResultDesc )];
-				if( AEGetDescData( &theResultDesc, [theTextData mutableBytes], [theTextData length] ) != noErr ) theTextData = nil;
-				theResultObject = ( ! theTextData ? nil : [[[NSString alloc] initWithData:theTextData encoding:NSUnicodeStringEncoding] autorelease] );
-				AEDisposeDesc( &theResultDesc );
-			}
-		}
-		AEDisposeDesc( &theScriptDesc );
-		if( theResultID != kOSANullScript )
-			OSADispose( component, theResultID );
-	}
+	if( [result descriptorType] && [result descriptorType] != typeNull )
+		return [result stringValue];
 
-	return theResultObject;
+	return nil;
 }
 @end
