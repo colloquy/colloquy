@@ -23,10 +23,10 @@
 "%1I:%M %p, you're offline." = "%1I:%M %p, you're offline.";
 
 /* chat room window - window title */
-"%@ - Chat Room" = "%@ — Chat Room";
+"%@ - Chat Room" = "%@ - Chat Room";
 
 /* private message with user - window title */
-"%@ - Private Message" = "%@ — Private Message";
+"%@ - Private Message" = "%@ - Private Message";
 
 /* time that has passed on selected transfer */
 "%@ elapsed" = "%@ elapsed";
@@ -112,14 +112,17 @@
 /* close window button text */
 "Close" = "Close";
 
+/* IRC command not recognised dialog title */
+"Command not recognised" = "Command not recognised";
+
 /* connect to server title */
 "Connect" = "Connect";
 
 /* connect button tooltip */
-"Connect to Server" = "Connect to Server";
+"Connect to server" = "Connect to server";
 
 /* connect button tooltip */
-"Connect to server" = "Connect to server";
+"Connect to Server" = "Connect to Server";
 
 /* name for connection info button in customize palette */
 "Connection Info" = "Connection Info";
@@ -295,9 +298,6 @@
 /* no answer */
 "No" = "No";
 
-/* no irc commands error dialog title */
-"No IRC Commands" = "No IRC Commands";
-
 /* error description for loosing connection */
 "No messages can be sent at this time. Reconnecting might be in progress." = "No messages can be sent at this time. Reconnecting might be in progress.";
 
@@ -358,9 +358,6 @@
 /* plural seconds */
 "seconds" = "seconds";
 
-/* send button name */
-"Send" = "Send";
-
 /* send message contextual menu */
 "Send Message" = "Send Message";
 
@@ -405,6 +402,9 @@
 
 /* chat server blank dialog message */
 "The chat server you specified is invalid because it was left blank." = "The chat server you specified is invalid because it was left blank.";
+
+/* IRC command not recognised dialog message */
+"The command you specified is not recognised by Colloquy or it's plugins. No action can be performed." = "The command you specified is not recognised by Colloquy or it's plugins. No action can be performed.";
 
 /* replace transfer save dialog message */
 "The file %@ in %@ already exists and can't be resumed. Replace it?" = "The file %@ in %@ already exists and can't be resumed. Replace it?";
@@ -489,9 +489,6 @@
 
 /* invited to chat room description - sheet message */
 "You have been invited to chat in the %@ room by %@." = "You have been invited to chat in the %@ room by %@.";
-
-/* no irc commands error dialog message */
-"You have typed in an IRC command that wont be processed. If you choose Send, the message will be sent exactly as you typed it." = "You have typed in an IRC command that wont be processed. If you choose Send, the message will be sent exactly as you typed it.";
 
 /* left the chat message displayed before window is closed */
 "You left the chat." = "You left the chat.";

@@ -112,6 +112,9 @@
 /* close window button text */
 "Close" = "Fermer";
 
+/* IRC command not recognised dialog title */
+"Command not recognised" = "Commande non reconnue";
+
 /* connect to server title */
 "Connect" = "Connexion";
 
@@ -304,9 +307,6 @@
 /* no answer */
 "No" = "Non";
 
-/* no irc commands error dialog title */
-"No IRC Commands" = "Pas de commandes IRC";
-
 /* error description for loosing connection */
 "No messages can be sent at this time. Reconnecting might be in progress." = "Aucun message ne peut être envoyé actuellement. Une reconnexion est peut-être en cours.";
 
@@ -409,6 +409,9 @@
 /* chat server blank dialog message */
 "The chat server you specified is invalid because it was left blank." = "Le serveur que vous avez spécifié est invalide car son champ est vide.";
 
+/* IRC command not recognised dialog message */
+"The command you specified is not recognised by Colloquy or it's plugins. No action can be performed." = "La commande utilisée n'est pas reconnu par Colloquy ou un de ses plugins. Aucune action ne peut donc être lancée.";
+
 /* replace transfer save dialog message */
 "The file %@ in %@ already exists and can't be resumed. Replace it?" = "Le fichier %@ dans %@ existe déjà et son téléchargement ne peut être repris. Le remplacer ?";
 
@@ -492,9 +495,6 @@
 
 /* invited to chat room description - sheet message */
 "You have been invited to chat in the %@ room by %@." = "Vous avez été invité à discuter dans le canal %@ par %@.";
-
-/* no irc commands error dialog message */
-"You have typed in an IRC command that wont be processed. If you choose Send, the message will be sent exactly as you typed it." = "Vous avez tapé une commande IRC qui ne sera pas traitée. Si vous choisissez 'Envoyer', le message sera envoyé sur le canal.";
 
 /* left the chat message displayed before window is closed */
 "You left the chat." = "Vous avez quitté le canal.";
