@@ -119,6 +119,14 @@ static BOOL applicationIsTerminating = NO;
 		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
 		return YES;
 	}
+	if ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame ) {
+		[[NSFileManager defaultManager] movePath:filename toPath:[NSString stringWithFormat:@"%@/%@", [@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath], [filename lastPathComponent]] handler:nil];
+		return YES;
+	}
+	if ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame ) {
+		[[NSFileManager defaultManager] movePath:filename toPath:[NSString stringWithFormat:@"%@/%@", [@"~/Library/Application Support/Colloquy/Emoticons" stringByExpandingTildeInPath], [filename lastPathComponent]] handler:nil];
+		return YES;
+	}
 	return NO;
 }
 
