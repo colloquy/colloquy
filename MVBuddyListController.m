@@ -3,6 +3,7 @@
 #import <ChatCore/MVChatConnection.h>
 
 #import "MVBuddyListController.h"
+#import "JVBuddy.h"
 #import "JVChatController.h"
 #import "MVConnectionsController.h"
 #import "JVInspectorController.h"
@@ -63,81 +64,61 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) _manuallySortAndUpdate;
 - (void) _setBuddiesNeedSortAnimated;
 - (void) _sortBuddiesAnimatedIfNeeded:(id) sender;
-- (void) _addPersonToBuddyList:(ABPerson *) person;
-- (void) _registerBuddyWithActiveConnections:(ABPerson *) person;
-- (NSMutableDictionary *) _buddyInfo;
+- (void) _addBuddyToList:(JVBuddy *) buddy;
 @end
 
 #pragma mark -
 
-NSComparisonResult sortBuddiesByLastName( ABPerson *buddy1, ABPerson *buddy2, void *context );
-NSComparisonResult sortBuddiesByFirstName( ABPerson *buddy1, ABPerson *buddy2, void *context );
-NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2, void *context );
+NSComparisonResult sortBuddiesByLastName( JVBuddy *buddy1, JVBuddy *buddy2, void *context );
+NSComparisonResult sortBuddiesByFirstName( JVBuddy *buddy1, JVBuddy *buddy2, void *context );
+NSComparisonResult sortBuddiesByAvailability( JVBuddy *buddy1, JVBuddy *buddy2, void *context );
 
-NSComparisonResult sortBuddiesByNickname( ABPerson *buddy1, ABPerson *buddy2, void *context ) {
-	MVBuddyListController *self = context;
-	NSString *name1 = [[[self _buddyInfo] objectForKey:[buddy1 uniqueId]] objectForKey:@"displayNick"];
-	NSString *name2 = [[[self _buddyInfo] objectForKey:[buddy2 uniqueId]] objectForKey:@"displayNick"];
-	name1 = [[NSURL URLWithString:name1] user];
-	name2 = [[NSURL URLWithString:name2] user];
+NSComparisonResult sortBuddiesByNickname( JVBuddy *buddy1, JVBuddy *buddy2, void *context ) {
+	NSString *name1 = [[buddy1 activeNickname] user];
+	NSString *name2 = [[buddy2 activeNickname] user];
 	return [name1 caseInsensitiveCompare:name2];
 }
 
-NSComparisonResult sortBuddiesByServer( ABPerson *buddy1, ABPerson *buddy2, void *context ) {
-	MVBuddyListController *self = context;
-	NSString *name1 = [[[self _buddyInfo] objectForKey:[buddy1 uniqueId]] objectForKey:@"displayNick"];
-	NSString *name2 = [[[self _buddyInfo] objectForKey:[buddy2 uniqueId]] objectForKey:@"displayNick"];
-	name1 = [[NSURL URLWithString:name1] host];
-	name2 = [[NSURL URLWithString:name2] host];
+NSComparisonResult sortBuddiesByServer( JVBuddy *buddy1, JVBuddy *buddy2, void *context ) {
+	NSString *name1 = [[buddy1 activeNickname] host];
+	NSString *name2 = [[buddy2 activeNickname] host];
 	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
 	return ( ret != NSOrderedSame ? ret : sortBuddiesByAvailability( buddy1, buddy2, context ) );
 }
 
-NSComparisonResult sortBuddiesByFirstName( ABPerson *buddy1, ABPerson *buddy2, void *context ) {
-	MVBuddyListController *self = context;
-	if( ! [self showFullNames] ) return sortBuddiesByNickname( buddy1, buddy2, context );
-	NSString *name1 = [buddy1 valueForProperty:kABFirstNameProperty];
-	NSString *name2 = [buddy2 valueForProperty:kABFirstNameProperty];
-	if( ! [name1 length] ) name1 = [buddy1 valueForProperty:kABLastNameProperty];
-	if( ! [name2 length] ) name2 = [buddy2 valueForProperty:kABLastNameProperty];
+NSComparisonResult sortBuddiesByFirstName( JVBuddy *buddy1, JVBuddy *buddy2, void *context ) {
+	NSString *name1 = [buddy1 firstName];
+	NSString *name2 = [buddy2 firstName];
+	if( ! [name1 length] ) name1 = [buddy1 lastName];
+	if( ! [name2 length] ) name2 = [buddy2 lastName];
 	if( ! [name1 length] ) return NSOrderedAscending;
 	if( ! [name2 length] ) return NSOrderedDescending;
 	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
 	return ( ret != NSOrderedSame ? ret : sortBuddiesByLastName( buddy1, buddy2, context ) );
 }
 
-NSComparisonResult sortBuddiesByLastName( ABPerson *buddy1, ABPerson *buddy2, void *context ) {
-	MVBuddyListController *self = context;
-	if( ! [self showFullNames] ) return sortBuddiesByNickname( buddy1, buddy2, context );
-	NSString *name1 = [buddy1 valueForProperty:kABLastNameProperty];
-	NSString *name2 = [buddy2 valueForProperty:kABLastNameProperty];
-	if( ! [name1 length] ) name1 = [buddy1 valueForProperty:kABFirstNameProperty];
-	if( ! [name2 length] ) name2 = [buddy2 valueForProperty:kABFirstNameProperty];
+NSComparisonResult sortBuddiesByLastName( JVBuddy *buddy1, JVBuddy *buddy2, void *context ) {
+	NSString *name1 = [buddy1 lastName];
+	NSString *name2 = [buddy2 lastName];
+	if( ! [name1 length] ) name1 = [buddy1 firstName];
+	if( ! [name2 length] ) name2 = [buddy2 firstName];
 	if( ! [name1 length] ) return NSOrderedAscending;
 	if( ! [name2 length] ) return NSOrderedDescending;
 	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
 	return ( ret != NSOrderedSame ? ret : sortBuddiesByFirstName( buddy1, buddy2, context ) );
 }
 
-NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2, void *context ) {
-	MVBuddyListController *self = context;
+NSComparisonResult sortBuddiesByAvailability( JVBuddy *buddy1, JVBuddy *buddy2, void *context ) {
 	int b1 = 0, b2 = 0;
-	NSString *displayNick = [[[self _buddyInfo] objectForKey:[buddy1 uniqueId]] objectForKey:@"displayNick"];
-	NSMutableSet *onlineNicks = [[[self _buddyInfo] objectForKey:[buddy1 uniqueId]] objectForKey:@"onlineNicks"];
-	NSMutableDictionary *info = [[[[self _buddyInfo] objectForKey:[buddy1 uniqueId]] objectForKey:@"nickInfo"] objectForKey:displayNick];
 
-	if( [[info objectForKey:@"away"] boolValue] ) b1 = 2;
-	else if( [[info objectForKey:@"idle"] intValue] >= 600. ) b1 = 1;
-	else if( [onlineNicks containsObject:displayNick] ) b1 = 0;
+	if( [buddy1 status] == JVBuddyAwayStatus ) b1 = 2;
+	else if( [buddy1 status] == JVBuddyIdleStatus ) b1 = 1;
+	else if( [buddy1 status] == JVBuddyAvailableStatus ) b1 = 0;
 	else b1 = 3;
 
-	displayNick = [[[self _buddyInfo] objectForKey:[buddy2 uniqueId]] objectForKey:@"displayNick"];
-	onlineNicks = [[[self _buddyInfo] objectForKey:[buddy2 uniqueId]] objectForKey:@"onlineNicks"];
-	info = [[[[self _buddyInfo] objectForKey:[buddy2 uniqueId]] objectForKey:@"nickInfo"] objectForKey:displayNick];
-
-	if( [[info objectForKey:@"away"] boolValue] ) b2 = 2;
-	else if( [[info objectForKey:@"idle"] intValue] >= 600. ) b2 = 1;
-	else if( [onlineNicks containsObject:displayNick] ) b2 = 0;
+	if( [buddy2 status] == JVBuddyAwayStatus ) b2 = 2;
+	else if( [buddy2 status] == JVBuddyIdleStatus ) b2 = 1;
+	else if( [buddy2 status] == JVBuddyAvailableStatus ) b2 = 0;
 	else b2 = 3;
 	
 	if( b1 > b2 ) return NSOrderedDescending;
@@ -157,21 +138,16 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"MVBuddyList"] ) ) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _registerBuddies: ) name:MVChatConnectionDidConnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _disconnected: ) name:MVChatConnectionDidDisconnectNotification object:nil];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _nicknameChange: ) name:MVChatConnectionUserNicknameChangedNotification object:nil];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOnline: ) name:MVChatConnectionBuddyIsOnlineNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOffline: ) name:MVChatConnectionBuddyIsOfflineNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyAwayStatusChange: ) name:MVChatConnectionBuddyIsAwayNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyAwayStatusChange: ) name:MVChatConnectionBuddyIsUnawayNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatConnectionBuddyIsIdleNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOnline: ) name:JVBuddyCameOnlineNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOffline: ) name:JVBuddyWentOfflineNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyNicknameCameOnlineNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyNicknameWentOfflineNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyNicknameStatusChangedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyActiveNicknameChangedNotification object:nil];
 
 		[[NSTimer scheduledTimerWithTimeInterval:( .5 ) target:self selector:@selector( _sortBuddiesAnimatedIfNeeded: ) userInfo:nil repeats:YES] retain];
 
 		_onlineBuddies = [[NSMutableSet set] retain];
-		_buddyInfo = [[NSMutableDictionary dictionary] retain];
 		_buddyList = [[NSMutableSet set] retain];
 		_buddyOrder = [[NSMutableArray array] retain];
 		_picker = nil;
@@ -192,7 +168,6 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	[self _saveBuddyList];
 
 	[_onlineBuddies autorelease];
-	[_buddyInfo autorelease];
 	[_buddyList autorelease];
 	[_buddyOrder autorelease];
 	[_picker autorelease];
@@ -200,7 +175,6 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	_onlineBuddies = nil;
-	_buddyInfo = nil;
 	_buddyList = nil;
 	_buddyOrder = nil;
 	_picker = nil;
@@ -306,9 +280,9 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 		_addPerson = [[person uniqueId] copy];
 		[self showNewPersonSheet:nil];
 	} else {
-		[self _addPersonToBuddyList:person];
+		JVBuddy *buddy = [JVBuddy buddyWithPerson:person];
+		[self _addBuddyToList:buddy];
 		[self _saveBuddyList];
-		[self _registerBuddyWithActiveConnections:person];
 	}
 }
 
@@ -425,9 +399,9 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	}
 
 	if( person ) {
-		[self _addPersonToBuddyList:person];
+		JVBuddy *buddy = [JVBuddy buddyWithPerson:person];
+		[self _addBuddyToList:buddy];
 		[self _saveBuddyList];
-		[self _registerBuddyWithActiveConnections:person];
 	}
 
 	[_addPerson autorelease];
@@ -443,17 +417,15 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 
 - (IBAction) messageSelectedBuddy:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
-	ABPerson *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
-	NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
-	NSURL *url = [NSURL URLWithString:displayNick];
+	JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+	NSURL *url = [buddy activeNickname];
 	[[JVChatController defaultManager] chatViewControllerForUser:[url user] withConnection:[[MVConnectionsController defaultManager] connectionForServerAddress:[url host]] ifExists:NO];
 }
 
 - (IBAction) sendFileToSelectedBuddy:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
-	ABPerson *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
-	NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
-	NSURL *url = [NSURL URLWithString:displayNick];
+	JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+	NSURL *url = [buddy activeNickname];
 	NSOpenPanel *panel = [NSOpenPanel openPanel];
 	[panel setResolvesAliases:YES];
 	[panel setCanChooseFiles:YES];
@@ -606,8 +578,7 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 @implementation MVBuddyListController (MVBuddyListControllerDelegate)
 - (void) clear:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
-	ABPerson *buddy = [[[_buddyOrder objectAtIndex:[buddies selectedRow]] retain] autorelease];
-	[_buddyInfo removeObjectForKey:[buddy uniqueId]];
+	JVBuddy *buddy = [[[_buddyOrder objectAtIndex:[buddies selectedRow]] retain] autorelease];
 	[_buddyList removeObject:buddy];
 	[_onlineBuddies removeObject:buddy];
 	[_buddyOrder removeObjectIdenticalTo:buddy];
@@ -624,35 +595,17 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 
 	if( [[column identifier] isEqualToString:@"buddy"] ) {
 		if( _showIcons ) {
-			NSImage *ret = [[[NSImage imageNamed:@"largePerson"] copy] autorelease];
-
-			if( [[_buddyOrder objectAtIndex:row] imageData] )
-				ret = [[[NSImage alloc] initWithData:[[_buddyOrder objectAtIndex:row] imageData]] autorelease];
-
+			JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+			NSImage *ret = [buddy picture];
+			if( ! ret ) ret = [[[NSImage imageNamed:@"largePerson"] copy] autorelease];
 			[ret setScalesWhenResized:YES];
 			[ret setSize:NSMakeSize( 32., 32. )];
 			return ret;
 		} else if( ! _showIcons ) {
-			ABPerson *buddy = [_buddyOrder objectAtIndex:row];
-			NSMutableSet *onlineNicks = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"onlineNicks"];
-			NSSet *nicks = nil;
-			NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
-
-			if( _showOfflineBuddies ) nicks = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"allNicks"];
-			else nicks = onlineNicks;
-	
-			if( ! [nicks containsObject:displayNick] || ! displayNick ) {
-				if( [onlineNicks count] ) displayNick = [[onlineNicks allObjects] objectAtIndex:0];
-				else displayNick = [[nicks allObjects] objectAtIndex:0];
-				if( displayNick ) [[_buddyInfo objectForKey:[buddy uniqueId]] setObject:displayNick forKey:@"displayNick"];
-			}
-
-			if( [[[[[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"nickInfo"] objectForKey:displayNick] objectForKey:@"away"] boolValue] ) 
-				return [NSImage imageNamed:@"statusAway"];
-			else if( [[[[[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"nickInfo"] objectForKey:displayNick] objectForKey:@"idle"] intValue] >= 600. )
-				return [NSImage imageNamed:@"statusIdle"];
-			else if( [onlineNicks containsObject:displayNick] )
-				return [NSImage imageNamed:@"statusAvailable"];
+			JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+			if( [buddy status] == JVBuddyAwayStatus ) return [NSImage imageNamed:@"statusAway"];
+			else if( [buddy status] == JVBuddyIdleStatus ) return [NSImage imageNamed:@"statusIdle"];
+			else if( [buddy status] == JVBuddyAvailableStatus ) return [NSImage imageNamed:@"statusAvailable"];
 			else return [NSImage imageNamed:@"statusOffline"];
 		} else return nil;
 	}
@@ -663,22 +616,8 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 - (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(int) row {
 	if( row == -1 || row >= [_buddyOrder count] ) return;
 	if( [[column identifier] isEqualToString:@"buddy"] ) {
-		ABPerson *buddy = [_buddyOrder objectAtIndex:row];
-		NSMutableSet *onlineNicks = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"onlineNicks"];
-		NSSet *nicks = nil;
-		NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
-		NSURL *url = nil;
-
-		if( _showOfflineBuddies ) nicks = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"allNicks"];
-		else nicks = onlineNicks;
-
-		if( ! [nicks containsObject:displayNick] || ! displayNick ) {
-			if( [onlineNicks count] ) displayNick = [[onlineNicks allObjects] objectAtIndex:0];
-			else displayNick = [[nicks allObjects] objectAtIndex:0];
-			if( displayNick ) [[_buddyInfo objectForKey:[buddy uniqueId]] setObject:displayNick forKey:@"displayNick"];
-		}
-
-		if( displayNick ) url = [NSURL URLWithString:displayNick];
+		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+		NSURL *url = [buddy activeNickname];
 		if( ! _showFullNames || [[buddy compositeName] isEqualToString:@"No Name"] ) {
 			[cell setMainText:[url user]];
 			if( _showNicknameAndServer ) [cell setInformationText:[url host]];
@@ -689,35 +628,33 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 			else [cell setInformationText:nil];
 		}
 
-		if( [onlineNicks containsObject:displayNick] ) [cell setEnabled:YES];
-		else [cell setEnabled:NO];
+		[cell setEnabled:[buddy isOnline]];
 
 		if( _showIcons ) {
-			NSDictionary *info = [[[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"nickInfo"] objectForKey:displayNick];
-			if( [[info objectForKey:@"away"] boolValue] ) [cell setStatusImage:[NSImage imageNamed:@"statusAway"]];
-			else if( [[info objectForKey:@"idle"] intValue] >= 600. ) [cell setStatusImage:[NSImage imageNamed:@"statusIdle"]];
-			else if( [onlineNicks containsObject:displayNick] ) [cell setStatusImage:[NSImage imageNamed:@"statusAvailable"]];
+			if( [buddy status] == JVBuddyAwayStatus ) [cell setStatusImage:[NSImage imageNamed:@"statusAway"]];
+			else if( [buddy status] == JVBuddyIdleStatus ) [cell setStatusImage:[NSImage imageNamed:@"statusIdle"]];
+			else if( [buddy status] == JVBuddyAvailableStatus ) [cell setStatusImage:[NSImage imageNamed:@"statusAvailable"]];
 			else [cell setStatusImage:[NSImage imageNamed:@"statusOffline"]];
 		} else [cell setStatusImage:nil];
 	} else if( [[column identifier] isEqualToString:@"switch"] ) {
-		ABPerson *buddy = [_buddyOrder objectAtIndex:row];
-		NSSet *onlineNicks = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"onlineNicks"];
+		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+		NSSet *onlineNicks = [buddy onlineNicknames];
 		NSSet *nicks = nil;
-		if( _showOfflineBuddies ) nicks = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"allNicks"];
-		else nicks = onlineNicks;
+
+		if( _showOfflineBuddies ) nicks = [buddy nicknames];
+		else nicks = [buddy onlineNicknames];
+
 		if( [nicks count] >= 2 ) {
-			NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
 			NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 			NSMenuItem *item = nil;
 			NSEnumerator *nickEnumerator = [nicks objectEnumerator];
-			NSString *nick = nil;
-			NSURL *url = nil;
+			NSURL *activeNick = [buddy activeNickname];
+			NSURL *nick = nil;
 
 			[menu setAutoenablesItems:NO];
 			while( ( nick = [nickEnumerator nextObject] ) ) {
-				url = [NSURL URLWithString:nick];
-				item = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [url user], [url host]] action:NULL keyEquivalent:@""] autorelease];
-				if( [nick isEqualToString:displayNick] ) [item setState:NSOnState];
+				item = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [nick user], [nick host]] action:NULL keyEquivalent:@""] autorelease];
+				if( [nick isEqual:activeNick] ) [item setState:NSOnState];
 				if( ! [onlineNicks containsObject:nick] ) [item setEnabled:NO];
 				[menu addItem:item];
 			}
@@ -736,11 +673,14 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 
 - (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) tableColumn row:(int) row {
 	if( row == -1 || row >= [_buddyOrder count] ) return;
-	ABPerson *buddy = [_buddyOrder objectAtIndex:row];
+	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 	NSArray *nicks = nil;
-	if( _showOfflineBuddies ) nicks = [[[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"allNicks"] allObjects];
-	else nicks = [[[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"onlineNicks"] allObjects];
-	[[_buddyInfo objectForKey:[buddy uniqueId]] setObject:[nicks objectAtIndex:[object unsignedIntValue]] forKey:@"displayNick"];
+
+	if( _showOfflineBuddies ) nicks = [[buddy nicknames] allObjects];
+	else nicks = [[buddy onlineNicknames] allObjects];
+
+	[buddy setActiveNickname:[nicks objectAtIndex:[object unsignedIntValue]]];
+
 	[buddies reloadData];
 	[self _setBuddiesNeedSortAnimated];
 	[self _sortBuddiesAnimatedIfNeeded:nil];
@@ -752,27 +692,18 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 
 - (NSString *) tableView:(MVTableView *) tableView toolTipForTableColumn:(NSTableColumn *) column row:(int) row {
 	if( row == -1 || row >= [_buddyOrder count] ) return nil;
-	ABPerson *buddy = [_buddyOrder objectAtIndex:row];
-	NSMutableSet *onlineNicks = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"onlineNicks"];
-	NSSet *nicks = nil;
-	NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
-	NSURL *url = nil;
 	NSMutableString *ret = [NSMutableString string];
-
-	if( _showOfflineBuddies ) nicks = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"allNicks"];
-	else nicks = onlineNicks;
+	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+	NSURL *url = [buddy activeNickname];
 
 	[ret appendFormat:@"%@\n", [buddy compositeName]];
-	if( displayNick ) {
-		url = [NSURL URLWithString:displayNick];
-		[ret appendFormat:@"%@ (%@)\n", [url user], [url host]];
+	[ret appendFormat:@"%@ (%@)\n", [url user], [url host]];
 
-		NSDictionary *info = [[[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"nickInfo"] objectForKey:displayNick];
-		if( [[info objectForKey:@"away"] boolValue] ) [ret appendString:NSLocalizedString( @"Away", "away buddy status" )];
-		else if( [[info objectForKey:@"idle"] intValue] >= 600. ) [ret appendString:NSLocalizedString( @"Idle", "idle buddy status" )];
-		else if( [onlineNicks containsObject:displayNick] ) [ret appendString:NSLocalizedString( @"Available", "available buddy status" )];
-		else [ret appendString:NSLocalizedString( @"Offline", "offline buddy status" )];
-	}
+	if( [buddy status] == JVBuddyAwayStatus ) [ret appendString:NSLocalizedString( @"Away", "away buddy status" )];
+	else if( [buddy status] == JVBuddyIdleStatus ) [ret appendString:NSLocalizedString( @"Idle", "idle buddy status" )];
+	else if( [buddy status] == JVBuddyAvailableStatus ) [ret appendString:NSLocalizedString( @"Available", "available buddy status" )];
+	else [ret appendString:NSLocalizedString( @"Offline", "offline buddy status" )];
+
 	return ret;
 }
 
@@ -791,9 +722,8 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 - (BOOL) tableView:(NSTableView *) tableView acceptDrop:(id <NSDraggingInfo>) info row:(int) row dropOperation:(NSTableViewDropOperation) operation {
 	NSPasteboard *board = [info draggingPasteboard];
 	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
-		ABPerson *buddy = [_buddyOrder objectAtIndex:row];
-		NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
-		NSURL *url = [NSURL URLWithString:displayNick];
+		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+		NSURL *url = [buddy activeNickname];
 		MVChatConnection *connection = [[MVConnectionsController defaultManager] connectionForServerAddress:[url host]];
 		NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
 		NSEnumerator *enumerator = [files objectEnumerator];
@@ -918,255 +848,56 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	[[NSTimer scheduledTimerWithTimeInterval:( 1. / 240. ) target:self selector:@selector( _animateStep: ) userInfo:nil repeats:YES] retain];
 }
 
-- (NSMutableDictionary *) _buddyInfo {
-	return _buddyInfo;
-}
-
 - (void) _buddyOnline:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSEnumerator *enumerator = [_buddyList objectEnumerator];
-	ABPerson *person = nil;
-	ABMultiValue *value = nil;
-	unsigned int i = 0, count = 0;
-	BOOL found = NO;
+	JVBuddy *buddy = [notification object];
+	if( ! [_buddyList containsObject:buddy] ) return;
 
-	while( ( person = [enumerator nextObject] ) && ! found ) {
-		value = [person valueForProperty:@"IRCNickname"];
-		count = [value count];
-		for( i = 0; i < count; i++ ) {
-			if( [[value labelAtIndex:i] caseInsensitiveCompare:[connection server]] == NSOrderedSame && [[value valueAtIndex:i] caseInsensitiveCompare:who] == NSOrderedSame ) {
-				[_onlineBuddies addObject:person];
-				if( ! [_buddyOrder containsObject:person] ) {
-					[_buddyOrder addObject:person];
-					[buddies noteNumberOfRowsChanged];
-				}
-
-				NSMutableSet *onlineNicks = nil;
-				if( ! ( onlineNicks = [[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"onlineNicks"] ) ) {
-					onlineNicks = [NSMutableSet set];
-					[[_buddyInfo objectForKey:[person uniqueId]] setObject:onlineNicks forKey:@"onlineNicks"];
-				}
-
-				NSMutableDictionary *nickInfo = nil;
-				if( ! ( nickInfo = [[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"nickInfo"] ) ) {
-					nickInfo = [NSMutableDictionary dictionary];
-					[[_buddyInfo objectForKey:[person uniqueId]] setObject:nickInfo forKey:@"nickInfo"];
-				}
-
-				NSString *mask = [NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )];
-				[onlineNicks addObject:mask];
-				[nickInfo setObject:[NSMutableDictionary dictionary] forKey:mask];
-
-				[self _setBuddiesNeedSortAnimated];
-				if( ! _animating ) [buddies reloadData];
-
-				found = YES;
-				break;
-			}
-		}
-	}
-}
-
-- (void) _buddyOffline:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSEnumerator *enumerator = [[[_onlineBuddies copy] autorelease] objectEnumerator];
-	ABPerson *person = nil;
-
-	while( ( person = [enumerator nextObject] ) ) {
-		NSMutableSet *onlineNicks = [[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"onlineNicks"];
-		if( [onlineNicks containsObject:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )]] ) {
-			NSMutableDictionary *nickInfo = [[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"nickInfo"];
-			NSString *mask = [NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )];
-			[onlineNicks removeObject:mask];
-			[nickInfo removeObjectForKey:mask];
-			if( ! [onlineNicks count] ) {
-				[_onlineBuddies removeObject:person];
-				if( ! _showOfflineBuddies ) {
-					[_buddyOrder removeObject:person];
-					[buddies noteNumberOfRowsChanged];
-				}
-			}
-			[self _setBuddiesNeedSortAnimated];
-			if( ! _animating ) [buddies reloadData];
-			break;
-		}
-	}
-}
-
-- (void) _buddyIdleUpdate:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSNumber *idle = [[notification userInfo] objectForKey:@"idle"];
-	NSEnumerator *enumerator = [_onlineBuddies objectEnumerator];
-	ABPerson *person = nil;
-	NSMutableSet *onlineNicks = nil;
-	NSString *mask = nil;
-
-	while( ( person = [enumerator nextObject] ) ) {
-		onlineNicks = [[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"onlineNicks"];
-		mask = [NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )];
-		if( [onlineNicks containsObject:mask] ) {
-			NSMutableDictionary *info = [[[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"nickInfo"] objectForKey:mask];
-			[info setObject:idle forKey:@"idle"];
-			[self _setBuddiesNeedSortAnimated];
-			if( ! _animating ) [buddies reloadData];
-			break;
-		}
-	}
-}
-
-- (void) _buddyAwayStatusChange:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSEnumerator *enumerator = [_onlineBuddies objectEnumerator];
-	ABPerson *person = nil;
-	BOOL away = ( [[notification name] isEqualToString:MVChatConnectionBuddyIsAwayNotification] ? YES : NO );
-	NSMutableSet *onlineNicks = nil;
-	NSString *mask = nil;
-
-	while( ( person = [enumerator nextObject] ) ) {
-		onlineNicks = [[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"onlineNicks"];
-		mask = [NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )];
-		if( [onlineNicks containsObject:mask] ) {
-			NSMutableDictionary *info = [[[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"nickInfo"] objectForKey:mask];
-			[info setObject:[NSNumber numberWithBool:away] forKey:@"away"];
-			[self _setBuddiesNeedSortAnimated];
-			if( ! _animating ) [buddies reloadData];
-			break;
-		}
-	}
-}
-
-- (void) _registerBuddies:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSEnumerator *enumerator = [_buddyList objectEnumerator];
-	ABPerson *person = nil;
-	ABMultiValue *value = nil;
-	unsigned int i = 0, count = 0;
-
-	while( ( person = [enumerator nextObject] ) ) {
-		value = [person valueForProperty:@"IRCNickname"];
-		count = [value count];
-		for( i = 0; i < count; i++ ) {
-			if( [[value labelAtIndex:i] caseInsensitiveCompare:[connection server]] == NSOrderedSame ) {
-				[connection addUserToNotificationList:[value valueAtIndex:i]];
-			}
-		}
-	}
-}
-
-- (void) _disconnected:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSEnumerator *enumerator = [[[_onlineBuddies copy] autorelease] objectEnumerator];
-	ABPerson *person = nil;
-
-	NSEnumerator *tenumerator = [[[MVConnectionsController defaultManager] connections] objectEnumerator];
-	MVChatConnection *testConnection = nil;
-	unsigned int count = 0;
-
-	while( ( testConnection = [tenumerator nextObject] ) )
-		if( [[testConnection server] caseInsensitiveCompare:[connection server]] == NSOrderedSame && [testConnection isConnected] )
-			count++;
-
-	if( count >= 1 ) return;
-
-	while( ( person = [enumerator nextObject] ) ) {
-		NSMutableSet *onlineNicks = [[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"onlineNicks"];
-		NSEnumerator *nickEnumerator = [[[onlineNicks copy] autorelease] objectEnumerator];
-		NSString *nick = nil;
-		NSURL *url = nil;
-
-		while( ( nick = [nickEnumerator nextObject] ) ) {
-			url = [NSURL URLWithString:nick];
-			if( [[url host] caseInsensitiveCompare:[connection server]] == NSOrderedSame ) {
-				[onlineNicks removeObject:nick];
-				[[[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"nickInfo"] removeObjectForKey:nick];
-				if( [[[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"displayNick"] isEqualToString:nick] )
-					[[_buddyInfo objectForKey:[person uniqueId]] removeObjectForKey:@"displayNick"];
-			}
-		}
-
-		if( ! [onlineNicks count] ) {
-			[_onlineBuddies removeObject:person];
-			if( ! _showOfflineBuddies ) {
-				[_buddyOrder removeObject:person];
-				[buddies noteNumberOfRowsChanged];
-			}
-		}
+	[_onlineBuddies addObject:buddy];
+	if( ! [_buddyOrder containsObject:buddy] ) {
+		[_buddyOrder addObject:buddy];
+		[buddies noteNumberOfRowsChanged];
 	}
 
 	[self _setBuddiesNeedSortAnimated];
 	if( ! _animating ) [buddies reloadData];
 }
 
-- (void) _nicknameChange:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSString *who = [[notification userInfo] objectForKey:@"oldNickname"];
-	NSString *new = [[notification userInfo] objectForKey:@"newNickname"];
-	NSEnumerator *enumerator = [_onlineBuddies objectEnumerator];
-	ABPerson *person = nil;
-	NSString *mask = nil;
-	NSString *newMask = nil;
+- (void) _buddyOffline:(NSNotification *) notification {
+	JVBuddy *buddy = [notification object];
+	if( ! [_onlineBuddies containsObject:buddy] ) return;
 
-	while( ( person = [enumerator nextObject] ) ) {
-		NSMutableSet *onlineNicks = [[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"onlineNicks"];
-		mask = [NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )];
-		if( [onlineNicks containsObject:mask] ) {
-			NSMutableSet *allNicks = [[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"allNicks"];
-
-			newMask = [NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( new ), MVURLEncodeString( [connection server] )];
-
-			if( [[[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"displayNick"] isEqualToString:mask] )
-				[[_buddyInfo objectForKey:[person uniqueId]] setObject:newMask forKey:@"displayNick"];
-
-			[allNicks removeObject:mask];
-			[allNicks addObject:newMask];
-
-			[onlineNicks removeObject:mask];
-			[onlineNicks addObject:newMask];
-
-			NSMutableDictionary *nickInfo = [[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"nickInfo"];
-			NSMutableDictionary *info = [[[nickInfo objectForKey:mask] retain] autorelease];
-			[nickInfo removeObjectForKey:mask];
-			[nickInfo setObject:info forKey:newMask];
-
-			[self _setBuddiesNeedSortAnimated];
-			if( ! _animating ) [buddies reloadData];
-
-			break;
-		}
+	[_onlineBuddies removeObject:buddy];
+	if( ! _showOfflineBuddies ) {
+		[_buddyOrder removeObject:buddy];
+		[buddies noteNumberOfRowsChanged];
 	}
+
+	[self _setBuddiesNeedSortAnimated];
+	if( ! _animating ) [buddies reloadData];
 }
 
-- (void) _addPersonToBuddyList:(ABPerson *) person {
-	[_buddyList addObject:person];
-	[_buddyInfo setObject:[NSMutableDictionary dictionary] forKey:[person uniqueId]];
+- (void) _buddyChanged:(NSNotification *) notification {
+	JVBuddy *buddy = [notification object];
+	if( ! [_onlineBuddies containsObject:buddy] ) return;
+	[self _setBuddiesNeedSortAnimated];
+	if( ! _animating ) [buddies reloadData];
+}
 
-	if( _showOfflineBuddies && ! [_buddyOrder containsObject:person] ) {
-		[_buddyOrder addObject:person];
+- (void) _addBuddyToList:(JVBuddy *) buddy {
+	[_buddyList addObject:buddy];
+	if( _showOfflineBuddies && ! [_buddyOrder containsObject:buddy] ) {
+		[_buddyOrder addObject:buddy];
 		[self _manuallySortAndUpdate];
-	}
-}
-
-- (void) _registerBuddyWithActiveConnections:(ABPerson *) person {
-	ABMultiValue *value = [person valueForProperty:@"IRCNickname"];
-	MVChatConnection *connection = nil;
-	unsigned int i = 0, count = [value count];
-	for( i = 0; i < count; i++ ) {
-		connection = [[MVConnectionsController defaultManager] connectionForServerAddress:[value labelAtIndex:i]];
-		if( [connection isConnected] ) [connection addUserToNotificationList:[value valueAtIndex:i]];
 	}
 }
 
 - (void) _saveBuddyList {
 	NSMutableArray *list = [NSMutableArray arrayWithCapacity:[_buddyList count]];
 	NSEnumerator *enumerator = [_buddyList objectEnumerator];
-	ABPerson *person = nil;
+	JVBuddy *buddy = nil;
 
-	while( ( person = [enumerator nextObject] ) )
-		[list addObject:[person uniqueId]];
+	while( ( buddy = [enumerator nextObject] ) )
+		[list addObject:[buddy uniqueIdentifier]];
 
 	[[NSUserDefaults standardUserDefaults] setObject:list forKey:@"JVChatBuddies"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
@@ -1178,19 +909,8 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	NSString *identifier = nil;
 
 	while( ( identifier = [enumerator nextObject] ) ) {
-		ABRecord *person = [[ABAddressBook sharedAddressBook] recordForUniqueId:identifier];
-		if( [person isKindOfClass:[ABPerson class]] ) {
-			NSMutableSet *allNicks = [NSMutableSet set];
-			ABMultiValue *value = [person valueForProperty:@"IRCNickname"];
-			unsigned int i = 0, count = [value count];
-			for( i = 0; i < count; i++ )
-				[allNicks addObject:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( [value valueAtIndex:i] ), MVURLEncodeString( [value labelAtIndex:i] )]];
-
-			if( [allNicks count] ) {
-				[self _addPersonToBuddyList:(ABPerson *)person];
-				[[_buddyInfo objectForKey:[person uniqueId]] setObject:allNicks forKey:@"allNicks"];
-			}
-		}
+		JVBuddy *buddy = [JVBuddy buddyWithUniqueIdentifier:identifier];
+		if( [[buddy nicknames] count] ) [self _addBuddyToList:buddy];
 	}
 }
 @end

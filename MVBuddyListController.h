@@ -1,5 +1,6 @@
 #import <Foundation/NSObject.h>
 #import <AppKit/NSNibDeclarations.h>
+#import "JVInspectorController.h"
 
 @class ABPerson;
 @class NSWindow;
@@ -38,7 +39,6 @@ typedef enum {
 	NSMutableSet *_buddyList;
 	NSMutableSet *_onlineBuddies;
 	NSMutableArray *_buddyOrder;
-	NSMutableDictionary *_buddyInfo;
 	ABPeoplePickerController* _picker;
 	NSString *_addPerson;
 
