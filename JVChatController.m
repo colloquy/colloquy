@@ -319,7 +319,7 @@ static JVChatController *sharedInstance = nil;
 	switch( mode ) {
 	default:
 	case 0:
-		windowController = [self newChatWindowController];
+		windowController = nil;
 		break;
 	case 1:
 		enumerator = [_chatWindows objectEnumerator];
