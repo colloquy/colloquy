@@ -1,6 +1,5 @@
 #import "JVConnectionInspector.h"
 #import <Cocoa/Cocoa.h>
-#import <ChatCore/MVChatConnection.h>
 #import "MVConnectionsController.h"
 #import "MVKeyChain.h"
 
@@ -21,6 +20,14 @@
 	return self;
 }
 
+- (void) dealloc {
+	[_connection autorelease];
+	[_editingRooms autorelease];
+	_connection = nil;
+	_editingRooms = nil;
+	[super dealloc];
+}
+
 #pragma mark -
 
 - (NSView *) view {
@@ -29,7 +36,7 @@
 }
 
 - (NSSize) minSize {
-	return NSMakeSize( 315., 325. );
+	return NSMakeSize( 265., 290. );
 }
 
 - (NSString *) title {
