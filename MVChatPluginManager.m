@@ -140,6 +140,7 @@ static MVChatPluginManager *sharedInstance = nil;
 				[invocation getReturnValue:ret];
 				id res = [NSNumber numberWithBytes:ret objCType:[sig methodReturnType]];
 				if( ! res ) res = [NSValue valueWithBytes:ret objCType:[sig methodReturnType]];
+				free( ret );
 				[results addObject:res];
 				if( [res isKindOfClass:[NSNumber class]] && stop && [res boolValue] ) return results;
 			} else if( [results count] ) [results addObject:[NSNull null]];
