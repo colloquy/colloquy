@@ -185,6 +185,8 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	[self _updateChatStylesMenu];
 	[self _updateChatEmoticonsMenu];
+
+	[self performSelector:@selector( _reloadStyleIfNeeded: ) withObject:nil afterDelay:0.5];
 }
 
 - (void) dealloc {
@@ -858,10 +860,9 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 @end
 
 #pragma mark -
-
-@implementation JVChatTranscript (JVChatTranscriptPrivate)
 #pragma mark Style Support
 
+@implementation JVChatTranscript (JVChatTranscriptPrivate)
 - (void) _reloadCurrentStyle:(id) sender {
 	JVStyle *style = [[_chatStyle retain] autorelease];
 
@@ -875,6 +876,11 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 	[self setChatStyle:style withVariant:_chatStyleVariant];
 
 	if( ! _chatStyle ) _chatStyle = [style retain];
+}
+
+- (void) _reloadStyleIfNeeded:(id) sender {
+	if( ! [[display stringByEvaluatingJavaScriptFromString:@"document.title"] length] )
+		[self _reloadCurrentStyle:sender];
 }
 
 - (void) _switchingStyleEnded:(id) sender {
