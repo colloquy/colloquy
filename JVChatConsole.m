@@ -147,19 +147,23 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear", "clear console contextual menu item title" ) action:@selector( clearConsole: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
+	[item setTarget:_windowController];
+	[menu addItem:item];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Display", "clear console contextual menu item title" ) action:@selector( clearConsole: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
-	[item setTarget:self];
-	[menu addItem:item];
-
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
 	[item setTarget:[JVChatController defaultManager]];
+	[menu addItem:item];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
 	[menu addItem:item];
 
 	return [[menu retain] autorelease];

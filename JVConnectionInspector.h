@@ -2,6 +2,7 @@
 #import <AppKit/NSNibDeclarations.h>
 #import <ChatCore/MVChatConnection.h>
 #import "JVInspectorController.h"
+#import "JVChatConsole.h"
 
 @class NSTextField;
 @class NSPopUpButton;
@@ -11,6 +12,10 @@
 @class NSPanel;
 
 @interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
+- (id <JVInspector>) inspector;
+@end
+
+@interface JVChatConsole (JVChatConsoleInspection) <JVInspection>
 - (id <JVInspector>) inspector;
 @end
 
