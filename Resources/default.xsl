@@ -58,12 +58,15 @@
 		</xsl:variable>
 
 		<div id="{$properIdentifier}" class="{$envelopeClasses}">
-			<a href="member:{sender | ../sender}" class="{$senderClasses}"><xsl:value-of select="sender | ../sender" /></a>
+			<span class="timestamp hidden">[</span>
 			<span class="timestamp">
 				<xsl:call-template name="short-time">
 					<xsl:with-param name="date" select="message[1]/@received | @received" />
 				</xsl:call-template>
 			</span>
+			<span class="timestamp hidden">] </span>
+			<a href="member:{sender | ../sender}" class="{$senderClasses}"><xsl:value-of select="sender | ../sender" /></a>
+			<span class="hidden">: </span>
 			<span class="message">
 				<xsl:choose>
 					<xsl:when test="message[1]">
