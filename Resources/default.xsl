@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='iso-8859-1'?>
 <xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 	<xsl:output omit-xml-declaration="yes" indent="no" />
-	<xsl:param name="subsequent" />
+	<xsl:param name="bulkTransform" />
 	<xsl:param name="timeFormat" />
 
 	<xsl:template match="/">
 		<xsl:choose>
-			<xsl:when test="$subsequent != 'yes'">
-				<xsl:apply-templates />
+			<xsl:when test="count( /envelope/message ) &gt; 1">
+				<xsl:apply-templates select="/envelope/message[last()]" />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="/envelope/message[last()]" />
+				<xsl:apply-templates />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -104,7 +104,7 @@
 			</span>
 			<span class="timestamp hidden">] </span>
 			<xsl:apply-templates select="message/child::node()" mode="copy" />
-			<xsl:if test="reason!=''">
+			<xsl:if test="string-length( reason )">
 				<span class="reason">
 					<xsl:text> (</xsl:text>
 					<xsl:apply-templates select="reason/child::node()" mode="copy"/>
