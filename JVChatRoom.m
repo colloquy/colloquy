@@ -490,6 +490,11 @@
 #pragma mark -
 
 - (BOOL) textView:(NSTextView *) textView tabHit:(NSEvent *) event {
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
+		[textView complete:nil];
+		return YES;
+	}
+
 	NSArray *tabArr = [[send string] componentsSeparatedByString:@" "];
 	NSMutableArray *found = [NSMutableArray array];
 	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
@@ -497,7 +502,7 @@
 	unsigned len = [(NSString *)[tabArr lastObject] length], count = 0;
 	if( ! len ) return YES;
 	while( ( name = [enumerator nextObject] ) ) {
-		if( [[tabArr lastObject] caseInsensitiveCompare:[name substringToIndex:len]] == NSOrderedSame ) {
+		if( len <= [name length] && [[tabArr lastObject] caseInsensitiveCompare:[name substringToIndex:len]] == NSOrderedSame ) {
 			[found addObject:name];
 			if( [name length] < [shortest length] || ! shortest ) shortest = [[name copy] autorelease];
 			count++;
@@ -528,6 +533,21 @@
 		[[send textStorage] replaceCharactersInRange:NSMakeRange([[send textStorage] length] - len, len) withString:cut];
 	}
 	return YES;
+}
+
+- (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
+	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
+	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+	NSMutableArray *ret = [NSMutableArray array];
+	NSString *name = nil;
+	unsigned int length = [search length];
+	while( length && ( name = [enumerator nextObject] ) ) {
+		if( length <= [name length] && [search caseInsensitiveCompare:[name substringToIndex:length]] == NSOrderedSame ) {
+			[ret addObject:name];
+		}
+	}
+	[ret addObjectsFromArray:words];
+	return ret;
 }
 
 #pragma mark -
