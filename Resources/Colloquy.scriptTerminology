@@ -94,7 +94,7 @@
 				<key>message</key>
 				<dict>
 					<key>Description</key>
-					<string>The body of the message.</string>
+					<string>The body of the message. (Default subcontainer.)</string>
 					<key>Name</key>
 					<string>body</string>
 				</dict>
@@ -343,7 +343,7 @@
 				<key>scriptTypedTopic</key>
 				<dict>
 					<key>Description</key>
-					<string>Topic of the room.</string>
+					<string>Topic of the room. Can include HTML formatting.</string>
 					<key>Name</key>
 					<string>topic</string>
 				</dict>
@@ -362,7 +362,7 @@
 				<key>buddy</key>
 				<dict>
 					<key>Description</key>
-					<string>Buddy (if any) this member represents.</string>
+					<string>Buddy (if any) this member represents. (Default subcontainer.)</string>
 					<key>Name</key>
 					<string>buddy</string>
 				</dict>
@@ -441,7 +441,7 @@
 				<key>window</key>
 				<dict>
 					<key>Description</key>
-					<string>User interface window.</string>
+					<string>User interface window. (Default subcontainer.)</string>
 					<key>Name</key>
 					<string>window</string>
 				</dict>
@@ -640,7 +640,7 @@
 				<key>chatController</key>
 				<dict>
 					<key>Description</key>
-					<string>Chat manager, handles all windows and views.</string>
+					<string>Chat manager, handles all windows and views. (Default subcontainer.)</string>
 					<key>Name</key>
 					<string>chat manager</string>
 				</dict>
