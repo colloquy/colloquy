@@ -1292,17 +1292,17 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) )
-		[roomList addObject:[self _roomWithProperPrefix:room]];
+		if( [room length] ) [roomList addObject:[self _roomWithProperPrefix:room]];
 
 	[self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
 }
 
 - (void) joinChatRoom:(NSString *) room {
-	[self sendRawMessageWithFormat:@"JOIN %@", [self _roomWithProperPrefix:room]];
+	if( [room length] ) [self sendRawMessageWithFormat:@"JOIN %@", [self _roomWithProperPrefix:room]];
 }
 
 - (void) partChatRoom:(NSString *) room {
-	[self sendRawMessageWithFormat:@"PART %@", [self _roomWithProperPrefix:room]];
+	if( [room length] ) [self sendRawMessageWithFormat:@"PART %@", [self _roomWithProperPrefix:room]];
 }
 
 #pragma mark -
