@@ -7,14 +7,14 @@
 #import "JVPreferencesController.h"
 #import "JVGeneralPreferences.h"
 #import "JVAppearancePreferences.h"
-//#import "JVFileTransferPreferences.h"
+#import "JVFileTransferPreferences.h"
 #import "JVAdvancedPreferences.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
 #import "MVBuddyListController.h"
 #import "MVChatPluginManager.h"
-#import <AddressBook/AddressBook.h>
 #import "JVChatController.h"
+#import "MVChatConnection.h"
 
 @interface WebCoreCache : NSObject {}
 + (void) setDisabled:(BOOL) disabled;
@@ -25,10 +25,10 @@
 @implementation MVApplicationController
 - (void) dealloc {
 	[[JVChatController defaultManager] autorelease];
-	[[MVConnectionsController defaultManager] autorelease];
 	[[MVFileTransferController defaultManager] autorelease];
 	[[MVBuddyListController sharedBuddyList] autorelease];
 	[[MVChatPluginManager defaultManager] autorelease];
+	[[MVConnectionsController defaultManager] autorelease];
 
 	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
 
@@ -84,7 +84,7 @@
 #pragma mark -
 
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
-	if( [[filename pathExtension] isEqualToString:@"colloquyTranscript"] ) {
+	if( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame ) {
 		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
 		return YES;
 	}
@@ -117,20 +117,6 @@
 	[MVColorPanel setPickerMode:NSColorListModeColorPanel];
 	[[MVColorPanel sharedColorPanel] attachColorList:[[[NSColorList alloc] initWithName:@"Chat" fromFile:[[NSBundle mainBundle] pathForResource:@"Chat" ofType:@"clr"]] autorelease]];
 
-/*	{
-		ABPerson *buddy = [[ABAddressBook sharedAddressBook] me];
-		ABMutableMultiValue *value = [[[ABMutableMultiValue alloc] init] autorelease];
-
-		[value addValue:@"xer" withLabel:@"irc.freenode.net"];
-		[value addValue:@"timothy" withLabel:@"irc.javelin.cc"];
-		[value addValue:@"xenon" withLabel:@"irc.massinova.com"];
-
-		[ABPerson addPropertiesAndTypes:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:kABMultiStringProperty] forKey:@"IRCNickname"]];
-
-		[buddy setValue:value forProperty:@"IRCNickname"];
-		[[ABAddressBook sharedAddressBook] save];
-	} */
-
 	[WebCoreCache setDisabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"]];
 
 	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NSToolbar Configuration NSPreferences"];
@@ -138,7 +124,7 @@
 	[NSPreferences setDefaultPreferencesClass:[JVPreferencesController class]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"General", "general preference pane name" ) owner:[JVGeneralPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Appearance", "appearance preference pane name" ) owner:[JVAppearancePreferences sharedInstance]];
-//	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
+	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Advanced", "advanced preference pane name" ) owner:[JVAdvancedPreferences sharedInstance]];
 
 	[JVChatController defaultManager];
