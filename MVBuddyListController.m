@@ -939,6 +939,22 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 @implementation MVBuddyListController (MVBuddyListControllerScripting)
+- (MVChatConnection *) valueInBuddiesAtIndex:(unsigned) index {
+	return [_buddyOrder objectAtIndex:index];
+}
+
+- (void) addInBuddies:(JVBuddy *) buddy {
+	[NSException raise:NSOperationNotSupportedForKeyException format:@"Can't add a buddy."];
+}
+
+- (void) insertInBuddies:(JVBuddy *) buddy {
+	[NSException raise:NSOperationNotSupportedForKeyException format:@"Can't insert a buddy."];
+}
+
+- (void) insertInBuddies:(JVBuddy *) buddy atIndex:(unsigned) index {
+	[NSException raise:NSOperationNotSupportedForKeyException format:@"Can't insert a buddy."];
+}
+
 - (void) removeFromBuddiesAtIndex:(unsigned) index {
 	JVBuddy *buddy = [[[_buddyOrder objectAtIndex:index] retain] autorelease];
 	[_buddyList removeObject:buddy];
@@ -946,6 +962,10 @@ static MVBuddyListController *sharedInstance = nil;
 	[_buddyOrder removeObjectIdenticalTo:buddy];
 	[self _manuallySortAndUpdate];
 	[self _saveBuddyList];
+}
+
+- (void) replaceInBuddies:(JVBuddy *) buddy atIndex:(unsigned) index {
+	[NSException raise:NSOperationNotSupportedForKeyException format:@"Can't replace a buddy."];
 }
 
 - (JVBuddy *) valueInBuddiesWithUniqueID:(id) identifier {
