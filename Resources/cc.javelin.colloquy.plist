@@ -2,20 +2,26 @@
 <!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
 <plist version="0.9">
 <dict>
+	<key>JVChatDefaultStyle</key>
+	<string>cc.javelin.colloquy.style.standard</string>
+	<key>JVChatDefaultEmoticons</key>
+	<string>cc.javelin.colloquy.emoticons.standard</string>
 	<key>MVChatHighlightNames</key>
 	<array></array>
+	<key>MVChatBookmarks</key>
+	<array></array>
+	<key>JVEnableAutomaticSoftwareUpdateCheck</key>
+	<true/>
 	<key>MVChatSendOnReturn</key>
 	<true/>
-	<key>MVChatSendOnEnter</key>
-	<false/>
 	<key>MVChatActionOnReturn</key>
+	<false/>
+	<key>MVChatSendOnEnter</key>
 	<false/>
 	<key>MVChatActionOnEnter</key>
 	<true/>
 	<key>MVChatBounceIconOnMessage</key>
 	<true/>
-	<key>MVChatHideOnWindowClose</key>
-	<false/>
 	<key>MVChatSpellChecking</key>
 	<true/>
 	<key>MVChatEncoding</key>
@@ -53,46 +59,6 @@
 		<key>MVChatMentionedAction</key>
 		<string>Beep 2.aiff</string>
 	</dict>
-	<key>MVChatActionColor</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMDhAJm
-	ZoM+qqqrAYY=
-	</data>
-	<key>MVChatAlertColor</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
-	ZmZmAYM9zMzNAAGG
-	</data>
-	<key>MVChatHighlightColor</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
-	ZmZmgz9v7/CDP2/v8IM/Ts7OAYY=
-	</data>
-	<key>MVChatOthersColor</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
-	ZmZmgz7KysqDPubm54M/N75GAYY=
-	</data>
-	<key>MVChatSelfColor</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
-	ZmZmAYM+5mZmAAGG
-	</data>
-	<key>MVChatTextColor</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMDhAJm
-	ZgABhg==
-	</data>
-	<key>MVChatLinkColor</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
-	ZmZmgzxAwMGDPji4uQEBhg==
-	</data>
-	<key>MVChatBackgroundColor</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMDhAJm
-	ZgEBhg==
-	</data>
 	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
 	<dict>
 		<key>TB Is Shown</key>
