@@ -41,8 +41,6 @@ void irc_deinit( void );
 #pragma mark -
 
 NSRecursiveLock *MVIRCChatConnectionThreadLock = nil;
-static unsigned int connectionCount = 0;
-static GMainLoop *glibMainLoop = NULL;
 static NSPort *threadConnectionPort = nil;
 static BOOL irssiThreadReady = NO;
 
@@ -1045,9 +1043,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 		_knownUsers = [[NSMutableDictionary dictionaryWithCapacity:200] retain];
 
-		extern unsigned int connectionCount;
-		connectionCount++;
-
 		[MVIRCChatConnectionThreadLock lock];
 
 		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
@@ -1113,9 +1108,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	[self _setIrssiConnection:NULL];
 	[self _setIrssiConnectSettings:NULL];
-
-	extern unsigned int connectionCount;
-	connectionCount--;
 
 	[super dealloc];
 }
@@ -1658,8 +1650,21 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	return [data bytes];
 }
 
+#pragma mark -
+
+static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
+	if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
+		g_main_iteration( FALSE ); // this will not block and return quickly so we wont keep the lock long
+		[MVIRCChatConnectionThreadLock unlock];
+	}
+}
+
+#pragma mark -
+
 + (void) _irssiRunLoop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+	[MVIRCChatConnectionThreadLock lock];
 
 	MVIRCConnectionThreadHelper *helper = [[MVIRCConnectionThreadHelper alloc] init];
 	NSConnection *server = [[NSConnection defaultConnection] retain];
@@ -1669,24 +1674,19 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	extern NSPort *threadConnectionPort;
 	threadConnectionPort = [[[NSConnection defaultConnection] sendPort] retain];
 
-	extern GMainLoop *glibMainLoop;
-	glibMainLoop = g_main_new( TRUE );
+	GMainLoop *glibMainLoop = g_main_new( TRUE );
+
+	CFRunLoopTimerRef timer = CFRunLoopTimerCreate( NULL, 0., 0.01, 0, 0, irssiRunCallback, NULL );
+    CFRunLoopAddTimer( [[NSRunLoop currentRunLoop] getCFRunLoop], timer, kCFRunLoopDefaultMode );
 
 	extern BOOL irssiThreadReady;
 	irssiThreadReady = YES;
 
+	[MVIRCChatConnectionThreadLock unlock];
+
 	extern BOOL MVChatApplicationQuitting;
-	extern unsigned int connectionCount;
-	while( ! MVChatApplicationQuitting || connectionCount ) {
-		if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
-			g_main_iteration( TRUE ); // this will block if TRUE is passed
-			[MVIRCChatConnectionThreadLock unlock];
-		}
-
-		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.001]];
-
-		usleep( 1000 ); // give time for other theads to lock
-	}
+	while( ! MVChatApplicationQuitting ) // run until the application quits
+		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
 
 	[MVIRCChatConnectionThreadLock lock];
 
@@ -1700,13 +1700,14 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	irc_deinit();
 	core_deinit();
 
-	[MVIRCChatConnectionThreadLock unlock];
-
 	[threadConnectionPort release];
 	threadConnectionPort = nil;
 
 	[server release];
 	[helper release];
+
+	[MVIRCChatConnectionThreadLock unlock];
+
 	[pool release];
 }
 
