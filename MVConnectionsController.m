@@ -986,8 +986,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
 	return [NSArray arrayWithObjects:MVToolbarConnectToggleItemIdentifier, NSToolbarSeparatorItemIdentifier,
-		MVToolbarJoinRoomItemIdentifier, MVToolbarQueryUserItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
-		MVToolbarEditItemIdentifier, MVToolbarDeleteItemIdentifier, nil];
+		MVToolbarJoinRoomItemIdentifier, MVToolbarQueryUserItemIdentifier, MVToolbarConsoleItemIdentifier,
+		NSToolbarFlexibleSpaceItemIdentifier, MVToolbarEditItemIdentifier, MVToolbarDeleteItemIdentifier, nil];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
