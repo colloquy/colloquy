@@ -62,7 +62,9 @@
 - (NSString *) stringByEscapingCharactersInSet:(NSCharacterSet *) set {
 	NSMutableString *result = [self mutableCopy];
 	[result escapeCharactersInSet:set];
-	return [NSString stringWithString:result];
+	NSString *immutableResult = [NSString stringWithString:result];
+	[result release];
+	return immutableResult;
 }
 @end
 
@@ -86,7 +88,7 @@
 }
 
 - (void) escapeCharactersInSet:(NSCharacterSet *) set {
-	NSScanner *scanner = [NSScanner scannerWithString:self];
+	NSScanner *scanner = [[NSScanner alloc] initWithString:self];
 	while( ! [scanner isAtEnd] ) {
 		[scanner scanUpToCharactersFromSet:set intoString:nil];
 		if( ! [scanner isAtEnd] ) {
@@ -94,5 +96,6 @@
 			[scanner setScanLocation:[scanner scanLocation] + 1];
 		}
 	}
+	[scanner release];
 }
 @end
