@@ -18,9 +18,9 @@
 		id sound = nil;
 
 		chatSoundActions = [[NSMutableArray arrayWithContentsOfFile:[bundle pathForResource:@"actions" ofType:@"plist"]] retain];
-		availableSounds = [[NSMenu alloc] initWithTitle:NSLocalizedStringFromTable( @"Sounds", @"Chat", sounds menu name )];
+		availableSounds = [[NSMenu alloc] initWithTitle:@"Sounds"];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedStringFromTable( @"No Sound", @"Chat", no sound menu option - mute ) action:NULL keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Sound", "no sound menu option - mute" ) action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@""];
 		[menuItem setImage:soundIcon];
 		[availableSounds addItem:menuItem];
