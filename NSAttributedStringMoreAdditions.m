@@ -132,7 +132,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 
 	switch( node -> name[0] ) {
 	case 'i':
-		if( ! strcmp( node -> name, "img" ) ) {
+		/* if( ! strcmp( node -> name, "img" ) ) {
 			xmlBufferPtr buf = xmlBufferCreate();
 			xmlNodeDump( buf, node -> doc, node, 0, 0 );
 
@@ -150,7 +150,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 			}
 
 			skipTag = YES;
-		} else if( ! strcmp( node -> name, "i" ) ) {
+		} else */ if( ! strcmp( node -> name, "i" ) ) {
 			NSFont *font = [[NSFontManager sharedFontManager] convertFont:[newAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask];
 			if( font ) {
 				[newAttributes setObject:font forKey:NSFontAttributeName];
