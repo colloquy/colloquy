@@ -431,15 +431,7 @@
 
 - (IBAction) ban:(id) sender {
 	if( _address ) {
-		// Address is in the form of user@hostmask, lets get rid of the user bit
-		NSArray *parts = [_address componentsSeparatedByString:@"@"];
-		NSString *hostmask;
-		if( [parts count] == 2 ) {
-			hostmask = [parts objectAtIndex:1];
-		} else {
-			hostmask = [parts objectAtIndex:0];
-		}
-		[[_parent connection] banMember:[NSString stringWithFormat:@"*!*@%@", hostmask] inRoom:[_parent target]];
+		[[_parent connection] banMember:[NSString stringWithFormat:@"*!*@%@", _address] inRoom:[_parent target]];
 	}
 }
 
@@ -484,14 +476,7 @@
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask label")];
 
 	if( _address) {
-		NSArray *parts = [_address componentsSeparatedByString:@"@"];
-		NSString *hostmask;
-		if( [parts count] == 2 ) {
-			hostmask = [parts objectAtIndex:1];
-		} else {
-			hostmask = [parts objectAtIndex:0];
-		}
-		[firstField setStringValue:[NSString stringWithFormat:@"%@!*@%@", [self nickname], hostmask]];
+		[firstField setStringValue:[NSString stringWithFormat:@"%@!%@@%@", [self nickname], _username, _address]];
 	} else
 		[firstField setStringValue:@""];
 
@@ -536,14 +521,7 @@
 	[secondTitle setStringValue:NSLocalizedString( @"And reason:", "kick reason (secondary)" )];
 
 	if( _address ) {
-		NSArray *parts = [_address componentsSeparatedByString:@"@"];
-		NSString *hostmask;
-		if( [parts count] == 2 ) {
-			hostmask = [parts objectAtIndex:1];
-		} else {
-			hostmask = [parts objectAtIndex:0];
-		}
-		[firstField setStringValue:[NSString stringWithFormat:@"%@!*@%@", [self nickname], hostmask]];
+		[firstField setStringValue:[NSString stringWithFormat:@"%@!%@@%@", [self nickname], _username, _address]];
 	} else
 		[firstField setStringValue:@""];
 	[secondField setStringValue:@""];
