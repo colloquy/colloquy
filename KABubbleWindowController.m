@@ -71,7 +71,7 @@ static unsigned int bubbleWindowDepth = 0;
 	_delegate = nil;
 	_animationTimer = nil;
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self]; // We remove on fade out but just in case...
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	[super dealloc];
 }
@@ -109,7 +109,6 @@ static unsigned int bubbleWindowDepth = 0;
 		if( [_delegate respondsToSelector:@selector( bubbleDidFadeOut: )] )
 			[_delegate bubbleDidFadeOut:self];
 		[self close];
-		[[NSNotificationCenter defaultCenter] removeObserver:self]; // We don't need this anymore
 		[self autorelease]; // Relase, we retained when we faded in.
 	}
 }

@@ -29,7 +29,6 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 	[_icon release];
 	[_title release];
 	[_text release];
-	[_target release];
 
 	_icon = nil;
 	_title = nil;
@@ -129,8 +128,7 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 }
 
 - (void) setTarget:(id) object {
-	[_target autorelease];
-	_target = [object retain];
+	_target = object;
 }
 
 #pragma mark -
