@@ -103,8 +103,6 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 		_waitingAlerts = [[NSMutableArray array] retain];
 		_waitingAlertNames = [[NSMutableDictionary dictionary] retain];
-
-		_encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"];
 	}
 	return self;
 }
@@ -125,7 +123,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 - (void) awakeFromNib {
 	NSView *toolbarItemContainerView = nil;
-	NSString *prefStyle = [NSString stringWithFormat:@"chat.style.%@.%@", [[self connection] server], _target];
+	NSString *prefStyle = [NSString stringWithFormat:@"chat.style.%@", [self identifier]];
 	NSBundle *style = nil;
 	NSString *variant = nil;
 
@@ -142,7 +140,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 	}
 
-	variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"chat.style.%@.%@ %@ variant", [[self connection] server], _target, [style bundleIdentifier]]];
+	variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], [style bundleIdentifier]]];
 	if( ! variant ) variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]];
 
 	[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
@@ -279,6 +277,12 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 #pragma mark -
 
+- (NSString *) identifier {
+	return [NSString stringWithFormat:@"%@.%@.directChat", [[self connection] server], _target];
+}
+
+#pragma mark -
+
 - (void) didUnselect {
 	_newMessage = NO;
 	_newHighlightMessage = NO;
@@ -352,7 +356,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 - (IBAction) changeChatStyle:(id) sender {
 	NSBundle *style = [NSBundle bundleWithIdentifier:[sender representedObject]];
-	NSString *key = [NSString stringWithFormat:@"chat.style.%@.%@", [[self connection] server], _target];
+	NSString *key = [NSString stringWithFormat:@"chat.style.%@", [self identifier]];
 	if( style ) {
 		[[NSUserDefaults standardUserDefaults] setObject:[style bundleIdentifier] forKey:key];
 	} else {
@@ -365,13 +369,13 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 - (IBAction) changeChatStyleVariant:(id) sender {
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
 	NSBundle *style = [[sender representedObject] objectForKey:@"style"];
-	NSString *key = [NSString stringWithFormat:@"chat.style.%@.%@ %@ variant", [[self connection] server], _target, [style bundleIdentifier]];
+	NSString *key = [NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], [style bundleIdentifier]];
 
 	if( variant ) [[NSUserDefaults standardUserDefaults] setObject:variant forKey:key];
 	else [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
 
 	if( style != _chatStyle ) {
-		[[NSUserDefaults standardUserDefaults] setObject:[style bundleIdentifier] forKey:[NSString stringWithFormat:@"chat.style.%@.%@", [[self connection] server], _target]];
+		[[NSUserDefaults standardUserDefaults] setObject:[style bundleIdentifier] forKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]];
 		[self setChatStyle:style withVariant:variant];
 	} else {
 		[self setChatStyleVariant:variant];
@@ -401,7 +405,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	unsigned i = 0, count = 0;
 	BOOL new = YES;
 	if( ! [sender tag] ) {
-		_encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:[NSString stringWithFormat:@"chat.%@.%@.encoding", [[self connection] server], [self target]]];
+		_encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:[NSString stringWithFormat:@"chat.encoding.%@", [self identifier]]];
 		if( ! _encoding ) _encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"];
 	} else _encoding = (NSStringEncoding) [sender tag];
 
@@ -430,9 +434,9 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	for( i = 1; i < count; i++ ) [_spillEncodingMenu addItem:[[(NSMenuItem *)[[encodingView menu] itemAtIndex:i] copy] autorelease]];
 
 	if( _encoding != (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"] ) {
-		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithUnsignedInt:_encoding] forKey:[NSString stringWithFormat:@"chat.%@.%@.encoding", [[self connection] server], [self target]]];
+		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithUnsignedInt:_encoding] forKey:[NSString stringWithFormat:@"chat.encoding.%@", [self identifier]]];
 	} else {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"chat.%@.%@.encoding", [[self connection] server], [self target]]];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"chat.encoding.%@", [self identifier]]];
 	}
 }
 
@@ -595,6 +599,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
 	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
 	[[[send textStorage] mutableString] replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
+	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
+	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"'" withString:@"&apos;" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
 	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
 
 	while( [[send textStorage] length] ) {
@@ -855,94 +861,100 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 @implementation JVDirectChat (JVDirectChatPrivate)
 - (void) _makeHyperlinksInString:(NSMutableString *) string {
+	unsigned i = 0, c = 0;
+	NSMutableArray *parts = nil;
+	NSMutableString *part = nil;
 	NSScanner *urlScanner = nil;
-	NSCharacterSet *urlStopSet = [NSCharacterSet characterSetWithCharactersInString:@" \t\n\r\0<>\"'![]{}()|*^!"];
+	NSCharacterSet *urlStopSet = [NSCharacterSet characterSetWithCharactersInString:@" \t\n\r\"'!<>[]{}()|*^!"];
+	NSCharacterSet *ircChannels = [NSCharacterSet characterSetWithCharactersInString:@"#&+"];
 	NSString *link = nil, *urlHandle = nil;
 	NSMutableString *mutableLink = nil;
-	unsigned int lastLoc = 0;
 
-	if( ! string ) return;
+	// escape the special entities
+	[string replaceOccurrencesOfString:@"*" withString:@"*star;" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+	[string replaceOccurrencesOfString:@"<" withString:@"*lt;" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+	[string replaceOccurrencesOfString:@">" withString:@"*gt;" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+	[string replaceOccurrencesOfString:@"\"" withString:@"*quot;" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+	[string replaceOccurrencesOfString:@"'" withString:@"*apos;" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
 
-	urlScanner = [NSScanner scannerWithString:string];
+	[string replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+	[string replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+	[string replaceOccurrencesOfString:@"&quot;" withString:@"\"" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+	[string replaceOccurrencesOfString:@"&apos;" withString:@"'" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
 
-	while( ! [urlScanner isAtEnd] ) {
-		while( ! [urlScanner isAtEnd] ) {
-			lastLoc = [urlScanner scanLocation];
-			if( [urlScanner scanUpToString:@"://" intoString:&urlHandle] ) {
-				NSRange range = [urlHandle rangeOfCharacterFromSet:urlStopSet options:NSBackwardsSearch];
-				[urlScanner setScanLocation:lastLoc];
-				if( ! range.length ) {
-					if( lastLoc ) lastLoc += 1;
-					break;
-				} else if( ! [urlHandle rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]].length ) {
-					lastLoc += range.location + range.length + ( lastLoc ? 1 : 0 );
-					if( lastLoc < [string length] ) [urlScanner setScanLocation:lastLoc];
-					else [urlScanner setScanLocation:[string length]];
-					break;
-				}
-			}
-			[urlScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:nil];
-		}
+	[string replaceOccurrencesOfString:@"&amp;" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+	[string replaceOccurrencesOfString:@"&" withString:@"*amp;" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+	[string replaceOccurrencesOfString:@"~amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+
+	parts = [[[string componentsSeparatedByString:@" "] mutableCopy] autorelease];
+
+	for( i = 0, c = [parts count]; i < c; i++ ) {
+		part = [[[parts objectAtIndex:i] mutableCopy] autorelease];
+
+		// catch well-formed urls like "http://www.apple.com" or "irc://irc.javelin.cc"
+		urlScanner = [NSScanner scannerWithString:part];
+		[urlScanner scanUpToCharactersFromSet:[urlStopSet invertedSet] intoString:NULL];
 		if( [urlScanner scanUpToString:@"://" intoString:&urlHandle] && [urlScanner scanUpToCharactersFromSet:urlStopSet intoString:&link] ) {
+			if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' )
+				link = [link substringToIndex:( [link length] - 1 )];
+			link = [urlHandle stringByAppendingString:link];
 			if( [link length] >= 7 ) {
-				if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' )
-					link = [link substringToIndex:([link length] - 1)];
-				link = [urlHandle stringByAppendingString:link];
 				mutableLink = [[link mutableCopy] autorelease];
-				[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"%" withString:@"&#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"&amp;" withString:@"&#8203;&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[string replaceCharactersInRange:NSMakeRange( lastLoc, [link length] ) withString:[NSString stringWithFormat:@"<a href=\"%@\">%@</a>", link, mutableLink]];
+				[mutableLink replaceOccurrencesOfString:@"/" withString:@"/*amp;#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"+" withString:@"+*amp;#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"%" withString:@"*amp;#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"&" withString:@"*amp;#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"*lt;a href=*quot;%@*quot;*gt;%@*lt;/a*gt;", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[parts replaceObjectAtIndex:i withObject:part];
+				continue;
 			}
 		}
-	}
 
-	urlHandle = link = nil;
-	lastLoc = 0;
-
-	[urlScanner setScanLocation:0];
-	while( ! [urlScanner isAtEnd] ) {
-		while( ! [urlScanner isAtEnd] ) {
-			lastLoc = [urlScanner scanLocation];
-			if( [urlScanner scanUpToString:@"@" intoString:&urlHandle] ) {
-				NSRange range = [urlHandle rangeOfCharacterFromSet:urlStopSet options:NSBackwardsSearch];
-				[urlScanner setScanLocation:lastLoc];
-				if( ! range.length ) {
-					if( lastLoc ) lastLoc += 1;
-					break;
-				} else if( ! [urlHandle rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]].length ) {
-					lastLoc += range.location + range.length + ( lastLoc ? 1 : 0 );
-					if( lastLoc < [string length] ) [urlScanner setScanLocation:lastLoc];
-					else [urlScanner setScanLocation:[string length]];
-					break;
-				}
-			}
-			[urlScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:nil];
-		}
+		// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
+		urlScanner = [NSScanner scannerWithString:part];
+		[urlScanner scanUpToCharactersFromSet:[urlStopSet invertedSet] intoString:NULL];
 		if( [urlScanner scanUpToString:@"@" intoString:&urlHandle] && [urlScanner scanUpToCharactersFromSet:urlStopSet intoString:&link] ) {
 			NSRange hasPeriod = [link rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
-			NSRange limitRange = NSMakeRange( lastLoc, [[urlHandle stringByAppendingString:link] length] );
-			if( [urlHandle length] && [link length] && hasPeriod.location < ([link length] - 1) && hasPeriod.location != NSNotFound /*&& ! [attrs objectForKey:NSLinkAttributeName]*/ ) {
-				[string replaceCharactersInRange:limitRange withString:[NSString stringWithFormat:@"<a href=\"mailto:%@%@\">%@%@</a>", urlHandle, link, urlHandle, link]];
+			if( [urlHandle length] && [link length] && hasPeriod.location < ([link length] - 1) && hasPeriod.location != NSNotFound ) {
+				link = [urlHandle stringByAppendingString:link];
+				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"*lt;a href=*quot;mailto:%@*quot;*gt;%@*lt;/a*gt;", link, link] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[parts replaceObjectAtIndex:i withObject:part];
+				continue;
+			}
+		}
+
+		// catch well-formed IRC channel names like "#php" or "&admins"
+		urlScanner = [NSScanner scannerWithString:part];
+		if( ( [urlScanner scanUpToCharactersFromSet:ircChannels intoString:NULL] || [part rangeOfCharacterFromSet:ircChannels].location == 0 ) && [urlScanner scanUpToCharactersFromSet:urlStopSet intoString:&urlHandle] ) {
+			if( [urlHandle length] > 2 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != 1 && ! [[urlHandle substringFromIndex:1] rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].length ) {
+				link = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];
+				link = [NSString stringWithFormat:@"*lt;a href=*quot;%@*quot;*gt;%@*lt;/a*gt;", link, urlHandle];
+				[part replaceOccurrencesOfString:urlHandle withString:link options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[parts replaceObjectAtIndex:i withObject:part];
+				continue;
 			}
 		}
 	}
 
-	urlHandle = link = nil;
-	lastLoc = 0;
+	part = [[[parts componentsJoinedByString:@" "] mutableCopy] autorelease];
 
-	[urlScanner setScanLocation:0];
-	while( [urlScanner isAtEnd] == NO ) {
-		lastLoc = [urlScanner scanLocation];
-		if( [urlScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&urlHandle] ) {
-			if( ( [urlHandle rangeOfString:@"#"].location == 0 || [urlHandle rangeOfString:@"&"].location == 0 || [urlHandle rangeOfString:@"+"].location == 0 ) && [urlHandle length] > 2 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != 1 && ! [[urlHandle substringFromIndex:1] rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].length ) {
-				id irc = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];
-				if( lastLoc ) lastLoc += 1;
-				[string replaceCharactersInRange:NSMakeRange( lastLoc, [urlHandle length] ) withString:[NSString stringWithFormat:@"<a href=\"%@\">%@</a>", irc, urlHandle]];
-			}
-		}
-	}	
+	// un-escape the special entities
+	[part replaceOccurrencesOfString:@"&" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+	[part replaceOccurrencesOfString:@"*amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+	[part replaceOccurrencesOfString:@"~amp;" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+
+	[part replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+	[part replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+	[part replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+	[part replaceOccurrencesOfString:@"'" withString:@"&apos;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+
+	[part replaceOccurrencesOfString:@"*lt;" withString:@"<" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+	[part replaceOccurrencesOfString:@"*gt;" withString:@">" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+	[part replaceOccurrencesOfString:@"*quot;" withString:@"\"" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+	[part replaceOccurrencesOfString:@"*apos;" withString:@"'" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+	[part replaceOccurrencesOfString:@"*star;" withString:@"*" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+
+	[string setString:part];
 }
 
 - (void) _breakLongLinesInString:(NSMutableString *) string { // Not good on strings that have prior HTML or HTML entities
