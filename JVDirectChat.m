@@ -95,6 +95,7 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
+static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 @interface JVDirectChat (JVDirectChatPrivate) <ABImageClient>
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
@@ -1159,12 +1160,24 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( clearDisplay: )];
+	} else if( [identifier isEqual:JVToolbarSendFileItemIdentifier] ) {
+		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+
+		[toolbarItem setLabel:NSLocalizedString( @"Send File", "send file toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Send File", "send file toolbar customize palette name" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Send File", "send file toolbar tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"fileSend"]];
+
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector( _sendFile: )];
 	} else return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
 	return toolbarItem;
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
+	if( [self isMemberOfClass:[JVDirectChat class]] ) [list addObject:JVToolbarSendFileItemIdentifier];
 	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	return list;
@@ -1172,6 +1185,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
+	if( [self isMemberOfClass:[JVDirectChat class]] ) [list addObject:JVToolbarSendFileItemIdentifier];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	[list addObject:JVToolbarClearItemIdentifier];
 	return list;
