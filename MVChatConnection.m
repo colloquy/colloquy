@@ -1805,6 +1805,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 - (NSString *) _roomWithProperPrefix:(NSString *) room {
+	if( ! [room length] ) return room;
 	NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"#&+!"];
 	return ( [set characterIsMember:[room characterAtIndex:0]] ? room : [@"#" stringByAppendingString:room] );
 }

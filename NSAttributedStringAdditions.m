@@ -57,10 +57,13 @@ static int colorRGBToMIRCColor( unsigned int red, unsigned int green, unsigned i
 
 static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 	unsigned int location = [scanner scanLocation];
-	if( [scanner isAtEnd] || [[scanner string] length] < ( location + 1 ) ) return NO;
+	if( [scanner isAtEnd] || ! ( [[scanner string] length] > location ) ) return NO;
 
 	char a = [[scanner string] characterAtIndex:location];
-	char b = [[scanner string] characterAtIndex:( location + 1 )];
+	char b = 0;
+
+	if( [[scanner string] length] > ( location + 1 ) )
+		b = [[scanner string] characterAtIndex:( location + 1 )];
 
 	*number = 0;
 
