@@ -433,10 +433,13 @@
 	if( _address ) {
 		// Address is in the form of user@hostmask, lets get rid of the user bit
 		NSArray *parts = [_address componentsSeparatedByString:@"@"];
+		NSString *hostmask;
 		if( [parts count] == 2 ) {
-			NSString *hostmask = [parts objectAtIndex:1];
-			[[_parent connection] banMember:[NSString stringWithFormat:@"*!*@%@", hostmask] inRoom:[_parent target]];
+			hostmask = [parts objectAtIndex:1];
+		} else {
+			hostmask = [parts objectAtIndex:0];
 		}
+		[[_parent connection] banMember:[NSString stringWithFormat:@"*!*@%@", hostmask] inRoom:[_parent target]];
 	}
 }
 
@@ -480,8 +483,17 @@
 	[banTitle setStringValue:[NSString stringWithFormat:NSLocalizedString( @"Ban %@ from the %@ room.", "ban user from room label" ), [self title], [_parent title]]];
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask label")];
 
-	if( _address) [firstField setStringValue:[NSString stringWithFormat:@"%@!%@", [self nickname], _address]];
-	else [firstField setStringValue:@""];
+	if( _address) {
+		NSArray *parts = [_address componentsSeparatedByString:@"@"];
+		NSString *hostmask;
+		if( [parts count] == 2 ) {
+			hostmask = [parts objectAtIndex:1];
+		} else {
+			hostmask = [parts objectAtIndex:0];
+		}
+		[firstField setStringValue:[NSString stringWithFormat:@"%@!*@%@", [self nickname], hostmask]];
+	} else
+		[firstField setStringValue:@""];
 
 	[banWindow makeFirstResponder:firstField];
 
@@ -523,8 +535,17 @@
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask" )];
 	[secondTitle setStringValue:NSLocalizedString( @"And reason:", "kick reason (secondary)" )];
 
-	if( _address ) [firstField setStringValue:[NSString stringWithFormat:@"%@!%@", [self nickname], _address]];
-	else [firstField setStringValue:@""];
+	if( _address ) {
+		NSArray *parts = [_address componentsSeparatedByString:@"@"];
+		NSString *hostmask;
+		if( [parts count] == 2 ) {
+			hostmask = [parts objectAtIndex:1];
+		} else {
+			hostmask = [parts objectAtIndex:0];
+		}
+		[firstField setStringValue:[NSString stringWithFormat:@"%@!*@%@", [self nickname], hostmask]];
+	} else
+		[firstField setStringValue:@""];
 	[secondField setStringValue:@""];
 
 	[banWindow makeFirstResponder:firstField];
