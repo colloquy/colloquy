@@ -1,3 +1,35 @@
+on enocdeEntities(htmlText)
+	set oldDelims to AppleScript's text item delimiters
+	
+	set AppleScript's text item delimiters to the "&"
+	set the itemList to every text item of htmlText
+	set AppleScript's text item delimiters to the "&amp;"
+	set htmlText to the itemList as string
+	
+	set AppleScript's text item delimiters to the "<"
+	set the itemList to every text item of htmlText
+	set AppleScript's text item delimiters to the "&lt;"
+	set htmlText to the itemList as string
+	
+	set AppleScript's text item delimiters to the ">"
+	set the itemList to every text item of htmlText
+	set AppleScript's text item delimiters to the "&gt;"
+	set htmlText to the itemList as string
+	
+	set AppleScript's text item delimiters to the "\""
+	set the itemList to every text item of htmlText
+	set AppleScript's text item delimiters to the "&quot;"
+	set htmlText to the itemList as string
+	
+	set AppleScript's text item delimiters to the "'"
+	set the itemList to every text item of htmlText
+	set AppleScript's text item delimiters to the "&apos;"
+	set htmlText to the itemList as string
+	
+	set AppleScript's text item delimiters to oldDelims
+	return htmlText
+end enocdeEntities
+
 using terms from application "Colloquy"
 	on process user command c with arguments for view
 		if c is "itunes" then
@@ -13,9 +45,9 @@ using terms from application "Colloquy"
 							set theArtist to artist of current track
 							set theSong to name of current track
 							if theArtist is not "" and theArtist is not missing value then
-								set msg to "is listening to <font color=\"orange\">" & theSong & "</font> by <font color=\"green\">" & theArtist & "</font>."
+								set msg to "is listening to <font color=\"orange\">" & my enocdeEntities(theSong) & "</font> by <font color=\"green\">" & my enocdeEntities(theArtist) & "</font>."
 							else
-								set msg to "is listening to <font color=\"orange\">" & theSong & "</font>."
+								set msg to "is listening to <font color=\"orange\">" & my enocdeEntities(theSong) & "</font>."
 							end if
 						else if player state is paused or player state is stopped then
 							set msg to "has iTunes paused."
