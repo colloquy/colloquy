@@ -1574,6 +1574,28 @@
 			settings = {
 			};
 		};
+		1C9014BE07A2D798002942A7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVChatUserAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9014BF07A2D798002942A7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVChatUserAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9014C107A2D798002942A7 = {
+			fileRef = 1C9014BF07A2D798002942A7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C91DEAC06972EC0007C1638 = {
 			buildActionMask = 8;
 			files = (
@@ -1943,6 +1965,8 @@
 				1CE2BC49042F53AD00000102,
 				1C088A0F04FCFEE700A8FE6E,
 				1C088A0E04FCFEE700A8FE6E,
+				1C9014BF07A2D798002942A7,
+				1C9014BE07A2D798002942A7,
 				1C2391A80677E6B7000E89A7,
 				1C2391A70677E6B7000E89A7,
 			);
@@ -2658,6 +2682,7 @@
 				1C0A4CBA0799BE000093B702,
 				1C0A4CE50799BE660093B702,
 				1C0A4CF70799BEA70093B702,
+				1C9014C107A2D798002942A7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

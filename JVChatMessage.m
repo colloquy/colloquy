@@ -46,7 +46,7 @@
 	_date = ( dateStr ? [[NSDate dateWithString:[NSString stringWithUTF8String:dateStr]] retain] : nil );
 	xmlFree( dateStr );
 
-	_attributedMessage = [[NSTextStorage attributedStringWithXHTMLTree:_node baseURL:nil defaultFont:nil] retain];
+	_attributedMessage = [[NSTextStorage attributedStringWithXHTMLTree:_node baseURL:nil defaultAttributes:nil] retain];
 	_action = ( xmlHasProp( _node, "action" ) ? YES : NO );
 	_highlighted = ( xmlHasProp( _node, "highlight" ) ? YES : NO );
 	_ignoreStatus = ( xmlHasProp( _node, "ignored" ) ? JVMessageIgnored : _ignoreStatus );

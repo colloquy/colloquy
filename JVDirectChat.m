@@ -115,7 +115,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
-- (char *) _classificationForUser:(MVChatUser *) user;
 - (void) _saveSelfIcon;
 - (void) _saveBuddyIcon:(JVBuddy *) buddy;
 - (void) _setCurrentMessage:(JVMutableChatMessage *) message;
@@ -1224,7 +1223,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
 		msgStr = NULL;
 
-		if( [value isKindOfClass:[NSAttributedString class]] ) {
+		if( [value respondsToSelector:@selector( xmlDescriptionWithTagName: )] ) {
+			msgStr = [(NSString *)[value performSelector:@selector( xmlDescriptionWithTagName: ) withObject:key] UTF8String];
+		} else if( [value isKindOfClass:[NSAttributedString class]] ) {
 			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
 			value = [value HTMLFormatWithOptions:options];
 			value = [value stringByStrippingIllegalXMLCharacters];
@@ -1434,17 +1435,13 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 			}
 		} */
 
-		child = xmlNewTextChild( root, NULL, "sender", [[user displayName] UTF8String] );
+		const char *sendDesc = [(NSString *)[[cmessage sender] performSelector:@selector( xmlDescriptionWithTagName: ) withObject:@"sender"] UTF8String];
 
-		if( ! [[[user uniqueIdentifier] description] isEqualToString:[user displayName]] )
-			xmlSetProp( child, "identifier", [[[user uniqueIdentifier] description] UTF8String] );		
-
-		if( [[self target] isKindOfClass:[MVChatRoom class]] )
-			xmlSetProp( child, "classification", [self _classificationForUser:user] );
-
-		if( [user isLocalUser] ) {
-			xmlSetProp( child, "self", "yes" );
-			xmlSetProp( child, "card", [[[[ABAddressBook sharedAddressBook] me] uniqueId] UTF8String] );
+		if( sendDesc ) {
+			xmlDocPtr tempDoc = xmlParseMemory( sendDesc, strlen( sendDesc ) );
+			child = xmlDocCopyNode( xmlDocGetRootElement( tempDoc ), doc, 1 );
+			xmlAddChild( root, child );
+			xmlFreeDoc( tempDoc );
 		}
 	}
 
@@ -1963,10 +1960,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 - (BOOL) _usingSpecificEmoticons {
 	return ( [self preferenceForKey:@"emoticon"] ? YES : NO );
-}
-
-- (char *) _classificationForUser:(MVChatUser *) user {
-	return "normal";
 }
 
 - (void) consumeImageData:(NSData *) data forTag:(int) tag {

@@ -2,6 +2,8 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
+#import <ChatCore/NSDataAdditions.h>
+#import <ChatCore/NSStringAdditions.h>
 
 #import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
@@ -139,7 +141,7 @@
 }
 
 - (NSString *) hostmask {
-	if( ! [[self user] username] || ! [[self user] address] ) return nil;
+	if( ! [[[self user] username] length] || ! [[[self user] address] length] ) return nil;
 	return [NSString stringWithFormat:@"%@@%@", [[self user] username], [[self user] address]];
 }
 
@@ -162,6 +164,10 @@
 	return ( [[[self room] target] modesForMemberUser:[self user]] & MVChatRoomMemberHalfOperatorMode );
 }
 
+- (BOOL) roomFounder {
+	return ( [[[self room] target] modesForMemberUser:[self user]] & MVChatRoomMemberFounderMode );
+}
+
 - (BOOL) serverOperator {
 	return [[self user] isServerOperator];
 }
@@ -172,6 +178,52 @@
 
 - (NSString *) description {
 	return [self nickname];
+}
+
+- (NSString *) xmlDescription {
+	return [self xmlDescriptionWithTagName:@"member"];
+}
+
+- (NSString *) xmlDescriptionWithTagName:(NSString *) tag {
+	NSParameterAssert( [tag length] != 0 );
+
+	// Full format will look like:
+	// <member self="yes" nickname="..." hostmask="..." identifier="..." class="..." buddy="...">...</member>
+
+	NSMutableString *ret = [NSMutableString string];
+	[ret appendFormat:@"<%@", tag];
+
+	if( [self isLocalUser] ) [ret appendString:@" self=\"yes\""];
+
+	if( ! [[self displayName] isEqualToString:[self nickname]] )
+		[ret appendFormat:@" nickname=\"%@\"", [[self nickname] stringByEncodingXMLSpecialCharactersAsEntities]];
+
+	id hostmask = [self hostmask];
+	if( hostmask ) [ret appendFormat:@" hostmask=\"%@\"", [hostmask stringByEncodingXMLSpecialCharactersAsEntities]];
+
+	id uniqueId = [[self user] uniqueIdentifier];
+	if( ! [uniqueId isEqual:[self nickname]] ) {
+		if( [uniqueId isKindOfClass:[NSData class]] ) uniqueId = [uniqueId base64Encoding];
+		else if( [uniqueId isKindOfClass:[NSString class]] ) uniqueId = [uniqueId stringByEncodingXMLSpecialCharactersAsEntities];
+		[ret appendFormat:@" identifier=\"%@\"", uniqueId];
+	}
+
+	NSString *class = nil;
+	if( [self serverOperator] ) class = @"server operator";
+	else if( [self roomFounder] ) class = @"room founder";
+	else if( [self operator] ) class = @"operator";
+	else if( [self halfOperator] ) class = @"half operator";
+	else if( [self voice] ) class = @"voice";
+
+	if( class ) [ret appendFormat:@" class=\"%@\"", class];
+
+	if( [self buddy] && ! [self isLocalUser] )
+		[ret appendFormat:@" buddy=\"%@\"", [[[self buddy] uniqueIdentifier] stringByEncodingXMLSpecialCharactersAsEntities]];
+
+	[ret appendFormat:@">%@</%@>", [[self displayName] stringByEncodingXMLSpecialCharactersAsEntities], tag];
+
+	[ret stripIllegalXMLCharacters];
+	return [NSString stringWithString:ret];
 }
 
 #pragma mark -
