@@ -64,9 +64,6 @@
 				</xsl:variable>
 
 				<xsl:if test="@ignored != 'yes'">
-					<xsl:if test="$subsequent = 'yes'">
-						<xsl:processing-instruction name="message">type="subsequent"</xsl:processing-instruction>
-					</xsl:if>
 					<span class="{$messageClass}">
 						<span class="hidden">[</span>
 						<span class="time"><xsl:value-of select="$timestamp" /></span>
@@ -82,6 +79,7 @@
 						<br />
 					</span>
 					<xsl:if test="$subsequent = 'yes'">
+						<xsl:processing-instruction name="message">type="subsequent"</xsl:processing-instruction>
 						<span id="consecutiveInsert">&#8203;</span>
 					</xsl:if>
 				</xsl:if>
