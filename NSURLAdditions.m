@@ -6,6 +6,7 @@
 + (id) URLWithInternetLocationFile:(NSString *) path {
 	NSAppleScript *script = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"Finder\" to return location of internet location file (POSIX file \"%@\")", path]]; 
 	NSAppleEventDescriptor *result = [script executeAndReturnError:NULL];
+	if( ! [[result stringValue] length] ) return nil;
 	NSURL *ret = [NSURL URLWithString:[result stringValue]];
 	return [[ret retain] autorelease];
 }
