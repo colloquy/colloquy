@@ -188,6 +188,7 @@
 }
 
 - (NSString *) toolTip {
+	if( ! [self address] ) return nil;
 	return [NSString stringWithFormat:@"%@\n%@", [self title], [self address]];
 }
 
