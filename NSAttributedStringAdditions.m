@@ -212,7 +212,7 @@ static WebView *fragmentWebView = nil;
 		return nil;
 	}
 
-	NSCharacterSet *formatCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\002\003\026\037\017"];
+	NSCharacterSet *formatCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\002\003\006\026\037\017"];
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 
 	NSFont *baseFont = [options objectForKey:@"BaseFont"];
@@ -223,10 +223,11 @@ static WebView *fragmentWebView = nil;
 	if( [message rangeOfCharacterFromSet:formatCharacters].location == NSNotFound )
 		return ( self = [self initWithString:message attributes:attributes] );
 
-	BOOL bold = NO, italic = NO, underline = NO;
 	NSMutableAttributedString *ret = [[NSMutableAttributedString new] autorelease];
 	NSScanner *scanner = [NSScanner scannerWithString:message];
 	[scanner setCharactersToBeSkipped:nil]; // don't skip leading whitespace!
+
+	char boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0, reverseStack = 0, urlStack = 0, blinkStack = 0;
 
 	while( ! [scanner isAtEnd] ) {
 		NSString *attribs = nil;
@@ -237,7 +238,7 @@ static WebView *fragmentWebView = nil;
 		for( i = 0; i < [attribs length]; i++, location++ ) {
 			switch( [attribs characterAtIndex:i] ) {
 			case '\017': // reset all
-				bold = italic = underline = NO;
+				boldStack = italicStack = underlineStack = strikeStack = reverseStack = urlStack = blinkStack = 0;
 				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:( NSBoldFontMask | NSItalicFontMask )];
 				if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 				[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
@@ -246,8 +247,8 @@ static WebView *fragmentWebView = nil;
 				break;
 			case '\002': // toggle bold
 				if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
-				bold = ! bold;
-				if( bold ) {
+				boldStack = ! boldStack;
+				if( boldStack ) {
 					NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask];
 					if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 				} else {
@@ -257,8 +258,8 @@ static WebView *fragmentWebView = nil;
 				break;
 			case '\026': // toggle italic
 				if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
-				italic = ! italic;
-				if( italic ) {
+				italicStack = ! italicStack;
+				if( italicStack ) {
 					NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask];
 					if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 				} else {
@@ -268,8 +269,8 @@ static WebView *fragmentWebView = nil;
 				break;
 			case '\037': // toggle underline
 				if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
-				underline = ! underline;
-				if( underline ) [attributes setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+				underlineStack = ! underlineStack;
+				if( underlineStack ) [attributes setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
 				else [attributes removeObjectForKey:NSUnderlineStyleAttributeName];
 				break;
 			case '\003': // color
@@ -294,6 +295,104 @@ static WebView *fragmentWebView = nil;
 						[attributes removeObjectForKey:NSForegroundColorAttributeName];
 						[attributes removeObjectForKey:NSBackgroundColorAttributeName];
 					}
+				}
+				break;
+			case '\006': // ctcp 2 formatting (http://www.lag.net/~robey/ctcp/ctcp2.2.txt)
+				if( [message length] > ( location + 2 ) ) {
+					NSString *sign = nil;
+					BOOL off = NO;
+
+					[scanner setScanLocation:( location + 2 )];
+
+					switch( [attribs characterAtIndex:( location + 1 )] ) {
+					case 'B': // bold
+						if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
+						if( [scanner scanString:@"-" intoString:&sign] ) {
+							if( boldStack > 1 ) boldStack--;
+							off = YES;
+						} else { // on is the default
+							[scanner scanString:@"+" intoString:&sign];
+							boldStack++;
+						}
+
+						if( boldStack == 1 && ! off ) {
+							NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask];
+							if( font ) [attributes setObject:font forKey:NSFontAttributeName];
+						} else if( ! boldStack ) {
+							NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSBoldFontMask];
+							if( font ) [attributes setObject:font forKey:NSFontAttributeName];
+						}
+						break;
+					case 'I': // italic
+						if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
+						if( [scanner scanString:@"-" intoString:&sign] ) {
+							if( italicStack > 1 ) italicStack--;
+							off = YES;
+						} else { // on is the default
+							[scanner scanString:@"+" intoString:&sign];
+							italicStack++;
+						}
+
+						if( italicStack == 1 && ! off ) {
+							NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask];
+							if( font ) [attributes setObject:font forKey:NSFontAttributeName];
+						} else if( ! italicStack ) {
+							NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSItalicFontMask];
+							if( font ) [attributes setObject:font forKey:NSFontAttributeName];
+						}
+						break;
+					case 'U': // underline
+						if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
+						if( [scanner scanString:@"-" intoString:&sign] ) {
+							if( boldStack > 1 ) underlineStack--;
+							off = YES;
+						} else { // on is the default
+							[scanner scanString:@"+" intoString:&sign];
+							underlineStack++;
+						}
+
+						if( underlineStack == 1 && ! off ) {
+							[attributes setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+						} else if( ! underlineStack ) {
+							[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
+						}
+						break;
+					case 'S': // strikethrough
+						if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
+						if( [scanner scanString:@"-" intoString:&sign] ) {
+							if( strikeStack > 1 ) strikeStack--;
+							off = YES;
+						} else { // on is the default
+							[scanner scanString:@"+" intoString:&sign];
+							strikeStack++;
+						}
+
+						if( strikeStack == 1 && ! off ) {
+							[attributes setObject:[NSNumber numberWithInt:1] forKey:NSStrikethroughStyleAttributeName];
+						} else if( ! strikeStack ) {
+							[attributes removeObjectForKey:NSStrikethroughStyleAttributeName];
+						}
+						break;
+					case 'V': // inverse
+					case 'K': // blink
+					case 'L': // url
+					case 'C': // color
+					case 'F': // font size
+					case 'E': // encoding
+					case 'P': // spacing
+						// not supported yet
+						break;
+					case 'N': // normal (reset)
+						boldStack = italicStack = underlineStack = strikeStack = reverseStack = urlStack = blinkStack = 0;
+						NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:( NSBoldFontMask | NSItalicFontMask )];
+						if( font ) [attributes setObject:font forKey:NSFontAttributeName];
+							[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
+						[attributes removeObjectForKey:NSForegroundColorAttributeName];
+						[attributes removeObjectForKey:NSBackgroundColorAttributeName];
+					}
+
+					[scanner scanUpToString:@"\006" intoString:NULL];
+					[scanner scanString:@"\006" intoString:NULL];
 				}
 			}
 		}
