@@ -2072,7 +2072,6 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 @implementation NSURL (NSURLChatAdditions)
 - (BOOL) isChatURL {
 	if( [[self scheme] isEqualToString:@"irc"] ) return YES;
-	else [[NSWorkspace sharedWorkspace] openURL:self]; 
 	return NO;
 }
 
