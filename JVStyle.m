@@ -160,8 +160,11 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 	if( ! _XSLStyle ) [self _setXSLStyle:[self XMLStyleSheetFilePath]];
 	NSAssert( _XSLStyle, @"XSL not allocated." );
 
-	NSMutableDictionary *pms = [[[self mainParameters] mutableCopy] autorelease];
-	[pms addEntriesFromDictionary:parameters];
+	NSDictionary *pms = [self mainParameters];
+	if( parameters ) {
+		pms = [[[self mainParameters] mutableCopy] autorelease];
+		[(NSMutableDictionary *)pms addEntriesFromDictionary:parameters];
+	}
 
 	xmlDoc *doc = document;
 	const char **params = [[self class] _xsltParamArrayWithDictionary:pms];
@@ -337,6 +340,12 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 - (NSString *) contentsOfHeaderFile {
 	NSString *contents = [NSString stringWithContentsOfFile:[self headerFilePath]];
 	return ( contents ? contents : @"" );
+}
+
+#pragma mark -
+
+- (NSString *) description {
+	return [self identifier];
 }
 @end
 
