@@ -50,8 +50,11 @@ extern NSString *JVChatViewPboardType;
 
 - (NSToolbarItem *) toggleChatDrawerToolbarItem;
 - (IBAction) toggleViewsDrawer:(id) sender;
-
+- (IBAction) openViewsDrawer:(id) sender;
+- (IBAction) closeViewsDrawer:(id) sender;
+	
 - (void) reloadListItem:(id <JVChatListItem>) controller andChildren:(BOOL) children;
+- (void) expandListItem:(id <JVChatListItem>) item;
 @end
 
 @protocol JVChatViewController <NSObject, JVChatListItem>
@@ -85,4 +88,9 @@ extern NSString *JVChatViewPboardType;
 
 - (int) numberOfChildren;
 - (id) childAtIndex:(int) index;
+@end
+
+@interface NSObject (JVChatListItemOptional)
+- (BOOL) acceptsDraggedFileOfType:(NSString *) type;
+- (void) handleDraggedFile:(NSString *) path;
 @end

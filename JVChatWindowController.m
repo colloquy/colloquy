@@ -57,7 +57,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[chatViewsOutlineView setAutoresizesOutlineColumn:YES];
 	[chatViewsOutlineView setMenu:[[[NSMenu alloc] initWithTitle:@""] autorelease]];
-	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObject:JVChatViewPboardType]];
+	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
 	[self _refreshList];
 }
 
@@ -322,6 +322,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[viewsDrawer toggle:sender];
 }
 
+- (IBAction) openViewsDrawer:(id) sender {
+	[viewsDrawer open:sender];
+}
+
+- (IBAction) closeViewsDrawer:(id) sender {
+	[viewsDrawer close:sender];
+}
+
 - (IBAction) toggleSmallDrawerIcons:(id) sender {
 	_usesSmallIcons = ! _usesSmallIcons;
 	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:_usesSmallIcons] forKey:@"JVChatWindowUseSmallDrawerIcons"];
@@ -333,6 +341,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
 	[chatViewsOutlineView reloadItem:item reloadChildren:( children && [chatViewsOutlineView isItemExpanded:item] ? YES : NO )];
 	if( _activeViewController == item ) [self _refreshWindowTitle];
+}
+
+- (void) expandListItem:(id <JVChatListItem>) item {
+	[chatViewsOutlineView expandItem:item];
 }
 
 #pragma mark -
@@ -451,29 +463,57 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (NSDragOperation) outlineView:(NSOutlineView *) outlineView validateDrop:(id <NSDraggingInfo>) info proposedItem:(id) item proposedChildIndex:(int) index {
-	if( ! item ) return NSDragOperationMove;
-	else return NSDragOperationNone;
+	if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
+		if( [item respondsToSelector:@selector( acceptsDraggedFileOfType: )] ) {
+			NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+			NSEnumerator *enumerator = [files objectEnumerator];
+			id file = nil;
+			while( ( file = [enumerator nextObject] ) )
+				if( [item acceptsDraggedFileOfType:[file pathExtension]] )
+					return NSDragOperationMove;
+			return NSDragOperationNone;
+		} else return NSDragOperationNone;
+	} else if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:JVChatViewPboardType]] ) {
+		if( ! item ) return NSDragOperationMove;
+		else return NSDragOperationNone;
+	} else return NSDragOperationNone;
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView acceptDrop:(id <NSDraggingInfo>) info item:(id) item childIndex:(int) index {
 	NSPasteboard *board = [info draggingPasteboard];
-	NSData *pointerData = [board dataForType:JVChatViewPboardType];
-	id <JVChatViewController> dragedController = nil;
-	[pointerData getBytes:&dragedController];
+	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
+		NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+		NSEnumerator *enumerator = [files objectEnumerator];
+		id file = nil;
 
-	[[dragedController retain] autorelease];
+		if( ! [item respondsToSelector:@selector( acceptsDraggedFileOfType: )] || ! [item respondsToSelector:@selector( handleDraggedFile: )] ) return NO;
 
-	if( [_views containsObject:dragedController] ) {
-		if( index != NSOutlineViewDropOnItemIndex && index >= [_views indexOfObjectIdenticalTo:dragedController] ) index--;
-		[_views removeObjectIdenticalTo:dragedController];
-	} else {
-		[[dragedController windowController] removeChatViewController:dragedController];
+		while( ( file = [enumerator nextObject] ) )
+			if( [item acceptsDraggedFileOfType:[file pathExtension]] )
+				[item handleDraggedFile:file];
+
+		return YES;
+	} else if( [board availableTypeFromArray:[NSArray arrayWithObject:JVChatViewPboardType]] ) {
+		NSData *pointerData = [board dataForType:JVChatViewPboardType];
+		id <JVChatViewController> dragedController = nil;
+		[pointerData getBytes:&dragedController];
+
+		[[dragedController retain] autorelease];
+
+		if( [_views containsObject:dragedController] ) {
+			if( index != NSOutlineViewDropOnItemIndex && index >= [_views indexOfObjectIdenticalTo:dragedController] ) index--;
+			[_views removeObjectIdenticalTo:dragedController];
+		} else {
+			[[dragedController windowController] removeChatViewController:dragedController];
+		}
+
+		if( index == NSOutlineViewDropOnItemIndex ) [self addChatViewController:dragedController];
+		else [self insertChatViewController:dragedController atIndex:index];
+
+		return YES;
 	}
 
-	if( index == NSOutlineViewDropOnItemIndex ) [self addChatViewController:dragedController];
-	else [self insertChatViewController:dragedController atIndex:index];
-
-	return YES;
+	return NO;
 }
 @end
 
