@@ -306,6 +306,9 @@ static JVChatController *sharedInstance = nil;
 
 @implementation JVChatController (JVChatControllerPrivate)
 - (void) _joinedRoom:(NSNotification *) notification {
+	JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:[notification object] ifExists:YES];
+	[console pause];
+
 	JVChatRoom *room = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:NO];
 	[room joined];
 }
@@ -418,6 +421,9 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) _banlistReceived:(NSNotification *) notification {
+	JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:[notification object] ifExists:YES];
+	[console resume];
+	
 	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
 	[controller banlistReceived];
 }
