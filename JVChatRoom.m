@@ -321,7 +321,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		NSMutableString *escapedName = [name mutableCopy];
 		[escapedName escapeCharactersInSet:escapeSet];
 		NSString *pattern = [[NSString alloc] initWithFormat:@"\\b(%@)\\b", escapedName];
-		regex = [AGRegex regexWithPattern:pattern];
+		regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 		[escapedName release];
 		[pattern release];
 		NSRange searchRange = NSMakeRange(0, [message length]);
@@ -341,7 +341,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 				NSRange closeRange = [message rangeOfString:@"</a>" options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
 
 				if( openRange.location == NSNotFound || ( closeRange.location != NSNotFound && closeRange.location > openRange.location ) ) {
-					[message replaceCharactersInRange:foundRange withString:[NSString stringWithFormat:@"<span class=\"member\">%@</span>", name]];
+					[message replaceCharactersInRange:foundRange withString:[NSString stringWithFormat:@"<span class=\"member\">%@</span>", [match groupAtIndex:1]]];
 					searchRange.location = NSMaxRange( foundRange ) + 28;
 					searchRange.length = [message length] - searchRange.location;
 					backSearchRange.location = searchRange.location;
@@ -831,12 +831,12 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	NSEnumerator *enumerator = [_members objectEnumerator];
 	while( ( member = [enumerator nextObject] ) )
-		if( [[member nickname] isEqualToString:name] )
+		if( [[member nickname] caseInsensitiveCompare:name] == NSOrderedSame)
 			return member;
 
 	enumerator = [_members objectEnumerator];
 	while( ( member = [enumerator nextObject] ) )
-		if( [[member title] isEqualToString:name] )
+		if( [[member title] caseInsensitiveCompare:name] == NSOrderedSame )
 			return member;
 
 	return nil;
