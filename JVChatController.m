@@ -276,8 +276,8 @@ static JVChatController *sharedInstance = nil;
 #pragma mark -
 #pragma mark Ignores
 
-- (void) addIgnoreForUser:(NSString *)user withMessage:(NSString *)message inRooms:(NSArray *)rooms usesRegex:(BOOL) regex isPermanent:(BOOL) permanent {
-	KAIgnoreRule *rule = [KAIgnoreRule ruleForUser:user message:message inRooms:rooms usesRegex:regex isPermanent:permanent];
+- (void) addIgnoreForUser:(NSString *) user withMessage:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent {
+	KAIgnoreRule *rule = [KAIgnoreRule ruleForUser:user message:message inRooms:rooms isPermanent:permanent];
 	[_ignoreRules addObject:rule];
 
 	if( permanent ) {

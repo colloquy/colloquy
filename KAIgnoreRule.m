@@ -3,19 +3,18 @@
 //  Created by Karl Adam on Thu Apr 15 2004.
 
 #import <Cocoa/Cocoa.h>
-#import <AGRegex/AGRegex.h>
-#import <ChatCore/MVChatConnection.h>
-
 #import "KAIgnoreRule.h"
+#import "MVChatConnection.h"
 #import "JVChatWindowController.h"
 #import "JVDirectChat.h"
+#import <AGRegex/AGRegex.h>
 
 @implementation KAIgnoreRule
-+ (id) ruleForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex isPermanent:(BOOL) permanent {
-	return [[[KAIgnoreRule alloc] initForUser:user message:message inRooms:rooms usesRegex:regex isPermanent:permanent] autorelease];
++ (id) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent {
+	return [[[KAIgnoreRule alloc] initForUser:user message:message inRooms:rooms isPermanent:permanent] autorelease];
 }
 
-- (id) initForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex isPermanent:(BOOL) permanent {
+- (id) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent {
 	if( ( self = [super init] ) ) {
 		_ignoredUser = [user copy];
 		_ignoredMessage = [message copy];
@@ -24,10 +23,10 @@
 		_messageRegex = nil;
 		_permanent = permanent;
 
-		if( regex ) {
-			if( user ) _userRegex = [[AGRegex alloc] initWithPattern:user options:AGRegexCaseInsensitive];
-			if( message ) _messageRegex = [[AGRegex alloc] initWithPattern:message options:AGRegexCaseInsensitive];
-		}
+		if( user && ( [user length] > 2 ) && [user hasPrefix:@"/"] && [user hasSuffix:@"/"] ) 
+			_userRegex = [[AGRegex alloc] initWithPattern:[user substringWithRange:NSMakeRange( 1, [user length] - 2 )] options:AGRegexCaseInsensitive];
+		if( message && ( [message length] > 2 ) && [message hasPrefix:@"/"] && [message hasSuffix:@"/"] ) 
+			_messageRegex = [[AGRegex alloc] initWithPattern:[message substringWithRange:NSMakeRange( 1, [message length] - 2)] options:AGRegexCaseInsensitive];
 	}
 
 	return self;
@@ -35,7 +34,7 @@
 
 - (id) initWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] )
-		return [self initForUser:[coder decodeObjectForKey:@"KAIgnoreUser"] message:[coder decodeObjectForKey:@"KAIgnoreMessage"] inRooms:[coder decodeObjectForKey:@"KAIgnoreRooms"] usesRegex:[coder decodeBoolForKey:@"KAIgnoreUseRegex"] isPermanent:[coder decodeBoolForKey:@"KAIgnorePermanent"]];
+		return [self initForUser:[coder decodeObjectForKey:@"KAIgnoreUser"] message:[coder decodeObjectForKey:@"KAIgnoreMessage"] inRooms:[coder decodeObjectForKey:@"KAIgnoreRooms"] isPermanent:[coder decodeBoolForKey:@"KAIgnorePermanent"]];
 	else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 	return nil;
 }
@@ -45,7 +44,6 @@
 		[coder encodeObject:_ignoredUser forKey:@"KAIgnoreUser"];
 		[coder encodeObject:_ignoredMessage forKey:@"KAIgnoreMessage"];
 		[coder encodeObject:_inRooms forKey:@"KAIgnoreRooms"];
-		[coder encodeBool:( _userRegex || _messageRegex ) forKey:@"KAIgnoreUseRegex"];
 		[coder encodeBool:_permanent forKey:@"KAIgnorePermanent"];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
@@ -68,7 +66,7 @@
 		else if( _ignoredUser ) userFound = [_ignoredUser isEqualToString:user];
 
 		if( _messageRegex && [_messageRegex findInString:message] ) messageFound = YES;
-		else if( _ignoredMessage ) messageFound = [_ignoredMessage isEqualToString:message];
+		else if( _ignoredMessage ) messageFound = ([message rangeOfString:_ignoredMessage].location != NSNotFound);
 
 		if( userRequired ) {
 			if( ! userFound || ( messageRequired && ! messageFound ) ) return JVNotIgnored;

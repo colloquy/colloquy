@@ -562,17 +562,16 @@
 	// n is to specify a nickname
 
 	// EXAMPLES: 
-	// /ignore Loser23094 - ignore Loser23094 in the current room
+	// /ignore Loser23094 - ignore Loser23094 in all rooms
 	// /ignore -m "is listening" - ignore any message that has "is listening" from everyone
 	// /ignore -m /is listening .*/ - ignore the message expression "is listening *" from everyone
 	// /ignore -mn /eevyl.*/ /is listening .*/ #adium #colloquy #here
-	// /ignore -n /bunny.*/ * - ignore user in all rooms
+	// /ignore -n /bunny.*/ - ignore users whose nick starts with bunny in all rooms
 
 	NSArray *argsArray = [args componentsSeparatedByString:@" "];
 	NSString *memberString = nil;
 	NSString *messageString = nil;
 	NSMutableArray *rooms = nil;
-	BOOL regex = NO;
 	BOOL permanent = NO;
 	BOOL member = YES;
 	BOOL message = NO;
@@ -584,9 +583,9 @@
 			member = NO;
 			message = YES;
 		}
-	
+
 		if( [[argsArray objectAtIndex:0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
-	
+
 		offset++; // lookup next arg.
 	}
 
@@ -595,39 +594,32 @@
 
 	if( member ) {
 		memberString = [argsArray objectAtIndex:offset];
-		if( [memberString hasPrefix:@"/"] && [memberString hasSuffix:@"/"] && [memberString length] > 2 ) {
-			memberString = [args substringWithRange:NSMakeRange( 1, [memberString length] - 2 )];
-			regex = YES;
-		}
 		offset++;
+		args = [[argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )] componentsJoinedByString:@" "];
+		// without that, the / test in message could have matched the / from the nick...
 	}
 
 	if( message ) {
 		if( [args rangeOfString:@"\""].location != NSNotFound ) {
 			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location + 1, [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ( [args rangeOfString:@"\""].location + 1 ) )];
 		} else if( [args rangeOfString:@"/"].location != NSNotFound) {
-			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"/"].location + 1, [args rangeOfString:@"/" options:NSBackwardsSearch].location - ( [args rangeOfString:@"/"].location + 1 ) )];
-			regex = YES;
+			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"/"].location, [args rangeOfString:@"/" options:NSBackwardsSearch].location - [args rangeOfString:@"/"].location + 1 )];
 		} else messageString = [argsArray objectAtIndex:offset];
-		
+
 		offset += [[messageString componentsSeparatedByString:@" "] count];
 	}
 
 	if( offset < [argsArray count] ) {
-		NSArray *typedRooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
-		if( [typedRooms containsObject:@"*"] ) rooms = [NSArray arrayWithObject:[[view connection] url]]; // We want all rooms on this same server.
-		else {
-			rooms = [NSMutableArray array];
-			NSEnumerator *rEnum = [typedRooms objectEnumerator];
-			NSString *room = nil;
-			while( ( room = [rEnum nextObject] ) ) {
-				[rooms addObject:[NSURL URLWithString:[[[[view connection] url] absoluteString] stringByAppendingPathComponent:[room stringByEncodingIllegalURLCharacters]]]];
-			}
-		}
-	} else if( [view isKindOfClass:NSClassFromString( @"JVDirectChat" )] )
-		rooms = [NSArray arrayWithObject:[(JVDirectChat *)view targetURL]];
+		rooms = [NSMutableArray array];
 
-	[[_manager chatController] addIgnoreForUser:memberString withMessage:messageString inRooms:rooms usesRegex:regex isPermanent:permanent];
+		NSArray *typedRooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
+		NSEnumerator *rEnum = [typedRooms objectEnumerator];
+		NSString *room = nil;
+		while( ( room = [rEnum nextObject] ) )
+			[rooms addObject:[NSURL URLWithString:[[[[view connection] url] absoluteString] stringByAppendingPathComponent:[room stringByEncodingIllegalURLCharacters]]]];
+	} else rooms = [NSArray arrayWithObject:[[view connection] url]];
+
+	[[_manager chatController] addIgnoreForUser:memberString withMessage:messageString inRooms:rooms isPermanent:permanent];
 
 	return YES;
 }
