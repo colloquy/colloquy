@@ -93,6 +93,15 @@
 					<key>Type</key>
 					<string>NSNumber&lt;ConnectionStatus&gt;</string>
 				</dict>
+				<key>awayStatusMessage</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>aStA</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>
 					<key>AppleEventCode</key>
@@ -117,6 +126,14 @@
 				<string>sendMessageScriptCommand:</string>
 				<key>sendRawMessage</key>
 				<string>sendRawMessageScriptCommand:</string>
+				<key>sendSubcodeCommand</key>
+				<string>sendSubcodeMessageScriptCommand:</string>
+				<key>returnFromAwayStatus</key>
+				<string>returnFromAwayStatusScriptCommand:</string>
+				<key>joinChatRoom</key>
+				<string>joinChatRoomScriptCommand:</string>
+				<key>sendFile</key>
+				<string>sendFileScriptCommand:</string>
 			</dict>
 		</dict>
 	</dict>
@@ -278,9 +295,157 @@
 				</dict>
 			</dict>
 		</dict>
+		<key>sendSubcodeCommand</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>ccoR</string>
+			<key>AppleEventCode</key>
+			<string>sSrX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>MVChatConnection</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>command</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>sSr1</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>arguments</key>
+				<dict>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>AppleEventCode</key>
+					<string>sSr2</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>type</key>
+				<dict>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>AppleEventCode</key>
+					<string>sSr3</string>
+					<key>Type</key>
+					<string>NSNumber&lt;SubcodeType&gt;</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>sSr4</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>returnFromAwayStatus</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>ccoR</string>
+			<key>AppleEventCode</key>
+			<string>rAsX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>MVChatConnection</string>
+			</dict>
+		</dict>
+		<key>joinChatRoom</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>ccoR</string>
+			<key>AppleEventCode</key>
+			<string>jCrX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>MVChatConnection</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>room</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>jCr1</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>sendFile</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>ccoR</string>
+			<key>AppleEventCode</key>
+			<string>sFiX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>MVChatConnection</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>path</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>sFi1</string>
+					<key>Type</key>
+					<string>NSString&lt;FilePath&gt;</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>sFi2</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+		</dict>
 	</dict>
 	<key>Enumerations</key>
 	<dict>
+		<key>SubcodeType</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>scTE</string>
+			<key>Enumerators</key>
+			<dict>
+				<key>Request</key>
+				<string>sreQ</string>
+				<key>Reply</key>
+				<string>srpL</string>
+			</dict>
+		</dict>
 		<key>ConnectionStatus</key>
 		<dict>
 			<key>AppleEventCode</key>

@@ -71,6 +71,13 @@
 					<key>Name</key>
 					<string>status</string>
 				</dict>
+				<key>awayStatusMessage</key>
+				<dict>
+					<key>Description</key>
+					<string>Away message for other users to see that your not there.</string>
+					<key>Name</key>
+					<string>away message</string>
+				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>
 					<key>Description</key>
@@ -211,11 +218,130 @@
 				</dict>
 			</dict>
 		</dict>
+		<key>sendSubcodeCommand</key>
+		<dict>
+			<key>Description</key>
+			<string>Send a subcode (CTCP) command to another user.</string>
+			<key>Name</key>
+			<string>send subcode</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Connection to send from.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>command</key>
+				<dict>
+					<key>Description</key>
+					<string>CTCP command to send to user.</string>
+					<key>Name</key>
+					<string>command</string>
+				</dict>
+				<key>arguments</key>
+				<dict>
+					<key>Description</key>
+					<string>Command arguments to send. Can include HTML formatting.</string>
+					<key>Name</key>
+					<string>with arguments</string>
+				</dict>
+				<key>type</key>
+				<dict>
+					<key>Description</key>
+					<string>Type of subcode message to send.</string>
+					<key>Name</key>
+					<string>as</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Description</key>
+					<string>Name of user.</string>
+					<key>Name</key>
+					<string>to user</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>returnFromAwayStatus</key>
+		<dict>
+			<key>Description</key>
+			<string>Removes any away message.</string>
+			<key>Name</key>
+			<string>return from away status</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Connection to clear away status for.</string>
+			</dict>
+		</dict>
+		<key>joinChatRoom</key>
+		<dict>
+			<key>Description</key>
+			<string>Join a chat room on the connection.</string>
+			<key>Name</key>
+			<string>join chat</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Connection to join room on.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>Room to join. Can also be a list of rooms.</string>
+					<key>Name</key>
+					<string>room</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>sendFile</key>
+		<dict>
+			<key>Description</key>
+			<string>Send a file (DCC) to another user.</string>
+			<key>Name</key>
+			<string>transfer file</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Connection user is on.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>path</key>
+				<dict>
+					<key>Description</key>
+					<string>Path of file to send the user.</string>
+					<key>Name</key>
+					<string>at</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Description</key>
+					<string>User to send file to.</string>
+					<key>Name</key>
+					<string>to user</string>
+				</dict>
+			</dict>
+		</dict>
 	</dict>
 	<key>Description</key>
 	<string>commands and classes for Chat Core scripting.</string>
 	<key>Enumerations</key>
 	<dict>
+		<key>SubcodeType</key>
+		<dict>
+			<key>Request</key>
+			<dict>
+				<key>Name</key>
+				<string>request</string>
+			</dict>
+			<key>Reply</key>
+			<dict>
+				<key>Name</key>
+				<string>reply</string>
+			</dict>
+		</dict>
 		<key>ConnectionStatus</key>
 		<dict>
 			<key>Connected</key>
