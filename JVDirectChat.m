@@ -19,7 +19,6 @@
 
 #import "JVChatController.h"
 #import "JVStyle.h"
-#import "JVChatTranscriptPrivates.h"
 #import "JVNotificationController.h"
 #import "MVConnectionsController.h"
 #import "JVDirectChat.h"
@@ -108,6 +107,14 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (char *) _classificationForNickname:(NSString *) nickname;
 - (void) _saveSelfIcon;
 - (void) _saveBuddyIcon:(JVBuddy *) buddy;
+@end
+
+#pragma mark -
+
+@interface JVChatTranscript (JVChatTranscriptPrivate)
+- (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
+- (void) _changeChatEmoticonsMenuSelection;
+- (void) _switchingStyleEnded:(in NSString *) html;
 @end
 
 #pragma mark -

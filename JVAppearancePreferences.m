@@ -8,7 +8,6 @@
 #import "MVApplicationController.h"
 #import "JVStyle.h"
 #import "JVChatTranscript.h"
-#import "JVChatTranscriptPrivates.h"
 #import "JVFontPreviewField.h"
 #import "JVColorWellCell.h"
 #import "JVDetailCell.h"
@@ -20,6 +19,12 @@
 
 @interface WebCoreCache
 + (void) empty;
+@end
+
+#pragma mark -
+
+@interface JVChatTranscript (JVChatTranscriptPrivate)
++ (void) _scanForEmoticons;
 @end
 
 #pragma mark -

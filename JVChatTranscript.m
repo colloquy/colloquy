@@ -16,7 +16,6 @@
 #import "MVMenuButton.h"
 #import "NSPreferences.h"
 #import "JVAppearancePreferences.h"
-#import "JVChatTranscriptPrivates.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
 
@@ -42,6 +41,26 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 @interface NSScrollView (NSScrollViewWebKitPrivate)
 - (void) setAllowsHorizontalScrolling:(BOOL) allow;
+@end
+
+#pragma mark -
+
+@interface JVChatTranscript (JVChatTranscriptPrivate)
++ (void) _scanForEmoticons;
+
+- (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
+
+- (void) _switchingStyleEnded:(in NSString *) html;
+- (void) _changeChatStyleMenuSelection;
+- (void) _updateChatStylesMenu;
+
+- (void) _changeChatEmoticonsMenuSelection;
+- (void) _updateChatEmoticonsMenu;
+- (NSString *) _chatEmoticonsMappingFilePath;
+- (NSString *) _chatEmoticonsCSSFileURL;
+
+- (BOOL) _usingSpecificStyle;
+- (BOOL) _usingSpecificEmoticons;
 @end
 
 #pragma mark -
@@ -659,7 +678,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		[ret addObject:item];
 
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
-		[item setSubmenu:[[[self _emoticonsMenu] copy] autorelease]];
+		[item setSubmenu:_emoticonMenu];
 		[ret addObject:item];
 	}
 
