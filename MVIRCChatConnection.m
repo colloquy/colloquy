@@ -1681,7 +1681,7 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	GMainLoop *glibMainLoop = g_main_new( TRUE );
 
 	CFRunLoopTimerRef timer = CFRunLoopTimerCreate( NULL, 0., 0.05, 0, 0, irssiRunCallback, NULL );
-    CFRunLoopAddTimer( (CFRunLoopRef) [NSRunLoop currentRunLoop], timer, kCFRunLoopDefaultMode );
+    CFRunLoopAddTimer( [[NSRunLoop currentRunLoop] getCFRunLoop], timer, kCFRunLoopDefaultMode );
 
 	extern BOOL irssiThreadReady;
 	irssiThreadReady = YES;
