@@ -173,6 +173,13 @@ static void server_init(IRC_SERVER_REC *server)
 	g_hash_table_insert(server->isupport, g_strdup("PREFIX"), g_strdup("(ohv)@%+"));
 
 	server->cmdcount = 0;
+
+	/* prevent the queue from sending too early, we have a max cut off of 120 secs */
+	/* this will reset to 1 sec after we get the 001 event */
+	GTimeVal now;
+	g_get_current_time(&now);
+	memcpy(&((IRC_SERVER_REC *)server)->wait_cmd, &now, sizeof(GTimeVal));
+	((IRC_SERVER_REC *)server)->wait_cmd.tv_sec += 120;
 }
 
 SERVER_REC *irc_server_init_connect(SERVER_CONNECT_REC *conn)
@@ -225,13 +232,6 @@ void irc_server_connect(SERVER_REC *server)
                 server_connect_unref(server->connrec);
 		g_free(server);
 	}
-
-	/* prevent the queue from sending too early, we have a max cut off of 120 secs */
-	/* this will reset to 1 sec after we get the 001 event */
-	GTimeVal now;
-	g_get_current_time(&now);
-	memcpy(&((IRC_SERVER_REC *)server)->wait_cmd, &now, sizeof(GTimeVal));
-	((IRC_SERVER_REC *)server)->wait_cmd.tv_sec += 120;
 }
 
 /* Returns TRUE if `command' is sent to `target' */
