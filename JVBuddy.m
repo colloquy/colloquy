@@ -5,13 +5,6 @@
 #import "JVBuddy.h"
 #import "MVConnectionsController.h"
 
-@interface ABPerson (ABPersonPrivate)
-- (NSString *) compositeName;
-- (NSString *) alternateName;
-@end
-
-#pragma mark -
-
 NSString *JVBuddyCameOnlineNotification = @"JVBuddyCameOnlineNotification";
 NSString *JVBuddyWentOfflineNotification = @"JVBuddyWentOfflineNotification";
 

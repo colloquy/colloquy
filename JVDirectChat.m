@@ -612,9 +612,11 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	xmlSetProp( root, "received", [[[NSDate date] description] UTF8String] );
 	xmlDocSetRootElement( doc, root );
 
-	if( [user isEqualToString:_target] && _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-		child = xmlNewTextChild( root, NULL, "sender", [[_buddy preferredName] UTF8String] );
-	else if( [user isEqualToString:[[self connection] nickname]] ) {
+	if( [user isEqualToString:_target] && _buddy ) {
+		NSSring *theirName = user;
+		if( [_buddy preferredNameWillReturn] != JVBuddyActiveNickname ) theirName = [_buddy preferredName];
+		child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
+	} else if( [user isEqualToString:[[self connection] nickname]] ) {
 		NSString *selfName = user;
 		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
 			selfName = [self _selfCompositeName];
