@@ -66,10 +66,10 @@
 			<span class="message">
 				<xsl:choose>
 					<xsl:when test="message[1]">
-						<xsl:apply-templates select="message[1]/child::node()" mode="copy" />
+						<xsl:apply-templates select="message[1]/*" mode="copy" />
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:apply-templates select="child::node()" mode="copy" />
+						<xsl:apply-templates select="*" mode="copy" />
 					</xsl:otherwise>
 				</xsl:choose>
 			</span>
@@ -80,7 +80,7 @@
 
 	<xsl:template match="event">
 		<div class="event">
-			<xsl:apply-templates select="message/child::node()" mode="copy" />
+			<xsl:apply-templates select="message/*" mode="copy" />
 		</div>
 	</xsl:template>
 
