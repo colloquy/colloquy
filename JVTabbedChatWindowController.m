@@ -97,6 +97,8 @@
 	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
 	NSAssert( index >= 0 && index <= [_tabItems count], @"Index is beyond bounds." );
 
+	[icon setImage:nil];
+
 	JVChatTabItem *newTab = [[[JVChatTabItem alloc] initWithChatViewController:controller] autorelease];
 
 	[_tabItems insertObject:newTab atIndex:index];
@@ -111,10 +113,12 @@
 	unsigned int index = [_views indexOfObjectIdenticalTo:controller];
 	[_tabItems removeObjectAtIndex:index];
 	[tabView removeTabViewItem:[tabView tabViewItemAtIndex:index]];
+	if( ! [_tabItems count] ) [icon setImage:[NSImage imageNamed:@"colloquy-alpha"]];
 	[super removeChatViewController:controller];
 }
 
 - (void) removeAllChatViewControllers {
+	[icon setImage:[NSImage imageNamed:@"colloquy-alpha"]];
 	[_tabItems removeAllObjects];
 	while( [tabView numberOfTabViewItems] > 0 )
         [tabView removeTabViewItem:[tabView tabViewItemAtIndex:0]];

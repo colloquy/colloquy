@@ -28,9 +28,10 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
+            ACTIONS = {toggleTabBarVisible = id; }; 
             CLASS = JVTabbedChatWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {customTabsView = AICustomTabsView; tabView = NSTabView; }; 
+            OUTLETS = {customTabsView = AICustomTabsView; icon = NSImageView; tabView = NSTabView; }; 
             SUPERCLASS = JVChatWindowController; 
         }, 
         {
