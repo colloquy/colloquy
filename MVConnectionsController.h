@@ -31,6 +31,7 @@
 	/* Edit Connection */
 	IBOutlet NSTextField *editNickname;
 	IBOutlet NSTextField *editPassword;
+	IBOutlet NSTextField *editServerPassword;
 	IBOutlet NSTextField *editAddress;
 	IBOutlet NSTextField *editPort;
 	IBOutlet NSButton *editAutomatic;

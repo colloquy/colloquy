@@ -95,7 +95,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 	[newNickname setObjectValue:NSUserName()];
 
-	[[self window] setFloatingPanel:NO];
+	[(NSPanel *)[self window] setFloatingPanel:NO];
 
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];
@@ -235,9 +235,10 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 		[connection setServer:[editAddress stringValue]];
 		[connection setServerPort:[editPort intValue]];
 		[connection setNickname:[editNickname stringValue]];
-		[connection setPassword:[editPassword stringValue]];
+		[connection setNicknamePassword:[editPassword stringValue]];
 
 		if( ! [[info objectForKey:@"temporary"] boolValue] ) {
+			[[MVKeyChain defaultKeyChain] setInternetPassword:[editServerPassword stringValue] forServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 			[[MVKeyChain defaultKeyChain] setInternetPassword:[editPassword stringValue] forServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:[editNickname stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 		}
 
@@ -269,7 +270,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	[nicknameAuth orderOut:nil];
 
 	if( [sender tag] ) {
-		[_passConnection setPassword:[authPassword stringValue]];
+		[_passConnection setNicknamePassword:[authPassword stringValue]];
 	
 		if( [authKeychain state] == NSOnState ) {
 			[[MVKeyChain defaultKeyChain] setInternetPassword:[authPassword stringValue] forServer:[_passConnection server] securityDomain:[_passConnection server] account:[_passConnection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
@@ -684,7 +685,8 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 		MVChatConnection *connection = nil;
 		connection = [[[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]] autorelease];
 
-		[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+		[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+		[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 
 		if( [[info objectForKey:@"automatic"] boolValue] ) {
 			NSEnumerator *renumerator = nil;
@@ -843,6 +845,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	[editPort setIntValue:[connection serverPort]];
 	[editNickname setObjectValue:[connection nickname]];
 	[editPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+	[editServerPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 
 	[_editingRooms autorelease];
 	_editingRooms = [[[_bookmarks objectAtIndex:_editingRow] objectForKey:@"rooms"] mutableCopy];
