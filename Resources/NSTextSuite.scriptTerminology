@@ -67,6 +67,20 @@
 					<key>Name</key>
 					<string>link</string>
 				</dict>
+				<key>XHTMLStart</key>
+				<dict>
+					<key>Description</key>
+					<string>The HTML that directly proceeds the first character. This would include start tags or self-closing tags.</string>
+					<key>Name</key>
+					<string>HTML start</string>
+				</dict>
+				<key>XHTMLEnd</key>
+				<dict>
+					<key>Description</key>
+					<string>The HTML that directly follows the first character or end of the attribute run. This would include end tags.</string>
+					<key>Name</key>
+					<string>HTML end</string>
+				</dict>
 				<key>styleClasses</key>
 				<dict>
 					<key>Description</key>

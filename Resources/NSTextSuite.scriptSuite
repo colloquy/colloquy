@@ -71,6 +71,20 @@
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
+				<key>XHTMLStart</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>htMs</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>XHTMLEnd</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>htMe</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
 				<key>styleClasses</key>
 				<dict>
 					<key>AppleEventCode</key>

@@ -67,4 +67,22 @@
 	if( ! [classes isKindOfClass:[NSArray class]] || ! [classes count] ) [self removeAttribute:@"CSSClasses" range:NSMakeRange( 0, [self length] )];
 	else [self addAttribute:@"CSSClasses" value:[NSMutableSet setWithArray:classes] range:NSMakeRange( 0, [self length] )];
 }
+
+- (NSArray *) XHTMLStart {
+	return [[self attribute:@"XHTMLStart" atIndex:0 effectiveRange:NULL] allObjects];
+}
+
+- (void) setXHTMLStart:(NSString *) html {
+	if( ! [html isKindOfClass:[NSString class]] ) [self removeAttribute:@"XHTMLStart" range:NSMakeRange( 0, [self length] )];
+	else [self addAttribute:@"XHTMLStart" value:html range:NSMakeRange( 0, [self length] )];
+}
+
+- (NSArray *) XHTMLEnd {
+	return [[self attribute:@"XHTMLEnd" atIndex:0 effectiveRange:NULL] allObjects];
+}
+
+- (void) setXHTMLEnd:(NSString *) html {
+	if( ! [html isKindOfClass:[NSString class]] ) [self removeAttribute:@"XHTMLEnd" range:NSMakeRange( 0, [self length] )];
+	else [self addAttribute:@"XHTMLEnd" value:html range:NSMakeRange( 0, [self length] )];
+}
 @end
