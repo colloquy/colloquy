@@ -34,8 +34,11 @@
 
 - (void) drawLabel:(BOOL) shouldTruncateLabel inRect:(NSRect) labelRect {
 	BOOL selected = ( [[self tabView] selectedTabViewItem] == self );
-	BOOL disabled = ! [(id)_controller isEnabled];
+	BOOL disabled = NO;
 	float alpha = 1.;
+
+	if( [(id)_controller respondsToSelector:@selector( isEnabled )] )
+		disabled = ( ! [(id)_controller isEnabled] );
 
 	if( ! selected ) alpha = 0.8;
 	if( disabled ) alpha = 0.5;
