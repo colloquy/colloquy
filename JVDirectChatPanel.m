@@ -305,7 +305,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 #pragma mark -
 
-- (NSString *) target {
+- (id) target {
 	return [[_target retain] autorelease];
 }
 
