@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+#import <WebKit/WebKit.h>
 #import <string.h>
 #import <IOKit/IOKitLib.h>
 #import <IOKit/IOTypes.h>
@@ -8,6 +9,7 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatPlugin.h>
 #import "NSAttributedStringAdditions.h"
+#import "NSColorAdditions.h"
 #import "firetalk.h"
 
 typedef void (*firetalk_callback)(firetalk_t, void *, ...);
@@ -758,7 +760,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 #pragma mark -
 
-- (void) sendMessageToUser:(NSString *) user attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action {
 	if( [self isConnected] ) {
 		NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
 		[encodedData appendBytes:"\0" length:1];
@@ -768,7 +770,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	}
 }
 
-- (void) sendMessageToChatRoom:(NSString *) room attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action {
 	if( [self isConnected] ) {
 		NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
 		[encodedData appendBytes:"\0" length:1];
@@ -787,7 +789,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 #pragma mark -
 
-- (void) sendFileToUser:(NSString *) user withFilePath:(NSString *) path {
+- (void) sendFile:(NSString *) path toUser:(NSString *) user {
 	if( [user isEqualToString:_nickname] ) return;
 	if( ! [[NSFileManager defaultManager] isReadableFileAtPath:path] ) return;
 	if( [self isConnected] ) {
@@ -1131,6 +1133,103 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (void) disconnectScriptCommand:(NSScriptCommand *) command {
 	[self disconnect];
+}
+
+- (void) sendMessageToUserScriptCommand:(NSScriptCommand *) command {
+	WebView *webView = [[[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 300., 100. ) frameName:nil groupName:nil] autorelease];
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:webView, @"webView", command, @"command", nil];
+	NSString *message = [[command evaluatedArguments] objectForKey:@"message"];
+	[[webView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", message] baseURL:nil];
+	[self performSelector:@selector( finishSendMessageToUserScriptCommand: ) withObject:info afterDelay:0.];
+}
+
+- (void) finishSendMessageToUserScriptCommand:(NSDictionary *) info {
+	NSScriptCommand *command = [info objectForKey:@"command"];
+	WebView *webView = [info objectForKey:@"webView"];
+	NSString *user = [[command evaluatedArguments] objectForKey:@"user"];
+	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
+	unsigned long enc = [[[command evaluatedArguments] objectForKey:@"encoding"] unsignedLongValue];
+	NSStringEncoding encoding = NSUTF8StringEncoding;
+	NSMutableAttributedString *attributeMsg = [[[(id <WebDocumentText>)[[[webView mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
+
+	switch( enc ) {
+	default:
+	case 'utF8':
+		encoding = NSUTF8StringEncoding;
+		break;
+	case 'ascI':
+		encoding = NSASCIIStringEncoding;
+		break;
+	case 'nlAs':
+		encoding = NSNonLossyASCIIStringEncoding;
+		break;
+	case 'isL1':
+		encoding = NSISOLatin1StringEncoding;
+		break;
+	case 'isL2':
+		encoding = NSISOLatin2StringEncoding;
+		break;
+	case 'isL3':
+		encoding = (NSStringEncoding) 0x80000203;
+		break;
+	case 'isL4':
+		encoding = (NSStringEncoding) 0x80000204;
+		break;
+	case 'isL5':
+		encoding = (NSStringEncoding) 0x80000205;
+		break;
+	case 'isL9':
+		encoding = (NSStringEncoding) 0x8000020F;
+		break;
+	case 'cp50':
+		encoding = NSWindowsCP1250StringEncoding;
+		break;
+	case 'cp52':
+		encoding = NSWindowsCP1252StringEncoding;
+		break;
+	case 'jpUC':
+		encoding = NSJapaneseEUCStringEncoding;
+		break;
+	case 'scUC':
+		encoding = (NSStringEncoding) 0x80000930;
+		break;
+	case 'tcUC':
+		encoding = (NSStringEncoding) 0x80000931;
+		break;
+	case 'krUC':
+		encoding = (NSStringEncoding) 0x80000940;
+		break;
+	case 'sJiS':
+		encoding = NSShiftJISStringEncoding;
+		break;
+	case 'gb30':
+		encoding = (NSStringEncoding) 0x80000632;
+		break;
+	case 'gbKK':
+		encoding = (NSStringEncoding) 0x80000631;
+		break;
+	case 'biG5':
+		encoding = (NSStringEncoding) 0x80000A03;
+		break;
+	case 'bG5H':
+		encoding = (NSStringEncoding) 0x80000A06;
+		break;
+	}
+
+	NSRange limitRange, effectiveRange;
+	limitRange = NSMakeRange( 0, [attributeMsg length] );
+	while( limitRange.length > 0 ) {
+		NSColor *color = [attributeMsg attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
+		if( [[color colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && [[color htmlAttributeValue] isEqualToString:@"#01fe02"] )
+			[attributeMsg removeAttribute:NSForegroundColorAttributeName range:effectiveRange];
+		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
+	}
+
+	[self sendMessage:attributeMsg withEncoding:encoding toUser:user asAction:action];
+}
+
+- (NSString *) urlString {
+	return [[self url] absoluteString];
 }
 @end
 

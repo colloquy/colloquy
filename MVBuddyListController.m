@@ -414,7 +414,7 @@ static MVBuddyListController *sharedInstance = nil;
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		NSString *path = nil;
 		while( ( path = [enumerator nextObject] ) )
-			[connection sendFileToUser:[url user] withFilePath:path];
+			[connection sendFile:path toUser:[url user]];
 	}
 }
 
@@ -740,7 +740,7 @@ static MVBuddyListController *sharedInstance = nil;
 		id file = nil;
 
 		while( ( file = [enumerator nextObject] ) )
-			[connection sendFileToUser:[url user] withFilePath:file];
+			[connection sendFile:file toUser:[url user]];
 
 		return YES;
 	}

@@ -62,7 +62,7 @@
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
 		if( [arguments length] ) {
 			[room echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
-			[[room connection] sendMessageToChatRoom:[room target] attributedMessage:arguments withEncoding:[room encoding] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+			[[room connection] sendMessage:arguments withEncoding:[room encoding] toChatRoom:[room target] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 			return YES;
 		}
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
@@ -167,7 +167,7 @@
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
 		if( [arguments length] ) {
 			[chat echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
-			[[chat connection] sendMessageToUser:[chat target] attributedMessage:arguments withEncoding:[chat encoding] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+			[[chat connection] sendMessage:arguments withEncoding:[chat encoding] toUser:[chat target] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 			return YES;
 		}
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
@@ -233,9 +233,9 @@
 		if( [panel runModalForTypes:nil] == NSOKButton ) {
 			NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 			while( ( path = [enumerator nextObject] ) )
-				[connection sendFileToUser:to withFilePath:path];
+				[connection sendFile:path toUser:to];
 		}
-	} else [connection sendFileToUser:to withFilePath:path];
+	} else [connection sendFile:path toUser:to];
 	return YES;
 }
 
@@ -318,7 +318,7 @@
 		if( [msg length] ) [chatView echoSentMessageToDisplay:msg asAction:NO];
 	}
 
-	if( [msg length] ) [connection sendMessageToUser:to attributedMessage:msg withEncoding:encoding asAction:NO];
+	if( [msg length] ) [connection sendMessage:msg withEncoding:encoding toUser:to asAction:NO];
 	return YES;
 }
 
@@ -328,7 +328,7 @@
 	NSEnumerator *enumerator = [[[_manager chatController] chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
 	id item = nil;
 	while( ( item = [enumerator nextObject] ) ) {
-		[connection sendMessageToChatRoom:[item target] attributedMessage:message withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
+		[connection sendMessage:message withEncoding:encoding toChatRoom:[item target] asAction:[command isEqualToString:@"ame"]];
 		[item echoSentMessageToDisplay:message asAction:[command isEqualToString:@"ame"]];
 	}
 	return YES;

@@ -548,13 +548,13 @@
 		<key>newConnection</key>
 		<dict>
 			<key>Description</key>
-			<string>Creates a new connection to server as nickname.</string>
+			<string>Prompts to make a new connection.</string>
 			<key>Name</key>
 			<string>show new connection dialog</string>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The connection manager.</string>
+				<string>The application.</string>
 			</dict>
 		</dict>
 		<key>handleChatUrl</key>

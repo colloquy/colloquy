@@ -29,7 +29,7 @@
 		BOOL linkFlag = NO;
 		NSMutableString *substr = nil;
 		NSMutableString *fontstr = nil;
-		NSMutableDictionary *dict = [[[self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange] mutableCopy] autorelease];
+		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 		NSString *link = [dict objectForKey:NSLinkAttributeName];
 		NSFont *curFont = [dict objectForKey:NSFontAttributeName];
 

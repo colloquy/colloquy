@@ -152,7 +152,7 @@
 }
 
 - (void) handleDraggedFile:(NSString *) path {
-	[[self connection] sendFileToUser:_memberName withFilePath:path];
+	[[self connection] sendFile:path toUser:_memberName];
 }
 
 #pragma mark -
@@ -189,7 +189,7 @@
 	if( [panel runModalForTypes:nil] == NSOKButton ) {
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		while( ( path = [enumerator nextObject] ) )
-			[[_parent connection] sendFileToUser:_memberName withFilePath:path];
+			[[_parent connection] sendFile:path toUser:_memberName];
 	}
 }
 

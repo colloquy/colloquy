@@ -57,6 +57,13 @@
 					<key>Name</key>
 					<string>port number</string>
 				</dict>
+				<key>urlString</key>
+				<dict>
+					<key>Description</key>
+					<string>Chat URL containing nickname, server and port.</string>
+					<key>Name</key>
+					<string>URL</string>
+				</dict>
 				<key>status</key>
 				<dict>
 					<key>Description</key>
@@ -95,6 +102,49 @@
 			<string>Disconnect from the server.</string>
 			<key>Name</key>
 			<string>disconnect</string>
+		</dict>
+		<key>sendMsgToUser</key>
+		<dict>
+			<key>Description</key>
+			<string>Send a message to another user.</string>
+			<key>Name</key>
+			<string>send</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Connection to send from.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>message</key>
+				<dict>
+					<key>Description</key>
+					<string>Message to send to user. Can include HTML formatting.</string>
+					<key>Name</key>
+					<string>message</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Description</key>
+					<string>Name of user.</string>
+					<key>Name</key>
+					<string>to user</string>
+				</dict>
+				<key>encoding</key>
+				<dict>
+					<key>Description</key>
+					<string>Encoding to use. (Default is UTF-8.)</string>
+					<key>Name</key>
+					<string>encoded as</string>
+				</dict>
+				<key>action</key>
+				<dict>
+					<key>Description</key>
+					<string>Send as an action?</string>
+					<key>Name</key>
+					<string>action tense</string>
+				</dict>
+			</dict>
 		</dict>
 	</dict>
 	<key>Description</key>
@@ -140,6 +190,169 @@
 			<dict>
 				<key>Name</key>
 				<string>SOCKS firewall</string>
+			</dict>
+		</dict>
+		<key>Encoding</key>
+		<dict>
+			<key>UTF8</key>
+			<dict>
+				<key>Name</key>
+				<string>UTF-8</string>
+			</dict>
+			<key>ASCII</key>
+			<dict>
+				<key>Name</key>
+				<string>ASCII</string>
+			</dict>
+			<key>NonLossyASCII</key>
+			<dict>
+				<key>Name</key>
+				<string>Non-lossy ASCII</string>
+			</dict>
+			<key>ISOLatin1</key>
+			<dict>
+				<key>Name</key>
+				<string>ISO Latin 1</string>
+			</dict>
+			<key>ISOLatin2</key>
+			<dict>
+				<key>Name</key>
+				<string>ISO Latin 2</string>
+			</dict>
+			<key>ISOLatin3</key>
+			<dict>
+				<key>Name</key>
+				<string>ISO Latin 3</string>
+			</dict>
+			<key>ISOLatin4</key>
+			<dict>
+				<key>Name</key>
+				<string>ISO Latin 4</string>
+			</dict>
+			<key>ISOLatin5</key>
+			<dict>
+				<key>Name</key>
+				<string>ISO Latin 5</string>
+			</dict>
+			<key>ISOLatin9</key>
+			<dict>
+				<key>Name</key>
+				<string>ISO Latin 9</string>
+			</dict>
+			<!--<key>MacOSRoman</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Roman</string>
+			</dict>
+			<key>MacOSEuropean</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS European</string>
+			</dict>
+			<key>MacOSCyrllic</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Cyrllic</string>
+			</dict>
+			<key>MacOSJapanese</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Japanese</string>
+			</dict>
+			<key>MacOSSimpChinese</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Simp. Chinese</string>
+			</dict>
+			<key>MacOSTradChinese</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Trad. Chinese</string>
+			</dict>
+			<key>MacOSKorean</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Korean</string>
+			</dict>-->
+			<key>CP1250</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Latin 2</string>
+			</dict>
+			<!--<key>CP1251</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Cyrllic</string>
+			</dict>-->
+			<key>CP1252</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Latin 1</string>
+			</dict>
+			<!--<key>SimpChineseWindows</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Simp. Chinese</string>
+			</dict>
+			<key>TradChineseWindows</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Trad. Chinese</string>
+			</dict>
+			<key>KoreanWindows</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Korean</string>
+			</dict>-->
+			<key>ShiftJIS</key>
+			<dict>
+				<key>Name</key>
+				<string>Shift JIS</string>
+			</dict>
+			<key>GB18030</key>
+			<dict>
+				<key>Name</key>
+				<string>GB 18030</string>
+			</dict>
+			<key>GBK</key>
+			<dict>
+				<key>Name</key>
+				<string>GBK</string>
+			</dict>
+			<key>Big5</key>
+			<dict>
+				<key>Name</key>
+				<string>Big 5</string>
+			</dict>
+			<key>Big5HKSCS</key>
+			<dict>
+				<key>Name</key>
+				<string>Big 5 HKSCS</string>
+			</dict>
+			<key>KOI8R</key>
+			<dict>
+				<key>Name</key>
+				<string>KOI8-R</string>
+			</dict>
+			<key>KoreanEUC</key>
+			<dict>
+				<key>Name</key>
+				<string>Korean EUC</string>
+			</dict>
+			<key>JapaneseEUC</key>
+			<dict>
+				<key>Name</key>
+				<string>Japanese EUC</string>
+			</dict>
+			<key>SimpChineseEUC</key>
+			<dict>
+				<key>Name</key>
+				<string>Simp. Chinese EUC</string>
+			</dict>
+			<key>TradChineseEUC</key>
+			<dict>
+				<key>Name</key>
+				<string>Trad. Chinese EUC</string>
 			</dict>
 		</dict>
 	</dict>

@@ -187,7 +187,7 @@
 	while( ( item = [enumerator nextObject] ) )
 		message = [item processMessage:message asAction:action toRoom:self];
 
-	[[self connection] sendMessageToChatRoom:[self target] attributedMessage:message withEncoding:_encoding asAction:action];
+	[[self connection] sendMessage:message withEncoding:_encoding toChatRoom:[self target] asAction:action];
 
 	return [[message retain] autorelease];
 }

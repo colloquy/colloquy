@@ -75,6 +75,15 @@
 					<key>Type</key>
 					<string>NSNumber&lt;Short&gt;</string>
 				</dict>
+				<key>urlString</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>url </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
 				<key>status</key>
 				<dict>
 					<key>AppleEventCode</key>
@@ -102,6 +111,8 @@
 				<string>connectScriptCommand:</string>
 				<key>disconnect</key>
 				<string>disconnectScriptCommand:</string>
+				<key>sendMsgToUser</key>
+				<string>sendMessageToUserScriptCommand:</string>
 			</dict>
 		</dict>
 	</dict>
@@ -124,6 +135,61 @@
 			<string>dscX</string>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
+		</dict>
+		<key>sendMsgToUser</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>smuX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>MVChatConnection</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>message</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>meSA</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>usRA</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>action</key>
+				<dict>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>AppleEventCode</key>
+					<string>actA</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>encoding</key>
+				<dict>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>AppleEventCode</key>
+					<string>encE</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Encoding&gt;</string>
+				</dict>
+			</dict>
 		</dict>
 	</dict>
 	<key>Enumerations</key>
@@ -158,7 +224,83 @@
 				<string>sokS</string>
 			</dict>
 		</dict>
+		<key>Encoding</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>encE</string>
+			<key>Enumerators</key>
+			<dict>
+				<key>UTF8</key>
+				<string>utF8</string>
+				<key>ASCII</key>
+				<string>ascI</string>
+				<key>NonLossyASCII</key>
+				<string>nlAs</string>
+				<key>ISOLatin1</key>
+				<string>isL1</string>
+				<key>ISOLatin2</key>
+				<string>isL2</string>
+				<key>ISOLatin3</key>
+				<string>isL3</string>
+				<key>ISOLatin4</key>
+				<string>isL4</string>
+				<key>ISOLatin5</key>
+				<string>isL5</string>
+				<key>ISOLatin9</key>
+				<string>isL9</string>
+				<!--<key>MacOSRoman</key>
+				<string>mcRo</string>
+				<key>MacOSEuropean</key>
+				<string>mcEu</string>
+				<key>MacOSCyrllic</key>
+				<string>mcCy</string>
+				<key>MacOSJapanese</key>
+				<string>mcJp</string>
+				<key>MacOSSimpChinese</key>
+				<string>mcSc</string>
+				<key>MacOSTradChinese</key>
+				<string>mcTc</string>
+				<key>MacOSKorean</key>
+				<string>mcKr</string>-->
+				<key>CP1250</key>
+				<string>cp50</string>
+				<!--<key>CP1251</key>
+				<string>cp51</string>-->
+				<key>CP1252</key>
+				<string>cp52</string>
+				<!--<key>SimpChineseWindows</key>
+				<string>wnSc</string>
+				<key>TradChineseWindows</key>
+				<string>wnTc</string>
+				<key>KoreanWindows</key>
+				<string>wnKr</string>-->
+				<key>JapaneseEUC</key>
+				<string>jpUC</string>
+				<key>SimpChineseEUC</key>
+				<string>scUC</string>
+				<key>TradChineseEUC</key>
+				<string>tcUC</string>
+				<key>KoreanEUC</key>
+				<string>krUC</string>
+				<key>KOI8R</key>
+				<string>ko8R</string>
+				<key>ShiftJIS</key>
+				<string>sJiS</string>
+				<key>GB18030</key>
+				<string>gb30</string>
+				<key>GBK</key>
+				<string>gbKK</string>
+				<key>Big5</key>
+				<string>biG5</string>
+				<key>Big5HKSCS</key>
+				<string>bG5H</string>
+			</dict>
+		</dict>
 	</dict>
+	<key>UsedFeatures</key>
+	<array>
+		<string>UnnamedArguments</string>
+	</array>
 	<key>Name</key>
 	<string>ChatCore</string>
 </dict>

@@ -187,12 +187,12 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (NSDictionary *) floodControlIntervals;
 - (void) setFloodControlIntervals:(NSDictionary *) intervals;
 	
-- (void) sendMessageToUser:(NSString *) user attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
-- (void) sendMessageToChatRoom:(NSString *) room attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action;
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action;
 
 - (void) sendRawMessage:(NSString *) raw;
 
-- (void) sendFileToUser:(NSString *) user withFilePath:(NSString *) path;
+- (void) sendFile:(NSString *) path toUser:(NSString *) user;
 - (void) acceptFileTransfer:(NSString *) identifier saveToPath:(NSString *) path resume:(BOOL) resume;
 - (void) cancelFileTransfer:(NSString *) identifier;
 

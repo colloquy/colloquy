@@ -338,7 +338,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) handleDraggedFile:(NSString *) path {
-	[[self connection] sendFileToUser:_target withFilePath:path];
+	[[self connection] sendFile:path toUser:_target];
 }
 
 #pragma mark -
@@ -833,7 +833,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	while( ( item = [enumerator nextObject] ) )
 		message = [item processMessage:message asAction:action toChat:self];
 
-	[[self connection] sendMessageToUser:[self target] attributedMessage:message withEncoding:_encoding asAction:action];
+	[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
 
 	return message;
 }

@@ -173,6 +173,14 @@ static BOOL applicationIsTerminating = NO;
 
 #pragma mark -
 
+@implementation NSApplication (NSApplicationScripting)
+- (void) newConnection:(NSScriptCommand *) command {
+	[[MVConnectionsController defaultManager] newConnection:nil];
+}
+@end
+
+#pragma mark -
+
 @implementation JVChatController (JVChatControllerObjectSpecifier)
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];

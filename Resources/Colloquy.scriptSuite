@@ -600,12 +600,12 @@
 			<string>NSCoreSuite.AbstractObject</string>
 			<key>SupportedCommands</key>
 			<dict>
-				<key>newConnection</key>
-				<string>newConnection:</string>
 				<key>handleChatUrl</key>
 				<string>handleURLScriptcommand:</string>
 				<key>show</key>
 				<string>showConnectionManager:</string>
+				<key>newConnection</key>
+				<string>newConnection:</string>
 			</dict>
 			<key>ToOneRelationships</key>
 			<dict>
@@ -672,6 +672,11 @@
 					<string>MVConnectionsController</string>
 				</dict>
 			</dict>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>newConnection</key>
+				<string>newConnection:</string>
+			</dict>
 		</dict>
 	</dict>
 	<key>Commands</key>
@@ -735,9 +740,9 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Optional</key>
-				<string>NO</string>
+				<string>YES</string>
 				<key>Type</key>
-				<string>MVConnectionsController</string>
+				<string>NSApplication</string>
 			</dict>
 		</dict>
 		<key>handleChatUrl</key>
