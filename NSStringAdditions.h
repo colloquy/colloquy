@@ -18,6 +18,8 @@
 
 - (NSString *) stringByEncodingIllegalURLCharacters;
 - (NSString *) stringByDecodingIllegalURLCharacters;
+
+- (NSString *) stringByStrippingIllegalXMLCharacters;
 @end
 
 @interface NSMutableString (NSMutableStringAdditions)
@@ -28,4 +30,6 @@
 
 - (void) encodeIllegalURLCharacters;
 - (void) decodeIllegalURLCharacters;
+
+- (void) stripIllegalXMLCharacters;
 @end

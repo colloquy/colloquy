@@ -139,6 +139,16 @@
 - (NSString *) stringByDecodingIllegalURLCharacters {
 	return [(NSString *)CFURLCreateStringByReplacingPercentEscapes( NULL, (CFStringRef)self, CFSTR( "" ) ) autorelease];
 }
+
+#pragma mark -
+
+- (NSString *) stringByStrippingIllegalXMLCharacters {
+	NSMutableString *result = [self mutableCopy];
+	[result stripIllegalXMLCharacters];
+	NSString *immutableResult = [NSString stringWithString:result];
+	[result release];
+	return immutableResult;
+}
 @end
 
 #pragma mark -
@@ -183,5 +193,20 @@
 
 - (void) decodeIllegalURLCharacters {
 	[self setString:[self stringByDecodingIllegalURLCharacters]];
+}
+
+#pragma mark -
+
+- (void) stripIllegalXMLCharacters {
+	NSMutableCharacterSet *illegalSet = [[[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopy] autorelease];
+	[illegalSet addCharactersInRange:NSMakeRange( 0x7f, 1 )];
+	[illegalSet addCharactersInRange:NSMakeRange( 0xfffe, 1 )];
+	[illegalSet addCharactersInRange:NSMakeRange( 0xffff, 1 )];
+
+	NSRange range = [self rangeOfCharacterFromSet:illegalSet];
+	while( range.location != NSNotFound ) {
+		[self deleteCharactersInRange:range];
+		range = [self rangeOfCharacterFromSet:illegalSet];
+	}
 }
 @end
