@@ -793,6 +793,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 #pragma mark -
 
 - (void) sendFileToUser:(NSString *) user withFilePath:(NSString *) path {
+	if( ! [[NSFileManager defaultManager] isReadableFileAtPath:path] ) return;
 	if( [self isConnected] ) {
 		NSNumber *size = [[[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES] objectForKey:@"NSFileSize"];
 		void *handle = NULL;
