@@ -1,14 +1,14 @@
 <xsl:transform xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output omit-xml-declaration="yes" indent="no" />
-	<xsl:param name="subsequent" />
+	<xsl:param name="bulkTransform" />
 
 	<xsl:template match="/">
 		<xsl:choose>
-			<xsl:when test="$subsequent != 'yes'">
-				<xsl:apply-templates />
+			<xsl:when test="count( /envelope/message ) &gt; 1">
+				<xsl:apply-templates select="/envelope/message[last()]" />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="/envelope/message[last()]" />
+				<xsl:apply-templates />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -23,7 +23,7 @@
 		<div class="event">
 			<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
 			<xsl:copy-of select="message/child::node()" />
-			<xsl:if test="reason!=''">
+			<xsl:if test="string-length( reason )">
 				<span class="reason">
 					<xsl:text> (</xsl:text>
 					<xsl:apply-templates select="reason/child::node()" mode="copy"/>
@@ -35,11 +35,11 @@
 
 	<xsl:template match="message">
 		<xsl:choose>
-			<xsl:when test="count( ../message[@ignored != 'yes'] ) = 1 and @ignored != 'yes'">
+			<xsl:when test="count( ../message[not( @ignored = 'yes' )] ) = 1 and not( @ignored = 'yes' )">
 				<xsl:apply-templates select=".." />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="@ignored != 'yes' and ../@ignored != 'yes'">
+				<xsl:if test="not( @ignored = 'yes' ) and not( ../@ignored = 'yes' )">
 					<span class="submessage">
 					<xsl:if test="@action = 'yes'">
 						<xsl:value-of select="../sender" />
@@ -47,7 +47,7 @@
 					</xsl:if>
 					<xsl:value-of select="normalize-space(.)" />
 					</span>
-					<xsl:if test="$subsequent = 'yes'">
+					<xsl:if test="not( $bulkTransform = 'yes' )">
 						<xsl:processing-instruction name="message">type="subsequent"</xsl:processing-instruction>
 						<span id="consecutiveInsert" />
 					</xsl:if>
@@ -57,7 +57,7 @@
 	</xsl:template>
 
 	<xsl:template match="envelope">
-		<xsl:if test="@ignored != 'yes' and count( message[@ignored != 'yes'] ) &gt;= 1">
+		<xsl:if test="not( @ignored = 'yes' ) and count( message[not( @ignored = 'yes' )] ) &gt;= 1">
 			<xsl:variable name="envelopeClass">
 				<xsl:choose>
 					<xsl:when test="message/@highlight = 'yes'">
@@ -82,17 +82,17 @@
 	
 			<xsl:variable name="timestamp">
 				<xsl:call-template name="short-time">
-					<xsl:with-param name="date" select="message[@ignored != 'yes'][1]/@received" />
+					<xsl:with-param name="date" select="message[not( @ignored = 'yes' )][1]/@received" />
 				</xsl:call-template>
 			</xsl:variable>
 	
 			<div id="{@id}" class="{$envelopeClass}">
 				<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
 				<xsl:choose>
-					<xsl:when test="message[@ignored != 'yes'][1]/@action = 'yes'">
+					<xsl:when test="message[not( @ignored = 'yes' )][1]/@action = 'yes'">
 						<span class="{$senderClass}"><xsl:value-of select="sender" /></span>
 						<xsl:text> </xsl:text>
-						<xsl:value-of select="normalize-space(message[@ignored != 'yes'][1])" />
+						<xsl:value-of select="normalize-space(message[not( @ignored = 'yes' )][1])" />
 						<xsl:text> </xsl:text>
 						<q lang="en">
 							<xsl:apply-templates select="message[position() &gt; 1]" />
@@ -101,20 +101,20 @@
 							</xsl:if>
 						</q>
 					</xsl:when>
-					<xsl:when test="contains(message[@ignored != 'yes'][1], ',')">
+					<xsl:when test="contains(message[not( @ignored = 'yes' )][1], ',')">
 						<span class="hidden">&quot;</span>
 						<q lang="en">
-							<span class="message"><xsl:value-of select="normalize-space(substring-before( message[@ignored != 'yes'][1], ',' ))" /></span>
+							<span class="message"><xsl:value-of select="normalize-space(substring-before( message[not( @ignored = 'yes' )][1], ',' ))" /></span>
 							<xsl:text>,</xsl:text>
 						</q>
 						<span class="hidden">&quot;</span>
 						<xsl:text> </xsl:text>
 						<span class="{$senderClass}"><xsl:value-of select="sender" /></span>
 						<xsl:choose>
-							<xsl:when test="substring( message[@ignored != 'yes'][1], string-length( message[@ignored != 'yes'][1] ), 1 ) = '?'">
+							<xsl:when test="substring( message[not( @ignored = 'yes' )][1], string-length( message[not( @ignored = 'yes' )][1] ), 1 ) = '?'">
 								<xsl:text> asks </xsl:text>
 							</xsl:when>
-							<xsl:when test="substring( message[@ignored != 'yes'][1], string-length( message[@ignored != 'yes'][1] ), 1 ) = '!'">
+							<xsl:when test="substring( message[not( @ignored = 'yes' )][1], string-length( message[not( @ignored = 'yes' )][1] ), 1 ) = '!'">
 								<xsl:text> exclaims </xsl:text>
 							</xsl:when>
 							<xsl:otherwise>
@@ -123,7 +123,7 @@
 						</xsl:choose>
 						<span class="hidden">&quot;</span>
 						<q lang="en">
-							<span class="message"><xsl:value-of select="normalize-space(substring-after( message[@ignored != 'yes'][1], ',' ))" /></span>
+							<span class="message"><xsl:value-of select="normalize-space(substring-after( message[not( @ignored = 'yes' )][1], ',' ))" /></span>
 							<xsl:apply-templates select="message[position() &gt; 1]" />
 							<xsl:if test="position() = last()">
 								<span id="consecutiveInsert" />
@@ -134,15 +134,15 @@
 					<xsl:otherwise>
 						<span class="hidden">&quot;</span>
 						<q lang="en">
-							<span class="message"><xsl:value-of select="normalize-space( message[@ignored != 'yes'][1] )" /></span>
+							<span class="message"><xsl:value-of select="normalize-space( message[not( @ignored = 'yes' )][1] )" /></span>
 							<xsl:text>,</xsl:text>
 						</q>
 						<span class="hidden">&quot;</span>
 						<xsl:choose>
-							<xsl:when test="substring( message[@ignored != 'yes'][1], string-length( message[@ignored != 'yes'][1] ), 1 ) = '?'">
+							<xsl:when test="substring( message[not( @ignored = 'yes' )][1], string-length( message[not( @ignored = 'yes' )][1] ), 1 ) = '?'">
 								<xsl:text> asked </xsl:text>
 							</xsl:when>
-							<xsl:when test="substring( message[@ignored != 'yes'][1], string-length( message[@ignored != 'yes'][1] ), 1 ) = '!'">
+							<xsl:when test="substring( message[not( @ignored = 'yes' )][1], string-length( message[not( @ignored = 'yes' )][1] ), 1 ) = '!'">
 								<xsl:text> exclaimed </xsl:text>
 							</xsl:when>
 							<xsl:otherwise>
@@ -153,7 +153,7 @@
 						<xsl:text>. </xsl:text>
 						<span class="hidden">&quot;</span>
 						<q lang="en">
-							<xsl:apply-templates select="message[@ignored != 'yes'][position() &gt; 1]" />
+							<xsl:apply-templates select="message[not( @ignored = 'yes' )][position() &gt; 1]" />
 							<xsl:if test="position() = last()">
 								<span id="consecutiveInsert" />
 							</xsl:if>

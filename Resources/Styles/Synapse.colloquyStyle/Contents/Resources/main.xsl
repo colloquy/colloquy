@@ -1,15 +1,15 @@
 <xsl:transform xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output omit-xml-declaration="yes" indent="no" />
-	<xsl:param name="subsequent" />
+	<xsl:param name="bulkTransform" />
 	<xsl:param name="timeFormat" />
 
 	<xsl:template match="/">
 		<xsl:choose>
-			<xsl:when test="$subsequent != 'yes'">
-				<xsl:apply-templates />
+			<xsl:when test="count( /envelope/message ) &gt; 1">
+				<xsl:apply-templates select="/envelope/message[last()]" />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="/envelope/message[last()]" />
+				<xsl:apply-templates />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -27,7 +27,7 @@
 			<xsl:text> (</xsl:text>
 			<xsl:value-of select="$timestamp" />
 			<xsl:text>) </xsl:text>
-			<xsl:if test="reason!=''">
+			<xsl:if test="string-length( reason )">
 				<span class="reason">
 					<xsl:text>Reason: </xsl:text>
 					<xsl:apply-templates select="reason/child::node()" mode="copy"/>
@@ -39,11 +39,11 @@
 
 	<xsl:template match="message">
 		<xsl:choose>
-			<xsl:when test="count( ../message[@ignored != 'yes'] ) = 1 and @ignored != 'yes'">
+			<xsl:when test="count( ../message[not( @ignored = 'yes' )] ) = 1 and not( @ignored = 'yes' )">
 				<xsl:apply-templates select=".." />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="@ignored != 'yes' and ../@ignored != 'yes'">
+				<xsl:if test="not( @ignored = 'yes' ) and not( ../@ignored = 'yes' )">
 					<xsl:variable name="messageClass">
 						<xsl:choose>
 							<xsl:when test="../sender/@self = 'yes'">
@@ -57,7 +57,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-	
+
 					<xsl:variable name="timestamp">
 						<xsl:call-template name="short-time">
 							<xsl:with-param name="date" select="@received" />
@@ -67,7 +67,7 @@
 					<span class="{$messageClass}">
 						<span class="hidden">[</span>
 						<span class="time"><xsl:value-of select="$timestamp" /></span>
-						<span class="hidden">] <xsl:if test="@action != 'yes'"><xsl:value-of select="../sender" />: </xsl:if></span>
+						<span class="hidden">] <xsl:if test="not( @action = 'yes' )"><xsl:value-of select="../sender" />: </xsl:if></span>
 						<xsl:if test="@action = 'yes'">
 							<xsl:text>&#8226; </xsl:text>
 							<a href="member:{../sender}" class="member action">
@@ -78,7 +78,7 @@
 						<xsl:apply-templates select="child::node()" mode="copy" />
 						<br />
 					</span>
-					<xsl:if test="$subsequent = 'yes'">
+					<xsl:if test="not( $bulkTransform = 'yes' )">
 						<xsl:processing-instruction name="message">type="subsequent"</xsl:processing-instruction>
 						<span id="consecutiveInsert">&#8203;</span>
 					</xsl:if>
@@ -88,13 +88,13 @@
 	</xsl:template>
 
 	<xsl:template match="envelope">
-		<xsl:if test="@ignored != 'yes' and count( message[@ignored != 'yes'] ) &gt;= 1">
+		<xsl:if test="not( @ignored = 'yes' ) and count( message[not( @ignored = 'yes' )] ) &gt;= 1">
 			<xsl:variable name="messageClass">
 				<xsl:choose>
 					<xsl:when test="sender/@self = 'yes'">
 						<xsl:text>message self</xsl:text>
 					</xsl:when>
-			        <xsl:when test="message[@ignored != 'yes'][1]/@highlight = 'yes'">
+			        <xsl:when test="message[not( @ignored = 'yes' )][1]/@highlight = 'yes'">
 			          <xsl:text>message highlight</xsl:text>
 			        </xsl:when>
 					<xsl:otherwise>
@@ -105,7 +105,7 @@
 
 			<xsl:variable name="timestamp">
 				<xsl:call-template name="short-time">
-					<xsl:with-param name="date" select="message[@ignored != 'yes'][1]/@received" />
+					<xsl:with-param name="date" select="message[not( @ignored = 'yes' )][1]/@received" />
 				</xsl:call-template>
 			</xsl:variable>
 
@@ -117,17 +117,17 @@
 					</span>
 					<span class="hidden">: </span>
 					<span class="time" title="{$timestamp}">&#8203;</span>
-					<xsl:if test="message[@ignored != 'yes'][1]/@action = 'yes'">
+					<xsl:if test="message[not( @ignored = 'yes' )][1]/@action = 'yes'">
 						<xsl:text>&#8226; </xsl:text>
 						<a href="member:{sender}" class="member action">
 						<xsl:value-of select="sender" />
 						</a>
 						<xsl:text> </xsl:text>
 					</xsl:if>
-					<xsl:apply-templates select="message[@ignored != 'yes'][1]/child::node()" mode="copy" />
+					<xsl:apply-templates select="message[not( @ignored = 'yes' )][1]/child::node()" mode="copy" />
 					<br />
 				</span>
-				<xsl:apply-templates select="message[@ignored != 'yes'][position() &gt; 1]" />
+				<xsl:apply-templates select="message[not( @ignored = 'yes' )][position() &gt; 1]" />
 				<xsl:if test="position() = last()">
 					<span id="consecutiveInsert">&#8203;</span>
 				</xsl:if>
