@@ -406,6 +406,34 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1C2462A205F9205900505752 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVWebView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C2462A305F9205900505752 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVWebView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C2462A405F9205900505752 = {
+			fileRef = 1C2462A205F9205900505752;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C2462A505F9205900505752 = {
+			fileRef = 1C2462A305F9205900505752;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C258E55050B9656000001C8 = {
 			fallbackIsa = PBXFileReference;
 			includeInIndex = 1;
@@ -1065,6 +1093,7 @@
 				1CD733CB05A0E2470080F952,
 				1C6EA24305A738DD006A559F,
 				1CD4BD9505AA309A00F72EE6,
+				1C2462A405F9205900505752,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1787,6 +1816,7 @@
 				1CD733CC05A0E2470080F952,
 				1C6EA24405A738DD006A559F,
 				1CD4BD9605AA309A00F72EE6,
+				1C2462A505F9205900505752,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3449,6 +3479,8 @@
 				F5E2538403882A8501000102,
 				F5F9AF5801711CD401A84BDE,
 				F5F9AF5901711CD401A84BDE,
+				1C2462A305F9205900505752,
+				1C2462A205F9205900505752,
 				F592CABF01824AE801EE70DE,
 				F592CAC001824AE801EE70DE,
 				F599994901890E4601EE70DE,
