@@ -50,6 +50,6 @@
 	content: url( "cry.tiff" );
 }
 
-.emoticon.cry:after {
-	content: url( "cry.tiff" );
+.emoticon.anime:after {
+	content: url( "smile.tiff" );
 }
