@@ -344,6 +344,7 @@
 				1C7B83CC0668D765004F1EFE,
 				1C0D8867067D1E7100E851AC,
 				1CF4E5120698E9E900986498,
+				1C5A1A2506F8F4A000A51F10,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -400,6 +401,28 @@
 			path = ChatCore.framework;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C5A1A2206F8F4A000A51F10 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVIRCChatConnection.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A1A2306F8F4A000A51F10 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVIRCChatConnection.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A1A2506F8F4A000A51F10 = {
+			fileRef = 1C5A1A2306F8F4A000A51F10;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C6C83A00632186900698F55 = {
 			fileRef = F52BA284037C13C201A35792;
@@ -3237,6 +3260,8 @@
 				1CF6512A06EA22C40073DEA8,
 				F52D043001873FC401EE70DE,
 				F52D043101873FC401EE70DE,
+				1C5A1A2306F8F4A000A51F10,
+				1C5A1A2206F8F4A000A51F10,
 				1C943AAA063C260800618CD9,
 				1C943AA9063C260800618CD9,
 				1C2EF7EC0427A40B00000102,

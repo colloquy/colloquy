@@ -1,4 +1,9 @@
 typedef enum {
+	MVChatConnectionIRCType = 'ircC',
+	MVChatConnectionSILCType = 'silC'
+} MVChatConnectionType;
+
+typedef enum {
 	MVChatConnectionDisconnectedStatus = 'disC',
 	MVChatConnectionServerDisconnectedStatus = 'sdsC',
 	MVChatConnectionConnectingStatus = 'conG',
@@ -31,49 +36,6 @@ typedef enum {
 	MVChatMemberHalfOperatorMode = 0x2,
 	MVChatMemberVoiceMode = 0x4
 } MVChatMemberMode;
-
-typedef enum {
-	MVChatNoError,
-	MVChatConnectingError,
-	MVChatNoMatchError,
-	MVChatPacketError,
-	MVChatBadUserPasswordError,
-	MVChatSequenceError,
-	MVChatFrameTypeError,
-	MVChatPacketSizeError,
-	MVChatServerError,
-	MVChatUnknownError,
-	MVChatBlockedError,
-	MVChatWiredPacketError,
-	MVChatCallbackNumberError,
-	MVChatBadTargetError,
-	MVChatNotFoundError,
-	MVChatDisconnectError,
-	MVChatSocketError,
-	MVChatDNSError,
-	MVChatVersionError,
-	MVChatUserUnavailableError,
-	MVChatUserInfoUnavailableError,
-	MVChatTooFastError,
-	MVChatRoomUnavailableError,
-	MVChatIncomingError,
-	MVChatUserDisconnectError,
-	MVChatInvalidFormatError,
-	MVChatIdleFastError,
-	MVChatBadRoomError,
-	MVChatBadMessageError,
-	MVChatBadPrototypeError,
-	MVChatNotConnectedError,
-	MVChatBadConnectionError,
-	MVChatNoPermissionsError,
-	MVChatNoChangePasswordError,
-	MVChatDuplicateUserError,
-	MVChatDuplicateRoomError,
-	MVChatIOError,
-	MVChatBadHandleError,
-	MVChatTimeoutError,
-	MVChatNotDoneError
-} MVChatError;
 
 @class MVUploadFileTransfer;
 
@@ -135,22 +97,14 @@ extern NSString *MVChatConnectionNicknameRejectedNotification;
 extern NSString *MVChatConnectionSubcodeRequestNotification;
 extern NSString *MVChatConnectionSubcodeReplyNotification;
 
-extern NSRecursiveLock *MVChatConnectionThreadLock;
-
-#pragma mark -
-
 @interface MVChatConnection : NSObject {
-@private
+@protected
 	NSTimer *_reconnectTimer;
 	NSString *_npassword;
-	NSString *_proxyUsername;
-	NSString *_proxyPassword;
 	MVChatConnectionStatus _status;
 	MVChatConnectionProxy _proxy;
 	NSStringEncoding _encoding;
 
-	void *_chatConnection /* SERVER_REC */;
-	void *_chatConnectionSettings /* SERVER_CONNECT_REC */;
 	NSMutableDictionary *_roomsCache;
 	NSDate *_lastConnectAttempt;
 	NSDate *_cachedDate;
@@ -161,7 +115,9 @@ extern NSRecursiveLock *MVChatConnectionThreadLock;
 	unsigned int _nextAltNickIndex;
 }
 - (id) initWithURL:(NSURL *) url;
-- (id) initWithServer:(NSString *) server port:(unsigned short) port user:(NSString *) nickname;
+- (id) initWithServer:(NSString *) server type:(MVChatConnectionType) type port:(unsigned short) port user:(NSString *) nickname;
+
+- (MVChatConnectionType) type;
 
 - (void) connect;
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname;
@@ -170,6 +126,7 @@ extern NSRecursiveLock *MVChatConnectionThreadLock;
 
 #pragma mark -
 
+- (NSString *) urlScheme;
 - (NSURL *) url;
 
 #pragma mark -
@@ -229,6 +186,7 @@ extern NSRecursiveLock *MVChatConnectionThreadLock;
 
 #pragma mark -
 
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action;
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action;
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action;
 

@@ -161,14 +161,14 @@
 }
 
 - (void) errorOccurred:(NSNotification *) notification {
-	MVChatError error = (MVChatError) [[[notification userInfo] objectForKey:@"error"] intValue];
+/*	MVChatError error = (MVChatError) [[[notification userInfo] objectForKey:@"error"] intValue];
 	id target = [[notification userInfo] objectForKey:@"target"];
 	if( ! [target isKindOfClass:[NSString class]] || [target caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
 	if( error == MVChatBadTargetError ) {
 		[progress stopAnimation:nil];
 		[address setObjectValue:NSLocalizedString( @"n/a", "not applicable or not available" )];
 		[address setToolTip:nil];
-	}
+	} */
 }
 
 - (void) gotCTCPResponse:(NSNotification *) notification {

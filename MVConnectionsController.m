@@ -1272,7 +1272,7 @@ static NSMenu *favoritesMenu = nil;
 		if( [info objectForKey:@"url"] ) {
 			connection = [[[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]] autorelease];
 		} else {
-			connection = [[[MVChatConnection alloc] initWithServer:[info objectForKey:@"server"] port:[[info objectForKey:@"port"] unsignedShortValue] user:[info objectForKey:@"nickname"]] autorelease];
+			connection = [[[MVChatConnection alloc] initWithServer:[info objectForKey:@"server"] type:MVChatConnectionIRCType port:[[info objectForKey:@"port"] unsignedShortValue] user:[info objectForKey:@"nickname"]] autorelease];
 		}
 
 		[connection setProxyType:(MVChatConnectionProxy)[[info objectForKey:@"proxy"] unsignedIntValue]];

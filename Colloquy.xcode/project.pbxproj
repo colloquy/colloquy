@@ -1112,6 +1112,22 @@
 			settings = {
 			};
 		};
+		1C5A1A1106F8F42C00A51F10 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVChatConnection.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5A1A1206F8F42C00A51F10 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVChatConnection.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		1C6075E005138ED600A8FE6E = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -4407,7 +4423,7 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			path = MVChatConnection.m;
+			path = MVIRCChatConnection.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4415,7 +4431,7 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			path = MVChatConnection.h;
+			path = MVIRCChatConnection.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4429,6 +4445,8 @@
 		};
 		F5394BBA0378DD7601A35792 = {
 			children = (
+				1C5A1A1206F8F42C00A51F10,
+				1C5A1A1106F8F42C00A51F10,
 				F52D043001873FC401EE70DE,
 				F52D043101873FC401EE70DE,
 				1C8CF8E2066530D60080A2F5,
