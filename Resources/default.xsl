@@ -114,7 +114,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="span[@class='member']" mode="copy">
+	<xsl:template match="span[contains(@class,'member')]" mode="copy">
 		<a href="member:{current()}" class="member"><xsl:value-of select="current()" /></a>
 	</xsl:template>
 
