@@ -129,7 +129,8 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) handleURLEvent:(NSAppleEventDescriptor *) event withReplyEvent:(NSAppleEventDescriptor *) replyEvent {
 	NSURL *url = [NSURL URLWithString:[[event descriptorAtIndex:1] stringValue]];
-	[[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
+	if( [url isChatURL] ) [[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
+	else [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
 #pragma mark -
