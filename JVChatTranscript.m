@@ -730,10 +730,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	id object = [[element objectForKey:WebElementImageURLKey] description];
 	if( ! object ) object = [[element objectForKey:WebElementLinkURLKey] description];
-#ifdef _WEB_SCRIPT_OBJECT_H_
-	if( ! object && [display respondsToSelector:@selector( selectedDOMRange )] )
-		object = [[display selectedDOMRange] toString];
-#endif
+	if( ! object ) object = [[[[display mainFrame] frameView] documentView] selectedString];
 
 	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
 	[invocation setArgument:&object atIndex:2];
