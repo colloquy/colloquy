@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<log began="2003-10-25 13:26:25 -0400" source="irc://timothy@irc.javelin.cc:6667/#colloquy" ended="2003-10-25 13:52:33 -0400" style="cc.javelin.colloquy.style.standard">
+  <event name="memberJoined" occurred="2003-10-25 13:26:37 -0400">
+    <message>nonex joined the chat room.</message>
+    <who>nonex</who>
+  </event>
+  <envelope count="1" received="2003-10-25 13:28:02 -0400">
+    <sender self="yes">timothy</sender>
+    <message action="yes">waves to nonex</message>
+  </envelope>
+  <envelope count="2" received="2003-10-25 13:28:32 -0400">
+    <sender>nonex</sender>
+    <message>hello, what is going on in here?</message>
+  </envelope>
+  <envelope count="3" received="2003-10-25 13:28:40 -0400">
+    <sender self="yes">timothy</sender>
+    <message>not a whole lot <span class="emoticon smile"><samp>:)</samp></span></message>
+  </envelope>
+  <envelope count="4" received="2003-10-25 13:28:54 -0400">
+    <sender self="yes">timothy</sender>
+    <message>I really like the Javelin.cc header <a href="http://www.javelin.cc/images/section-logo.png">http://www.javelin.cc/images/section-logo.png</a></message>
+  </envelope>
+  <envelope count="5" received="2003-10-25 13:50:38 -0400">
+    <sender>nonex</sender>
+    <message>hey, that is pretty cool</message>
+  </envelope>
+  <event name="memberPromoted" occurred="2003-10-25 13:50:53 -0400">
+    <message>nonex was promoted to operator by you.</message>
+    <by>timothy</by>
+    <who>nonex</who>
+  </event>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender self="yes">timothy</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+</log>

@@ -1,0 +1,61 @@
+body {
+	background-color: white;
+	margin: 10px;
+}
+
+a img {
+	border: 0;
+}
+
+img {
+	display: block;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin: auto;
+}
+
+.error {
+	color: #aaa;
+}
+
+.error:before {
+	content: "(";
+}
+
+.error:after {
+	content: ")";
+}
+
+.event {
+	color: #aaa;
+	text-align: center;
+	font-size: smaller;
+	padding: 4px;
+}
+
+.envelope {
+	margin-bottom: 10px;
+}
+
+.envelope .body {
+	padding: 2px 8px 2px 8px;
+}
+
+.envelope .header {
+	background-image: url( "dark.png" );
+	height: 15px;
+	padding: 1px 0 2px 8px;
+	color: white;
+	font-weight: bold;
+	font-family: "Lucida Grande";
+	font-size: 12px;
+	text-shadow: 0 0 3px #111;
+}
+
+.envelope .header.light {
+	background-image: url( "light.png" );
+}
+
+.envelope .header.highlight {
+	background-image: url( "highlight.png" );
+}

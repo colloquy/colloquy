@@ -1,0 +1,78 @@
+body {
+	background-color: #344c7c;
+	margin: 0;
+}
+
+.msg1 {
+	background-color: #dddddd;
+	padding: 6px;
+	padding-top: 4px;
+	padding-bottom: 2px;
+	margin-bottom: 0px;
+}
+
+.msg1_again {
+	border-top: 1px dashed #888;
+	background-color: #dddddd;
+	padding: 6px;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	margin-bottom: 0px;
+}
+
+.msg2 {
+	background: url( "2_back.png" ) repeat; 
+	padding: 6px;
+	padding-top: 4px;
+	padding-bottom: 2px;
+	margin-bottom: 0px;
+}
+
+.msg2_again {
+	border-top: 1px dashed #888;
+	background: url( "2_back.png" ) repeat; 
+	padding: 6px;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	margin-bottom: 0px;
+}
+
+.msg3 {
+	background: url( "highlight.png" ) repeat; 
+	padding: 6px;
+	padding-top: 4px;
+	padding-bottom: 2px;
+	margin-bottom: 0px;
+}
+
+.shadow {
+	background: url( "shadow.png" ) repeat-x; 
+	border-bottom: #afafaf; 
+	width: auto;
+}
+
+.name_time {
+   	position: relative;
+    border-bottom: 1px solid #777;
+    margin-bottom: 2px;
+}
+
+.name_time .name {
+	text-shadow: 2px 2px 4px #888;
+	width: 100%;
+	font-weight: bold;
+}
+
+.name_time .time {
+	float: right;
+	font-size: smaller;
+	color: #444;
+}
+
+.event {
+	text-shadow: 2px 2px 4px #111;
+	width: 100%;
+	font-weight: bold;
+	font-size: smaller;
+	color: #fff;
+}

@@ -1,0 +1,17 @@
+<script type="text/javascript">
+	function resizeImagesIfNeeded() {
+		for( i = 0; i < document.images.length; i++ ) {
+			if( document.images[i].realWidth > ( window.innerWidth - 35 ) )
+				document.images[i].width = ( window.innerWidth - 35 );
+			else document.images[i].width = document.images[i].realWidth;
+		}
+	}
+
+	window.onresize = resizeImagesIfNeeded;
+
+	function resizeIfNeeded( image ) {
+		image.realWidth = image.width;
+		if( image.width > ( window.innerWidth - 35 ) )
+			image.width = ( window.innerWidth - 35 );
+	}
+</script>
