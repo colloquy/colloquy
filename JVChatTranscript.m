@@ -707,7 +707,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 			} else if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
 				[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
 			} else {
-				[[NSWorkspace sharedWorkspace] openURL:url];	
+				if( ( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSCommandKeyMask ) &&
+					[[NSWorkspace sharedWorkspace] respondsToSelector:@selector(openURLs:withAppBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifiers:)] ) {
+					[[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:url] withAppBundleIdentifier:nil options:NSWorkspaceLaunchWithoutActivation additionalEventParamDescriptor:nil launchIdentifiers:nil];
+				} else {
+					[[NSWorkspace sharedWorkspace] openURL:url];
+				}
 			}
 		}
 
