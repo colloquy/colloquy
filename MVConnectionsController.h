@@ -50,6 +50,9 @@
 }
 + (MVConnectionsController *) defaultManager;
 
++ (NSMenu *) favoritesMenu;
++ (void) refreshFavoritesMenu;
+
 - (IBAction) showConnectionManager:(id) sender;
 
 - (IBAction) newConnection:(id) sender;

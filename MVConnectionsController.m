@@ -9,6 +9,7 @@
 #import "MVKeyChain.h"
 #import "JVChatRoom.h"
 #import "JVDirectChat.h"
+#import "NSURLAdditions.h"
 
 static MVConnectionsController *sharedInstance = nil;
 
@@ -20,6 +21,8 @@ static NSString *MVToolbarJoinRoomItemIdentifier = @"MVToolbarJoinRoomItem";
 static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteboard type";
+
+static NSMenu *favoritesMenu = nil;
 
 @interface MVConnectionsController (MVConnectionsControllerPrivate)
 - (void) _connect:(id) sender;
@@ -45,6 +48,80 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	extern MVConnectionsController *sharedInstance;
 	if( ! sharedInstance && [MVApplicationController isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
+}
+
++ (NSMenu *) favoritesMenu {
+	extern NSMenu *favoritesMenu;
+	[self refreshFavoritesMenu];
+	return favoritesMenu;
+}
+
++ (void) refreshFavoritesMenu {
+	extern NSMenu *favoritesMenu;
+	if( ! favoritesMenu ) favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
+
+	NSMenuItem *menuItem = nil;
+	NSEnumerator *enumerator = [[[[favoritesMenu itemArray] copy] autorelease] objectEnumerator];
+	while( ( menuItem = [enumerator nextObject] ) )
+		[favoritesMenu removeItem:menuItem];
+
+	NSURL *url = nil;
+	NSString *item = nil;
+	NSMutableArray *rooms = [NSMutableArray array], *roomNames = [NSMutableArray array];
+	NSMutableArray *users = [NSMutableArray array], *userNames = [NSMutableArray array];
+
+	enumerator = [[NSFileManager defaultManager] enumeratorAtPath:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath]];
+	while( ( item = [enumerator nextObject] ) ) {
+		if( [[item pathExtension] isEqualToString:@"inetloc"] ) {
+			url = [NSURL URLWithInternetLocationFile:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@", item] stringByExpandingTildeInPath]];
+			if( [url isChatRoomURL] ) {
+				[rooms addObject:url];
+				[roomNames addObject:[item stringByDeletingPathExtension]];
+			} else if( [url isDirectChatURL] ) {
+				[users addObject:url];
+				[userNames addObject:[item stringByDeletingPathExtension]];
+			}
+		}
+	}
+
+	if( ! [rooms count] && ! [users count] ) {
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Favorites", "no favorites menu title" ) action:NULL keyEquivalent:@""] autorelease];
+		[favoritesMenu addItem:menuItem];
+	}
+
+	NSEnumerator *nameEnumerator = [roomNames objectEnumerator];
+	NSImage *icon = [[[NSImage imageNamed:@"room"] copy] autorelease];
+	[icon setScalesWhenResized:YES];
+	[icon setSize:NSMakeSize( 16., 16. )];
+	enumerator = [rooms objectEnumerator];
+	while( ( url = [enumerator nextObject] ) && ( item = [nameEnumerator nextObject] ) ) {
+		menuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( _connectToFavorite: ) keyEquivalent:@""] autorelease];
+		[menuItem setImage:icon];
+		[menuItem setTarget:self];
+		[menuItem setRepresentedObject:url];
+		[favoritesMenu addItem:menuItem];
+	}
+
+	if( [users count] ) [favoritesMenu addItem:[NSMenuItem separatorItem]];
+
+	enumerator = [users objectEnumerator];
+	nameEnumerator = [userNames objectEnumerator];
+	icon = [[[NSImage imageNamed:@"messageUser"] copy] autorelease];
+	[icon setScalesWhenResized:YES];
+	[icon setSize:NSMakeSize( 16., 16. )];
+	while( ( url = [enumerator nextObject] ) && ( item = [nameEnumerator nextObject] ) ) {
+		menuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( _connectToFavorite: ) keyEquivalent:@""] autorelease];
+		[menuItem setImage:icon];
+		[menuItem setTarget:self];
+		[menuItem setRepresentedObject:url];
+		[favoritesMenu addItem:menuItem];
+	}
+
+	[favoritesMenu addItem:[NSMenuItem separatorItem]];
+
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Open Favorites folder...", "open favorites folder menu title" ) action:@selector( _openFavoritesFolder: ) keyEquivalent:@""] autorelease];
+	[menuItem setTarget:self];
+	[favoritesMenu addItem:menuItem];
 }
 
 #pragma mark -
@@ -83,8 +160,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
-#warning Releasing _bookmarks causes a crash.
-//	[_bookmarks release];
+	[_bookmarks release];
 	[_joinRooms release];
 	[_passConnection release];
 
@@ -204,24 +280,22 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		return;
 	}
 
-	{
-		NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-		id data = nil;
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	id data = nil;
 
-		while( ( data = [enumerator nextObject] ) ) {
-			if( [[(MVChatConnection *)[data objectForKey:@"connection"] server] isEqualToString:[newAddress stringValue]] &&
-				[[(MVChatConnection *)[data objectForKey:@"connection"] nickname] isEqualToString:[newNickname stringValue]] ) {
-				if( [(MVChatConnection *)[data objectForKey:@"connection"] isConnected] ) {
-					NSRunCriticalAlertPanel( NSLocalizedString( @"Already connected", "already connected dialog title" ), NSLocalizedString( @"The chat server with the nickname you specified is already connected to from this computer. Use another nickname if you desire multiple connections.", "chat already connected message" ), nil, nil, nil );
-					[openConnection makeFirstResponder:newNickname];
-				} else {
-					[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
-					[self _connect:nil];
-					[[self window] makeKeyAndOrderFront:nil];
-					[openConnection orderOut:nil];
-				}
-				return;
+	while( ( data = [enumerator nextObject] ) ) {
+		if( [[(MVChatConnection *)[data objectForKey:@"connection"] server] isEqualToString:[newAddress stringValue]] &&
+			[[(MVChatConnection *)[data objectForKey:@"connection"] nickname] isEqualToString:[newNickname stringValue]] ) {
+			if( [(MVChatConnection *)[data objectForKey:@"connection"] isConnected] ) {
+				NSRunCriticalAlertPanel( NSLocalizedString( @"Already connected", "already connected dialog title" ), NSLocalizedString( @"The chat server with the nickname you specified is already connected to from this computer. Use another nickname if you desire multiple connections.", "chat already connected message" ), nil, nil, nil );
+				[openConnection makeFirstResponder:newNickname];
+			} else {
+				[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
+				[self _connect:nil];
+				[[self window] makeKeyAndOrderFront:nil];
+				[openConnection orderOut:nil];
 			}
+			return;
 		}
 	}
 
@@ -421,8 +495,8 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 				if( ! [connection isConnected] && connect ) [connection connect];
 				if( target && isRoom ) [connection joinChatRoom:target];
 				else if( target && ! isRoom ) [[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:NO];
+				else [[self window] orderFront:nil];
 				[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
-				[[self window] makeKeyAndOrderFront:nil];
 				handled = YES;
 				break;
 			}
@@ -439,7 +513,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 			[self addConnection:connection keepBookmark:NO];
 
-			[[self window] makeKeyAndOrderFront:nil];
+			[[self window] orderFront:nil];
 
 			if( target && ! isRoom ) [[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:NO];
 		}
@@ -624,10 +698,10 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		}
 
 		[menu addItem:[NSMenuItem separatorItem]];
-	
+
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", "join room contextual menu item title" ) action:@selector( joinRoom: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
-		if( ! connected ) [item setAction:NULL];
+		if( ! [_bookmarks count] ) [item setAction:NULL];
 		[menu addItem:item];
 
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Message User...", "message user contextual menu item title" ) action:@selector( _messageUser: ) keyEquivalent:@""] autorelease];
@@ -1011,7 +1085,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 	[connections noteNumberOfRowsChanged];
 
-	if( [_bookmarks count] ) [[self window] makeKeyAndOrderFront:nil];
+	if( [_bookmarks count] ) [[self window] orderFront:nil];
 	else [self newConnection:nil];
 
 	[self _validateToolbar];
@@ -1084,7 +1158,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[nicknameAuth orderFront:nil];
 }
 
-- (void) _connect:(id) sender {
+- (IBAction) _connect:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
 	[connection connect];
@@ -1113,7 +1187,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		[connection joinChatRoom:item];
 }
 
-- (void) _disconnect:(id) sender {
+- (IBAction) _disconnect:(id) sender {
 	unsigned int row = [connections selectedRow];
 	if( row == -1 ) return;
 	[[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] disconnect];
@@ -1125,15 +1199,24 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[self removeConnectionAtIndex:row];
 }
 
-- (void) _messageUser:(id) sender {
+- (IBAction) _messageUser:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
 	[[NSApplication sharedApplication] beginSheet:messageUser modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
-- (void) _openConsole:(id) sender {
+- (IBAction) _openConsole:(id) sender {
 	unsigned int row = [connections selectedRow];
 	if( row == -1 ) return;
 	[[JVChatController defaultManager] chatConsoleForConnection:[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] ifExists:NO];
+}
+
++ (IBAction) _openFavoritesFolder:(id) sender {
+	[[NSWorkspace sharedWorkspace] openFile:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath]];
+}
+
++ (IBAction) _connectToFavorite:(id) sender {
+	if( ! [sender representedObject] ) return;
+	[[MVConnectionsController defaultManager] handleURL:[sender representedObject] andConnectIfPossible:YES];
 }
 @end
 
