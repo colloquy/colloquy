@@ -32,7 +32,7 @@
 	else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatActionOnEnter"] )
 		[enterKeyAction selectItemAtIndex:[enterKeyAction indexOfItemWithTag:1]];
 	else [enterKeyAction selectItemAtIndex:[enterKeyAction indexOfItemWithTag:2]];
-	
+
 	[sendHistory setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
 	[sendHistoryStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
 
