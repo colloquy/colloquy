@@ -3,6 +3,7 @@
 //  Created by Karl Adam on Thu Apr 15 2004.
 
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/NSAttributedStringAdditions.h>
 
 #import "KAConnectionHandler.h"
 #import "MVApplicationController.h"
@@ -43,9 +44,10 @@ static KAConnectionHandler *sharedHandler = nil;
 
 	if( [user isEqualToString:@"MemoServ"] ) {
 		if( [curMsg rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [curMsg rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
+			NSAttributedString *curAMsg = [NSAttributedString attributedStringWithHTMLFragment:[NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@ on %@</span>", curMsg, [connection server]] baseURL:NULL]; 
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"You Have New Memos", "new memos bubble title" ) forKey:@"title"];
-			[context setObject:curMsg forKey:@"description"];
+			[context setObject:curAMsg forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"Stickies"] forKey:@"image"];
 			[context setObject:[connection nickname] forKey:@"performedOn"];
 			[context setObject:user forKey:@"performedBy"];
