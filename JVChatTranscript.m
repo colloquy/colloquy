@@ -476,13 +476,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (void) setChatEmoticons:(NSBundle *) emoticons performRefresh:(BOOL) refresh {
-	[_emoticonMappings autorelease];
-	_emoticonMappings = [[NSDictionary dictionaryWithContentsOfFile:[self _chatEmoticonsMappingFilePath]] retain];
-	
-	if( emoticons == _chatEmoticons ) return;
-
 	[_chatEmoticons autorelease];
 	_chatEmoticons = [emoticons retain];
+
+	[_emoticonMappings autorelease];
+	_emoticonMappings = [[NSDictionary dictionaryWithContentsOfFile:[self _chatEmoticonsMappingFilePath]] retain];
 
 	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", [[_chatEmoticons bundleIdentifier] UTF8String] );
 
