@@ -299,7 +299,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "Core/irssi/src/irc Core/irssi/src/irc/core Core/irssi/src/irc/dcc Core/irssi/src/irc/flood Core/irssi/src/irc/notifylist Core/irssi/src/core Core/irssi/glib/.libs Core/irssi/src/lib-config Core/irssi/src/lib-popt Core/irssi/src/fe-common/core Core/irssi/src/fe-common/irc Core/irssi/src/fe-common/irc/dcc Core/irssi/src/fe-common/irc/notifylist";
 				OTHER_CFLAGS = "-fconstant-cfstrings -fobjc-exceptions -DUOFF_T_LONG_LONG";
-				OTHER_LDFLAGS = "-seg1addr 0xa10000 -lssl -lcrypto";
+				OTHER_LDFLAGS = "-seg1addr 0xd0000000 -lssl -lcrypto";
 				OTHER_LIBTOOL_FLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRINCIPAL_CLASS = "";
