@@ -1,4 +1,5 @@
-#import <Cocoa/Cocoa.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSDate.h>
 
 extern NSString *JVBuddyCameOnlineNotification;
 extern NSString *JVBuddyWentOfflineNotification;
@@ -10,6 +11,12 @@ extern NSString *JVBuddyNicknameStatusChangedNotification;
 extern NSString *JVBuddyActiveNicknameChangedNotification;
 
 @class ABPerson;
+@class NSMutableSet;
+@class NSMutableDictionary;
+@class NSURL;
+@class NSString;
+@class NSImage;
+@class NSSet;
 
 typedef enum {
 	JVBuddyOfflineStatus = 0,
