@@ -102,7 +102,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (NSView *) view {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatConsolePanel" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatConsole" owner:self];
 	return contents;
 }
 
