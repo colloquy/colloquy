@@ -82,8 +82,7 @@
 #pragma mark -
 
 - (void) selectStyleWithIdentifier:(NSString *) identifier {
-	[_style autorelease];
-	_style = [[JVStyle styleWithIdentifier:identifier] retain];
+	[self setStyle:[JVStyle styleWithIdentifier:identifier]];
 	[self changePreferences];
 }
 
@@ -91,6 +90,16 @@
 	[[NSUserDefaults standardUserDefaults] setObject:identifier forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_style identifier]]];
 	[self updateEmoticonsMenu];
 	[self updatePreview];
+}
+
+#pragma mark -
+
+- (void) setStyle:(JVStyle *) style {
+	[_style autorelease];
+	_style = [style retain];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateVariant ) name:JVStyleVariantChangedNotification object:_style];
 }
 
 #pragma mark -
@@ -106,9 +115,7 @@
 	[column setDataCell:prototypeCell];
 
 	[JVStyle scanForStyles];
-
-	[_style autorelease];
-	_style = [[JVStyle defaultStyle] retain];
+	[self setStyle:[JVStyle defaultStyle]];
 
 	[self changePreferences];
 }
@@ -144,8 +151,7 @@
 		[self updateVariant];
 		[self parseStyleOptions];
 	} else {
-		[_style autorelease];
-		_style = [style retain];
+		[self setStyle:style];
 
 		[JVStyle setDefaultStyle:_style];
 		[_style setDefaultVariantName:variant];
@@ -487,11 +493,12 @@
 // Saves the custom variant to the user's area.
 - (void) saveStyleOptions {
 	if( _variantLocked ) return;
-	[_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:NO];
+	[_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:YES];
 	[WebCoreCache empty];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[_style defaultVariantName], @"variant", nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleVariantChangedNotification object:_style userInfo:info];
+	NSNotification *notification = [NSNotification notificationWithName:JVStyleVariantChangedNotification object:_style userInfo:info];
+	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 }
 
 // Shows the drawer, option clicking the button will open the custom variant CSS file.
@@ -546,7 +553,6 @@
 		}
 
 		[self saveStyleOptions];
-		[self updateVariant];
 	}
 }
 
@@ -573,7 +579,6 @@
 	}
 
 	[self saveStyleOptions];
-	[self updateVariant];
 }
 
 - (BOOL) tableView:(NSTableView *) view shouldSelectRow:(int) row {
@@ -629,7 +634,7 @@
 	[[NSFileManager defaultManager] createDirectoryAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [_style identifier]] stringByExpandingTildeInPath] attributes:nil];
 
 	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [_style identifier], [newVariantName stringValue]] stringByExpandingTildeInPath];
-	[_userStyle writeToFile:path atomically:NO];
+	[_userStyle writeToFile:path atomically:YES];
 
 	[_style setDefaultVariantName:[newVariantName stringValue]];
 
