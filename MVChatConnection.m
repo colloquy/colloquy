@@ -19,6 +19,7 @@
 #import "signals.h"
 #import "servers.h"
 #import "servers-setup.h"
+#import "servers-reconnect.h"
 #import "chat-protocols.h"
 #import "channels.h"
 #import "nicklist.h"
@@ -104,6 +105,7 @@ static GMainLoop *glibMainLoop = NULL;
 - (io_connect_t) _powerConnection;
 - (SERVER_REC *) _irssiConnection;
 - (void) _setIrssiConnection:(SERVER_REC *) server;
+- (void) _removePendingIrssiReconnections;
 - (void) _registerForSleepNotifications;
 - (void) _deregisterForSleepNotifications;
 - (void) _postNotification:(NSNotification *) notification;
@@ -1130,6 +1132,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 		&& [self status] != MVChatConnectionServerDisconnectedStatus ) return;
 
 	[self _willConnect];
+	[self _removePendingIrssiReconnections];
 
 	if( ! [self _irssiConnection] -> connect_time ) {
 		CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
@@ -1747,6 +1750,25 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 		old -> no_reconnect = 1;
 		server_unref( old );
 	}
+}
+
+#pragma mark -
+
+- (void) _removePendingIrssiReconnections {
+	GSList *list = NULL;
+	GSList *item = NULL;
+	MVChatConnection *test = NULL;
+
+	list = g_slist_copy( reconnects );
+
+	for( item = list; item; item = item -> next ) {
+		RECONNECT_REC *rec = item -> data;
+		if( ! rec || ! rec -> conn || ! rec -> conn -> chatnet ) continue;
+		sscanf( rec -> conn -> chatnet, "%8lx", (unsigned long *) &test );
+		if( test == self ) server_reconnect_destroy( rec );
+	}
+
+	g_slist_free( list );
 }
 
 #pragma mark -
