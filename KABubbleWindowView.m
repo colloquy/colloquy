@@ -15,7 +15,7 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 
 @implementation KABubbleWindowView
 - (id) initWithFrame:(NSRect) frame {
-	if( ! ( self = [super initWithFrame:frame] ) ) {
+	if( self = [super initWithFrame:frame] ) {
 		_icon = nil;
 		_title = nil;
 		_text = nil;

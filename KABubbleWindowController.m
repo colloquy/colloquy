@@ -57,18 +57,22 @@ static unsigned int bubbleWindowDepth = 0;
 	_delegate = nil;
 	_target = nil;
 	_action = NULL;
+	_animationTimer = nil;
 
 	return ( self = [super initWithWindow:panel] );
 }
 
 - (void) dealloc {
 	[_target release];
+	[_animationTimer invalidate];
 	[_animationTimer release];
 
 	_target = nil;
 	_delegate = nil;
 	_animationTimer = nil;
-
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self]; // We remove on fade out but just in case...
+	
 	[super dealloc];
 }
 
@@ -105,6 +109,7 @@ static unsigned int bubbleWindowDepth = 0;
 		if( [_delegate respondsToSelector:@selector( bubbleDidFadeOut: )] )
 			[_delegate bubbleDidFadeOut:self];
 		[self close];
+		[[NSNotificationCenter defaultCenter] removeObserver:self]; // We don't need this anymore
 		[self autorelease]; // Relase, we retained when we faded in.
 	}
 }
@@ -124,7 +129,7 @@ static unsigned int bubbleWindowDepth = 0;
 - (void) startFadeIn {
 	if( [_delegate respondsToSelector:@selector( bubbleWillFadeIn: )] )
 		[_delegate bubbleWillFadeIn:self];
-	[self retain]; // Retain, after fade out we relase.
+	[self retain]; // Retain, after fade out we release.
 	[self showWindow:nil];
 	[self _stopTimer];
 	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector( _fadeIn: ) userInfo:nil repeats:YES] retain];
