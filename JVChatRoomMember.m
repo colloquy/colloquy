@@ -103,6 +103,10 @@
 	_operator = operator;
 }
 
+- (MVChatConenction *) connection {
+	return [[[_parent connection] retain] autorelease];
+}
+
 #pragma mark -
 
 - (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
