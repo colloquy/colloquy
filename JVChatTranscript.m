@@ -136,13 +136,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 - (void) awakeFromNib {
 	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 
-	if( xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
+	if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
 		xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
 		[self setChatStyle:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:styleProp]] withVariant:nil];
 		xmlFree( styleProp );
 	}
 
-	if( xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ) {
+	if( ! _chatEmoticons && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ) {
 		xmlChar *emoticonProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" );
 		[self setChatEmoticons:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:emoticonProp]]];
 		xmlFree( emoticonProp );
