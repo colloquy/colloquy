@@ -1,4 +1,30 @@
-.emoticon samp {
+.emoticon.smile samp,
+.emoticon.wink samp,
+.emoticon.happy samp,
+.emoticon.stoic samp,
+.emoticon.frown samp,
+.emoticon.annoyed samp,
+.emoticon.razz samp,
+.emoticon.angry samp,
+.emoticon.cool samp,
+.emoticon.headphones samp,
+.emoticon.hat samp,
+.emoticon.angel samp,
+.emoticon.evil samp,
+.emoticon.anime samp,
+.emoticon.frosty samp,
+.emoticon.kirby samp,
+.emoticon.pikachu samp,
+.emoticon.suprised samp,
+.emoticon.confused samp,
+.emoticon.sarcasm samp,
+.emoticon.pumpkin samp,
+.emoticon.flag samp,
+.emoticon.rose samp,
+.emoticon.shocked samp,
+.emoticon.shockedfrown samp,
+.emoticon.dead samp,
+.emoticon.dorkgrin samp {
 	display: none;
 }
 
@@ -78,10 +104,6 @@
 	content: url( "suprised.tif" );
 }
 
-.emoticon.cry samp {
-	display: inline;
-}
-
 .emoticon.confused:after {
 	content: url( "confused.tif" );
 }
@@ -117,4 +139,3 @@
 .emoticon.dorkgrin:after {
 	content: url( "dorkgrin.tif" );
 }
-
