@@ -10,6 +10,7 @@
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>colloquyStyle</string>
+				<string>colloquystyle</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>Generic.icns</string>
@@ -28,6 +29,7 @@
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>colloquyEmoticons</string>
+				<string>colloquyemoticons</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>Generic.icns</string>
@@ -46,6 +48,7 @@
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>colloquyTranscript</string>
+				<string>colloquytranscript</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>Generic.icns</string>
@@ -93,7 +96,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2B59</string>
+	<string>2B81</string>
 	<key>NSMainNibFile</key>
 	<string>Colloquy</string>
 	<key>NSPrincipalClass</key>
