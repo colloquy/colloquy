@@ -73,10 +73,7 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 	const char *valueType = [self objCType];
 	unsigned long valueKeywordType = 0;
 	unsigned long valueSize = 0;
-	if( strcmp( valueType, @encode( char ) ) == 0) {
-		valueSize = sizeof( char );
-		valueKeywordType = typeChar;
-	} else if( strcmp( valueType, @encode( BOOL ) ) == 0 ) {
+	if( strcmp( valueType, @encode( BOOL ) ) == 0 ) {
 		valueSize = sizeof( BOOL );
 		valueKeywordType = typeBoolean;
 	} else if( strcmp( valueType, @encode( short ) ) == 0 ) {
@@ -100,6 +97,9 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 	} else if( strcmp( valueType, @encode( double ) ) == 0 ) {
 		valueSize = sizeof( double );
 		valueKeywordType = typeLongFloat;
+	} else if( strcmp( valueType, @encode( char * ) ) == 0 ) {
+		valueSize = 4;
+		valueKeywordType = typeEnumerated;
 	}
 
 	[self getValue:&data];
@@ -272,7 +272,6 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 	}
 
 	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:NULL];
-
 	if( ! result ) return nil;
 
 	return [result objectValue];
