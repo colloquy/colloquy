@@ -10,9 +10,9 @@
 @end
 
 @interface NSObject (MVTextViewDelegate)
-- (BOOL) textView:(NSTextView *) textView enterHit:(NSEvent *) event;
-- (BOOL) textView:(NSTextView *) textView returnHit:(NSEvent *) event;
-- (BOOL) textView:(NSTextView *) textView tabHit:(NSEvent *) event;
-- (BOOL) textView:(NSTextView *) textView upArrowHit:(NSEvent *) event;
-- (BOOL) textView:(NSTextView *) textView downArrowHit:(NSEvent *) event;
+- (BOOL) textView:(NSTextView *) textView functionKeyPressed:(NSEvent *) event;
+- (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event;
+- (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event;
+- (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event;
+- (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event;
 @end

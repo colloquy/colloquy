@@ -762,7 +762,7 @@
 
 #pragma mark -
 
-- (BOOL) textView:(NSTextView *) textView tabHit:(NSEvent *) event {
+- (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event {
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
 		[textView complete:nil];
 		return YES;

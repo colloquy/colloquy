@@ -662,6 +662,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 				[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 				[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+				NSLog( @"appendMessage( \"%@\" );", messageString );
 				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
 			}
 		}
@@ -1000,7 +1001,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 #pragma mark -
 
-- (BOOL) textView:(NSTextView *) textView enterHit:(NSEvent *) event {
+- (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event {
 	BOOL ret = NO;
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnEnter"] ) {
 		[self send:nil];
@@ -1012,7 +1013,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return ret;
 }
 
-- (BOOL) textView:(NSTextView *) textView returnHit:(NSEvent *) event {
+- (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
 	BOOL ret = NO;
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnReturn"] ) {
 		[self send:nil];
@@ -1024,7 +1025,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return ret;
 }
 
-- (BOOL) textView:(NSTextView *) textView upArrowHit:(NSEvent *) event {
+- (BOOL) upArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
 	_historyIndex++;
@@ -1038,7 +1039,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return YES;
 }
 
-- (BOOL) textView:(NSTextView *) textView downArrowHit:(NSEvent *) event {
+- (BOOL) downArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
 	if( [[send textStorage] length] ) _historyIndex--;
@@ -1055,7 +1056,26 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return YES;
 }
 
-- (BOOL) textView:(NSTextView *) textView tabHit:(NSEvent *) event {
+- (BOOL) textView:(NSTextView *) textView functionKeyPressed:(NSEvent *) event {
+	unichar chr = 0;
+
+	if( [[event charactersIgnoringModifiers] length] ) {
+		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
+	} else return NO;
+
+	if( chr == NSUpArrowFunctionKey ) {
+		return [self upArrowKeyPressed];
+	} else if( chr == NSDownArrowFunctionKey ) {
+		return [self downArrowKeyPressed];
+	} else if( chr == NSPageUpFunctionKey || chr == NSPageDownFunctionKey || chr == NSHomeFunctionKey || chr == NSBeginFunctionKey || chr == NSEndFunctionKey ) {
+		[[[display mainFrame] frameView] keyDown:event];
+		return YES;
+	}
+
+	return NO;
+}
+
+- (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event {
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
 		[textView complete:nil];
 		return YES;
@@ -1070,6 +1090,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		else [send replaceCharactersInRange:NSMakeRange([[send textStorage] length], 0) withString:@" "];
 	}
 	return YES;
+}
+
+- (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event {
+	[send reset:nil];
+	return YES;	
 }
 
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {

@@ -317,17 +317,17 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[display scrollRangeToVisible:NSMakeRange( [[display textStorage] length], 0 )];
 }
 
-- (BOOL) textView:(NSTextView *) textView enterHit:(NSEvent *) event {
+- (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event {
 	[self send:nil];
 	return YES;
 }
 
-- (BOOL) textView:(NSTextView *) textView returnHit:(NSEvent *) event {
+- (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
 	[self send:nil];
 	return YES;
 }
 
-- (BOOL) textView:(NSTextView *) textView upArrowHit:(NSEvent *) event {
+- (BOOL) upArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
 	_historyIndex++;
@@ -341,7 +341,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return YES;
 }
 
-- (BOOL) textView:(NSTextView *) textView downArrowHit:(NSEvent *) event {
+- (BOOL) downArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
 	if( [[send textStorage] length] ) _historyIndex--;
@@ -358,12 +358,33 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return YES;
 }
 
-- (BOOL) textView:(NSTextView *) textView tabHit:(NSEvent *) event {
+- (BOOL) textView:(NSTextView *) textView functionKeyPressed:(NSEvent *) event {
+	unichar chr = 0;
+
+	if( [[event charactersIgnoringModifiers] length] ) {
+		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
+	} else return NO;
+
+	if( chr == NSUpArrowFunctionKey ) {
+		return [self upArrowKeyPressed];
+	} else if( chr == NSDownArrowFunctionKey ) {
+		return [self downArrowKeyPressed];
+	}
+
+	return NO;
+}
+
+- (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event {
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
 		[textView complete:nil];
 		return YES;
 	}
 	return NO;
+}
+
+- (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event {
+	[send reset:nil];
+	return YES;	
 }
 
 - (void) textDidChange:(NSNotification *) notification {

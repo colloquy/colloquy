@@ -2,45 +2,29 @@
 #import "MVTextView.h"
 
 @implementation MVTextView
-
-#define kEnterCharCode 3
-#define kTabCharCode 9
-#define kReturnCharCode 13
-#define kPageUpCharCode 63276
-#define kPageDownCharCode 63277
-#define kUpArrowCharCode 63232
-#define kDownArrowCharCode 63233
-
-- (void) keyDown:(NSEvent *) theEvent {
-	NSString *chars = [theEvent charactersIgnoringModifiers];
+- (void) keyDown:(NSEvent *) event {
 	if( ! [self isEditable] ) {
-		[super keyDown:theEvent];
+		[super keyDown:event];
 		return;
 	}
 
-	if( [chars length] && [chars characterAtIndex:0] == kReturnCharCode ) {
-		if ([[self delegate] respondsToSelector:@selector(textView:returnHit:)]) {
-			if( [[self delegate] textView:self returnHit:theEvent] ) return;
-		}
-	} else if( [chars length] && [chars characterAtIndex:0] == kEnterCharCode ) {
-		if( [[self delegate] respondsToSelector:@selector(textView:enterHit:)] ) {
-			if( [[self delegate] textView:self enterHit:theEvent] ) return;
-		}
-	} else if( [chars length] && [chars characterAtIndex:0] == kTabCharCode ) {
-		if( [[self delegate] respondsToSelector:@selector(textView:tabHit:)] ) {
-			if( [[self delegate] textView:self tabHit:theEvent] ) return;
-		}
-	} else if( [chars length] && [chars characterAtIndex:0] == kUpArrowCharCode ) {
-		if( [[self delegate] respondsToSelector:@selector(textView:upArrowHit:)] ) {
-			if( [[self delegate] textView:self upArrowHit:theEvent] ) return;
-		}
-	} else if( [chars length] && [chars characterAtIndex:0] == kDownArrowCharCode ) {
-		if( [[self delegate] respondsToSelector:@selector(textView:downArrowHit:)] ) {
-			if( [[self delegate] textView:self downArrowHit:theEvent] ) return;
-		}
+	unichar chr = 0;
+	if( [[event charactersIgnoringModifiers] length] )
+		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
+
+	if( chr == 0xD && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
+		if( [[self delegate] textView:self returnKeyPressed:event] ) return;
+	} else if( chr == 0x3 && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
+		if( [[self delegate] textView:self enterKeyPressed:event] ) return;
+	} else if( chr == 0x9 && [[self delegate] respondsToSelector:@selector( textView:tabKeyPressed: )]) {
+		if( [[self delegate] textView:self tabKeyPressed:event] ) return;
+	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
+		if( [[self delegate] textView:self escapeKeyPressed:event] ) return;
+	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
+		if( [[self delegate] textView:self functionKeyPressed:event] ) return;
 	}
 
-	[super keyDown:theEvent];
+	[super keyDown:event];
 
 	if( ! [[self textStorage] length] )
 		[self reset:nil];

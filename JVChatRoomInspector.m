@@ -131,17 +131,17 @@
 	return YES;
 }
 
-- (BOOL) textView:(NSTextView *) textView returnHit:(NSEvent *) event {
+- (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
 	[[_room connection] setTopic:[topic textStorage] withEncoding:[_room encoding] forRoom:[_room target]];
 	return YES;
 }
 
-- (BOOL) textView:(NSTextView *) textView enterHit:(NSEvent *) event {
-	[self textView:textView returnHit:event];
+- (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event {
+	[self textView:textView returnKeyPressed:event];
 	return YES;
 }
 
-- (BOOL) textView:(NSTextView *) textView tabHit:(NSEvent *) event {
+- (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event {
 	return YES;
 }
 
