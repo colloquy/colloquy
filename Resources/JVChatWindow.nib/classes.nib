@@ -1,0 +1,24 @@
+{
+    IBClasses = (
+        {CLASS = ASExtendedOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = JVChatWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                chatViewsOutlineView = NSOutlineView; 
+                viewActionButton = NSPopUpButton; 
+                viewsDrawer = NSDrawer; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {displayMenu = id; }; 
+            CLASS = MVMenuButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {menu = id; }; 
+            SUPERCLASS = NSButton; 
+        }
+    ); 
+    IBVersion = 1; 
+}
