@@ -1444,7 +1444,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	xmlSetProp( child, "received", [[[NSDate date] description] UTF8String] );
 	if( action ) xmlSetProp( child, "action", "yes" );
 	if( highlight ) xmlSetProp( child, "highlight", "yes" );
-	if ( [[JVChatController defaultManager] ignoreUser:user withMessage:[NSAttributedString attributedStringWithHTMLFragment:[NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, sans-serif\">%@</span>", messageString] baseURL:NULL] inRoom:_target withConnection:[self connection]] )
+	if( [[JVChatController defaultManager] ignoreUser:user withMessage:[NSAttributedString attributedStringWithHTMLFragment:messageString baseURL:NULL] inRoom:_target withConnection:[self connection]] )
 		 xmlSetProp( child, "ignore", "yes" );
 	xmlAddChild( root, child );
 

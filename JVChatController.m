@@ -38,7 +38,7 @@ static JVChatController *sharedInstance = nil;
 	if( ( self = [super init] ) ) {
 		_chatWindows = [[NSMutableArray array] retain];
 		_chatControllers = [[NSMutableArray array] retain];
-		_ignoreRules = [[NSMutableDictionary alloc] init];
+		_ignoreRules = [[NSMutableArray alloc] init];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatConnectionJoinedRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _leftRoom: ) name:MVChatConnectionLeftRoomNotification object:nil];
@@ -271,73 +271,29 @@ static JVChatController *sharedInstance = nil;
 #pragma mark -
 #pragma mark Ignores
 
-- (void) addIgnore:(NSString *) inIgnoreName withKey:(NSString *) ignoreKeyExpression inRooms:(NSArray *) rooms usesRegex:(BOOL) regex isMember:(BOOL) member {
-	[_ignoreRules setObject:[KAInternalIgnoreRule ruleWithString:ignoreKeyExpression inRooms:rooms usesRegex:regex ignoreMember:member] forKey:inIgnoreName];
-}
-
-
-- (KAInternalIgnoreRule *) shouldIgnoreUser:(NSString *) user inRoom:(NSString *) room {
-	KAInternalIgnoreRule *ignoreThisUser=nil;
-	NSEnumerator *kenum = [_ignoreRules keyEnumerator];
-	NSString *key = nil;
-	KAInternalIgnoreRule *rule = nil;
-
-	while( ! ignoreThisUser && ( ( key = [kenum nextObject] ) ) ) {
-		rule = [_ignoreRules objectForKey:key];
-		if( [key isEqualToString:user] ) ignoreThisUser = rule;
-		if( [rule regex] && !ignoreThisUser && [rule isMember] ) {
-			AGRegex *matchString = [AGRegex regexWithPattern:[rule key] options:AGRegexCaseInsensitive];
-			if( [matchString findInString:user] ) ignoreThisUser = rule;
-		}
-	}
-
-	return ignoreThisUser;
-}
-
-- (KAInternalIgnoreRule*) shouldIgnoreMessage:(NSAttributedString *) message inRoom:(NSString *) room {
-	KAInternalIgnoreRule* ignoreThisMessage = nil;
-	NSEnumerator *oenum = [_ignoreRules objectEnumerator];
-	KAInternalIgnoreRule *rule = nil;
-
-	while( ! ignoreThisMessage && ( ( rule = [oenum nextObject] ) ) ) {		
-		if( [rule regex] && ![rule isMember] ) {
-			AGRegex *matchPattern = [AGRegex regexWithPattern:[rule key] options:AGRegexCaseInsensitive];
-			if( [matchPattern findInString:[message string]] ) ignoreThisMessage = rule;
-		} else if( [[rule key] isEqualToString:[message string]] ) ignoreThisMessage = rule;
-	}
-
-	return ignoreThisMessage;
+- (void) addIgnoreForUser:(NSString *)user withMessage:(NSString *)message inRooms:(NSArray *)rooms usesRegex:(BOOL) regex {
+	[_ignoreRules addObject:[KAInternalIgnoreRule ruleForUser:user message:message inRooms:rooms usesRegex:regex]];
 }
 
 - (BOOL) ignoreUser:(NSString *) name withMessage:(NSAttributedString *) message inRoom:(NSString *) room withConnection:(MVChatConnection *) connection {
-	BOOL wasIgnored = NO;
-	KAInternalIgnoreRule* rule=nil;
-	// check for ignore: if the object in the dictionary is nil, we ignore the user everywhere
-	// if we have an array we check that the array contains our current room and ignore them
-	enum { JVUserMessageIgnored, JVMessageIgnored } ignoreType;
+	JVIgnoreMatchResult ignoreResult = JVNotIgnored;
+	NSEnumerator *renum = [_ignoreRules objectEnumerator];
+	KAInternalIgnoreRule *rule = nil;
 
-	if( ( rule = [self shouldIgnoreUser:name inRoom:room] ) ) {
-		ignoreType = JVUserMessageIgnored; 
-		wasIgnored = YES;
-	} else if( ( rule = [self shouldIgnoreMessage:message inRoom:room] ) ) {
-		ignoreType = JVMessageIgnored;
-		wasIgnored = YES;
+	while( ( ignoreResult == JVNotIgnored ) && ( ( rule = [renum nextObject] ) ) )
+		ignoreResult = [rule matchesUser:name message:[message string] inChannel:room];
+
+	if( ignoreResult != JVNotIgnored ) {   
+		// send an ignored Notificatoin
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:( ( ignoreResult == JVUserMessageIgnored ) ? NSLocalizedString( @"User Message Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
+		[context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", name, room] forKey:@"description"];
+		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
+		[context setObject:connection forKey:@"representedObject"];
+		[[JVNotificationController defaultManager] performNotification:( ( ignoreResult == JVUserMessageIgnored ) ? @"JVUserMessageIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
 
-	if( wasIgnored ) {   
-		NSArray *ignoredRooms = [rule channels];
-		if( ! ignoredRooms || [ignoredRooms containsObject:room] || [ignoredRooms containsObject:@"##ALL"] ) {
-			// send an ignored Notificatoin
-			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:( ( ignoreType == JVUserMessageIgnored ) ? NSLocalizedString( @"User Message Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", name, room] forKey:@"description"];
-			[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-			[context setObject:connection forKey:@"representedObject"];
-			[[JVNotificationController defaultManager] performNotification:( ( ignoreType == JVUserMessageIgnored ) ? @"JVUserMessageIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
-		} else wasIgnored = NO;
-	}
-
-	return wasIgnored;
+	return ( ignoreResult != JVNotIgnored );
 }
 @end
 

@@ -4,46 +4,73 @@
 
 #import <Cocoa/Cocoa.h>
 #import "KAIgnoreRule.h"
+#import <AGRegex/AGRegex.h>
 
 @implementation KAInternalIgnoreRule
-+ (id) ruleWithString:(NSString *) string inRooms:(NSArray *) rooms usesRegex:(BOOL) regex ignoreMember:(BOOL) member {
-	return [[[KAInternalIgnoreRule alloc] initWithString:string inRooms:rooms usesRegex:regex ignoreMember:member] autorelease];
++ (id) ruleForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex {
+	return [[[KAInternalIgnoreRule alloc] initForUser:user message:message inRooms:rooms usesRegex:regex] autorelease];
 }
 
-- (id) initWithString:(NSString *) string inRooms:(NSArray *) rooms usesRegex:(BOOL) regex ignoreMember:(BOOL) member {
+- (id) initForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex {
 	if( ( self = [super init] ) ) {
-		_ignoredKey = [string retain];
-		_inChannels	= [rooms retain];
-		_regex = regex;
-		_memberIgnore = member;
+		_ignoredUser = [user copy];
+		_ignoredMessage = [message copy];
+		_inChannels	= [rooms copy];
+		_userRegex = nil;
+		_messageRegex = nil;
+
+		if( regex ) {
+			if( user ) _userRegex = [[AGRegex alloc] initWithPattern:user options:AGRegexCaseInsensitive];
+			if( message ) _messageRegex = [[AGRegex alloc] initWithPattern:message options:AGRegexCaseInsensitive];
+		}
 	}
 
 	return self;
 }
 
+- (id) initWithCoder:(NSCoder *) coder {
+	if( [coder allowsKeyedCoding] )
+		return [self initForUser:[coder decodeObjectForKey:@"KAIgnoreUser"] message:[coder decodeObjectForKey:@"KAIgnoreMessage"] inRooms:[coder decodeObjectForKey:@"KAIgnoreRooms"] usesRegex:[coder decodeBoolForKey:@"KAIgnoreUseRegex"]];
+	else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
+	return nil;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+	if( [coder allowsKeyedCoding] ) {
+		[coder encodeObject:_ignoredUser forKey:@"KAIgnoreUser"];
+		[coder encodeObject:_ignoredMessage forKey:@"KAIgnoreMessage"];
+		[coder encodeObject:_inChannels forKey:@"KAIgnoreRooms"];
+		[coder encodeBool:( _userRegex || _messageRegex ) forKey:@"KAIgnoreUseRegex"];
+	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
+}
+
 - (void) dealloc {
-	[_ignoredKey release];
+	[_ignoredUser release];
+	[_ignoredMessage release];
 	[_inChannels release];
-
-	_ignoredKey = nil;
-	_inChannels = nil;
-
+	[_userRegex release];
+	[_messageRegex release];
 	[super dealloc];
 }
 
-- (NSString *) key {
-	return [[_ignoredKey retain] autorelease];
-}
+- (JVIgnoreMatchResult) matchesUser:(NSString *) user message:(NSString *) message inChannel:(NSString *) channel {
+	if( ! _inChannels || [_inChannels containsObject:channel] || [_inChannels containsObject:@"##ALL"] ) {
+		BOOL userFound = NO, messageFound = NO;
+		BOOL userRequired = ( _userRegex || _ignoredUser ), messageRequired = ( _messageRegex || _ignoredMessage );
 
-- (NSArray *) channels {
-	return [[_inChannels retain] autorelease];
-}
+		if( _userRegex && [_userRegex findInString:user] ) userFound = YES;
+		else if( _ignoredUser ) userFound = [_ignoredUser isEqualToString:user];
 
-- (BOOL) isMember {
-	return _memberIgnore;
-}
+		if( _messageRegex && [_messageRegex findInString:message] ) messageFound = YES;
+		else if( _ignoredMessage ) messageFound = [_ignoredMessage isEqualToString:message];
 
-- (BOOL) regex {
-	return _regex;
+		if( userRequired ) {
+			if( ! userFound || ( messageRequired && ! messageFound ) ) return JVNotIgnored;
+			else return JVUserMessageIgnored;
+		} else {
+			if( messageRequired && messageFound ) return JVMessageIgnored;
+			else return JVNotIgnored;
+		}
+	} else return JVNotIgnored;
 }
 @end

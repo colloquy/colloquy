@@ -1,25 +1,24 @@
-//  KAIgnoreRule.h
-//  Colloquy
-//  Created by Karl Adam on Thu Apr 15 2004.
-
-#import <Foundation/NSObject.h>
+#import <Foundation/Foundation.h>
 
 @class JVChatController;
-@class NSString;
-@class NSArray;
+@class AGRegex;
+
+typedef enum _JVIgnoreMatch {
+	JVUserMessageIgnored,
+	JVMessageIgnored,
+	JVNotIgnored
+} JVIgnoreMatchResult;
 
 @interface KAInternalIgnoreRule : NSObject {
-	NSString *_ignoredKey;
+	NSString *_ignoredUser;
+	NSString *_ignoredMessage;
+	AGRegex *_userRegex;
+	AGRegex *_messageRegex;
 	NSArray *_inChannels;
-	BOOL _regex;
-	BOOL _memberIgnore;
 }
-+ (id) ruleWithString:(NSString *) string inRooms:(NSArray *) rooms usesRegex:(BOOL) regex ignoreMember:(BOOL) member;
 
-- (id) initWithString:(NSString *) string inRooms:(NSArray *) rooms usesRegex:(BOOL) regex ignoreMember:(BOOL) member;
++ (id) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms usesRegex:(BOOL) regex;
+- (id) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms usesRegex:(BOOL) regex;
 
-- (NSString *) key;
-- (NSArray *) channels;
-- (BOOL) isMember;
-- (BOOL) regex;
+- (JVIgnoreMatchResult) matchesUser:(NSString *) user message:(NSString *) message inChannel:(NSString *) channel;
 @end

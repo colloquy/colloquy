@@ -606,7 +606,7 @@
 
 	if( ! rooms && [view isMemberOfClass:NSClassFromString( @"JVChatRoom" )] ) rooms = [NSArray arrayWithObject:[(JVChatRoom *)view target]];
 
-	[[_manager chatController] addIgnore:( memberString ? memberString : messageString ) withKey:( messageString ? messageString : memberString ) inRooms:rooms usesRegex:regex isMember:member];
+	[[_manager chatController] addIgnoreForUser:memberString withMessage:messageString inRooms:rooms usesRegex:regex];
 
 	return YES;
 }

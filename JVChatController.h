@@ -19,7 +19,7 @@
 	@private
 	NSMutableArray *_chatWindows;
 	NSMutableArray *_chatControllers;
-	NSMutableDictionary *_ignoreRules;
+	NSMutableArray *_ignoreRules;
 }
 + (JVChatController *) defaultManager;
 
@@ -42,8 +42,6 @@
 
 - (IBAction) detachView:(id) sender;
 
-- (void) addIgnore:(NSString *)inIgnoreName withKey:(NSString *)ignoreKeyExpression inRooms:(NSArray *) rooms usesRegex:(BOOL) regex isMember:(BOOL) member;
-- (KAInternalIgnoreRule *) shouldIgnoreUser:(NSString *) user inRoom:(NSString *) room;
-- (KAInternalIgnoreRule *) shouldIgnoreMessage:(NSAttributedString *) message inRoom:(NSString *) room;
+- (void) addIgnoreForUser:(NSString *)user withMessage:(NSString *)message inRooms:(NSArray *)rooms usesRegex:(BOOL) regex;
 - (BOOL) ignoreUser:(NSString *) name withMessage:(NSAttributedString *) message inRoom:(NSString *) room withConnection:(MVChatConnection *) connection;
 @end
