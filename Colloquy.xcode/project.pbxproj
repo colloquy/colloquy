@@ -120,6 +120,28 @@
 //082
 //083
 //084
+//0A0
+//0A1
+//0A2
+//0A3
+//0A4
+		0A60BE050630D67300DC6280 = {
+			containerPortal = 1CFA05F6053C960800C702F9;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+		0A60BE060630D67300DC6280 = {
+			isa = PBXTargetDependency;
+			name = "Chat Core (Framework) (from Chat Core.xcode)";
+			targetProxy = 0A60BE050630D67300DC6280;
+		};
+//0A0
+//0A1
+//0A2
+//0A3
+//0A4
 //100
 //101
 //102
@@ -722,6 +744,33 @@
 			settings = {
 			};
 		};
+		1C6C78470630D84500698F55 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = ChatCore.framework;
+			refType = 3;
+			remoteRef = 1C6C78920630D84C00698F55;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C6C78920630D84C00698F55 = {
+			containerPortal = 1CFA05F6053C960800C702F9;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+		1C6C78930630D89200698F55 = {
+			fileRef = 1C6C78470630D84500698F55;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C6C78940630D89A00698F55 = {
+			fileRef = 1C6C78470630D84500698F55;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C6EA23C05A735D6006A559F = {
 			children = (
 				1C6EA23D05A735D6006A559F,
@@ -1195,7 +1244,7 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
-				1CFA05FE053C964800C702F9,
+				0A60BE060630D67300DC6280,
 				1C09DFF7052DFF6600D748CF,
 			);
 			isa = PBXNativeTarget;
@@ -2087,8 +2136,8 @@
 				1CB2CD7F052DDC560094AAA4,
 				1CB2CD80052DDC560094AAA4,
 				1CD0201F05758F26000F93B4,
-				1CF03CAC063092D7009774D8,
 				1C6C75460630AD5300698F55,
+				1C6C78930630D89200698F55,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2146,7 +2195,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1CF03CB6063092E4009774D8,
+				1C6C78940630D89A00698F55,
 				1C6C75490630AD9500698F55,
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
@@ -3490,33 +3539,6 @@
 			shellPath = /bin/sh;
 			shellScript = "touch Resources/Styles\ntouch Resources/Emoticons";
 		};
-		1CF03C2E063092A5009774D8 = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = ChatCore.framework;
-			refType = 3;
-			remoteRef = 1CF03C2F063092AB009774D8;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1CF03C2F063092AB009774D8 = {
-			containerPortal = 1CFA05F6053C960800C702F9;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
-			remoteInfo = "Chat Core (Framework)";
-		};
-		1CF03CAC063092D7009774D8 = {
-			fileRef = 1CF03C2E063092A5009774D8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CF03CB6063092E4009774D8 = {
-			fileRef = 1CF03C2E063092A5009774D8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CF9BB9A04FBE96D00A8FE6E = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -3534,24 +3556,12 @@
 		};
 		1CFA05F9053C960800C702F9 = {
 			children = (
-				1CF03C2E063092A5009774D8,
+				1C6C78470630D84500698F55,
 			);
 			isa = PBXGroup;
 			name = Products;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		1CFA05FD053C964800C702F9 = {
-			containerPortal = 1CFA05F6053C960800C702F9;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B;
-			remoteInfo = "Chat Core (Framework)";
-		};
-		1CFA05FE053C964800C702F9 = {
-			isa = PBXTargetDependency;
-			name = "Chat Core (Framework) (from Chat Core.xcode)";
-			targetProxy = 1CFA05FD053C964800C702F9;
 		};
 		1CFAFE9A053C1B3D00C702F9 = {
 			children = (
