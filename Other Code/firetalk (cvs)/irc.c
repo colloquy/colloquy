@@ -1116,6 +1116,9 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 					case 332: /* RPL_TOPIC */
 						firetalk_callback_chat_gottopic(c,args[3],irc_irc_to_html(args[4]),NULL);
 						break;
+					case 333: /* RPL_TOPICWHOTIME */
+						firetalk_callback_chat_gottopic(c,args[3],NULL,irc_get_nickname(args[4]));
+						break;
 				}
 			}
 		}
