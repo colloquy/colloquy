@@ -152,7 +152,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	MVChatConnectionProxy _proxy;
 	NSStringEncoding _encoding;
 
-	void *_chatConnection;
+	void *_chatConnection /* SERVER_REC */;
+	void *_chatConnectionSettings /* SERVER_CONNECT_REC */;
 	NSMutableDictionary *_roomsCache;
 	NSDate *_cachedDate;
 	NSAttributedString *_awayMessage;

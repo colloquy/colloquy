@@ -117,6 +117,8 @@ typedef struct {
 - (io_connect_t) _powerConnection;
 - (SERVER_REC *) _irssiConnection;
 - (void) _setIrssiConnection:(SERVER_REC *) server;
+- (SERVER_CONNECT_REC *) _irssiConnectSettings;
+- (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings;
 - (void) _removePendingIrssiReconnections;
 - (void) _registerForSleepNotifications;
 - (void) _deregisterForSleepNotifications;
@@ -1243,8 +1245,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		connectionCount++;
 
 		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
-		SERVER_CONNECT_REC *conn = server_create_conn( proto -> id, "irc.javelin.cc", 6667, [[NSString stringWithFormat:@"%8x", self] UTF8String], NULL, [self encodedBytesWithString:NSUserName()] );
-		[self _setIrssiConnection:proto -> server_init_connect( conn )];
+		SERVER_CONNECT_REC *settings = server_create_conn( proto -> id, "irc.javelin.cc", 6667, [[NSString stringWithFormat:@"%8x", self] UTF8String], NULL, [self encodedBytesWithString:NSUserName()] );
+
+		[self _setIrssiConnectSettings:settings];
+//		[self _setIrssiConnection:proto -> server_init_connect( _chatConnectionSettings )];
 	}
 
 	return self;
@@ -1285,6 +1289,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[_awayMessage release];
 
 	[self _setIrssiConnection:NULL];
+	[self _setIrssiConnectSettings:NULL];
 
 	_npassword = nil;
 	_roomsCache = nil;
@@ -1300,7 +1305,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (void) connect {
-	if( ! [self _irssiConnection] ) return;
+	if( ! [self _irssiConnectSettings] ) return;
 	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
 
 	_nextAltNickIndex = 0;
@@ -1308,20 +1313,18 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[self _willConnect];
 	[self _removePendingIrssiReconnections];
 
-	CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( [self _irssiConnection] -> chat_type );
+	CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( [self _irssiConnectSettings] -> chat_type );
 
 	if( ! proto ) {
 		[self _didNotConnect];
 		return;
 	}
 
-	if( [self _irssiConnection] -> connect_time ) {
-		SERVER_REC *newConnection = proto -> server_init_connect( [self _irssiConnection] -> connrec );
-		[self _setIrssiConnection:newConnection];
-		if( ! newConnection ) {
-			[self _didNotConnect];
-			return;
-		}
+	SERVER_REC *newConnection = proto -> server_init_connect( [self _irssiConnectSettings] );
+	[self _setIrssiConnection:newConnection];
+	if( ! newConnection ) {
+		[self _didNotConnect];
+		return;
 	}
 
 	proto -> server_connect( [self _irssiConnection] );
@@ -1375,15 +1378,15 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 - (void) setRealName:(NSString *) name {
 	NSParameterAssert( name != nil );
-	if( ! [self _irssiConnection] ) return;
+	if( ! [self _irssiConnectSettings] ) return;
 
-	g_free_not_null( [self _irssiConnection] -> connrec -> realname );
-	[self _irssiConnection] -> connrec -> realname = g_strdup( [self encodedBytesWithString:name] );		
+	g_free_not_null( [self _irssiConnectSettings] -> realname );
+	[self _irssiConnectSettings] -> realname = g_strdup( [self encodedBytesWithString:name] );		
 }
 
 - (NSString *) realName {
-	if( ! [self _irssiConnection] ) return nil;
-	return [self stringWithEncodedBytes:[self _irssiConnection] -> connrec -> realname];
+	if( ! [self _irssiConnectSettings] ) return nil;
+	return [self stringWithEncodedBytes:[self _irssiConnectSettings] -> realname];
 }
 
 #pragma mark -
@@ -1391,35 +1394,29 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) setNickname:(NSString *) nickname {
 	NSParameterAssert( nickname != nil );
 	NSParameterAssert( [nickname length] > 0 );
-	if( ! [self _irssiConnection] ) return;
+	if( ! [self _irssiConnectSettings] ) return;
+
+	g_free_not_null( [self _irssiConnectSettings] -> nick );
+	[self _irssiConnectSettings] -> nick = g_strdup( [self encodedBytesWithString:nickname] );		
 
 	if( [self isConnected] ) {
-		g_free_not_null( [self _irssiConnection] -> connrec -> nick );
-		[self _irssiConnection] -> connrec -> nick = g_strdup( [self encodedBytesWithString:nickname] );		
-
 		if( ! [nickname isEqualToString:[self nickname]] ) {
 			_nickIdentified = NO;
 			[self sendRawMessageWithFormat:@"NICK %@", nickname];
 		}
-	} else {
-		g_free_not_null( [self _irssiConnection] -> nick );
-		[self _irssiConnection] -> nick = g_strdup( [self encodedBytesWithString:nickname] );		
-
-		g_free_not_null( [self _irssiConnection] -> connrec -> nick );
-		[self _irssiConnection] -> connrec -> nick = g_strdup( [self encodedBytesWithString:nickname] );		
 	}
 }
 
 - (NSString *) nickname {
-	if( ! [self _irssiConnection] ) return nil;
-	if( [self isConnected] )
+	if( [self isConnected] && [self _irssiConnection] )
 		return [self stringWithEncodedBytes:[self _irssiConnection] -> nick];
-	return [self stringWithEncodedBytes:[self _irssiConnection] -> connrec -> nick];
+	if( ! [self _irssiConnectSettings] ) return nil;
+	return [self stringWithEncodedBytes:[self _irssiConnectSettings] -> nick];
 }
 
 - (NSString *) preferredNickname {
-	if( ! [self _irssiConnection] ) return nil;
-	return [self stringWithEncodedBytes:[self _irssiConnection] -> connrec -> nick];
+	if( ! [self _irssiConnectSettings] ) return nil;
+	return [self stringWithEncodedBytes:[self _irssiConnectSettings] -> nick];
 }
 
 #pragma mark -
@@ -1462,16 +1459,16 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (void) setPassword:(NSString *) password {
-	if( ! [self _irssiConnection] ) return;
+	if( ! [self _irssiConnectSettings] ) return;
 
-	g_free_not_null( [self _irssiConnection] -> connrec -> password );
-	if( [password length] ) [self _irssiConnection] -> connrec -> password = g_strdup( [self encodedBytesWithString:password] );		
-	else [self _irssiConnection] -> connrec -> password = NULL;		
+	g_free_not_null( [self _irssiConnectSettings] -> password );
+	if( [password length] ) [self _irssiConnectSettings] -> password = g_strdup( [self encodedBytesWithString:password] );		
+	else [self _irssiConnectSettings] -> password = NULL;		
 }
 
 - (NSString *) password {
-	if( ! [self _irssiConnection] ) return nil;
-	char *pass = [self _irssiConnection] -> connrec -> password;
+	if( ! [self _irssiConnectSettings] ) return nil;
+	char *pass = [self _irssiConnectSettings] -> password;
 	if( pass ) return [self stringWithEncodedBytes:pass];
 	return nil;
 }
@@ -1481,15 +1478,15 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) setUsername:(NSString *) username {
 	NSParameterAssert( username != nil );
 	NSParameterAssert( [username length] > 0 );
-	if( ! [self _irssiConnection] ) return;
+	if( ! [self _irssiConnectSettings] ) return;
 
-	g_free_not_null( [self _irssiConnection] -> connrec -> username );
-	[self _irssiConnection] -> connrec -> username = g_strdup( [self encodedBytesWithString:username] );		
+	g_free_not_null( [self _irssiConnectSettings] -> username );
+	[self _irssiConnectSettings] -> username = g_strdup( [self encodedBytesWithString:username] );		
 }
 
 - (NSString *) username {
-	if( ! [self _irssiConnection] ) return nil;
-	return [self stringWithEncodedBytes:[self _irssiConnection] -> connrec -> username];
+	if( ! [self _irssiConnectSettings] ) return nil;
+	return [self stringWithEncodedBytes:[self _irssiConnectSettings] -> username];
 }
 
 #pragma mark -
@@ -1497,50 +1494,50 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) setServer:(NSString *) server {
 	NSParameterAssert( server != nil );
 	NSParameterAssert( [server length] > 0 );
-	if( ! [self _irssiConnection] ) return;
+	if( ! [self _irssiConnectSettings] ) return;
 
-	g_free_not_null( [self _irssiConnection] -> connrec -> address );
-	[self _irssiConnection] -> connrec -> address = g_strdup( [self encodedBytesWithString:server] );		
+	g_free_not_null( [self _irssiConnectSettings] -> address );
+	[self _irssiConnectSettings] -> address = g_strdup( [self encodedBytesWithString:server] );		
 }
 
 - (NSString *) server {
-	if( ! [self _irssiConnection] ) return nil;
-	return [self stringWithEncodedBytes:[self _irssiConnection] -> connrec -> address];
+	if( ! [self _irssiConnectSettings] ) return nil;
+	return [self stringWithEncodedBytes:[self _irssiConnectSettings] -> address];
 }
 
 #pragma mark -
 
 - (void) setServerPort:(unsigned short) port {
-	if( ! [self _irssiConnection] ) return;
-	[self _irssiConnection] -> connrec -> port = ( port ? port : 6667 );
+	if( ! [self _irssiConnectSettings] ) return;
+	[self _irssiConnectSettings] -> port = ( port ? port : 6667 );
 }
 
 - (unsigned short) serverPort {
-	if( ! [self _irssiConnection] ) return 0;
-	return [self _irssiConnection] -> connrec -> port;
+	if( ! [self _irssiConnectSettings] ) return 0;
+	return [self _irssiConnectSettings] -> port;
 }
 
 #pragma mark -
 
 - (void) setProxyType:(MVChatConnectionProxy) type {
-	if( ! [self _irssiConnection] ) return;
+	if( ! [self _irssiConnectSettings] ) return;
 
 	_proxy = type;
 
 	if( _proxy == MVChatConnectionHTTPSProxy ) {
-		g_free_not_null( [self _irssiConnection] -> connrec -> proxy );
-		[self _irssiConnection] -> connrec -> proxy = g_strdup( "127.0.0.1" );
+		g_free_not_null( [self _irssiConnectSettings] -> proxy );
+		[self _irssiConnectSettings] -> proxy = g_strdup( "127.0.0.1" );
 
-		[self _irssiConnection] -> connrec -> proxy_port = 8000;
+		[self _irssiConnectSettings] -> proxy_port = 8000;
 
-		g_free_not_null( [self _irssiConnection] -> connrec -> proxy_string );
-		[self _irssiConnection] -> connrec -> proxy_string = g_strdup( "CONNECT %s:%d\nProxy-Authorization: %%BASE64(user:pass)%%\n\n" );
+		g_free_not_null( [self _irssiConnectSettings] -> proxy_string );
+		[self _irssiConnectSettings] -> proxy_string = g_strdup( "CONNECT %s:%d\nProxy-Authorization: %%BASE64(user:pass)%%\n\n" );
 
-		g_free_not_null( [self _irssiConnection] -> connrec -> proxy_string_after );
-		[self _irssiConnection] -> connrec -> proxy_string_after = NULL;
+		g_free_not_null( [self _irssiConnectSettings] -> proxy_string_after );
+		[self _irssiConnectSettings] -> proxy_string_after = NULL;
 
-		g_free_not_null( [self _irssiConnection] -> connrec -> proxy_password );
-		[self _irssiConnection] -> connrec -> proxy_password = NULL;
+		g_free_not_null( [self _irssiConnectSettings] -> proxy_password );
+		[self _irssiConnectSettings] -> proxy_password = NULL;
 	}
 }
 
@@ -2023,6 +2020,19 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
+- (SERVER_CONNECT_REC *) _irssiConnectSettings {
+	return _chatConnectionSettings;
+}
+
+- (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings {
+	SERVER_CONNECT_REC *old = _chatConnectionSettings;
+	_chatConnectionSettings = settings;
+	if( _chatConnectionSettings ) server_connect_ref( (SERVER_CONNECT_REC *)_chatConnectionSettings );
+	if( old ) server_connect_unref( old );
+}
+
+#pragma mark -
+
 - (void) _removePendingIrssiReconnections {
 	GSList *list = NULL;
 	GSList *item = NULL;
@@ -2129,6 +2139,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( [self _irssiConnection] -> connection_lost ) _status = MVChatConnectionServerDisconnectedStatus;
 	else _status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
+	[self _setIrssiConnection:NULL];
 }
 
 - (void) _forceDisconnect {
@@ -2144,7 +2155,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	[self _irssiConnection] -> connection_lost = TRUE;
 	[self _irssiConnection] -> no_reconnect = FALSE;
-	server_disconnect( [self _irssiConnection] );	
+	server_disconnect( [self _irssiConnection] );
 }
 @end
 
