@@ -8,7 +8,6 @@
                 changeDefaultEmoticons = id; 
                 changeMinimumFontSize = id; 
                 changePreferences = id; 
-                hideEmoticons = id; 
                 noGraphicEmoticons = id; 
             }; 
             CLASS = JVAppearancePreferences; 
