@@ -20,6 +20,7 @@
 
 #import "JVChatController.h"
 #import "JVStyle.h"
+#import "JVChatRoom.h"
 #import "JVNotificationController.h"
 #import "MVConnectionsController.h"
 #import "JVDirectChat.h"
@@ -161,29 +162,74 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
 		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
 
-		// Set up log directories
-		NSString *logs = [[NSString stringWithFormat:@"~/Documents/%@ Transcripts", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath];
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
-		logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", _target, [_connection server]]];
-		if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
-		logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.colloquyTranscript", [[NSDate date] description]]];
+		if( ( [self isMemberOfClass:[JVDirectChat class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"] ) ||
+			( [self isMemberOfClass:[JVChatRoom class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"] ) ) {
+			// Set up log directories
+			NSString *logs = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
+			NSFileManager *fileManager = [NSFileManager defaultManager];
+			if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 
-		[fileManager createFileAtPath:logs contents:[NSData data] attributes:nil];
-		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:logs];
+			int org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
 
-		_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:logs] retain];
+			if( org == 1 ) {
+				logs = [logs stringByAppendingPathComponent:[_connection server]];
+				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+			} else if( org == 2 ) {
+				logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", _target, [_connection server]]];
+				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+			} else if( org == 3 ) {
+				logs = [logs stringByAppendingPathComponent:[_connection server]];
+				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 
-		// Write the <log> element to the logfile
-		[self writeToLog:xmlDocGetRootElement( _xmlLog ) withDoc:_xmlLog initializing:YES continuation:NO];
+				logs = [logs stringByAppendingPathComponent:_target];
+				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+			}
 
-		[_filePath autorelease];
-		_filePath = [logs retain];
+			NSString *logName = nil;
+			int session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
 
-		if( ! [[NSFileManager defaultManager] fileExistsAtPath:_filePath] ) {
+			if( ! session ) {
+				BOOL nameFound = NO;
+				unsigned int i = 1;
+
+				if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", _target];
+				else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", _target, [_connection server]];
+				nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
+
+				while( ! nameFound ) {
+					if( org ) logName = [NSString stringWithFormat:@"%@ %d.colloquyTranscript", _target, i];
+					else logName = [NSString stringWithFormat:@"%@ (%@) %d.colloquyTranscript", _target, [_connection server], i];
+					nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
+				}
+			} else if( session == 1 ) {
+				if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", _target];
+				else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", _target, [_connection server]];
+			} else if( session == 2 ) {
+				if( org ) logName = [NSString stringWithFormat:@"%@ %@.colloquyTranscript", _target, [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
+				else logName = [NSString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", _target, [_connection server], [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
+			}
+
+			logs = [logs stringByAppendingPathComponent:logName];
+			if( ! [fileManager fileExistsAtPath:logs] ) {
+				[fileManager createFileAtPath:logs contents:[NSData data] attributes:nil];
+				[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:logs];
+
+				_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:logs] retain];
+
+				// Write the <log> element to the logfile
+				[self writeToLog:xmlDocGetRootElement( _xmlLog ) withDoc:_xmlLog initializing:YES continuation:NO];
+			} else { // Use existing file.
+				_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:logs] retain];
+			}
+
 			[_filePath autorelease];
-			_filePath = nil;
-		}
+			_filePath = [logs retain];
+
+			if( ! [[NSFileManager defaultManager] fileExistsAtPath:_filePath] ) {
+				[_filePath autorelease];
+				_filePath = nil;
+			}
+		} else _logFile = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
@@ -1437,6 +1483,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) writeToLog:(void *) root withDoc:(void *) doc initializing:(BOOL) init continuation:(BOOL) cont {
+	if( ! _logFile ) return;
+
 	// Append a node to the logfile for this chat
 	xmlBufferPtr buf = xmlBufferCreate();
 	xmlNodeDump( buf, doc, root, 0, (int) [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] );

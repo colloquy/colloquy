@@ -15,6 +15,7 @@
 #import "JVBehaviorPreferences.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
+#import "JVTranscriptPreferences.h"
 #import "MVBuddyListController.h"
 #import "MVChatPluginManager.h"
 #import "JVChatController.h"
@@ -130,6 +131,7 @@ static BOOL applicationIsTerminating = NO;
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Appearance", "appearance preference pane name" ) owner:[JVAppearancePreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Notification", "notification preference pane name" ) owner:[JVNotificationPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
+	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transcripts", "chat transcript preference pane name" ) owner:[JVTranscriptPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Behavior", "behavior preference pane name" ) owner:[JVBehaviorPreferences sharedInstance]];
 
 	setupAlready = YES;

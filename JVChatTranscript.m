@@ -220,7 +220,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 }
 
 - (void) setWindowController:(JVChatWindowController *) controller {
-	if( [[[_windowController window] representedFilename] isEqualToString:_filePath] )
+	if( [[[_windowController window] representedFilename] isEqualToString:_filePath] || ! _filePath )
 		[[_windowController window] setRepresentedFilename:@""];
 	else if( ! [[[_windowController window] representedFilename] length] )
 		[[_windowController window] setRepresentedFilename:_filePath];

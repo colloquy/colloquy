@@ -2,6 +2,12 @@
 <!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
 <plist version="0.9">
 <dict>
+	<key>JVChatTranscriptFolder</key>
+	<string>~/Documents/Colloquy Transcripts</string>
+	<key>JVChatTranscriptFolderOrganization</key>
+	<integer>1</integer>
+	<key>JVChatTranscriptSessionHandling</key>
+	<integer>1</integer>
 	<key>JVAutoAcceptFilesFrom</key>
 	<integer>1</integer>
 	<key>JVChatConsolePreferredOpenMode</key>

@@ -1,0 +1,46 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                changeFolderOrganization = id; 
+                changeHumanReadable = id; 
+                changeLogChatRooms = id; 
+                changeLogPrivateChats = id; 
+                changeSessionHandling = id; 
+                changeTranscriptFolder = id; 
+            }; 
+            CLASS = JVTranscriptPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                folderOrganization = NSPopUpButton; 
+                humanReadable = NSButton; 
+                logChatRooms = NSButton; 
+                logPrivateChats = NSButton; 
+                sessionHandling = NSPopUpButton; 
+                transcriptFolder = NSPopUpButton; 
+            }; 
+            SUPERCLASS = NSPreferencesModule; 
+        }, 
+        {
+            ACTIONS = {apply = id; cancel = id; ok = id; selectModule = id; }; 
+            CLASS = NSPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                applyButton = id; 
+                cancelButton = id; 
+                moduleMatrix = id; 
+                okButton = id; 
+                preferencesPanel = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = NSPreferencesModule; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
