@@ -1307,12 +1307,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
 	}
 
-	if( [messageString length] ) {
-		[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
-		[self appendMessage:messageString subsequent:NO];
-		[display displayIfNeeded];
-		[[display window] enableFlushWindow];
-	}
+	if( [messageString length] ) [self appendMessage:messageString subsequent:NO];
 
 	xmlFreeDoc( doc );
 
@@ -1534,8 +1529,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}
 
 	if( [transformedMessage length] ) {
-		[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
-
 		BOOL subsequent = ( [transformedMessage rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
 		[self appendMessage:transformedMessage subsequent:subsequent];
 
@@ -1543,9 +1536,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 			long loc = [self locationOfMessage:cmessage];
 			if( loc ) [[self _verticalMarkedScroller] addMarkAt:loc];
 		}
-
-		[display displayIfNeeded];
-		[[display window] enableFlushWindow]; // flush everything we have drawn
 
 		_firstMessage = NO; // not the first message anymore
 		_requiresFullMessage = NO; // next message will not require a new envelope if it is consecutive
