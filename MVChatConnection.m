@@ -798,6 +798,13 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 #pragma mark -
 
+- (void) sendRawMessage:(NSString *) raw {
+	if( [self isConnected] )
+		firetalk_send_raw( _chatConnection, [raw UTF8String] );
+}
+
+#pragma mark -
+
 - (void) sendFileToUser:(NSString *) user withFilePath:(NSString *) path {
 	if( ! [[NSFileManager defaultManager] isReadableFileAtPath:path] ) return;
 	if( [self isConnected] ) {

@@ -172,6 +172,7 @@ struct s_firetalk_protocol_functions {
 	enum firetalk_error (*comparenicks)(const char * const, const char * const);
 	enum firetalk_error (*disconnect)(client_t);
 	enum firetalk_error (*signon)(client_t, const char * const);
+    enum firetalk_error (*send_raw)(client_t, const char * const);
 	enum firetalk_error (*save_config)(client_t);
 	enum firetalk_error (*get_roomlist)(client_t, const char * const);
 	enum firetalk_error (*stop_roomlist)(client_t);

@@ -44,6 +44,10 @@ enum firetalk_error dummy_signon(client_t c, const char * const nickname) {
 	return FE_SUCCESS;
 }
 
+enum firetalk_error dummy_send_raw(client_t c, const char * const text) {
+	return FE_SUCCESS;
+}
+
 enum firetalk_error dummy_save_config(client_t c) {
 	return FE_SUCCESS;
 }

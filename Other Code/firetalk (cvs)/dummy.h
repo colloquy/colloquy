@@ -29,6 +29,7 @@ const char * const dummy_normalize_room_name(const char * const name);
 enum firetalk_error dummy_compare_nicks(const char * const nick1, const char * const nick2);
 enum firetalk_error dummy_disconnect(client_t c);
 enum firetalk_error dummy_signon(client_t c, const char * const nickname);
+enum firetalk_error dummy_send_raw(client_t c, const char * const text);
 enum firetalk_error dummy_save_config(client_t c);
 
 enum firetalk_error dummy_preselect(client_t c, fd_set *read, fd_set *write, fd_set *except, int *n);

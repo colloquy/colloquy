@@ -131,6 +131,7 @@ static const struct s_firetalk_protocol_functions protocol_functions[FP_MAX] = {
 		aim_compare_nicks,
 		toc_disconnect,
 		toc_signon,
+		dummy_send_raw,
 		toc_save_config,
 		dummy_get_roomlist,
 		dummy_stop_roomlist,
@@ -182,6 +183,7 @@ static const struct s_firetalk_protocol_functions protocol_functions[FP_MAX] = {
 		irc_compare_nicks,
 		irc_disconnect,
 		irc_signon,
+		irc_send_raw,
 		dummy_save_config,
 		irc_get_roomlist,
 		irc_stop_roomlist,
@@ -2214,6 +2216,16 @@ enum firetalk_error firetalk_signon(firetalk_t conn, const char * const server, 
 		return FE_SUCCESS;
 	} else
 		return firetalkerror;
+}
+
+enum firetalk_error firetalk_send_raw(firetalk_t conn, const char * const message) {
+	
+#ifdef DEBUG
+    if (firetalk_check_handle(conn) != FE_SUCCESS)
+        return FE_BADHANDLE;
+#endif
+    
+    return protocol_functions[conn->protocol].send_raw(conn->handle,message);
 }
 
 enum firetalk_error firetalk_handle_synack(firetalk_t conn) {

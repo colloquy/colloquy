@@ -714,6 +714,10 @@ enum firetalk_error irc_signon(client_t c, const char * const nickname) {
 	return FE_SUCCESS;
 }
 
+enum firetalk_error irc_send_raw(client_t c, const char * const text) {
+    return irc_send_printf(c,1,text);
+}
+
 enum firetalk_error irc_preselect(client_t c, fd_set *read, fd_set *write, fd_set *except, int *n) {
 	if (c->modecount > 0)
 		irc_flush_modes(c);

@@ -205,6 +205,7 @@ enum firetalk_protocol firetalk_get_protocol(firetalk_t conn);
 
 enum firetalk_error firetalk_disconnect(firetalk_t conn);
 enum firetalk_error firetalk_signon(firetalk_t conn, const char * const server, const short port, const char * const username);
+enum firetalk_error firetalk_send_raw(firetalk_t conn, const char * const message);
 enum firetalk_error firetalk_register_callback(firetalk_t conn, const int type, void (*function)(firetalk_t, void *, ...));
 
 enum firetalk_error firetalk_im_add_buddy(firetalk_t conn, const char * const nickname);
