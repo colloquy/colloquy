@@ -17,6 +17,7 @@
 		[super keyDown:theEvent];
 		return;
 	}
+
 	if( [chars length] && [chars characterAtIndex:0] == kReturnCharCode ) {
 		if ([[self delegate] respondsToSelector:@selector(textView:returnHit:)]) {
 			if( [[self delegate] textView:self returnHit:theEvent] ) return;
@@ -38,7 +39,11 @@
 			if( [[self delegate] textView:self downArrowHit:theEvent] ) return;
 		}
 	}
+
 	[super keyDown:theEvent];
+
+	if( ! [[self textStorage] length] )
+		[self reset:nil];
 }
 
 - (void) reset:(id) sender {
