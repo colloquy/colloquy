@@ -93,6 +93,9 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 		if( [value isKindOfClass:[NSValue class]] || [value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]] ) {
 			[list insertDescriptor:[value appleEventDescriptor] atIndex:count];
 			count++;
+		} else if( [value isKindOfClass:[NSNull class]] ) {
+			[list insertDescriptor:[NSAppleEventDescriptor nullDescriptor] atIndex:count];
+			count++;
 		} else {
 			NSAppleEventDescriptor *descriptor = [[value objectSpecifier] _asDescriptor];
 			if( descriptor ) {
@@ -120,6 +123,8 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
 		if( [value isKindOfClass:[NSValue class]] || [value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]] ) {
 			descriptor = [value appleEventDescriptor];
+		} else if( [value isKindOfClass:[NSNull class]] ) {
+			descriptor = [NSAppleEventDescriptor nullDescriptor];
 		} else descriptor = [[value objectSpecifier] _asDescriptor];
 
 		if( descriptor ) [record setDescriptor:descriptor forKeyword:[key fourCharCode]];
@@ -163,6 +168,8 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
 		if( [value isKindOfClass:[NSValue class]] || [value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]] ) {
 			descriptor = [value appleEventDescriptor];
+		} else if( [value isKindOfClass:[NSNull class]] ) {
+			descriptor = [NSAppleEventDescriptor nullDescriptor];
 		} else descriptor = [[value objectSpecifier] _asDescriptor];
 
 		if( descriptor ) [event setDescriptor:descriptor forKeyword:[key fourCharCode]];
