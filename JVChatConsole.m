@@ -189,7 +189,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (void) pause {
-	_paused = YES;
+	if( [[self connection] type] == MVChatConnectionIRCType )
+		_paused = YES;
 }
 
 - (void) resume {
