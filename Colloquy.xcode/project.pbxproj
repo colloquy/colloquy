@@ -197,6 +197,7 @@
 				1C7055C40519E54C00A8FE6E,
 				1C5A249106FA6AAA00A51F10,
 				1C5A249206FA6AAA00A51F10,
+				1C16362607021F240020D94D,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -449,6 +450,20 @@
 			isa = PBXTargetDependency;
 			target = 1C51B4BB052DE14B00BB459B;
 			targetProxy = 1C09DFF6052DFF6600D748CF;
+		};
+		1C16362607021F240020D94D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = GrowlAppBridge.framework;
+			path = /Library/Frameworks/GrowlAppBridge.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		1C16362707021F240020D94D = {
+			fileRef = 1C16362607021F240020D94D;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C18CD100528DBBA000001C8 = {
 			fileEncoding = 4;
@@ -1993,7 +2008,9 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-fconstant-cfstrings -fobjc-exceptions";
+				OTHER_LDFLAGS = "-weak_framework GrowlAppBridge";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = "";
@@ -2767,6 +2784,7 @@
 				1C8D2E72065D0BB600AC28C5,
 				1C5A249306FA6AAA00A51F10,
 				1C5A249406FA6AAA00A51F10,
+				1C16362707021F240020D94D,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
