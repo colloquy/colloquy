@@ -54,15 +54,23 @@ static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary 
 			}
 		} else if( [prop isEqualToString:@"font-style"] ) {
 			if( [attr rangeOfString:@"italic"].location != NSNotFound ) {
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[currentAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask];
+				NSFont *oldFont = [currentAttributes objectForKey:NSFontAttributeName];
+				NSFont *font = [[NSFontManager sharedFontManager] convertFont:oldFont toHaveTrait:NSItalicFontMask];
 				if( font ) {
 					[currentAttributes setObject:font forKey:NSFontAttributeName];
 					handled = YES;
+				} else {
+					[currentAttributes setObject:[NSNumber numberWithFloat:0.16] forKey:NSObliquenessAttributeName];
+					handled = YES;
 				}
 			} else {
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[currentAttributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSItalicFontMask];
+				NSFont *oldFont = [currentAttributes objectForKey:NSFontAttributeName];
+				NSFont *font = [[NSFontManager sharedFontManager] convertFont:oldFont toNotHaveTrait:NSItalicFontMask];
 				if( font ) {
 					[currentAttributes setObject:font forKey:NSFontAttributeName];
+					handled = YES;
+				} else {
+					[currentAttributes removeObjectForKey:NSObliquenessAttributeName];
 					handled = YES;
 				}
 			}
@@ -151,9 +159,13 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 
 			skipTag = YES;
 		} else */ if( ! strcmp( node -> name, "i" ) ) {
-			NSFont *font = [[NSFontManager sharedFontManager] convertFont:[newAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask];
-			if( font ) {
+			NSFont *oldFont = [newAttributes objectForKey:NSFontAttributeName];
+			NSFont *font = [[NSFontManager sharedFontManager] convertFont:oldFont toHaveTrait:NSItalicFontMask];
+			if( [font isEqual:oldFont] ) {
 				[newAttributes setObject:font forKey:NSFontAttributeName];
+				skipTag = YES;
+			} else {
+				[newAttributes setObject:[NSNumber numberWithFloat:0.16] forKey:NSObliquenessAttributeName];
 				skipTag = YES;
 			}
 		}
