@@ -1187,8 +1187,8 @@ static SilcClientOperations silcClientOps = {
 	while( ! MVChatApplicationQuitting ) {
 		[silcChatConnectionsLock lock];
 		if( ! [silcChatConnections count] ) {
-			usleep( 500000 ); // run really still (every 1/2 second) since we have no connections
 			[silcChatConnectionsLock unlock];
+			usleep( 2000000 ); // run really still (every 2 seconds) since we have no connections
 			continue;
 		}
 
