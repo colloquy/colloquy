@@ -226,6 +226,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateInputFont: ) name:JVStyleViewDidChangeStylesNotification object:display];
 
 	if( [self preferenceForKey:@"style"] ) {
 		style = [JVStyle styleWithIdentifier:[self preferenceForKey:@"style"]];
@@ -535,18 +536,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	[self setPreference:[style identifier] forKey:@"style"];
 	[self setPreference:variant forKey:@"style variant"];
-
-	NSFont *baseFont = nil;
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputUsesStyleFont"] ) {
-		WebPreferences *preferences = [display preferences];
-		// in some versions of WebKit (v125.9 at least), this is a font name, not a font family, try both
-		NSString *fontFamily = [preferences standardFontFamily];
-		int fontSize = [preferences defaultFontSize];
-		baseFont = [NSFont fontWithName:fontFamily size:fontSize];
-		if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:fontFamily traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:fontSize];
-	}
-
-	[send setBaseFont:baseFont];
 
 	[super changeStyleVariant:sender];
 }
@@ -1548,6 +1537,20 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 - (BOOL) _usingSpecificEmoticons {
 	return ( [self preferenceForKey:@"emoticon"] ? YES : NO );
+}
+
+- (void) _updateInputFont:(NSNotification *) notification {
+	NSFont *baseFont = nil;
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputUsesStyleFont"] ) {
+		WebPreferences *preferences = [display preferences];
+		// in some versions of WebKit (v125.9 at least), this is a font name, not a font family, try both
+		NSString *fontFamily = [preferences standardFontFamily];
+		int fontSize = [preferences defaultFontSize];
+		baseFont = [NSFont fontWithName:fontFamily size:fontSize];
+		if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:fontFamily traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:fontSize];
+	}
+
+	[send setBaseFont:baseFont];	
 }
 
 - (void) consumeImageData:(NSData *) data forTag:(int) tag {

@@ -6,6 +6,9 @@
 #import "JVEmoticonSet.h"
 
 #import <ChatCore/NSStringAdditions.h>
+#import <ChatCore/NSNotificationAdditions.h>
+
+NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesNotification";
 
 @interface WebCoreCache
 + (void) empty;
@@ -433,6 +436,9 @@
 
 	_switchingStyles = NO;
 	[self performSelectorOnMainThread:@selector( markScrollbarForMessages: ) withObject:highlightedMsgs waitUntilDone:YES];
+
+	NSNotification *note = [NSNotification notificationWithName:JVStyleViewDidChangeStylesNotification object:self userInfo:nil];		
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 quickEnd:
 	_switchingStyles = NO;

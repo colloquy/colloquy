@@ -6,6 +6,8 @@
 
 @protocol JVChatTranscriptElement;
 
+extern NSString *JVStyleViewDidChangeStylesNotification;
+
 @interface JVStyleView : WebView {
 	IBOutlet NSTextView *nextTextView;
 	BOOL _forwarding;
