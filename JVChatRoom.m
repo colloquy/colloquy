@@ -761,13 +761,15 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	_topic = [topic copy];
 
 	[_topicAttributed autorelease];
-	_topicAttributed = [self _convertRawMessage:topic withBaseFont:[NSFont systemFontOfSize:11.]];
+	_topicAttributed = [[self _convertRawMessage:topic withBaseFont:[NSFont systemFontOfSize:11.]] retain];
 
 	if( showChange && author ) {
 		author = [[author componentsSeparatedByString:@"!"] objectAtIndex:0];
 		JVChatRoomMember *mbr = [self chatRoomMemberWithName:author];
+
 		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
 		NSString *topicString = [_topicAttributed HTMLFormatWithOptions:options];
+
 		if( [mbr isLocalUser] ) {
 			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You changed the topic to \"%@\".", "you changed the topic chat room status message" ), topicString] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : author ), @"by", author, @"bynickname", _topicAttributed, @"topic", nil]];
 		} else {
