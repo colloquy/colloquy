@@ -17,18 +17,6 @@
 			isa = PBXBuildStyle;
 			name = Development;
 		};
-		014CEA430018CDE011CA2923 = {
-			buildRules = (
-			);
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUGGING_SYMBOLS = NO;
-				OPTIMIZATION_CFLAGS = "-O2";
-				OTHER_CFLAGS = "\U0001-DMAC_OS_X_VERSION_MIN_REQUIRED=MAC_OS_X_VERSION_10_2";
-			};
-			isa = PBXBuildStyle;
-			name = "Deployment (Mac OS X 10.2)";
-		};
 //010
 //011
 //012
@@ -41,8 +29,6 @@
 //084
 		089C1669FE841209C02AAC07 = {
 			buildStyles = (
-				014CEA430018CDE011CA2923,
-				F5DC9270031A65F001A84B83,
 				F52BA31C037C62E801A35792,
 				014CEA420018CDE011CA2923,
 			);
@@ -277,15 +263,10 @@
 			settings = {
 			};
 		};
-		1C9A54980425721E00000102 = {
-			isa = PBXFileReference;
-			name = French;
-			path = "Preference Panes/Identity/French.lproj/Identity.nib";
-			refType = 4;
-		};
 		1C9A54A4042573A400000102 = {
 			children = (
 				1C9A54A5042573A400000102,
+				1CEE50CF042698E900000102,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -308,6 +289,7 @@
 		1C9A54AA0425747400000102 = {
 			children = (
 				1C9A54AB0425747400000102,
+				1CEE50D4042699C500000102,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -330,6 +312,7 @@
 		1C9A5582042574A200000102 = {
 			children = (
 				1C9A5583042574A200000102,
+				1CEE50D704269A5E00000102,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -396,6 +379,7 @@
 		1CCAD859042576CE00000102 = {
 			children = (
 				1CCAD85A042576CE00000102,
+				1CEE50D00426999400000102,
 			);
 			isa = PBXVariantGroup;
 			name = Appearance.nib;
@@ -411,6 +395,7 @@
 		1CCAD85B042576CE00000102 = {
 			children = (
 				1CCAD85C042576CE00000102,
+				1CEE50D10426999E00000102,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -439,6 +424,7 @@
 		1CCAD89204263A8200000102 = {
 			children = (
 				1CCAD89304263A8200000102,
+				1CEE50D5042699CC00000102,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -457,6 +443,71 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		1CEE50CE042698C000000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Identity/French.lproj/Identity.nib";
+			refType = 4;
+		};
+		1CEE50CF042698E900000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Identity/French.lproj/InfoPlist.strings";
+			refType = 4;
+		};
+		1CEE50D00426999400000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Appearance/French.lproj/Appearance.nib";
+			refType = 4;
+		};
+		1CEE50D10426999E00000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Appearance/French.lproj/InfoPlist.strings";
+			refType = 4;
+		};
+		1CEE50D2042699B400000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Notification/French.lproj/actions.plist";
+			refType = 4;
+		};
+		1CEE50D3042699BF00000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Notification/French.lproj/Notification.nib";
+			refType = 4;
+		};
+		1CEE50D4042699C500000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Notification/French.lproj/InfoPlist.strings";
+			refType = 4;
+		};
+		1CEE50D5042699CC00000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Notification/French.lproj/Localizable.strings";
+			refType = 4;
+		};
+		1CEE50D604269A5400000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Behavior/French.lproj/Behavior.nib";
+			refType = 4;
+		};
+		1CEE50D704269A5E00000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Behavior/French.lproj/InfoPlist.strings";
+			refType = 4;
 		};
 //1C0
 //1C1
@@ -2326,18 +2377,6 @@ Copyright © 2003, Timothy Hatcher</string>
 			settings = {
 			};
 		};
-		F5DC9270031A65F001A84B83 = {
-			buildRules = (
-			);
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUGGING_SYMBOLS = NO;
-				OPTIMIZATION_CFLAGS = "-O2";
-				OTHER_CFLAGS = "\U0001-DMAC_OS_X_VERSION_MIN_REQUIRED=MAC_OS_X_VERSION_10_1 -DMAC_OS_X_VERSION_MAX_ALLOWED=MAC_OS_X_VERSION_10_1";
-			};
-			isa = PBXBuildStyle;
-			name = "Deployment (Mac OS X 10.1)";
-		};
 		F5DD34620381436B01000102 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -2412,12 +2451,13 @@ Copyright © 2003, Timothy Hatcher</string>
 				F5E3BD370383EC8201000102,
 			);
 			isa = PBXGroup;
-			name = Idenity;
+			name = Identity;
 			refType = 4;
 		};
 		F5DD347D0382FD7401000102 = {
 			children = (
 				F5DD347E0382FD7401000102,
+				1CEE50D604269A5400000102,
 			);
 			isa = PBXVariantGroup;
 			name = Behavior.nib;
@@ -2433,7 +2473,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5DD347F0382FD8001000102 = {
 			children = (
 				F5DD34800382FD8001000102,
-				1C9A54980425721E00000102,
+				1CEE50CE042698C000000102,
 			);
 			isa = PBXVariantGroup;
 			name = Identity.nib;
@@ -2449,6 +2489,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5DD34810382FD8C01000102 = {
 			children = (
 				F5DD34820382FD8C01000102,
+				1CEE50D3042699BF00000102,
 			);
 			isa = PBXVariantGroup;
 			name = Notification.nib;
@@ -2464,6 +2505,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5DD34830382FDC601000102 = {
 			children = (
 				F5DD34840382FDC601000102,
+				1CEE50D2042699B400000102,
 			);
 			isa = PBXVariantGroup;
 			name = actions.plist;

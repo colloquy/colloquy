@@ -1,5 +1,5 @@
 /* Localized versions of Info.plist keys */
 
-CFBundleName = "Chat";
-NSPrefPaneIconLabel = "Chat";
+CFBundleName = "Identity";
+NSPrefPaneIconLabel = "Identity";
 NSHumanReadableCopyright = "Copyright © 2003, Timothy Hatcher";
