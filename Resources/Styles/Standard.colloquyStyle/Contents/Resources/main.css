@@ -6,9 +6,10 @@ body {
 	background-attachment: fixed;
 	background-position: bottom right;
 	background-image: url( "colloquy.png" );
-	font-family: Verdana, Helvetica, sans-serif;
-	font-size: 11px;
-	line-height: 12px;
+//	font-family: Verdana, Helvetica, sans-serif;
+//	font-size: 11px;
+//	line-height: 12px;
+	font-family: sans-serif;
 }
 
 .error {
