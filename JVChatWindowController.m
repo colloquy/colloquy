@@ -112,6 +112,22 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
+- (id <JVInspection>) objectToInspect {
+	if( [chatViewsOutlineView selectedRow] == -1 ) return nil;
+	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
+	if( [item conformsToProtocol:@protocol( JVInspection )] ) return item;
+	else return nil;
+}
+
+- (IBAction) getInfo:(id) sender {
+	if( [chatViewsOutlineView selectedRow] == -1 ) return;
+	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
+	if( [item conformsToProtocol:@protocol( JVInspection )] )
+		[[JVInspectorController inspectorOfObject:item] show:sender];
+}
+
+#pragma mark -
+
 - (IBAction) closeCurrentPanel:(id) sender {
 	[[JVChatController defaultManager] disposeViewController:_activeViewController];
 	[self removeChatViewController:_activeViewController];
@@ -335,6 +351,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Hide Drawer", "hide drawer menu title" )]];
 		}
 		return YES;
+	} else if( [menuItem action] == @selector( getInfo: ) ) {
+		if( [chatViewsOutlineView selectedRow] == -1 ) return NO;
+		id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
+		if( [item conformsToProtocol:@protocol( JVInspection )] )
+			return YES;
+		else return NO;
 	}
 	return YES;
 }
@@ -418,6 +440,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) outlineViewSelectionDidChange:(NSNotification *) notification {
 	id item = [[notification object] itemAtRow:[[notification object] selectedRow]];
+
+	[[JVInspectorController sharedInspector] inspectObject:[self objectToInspect]];
 
 	if( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController )
 		[self _refreshWindow];

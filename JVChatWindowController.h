@@ -1,5 +1,6 @@
 #import <AppKit/NSWindowController.h>
 #import <AppKit/NSNibDeclarations.h>
+#import "JVInspectorController.h"
 
 @class NSDrawer;
 @class NSOutlineView;
@@ -21,7 +22,7 @@
 extern NSString *JVToolbarToggleChatDrawerItemIdentifier;
 extern NSString *JVChatViewPboardType;
 
-@interface JVChatWindowController : NSWindowController {
+@interface JVChatWindowController : NSWindowController <JVInspectionDelegator> {
 	@private
 	IBOutlet NSDrawer *viewsDrawer;
 	IBOutlet NSOutlineView *chatViewsOutlineView;
