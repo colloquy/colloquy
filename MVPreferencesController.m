@@ -308,11 +308,9 @@ static NSString *MVPreferencesWindowNotification = @"MVPreferencesWindowNotifica
 	NSMutableDictionary *cache = [paneInfo objectForKey:[bundle bundleIdentifier]];
 	label = [[[cache objectForKey:@"MVPreferencePanePaletteLabel"] retain] autorelease];
 	if( ! label ) {
-		NSDictionary *info = [bundle infoDictionary];
-		label = NSLocalizedStringFromTableInBundle( @"NSPrefPaneIconLabel", @"InfoPlist", bundle, nil );
-		if( [label isEqualToString:@"NSPrefPaneIconLabel"] ) label = [info objectForKey:@"NSPrefPaneIconLabel"];
-		if( ! label ) label = NSLocalizedStringFromTableInBundle( @"CFBundleName", @"InfoPlist", bundle, nil );
-		if( [label isEqualToString:@"CFBundleName"] ) label = [info objectForKey:@"CFBundleName"];
+		NSDictionary *info = [bundle localizedInfoDictionary];
+		label = [info objectForKey:@"NSPrefPaneIconLabel"];
+		if( ! label ) label = [info objectForKey:@"CFBundleName"];
 		if( ! label ) label = [bundle bundleIdentifier];
 		if( ! cache ) [paneInfo setObject:[NSMutableDictionary dictionary] forKey:[bundle bundleIdentifier]];
 		cache = [paneInfo objectForKey:[bundle bundleIdentifier]];
@@ -326,9 +324,8 @@ static NSString *MVPreferencesWindowNotification = @"MVPreferencesWindowNotifica
 	NSMutableDictionary *cache = [paneInfo objectForKey:[bundle bundleIdentifier]];
 	label = [[[cache objectForKey:@"MVPreferencePaneLabel"] retain] autorelease];
 	if( ! label ) {
-		NSDictionary *info = [bundle infoDictionary];
-		label = NSLocalizedStringFromTableInBundle( @"CFBundleName", @"InfoPlist", bundle, nil );
-		if( [label isEqualToString:@"CFBundleName"] ) label = [info objectForKey:@"CFBundleName"];
+		NSDictionary *info = [bundle localizedInfoDictionary];
+		label = [info objectForKey:@"CFBundleName"];
 		if( ! label ) label = [bundle bundleIdentifier];
 		if( ! cache ) [paneInfo setObject:[NSMutableDictionary dictionary] forKey:[bundle bundleIdentifier]];
 		cache = [paneInfo objectForKey:[bundle bundleIdentifier]];
