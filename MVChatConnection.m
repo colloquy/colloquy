@@ -117,10 +117,6 @@ void MVChatLoad( void *c, void *cs, const char * const nickname ) {
 void MVChatConnected( void *c, void *cs ) {
 	MVChatConnection *self = cs;
 	[self _didConnect];
-/*	NSEnumerator *enumerator = [[MVChatWindowController roomChatWindowsForConnection:self] keyEnumerator];
-	id key = nil;
-	while( ( key = [enumerator nextObject] ) )
-		[self joinChatForRoom:key];*/
 }
 
 void MVChatConnectionFailed( void *c, void *cs, const int error, const char * const reason ) {
@@ -357,7 +353,7 @@ void MVChatKicked( void *c, void *cs, const char * const room, const char * cons
 	NSCParameterAssert( room != NULL );
 	{
 		NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionKickedFromRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", ( by ? [NSString stringWithUTF8String:by] : [NSNull null] ), @"who", ( reason ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionKickedFromRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", ( by ? [NSString stringWithUTF8String:by] : [NSNull null] ), @"by", ( reason ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
 	}
 }
 
