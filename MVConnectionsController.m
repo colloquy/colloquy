@@ -577,6 +577,8 @@ static NSMenu *favoritesMenu = nil;
 			handled = YES;
 		} else if( ! handled && [url user] ) {
 			connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
+			[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
+
 			if( connect ) [connection connect];
 
 			[self addConnection:connection keepBookmark:NO];
@@ -1481,6 +1483,8 @@ static NSMenu *favoritesMenu = nil;
 	if( ! url ) return nil;
 
 	MVChatConnection *connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
+	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
+
 	if( ! connection ) return nil;
 
 	[self addConnection:connection];
