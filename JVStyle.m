@@ -15,6 +15,8 @@
 - (void) _setBundle:(NSBundle *) bundle;
 - (void) _setXSLStyle:(NSString *) path;
 - (void) _setStyleOptions:(NSArray *) options;
+- (void) _setVariants:(NSArray *) variants;
+- (void) _setUserVariants:(NSArray *) variants;
 @end
 
 #pragma mark -
@@ -106,9 +108,14 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 
 - (id) initWithBundle:(NSBundle *) bundle {
 	if( ( self = [self init] ) ) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _clearVariantCache ) name:JVNewStyleVariantAddedNotification object:self];
+
 		_bundle = nil;
 		_XSLStyle = NULL;
+		_parameters = nil;
 		_styleOptions = nil;
+		_variants = nil;
+		_userVariants = nil;
 		[self _setBundle:bundle];
 	}
 
@@ -116,6 +123,7 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self _setBundle:nil]; // this will dealloc all other dependant objects
 	[super dealloc];
 }
@@ -195,28 +203,36 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 }
 
 - (NSArray *) variantStyleSheetNames {
-	NSMutableArray *ret = [NSMutableArray array];
-	NSArray *files = [_bundle pathsForResourcesOfType:@"css" inDirectory:@"Variants"];
-	NSEnumerator *enumerator = [files objectEnumerator];
-	NSString *file = nil;
+	if( ! _variants ) {
+		NSMutableArray *ret = [NSMutableArray array];
+		NSArray *files = [_bundle pathsForResourcesOfType:@"css" inDirectory:@"Variants"];
+		NSEnumerator *enumerator = [files objectEnumerator];
+		NSString *file = nil;
 
-	while( ( file = [enumerator nextObject] ) )
-		[ret addObject:[[file lastPathComponent] stringByDeletingPathExtension]];
+		while( ( file = [enumerator nextObject] ) )
+			[ret addObject:[[file lastPathComponent] stringByDeletingPathExtension]];
 
-	return ret;
+		[self _setVariants:ret];
+	}
+
+	return _variants;
 }
 
 - (NSArray *) userVariantStyleSheetNames {
-	NSMutableArray *ret = [NSMutableArray array];
-	NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [self identifier]] stringByExpandingTildeInPath]];
-	NSEnumerator *enumerator = [files objectEnumerator];
-	NSString *file = nil;
+	if( ! _userVariants ) {
+		NSMutableArray *ret = [NSMutableArray array];
+		NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [self identifier]] stringByExpandingTildeInPath]];
+		NSEnumerator *enumerator = [files objectEnumerator];
+		NSString *file = nil;
 
-	while( ( file = [enumerator nextObject] ) )
-		if( [[file pathExtension] isEqualToString:@"css"] || [[file pathExtension] isEqualToString:@"colloquyVariant"] )
-			[ret addObject:[[file lastPathComponent] stringByDeletingPathExtension]];
+		while( ( file = [enumerator nextObject] ) )
+			if( [[file pathExtension] isEqualToString:@"css"] || [[file pathExtension] isEqualToString:@"colloquyVariant"] )
+				[ret addObject:[[file lastPathComponent] stringByDeletingPathExtension]];
 
-	return ret;
+		[self _setUserVariants:ret];
+	}
+
+	return _userVariants;
 }
 
 - (BOOL) isUserVariantName:(NSString *) name {
@@ -247,11 +263,12 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 
 - (NSArray *) styleSheetOptions {
 	if( ! _styleOptions ) {
-		_styleOptions = [[NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"styleOptions" ofType:@"plist"]] retain];
+		NSMutableArray *options = [NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"styleOptions" ofType:@"plist"]];
 		if( [_bundle objectForInfoDictionaryKey:@"JVStyleOptions"] )
-			[(NSMutableArray *)_styleOptions addObjectsFromArray:[_bundle objectForInfoDictionaryKey:@"JVStyleOptions"]];
+			[options addObjectsFromArray:[_bundle objectForInfoDictionaryKey:@"JVStyleOptions"]];
+		[self _setStyleOptions:options];
 	}
-	
+
 	return _styleOptions;
 }
 
@@ -269,15 +286,11 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 #pragma mark -
 
 - (NSURL *) baseLocation {
-	NSString *path = [_bundle resourcePath];
-	if( path ) return [NSURL fileURLWithPath:path];
-	return nil;
+	return [NSURL fileURLWithPath:[_bundle resourcePath]];
 }
 
 - (NSURL *) mainStyleSheetLocation {
-	NSString *path = [_bundle pathForResource:@"main" ofType:@"css"];
-	if( path ) return [NSURL fileURLWithPath:path];
-	return nil;
+	return [NSURL fileURLWithPath:[_bundle pathForResource:@"main" ofType:@"css"]];
 }
 
 - (NSURL *) variantStyleSheetLocationWithName:(NSString *) name {
@@ -366,6 +379,11 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 
 #pragma mark -
 
+- (void) _clearVariantCache {
+	[self _setVariants:nil];
+	[self _setUserVariants:nil];
+}
+
 - (void) _setBundle:(NSBundle *) bundle {
 	[_bundle autorelease];
 	_bundle = [bundle retain];
@@ -373,6 +391,8 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 
 	[self _setXSLStyle:nil];
 	[self _setStyleOptions:nil];
+	[self _setVariants:nil];
+	[self _setUserVariants:nil];
 	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:[_bundle pathForResource:@"parameters" ofType:@"plist"]]];
 }
 
@@ -384,5 +404,15 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 - (void) _setStyleOptions:(NSArray *) options {
 	[_styleOptions autorelease];
 	_styleOptions = [options retain];
+}
+
+- (void) _setVariants:(NSArray *) variants {
+	[_variants autorelease];
+	_variants = [variants retain];
+}
+
+- (void) _setUserVariants:(NSArray *) variants {
+	[_userVariants autorelease];
+	_userVariants = [variants retain];
 }
 @end
