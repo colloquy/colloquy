@@ -438,15 +438,15 @@ static void MVChatUserQuit( IRC_SERVER_REC *server, const char *data, const char
 
 	if( *data == ':' ) data++;
 
+	MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+	NSData *reasonData = [NSData dataWithBytes:data length:strlen( data )];
 	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
 	MVChatRoom *room = nil;
 
 	while( ( room = [enumerator nextObject] ) ) {
 		if( ! [room isJoined] ) continue;
-		MVChatUser *member = [room memberUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		if( member ) {
+		if( [room hasUser:member] ) {
 			[room _removeMemberUser:member];
-			NSData *reasonData = [NSData dataWithBytes:data length:strlen( data )];
 			NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", ( reasonData ? (id) reasonData : (id) [NSNull null] ), @"reason", nil]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 		}
