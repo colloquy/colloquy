@@ -1646,7 +1646,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message {
 	// catch IRC rooms like "#room" or "&help" but not HTML colors like "#ab12ef" or HTML entities like "&#135;" or "&amp;"
-	AGRegex *regex = [AGRegex regexWithPattern:@"(?:(?<!&)#(?![\\da-fA-F]{6}|\\d{1,3}\\b)|&(?![\\d\\w#]{2,5};))[\\w-_+&#]{2,}" options:AGRegexCaseInsensitive];
+	AGRegex *regex = [AGRegex regexWithPattern:@"(?:(?<!&)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)|&(?![\\d\\w#]{2,5};))[\\w-_+&#]{2,}" options:AGRegexCaseInsensitive];
 	NSArray *matches = [regex findAllInString:[message string]];
 	NSEnumerator *enumerator = [matches objectEnumerator];
 	AGRegexMatch *match = nil;
