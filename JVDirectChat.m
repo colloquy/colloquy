@@ -27,6 +27,7 @@
 #import "MVTextView.h"
 #import "MVMenuButton.h"
 #import "NSURLAdditions.h"
+#import "KAConnectionHandler.h"
 #import "JVMarkedScroller.h"
 
 static NSArray *JVAutoActionVerbs = nil;
@@ -1332,7 +1333,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 			}
 		}
 		 
-		xmlSetProp( child, "classification", [self _classificationForNickname:user] );		
+		xmlSetProp( child, "classification", [self _classificationForNickname:user] );
+		if ( [[KAConnectionHandler defaultHandler] shouldIgnoreMessage:[NSAttributedString attributedStringWithHTMLFragment:[NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", messageString] baseURL:NULL] inRoom:_target] ) {
+			xmlSetProp( child, "ignore", "yes" );
+		}
 	}
 
 	xmlXPathFreeObject( result );

@@ -327,7 +327,11 @@ static JVChatController *sharedInstance = nil;
 - (void) _gotPrivateMessage:(NSNotification *) notification {
 	BOOL continueNotify = YES;
 	if ( [[[notification userInfo] objectForKey:@"auto"] boolValue] ) {
-		continueNotify = ! [[KAConnectionHandler defaultHandler] connection:[notification object] willPostMessage:[[notification userInfo] objectForKey:@"message"] from:[[notification userInfo] objectForKey:@"from"] toRoom:NO];
+		continueNotify = ! [[KAConnectionHandler defaultHandler] connection:[notification object] 
+															willPostMessage:[[notification userInfo] objectForKey:@"message"] 
+																	   from:[[notification userInfo] objectForKey:@"from"] 
+																	 toRoom:NO 
+																   withInfo:[notification userInfo]];
 	}
 	
 	if ( continueNotify ) {
@@ -337,8 +341,10 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) _gotRoomMessage:(NSNotification *) notification {
-	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
-	[controller addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"from"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue]];
+	if ( ! [[KAConnectionHandler defaultHandler] connection:[notification object] willPostMessage:[[notification userInfo] objectForKey:@"message"] from:[[notification userInfo] objectForKey:@"from"] toRoom:YES withInfo:[notification userInfo]] ) {
+		JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
+		[controller addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"from"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue]];
+	}
 }
 
 - (void) _roomTopicChanged:(NSNotification *) notification {

@@ -11,6 +11,7 @@
 #import "JVInspectorController.h"
 #import "JVChatMemberInspector.h"
 #import "JVChatRoomBrowser.h"
+#import "KAConnectionHandler.h"
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (void) _reloadCurrentStyle:(id) sender;
@@ -246,7 +247,47 @@
 			[room _reloadCurrentStyle:nil];
 			return YES;
 		}
+	} else if( [command isEqualToString:@"ignore"] ) {
+		NSString *args = [arguments string];
+		NSArray *argsArray = [args componentsSeparatedByString:@" "];
+		NSString *memberString = nil;
+		NSString *messageString = nil;
+		NSArray *rooms = nil;
+		BOOL regex = NO;
+		BOOL member = YES;
+		BOOL message = NO;
+		
+		if ( [args hasPrefix:@"-"] ) {
+			//parse commands/flags
+			if ( [[argsArray objectAtIndex:0] rangeOfString:@"e"].location != NSNotFound ) regex = YES;
+			if ( [[argsArray objectAtIndex:0] rangeOfString:@"m"].location != NSNotFound ) {
+				member = NO;
+				message = YES;
+			}
+			if ( [[argsArray objectAtIndex:0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
+			
+			args = [args substringFromIndex:NSMaxRange( [args rangeOfString:[argsArray objectAtIndex:0]] )+1];
+			argsArray = [args componentsSeparatedByString:@" "];
+		}
+		
+		if ( member ) {
+			memberString = [argsArray objectAtIndex:0];
+		
+			args = [args substringFromIndex:NSMaxRange( [args rangeOfString:[argsArray objectAtIndex:0]] )+1];
+			argsArray = [args componentsSeparatedByString:@" "];
+		}
+		if ( message ) {
+			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location +1,  
+																  [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ([args rangeOfString:@"\""].location +1) )];
+		}
+		if ( [args rangeOfString:@"#"].location != NSNotFound ) {
+			rooms = [[args substringFromIndex:NSMaxRange( [args rangeOfString:@"#"] )+1] componentsSeparatedByString:@" "];
+		}
+		if ( !rooms ) rooms = [NSArray arrayWithObject:room];
+		
+		//[[KAConnectionHandler defaultHandler] addIgnore:memberString withKey:messageString ? messageString : memberString inRooms:rooms usesRegex:regex isMember:member ];
 	}
+	
 	return NO;
 }
 
