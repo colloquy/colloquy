@@ -14,55 +14,6 @@ static SilcPrivateKey silcPrivateKey;
 
 NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCertificate";
 
-@interface MVSILCChatConnection (MVSILCChatConnectionPrivate)
-+ (const char *) _flattenedSILCStringForMessage:(NSAttributedString *) message;
-
-- (SilcClient) _silcClient;
-- (NSRecursiveLock *) _silcClientLock;
-- (void) _setSilcConn:(SilcClientConnection)aSilcConn;
-- (SilcClientConnection) _silcConn;
-- (SilcClientParams *) _silcClientParams;
-
-- (NSMutableArray *) _joinedChannels;
-- (void) _addChannel:(NSString *)channel_name;
-- (void) _addUser:(NSString *)nick_name toChannel:(NSString *)channel_name withMode:(NSNumber *)mode;
-- (void) _delUser:(NSString *)nick_name fromChannel:(NSString *)channel_name;
-- (void) _delUser:(NSString *)nick_name;
-- (void) _delChannel:(NSString *)channel_name;
-- (void) _userChangedNick:(NSString *)old_nick_name to:(NSString *)new_nick_name;
-- (void) _userModeChanged:(NSString *)nick_name onChannel:(NSString *)channel_name toMode:(NSNumber *)mode;
-- (NSArray *) _getChannelsForUser:(NSString *)nick_name;
-- (NSMutableDictionary *) _getChannel:(NSString *)channel_name;
-- (NSNumber *) _getModeForUser:(NSString *)nick_name onChannel:(NSString *)channel_name;
-
-- (NSMutableArray *) _queuedCommands;
-- (NSLock *) _queuedCommandsLock;
-
-- (BOOL) _loadKeyPair;
-- (BOOL) _isKeyPairLoaded;
-- (void) _connectKeyPairLoaded:(NSNotification *) notification;
-
-- (void) _addCommand:(NSString *)raw forNumber:(SilcUInt16) cmd_ident;
-- (NSString *) _getCommandForNumber:(SilcUInt16) cmd_ident;
-- (NSLock *) _sentCommandsLock;
-- (NSMutableDictionary *) _sentCommands;
-
-- (void) _sendCommandSucceededNotify:(NSString *) message;
-- (void) _sendCommandFailedNotify:(NSString *) message;
-@end
-
-#pragma mark -
-
-@interface MVChatConnection (MVChatConnectionPrivate)
-- (void) _willConnect;
-- (void) _didConnect;
-- (void) _didNotConnect;
-- (void) _willDisconnect;
-- (void) _didDisconnect;
-@end
-
-#pragma mark -
-
 static void silc_nickname_format_parse( const char *nickname, char **ret_nickname ) {
 	silc_parse_userfqdn( nickname, ret_nickname, NULL );
 }
