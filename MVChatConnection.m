@@ -876,7 +876,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[super initialize];
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
-		MVChatConnectionThreadLock = [NSRecursiveLock new];
+		MVChatConnectionThreadLock = [[NSRecursiveLock alloc] init];
 		[NSThread detachNewThreadSelector:@selector( _connectionRunLoop ) toTarget:self withObject:nil];
 		tooLate = YES;
 	}
@@ -1333,34 +1333,27 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action {
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
-	NSParameterAssert( user != nil );
+	NSParameterAssert( target != nil );
 	if( ! [self _irssiConnection] ) return;
 
 	const char *msg = [MVChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding];
 
 	[MVChatConnectionThreadLock lock];
 
-	if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:user], msg, 0 );
-	else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:user], msg );
+	if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:target], msg, 0 );
+	else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:target], msg );
 
 	[MVChatConnectionThreadLock unlock];
 }
 
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action {
+	[self sendMessage:message withEncoding:encoding toTarget:user asAction:action];
+}
+
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action {
-	NSParameterAssert( message != nil );
-	NSParameterAssert( room != nil );
-	if( ! [self _irssiConnection] ) return;
-
-	const char *msg = [MVChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding];
-
-	[MVChatConnectionThreadLock lock];
-	
-	if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:[room lowercaseString]], msg, 0 );
-	else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:[room lowercaseString]], msg );
-
-	[MVChatConnectionThreadLock unlock];
+	[self sendMessage:message withEncoding:encoding toTarget:[room lowercaseString] asAction:action];
 }
 
 #pragma mark -
@@ -1382,10 +1375,13 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 - (void) sendRawMessageWithFormat:(NSString *) format, ... {
 	NSParameterAssert( format != nil );
+
 	va_list ap;
 	va_start( ap, format );
+
 	NSString *command = [[[NSString alloc] initWithFormat:format arguments:ap] autorelease];
 	[self sendRawMessage:command immediately:NO];
+
 	va_end( ap );
 }
 
