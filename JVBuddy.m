@@ -1,6 +1,7 @@
 #import <AddressBook/AddressBook.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/NSStringAdditions.h>
+#import <ChatCore/MVChatUser.h>
 
 #import "JVBuddy.h"
 #import "MVConnectionsController.h"
@@ -103,8 +104,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	NSURL *nick = nil;
 	while( ( nick = [enumerator nextObject] ) ) {
 		connectionEnumerator = [[[MVConnectionsController defaultManager] connectionsForServerAddress:[nick host]] objectEnumerator];
+		MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:[nick user] andHostMask:nil];
 		while( ( connection = [connectionEnumerator nextObject] ) )
-			[connection addUserToNotificationList:[nick user]];
+			[connection addUserToNotificationList:user];
 	}
 }
 
@@ -115,8 +117,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	NSURL *nick = nil;
 	while( ( nick = [enumerator nextObject] ) ) {
 		connectionEnumerator = [[[MVConnectionsController defaultManager] connectionsForServerAddress:[nick host]] objectEnumerator];
+		MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:[nick user] andHostMask:nil];
 		while( ( connection = [connectionEnumerator nextObject] ) )
-			[connection removeUserFromNotificationList:[nick user]];
+			[connection removeUserFromNotificationList:user];
 	}
 }
 
@@ -497,8 +500,10 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	NSURL *nick = nil;
 
 	while( ( nick = [enumerator nextObject] ) )
-		if( [[nick host] caseInsensitiveCompare:[connection server]] == NSOrderedSame )
-			[connection addUserToNotificationList:[nick user]];
+		if( [[nick host] caseInsensitiveCompare:[connection server]] == NSOrderedSame ) {
+			MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:[nick user] andHostMask:nil];
+			[connection addUserToNotificationList:user];
+		}
 }
 
 - (void) _disconnected:(NSNotification *) notification {
