@@ -70,6 +70,16 @@ resource 'aete' (0, "Colloquy Terminology") {
 			{
 			},
 
+			"panel", 'chvC',
+			"Generic window panel that all panels inherit from (e.g. direct chat panel, chat room panel, etc.)",
+			{
+				"<Inheritance>", pInherits, 'cliM',
+				"inherits elements and properties of the list item class.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12
+			},
+			{
+			},
+
 			"direct chat panel", 'dchM',
 			"Direct (private) chat panel with another user.",
 			{
@@ -80,13 +90,13 @@ resource 'aete' (0, "Colloquy Terminology") {
 			{
 			},
 
-			"chat room or chat user", 't000', "", { }, { },
+			"chat room panel or direct chat panel", 't001', "", { }, { },
 
-			"chat user, member or string", 't002', "", { }, { },
+			"chat room or chat user", 't000', "", { }, { },
 
 			"chat user or member", 't004', "", { }, { },
 
-			"chat room panel or direct chat panel", 't001', "", { }, { }
+			"chat user, member or string", 't002', "", { }, { }
 		},
 		{
 			/* Comparisons */
@@ -892,7 +902,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			{
 				"to", 'sRm1', 'conM',
 				"The conenction to send to.",
-				required,
+				optional,
 				singleItem, notEnumerated, Reserved13,
 				"priority", 'sRm2', 'bool',
 				"Send this command now? (This will bypass any queued commands.)",
@@ -911,7 +921,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			{
 				"on", 'jCr1', 'conM',
 				"The connection to join on.",
-				required,
+				optional,
 				singleItem, notEnumerated, Reserved13
 			},
 

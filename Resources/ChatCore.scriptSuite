@@ -432,6 +432,8 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>jCr1</string>
+					<key>Optional</key>
+					<string>YES</string>
 					<key>Type</key>
 					<string>ChatCore.MVChatConnection</string>
 				</dict>
@@ -532,6 +534,8 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>sRm1</string>
+					<key>Optional</key>
+					<string>YES</string>
 					<key>Type</key>
 					<string>ChatCore.MVChatConnection</string>
 				</dict>

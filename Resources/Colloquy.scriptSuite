@@ -869,6 +869,8 @@
 			<string>Colloquy.ListItem</string>
 			<key>SupportedCommands</key>
 			<dict>
+				<key>ChatCore.SendMessage</key>
+				<string>sendMessageScriptCommand:</string>
 				<key>NSCoreSuite.Close</key>
 				<string>close:</string>
 			</dict>

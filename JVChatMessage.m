@@ -321,10 +321,25 @@
 
 #pragma mark -
 
-- (void) setValue:(id) value forKey:(NSString *) key {
-	// this is a non-mutable message, give AppleScript a good error if this is a script command call
-	[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-	[[NSScriptCommand currentCommand] setScriptErrorString:@"The message and it's properties are not changeable."];
+- (id) valueForUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The message id %@ doesn't have the \"%@\" property.", [self messageIdentifier], key]];
+		return nil;
+	}
+
+	return [super valueForUndefinedKey:key];
+}
+
+- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		// this is a non-mutable message, give AppleScript a good error if this is a script command call
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The properties of message id %@ are read only.", key, [self messageIdentifier]]];
+		return;
+	}
+
+	[super setValue:value forUndefinedKey:key];
 }
 @end
 
@@ -554,5 +569,17 @@
 	[self setNode:NULL];
 	[_messageIdentifier autorelease];
 	_messageIdentifier = [identifier copyWithZone:[self zone]];
+}
+
+#pragma mark -
+
+- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of message id %@ is read only.", key, [self messageIdentifier]]];
+		return;
+	}
+
+	[super setValue:value forUndefinedKey:key];
 }
 @end

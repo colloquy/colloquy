@@ -20,10 +20,19 @@
 	NSScriptObjectSpecifier *subjectSpecifier = [self subjectSpecifier];
 	NSScriptClassDescription *classDesc = [subjectSpecifier keyClassDescription];
 	NSScriptCommandDescription *cmdDesc = [self commandDescription];
-	BOOL supports = [classDesc supportsCommand:cmdDesc];
+
+	if( ! [classDesc supportsCommand:cmdDesc] ) return NO;
+
 	SEL selector = [classDesc selectorForCommand:cmdDesc];
 	if( ! [NSStringFromSelector( selector ) length] ) return NO;
-	return supports;
+
+	id subject = [subjectSpecifier objectsByEvaluatingSpecifier];
+	if( ! subject ) return NO;
+
+	if( ! [subject isKindOfClass:[NSArray class]] )
+		return [subject respondsToSelector:selector];
+
+	return YES;
 }
 
 - (id) executeCommandOnSubject {
@@ -44,13 +53,17 @@
 			NSMutableArray *results = [NSMutableArray arrayWithCapacity:[subject count]];
 
 			while( ( subj = [enumerator nextObject] ) ) {
-				result = [subj performSelector:selector withObject:self];
+				result = nil;
+				if( [subj respondsToSelector:selector] )
+					result = [subj performSelector:selector withObject:self];
 				if( result ) [results addObject:result];
 				else [results addObject:[NSNull null]];
 			}
 
 			return results;
 		}
+
+		if( ! [subject respondsToSelector:selector] ) return nil;
 
 		// a single reciever
 		return [subject performSelector:selector withObject:self];

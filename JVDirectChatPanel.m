@@ -894,8 +894,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 					JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] localUser]];
 					[cmessage setAction:action];
 
-					[self echoSentMessageToDisplay:cmessage];
 					[self sendMessage:cmessage];
+					[self echoSentMessageToDisplay:cmessage]; // echo after the plugins process the message
 
 					[cmessage release];
 				}

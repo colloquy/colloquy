@@ -837,6 +837,28 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 
 #pragma mark -
 
+- (id) valueForUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The connection id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], key]];
+		return nil;
+	}
+
+	return [super valueForUndefinedKey:key];
+}
+
+- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of connection id %@ is read only.", key, [self uniqueIdentifier]]];
+		return;
+	}
+
+	[super setValue:value forUndefinedKey:key];
+}
+
+#pragma mark -
+
 - (void) connectScriptCommand:(NSScriptCommand *) command {
 	[self connect];
 }
@@ -950,13 +972,13 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 	if( ! target ) target = [self subjectParameter];
 	if( ! target || ( ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[MVChatRoom class]] ) ) {
 		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"to\" parameter was missing, not a chat user nor a chat room object."];
+		[self setScriptErrorString:@"The \"to\" parameter was missing, not a chat user nor a chat room object. The nearest enclosing tell block also did not accept this command."];
 		return nil;
 	}
 
-	if( [target isKindOfClass:[MVChatUser class]] && [(MVChatUser *)target type] == MVChatWildcardUserType ) {
+	if( [target isKindOfClass:[MVChatUser class]] && [(MVChatUser *)target type] != MVChatRemoteUserType ) {
 		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"to\" parameter cannot be a wildcard user."];
+		[self setScriptErrorString:@"The \"to\" parameter cannot be a wildcard user nor local user."];
 		return nil;
 	}
 
@@ -1032,8 +1054,12 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 
 @implementation MVSendRawMessageScriptCommand
 - (id) performDefaultImplementation {
+	// check if the subject responds to the command directly, if so execute that implementation
+	if( [self subjectSupportsCommand] ) return [self executeCommandOnSubject];
+	
+	// the subject didn't respond to the command, so do our default implementation
 	NSDictionary *args = [self evaluatedArguments];
-	id message = [self directParameter];
+	id message = [self evaluatedDirectParameter];
 	id connection = [args objectForKey:@"connection"];
 	id priority = [args objectForKey:@"priority"];
 
@@ -1043,9 +1069,10 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 		return nil;
 	}
 
+	if( ! connection ) connection = [self subjectParameter];
 	if( ! connection || ! [connection isKindOfClass:[MVChatConnection class]] ) {
 		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"to\" parameter was missing or not a connection object."];
+		[self setScriptErrorString:@"The \"to\" parameter was missing or not a connection object. The nearest enclosing tell block also did not accept this command."];
 		return nil;
 	}
 	
@@ -1070,8 +1097,12 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 
 @implementation MVJoinChatRoomScriptCommand
 - (id) performDefaultImplementation {
+	// check if the subject responds to the command directly, if so execute that implementation
+	if( [self subjectSupportsCommand] ) return [self executeCommandOnSubject];
+
+	// the subject didn't respond to the command, so do our default implementation
 	NSDictionary *args = [self evaluatedArguments];
-	id room = [self directParameter];
+	id room = [self evaluatedDirectParameter];
 	id connection = [args objectForKey:@"connection"];
 
 	if( ! room || ( ! [room isKindOfClass:[NSString class]] && ! [room isKindOfClass:[NSArray class]] ) ) {
@@ -1080,9 +1111,10 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 		return nil;
 	}
 
+	if( ! connection ) connection = [self subjectParameter];
 	if( ! connection || ! [connection isKindOfClass:[MVChatConnection class]] ) {
 		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"on\" parameter was missing or not a connection object."];
+		[self setScriptErrorString:@"The \"on\" parameter was missing or not a connection object. The nearest enclosing tell block also did not accept this command."];
 		return nil;
 	}
 

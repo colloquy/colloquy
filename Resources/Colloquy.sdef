@@ -47,10 +47,12 @@
 						<cocoa method=""/>
 					</responds-to>
 					<responds-to name="send message" hidden="hidden">
-						<cocoa method="&#10;"/>
+						<cocoa method="
+"/>
 					</responds-to>
 					<responds-to name="add event message" hidden="hidden">
-						<cocoa method="&#10;"/>
+						<cocoa method="
+"/>
 					</responds-to>
 				</responds-to-commands>
 			</class>
@@ -360,6 +362,9 @@
 					<responds-to name="close">
 						<cocoa method="close:"/>
 					</responds-to>
+					<responds-to name="send message" hidden="hidden">
+						<cocoa method="sendMessageScriptCommand:"/>
+					</responds-to>
 				</responds-to-commands>
 			</class>
 			<class name="transcript panel" code="ctrM" description="A log panel of some previous conversation." inherits="panel">
@@ -401,8 +406,9 @@
 					<responds-to name="send message">
 						<cocoa method="sendMessageScriptCommand:"/>
 					</responds-to>
-					<responds-to name="add event message" hidden="hidden">
-						<cocoa method="&#10;"/>
+					<responds-to name="add event message">
+						<cocoa method="
+"/>
 					</responds-to>
 				</responds-to-commands>
 			</class>
@@ -811,7 +817,7 @@
 			<command name="send raw command" code="ccoRsRmX" description="Send raw server command (message) to server.">
 				<cocoa class="MVSendRawMessageScriptCommand"/>
 				<direct-parameter type="string" description="The raw server command (message) to send. (This is protocol specific.)"/>
-				<parameter name="to" code="sRm1" description="The conenction to send to." type="connection">
+				<parameter name="to" code="sRm1" description="The conenction to send to. Optional if the nearest enclosing tell block accepts this command." type="connection" optional="optional">
 					<cocoa key="connection"/>
 				</parameter>
 				<parameter name="priority" code="sRm2" description="Send this command now? (This will bypass any queued commands.)" type="boolean" optional="optional">
@@ -821,7 +827,7 @@
 			<command name="join chat room" code="ccoRjCrX" description="Join a chat room.">
 				<cocoa class="MVJoinChatRoomScriptCommand"/>
 				<direct-parameter type="string" description="Room to join. (Can also be a list of rooms.)"/>
-				<parameter name="on" code="jCr1" description="The connection to join on." type="connection">
+				<parameter name="on" code="jCr1" description="The connection to join on. Optional if the nearest enclosing tell block accepts this command." type="connection" optional="optional">
 					<cocoa key="connection"/>
 				</parameter>
 			</command>

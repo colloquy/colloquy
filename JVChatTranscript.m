@@ -1007,12 +1007,34 @@
 
 #pragma mark -
 
-- (void) raiseCantRemoveMessageException {
+- (id) valueForUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The transcript doesn't have the \"%@\" property.", key]];
+		return nil;
+	}
+
+	return [super valueForUndefinedKey:key];
+}
+
+- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of the transcript is read only.", key]];
+		return;
+	}
+
+	[super setValue:value forUndefinedKey:key];
+}
+
+#pragma mark -
+
+- (void) scriptErrorCantRemoveMessageException {
 	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't remove or replace a message in a transcript."];
 	[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 }
 
-- (void) raiseCantInsertMessageException {
+- (void) scriptErrorCantInsertMessageException {
 	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't insert a message in the middle of a transcript. You can only add to the end."];
 	[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 }
@@ -1048,14 +1070,14 @@
 }
 
 - (void) insertInMessages:(JVChatMessage *) message atIndex:(unsigned) index {
-	[self raiseCantInsertMessageException];
+	[self scriptErrorCantInsertMessageException];
 }
 
 - (void) removeFromMessagesAtIndex:(unsigned) index {
-	[self raiseCantRemoveMessageException];
+	[self scriptErrorCantRemoveMessageException];
 }
 
 - (void) replaceInMessages:(JVChatMessage *) message atIndex:(unsigned) index {
-	[self raiseCantRemoveMessageException];
+	[self scriptErrorCantRemoveMessageException];
 }
 @end

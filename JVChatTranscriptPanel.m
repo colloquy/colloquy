@@ -235,6 +235,26 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 	return [[self windowController] window];
 }
 
+- (id) valueForUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], key]];
+		return nil;
+	}
+
+	return [super valueForUndefinedKey:key];
+}
+
+- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of panel id %@ is read only.", key, [self uniqueIdentifier]]];
+		return;
+	}
+
+	[super setValue:value forUndefinedKey:key];
+}
+
 #pragma mark -
 #pragma mark File Saving
 

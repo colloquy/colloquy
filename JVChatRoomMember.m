@@ -663,6 +663,28 @@
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 }
+
+#pragma mark -
+
+- (id) valueForUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The member id %@ of chat room panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], [[self room] uniqueIdentifier], key]];
+		return nil;
+	}
+
+	return [super valueForUndefinedKey:key];
+}
+
+- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+	if( [NSScriptCommand currentCommand] ) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of member id %@ of chat room panel id %@ is read only.", key, [self uniqueIdentifier], [[self room] uniqueIdentifier]]];
+		return;
+	}
+
+	[super setValue:value forUndefinedKey:key];
+}
 @end
 
 #pragma mark -
