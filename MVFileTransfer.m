@@ -75,10 +75,12 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 	[_startDate release];
 	[_host release];
 	[_user release];
+	[_lastError release];
 
 	_startDate = nil;
 	_host = nil;
 	_user = nil;
+	_lastError = nil;
 
 	[super dealloc];
 }
