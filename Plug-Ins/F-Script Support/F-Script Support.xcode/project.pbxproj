@@ -1,0 +1,409 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 39;
+	objects = {
+		014CEA420018CDE011CA2923 = {
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ZERO_LINK = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		014CEA430018CDE011CA2923 = {
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				ZERO_LINK = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+//010
+//011
+//012
+//013
+//014
+//080
+//081
+//082
+//083
+//084
+		089C1669FE841209C02AAC07 = {
+			buildSettings = {
+			};
+			buildStyles = (
+				014CEA420018CDE011CA2923,
+				014CEA430018CDE011CA2923,
+			);
+			hasScannedForEncodings = 1;
+			isa = PBXProject;
+			mainGroup = 089C166AFE841209C02AAC07;
+			projectDirPath = "";
+			targets = (
+				8D5B49AC048680CD000E48DA,
+			);
+		};
+		089C166AFE841209C02AAC07 = {
+			children = (
+				08FB77AFFE84173DC02AAC07,
+				32C88E010371C26100C91783,
+				089C167CFE841241C02AAC07,
+				089C1671FE841209C02AAC07,
+				19C28FB8FE9D52D311CA2CBB,
+			);
+			isa = PBXGroup;
+			name = "FScript Plugin";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 = {
+			children = (
+				1058C7ACFEA557BF11CA2CBB,
+				1058C7AEFEA557BF11CA2CBB,
+			);
+			isa = PBXGroup;
+			name = "Frameworks and Libraries";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		089C1672FE841209C02AAC07 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Foundation.framework;
+			path = /System/Library/Frameworks/Foundation.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		089C167CFE841241C02AAC07 = {
+			children = (
+				1C919D9D07C6DC2800079B67,
+				1CE3FB5407C7DFD50049A366,
+				8D5B49B7048680CD000E48DA,
+			);
+			isa = PBXGroup;
+			name = Resources;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		089C167FFE841241C02AAC07 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AppKit.framework;
+			path = /System/Library/Frameworks/AppKit.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		08FB77AFFE84173DC02AAC07 = {
+			children = (
+				1C91A7A207C7983900079B67,
+				1C91A7A107C7983900079B67,
+				1C4FD3CD07C6BF1B000EA451,
+				1C4FD3CC07C6BF1B000EA451,
+				1C4FD36607C6BC25000EA451,
+				1C4FD36507C6BC25000EA451,
+			);
+			isa = PBXGroup;
+			name = Classes;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//080
+//081
+//082
+//083
+//084
+//100
+//101
+//102
+//103
+//104
+		1058C7ACFEA557BF11CA2CBB = {
+			children = (
+				1058C7ADFEA557BF11CA2CBB,
+				1C4FD32907C6B9F5000EA451,
+			);
+			isa = PBXGroup;
+			name = "Linked Frameworks";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1058C7ADFEA557BF11CA2CBB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Cocoa.framework;
+			path = /System/Library/Frameworks/Cocoa.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		1058C7AEFEA557BF11CA2CBB = {
+			children = (
+				089C1672FE841209C02AAC07,
+				089C167FFE841241C02AAC07,
+			);
+			isa = PBXGroup;
+			name = "Other Frameworks";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//100
+//101
+//102
+//103
+//104
+//190
+//191
+//192
+//193
+//194
+		19C28FB8FE9D52D311CA2CBB = {
+			children = (
+				8D5B49B6048680CD000E48DA,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//190
+//191
+//192
+//193
+//194
+//1C0
+//1C1
+//1C2
+//1C3
+//1C4
+		1C4FD32907C6B9F5000EA451 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = FScript.framework;
+			path = /Library/Frameworks/FScript.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		1C4FD32A07C6B9F5000EA451 = {
+			fileRef = 1C4FD32907C6B9F5000EA451;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C4FD36507C6BC25000EA451 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVFScriptPluginLoader.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C4FD36607C6BC25000EA451 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVFScriptPluginLoader.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C4FD36807C6BC25000EA451 = {
+			fileRef = 1C4FD36607C6BC25000EA451;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C4FD3CC07C6BF1B000EA451 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVFScriptConsolePanel.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C4FD3CD07C6BF1B000EA451 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVFScriptConsolePanel.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C4FD3CF07C6BF1B000EA451 = {
+			fileRef = 1C4FD3CD07C6BF1B000EA451;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C919D9D07C6DC2800079B67 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = console.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C919D9E07C6DC2800079B67 = {
+			fileRef = 1C919D9D07C6DC2800079B67;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C91A7A107C7983900079B67 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVFScriptChatPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C91A7A207C7983900079B67 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVFScriptChatPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C91A7A407C7983900079B67 = {
+			fileRef = 1C91A7A207C7983900079B67;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CE3FB5407C7DFD50049A366 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			path = "F-ScriptConsole.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE3FB5507C7DFD50049A366 = {
+			fileRef = 1CE3FB5407C7DFD50049A366;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//1C0
+//1C1
+//1C2
+//1C3
+//1C4
+//320
+//321
+//322
+//323
+//324
+		32C88E010371C26100C91783 = {
+			children = (
+				32DBCF630370AF2F00C91783,
+			);
+			isa = PBXGroup;
+			name = "Other Sources";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		32DBCF630370AF2F00C91783 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = "F-Script Support.pch";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//320
+//321
+//322
+//323
+//324
+//8D0
+//8D1
+//8D2
+//8D3
+//8D4
+		8D5B49AC048680CD000E48DA = {
+			buildPhases = (
+				8D5B49AF048680CD000E48DA,
+				8D5B49B1048680CD000E48DA,
+				8D5B49B3048680CD000E48DA,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "F-Script Support.pch";
+				HEADER_SEARCH_PATHS = ../..;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_LDFLAGS = "-undefined dynamic_lookup -weak_framework FScript";
+				PRODUCT_NAME = "F-Script Support";
+				WRAPPER_EXTENSION = plugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "F-Script Support Plugin";
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = "FScript Plugin";
+			productReference = 8D5B49B6048680CD000E48DA;
+			productType = "com.apple.product-type.bundle";
+		};
+		8D5B49AF048680CD000E48DA = {
+			buildActionMask = 2147483647;
+			files = (
+				1C919D9E07C6DC2800079B67,
+				1CE3FB5507C7DFD50049A366,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D5B49B1048680CD000E48DA = {
+			buildActionMask = 2147483647;
+			files = (
+				1C4FD36807C6BC25000EA451,
+				1C4FD3CF07C6BF1B000EA451,
+				1C91A7A407C7983900079B67,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D5B49B3048680CD000E48DA = {
+			buildActionMask = 2147483647;
+			files = (
+				8D5B49B4048680CD000E48DA,
+				1C4FD32A07C6B9F5000EA451,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D5B49B4048680CD000E48DA = {
+			fileRef = 1058C7ADFEA557BF11CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		8D5B49B6048680CD000E48DA = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "F-Script Support.plugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8D5B49B7048680CD000E48DA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			path = Info.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+	};
+	rootObject = 089C1669FE841209C02AAC07;
+}

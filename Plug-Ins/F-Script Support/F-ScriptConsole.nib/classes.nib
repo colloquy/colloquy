@@ -1,0 +1,28 @@
+{
+    IBClasses = (
+        {
+            CLASS = FSInterpreterView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                object1 = id; 
+                object2 = id; 
+                object3 = id; 
+                object4 = id; 
+                object5 = id; 
+                object6 = id; 
+                object7 = id; 
+                object8 = id; 
+                object9 = id; 
+            }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = JVFScriptConsolePanel; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {console = FSInterpreterView; contents = NSView; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

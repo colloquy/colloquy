@@ -60,6 +60,10 @@
 					ProductGroup = 0A60C1600630D96D00DC6280;
 					ProjectRef = 0A60C15F0630D96D00DC6280;
 				},
+				{
+					ProductGroup = 1CE3F9BC07C7C29A0049A366;
+					ProjectRef = 1CE3F9BB07C7C29A0049A366;
+				},
 			);
 			targets = (
 				1CB2CCF5052DDC560094AAA4,
@@ -2118,6 +2122,7 @@
 			dependencies = (
 				0A60C2B80630DA2C00DC6280,
 				1C09DFF7052DFF6600D748CF,
+				1CE3F9C307C7C2B30049A366,
 			);
 			isa = PBXNativeTarget;
 			name = "Colloquy (Application)";
@@ -2977,6 +2982,7 @@
 			files = (
 				1CD4C09A07824A010003620F,
 				1C8CE1ED05A921AB0020D841,
+				1CE3F9BF07C7C2A70049A366,
 				1C51B8F2052DFAAA00BB459B,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -3404,6 +3410,7 @@
 		1CC478470427BB2C00000102 = {
 			children = (
 				1CC478480427BB5500000102,
+				1CE3F7BC07C7B60A0049A366,
 				1CA56CCD042A713E00000102,
 				1CD4C093078249A50003620F,
 			);
@@ -4355,6 +4362,65 @@
 			path = JVChatController.m;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1CE3F7BC07C7B60A0049A366 = {
+			children = (
+				1CE3F9BB07C7C29A0049A366,
+			);
+			isa = PBXGroup;
+			name = "F-Script Support";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE3F9BB07C7C29A0049A366 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "wrapper.pb-project";
+			name = "F-Script Support.xcode";
+			path = "Plug-Ins/F-Script Support/F-Script Support.xcode";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE3F9BC07C7C29A0049A366 = {
+			children = (
+				1CE3F9BE07C7C29B0049A366,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE3F9BE07C7C29B0049A366 = {
+			fileType = wrapper.cfbundle;
+			isa = PBXReferenceProxy;
+			path = "F-Script Support.plugin";
+			refType = 3;
+			remoteRef = 1CE3F9C707C7C2C50049A366;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CE3F9BF07C7C2A70049A366 = {
+			fileRef = 1CE3F9BE07C7C29B0049A366;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CE3F9C207C7C2B30049A366 = {
+			containerPortal = 1CE3F9BB07C7C29A0049A366;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
+			remoteInfo = "F-Script Support Plugin";
+		};
+		1CE3F9C307C7C2B30049A366 = {
+			isa = PBXTargetDependency;
+			name = "F-Script Support Plugin (from F-Script Support.xcode)";
+			targetProxy = 1CE3F9C207C7C2B30049A366;
+		};
+		1CE3F9C707C7C2C50049A366 = {
+			containerPortal = 1CE3F9BB07C7C29A0049A366;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
+			remoteInfo = "F-Script Support Plugin";
 		};
 		1CE72A95052C745400A8FE6E = {
 			fileEncoding = 4;
