@@ -83,6 +83,7 @@ NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeRe
 - (void) _didNotConnect;
 - (void) _willDisconnect;
 - (void) _didDisconnect;
+- (void) _joinRooms:(id) sender;
 @end
 
 #pragma mark -
@@ -811,6 +812,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 #pragma mark -
 
 - (void) sendFileToUser:(NSString *) user withFilePath:(NSString *) path {
+	if( [user isEqualToString:_nickname] ) return;
 	if( ! [[NSFileManager defaultManager] isReadableFileAtPath:path] ) return;
 	if( [self isConnected] ) {
 		NSNumber *size = [[[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES] objectForKey:@"NSFileSize"];
@@ -856,6 +858,11 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 }
 
 #pragma mark -
+
+- (void) joinChatRooms:(NSArray *) rooms {
+	[_joinList addObjectsFromArray:rooms];
+	if( [self isConnected] ) [self _joinRooms:nil];
+}
 
 - (void) joinChatForRoom:(NSString *) room {
 	if( [self isConnected] ) firetalk_chat_join( _chatConnection, [[room lowercaseString] UTF8String] );
