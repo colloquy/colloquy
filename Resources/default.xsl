@@ -33,6 +33,18 @@
 			</xsl:choose>
 		</xsl:variable>
 
+		<xsl:variable name="allClasses">
+			<xsl:choose>
+				<xsl:when test="(message[1]/@ignored = 'yes') or (@ignored = 'yes')">
+					<xsl:value-of select="$envelopeClasses" />
+					<xsl:text> ignore</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$envelopeClasses" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
 		<xsl:variable name="senderClasses">
 			<xsl:choose>
 				<xsl:when test="sender/@self = 'yes' or ../sender/@self = 'yes'">
@@ -57,7 +69,7 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<div id="{$properIdentifier}" class="{$envelopeClasses}">
+		<div id="{$properIdentifier}" class="{$allClasses}">
 			<span class="timestamp hidden">[</span>
 			<span class="timestamp">
 				<xsl:call-template name="short-time">

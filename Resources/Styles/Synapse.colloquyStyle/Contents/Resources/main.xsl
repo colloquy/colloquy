@@ -43,27 +43,27 @@
 				<xsl:apply-templates select=".." />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:variable name="messageClass">
-					<xsl:choose>
-						<xsl:when test="../sender/@self = 'yes'">
-							<xsl:text>submessage self</xsl:text>
-						</xsl:when>
-						<xsl:when test="@highlight = 'yes'">
-						  <xsl:text>submessage highlight</xsl:text>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>submessage</xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-
-				<xsl:variable name="timestamp">
-					<xsl:call-template name="short-time">
-						<xsl:with-param name="date" select="@received" />
-					</xsl:call-template>
-				</xsl:variable>
-
 				<xsl:if test="@ignored != 'yes'">
+					<xsl:variable name="messageClass">
+						<xsl:choose>
+							<xsl:when test="../sender/@self = 'yes'">
+								<xsl:text>submessage self</xsl:text>
+							</xsl:when>
+							<xsl:when test="@highlight = 'yes'">
+							  <xsl:text>submessage highlight</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>submessage</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+	
+					<xsl:variable name="timestamp">
+						<xsl:call-template name="short-time">
+							<xsl:with-param name="date" select="@received" />
+						</xsl:call-template>
+					</xsl:variable>
+
 					<span class="{$messageClass}">
 						<span class="hidden">[</span>
 						<span class="time"><xsl:value-of select="$timestamp" /></span>
@@ -88,27 +88,27 @@
 	</xsl:template>
 
 	<xsl:template match="envelope">
-		<xsl:variable name="messageClass">
-			<xsl:choose>
-				<xsl:when test="sender/@self = 'yes'">
-					<xsl:text>message self</xsl:text>
-				</xsl:when>
-		        <xsl:when test="message[@ignored != 'yes'][1]/@highlight = 'yes'">
-		          <xsl:text>message highlight</xsl:text>
-		        </xsl:when>
-				<xsl:otherwise>
-					<xsl:text>message</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
-		<xsl:variable name="timestamp">
-			<xsl:call-template name="short-time">
-				<xsl:with-param name="date" select="message[@ignored != 'yes'][1]/@received" />
-			</xsl:call-template>
-		</xsl:variable>
-
 		<xsl:if test="@ignored != 'yes' and count( message[@ignored != 'yes'] ) &gt;= 1">
+			<xsl:variable name="messageClass">
+				<xsl:choose>
+					<xsl:when test="sender/@self = 'yes'">
+						<xsl:text>message self</xsl:text>
+					</xsl:when>
+			        <xsl:when test="message[@ignored != 'yes'][1]/@highlight = 'yes'">
+			          <xsl:text>message highlight</xsl:text>
+			        </xsl:when>
+					<xsl:otherwise>
+						<xsl:text>message</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
+			<xsl:variable name="timestamp">
+				<xsl:call-template name="short-time">
+					<xsl:with-param name="date" select="message[@ignored != 'yes'][1]/@received" />
+				</xsl:call-template>
+			</xsl:variable>
+
 			<span id="{@id}">
 				<span class="{$messageClass}">
 					<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>

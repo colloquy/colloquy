@@ -38,6 +38,10 @@ body {
 	margin-bottom: 3px;
 }
 
+.envelope.ignore {
+	display: none;
+}
+
 .envelope.highlight {
 	background-color: #efefec;
 	background-color: rgba( 0, 0, 0, 0.1 );

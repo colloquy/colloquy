@@ -42,6 +42,10 @@ i {
 	overflow: hidden;
 }
 
+.envelope.ignore {
+	display: none;
+}
+
 .envelope.highlight {
 	background-color: #ccd;
 }
