@@ -544,7 +544,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 				[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 				[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 				[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottomIfNeeded();", messageString]];
+				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); documentAppend( \"%@\" ); scrollToBottomIfNeeded();", messageString]];
 			}
 		}
 
@@ -657,7 +657,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 				[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 				[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 				[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottomIfNeeded();", messageString]];
+				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); documentAppend( \"%@\" ); scrollToBottomIfNeeded();", messageString]];
 			}
 		}
 
@@ -864,9 +864,27 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		[textView complete:nil];
 		return YES;
 	}
-	return NO;
-}	
-	
+
+	NSArray *tabArr = [[send string] componentsSeparatedByString:@" "];
+	unsigned len = [(NSString *)[tabArr lastObject] length];
+	if( ! len ) return YES;
+	if( len <= [_target length] && [[tabArr lastObject] caseInsensitiveCompare:[_target substringToIndex:len]] == NSOrderedSame ) {
+		[[send textStorage] replaceCharactersInRange:NSMakeRange([[send textStorage] length] - len, len) withString:_target];
+		if( ! [[send string] rangeOfString:@" "].length ) [send replaceCharactersInRange:NSMakeRange([[send textStorage] length], 0) withString:@": "];
+		else [send replaceCharactersInRange:NSMakeRange([[send textStorage] length], 0) withString:@" "];
+	}
+	return YES;
+}
+
+- (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
+	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
+	NSMutableArray *ret = [NSMutableArray array];
+	if( [search length] <= [_target length] && [search caseInsensitiveCompare:[_target substringToIndex:[search length]]] == NSOrderedSame )
+		[ret addObject:_target];
+	[ret addObjectsFromArray:words];
+	return ret;
+}
+
 - (void) textDidChange:(NSNotification *) notification {
 	_historyIndex = 0;
 }
