@@ -475,13 +475,15 @@
 	NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
 	JVDirectChatPanel *chatView = nil;
 
+	MVChatRoom *room = nil;
 	if( ! [command caseInsensitiveCompare:@"msg"] && ( ! chanSet || [chanSet characterIsMember:[to characterAtIndex:0]] ) ) {
-		MVChatRoom *room = [connection joinedChatRoomWithName:to];
+		room = [connection joinedChatRoomWithName:to];
 		if( room ) chatView = [[JVChatController defaultManager] chatViewControllerForRoom:room ifExists:YES];
 	}
 
+	MVChatUser *user = nil;
 	if( ! chatView ) {
-		MVChatUser *user = [[connection chatUsersWithNickname:to] anyObject];
+		user = [[connection chatUsersWithNickname:to] anyObject];
 		if( user ) chatView = [[JVChatController defaultManager] chatViewControllerForUser:user ifExists:( ! show )];
 	}
 
@@ -489,6 +491,11 @@
 		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:msg sender:[connection localUser]];
 		[chatView echoSentMessageToDisplay:cmessage];
 		[chatView sendMessage:cmessage];
+		return YES;
+	} else if( ( user || room ) && [msg length] ) {
+		id target = room;
+		if( ! target ) target = user;
+		[target sendMessage:msg withEncoding:( room ? [room encoding] : [connection encoding] ) asAction:NO];
 		return YES;
 	}
 
