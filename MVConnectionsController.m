@@ -295,10 +295,21 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	id info = nil;
 
 	while( ( info = [enumerator nextObject] ) )
-		if( [[info objectForKey:@"connection"] connected] )
+		if( [[info objectForKey:@"connection"] isConnected] )
 			[ret addObject:[info objectForKey:@"connection"]];
 
 	return [[ret retain] autorelease];
+}
+
+- (MVChatConnection *) connectionForServerAddress:(NSString *) address {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	id info = nil;
+
+	while( ( info = [enumerator nextObject] ) )
+		if( [[[info objectForKey:@"connection"] server] caseInsensitiveCompare:address] == NSOrderedSame )
+			return [info objectForKey:@"connection"];
+
+	return nil;
 }
 
 #pragma mark -
