@@ -67,7 +67,9 @@ extern NSString *JVChatViewPboardType;
 - (IBAction) closeViewsDrawer:(id) sender;
 	
 - (void) reloadListItem:(id <JVChatListItem>) controller andChildren:(BOOL) children;
+- (BOOL) isListItemExpanded:(id <JVChatListItem>) item;
 - (void) expandListItem:(id <JVChatListItem>) item;
+- (void) collapseListItem:(id <JVChatListItem>) item;
 @end
 
 @interface JVChatWindowController (JVChatWindowControllerScripting)

@@ -474,8 +474,16 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 //	[self _refreshChatActivityToolbarItemWithListItem:item];
 }
 
+- (BOOL) isListItemExpanded:(id <JVChatListItem>) item {
+	return [chatViewsOutlineView isItemExpanded:item];
+}
+
 - (void) expandListItem:(id <JVChatListItem>) item {
 	[chatViewsOutlineView expandItem:item];
+}
+
+- (void) collapseListItem:(id <JVChatListItem>) item {
+	[chatViewsOutlineView collapseItem:item];
 }
 
 #pragma mark -

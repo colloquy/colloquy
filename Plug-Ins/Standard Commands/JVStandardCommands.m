@@ -147,7 +147,8 @@
 		return YES;
 	} else if( [command isEqualToString:@"names"] && ! [[arguments string] length] ) {
 		[[room windowController] openViewsDrawer:nil];
-		[[room windowController] expandListItem:room];
+		if( [[room windowController] isListItemExpanded:room] ) [[room windowController] collapseListItem:room];
+		else [[room windowController] expandListItem:room];
 		return YES;
 	} else if( ( [command isEqualToString:@"cycle"] || [command isEqualToString:@"hop"] ) && ! [[arguments string] length] ) {
 		[room setKeepAfterPart:YES];
