@@ -20,7 +20,7 @@ static JVChatController *sharedInstance = nil;
 
 @interface JVChatController (JVChatControllerPrivate)
 - (void) _addWindowController:(JVChatWindowController *) windowController;
-- (void) _addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller;
+- (void) _addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller andFocus:(BOOL) focus;
 - (BOOL) _handlePrivateMessageOnConnection:(MVChatConnection *) connection withInfo:(NSDictionary *) info;
 - (BOOL) _ignoreUser:(NSString *) name withMessage:(NSAttributedString *) message inRoom:(NSString *) room withConnection:(MVChatConnection *) connection;
 @end
@@ -175,7 +175,7 @@ static JVChatController *sharedInstance = nil;
 	if( ! ret && ! exists ) {
 		if( ( ret = [[[JVChatRoom alloc] initWithTarget:room forConnection:connection] autorelease] ) ) {
 			[_chatControllers addObject:ret];
-			[self _addViewControllerToPreferedWindowController:ret];
+			[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
 		}
 	}
 
@@ -183,6 +183,10 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (JVDirectChat *) chatViewControllerForUser:(NSString *) user withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
+	return [self chatViewControllerForUser:user withConnection:connection ifExists:exists userInitiated:YES];
+}
+
+- (JVDirectChat *) chatViewControllerForUser:(NSString *) user withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
 	id <JVChatViewController> ret = nil;
 	NSEnumerator *enumerator = nil;
 
@@ -197,7 +201,7 @@ static JVChatController *sharedInstance = nil;
 	if( ! ret && ! exists ) {
 		if( ( ret = [[[JVDirectChat alloc] initWithTarget:user forConnection:connection] autorelease] ) ) {
 			[_chatControllers addObject:ret];
-			[self _addViewControllerToPreferedWindowController:ret];
+			[self _addViewControllerToPreferedWindowController:ret andFocus:initiated];
 		}
 	}
 
@@ -208,7 +212,7 @@ static JVChatController *sharedInstance = nil;
 	id <JVChatViewController> ret = nil;
 	if( ( ret = [[[JVChatTranscript alloc] initWithTranscript:filename] autorelease] ) ) {
 		[_chatControllers addObject:ret];
-		[self _addViewControllerToPreferedWindowController:ret];
+		[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
 	}
 	return [[ret retain] autorelease];
 }
@@ -227,7 +231,7 @@ static JVChatController *sharedInstance = nil;
 	if( ! ret && ! exists ) {
 		if( ( ret = [[[JVChatConsole alloc] initWithConnection:connection] autorelease] ) ) {
 			[_chatControllers addObject:ret];
-			[self _addViewControllerToPreferedWindowController:ret];
+			[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
 		}
 	}
 
@@ -442,9 +446,9 @@ static JVChatController *sharedInstance = nil;
 	if ( [[[notification userInfo] objectForKey:@"auto"] boolValue] ) {
 		continueNotify = ! [self _handlePrivateMessageOnConnection:[notification object] withInfo:[notification userInfo]];
 	}
-	
+
 	if ( continueNotify ) {
-		JVDirectChat *controller = [self chatViewControllerForUser:[[notification userInfo] objectForKey:@"from"] withConnection:[notification object] ifExists:NO];
+		JVDirectChat *controller = [self chatViewControllerForUser:[[notification userInfo] objectForKey:@"from"] withConnection:[notification object] ifExists:NO userInitiated:NO];
 		[controller addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"from"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue]];
 	}
 }
@@ -465,7 +469,7 @@ static JVChatController *sharedInstance = nil;
 	[_chatWindows addObject:windowController];
 }
 
-- (void) _addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller {
+- (void) _addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller andFocus:(BOOL) focus {
 	JVChatWindowController *windowController = nil;
 	id <JVChatViewController> viewController = nil;
 	Class modeClass = NULL;
@@ -532,7 +536,7 @@ static JVChatController *sharedInstance = nil;
 	if( ! windowController ) windowController = [self newChatWindowController];
 
 	[windowController addChatViewController:controller];
-	if( [[windowController allChatViewControllers] count] == 1 || ! [controller isMemberOfClass:[JVDirectChat class]] )
+	if( focus || [[windowController allChatViewControllers] count] == 1 )
 		[windowController showChatViewController:controller];
 }
 
