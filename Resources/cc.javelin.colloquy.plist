@@ -43,11 +43,11 @@
 	<key>JVChatDefaultStyle</key>
 	<string>cc.javelin.colloquy.style.standard</string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.bland</key>
-	<string>none</string>
+	<string></string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.bubbles</key>
 	<string>cc.javelin.colloquy.emoticons.standard</string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.novel</key>
-	<string>none</string>
+	<string></string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.standard</key>
 	<string>cc.javelin.colloquy.emoticons.standard</string>
 	<key>cc.javelin.colloquy.style.blandWebKitDefaultFixedFontSize</key>
