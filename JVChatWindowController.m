@@ -489,11 +489,17 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (void) outlineView:(NSOutlineView *) outlineView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn item:(id) item {
-	[(JVDetailCell *) cell setMainText:[item title]];
-	[(JVDetailCell *) cell setInformationText:[item information]];
-	[(JVDetailCell *) cell setStatusImage:[item statusImage]];
 	[(JVDetailCell *) cell setRepresentedObject:item];
-		
+	[(JVDetailCell *) cell setMainText:[item title]];
+
+	if( [item respondsToSelector:@selector( information )] ) {
+		[(JVDetailCell *) cell setInformationText:[item information]];
+	} else [(JVDetailCell *) cell setInformationText:nil];
+
+	if( [item respondsToSelector:@selector( statusImage )] ) {
+		[(JVDetailCell *) cell setStatusImage:[item statusImage]];
+	} else [(JVDetailCell *) cell setStatusImage:nil];
+
 	if( [item respondsToSelector:@selector( isEnabled )] ) {
 		[cell setEnabled:[item isEnabled]];
 	} else [cell setEnabled:YES];
@@ -508,17 +514,19 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
-	if( item ) return [item numberOfChildren];
+	if( item && [item respondsToSelector:@selector( numberOfChildren )] ) return [item numberOfChildren];
 	else return [_views count];
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView isItemExpandable:(id) item {
-	return ( [item numberOfChildren] ? YES : NO );
+	return ( [item respondsToSelector:@selector( numberOfChildren )] && [item numberOfChildren] ? YES : NO );
 }
 
 - (id) outlineView:(NSOutlineView *) outlineView child:(int) index ofItem:(id) item {
 	if( item ) {
-		return [item childAtIndex:index];
+		if( [item respondsToSelector:@selector( childAtIndex: )] )
+			return [item childAtIndex:index];
+		else return nil;
 	} else return [_views objectAtIndex:index];
 }
 
@@ -539,12 +547,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldExpandItem:(id) item {
 	BOOL retVal = YES; 
-	// test here if we are dragging, and don't expand
-	if ( _currentlyDragging ) {
-		retVal = NO;
-	}
-	
+	if ( _currentlyDragging ) retVal = NO; // if we are dragging don't expand
 	return retVal;
+}
+
+- (BOOL) outlineView:(NSOutlineView *) outlineView shouldCollapseItem:(id) item {
+	return YES;
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView heightOfRow:(int) row {
@@ -665,7 +673,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
 	id menuItem = nil;
 	NSMenu *menu = [chatViewsOutlineView menu];
-	NSMenu *newMenu = [item menu];
+	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
 	NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
 
 	while( ( menuItem = [enumerator nextObject] ) )

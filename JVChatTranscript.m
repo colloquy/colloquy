@@ -288,14 +288,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return nil;
 }
 
-- (int) numberOfChildren {
-	return 0;
-}
-
-- (id) childAtIndex:(int) index {
-	return nil;
-}
-
 - (NSMenu *) menu {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
@@ -316,10 +308,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSImage *ret = [NSImage imageNamed:@"Generic"];
 	[ret setSize:NSMakeSize( 32., 32. )];
 	return [[ret retain] autorelease];
-}
-
-- (NSImage *) statusImage {
-	return nil;
 }
 
 #pragma mark -

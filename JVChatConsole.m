@@ -136,14 +136,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return nil;
 }
 
-- (int) numberOfChildren {
-	return 0;
-}
-
-- (id) childAtIndex:(int) index {
-	return nil;
-}
-
 #pragma mark -
 
 - (NSMenu *) menu {
@@ -170,10 +162,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (NSImage *) icon {
 	return [NSImage imageNamed:@"console"];
-}
-
-- (NSImage *) statusImage {
-	return nil;
 }
 
 #pragma mark -

@@ -187,16 +187,7 @@
 }
 
 - (NSString *) toolTip {
-	//return [self title];
-	return @"";
-}
-
-- (int) numberOfChildren {
-	return 0;
-}
-
-- (id) childAtIndex:(int) index {
-	return nil;
+	return [NSString stringWithFormat:@"%@\n%@", [self title], [self address]];
 }
 
 - (id <JVChatListItem>) parent {
