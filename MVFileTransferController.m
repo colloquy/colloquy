@@ -121,9 +121,9 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	theColumn = [currentFiles tableColumnWithIdentifier:@"status"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"statusHeader"]];
-	prototypeCell = [[NSImageCell new] autorelease];
+/*	prototypeCell = [[NSImageCell new] autorelease];
 	[prototypeCell setImageAlignment:NSImageAlignCenter];
-	[theColumn setDataCell:prototypeCell];
+	[theColumn setDataCell:prototypeCell];*/
 
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
@@ -304,7 +304,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
 	if( [[column identifier] isEqual:@"file"] ) {
-		return [[[_transferStorage objectAtIndex:row] objectForKey:@"path"] lastPathComponent];
+		NSImage *fileIcon = [[NSWorkspace sharedWorkspace] iconForFileType:[[[_transferStorage objectAtIndex:row] objectForKey:@"path"] pathExtension]];
+		[fileIcon setScalesWhenResized:YES];
+		[fileIcon setSize:NSMakeSize( 16., 16. )];
+		return fileIcon;
+//		return [[[_transferStorage objectAtIndex:row] objectForKey:@"path"] lastPathComponent];
 	} else if( [[column identifier] isEqual:@"size"] ) {
 		return MVPrettyFileSize( [[[_transferStorage objectAtIndex:row] objectForKey:@"size"] unsignedLongValue] );
 	} else if( [[column identifier] isEqual:@"user"] ) {
@@ -315,10 +319,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 - (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(int) row {
 	if( [[column identifier] isEqual:@"file"] ) {
-		NSImage *fileIcon = [[NSWorkspace sharedWorkspace] iconForFileType:[[[_transferStorage objectAtIndex:row] objectForKey:@"path"] pathExtension]];
-		[fileIcon setScalesWhenResized:YES];
-		[fileIcon setSize:NSMakeSize( 16., 16. )];
-		[cell setImage:fileIcon];
+//		NSImage *fileIcon = [[NSWorkspace sharedWorkspace] iconForFileType:[[[_transferStorage objectAtIndex:row] objectForKey:@"path"] pathExtension]];
+//		[fileIcon setScalesWhenResized:YES];
+//		[fileIcon setSize:NSMakeSize( 16., 16. )];
+//		[cell setImage:fileIcon];
+		[cell setMainText:[[[_transferStorage objectAtIndex:row] objectForKey:@"path"] lastPathComponent]];
 	} else if( [[column identifier] isEqual:@"status"] ) {
 		MVTransferOperation type = (MVTransferOperation) [[[_transferStorage objectAtIndex:row] objectForKey:@"type"] unsignedIntValue];
 		MVTransferStatus status = (MVTransferStatus) [[[_transferStorage objectAtIndex:row] objectForKey:@"status"] unsignedIntValue];

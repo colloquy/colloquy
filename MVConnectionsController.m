@@ -85,7 +85,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 - (void) windowDidLoad {
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"connections.toolbar"] autorelease];
 	NSTableColumn *theColumn = nil;
-	id prototypeCell = nil;
+//	id prototypeCell = nil;
 
 	[newNickname setObjectValue:NSUserName()];
 
@@ -93,16 +93,16 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];
-	prototypeCell = [[NSButtonCell new] autorelease];
+/*	prototypeCell = [[NSButtonCell new] autorelease];
 	[prototypeCell setButtonType:NSSwitchButton];
 	[prototypeCell setControlSize:NSSmallControlSize];
-	[theColumn setDataCell:prototypeCell];
+	[theColumn setDataCell:prototypeCell]; */
 
 	theColumn = [connections tableColumnWithIdentifier:@"status"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"statusHeader"]];
-	prototypeCell = [[NSImageCell new] autorelease];
+/*	prototypeCell = [[NSImageCell new] autorelease];
 	[prototypeCell setImageAlignment:NSImageAlignCenter];
-	[theColumn setDataCell:prototypeCell];
+	[theColumn setDataCell:prototypeCell];*/
 
 	[connections registerForDraggedTypes:[NSArray arrayWithObjects:MVConnectionPboardType,NSURLPboardType,@"CorePasteboardFlavorType 0x75726C20",nil]];
 
@@ -516,8 +516,8 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:object securityDomain:object account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServer:object];
 		} else if( [[column identifier] isEqual:@"port"] ) {
-			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:(unsigned short)[object intValue] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:(unsigned short)[object intValue]];
+			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[object unsignedShortValue] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:[object unsignedShortValue]];
 		}
 		[self _saveBookmarkList];
 	} else if( view == editRooms ) {
