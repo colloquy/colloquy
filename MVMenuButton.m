@@ -130,7 +130,6 @@
 		[tbitem setMinSize:NSMakeSize( 24., 24. )];
 		[tbitem setMaxSize:NSMakeSize( 24., 24. )];
 	}
-	NSLog( @"%@", NSStringFromRect( [self frame] ) );
 	size = controlSize;
 }
 
