@@ -136,7 +136,8 @@ const unsigned int bottomBorder = 13;
 
 - (void) keyDown:(NSEvent *) theEvent {
 	NSView *nextView = nil;
-	if( [[theEvent charactersIgnoringModifiers] characterAtIndex:0] == NSTabCharacter ) {
+	NSString *chars = [theEvent charactersIgnoringModifiers];
+	if( [chars length] && [chars characterAtIndex:0] == NSTabCharacter ) {
 		[self setKeyboardFocusRingNeedsDisplayInRect:[self _boundsForIndex:focusedIndex]];
 		if( focusedIndex == NSNotFound && [self _numberOfIcons] ) focusedIndex = 0;
 		else if( ! ( [theEvent modifierFlags] & NSShiftKeyMask ) ) focusedIndex++;
@@ -150,7 +151,7 @@ const unsigned int bottomBorder = 13;
 		}
 		if( ! [self _numberOfIcons] ) focusedIndex = NSNotFound;
 		[self setNeedsDisplayInRect:[self _boundsForIndex:focusedIndex]];
-	} else if( [[theEvent charactersIgnoringModifiers] characterAtIndex:0] == NSBackTabCharacter ) {
+	} else if( [chars length] && [chars characterAtIndex:0] == NSBackTabCharacter ) {
 		[self setKeyboardFocusRingNeedsDisplayInRect:[self _boundsForIndex:focusedIndex]];
 		if( focusedIndex == NSNotFound && [self _numberOfIcons] ) focusedIndex = [self _numberOfIcons] - 1;
 		else if( [theEvent modifierFlags] & NSShiftKeyMask ) focusedIndex--;
@@ -164,7 +165,7 @@ const unsigned int bottomBorder = 13;
 		}
 		if( ! [self _numberOfIcons] ) focusedIndex = NSNotFound;
 		[self setNeedsDisplayInRect:[self _boundsForIndex:focusedIndex]];
-	} else if( [[theEvent charactersIgnoringModifiers] characterAtIndex:0] == ' ' ) {
+	} else if( [chars length] && [chars characterAtIndex:0] == ' ' ) {
 		if( focusedIndex != NSNotFound && focusedIndex < [self _numberOfIcons] && focusedIndex >= 0 ) {
 			[preferencesController selectPreferencePaneByIdentifier:[[preferencePanes objectAtIndex:focusedIndex] bundleIdentifier]];
 			focusedIndex = NSNotFound;

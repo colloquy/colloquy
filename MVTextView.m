@@ -12,23 +12,24 @@
 #define kDownArrowCharCode 63233
 
 - (void) keyDown:(NSEvent *) theEvent {
-	if( [[theEvent charactersIgnoringModifiers] characterAtIndex:0] == kReturnCharCode ) {
+	NSString *chars = [theEvent charactersIgnoringModifiers];
+	if( [chars length] && [chars characterAtIndex:0] == kReturnCharCode ) {
 		if ([[self delegate] respondsToSelector:@selector(textView:returnHit:)]) {
 			if( [[self delegate] textView:self returnHit:theEvent] ) return;
 		}
-	} else if( [[theEvent charactersIgnoringModifiers] characterAtIndex:0] == kEnterCharCode ) {
+	} else if( [chars length] && [chars characterAtIndex:0] == kEnterCharCode ) {
 		if( [[self delegate] respondsToSelector:@selector(textView:enterHit:)] ) {
 			if( [[self delegate] textView:self enterHit:theEvent] ) return;
 		}
-	} else if( [[theEvent charactersIgnoringModifiers] characterAtIndex:0] == kTabCharCode ) {
+	} else if( [chars length] && [chars characterAtIndex:0] == kTabCharCode ) {
 		if( [[self delegate] respondsToSelector:@selector(textView:tabHit:)] ) {
 			if( [[self delegate] textView:self tabHit:theEvent] ) return;
 		}
-	} else if( [[theEvent charactersIgnoringModifiers] characterAtIndex:0] == kUpArrowCharCode ) {
+	} else if( [chars length] && [chars characterAtIndex:0] == kUpArrowCharCode ) {
 		if( [[self delegate] respondsToSelector:@selector(textView:upArrowHit:)] ) {
 			if( [[self delegate] textView:self upArrowHit:theEvent] ) return;
 		}
-	} else if( [[theEvent charactersIgnoringModifiers] characterAtIndex:0] == kDownArrowCharCode ) {
+	} else if( [chars length] && [chars characterAtIndex:0] == kDownArrowCharCode ) {
 		if( [[self delegate] respondsToSelector:@selector(textView:downArrowHit:)] ) {
 			if( [[self delegate] textView:self downArrowHit:theEvent] ) return;
 		}
