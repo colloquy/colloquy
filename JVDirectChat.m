@@ -1268,30 +1268,17 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	for( i = 0, c = [parts count]; i < c; i++ ) {
 		part = [[[parts objectAtIndex:i] mutableCopy] autorelease];
-		
+
 		if( ! [part length] || ( [part length] >= 1 && [part characterAtIndex:0] == '<' ) )
 			continue;
-
-		// escape the special entities
-		[part replaceOccurrencesOfString:@"*" withString:@"*star;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"<" withString:@"*lt;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@">" withString:@"*gt;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"\"" withString:@"*quot;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"'" withString:@"*apos;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-
-		[part replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"&quot;" withString:@"\"" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"&apos;" withString:@"'" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-
-		[part replaceOccurrencesOfString:@"&amp;" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"&" withString:@"*amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"~amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 
 		// catch well-formed urls like "http://www.apple.com" or "irc://irc.javelin.cc"
 		legalSchemeSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"];
 		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;#.\\/?!&%$-+=_~@*'"];
 		urlScanner = [NSScanner scannerWithString:part];
+		srange = [part rangeOfString:@"://"];
+		range = [part rangeOfCharacterFromSet:[legalSchemeSet invertedSet] options:( NSLiteralSearch | NSBackwardsSearch ) range:NSMakeRange( 0, ( srange.location != NSNotFound ? srange.location : 0 ) )];
+		if( range.location != NSNotFound ) [urlScanner setScanLocation:range.location];
 		[urlScanner scanUpToCharactersFromSet:legalSchemeSet intoString:NULL];
 		if( [urlScanner scanUpToString:@"://" intoString:&urlHandle] && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
 			if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' || [link characterAtIndex:([link length] - 1)] == '!' )
@@ -1300,11 +1287,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				link = [urlHandle stringByAppendingString:link];
 			if( [link length] >= 7 ) {
 				mutableLink = [[link mutableCopy] autorelease];
-				[mutableLink replaceOccurrencesOfString:@"/" withString:@"/*amp;#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"+" withString:@"+*amp;#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"%" withString:@"*amp;#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"&" withString:@"*amp;#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"*lt;a href=*quot;%@*quot;*gt;%@*lt;/a*gt;", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"%" withString:@"&#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"&" withString:@"&#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"%@\">%@</a>", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 				goto finish;
 			}
 		}
@@ -1317,19 +1304,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				 link = [link substringToIndex:( [link length] - 1 )];
 			if( [link length] >= 8 ) {
 				mutableLink = [[link mutableCopy] autorelease];
-				[mutableLink replaceOccurrencesOfString:@"/" withString:@"/*amp;#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"+" withString:@"+*amp;#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"%" withString:@"*amp;#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"&" withString:@"*amp;#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"*lt;a href=*quot;http://%@*quot;*gt;%@*lt;/a*gt;", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"%" withString:@"&#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[mutableLink replaceOccurrencesOfString:@"&" withString:@"&#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"http://%@\">%@</a>", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 				goto finish;
 			}
 		}
 
 		// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
 		legalSchemeSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890._-+"];
-		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:@./-_"];
+		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@.-_"];
 		urlScanner = [NSScanner scannerWithString:part];
+		srange = [part rangeOfString:@"@"];
+		range = [part rangeOfCharacterFromSet:[legalSchemeSet invertedSet] options:( NSLiteralSearch | NSBackwardsSearch ) range:NSMakeRange( 0, ( srange.location != NSNotFound ? srange.location : 0 ) )];
+		if( range.location != NSNotFound ) [urlScanner setScanLocation:range.location];
 		[urlScanner scanUpToCharactersFromSet:legalSchemeSet intoString:NULL];
 		if( [urlScanner scanUpToString:@"@" intoString:&urlHandle] && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
 			if( [link characterAtIndex:([link length] - 1)] == '.' )
@@ -1337,10 +1327,14 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 			NSRange hasPeriod = [link rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
 			if( [urlHandle length] && [link length] && hasPeriod.location < ([link length] - 1) && hasPeriod.location != NSNotFound ) {
 				link = [urlHandle stringByAppendingString:link];
-				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"*lt;a href=*quot;mailto:%@*quot;*gt;%@*lt;/a*gt;", link, link] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"mailto:%@\">%@</a>", link, link] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 				goto finish;
 			}
 		}
+
+		[part replaceOccurrencesOfString:@"&amp;" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+		[part replaceOccurrencesOfString:@"&" withString:@"*amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+		[part replaceOccurrencesOfString:@"~amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 
 		// catch well-formed IRC channel names like "#php" or "&admins"
 		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;.?!%^$@#&*~`\\|+/-_"];
@@ -1350,31 +1344,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				if( [urlHandle characterAtIndex:([urlHandle length] - 1)] == '.' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '?' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '!' )
 					urlHandle = [urlHandle substringToIndex:( [urlHandle length] - 1 )];
 				link = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];
-				link = [NSString stringWithFormat:@"*lt;a href=*quot;%@*quot;*gt;%@*lt;/a*gt;", link, urlHandle];
-				[part replaceOccurrencesOfString:urlHandle withString:link options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				mutableLink = [NSMutableString stringWithFormat:@"<a href=\"%@\">%@</a>", link, urlHandle];
+				[mutableLink replaceOccurrencesOfString:@"&" withString:@"*amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[part replaceOccurrencesOfString:urlHandle withString:mutableLink options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+
+				[part replaceOccurrencesOfString:@"&" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[part replaceOccurrencesOfString:@"*amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[part replaceOccurrencesOfString:@"~amp;" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 				goto finish;
 			}
 		}
 
-		continue;
-
-	finish:
-		// un-escape the special entities
 		[part replaceOccurrencesOfString:@"&" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 		[part replaceOccurrencesOfString:@"*amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"~amp;" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+		[part replaceOccurrencesOfString:@"~amp;" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];		
 
-		[part replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"'" withString:@"&apos;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-
-		[part replaceOccurrencesOfString:@"*lt;" withString:@"<" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"*gt;" withString:@">" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"*quot;" withString:@"\"" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"*apos;" withString:@"'" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"*star;" withString:@"*" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-
+	finish:
 		[parts replaceObjectAtIndex:i withObject:part];
 	}
 
