@@ -6,8 +6,6 @@
 	objectVersion = 39;
 	objects = {
 		014CEA420018CDE011CA2923 = {
-			buildRules = (
-			);
 			buildSettings = {
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -3097,7 +3095,7 @@
 		1CCA517E0598AFBA00F0A4CD = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = ChatCore.scriptSuite;
 			path = Resources/ChatCore.scriptSuite;
 			refType = 4;
@@ -3106,7 +3104,7 @@
 		1CCA517F0598AFBA00F0A4CD = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = ChatCore.scriptTerminology;
 			path = Resources/ChatCore.scriptTerminology;
 			refType = 4;
@@ -3270,8 +3268,6 @@
 			sourceTree = "<group>";
 		};
 		F52BA31C037C62E801A35792 = {
-			buildRules = (
-			);
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
