@@ -30,6 +30,7 @@ size_t safe_strlen(const char * const input) {
 
 void *safe_malloc(const size_t size) {
 	void *output;
+	if (!size) return NULL;
 	output = malloc(size);
 	if (output == NULL) {
 		perror("malloc");
@@ -41,6 +42,7 @@ void *safe_malloc(const size_t size) {
 
 void *safe_realloc(void *old, const size_t new) {
 	void *output;
+	if (!old || new == 0) return old;
 	output = realloc(old,new);
 	if (output == NULL) {
 		perror("realloc");
@@ -60,6 +62,7 @@ char *safe_strdup(const char * const input) {
 }
 
 void safe_strncpy(char * const to, const char * const from, const size_t size) {
+	if (!to || !from || size <= 1) return;
 	strncpy(to,from,size);
 	to[size - 1]= '\0';
 	return;
@@ -67,7 +70,9 @@ void safe_strncpy(char * const to, const char * const from, const size_t size) {
 
 void safe_strncat(char * const to, const char * const from, const size_t size) {
 	size_t l = 0;
+	if (!to || !from) return;
 	l = safe_strlen(to);
+	if (size <= l) return;
 	safe_strncpy(&to[l],from,size - l);
 	return;
 }
@@ -75,9 +80,11 @@ void safe_strncat(char * const to, const char * const from, const size_t size) {
 void safe_snprintf(char *out, const size_t size, char * const format, ...) {
 	va_list ap;
 	char numbuf[64]; /* stores strings for printing */
-	size_t f,o = 0,fl,tl,ml;
-	char *tempchr;
+	size_t f = 0,o = 0,fl = 0,tl = 0,ml = 0;
+	char *tempchr = NULL;
 	int b = 0;
+
+	if (!out || size <= 1 || !format) return;
 
 	fl = safe_strlen(format);
 	ml = size - 1;
@@ -148,7 +155,8 @@ void safe_snprintf(char *out, const size_t size, char * const format, ...) {
 }
 
 int safe_strncasecmp(const char *s1, const char *s2, size_t n) {
-	size_t s;
+	size_t s = 0;
+	if (!s1 || !s1 || !n) return 0;
 	for (s = 0; s < n; s++) {
 		if (tolower((unsigned char) s1[s]) != tolower((unsigned char) s2[s]))
 			return 1;
