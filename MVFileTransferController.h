@@ -1,4 +1,5 @@
 #import <Foundation/NSObject.h>
+#import <Foundation/NSDate.h>
 #import <AppKit/NSNibDeclarations.h>
 
 typedef enum {
