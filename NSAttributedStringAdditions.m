@@ -55,6 +55,33 @@ static int colorRGBToMIRCColor( unsigned int red, unsigned int green, unsigned i
 	return color;
 }
 
+static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
+	unsigned int location = [scanner scanLocation];
+	if( [scanner isAtEnd] || [[scanner string] length] < ( location + 1 ) ) return NO;
+
+	char a = [[scanner string] characterAtIndex:location];
+	char b = [[scanner string] characterAtIndex:( location + 1 )];
+
+	*number = 0;
+
+	if( a >= '0' && a <= '9' ) {
+		a -= '0';
+		*number = a;
+		location++;
+	} else return NO;
+
+	if( b >= '0' && b <= '9' ) {
+		b -= '0';
+		*number = *number * 10 + b;
+		location++;
+	}
+
+	[scanner setScanLocation:location];
+	return YES;
+}
+
+#pragma mark -
+
 static NSConditionLock *renderingFragmentLock = nil;
 static WebView *fragmentWebView = nil;
 
@@ -301,14 +328,14 @@ static WebView *fragmentWebView = nil;
 					[scanner setScanLocation:( location + 1 )];
 
 					unsigned int fcolor = 0;
-					if( [scanner scanInt:&fcolor] ) {
+					if( scanOneOrTwoDigits( scanner, &fcolor ) ) {
 						fcolor %= 16;
 
 						NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[fcolor][0] / 255. ) green:( (float) mIRCColors[fcolor][1] / 255. ) blue:( (float) mIRCColors[fcolor][2] / 255. ) alpha:1.];
 						if( foregroundColor ) [attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
 
 						unsigned int bcolor = 0;
-						if( [scanner scanString:@"," intoString:NULL] && [scanner scanInt:&bcolor] && bcolor != 99 ) {
+						if( [scanner scanString:@"," intoString:NULL] && scanOneOrTwoDigits( scanner, &bcolor ) && bcolor != 99 ) {
 							bcolor %= 16;
 							NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[bcolor][0] / 255. ) green:( (float) mIRCColors[bcolor][1] / 255. ) blue:( (float) mIRCColors[bcolor][2] / 255. ) alpha:1.];
 							if( backgroundColor ) [attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
