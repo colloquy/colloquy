@@ -1365,42 +1365,6 @@
 			settings = {
 			};
 		};
-		1C8997E5058806DA00F49617 = {
-			children = (
-				1C8997E6058806DA00F49617,
-			);
-			isa = PBXVariantGroup;
-			name = JVInterfacePreferences.nib;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C8997E6058806DA00F49617 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = English;
-			path = Languages/English.lproj/JVInterfacePreferences.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C8997E7058806DA00F49617 = {
-			fileRef = 1C8997E5058806DA00F49617;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C8997E8058807C400F49617 = {
-			fileRef = 1CDEE8210586C289000B9075;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C8997E9058807C500F49617 = {
-			fileRef = 1CDEE8200586C289000B9075;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C8BDCF1054345160035B84A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1942,7 +1906,6 @@
 				1CEE3F05057AEC0200AD6DE2,
 				1CDEE25D05823C25000B9075,
 				1CDEE4790583DC58000B9075,
-				1C8997E9058807C500F49617,
 				1CCA236E05956E7C0050EDE0,
 				1CD733CB05A0E2470080F952,
 				1C6EA24305A738DD006A559F,
@@ -2193,7 +2156,6 @@
 				1CEE3B170578491B00AD6DE2,
 				1CDEE48D0583E268000B9075,
 				1CDEE8C505878D30000B9075,
-				1C8997E7058806DA00F49617,
 				1CBA56ED058D202200257832,
 				1CCA510F0598108000F0A4CD,
 				1CCA51100598108000F0A4CD,
@@ -2678,7 +2640,6 @@
 				1CEE3F06057AEC0200AD6DE2,
 				1CDEE25E05823C26000B9075,
 				1CDEE47A0583DC58000B9075,
-				1C8997E8058807C400F49617,
 				1CCA236F05956E7C0050EDE0,
 				1CD733CC05A0E2470080F952,
 				1C6EA24405A738DD006A559F,
@@ -3207,8 +3168,6 @@
 				1CC6FC500549FCD70075807C,
 				1C9982010603EFD6006C6417,
 				1C9982000603EFD6006C6417,
-				1CDEE8210586C289000B9075,
-				1CDEE8200586C289000B9075,
 				1CDEE25605823C13000B9075,
 				1CDEE25505823C13000B9075,
 				1CC6FC550549FDD70075807C,
@@ -3937,22 +3896,6 @@
 			settings = {
 			};
 		};
-		1CDEE8200586C289000B9075 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = JVInterfacePreferences.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CDEE8210586C289000B9075 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = JVInterfacePreferences.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1CDEE8260586C723000B9075 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -4521,7 +4464,6 @@
 				1C8BDD2005436A020035B84A,
 				1CDEE48B0583E268000B9075,
 				1CBC634705489BEE009E59E1,
-				1C8997E5058806DA00F49617,
 				1CECE22F06A37A8300350564,
 				1CC6FC62054A003C0075807C,
 				1CC6FC64054A003C0075807C,

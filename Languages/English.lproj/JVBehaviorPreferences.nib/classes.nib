@@ -4,11 +4,14 @@
         {
             ACTIONS = {
                 changeNaturalActionDetection = id; 
+                changePreferredWindow = id; 
                 changeSendHistory = id; 
                 changeSendOnEnterAction = id; 
                 changeSendOnReturnAction = id; 
+                changeSortByStatus = id; 
                 changeSpellChecking = id; 
                 changeTabKeyComplete = id; 
+                changeTabbedWindows = id; 
             }; 
             CLASS = JVBehaviorPreferences; 
             LANGUAGE = ObjC; 
@@ -16,11 +19,17 @@
                 checkSpelling = NSButton; 
                 detectNaturalActions = NSButton; 
                 enterKeyAction = NSPopUpButton; 
+                newChats = NSPopUpButton; 
+                newConsoles = NSPopUpButton; 
+                newRooms = NSPopUpButton; 
+                newTranscripts = NSPopUpButton; 
                 returnKeyAction = NSPopUpButton; 
                 sendHistory = NSTextField; 
                 sendHistoryStepper = NSStepper; 
+                sortByStatus = NSButton; 
                 tabKeyComplete = NSButton; 
                 tabKeyCompleteLabel = NSTextField; 
+                tabbedWindows = NSButton; 
             }; 
             SUPERCLASS = NSPreferencesModule; 
         }, 
