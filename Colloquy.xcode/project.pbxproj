@@ -6,8 +6,6 @@
 	objectVersion = 39;
 	objects = {
 		014CEA420018CDE011CA2923 = {
-			buildRules = (
-			);
 			buildSettings = {
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -616,7 +614,7 @@
 		1C1D19F105992D80000BB31A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = ChatCore.scriptSuite;
 			path = Resources/ChatCore.scriptSuite;
 			refType = 4;
@@ -625,7 +623,7 @@
 		1C1D19F205992D80000BB31A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = ChatCore.scriptTerminology;
 			path = Resources/ChatCore.scriptTerminology;
 			refType = 4;
@@ -1153,7 +1151,7 @@
 		1C59BD61059E2E02001487E2 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = ChatPlugIn.scriptSuite;
 			path = Resources/ChatPlugIn.scriptSuite;
 			refType = 4;
@@ -1162,7 +1160,7 @@
 		1C59BD63059E2E16001487E2 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = ChatPlugIn.scriptTerminology;
 			path = Resources/ChatPlugIn.scriptTerminology;
 			refType = 4;
@@ -1629,7 +1627,7 @@
 		1C9982AF0604BEAA006C6417 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = notifications.plist;
 			path = Resources/notifications.plist;
 			refType = 4;
@@ -1666,7 +1664,7 @@
 		1CA75A260652537A000141D5 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = styleOptions.plist;
 			path = Resources/styleOptions.plist;
 			refType = 4;
@@ -3313,7 +3311,7 @@
 		1CBECDCF0508C8AB000001C8 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = default.xsl;
 			path = Resources/default.xsl;
 			refType = 2;
@@ -3548,7 +3546,7 @@
 		1CC6FD38054AF1940075807C = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = preview.colloquyTranscript;
 			path = Resources/preview.colloquyTranscript;
 			refType = 2;
@@ -3669,7 +3667,7 @@
 		1CCA510D0598108000F0A4CD = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = Colloquy.scriptSuite;
 			path = Resources/Colloquy.scriptSuite;
 			refType = 4;
@@ -3678,7 +3676,7 @@
 		1CCA510E0598108000F0A4CD = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
+			lastKnownFileType = text.xml;
 			name = Colloquy.scriptTerminology;
 			path = Resources/Colloquy.scriptTerminology;
 			refType = 4;
@@ -4655,8 +4653,6 @@
 			sourceTree = "<group>";
 		};
 		F52BA31C037C62E801A35792 = {
-			buildRules = (
-			);
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
