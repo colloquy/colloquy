@@ -143,7 +143,7 @@
 	} else [[self textStorage] addAttribute:NSBackgroundColorAttributeName value:color range:range];
 }
 
-- (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( bold: ) ) {
 		return [self isEditable];
 	} else if( [menuItem action] == @selector( italic: ) ) {

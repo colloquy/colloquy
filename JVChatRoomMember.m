@@ -179,7 +179,7 @@
 
 #pragma mark -
 
-- (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( toggleVoiceStatus: ) ) {
 		if( _voice ) {
 			[menuItem setTitle:NSLocalizedString( @"Remove Voice", "remove voice contextual menu - admin only" )];

@@ -388,7 +388,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
-- (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( toggleSmallDrawerIcons: ) ) {
 		[menuItem setState:( _usesSmallIcons ? NSOnState : NSOffState )];
 		return YES;

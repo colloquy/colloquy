@@ -196,7 +196,7 @@ static BOOL applicationIsTerminating = NO;
 	return NO;
 }
 
-- (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( joinRoom: ) ) {
 		if( [[[MVConnectionsController defaultManager] connections] count] ) return YES;
 		else return NO;

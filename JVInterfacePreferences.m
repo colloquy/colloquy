@@ -91,18 +91,18 @@
 	BOOL groupByServer = (BOOL) [[NSUserDefaults standardUserDefaults] integerForKey:key] & 32;
 
 	if( [[sender selectedItem] tag] == 32 ) {
-		id <NSMenuItem> item = [sender selectedItem];
+		NSMenuItem *item = [sender selectedItem];
 		new = [[NSUserDefaults standardUserDefaults] integerForKey:key] & ~32;
 		groupByServer = ! groupByServer;
 		[sender selectItemAtIndex:[sender indexOfItemWithTag:new]];
 		[item setState:( groupByServer ? NSOnState : NSOffState )];
 	} else if( [[sender selectedItem] tag] == 0 || [[sender selectedItem] tag] == 1 || [[sender selectedItem] tag] == 4 ) {
-		id <NSMenuItem> item = ( [sender indexOfItemWithTag:32] >= 0 ? [sender itemAtIndex:[sender indexOfItemWithTag:32]] : nil );
+		NSMenuItem *item = ( [sender indexOfItemWithTag:32] >= 0 ? [sender itemAtIndex:[sender indexOfItemWithTag:32]] : nil );
 		[item setState:NSOffState];
 		[item setEnabled:NO];
 		groupByServer = NO;
 	} else {
-		id <NSMenuItem> item = ( [sender indexOfItemWithTag:32] >= 0 ? [sender itemAtIndex:[sender indexOfItemWithTag:32]] : nil );
+		NSMenuItem *item = ( [sender indexOfItemWithTag:32] >= 0 ? [sender itemAtIndex:[sender indexOfItemWithTag:32]] : nil );
 		[item setState:( groupByServer ? NSOnState : NSOffState )];
 		[item setEnabled:YES];
 	}

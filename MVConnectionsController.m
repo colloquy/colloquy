@@ -618,7 +618,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 @implementation MVConnectionsController (MVConnectionsControllerDelegate)
-- (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( cut: ) ) {
 		if( [connections selectedRow] == -1 ) return NO;
 	} else if( [menuItem action] == @selector( copy: ) ) {
