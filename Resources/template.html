@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="Colloquy 2.0" />
+	<meta name="formatter" content="libxslt 1.0.30" />
+	<title>%@</title>
+	<script type="text/ecmascript" defer="defer">
+		function documentAppend( html ) {
+			range = document.createRange();
+			range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
+			documentFragment = range.createContextualFragment( html );
+			document.body.appendChild( documentFragment );
+		}
+
+		function scrollToBottom() {
+			document.body.scrollTop = document.body.offsetHeight;
+		}
+
+		function setStylesheet( id, url ) {
+			code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
+			if( url.length ) code += "@import url( \"" + url + "\" );";
+			code += "</style>";
+			range = document.createRange();
+			head = document.getElementsByTagName( "head" ).item(0);
+			range.selectNode( head );
+			documentFragment = range.createContextualFragment( code );
+			head.removeChild( document.getElementById( id ) );
+			head.appendChild( documentFragment );
+		}
+	</script>
+	<style id="emoticonStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
+	<style id="mainStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
+	<style id="variantStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
+</head>
+<body onload="scrollToBottom()">
+%@
+</body>
+</html>
