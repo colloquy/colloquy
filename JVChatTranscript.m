@@ -339,7 +339,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (void) didSelect {
-	[[_windowController window] setRepresentedFilename:_filePath];
+	[[_windowController window] setRepresentedFilename:( _filePath ? _filePath : @"" )];
 }
 
 #pragma mark -
