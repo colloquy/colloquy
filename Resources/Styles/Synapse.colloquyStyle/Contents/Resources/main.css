@@ -8,7 +8,7 @@ body {
 }
 
 .hidden {
-	position: absolute;
+	position: fixed;
 	top: -900px;
 	left: -900px;
 }
