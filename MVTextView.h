@@ -12,6 +12,8 @@
 - (void) reset:(id) sender;
 - (void) bold:(id) sender;
 - (void) italic:(id) sender;
+
+- (BOOL) autocomplete;
 @end
 
 @interface NSObject (MVTextViewDelegate)
@@ -19,5 +21,5 @@
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event;
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event;
 - (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event;
-- (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event;
+- (NSArray *) completionsFor:(NSString *) inFragment;
 @end

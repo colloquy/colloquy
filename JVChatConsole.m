@@ -382,12 +382,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return NO;
 }
 
-- (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event {
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
-		[textView complete:nil];
-		return YES;
-	}
-	return NO;
+- (NSArray *) completionsFor:(NSString *) inFragment {
+	return nil;
 }
 
 - (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event {
@@ -399,7 +395,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	_historyIndex = 0;
 }
 
-#pragma mark -
+#pragma mark ToolBar methods
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];

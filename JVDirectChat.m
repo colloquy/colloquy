@@ -956,6 +956,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return YES;
 }
 
+- (NSArray *) completionsFor:(NSString *) inFragment {
+	NSArray *retVal = nil;
+	
+	if( [_target rangeOfString:inFragment options:NSCaseInsensitiveSearch|NSAnchoredSearch].location == 0 ) {
+		retVal = [NSArray arrayWithObject:_target];
+	}
+	
+	return retVal;	
+}
+
 - (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event {
 	[send reset:nil];
 	return YES;	

@@ -1038,81 +1038,16 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 #pragma mark -
 #pragma mark TextView/Input supprt
 
-- (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event {
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
-		[textView complete:nil];
-		return YES;
-	}
-
-	// get partial completion & insertion point location
-	NSRange curPos = [textView selectedRange];
-	NSCharacterSet *illegalCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"[]{}-_^|\'`abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"] invertedSet];
-	NSString *partialCompletion = nil;
-	NSRange wordStart = [[textView string] rangeOfCharacterFromSet:illegalCharacters options:NSBackwardsSearch range:NSMakeRange(0, curPos.location)];
-
-	// get the string before
-	if( wordStart.location == NSNotFound )
-		wordStart = NSMakeRange( 0, 0 );
-	NSRange theRange = NSMakeRange(NSMaxRange(wordStart), curPos.location - NSMaxRange(wordStart));
-	partialCompletion = [[textView string] substringWithRange:theRange];
-
-	// continue if necessary
-	if( ! [partialCompletion isEqualToString:@""] ) {
-		// compile list of possible completions
-		NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
-		NSMutableArray *possibleNicks = [NSMutableArray array];
-		NSString *name = nil;
-
-		while( name = [[enumerator nextObject] nickname] )
-			if( [name rangeOfString:partialCompletion options:NSCaseInsensitiveSearch|NSAnchoredSearch].location == 0 )
-				[possibleNicks addObject:name];
-
-		// insert word or suggestion
-		if( [possibleNicks count] == 1 && ( curPos.location == [[textView string] length] || [illegalCharacters characterIsMember:[[textView string] characterAtIndex:curPos.location]] ) ) {
-			name = [possibleNicks objectAtIndex:0];
-			NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
-
-			[textView replaceCharactersInRange:replacementRange withString:name];
-			if( replacementRange.location == 0 ) [textView insertText:@": "];
-			else [textView insertText:@" "];
-		} else if ( [possibleNicks count] > 1 ) {
-			// since several are available, we highlight the modified text
-
-			NSRange wordRange;
-			BOOL keepSearching = YES;
-			int count = 0;
-
-			wordRange = [[textView string] rangeOfCharacterFromSet:illegalCharacters options:0 range:NSMakeRange( curPos.location, [[textView string] length] - curPos.location )];
-			if( wordRange.location == NSNotFound )
-				wordRange = NSMakeRange( NSMaxRange( wordStart ), [[textView string] length] - NSMaxRange( wordStart )) ;
-			else wordRange = NSMakeRange( NSMaxRange( wordStart ), wordRange.location - NSMaxRange( wordStart ));
-
-			NSString *tempWord = [[textView string] substringWithRange:wordRange];
-
-			do {
-				keepSearching = ! [[possibleNicks objectAtIndex:count] isEqualToString:tempWord];
-			} while ( ++count < [possibleNicks count] && keepSearching );
-
-			if( count == [possibleNicks count] ) count = 0;
-
-			if( ! keepSearching ) {
-				name = [possibleNicks objectAtIndex:count];
-				if( wordRange.location == 0 ) name = [name stringByAppendingString:@": "];
-				else name = [name stringByAppendingString:@" "];
-				[textView replaceCharactersInRange:wordRange withString:[possibleNicks objectAtIndex:count]];
-				[textView setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
-			} else if( curPos.location == [[textView string] length] || [illegalCharacters characterIsMember:[[textView string] characterAtIndex:curPos.location]] ) {
-				NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
-				name = [possibleNicks objectAtIndex:0];
-				if( replacementRange.location == 0 ) name = [name stringByAppendingString:@": "];
-				else name = [name stringByAppendingString:@" "];
-				[textView replaceCharactersInRange:replacementRange withString:name];
-				[textView setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
-			}
-		}
-	}
-
-	return YES;
+- (NSArray *) completionsFor:(NSString *) inFragment {
+	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+	NSMutableArray *possibleNicks = [NSMutableArray array];
+	NSString *name = nil;
+	
+	while( name = [[enumerator nextObject] nickname] )
+		if( [name rangeOfString:inFragment options:NSCaseInsensitiveSearch|NSAnchoredSearch].location == 0 )
+			[possibleNicks addObject:name];
+	
+	return possibleNicks;
 }
 
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {

@@ -46,7 +46,7 @@
 		return YES;
 	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
 		return YES;
-	} else if( chr == NSTabCharacter && [[self delegate] respondsToSelector:@selector( textView:tabKeyPressed: )]) {
+	} else if( chr == NSTabCharacter ) {
 		return YES;
 	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
 		return YES;
@@ -66,8 +66,8 @@
 		if( [[self delegate] textView:self returnKeyPressed:event] ) return YES;
 	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
 		if( [[self delegate] textView:self enterKeyPressed:event] ) return YES;
-	} else if( chr == NSTabCharacter && [[self delegate] respondsToSelector:@selector( textView:tabKeyPressed: )]) {
-		if( [[self delegate] textView:self tabKeyPressed:event] ) return YES;
+	} else if( chr == NSTabCharacter ) {
+		return [self autocomplete];
 	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
 		if( [[self delegate] textView:self escapeKeyPressed:event] ) return YES;
 	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
@@ -76,6 +76,8 @@
 
 	return NO;
 }
+
+#pragma mark -
 
 - (void) setBaseFont:(NSFont *) font {
 	[defaultTypingAttributes release];
@@ -114,6 +116,8 @@
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 }
+
+#pragma mark -
 
 - (void) bold:(id) sender {
 	if( ! [self isEditable] ) return;
@@ -190,6 +194,85 @@
 		[self setTypingAttributes:attributes];
 	} else [[self textStorage] addAttribute:NSBackgroundColorAttributeName value:color range:range];
 }
+
+#pragma mark -
+
+- (BOOL) autocomplete {
+	NSLog( @"Here we are" );
+	//get list of suggestions from delegate
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
+		[self complete:nil];
+		return YES;
+	}
+
+	// get partial completion & insertion point location
+	NSRange curPos = [self selectedRange];
+	NSCharacterSet *illegalCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"[]{}-_^|\'`abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"] invertedSet];
+	NSString *partialCompletion = nil;
+	NSRange wordStart = [[self string] rangeOfCharacterFromSet:illegalCharacters options:NSBackwardsSearch range:NSMakeRange(0, curPos.location)];
+
+	// get the string before
+	if( wordStart.location == NSNotFound )
+		wordStart = NSMakeRange( 0, 0 );
+	NSRange theRange = NSMakeRange(NSMaxRange(wordStart), curPos.location - NSMaxRange(wordStart));
+	partialCompletion = [[self string] substringWithRange:theRange];
+
+	// continue if necessary
+	if( ! [partialCompletion isEqualToString:@""] ) {
+		// compile list of possible completions
+		NSArray *possibleNicks = [[self delegate] completionsFor:partialCompletion];
+		NSString *name = nil;
+
+		// insert word or suggestion
+		if( [possibleNicks count] == 1 && ( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) ) {
+			name = [possibleNicks objectAtIndex:0];
+			NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
+
+			[self replaceCharactersInRange:replacementRange withString:name];
+			if( replacementRange.location == 0 ) [self insertText:@": "];
+			else [self insertText:@" "];
+		} else if ( [possibleNicks count] > 1 ) {
+			// since several are available, we highlight the modified text
+
+			NSRange wordRange;
+			BOOL keepSearching = YES;
+			int count = 0;
+
+			wordRange = [[self string] rangeOfCharacterFromSet:illegalCharacters options:0 range:NSMakeRange( curPos.location, [[self string] length] - curPos.location )];
+			if( wordRange.location == NSNotFound )
+				wordRange = NSMakeRange( NSMaxRange( wordStart ), [[self string] length] - NSMaxRange( wordStart )) ;
+			else wordRange = NSMakeRange( NSMaxRange( wordStart ), wordRange.location - NSMaxRange( wordStart ));
+
+			NSString *tempWord = [[self string] substringWithRange:wordRange];
+
+			do {
+				keepSearching = ! [[possibleNicks objectAtIndex:count] isEqualToString:tempWord];
+			} while ( ++count < [possibleNicks count] && keepSearching );
+
+			if( count == [possibleNicks count] ) count = 0;
+
+			if( ! keepSearching ) {
+				name = [possibleNicks objectAtIndex:count];
+				if( wordRange.location == 0 ) name = [name stringByAppendingString:@": "];
+				else name = [name stringByAppendingString:@" "];
+				[self replaceCharactersInRange:wordRange withString:[possibleNicks objectAtIndex:count]];
+				[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
+			} else if( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) {
+				NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
+				name = [possibleNicks objectAtIndex:0];
+				if( replacementRange.location == 0 ) name = [name stringByAppendingString:@": "];
+				else name = [name stringByAppendingString:@" "];
+				[self replaceCharactersInRange:replacementRange withString:name];
+				[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
+			}
+		}
+	}
+
+	return YES;
+
+}
+
+#pragma mark -
 
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( bold: ) ) {
