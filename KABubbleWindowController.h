@@ -3,15 +3,14 @@
 @class NSTimer;
 
 @interface KABubbleWindowController : NSWindowController {
-	id				_delegate;
-	NSTimer			*_animationTimer;
-	unsigned int	_depth;
-	BOOL			_autoFadeOut;
-	SEL				_action;
-	id				_target;
-	id				_representedObject;
+	id _delegate;
+	NSTimer *_animationTimer;
+	unsigned int _depth;
+	BOOL _autoFadeOut;
+	SEL _action;
+	id _target;
+	id _representedObject;
 }
-
 + (KABubbleWindowController *) bubble;
 + (KABubbleWindowController *) bubbleWithTitle:(NSString *) title text:(id) text icon:(NSImage *) icon;
 

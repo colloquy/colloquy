@@ -16,9 +16,9 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 @implementation KABubbleWindowView
 - (id) initWithFrame:(NSRect) frame {
 	if( self = [super initWithFrame:frame] ) {
-		_icon   = nil;
-		_title  = nil;
-		_text   = nil;
+		_icon = nil;
+		_title = nil;
+		_text = nil;
 		_target = nil;
 		_action = NULL;
 	}
@@ -48,30 +48,10 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 
 	float radius = 9.;
 	NSRect irect = NSInsetRect( [self bounds], radius + lineWidth, radius + lineWidth );
-	[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( irect ), 
-														 NSMinY( irect ) ) 
-									 radius:radius 
-								 startAngle:180. 
-								   endAngle:270.];
-	
-	[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( irect ), 
-														 NSMinY( irect ) ) 
-									 radius:radius 
-								 startAngle:270. 
-								   endAngle:360.];
-	
-	[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( irect ), 
-														 NSMaxY( irect ) ) 
-									 radius:radius 
-								 startAngle:0. 
-								   endAngle:90.];
-	
-	[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( irect ), 
-														 NSMaxY( irect ) ) 
-									 radius:radius 
-								 startAngle:90. 
-								   endAngle:180.];
-	
+	[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( irect ), NSMinY( irect ) ) radius:radius startAngle:180. endAngle:270.];
+	[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( irect ), NSMinY( irect ) ) radius:radius startAngle:270. endAngle:360.];
+	[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( irect ), NSMaxY( irect ) ) radius:radius startAngle:0. endAngle:90.];
+	[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( irect ), NSMaxY( irect ) ) radius:radius startAngle:90. endAngle:180.];
 	[path closePath];
 
 	[[NSGraphicsContext currentContext] saveGraphicsState];
@@ -84,10 +64,7 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 
 	float srcX = NSMinX( [self bounds] ), srcY = NSMinY( [self bounds] );
 	float dstX = NSMinX( [self bounds] ), dstY = NSMaxY( [self bounds] );
-	CGShadingRef shading = CGShadingCreateAxial( cspace, 
-												 CGPointMake( srcX, srcY ), 
-												 CGPointMake( dstX, dstY ), 
-												 function, false, false );	
+	CGShadingRef shading = CGShadingCreateAxial( cspace, CGPointMake( srcX, srcY ), CGPointMake( dstX, dstY ), function, false, false );	
 
 	CGContextDrawShading( [[NSGraphicsContext currentContext] graphicsPort], shading );
 
