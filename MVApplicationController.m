@@ -146,9 +146,12 @@ static BOOL applicationIsTerminating = NO;
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
+#ifdef DEBUG
+	NSDebugEnabled = YES;
 //	NSZombieEnabled = YES;
 //	NSDeallocateZombies = NO;
-//	[NSAutoreleasePool enableFreedObjectCheck:YES];
+	[NSAutoreleasePool enableFreedObjectCheck:YES];
+#endif
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
