@@ -1379,12 +1379,13 @@ static char irc_tolower(const char c) {
 enum firetalk_error irc_compare_nicks(const char * const nick1, const char * const nick2) {
 	int i = 0;
 
-	while (nick1[i] != '\0') {
+	while (safe_strlen(nick1) > i && safe_strlen(nick2) > i && nick1[i] != '\0') {
 		if (irc_tolower(nick1[i]) != irc_tolower(nick2[i]))
 			return FE_NOMATCH;
 		i++;
 	}
-	if (nick2[i] != '\0')
+
+	if (safe_strlen(nick2) > i && nick2[i] != '\0')
 		return FE_NOMATCH;
 
 	return FE_SUCCESS;
