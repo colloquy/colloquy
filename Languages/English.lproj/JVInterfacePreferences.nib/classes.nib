@@ -4,27 +4,17 @@
         {
             ACTIONS = {
                 changePreferredWindow = id; 
-                changeSendHistory = id; 
-                changeSendOnEnterAction = id; 
-                changeSendOnReturnAction = id; 
                 changeSortByStatus = id; 
-                changeTabKeyComplete = id; 
                 changeTabbedWindows = id; 
             }; 
             CLASS = JVInterfacePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                enterKeyAction = NSPopUpButton; 
                 newChats = NSPopUpButton; 
                 newConsoles = NSPopUpButton; 
                 newRooms = NSPopUpButton; 
                 newTranscripts = NSPopUpButton; 
-                returnKeyAction = NSPopUpButton; 
-                sendHistory = NSTextField; 
-                sendHistoryStepper = NSStepper; 
                 sortByStatus = NSButton; 
-                tabKeyComplete = NSButton; 
-                tabKeyCompleteLabel = NSTextField; 
                 tabbedWindows = NSButton; 
             }; 
             SUPERCLASS = NSPreferencesModule; 

@@ -25,8 +25,6 @@
 	[yourName selectItemAtIndex:[yourName indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"]]];
 	[buddyNames selectItemAtIndex:[yourName indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyNameStyle"]]];
 
-	[checkSpelling setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatSpellChecking"]];
-	[detectNaturalActions setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"]];
 	[autoCheckVersion setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"]];
 }
 
@@ -64,14 +62,6 @@
 - (IBAction) changeBuddyPreferredName:(id) sender {
 	[JVBuddy setPreferredName:(JVBuddyName)[[sender selectedItem] tag]];
 	[[NSUserDefaults standardUserDefaults] setInteger:[[sender selectedItem] tag] forKey:@"JVChatBuddyNameStyle"];
-}
-
-- (IBAction) changeSpellChecking:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVChatSpellChecking"];
-}
-
-- (IBAction) changeNaturalActionDetection:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"MVChatNaturalActions"];
 }
 
 - (IBAction) changeAutomaticVersionCheck:(id) sender {

@@ -6,17 +6,13 @@
                 changeAutomaticVersionCheck = id; 
                 changeBuddyPreferredName = id; 
                 changeEncoding = id; 
-                changeNaturalActionDetection = id; 
                 changeSelfPreferredName = id; 
-                changeSpellChecking = id; 
             }; 
             CLASS = JVGeneralPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 autoCheckVersion = NSButton; 
                 buddyNames = NSPopUpButton; 
-                checkSpelling = NSButton; 
-                detectNaturalActions = NSButton; 
                 encoding = NSPopUpButton; 
                 yourName = NSPopUpButton; 
             }; 

@@ -333,10 +333,12 @@
 	NSString *html = [_style transformXML:[NSString stringWithContentsOfFile:[_style previewTranscriptFilePath]] withParameters:nil];
 	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, [[_style mainStyleSheetLocation] absoluteString], [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString], [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
 
+	[WebCoreCache empty];
 	[[preview mainFrame] loadHTMLString:html baseURL:nil];
 }
 
 - (void) updateVariant {
+	[WebCoreCache empty];
 	[preview stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString]]];	
 }
 
@@ -609,7 +611,6 @@
 - (void) saveStyleOptions {
 	if( _variantLocked ) return;
 	[_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:YES];
-	[WebCoreCache empty];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[_style defaultVariantName], @"variant", nil];
 	NSNotification *notification = [NSNotification notificationWithName:JVStyleVariantChangedNotification object:_style userInfo:info];

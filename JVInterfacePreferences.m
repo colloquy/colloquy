@@ -46,34 +46,8 @@
 	if( index >= 0 ) [newConsoles selectItemAtIndex:index];
 	[self changePreferredWindow:newConsoles];
 
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnReturn"] )
-		[returnKeyAction selectItemAtIndex:[returnKeyAction indexOfItemWithTag:0]];
-	else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatActionOnReturn"] )
-		[returnKeyAction selectItemAtIndex:[returnKeyAction indexOfItemWithTag:1]];
-	else [returnKeyAction selectItemAtIndex:[returnKeyAction indexOfItemWithTag:2]];
-
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnEnter"] )
-		[enterKeyAction selectItemAtIndex:[enterKeyAction indexOfItemWithTag:0]];
-	else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatActionOnEnter"] )
-		[enterKeyAction selectItemAtIndex:[enterKeyAction indexOfItemWithTag:1]];
-	else [enterKeyAction selectItemAtIndex:[enterKeyAction indexOfItemWithTag:2]];
-
-	[sendHistory setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
-	[sendHistoryStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
-
 	[sortByStatus setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"]];
 	[tabbedWindows setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUseTabbedWindows"]];
-
-	if( NSAppKitVersionNumber >= 700. ) {
-		[tabKeyComplete setEnabled:YES];
-		[tabKeyComplete setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
-	} else {
-		[tabKeyCompleteLabel setObjectValue:@""];
-	}
-}
-
-- (IBAction) changeTabKeyComplete:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVUsePantherTextCompleteOnTab"];
 }
 
 - (IBAction) changeSortByStatus:(id) sender {
@@ -88,13 +62,6 @@
 - (IBAction) changeTabbedWindows:(id) sender {
 	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVUseTabbedWindows"];
 	NSRunInformationalAlertPanel( NSLocalizedString( @"Tabs Changed", "changes will take affect title" ), NSLocalizedString( @"Changes will take affect when a new chat window is created. You can detach your existing panels to switch the window behavior without parting the chat.", "new chat windows will reflect this change" ), nil, nil, nil );
-}
-
-- (IBAction) changeSendHistory:(id) sender {
-	int size = [sender intValue];
-	[sendHistory setIntValue:size];
-	[sendHistoryStepper setIntValue:size];
-	[[NSUserDefaults standardUserDefaults] setInteger:[sendHistory intValue] forKey:@"JVChatMaximumHistory"];
 }
 
 - (IBAction) changePreferredWindow:(id) sender {
@@ -129,31 +96,5 @@
 	if( groupByServer ) new |= 32;
 
 	[[NSUserDefaults standardUserDefaults] setInteger:new forKey:key];
-}
-
-- (IBAction) changeSendOnReturnAction:(id) sender {
-	if( [[sender selectedItem] tag] == 0 ) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MVChatSendOnReturn"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatActionOnReturn"];
-	} else if( [[sender selectedItem] tag] == 1 ) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MVChatActionOnReturn"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatSendOnReturn"];
-	} else {
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatSendOnReturn"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatActionOnReturn"];
-	}
-}
-
-- (IBAction) changeSendOnEnterAction:(id) sender {
-	if( [[sender selectedItem] tag] == 0 ) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MVChatSendOnEnter"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatActionOnEnter"];
-	} else if( [[sender selectedItem] tag] == 1 ) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MVChatActionOnEnter"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatSendOnEnter"];
-	} else {
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatSendOnEnter"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatActionOnEnter"];
-	}
 }
 @end

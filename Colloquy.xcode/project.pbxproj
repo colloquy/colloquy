@@ -2172,7 +2172,6 @@
 				1C8BDD2205436A030035B84A,
 				1CBC63190548975E009E59E1,
 				1CBC634905489BEE009E59E1,
-				1CC6FC66054A003C0075807C,
 				1CC6FC67054A003C0075807C,
 				1CC6FC68054A003C0075807C,
 				1CC6FC70054A02F70075807C,
@@ -2231,6 +2230,7 @@
 				1C2391C30677E8F2000E89A7,
 				1C23927306795020000E89A7,
 				0A3187FC067ECEB600271E42,
+				1CECE26006A37BEC00350564,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3406,7 +3406,7 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			path = JVAdvancedPreferences.h;
+			path = JVBehaviorPreferences.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3414,7 +3414,7 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			path = JVAdvancedPreferences.m;
+			path = JVBehaviorPreferences.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3429,24 +3429,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		1CC6FC60054A003C0075807C = {
-			children = (
-				1CC6FC61054A003C0075807C,
-			);
-			isa = PBXVariantGroup;
-			name = JVAdvancedPreferences.nib;
-			path = "";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		1CC6FC61054A003C0075807C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = English;
-			path = Languages/English.lproj/JVAdvancedPreferences.nib;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		1CC6FC62054A003C0075807C = {
 			children = (
@@ -3484,12 +3466,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1CC6FC66054A003C0075807C = {
-			fileRef = 1CC6FC60054A003C0075807C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CC6FC67054A003C0075807C = {
 			fileRef = 1CC6FC62054A003C0075807C;
 			isa = PBXBuildFile;
@@ -3505,8 +3481,8 @@
 		1CC6FC6F054A02F70075807C = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
-			name = AdvancedPreferences.tif;
-			path = "Resources/Preference Related/AdvancedPreferences.tif";
+			name = BehaviorPreferences.tif;
+			path = "Resources/Preference Related/BehaviorPreferences.tif";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
@@ -4077,6 +4053,30 @@
 			settings = {
 			};
 		};
+		1CECE22F06A37A8300350564 = {
+			children = (
+				1CECE23006A37A8300350564,
+			);
+			isa = PBXVariantGroup;
+			name = JVBehaviorPreferences.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CECE23006A37A8300350564 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Languages/English.lproj/JVBehaviorPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CECE26006A37BEC00350564 = {
+			fileRef = 1CECE22F06A37A8300350564;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CEE3A4C0577E14500AD6DE2 = {
 			children = (
 				1CEE3AFE0578421400AD6DE2,
@@ -4522,9 +4522,9 @@
 				1CDEE48B0583E268000B9075,
 				1CBC634705489BEE009E59E1,
 				1C8997E5058806DA00F49617,
+				1CECE22F06A37A8300350564,
 				1CC6FC62054A003C0075807C,
 				1CC6FC64054A003C0075807C,
-				1CC6FC60054A003C0075807C,
 				1C6EA23C05A735D6006A559F,
 				1C9982040603F097006C6417,
 				0A3187FA067ECEB600271E42,
