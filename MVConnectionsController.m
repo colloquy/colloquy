@@ -6,6 +6,7 @@
 #import "MVConnectionsController.h"
 #import "JVConnectionInspector.h"
 #import "MVApplicationController.h"
+#import "JVNotificationController.h"
 #import "MVChatPluginManager.h"
 #import "JVChatController.h"
 #import "JVChatRoomBrowser.h"
@@ -145,6 +146,7 @@ static NSMenu *favoritesMenu = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _willConnect: ) name:MVChatConnectionWillConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
 
@@ -1412,6 +1414,22 @@ static NSMenu *favoritesMenu = nil;
 		} else if( [command length] ) {
 			[connection sendRawMessage:command];
 		}
+	}
+
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"Connected", "connected bubble title" ) forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You're now connected to %@ as %@.", "you are now connected bubble text" ), [connection server], [connection nickname]] forKey:@"description"];
+	[context setObject:[NSImage imageNamed:@"connect"] forKey:@"image"];
+	[[JVNotificationController defaultManager] performNotification:@"JVChatConnected" withContextInfo:context];
+}
+
+- (void) _didDisconnect:(NSNotification *) notification {
+	if( [(MVChatConnection *)[notification object] status] == MVChatConnectionServerDisconnectedStatus ) {
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:NSLocalizedString( @"Disconnected", "disconnected bubble title" ) forKey:@"title"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You're were disconnected from %@.", "you were disconnected bubble text" ), [(MVChatConnection *)[notification object] server]] forKey:@"description"];
+		[context setObject:[NSImage imageNamed:@"disconnect"] forKey:@"image"];
+		[[JVNotificationController defaultManager] performNotification:@"JVChatDisconnected" withContextInfo:context];
 	}
 }
 
