@@ -478,6 +478,12 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 	}
 }
 
+- (void) _clearBannedUsers {
+	@synchronized( _bannedUsers ) {
+		[_bannedUsers removeAllObjects];
+	}
+}
+
 - (void) _addBanForUser:(MVChatUser *) user {
 	@synchronized( _bannedUsers ) {
 		[_bannedUsers addObject:user];
