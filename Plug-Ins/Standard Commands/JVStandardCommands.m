@@ -15,6 +15,12 @@
 #import "JVChatRoomBrowser.h"
 #import "JVStyle.h"
 
+@interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
+- (id <JVInspector>) inspector;
+@end
+
+#pragma mark -
+
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (void) _reloadCurrentStyle:(id) sender;
 @end
@@ -562,6 +568,7 @@
 	// n is to specify a nickname
 
 	// EXAMPLES: 
+	// /ignore - will open a GUI window to add and manage ignores
 	// /ignore Loser23094 - ignore Loser23094 in all rooms
 	// /ignore -m "is listening" - ignore any message that has "is listening" from everyone
 	// /ignore -m /is listening .*/ - ignore the message expression "is listening *" from everyone
@@ -576,6 +583,13 @@
 	BOOL member = YES;
 	BOOL message = NO;
 	int offset = 0;
+
+	if( ! [args length] ) {
+		id info = [NSClassFromString( @"JVInspectorController" ) inspectorOfObject:[view connection]];
+		[info show:nil];		
+		[(id)[info inspector] selectTabWithIdentifier:@"Ignores"];
+		return YES;
+	}
 
 	if( [args hasPrefix:@"-"] ) { // parse commands/flags
 		if( [[argsArray objectAtIndex:0] rangeOfString:@"p"].location != NSNotFound ) permanent = YES;
