@@ -30,7 +30,7 @@
 - (void) resume;
 - (BOOL) isPaused;
 	
-- (void) addMessageToDisplay:(NSData *) message asOutboundMessage:(BOOL) outbound;
+- (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound;
 - (IBAction) send:(id) sender;
 @end
 

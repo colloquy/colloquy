@@ -193,14 +193,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return _paused;
 }
 
-- (void) addMessageToDisplay:(NSData *) message asOutboundMessage:(BOOL) outbound {
+- (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound {
 	NSAttributedString *msg = nil;
-	NSMutableString *strMsg = [[[NSMutableString alloc] initWithData:message encoding:NSUTF8StringEncoding] autorelease];
+	NSMutableString *strMsg = [[message mutableCopy] autorelease];
 	NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
 	NSMutableParagraphStyle *para = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 	unsigned int numeric = 0;
-
-	if( ! strMsg ) strMsg = [NSMutableString stringWithCString:[message bytes] length:[message length]];
 
 	if( ! [strMsg length] || ( _ignorePRIVMSG && [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location == NSNotFound ) )
 		return;
