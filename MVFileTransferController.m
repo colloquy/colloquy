@@ -75,15 +75,27 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	ICInstance inst = NULL;
 	ICFileSpec folder;
 	long length = kICFileSpecHeaderSize;
+	FSRef ref;
+	unsigned char path[1024];
 
-	err = ICStart( &inst, 'coRC' );
-	if( err == noErr ) ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
+	memset( path, 0, 1024 );
+
+	if( ( err = ICStart( &inst, 'coRC' ) ) != noErr )
+		goto finish;
+
+	ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
 	ICStop( inst );
 
-	FSRef ref;
-	FSpMakeFSRef( &folder.fss, &ref );
-	unsigned char path[1024];
-	FSRefMakePath( &ref, path, 1024 );
+	if( ( err = FSpMakeFSRef( &folder.fss, &ref ) ) != noErr )
+		goto finish;
+
+	if( ( err = FSRefMakePath( &ref, path, 1024 ) ) != noErr )
+		goto finish;
+
+finish:
+
+	if( ! strlen( path ) )
+		return [@"~/Desktop" stringByExpandingTildeInPath];
 
 	return [NSString stringWithUTF8String:path];
 }
@@ -111,8 +123,10 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	memcpy( &dir -> alias, *alias, length - kICFileSpecHeaderSize );
 
-	err = ICStart( &inst, 'coRC' );
-	if( err == noErr ) ICSetPref( inst, kICDownloadFolder, NULL, dir, length );
+	if( ( err = ICStart( &inst, 'coRC' ) ) != noErr )
+		return;
+
+	ICSetPref( inst, kICDownloadFolder, NULL, dir, length );
 	ICStop( inst );
 
 	free( dir );
