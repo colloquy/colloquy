@@ -68,7 +68,7 @@
 		else if( [_ignoredUser length] ) userFound = [_ignoredUser isEqualToString:user];
 
 		if( _messageRegex && [_messageRegex findInString:message] ) messageFound = YES;
-		else if( [_ignoredMessage length] ) messageFound = ( [message rangeOfString:_ignoredMessage].location != NSNotFound );
+		else if( [_ignoredMessage length] ) messageFound = ( [message rangeOfString:_ignoredMessage options:NSCaseInsensitiveSearch].location != NSNotFound );
 
 		if( userRequired ) {
 			if( ! userFound || ( messageRequired && ! messageFound ) ) return JVNotIgnored;
