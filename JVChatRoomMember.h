@@ -13,7 +13,7 @@
 	BOOL _operator;
 	BOOL _voice;
 }
-- (void) setParent:(id <JVChatListItem>) parent;
+- (void) setParent:(JVChatRoom *) parent;
 
 - (MVChatConnection *) connection;
 
@@ -28,4 +28,8 @@
 - (BOOL) operator;
 
 - (BOOL) isLocalUser;
+@end
+
+@interface JVChatRoomMember (JVChatRoomMemberScripting) <JVChatListItemScripting>
+- (NSNumber *) uniqueIdentifier;
 @end

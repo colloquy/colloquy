@@ -1129,7 +1129,23 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 #pragma mark -
 
+@implementation MVChatConnection (MVChatConnectionObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[MVConnectionsController class]];
+	NSScriptObjectSpecifier *container = [[MVConnectionsController defaultManager] objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"connectionsArray" uniqueID:[self uniqueIdentifier]] autorelease];
+}
+@end
+
+#pragma mark -
+
 @implementation MVConnectionsController (MVConnectionsControllerScripting)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
+	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
+	return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"connectionsController"] autorelease];
+}
+
 - (NSArray *) connectionsArray {
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
@@ -1139,6 +1155,20 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		[ret addObject:[info objectForKey:@"connection"]];
 
 	return [[ret retain] autorelease];
+}
+
+- (MVChatConnection *) valueInConnectionsArrayWithUniqueID:(id) identifier {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	MVChatConnection *connection = nil;
+	NSDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		connection = [info objectForKey:@"connection"];
+		if( [[connection uniqueIdentifier] isEqual:identifier] )
+			return connection;
+	}
+
+	return nil;
 }
 
 - (void) addInConnectionsArray:(MVChatConnection *) connection {

@@ -1109,8 +1109,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 #pragma mark -
 
 @implementation MVChatConnection (MVChatConnectionScripting)
-- (unsigned long) uniqueIdentifier {
-	return (unsigned long) self;
+- (NSNumber *) uniqueIdentifier {
+	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
 @end
 

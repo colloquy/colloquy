@@ -165,7 +165,6 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (BOOL) application:(NSApplication *) sender delegateHandlesKey:(NSString *) key {
-	NSLog( @"delegateHandlesKey %@", key );
 	if( [key isEqualToString:@"chatController"] || [key isEqualToString:@"connectionsController"] || [key isEqualToString:@"transferManager"] || [key isEqualToString:@"buddyList"] )
 		return YES;
 	return NO;

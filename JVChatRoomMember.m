@@ -100,9 +100,8 @@
 	return nil;
 }
 
-- (void) setParent:(id <JVChatListItem>) parent {
-	if( ! [parent isMemberOfClass:[JVChatRoom class]] ) return;
-	_parent = (JVChatRoom *)parent;
+- (void) setParent:(JVChatRoom *) parent {
+	_parent = parent;
 }
 
 - (id <JVChatListItem>) parent {
@@ -206,5 +205,13 @@
 
 - (IBAction) kick:(id) sender {
 	[[_parent connection] kickMember:_memberName inRoom:[_parent target] forReason:@""];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatRoomMember (JVChatRoomMemberScripting)
+- (NSNumber *) uniqueIdentifier {
+	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
 @end

@@ -94,14 +94,14 @@
 			<string>budM</string>
 			<key>Attributes</key>
 			<dict>
-				<key>activeNickname</key>
+				<key>activeNicknameDictionary</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>acnA</string>
 					<key>ReadOnly</key>
 					<string>NO</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>NSDictionary</string>
 				</dict>
 				<key>awayMessage</key>
 				<dict>

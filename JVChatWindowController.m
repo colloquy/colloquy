@@ -107,12 +107,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
-- (NSString *) uniqueIdentifier {
-	return [self description];
-}
-
-#pragma mark -
-
 - (void) showChatViewController:(id <JVChatViewController>) controller {
 	NSAssert1( [_views containsObject:controller], @"%@ is not a member of this window controller.", controller );
 	[chatViewsOutlineView selectRow:[chatViewsOutlineView rowForItem:controller] byExtendingSelection:NO];
@@ -586,13 +580,17 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 @implementation JVChatWindowController (JVChatWindowControllerScripting)
+- (NSNumber *) uniqueIdentifier {
+	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+}
+
 - (NSArray *) views {
 	return _views;
 }
 
 - (id <JVChatViewController>) valueInViewsWithUniqueID:(id) identifier {
 	NSEnumerator *enumerator = [_views objectEnumerator];
-	id <JVChatViewController> view = nil;
+	id <JVChatViewController, JVChatListItemScripting> view = nil;
 
 	while( ( view = [enumerator nextObject] ) )
 		if( [[view uniqueIdentifier] isEqual:identifier] )

@@ -334,10 +334,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return [NSString stringWithFormat:@"Transcript %@", [[_filePath lastPathComponent] stringByDeletingPathExtension]];
 }
 
-- (NSString *) uniqueIdentifier {
-	return [self description];
-}
-
 - (MVChatConnection *) connection {
 	return nil;
 }
@@ -1011,5 +1007,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	return [[[NSString stringWithFormat:shell, [self title], [self _chatEmoticonsCSSFileURL], [self _chatStyleCSSFileURL], [self _chatStyleVariantCSSFileURL], html] retain] autorelease];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatTranscript (JVChatTranscriptScripting)
+- (NSNumber *) uniqueIdentifier {
+	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
 @end

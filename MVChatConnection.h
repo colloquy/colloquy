@@ -228,6 +228,10 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (MVChatConnectionStatus) status;
 @end
 
+@interface MVChatConnection (MVChatConnectionScripting)
+- (NSNumber *) uniqueIdentifier;
+@end
+
 @interface NSURL (NSURLChatAdditions)
 - (BOOL) isChatURL;
 - (BOOL) isChatRoomURL;

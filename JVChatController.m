@@ -356,7 +356,43 @@ static JVChatController *sharedInstance = nil;
 
 #pragma mark -
 
+@implementation JVChatWindowController (JVChatWindowControllerObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatController class]];
+	NSScriptObjectSpecifier *container = [[JVChatController defaultManager] objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatWindows" uniqueID:[self uniqueIdentifier]] autorelease];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatTranscript (JVChatTranscriptObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatController class]];
+	NSScriptObjectSpecifier *container = [[JVChatController defaultManager] objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatViews" uniqueID:[self uniqueIdentifier]] autorelease];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatConsole (JVChatConsoleObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatController class]];
+	NSScriptObjectSpecifier *container = [[JVChatController defaultManager] objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatViews" uniqueID:[self uniqueIdentifier]] autorelease];
+}
+@end
+
+#pragma mark -
+
 @implementation JVChatController (JVChatControllerScripting)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
+	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
+	return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatController"] autorelease];
+}
+
 - (JVChatWindowController *) newChatWindowScriptCommand:(NSScriptCommand *) command {
 	return [self newChatWindowController];
 }
@@ -396,7 +432,7 @@ static JVChatController *sharedInstance = nil;
 
 - (id <JVChatViewController>) valueInChatViewsWithUniqueID:(id) identifier {
 	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
-	id <JVChatViewController> view = nil;
+	id <JVChatViewController, JVChatListItemScripting> view = nil;
 
 	while( ( view = [enumerator nextObject] ) )
 		if( [[view uniqueIdentifier] isEqual:identifier] )

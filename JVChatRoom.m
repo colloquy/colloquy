@@ -674,6 +674,16 @@
 
 #pragma mark -
 
+@implementation JVChatRoomMember (JVChatRoomMemberObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[_parent class]];
+	NSScriptObjectSpecifier *container = [_parent objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]] autorelease];
+}
+@end
+
+#pragma mark -
+
 @implementation JVChatRoom (JVChatRoomScripting)
 - (NSArray *) chatMembers {
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_sortedMembers count]];

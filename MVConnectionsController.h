@@ -14,6 +14,7 @@
 @class NSMutableArray;
 @class MVChatConnection;
 @class NSURL;
+@class NSScriptObjectSpecifier;
 
 @interface MVConnectionsController : NSWindowController <JVInspectionDelegator> {
 @private

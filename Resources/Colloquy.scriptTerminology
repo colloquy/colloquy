@@ -77,7 +77,7 @@
 		<dict>
 			<key>Attributes</key>
 			<dict>
-				<key>activeNickname</key>
+				<key>activeNicknameDictionary</key>
 				<dict>
 					<key>Description</key>
 					<string>Current nickname that determins the information returned by status, is online, away message and idle time.</string>

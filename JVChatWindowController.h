@@ -32,8 +32,6 @@ extern NSString *JVChatViewPboardType;
 	id <JVChatViewController> _activeViewController;
 	BOOL _usesSmallIcons;
 }
-- (NSString *) uniqueIdentifier;
-
 - (void) showChatViewController:(id <JVChatViewController>) controller;
 
 - (void) addChatViewController:(id <JVChatViewController>) controller;
@@ -59,6 +57,10 @@ extern NSString *JVChatViewPboardType;
 - (void) expandListItem:(id <JVChatListItem>) item;
 @end
 
+@interface JVChatWindowController (JVChatWindowControllerScripting)
+- (NSNumber *) uniqueIdentifier;
+@end
+
 @protocol JVChatViewController <NSObject, JVChatListItem>
 - (MVChatConnection *) connection;
 
@@ -69,7 +71,6 @@ extern NSString *JVChatViewPboardType;
 - (NSToolbar *) toolbar;
 - (NSString *) windowTitle;
 - (NSString *) identifier;
-- (id) uniqueIdentifier;
 @end
 
 @interface NSObject (JVChatViewControllerOptional)
@@ -78,6 +79,10 @@ extern NSString *JVChatViewPboardType;
 
 - (void) willUnselect;
 - (void) didUnselect;
+@end
+
+@protocol JVChatListItemScripting
+- (NSNumber *) uniqueIdentifier;
 @end
 
 @protocol JVChatListItem <NSObject>

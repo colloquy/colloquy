@@ -164,10 +164,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return [NSString stringWithFormat:@"Console %@", [_connection server]];
 }
 
-- (NSString *) uniqueIdentifier {
-	return [self description];
-}
-
 - (MVChatConnection *) connection {
 	return _connection;
 }
@@ -405,8 +401,16 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
-@implementation JVChatConsole (JVChatConsoleprivate)
+@implementation JVChatConsole (JVChatConsolePrivate)
 - (void) _gotRawMessage:(NSNotification *) notification {
 	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] asOutboundMessage:[[[notification userInfo] objectForKey:@"outbound"] boolValue]];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatConsole (JVChatConsoleScripting)
+- (NSNumber *) uniqueIdentifier {
+	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
 @end

@@ -529,21 +529,46 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 @implementation JVBuddy (JVBuddyScripting)
+- (NSDictionary *) activeNicknameDictionary {
+	MVChatConnection *connection = [[MVConnectionsController defaultManager] connectionForServerAddress:[[self activeNickname] host]];
+	return [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [[self activeNickname] user], @"nickname", nil];
+}
+
 - (NSArray *) nicknamesArray {
-	return [_nicknames allObjects];
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_nicknames count]];
+	NSEnumerator *enumerator = [_nicknames objectEnumerator];
+	NSURL *nick = nil;
+
+	while( ( nick = [enumerator nextObject] ) ) {
+		MVChatConnection *connection = [[MVConnectionsController defaultManager] connectionForServerAddress:[nick host]];
+		if( ! connection ) continue;
+		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [nick user], @"nickname", nil];
+		[ret addObject:info];
+	}
+
+	return ret;
 }
 
 - (NSArray *) onlineNicknamesArray {
-	return [_onlineNicknames allObjects];
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_nicknames count]];
+	NSEnumerator *enumerator = [_onlineNicknames objectEnumerator];
+	NSURL *nick = nil;
+
+	while( ( nick = [enumerator nextObject] ) ) {
+		MVChatConnection *connection = [[MVConnectionsController defaultManager] connectionForServerAddress:[nick host]];
+		if( ! connection ) continue;
+		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [nick user], @"nickname", nil];
+		[ret addObject:info];
+	}
+
+	return ret;
 }
 
 - (void) editInAddressBookScriptCommand:(NSScriptCommand *) command {
-	NSLog( @"editInAddressBookScriptCommand" );
 	[self editInAddressBook];
 }
 
 - (void) viewInAddressBookScriptCommand:(NSScriptCommand *) command {
-	NSLog( @"viewInAddressBookScriptCommand" );
 	[self viewInAddressBook];
 }
 @end
