@@ -246,6 +246,16 @@ a:hover {
 	background: url( "images/m_corner_right.png" );
 }
 
+.member {
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
+.member:hover {
+	text-decoration: underline;
+	text-shadow: rgba( 0, 0, 0, .5 ) 0 1px 2px;
+}
+
 .itunes {
 	text-decoration: none !important;
 	color: inherit !important;

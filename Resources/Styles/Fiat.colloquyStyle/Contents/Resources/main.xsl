@@ -24,7 +24,9 @@
 		<div class="message">
 			<xsl:if test="@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
+				<a href="member:{../sender}" class="member action">
 				<xsl:value-of select="../sender" />
+				</a>
 				<xsl:text> </xsl:text>
 			</xsl:if>
 			<xsl:apply-templates select="child::node()" mode="copy" />
@@ -54,7 +56,11 @@
 			<div class="header">
 				<div>
 					<div>
-					<div class="sender"><xsl:value-of select="sender" /></div>
+					<div class="sender">
+					<a href="member:{sender}" class="member">
+					<xsl:value-of select="sender" />
+					</a>
+					</div>
 					</div>
 				</div>
 				<div class="left">&#8203;</div>
@@ -69,11 +75,13 @@
 						</xsl:call-template>
 						</div>
 						<div class="message">
-						<xsl:if test="message[1]/@action = 'yes'">
-							<xsl:text>&#8226; </xsl:text>
-							<xsl:value-of select="sender" />
-							<xsl:text> </xsl:text>
-						</xsl:if>
+							<xsl:if test="message[1]/@action = 'yes'">
+								<xsl:text>&#8226; </xsl:text>
+								<a href="member:{sender}" class="member action">
+								<xsl:value-of select="sender" />
+								</a>
+								<xsl:text> </xsl:text>
+							</xsl:if>
 							<xsl:apply-templates select="message[1]/child::node()" mode="copy" />
 						</div>
 						<xsl:apply-templates select="message[position() &gt; 1]" mode="subsequent" />
@@ -137,6 +145,10 @@
 				<xsl:copy-of select="current()"/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="span[@class='member']" mode="copy">
+		<a href="member:{current()}" class="member"><xsl:value-of select="current()" /></a>
 	</xsl:template>
 
 	<xsl:template match="@*|*" mode="copy">
