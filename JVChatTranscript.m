@@ -128,9 +128,6 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	[display setUIDelegate:self];
 	[display setPolicyDelegate:self];
 
-	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
-	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setVerticalScroller:[[[JVMarkedScroller alloc] initWithFrame:NSMakeRect( 0., 0., 10., 20. )] autorelease]];
-
 	if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
 		xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
 		[self setChatStyle:[JVStyle styleWithIdentifier:[NSString stringWithUTF8String:styleProp]] withVariant:nil];
@@ -722,31 +719,41 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	[[display preferences] setJavaScriptEnabled:YES];
 	[_logLock unlock];
 
-	NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
-	if( [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
-		[(JVMarkedScroller *)scroller removeAllMarks];
+	NSScrollView *scrollView = [[[[sender mainFrame] frameView] documentView] enclosingScrollView];
+	[scrollView setHasHorizontalScroller:NO];
+	[scrollView setAllowsHorizontalScrolling:NO];
 
-		xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
-		if( ! ctx ) return;
-
-		xmlXPathObjectPtr result = xmlXPathEval( "/log/envelope/message[@highlight = 'yes']/..", ctx );
-		if( ! result ) {
-			xmlXPathFreeContext( ctx );
-			return;
-		}
-
-		xmlNodePtr cur = NULL;
-		unsigned int c = ( result -> nodesetval ? result -> nodesetval -> nodeNr : 0 );
-		unsigned int i = 0;
-		for( i = 0; i < c; i++ ) {
-			cur = result -> nodesetval -> nodeTab[i];   	    
-			unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%s\" );", xmlGetProp( cur, "id" )]] intValue];
-			if( loc ) [(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] addMarkAt:loc];
-		}
-
-		xmlXPathFreeContext( ctx );
-		xmlXPathFreeObject( result );
+	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller];
+	if( ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
+		NSRect scrollerFrame = [[scrollView verticalScroller] frame];
+		NSScroller *oldScroller = scroller;
+		scroller = [[[JVMarkedScroller alloc] initWithFrame:scrollerFrame] autorelease];
+		[scroller setFloatValue:[oldScroller floatValue] knobProportion:[oldScroller knobProportion]];
+		[scrollView setVerticalScroller:scroller];
 	}
+
+	[scroller removeAllMarks];
+
+	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
+	if( ! ctx ) return;
+
+	xmlXPathObjectPtr result = xmlXPathEval( "/log/envelope/message[@highlight = 'yes']/..", ctx );
+	if( ! result ) {
+		xmlXPathFreeContext( ctx );
+		return;
+	}
+
+	xmlNodePtr cur = NULL;
+	unsigned int c = ( result -> nodesetval ? result -> nodesetval -> nodeNr : 0 );
+	unsigned int i = 0;
+	for( i = 0; i < c; i++ ) {
+		cur = result -> nodesetval -> nodeTab[i];   	    
+		unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%s\" );", xmlGetProp( cur, "id" )]] intValue];
+		if( loc ) [(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] addMarkAt:loc];
+	}
+
+	xmlXPathFreeContext( ctx );
+	xmlXPathFreeObject( result );
 }
 @end
 
