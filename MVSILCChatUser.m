@@ -8,7 +8,7 @@
 
 		// this info will be pulled live from the connection
 		[_nickname release];
-		[_username release];
+		[_realName release];
 		[_username release];
 
 		_nickname = nil;
