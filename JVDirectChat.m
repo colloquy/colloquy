@@ -307,7 +307,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[send setUsesSystemCompleteOnTab:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
 	[send reset:nil];
 
-//	[(NSSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
+	[self textDidChange:nil];
 
 	[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
 }
@@ -996,6 +996,48 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 - (void) textDidChange:(NSNotification *) notification {
 	_historyIndex = 0;
+
+	// We need to resize the textview to fit the content.
+	// The scroll views are two superviews up: NSTextView(WebView) -> NSClipView -> NSScrollView
+	NSSplitView *splitView = (NSSplitView *)[[[send superview] superview] superview];
+	NSRect splitViewFrame = [splitView frame];
+	NSSize contentSize = [send minimumSizeForContent];
+	NSRect sendFrame = [[[send superview] superview] frame];
+	float dividerThickness = [splitView dividerThickness];
+	float maxContentHeight = ( NSHeight( splitViewFrame ) - dividerThickness - 30. );
+	float newContentHeight =  MIN( maxContentHeight, MAX( 25., contentSize.height + 8. ) );
+
+	if( newContentHeight == NSHeight( sendFrame ) ) return;
+
+	NSRect webFrame = [[[display superview] superview] frame];
+
+	// Set size of the web view to the maximum size possible
+	webFrame.size.height = NSHeight( splitViewFrame ) - dividerThickness - newContentHeight;
+	webFrame.origin = NSMakePoint( 0., 0. );
+
+	// Keep the send box the same size
+	sendFrame.size.height = newContentHeight;
+	sendFrame.origin.y = NSHeight( webFrame ) + dividerThickness;
+
+	[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
+
+	JVMarkedScroller *scroller = [self _verticalMarkedScroller];
+	if( ! scroller || [scroller floatValue] == 1. ) _scrollerIsAtBottom = YES;
+	else _scrollerIsAtBottom = NO;
+
+	// Commit the changes
+	[[[send superview] superview] setFrame:sendFrame];
+	[[[display superview] superview] setFrame:webFrame];
+	[splitView displayIfNeeded]; // makes the WebView draw correctly
+	[splitView setNeedsDisplay:YES]; // makes it redraw correctly
+
+	if( _scrollerIsAtBottom ) {
+		NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
+		[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint( 0, [[scrollView documentView] bounds].size.height )]];
+		[scrollView reflectScrolledClipView:[scrollView contentView]];
+	}
+
+	[[display window] enableFlushWindow]; // flush everything we have drawn
 }
 
 #pragma mark -
@@ -1015,17 +1057,17 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	_sendHeight = sendFrame.size.height;
 
 	if( _scrollerIsAtBottom ) {
-		NSScrollView *scrollView = [[[[display subviews] objectAtIndex:0] subviews] objectAtIndex:0];
+		NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
 		[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint( 0, [[scrollView documentView] bounds].size.height )]];
 		[scrollView reflectScrolledClipView:[scrollView contentView]];
 	}
 
-	[[notification object] savePositionUsingName:@"JVChatSplitViewPosition"];
 	_forceSplitViewPosition = NO;
 }
 
 - (void) splitViewWillResizeSubviews:(NSNotification *) notification {
-	if( [[self _verticalMarkedScroller] floatValue] == 1. ) _scrollerIsAtBottom = YES;
+	JVMarkedScroller *scroller = [self _verticalMarkedScroller];
+	if( ! scroller || [scroller floatValue] == 1. ) _scrollerIsAtBottom = YES;
 	else _scrollerIsAtBottom = NO;
 }
 
@@ -1046,14 +1088,14 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	NSRect webFrame = [[[display superview] superview] frame];
 
 	// Set size of the web view to the maximum size possible
-	webFrame.size.height = newFrame.size.height - dividerThickness - _sendHeight;
-	webFrame.size.width = newFrame.size.width;
+	webFrame.size.height = NSHeight( newFrame ) - dividerThickness - _sendHeight;
+	webFrame.size.width = NSWidth( newFrame );
 	webFrame.origin = NSMakePoint( 0., 0. );
 
 	// Keep the send box the same size
 	sendFrame.size.height = _sendHeight;
-	sendFrame.size.width = newFrame.size.width;
-	sendFrame.origin.y = webFrame.size.height + dividerThickness;
+	sendFrame.size.width = NSWidth( newFrame );
+	sendFrame.origin.y = NSHeight( webFrame ) + dividerThickness;
 
 	// Commit the changes
 	[[[send superview] superview] setFrame:sendFrame];
