@@ -1,9 +1,10 @@
 #import "MVChatRoom.h"
+#include <libsilcclient/client.h>
 
 @class MVSILCChatConnection;
 
 @interface MVSILCChatRoom : MVChatRoom {}
-- (id) initWithName:(NSString *) name andConnection:(MVSILCChatConnection *) connection andUniqueIdentifier:(NSString *) identifier;
+- (id) initWithChannelEntry:(SilcChannelEntry) channelEntry andConnection:(MVSILCChatConnection *) connection;
 @end
 
 #pragma mark -

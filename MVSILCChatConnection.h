@@ -8,23 +8,20 @@
     SilcClientParams _silcClientParams;
 	NSRecursiveLock *_silcClientLock;
 
-	NSMutableArray *_joinedChannels;
-	NSMutableArray *_queuedCommands;
-	NSLock *_queuedCommandsLock;
-
 	SilcClientConnection _silcConn;
 
 	NSString *_silcServer;
 	unsigned short _silcPort;
 
 	NSString *_silcPassword;
-	
+
 	NSString *_certificatePassword;
 	BOOL _waitForCertificatePassword;
-	
+
+	NSMutableDictionary *_knownUsers;
 	NSMutableDictionary *_sentCommands;
-	NSLock *_sentCommandsLock;
-	
+	NSMutableArray *_queuedCommands;
+
 	BOOL _sentQuitCommand;
 }
 @end
@@ -41,32 +38,21 @@
 - (SilcClientConnection) _silcConn;
 - (void) _setSilcConn:(SilcClientConnection) aSilcConn;
 
-- (NSMutableArray *) _joinedChannels;
-- (void) _addChannel:(NSString *)channel_name;
-- (void) _addUser:(NSString *)nick_name toChannel:(NSString *)channel_name withMode:(NSNumber *)mode;
-- (void) _delUser:(NSString *)nick_name fromChannel:(NSString *)channel_name;
-- (void) _delUser:(NSString *)nick_name;
-- (void) _delChannel:(NSString *)channel_name;
-- (void) _userChangedNick:(NSString *)old_nick_name to:(NSString *)new_nick_name;
-- (void) _userModeChanged:(NSString *)nick_name onChannel:(NSString *)channel_name toMode:(NSNumber *)mode;
-- (NSArray *) _getChannelsForUser:(NSString *)nick_name;
-- (NSMutableDictionary *) _getChannel:(NSString *)channel_name;
-- (NSNumber *) _getModeForUser:(NSString *)nick_name onChannel:(NSString *)channel_name;
-
-- (NSMutableArray *) _queuedCommands;
-- (NSLock *) _queuedCommandsLock;
-
 - (BOOL) _loadKeyPair;
 - (BOOL) _isKeyPairLoaded;
 - (void) _connectKeyPairLoaded:(NSNotification *) notification;
 
-- (void) _addCommand:(NSString *)raw forNumber:(SilcUInt16) cmd_ident;
-- (NSString *) _getCommandForNumber:(SilcUInt16) cmd_ident;
-- (NSLock *) _sentCommandsLock;
+- (NSMutableArray *) _queuedCommands;
 - (NSMutableDictionary *) _sentCommands;
+
+- (void) _addCommand:(NSString *) raw forNumber:(SilcUInt16) cmd_ident;
+- (NSString *) _getCommandForNumber:(SilcUInt16) cmd_ident;
 
 - (void) _sendCommandSucceededNotify:(NSString *) message;
 - (void) _sendCommandFailedNotify:(NSString *) message;
+
+- (MVChatUser *) _chatUserWithClientEntry:(SilcClientEntry) clientEntry;
+- (void) _updateKnownUser:(MVChatUser *) user withClientEntry:(SilcClientEntry) clientEntry;
 @end
 
 #pragma mark -

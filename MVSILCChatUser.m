@@ -68,11 +68,17 @@ finish:
 		_connection = connection; // prevent circular retain
 
 		_nickname = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> nickname];
-		_username = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> username];
-		_address = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> hostname];
-		_serverAddress = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> server];
-		_realName = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> realname];
-		_fingerprint = [[NSString allocWithZone:[self zone]] initWithBytes:clientEntry -> fingerprint length:clientEntry -> fingerprint_len encoding:NSASCIIStringEncoding];
+		if( clientEntry -> username ) _username = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> username];
+		if( clientEntry -> hostname ) _address = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> hostname];
+		if( clientEntry -> server ) _serverAddress = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> server];
+		if( clientEntry -> realname ) _realName = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> realname];
+		if( clientEntry -> fingerprint ) _fingerprint = [[NSString allocWithZone:[self zone]] initWithBytes:clientEntry -> fingerprint length:clientEntry -> fingerprint_len encoding:NSASCIIStringEncoding];
+
+		if( clientEntry -> public_key ) {
+			unsigned long len = 0;
+			unsigned char *key = silc_pkcs_public_key_encode( clientEntry -> public_key, &len );
+			_publicKey = [[NSData allocWithZone:[self zone]] initWithBytes:key length:len];
+		}
 
 		unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
 		unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );

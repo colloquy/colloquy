@@ -71,11 +71,11 @@ BOOL MVChatApplicationQuitting = NO;
 	NSZone *zone = [self zone];
 	[self release];
 
-//	if( type == MVChatConnectionIRCType ) {
+	if( type == MVChatConnectionIRCType ) {
 		self = [[MVIRCChatConnection allocWithZone:zone] init];
-/*	} else if ( type == MVChatConnectionSILCType ) {
-		self = [[MVSILCChatConnection allocWithZone:zone] init];*/
-//	} else self = nil;
+	} else if ( type == MVChatConnectionSILCType ) {
+		self = [[MVSILCChatConnection allocWithZone:zone] init];
+	} else self = nil;
 
 	return self;
 }

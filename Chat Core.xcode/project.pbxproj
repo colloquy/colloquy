@@ -337,6 +337,9 @@
 				1C91405D07051A9100CBA5F1,
 				1C914B160705BFE100CBA5F1,
 				1C914D360706148800CBA5F1,
+				1CF6B82D07122670008ABEFA,
+				1CF6B82E07122672008ABEFA,
+				1CF6B82F07122673008ABEFA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3466,6 +3469,24 @@
 			path = MVSILCChatUser.m;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1CF6B82D07122670008ABEFA = {
+			fileRef = 1C5A230806FA4F2700A51F10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF6B82E07122672008ABEFA = {
+			fileRef = 1CF6B4970710894D008ABEFA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF6B82F07122673008ABEFA = {
+			fileRef = 1CF6B4990710894D008ABEFA;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //1C0
 //1C1
