@@ -138,9 +138,6 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	[display setUIDelegate:self];
 	[display setPolicyDelegate:self];
 
-	if( [display respondsToSelector:@selector( setDrawsBackground: )] )
-		[display setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
-
 	if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
 		xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
 		[self setChatStyle:[JVStyle styleWithIdentifier:[NSString stringWithUTF8String:styleProp]] withVariant:nil];
@@ -743,6 +740,15 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 }
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
+	if( [display respondsToSelector:@selector( setDrawsBackground: )] ) {
+		DOMCSSStyleDeclaration *style = [sender computedStyleForElement:[(DOMHTMLDocument *)[[sender mainFrame] DOMDocument] body] pseudoElement:nil];
+		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
+		DOMCSSValue *altvalue = [style getPropertyCSSValue:@"background"];
+		if( [[value cssText] rangeOfString:@"rgba"].location != NSNotFound || [[altvalue cssText] rangeOfString:@"rgba"].location != NSNotFound )
+			[display setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
+		else [display setDrawsBackground:YES];
+	}
+
 	[display setFrameLoadDelegate:nil];
 	[[display preferences] setJavaScriptEnabled:YES];
 	[_logLock unlock];
