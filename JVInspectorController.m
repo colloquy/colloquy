@@ -133,7 +133,7 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 			[self _resizeWindowForContentSize:newSize];
 		}
 		[[self window] setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ \"%@\" Info", "inspector title format order: object type, object title/name" ), [_inspector type], [_inspector title]]];
-		[[self window] setMinSize:minSize];
+		[[self window] setMinSize:[NSWindow frameRectForContentRect:NSMakeRect( 0., 0., minSize.width, minSize.height) styleMask:[[self window] styleMask]].size];
 		[[self window] setContentView:view];
 
 		if( [_inspector respondsToSelector:@selector( didLoad )] )
