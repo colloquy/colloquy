@@ -203,16 +203,9 @@
 #pragma mark -
 
 - (void) updateChatStylesMenu {
-	JVStyle *defaultStyle = [JVStyle defaultStyle];
-	NSString *variant = [defaultStyle defaultVariantName];		
+	NSString *variant = [_style defaultVariantName];		
 
-	if( ! defaultStyle ) {
-		[JVStyle setDefaultStyle:nil];
-		defaultStyle = [JVStyle defaultStyle];
-		variant = [defaultStyle defaultVariantName];
-	}
-
-	_variantLocked = ! [defaultStyle isUserVariantName:variant];
+	_variantLocked = ! [_style isUserVariantName:variant];
 
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease], *subMenu = nil;
 	NSMenuItem *menuItem = nil, *subMenuItem = nil;
@@ -226,7 +219,7 @@
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
-		if( [defaultStyle isEqualTo:style] ) [menuItem setState:NSOnState];
+		if( [_style isEqualTo:style] ) [menuItem setState:NSOnState];
 		[menu addItem:menuItem];
 
 		NSArray *variants = [style variantStyleSheetNames];
@@ -238,7 +231,7 @@
 			subMenuItem = [[[NSMenuItem alloc] initWithTitle:[style mainVariantDisplayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 			[subMenuItem setTarget:self];
 			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
-			if( [defaultStyle isEqualTo:style] && ! variant ) [subMenuItem setState:NSOnState];
+			if( [_style isEqualTo:style] && ! variant ) [subMenuItem setState:NSOnState];
 			[subMenu addItem:subMenuItem];
 
 			venumerator = [variants objectEnumerator];
@@ -246,7 +239,7 @@
 				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
-				if( [defaultStyle isEqualTo:style] && [variant isEqualToString:item] )
+				if( [_style isEqualTo:style] && [variant isEqualToString:item] )
 					[subMenuItem setState:NSOnState];
 				[subMenu addItem:subMenuItem];
 			}
@@ -258,7 +251,7 @@
 				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
-				if( [defaultStyle isEqualTo:style] && [variant isEqualToString:item] )
+				if( [_style isEqualTo:style] && [variant isEqualToString:item] )
 					[subMenuItem setState:NSOnState];
 				[subMenu addItem:subMenuItem];
 			}
