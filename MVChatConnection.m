@@ -1184,13 +1184,13 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 @implementation MVChatScriptPlugin (MVChatScriptPluginSubcodeSupport)
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? arguments : [NSNull null] ), @"psR1", user, @"psR2", connection, @"psR3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psR1", user, @"psR2", connection, @"psR3", nil];
 	id result = [self callScriptHandler:'psRX' withArguments:args];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? arguments : [NSNull null] ), @"psL1", user, @"psL2", connection, @"psL3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psL1", user, @"psL2", connection, @"psL3", nil];
 	id result = [self callScriptHandler:'psLX' withArguments:args];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
