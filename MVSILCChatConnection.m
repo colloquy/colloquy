@@ -300,8 +300,14 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			[info setObject:[NSNumber numberWithBool:operator] forKey:@"operator"];
 			[info setObject:[NSNumber numberWithBool:NO] forKey:@"halfOperator"];
 			[info setObject:[NSNumber numberWithBool:NO] forKey:@"voice"];
-			if( joining_client -> hostname ) [info setObject:[NSString stringWithUTF8String:joining_client -> hostname] forKey:@"address"];
-			if( joining_client -> realname ) [info setObject:[NSString stringWithUTF8String:joining_client -> realname] forKey:@"realName"];
+			
+			NSString *hostname = nil;
+			if ( joining_client -> hostname ) hostname = [NSString stringWithUTF8String:joining_client -> hostname];
+			if ( hostname ) [info setObject:hostname forKey:@"address"];
+			
+			NSString *realname = nil;
+			if ( joining_client -> realname ) realname = [NSString stringWithUTF8String:joining_client -> realname];
+			if ( realname ) [info setObject:realname forKey:@"realName"];
 
 			NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:channelname, @"room", nickname, @"who", info, @"info", nil]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
