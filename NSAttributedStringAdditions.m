@@ -368,7 +368,9 @@ static WebView *fragmentWebView = nil;
 		}
 
 		[ret appendData:data];
-		[ret appendBytes:"\017" length:1];
+
+		if( foregroundColor || bold || italic || underline )
+			[ret appendBytes:"\017" length:1]; // reset the formatting only if we had formatting
 
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
