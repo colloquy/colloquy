@@ -718,7 +718,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		_newHighlightMessageCount++;
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"description"];
+		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "chat room mentioned bubble text" ), [self title]] forKey:@"description"];
+		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned by %@.", "private chat mentioned bubble text" ), [self title]] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
 		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatMentioned"] forKey:@"coalesceKey"];
 		[context setObject:self forKey:@"target"];
@@ -729,8 +730,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	if( [cmessage ignoreStatus] != JVNotIgnored ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
-		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) [context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", user, [self title]] forKey:@"description"];
-		else [context setObject:[NSString stringWithFormat:@"%@'s message was ignored.", user] forKey:@"description"];
+		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@'s message was ignored in %@.", "chat room user ignored bubble text" ), user, [self title]] forKey:@"description"];
+		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@'s message was ignored.", "direct chat user ignored bubble text" ), user] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
 		[[JVNotificationController defaultManager] performNotification:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
