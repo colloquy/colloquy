@@ -1,5 +1,11 @@
-//  Adium, ESFloater.h
+//
+//  ESFloater.h
+//  Adium
+//
 //  Created by Evan Schoenberg on Wed Oct 08 2003.
+//
+
+#import <Foundation/Foundation.h>
 
 @interface ESFloater : NSObject {
     NSImageView			*staticView;
@@ -9,7 +15,7 @@
     float               maxOpacity;
 }
 
-+ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title;
++ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask;
 - (void)moveFloaterToPoint:(NSPoint)inPoint;
 - (IBAction)close:(id)sender;
 - (void)endFloater;
