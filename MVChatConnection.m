@@ -13,6 +13,7 @@
 #import "NSColorAdditions.h"
 #import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
+#import "NSURLAdditions.h"
 
 #define MODULE_NAME "MVChatConnection"
 
@@ -697,7 +698,7 @@ static void MVChatJoinedWhoList( CHANNEL_REC *channel ) {
 }
 
 static void MVChatLeftRoom( CHANNEL_REC *channel ) {
-	if( channel -> kicked ) return;
+	if( channel -> kicked || channel -> server -> disconnected ) return;
 	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel -> name], @"room", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -1248,7 +1249,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		SERVER_CONNECT_REC *settings = server_create_conn( proto -> id, "irc.javelin.cc", 6667, [[NSString stringWithFormat:@"%8x", self] UTF8String], NULL, [self encodedBytesWithString:NSUserName()] );
 
 		[self _setIrssiConnectSettings:settings];
-//		[self _setIrssiConnection:proto -> server_init_connect( _chatConnectionSettings )];
 	}
 
 	return self;
@@ -2121,6 +2121,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) _didNotConnect {
 	_status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidNotConnectNotification object:self];
+	[self performSelector:@selector( _detachConnection ) withObject:nil afterDelay:0.]; // wait until the next run loop, so we are done disconnecting
 }
 
 - (void) _willDisconnect {
@@ -2139,7 +2140,11 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( [self _irssiConnection] -> connection_lost ) _status = MVChatConnectionServerDisconnectedStatus;
 	else _status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
-	[self _setIrssiConnection:NULL];
+	[self performSelector:@selector( _detachConnection ) withObject:nil afterDelay:0.]; // wait until the next run loop, so we are done disconnecting
+}
+
+- (void) _detachConnection {
+	[self _setIrssiConnection:NULL];	
 }
 
 - (void) _forceDisconnect {
@@ -2373,41 +2378,5 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
 	if( ! [self callScriptHandler:'dFsX' withArguments:args] )
 		[self doesNotRespondToSelector:_cmd];
-}
-@end
-
-#pragma mark -
-
-@implementation NSURL (NSURLChatAdditions)
-- (BOOL) isChatURL {
-	if( [[self scheme] isEqualToString:@"irc"] ) return YES;
-	return NO;
-}
-
-- (BOOL) isChatRoomURL {
-	BOOL isRoom = NO;
-	if( [[self scheme] isEqualToString:@"irc"] ) {
-		if( [self fragment] ) {
-			if( [[self fragment] length] > 0 ) isRoom = YES;
-		} else if( [self path] && [[self path] length] >= 2 ) {
-			if( [[[self path] substringFromIndex:1] hasPrefix:@"&"] || [[[self path] substringFromIndex:1] hasPrefix:@"+"] || [[[self path] substringFromIndex:1] hasPrefix:@"!"] )
-				isRoom = YES;
-		}
-	}
-	return isRoom;
-}
-
-- (BOOL) isDirectChatURL {
-	BOOL isDirect = NO;
-	if( [[self scheme] isEqualToString:@"irc"] ) {
-		if( [self fragment] ) {
-			if( [[self fragment] length] > 0 ) isDirect = NO;
-		} else if( [self path] && [[self path] length] >= 2) {
-			if( [[[self path] substringFromIndex:1] hasPrefix:@"&"] || [[[self path] substringFromIndex:1] hasPrefix:@"+"] || [[[self path] substringFromIndex:1] hasPrefix:@"!"] ) {
-				isDirect = NO;
-			} else isDirect = YES;
-		}
-	}
-	return isDirect;
 }
 @end

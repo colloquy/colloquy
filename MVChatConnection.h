@@ -1,7 +1,5 @@
 #import <Foundation/NSObject.h>
-#import <Foundation/NSDate.h>
 #import <Foundation/NSString.h>
-#import <Foundation/NSURL.h>
 
 typedef enum {
 	MVChatConnectionDisconnectedStatus = 'disC',
@@ -78,6 +76,13 @@ typedef enum {
 	MVChatTimeoutError,
 	MVChatNotDoneError
 } MVChatError;
+
+@class NSString;
+@class NSArray;
+@class NSAttributedString;
+@class NSMutableDictionary;
+@class NSDate;
+@class MVUploadFileTransfer;
 
 extern NSString *MVChatConnectionGotRawMessageNotification;
 
@@ -292,12 +297,4 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) connected:(MVChatConnection *) connection;
 - (void) disconnecting:(MVChatConnection *) connection;
-@end
-
-#pragma mark -
-
-@interface NSURL (NSURLChatAdditions)
-- (BOOL) isChatURL;
-- (BOOL) isChatRoomURL;
-- (BOOL) isDirectChatURL;
 @end
