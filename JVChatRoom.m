@@ -316,10 +316,16 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
 	while( ( name = [[enumerator nextObject] nickname] ) ) {
-		NSString *escapedName = [name stringByEscapingCharactersInSet:escapeSet];
-		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"\\b(%@)\\b", escapedName]];
-		NSRange searchRange = NSMakeRange( 0, [message length] );
-		NSRange backSearchRange = NSMakeRange( 0, [message length] );
+		// Avoid putting stuff in the autorelease pool if we don't have to
+		// On #gentoo this will be called 800+ times
+		NSMutableString *escapedName = [name mutableCopy];
+		[escapedName escapeCharactersInSet:escapeSet];
+		NSString *pattern = [[NSString alloc] initWithFormat:@"\\b(%@)\\b", escapedName];
+		regex = [AGRegex regexWithPattern:pattern];
+		[escapedName release];
+		[pattern release];
+		NSRange searchRange = NSMakeRange(0, [message length]);
+		NSRange backSearchRange = NSMakeRange(0, [message length]);
 		AGRegexMatch *match = [regex findInString:message range:searchRange];
 		while ( match ) {
 			NSRange foundRange = [match rangeAtIndex:1];
