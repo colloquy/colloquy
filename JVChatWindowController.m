@@ -711,11 +711,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) outlineViewItemDidCollapse:(NSNotification *) notification {
-	[chatViewsOutlineView sizeLastColumnToFit];
+	[chatViewsOutlineView performSelector:@selector( sizeLastColumnToFit ) withObject:nil afterDelay:0.];
+	[chatViewsOutlineView performSelector:@selector( display ) withObject:nil afterDelay:0.];
 }
 
 - (void) outlineViewItemDidExpand:(NSNotification *) notification {
-	[chatViewsOutlineView sizeLastColumnToFit];
+	[chatViewsOutlineView performSelector:@selector( sizeLastColumnToFit ) withObject:nil afterDelay:0.];
 }
 @end
 
