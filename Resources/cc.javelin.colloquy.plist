@@ -97,6 +97,20 @@
 		<key>showBubble</key>
 		<true/>
 	</dict>
+	<key>JVNotificationSettings JVNickNameIdentifiedWithServer</key>
+	<dict>
+		<key>playSound</key>
+		<false/>
+		<key>showBubble</key>
+		<true/>
+	</dict>
+	<key>JVNotificationSettings JVNewMemosFromServer</key>
+	<dict>
+		<key>playSound</key>
+		<false/>
+		<key>showBubble</key>
+		<true/>
+	</dict>
 	<key>JVNotificationSettings JVChatFirstMessage</key>
 	<dict>
 		<key>bounceIcon</key>
