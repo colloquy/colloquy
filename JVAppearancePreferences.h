@@ -35,7 +35,7 @@
 - (void) selectStyleWithIdentifier:(NSString *) identifier;
 - (void) selectEmoticonsWithIdentifier:(NSString *) identifier;
 
-- (void) changePreferences:(id) sender;
+- (void) changePreferences;
 
 - (IBAction) changeBaseFontSize:(id) sender;
 - (IBAction) changeMinimumFontSize:(id) sender;
@@ -50,6 +50,7 @@
 - (void) updateChatStylesMenu;
 - (void) updateEmoticonsMenu;
 - (void) updatePreview;
+- (void) updateVariant;
 
 - (void) parseStyleOptions;
 - (NSString *) valueOfProperty:(NSString *) property forSelector:(NSString *) selector inStyle:(NSString *) style;

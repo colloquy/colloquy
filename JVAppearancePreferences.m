@@ -39,6 +39,8 @@
 		[JVChatTranscript _scanForEmoticons];
 
 		_style = nil;
+		_styleOptions = nil;
+		_userStyle = nil;
 		_emoticonBundles = [JVChatEmoticonBundles retain];
 	}
 	return self;
@@ -81,7 +83,7 @@
 - (void) selectStyleWithIdentifier:(NSString *) identifier {
 	[_style autorelease];
 	_style = [[JVStyle styleWithIdentifier:identifier] retain];
-	[self performSelector:@selector( changePreferences: ) withObject:nil afterDelay:0.];
+	[self changePreferences];
 }
 
 - (void) selectEmoticonsWithIdentifier:(NSString *) identifier {
@@ -105,7 +107,7 @@
 	[_style autorelease];
 	_style = [[JVStyle defaultStyle] retain];
 
-	[self changePreferences:nil];
+	[self changePreferences];
 }
 
 - (IBAction) changeBaseFontSize:(id) sender {
@@ -123,16 +125,26 @@
 }
 
 - (IBAction) changeDefaultChatStyle:(id) sender {
-	[_style autorelease];
-	_style = [[[sender representedObject] objectForKey:@"style"] retain];
+	JVStyle *style = [[sender representedObject] objectForKey:@"style"];
+	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
 
-	[JVStyle setDefaultStyle:_style];
-	[_style setDefaultVariantName:[[sender representedObject] objectForKey:@"variant"]];
-	
-	[self performSelector:@selector( changePreferences: ) withObject:nil afterDelay:0.];
+	if( style == _style ) {
+		[_style setDefaultVariantName:variant];
+
+		[self updateChatStylesMenu];
+		[self updateVariant];
+	} else {
+		[_style autorelease];
+		_style = [style retain];
+
+		[JVStyle setDefaultStyle:_style];
+		[_style setDefaultVariantName:variant];
+
+		[self changePreferences];
+	}
 }
 
-- (void) changePreferences:(id) sender {
+- (void) changePreferences {
 	[self updateChatStylesMenu];
 	[self updateEmoticonsMenu];
 
@@ -292,6 +304,10 @@
 	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, [[_style mainStyleSheetLocation] absoluteString], [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString], [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
 
 	[[preview mainFrame] loadHTMLString:html baseURL:nil];
+}
+
+- (void) updateVariant {
+	[preview stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString]]];	
 }
 
 #pragma mark -
@@ -486,7 +502,7 @@
 		}
 
 		[self saveStyleOptions];
-		[self updatePreview];
+		[self updateVariant];
 	}
 }
 
@@ -512,7 +528,7 @@
 	}
 
 	[self saveStyleOptions];
-	[self updatePreview];
+	[self updateVariant];
 }
 
 - (BOOL) tableView:(NSTableView *) view shouldSelectRow:(int) row {
@@ -573,6 +589,6 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVNewStyleVariantAddedNotification object:_style]; 
 
 	[self updateChatStylesMenu];
-	[self updatePreview];
+	[self updateVariant];
 }
 @end
