@@ -1,4 +1,3 @@
-#import <WebKit/WebKit.h>
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
 #import "NSStringAdditions.h"
@@ -85,81 +84,24 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 
 #pragma mark -
 
-static NSConditionLock *renderingFragmentLock = nil;
-static WebView *fragmentWebView = nil;
-
 @implementation NSAttributedString (NSAttributedStringHTMLAdditions)
 + (id) attributedStringWithHTMLFragment:(NSString *) fragment baseURL:(NSURL *) url {
-	extern NSConditionLock *renderingFragmentLock;
-	extern WebView *fragmentWebView;
-	NSMutableAttributedString *result = nil;
-
 	NSParameterAssert( fragment != nil );
 
+	NSMutableAttributedString *result = nil;
 	if( NSAppKitVersionNumber >= 700. ) {
-		NSString *render = [NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", fragment];
-		result = [[[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", url, @"BaseURL", nil] documentAttributes:NULL] autorelease];
+		// the rgba CSS makes WebKit give colorless text where no color was specified (instead of black)
+		NSString *render = [NSString stringWithFormat:@"<span style=\"color: rgba( 0, 0, 0, 0.0 )\">%@</span>", fragment];
+		result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", url, @"BaseURL", nil] documentAttributes:NULL];
 	} else {
-		if( ! renderingFragmentLock )
-			renderingFragmentLock = [[NSConditionLock alloc] initWithCondition:2];
-
-		if( [renderingFragmentLock lockWhenCondition:2 beforeDate:[NSDate dateWithTimeIntervalSinceNow:2.]] ) { // wait until any other call to this method finishes; timesout after 2 seconds waiting
-			[renderingFragmentLock unlockWithCondition:0];
-
-			[NSThread detachNewThreadSelector:@selector( renderHTMLFragment: ) toTarget:self withObject:[NSDictionary dictionaryWithObjectsAndKeys:fragment, @"fragment", url, @"url", nil]];
-
-			if( [renderingFragmentLock lockWhenCondition:1 beforeDate:[NSDate dateWithTimeIntervalSinceNow:3.]] ) { // wait until the rendering is done; timeouts in 3 seconds
-				result = [[[(id <WebDocumentText>)[[[fragmentWebView mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
-				[renderingFragmentLock unlockWithCondition:2]; // we are done, safe for relase WebView
-			}
-		}
-
-		if( ! result ) {
-			NSString *render = [NSString stringWithFormat:@"<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body><font color=\"#01fe02\">%@</font></body></html>", fragment];
-			result = [[[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] baseURL:url documentAttributes:NULL] autorelease];
-		}
+		NSString *render = [NSString stringWithFormat:@"<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body>%@</body></html>", fragment];
+		result = [[NSAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] baseURL:url documentAttributes:NULL];
 	}
 
-	NSRange limitRange, effectiveRange;
-	limitRange = NSMakeRange( 0, [result length] );
-	while( limitRange.length > 0 ) {
-		NSColor *color = [result attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
-		if( [[color colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && [[color HTMLAttributeValue] isEqualToString:@"#01fe02"] )
-			[result removeAttribute:NSForegroundColorAttributeName range:effectiveRange];
-		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
-	}
+	NSAttributedString *ret = [[self alloc] initWithAttributedString:result];
+	[result release];
 
-	return [[[self alloc] initWithAttributedString:result] autorelease];
-}
-
-+ (void) renderHTMLFragment:(NSDictionary *) info {
-	extern WebView *fragmentWebView;
-	extern NSConditionLock *renderingFragmentLock;
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-	[renderingFragmentLock lockWhenCondition:0]; // start the rendering, makes parent thread block
-
-	[NSThread setThreadPriority:1.0];
-
-	NSString *fragment = [info objectForKey:@"fragment"];
-	NSURL *url = [info objectForKey:@"url"];
-
-	if( ! fragmentWebView ) fragmentWebView = [[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 2000., 100. ) frameName:nil groupName:nil];
-	[fragmentWebView setFrameLoadDelegate:self];
-	[[fragmentWebView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body><font color=\"#01fe02\">%@</font></body></html>", fragment] baseURL:url];
-
-	[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.25]];
-
-	[renderingFragmentLock lockWhenCondition:2]; // wait until it is safe to release
-	[renderingFragmentLock unlockWithCondition:2];
-
-	[pool release];
-}
-
-+ (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
-	extern NSConditionLock *renderingFragmentLock;
-	[renderingFragmentLock unlockWithCondition:1]; // rendering is complete
-	[sender setFrameLoadDelegate:nil];
+	return [ret autorelease];
 }
 
 - (NSString *) HTMLFormatWithOptions:(NSDictionary *) options {
