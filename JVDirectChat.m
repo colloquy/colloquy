@@ -1184,6 +1184,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[messageString appendFormat:@" <span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
 	}
 
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
+		AGRegex *regex = [AGRegex regexWithPattern:@"</*font.*?>" options:AGRegexCaseInsensitive];
+		[messageString setString:[regex replaceWithString:@"" inString:messageString]];
+	}
+
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
+		AGRegex *regex = [AGRegex regexWithPattern:@"</*[b|i|u]>" options:AGRegexCaseInsensitive];
+		[messageString setString:[regex replaceWithString:@"" inString:messageString]];
+	}
+
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 		NSMutableArray *names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
