@@ -236,6 +236,11 @@
 		[item setTarget:self];
 		[menu addItem:item];
 	}
+	if ( _buddy == nil ) {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add To Buddy List", "add to buddy list contextual menu") action:@selector( addBuddy: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	}
 
 	if( ( [self isLocalUser] && _operator ) || [[_parent chatRoomMemberWithName:[[_parent connection] nickname]] operator] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
@@ -311,6 +316,10 @@
 		while( ( path = [enumerator nextObject] ) )
 			[[_parent connection] sendFile:path toUser:_nickname];
 	}
+}
+
+- (IBAction) addBuddy:(id) sender {
+	[[MVBuddyListController sharedBuddyList] showBuddyPickerSheet:self];
 }
 
 #pragma mark -

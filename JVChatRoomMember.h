@@ -37,6 +37,7 @@
 
 - (IBAction) startChat:(id) sender;
 - (IBAction) sendFile:(id) sender;
+- (IBAction) addBuddy:(id) sender;
 
 - (IBAction) toggleOperatorStatus:(id) sender;
 - (IBAction) toggleVoiceStatus:(id) sender;
