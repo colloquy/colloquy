@@ -140,7 +140,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 	if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
 		xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
-		[self setChatStyle:[JVStyle styleWithIdentifier:[NSString stringWithUTF8String:styleProp]] withVariant:nil];
+		JVStyle *style = [JVStyle styleWithIdentifier:[NSString stringWithUTF8String:styleProp]];
+		if( style ) [self setChatStyle:style withVariant:nil];
 		xmlFree( styleProp );
 	}
 

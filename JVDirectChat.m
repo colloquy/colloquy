@@ -256,7 +256,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( [self preferenceForKey:@"style"] ) {
 		style = [JVStyle styleWithIdentifier:[self preferenceForKey:@"style"]];
 		variant = [self preferenceForKey:@"style variant"];
-		[self setChatStyle:style withVariant:variant];
+		if( style ) [self setChatStyle:style withVariant:variant];
 	}
 
 	if( [(NSString *)[self preferenceForKey:@"emoticon"] length] ) {
