@@ -183,7 +183,7 @@ static NSMenu *favoritesMenu = nil;
 	[newRealName setObjectValue:NSFullUserName()];
 
 	[(NSPanel *)[self window] setFloatingPanel:NO];
-	[[self window] setResizeIncrements:NSMakeSize( 1, [connections rowHeight] + [connections intercellSpacing].height )];
+	[[self window] setResizeIncrements:NSMakeSize( 1, [connections rowHeight] + [connections intercellSpacing].height - 1. )];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( windowWillClose: ) name:NSWindowWillCloseNotification object:[self window]];
 
