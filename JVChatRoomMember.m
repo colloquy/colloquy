@@ -1,4 +1,6 @@
 #import <Cocoa/Cocoa.h>
+#import "MVChatConnection.h"
+#import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
 
 @implementation JVChatRoomMember
@@ -43,7 +45,7 @@
 	[item setTarget:self];
 	[menu addItem:item];
 
-/*	if( [[memberList objectForKey:[[self connection] nickname]] objectForKey:@"op"] ) {
+	if( [(JVChatRoom *)_parent doesMemberHaveOperatorStatus:[[(JVChatRoom *)_parent connection] nickname]] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room", "kick from room contextual menu - admin only" ) action:@selector( kickSelectedUser: ) keyEquivalent:@""] autorelease];
@@ -52,7 +54,7 @@
 
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		if( [[memberList objectForKey:[sortedMembers objectAtIndex:[memberListTable selectedRow]]] objectForKey:@"op"] ) {
+		if( [(JVChatRoom *)_parent doesMemberHaveOperatorStatus:_memberName] ) {
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Demote Operator", "demote operator contextual menu - admin only" ) action:@selector( promoteSelectedUser: ) keyEquivalent:@""] autorelease];
 			[item setTarget:self];
 			[menu addItem:item];
@@ -62,7 +64,7 @@
 			[menu addItem:item];
 		}
 
-		if( [[memberList objectForKey:[sortedMembers objectAtIndex:[memberListTable selectedRow]]] objectForKey:@"voice"] ) {
+		if( [(JVChatRoom *)_parent doesMemberHaveVoiceStatus:_memberName] ) {
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Remove Voice", "remove voice contextual menu - admin only" ) action:@selector( voiceSelectedUser: ) keyEquivalent:@""] autorelease];
 			[item setTarget:self];
 			[menu addItem:item];
@@ -71,7 +73,7 @@
 			[item setTarget:self];
 			[menu addItem:item];
 		}
-	}*/
+	}
 
 	return [[menu retain] autorelease];
 }
