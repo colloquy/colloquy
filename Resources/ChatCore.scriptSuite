@@ -441,7 +441,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Type</key>
-				<string>NSObject</string>
+				<string>NSString</string>
 			</dict>
 		</dict>
 		<key>RefreshInformation</key>

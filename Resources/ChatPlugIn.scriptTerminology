@@ -17,7 +17,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called for every object that the user can access a contextual/action menu. This handler is called when the selection changes in a table or right before the menu is shown, allowing you to provide a list of titles to show. The title "-" will insert a menu separator. Sub-menus can be added by inserting into your list a record looking like: {title:"Parent Item", submenu:{"Item 1", "Item 2"}}. The depth of the sub-menu is virtually unlimited. When the user selects on of the titles you provided the "handle clicked contextual menu item"</string>
+			<string>Called for every object that the user can access a contextual/action menu. This handler is called when the selection changes in a table or right before the menu is shown, allowing you to provide a list of titles to show.</string>
 			<key>Name</key>
 			<string>build contextual menu for item</string>
 			<key>UnnamedArgument</key>
@@ -70,7 +70,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when the user clicks on one of the supplied menu item titles you returned from the "build contextual menu for item"</string>
+			<string>Called when the user clicks on one of the supplied menu item titles you returned from the "build contextual menu for item".</string>
 			<key>Name</key>
 			<string>handle clicked contextual menu item</string>
 			<key>UnnamedArgument</key>
@@ -451,7 +451,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when the user types an unhandled "/command". Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent "raw"</string>
+			<string>Called when the user types an unhandled "/command". Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent "raw" to the server.</string>
 			<key>Name</key>
 			<string>process user command</string>
 			<key>UnnamedArgument</key>

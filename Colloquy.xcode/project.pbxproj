@@ -277,18 +277,6 @@
 			remoteRef = 1C04394D07CAFCAF00304949;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1C04394907CAFC9600304949 = {
-			fileRef = 1C04394807CAFC7D00304949;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C04394A07CAFCA000304949 = {
-			fileRef = 1C04394807CAFC7D00304949;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C04394B07CAFCA500304949 = {
 			containerPortal = 1C04394607CAFC7D00304949;
 			isa = PBXContainerItemProxy;
@@ -1117,7 +1105,6 @@
 		};
 		1C51B4BB052DE14B00BB459B = {
 			buildPhases = (
-				1C51B4BC052DE14B00BB459B,
 				1C51B4C6052DE14B00BB459B,
 				1C51B4C8052DE14B00BB459B,
 			);
@@ -1152,13 +1139,6 @@
 			productName = "Standard Commands (Plug–In)";
 			productReference = 1C51B4CD052DE14B00BB459B;
 			productType = "com.apple.product-type.bundle";
-		};
-		1C51B4BC052DE14B00BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1C51B4C6052DE14B00BB459B = {
 			buildActionMask = 2147483647;
@@ -1212,12 +1192,6 @@
 			path = Resources/Info.plist;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
-		};
-		1C51B8F2052DFAAA00BB459B = {
-			fileRef = 1C51B4CD052DE14B00BB459B;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1C5959010507803F000001C8 = {
 			isa = PBXFileReference;
@@ -1500,6 +1474,119 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1C7C76E507DBA1C100FB5F83 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = NSCoreSuite.scriptSuite;
+			path = Resources/NSCoreSuite.scriptSuite;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7C76E607DBA1C100FB5F83 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = NSCoreSuite.scriptTerminology;
+			path = Resources/NSCoreSuite.scriptTerminology;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7C76E707DBA1C100FB5F83 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = NSTextSuite.scriptSuite;
+			path = Resources/NSTextSuite.scriptSuite;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7C76E807DBA1C100FB5F83 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = NSTextSuite.scriptTerminology;
+			path = Resources/NSTextSuite.scriptTerminology;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7C76E907DBA1C100FB5F83 = {
+			fileRef = 1C7C76E507DBA1C100FB5F83;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C76EA07DBA1C100FB5F83 = {
+			fileRef = 1C7C76E607DBA1C100FB5F83;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C76EB07DBA1C100FB5F83 = {
+			fileRef = 1C7C76E707DBA1C100FB5F83;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C76EC07DBA1C100FB5F83 = {
+			fileRef = 1C7C76E807DBA1C100FB5F83;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C76ED07DBA1D000FB5F83 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.rez;
+			name = Scripting.r;
+			path = Resources/Scripting.r;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7C770C07DBA1F700FB5F83 = {
+			buildActionMask = 2147483647;
+			files = (
+				1C7C770E07DBA20200FB5F83,
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C7C770E07DBA20200FB5F83 = {
+			fileRef = 1C7C76ED07DBA1D000FB5F83;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C773B07DBAAB800FB5F83 = {
+			fileRef = 1CD4C098078249C10003620F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C773C07DBAABC00FB5F83 = {
+			fileRef = 1C8CE1EB05A921A00020D841;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C773D07DBAAC400FB5F83 = {
+			fileRef = 1C04394807CAFC7D00304949;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C773E07DBAAD500FB5F83 = {
+			fileRef = 1CE3F9BE07C7C29B0049A366;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C773F07DBAAE900FB5F83 = {
+			fileRef = 1C51B4CD052DE14B00BB459B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C7E023C06B42C470037F173 = {
 			children = (
 				1C7E023D06B42C470037F173,
@@ -1649,12 +1736,6 @@
 			path = "Plug-Ins/iTunes/iTunes.scpt";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		1C8CE1ED05A921AB0020D841 = {
-			fileRef = 1C8CE1EB05A921A00020D841;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1C8CF8E1066530D60080A2F5 = {
 			fileEncoding = 4;
@@ -2106,10 +2187,10 @@
 		};
 		1CB2CCF5052DDC560094AAA4 = {
 			buildPhases = (
-				1CB2CCF9052DDC560094AAA4,
 				1CB2CD0F052DDC560094AAA4,
 				1CB2CD61052DDC560094AAA4,
 				1CB2CD78052DDC560094AAA4,
+				1C7C770C07DBA1F700FB5F83,
 				1CB2CD82052DDC560094AAA4,
 				1CB2CD88052DDC560094AAA4,
 				1CF038FF062F8DBB009774D8,
@@ -2148,13 +2229,6 @@
 			productName = "Massinova (Application)";
 			productReference = 1CB2CD8C052DDC570094AAA4;
 			productType = "com.apple.product-type.application";
-		};
-		1CB2CCF9052DDC560094AAA4 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1CB2CD0F052DDC560094AAA4 = {
 			buildActionMask = 2147483647;
@@ -2299,10 +2373,12 @@
 				1C7EF5C306B346E50037F173,
 				1C7E023E06B42C470037F173,
 				1CF627CB07558F79005DFCFA,
-				1CD4C099078249C10003620F,
 				1C0A4C9C0799BDB00093B702,
 				1C0A4C9D0799BDB00093B702,
-				1C04394A07CAFCA000304949,
+				1C7C76E907DBA1C100FB5F83,
+				1C7C76EA07DBA1C100FB5F83,
+				1C7C76EB07DBA1C100FB5F83,
+				1C7C76EC07DBA1C100FB5F83,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2999,11 +3075,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				1CD4C09A07824A010003620F,
-				1C8CE1ED05A921AB0020D841,
-				1C04394907CAFC9600304949,
-				1CE3F9BF07C7C2A70049A366,
-				1C51B8F2052DFAAA00BB459B,
+				1C7C773D07DBAAC400FB5F83,
+				1C7C773E07DBAAD500FB5F83,
+				1C7C773F07DBAAE900FB5F83,
+				1C7C773C07DBAABC00FB5F83,
+				1C7C773B07DBAAB800FB5F83,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4178,18 +4254,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1CD4C099078249C10003620F = {
-			fileRef = 1CD4C098078249C10003620F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CD4C09A07824A010003620F = {
-			fileRef = 1CD4C098078249C10003620F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CD6C413051DFA1C00A8FE10 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -4426,12 +4490,6 @@
 			refType = 3;
 			remoteRef = 1CE3F9C707C7C2C50049A366;
 			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1CE3F9BF07C7C2A70049A366 = {
-			fileRef = 1CE3F9BE07C7C29B0049A366;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1CE3F9C207C7C2B30049A366 = {
 			containerPortal = 1CE3F9BB07C7C29A0049A366;
@@ -4990,6 +5048,11 @@
 				1CA75A260652537A000141D5,
 				1CC6FD38054AF1940075807C,
 				1CD9DF6507D934F70006BB99,
+				1C7C76ED07DBA1D000FB5F83,
+				1C7C76E507DBA1C100FB5F83,
+				1C7C76E607DBA1C100FB5F83,
+				1C7C76E707DBA1C100FB5F83,
+				1C7C76E807DBA1C100FB5F83,
 				1CCA510D0598108000F0A4CD,
 				1CCA510E0598108000F0A4CD,
 				1C59BD61059E2E02001487E2,

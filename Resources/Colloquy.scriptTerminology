@@ -388,80 +388,36 @@
 		</dict>
 		<key>NSApplication</key>
 		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>isActive</key>
+				<dict>
+					<key>Description</key>
+					<string>Is this the frontmost (active) application?</string>
+					<key>Name</key>
+					<string>frontmost</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>Description</key>
+					<string>The name of the application.</string>
+					<key>Name</key>
+					<string>name</string>
+				</dict>
+				<key>version</key>
+				<dict>
+					<key>Description</key>
+					<string>The version of the application.</string>
+					<key>Name</key>
+					<string>version</string>
+				</dict>
+			</dict>
 			<key>Description</key>
-			<string>Colloquy application.</string>
+			<string>The Colloquy application's top level scripting object.</string>
 			<key>Name</key>
 			<string>application</string>
 			<key>PluralName</key>
 			<string>applications</string>
-		</dict>
-		<key>NSTextStorage</key>
-		<dict>
-			<key>Attributes</key>
-			<dict>
-				<key>XHTMLEnd</key>
-				<dict>
-					<key>Description</key>
-					<string>The HTML that directly follows the first character or end of the attribute run. This would include end tags.</string>
-					<key>Name</key>
-					<string>HTML end</string>
-				</dict>
-				<key>XHTMLStart</key>
-				<dict>
-					<key>Description</key>
-					<string>The HTML that directly proceeds the first character. This would include start tags or self-closing tags.</string>
-					<key>Name</key>
-					<string>HTML start</string>
-				</dict>
-				<key>backgroundColor</key>
-				<dict>
-					<key>Description</key>
-					<string>The background color of the first character.</string>
-					<key>Name</key>
-					<string>background color</string>
-				</dict>
-				<key>boldState</key>
-				<dict>
-					<key>Description</key>
-					<string>The bold state of the first character.</string>
-					<key>Name</key>
-					<string>bold</string>
-				</dict>
-				<key>hyperlink</key>
-				<dict>
-					<key>Description</key>
-					<string>The Internet link of the first character.</string>
-					<key>Name</key>
-					<string>link</string>
-				</dict>
-				<key>italicState</key>
-				<dict>
-					<key>Description</key>
-					<string>The italic state of the first character.</string>
-					<key>Name</key>
-					<string>italic</string>
-				</dict>
-				<key>styleClasses</key>
-				<dict>
-					<key>Description</key>
-					<string>The stylesheet classes of the first character.</string>
-					<key>Name</key>
-					<string>style classes</string>
-				</dict>
-				<key>underlineState</key>
-				<dict>
-					<key>Description</key>
-					<string>The underline state of the first character.</string>
-					<key>Name</key>
-					<string>underline</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Rich (styled) text</string>
-			<key>Name</key>
-			<string>text</string>
-			<key>PluralName</key>
-			<string>text</string>
 		</dict>
 		<key>NSWindow</key>
 		<dict>
@@ -474,6 +430,90 @@
 					<key>Name</key>
 					<string>active panel</string>
 				</dict>
+				<key>boundsAsQDRect</key>
+				<dict>
+					<key>Description</key>
+					<string>The bounding rectangle of the window.</string>
+					<key>Name</key>
+					<string>bounds</string>
+				</dict>
+				<key>hasCloseBox</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window has a close box.</string>
+					<key>Name</key>
+					<string>closeable</string>
+				</dict>
+				<key>hasTitleBar</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window has a title bar.</string>
+					<key>Name</key>
+					<string>titled</string>
+				</dict>
+				<key>isFloatingPanel</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window floats.</string>
+					<key>Name</key>
+					<string>floating</string>
+				</dict>
+				<key>isMiniaturizable</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window can be miniaturized.</string>
+					<key>Name</key>
+					<string>miniaturizable</string>
+				</dict>
+				<key>isMiniaturized</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window is currently miniaturized.</string>
+					<key>Name</key>
+					<string>miniaturized</string>
+				</dict>
+				<key>isModalPanel</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window is the application's current modal window.</string>
+					<key>Name</key>
+					<string>modal</string>
+				</dict>
+				<key>isResizable</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window can be resized.</string>
+					<key>Name</key>
+					<string>resizable</string>
+				</dict>
+				<key>isVisible</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window is currently visible.</string>
+					<key>Name</key>
+					<string>visible</string>
+				</dict>
+				<key>isZoomable</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window can be zoomed.</string>
+					<key>Name</key>
+					<string>zoomable</string>
+				</dict>
+				<key>isZoomed</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window is currently zoomed.</string>
+					<key>Name</key>
+					<string>zoomed</string>
+				</dict>
+				<key>orderedIndex</key>
+				<dict>
+					<key>Description</key>
+					<string>The index of the window in the back-to-front window ordering.</string>
+					<key>Name</key>
+					<string>index</string>
+				</dict>
 				<key>selectedListItem</key>
 				<dict>
 					<key>Description</key>
@@ -481,9 +521,23 @@
 					<key>Name</key>
 					<string>selected list item</string>
 				</dict>
+				<key>title</key>
+				<dict>
+					<key>Description</key>
+					<string>The full title of the window.</string>
+					<key>Name</key>
+					<string>name</string>
+				</dict>
+				<key>uniqueID</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the window.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Colloquy window.</string>
+			<string>A window that can contain panels.</string>
 			<key>Name</key>
 			<string>window</string>
 			<key>PluralName</key>
@@ -715,44 +769,5 @@
 	</dict>
 	<key>Name</key>
 	<string>Colloquy Suite</string>
-	<key>Synonyms</key>
-	<dict>
-		<key>catr</key>
-		<dict>
-			<key>Description</key>
-			<string>This subdivides the text into chunks that all have the same attributes.</string>
-			<key>Name</key>
-			<string>attribute run</string>
-			<key>PluralName</key>
-			<string>attribute runs</string>
-		</dict>
-		<key>cha </key>
-		<dict>
-			<key>Description</key>
-			<string>This subdivides the text into characters.</string>
-			<key>Name</key>
-			<string>character</string>
-			<key>PluralName</key>
-			<string>characters</string>
-		</dict>
-		<key>cpar</key>
-		<dict>
-			<key>Description</key>
-			<string>This subdivides the text into paragraphs.</string>
-			<key>Name</key>
-			<string>paragraph</string>
-			<key>PluralName</key>
-			<string>paragraphs</string>
-		</dict>
-		<key>cwor</key>
-		<dict>
-			<key>Description</key>
-			<string>This subdivides the text into words.</string>
-			<key>Name</key>
-			<string>word</string>
-			<key>PluralName</key>
-			<string>words</string>
-		</dict>
-	</dict>
 </dict>
 </plist>
