@@ -528,7 +528,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 #pragma mark -
 
-- (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( toggleShowFullNames: ) ) {
 		[menuItem setState:( _showFullNames ? NSOnState : NSOffState )];
 		return YES;
@@ -595,14 +595,6 @@ static MVBuddyListController *sharedInstance = nil;
 			[ret setScalesWhenResized:YES];
 			[ret setSize:NSMakeSize( 32., 32. )];
 			return ret;
-		} else if( ! _showIcons ) {
-			JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
-			switch( [buddy status] ) {
-				case JVBuddyAwayStatus: return [NSImage imageNamed:@"statusAway"];
-				case JVBuddyIdleStatus: return [NSImage imageNamed:@"statusIdle"];
-				case JVBuddyAvailableStatus: return [NSImage imageNamed:@"statusAvailable"];
-				default: return [NSImage imageNamed:@"statusOffline"];
-			}
 		} else return nil;
 	}
 
@@ -626,21 +618,19 @@ static MVBuddyListController *sharedInstance = nil;
 
 		[cell setEnabled:[buddy isOnline]];
 
-		if( _showIcons ) {
-			switch( [buddy status] ) {
-			case JVBuddyAwayStatus:
-				[cell setStatusImage:[NSImage imageNamed:@"statusAway"]];
-				break;
-			case JVBuddyIdleStatus:
-				[cell setStatusImage:[NSImage imageNamed:@"statusIdle"]];
-				break;
-			case JVBuddyAvailableStatus:
-				[cell setStatusImage:[NSImage imageNamed:@"statusAvailable"]];
-				break;
-			default:
-				[cell setStatusImage:[NSImage imageNamed:@"statusOffline"]];
-			}
-		} else [cell setStatusImage:nil];
+		switch( [buddy status] ) {
+		case JVBuddyAwayStatus:
+			[cell setStatusImage:[NSImage imageNamed:@"statusAway"]];
+			break;
+		case JVBuddyIdleStatus:
+			[cell setStatusImage:[NSImage imageNamed:@"statusIdle"]];
+			break;
+		case JVBuddyAvailableStatus:
+			[cell setStatusImage:[NSImage imageNamed:@"statusAvailable"]];
+			break;
+		default:
+			[cell setStatusImage:[NSImage imageNamed:@"statusOffline"]];
+		}
 	} else if( [[column identifier] isEqualToString:@"switch"] ) {
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 		NSSet *onlineNicks = [buddy onlineNicknames];
