@@ -645,6 +645,9 @@ static SilcClientOperations silcClientOps = {
 			return nil;
 		}
 
+		[self setUsername:NSUserName()];
+		[self setRealName:NSFullUserName()];
+
 		[silcChatConnectionsLock lock];
 		[silcChatConnections addObject:self];
 		[silcChatConnectionsLock unlock];
@@ -1176,7 +1179,7 @@ static SilcClientOperations silcClientOps = {
 	while( ! MVChatApplicationQuitting ) {
 		[silcChatConnectionsLock lock];
 		NSEnumerator *enumerator = [silcChatConnections objectEnumerator];
-		MVSILCChatConnection *connection;
+		MVSILCChatConnection *connection = nil;
 
 		while( ( connection = [enumerator nextObject] ) ) {
 			[[connection _silcClientLock] lock];
