@@ -8,7 +8,7 @@
 		documentFragment = range.createContextualFragment( html );
 		document.body.appendChild( documentFragment );
 
-		regex = /No%20Fade\.css/g;
+		regex = /No%20Fade/g;
 		if( ! regex.test( document.getElementById( "variantStyle" ).innerText ) ) {
 			document.body.lastChild.previousSibling.style.opacity = '1.0';
 			document.body.lastChild.style.opacity = '0.0';
