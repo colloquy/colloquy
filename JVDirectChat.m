@@ -1489,7 +1489,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 
 		BOOL subsequent = ( [messageString rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
-		NSLog( @"%@", messageString );
 		
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
