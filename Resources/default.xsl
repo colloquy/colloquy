@@ -84,6 +84,13 @@
 
 	<xsl:template match="event">
 		<div class="event">
+			<span class="timestamp hidden">[</span>
+			<span class="timestamp">
+				<xsl:call-template name="short-time">
+					<xsl:with-param name="date" select="@occurred" />
+				</xsl:call-template>
+			</span>
+			<span class="timestamp hidden">] </span>
 			<xsl:apply-templates select="message/child::node()" mode="copy" />
 			<xsl:if test="reason!=''">
 				<span class="reason">
