@@ -21,10 +21,12 @@
 		_messageRegex = nil;
 		_ignoredUser = nil;
 		_ignoredMessage = nil;
+
 		[self setUser:user];
 		[self setMessage:message];
-		_rooms = [rooms copy];
-		_friendlyName = [friendlyName copy];
+
+		_rooms = [rooms copyWithZone:[self zone]];
+		_friendlyName = [friendlyName copyWithZone:[self zone]];
 		_permanent = permanent;
 	}
 
@@ -55,6 +57,14 @@
 	[_userRegex release];
 	[_messageRegex release];
 	[_friendlyName release];
+
+	_ignoredUser = nil;
+	_ignoredMessage = nil;
+	_rooms = nil;
+	_userRegex = nil;
+	_messageRegex = nil;
+	_friendlyName = nil;
+
 	[super dealloc];
 }
 
@@ -109,7 +119,7 @@
 - (void) setFriendlyName:(NSString *) friendlyName {
     if( _friendlyName != friendlyName ) {
         [_friendlyName release];
-        _friendlyName = [friendlyName copy];
+        _friendlyName = [friendlyName copyWithZone:[self zone]];
     }
 }
 
@@ -121,7 +131,7 @@
 
 - (void) setRooms:(NSArray *) rooms {
     [_rooms autorelease];
-	_rooms = [rooms copy];
+	_rooms = [rooms copyWithZone:[self zone]];
 }
 
 #pragma mark -
@@ -133,10 +143,12 @@
 - (void) setMessage:(NSString *) message {
     if( _ignoredMessage != message ) {
         [_ignoredMessage release];
-        _ignoredMessage = [message copy];
+        _ignoredMessage = [message copyWithZone:[self zone]];
     }
 
 	[_messageRegex release];
+	_messageRegex = nil;
+
 	if( message && ( [message length] > 2 ) && [message hasPrefix:@"/"] && [message hasSuffix:@"/"] )
 		_messageRegex = [[AGRegex alloc] initWithPattern:[message substringWithRange:NSMakeRange( 1, [message length] - 2)] options:AGRegexCaseInsensitive];
 }
@@ -150,10 +162,12 @@
 - (void) setUser:(NSString *) user {
     if( _ignoredUser != user ) {
         [_ignoredUser release];
-        _ignoredUser = [user copy];
+        _ignoredUser = [user copyWithZone:[self zone]];
     }
 
 	[_userRegex release];
+	_userRegex = nil;
+
 	if( user && ( [user length] > 2 ) && [user hasPrefix:@"/"] && [user hasSuffix:@"/"] )
 		_userRegex = [[AGRegex alloc] initWithPattern:[user substringWithRange:NSMakeRange( 1, [user length] - 2 )] options:AGRegexCaseInsensitive];
 }
