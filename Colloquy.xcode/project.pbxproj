@@ -827,8 +827,8 @@
 			lastKnownFileType = wrapper.framework;
 			name = ChatCore.framework;
 			path = build/ChatCore.framework;
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		1C3B290806529E720066197C = {
 			fileRef = 1C3B290706529E720066197C;
@@ -1151,16 +1151,16 @@
 			lastKnownFileType = wrapper.framework;
 			name = libsilc.framework;
 			path = Frameworks/libsilc.framework;
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		1C5A249206FA6AAA00A51F10 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = libsilcclient.framework;
 			path = Frameworks/libsilcclient.framework;
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		1C5A249306FA6AAA00A51F10 = {
 			fileRef = 1C5A249106FA6AAA00A51F10;
@@ -1221,8 +1221,8 @@
 			lastKnownFileType = wrapper.framework;
 			name = AGRegex.framework;
 			path = Frameworks/AGRegex.framework;
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		1C6C75460630AD5300698F55 = {
 			fileRef = 1C6C75450630AD5300698F55;
