@@ -179,7 +179,9 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
 			int traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
 			if( traits & NSBoldFontMask ) bold = YES;
-			if( traits & NSItalicFontMask || [[dict objectForKey:NSObliquenessAttributeName] floatValue] > 0 ) italic = YES;
+			if( traits & NSItalicFontMask) italic = YES;
+			NSNumber *oblique = [dict objectForKey:NSObliquenessAttributeName];
+			if( oblique && [oblique floatValue] > 0. ) italic = YES;
 			if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
 			if( [[dict objectForKey:NSStrikethroughStyleAttributeName] intValue] ) strikethrough = YES;
 		}
@@ -341,8 +343,9 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			switch( c ) {
 			case '\017': // reset all
 				boldStack = italicStack = underlineStack = strikeStack = 0;
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:( NSBoldFontMask | NSItalicFontMask )];
+				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSBoldFontMask];
 				if( font ) [attributes setObject:font forKey:NSFontAttributeName];
+				removeItalicOrObliqueFont( attributes );
 				[attributes removeObjectForKey:NSStrikethroughStyleAttributeName];
 				[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
 				[attributes removeObjectForKey:NSForegroundColorAttributeName];
@@ -530,6 +533,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 						break;
 					case 'N': // normal (reset)
 						boldStack = italicStack = underlineStack = strikeStack = 0;
+						NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSBoldFontMask];
+						if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 						removeItalicOrObliqueFont( attributes );
 						[attributes removeObjectForKey:NSStrikethroughStyleAttributeName];
 						[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
@@ -575,7 +580,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			int traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
 			if( traits & NSBoldFontMask ) bold = YES;
 			if( traits & NSItalicFontMask ) italic = YES;
-			if( [[dict objectForKey:NSObliquenessAttributeName] floatValue] > 0 ) italic = YES;
+			NSNumber *oblique = [dict objectForKey:NSObliquenessAttributeName];
+			if( oblique && [oblique floatValue] > 0. ) italic = YES;
 			if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
 		}
 
@@ -703,7 +709,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				int traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
 				if( traits & NSBoldFontMask ) bold = YES;
 				if( traits & NSItalicFontMask ) italic = YES;
-				if( [[dict objectForKey:NSObliquenessAttributeName] floatValue] > 0 ) italic = YES;
+				NSNumber *oblique = [dict objectForKey:NSObliquenessAttributeName];
+				if( oblique && [oblique floatValue] > 0. ) italic = YES;
 				if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
 				if( [[dict objectForKey:NSStrikethroughStyleAttributeName] intValue] ) strikethrough = YES;
 			}

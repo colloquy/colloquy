@@ -8,6 +8,37 @@
 #import <libxml/xinclude.h>
 #import "NSAttributedStringMoreAdditions.h"
 
+static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
+	NSFontManager *fm = [NSFontManager sharedFontManager];
+	NSFont *font = [attrs objectForKey:NSFontAttributeName];
+	if( ! font )
+		font = [NSFont userFontOfSize:12];
+	if( ! ( [fm traitsOfFont:font] & NSItalicFontMask ) ) {
+		NSFont *newFont = [fm convertFont:font toHaveTrait:NSItalicFontMask];
+		if( newFont == font ) {
+			// font couldn't be made italic
+			[attrs setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue]
+					  forKey:NSObliquenessAttributeName];
+		} else {
+			// We got an italic font
+			[attrs setObject:newFont forKey:NSFontAttributeName];
+			[attrs removeObjectForKey:NSObliquenessAttributeName];
+		}
+	}
+}
+
+static void removeItalicOrObliqueFont( NSMutableDictionary *attrs ) {
+	NSFontManager *fm = [NSFontManager sharedFontManager];
+	NSFont *font = [attrs objectForKey:NSFontAttributeName];
+	if( ! font )
+		font = [NSFont userFontOfSize:12];
+	if( [fm traitsOfFont:font] & NSItalicFontMask ) {
+		font = [fm convertFont:font toNotHaveTrait:NSItalicFontMask];
+		[attrs setObject:font forKey:NSFontAttributeName];
+	}
+	[attrs removeObjectForKey:NSObliquenessAttributeName];
+}
+
 static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary *currentAttributes ) {
 	NSScanner *scanner = [NSScanner scannerWithString:[NSString stringWithUTF8String:style]];
 	NSMutableString *unhandledStyles = [NSMutableString string];
@@ -54,25 +85,11 @@ static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary 
 			}
 		} else if( [prop isEqualToString:@"font-style"] ) {
 			if( [attr rangeOfString:@"italic"].location != NSNotFound ) {
-				NSFont *oldFont = [currentAttributes objectForKey:NSFontAttributeName];
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:oldFont toHaveTrait:NSItalicFontMask];
-				if( ! [font isEqual:oldFont] ) {
-					[currentAttributes setObject:font forKey:NSFontAttributeName];
-					handled = YES;
-				} else {
-					[currentAttributes setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue] forKey:NSObliquenessAttributeName];
-					handled = YES;
-				}
+				setItalicOrObliqueFont( currentAttributes );
+				handled = YES;
 			} else {
-				NSFont *oldFont = [currentAttributes objectForKey:NSFontAttributeName];
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:oldFont toNotHaveTrait:NSItalicFontMask];
-				if( ! [font isEqual:oldFont] ) {
-					[currentAttributes setObject:font forKey:NSFontAttributeName];
-					handled = YES;
-				} else {
-					[currentAttributes removeObjectForKey:NSObliquenessAttributeName];
-					handled = YES;
-				}
+				removeItalicOrObliqueFont( currentAttributes );
+				handled = YES;
 			}
 		} else if( [prop isEqualToString:@"font-variant"] ) {
 			if( [attr rangeOfString:@"small-caps"].location != NSNotFound ) {
