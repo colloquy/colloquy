@@ -933,20 +933,6 @@
 			settings = {
 			};
 		};
-		1C8CE1DC05A91F160020D841 = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = support.scpt;
-			path = Resources/support.scpt;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C8CE1DD05A91F160020D841 = {
-			fileRef = 1C8CE1DC05A91F160020D841;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C8CE1EB05A921A00020D841 = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -1078,6 +1064,7 @@
 				1CCA236E05956E7C0050EDE0,
 				1CD733CB05A0E2470080F952,
 				1C6EA24305A738DD006A559F,
+				1CD4BD9505AA309A00F72EE6,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1327,8 +1314,9 @@
 				1C59BD6A059E387B001487E2,
 				1C6EA23E05A735D6006A559F,
 				1C6EA66205A76038006A559F,
-				1C8CE1DD05A91F160020D841,
 				1C8CE1EC05A921A00020D841,
+				1CD4BD9D05AA773800F72EE6,
+				1CD4BD9E05AA773800F72EE6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1798,6 +1786,7 @@
 				1CCA236F05956E7C0050EDE0,
 				1CD733CC05A0E2470080F952,
 				1C6EA24405A738DD006A559F,
+				1CD4BD9605AA309A00F72EE6,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2860,6 +2849,62 @@
 			settings = {
 			};
 		};
+		1CD4BD9305AA309A00F72EE6 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSURLAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4BD9405AA309A00F72EE6 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSURLAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4BD9505AA309A00F72EE6 = {
+			fileRef = 1CD4BD9305AA309A00F72EE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CD4BD9605AA309A00F72EE6 = {
+			fileRef = 1CD4BD9405AA309A00F72EE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CD4BD9B05AA773800F72EE6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = favorites.tif;
+			path = Resources/favorites.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CD4BD9C05AA773800F72EE6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = favoritesPressed.tif;
+			path = Resources/favoritesPressed.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CD4BD9D05AA773800F72EE6 = {
+			fileRef = 1CD4BD9B05AA773800F72EE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CD4BD9E05AA773800F72EE6 = {
+			fileRef = 1CD4BD9C05AA773800F72EE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CD6C413051DFA1C00A8FE10 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3414,6 +3459,8 @@
 				1CC6FD62054B70BC0075807C,
 				F551EE490209FB3301EE70DE,
 				F551EE4A0209FB3301EE70DE,
+				1CD4BD9405AA309A00F72EE6,
+				1CD4BD9305AA309A00F72EE6,
 			);
 			isa = PBXGroup;
 			name = "Other Sources";
@@ -3438,7 +3485,6 @@
 				1C746A95050CF86B000001C8,
 				F5675B8601DB767601EE70DE,
 				1CC6FD38054AF1940075807C,
-				1C8CE1DC05A91F160020D841,
 				1CCA510D0598108000F0A4CD,
 				1CCA510E0598108000F0A4CD,
 				1C59BD61059E2E02001487E2,
@@ -4216,6 +4262,8 @@
 				1CBB23CE04EFE233000001C8,
 				1CBB23CF04EFE233000001C8,
 				1CBB23D004EFE233000001C8,
+				1CD4BD9B05AA773800F72EE6,
+				1CD4BD9C05AA773800F72EE6,
 			);
 			isa = PBXGroup;
 			name = Widgets;
