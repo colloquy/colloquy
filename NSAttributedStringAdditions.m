@@ -1,5 +1,7 @@
-#import "NSAttributedStringAdditions.h"
 #import <Cocoa/Cocoa.h>
+#import "NSAttributedStringAdditions.h"
+#import "NSColorAdditions.h"
+#import "NSStringAdditions.h"
 
 @implementation NSAttributedString (NSAttributedStringHTMLAdditions)
 - (NSData *) HTMLWithOptions:(NSDictionary *) options usingEncoding:(NSStringEncoding) encoding allowLossyConversion:(BOOL) loss {
