@@ -78,6 +78,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     selected = NO;
     trackingTag = 0;
     closeTrackingTag = 0;
+	toolTipTag = 0;
 	
     return(self);
 }
@@ -262,6 +263,8 @@ static NSImage		*tabCloseFrontRollover = nil;
                                     userData:closeUserData
                                 assumeInside:NSPointInRect(cursorLocation, [self _closeButtonRect])];
     hoveringClose = NSPointInRect(cursorLocation, [self _closeButtonRect]);
+	
+	toolTipTag = [view addToolTipRect:trackRect owner:view userData:NULL];
 }
 
 //Remove our tracking rects
@@ -272,6 +275,8 @@ static NSImage		*tabCloseFrontRollover = nil;
 
     [view removeTrackingRect:closeTrackingTag]; closeTrackingTag = 0;
     [closeUserData autorelease]; closeUserData = nil;
+	
+	[view removeToolTip:toolTipTag]; toolTipTag = 0;
 }
 
 //Mouse entered our tabs (or close button)

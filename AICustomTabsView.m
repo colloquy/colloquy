@@ -664,6 +664,19 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
     return(nil);
 }
 
+//Tooltip ------------------------------------------------------------------------------------------------------
+#pragma mark Tooltip
+//Return a tooltip
+- (NSString *) view:(NSView *) view stringForToolTip:(NSToolTipTag) tag point:(NSPoint) point userData:(void *) userData {
+	NSPoint		location = [self convertPoint:point fromView:nil];
+    AICustomTabCell	*tabCell = [self tabAtPoint:location];
+	
+    //Pass this on to our delegate
+    if(tabCell && [delegate respondsToSelector:@selector(customTabView:toolTipForTabViewItem:)]){
+        return([delegate customTabView:self toolTipForTabViewItem:[tabCell tabViewItem]]);
+    }
+    return(nil);
+}
 
 //Dragging -------------------------------------------------------------------------------------------------------------
 #pragma mark Dragging

@@ -32,6 +32,7 @@
     NSDictionary        *userData;
     NSTrackingRectTag   closeTrackingTag;
     NSDictionary        *closeUserData;
+	NSToolTipTag		toolTipTag;
     
     NSTabViewItem		*tabViewItem;
     NSRect				frame;
