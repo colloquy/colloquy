@@ -80,17 +80,17 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", nil];
 	if( url ) [options setObject:url forKey:@"BaseURL"];
 
-	// we suround the fragment in the #01fe02 green color so we can later key it out and strip it
+	// we suround the fragment in the #01FE02 green color so we can later key it out and strip it
 	// this will result in colorless areas of our string, letting the color be defined by the interface
 
-	NSString *render = [NSString stringWithFormat:@"<span style=\"color: #01fe02\">%@</span>", fragment];
+	NSString *render = [NSString stringWithFormat:@"<span style=\"color: #01FE02\">%@</span>", fragment];
 	NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:options documentAttributes:NULL];
 
 	NSRange limitRange, effectiveRange;
 	limitRange = NSMakeRange( 0, [result length] );
 	while( limitRange.length > 0 ) {
 		NSColor *color = [result attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
-		if( [[color HTMLAttributeValue] isEqualToString:@"#01fe02"] ) // strip the color if it matched
+		if( [[color HTMLAttributeValue] isEqualToString:@"#01FE02"] ) // strip the color if it matched
 			[result removeAttribute:NSForegroundColorAttributeName range:effectiveRange];
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
