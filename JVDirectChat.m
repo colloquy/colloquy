@@ -13,7 +13,7 @@
 #import "NSAttributedStringAdditions.h"
 #import "NSStringAdditions.h"
 
-static const NSStringEncoding JVAllowedTextEncodings[] = {
+const NSStringEncoding JVAllowedTextEncodings[] = {
 	/* Universal */
 	NSUTF8StringEncoding,
 	NSNonLossyASCIIStringEncoding,
