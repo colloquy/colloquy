@@ -794,6 +794,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		xmlSetProp( child, "classification", [self _classificationForNickname:user] );		
 	}
 
+	xmlXPathFreeObject( result );
+
 	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 
