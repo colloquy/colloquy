@@ -10,6 +10,10 @@
 	<array>
 		<integer>5</integer>
 	</array>
+	<key>IBOpenObjects</key>
+	<array>
+		<integer>706</integer>
+	</array>
 	<key>IBSystem Version</key>
 	<string>7M34</string>
 </dict>
