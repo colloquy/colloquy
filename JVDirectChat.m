@@ -1296,7 +1296,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}
 
 	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:user andTranscript:self];
-	[cmessage setEnvelopeIdentifier:[NSString locallyUniqueString]];
 	[cmessage setMessageIdentifier:identifier];
 	[cmessage setAction:action];
 
@@ -1396,7 +1395,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		xmlDocSetRootElement( doc, root );
 	} else {
 		root = xmlNewNode( NULL, "envelope" );
-		xmlSetProp( root, "id", [[cmessage envelopeIdentifier] UTF8String] );
 		xmlDocSetRootElement( doc, root );
 
 		/* if( [user isEqualToString:[self target]] && _buddy ) {

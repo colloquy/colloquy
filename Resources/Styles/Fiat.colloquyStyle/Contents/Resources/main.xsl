@@ -105,7 +105,7 @@
 				</xsl:choose>
 			</xsl:variable>
 
-			<span id="{@id}" class="{$senderClasses}">
+			<span class="{$senderClasses}">
 				<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
 				<span class="header_top">&#8203;</span>
 				<span class="header">

@@ -87,7 +87,6 @@
 		_objectSpecifier = nil;
 		_transcript = nil;
 		_messageIdentifier = nil;
-		_envelopeIdentifier = nil;
 		_sender = nil;
 		_htmlMessage = nil;
 		_attributedMessage = nil;
@@ -109,10 +108,6 @@
 		xmlChar *idStr = xmlGetProp( (xmlNode *) _node, "id" );
 		_messageIdentifier = ( idStr ? [[NSString allocWithZone:[self zone]] initWithUTF8String:idStr] : nil );
 		xmlFree( idStr );
-
-		idStr = xmlGetProp( ((xmlNode *) _node ) -> parent, "id" );
-		_envelopeIdentifier = ( idStr ? [[NSString allocWithZone:[self zone]] initWithUTF8String:idStr] : nil );
-		xmlFree( idStr );
 	}
 
 	return self;
@@ -126,14 +121,12 @@
 	[ret setAction:_action];
 	[ret setHighlighted:_highlighted];
 	[ret setMessageIdentifier:_messageIdentifier];
-	[ret setEnvelopeIdentifier:_envelopeIdentifier];
 
 	return ret;
 }
 
 - (void) dealloc {
 	[_messageIdentifier release];
-	[_envelopeIdentifier release];
 	[_sender release];
 	[_htmlMessage release];
 	[_attributedMessage release];
@@ -144,7 +137,6 @@
 	_transcript = nil;
 	_sender = nil;
 	_messageIdentifier = nil;
-	_envelopeIdentifier = nil;
 	_htmlMessage = nil;
 	_attributedMessage = nil;
 	_date = nil;
@@ -217,10 +209,6 @@
 
 - (NSString *) messageIdentifier {
 	return _messageIdentifier;
-}
-
-- (NSString *) envelopeIdentifier {
-	return _envelopeIdentifier;
 }
 
 #pragma mark -
@@ -336,10 +324,5 @@
 - (void) setMessageIdentifier:(NSString *) identifier {
 	[_messageIdentifier autorelease];
 	_messageIdentifier = [identifier copyWithZone:[self zone]];
-}
-
-- (void) setEnvelopeIdentifier:(NSString *) identifier {
-	[_envelopeIdentifier autorelease];
-	_envelopeIdentifier = [identifier copyWithZone:[self zone]];
 }
 @end

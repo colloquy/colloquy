@@ -137,7 +137,7 @@
 				</xsl:choose>
 			</xsl:variable>
 
-			<span id="{@id}">
+			<span>
 				<span id="{message[not( @ignored = 'yes' )][1]/@id}" class="{$messageClass}">
 					<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
 					<span class="header">

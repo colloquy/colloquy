@@ -56,17 +56,6 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<xsl:variable name="properIdentifier">
-			<xsl:choose>
-				<xsl:when test="name() = 'message'">
-					<xsl:value-of select="@id" />
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="message[1]/@id" />
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
 		<xsl:variable name="memberLink">
 			<xsl:choose>
 				<xsl:when test="sender/@identifier or ../sender/@identifier">
@@ -81,7 +70,7 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<div id="{$properIdentifier}" class="{$allClasses}">
+		<div id="{message[1]/@id | @id}" class="{$allClasses}">
 			<span class="timestamp hidden">[</span>
 			<span class="timestamp">
 				<xsl:call-template name="short-time">

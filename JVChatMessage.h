@@ -6,7 +6,6 @@
 	@protected
 	/* xmlNode */ void *_node;
 	NSString *_messageIdentifier;
-	NSString *_envelopeIdentifier;
 	NSScriptObjectSpecifier *_objectSpecifier;
 	JVChatTranscript *_transcript;
 	id _sender;
@@ -38,7 +37,6 @@
 
 - (JVChatTranscript *) transcript;
 - (NSString *) messageIdentifier;
-- (NSString *) envelopeIdentifier;
 
 - (NSScriptObjectSpecifier *) objectSpecifier;
 - (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier;
@@ -63,5 +61,4 @@
 
 - (void) setTranscript:(JVChatTranscript *) transcript;
 - (void) setMessageIdentifier:(NSString *) identifier;
-- (void) setEnvelopeIdentifier:(NSString *) identifier;
 @end

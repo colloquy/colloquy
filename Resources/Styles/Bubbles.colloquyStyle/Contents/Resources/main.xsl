@@ -52,7 +52,7 @@
 				</xsl:choose>
 			</xsl:variable>
 	
-			<table id="{@id}" class="{$messageClass}" cellpadding="0" cellspacing="0">
+			<table class="{$messageClass}" cellpadding="0" cellspacing="0">
 			<tr>
 				<xsl:choose>
 					<xsl:when test="sender/@self = 'yes'">
