@@ -46,7 +46,7 @@ typedef enum {
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;
 
-+ (id) updateExternalIPAddress;
++ (void) updateExternalIPAddress;
 
 - (id) initWithDCCFileRecord:(void *) record fromConnection:(MVChatConnection *) connection;
 
