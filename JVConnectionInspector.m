@@ -78,6 +78,9 @@
 	[prototypeCell setImageScaling:NSScaleNone];
 	[column setDataCell:prototypeCell];
 
+	[editRules setTarget:self];
+	[editRules setDoubleAction:@selector( configureRule: )];
+
 	_ignoreRules = [[MVConnectionsController defaultManager] ignoreRulesForConnection:_connection];
 }
 
@@ -240,8 +243,8 @@
 
 	[editRuleName setStringValue:[rule friendlyName]];
 	[makeRulePermanent setState:( [rule isPermanent] ? NSOnState : NSOffState )];
-	[ruleUsesSender setState:( ! [rule user] ? NSOffState : NSOnState )];
-	[ruleUsesMessage setState:( ! [rule message] ? NSOffState : NSOnState )];
+	[ruleUsesSender setState:( ! [[rule user] length] ? NSOffState : NSOnState )];
+	[ruleUsesMessage setState:( ! [[rule message] length] ? NSOffState : NSOnState )];
 	[ruleUsesRooms setState:( ! [[rule inRooms] count] ? NSOffState : NSOnState )];
 	[senderType selectItemAtIndex:( regexUser ? 1 : 0 )];
 	[messageType selectItemAtIndex:( regexMessage ? 1 : 0 )];
