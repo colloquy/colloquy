@@ -208,11 +208,14 @@
 					<element code="crmM" type="chat room panel" access="r">
 						<cocoa method="chatRooms"/>
 					</element>
-					<element type="connection">
+					<element type="connection" access="r">
 						<cocoa method="chatConnections"/>
 					</element>
-					<element type="buddy">
+					<element type="buddy" access="r">
 						<cocoa method="chatBuddies"/>
+					</element>
+					<element type="file transfer" access="r">
+						<cocoa method="fileTransfers"/>
 					</element>
 				</elements>
 				<properties>
@@ -792,6 +795,47 @@
 						<cocoa method=" "/>
 					</responds-to>
 				</responds-to-commands>
+			</class>
+			<class name="file transfer" code="flTx" description="Represents a file transfer with another chat user.">
+				<cocoa class="MVFileTransfer"/>
+				<properties>
+					<property name="id" code="ID  " description="The unique identifier of the file transfer." type="number" access="r">
+						<cocoa method="uniqueIdentifier"/>
+					</property>
+					<property name="type" code="typA" description="The type of this transfer." type="file transfer type" access="r">
+						<cocoa method="scriptType"/>
+					</property>
+					<property name="file" code="kfil" description="The file this transfer is associated with." type="file" access="r">
+						<cocoa method="scriptFilePath"/>
+					</property>
+					<property name="status" code="stsA" description="The current status of the transfer." type="file transfer status" access="r">
+						<cocoa method="status"/>
+					</property>
+					<property name="start date" code="sDtA" description="The date and time this file transfer started." type="date" access="r">
+						<cocoa method="startDate"/>
+					</property>
+					<property name="start offset" code="sOfA" description="The location (offset) in the file where transfer was resumed." type="number" access="r">
+						<cocoa method="startOffset"/>
+					</property>
+					<property name="chat user" code="chUs" description="The chat user this transfer is with." type="chat user" access="r">
+						<cocoa method="user"/>
+					</property>
+					<property name="host address" code="HoSA" description="The address of the other user engaged in the transfer." type="string" access="r">
+						<cocoa method="hostString"/>
+					</property>
+					<property name="port" code="pOrA" description="The port this the transfer is using." type="number" access="r">
+						<cocoa method="port"/>
+					</property>
+					<property name="passive" code="pAsA" description="Is the transfer using passive mode?" type="boolean" access="r">
+						<cocoa method="isPassive"/>
+					</property>
+					<property name="final size" code="fSzA" description="The final expected size (in bytes) of the file." type="number" access="r">
+						<cocoa method="finalSize"/>
+					</property>
+					<property name="transfered size" code="TrzA" description="The current size (in bytes) this file has transfered." type="number" access="r">
+						<cocoa method="transfered"/>
+					</property>
+				</properties>
 			</class>
 		</classes>
 		<commands>
