@@ -208,7 +208,7 @@
 					<property name="action tense" code="isAc" description="Does the message have action tense?" type="boolean" access="rw">
 						<cocoa method="isAction"/>
 					</property>
-					<property name="HTML" code="maHA" description="The message with posiable HTML formatting." type="string" access="rw">
+					<property name="HTML" code="maHA" description="The message with possible HTML formatting." type="string" access="rw">
 						<cocoa method="bodyAsHTML"/>
 					</property>
 					<property name="ignore status" code="iGsA" description="If the message was ignored with one of the ignore rules." type="ignore status" access="rw">
