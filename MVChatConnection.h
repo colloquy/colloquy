@@ -236,8 +236,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 #pragma mark -
 
 @interface NSObject (MVChatPluginConnectionSupport)
-- (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection;
-- (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection;
+- (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user;
+- (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user;
 
 - (void) connected:(MVChatConnection *) connection;
 - (void) disconnecting:(MVChatConnection *) connection;
