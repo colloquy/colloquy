@@ -2,8 +2,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
-#import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/MVChatPlugin.h>
 
 #import "JVChatController.h"
 #import "MVFileTransferController.h"
