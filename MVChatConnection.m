@@ -627,6 +627,8 @@ static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, cons
 	CHANNEL_REC *room = channel_find( (SERVER_REC *) server, channel );
 	NICK_REC *nickname = nicklist_find( room, nick );
 
+	if( ! nickname ) return;
+
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	[info setObject:[NSString stringWithUTF8String:nickname -> nick] forKey:@"nickname"];
 	[info setObject:[NSNumber numberWithBool:nickname -> serverop] forKey:@"serverOperator"];
@@ -1136,6 +1138,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (NSString *) nickname {
+	if( [self isConnected] ) return [NSString stringWithUTF8String:[self _irssiConnection] -> nick];
 	return [[_nickname retain] autorelease];
 }
 
