@@ -897,15 +897,16 @@ static void MVChatUserIdle( IRC_SERVER_REC *server, const char *data ) {
 }
 
 static void MVChatUserWhoisComplete( IRC_SERVER_REC *server, const char *data ) {
-	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+	if( data != NULL ) {
+		MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+		char *nick = NULL;
+		char *params = event_get_params( data, 2, NULL, &nick );
 
-	char *nick = NULL;
-	char *params = event_get_params( data, 2, NULL, &nick );
+		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotUserWhoisCompleteNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", nil]];		
+		[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotUserWhoisCompleteNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", nil]];		
-	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
-
-	g_free( params );
+		g_free( params );
+	}
 }
 
 #pragma mark -
