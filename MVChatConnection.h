@@ -176,6 +176,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) connect;
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname;
 - (void) disconnect;
+- (void) disconnectWithReason:(NSAttributedString *) reason;
 
 #pragma mark -
 

@@ -72,11 +72,11 @@
 	} else if( [command isEqualToString:@"globops"] ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"GLOBOPS :%@", [arguments string]]];
 		return YES;
-	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
-		[[NSApplication sharedApplication] terminate:nil];
+	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
+		[connection disconnectWithReason:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"disconnect"] ) {
-		[connection disconnect];
+	} else if( [command isEqualToString:@"exit"] ) {
+		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
 	} else if( [command isEqualToString:@"reload"] ) {
 		if( [[arguments string] isEqualToString:@"plugins"] ) {
@@ -249,7 +249,10 @@
 				[[room connection] unbanMember:arg inRoom:[room target]];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
+	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
+		[[room connection] disconnectWithReason:arguments];
+		return YES;
+	} else if( [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
 	} else if( [command isEqualToString:@"whois"] || [command isEqualToString:@"wi"] ) {
@@ -264,9 +267,6 @@
 		return YES;
 	} else if( [command isEqualToString:@"globops"] ) {
 		[[room connection] sendRawMessage:[NSString stringWithFormat:@"GLOBOPS :%@", [arguments string]]];
-		return YES;
-	} else if( [command isEqualToString:@"disconnect"] ) {
-		[[room connection] disconnect];
 		return YES;
 	} else if( [command isEqualToString:@"console"] ) {
 		id controller = [[_manager chatController] chatConsoleForConnection:[room connection] ifExists:NO];
@@ -352,11 +352,11 @@
 		return NO;
 	} else if( [command isEqualToString:@"clear"] ) {
 		[chat clearDisplay:nil];
-	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
-		[[NSApplication sharedApplication] terminate:nil];
+	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
+		[[chat connection] disconnectWithReason:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"disconnect"] ) {
-		[[chat connection] disconnect];
+	} else if( [command isEqualToString:@"exit"] ) {
+		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
 	} else if( [command isEqualToString:@"console"] ) {
 		id controller = [[_manager chatController] chatConsoleForConnection:[chat connection] ifExists:NO];
