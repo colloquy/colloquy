@@ -1,5 +1,5 @@
 #import <Foundation/NSObject.h>
-#import "MVChatPlugin.h"
+#import "MVChatPluginManager.h"
 
 @class NSString;
 @class MVChatConnection;
