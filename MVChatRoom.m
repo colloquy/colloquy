@@ -102,8 +102,7 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 }
 
 - (unsigned) hash {
-	// this hash assumes the MVChatConnection will return the same instance for equal rooms
-	return ( [[self uniqueIdentifier] hash] ^ [[self connection] hash] ^ (unsigned long) self );
+	return ( [[self uniqueIdentifier] hash] ^ [[self connection] hash] ^ [[self uniqueIdentifier] hash] );
 }
 
 #pragma mark -
