@@ -554,6 +554,7 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 }
 
 static void MVChatLeftRoom( CHANNEL_REC *channel ) {
+	if( channel -> kicked ) return;
 	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
@@ -674,9 +675,9 @@ static void MVChatUserAway( IRC_SERVER_REC *server, const char *data ) {
 
 static void MVChatSelfAwayChanged( IRC_SERVER_REC *server ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
-	
-	NSNumber *away = [NSNumber numberWithBool:(((SERVER_REC *)server)->usermode_away == TRUE)];
-	
+
+	NSNumber *away = [NSNumber numberWithBool:( ((SERVER_REC *)server) -> usermode_away == TRUE )];
+
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSelfAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:away, @"away", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
@@ -719,7 +720,7 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 	if( ! address ) address = "";
 
 	if( ! strncasecmp( nick, "NickServ", 8 ) && message ) {
-		if( strstr( message, "owned by someone else" ) || ( strstr( message, "NickServ" ) && strstr( message, "IDENTIFY" ) ) ) {
+		if( strstr( message, nick ) && strstr( message, "IDENTIFY" ) ) {
 			if( ! [self nicknamePassword] ) {
 				NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
