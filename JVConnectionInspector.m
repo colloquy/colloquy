@@ -36,7 +36,7 @@
 }
 
 - (NSSize) minSize {
-	return NSMakeSize( 265., 344. );
+	return NSMakeSize( 275., 298. );
 }
 
 - (NSString *) title {
