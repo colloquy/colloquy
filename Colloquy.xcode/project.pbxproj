@@ -332,80 +332,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C20B0940424A11100000102 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = French;
-			path = Languages/French.lproj/Colloquy.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C20B0980424A14100000102 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = French;
-			path = Languages/French.lproj/MVBuddyList.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C20B0990424A15300000102 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = French;
-			path = Languages/French.lproj/MVFileTransfer.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C20B09B0424A17700000102 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = French;
-			path = Languages/French.lproj/MVConnections.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C20B09C0424A18B00000102 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = French;
-			path = Languages/French.lproj/MVCrashCatcher.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C20B09D0424A19D00000102 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = French;
-			path = Languages/French.lproj/MVSoftwareUpdate.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C20B09E0424A1B700000102 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.rtf;
-			name = French;
-			path = Languages/French.lproj/Credits.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C20B09F0424A1C500000102 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = French;
-			path = Languages/French.lproj/InfoPlist.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C20B0A00424A1DE00000102 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = French;
-			path = Languages/French.lproj/Localizable.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C2462A205F9205900505752 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1215,9 +1141,9 @@
 				GCC_PREFIX_HEADER = "";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "\"Other Code/firetalk (cvs)\"";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
-				LIBRARY_SEARCH_PATHS = "\"Other Code/firetalk (cvs)\"";
+				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = Colloquy;
@@ -2893,7 +2819,6 @@
 		1CC7CAAE03C48E8B001C0D62 = {
 			children = (
 				1CC7CAAF03C48E8B001C0D62,
-				1C20B0980424A14100000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVBuddyList.nib;
@@ -2912,7 +2837,6 @@
 		1CC7CAB003C48E8B001C0D62 = {
 			children = (
 				1CC7CAB103C48E8B001C0D62,
-				1C20B0990424A15300000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVFileTransfer.nib;
@@ -3014,22 +2938,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			path = JVDirectChat.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CCB3C1505227E74000001C8 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = proxy.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CCB3C1605227E74000001C8 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = proxy.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3668,24 +3576,6 @@
 //F52
 //F53
 //F54
-		F50AC513037E2E3801A35792 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.c;
-			name = dummy.c;
-			path = "Other Code/firetalk (cvs)/dummy.c";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		F50AC514037E2E3801A35792 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = dummy.h;
-			path = "Other Code/firetalk (cvs)/dummy.h";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
 		F50B0A9F0170C89301A84BDE = {
 			children = (
 				F5394BBA0378DD7601A35792,
@@ -3940,88 +3830,12 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F52BA273037C13C201A35792 = {
-			children = (
-				F52BA282037C13C201A35792,
-				F52BA283037C13C201A35792,
-				F52BA281037C13C201A35792,
-				1CCB3C1605227E74000001C8,
-				1CCB3C1505227E74000001C8,
-				F52BA28C037C13C201A35792,
-				F52BA28D037C13C201A35792,
-				F52BA286037C13C201A35792,
-				F52BA287037C13C201A35792,
-				F50AC513037E2E3801A35792,
-				F50AC514037E2E3801A35792,
-			);
-			isa = PBXGroup;
-			name = "Firetalk Library";
-			path = "Other Code/firetalk (cvs)";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		F52BA281037C13C201A35792 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = "firetalk-int.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52BA282037C13C201A35792 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.c;
-			path = firetalk.c;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52BA283037C13C201A35792 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = firetalk.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F52BA284037C13C201A35792 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = text;
 			name = GPL;
 			path = "Other Code/firetalk (cvs)/GPL";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52BA286037C13C201A35792 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.c;
-			path = irc.c;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52BA287037C13C201A35792 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = irc.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52BA28C037C13C201A35792 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.c;
-			path = safestring.c;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52BA28D037C13C201A35792 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = safestring.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4066,7 +3880,6 @@
 		};
 		F5394BBA0378DD7601A35792 = {
 			children = (
-				F52BA273037C13C201A35792,
 				F52D043001873FC401EE70DE,
 				F52D043101873FC401EE70DE,
 				1C2EF7EC0427A40B00000102,
@@ -4092,7 +3905,6 @@
 		F5394BEB0378E23701A35792 = {
 			children = (
 				F5394BEC0378E23701A35792,
-				1C20B0940424A11100000102,
 			);
 			isa = PBXVariantGroup;
 			name = Colloquy.nib;
@@ -4111,7 +3923,6 @@
 		F5394BEF0378E23701A35792 = {
 			children = (
 				F5394BF00378E23701A35792,
-				1C20B09C0424A18B00000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVCrashCatcher.nib;
@@ -4130,7 +3941,6 @@
 		F5394BF10378E23701A35792 = {
 			children = (
 				F5394BF20378E23701A35792,
-				1C20B09D0424A19D00000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVSoftwareUpdate.nib;
@@ -4149,7 +3959,6 @@
 		F5394C070378E44D01A35792 = {
 			children = (
 				F5394C080378E44D01A35792,
-				1C20B09E0424A1B700000102,
 			);
 			isa = PBXVariantGroup;
 			name = Credits.rtf;
@@ -4168,7 +3977,6 @@
 		F5394C090378E44D01A35792 = {
 			children = (
 				F5394C0A0378E44D01A35792,
-				1C20B09F0424A1C500000102,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -4188,7 +3996,6 @@
 		F5394C0B0378E44D01A35792 = {
 			children = (
 				F5394C0C0378E44D01A35792,
-				1C20B0A00424A1DE00000102,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -4595,7 +4402,6 @@
 		F5C4977B0385785401000102 = {
 			children = (
 				F5C4977C0385785401000102,
-				1C20B09B0424A17700000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVConnections.nib;
