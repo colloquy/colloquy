@@ -1463,6 +1463,102 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	[self addEventMessageToDisplay:message withName:name andAttributes:( [attributes isKindOfClass:[NSDictionary class]] ? attributes : nil )];
 }
+
+- (unsigned long) scriptTypedEncoding {
+	switch( _encoding ) {
+		default:
+		case NSUTF8StringEncoding: return 'utF8';
+		case NSASCIIStringEncoding: return 'ascI';
+		case NSNonLossyASCIIStringEncoding: return 'nlAs';
+		case NSISOLatin1StringEncoding: return 'isL1';
+		case NSISOLatin2StringEncoding: return 'isL2';
+		case (NSStringEncoding) 0x80000203: return 'isL3';
+		case (NSStringEncoding) 0x80000204: return 'isL4';
+		case (NSStringEncoding) 0x80000205: return 'isL5';
+		case (NSStringEncoding) 0x8000020F: return 'isL9';
+		case NSWindowsCP1250StringEncoding: return 'cp50';
+		case NSWindowsCP1251StringEncoding: return 'cp51';
+		case NSWindowsCP1252StringEncoding: return 'cp52';
+
+		case NSMacOSRomanStringEncoding: return 'mcRo';
+		case (NSStringEncoding) 0x8000001D: return 'mcEu';
+		case (NSStringEncoding) 0x80000007: return 'mcCy';
+		case (NSStringEncoding) 0x80000001: return 'mcJp';
+		case (NSStringEncoding) 0x80000019: return 'mcSc';
+		case (NSStringEncoding) 0x80000002: return 'mcTc';
+		case (NSStringEncoding) 0x80000003: return 'mcKr';
+
+		case (NSStringEncoding) 0x80000A02: return 'ko8R';
+
+		case (NSStringEncoding) 0x80000421: return 'wnSc';
+		case (NSStringEncoding) 0x80000423: return 'wnTc';
+		case (NSStringEncoding) 0x80000422: return 'wnKr';
+
+		case NSJapaneseEUCStringEncoding: return 'jpUC';
+		case (NSStringEncoding) 0x80000A01: return 'sJiS';
+		case NSShiftJISStringEncoding: return 'sJiS';
+
+		case (NSStringEncoding) 0x80000940: return 'krUC';
+
+		case (NSStringEncoding) 0x80000930: return 'scUC';
+		case (NSStringEncoding) 0x80000931: return 'tcUC';
+		case (NSStringEncoding) 0x80000632: return 'gb30';
+		case (NSStringEncoding) 0x80000631: return 'gbKK';
+		case (NSStringEncoding) 0x80000A03: return 'biG5';
+		case (NSStringEncoding) 0x80000A06: return 'bG5H';
+	}
+}
+
+- (void) setScriptTypedEncoding:(unsigned long) enc {
+	NSStringEncoding encoding = NSUTF8StringEncoding;
+
+	switch( enc ) {
+		default:
+		case 'utF8': encoding = NSUTF8StringEncoding; break;
+		case 'ascI': encoding = NSASCIIStringEncoding; break;
+		case 'nlAs': encoding = NSNonLossyASCIIStringEncoding; break;
+
+		case 'isL1': encoding = NSISOLatin1StringEncoding; break;
+		case 'isL2': encoding = NSISOLatin2StringEncoding; break;
+		case 'isL3': encoding = (NSStringEncoding) 0x80000203; break;
+		case 'isL4': encoding = (NSStringEncoding) 0x80000204; break;
+		case 'isL5': encoding = (NSStringEncoding) 0x80000205; break;
+		case 'isL9': encoding = (NSStringEncoding) 0x8000020F; break;
+
+		case 'cp50': encoding = NSWindowsCP1250StringEncoding; break;
+		case 'cp51': encoding = NSWindowsCP1251StringEncoding; break;
+		case 'cp52': encoding = NSWindowsCP1252StringEncoding; break;
+
+		case 'mcRo': encoding = NSMacOSRomanStringEncoding; break;
+		case 'mcEu': encoding = (NSStringEncoding) 0x8000001D; break;
+		case 'mcCy': encoding = (NSStringEncoding) 0x80000007; break;
+		case 'mcJp': encoding = (NSStringEncoding) 0x80000001; break;
+		case 'mcSc': encoding = (NSStringEncoding) 0x80000019; break;
+		case 'mcTc': encoding = (NSStringEncoding) 0x80000002; break;
+		case 'mcKr': encoding = (NSStringEncoding) 0x80000003; break;
+
+		case 'ko8R': encoding = (NSStringEncoding) 0x80000A02; break;
+
+		case 'wnSc': encoding = (NSStringEncoding) 0x80000421; break;
+		case 'wnTc': encoding = (NSStringEncoding) 0x80000423; break;
+		case 'wnKr': encoding = (NSStringEncoding) 0x80000422; break;
+
+		case 'jpUC': encoding = NSJapaneseEUCStringEncoding; break;
+		case 'sJiS': encoding = (NSStringEncoding) 0x80000A01; break;
+
+		case 'krUC': encoding = (NSStringEncoding) 0x80000940; break;
+
+		case 'scUC': encoding = (NSStringEncoding) 0x80000930; break;
+		case 'tcUC': encoding = (NSStringEncoding) 0x80000931; break;
+		case 'gb30': encoding = (NSStringEncoding) 0x80000632; break;
+		case 'gbKK': encoding = (NSStringEncoding) 0x80000631; break;
+		case 'biG5': encoding = (NSStringEncoding) 0x80000A03; break;
+		case 'bG5H': encoding = (NSStringEncoding) 0x80000A06; break;
+	}
+
+	[self setPreference:[NSNumber numberWithInt:encoding] forKey:@"encoding"];
+	[self changeEncoding:nil];
+}
 @end
 
 #pragma mark -
