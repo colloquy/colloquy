@@ -1589,6 +1589,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_add_last( "event 320", (SIGNAL_FUNC) MVChatUserIdentified );
 	signal_add_last( "event 322", (SIGNAL_FUNC) MVChatListRoom );
 	signal_add_last( "event 368", (SIGNAL_FUNC) MVChatBanListFinished );
+	signal_add_last( "chanquery ban end", (SIGNAL_FUNC) MVChatBanListFinished );
 	signal_add_first( "event 433", (SIGNAL_FUNC) MVChatNickTaken );
 	signal_add_last( "event 001", (SIGNAL_FUNC) MVChatNickFinal );
 
