@@ -689,10 +689,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void)outlineViewItemDidExpand:(NSNotification *)notification {
 	[chatViewsOutlineView sizeLastColumnToFit];
 }
-
-- (void)outlineViewSelectionDidChange:(NSNotification *)notification {
-	[self _refreshSelectionMenu];
-}
 @end
 
 #pragma mark -
