@@ -1,6 +1,9 @@
 #import <Cocoa/Cocoa.h>
 #import "JVStandardCommands.h"
 #import "MVConnectionsController.h"
+#import "JVChatController.h"
+#import "JVDirectChat.h"
+#import "JVChatRoom.h"
 #import "MVChatConnection.h"
 
 @implementation JVStandardCommands
@@ -10,12 +13,15 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(NSString *) room forConnection:(MVChatConnection *) connection {
-//	Class chatWindowControllerClass = NSClassFromString( @"MVChatWindowController" );
 	MVConnectionsController *connectionsController = (MVConnectionsController *)[NSClassFromString( @"MVConnectionsController" ) defaultManager];
-	NSStringEncoding encoding = NSUTF8StringEncoding; //[[chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES] encoding];
+	JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+	NSStringEncoding encoding = [(JVChatRoom *)[chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES] encoding];
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
-		if( [arguments length] )
+		if( [arguments length] ) {
+			JVChatRoom *chatView = [chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES];
+			[chatView echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 			[connection sendMessageToChatRoom:room attributedMessage:arguments withEncoding:encoding asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+		}
 		return YES;
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
 		NSString *to = nil;
@@ -32,19 +38,21 @@
 		}
 
 		if( [command isEqualToString:@"query"] ) {
-//			MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:to withConnection:connection ifExists:NO];
-//			[window showWindowAndMakeKey:nil];
+			JVDirectChat *chatView = [chatController chatViewControllerForUser:to withConnection:connection ifExists:NO];
+			if( [msg length] ) [chatView echoSentMessageToDisplay:msg asAction:NO];
 		}
 
 		if( [msg length] ) [connection sendMessageToUser:to attributedMessage:msg withEncoding:encoding asAction:NO];
 		return YES;
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
-//		NSEnumerator *enumerator = [[chatWindowControllerClass roomChatWindowsForConnection:connection] keyEnumerator];
-//		id item = nil;
-//		if( ! [arguments length] ) return NO;
-//		while( ( item = [enumerator nextObject] ) )
-//			[connection sendMessageToChatRoom:item attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
-//		return YES;
+		if( ! [arguments length] ) return NO;
+		NSEnumerator *enumerator = [[chatController chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
+		id item = nil;
+		while( ( item = [enumerator nextObject] ) ) {
+			[connection sendMessageToChatRoom:[item target] attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
+			[item echoSentMessageToDisplay:arguments asAction:[command isEqualToString:@"ame"]];
+		}
+		return YES;
 	} else if( [command isEqualToString:@"nick"] ) {
 		NSString *nick = nil;
 		if( ! [arguments length] ) return NO;
@@ -197,13 +205,15 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toUser:(NSString *) user forConnection:(MVChatConnection *) connection {
-//	Class chatWindowControllerClass = NSClassFromString( @"MVChatWindowController" );
-//	Class connectionsControllerClass = NSClassFromString( @"MVConnectionsController" );
 	MVConnectionsController *connectionsController = (MVConnectionsController *)[NSClassFromString( @"MVConnectionsController" ) defaultManager];
-	NSStringEncoding encoding = NSUTF8StringEncoding;//[[chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES] encoding];
+	JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+	NSStringEncoding encoding = [(JVDirectChat *)[chatController chatViewControllerForUser:user withConnection:connection ifExists:YES] encoding];
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
-		if( [arguments length] )
+		if( [arguments length] ) {
+			JVDirectChat *chatView = [chatController chatViewControllerForUser:user withConnection:connection ifExists:YES];
+			[chatView echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 			[connection sendMessageToUser:user attributedMessage:arguments withEncoding:encoding asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+		}
 		return YES;
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
 		NSString *to = nil;
@@ -220,19 +230,21 @@
 		}
 
 		if( [command isEqualToString:@"query"] ) {
-//			MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:to withConnection:connection ifExists:NO];
-//			[window showWindowAndMakeKey:nil];
+			JVDirectChat *chatView = [chatController chatViewControllerForUser:to withConnection:connection ifExists:NO];
+			if( [msg length] ) [chatView echoSentMessageToDisplay:msg asAction:NO];
 		}
 
 		if( [msg length] ) [connection sendMessageToUser:to attributedMessage:msg withEncoding:encoding asAction:NO];
 		return YES;
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
-//		NSEnumerator *enumerator = [[chatWindowControllerClass roomChatWindowsForConnection:connection] keyEnumerator];
-//		id item = nil;
-//		if( ! [arguments length] ) return NO;
-//		while( ( item = [enumerator nextObject] ) )
-//			[connection sendMessageToChatRoom:item attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
-//		return YES;
+		if( ! [arguments length] ) return NO;
+		NSEnumerator *enumerator = [[chatController chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
+		id item = nil;
+		while( ( item = [enumerator nextObject] ) ) {
+			[connection sendMessageToChatRoom:[item target] attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
+			[item echoSentMessageToDisplay:arguments asAction:[command isEqualToString:@"ame"]];
+		}
+		return YES;
 	} else if( [command isEqualToString:@"nick"] ) {
 		NSString *nick = nil;
 		if( ! [arguments length] ) return NO;
@@ -302,10 +314,6 @@
 			return YES;
 		}
 		return NO;
-	} else if( [command isEqualToString:@"names"] ) {
-//		MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES];
-//		[window openMemberDrawer:nil];
-//		return YES;
 	} else if( [command isEqualToString:@"clear"] ) {
 //		MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES];
 //		[window clearDisplay:nil];
