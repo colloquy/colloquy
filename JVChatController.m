@@ -307,6 +307,8 @@ static JVChatController *sharedInstance = nil;
 		if( [[windowController window] isMainWindow] || ! [[NSApplication sharedApplication] isActive] )
 			break;
 
+	if( ! windowController ) windowController = [_chatWindows anyObject];
+
 	if( ! windowController ) windowController = [self newChatWindowController];
 
 	[windowController addChatViewController:controller];
