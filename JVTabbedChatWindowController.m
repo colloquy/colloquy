@@ -176,17 +176,17 @@
 #pragma mark -
 
 - (id <JVInspection>) objectToInspect {
-	if( [[chatViewsOutlineView window] firstResponder] == chatViewsOutlineView )
+	if( [chatViewsOutlineView numberOfSelectedRows] && [[chatViewsOutlineView window] firstResponder] == chatViewsOutlineView )
 		return [super objectToInspect];
-	if( [_activeViewController conformsToProtocol:@protocol( JVInspection )] )
+	else if( [_activeViewController conformsToProtocol:@protocol( JVInspection )] )
 		return (id <JVInspection>)_activeViewController;
 	return nil;
 }
 
 - (IBAction) getInfo:(id) sender {
-	if( [[chatViewsOutlineView window] firstResponder] == chatViewsOutlineView ) {
+	if( [chatViewsOutlineView numberOfSelectedRows] && [[chatViewsOutlineView window] firstResponder] == chatViewsOutlineView ) {
 		[super getInfo:sender];
-	} else if( [_activeViewController conformsToProtocol:@protocol( JVInspection )] && [_activeViewController conformsToProtocol:@protocol( JVInspection )] ) {
+	} else if( [_activeViewController conformsToProtocol:@protocol( JVInspection )] ) {
 		if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSAlternateKeyMask )
 			[JVInspectorController showInspector:_activeViewController];
 		else [[JVInspectorController inspectorOfObject:(id <JVInspection>)_activeViewController] show:sender];
@@ -203,6 +203,10 @@
 			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Hide Tab Bar", "hide tab bar menu title" )]];
 		}
 		return YES;
+	} else if( [menuItem action] == @selector( getInfo: ) ) {
+		if( [chatViewsOutlineView numberOfSelectedRows] && [[chatViewsOutlineView window] firstResponder] == chatViewsOutlineView ) return [super validateMenuItem:menuItem];
+		else if( [_activeViewController conformsToProtocol:@protocol( JVInspection )] ) return YES;
+		else return NO;
 	}
 	return [super validateMenuItem:menuItem];
 }
