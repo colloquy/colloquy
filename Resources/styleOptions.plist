@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>selector</key>
+		<string>body</string>
+		<key>property</key>
+		<string>color</string>
+		<key>important</key>
+		<true />
+		<key>default</key>
+		<string>#000000</string>
+		<key>description</key>
+		<string>Main text</string>
+		<key>type</key>
+		<string>color</string>
+	</dict>
+	<dict>
+		<key>selector</key>
+		<string>body</string>
+		<key>property</key>
+		<string>background-color</string>
+		<key>important</key>
+		<true />
+		<key>default</key>
+		<string>#ffffff</string>
+		<key>description</key>
+		<string>Background</string>
+		<key>type</key>
+		<string>color</string>
+	</dict>
+	<dict>
+		<key>selector</key>
+		<string>a:link</string>
+		<key>property</key>
+		<string>color</string>
+		<key>default</key>
+		<string>#0000aa</string>
+		<key>description</key>
+		<string>Links</string>
+		<key>type</key>
+		<string>color</string>
+	</dict>
+	<dict>
+		<key>selector</key>
+		<string>a:link</string>
+		<key>property</key>
+		<string>text-decoration</string>
+		<key>default</key>
+		<integer>0</integer>
+		<key>description</key>
+		<string>Underline links</string>
+		<key>type</key>
+		<string>list</string>
+		<key>options</key>
+		<array>
+			<string>Yes</string>
+			<string>No</string>
+		</array>
+		<key>values</key>
+		<array>
+			<string>underline</string>
+			<string>none</string>
+		</array>
+	</dict>
+</array>
+</plist>
