@@ -262,13 +262,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( ! firstName && lastName ) return lastName;
 	else if( firstName && ! lastName ) return firstName;
 	else if( firstName && lastName ) {
-		switch( [[ABAddressBook sharedAddressBook] defaultNameOrdering] ) {
-		default:
-		case kABFirstNameFirst:
-			return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-		case kABLastNameFirst:
-			return [NSString stringWithFormat:@"%@ %@", lastName, firstName];
-		}
+		return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
 	}
 
 	firstName = [self givenNickname];
