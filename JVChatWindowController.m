@@ -132,8 +132,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
+- (void) close {
+	[[JVChatController defaultManager] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
+	[[self window] orderOut:nil];
+	[self removeAllChatViewControllers];
+	[super close];
+}
+
 - (IBAction) closeCurrentPanel:(id) sender {
-	[[JVChatController defaultManager] disposeViewController:_activeViewController];
+	[self removeChatViewController:_activeViewController];
 }
 
 - (IBAction) selectPreviousPanel:(id) sender {
@@ -215,10 +222,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self _refreshList];
 	[self _refreshWindow];
 
-	if( ! [_views count] ) {
-		[[JVChatController defaultManager] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
-		[[self window] orderOut:nil];
-	}
+	if( ! [_views count] && [[self window] isVisible] )
+		[self close];
 }
 
 - (void) removeChatViewControllerAtIndex:(unsigned int) index {
@@ -235,8 +240,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self _refreshList];
 	[self _refreshWindow];
 
-	[[JVChatController defaultManager] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
-	[[self window] orderOut:nil];
+	if( [[self window] isVisible] )
+		[self close];
 }
 
 #pragma mark -
@@ -382,7 +387,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 @implementation JVChatWindowController (JVChatWindowControllerDelegate)
 - (void) windowWillClose:(NSNotification *) notification {
-	[[JVChatController defaultManager] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
+	if( [[self window] isVisible] ) [self close];
 }
 
 - (void) windowDidBecomeMain:(NSNotification *) notification {
