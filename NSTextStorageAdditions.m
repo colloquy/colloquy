@@ -2,11 +2,13 @@
 
 @implementation NSTextStorage (NSTextStorageAdditions)
 - (NSColor *) backgroundColor {
-	return [self attribute:NSBackgroundColorAttributeName atIndex:0 effectiveRange:NULL];
+	id color = [self attribute:NSBackgroundColorAttributeName atIndex:0 effectiveRange:NULL];
+	if( [color isKindOfClass:[NSColor class]] ) return color;
+	return (id)[NSNull null];
 }
 
 - (void) setBackgroundColor:(NSColor *) color {
-	if( ! color ) [self removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange( 0, [self length] )];
+	if( ! color || ! [color isKindOfClass:[NSColor class]] ) [self removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange( 0, [self length] )];
 	else [self addAttribute:NSBackgroundColorAttributeName value:color range:NSMakeRange( 0, [self length] )];
 }
 
@@ -14,11 +16,11 @@
 	id link = [self attribute:NSLinkAttributeName atIndex:0 effectiveRange:NULL];
 	if( [link isKindOfClass:[NSURL class]] ) return [link absoluteString];
 	else if( [link isKindOfClass:[NSString class]] ) return link;
-	return nil;
+	return (id)[NSNull null];
 }
 
 - (void) setHyperlink:(NSString *) link {
-	if( ! [link length] ) [self removeAttribute:NSLinkAttributeName range:NSMakeRange( 0, [self length] )];
+	if( ! [link isKindOfClass:[NSString class]] || ! [link length] ) [self removeAttribute:NSLinkAttributeName range:NSMakeRange( 0, [self length] )];
 	else [self addAttribute:NSLinkAttributeName value:link range:NSMakeRange( 0, [self length] )];
 }
 
@@ -62,7 +64,7 @@
 }
 
 - (void) setStyleClasses:(NSArray *) classes {
-	if( ! [classes count] ) [self removeAttribute:@"CSSClasses" range:NSMakeRange( 0, [self length] )];
+	if( ! [classes isKindOfClass:[NSArray class]] || ! [classes count] ) [self removeAttribute:@"CSSClasses" range:NSMakeRange( 0, [self length] )];
 	else [self addAttribute:@"CSSClasses" value:[NSMutableSet setWithArray:classes] range:NSMakeRange( 0, [self length] )];
 }
 @end
