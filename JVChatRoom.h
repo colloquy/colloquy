@@ -13,7 +13,7 @@
 	BOOL _kickedFromRoom;
 	BOOL _inRoom;
 	BOOL _keepAfterPart;
-	BOOL _recentlyJoined;
+	BOOL _banListSynced;
 }
 - (void) joined;
 - (void) parting;

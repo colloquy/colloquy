@@ -25,6 +25,9 @@ extern NSString *MVChatRoomPartedNotification;
 extern NSString *MVChatRoomKickedNotification;
 extern NSString *MVChatRoomInvitedNotification;
 
+extern NSString *MVChatRoomMemberUsersSyncedNotification;
+extern NSString *MVChatRoomBannedUsersSyncedNotification;
+
 extern NSString *MVChatRoomUserJoinedNotification;
 extern NSString *MVChatRoomUserPartedNotification;
 extern NSString *MVChatRoomUserKickedNotification;

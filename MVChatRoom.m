@@ -9,6 +9,9 @@ NSString *MVChatRoomPartedNotification = @"MVChatRoomPartedNotification";
 NSString *MVChatRoomKickedNotification = @"MVChatRoomKickedNotification";
 NSString *MVChatRoomInvitedNotification = @"MVChatRoomInvitedNotification";
 
+NSString *MVChatRoomMemberUsersSyncedNotification = @"MVChatRoomMemberUsersSyncedNotification";
+NSString *MVChatRoomBannedUsersSyncedNotification = @"MVChatRoomBannedUsersSyncedNotification";
+
 NSString *MVChatRoomUserJoinedNotification = @"MVChatRoomUserJoinedNotification";
 NSString *MVChatRoomUserPartedNotification = @"MVChatRoomUserPartedNotification";
 NSString *MVChatRoomUserKickedNotification = @"MVChatRoomUserKickedNotification";

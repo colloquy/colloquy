@@ -48,6 +48,12 @@ void silc_channel_get_clients_per_list_callback( SilcClient client, SilcClientCo
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomJoinedNotification object:room userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+
+	note = [NSNotification notificationWithName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];	
+
+	note = [NSNotification notificationWithName:MVChatRoomBannedUsersSyncedNotification object:room userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];	
 }
 
 static void silc_say( SilcClient client, SilcClientConnection conn, SilcClientMessageType type, char *msg, ... ) {

@@ -320,6 +320,12 @@ static void MVChatJoinedWhoList( CHANNEL_REC *channel ) {
 			}
 		}
 	}
+
+	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
+	if( ! room ) return;
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 static void MVChatLeftRoom( CHANNEL_REC *channel ) {
@@ -738,6 +744,22 @@ static void MVChatBanRemove( CHANNEL_REC *channel, BAN_REC *ban, const char *who
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", byMember, @"byUser", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+}
+
+static void MVChatBanListFinished( IRC_SERVER_REC *server, const char *data ) {
+	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
+	if( ! self ) return;
+
+	char *channel = NULL;
+	char *params = event_get_params( data, 2, NULL, &channel );
+
+	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
+	g_free( params );
+
+	if( ! room ) return;
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomBannedUsersSyncedNotification object:room userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];	
 }
 
 #pragma mark -
@@ -1591,6 +1613,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_add_last( "event 319", (SIGNAL_FUNC) MVChatUserChannels );
 	signal_add_last( "event 320", (SIGNAL_FUNC) MVChatUserIdentified );
 	signal_add_last( "event 322", (SIGNAL_FUNC) MVChatListRoom );
+	signal_add_last( "event 368", (SIGNAL_FUNC) MVChatBanListFinished );
 	signal_add_first( "event 433", (SIGNAL_FUNC) MVChatNickTaken );
 	signal_add_last( "event 001", (SIGNAL_FUNC) MVChatNickFinal );
 
@@ -1653,6 +1676,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_remove( "event 319", (SIGNAL_FUNC) MVChatUserChannels );
 	signal_remove( "event 320", (SIGNAL_FUNC) MVChatUserIdentified );
 	signal_remove( "event 322", (SIGNAL_FUNC) MVChatListRoom );
+	signal_remove( "event 368", (SIGNAL_FUNC) MVChatBanListFinished );
 	signal_remove( "event 433", (SIGNAL_FUNC) MVChatNickTaken );
 	signal_remove( "event 001", (SIGNAL_FUNC) MVChatNickFinal );
 

@@ -52,7 +52,7 @@
 		_nextMessageAlertMembers = [[NSMutableSet set] retain];
 		_kickedFromRoom = NO;
 		_keepAfterPart = NO;
-		_recentlyJoined = NO;
+		_banListSynced = NO;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _partedRoom: ) name:MVChatRoomPartedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _kicked: ) name:MVChatRoomKickedNotification object:target];
@@ -62,6 +62,10 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberKicked: ) name:MVChatRoomUserKickedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatRoomModeChangedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberModeChanged: ) name:MVChatRoomUserModeChangedNotification object:target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanned: ) name:MVChatRoomUserBannedNotification object:target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanRemoved: ) name:MVChatRoomUserBanRemovedNotification object:target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _membersSynced: ) name:MVChatRoomMemberUsersSyncedNotification object:target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _bannedMembersSynced: ) name:MVChatRoomBannedUsersSyncedNotification object:target];
 	}
 
 	return self;
@@ -324,7 +328,7 @@
 #pragma mark Join & Part Handling
 
 - (void) joined {
-	_recentlyJoined = YES;
+	_banListSynced = NO;
 	[_sortedMembers removeAllObjects];
 
 	NSEnumerator *enumerator = [[[self target] memberUsers] objectEnumerator];
@@ -354,15 +358,10 @@
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _selfNicknameChanged: ) name:MVChatConnectionNicknameAcceptedNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatRoomTopicChangedNotification object:[self target]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanned: ) name:MVChatRoomUserBannedNotification object:[self target]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanRemoved: ) name:MVChatRoomUserBanRemovedNotification object:[self target]];
-
-	[self performSelector:@selector( _resetRecentlyJoinedStatus ) withObject:nil afterDelay:3.];
 }	
 
 - (void) parting {
 	if( [[self target] isJoined] ) {
-		_recentlyJoined = NO;
 		_cantSendMessages = YES;
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), nil];
@@ -375,8 +374,6 @@
 
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:[self connection]];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:[self target]];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomUserBannedNotification object:[self target]];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomUserBanRemovedNotification object:[self target]];
 	}
 }
 
@@ -953,7 +950,7 @@
 }
 
 - (void) _memberBanned:(NSNotification *) notification {
-	if( _recentlyJoined ) return;
+	if( ! _banListSynced ) return;
 
 	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
 	JVChatRoomMember *byMbr = [self chatRoomMemberForUser:byUser];
@@ -1175,6 +1172,14 @@
 	}
 }
 
+- (void) _membersSynced:(NSNotification *) notification {
+	[self resortMembers];
+}
+
+- (void) _bannedMembersSynced:(NSNotification *) notification {
+	_banListSynced = YES;
+}
+
 - (void) _topicChanged:(id) sender {
 	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic] withBaseFont:[NSFont systemFontOfSize:11.]];
 	JVChatRoomMember *author = [self chatRoomMemberForUser:[[self target] topicAuthor]];
@@ -1223,10 +1228,6 @@
 
 - (void) _startChatWithNonMember:(id) sender {
 	[[JVChatController defaultManager] chatViewControllerForUser:[sender representedObject] ifExists:NO];
-}
-
-- (void) _resetRecentlyJoinedStatus {
-	_recentlyJoined = NO;
 }
 @end
 
