@@ -8,6 +8,7 @@
 	<title>%@</title>
 	<script type="text/ecmascript" defer="defer">
 		var scrollToBottomIsNeeded = false;
+		var smoothScroll = false;
 
 		function appendMessage( html ) {
 			checkIfScrollToBottomIsNeeded();
@@ -48,7 +49,7 @@
 		}
 
 		function scrollToBottom() {
-			if( document.body.scrollTop >= ( document.body.scrollHeight - ( window.innerHeight * 1.3 ) ) ) {
+			if( smoothScroll && document.body.scrollTop >= ( document.body.scrollHeight - ( window.innerHeight * 1.3 ) ) ) {
 				document.body.scrollTop += 5;
 				if( document.body.scrollTop < ( document.body.scrollHeight - window.innerHeight ) ) {
 					setTimeout( 'scrollToBottom()', 5 );
