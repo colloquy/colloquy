@@ -7,6 +7,7 @@
 #import "JVChatController.h"
 #import "MVApplicationController.h"
 #import "MVConnectionsController.h"
+#import "MVFileTransferController.h"
 #import "JVNotificationController.h"
 #import "JVInspectorController.h"
 #import "MVTableView.h"
@@ -420,7 +421,7 @@ static MVBuddyListController *sharedInstance = nil;
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		NSString *path = nil;
 		while( ( path = [enumerator nextObject] ) )
-			[connection sendFile:path toUser:[url user]];
+			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:path toUser:[url user]]];
 	}
 }
 
@@ -741,7 +742,7 @@ static MVBuddyListController *sharedInstance = nil;
 		id file = nil;
 
 		while( ( file = [enumerator nextObject] ) )
-			[connection sendFile:file toUser:[url user]];
+			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:file toUser:[url user]]];
 
 		return YES;
 	}

@@ -6,6 +6,7 @@
 #import "JVChatRoomMember.h"
 #import "JVChatController.h"
 #import "MVBuddyListController.h"
+#import "MVFileTransferController.h"
 #import "JVBuddy.h"
 #import "JVChatMemberInspector.h"
 
@@ -209,7 +210,7 @@
 }
 
 - (void) handleDraggedFile:(NSString *) path {
-	[[self connection] sendFile:path toUser:_nickname];
+	[[MVFileTransferController defaultManager] addFileTransfer:[[self connection] sendFile:path toUser:_nickname]];
 }
 
 #pragma mark -
@@ -320,7 +321,7 @@
 	if( [panel runModalForTypes:nil] == NSOKButton ) {
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		while( ( path = [enumerator nextObject] ) )
-			[[_parent connection] sendFile:path toUser:_nickname];
+			[[MVFileTransferController defaultManager] addFileTransfer:[[_parent connection] sendFile:path toUser:_nickname]];
 	}
 }
 

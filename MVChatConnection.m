@@ -1422,7 +1422,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user {
-	return nil;
+	return [[MVUploadFileTransfer transferWithSourceFile:path toUser:user onConnection:self] retain];
 }
 
 #pragma mark -

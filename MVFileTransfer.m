@@ -14,6 +14,8 @@
 #import "config.h"
 #import "dcc.h"
 #import "dcc-get.h"
+#import "dcc-send.h"
+#import "dcc-queue.h"
 #import "dcc-file.h"
 
 NSString *MVDownloadFileTransferOfferNotification = @"MVDownloadFileTransferOfferNotification";
@@ -21,6 +23,7 @@ NSString *MVFileTransferStartedNotification = @"MVFileTransferStartedNotificatio
 NSString *MVFileTransferFinishedNotification = @"MVFileTransferFinishedNotification";
 
 void dcc_send_resume( GET_DCC_REC *dcc );
+void dcc_queue_send_next( int queue );
 
 typedef struct {
 	MVFileTransfer *transfer;
@@ -35,6 +38,12 @@ typedef struct {
 - (void) _setConnection:(MVChatConnection *) connection;
 - (void) _setStatus:(MVFileTransferStatus) status;
 - (void) _destroying;
+@end
+
+#pragma mark -
+
+@interface MVChatConnection (MVChatConnectionPrivate)
+- (SERVER_REC *) _irssiConnection;
 @end
 
 #pragma mark -
@@ -135,6 +144,7 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 		_transfered = 0;
 		_startDate = nil;
 		_host = nil;
+		_user = nil;
 		_port = 0;
 		_startOffset = 0;
 	}
@@ -143,13 +153,16 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 }
 
 - (void) dealloc {
+	[self cancel];
 	[self _setDCCFileRecord:NULL];
 
 	[_startDate release];
 	[_host release];
+	[_user release];
 
 	_startDate = nil;
 	_host = nil;
+	_user = nil;
 
 	[super dealloc];
 }
@@ -215,6 +228,11 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	return _connection;
 }
 
+- (NSString *) user {
+	if( ! [self _DCCFileRecord] ) return _user;
+	return [NSString stringWithCString:[self _DCCFileRecord] -> nick];
+}
+
 #pragma mark -
 
 - (void) cancel {
@@ -267,6 +285,7 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	_transfered = [self transfered];
 	_startDate = [[self startDate] retain];
 	_host = [[self host] retain];
+	_user = [[self user] retain];
 	_port = [self port];
 	_startOffset = [self startOffset];
 
@@ -277,6 +296,34 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 #pragma mark -
 
 @implementation MVUploadFileTransfer
++ (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection {
+	int queue = dcc_queue_new();
+	NSString *source = [[path stringByStandardizingPath] copy];
+
+	char *tag = [connection _irssiConnection] -> tag;
+
+	if( 1 ) dcc_queue_add( queue, DCC_QUEUE_NORMAL, [nickname UTF8String], [source fileSystemRepresentation], tag, NULL );
+	else dcc_queue_add_passive( queue, DCC_QUEUE_NORMAL, [nickname UTF8String], [source fileSystemRepresentation], tag, NULL );
+
+	dcc_queue_send_next( queue );
+
+	DCC_REC *dcc = dcc_find_request( DCC_SEND_TYPE, [nickname UTF8String], [[source lastPathComponent] fileSystemRepresentation] );
+
+	MVUploadFileTransfer *ret = [[[MVUploadFileTransfer alloc] initWithDCCFileRecord:dcc fromConnection:connection] autorelease];
+	ret -> _source = [[source stringByStandardizingPath] copy];
+	ret -> _transferQueue = queue;
+
+	return ret;
+}
+
+#pragma mark -
+
+- (NSString *) source {
+	return _source;
+}
+
+#pragma mark -
+
 - (BOOL) isUpload {
 	return YES;
 }
@@ -320,7 +367,6 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (id) initWithDCCFileRecord:(void *) record fromConnection:(MVChatConnection *) connection {
 	if( ( self = [super initWithDCCFileRecord:record fromConnection:connection] ) ) {
 		_destination = nil;
-		_fromNickname = nil;
 		_originalFileName = nil;
 	}
 
@@ -331,11 +377,9 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	[self reject];
 
 	[_destination release];
-	[_fromNickname release];
 	[_originalFileName release];
 
 	_destination = nil;
-	_fromNickname = nil;
 	_originalFileName = nil;
 
 	[super dealloc];
@@ -356,11 +400,6 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 }
 
 #pragma mark -
-
-- (NSString *) fromNickname {
-	if( ! [self _DCCFileRecord] ) return _fromNickname;
-	return [NSString stringWithCString:[self _DCCFileRecord] -> nick];
-}
 
 - (NSString *) originalFileName {
 	if( ! [self _DCCFileRecord] ) return _originalFileName;
@@ -400,7 +439,6 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 }
 
 - (void) _destroying {
-	_fromNickname = [[self fromNickname] retain];
 	_originalFileName = [[self originalFileName] retain];
 	[super _destroying];
 }

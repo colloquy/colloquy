@@ -259,7 +259,7 @@ finish:
 	[self showTransferManager:nil];
 }
 
-- (void) addFileTransfer:(MVFileTransfer *) transfer {
+- (void) addFileTransfer:(id) transfer {
 	NSEnumerator *enumerator = nil;
 	NSMutableDictionary *info = nil;
 	NSParameterAssert( transfer != nil );
@@ -274,6 +274,7 @@ finish:
 	[info setObject:[NSNumber numberWithUnsignedInt:[transfer status]] forKey:@"status"];
 	[info setObject:[NSNumber numberWithUnsignedLongLong:[transfer finalSize]] forKey:@"size"];
 	if( [transfer isDownload] ) [info setObject:[(MVDownloadFileTransfer *)transfer destination] forKey:@"path"];
+	else if( [transfer isUpload] ) [info setObject:[(MVUploadFileTransfer *)transfer source] forKey:@"path"];
 	[info setObject:transfer forKey:@"controller"];
 
 	[_transferStorage addObject:info];
@@ -366,7 +367,6 @@ finish:
 		return fileIcon;
 	} else if( [[column identifier] isEqual:@"size"] ) {
 		unsigned long long size = [[[self _infoForTransferAtIndex:row] objectForKey:@"size"] unsignedLongLongValue];
-		NSLog( @"size %d", size );
 		return ( size ? MVPrettyFileSize( size ) : @"--" );
 	} else if( [[column identifier] isEqual:@"user"] ) {
 		NSString *ret = [[self _infoForTransferAtIndex:row] objectForKey:@"user"];
@@ -620,19 +620,21 @@ finish:
 }
 
 - (void) _fileTransferFinished:(NSNotification *) notification {
-	MVDownloadFileTransfer *transfer = [notification object];
+	MVFileTransfer *transfer = [notification object];
 	NSEnumerator *enumerator = nil;
 	NSMutableDictionary *info = nil;
 
 	enumerator = [[[_transferStorage copy] autorelease] objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [[info objectForKey:@"controller"] isEqualTo:transfer] ) {
-			NSString *path = [transfer destination];
+			if( [transfer isDownload] ) {
+				NSString *path = [(MVDownloadFileTransfer *)transfer destination];
 
-			[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
+				[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
 
-			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"] && [_safeFileExtentions containsObject:[[path pathExtension] lowercaseString]] )
-				[[NSWorkspace sharedWorkspace] openFile:path withApplication:nil andDeactivate:NO];
+				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"] && [_safeFileExtentions containsObject:[[path pathExtension] lowercaseString]] )
+					[[NSWorkspace sharedWorkspace] openFile:path withApplication:nil andDeactivate:NO];
+			}
 
 			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2 ) {
 				[_calculationItems removeObject:info];
@@ -653,11 +655,11 @@ finish:
 	if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 3 ) {
 		[self _incomingFileSheetDidEnd:nil returnCode:NSOKButton contextInfo:(void *)[transfer retain]];
 	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 2 ) {
-		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:[transfer fromNickname] onServer:[(MVChatConnection *)[transfer connection] server]];
+		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:[transfer user] onServer:[(MVChatConnection *)[transfer connection] server]];
 		if( buddy ) [self _incomingFileSheetDidEnd:nil returnCode:NSOKButton contextInfo:(void *)[transfer retain]];
-		else NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)[transfer retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer fromNickname], MVPrettyFileSize( [transfer finalSize] ) );
+		else NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)[transfer retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] ) );
 	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 1 ) {
-		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)[transfer retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer fromNickname], MVPrettyFileSize( [transfer finalSize] ) );
+		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)[transfer retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] ) );
 	}
 }
 
@@ -869,11 +871,7 @@ finish:
 		MVFileTransfer *transfer = [info objectForKey:@"controller"];
 		[info setObject:[NSNumber numberWithUnsignedLongLong:[transfer transfered]] forKey:@"transfered"];
 		[info setObject:[NSNumber numberWithUnsignedInt:[transfer status]] forKey:@"status"];
-		if( [transfer isDownload] ) {
-			[info setObject:[(MVDownloadFileTransfer *)transfer fromNickname] forKey:@"user"];
-		} else if( [transfer isUpload] ) {
-	//		[info setObject:[transfer fromNickname] forKey:@"user"];
-		}
+		[info setObject:[(MVDownloadFileTransfer *)transfer user] forKey:@"user"];
 	}
 
 	return info;

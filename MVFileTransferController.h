@@ -11,7 +11,6 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 @class NSTableView;
 @class NSMutableArray;
 @class NSRecursiveLock;
-@class MVFileTransfer;
 @class NSTimer;
 
 @interface MVFileTransferController : NSWindowController {
@@ -33,7 +32,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 - (IBAction) hideTransferManager:(id) sender;
 
 - (void) downloadFileAtURL:(NSURL *) url toLocalFile:(NSString *) path;
-- (void) addFileTransfer:(MVFileTransfer *) trtansfer;
+- (void) addFileTransfer:(id) trtansfer;
 
 - (IBAction) stopSelectedTransfer:(id) sender;
 - (IBAction) clearFinishedTransfers:(id) sender;

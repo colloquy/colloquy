@@ -27,6 +27,7 @@ typedef enum {
 	unsigned short _port;
 	unsigned long long _startOffset;
 	MVChatConnection *_connection;
+	NSString *_user;
 	MVFileTransferStatus _status;
 }
 + (void) setFileTransferPortRange:(NSRange) range;
@@ -49,23 +50,31 @@ typedef enum {
 - (unsigned short) port;
 
 - (MVChatConnection *) connection;
+- (NSString *) user;
 
 - (void) cancel;
 @end
 
-@interface MVUploadFileTransfer : MVFileTransfer {}
+#pragma mark -
 
+@interface MVUploadFileTransfer : MVFileTransfer {
+	int _transferQueue;
+	NSString *_source;
+}
++ (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection;
+
+- (NSString *) source;
 @end
+
+#pragma mark -
 
 @interface MVDownloadFileTransfer : MVFileTransfer {
 	NSString *_destination;
-	NSString *_fromNickname;
 	NSString *_originalFileName;
 }
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) allow;
 - (NSString *) destination;
 
-- (NSString *) fromNickname;
 - (NSString *) originalFileName;
 
 - (void) reject;
