@@ -23,6 +23,7 @@
 	NSMutableArray *_queuedCommands;
 
 	BOOL _sentQuitCommand;
+	BOOL _lookingUpUsers;
 }
 + (NSArray *) defaultServerPorts;
 @end
