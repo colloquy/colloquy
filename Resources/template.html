@@ -18,6 +18,11 @@
 			document.body.scrollTop = document.body.offsetHeight;
 		}
 
+		function scrollToBottomIfNeeded() {
+			if( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.1 ) ) )
+				document.body.scrollTop = document.body.offsetHeight;
+		}
+
 		function setStylesheet( id, url ) {
 			code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
 			if( url.length ) code += "@import url( \"" + url + "\" );";
