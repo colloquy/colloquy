@@ -5,6 +5,8 @@
 #import "MVChatConnection.h"
 #import "NSNotificationAdditions.h"
 
+#import <pthread.h>
+
 #import "common.h"
 #import "core.h"
 #import "signals.h"
@@ -79,9 +81,11 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-	[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	if( ! pthread_main_np() ) { // if not main thread
+		[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+		[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
+		[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	} else [self performSelector:@selector( _destroying )];
 
 	if( dcc -> size != dcc -> transfd ) {
 		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];
@@ -98,9 +102,11 @@ static void MVFileTransferErrorConnect( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-	[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	if( ! pthread_main_np() ) { // if not main thread
+		[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+		[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
+		[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	} else [self performSelector:@selector( _destroying )];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer connection could not be made.", NSLocalizedDescriptionKey, nil];
 	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferConnectionError userInfo:info];
@@ -111,9 +117,11 @@ static void MVFileTransferErrorFileCreate( FILE_DCC_REC *dcc, char *filename ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-	[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	if( ! pthread_main_np() ) { // if not main thread
+		[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+		[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
+		[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	} else [self performSelector:@selector( _destroying )];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
 	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
@@ -124,10 +132,12 @@ static void MVFileTransferErrorFileOpen( FILE_DCC_REC *dcc, char *filename, int 
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-	[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
-
+	if( ! pthread_main_np() ) { // if not main thread
+		[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+		[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
+		[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	} else [self performSelector:@selector( _destroying )];
+	
 	NSError *ferror = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be opened, please make sure you have read permissions for this file.", NSLocalizedDescriptionKey, ferror, @"NSUnderlyingErrorKey", nil];
 	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileOpenError userInfo:info];
@@ -138,9 +148,11 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-	[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	if( ! pthread_main_np() ) { // if not main thread
+		[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+		[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
+		[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	} else [self performSelector:@selector( _destroying )];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
 	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
@@ -392,7 +404,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	if( ( self = [super initWithUser:user fromConnection:connection] ) ) {
 		[self _setDCCFileRecord:record];
 	}
-	
+
 	return self;
 }
 

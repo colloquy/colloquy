@@ -1,4 +1,5 @@
 #import <unistd.h>
+#import <pthread.h>
 
 #import "MVChatConnection.h"
 #import "MVIRCChatConnection.h"
@@ -165,9 +166,11 @@ static void MVChatConnected( SERVER_REC *server ) {
 static void MVChatDisconnect( SERVER_REC *server ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
 
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	if( ! pthread_main_np() ) { // if not main thread
+		[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
+		[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	} else [self performSelector:@selector( _didDisconnect )];
 }
 
 static void MVChatConnectFailed( SERVER_REC *server ) {
@@ -176,9 +179,11 @@ static void MVChatConnectFailed( SERVER_REC *server ) {
 
 	server_ref( server );
 
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-	[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:YES];
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	if( ! pthread_main_np() ) { // if not main thread
+		[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:YES];
+		[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	} else [self performSelector:@selector( _didNotConnect )];
 }
 
 static void MVChatRawIncomingMessage( SERVER_REC *server, char *data ) {
