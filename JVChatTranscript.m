@@ -957,10 +957,40 @@ finish:
 }
 
 - (void) _prependMessages:(NSString *) messages {
-	NSMutableString *result = [[messages mutableCopy] autorelease];
-	[result escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
-	[result replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
-	[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"prependMessages( \"%@\" );", result]];
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+#ifdef _WEB_SCRIPT_OBJECT_H_
+		NSMutableString *result = [messages mutableCopy];
+		[result replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
+
+		// check if we are near the bottom of the chat area, and if we should scroll down later
+		NSNumber *scrollNeeded = [[[display mainFrame] DOMDocument] evaluateWebScript:@"( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.1 ) ) )"];
+
+		// parses the message so we can get the DOM tree
+		DOMHTMLElement *element = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] createElement:@"span"];
+		[element setInnerHTML:result];
+
+		[result release];
+		result = nil;
+
+		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
+		DOMNode *firstMessage = [body firstChild];
+
+		while( [[element children] length] ) { // append all children
+			if( firstMessage ) [body insertBefore:[element firstChild] :firstMessage];
+			else [body appendChild:[element firstChild]];
+		}
+
+		// scroll down if we need to
+		if( [scrollNeeded boolValue] ) [body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
+#endif
+	} else {
+		NSMutableString *result = [messages mutableCopy];
+		[result escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
+		[result replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
+		[result replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
+		[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"prependMessages( \"%@\" );", result]];
+		[result release];
+	}
 }
 
 - (void) _styleError:(NSException *) exception {
