@@ -126,7 +126,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSString *) toolTip {
-	return [self title];
+	return [NSString stringWithFormat:@"%@\%d ms lag", [self title], [[self connection] lag]];
 }
 
 #pragma mark -
