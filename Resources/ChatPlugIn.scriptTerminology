@@ -170,6 +170,263 @@
 			<key>Name</key>
 			<string>process outgoing chat message</string>
 		</dict>
+		<key>processNewChatTopic</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The new room topic. Can contain HTML formatting.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>by</key>
+				<dict>
+					<key>Description</key>
+					<string>The member who set the topic.</string>
+					<key>Name</key>
+					<string>set by</string>
+				</dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room.</string>
+					<key>Name</key>
+					<string>in</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a new topic is for a room we are in. Return a reformatted message (if desired).</string>
+			<key>Name</key>
+			<string>process chat topic</string>
+		</dict>
+		<key>joinedRoom</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat room.</string>
+			</dict>
+			<key>Description</key>
+			<string>Called when we join a room.</string>
+			<key>Name</key>
+			<string>joined chat room</string>
+		</dict>
+		<key>partingRoom</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat room.</string>
+			</dict>
+			<key>Description</key>
+			<string>Called when are in the process of laveing a room. Messages can still be sent.</string>
+			<key>Name</key>
+			<string>parting from chat room</string>
+		</dict>
+		<key>memberJoinedRoom</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The member.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room.</string>
+					<key>Name</key>
+					<string>in</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a member joins a room we are also members of.</string>
+			<key>Name</key>
+			<string>member joined</string>
+		</dict>
+		<key>memberPartedRoom</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The member.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room.</string>
+					<key>Name</key>
+					<string>from</string>
+				</dict>
+				<key>reason</key>
+				<dict>
+					<key>Description</key>
+					<string>The reason the member left.</string>
+					<key>Name</key>
+					<string>for</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a member leaves a room we are also members of.</string>
+			<key>Name</key>
+			<string>member parted</string>
+		</dict>
+		<key>memberKickedFromRoom</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The member.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room.</string>
+					<key>Name</key>
+					<string>from</string>
+				</dict>
+				<key>by</key>
+				<dict>
+					<key>Description</key>
+					<string>The member who kicked the other member out.</string>
+					<key>Name</key>
+					<string>by</string>
+				</dict>
+				<key>reason</key>
+				<dict>
+					<key>Description</key>
+					<string>The reason the member left.</string>
+					<key>Name</key>
+					<string>for</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a member is kicked out of a room we are also members of.</string>
+			<key>Name</key>
+			<string>member kicked</string>
+		</dict>
+		<key>memberStatusChanged</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The member.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>status</key>
+				<dict>
+					<key>Description</key>
+					<string>The new distinction this member has.</string>
+					<key>Name</key>
+					<string>to</string>
+				</dict>
+				<key>by</key>
+				<dict>
+					<key>Description</key>
+					<string>The member who gave this distinction.</string>
+					<key>Name</key>
+					<string>thanks to</string>
+				</dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room.</string>
+					<key>Name</key>
+					<string>in</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a member is granted voice or jurisdiction of the room; or when those powers are revoked.</string>
+			<key>Name</key>
+			<string>member distinction changed</string>
+		</dict>
+		<key>topicChanged</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>topic</key>
+				<dict>
+					<key>Description</key>
+					<string>The new room topic.</string>
+					<key>Name</key>
+					<string>to</string>
+				</dict>
+				<key>by</key>
+				<dict>
+					<key>Description</key>
+					<string>The member who changed the topic.</string>
+					<key>Name</key>
+					<string>by</string>
+				</dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room.</string>
+					<key>Name</key>
+					<string>in</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a member changes the room topic.</string>
+			<key>Name</key>
+			<string>topic changed</string>
+		</dict>
+		<key>userNicknameChanged</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The user's old nickname.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>now</key>
+				<dict>
+					<key>Description</key>
+					<string>The new nickname for the user.</string>
+					<key>Name</key>
+					<string>is now known as</string>
+				</dict>
+				<key>view</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room or direct chat the change happened.</string>
+					<key>Name</key>
+					<string>in</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a user changes their nickname. This is called for all chat views you are in with the user (from one to many times). You can't get notifications for users you don't see in a chat room or direct chat.</string>
+			<key>Name</key>
+			<string>user named</string>
+		</dict>
+	</dict>
+	<key>Enumerations</key>
+	<dict>
+		<key>MemberStatus</key>
+		<dict>
+			<key>Normal</key>
+			<dict>
+				<key>Name</key>
+				<string>normal</string>
+			</dict>
+			<key>Voice</key>
+			<dict>
+				<key>Name</key>
+				<string>voice</string>
+			</dict>
+			<key>Operator</key>
+			<dict>
+				<key>Name</key>
+				<string>operator</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>Description</key>
 	<string>commands to be implemented by plug-ins.</string>
