@@ -53,7 +53,7 @@
 		return [self handleMassAwayWithMessage:arguments];
 	} else if( [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
-	} else if( [command isEqualToString:@"leave"] ) {
+	} else if( [command isEqualToString:@"leave"] || [command isEqualToString:@"part"] ) {
 		return [self handlePartWithArguments:[arguments string] forConnection:connection];
 	} else if( [command isEqualToString:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
@@ -129,7 +129,7 @@
 		return [self handleMassAwayWithMessage:arguments];
 	} else if( [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[room connection]];
-	} else if( [command isEqualToString:@"leave"] ) {
+	} else if( [command isEqualToString:@"leave"] || [command isEqualToString:@"part"] ) {
 		if( ! [arguments length] ) [self handlePartWithArguments:[room target] forConnection:[room connection]];
 		else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		return YES;
@@ -303,7 +303,19 @@
 		}
 	} else if( [command isEqualToString:@"ignore"] ) {
 		return [self handleIgnoreWithArguments:[arguments string] inView:room];
-	}
+	} else if( [command isEqualToString:@"invite"] ) {
+        NSString *nick = nil;
+		NSString *roomName = nil;
+        NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
+
+		[scanner scanUpToCharactersFromSet:whitespace intoString:&nick];
+		if( ! nick ) return NO;
+        if( ! [scanner isAtEnd] ) [scanner scanUpToCharactersFromSet:whitespace intoString:&roomName];
+
+		[[room connection] sendRawMessage:[NSString stringWithFormat:@"INVITE %@ %@", nick, ( [roomName length] ? roomName : [room target] )]];
+        return YES;
+    }
 
 	return NO;
 }
@@ -340,7 +352,7 @@
 		return [self handleMassAwayWithMessage:arguments];
 	} else if( [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[chat connection]];
-	} else if( [command isEqualToString:@"leave"] ) {
+	} else if( [command isEqualToString:@"leave"] || [command isEqualToString:@"part"] ) {
 		return [self handlePartWithArguments:[arguments string] forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
