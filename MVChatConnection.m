@@ -1671,18 +1671,19 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 @implementation MVChatConnection (MVChatConnectionPrivate)
 + (MVChatConnection *) _connectionForServer:(SERVER_REC *) server {
+	if( ! server ) return nil;
+
 	MVChatConnectionModuleData *data = MODULE_DATA( server );
 	if( data && data -> connection ) return data -> connection;
 
-	if( ! server -> tag ) return nil;
+	if( ! server -> tag || ( server -> tag && ! strlen( server -> tag ) ) ) return nil;
 
 	MVChatConnection *ret = NULL;
 	sscanf( server -> tag, "%8lx", (unsigned long *) &ret );
 
 	if( ! ret ) return nil;
-	if( [ret _irssiConnection] == server || ! [ret _irssiConnection] ) return ret;
-
 	[ret _setIrssiConnection:server];
+
 	return ret;
 }
 
@@ -1843,15 +1844,31 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) _setIrssiConnection:(SERVER_REC *) server {
 	SERVER_REC *old = _chatConnection;
 
+	if( old ) {
+		MVChatConnectionModuleData *data = MODULE_DATA( old );
+		if( data ) data -> connection = nil;
+		g_free_not_null( data );
+	}
+
 	_chatConnection = server;
+
 	if( _chatConnection ) {
+		server_ref( _chatConnection );
+
 		MVChatConnectionModuleData *data = g_new0( MVChatConnectionModuleData, 1 );
 		data -> connection = self;
 
 		MODULE_DATA_SET( server, data );
 
 		((SERVER_REC *) _chatConnection) -> no_reconnect = 0;
-		server_ref( _chatConnection );
+
+		const char *tag = [[NSString stringWithFormat:@"%8x", self] UTF8String];
+
+		g_free_not_null( ((SERVER_REC *) _chatConnection) -> tag );
+		((SERVER_REC *) _chatConnection) -> tag = g_strdup( tag );
+
+		g_free_not_null( ((SERVER_REC *) _chatConnection) -> connrec -> tag );
+		((SERVER_REC *) _chatConnection) -> connrec -> tag = g_strdup( tag );
 	}
 
 	if( old ) {
