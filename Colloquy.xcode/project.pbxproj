@@ -2424,6 +2424,7 @@
 				1CF4D2F107E5489D00DB421A,
 				1CF4D30307E5497400DB421A,
 				1CF4D38907E54C0C00DB421A,
+				1CF4D76607E6AD4400DB421A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4789,6 +4790,20 @@
 			settings = {
 			};
 		};
+		1CF4D76507E6AD4400DB421A = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = smartTranscriptSettings.png;
+			path = Resources/smartTranscriptSettings.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF4D76607E6AD4400DB421A = {
+			fileRef = 1CF4D76507E6AD4400DB421A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CF4E51D0698E9FB00986498 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -6110,6 +6125,7 @@
 				F5D04C03019489B801A35792,
 				1CBECD660508C61B000001C8,
 				1CF627CA07558F79005DFCFA,
+				1CF4D76507E6AD4400DB421A,
 			);
 			isa = PBXGroup;
 			name = "Toolbar Icons";

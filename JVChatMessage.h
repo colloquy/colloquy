@@ -23,6 +23,7 @@ typedef enum _JVChatMessageType {
 	NSString *_htmlMessage;
 	NSTextStorage *_attributedMessage;
 	NSDate *_date;
+	NSURL *_source;
 	JVIgnoreMatchResult _ignoreStatus;
 	JVChatMessageType _type;
 	BOOL _senderIsLocalUser;
@@ -53,6 +54,7 @@ typedef enum _JVChatMessageType {
 - (JVIgnoreMatchResult) ignoreStatus;
 - (JVChatMessageType) type;
 
+- (NSURL *) source;
 - (JVChatTranscript *) transcript;
 - (NSString *) messageIdentifier;
 
@@ -82,5 +84,6 @@ typedef enum _JVChatMessageType {
 - (void) setIgnoreStatus:(JVIgnoreMatchResult) ignoreStatus;
 - (void) setType:(JVChatMessageType) type;
 
+- (void) setSource:(NSURL *) source;
 - (void) setMessageIdentifier:(NSString *) identifier;
 @end

@@ -74,7 +74,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	[smartTranscriptMenu addItem:[NSMenuItem separatorItem]];
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Smart Transcript...", "new smart transcript menu title" ) action:@selector( _newSmartTranscript: ) keyEquivalent:@"N"] autorelease];
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Smart Transcript...", "new smart transcript menu title" ) action:@selector( _newSmartTranscript: ) keyEquivalent:@"n"] autorelease];
 	[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
 	[menuItem setTarget:[JVChatController defaultManager]];
 	[smartTranscriptMenu addItem:menuItem];
@@ -444,8 +444,6 @@ static NSMenu *smartTranscriptMenu = nil;
 	switch( mode ) {
 	default:
 	case 0:
-		windowController = nil;
-		break;
 	case 1:
 		enumerator = [_chatWindows objectEnumerator];
 		while( ( windowController = [enumerator nextObject] ) )

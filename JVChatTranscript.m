@@ -562,43 +562,53 @@
 
 	@synchronized( self ) {
 		if( ! _requiresNewEnvelope && ! forceEnvelope ) {
-			// check if the last node is an envelope by the same sender, if so append this message to that envelope
+			// check if the last node is an envelope by the same sender (and maybe source), if so append this message to that envelope
 			xmlNode *lastChild = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 			if( lastChild && lastChild -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) lastChild -> name, 8 ) ) {
-				xmlNode *subNode = lastChild -> children;
-				do {
-					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
-						NSString *identifier = [message senderIdentifier];
-						NSString *nickname = [message senderNickname];
-						NSString *name = [message senderName];
+				NSString *msgSource = [[message source] absoluteString];
 
-						xmlChar *senderNameStr = xmlNodeGetContent( subNode );
-						NSString *senderName = [NSString stringWithUTF8String:(char *) senderNameStr];
-						xmlFree( senderNameStr );
+				xmlChar *sourceStr = xmlGetProp( lastChild, (xmlChar *) "source" );
+				NSString *source = ( sourceStr ? [NSString stringWithUTF8String:(char *) sourceStr] : nil );
+				xmlFree( sourceStr );
 
-						NSString *senderNickname = nil;
-						NSString *senderIdentifier = nil;
+				if( [msgSource isEqualToString:source] ) { // different rooms/chats, give up early
+					xmlNode *subNode = lastChild -> children;
+					do {
+						if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
+							NSString *identifier = [message senderIdentifier];
+							NSString *nickname = [message senderNickname];
+							NSString *name = [message senderName];
 
-						xmlChar *prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
-						if( prop ) senderNickname = [NSString stringWithUTF8String:(char *) prop];
-						xmlFree( prop );
+							xmlChar *senderNameStr = xmlNodeGetContent( subNode );
+							NSString *senderName = [NSString stringWithUTF8String:(char *) senderNameStr];
+							xmlFree( senderNameStr );
 
-						prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
-						if( prop ) senderIdentifier = [NSString stringWithUTF8String:(char *) prop];
-						xmlFree( prop );
+							NSString *senderNickname = nil;
+							NSString *senderIdentifier = nil;
 
-						if( [senderIdentifier isEqualToString:identifier] || [senderNickname isEqualToString:nickname] || [senderName isEqualToString:name] )
-							parent = lastChild;
+							xmlChar *prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
+							if( prop ) senderNickname = [NSString stringWithUTF8String:(char *) prop];
+							xmlFree( prop );
 
-						break;
-					}
-				} while( subNode && ( subNode = subNode -> next ) ); 
+							prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
+							if( prop ) senderIdentifier = [NSString stringWithUTF8String:(char *) prop];
+							xmlFree( prop );
+
+							if( [senderIdentifier isEqualToString:identifier] || [senderNickname isEqualToString:nickname] || [senderName isEqualToString:name] )
+								parent = lastChild;
+
+							break;
+						}
+					} while( subNode && ( subNode = subNode -> next ) );
+				}
 			}
 		}
 
 		if( ! parent ) { // make a new envelope to append
 			root = xmlNewNode( NULL, (xmlChar *) "envelope" );
 			root = xmlAddChild( xmlDocGetRootElement( _xmlLog ), root );
+
+			if( [message source] ) xmlSetProp( root, (xmlChar *) "source", (xmlChar *) [[[message source] absoluteString] UTF8String] );
 
 			if( [message ignoreStatus] == JVUserIgnored )
 				xmlSetProp( root, (xmlChar *) "ignored", (xmlChar *) "yes" );

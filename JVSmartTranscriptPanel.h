@@ -6,7 +6,11 @@
 	IBOutlet NSPopUpButton *operation;
 	IBOutlet NSButton *ignoreCase;
 	BOOL _settingsNibLoaded;
+	NSMutableDictionary *_settings;
 	NSMutableArray *_rules;
+	NSString *_title;
+	BOOL _isActive;
+	unsigned long _newMessages;
 }
 - (id) initWithSettings:(NSDictionary *) settings;
 

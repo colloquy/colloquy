@@ -316,7 +316,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (NSURL *) url {
 	NSString *server = [[[self connection] url] absoluteString];
-	return [NSURL URLWithString:[server stringByAppendingPathComponent:[[[self target] description] stringByEncodingIllegalURLCharacters]]];
+	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", server, [[[self target] description] stringByEncodingIllegalURLCharacters]]];
 }
 
 - (MVChatConnection *) connection {

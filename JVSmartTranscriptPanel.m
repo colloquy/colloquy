@@ -8,15 +8,45 @@
 #import "JVStyleView.h"
 #import "JVViewCell.h"
 
-@implementation JVSmartTranscriptPanel
-- (id) initWithSettings:(NSDictionary *) settings {
-	_settingsNibLoaded = [NSBundle loadNibNamed:@"JVSmartTranscriptFilterSheet" owner:self];
+static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsItem";
+static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
+@implementation JVSmartTranscriptPanel
+- (id) init {
+	if( ( self = [super init] ) ) {
+		_newMessages = 0;
+		_isActive = NO;
+		_rules = nil;
+		_title = nil;
+		_settings = nil;
+	}
+
+	return self;
+}
+
+- (id) initWithSettings:(NSDictionary *) settings {
 	if( ( self = [self init] ) ) {
+		_settingsNibLoaded = [NSBundle loadNibNamed:@"JVSmartTranscriptFilterSheet" owner:self];
+		_settings = [settings mutableCopy];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];		
 	}
 
 	return self;
+}
+
+- (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+	[_settings release];
+	[_title release];
+	[_rules release];
+
+	_rules = nil;
+	_title = nil;
+	_settings = nil;
+
+	[super dealloc];
 }
 
 - (void) awakeFromNib {
@@ -31,7 +61,7 @@
 		[self addRow:nil];
 	}
 
-	[super awakeFromNib];
+	if( ! _nibLoaded ) [super awakeFromNib];
 }
 
 #pragma mark -
@@ -59,11 +89,29 @@
 }
 
 - (NSImage *) statusImage {
-//	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
-//		return ( [_waitingAlerts count] ? [NSImage imageNamed:@"AlertCautionIcon"] : ( _newMessageCount ? ( _newHighlightMessageCount ? [NSImage imageNamed:@"privateChatTabNewMessage"] : [NSImage imageNamed:@"privateChatTabNewMessage"] ) : nil ) );
+	if( _isActive && [[[self view] window] isKeyWindow] ) {
+		_newMessages = 0;
+		return nil;
+	}
 
-//	return ( [_waitingAlerts count] ? [NSImage imageNamed:@"viewAlert"] : ( _newMessageCount ? ( _newHighlightMessageCount ? [NSImage imageNamed:@"newHighlightMessage"] : [NSImage imageNamed:@"newMessage"] ) : nil ) );
-	return nil;
+	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
+		return ( _newMessages ? [NSImage imageNamed:@"smartTranscriptTabActivity"] : nil );
+
+	return ( _newMessages ? [NSImage imageNamed:@"newMessage"] : nil );
+}
+
+#pragma mark -
+
+- (void) didUnselect {
+	_newMessages = 0;
+	_isActive = NO;
+	[super didUnselect];
+}
+
+- (void) didSelect {
+	_newMessages = 0;
+	_isActive = YES;
+	[super didSelect];
 }
 
 #pragma mark -
@@ -71,6 +119,12 @@
 - (NSMutableArray *) criterionControllers {
 	if( ! _rules ) _rules = [[NSMutableArray alloc] init];
 	return _rules;
+}
+
+- (void) reloadTableView {
+	while( [[subviewTableView subviews] count] > 0 )
+		[[[subviewTableView subviews] lastObject] removeFromSuperviewWithoutNeedingDisplay];
+	[subviewTableView reloadData];
 }
 
 - (void) insertObject:(id) obj inCriterionControllersAtIndex:(unsigned int) index {
@@ -101,6 +155,12 @@
 
 #pragma mark -
 
+- (IBAction) clearDisplay:(id) sender {
+	[display clear];
+}
+
+#pragma mark -
+
 - (void) matchMessage:(JVChatMessage *) message fromView:(id <JVChatViewController>) view {
 	BOOL andOperation = ( [operation selectedTag] == 2 );
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
@@ -117,8 +177,14 @@
 
 	if( ! match ) return;
 
-	JVChatMessage *newMessage = [[self transcript] appendMessage:message];
-	[display appendChatMessage:newMessage];	
+	JVMutableChatMessage *localMessage = [[message mutableCopy] autorelease];
+	[localMessage setSource:[(JVDirectChatPanel *)view url]];
+
+	localMessage = (id) [[self transcript] appendMessage:localMessage];
+	[display appendChatMessage:localMessage];	
+
+	_newMessages++;
+	[_windowController reloadListItem:self andChildren:NO];
 }
 
 #pragma mark -
@@ -179,12 +245,6 @@
 
 #pragma mark -
 
-- (void) reloadTableView {
-	while( [[subviewTableView subviews] count] > 0 )
-		[[[subviewTableView subviews] lastObject] removeFromSuperviewWithoutNeedingDisplay];
-	[subviewTableView reloadData];
-}
-
 - (int) numberOfRowsInTableView:(NSTableView *) tableView {
 	return [[self criterionControllers] count];
 }
@@ -199,6 +259,60 @@
 	} else if( [[tableColumn identifier] isEqualToString:@"remove"] ) {
 		[cell setEnabled:( [self numberOfRowsInTableView:tableView] > 1 )];
 	}
+}
+
+#pragma mark -
+#pragma mark Toolbar Support
+
+- (NSToolbar *) toolbar {
+	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Smart Transcript"];
+	[toolbar setDelegate:self];
+	[toolbar setAllowsUserCustomization:YES];
+	[toolbar setAutosavesConfiguration:YES];
+	return [toolbar autorelease];
+}
+
+- (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+	NSToolbarItem *toolbarItem = nil;
+
+	if( [identifier isEqual:JVToolbarRuleSettingsItemIdentifier] ) {
+		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+
+		[toolbarItem setLabel:NSLocalizedString( @"Settings", "settings toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Settings", "settings toolbar customize palette name" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Smart Transcript Settings", "smart transcript settings tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"smartTranscriptSettings"]];
+
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector( editSettings: )];
+	} else if( [identifier isEqual:JVToolbarClearItemIdentifier] ) {
+		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+
+		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear display toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Clear Display", "clear display toolbar customize palette name" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Clear Display", "clear display tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"clear"]];
+
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector( clearDisplay: )];
+	} else return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
+	return toolbarItem;
+}
+
+- (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
+	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
+	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
+	[list addObject:JVToolbarRuleSettingsItemIdentifier];
+	return list;
+}
+
+- (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
+	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
+	[list addObject:JVToolbarRuleSettingsItemIdentifier];
+	[list addObject:JVToolbarClearItemIdentifier];
+	return list;
 }
 @end
 

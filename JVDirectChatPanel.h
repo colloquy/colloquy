@@ -39,6 +39,7 @@ extern NSString *JVChatMessageWasProcessedNotification;
 }
 - (id) initWithTarget:(id) target;
 - (id) target;
+- (NSURL *) url;
 
 - (IBAction) addToFavorites:(id) sender;
 

@@ -70,6 +70,13 @@
 		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "ignored" );
 		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVUserIgnored : _ignoreStatus );
 		xmlFree( prop );
+
+		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "source" );
+		if( prop ) {
+			NSString *sourceStr = [NSString stringWithUTF8String:prop];
+			if( sourceStr ) _source = [[NSURL allocWithZone:[self zone]] initWithString:sourceStr];
+			xmlFree( prop );			
+		}
 	}
 
 	_loaded = YES;
@@ -137,6 +144,7 @@
 		_htmlMessage = nil;
 		_attributedMessage = nil;
 		_date = nil;
+		_source = nil;
 		_action = NO;
 		_highlighted = NO;
 		_senderIsLocalUser = NO;
@@ -167,15 +175,17 @@
 }
 
 - (id) mutableCopyWithZone:(NSZone *) zone {
-	[self load];
-	[self loadBody];
-	[self loadSender];
+	JVChatMessage *ret =  nil;
 
-	JVMutableChatMessage *ret = [[JVMutableChatMessage allocWithZone:zone] initWithText:_attributedMessage sender:nil];
-	[ret setDate:_date];
-	[ret setAction:_action];
-	[ret setHighlighted:_highlighted];
-	[ret setMessageIdentifier:_messageIdentifier];
+	@synchronized( [self transcript] ) {
+		ret = [[JVMutableChatMessage allocWithZone:zone] initWithNode:[self node] andTranscript:nil];
+
+		[ret load];
+		[ret loadBody];
+		[ret loadSender];
+
+		[ret performSelector:@selector( setNode: ) withObject:NULL]; // remove the node association
+	}
 
 	return ret;
 }
@@ -185,6 +195,7 @@
 	[_htmlMessage release];
 	[_attributedMessage release];
 	[_date release];
+	[_source release];
 	[_objectSpecifier release];
 
 	_node = NULL;
@@ -193,6 +204,7 @@
 	_htmlMessage = nil;
 	_attributedMessage = nil;
 	_date = nil;
+	_source = nil;
 	_objectSpecifier = nil;
 
 	[super dealloc];
@@ -297,6 +309,11 @@
 }
 
 #pragma mark -
+
+- (NSURL *) source {
+	[self load];
+	return _source;
+}
 
 - (JVChatTranscript *) transcript {
 	return _transcript;
@@ -412,7 +429,9 @@
 		xmlNodePtr root = xmlNewNode( NULL, (xmlChar *) "envelope" );
 		xmlDocSetRootElement( _doc, root );
 
-		if( [[self sender] respondsToSelector:@selector( xmlDescriptionWithTagName: )] ) {
+		if( _source ) xmlSetProp( root, (xmlChar *) "source", (xmlChar *) [[[self source] absoluteString] UTF8String] );
+
+		if( [self sender] && [[self sender] respondsToSelector:@selector( xmlDescriptionWithTagName: )] ) {
 			const char *sendDesc = [(NSString *)[[self sender] performSelector:@selector( xmlDescriptionWithTagName: ) withObject:@"sender"] UTF8String];
 
 			if( sendDesc ) {
@@ -423,6 +442,19 @@
 				xmlAddChild( root, child );
 				xmlFreeDoc( tempDoc );
 			}
+		} else if( [self senderName] ) {
+			child = xmlNewTextChild( root, NULL, (xmlChar *) "sender", (xmlChar *) [[self senderName] UTF8String] );
+			if( [self senderIsLocalUser] ) xmlSetProp( child, (xmlChar *) "self", (xmlChar *) "yes" );
+			if( [self senderNickname] && ! [[self senderName] isEqualToString:[self senderNickname]] )
+				xmlSetProp( child, (xmlChar *) "nickname", (xmlChar *) [[self senderNickname] UTF8String] );
+			if( [self senderHostmask] )
+				xmlSetProp( child, (xmlChar *) "hostmask", (xmlChar *) [[self senderNickname] UTF8String] );
+			if( [self senderIdentifier] )
+				xmlSetProp( child, (xmlChar *) "identifier", (xmlChar *) [[self senderIdentifier] UTF8String] );
+			if( [self senderClass] )
+				xmlSetProp( child, (xmlChar *) "class", (xmlChar *) [[self senderClass] UTF8String] );
+			if( [self senderBuddyIdentifier] && ! [self senderIsLocalUser] )
+				xmlSetProp( child, (xmlChar *) "buddy", (xmlChar *) [[self senderBuddyIdentifier] UTF8String] );
 		} else return NULL;
 
 		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
@@ -584,6 +616,12 @@
 }
 
 #pragma mark -
+
+- (void) setSource:(NSURL *) source {
+	[self setNode:NULL];
+	[_source autorelease];
+	_source = [source copyWithZone:[self zone]];
+}
 
 - (void) setMessageIdentifier:(NSString *) identifier {
 	[self setNode:NULL];
