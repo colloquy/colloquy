@@ -8,13 +8,6 @@
 		<dict>
 			<key>Attributes</key>
 			<dict>
-				<key>isConnected</key>
-				<dict>
-					<key>Description</key>
-					<string>Is connected?</string>
-					<key>Name</key>
-					<string>connected</string>
-				</dict>
 				<key>nickname</key>
 				<dict>
 					<key>Description</key>

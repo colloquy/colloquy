@@ -12,15 +12,6 @@
 			<string>conM</string>
 			<key>Attributes</key>
 			<dict>
-				<key>isConnected</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>iscA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
 				<key>nickname</key>
 				<dict>
 					<key>AppleEventCode</key>
