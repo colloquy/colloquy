@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/NSAttributedStringAdditions.h>
 
 #import "JVChatController.h"
 #import "MVApplicationController.h"
@@ -9,7 +10,6 @@
 #import "JVDirectChat.h"
 #import "JVChatRoom.h"
 #import "JVChatConsole.h"
-#import "KAConnectionHandler.h"
 
 #import <libxml/parser.h>
 
@@ -18,6 +18,7 @@ static JVChatController *sharedInstance = nil;
 @interface JVChatController (JVChatControllerPrivate)
 - (void) _addWindowController:(JVChatWindowController *) windowController;
 - (void) _addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller;
+- (BOOL) _handlePrivateMessageOnConnection:(MVChatConnection *) connection withInfo:(NSDictionary *) info;
 @end
 
 #pragma mark -
@@ -327,11 +328,7 @@ static JVChatController *sharedInstance = nil;
 - (void) _gotPrivateMessage:(NSNotification *) notification {
 	BOOL continueNotify = YES;
 	if ( [[[notification userInfo] objectForKey:@"auto"] boolValue] ) {
-		continueNotify = ! [[KAConnectionHandler defaultHandler] connection:[notification object] 
-															willPostMessage:[[notification userInfo] objectForKey:@"message"] 
-																	   from:[[notification userInfo] objectForKey:@"from"] 
-																	 toRoom:NO 
-																   withInfo:[notification userInfo]];
+		continueNotify = ! [self _handlePrivateMessageOnConnection:[notification object] withInfo:[notification userInfo]];
 	}
 	
 	if ( continueNotify ) {
@@ -341,10 +338,10 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) _gotRoomMessage:(NSNotification *) notification {
-	if ( ! [[KAConnectionHandler defaultHandler] connection:[notification object] willPostMessage:[[notification userInfo] objectForKey:@"message"] from:[[notification userInfo] objectForKey:@"from"] toRoom:YES withInfo:[notification userInfo]] ) {
+	//if ( ! [[KAConnectionHandler defaultHandler] connection:[notification object] willPostMessage:[[notification userInfo] objectForKey:@"message"] from:[[notification userInfo] objectForKey:@"from"] toRoom:YES withInfo:[notification userInfo]] ) {
 		JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
 		[controller addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"from"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue]];
-	}
+	//}
 }
 
 - (void) _roomTopicChanged:(NSNotification *) notification {
@@ -417,6 +414,47 @@ static JVChatController *sharedInstance = nil;
 
 	[windowController addChatViewController:controller];
 	[windowController showChatViewController:controller];
+}
+
+- (BOOL) _handlePrivateMessageOnConnection:(MVChatConnection *) connection withInfo:(NSDictionary *) info {
+	NSString *user = [info objectForKey:@"from"];
+	NSData *message = [info objectForKey:@"message"];
+	BOOL hideFromUser = YES;
+	
+	if( [self chatViewControllerForUser:user withConnection:connection ifExists:YES] ) hideFromUser = NO;
+	
+	NSString *curMsg = [[[NSString alloc] initWithData:message encoding:NSUTF8StringEncoding] autorelease];
+	if( ! curMsg ) curMsg = [NSString stringWithCString:[message bytes] length:[message length]];
+	
+	if( [user isEqualToString:@"NickServ"] ) {
+		if( [curMsg rangeOfString:@"password accepted" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
+			[context setObject:[NSString stringWithFormat:@"%@ on %@", curMsg, [connection server]] forKey:@"description"];
+			[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+			[context setObject:[connection nickname] forKey:@"performedOn"];
+			[context setObject:user forKey:@"performedBy"];
+			[[JVNotificationController defaultManager] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+		}
+	}
+	
+	if( [user isEqualToString:@"MemoServ"] ) {
+		if( [curMsg rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [curMsg rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
+			NSAttributedString *curAMsg = [NSAttributedString attributedStringWithHTMLFragment:[NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@ on %@</span>", curMsg, [connection server]] baseURL:NULL]; 
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"You Have New Memos", "new memos bubble title" ) forKey:@"title"];
+			[context setObject:curAMsg forKey:@"description"];
+			[context setObject:[NSImage imageNamed:@"Stickies"] forKey:@"image"];
+			[context setObject:[connection nickname] forKey:@"performedOn"];
+			[context setObject:user forKey:@"performedBy"];
+			[context setObject:self forKey:@"target"];
+			[context setObject:NSStringFromSelector( @selector( checkMemos: ) ) forKey:@"action"];
+			[context setObject:connection forKey:@"representedObject"];
+			[[JVNotificationController defaultManager] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
+		}	
+	}
+	
+	return hideFromUser;
 }
 @end
 
