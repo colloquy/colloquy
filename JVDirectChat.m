@@ -1165,7 +1165,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	// Set size of the web view to the maximum size possible
 	webFrame.size.height = newFrame.size.height - dividerThickness - _sendHeight;
 	webFrame.size.width = newFrame.size.width;
-	webFrame.origin = NSMakePoint(0,0);
+	webFrame.origin = NSMakePoint( 0., 0. );
 
 	// Keep the send box the same size
 	sendFrame.size.height = _sendHeight;
