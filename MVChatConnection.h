@@ -74,8 +74,16 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 #pragma mark -
 
 - (MVChatConnectionType) type;
+
+#pragma mark -
+
 - (NSSet *) supportedFeatures;
 - (BOOL) supportsFeature:(NSString *) key;
+
+#pragma mark -
+
+- (const NSStringEncoding *) supportedStringEncodings;
+- (BOOL) supportsStringEncoding:(NSStringEncoding) encoding;
 
 #pragma mark -
 

@@ -34,6 +34,12 @@ NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeRe
 
 BOOL MVChatApplicationQuitting = NO;
 
+static const NSStringEncoding supportedEncodings[] = {
+	NSUTF8StringEncoding,
+	NSNonLossyASCIIStringEncoding,
+	NSASCIIStringEncoding, 0
+};
+
 @interface MVChatRoom (MVChatRoomPrivate)
 - (void) _setDateParted:(NSDate *) date;
 @end
@@ -150,6 +156,8 @@ BOOL MVChatApplicationQuitting = NO;
 	return 0;
 }
 
+#pragma mark -
+
 - (NSSet *) supportedFeatures {
 // subclass this method, if needed
 	return nil;
@@ -158,6 +166,22 @@ BOOL MVChatApplicationQuitting = NO;
 - (BOOL) supportsFeature:(NSString *) key {
 	NSParameterAssert( key != nil );
 	return [[self supportedFeatures] containsObject:key];
+}
+
+#pragma mark -
+
+- (const NSStringEncoding *) supportedStringEncodings {
+	return supportedEncodings;
+}
+
+- (BOOL) supportsStringEncoding:(NSStringEncoding) encoding {
+	const NSStringEncoding *encodings = [self supportedStringEncodings];
+	unsigned i = 0;
+
+	for( i = 0; encodings[i]; i++ )
+		if( encodings[i] == encoding ) return YES;
+
+	return NO;
 }
 
 #pragma mark -
@@ -201,6 +225,7 @@ BOOL MVChatApplicationQuitting = NO;
 #pragma mark -
 
 - (void) setEncoding:(NSStringEncoding) encoding {
+	NSParameterAssert( [self supportsStringEncoding:encoding] );
 	_encoding = encoding;
 }
 

@@ -16,6 +16,10 @@ static SilcPrivateKey silcPrivateKey;
 
 NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCertificate";
 
+static const NSStringEncoding supportedEncodings[] = {
+	NSUTF8StringEncoding, 0
+};
+
 void silc_channel_get_clients_per_list_callback( SilcClient client, SilcClientConnection conn, SilcClientEntry *clients, SilcUInt32 clients_count, void *context ) {
 	MVSILCChatRoom *room = context;
 	MVSILCChatConnection *self = (MVSILCChatConnection *)[room connection];
@@ -764,6 +768,10 @@ static SilcClientOperations silcClientOps = {
 
 - (NSSet *) supportedFeatures {
 	return nil;
+}
+
+- (const NSStringEncoding *) supportedStringEncodings {
+	return supportedEncodings;
 }
 
 #pragma mark -

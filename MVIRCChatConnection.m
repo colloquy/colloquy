@@ -43,6 +43,56 @@ NSRecursiveLock *MVIRCChatConnectionThreadLock = nil;
 static unsigned int connectionCount = 0;
 static GMainLoop *glibMainLoop = NULL;
 
+static const NSStringEncoding supportedEncodings[] = {
+	/* Universal */
+	NSUTF8StringEncoding,
+	NSNonLossyASCIIStringEncoding,
+	/* Western */
+	NSASCIIStringEncoding,
+	NSISOLatin1StringEncoding,			// ISO Latin 1
+	(NSStringEncoding) 0x80000203,		// ISO Latin 3
+	(NSStringEncoding) 0x8000020F,		// ISO Latin 9
+	NSMacOSRomanStringEncoding,			// Mac
+	NSWindowsCP1252StringEncoding,		// Windows
+	/* European */
+	NSISOLatin2StringEncoding,			// ISO Latin 2
+	(NSStringEncoding) 0x80000204,		// ISO Latin 4
+	(NSStringEncoding) 0x8000001D,		// Mac
+	NSWindowsCP1250StringEncoding,		// Windows
+	/* Cyrillic */
+	(NSStringEncoding) 0x80000A02,		// KOI8-R
+	(NSStringEncoding) 0x80000205,		// ISO Latin 5
+	(NSStringEncoding) 0x80000007,		// Mac
+	NSWindowsCP1251StringEncoding,		// Windows
+	/* Japanese */
+	(NSStringEncoding) 0x80000A01,		// ShiftJIS
+	NSISO2022JPStringEncoding,			// ISO-2022-JP
+	NSJapaneseEUCStringEncoding,		// EUC
+	(NSStringEncoding) 0x80000001,		// Mac
+	NSShiftJISStringEncoding,			// Windows
+	/* Simplified Chinese */
+	(NSStringEncoding) 0x80000632,		// GB 18030
+	(NSStringEncoding) 0x80000631,		// GBK
+	(NSStringEncoding) 0x80000930,		// EUC
+	(NSStringEncoding) 0x80000019,		// Mac
+	(NSStringEncoding) 0x80000421,		// Windows
+	/* Traditional Chinese */
+	(NSStringEncoding) 0x80000A03,		// Big5
+	(NSStringEncoding) 0x80000A06,		// Big5 HKSCS
+	(NSStringEncoding) 0x80000931,		// EUC
+	(NSStringEncoding) 0x80000002,		// Mac
+	(NSStringEncoding) 0x80000423,		// Windows
+	/* Korean */
+	(NSStringEncoding) 0x80000940,		// EUC
+	(NSStringEncoding) 0x80000003,		// Mac
+	(NSStringEncoding) 0x80000422,		// Windows
+	/* Hebrew */
+	(NSStringEncoding) 0x80000208,		// ISO-8859-8
+	(NSStringEncoding) 0x80000005,		// Mac
+	(NSStringEncoding) 0x80000505,		// Windows
+	0
+};
+
 typedef struct {
 	MVIRCChatConnection *connection;
 } MVIRCChatConnectionModuleData;
@@ -1044,6 +1094,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 - (NSSet *) supportedFeatures {
 	return nil;
+}
+
+- (const NSStringEncoding *) supportedStringEncodings {
+	return supportedEncodings;
 }
 
 #pragma mark -
