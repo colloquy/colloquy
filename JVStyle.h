@@ -17,6 +17,7 @@ extern NSString *JVNewStyleVariantAddedNotification;
 	NSArray *_variants;
 	NSArray *_userVariants;
 	void *_XSLStyle; /* xsltStylesheet */
+	BOOL _releasing;
 }
 + (void) scanForStyles;
 + (NSSet *) styles;

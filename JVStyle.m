@@ -45,12 +45,11 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
 		NSString *file = nil;
 		while( ( file = [denumerator nextObject] ) ) {
-			if( [[file pathExtension] isEqualToString:@"colloquyStyle"] || [[file pathExtension] isEqualToString:@"fireStyle"] ) {
+			if( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame ) {
 				NSBundle *bundle = nil;
-				if( ( bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] ) ) {
-					JVStyle *style = [[JVStyle newWithBundle:bundle] autorelease];
-					[styles addObject:style];
-				}
+				JVStyle *style = nil;
+				if( ( bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] ) )
+					style = [[JVStyle newWithBundle:bundle] autorelease];
 			}
 		}
 	}
@@ -108,8 +107,12 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 
 - (id) initWithBundle:(NSBundle *) bundle {
 	if( ( self = [self init] ) ) {
+		extern NSMutableSet *allStyles;
+		[allStyles addObject:self];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _clearVariantCache ) name:JVNewStyleVariantAddedNotification object:self];
 
+		_releasing = NO;
 		_bundle = nil;
 		_XSLStyle = NULL;
 		_parameters = nil;
@@ -120,6 +123,16 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 	}
 
 	return self;
+}
+
+- (void) release {
+	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
+		extern NSMutableSet *allStyles;
+		[allStyles removeObject:self];
+		_releasing = YES;
+	}
+
+	[super release];
 }
 
 - (void) dealloc {
