@@ -43,6 +43,7 @@ void irc_deinit( void );
 NSRecursiveLock *MVIRCChatConnectionThreadLock = nil;
 static NSPort *threadConnectionPort = nil;
 static BOOL irssiThreadReady = NO;
+static unsigned int connectionCount = 0;
 
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
@@ -1042,7 +1043,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		_chatConnectionSettings = NULL;
 
 		_knownUsers = [[NSMutableDictionary dictionaryWithCapacity:200] retain];
-
+		
+		extern unsigned int connectionCount;
+		connectionCount++;
+		
 		[MVIRCChatConnectionThreadLock lock];
 
 		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
@@ -1066,10 +1070,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		while( ! irssiThreadReady ) usleep( 50 );
 
 		extern NSPort *threadConnectionPort;
-		NSConnection *threadConnection = [NSConnection connectionWithReceivePort:threadConnectionPort sendPort:threadConnectionPort];
+		NSConnection *threadConnection = [NSConnection connectionWithReceivePort:nil sendPort:threadConnectionPort];
 		_irssiThreadConnection = [[(MVIRCConnectionThreadHelper *)[threadConnection rootProxy] vendChatConnection:self] retain];
 
-		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
+		NSConnection *connection = [NSConnection connectionWithReceivePort:nil sendPort:[_irssiThreadConnection receivePort]];
 		_irssiThreadProxy = [[connection rootProxy] retain];
 		[(NSDistantObject *)_irssiThreadProxy setProtocolForProxy:@protocol( MVIRCChatConnectionIrssiThread )];
 	}
@@ -1108,6 +1112,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	[self _setIrssiConnection:NULL];
 	[self _setIrssiConnectSettings:NULL];
+
+	extern unsigned int connectionCount;
+	connectionCount--;
 
 	[super dealloc];
 }
@@ -1672,7 +1679,7 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	[server setRootObject:helper];
 
 	extern NSPort *threadConnectionPort;
-	threadConnectionPort = [[[NSConnection defaultConnection] sendPort] retain];
+	threadConnectionPort = [[[NSConnection defaultConnection] receivePort] retain];
 
 	GMainLoop *glibMainLoop = g_main_new( TRUE );
 
@@ -1685,7 +1692,9 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	[MVIRCChatConnectionThreadLock unlock];
 
 	extern BOOL MVChatApplicationQuitting;
-	while( ! MVChatApplicationQuitting ) // run until the application quits
+	extern unsigned int connectionCount;
+
+	while( ! MVChatApplicationQuitting || connectionCount ) // run until the app quits and there are no more connections
 		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
 
 	[MVIRCChatConnectionThreadLock lock];
@@ -1896,16 +1905,20 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 #pragma mark -
 
 - (oneway void) _sendRawMessage:(NSString *) raw immediately:(BOOL) now {
-	[MVIRCChatConnectionThreadLock lock];
-	irc_send_cmd_full( (IRC_SERVER_REC *) _chatConnection, [self encodedBytesWithString:raw], now, now, FALSE);
-	[MVIRCChatConnectionThreadLock unlock];
+	if( [self _irssiConnection] ) {
+		[MVIRCChatConnectionThreadLock lock];
+		irc_send_cmd_full( (IRC_SERVER_REC *) [self _irssiConnection], [self encodedBytesWithString:raw], now, now, FALSE);
+		[MVIRCChatConnectionThreadLock unlock];
+	}
 }
 
 - (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action {
-	[MVIRCChatConnectionThreadLock lock];
-	if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:target], msg, 0 );
-	else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:target], msg );
-	[MVIRCChatConnectionThreadLock unlock];
+	if( [self _irssiConnection] ) {
+		[MVIRCChatConnectionThreadLock lock];
+		if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:target], msg, 0 );
+		else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:target], msg );
+		[MVIRCChatConnectionThreadLock unlock];
+	}
 }
 @end
 
