@@ -17,7 +17,7 @@
 #pragma mark -
 
 @interface JVChatRoomInspector (JVChatRoomInspectorPrivate)
-- (void) _finishTopicChange:(NSTimer *) timer;
+- (void) _finishTopicChange:(id) sender;
 - (void) _topicChanged:(NSNotification *) notification;
 - (void) _refreshEditStatus:(NSNotification *) notification;
 @end
@@ -151,7 +151,7 @@
 #pragma mark -
 
 @implementation JVChatRoomInspector (JVChatRoomInspectorPrivate)
-- (void) _finishTopicChange:(NSTimer *) timer {
+- (void) _finishTopicChange:(id) sender {
 	NSMutableAttributedString *topicString = [[[_room topic] mutableCopy] autorelease];
 	[topicString removeAttribute:NSParagraphStyleAttributeName range:NSMakeRange( 0, [topicString length] )];
 	[topicString removeAttribute:NSLinkAttributeName range:NSMakeRange( 0, [topicString length] )];
@@ -161,7 +161,7 @@
 - (void) _topicChanged:(NSNotification *) notification {
 	if( [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame ) return;
 	if( [[topic window] firstResponder] == topic && [topic isEditable] ) return;
-	[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector( _finishTopicChange: ) userInfo:NULL repeats:NO];
+	[self performSelector:@selector( _finishTopicChange: ) withObject:nil afterDelay:0.];
 }
 
 - (void) _refreshEditStatus:(NSNotification *) notification {
