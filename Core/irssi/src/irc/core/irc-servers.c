@@ -563,11 +563,10 @@ static void event_connected(IRC_SERVER_REC *server, const char *data, const char
 	server->connected = 1;
 	server->real_connect_time = time(NULL);
 
-	/* let the queue send in 1 second now that we are identified */
+	/* let the queue send now that we are identified */
 	GTimeVal now;
 	g_get_current_time(&now);
 	memcpy(&server->wait_cmd, &now, sizeof(GTimeVal));
-	server->wait_cmd.tv_sec += 1;
 
 	signal_emit("event connected", 1, server);
 	g_free(params);
