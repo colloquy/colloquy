@@ -1,7 +1,0 @@
-DCC SEND comet.txt 3466114712 56988 1438
-         ^         ^          ^     ^
-         |         |          |     |
-         filename  |          |     |
-                   IP address |     |
-                              port  |
-                                    size
