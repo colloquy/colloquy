@@ -4,6 +4,7 @@
 	NSAppleScript *_script;
 	NSString *_path;
 	NSMutableSet *_doseNotRespond;
+	NSTimer *_idleTimer;
 }
 - (id) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 

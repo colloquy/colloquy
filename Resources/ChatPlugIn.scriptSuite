@@ -698,6 +698,19 @@
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
 		</dict>
+		<key>idle</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>iDlX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>ResultAppleEventCode</key>
+			<string>long</string>
+			<key>Type</key>
+			<string>NSNumber&lt;UnsignedLong&gt;</string>
+		</dict>
 	</dict>
 	<key>Enumerations</key>
 	<dict>

@@ -532,6 +532,13 @@
 			<key>Name</key>
 			<string>user named</string>
 		</dict>
+		<key>idle</key>
+		<dict>
+			<key>Description</key>
+			<string>Automatically starts firing as soon as the script initializes, it will continue to fire periodically until the user quits the application. The default interval is 5 seconds, return a new interval to change the wait period for the next call.</string>
+			<key>Name</key>
+			<string>idle</string>
+		</dict>
 	</dict>
 	<key>Enumerations</key>
 	<dict>

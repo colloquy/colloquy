@@ -82,6 +82,7 @@
 		_doseNotRespond = [[NSMutableSet set] retain];
 		_script = nil;
 		_path = nil;
+		_idleTimer = nil;
 	}
 	return self;
 }
@@ -90,18 +91,27 @@
 	if( ( self = [self initWithManager:manager] ) ) {
 		_script = [script retain];
 		_path = [path copyWithZone:[self zone]];
+		[self performSelector:@selector( idle: ) withObject:nil afterDelay:1.];
 	}
 	return self;
+}
+
+- (void) release {
+	if( ( [self retainCount] - 1 ) == 1 )
+		[_idleTimer invalidate];
+	[super release];
 }
 
 - (void) dealloc {
 	[_script release];
 	[_path release];
 	[_doseNotRespond release];
+	[_idleTimer release];
 
 	_script = nil;
 	_path = nil;
 	_doseNotRespond = nil;
+	_idleTimer = nil;
 
 	[super dealloc];
 }
@@ -157,6 +167,18 @@
 
 	// a static result evaluate it to the proper object
 	return [[NSAEDescriptorTranslator sharedAEDescriptorTranslator] objectByTranslatingDescriptor:result toType:nil inSuite:nil];
+}
+
+#pragma mark -
+
+- (void) idle:(id) sender {
+	[_idleTimer invalidate];
+	[_idleTimer autorelease];
+
+	NSNumber *newTime = [self callScriptHandler:'iDlX' withArguments:nil forSelector:_cmd];
+	if( [newTime isMemberOfClass:[NSError class]] ) return;
+	if( ! [newTime isKindOfClass:[NSNumber class]] ) _idleTimer = [[NSTimer scheduledTimerWithTimeInterval:5. target:self selector:_cmd userInfo:nil repeats:NO] retain];
+	else _idleTimer = [[NSTimer scheduledTimerWithTimeInterval:[newTime doubleValue] target:self selector:_cmd userInfo:nil repeats:NO] retain];
 }
 
 #pragma mark -
