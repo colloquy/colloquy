@@ -28,14 +28,7 @@
                 view = NSView; 
             }; 
             SUPERCLASS = NSObject; 
-        }, 
-        {
-            ACTIONS = {bold = id; italic = id; reset = id; }; 
-            CLASS = MVTextView; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSTextView; 
-        }, 
-        {CLASS = NSObject; LANGUAGE = ObjC; }
+        }
     ); 
     IBVersion = 1; 
 }
