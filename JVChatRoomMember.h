@@ -1,5 +1,4 @@
 #import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
 #import "JVChatWindowController.h"
 
 @class JVChatRoom;
