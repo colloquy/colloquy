@@ -1474,6 +1474,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[transformedMessage replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
+		[transformedMessage replaceOccurrencesOfString:@"  " withString:@" &nbsp;" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
 		if( subsequent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
 		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
 
