@@ -119,7 +119,7 @@ void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t mess
 
 void MVChatRawMessage( void *c, void *cs, const char * const raw, int outbound ) {
 	MVChatConnection *self = cs;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:raw], @"message", [NSNumber numberWithBool:(BOOL)outbound], @"outbound", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSData dataWithBytes:raw length:strlen( raw )], @"message", [NSNumber numberWithBool:(BOOL)outbound], @"outbound", nil]];
 }
 
 void MVChatConnected( void *c, void *cs ) {
@@ -654,22 +654,19 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	if( ! _server ) return;
 	if( ! _nickname ) return;
 	if( [self status] == MVChatConnectionConnectingStatus ) return;
-	if( [self isConnected] ) [self disconnect];
 	[self _willConnect];
 	firetalk_set_password( _chatConnection, NULL, [_password UTF8String] );
-	firetalk_signon( _chatConnection, [_server UTF8String], _port, [_nickname UTF8String] );
+	if( firetalk_signon( _chatConnection, [_server UTF8String], _port, [_nickname UTF8String] ) != FE_SUCCESS ) {
+		[self _didNotConnect];
+	}
 }
 
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname {
-	if( [self isConnected] ) [self disconnect];
-
 	[self setNickname:nickname];
 	[self setServer:server];
 	[self setServerPort:port];
 
-	[self _willConnect];
-	firetalk_set_password( _chatConnection, NULL, [_password UTF8String] );
-	firetalk_signon( _chatConnection, [server UTF8String], port, [nickname UTF8String] );
+	[self connect];
 }
 
 - (void) disconnect {
