@@ -39,7 +39,7 @@
 @implementation MVColorPanel (MVColorPanelPrivate)
 - (NSView *) _makeAccessoryView {
 	NSView *view = [[[NSView alloc] initWithFrame:NSMakeRect( 0., 0., NSWidth( [self frame] ) - 10., 36. )] autorelease];
-	NSButtonCell *cell = [NSButtonCell new];
+	NSButtonCell *cell = [[NSButtonCell new] autorelease];
 
 	[cell setButtonType:NSRadioButton];
 	[cell setControlSize:NSSmallControlSize];
