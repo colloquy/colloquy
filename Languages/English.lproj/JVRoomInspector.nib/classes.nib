@@ -1,0 +1,37 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changeChatOption = id; }; 
+            CLASS = JVChatRoomInspector; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                emoticonSelection = NSPopUpButton; 
+                encodingSelection = NSPopUpButton; 
+                inviteOnly = NSButtonCell; 
+                limitMembers = NSButton; 
+                loadProgress = NSProgressIndicator; 
+                memberLimit = NSTextField; 
+                moderated = NSButtonCell; 
+                noOutside = NSButtonCell; 
+                password = NSTextField; 
+                privateRoom = NSButtonCell; 
+                requiresPassword = NSButton; 
+                secretRoom = NSButtonCell; 
+                styleSelection = NSPopUpButton; 
+                topic = NSTextView; 
+                topicChangeable = NSButtonCell; 
+                view = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {bold = id; italic = id; reset = id; }; 
+            CLASS = MVTextView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTextView; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
