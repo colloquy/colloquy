@@ -44,6 +44,11 @@
 			if( insert ) insert.parentNode.removeChild( insert );
 		}
 
+		function locationOfMessage( id ) {
+			element = document.getElementById( id );
+			return element.offsetTop;
+		}
+
 		function jumpToBottom() {
 			document.body.scrollTop = document.body.offsetHeight;
 		}

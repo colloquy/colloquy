@@ -24,6 +24,7 @@
 #import "MVTextView.h"
 #import "MVMenuButton.h"
 #import "NSURLAdditions.h"
+#import "JVMarkedScroller.h"
 
 static NSArray *JVAutoActionVerbs = nil;
 
@@ -843,6 +844,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (IBAction) clearDisplay:(id) sender {
 	_requiresFullMessage = YES;
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
+	[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] removeAllMarks];
 }
 
 #pragma mark -
@@ -1315,6 +1317,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 		if( parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendConsecutiveMessage( \"%@\" );", messageString]];
 		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
+
+		if( highlight ) {
+			unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", ( _messageId - 1 )]] intValue];
+			if( loc ) [(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] addMarkAt:loc];
+		}
 	}
 
 	xmlFreeDoc( doc );

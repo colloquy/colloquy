@@ -15,6 +15,7 @@
 #import "NSPreferences.h"
 #import "JVAppearancePreferences.h"
 #import "JVChatTranscriptPrivates.h"
+#import "JVMarkedScroller.h"
 
 #import <libxml/xinclude.h>
 #import <libxml/debugXML.h>
@@ -103,6 +104,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 - (void) awakeFromNib {
 	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
+	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setVerticalScroller:[[[JVMarkedScroller alloc] initWithFrame:NSMakeRect( 0., 0., 10., 20. )] autorelease]];
 
 	[display setUIDelegate:self];
 	[display setPolicyDelegate:self];

@@ -1019,6 +1019,34 @@
 			name = "Configure (Do First)";
 			productName = Configure;
 		};
+		1C9437080639F86700618CD9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVMarkedScroller.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9437090639F86700618CD9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVMarkedScroller.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C94370A0639F86700618CD9 = {
+			fileRef = 1C9437080639F86700618CD9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C94370B0639F86700618CD9 = {
+			fileRef = 1C9437090639F86700618CD9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C95D5B6041FA02C00000102 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -1321,6 +1349,7 @@
 				1CB37179060CC81C00F6A81F,
 				CB77A8890612622E0076BEE0,
 				CB742C010630E08200CF2B0E,
+				1C94370A0639F86700618CD9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2030,6 +2059,7 @@
 				1CB37172060CC7E200F6A81F,
 				1CB3717A060CC81C00F6A81F,
 				CB742C020630E08200CF2B0E,
+				1C94370B0639F86700618CD9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3794,6 +3824,8 @@
 				F5F9AF5901711CD401A84BDE,
 				1C2462A305F9205900505752,
 				1C2462A205F9205900505752,
+				1C9437090639F86700618CD9,
+				1C9437080639F86700618CD9,
 				F592CABF01824AE801EE70DE,
 				F592CAC001824AE801EE70DE,
 				F599994901890E4601EE70DE,
