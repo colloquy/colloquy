@@ -832,7 +832,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[pool release];
 }
 
-
 - (NSMenu *) _stylesMenu {
 	if( ! _nibLoaded ) [self view];
 	return [[[chooseStyle menu] retain] autorelease];
@@ -1131,7 +1130,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 #pragma mark -
-#pragma mark Webview
+#pragma mark Web View Template
 
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
