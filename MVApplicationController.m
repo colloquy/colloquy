@@ -123,6 +123,29 @@ static BOOL applicationIsTerminating = NO;
 
 #pragma mark -
 
+- (IBAction) copyStripped:(id) sender {
+	if( [NSApp sendAction:@selector(copy:) to:nil from:sender] ) {
+		NSPasteboard *pb = [NSPasteboard generalPasteboard];
+		if( [[pb types] containsObject:NSStringPboardType] ) {
+			NSMutableString *text = [[pb stringForType:NSStringPboardType] mutableCopy];
+			if( text ) {
+				unichar chr = 0x200b;
+				NSString *space = [NSString stringWithCharacters:&chr length:1];
+				[text replaceOccurrencesOfString:space
+									  withString:@""
+										 options:NSLiteralSearch
+										   range:NSMakeRange(0, [text length])];
+				
+				[pb addTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
+				[pb setString:text forType:NSStringPboardType];
+				[text release];
+			}
+		}
+	}
+}
+
+#pragma mark -
+
 - (void) setupPreferences {
 	static BOOL setupAlready = NO;
 	if( setupAlready ) return;

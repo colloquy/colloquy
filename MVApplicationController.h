@@ -12,6 +12,8 @@ extern NSString *JVChatEmoticonSetInstalledNotification;
 - (IBAction) showConnectionManager:(id) sender;
 - (IBAction) showBuddyList:(id) sender;
 
+- (IBAction) copyStripped:(id) sender;
+
 + (BOOL) isTerminating;
 @end
 
