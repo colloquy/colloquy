@@ -1312,6 +1312,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action {
+	if( ! [self _irssiConnection] ) return;
+
 	NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
 	[encodedData appendBytes:"\0" length:1];
 
@@ -1320,6 +1322,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action {
+	if( ! [self _irssiConnection] ) return;
+
 	NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
 	[encodedData appendBytes:"\0" length:1];
 
@@ -1331,6 +1335,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) sendRawMessage:(NSString *) raw {
 	if( ! raw ) return;
+	if( ! [self _irssiConnection] ) return;
 	irc_send_cmd_full( (IRC_SERVER_REC *) [self _irssiConnection], [raw UTF8String], FALSE, FALSE, FALSE);
 }
 
@@ -1413,6 +1418,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room {
 	NSParameterAssert( room != nil );
+	if( ! [self _irssiConnection] ) return;
+
 	NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:topic withEncoding:encoding] mutableCopy] autorelease];
 	[encodedData appendBytes:"\0" length:1];
 
@@ -1539,10 +1546,12 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (BOOL) waitingToReconnect {
+	if( ! [self _irssiConnection] ) return NO;
 	return ( ! [self _irssiConnection] -> no_reconnect && [self _irssiConnection] -> connection_lost );
 }
 
 - (unsigned int) lag {
+	if( ! [self _irssiConnection] ) return 0;
 	return [self _irssiConnection] -> lag;
 }
 @end
