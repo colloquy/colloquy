@@ -61,11 +61,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
 	[column setDataCell:prototypeCell];
 
+	[chatViewsOutlineView setDoubleAction:@selector( _doubleClickedListItem: )];
 	[chatViewsOutlineView setAutoresizesOutlineColumn:YES];
 	[chatViewsOutlineView setMenu:[[[NSMenu alloc] initWithTitle:@""] autorelease]];
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
+
+	[[self window] setFrameUsingName:@"Chat Window"];
+	[[self window] setFrameAutosaveName:@"Chat Window"];
+
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] )
+		[viewsDrawer open:nil];
 
 	[self _refreshList];
 }
@@ -345,14 +352,21 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (IBAction) toggleViewsDrawer:(id) sender {
 	[viewsDrawer toggle:sender];
+
+	if( [viewsDrawer state] == NSDrawerClosedState || [viewsDrawer state] == NSDrawerClosingState )
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVChatWindowDrawerOpen"];
+	else if( [viewsDrawer state] == NSDrawerOpenState || [viewsDrawer state] == NSDrawerOpeningState )
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVChatWindowDrawerOpen"];
 }
 
 - (IBAction) openViewsDrawer:(id) sender {
 	[viewsDrawer open:sender];
+	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVChatWindowDrawerOpen"];
 }
 
 - (IBAction) closeViewsDrawer:(id) sender {
 	[viewsDrawer close:sender];
+	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVChatWindowDrawerOpen"];
 }
 
 - (IBAction) toggleSmallDrawerIcons:(id) sender {
@@ -541,6 +555,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 @implementation JVChatWindowController (JVChatWindowControllerPrivate)
+- (IBAction) _doubleClickedListItem:(id) sender {
+	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
+	if( [item respondsToSelector:@selector( doubleClicked: )] )
+		[item doubleClicked:sender];
+}
+
 - (void) _refreshSelectionMenu {
 	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
 	id menuItem = nil;

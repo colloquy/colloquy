@@ -107,4 +107,5 @@ extern NSString *JVChatViewPboardType;
 @interface NSObject (JVChatListItemOptional)
 - (BOOL) acceptsDraggedFileOfType:(NSString *) type;
 - (void) handleDraggedFile:(NSString *) path;
+- (IBAction) doubleClicked:(id) sender;
 @end
