@@ -3,8 +3,8 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSURL.h>
 
-#define MVURLEncodeString(t) ((NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)(t), NULL, CFSTR(",;:/?@&$=|^~`\{}[]"), kCFStringEncodingUTF8))
-#define MVURLDecodeString(t) ((NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)(t), NULL))
+#define MVURLEncodeString(t) ([(NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)(t), NULL, CFSTR(",;:/?@&$=|^~`\{}[]"), kCFStringEncodingUTF8) autorelease])
+#define MVURLDecodeString(t) ([(NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)(t), NULL) autorelease])
 
 typedef enum {
 	MVChatConnectionDisconnectedStatus = 'disC',
