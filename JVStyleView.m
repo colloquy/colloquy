@@ -517,7 +517,10 @@ quickEnd:
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMElement *element = [[[self mainFrame] DOMDocument] getElementById:identifier];
-		return [[element valueForKey:@"offsetTop"] intValue];
+		id value = [element valueForKey:@"offsetTop"];
+		if( [value respondsToSelector:@selector( intValue )] )
+			return [value intValue];
+		return 0;
 	} else
 #endif
 	// old JavaScript method
@@ -532,8 +535,10 @@ quickEnd:
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
-		if( index < [[body childNodes] length] ) return [[[[body childNodes] item:index] valueForKey:@"offsetTop"] intValue];
-		else return 0;
+		id value = [[[body childNodes] item:index] valueForKey:@"offsetTop"];
+		if( index < [[body childNodes] length] && [value respondsToSelector:@selector( intValue )] )
+			return [value intValue];
+		return 0;
 	} else
 #endif
 	// old JavaScript method
