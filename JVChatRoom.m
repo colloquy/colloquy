@@ -408,6 +408,26 @@
 #pragma mark -
 #pragma mark User List Access
 
+- (NSSet *) chatRoomMembersWithName:(NSString *) name {
+	if( ! [name length] ) return nil;
+
+	NSMutableSet *ret = [NSMutableSet set];
+	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+	JVChatRoomMember *member = nil;
+
+	while( ( member = [enumerator nextObject] ) ) {
+		if( [[member nickname] caseInsensitiveCompare:name] == NSOrderedSame ) {
+			[ret addObject:member];
+		} else if( [[member realName] caseInsensitiveCompare:name] == NSOrderedSame ) {
+			[ret addObject:member];
+		} else if( [[member title] caseInsensitiveCompare:name] == NSOrderedSame ) {
+			[ret addObject:member];
+		}
+	}
+
+	return [NSSet setWithSet:ret];
+}
+
 - (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name {
 	if( ! [name length] ) return nil;
 
@@ -463,11 +483,21 @@
 #pragma mark WebKit Support
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
+	// valid member links: "member:xenon" or "member:identifier:qI+rEcbsuX1T0tNbi6mM+A=="
 	if( [[[element objectForKey:WebElementLinkURLKey] scheme] isEqualToString:@"member"] ) {
+		NSString *resource = [[[element objectForKey:WebElementLinkURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters];
+		BOOL specific = [resource hasPrefix:@"identifier:"];
+		NSString *nick = [resource substringFromIndex:( specific ? 11 : 0 )];
+		JVChatRoomMember *mbr = nil;
+
+		if( specific ) {
+			MVChatUser *user = [[self connection] chatUserWithUniqueIdentifier:nick];
+			if( user ) mbr = [self chatRoomMemberForUser:user];
+		} else {
+			mbr = [self firstChatRoomMemberWithName:nick];
+		}
+
 		NSMutableArray *ret = [NSMutableArray array];
-		NSString *identifier = [[[element objectForKey:WebElementLinkURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters];
-		MVChatUser *user = [[self connection] chatUserWithUniqueIdentifier:identifier];
-		JVChatRoomMember *mbr = [self chatRoomMemberForUser:user];
 		NSMenuItem *item = nil;
 
 		if( mbr ) {
@@ -498,6 +528,9 @@
 					[ret removeObjectIdenticalTo:[ret lastObject]];
 			}
 		} else {
+			MVChatUser *user = [[[self connection] chatUsersWithNickname:nick] anyObject];
+			if( ! user ) return ret;
+
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:NULL keyEquivalent:@""] autorelease];
 			[item setRepresentedObject:user];
 			[item setTarget:self];
@@ -512,11 +545,19 @@
 }
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
+	// valid member links: "member:xenon" or "member:identifier:qI+rEcbsuX1T0tNbi6mM+A=="
 	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"member"] ) {
-		NSString *identifier = [[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters];
-		MVChatUser *user = [[self connection] chatUserWithUniqueIdentifier:identifier];
+		NSString *resource = [[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters];
+		BOOL specific = [resource hasPrefix:@"identifier:"];
+		NSString *nick = [resource substringFromIndex:( specific ? 11 : 0 )];
+		MVChatUser *user = nil;
 
-		if( ! [user isLocalUser] )
+		if( specific ) user = [[self connection] chatUserWithUniqueIdentifier:nick];
+		else user = [[self firstChatRoomMemberWithName:nick] user];
+
+		if( ! user ) user = [[[self connection] chatUsersWithNickname:nick] anyObject];
+
+		if( user && ! [user isLocalUser] )
 			[[JVChatController defaultManager] chatViewControllerForUser:user ifExists:NO];
 
 		[listener ignore];

@@ -61,8 +61,8 @@
 					<xsl:otherwise>
 						<td class="icon">
 						<xsl:choose>
-							<xsl:when test="string-length( sender/@card )">
-				     		   <img src="file://{concat( $buddyIconDirectory, sender/@card, $buddyIconExtension )}" width="32" height="32" alt="" onerror="this.src = 'person.tif'" />
+							<xsl:when test="string-length( sender/@buddy )">
+				     		   <img src="file://{concat( $buddyIconDirectory, sender/@buddy, $buddyIconExtension )}" width="32" height="32" alt="" onerror="this.src = 'person.tif'" />
 							</xsl:when>
 							<xsl:otherwise>
 				     		   <img src="person.tif" width="32" height="32" alt="" />
@@ -106,8 +106,8 @@
 					<xsl:when test="sender/@self = 'yes'">
 						<td class="icon">
 						<xsl:choose>
-							<xsl:when test="string-length( sender/@card )">
-				     		   <img src="file://{concat( $buddyIconDirectory, sender/@card, $buddyIconExtension )}" width="32" height="32" alt="" onerror="this.src = 'person.tif'" />
+							<xsl:when test="string-length( sender/@buddy )">
+				     		   <img src="file://{concat( $buddyIconDirectory, sender/@buddy, $buddyIconExtension )}" width="32" height="32" alt="" onerror="this.src = 'person.tif'" />
 							</xsl:when>
 							<xsl:otherwise>
 				     		   <img src="person.tif" width="32" height="32" alt="" />

@@ -64,13 +64,27 @@
 						</xsl:call-template>
 					</xsl:variable>
 
+					<xsl:variable name="memberLink">
+						<xsl:choose>
+							<xsl:when test="../sender/@identifier">
+								<xsl:text>member:identifier:</xsl:text><xsl:value-of select="../sender/@identifier" />
+							</xsl:when>
+							<xsl:when test="../sender/@nickname">
+								<xsl:text>member:</xsl:text><xsl:value-of select="../sender/@nickname" />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>member:</xsl:text><xsl:value-of select="../sender" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+
 					<span class="{$messageClass}">
 						<span class="hidden">[</span>
 						<span class="time"><xsl:value-of select="$timestamp" /></span>
 						<span class="hidden">] <xsl:if test="not( @action = 'yes' )"><xsl:value-of select="../sender" />: </xsl:if></span>
 						<xsl:if test="@action = 'yes'">
 							<xsl:text>&#8226; </xsl:text>
-							<a href="member:{../sender}" class="member action">
+							<a href="{$memberLink}" class="member action">
 							<xsl:value-of select="../sender" />
 							</a>
 							<xsl:text> </xsl:text>
@@ -109,17 +123,31 @@
 				</xsl:call-template>
 			</xsl:variable>
 
+			<xsl:variable name="memberLink">
+				<xsl:choose>
+					<xsl:when test="sender/@identifier">
+						<xsl:text>member:identifier:</xsl:text><xsl:value-of select="sender/@identifier" />
+					</xsl:when>
+			        <xsl:when test="sender/@nickname">
+						<xsl:text>member:</xsl:text><xsl:value-of select="sender/@nickname" />
+			        </xsl:when>
+					<xsl:otherwise>
+						<xsl:text>member:</xsl:text><xsl:value-of select="sender" />
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
 			<span id="{@id}">
 				<span class="{$messageClass}">
 					<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
 					<span class="header">
-						<a href="member:{sender}" class="name"><xsl:value-of select="sender" /></a>
+						<a href="{$memberLink}" class="name"><xsl:value-of select="sender" /></a>
 					</span>
 					<span class="hidden">: </span>
 					<span class="time" title="{$timestamp}">&#8203;</span>
 					<xsl:if test="message[not( @ignored = 'yes' )][1]/@action = 'yes'">
 						<xsl:text>&#8226; </xsl:text>
-						<a href="member:{sender}" class="member action">
+						<a href="{$memberLink}" class="member action">
 						<xsl:value-of select="sender" />
 						</a>
 						<xsl:text> </xsl:text>

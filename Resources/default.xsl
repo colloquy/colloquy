@@ -69,6 +69,20 @@
 			</xsl:choose>
 		</xsl:variable>
 
+		<xsl:variable name="memberLink">
+			<xsl:choose>
+				<xsl:when test="sender/@identifier or ../sender/@identifier">
+					<xsl:text>member:identifier:</xsl:text><xsl:value-of select="sender/@identifier | ../sender/@identifier" />
+				</xsl:when>
+				<xsl:when test="sender/@nickname or ../sender/@nickname">
+					<xsl:text>member:</xsl:text><xsl:value-of select="sender/@nickname | ../sender/@nickname" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>member:</xsl:text><xsl:value-of select="sender | ../sender" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
 		<div id="{$properIdentifier}" class="{$allClasses}">
 			<span class="timestamp hidden">[</span>
 			<span class="timestamp">
@@ -77,7 +91,7 @@
 				</xsl:call-template>
 			</span>
 			<span class="timestamp hidden">] </span>
-			<a href="member:{sender | ../sender}" class="{$senderClasses}"><xsl:value-of select="sender | ../sender" /></a>
+			<a href="{$memberLink}" class="{$senderClasses}"><xsl:value-of select="sender | ../sender" /></a>
 			<span class="hidden">: </span>
 			<span class="message">
 				<xsl:choose>

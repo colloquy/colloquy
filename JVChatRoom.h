@@ -25,6 +25,7 @@
 - (BOOL) keepAfterPart;
 - (void) setKeepAfterPart:(BOOL) keep;
 
+- (NSSet *) chatRoomMembersWithName:(NSString *) name;
 - (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name;
 - (JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user;
 - (JVChatRoomMember *) localChatRoomMember;
