@@ -11,6 +11,14 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 
 #pragma mark -
 
+@implementation NSAppleScript (NSAppleScriptIdentifier)
+- (NSNumber *) scriptIdentifier {
+	return [NSNumber numberWithUnsignedLong:_compiledScriptID];
+}
+@end
+
+#pragma mark -
+
 @interface NSString (NSAppleEventDescriptor)
 - (unsigned long) fourCharCode;
 @end
@@ -154,6 +162,10 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 }
 
 #pragma mark -
+
+- (NSAppleScript *) script {
+	return _script;
+}
 
 - (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments {
 	int pid = [[NSProcessInfo processInfo] processIdentifier];
