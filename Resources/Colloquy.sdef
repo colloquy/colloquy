@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
 <dictionary title="Colloquy Terminology">
-	<suite name="Colloquy Suite" code="coRC" description="Commands and classes for Colloquy scripting.">
+	<suite name="Colloquy Suite" code="coRC" description="Classes and commands for Colloquy high-level scripting.">
 		<cocoa name="Colloquy"/>
 		<types>
 			<enumeration name="buddy status" code="bstE">
@@ -19,9 +19,34 @@
 			</enumeration>
 		</types>
 		<classes>
-			<class name="chat window" code="chwC" description="Controls the window and one or more chat views (direct chats, chat rooms, etc.)" inherits="item">
-				<contents name="window" code="cwin" description="User interface window. (Default subcontainer.)" type="window" access="r"/>
-				<cocoa class="JVChatWindowController"/>
+			<class name="application" code="capp" description="Colloquy application." inherits="application">
+				<cocoa class="NSApplication"/>
+				<elements>
+					<element code="chvC" type="panel" access="r">
+						<cocoa method="views"/>
+					</element>
+					<element code="ccoM" type="console panel" access="r">
+						<cocoa method="chatConsoles"/>
+					</element>
+					<element code="ctrM" type="transcript panel" access="r">
+						<cocoa method="chatTranscripts"/>
+					</element>
+					<element code="dchM" type="chat panel" access="r">
+						<cocoa method="directChats"/>
+					</element>
+					<element code="crmM" type="chat room panel" access="r">
+						<cocoa method="chatRooms"/>
+					</element>
+					<element type="connection">
+						<cocoa method="chatConnections"/>
+					</element>
+					<element type="buddy">
+						<cocoa method="buddies"/>
+					</element>
+				</elements>
+			</class>
+			<class name="window" code="cwin" description="Colloquy window." inherits="window">
+				<cocoa class="NSWindow"/>
 				<elements>
 					<element code="chvC" type="panel" access="r">
 						<cocoa method="views"/>
@@ -40,14 +65,40 @@
 					</element>
 				</elements>
 				<properties>
-					<property name="id" code="ID  " description="The unique identifier of the chat window." type="number" access="r">
-						<cocoa method="uniqueIdentifier"/>
-					</property>
 					<property name="selected list item" code="SclM" description="Current selection in the drawer list." type="list item" access="r">
 						<cocoa method="selectedListItem"/>
 					</property>
-					<property name="active chat view" code="AcvC" description="Current visible view for this chat window." type="panel" access="r">
+					<property name="active panel" code="AcvC" description="Current visible panel for this chat window." type="panel" access="r">
 						<cocoa method="activeChatViewController"/>
+					</property>
+				</properties>
+			</class>
+			<class name="text" code="ctxt" description="Rich (styled) text" plural="text" inherits="text">
+				<cocoa class="NSTextStorage"/>
+				<properties>
+					<property name="background color" code="bCol" description="The background color of the first character." type="color" access="rw">
+						<cocoa method="backgroundColor"/>
+					</property>
+					<property name="HTML start" code="htMs" description="The HTML that directly proceeds the first character. This would include start tags or self-closing tags." type="string" access="rw">
+						<cocoa method="XHTMLStart"/>
+					</property>
+					<property name="HTML end" code="htMe" description="The HTML that directly follows the first character or end of the attribute run. This would include end tags." type="string" access="rw">
+						<cocoa method="XHTMLEnd"/>
+					</property>
+					<property name="style classes" code="stYc" description="The stylesheet classes of the first character." type="list of any" access="rw">
+						<cocoa method="styleClasses"/>
+					</property>
+					<property name="bold" code="bOld" description="The bold state of the first character." type="boolean" access="rw">
+						<cocoa method="boldState"/>
+					</property>
+					<property name="italic" code="iTlc" description="The italic state of the first character." type="boolean" access="rw">
+						<cocoa method="italicState"/>
+					</property>
+					<property name="underline" code="unDl" description="The underline state of the first character." type="boolean" access="rw">
+						<cocoa method="underlineState"/>
+					</property>
+					<property name="link" code="liNk" description="The Internet link of the first character." type="string" access="rw">
+						<cocoa method="hyperlink"/>
 					</property>
 				</properties>
 			</class>
@@ -67,11 +118,8 @@
 						<cocoa method="uniqueIdentifier"/>
 					</property>
 					<property name="connection" code="conM" description="Connection this view uses." type="connection" access="r"/>
-					<property name="chat window" code="chwC" description="Owning chat window." type="chat window" access="r">
-						<cocoa method="windowController"/>
-					</property>
-					<property name="window title" code="wtiA" description="Title used when active in the chat window." type="string" access="r">
-						<cocoa method="windowTitle"/>
+					<property name="window" code="chwC" description="Parent window." type="window" access="r">
+						<cocoa method="window"/>
 					</property>
 					<property name="description" code="idtA" description="Consicse description of the chat view." type="string" access="r">
 						<cocoa method="identifier"/>
@@ -81,7 +129,7 @@
 			<class name="transcript panel" code="ctrM" description="A log panel of some previous conversation." inherits="panel">
 				<cocoa class="JVChatTranscriptPanel"/>
 			</class>
-			<class name="console panel" code="dchM" description="Direct server console for advanced users." inherits="panel">
+			<class name="console panel" code="ccoM" description="Direct server console for advanced users." inherits="panel">
 				<cocoa class="JVChatConsolePanel"/>
 			</class>
 			<class name="chat panel" code="dchM" description="Direct (private) chat panel with another user." inherits="transcript panel">
@@ -170,7 +218,7 @@
 			</class>
 		</classes>
 	</suite>
-	<suite name="Chat Core Suite" code="ccoR" description="Commands and classes for Chat Core scripting. Chat Core is the lowest level of Colloquy.">
+	<suite name="Chat Core Suite" code="ccoR" description="Classes and commands for Chat Core scripting. Chat Core is the lowest level of Colloquy.">
 		<cocoa name="ChatCore"/>
 		<types>
 			<enumeration name="subcode type" code="scTE">

@@ -230,46 +230,6 @@
 			<key>PluralName</key>
 			<string>transcript panels</string>
 		</dict>
-		<key>JVChatWindowController</key>
-		<dict>
-			<key>Attributes</key>
-			<dict>
-				<key>activeChatViewController</key>
-				<dict>
-					<key>Description</key>
-					<string>Current visible view for this chat window.</string>
-					<key>Name</key>
-					<string>active chat view</string>
-				</dict>
-				<key>selectedListItem</key>
-				<dict>
-					<key>Description</key>
-					<string>Current selection in the drawer list.</string>
-					<key>Name</key>
-					<string>selected list item</string>
-				</dict>
-				<key>uniqueIdentifier</key>
-				<dict>
-					<key>Description</key>
-					<string>The unique identifier of the chat window.</string>
-					<key>Name</key>
-					<string>id</string>
-				</dict>
-				<key>window</key>
-				<dict>
-					<key>Description</key>
-					<string>User interface window. (Default subcontainer.)</string>
-					<key>Name</key>
-					<string>window</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Controls the window and one or more chat views (direct chats, chat rooms, etc.)</string>
-			<key>Name</key>
-			<string>chat window</string>
-			<key>PluralName</key>
-			<string>chat windows</string>
-		</dict>
 		<key>JVDirectChatPanel</key>
 		<dict>
 			<key>Description</key>
@@ -305,6 +265,109 @@
 			<key>PluralName</key>
 			<string>list items</string>
 		</dict>
+		<key>NSApplication</key>
+		<dict>
+			<key>Description</key>
+			<string>Colloquy application.</string>
+			<key>Name</key>
+			<string>application</string>
+			<key>PluralName</key>
+			<string>applications</string>
+		</dict>
+		<key>NSTextStorage</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>XHTMLEnd</key>
+				<dict>
+					<key>Description</key>
+					<string>The HTML that directly follows the first character or end of the attribute run. This would include end tags.</string>
+					<key>Name</key>
+					<string>HTML end</string>
+				</dict>
+				<key>XHTMLStart</key>
+				<dict>
+					<key>Description</key>
+					<string>The HTML that directly proceeds the first character. This would include start tags or self-closing tags.</string>
+					<key>Name</key>
+					<string>HTML start</string>
+				</dict>
+				<key>backgroundColor</key>
+				<dict>
+					<key>Description</key>
+					<string>The background color of the first character.</string>
+					<key>Name</key>
+					<string>background color</string>
+				</dict>
+				<key>boldState</key>
+				<dict>
+					<key>Description</key>
+					<string>The bold state of the first character.</string>
+					<key>Name</key>
+					<string>bold</string>
+				</dict>
+				<key>hyperlink</key>
+				<dict>
+					<key>Description</key>
+					<string>The Internet link of the first character.</string>
+					<key>Name</key>
+					<string>link</string>
+				</dict>
+				<key>italicState</key>
+				<dict>
+					<key>Description</key>
+					<string>The italic state of the first character.</string>
+					<key>Name</key>
+					<string>italic</string>
+				</dict>
+				<key>styleClasses</key>
+				<dict>
+					<key>Description</key>
+					<string>The stylesheet classes of the first character.</string>
+					<key>Name</key>
+					<string>style classes</string>
+				</dict>
+				<key>underlineState</key>
+				<dict>
+					<key>Description</key>
+					<string>The underline state of the first character.</string>
+					<key>Name</key>
+					<string>underline</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Rich (styled) text</string>
+			<key>Name</key>
+			<string>text</string>
+			<key>PluralName</key>
+			<string>text</string>
+		</dict>
+		<key>NSWindow</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>activeChatViewController</key>
+				<dict>
+					<key>Description</key>
+					<string>Current visible panel for this chat window.</string>
+					<key>Name</key>
+					<string>active panel</string>
+				</dict>
+				<key>selectedListItem</key>
+				<dict>
+					<key>Description</key>
+					<string>Current selection in the drawer list.</string>
+					<key>Name</key>
+					<string>selected list item</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Colloquy window.</string>
+			<key>Name</key>
+			<string>window</string>
+			<key>PluralName</key>
+			<string>windows</string>
+		</dict>
 		<key>Panel</key>
 		<dict>
 			<key>Attributes</key>
@@ -330,19 +393,12 @@
 					<key>Name</key>
 					<string>id</string>
 				</dict>
-				<key>windowController</key>
+				<key>window</key>
 				<dict>
 					<key>Description</key>
-					<string>Owning chat window.</string>
+					<string>Parent window.</string>
 					<key>Name</key>
-					<string>chat window</string>
-				</dict>
-				<key>windowTitle</key>
-				<dict>
-					<key>Description</key>
-					<string>Title used when active in the chat window.</string>
-					<key>Name</key>
-					<string>window title</string>
+					<string>window</string>
 				</dict>
 			</dict>
 			<key>Description</key>
@@ -354,7 +410,7 @@
 		</dict>
 	</dict>
 	<key>Description</key>
-	<string>Commands and classes for Colloquy scripting.</string>
+	<string>Classes and commands for Colloquy high-level scripting.</string>
 	<key>Enumerations</key>
 	<dict>
 		<key>BuddyStatus</key>

@@ -399,7 +399,7 @@
 		</dict>
 	</dict>
 	<key>Description</key>
-	<string>Commands and classes for Chat Core scripting. Chat Core is the lowest level of Colloquy.</string>
+	<string>Classes and commands for Chat Core scripting. Chat Core is the lowest level of Colloquy.</string>
 	<key>Enumerations</key>
 	<dict>
 		<key>ConnectionStatus</key>
