@@ -98,8 +98,7 @@
 			sourceTree = "<group>";
 		};
 		089C1672FE841209C02AAC07 = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = Foundation.framework;
 			path = /System/Library/Frameworks/Foundation.framework;
@@ -107,8 +106,7 @@
 			sourceTree = "<absolute>";
 		};
 		089C167FFE841241C02AAC07 = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = AppKit.framework;
 			path = /System/Library/Frameworks/AppKit.framework;
@@ -183,8 +181,7 @@
 			sourceTree = "<group>";
 		};
 		1058C7ADFEA557BF11CA2CBB = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = Cocoa.framework;
 			path = /System/Library/Frameworks/Cocoa.framework;
@@ -825,9 +822,8 @@
 			};
 		};
 		1C258E55050B9656000001C8 = {
-			fallbackIsa = PBXFileReference;
 			includeInIndex = 1;
-			isa = PBXFolderReference;
+			isa = PBXFileReference;
 			lastKnownFileType = folder;
 			name = Emoticons;
 			path = Resources/Emoticons;
@@ -911,8 +907,7 @@
 			sourceTree = "<group>";
 		};
 		1C3C112E050265AE000001C8 = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = WebKit.framework;
 			path = /System/Library/Frameworks/WebKit.framework;
@@ -929,9 +924,8 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		1C3C116205029E03000001C8 = {
-			fallbackIsa = PBXFileReference;
 			includeInIndex = 1;
-			isa = PBXFolderReference;
+			isa = PBXFileReference;
 			lastKnownFileType = folder;
 			name = Styles;
 			path = Resources/Styles;
@@ -1257,8 +1251,7 @@
 			};
 		};
 		1C7055C40519E54C00A8FE6E = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = libexslt.framework;
 			path = Frameworks/libexslt.framework;
@@ -1266,8 +1259,7 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		1C7055C60519E55A00A8FE6E = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = libiconv.framework;
 			path = Frameworks/libiconv.framework;
@@ -1275,8 +1267,7 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		1C7055C80519E56300A8FE6E = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = libxml.framework;
 			path = Frameworks/libxml.framework;
@@ -1284,8 +1275,7 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		1C7055CA0519E56C00A8FE6E = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = libxslt.framework;
 			path = Frameworks/libxslt.framework;
@@ -1443,7 +1433,7 @@
 		};
 		1C8CE1EB05A921A00020D841 = {
 			isa = PBXFileReference;
-			lastKnownFileType = file;
+			lastKnownFileType = sourcecode.scpt;
 			name = iTunes.scpt;
 			path = "Plug-Ins/iTunes/iTunes.scpt";
 			refType = 4;
@@ -4335,7 +4325,7 @@
 		};
 		CB9B52B406351A540055AB73 = {
 			isa = PBXFileReference;
-			lastKnownFileType = file;
+			lastKnownFileType = sourcecode.scpt;
 			name = Google.scpt;
 			path = "Plug-Ins/Google/Google.scpt";
 			refType = 4;
@@ -4563,9 +4553,8 @@
 			sourceTree = "<group>";
 		};
 		F51F91D7037967CB01A35792 = {
-			fallbackIsa = PBXFileReference;
 			includeInIndex = 1;
-			isa = PBXFolderReference;
+			isa = PBXFileReference;
 			lastKnownFileType = folder;
 			name = Chat.clr;
 			path = Resources/Chat.clr;
@@ -4573,8 +4562,7 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F51F91F103796FCD01A35792 = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = Security.framework;
 			path = /System/Library/Frameworks/Security.framework;
@@ -4582,9 +4570,8 @@
 			sourceTree = "<absolute>";
 		};
 		F520458E01B1D37701EBB4B5 = {
-			fallbackIsa = PBXFileReference;
 			includeInIndex = 0;
-			isa = PBXFolderReference;
+			isa = PBXFileReference;
 			lastKnownFileType = folder;
 			name = Sounds;
 			path = Resources/Sounds;
@@ -4896,8 +4883,7 @@
 			sourceTree = "<group>";
 		};
 		F555208B01F0DE0601EE70DE = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = Message.framework;
 			path = /System/Library/Frameworks/Message.framework;
@@ -5464,8 +5450,7 @@
 			sourceTree = "<group>";
 		};
 		F5FB4CE60393C15601000102 = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
+			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = AddressBook.framework;
 			path = /System/Library/Frameworks/AddressBook.framework;

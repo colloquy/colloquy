@@ -46,12 +46,12 @@
 	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextPanel: )];
 	item = [windowMenu itemAtIndex:index];
 	[item setKeyEquivalent:[NSString stringWithCharacters:&right length:1]];
-	
+
 	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
 	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextActivePanel: )];
 	item = [windowMenu itemAtIndex:index];
 	[item setKeyEquivalent:[NSString stringWithCharacters:&right length:1]];
-	
+
 	[super initialize];	
 }
 
