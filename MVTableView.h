@@ -1,7 +1,12 @@
 #import <Cocoa/Cocoa.h>
 
 @interface MVTableView : NSTableView {
-	BOOL autosaveTableColumnHighlight;
+	int autosaveTableColumnHighlight:1;
+	int dataSourceDragImageForRows:1;
+	int dataSourceMenuForTableColumn:1;
+	int dataSourceToolTipForTableColumn:1;
+	int delegateRectOfRow:1;
+	int delegateRowsInRect:1;
 }
 + (NSImage *) ascendingSortIndicator;
 + (NSImage *) descendingSortIndicator;
