@@ -305,7 +305,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[toolbarItem setTarget:self];
 	[toolbarItem setAction:@selector( toggleViewsDrawer: )];
 
-	return [[toolbarItem retain] autorelease];
+	return toolbarItem;
 }
 
 - (IBAction) toggleViewsDrawer:(id) sender {
