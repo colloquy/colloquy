@@ -4,6 +4,7 @@
         {
             ACTIONS = {
                 addRoom = id; 
+                changeNewConnectionProtocol = id; 
                 conenctNewConnection = id; 
                 hideConnectionManager = id; 
                 messageUser = id; 

@@ -24,8 +24,8 @@
 	/* New Connection */
 	IBOutlet NSTextField *newNickname;
 	IBOutlet NSPopUpButton *newType;
-	IBOutlet NSTextField *newAddress;
-	IBOutlet NSTextField *newPort;
+	IBOutlet NSComboBox *newAddress;
+	IBOutlet NSComboBox *newPort;
 	IBOutlet NSButton *newRemember;
 	IBOutlet NSButton *showDetails;
 	IBOutlet NSTabView *detailsTabView;
@@ -54,6 +54,7 @@
 - (IBAction) hideConnectionManager:(id) sender;
 
 - (IBAction) newConnection:(id) sender;
+- (IBAction) changeNewConnectionProtocol:(id) sender;
 - (IBAction) toggleNewConnectionDetails:(id) sender;
 - (IBAction) addRoom:(id) sender;
 - (IBAction) removeRoom:(id) sender;

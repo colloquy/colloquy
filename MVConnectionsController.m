@@ -252,15 +252,39 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) newConnection:(id) sender {
 	[self _loadInterfaceIfNeeded];
 	if( [openConnection isVisible] ) return;
+
 	[_joinRooms autorelease];
 	_joinRooms = [[NSMutableArray array] retain];
+
 	if( [showDetails state] != NSOffState ) {
 		[showDetails setState:NSOffState];
 		[self toggleNewConnectionDetails:showDetails];
 	}
+
 	[newServerPassword setObjectValue:@""];
+
+	MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
+	if( [[MVChatConnection defaultServerPortsForType:type] count] )
+		[newPort setObjectValue:[[MVChatConnection defaultServerPortsForType:type] objectAtIndex:0]];
+
 	[openConnection center];
 	[openConnection makeKeyAndOrderFront:nil];
+}
+
+- (IBAction) changeNewConnectionProtocol:(id) sender {
+	MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
+
+	[newPort reloadData];
+	if( [[MVChatConnection defaultServerPortsForType:type] count] )
+		[newPort setObjectValue:[[MVChatConnection defaultServerPortsForType:type] objectAtIndex:0]];
+
+	if( type == MVChatConnectionIRCType ) {
+		[sslConnection setEnabled:YES];
+		[newProxy setEnabled:YES];
+	} else if( type == MVChatConnectionSILCType ) {
+		[sslConnection setEnabled:NO];
+		[newProxy setEnabled:NO];
+	}
 }
 
 - (IBAction) toggleNewConnectionDetails:(id) sender {
@@ -1028,22 +1052,43 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (int) numberOfItemsInComboBox:(NSComboBox *) comboBox {
-	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] count];
+	if( comboBox == newAddress ) {
+		return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] count];
+	} else if( comboBox == newPort ) {
+		MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
+		return [[MVChatConnection defaultServerPortsForType:type] count];
+	}
+
+	return 0;
 }
 
 - (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(int) index {
-	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectAtIndex:index];
+	if( comboBox == newAddress ) {
+		return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectAtIndex:index];
+	} else if( comboBox == newPort ) {
+		MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
+		return [[MVChatConnection defaultServerPortsForType:type] objectAtIndex:index];
+	}
+
+	return nil;
 }
 
 - (unsigned int) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
-	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] indexOfObject:string];
+	if( comboBox == newAddress ) {
+		return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] indexOfObject:string];
+	}
+
+	return NSNotFound;
 }
 
 - (NSString *) comboBox:(NSComboBox *) comboBox completedString:(NSString *) substring {
-	NSEnumerator *enumerator = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectEnumerator];
-	NSString *server = nil;
-	while( ( server = [enumerator nextObject] ) )
-		if( [server hasPrefix:substring] ) return server;
+	if( comboBox == newAddress ) {
+		NSEnumerator *enumerator = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectEnumerator];
+		NSString *server = nil;
+		while( ( server = [enumerator nextObject] ) )
+			if( [server hasPrefix:substring] ) return server;
+	}
+
 	return nil;
 }
 
