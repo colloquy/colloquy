@@ -70,7 +70,7 @@
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	float imageWidth = 0.;
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[NSApplication sharedApplication] isActive] );
-	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:11.], NSFontAttributeName, ( highlighted ? [NSColor whiteColor] : [NSColor blackColor] ), NSForegroundColorAttributeName, nil];
+	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:11.], NSFontAttributeName, ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ), NSForegroundColorAttributeName, nil];
 	NSImage *mainImage = nil;
 
 	if( highlighted && _altImage ) {
@@ -112,7 +112,7 @@
 		}
 	} else if( [_infoText length] && [_mainText length] ) {
 		float mainYLocation = 0., subYLocation = 0.;
-		NSDictionary *subAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:9.], NSFontAttributeName, ( highlighted ? [NSColor whiteColor] : [NSColor darkGrayColor] ), NSForegroundColorAttributeName, nil];
+		NSDictionary *subAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:9.], NSFontAttributeName, ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.75] ), NSForegroundColorAttributeName, nil];
 		NSSize mainStringSize = [_mainText sizeWithAttributes:attributes];
 		NSSize subStringSize = [_infoText sizeWithAttributes:subAttributes];
 
