@@ -1676,9 +1676,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	while( ! MVChatApplicationQuitting || connectionCount ) {
 		if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
 			g_main_iteration( TRUE ); // this will block if TRUE is passed
-			[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.001]];
 			[MVIRCChatConnectionThreadLock unlock];
 		}
+
+		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.001]];
 
 		usleep( 1000 ); // give time for other theads to lock
 	}
@@ -1887,12 +1888,16 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (oneway void) _sendRawMessage:(NSString *) raw immediately:(BOOL) now {
+	[MVIRCChatConnectionThreadLock lock];
 	irc_send_cmd_full( (IRC_SERVER_REC *) _chatConnection, [self encodedBytesWithString:raw], now, now, FALSE);
+	[MVIRCChatConnectionThreadLock unlock];
 }
 
 - (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action {
+	[MVIRCChatConnectionThreadLock lock];
 	if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:target], msg, 0 );
 	else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:target], msg );
+	[MVIRCChatConnectionThreadLock unlock];
 }
 @end
 
