@@ -8,6 +8,12 @@ body {
 	background-color: white;
 }
 
+.hidden {
+	position: fixed;
+	top: -900px;
+	left: -900px;
+}
+
 q:before {
 	content: "\201c";
 	font-weight: bold;
