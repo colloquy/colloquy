@@ -28,13 +28,15 @@
 
 	NSAffineTransform *transform = [NSAffineTransform transform];
 
-	float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self visibleRect] ) / [self knobProportion] );
+	NSRect clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 6. : 0. ), ( sFlags.isHoriz ? 0. : 6. ) );
+	float scale = NSHeight( clip ) / ( NSHeight( [self frame] ) / [self knobProportion] );
 	[transform scaleXBy:( sFlags.isHoriz ? scale : 1. ) yBy:( sFlags.isHoriz ? 1. : scale )];
 
 	float offset = [self rectForPart:NSScrollerKnobSlot].origin.y + 6.;
 	[transform translateXBy:( sFlags.isHoriz ? offset / scale : 0. ) yBy:( sFlags.isHoriz ? 0. : offset / scale )];
 
-	[[NSBezierPath bezierPathWithRect:NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 4. : 0. ), ( sFlags.isHoriz ? 0. : 4. ) )] setClip];
+	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 4. : 0. ), ( sFlags.isHoriz ? 0. : 4. ) );
+	[[NSBezierPath bezierPathWithRect:clip] setClip];
 
 	[[NSColor selectedKnobColor] set];
 	[[transform transformBezierPath:_lines] stroke];
