@@ -464,6 +464,11 @@
 }
 
 - (IBAction) showOptions:(id) sender {
+	if( ! _variantLocked && [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSAlternateKeyMask ) {
+		[[NSWorkspace sharedWorkspace] openURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]]];
+		return;
+	}
+
 	[optionsDrawer setParentWindow:[sender window]];
 	[optionsDrawer setPreferredEdge:NSMaxXEdge];
 	if( [optionsDrawer contentSize].width < [optionsDrawer minContentSize].width )
