@@ -71,7 +71,7 @@
 					<key>Name</key>
 					<string>status</string>
 				</dict>
-				<key>awayStatusMessage</key>
+				<key>scriptTypedAwayMessage</key>
 				<dict>
 					<key>Description</key>
 					<string>Away message for other users to see that your not there.</string>

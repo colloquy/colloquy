@@ -26,7 +26,7 @@
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( [command isEqualToString:@"away"] ) {
-		[connection setAwayStatusWithMessage:[arguments string]];
+		[connection setAwayStatusWithMessage:arguments];
 		return YES;
 	} else if( [command isEqualToString:@"join"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
@@ -75,7 +75,7 @@
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:[room connection]];
 	} else if( [command isEqualToString:@"away"] ) {
-		[[room connection] setAwayStatusWithMessage:[arguments string]];
+		[[room connection] setAwayStatusWithMessage:arguments];
 		return YES;
 	} else if( [command isEqualToString:@"join"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[room connection]];
@@ -185,7 +185,7 @@
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"away"] ) {
-		[[chat connection] setAwayStatusWithMessage:[arguments string]];
+		[[chat connection] setAwayStatusWithMessage:arguments];
 		return YES;
 	} else if( [command isEqualToString:@"join"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[chat connection]];

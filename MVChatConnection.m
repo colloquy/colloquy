@@ -974,18 +974,21 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 #pragma mark -
 
-- (NSString *) awayStatusMessage {
+- (NSAttributedString *) awayStatusMessage {
 	return _awayMessage;
 }
 
-- (void) setAwayStatusWithMessage:(NSString *) message {
+- (void) setAwayStatusWithMessage:(NSAttributedString *) message {
 	if( [self isConnected] ) {
 		[_awayMessage autorelease];
 		_awayMessage = nil;
 
-		if( [message length] ) {
+		if( [[message string] length] ) {
 			_awayMessage = [message copy];
-			firetalk_set_away( _chatConnection, [message UTF8String] );
+
+			NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:NSUTF8StringEncoding] mutableCopy] autorelease];
+			[encodedData appendBytes:"\0" length:1];
+			firetalk_set_away( _chatConnection, [encodedData bytes] );
 		} else firetalk_set_away( _chatConnection, NULL );
 	}
 }
@@ -1351,8 +1354,13 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	return [[self url] absoluteString];
 }
 
-- (void) setAwayStatusMessage:(NSString *) message {
-	[self setAwayStatusWithMessage:message];
+- (NSTextStorage *) scriptTypedAwayMessage {
+	return [[[NSTextStorage alloc] initWithAttributedString:_awayMessage] autorelease];
+}
+
+- (void) setScriptTypedAwayMessage:(NSString *) message {
+	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
+	[self setAwayStatusWithMessage:attributeMsg];
 }
 @end
 

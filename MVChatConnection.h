@@ -149,7 +149,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSDate *_cachedDate;
 	NSTimeInterval _backlogDelay;
 	NSDictionary *_floodIntervals;
-	NSString *_awayMessage;
+	NSAttributedString *_awayMessage;
 	unsigned int /* io_object_t */ _sleepNotifier;
 	unsigned int /* io_connect_t */ _powerConnection;
 }
@@ -222,8 +222,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) stopFetchingRoomList;
 - (NSDictionary *) roomListResults;
 
-- (NSString *) awayStatusMessage;
-- (void) setAwayStatusWithMessage:(NSString *) message;
+- (NSAttributedString *) awayStatusMessage;
+- (void) setAwayStatusWithMessage:(NSAttributedString *) message;
 - (void) clearAwayStatus;
 
 - (BOOL) isConnected;
