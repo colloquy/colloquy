@@ -74,9 +74,6 @@ extern char *irc_html_to_irc(const char * const string);
 extern char *irc_irc_to_html(const char * const string);
 
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
-static NSString *JVToolbarBoldFontItemIdentifier = @"JVToolbarBoldFontItem";
-static NSString *JVToolbarItalicFontItemIdentifier = @"JVToolbarItalicFontItem";
-static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFontItem";
 
 #pragma mark -
 
@@ -875,12 +872,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 #pragma mark -
 
+- (BOOL) newMessageWaiting {
+	return _newMessage;
+}
+
+- (BOOL) newHighlightMessageWaiting {
+	return _newHighlightMessage;
+}
+
+#pragma mark -
+
 - (IBAction) send:(id) sender {
 	NSMutableAttributedString *subMsg = nil;
 	BOOL action = NO;
 	NSRange range;
 
-	if( ! [[self connection] isConnected] || _cantSendMessages ) return;
+	if( ! [[self connection] isConnected] || ( _cantSendMessages && ! [[[send textStorage] string] hasPrefix:@"/"] ) ) return;
 
 	_historyIndex = 0;
 	if( ! [[send textStorage] length] ) return;
@@ -1150,42 +1157,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[menuItem setSubmenu:_spillEncodingMenu];
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
-	} else if( [identifier isEqual:JVToolbarBoldFontItemIdentifier] ) {
-		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
-		[_toolbarItems setObject:toolbarItem forKey:identifier];
-
-		[toolbarItem setLabel:NSLocalizedString( @"Bold", "bold font toolbar item" )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Bold", "bold font toolbar item" )];
-
-		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Bold Style", "bold font tooltip" )];
-		[toolbarItem setImage:[NSImage imageNamed:@"bold"]];
-
-		[toolbarItem setTarget:send];
-		[toolbarItem setAction:@selector( bold: )];
-	} else if( [identifier isEqual:JVToolbarItalicFontItemIdentifier] ) {
-		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
-		[_toolbarItems setObject:toolbarItem forKey:identifier];
-		
-		[toolbarItem setLabel:NSLocalizedString( @"Italic", "italic font style toolbar item" )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Italic", "italic font style toolbar item" )];
-
-		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Italic Style", "italic style tooltip" )];
-		[toolbarItem setImage:[NSImage imageNamed:@"italic"]];
-
-		[toolbarItem setTarget:send];
-		[toolbarItem setAction:@selector( italic: )];
-	} else if( [identifier isEqual:JVToolbarUnderlineFontItemIdentifier] ) {
-		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
-		[_toolbarItems setObject:toolbarItem forKey:identifier];
-		
-		[toolbarItem setLabel:NSLocalizedString( @"Underline", "underline font style toolbar item" )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Underline", "underline font style toolbar item" )];
-
-		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Underline Style", "underline style tooltip" )];
-		[toolbarItem setImage:[NSImage imageNamed:@"underline"]];
-
-		[toolbarItem setTarget:send];
-		[toolbarItem setAction:@selector( underline: )];
 	} else return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
 	return toolbarItem;
 }
@@ -1198,9 +1169,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
-	[list addObject:JVToolbarBoldFontItemIdentifier];
-	[list addObject:JVToolbarItalicFontItemIdentifier];
-	[list addObject:JVToolbarUnderlineFontItemIdentifier];
 	return list;
 }
 
