@@ -185,8 +185,6 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	[self _updateChatStylesMenu];
 	[self _updateChatEmoticonsMenu];
-
-//	[self performSelector:@selector( _reloadCurrentStyle: ) withObject:nil afterDelay:0.];
 }
 
 - (void) dealloc {
