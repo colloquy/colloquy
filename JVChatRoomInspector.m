@@ -83,10 +83,6 @@
 	[self _finishTopicChange:nil];
 }
 
-- (void) didUnload {
-	
-}
-
 #pragma mark -
 
 - (IBAction) changeChatOption:(id) sender {
@@ -129,7 +125,7 @@
 
 #pragma mark -
 
-- (BOOL) textView:(NSTextView *) textView clickedOnLink:(id) link {
+- (BOOL) textView:(NSTextView *) textView clickedOnLink:(id) link atIndex:(unsigned) charIndex {
 	return YES;
 }
 
@@ -146,6 +142,10 @@
 - (BOOL) textView:(NSTextView *) textView tabHit:(NSEvent *) event {
 	return YES;
 }
+
+- (void) textDidEndEditing:(NSNotification *) notification {
+	[[_room connection] setTopic:[topic textStorage] withEncoding:[_room encoding] forRoom:[_room target]];
+}
 @end
 
 #pragma mark -
@@ -160,6 +160,7 @@
 
 - (void) _topicChanged:(NSNotification *) notification {
 	if( [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame ) return;
+	if( [[topic window] firstResponder] == topic && [topic isEditable] ) return;
 	[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector( _finishTopicChange: ) userInfo:NULL repeats:NO];
 }
 
@@ -182,11 +183,11 @@
 	[requiresPassword setEnabled:canEdit];
 	if( [requiresPassword state] == NSOnState ) [password setEnabled:canEdit];
 	else [password setEnabled:NO];
-
-	[topic setEditable:canEdit]; // ( ! canEdit && ( chatOptions & op_topic_only ) )
 }
 
 - (void) _roomModeChanged:(NSNotification *) notification {
+	BOOL enabled = NO;
+
 	if( notification && [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame ) return;
 
 	switch( [[[notification userInfo] objectForKey:@"mode"] unsignedIntValue] ) {
@@ -203,7 +204,12 @@
 		[moderated setState:(NSCellStateValue)[[[notification userInfo] objectForKey:@"enabled"] boolValue]];
 		break;
 	case MVChatRoomSetTopicOperatorOnlyMode:
-		[topicChangeable setState:(NSCellStateValue)[[[notification userInfo] objectForKey:@"enabled"] boolValue]];
+		enabled = [[[notification userInfo] objectForKey:@"enabled"] boolValue];
+		if( enabled ) [self _finishTopicChange:nil];
+		if( [_room doesMemberHaveOperatorStatus:[[_room connection] nickname]] ) {
+			[topic setEditable:YES];
+		} else [topic setEditable:( ! enabled )];
+		[topicChangeable setState:(NSCellStateValue)enabled];
 		break;
 	case MVChatRoomNoOutsideMessagesMode:
 		[noOutside setState:(NSCellStateValue)[[[notification userInfo] objectForKey:@"enabled"] boolValue]];
