@@ -6,4 +6,8 @@
 	_preferenceModules = [[NSMutableArray array] retain];
 	return self;
 }
+
+- (BOOL) usesButtons {
+	return NO;
+}
 @end
