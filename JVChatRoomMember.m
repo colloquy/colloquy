@@ -98,7 +98,13 @@
 }
 
 - (NSImage *) icon {
-	return ( _operator ? [NSImage imageNamed:@"op"] : ( _voice ? [NSImage imageNamed:@"voice"] : [NSImage imageNamed:@"person"] ) );
+	NSImage *icon = nil;
+	if( _serverOperator ) icon = [NSImage imageNamed:@"admin"];
+	else if( _operator ) icon = [NSImage imageNamed:@"op"];
+	else if( _halfOperator ) icon = [NSImage imageNamed:@"half-op"];
+	else if( _voice ) icon = [NSImage imageNamed:@"voice"];
+	else icon = [NSImage imageNamed:@"person"];
+	return icon;
 }
 
 - (JVBuddy *) buddy {
@@ -113,7 +119,7 @@
 		case JVBuddyOfflineStatus:
 		default: return nil;
 	}
-		return nil;
+	return nil;
 }
 
 - (BOOL) voice {
