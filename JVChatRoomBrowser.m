@@ -355,11 +355,13 @@
 
 		if( ! t ) {
 			NSData *topic = [info objectForKey:@"topic"];
-			NSString *topicString = [[[NSString alloc] initWithData:topic encoding:[_connection encoding]] autorelease];
-			if( ! topicString ) topicString = [NSString stringWithCString:[topic bytes] length:[topic length]];
-			topicString = [NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", topicString];
-			t = [NSAttributedString attributedStringWithHTMLFragment:topicString baseURL:nil];
-			[info setObject:t forKey:@"topicAttributed"];
+			NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[_connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+			if( ! ( t = [NSAttributedString attributedStringWithIRCFormat:topic options:options] ) ) {
+				[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
+				t = [NSAttributedString attributedStringWithIRCFormat:topic options:options];
+			}
+
+			if( t ) [info setObject:t forKey:@"topicAttributed"];
 		}
 
 		return t;
