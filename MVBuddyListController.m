@@ -374,12 +374,13 @@ static MVBuddyListController *sharedInstance = nil;
 		unsigned index = [emailValue indexForIdentifier:[emailValue primaryIdentifier]];
 		if( emailValue && index != NSNotFound ) {
 			[emailValue replaceValueAtIndex:index withValue:[email objectValue]];
-		} else {
+		} else if( [[email objectValue] length] ) {
 			emailValue = [[[ABMutableMultiValue alloc] init] autorelease];
 			[emailValue addValue:[email objectValue] withLabel:kABOtherLabel];
 		}
 
-		[person setValue:emailValue forProperty:kABEmailProperty];
+		if( [emailValue count] )
+			[person setValue:emailValue forProperty:kABEmailProperty];
 
 		[person setImageData:[[image image] TIFFRepresentation]];
 
