@@ -73,7 +73,32 @@
 
 #pragma mark -
 
-- (void) applicationDidFinishLaunching:(NSNotification *) notification {
+- (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
+	NSLog( @"openFile %@", filename );
+
+	[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
+
+	return NO;
+}
+
+- (BOOL) application:(NSApplication *) sender openTempFile:(NSString *) filename {
+	NSLog( @"openTempFile %@", filename );
+	return NO;
+}
+
+- (BOOL) application:(id) sender openFileWithoutUI:(NSString *) filename {
+	NSLog( @"openFileWithoutUI %@", filename );
+	return NO;
+}
+
+- (BOOL) application:(NSApplication *) sender printFile:(NSString *) filename {
+	NSLog( @"printFile %@", filename );
+	return NO;
+}
+
+#pragma mark -
+
+- (void) applicationWillFinishLaunching:(NSNotification *) notification {
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 
 	[MVCrashCatcher check];
