@@ -60,9 +60,14 @@
 			mainGroup = 089C166AFE841209C02AAC07;
 			productRefGroup = 089C166AFE841209C02AAC07;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1CFA05F9053C960800C702F9;
+					ProjectRef = 1CFA05F6053C960800C702F9;
+				},
+			);
 			targets = (
 				1CB2CCF5052DDC560094AAA4,
-				1C51B46E052DE0CB00BB459B,
 				1C51B4BB052DE14B00BB459B,
 				1C51B4F6052DE2B800BB459B,
 			);
@@ -72,6 +77,7 @@
 				F5394BB50378DBC301A35792,
 				F5DD34720382B8AE01000102,
 				1CB35B5B042E1B2500000102,
+				1CFA05F6053C960800C702F9,
 				F50B0A9F0170C89301A84BDE,
 				F50B0AA00170C89301A84BDE,
 				F5185C82018626F701EE70DE,
@@ -127,9 +133,7 @@
 				1058C7ADFEA557BF11CA2CBB,
 				1CA56CE0042A764600000102,
 				F51F91F103796FCD01A35792,
-				F5A89F1C019302BD01EE70DE,
 				F555208B01F0DE0601EE70DE,
-				1CCB3C3705228EFD000001C8,
 				1C3C112E050265AE000001C8,
 				F5FB4CE60393C15601000102,
 				1C7055C80519E56300A8FE6E,
@@ -187,12 +191,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C09DFE3052DFF4800D748CF = {
-			fileRef = 1C51B48B052DE0CB00BB459B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C09DFF6052DFF6600D748CF = {
 			containerPortal = 089C1669FE841209C02AAC07;
 			isa = PBXContainerItemProxy;
@@ -216,12 +214,6 @@
 			isa = PBXTargetDependency;
 			target = 1C51B4F6052DE2B800BB459B;
 			targetProxy = 1C09DFF8052DFF6600D748CF;
-		};
-		1C09DFFB052DFF7800D748CF = {
-			fileRef = 1C51B48B052DE0CB00BB459B;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1C18CD100528DBBA000001C8 = {
 			expectedFileType = sourcecode.c.h;
@@ -259,6 +251,9 @@
 			fileRef = 1C1ACE410533943900F71D4E;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1C1ACE440533943900F71D4E = {
@@ -473,236 +468,6 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
-		1C51B46E052DE0CB00BB459B = {
-			buildPhases = (
-				1C51B46F052DE0CB00BB459B,
-				1C51B47A052DE0CB00BB459B,
-				1C51B47B052DE0CB00BB459B,
-				1C51B484052DE0CB00BB459B,
-				1C51B488052DE0CB00BB459B,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_PREPROCESSOR_DEFINITIONS = DISABLE_TOC_PROTOCOL;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_CFLAGS = "-fconstant-cfstrings";
-				OTHER_LDFLAGS = "-seg1addr 0x10000000";
-				OTHER_LIBTOOL_FLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRINCIPAL_CLASS = "";
-				PRODUCT_NAME = ChatCore;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
-				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = NO;
-			};
-			dependencies = (
-			);
-			isa = PBXNativeTarget;
-			name = "Chat Core (Framework)";
-			productInstallPath = "@executable_path/../Frameworks";
-			productName = "Chat Core (Framework)";
-			productReference = 1C51B48B052DE0CB00BB459B;
-			productType = "com.apple.product-type.framework";
-		};
-		1C51B46F052DE0CB00BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-				1C51B470052DE0CB00BB459B,
-				1C51B471052DE0CB00BB459B,
-				1C51B472052DE0CB00BB459B,
-				1C51B473052DE0CB00BB459B,
-				1C51B474052DE0CB00BB459B,
-				1C51B475052DE0CB00BB459B,
-				1C51B476052DE0CB00BB459B,
-				1C51B477052DE0CB00BB459B,
-				1C51B478052DE0CB00BB459B,
-				1C51B479052DE0CB00BB459B,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B470052DE0CB00BB459B = {
-			fileRef = F52D043101873FC401EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		1C51B471052DE0CB00BB459B = {
-			fileRef = 1C2EF7EB0427A40B00000102;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		1C51B472052DE0CB00BB459B = {
-			fileRef = F50AC514037E2E3801A35792;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B473052DE0CB00BB459B = {
-			fileRef = F52BA287037C13C201A35792;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B474052DE0CB00BB459B = {
-			fileRef = F52BA28D037C13C201A35792;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B475052DE0CB00BB459B = {
-			fileRef = 1CCB3C1505227E74000001C8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B476052DE0CB00BB459B = {
-			fileRef = F52BA281037C13C201A35792;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B477052DE0CB00BB459B = {
-			fileRef = F52BA283037C13C201A35792;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B478052DE0CB00BB459B = {
-			fileRef = 1C3B4DA40428C36400000102;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		1C51B479052DE0CB00BB459B = {
-			fileRef = F5E98623018B412B01EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B47A052DE0CB00BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B47B052DE0CB00BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-				1C51B47C052DE0CB00BB459B,
-				1C51B47D052DE0CB00BB459B,
-				1C51B47E052DE0CB00BB459B,
-				1C51B47F052DE0CB00BB459B,
-				1C51B480052DE0CB00BB459B,
-				1C51B481052DE0CB00BB459B,
-				1C51B482052DE0CB00BB459B,
-				1C51B483052DE0CB00BB459B,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B47C052DE0CB00BB459B = {
-			fileRef = F52D043001873FC401EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B47D052DE0CB00BB459B = {
-			fileRef = 1C2EF7EC0427A40B00000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B47E052DE0CB00BB459B = {
-			fileRef = F50AC513037E2E3801A35792;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B47F052DE0CB00BB459B = {
-			fileRef = F52BA286037C13C201A35792;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B480052DE0CB00BB459B = {
-			fileRef = F52BA28C037C13C201A35792;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B481052DE0CB00BB459B = {
-			fileRef = 1CCB3C1605227E74000001C8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B482052DE0CB00BB459B = {
-			fileRef = F52BA282037C13C201A35792;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B483052DE0CB00BB459B = {
-			fileRef = F5E98622018B412B01EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B484052DE0CB00BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-				1C51B485052DE0CB00BB459B,
-				1C51B486052DE0CB00BB459B,
-				1C51B487052DE0CB00BB459B,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B485052DE0CB00BB459B = {
-			fileRef = 1CCB3C3705228EFD000001C8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B486052DE0CB00BB459B = {
-			fileRef = F5A89F1C019302BD01EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B487052DE0CB00BB459B = {
-			fileRef = 1058C7ADFEA557BF11CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B488052DE0CB00BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1C51B48A052DE0CB00BB459B = {
 			expectedFileType = text.plist;
 			isa = PBXFileReference;
@@ -710,14 +475,6 @@
 			path = "Resources/Info-ChatCore.plist";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
-		};
-		1C51B48B052DE0CB00BB459B = {
-			expectedFileType = wrapper.framework;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = ChatCore.framework;
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1C51B4BB052DE14B00BB459B = {
 			buildPhases = (
@@ -1158,17 +915,9 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1CB2C67C052DAFE30094AAA4 = {
-			containerPortal = 089C1669FE841209C02AAC07;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 1C18CCC905289170000001C8;
-			remoteInfo = "Chat Core (Framework)";
-		};
 		1CB2C8CC052DDA360094AAA4 = {
 			children = (
 				1CB2CD8C052DDC570094AAA4,
-				1C51B48B052DE0CB00BB459B,
 				1C51B4CD052DE14B00BB459B,
 				1C51B505052DE2B800BB459B,
 			);
@@ -1204,7 +953,7 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
-				1CB2CCF6052DDC560094AAA4,
+				1CFA05FE053C964800C702F9,
 				1C09DFF7052DFF6600D748CF,
 				1C09DFF9052DFF6600D748CF,
 			);
@@ -1213,11 +962,6 @@
 			productName = "Massinova (Application)";
 			productReference = 1CB2CD8C052DDC570094AAA4;
 			productType = "com.apple.product-type.application";
-		};
-		1CB2CCF6052DDC560094AAA4 = {
-			isa = PBXTargetDependency;
-			target = 1C51B46E052DE0CB00BB459B;
-			targetProxy = 1CB2C67C052DAFE30094AAA4;
 		};
 		1CB2CCF9052DDC560094AAA4 = {
 			buildActionMask = 2147483647;
@@ -1296,6 +1040,9 @@
 			fileRef = F51A4F2C01C2DDD201EE70DE;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1CB2CD02052DDC560094AAA4 = {
@@ -1350,6 +1097,9 @@
 			fileRef = 1C088A0E04FCFEE700A8FE6E;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1CB2CD09052DDC560094AAA4 = {
@@ -1371,6 +1121,9 @@
 			fileRef = 1CD6C413051DFA1C00A8FE10;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1CB2CD0C052DDC560094AAA4 = {
@@ -1389,6 +1142,9 @@
 			fileRef = 1CE72A95052C745400A8FE6E;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1CB2CD0F052DDC560094AAA4 = {
@@ -2121,7 +1877,10 @@
 				1CB2CD7E052DDC560094AAA4,
 				1CB2CD7F052DDC560094AAA4,
 				1CB2CD80052DDC560094AAA4,
-				1C09DFE3052DFF4800D748CF,
+				1CFA05FC053C963800C702F9,
+				1CFA0631053C96CC00C702F9,
+				1CFA064D053C971500C702F9,
+				1CFA0878053C995500C702F9,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2179,7 +1938,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1C09DFFB052DFF7800D748CF,
+				1CFA0879053C996200C702F9,
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
 				1CB2CD86052DDC560094AAA4,
@@ -2495,15 +2254,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1CCB3C3705228EFD000001C8 = {
-			expectedFileType = wrapper.framework;
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			name = SystemConfiguration.framework;
-			path = /System/Library/Frameworks/SystemConfiguration.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
 		1CD6C413051DFA1C00A8FE10 = {
 			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
@@ -2608,6 +2358,79 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
+		1CFA05F6053C960800C702F9 = {
+			expectedFileType = "wrapper.pb-project";
+			isa = PBXFileReference;
+			path = "Chat Core.xcode";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CFA05F9053C960800C702F9 = {
+			children = (
+				1CFA05FA053C960800C702F9,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CFA05FA053C960800C702F9 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = ChatCore.framework;
+			refType = 3;
+			remoteRef = 1CFA05FB053C962600C702F9;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CFA05FB053C962600C702F9 = {
+			containerPortal = 1CFA05F6053C960800C702F9;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+		1CFA05FC053C963800C702F9 = {
+			fileRef = 1CFA05FA053C960800C702F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CFA05FD053C964800C702F9 = {
+			containerPortal = 1CFA05F6053C960800C702F9;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+		1CFA05FE053C964800C702F9 = {
+			isa = PBXTargetDependency;
+			name = "Chat Core (Framework) (from Chat Core.xcode)";
+			targetProxy = 1CFA05FD053C964800C702F9;
+		};
+		1CFA0631053C96CC00C702F9 = {
+			fileRef = 1CFA05FA053C960800C702F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CFA064D053C971500C702F9 = {
+			fileRef = 1CFA05FA053C960800C702F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CFA0878053C995500C702F9 = {
+			fileRef = 1CFA05FA053C960800C702F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CFA0879053C996200C702F9 = {
+			fileRef = 1CFA05FA053C960800C702F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CFAFE9A053C1B3D00C702F9 = {
 			children = (
 				1CE72A96052C745400A8FE6E,
@@ -2684,10 +2507,10 @@
 		};
 		F50B0A9F0170C89301A84BDE = {
 			children = (
-				1CFAFED8053C1BC500C702F9,
-				1CFAFED5053C1BA500C702F9,
-				1CFAFE9A053C1B3D00C702F9,
 				F5394BBA0378DD7601A35792,
+				1CFAFED8053C1BC500C702F9,
+				1CFAFE9A053C1B3D00C702F9,
+				1CFAFED5053C1BA500C702F9,
 				1CC478470427BB2C00000102,
 				F50B0AA20170CAD701A84BDE,
 				F5F9AF410170EE4A01A84BDE,
@@ -2740,13 +2563,13 @@
 		};
 		F50B0AA10170C89301A84BDE = {
 			children = (
-				F5DD34730382E5E501000102,
-				1C5959010507803F000001C8,
-				F52BA284037C13C201A35792,
 				1C51B89D052DF91E00BB459B,
 				1C51B48A052DE0CB00BB459B,
 				1C51B4CC052DE14B00BB459B,
 				1C51B504052DE2B800BB459B,
+				F5DD34730382E5E501000102,
+				1C5959010507803F000001C8,
+				F52BA284037C13C201A35792,
 				F5394C070378E44D01A35792,
 				F5394C090378E44D01A35792,
 				F5394C0B0378E44D01A35792,
@@ -3480,15 +3303,6 @@
 			path = "Resources/Toolbar Icons/magic.tif";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		F5A89F1C019302BD01EE70DE = {
-			expectedFileType = wrapper.framework;
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			name = IOKit.framework;
-			path = /System/Library/Frameworks/IOKit.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
 		};
 		F5B425E9038C056701000102 = {
 			expectedFileType = image.tiff;
