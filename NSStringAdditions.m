@@ -59,6 +59,22 @@
 	return ( str ? strlen( str ) : 0 );
 }
 
+- (NSString *) stringByEncodingXMLSpecialCharactersAsEntities {
+	NSMutableString *result = [self mutableCopy];
+	[result encodeXMLSpecialCharactersAsEntities];
+	NSString *immutableResult = [NSString stringWithString:result];
+	[result release];
+	return immutableResult;
+}
+
+- (NSString *) stringByDecodingXMLSpecialCharacterEntities {
+	NSMutableString *result = [self mutableCopy];
+	[result decodeXMLSpecialCharacterEntities];
+	NSString *immutableResult = [NSString stringWithString:result];
+	[result release];
+	return immutableResult;
+}
+
 - (NSString *) stringByEscapingCharactersInSet:(NSCharacterSet *) set {
 	NSMutableString *result = [self mutableCopy];
 	[result escapeCharactersInSet:set];
