@@ -31,7 +31,7 @@
 	[icon setScalesWhenResized:YES];
 	[icon setSize:NSMakeSize( 16., 16. )];
 
-	[menuItem setTitle:[path lastPathComponent]];
+	[menuItem setTitle:[[NSFileManager defaultManager] displayNameAtPath:path]];
 	[menuItem setImage:icon];
 	[menuItem setRepresentedObject:path];
 
@@ -79,7 +79,7 @@
 		[icon setScalesWhenResized:YES];
 		[icon setSize:NSMakeSize( 16., 16. )];
 
-		[menuItem setTitle:[[sheet directory] lastPathComponent]];
+		[menuItem setTitle:[[NSFileManager defaultManager] displayNameAtPath:[sheet directory]]];
 		[menuItem setImage:icon];
 		[menuItem setRepresentedObject:[sheet directory]];
 		[saveDownloads selectItem:menuItem];
