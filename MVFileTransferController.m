@@ -525,7 +525,13 @@ finish:
 	enumerator = [_transferStorage objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"controller"] == download ) {
-			[info setObject:[NSNumber numberWithUnsignedInt:[response expectedContentLength]] forKey:@"size"];
+			[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"transfered"];
+
+			unsigned long size = [response expectedContentLength];
+			if( (long)size == -1 ) size = 0;
+			[info setObject:[NSNumber numberWithUnsignedLongLong:size] forKey:@"size"];
+
+			[currentFiles reloadData];
 			break;
 		}
 	}
@@ -548,10 +554,16 @@ finish:
 			[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferNormalStatus] forKey:@"status"];
 			[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"transfered"];
 
+			if( transfered > [[info objectForKey:@"size"] unsignedLongLongValue] )
+				[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"size"];				
+
 			if( transfered != [[info objectForKey:@"size"] unsignedLongLongValue] )
 				[info setObject:[NSNumber numberWithDouble:( transfered / timeslice )] forKey:@"rate"];
 
-			if( ! [info objectForKey:@"started"] ) [info setObject:[NSDate date] forKey:@"started"];
+			if( ! [info objectForKey:@"started"] ) {
+				[info setObject:[NSDate date] forKey:@"started"];
+				[currentFiles reloadData];
+			}
 
 			break;
 		}
@@ -579,9 +591,9 @@ finish:
 			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2 ) {
 				[_calculationItems removeObject:info];
 				[_transferStorage removeObject:info];
-				[currentFiles reloadData];
 			}
 
+			[currentFiles reloadData];
 			break;
 		}
 	}
@@ -595,6 +607,7 @@ finish:
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"controller"] == download ) {
 			[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferErrorStatus] forKey:@"status"];
+			[currentFiles reloadData];
 			break;
 		}
 	}
