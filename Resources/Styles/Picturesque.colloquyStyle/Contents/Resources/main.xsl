@@ -14,7 +14,13 @@
 	</xsl:template>
 
 	<xsl:template match="message" mode="subsequent">
-		<div>
+		<div class="sep">&#8203;</div>
+		<div class="time">
+			<xsl:call-template name="short-time">
+				<xsl:with-param name="date" select="@received" />
+			</xsl:call-template>
+		</div>
+		<div class="message">
 			<xsl:if test="@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
 				<xsl:value-of select="../sender" />
@@ -23,63 +29,78 @@
 			<xsl:apply-templates select="child::node()" mode="copy" />
 		</div>
 		<xsl:if test="$subsequent = 'yes'">
-			<div id="consecutiveInsert" />
+			<div id="consecutiveInsert">&#8203;</div>
 		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="envelope">
-		<xsl:variable name="envelopeClasses">
-			<xsl:choose>
-				<xsl:when test="message[1]/@action = 'yes'">
-					<xsl:text>envelope action</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>envelope</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
 		<xsl:variable name="senderClasses">
 			<xsl:choose>
 				<xsl:when test="message[1]/@highlight = 'yes'">
-					<xsl:text>header highlight</xsl:text>
+					<xsl:text>incoming highlight</xsl:text>
 				</xsl:when>
 				<xsl:when test="sender/@self = 'yes'">
-					<xsl:text>header light</xsl:text>
+					<xsl:text>outgoing</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>header</xsl:text>
+					<xsl:text>incoming</xsl:text>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 
-		<div id="{@id}" class="{$envelopeClasses}">
-			<div class="{$senderClasses}">
-				<xsl:value-of select="sender" />
-				<xsl:text> | </xsl:text>
-				<xsl:call-template name="short-time">
-					<xsl:with-param name="date" select="message[1]/@received" />
-				</xsl:call-template>
+		<div id="{@id}" class="{$senderClasses}">
+			<div class="header_top">&#8203;</div>
+			<div class="header">
+				<div>
+					<div>
+					<div class="sender"><xsl:value-of select="sender" /></div>
+					</div>
+				</div>
+				<div class="left">&#8203;</div>
+				<div class="right">&#8203;</div>
 			</div>
-			<div class="body">
-				<xsl:apply-templates select="message" mode="subsequent" />
-				<xsl:if test="position() = last()">
-					<div id="consecutiveInsert" />
-				</xsl:if>
+			<div class="messages">
+				<div>
+					<div>
+						<div class="time">
+						<xsl:call-template name="short-time">
+							<xsl:with-param name="date" select="message[1]/@received" />
+						</xsl:call-template>
+						</div>
+						<div class="message">
+							<xsl:apply-templates select="message[1]/child::node()" mode="copy" />
+						</div>
+						<xsl:apply-templates select="message[position() &gt; 1]" mode="subsequent" />
+						<xsl:if test="position() = last()">
+							<div id="consecutiveInsert">&#8203;</div>
+						</xsl:if>
+					</div>
+				</div>
+			</div>
+			<div class="messages_bottom">
+				<div class="left">&#8203;</div>
+				<div class="right">&#8203;</div>
 			</div>
 		</div>
 	</xsl:template>
 
 	<xsl:template match="event">
 		<div class="event">
+			<div class="time">
+				<xsl:call-template name="short-time">
+					<xsl:with-param name="date" select="@occurred" />
+				</xsl:call-template>
+			</div>
+			<div class="message">
 			<xsl:copy-of select="message/child::node()" />
 			<xsl:if test="reason!=''">
 				<span class="reason">
 					<xsl:text> (</xsl:text>
-					<xsl:apply-templates select="reason/child::node()" mode="copy"/>
+					<xsl:apply-templates select="reason/child::node()" mode="copy" />
 					<xsl:text>)</xsl:text>
 				</span>
 			</xsl:if>
+			</div>
 		</div>
 	</xsl:template>
 
@@ -121,26 +142,8 @@
 
 	<xsl:template name="short-time">
 		<xsl:param name="date" /> <!-- YYYY-MM-DD HH:MM:SS +/-HHMM -->
-		<xsl:choose>
-			<xsl:when test="number(substring($date, 12, 2)) &gt; 12">
-				<xsl:value-of select="number(substring($date, 12, 2)) - 12" />
-			</xsl:when>
-			<xsl:when test="number(substring($date, 12, 2)) = 0">
-				<xsl:text>12</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="number(substring($date, 12, 2))" />
-			</xsl:otherwise>
-		</xsl:choose>
+		<xsl:value-of select="number(substring($date, 12, 2))" />
 		<xsl:text>:</xsl:text>
 		<xsl:value-of select="substring($date, 15, 2)" />
-		<xsl:choose>
-			<xsl:when test="number(substring($date, 12, 2)) &gt;= 12">
-				<xsl:text>p</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>a</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 </xsl:transform>

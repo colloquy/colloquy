@@ -4,24 +4,24 @@
     <message>nonex joined the chat room.</message>
     <who>nonex</who>
   </event>
-  <envelope count="1">
+  <envelope id="1">
     <sender self="yes">timothy</sender>
     <message action="yes" received="2003-10-25 13:28:02 -0400">waves to nonex</message>
   </envelope>
-  <envelope count="2">
+  <envelope id="2">
     <sender>nonex</sender>
     <message received="2003-10-25 13:28:32 -0400">hello, what is going on in here?</message>
   </envelope>
-  <envelope count="3">
+  <envelope id="3">
     <sender self="yes">timothy</sender>
     <message received="2003-10-25 13:28:40 -0400">not a whole lot <span class="emoticon smile"><samp>:)</samp></span></message>
     <message received="2003-10-25 13:28:52 -0400">just surfing the inertnet.</message>
   </envelope>
-  <envelope count="4">
+  <envelope id="4">
     <sender self="yes">timothy</sender>
     <message received="2003-10-25 13:28:54 -0400">I really like the Javelin.cc header <a href="http://www.javelin.cc/images/section-logo.png">http://www.javelin.cc/images/section-logo.png</a></message>
   </envelope>
-  <envelope count="5">
+  <envelope id="5">
     <sender>nonex</sender>
     <message received="2003-10-25 13:50:38 -0400">hey, that is pretty cool</message>
   </envelope>
@@ -30,7 +30,7 @@
     <by>timothy</by>
     <who>nonex</who>
   </event>
-  <envelope count="6">
+  <envelope id="6">
     <sender self="yes">timothy</sender>
     <message received="2003-10-25 13:51:25 -0400">there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
   </envelope>
