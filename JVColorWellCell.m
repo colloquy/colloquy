@@ -29,6 +29,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 		extern NSMutableSet *colorWellCells;
 		if( ! colorWellCells ) colorWellCells = [[NSMutableSet set] retain];
 		[colorWellCells addObject:self];
+		_releasing = NO;
 
 		[self setShowsWebValue:YES];
 		[self setEditable:YES];
@@ -47,6 +48,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	JVColorWellCell *ret = [super copyWithZone:zone];
 	ret -> _color = [_color copyWithZone:zone];
 	ret -> _showsWebValue = _showsWebValue;
+	ret -> _releasing = NO;
 
 	if( ! colorWellCells ) colorWellCells = [[NSMutableSet set] retain];
 	[colorWellCells addObject:ret];
@@ -55,19 +57,17 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 }
 
 - (void) release {
-	if( ( [self retainCount] - 1 ) == 1 )
-		[self performSelector:@selector( releaseFromSet ) withObject:nil afterDelay:0.];
+	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
+		extern NSMutableSet *colorWellCells;
+		_releasing = YES;
+		[colorWellCells removeObject:self];
+		if( ! [colorWellCells count] ) {
+			[colorWellCells autorelease];
+			colorWellCells = nil;
+		}
+	}
 
 	[super release];
-}
-
-- (void) releaseFromSet {
-	extern NSMutableSet *colorWellCells;
-	[colorWellCells removeObject:self];
-	if( ! [colorWellCells count] ) {
-		[colorWellCells autorelease];
-		colorWellCells = nil;
-	}
 }
 
 - (void) dealloc {

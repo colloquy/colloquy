@@ -7,6 +7,7 @@ extern NSString *JVColorWellCellColorDidChangeNotification;
 @interface JVColorWellCell : NSButtonCell {
 	NSColor *_color;
 	BOOL _showsWebValue;
+	BOOL _releasing;
 }
 - (void) deactivate;
 - (void) activate:(BOOL) exclusive;
