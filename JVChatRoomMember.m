@@ -3,18 +3,33 @@
 #import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
 #import "JVChatController.h"
+#import "MVBuddyListController.h"
+#import "JVBuddy.h"
 
 @implementation JVChatRoomMember
 - (id) init {
 	self = [super init];
 	_parent = nil;
 	_memberName = nil;
+	_buddy = nil;
 	_operator = NO;
 	_voice = NO;
 	return self;
 }
 
+- (void) dealloc {
+	[_memberName autorelease];
+	[_buddy autorelease];
+
+	_parent = nil;
+	_memberName = nil;
+	_buddy = nil;
+
+	[super dealloc];
+}
+
 - (NSString *) title {
+	if( _buddy ) return [_buddy compositeName];
 	return [[_memberName retain] autorelease];
 }
 
@@ -74,6 +89,13 @@
 }
 
 - (NSImage *) statusImage {
+	if( _buddy ) switch( [_buddy status] ) {
+		case JVBuddyAwayStatus: return [NSImage imageNamed:@"statusAway"];
+		case JVBuddyIdleStatus: return [NSImage imageNamed:@"statusIdle"];
+		case JVBuddyAvailableStatus: return [NSImage imageNamed:@"statusAvailable"];
+		case JVBuddyOfflineStatus:
+		default: return nil;
+	}
 	return nil;
 }
 
@@ -89,6 +111,8 @@
 - (void) setMemberName:(NSString *) name {
 	[_memberName autorelease];
 	_memberName = [name copy];
+	[_buddy autorelease];
+	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_memberName onServer:[[self connection] server]] retain];
 }
 
 - (NSString *) memberName {

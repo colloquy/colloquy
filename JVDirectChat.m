@@ -9,6 +9,8 @@
 
 #import "JVChatController.h"
 #import "JVDirectChat.h"
+#import "MVBuddyListController.h"
+#import "JVBuddy.h"
 #import "MVTextView.h"
 #import "MVMenuButton.h"
 
@@ -90,6 +92,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		encodingView = nil;
 		_messageId = 0;
 		_target = nil;
+		_buddy = nil;
 		_connection = nil;
 		_firstMessage = YES;
 		_newMessage = NO;
@@ -114,6 +117,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		NSString *source = nil;
 		_target = [target copy];
 		_connection = [connection retain];
+		_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_target onServer:[_connection server]] retain];
 		source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
 		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
 
@@ -178,6 +182,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	id alert = nil;
 
 	[_target autorelease];
+	[_buddy autorelease];
 	[_connection autorelease];
 	[_sendHistory autorelease];
 	[_waitingAlertNames autorelease];
@@ -191,6 +196,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	[_waitingAlerts release];
 
 	_target = nil;
+	_buddy = nil;
 	_sendHistory = nil;
 	_connection = nil;
 	_waitingAlerts = nil;
@@ -227,6 +233,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 #pragma mark -
 
 - (NSString *) title {
+	if( _buddy ) return [_buddy compositeName];
 	return [[_target retain] autorelease];
 }
 
@@ -329,6 +336,9 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 	NSString *source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
 	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
+
+	[_buddy autorelease];
+	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_target onServer:[[self connection] server]] retain];
 }
 
 #pragma mark -

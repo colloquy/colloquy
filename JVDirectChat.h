@@ -17,6 +17,7 @@
 @class NSData;
 @class NSAttributedString;
 @class NSMutableAttributedString;
+@class JVBuddy;
 
 @interface JVDirectChat : JVChatTranscript {
 	@protected
@@ -30,6 +31,7 @@
 	NSMutableDictionary *_waitingAlertNames;
 	NSMutableDictionary *_settings;
 	NSMenu *_spillEncodingMenu;
+	JVBuddy *_buddy;
 	unsigned int _messageId;
 	BOOL _firstMessage;
 	BOOL _isActive;
