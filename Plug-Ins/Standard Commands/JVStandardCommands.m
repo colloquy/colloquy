@@ -101,7 +101,7 @@
 	} else if( [command isEqualToString:@"join"] || [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[room connection]];
 	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
-		if( ! [arguments length] ) [[room connection] partChatRoom:[room target]];
+		if( ! [arguments length] ) [self handlePartWithArguments:[room target] forConnection:[room connection]];
 		else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		return YES;
 	} else if( [command isEqualToString:@"server"] ) {
@@ -364,9 +364,14 @@
 	NSArray *rooms = [arguments componentsSeparatedByString:@" "];
 	NSEnumerator *enumerator = [rooms objectEnumerator];
 	id item = nil;
+	id view = nil;
+
 	if( ! [rooms count] ) return NO;
-	while( ( item = [enumerator nextObject] ) )
-		[connection partChatRoom:item];
+	while( ( item = [enumerator nextObject] ) ) {
+		if( ! ( view = [[_manager chatController] chatViewControllerForRoom:item withConnection:connection ifExists:YES] ) )
+			continue;
+		[[_manager chatController] disposeViewController:view];
+	}
 	return YES;
 }
 
