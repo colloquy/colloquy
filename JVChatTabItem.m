@@ -37,7 +37,8 @@
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 	[paraStyle setLineBreakMode:NSLineBreakByTruncatingTail];
 
-	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11.], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( alpha < 1. ? [[NSColor controlTextColor] colorWithAlphaComponent:alpha] : [NSColor controlTextColor] ), NSForegroundColorAttributeName, nil];
+	NSColor *color = [NSColor controlTextColor];
+	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11.], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( alpha < 1. ? [color colorWithAlphaComponent:alpha] : color ), NSForegroundColorAttributeName, nil];
 
 	NSRect textRect = labelRect;
 
