@@ -1438,9 +1438,14 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
 	NSMutableString *transformedMessage = nil;
+	NSMutableDictionary *params = _styleParams;
+	if( parent ) { // compatiability parameter for pre 2C9 styles, styles can test for consecutive messages alone
+		params = [[_styleParams mutableCopy] autorelease];
+		[params setObject:@"'yes'" forKey:@"subsequent"];
+	}
 
 	@try {
-		transformedMessage = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
+		transformedMessage = [[[_chatStyle transformXMLDocument:doc withParameters:params] mutableCopy] autorelease];
 	} @catch ( NSException *exception ) {
 		transformedMessage = nil;
 		[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
