@@ -333,9 +333,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
-- (void) reloadChatView:(id <JVChatViewController>) controller {
-	[chatViewsOutlineView reloadItem:controller reloadChildren:YES];
-	[self _refreshWindowTitle];
+- (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
+	[chatViewsOutlineView reloadItem:item reloadChildren:( children && [chatViewsOutlineView isItemExpanded:item] ? YES : NO )];
+	if( _activeViewController == item ) [self _refreshWindowTitle];
 }
 
 #pragma mark -
