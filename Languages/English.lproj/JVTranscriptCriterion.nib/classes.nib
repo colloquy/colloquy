@@ -2,7 +2,13 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {noteOtherChanges = id; selectCriterionKind = id; }; 
+            ACTIONS = {
+                changeQuery = id; 
+                noteOtherChanges = id; 
+                selectCriterionKind = id; 
+                selectCriterionOperation = id; 
+                selectCriterionQueryUnits = id; 
+            }; 
             CLASS = JVTranscriptCriterionController; 
             LANGUAGE = ObjC; 
             OUTLETS = {

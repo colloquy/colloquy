@@ -9,7 +9,6 @@
 @class JVChatTranscriptPanel;
 @class JVSmartTranscriptPanel;
 @class JVChatConsolePanel;
-@class KAInternalIgnoreRule;
 
 @protocol JVChatViewController;
 
@@ -17,7 +16,6 @@
 	@private
 	NSMutableArray *_chatWindows;
 	NSMutableArray *_chatControllers;
-	NSMutableArray *_ignoreRules;
 }
 + (JVChatController *) defaultManager;
 + (NSMenu *) smartTranscriptMenu;
@@ -39,6 +37,9 @@
 - (JVChatConsolePanel *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 
 - (JVSmartTranscriptPanel *) newSmartTranscript;
+- (NSSet *) smartTranscripts;
+- (void) saveSmartTranscripts;
+- (void) disposeSmartTranscript:(JVSmartTranscriptPanel *) panel;
 
 - (void) disposeViewController:(id <JVChatViewController>) controller;
 - (void) detachViewController:(id <JVChatViewController>) controller;

@@ -125,11 +125,11 @@
 
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
 	if( item == _activeViewController ) {
-		[customTabsView redisplayTabForTabViewItem:[tabView selectedTabViewItem]];
+		[customTabsView resizeTabForTabViewItem:[tabView selectedTabViewItem]];
 		[self _refreshList];
 		[self _refreshWindowTitle];
 	} else if( [_views containsObject:item] ) {
-		[customTabsView redisplayTabForTabViewItem:[tabView tabViewItemAtIndex:[_views indexOfObjectIdenticalTo:item]]];
+		[customTabsView resizeTabForTabViewItem:[tabView tabViewItemAtIndex:[_views indexOfObjectIdenticalTo:item]]];
 	} else {
 		id selectItem = [self selectedListItem];
 

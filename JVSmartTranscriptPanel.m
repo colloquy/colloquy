@@ -1,3 +1,4 @@
+#import "JVChatController.h"
 #import "JVTranscriptCriterionController.h"
 #import "JVTabbedChatWindowController.h"
 #import "JVChatWindowController.h"
@@ -15,10 +16,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_newMessages = 0;
+		_origSheetHeight = 0;
 		_isActive = NO;
+		_editingRules = nil;
 		_rules = nil;
 		_title = nil;
-		_settings = nil;
 	}
 
 	return self;
@@ -27,7 +29,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (id) initWithSettings:(NSDictionary *) settings {
 	if( ( self = [self init] ) ) {
 		_settingsNibLoaded = [NSBundle loadNibNamed:@"JVSmartTranscriptFilterSheet" owner:self];
-		_settings = [settings mutableCopy];
+
+		_rules = [[settings objectForKey:@"rules"] mutableCopyWithZone:[self zone]];
+		_title = [[settings objectForKey:@"title"] copyWithZone:[self zone]];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];		
 	}
@@ -35,30 +39,48 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return self;
 }
 
+- (id) initWithCoder:(NSCoder *) coder {
+	if( [coder allowsKeyedCoding] ) {
+		NSMutableDictionary *settings = [NSMutableDictionary dictionary];
+		[settings setObject:[coder decodeObjectForKey:@"rules"] forKey:@"rules"];
+		[settings setObject:[coder decodeObjectForKey:@"title"] forKey:@"title"];
+//		[settings setObject:[NSNumber numberWithBool:[coder decodeBoolForKey:@"ignoreCase"]] forKey:@"ignoreCase"];
+//		[settings setObject:[NSNumber numberWithInt:[coder decodeIntForKey:@"operation"]] forKey:@"operation"];
+		return ( self = [self initWithSettings:settings] );
+	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
+	return nil;
+}
+
+- (void) encodeWithCoder:(NSCoder *) coder {
+	if( [coder allowsKeyedCoding] ) {
+		[coder encodeObject:[self rules] forKey:@"rules"];
+		[coder encodeObject:[self title] forKey:@"title"];
+	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
+}
+
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_settings release];
 	[_title release];
 	[_rules release];
+	[_editingRules release];
 
 	_rules = nil;
+	_editingRules = nil;
 	_title = nil;
-	_settings = nil;
 
 	[super dealloc];
 }
 
 - (void) awakeFromNib {
 	if( ! _settingsNibLoaded ) {
+		_origSheetHeight = NSHeight( [[settingsSheet contentView] frame] ) - 30;
 		[subviewTableView setDataSource:self];
 		[subviewTableView setDelegate:self];
 		[subviewTableView setRefusesFirstResponder:YES];
 
 		NSTableColumn *column = [subviewTableView tableColumnWithIdentifier:@"criteria"];
 		[column setDataCell:[[JVViewCell new] autorelease]];
-
-		[self addRow:nil];
 	}
 
 	if( ! _nibLoaded ) [super awakeFromNib];
@@ -67,11 +89,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (NSString *) title {
-	return @"Smart Transcript";
+	return ( [_title length] ? _title : @"Smart Transcript" );
 }
 
 - (NSString *) windowTitle {
-	return @"Smart Transcript";
+	return [self title];
 }
 
 - (NSString *) identifier {
@@ -80,6 +102,36 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (NSString *) information {
 	return nil;
+}
+
+- (NSString *) toolTip {
+	NSString *messageCount = @"";
+	if( _newMessages == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
+	else if( _newMessages == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
+	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), _newMessages];
+	return [NSString stringWithFormat:@"%@\n%@", [self title], messageCount];
+}
+
+- (NSMenu *) menu {
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenuItem *item = nil;
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+	[item setRepresentedObject:self];
+	[item setTarget:[JVChatController defaultManager]];
+	[menu addItem:item];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	[menu addItem:item];
+
+	[menu addItem:[NSMenuItem separatorItem]];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete contextual menu item title" ) action:@selector( dispose: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	[menu addItem:item];
+
+	return [[menu retain] autorelease];
 }
 
 - (NSImage *) icon {
@@ -102,6 +154,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
+- (IBAction) dispose:(id) sender {
+	[[JVChatController defaultManager] disposeSmartTranscript:self];
+}
+
+#pragma mark -
+
 - (void) didUnselect {
 	_newMessages = 0;
 	_isActive = NO;
@@ -116,9 +174,28 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
-- (NSMutableArray *) criterionControllers {
+- (NSMutableArray *) rules {
 	if( ! _rules ) _rules = [[NSMutableArray alloc] init];
 	return _rules;
+}
+
+- (NSMutableArray *) editingRules {
+	if( ! _editingRules ) _editingRules = [[NSMutableArray alloc] init];
+	return _editingRules;
+}
+
+#pragma mark -
+
+- (void) updateSettingsSheetSize {
+	NSRect frame = [[settingsSheet contentView] frame];
+	frame.size.height = _origSheetHeight + ( [[self editingRules] count] * 30 );
+	[settingsSheet setContentSize:frame.size];
+
+	frame.size.width = 514;
+	[settingsSheet setContentMinSize:frame.size];
+
+	frame.size.width = 800;
+	[settingsSheet setContentMaxSize:frame.size];	
 }
 
 - (void) reloadTableView {
@@ -128,29 +205,54 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) insertObject:(id) obj inCriterionControllersAtIndex:(unsigned int) index {
-	if( index != NSNotFound ) [[self criterionControllers] insertObject:obj atIndex:( index + 1 )];
-	else [[self criterionControllers] addObject:obj];
+	if( index != NSNotFound ) [[self editingRules] insertObject:obj atIndex:( index + 1 )];
+	else [[self editingRules] addObject:obj];
 	[self reloadTableView];
 }
 
 - (void) removeObjectFromCriterionControllersAtIndex:(unsigned int) index {
-	[[self criterionControllers] removeObjectAtIndex:index];
+	[[self editingRules] removeObjectAtIndex:index];
 	[self reloadTableView];
 }
 
 #pragma mark -
 
 - (IBAction) editSettings:(id) sender {
+	[[self editingRules] removeAllObjects];
+
+	id rule = nil;
+	NSEnumerator *enumerator = [[self rules] objectEnumerator];
+	while( ( rule = [enumerator nextObject] ) )
+		[[self editingRules] addObject:[[rule copy] autorelease]];
+
+	if( ! [[self editingRules] count] ) [self addRow:nil];
+
+	[self updateSettingsSheetSize];	
+	[self reloadTableView];
+
+	[titleField setStringValue:[self title]];
+
 	[[NSApplication sharedApplication] beginSheet:settingsSheet modalForWindow:[[self windowController] window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
 - (IBAction) closeEditSettingsSheet:(id) sender {
 	[settingsSheet orderOut:nil];
 	[[NSApplication sharedApplication] endSheet:settingsSheet];
+
+	[[self editingRules] removeAllObjects];
+	[self reloadTableView];
 }
 
 - (IBAction) saveSettings:(id) sender {
+	[[self rules] setArray:[self editingRules]];
 	[self closeEditSettingsSheet:sender];
+
+	[_title autorelease];
+	_title = [[titleField stringValue] copy];
+
+	[_windowController reloadListItem:self andChildren:NO];
+
+	[[JVChatController defaultManager] saveSmartTranscripts];
 }
 
 #pragma mark -
@@ -166,7 +268,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
 	BOOL match = ( andOperation ? YES : NO );
 
-	NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
+	NSEnumerator *rules = [[self rules] objectEnumerator];
 	JVTranscriptCriterionController *rule = nil;
 	while( ( rule = [rules nextObject] ) ) {
 		BOOL localMatch = [rule matchMessage:message ignoreCase:ignore];
@@ -190,7 +292,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (void) updateKeyViewLoop {
-	NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
+	NSEnumerator *rules = [[self editingRules] objectEnumerator];
 	JVTranscriptCriterionController *previousRule = [rules nextObject];
 	JVTranscriptCriterionController *rule = nil;
 
@@ -215,10 +317,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[settingsSheet setFrame:frame display:YES animate:YES];
 
 		frame.size.width = 514;
-		[settingsSheet setMinSize:frame.size];
+		[settingsSheet setContentMinSize:frame.size];
 
 		frame.size.width = 800;
-		[settingsSheet setMaxSize:frame.size];
+		[settingsSheet setContentMaxSize:frame.size];	
 	}
 
 	[self updateKeyViewLoop];
@@ -234,10 +336,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[settingsSheet setFrame:frame display:YES animate:YES];
 
 		frame.size.width = 514;
-		[settingsSheet setMinSize:frame.size];
+		[settingsSheet setContentMinSize:frame.size];
 
 		frame.size.width = 800;
-		[settingsSheet setMaxSize:frame.size];
+		[settingsSheet setContentMaxSize:frame.size];	
 	}
 
 	[self updateKeyViewLoop];
@@ -246,7 +348,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (int) numberOfRowsInTableView:(NSTableView *) tableView {
-	return [[self criterionControllers] count];
+	return [[self editingRules] count];
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
@@ -255,7 +357,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) tableView:(NSTableView *) tableView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn row:(int) row {
 	if( [[tableColumn identifier] isEqualToString:@"criteria"] ) {
-		[(JVViewCell *)cell setView:[(JVTranscriptCriterionController *)[[self criterionControllers] objectAtIndex:row] view]];
+		[(JVViewCell *)cell setView:[(JVTranscriptCriterionController *)[[self editingRules] objectAtIndex:row] view]];
 	} else if( [[tableColumn identifier] isEqualToString:@"remove"] ) {
 		[cell setEnabled:( [self numberOfRowsInTableView:tableView] > 1 )];
 	}

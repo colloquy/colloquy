@@ -25,9 +25,33 @@ typedef enum JVTranscriptCriterionKind { // corresponds to the nib menu tags
 	JVTranscriptMessageNotFromMeCriterionKind
 } JVTranscriptCriterionKind;
 
+typedef enum JVTranscriptCriterionOperation { // corresponds to the nib menu tags
+	JVTranscriptNoCriterionOperation = 0,
+	JVTranscriptTextMatchCriterionOperation = 1,
+	JVTranscriptTextDoesNotMatchCriterionOperation,
+	JVTranscriptTextContainCriterionOperation,
+	JVTranscriptTextDoesNotContainsCriterionOperation,
+	JVTranscriptTextBeginsWithCriterionOperation,
+	JVTranscriptTextEndsWithCriterionOperation,
+	JVTranscriptIsEqualCriterionOperation,
+	JVTranscriptIsLessThanCriterionOperation,
+	JVTranscriptIsGreaterThanCriterionOperation,
+	JVTranscriptIsNotEqualCriterionOperation
+} JVTranscriptCriterionOperation;
+
+typedef enum JVTranscriptCriterionQueryUnits { // corresponds to the nib menu tags
+	JVTranscriptNoCriterionQueryUnits = 0,
+	JVTranscriptSecondCriterionQueryUnits = 1,
+	JVTranscriptMinuteCriterionQueryUnits,
+	JVTranscriptHourCriterionQueryUnits,
+	JVTranscriptDayCriterionQueryUnits,
+	JVTranscriptWeekCriterionQueryUnits,
+	JVTranscriptMonthCriterionQueryUnits
+} JVTranscriptCriterionQueryUnits;
+
 @class JVChatMessage;
 
-@interface JVTranscriptCriterionController : NSObject {
+@interface JVTranscriptCriterionController : NSObject <NSCopying, NSMutableCopying, NSCoding> {
 	@private
 	IBOutlet NSView *subview;
 	IBOutlet NSTabView *tabView;
@@ -51,6 +75,10 @@ typedef enum JVTranscriptCriterionKind { // corresponds to the nib menu tags
 
 	JVTranscriptCriterionKind _kind;
 	JVTranscriptCriterionFormat _format;
+	JVTranscriptCriterionOperation _operation;
+	JVTranscriptCriterionQueryUnits _queryUnits;
+
+	id _query;
 
 	BOOL _changed;
 }
@@ -64,6 +92,9 @@ typedef enum JVTranscriptCriterionKind { // corresponds to the nib menu tags
 - (void) setKind:(JVTranscriptCriterionKind) kind;
 
 - (IBAction) selectCriterionKind:(id) sender;
+- (IBAction) selectCriterionOperation:(id) sender;
+- (IBAction) selectCriterionQueryUnits:(id) sender;
+- (IBAction) changeQuery:(id) sender;
 - (IBAction) noteOtherChanges:(id) sender;
 
 - (BOOL) changedSinceLastMatch;
@@ -71,6 +102,12 @@ typedef enum JVTranscriptCriterionKind { // corresponds to the nib menu tags
 
 - (id) query;
 - (void) setQuery:(id) query;
+
+- (JVTranscriptCriterionOperation) operation;
+- (void) setOperation:(JVTranscriptCriterionOperation) operation;
+
+- (JVTranscriptCriterionQueryUnits) queryUnits;
+- (void) setQueryUnits:(JVTranscriptCriterionQueryUnits) units;
 
 - (NSView *) firstKeyView;
 - (NSView *) lastKeyView;

@@ -29,6 +29,7 @@
                 operation = NSPopUpButton; 
                 settingsSheet = NSWindow; 
                 subviewTableView = NSTableView; 
+                titleField = NSTextField; 
             }; 
             SUPERCLASS = JVChatTranscriptPanel; 
         }, 

@@ -13,7 +13,6 @@
 #import "JVDirectChatPanel.h"
 #import "JVChatRoomPanel.h"
 #import "JVChatConsolePanel.h"
-#import "KAIgnoreRule.h"
 #import "JVChatMessage.h"
 #import "JVChatRoomMember.h"
 
@@ -50,22 +49,19 @@ static NSMenu *smartTranscriptMenu = nil;
 	while( ( menuItem = [enumerator nextObject] ) )
 		[smartTranscriptMenu removeItem:menuItem];
 
-	NSURL *url = nil;
-	NSString *item = nil;
-	NSMutableArray *items = [NSMutableArray array];
+	NSSet *items = [[self defaultManager] smartTranscripts];
+	enumerator = [items objectEnumerator];
+	
+	NSImage *icon = [NSImage imageNamed:@"smartTranscriptTab"];
+	JVSmartTranscriptPanel *panel = nil;
 
-/*	NSEnumerator *nameEnumerator = [items objectEnumerator];
-	NSImage *icon = [[[NSImage imageNamed:@"room"] copy] autorelease];
-	[icon setScalesWhenResized:YES];
-	[icon setSize:NSMakeSize( 16., 16. )];
-	enumerator = [rooms objectEnumerator];
-	while( ( url = [enumerator nextObject] ) && ( item = [nameEnumerator nextObject] ) ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( _connectToFavorite: ) keyEquivalent:@""] autorelease];
+	while( ( panel = [enumerator nextObject] ) ) {
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[panel title] action:@selector( showView: ) keyEquivalent:@""] autorelease];
 		[menuItem setImage:icon];
-		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:url];
+		[menuItem setTarget:[self defaultManager]];
+		[menuItem setRepresentedObject:panel];
 		[smartTranscriptMenu addItem:menuItem];
-	} */
+	}
 
 	if( ! [items count] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Smart Transcripts", "no smart transcripts menu title" ) action:NULL keyEquivalent:@""] autorelease];
@@ -86,12 +82,11 @@ static NSMenu *smartTranscriptMenu = nil;
 	if( ( self = [super init] ) ) {
 		_chatWindows = [[NSMutableArray array] retain];
 		_chatControllers = [[NSMutableArray array] retain];
-		_ignoreRules = [[NSMutableArray alloc] init];
 
-		NSEnumerator *permanentRulesEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVIgnoreRules"] objectEnumerator];
-		NSData *archivedRule = nil;
-		while( ( archivedRule = [permanentRulesEnumerator nextObject] ) )
-			[_ignoreRules addObject:[NSKeyedUnarchiver unarchiveObjectWithData:archivedRule]];
+		NSEnumerator *smartTranscriptsEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVSmartTranscripts"] objectEnumerator];
+		NSData *archivedSmartTranscript = nil;
+		while( ( archivedSmartTranscript = [smartTranscriptsEnumerator nextObject] ) )
+			[_chatControllers addObject:[NSKeyedUnarchiver unarchiveObjectWithData:archivedSmartTranscript]];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatRoomJoinedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToRoom: ) name:MVChatRoomInvitedNotification object:nil];
@@ -106,7 +101,6 @@ static NSMenu *smartTranscriptMenu = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
-	[_ignoreRules release];
 	[_chatWindows release];
 	[_chatControllers release];
 
@@ -260,6 +254,34 @@ static NSMenu *smartTranscriptMenu = nil;
 	return [[ret retain] autorelease];
 }
 
+- (NSSet *) smartTranscripts {
+	return [self chatViewControllersOfClass:[JVSmartTranscriptPanel class]];
+}
+
+- (void) saveSmartTranscripts {
+	NSMutableArray *smartTranscripts = [NSMutableArray array];
+	NSEnumerator *enumerator = [[self smartTranscripts] objectEnumerator];
+	JVSmartTranscriptPanel *smartTranscript = nil;
+
+	while( ( smartTranscript = [enumerator nextObject] ) )
+		[smartTranscripts addObject:[NSKeyedArchiver archivedDataWithRootObject:smartTranscript]];
+
+	[[self class] refreshSmartTranscriptMenu];
+	[[NSUserDefaults standardUserDefaults] setObject:smartTranscripts forKey:@"JVSmartTranscripts"];
+}
+
+- (void) disposeSmartTranscript:(JVSmartTranscriptPanel *) panel {
+	NSParameterAssert( panel != nil );
+
+	if( [panel respondsToSelector:@selector( willDispose )] )
+		[(NSObject *)panel willDispose];
+
+	[[panel windowController] removeChatViewController:panel];
+	[_chatControllers removeObject:panel];
+
+	[self saveSmartTranscripts];
+}
+
 #pragma mark -
 
 - (JVChatConsolePanel *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
@@ -286,9 +308,14 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (void) disposeViewController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
+	
 	if( [controller respondsToSelector:@selector( willDispose )] )
 		[(NSObject *)controller willDispose];
+	
 	[[controller windowController] removeChatViewController:controller];
+	
+	if( [controller isKindOfClass:[JVSmartTranscriptPanel class]] ) return;
+
 	[_chatControllers removeObject:controller];
 }
 
@@ -312,6 +339,13 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 #pragma mark -
+
+- (IBAction) showView:(id) sender {
+	id <JVChatViewController> view = [sender representedObject];
+	if( ! view ) return;
+	if( [view windowController] ) [[view windowController] showChatViewController:view];
+	else [self _addViewControllerToPreferedWindowController:view andFocus:YES];
+}
 
 - (IBAction) detachView:(id) sender {
 	id <JVChatViewController> view = [sender representedObject];
