@@ -496,6 +496,11 @@
 					<string>JVChatWindowController</string>
 				</dict>
 			</dict>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>startChatWith</key>
+				<string>startChatScriptCommand:</string>
+			</dict>
 		</dict>
 		<key>JVChatRoom</key>
 		<dict>
@@ -575,6 +580,15 @@
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ID  </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber</string>
+				</dict>
 				<key>voice</key>
 				<dict>
 					<key>AppleEventCode</key>
@@ -593,6 +607,21 @@
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
+			</dict>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>kick</key>
+				<string>kick:</string>
+				<key>voice</key>
+				<string>voiceScriptCommand:</string>
+				<key>devoice</key>
+				<string>devoiceScriptCommand:</string>
+				<key>promote</key>
+				<string>promoteScriptCommand:</string>
+				<key>demote</key>
+				<string>demoteScriptCommand:</string>
+				<key>startChat</key>
+				<string>startChat:</string>
 			</dict>
 		</dict>
 		<key>JVChatConsole</key>
@@ -632,6 +661,11 @@
 					<string>NSNumber</string>
 				</dict>
 			</dict>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>NSCoreSuite.Save</key>
+				<string>saveScriptCommand:</string>
+			</dict>
 		</dict>
 		<key>JVChatWindowController</key>
 		<dict>
@@ -661,7 +695,7 @@
 				<string>toggleViewsDrawer:</string>
 			</dict>
 			<key>DefaultSubcontainerAttribute</key>
-			<string>views</string>
+			<string>window</string>
 			<key>ToOneRelationships</key>
 			<dict>
 				<key>window</key>
@@ -672,6 +706,24 @@
 					<string>YES</string>
 					<key>Type</key>
 					<string>NSCoreSuite.NSWindow</string>
+				</dict>
+				<key>activeChatViewController</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>AcvC</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>AbstractChatViewController</string>
+				</dict>
+				<key>selectedListItem</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>SclM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>AbstractChatListItem</string>
 				</dict>
 			</dict>
 			<key>ToManyRelationships</key>
@@ -987,10 +1039,106 @@
 					<key>Optional</key>
 					<string>NO</string>
 					<key>AppleEventCode</key>
-					<string>urLA</string>
+					<string>hcu1</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
+			</dict>
+		</dict>
+		<key>kick</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>kicX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>JVChatRoomMember</string>
+			</dict>
+		</dict>
+		<key>voice</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>vocX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>JVChatRoomMember</string>
+			</dict>
+		</dict>
+		<key>devoice</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>dvoX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>JVChatRoomMember</string>
+			</dict>
+		</dict>
+		<key>promote</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>proX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>JVChatRoomMember</string>
+			</dict>
+		</dict>
+		<key>demote</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>dmoX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>JVChatRoomMember</string>
+			</dict>
+		</dict>
+		<key>startChat</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>sChX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>JVChatRoomMember</string>
 			</dict>
 		</dict>
 		<key>openViewsDrawer</key>
@@ -1079,7 +1227,7 @@
 					<key>Optional</key>
 					<string>NO</string>
 					<key>AppleEventCode</key>
-					<string>msGA</string>
+					<string>snd1</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
@@ -1088,7 +1236,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>AppleEventCode</key>
-					<string>actA</string>
+					<string>snd2</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
@@ -1097,9 +1245,46 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>AppleEventCode</key>
-					<string>ecOA</string>
+					<string>snd3</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>startChatWith</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>sCwX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>JVChatController</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>user</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>sCw1</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>connection</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>sCw2</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatConnection</string>
 				</dict>
 			</dict>
 		</dict>
@@ -1115,9 +1300,9 @@
 				<key>Availability</key>
 				<string>avlY</string>
 				<key>FirstName</key>
-				<string>fsnM</string>
+				<string>fSnM</string>
 				<key>LastName</key>
-				<string>lsnM</string>
+				<string>lSnM</string>
 				<key>Server</key>
 				<string>serV</string>
 			</dict>

@@ -376,6 +376,13 @@
 					<key>Name</key>
 					<string>nickname</string>
 				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the member. Unique even if member changes nicknames.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
 				<key>voice</key>
 				<dict>
 					<key>Description</key>
@@ -430,6 +437,20 @@
 					<string>User interface window.</string>
 					<key>Name</key>
 					<string>window</string>
+				</dict>
+				<key>activeChatViewController</key>
+				<dict>
+					<key>Description</key>
+					<string>Current visible view for this chat window.</string>
+					<key>Name</key>
+					<string>active chat view</string>
+				</dict>
+				<key>selectedListItem</key>
+				<dict>
+					<key>Description</key>
+					<string>Current selection in the drawer list.</string>
+					<key>Name</key>
+					<string>selected list item</string>
 				</dict>
 			</dict>
 			<key>Attributes</key>
@@ -679,6 +700,78 @@
 				<string>The buddy list.</string>
 			</dict>
 		</dict>
+		<key>kick</key>
+		<dict>
+			<key>Description</key>
+			<string>Kick member for the chat room (if we have operator status).</string>
+			<key>Name</key>
+			<string>kick</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat member to kick out.</string>
+			</dict>
+		</dict>
+		<key>voice</key>
+		<dict>
+			<key>Description</key>
+			<string>Grant voice status to a member of a chat room (if we have operator status).</string>
+			<key>Name</key>
+			<string>voice</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat member to affect.</string>
+			</dict>
+		</dict>
+		<key>devoice</key>
+		<dict>
+			<key>Description</key>
+			<string>Revoke voice status for a member of a chat room (if we have operator status).</string>
+			<key>Name</key>
+			<string>devoice</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat member to affect.</string>
+			</dict>
+		</dict>
+		<key>promote</key>
+		<dict>
+			<key>Description</key>
+			<string>Grant operator status to a member of a chat room (if we have operator status).</string>
+			<key>Name</key>
+			<string>promote</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat member to affect.</string>
+			</dict>
+		</dict>
+		<key>demote</key>
+		<dict>
+			<key>Description</key>
+			<string>Revoke operator status for a member of a chat room (if we have operator status).</string>
+			<key>Name</key>
+			<string>demote</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat member to affect.</string>
+			</dict>
+		</dict>
+		<key>startChat</key>
+		<dict>
+			<key>Description</key>
+			<string>Open a direct chat with a chat room member.</string>
+			<key>Name</key>
+			<string>open direct chat</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat member.</string>
+			</dict>
+		</dict>
 		<key>openViewsDrawer</key>
 		<dict>
 			<key>Description</key>
@@ -775,9 +868,36 @@
 				</dict>
 			</dict>
 		</dict>
+		<key>startChatWith</key>
+		<dict>
+			<key>Description</key>
+			<string>Open a direct chat with a user on a connected connection.</string>
+			<key>Name</key>
+			<string>start chat</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat manager</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>user</key>
+				<dict>
+					<key>Description</key>
+					<string>Nickname of user to chat with.</string>
+					<key>Name</key>
+					<string>with user</string>
+				</dict>
+				<key>connection</key>
+				<dict>
+					<key>Description</key>
+					<string>Connection the user is on. (Must be connected.)</string>
+					<key>Name</key>
+					<string>connected on</string>
+				</dict>
+			</dict>
+		</dict>
 	</dict>
-	<key>Description</key>
-	<string>commands and classes for Colloquy scripting.</string>
 	<key>Enumerations</key>
 	<dict>
 		<key>BuddyListSortOrder</key>
@@ -839,5 +959,7 @@
 	</dict>
 	<key>Name</key>
 	<string>Colloquy Suite</string>
+	<key>Description</key>
+	<string>commands and classes for Colloquy scripting.</string>
 </dict>
 </plist>
