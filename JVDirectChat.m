@@ -1575,24 +1575,28 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (int) locationOfMessage:(unsigned int) identifier {
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 #ifdef _WEB_SCRIPT_OBJECT_H_
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[NSString stringWithFormat:@"%d", identifier]];
 		return [[element valueForKey:@"offsetTop"] intValue];
+	} else
 #endif
-	} else { // old JavaScript method
+	{
+		// old JavaScript method
 		return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", identifier]] intValue];
 	}
 }
 
 - (int) locationOfElementByIndex:(unsigned int) index {
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 #ifdef _WEB_SCRIPT_OBJECT_H_
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
 		if( index < [[body children] length] ) return [[[[body children] item:index] valueForKey:@"offsetTop"] intValue];
 		else return 0;
+	} else
 #endif
-	} else { // old JavaScript method
+	{
+		// old JavaScript method
 		return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", index]] intValue];
 	}
 }
