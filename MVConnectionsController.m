@@ -1241,6 +1241,9 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[connection username] forKey:@"username"];
 			[data setObject:[connection urlScheme] forKey:@"type"];
 
+			if( [[connection persistentInformation] count] )
+				[data setObject:[connection persistentInformation] forKey:@"persistentInformation"];
+
 			NSMutableArray *permIgnores = [NSMutableArray array];
 			NSEnumerator *ie = [[info objectForKey:@"ignores"] objectEnumerator];
 			KAIgnoreRule *rule = nil;
@@ -1277,6 +1280,8 @@ static NSMenu *favoritesMenu = nil;
 		}
 
 		if( ! connection ) continue;
+
+		[connection setPersistentInformation:[info objectForKey:@"persistentInformation"]];
 
 		[connection setProxyType:(MVChatConnectionProxy)[[info objectForKey:@"proxy"] unsignedIntValue]];
 
