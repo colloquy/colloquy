@@ -49,6 +49,11 @@ body {
 	margin-right: 0.05em;
 }
 
+hr {
+	opacity: 0.5;
+	margin: 3px 0 2px 0;
+}
+
 table.message, table.selfMessage {
 	margin-bottom: 10px;
 }
