@@ -1344,6 +1344,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[cmessage setMessageIdentifier:identifier];
 	[cmessage setAction:action];
 
+	messageString = [cmessage body]; // just incase
+
 	[self _setCurrentMessage:cmessage];
 
 	if( ! [user isLocalUser] )
