@@ -298,16 +298,52 @@ static JVChatController *sharedInstance = nil;
 
 - (void) _addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller {
 	JVChatWindowController *windowController = nil;
+	id <JVChatViewController> viewController = nil;
+	Class modeClass = NULL;
 	NSEnumerator *enumerator = nil;
 
 	NSParameterAssert( controller != nil );
 
-	enumerator = [_chatWindows objectEnumerator];
-	while( ( windowController = [enumerator nextObject] ) )
-		if( [[windowController window] isMainWindow] || ! [[NSApplication sharedApplication] isActive] )
-			break;
+	int mode = [[NSUserDefaults standardUserDefaults] integerForKey:[NSStringFromClass( [controller class] ) stringByAppendingString:@"PreferredOpenMode"]];
+	BOOL groupByServer = (BOOL) mode & 32;
+	mode &= ~32;
 
-	if( ! windowController ) windowController = [_chatWindows anyObject];
+	switch( mode ) {
+	default:
+	case 0:
+		windowController = [self newChatWindowController];
+		break;
+	case 1:
+		enumerator = [_chatWindows objectEnumerator];
+		while( ( windowController = [enumerator nextObject] ) )
+			if( [[windowController window] isMainWindow] || ! [[NSApplication sharedApplication] isActive] )
+				break;
+		if( ! windowController ) windowController = [_chatWindows anyObject];
+		break;
+	case 2:
+		modeClass = [JVChatRoom class];
+		goto groupByClass;
+	case 3:
+		modeClass = [JVDirectChat class];
+		goto groupByClass;
+	case 4:
+		modeClass = [JVChatTranscript class];
+		goto groupByClass;
+	case 5:
+		modeClass = [JVChatConsole class];
+		goto groupByClass;
+	groupByClass:
+		if( groupByServer ) {
+			enumerator = [[self chatViewControllersOfClass:modeClass] objectEnumerator];
+			while( ( viewController = [enumerator nextObject] ) ) {
+				if( [viewController connection] == [controller connection] ) {
+					windowController = [viewController windowController];
+					break;
+				}
+			}
+		} else windowController = [[[self chatViewControllersOfClass:modeClass] anyObject] windowController];
+		break;
+	}
 
 	if( ! windowController ) windowController = [self newChatWindowController];
 

@@ -8,6 +8,7 @@
 #import "JVGeneralPreferences.h"
 #import "JVAppearancePreferences.h"
 #import "JVFileTransferPreferences.h"
+#import "JVInterfacePreferences.h"
 #import "JVAdvancedPreferences.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
@@ -124,12 +125,13 @@
 	[NSPreferences setDefaultPreferencesClass:[JVPreferencesController class]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"General", "general preference pane name" ) owner:[JVGeneralPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Appearance", "appearance preference pane name" ) owner:[JVAppearancePreferences sharedInstance]];
+	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Interface", "interface preference pane name" ) owner:[JVInterfacePreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Advanced", "advanced preference pane name" ) owner:[JVAdvancedPreferences sharedInstance]];
 
 	[JVChatController defaultManager];
-	[MVBuddyListController sharedBuddyList];
 	[MVConnectionsController defaultManager];
+	[MVBuddyListController sharedBuddyList];
 	[MVFileTransferController defaultManager];
 }
 
