@@ -2,6 +2,7 @@
 
 @interface NSScriptObjectSpecifier (NSScriptObjectSpecifierPrivate) // Private Foundation Methods
 + (id) _objectSpecifierFromDescriptor:(NSAppleEventDescriptor *) descriptor inCommandConstructionContext:(id) context;
+- (NSAppleEventDescriptor *) _asDescriptor;
 @end
 
 #pragma mark -
@@ -14,6 +15,11 @@
 - (NSScriptObjectSpecifier *) subjectSpecifier {
 	NSAppleEventDescriptor *subjDesc = [[self appleEvent] attributeDescriptorForKeyword:'subj'];
 	return [NSScriptObjectSpecifier _objectSpecifierFromDescriptor:subjDesc inCommandConstructionContext:nil];
+}
+
+- (void) setSubjectSpecifier:(NSScriptObjectSpecifier *) subject {
+	NSAppleEventDescriptor *subjDesc = [subject _asDescriptor];
+	[[self appleEvent] setAttributeDescriptor:subjDesc forKeyword:'subj'];
 }
 
 - (BOOL) subjectSupportsCommand {
