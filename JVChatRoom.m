@@ -248,6 +248,18 @@
 
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
 	JVChatRoomMember *member = [self chatRoomMemberWithName:user];
+
+	if( ! [user isEqualToString:[[self connection] nickname]] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:NSLocalizedString( @"Chat Room Activity", "room activity bubble title" ) forKey:@"title"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has new messages.", "new room messages bubble text" ), [self title]] forKey:@"description"];
+		[context setObject:[NSImage imageNamed:@"room"] forKey:@"image"];
+		[context setObject:_target forKey:@"performedOn"];
+		[context setObject:user forKey:@"performedBy"];
+		[context setObject:_target forKey:@"performedInRoom"];
+		[[JVNotificationController defaultManager] performNotification:@"JVChatRoomActivity" withContextInfo:context];
+	}
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( BOOL ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 

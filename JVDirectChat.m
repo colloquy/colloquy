@@ -704,28 +704,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		NSMutableArray *names = nil;
 		id item = nil;
 
-		if( [self isMemberOfClass:[JVDirectChat class]] && _firstMessage ) {
-			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"description"];
-			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
-			[context setObject:_target forKey:@"performedOn"];
-			[context setObject:user forKey:@"performedBy"];
-			[context setObject:_target forKey:@"performedInRoom"];
-			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
-		}
-
-		if( [self isMemberOfClass:[JVDirectChat class]] && ! _firstMessage ) {
-			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ sent you another private message.", "new message bubble text" ), [self title]] forKey:@"description"];
-			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
-			[context setObject:_target forKey:@"performedOn"];
-			[context setObject:user forKey:@"performedBy"];
-			[context setObject:_target forKey:@"performedInRoom"];
-			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
-		}
-
 		names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
 		[names addObject:[[self connection] nickname]];
 		enumerator = [names objectEnumerator];
@@ -858,6 +836,28 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
+	if( ! [user isEqualToString:[[self connection] nickname]] ) {
+		if( _firstMessage ) {
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"description"];
+			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
+			[context setObject:_target forKey:@"performedOn"];
+			[context setObject:user forKey:@"performedBy"];
+			[context setObject:_target forKey:@"performedInRoom"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
+		} else {
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ sent you another private message.", "new message bubble text" ), [self title]] forKey:@"description"];
+			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
+			[context setObject:_target forKey:@"performedOn"];
+			[context setObject:user forKey:@"performedBy"];
+			[context setObject:_target forKey:@"performedInRoom"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
+		}
+	}
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
