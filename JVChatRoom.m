@@ -1028,7 +1028,7 @@
 		} else {
 			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to room founder by <span class=\"member\">%@</span>.", "user is now a chat room founder status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
 		}
-	} else if( mode == MVChatRoomMemberOperatorMode && ! enabled ) {
+	} else if( mode == MVChatRoomMemberFounderMode && ! enabled ) {
 		name = @"memberDemotedFromFounder";
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
 			message = NSLocalizedString( @"You demoted yourself from room founder.", "we removed our chat room founder privilege status message" );
