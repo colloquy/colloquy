@@ -865,7 +865,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( ([event modifierFlags] & NSAlternateKeyMask) != 0 ) {
 		//[self send:[NSNumber numberWithBool:YES]];
 		ret = NO;
-	} else if ( ([event modifierFlags] & NSShiftKeyMask) != 0 ) {
+	} else if ( ([event modifierFlags] & NSControlKeyMask) != 0 ) {
 		[self send:[NSNumber numberWithBool:YES]];
 		ret = YES;
 	} else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnReturn"] ) {
