@@ -434,7 +434,7 @@ static  NSImage			*tabDivider = nil;
     int				tabExtraWidth;
     int				totalTabWidth;
     int				reducedWidth = 0;
-    int				reduceThreshold = 1000000;
+    float			reduceThreshold = 1000000;
 
     //Get the total tab width
     totalTabWidth = [self totalWidthOfTabs] + tabGapWidth;
