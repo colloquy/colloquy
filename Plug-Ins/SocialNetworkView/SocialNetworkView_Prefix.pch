@@ -1,0 +1,10 @@
+//
+// Prefix header for all source files of the 'SocialNetworkView' target in the 'SocialNetworkView' project.
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+    #import <AppKit/AppKit.h>
+	#import "../colloquy/JVChatRoom.h"
+	#import "../colloquy/MVChatConnection.h"
+#endif
