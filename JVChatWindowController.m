@@ -745,6 +745,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) _refreshSelectionMenu {
 	id item = [self selectedListItem];
+	if( ! item ) item = [self activeChatViewController];
+
 	id menuItem = nil;
 	NSMenu *menu = [chatViewsOutlineView menu];
 	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
