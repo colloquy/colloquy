@@ -47,15 +47,15 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 	if( [_inspector respondsToSelector:@selector( didUnload )] )
 		[(NSObject *)_inspector didUnload];
 
-	[_object autorelease];
-	[_inspector autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	if( self == sharedInstance ) sharedInstance = nil;
+
+	[_object release];
+	[_inspector release];
 
 	_object = nil;
 	_inspector = nil;
 
-	if( self == sharedInstance ) sharedInstance = nil;
 	[super dealloc];
 }
 

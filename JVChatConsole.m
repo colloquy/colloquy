@@ -41,11 +41,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) dealloc {
-	[contents autorelease];
-	[_sendHistory autorelease];
-	[_connection autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+	[contents release];
+	[_sendHistory release];
+	[_connection release];
 
 	contents = nil;
 	_connection = nil;

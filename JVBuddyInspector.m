@@ -21,11 +21,11 @@
 }
 
 - (void) dealloc {
-	[_buddy autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[_buddy release];
 	_buddy = nil;
+
 	[super dealloc];
 }
 

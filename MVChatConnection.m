@@ -621,17 +621,17 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	[self disconnect];
 	[self _deregisterForSleepNotifications];
 
-	[_nickname autorelease];
-	[_npassword autorelease];
-	[_password autorelease];
-	[_server autorelease];
-	[_joinList autorelease];
-	[_roomsCache autorelease];
-	[_cachedDate autorelease];
-	[_floodIntervals autorelease];
-	[_firetalkSelectTimer autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+	[_nickname release];
+	[_npassword release];
+	[_password release];
+	[_server release];
+	[_joinList release];
+	[_roomsCache release];
+	[_cachedDate release];
+	[_floodIntervals release];
+	[_firetalkSelectTimer release];
 
 	firetalk_destroy_handle( _chatConnection );
 	_chatConnection = NULL;

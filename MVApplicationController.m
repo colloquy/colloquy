@@ -25,11 +25,11 @@
 
 @implementation MVApplicationController
 - (void) dealloc {
-	[[JVChatController defaultManager] autorelease];
-	[[MVFileTransferController defaultManager] autorelease];
-	[[MVBuddyListController sharedBuddyList] autorelease];
-	[[MVChatPluginManager defaultManager] autorelease];
-	[[MVConnectionsController defaultManager] autorelease];
+	[[MVBuddyListController sharedBuddyList] release];
+	[[MVFileTransferController defaultManager] release];
+	[[MVChatPluginManager defaultManager] release];
+	[[JVChatController defaultManager] release];
+	[[MVConnectionsController defaultManager] release];
 
 	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
 
@@ -129,15 +129,15 @@
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Advanced", "advanced preference pane name" ) owner:[JVAdvancedPreferences sharedInstance]];
 
-	[JVChatController defaultManager];
 	[MVConnectionsController defaultManager];
-	[MVBuddyListController sharedBuddyList];
+	[JVChatController defaultManager];
 	[MVFileTransferController defaultManager];
+	[MVBuddyListController sharedBuddyList];
 }
 
 - (void) applicationWillTerminate:(NSNotification *) notification {
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
-	[self autorelease];
+	[self release];
 }
 @end

@@ -31,9 +31,9 @@
 
 - (void) dealloc {
 	[_clickHoldTimer invalidate];
-	[_clickHoldTimer autorelease];
-	[_orgImage autorelease];
-	[_smallImage autorelease];
+	[_clickHoldTimer release];
+	[_orgImage release];
+	[_smallImage release];
 
 	_clickHoldTimer = nil;
 	_orgImage = nil;

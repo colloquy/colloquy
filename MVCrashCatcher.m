@@ -26,8 +26,8 @@
 	[window close];
 	window = nil;
 
-	[programName autorelease];
-	[logPath autorelease];
+	[programName release];
+	[logPath release];
 
 	programName = nil;
 	logPath = nil;

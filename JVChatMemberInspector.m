@@ -22,11 +22,11 @@
 }
 
 - (void) dealloc {
-	[_member autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[_member release];
 	_member = nil;
+
 	[super dealloc];
 }
 

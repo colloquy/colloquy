@@ -181,18 +181,16 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 }
 
 - (void) dealloc {
-	NSEnumerator *enumerator = nil;
-	id alert = nil;
-
-	[_target autorelease];
-	[_buddy autorelease];
-	[_connection autorelease];
-	[_sendHistory autorelease];
-	[_waitingAlertNames autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	enumerator = [_waitingAlerts objectEnumerator];
+	[_target release];
+	[_buddy release];
+	[_connection release];
+	[_sendHistory release];
+	[_waitingAlertNames release];
+
+	NSEnumerator *enumerator = [_waitingAlerts objectEnumerator];
+	id alert = nil;
 	while( ( alert = [enumerator nextObject] ) )
 		NSReleaseAlertPanel( alert );
 

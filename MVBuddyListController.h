@@ -58,7 +58,7 @@ typedef enum {
 
 	float _animationPosition;
 	NSMutableArray *_oldPositions;
-	NSTimer *_animationTimer;
+	NSTimer *_sortTimer;
 	BOOL _viewingTop;
 	BOOL _needsToAnimate;
 	BOOL _animating;

@@ -169,19 +169,19 @@ finish:
 - (void) dealloc {
 	extern MVFileTransferController *sharedInstance;
 
-	[_transferStorage autorelease];
-	[_safeFileExtentions autorelease];
-	[_calculationItems autorelease];
-	[_updateTimer autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	if( self == sharedInstance ) sharedInstance = nil;
+	
+	[_transferStorage release];
+	[_safeFileExtentions release];
+	[_calculationItems release];
+	[_updateTimer release];
 
 	_transferStorage = nil;
 	_safeFileExtentions = nil;
 	_calculationItems = nil;
 	_updateTimer = nil;
 
-	if( self == sharedInstance ) sharedInstance = nil;
 	[super dealloc];
 }
 

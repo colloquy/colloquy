@@ -32,6 +32,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 @implementation JVChatWindowController
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"JVChatWindow"] ) ) {
+		NSLog( @"init window controller %x", self );
 		viewsDrawer = nil;
 		chatViewsOutlineView = nil;
 		viewActionButton = nil;
@@ -62,17 +63,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) dealloc {
+	NSLog( @"dealloc window controller %x", self );
 	[[self window] setToolbar:nil];
 	[[self window] setContentView:_placeHolder];
 
 	[chatViewsOutlineView setDelegate:nil];
 	[chatViewsOutlineView setDataSource:nil];
 
-	[_placeHolder autorelease];
-	[_activeViewController autorelease];
-	[_views autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+	[_placeHolder release];
+	[_activeViewController release];
+	[_views release];
 
 	_placeHolder = nil;
 	_activeViewController = nil;
@@ -365,6 +367,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 @implementation JVChatWindowController (JVChatWindowControllerDelegate)
 - (void) windowWillClose:(NSNotification *) notification {
+	NSLog( @"windowWillClose" );
 	[[JVChatController defaultManager] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
 }
 

@@ -153,13 +153,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	extern NSMutableSet *JVChatStyleBundles;
 	extern NSMutableSet *JVChatEmoticonBundles;
 
-	[contents autorelease];
-	[chooseStyle autorelease];
-	[_chatStyle autorelease];
-	[_chatStyleVariant autorelease];
-	[_chatEmoticons autorelease];
-	[_emoticonMappings autorelease];
-	[_logLock autorelease];
+	[contents release];
+	[chooseStyle release];
+	[_chatStyle release];
+	[_chatStyleVariant release];
+	[_chatEmoticons release];
+	[_emoticonMappings release];
+	[_logLock release];
 
 	[JVChatStyleBundles autorelease];
 	[JVChatEmoticonBundles autorelease];

@@ -82,7 +82,7 @@ static MVBuddyListController *sharedInstance = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyNicknameStatusChangedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyActiveNicknameChangedNotification object:nil];
 
-		[[NSTimer scheduledTimerWithTimeInterval:( .5 ) target:self selector:@selector( _sortBuddiesAnimatedIfNeeded: ) userInfo:nil repeats:YES] retain];
+		_sortTimer = [[NSTimer scheduledTimerWithTimeInterval:( .5 ) target:self selector:@selector( _sortBuddiesAnimatedIfNeeded: ) userInfo:nil repeats:YES] retain];
 
 		_onlineBuddies = [[NSMutableSet set] retain];
 		_buddyList = [[NSMutableSet set] retain];
@@ -102,23 +102,33 @@ static MVBuddyListController *sharedInstance = nil;
 	return self;
 }
 
+- (void) release {
+	if( ( [self retainCount] - 1 ) == 1 )
+		[_sortTimer invalidate];
+	[super release];
+}
+
 - (void) dealloc {
 	extern MVBuddyListController *sharedInstance;
 	[self _saveBuddyList];
 
-	[_onlineBuddies autorelease];
-	[_buddyList autorelease];
-	[_buddyOrder autorelease];
-	[_picker autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	if( self == sharedInstance ) sharedInstance = nil;
+
+	[_onlineBuddies release];
+	[_buddyList release];
+	[_buddyOrder release];
+	[_picker release];
+	[_oldPositions release];
+	[_sortTimer release];
 
 	_onlineBuddies = nil;
 	_buddyList = nil;
 	_buddyOrder = nil;
 	_picker = nil;
+	_oldPositions = nil;
+	_sortTimer = nil;
 
-	if( self == sharedInstance ) sharedInstance = nil;
 	[super dealloc];
 }
 
@@ -311,7 +321,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 		if( [(NSString *)[email objectValue] length] ) {
 			sub = [NSMutableDictionary dictionary];
-			[sub setObject:[NSArray arrayWithObject:@"_$!<Other>!$_"] forKey:@"labels"];
+			[sub setObject:[NSArray arrayWithObject:kABOtherLabel] forKey:@"labels"];
 			[sub setObject:[NSArray arrayWithObject:[email objectValue]] forKey:@"values"];
 			[info setObject:sub forKey:@"Email"];
 		}

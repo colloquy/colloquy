@@ -27,10 +27,15 @@
 }
 
 - (void) dealloc {
-	[self setStatusImage:nil];
-	[self setHighlightedImage:nil];
-	[self setMainText:nil];
-	[self setInformationText:nil];
+	[_altImage release];
+	[_statusImage release];
+	[_mainText release];
+	[_infoText release];
+
+	_altImage = nil;
+	_statusImage = nil;
+	_mainText = nil;
+	_infoText = nil;
 
 	[super dealloc];
 }

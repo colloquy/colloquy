@@ -73,17 +73,17 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[connections setDelegate:nil];
 	[connections setDataSource:nil];
 
-	[_bookmarks autorelease];
-	[_joinRooms autorelease];
-	[_passConnection autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	if( self == sharedInstance ) sharedInstance = nil;
+
+	[_bookmarks release];
+	[_joinRooms release];
+	[_passConnection release];
 
 	_bookmarks = nil;
 	_joinRooms = nil;
 	_passConnection = nil;
 
-	if( self == sharedInstance ) sharedInstance = nil;
 	[super dealloc];
 }
 

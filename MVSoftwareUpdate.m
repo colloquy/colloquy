@@ -72,7 +72,7 @@ static void MVSoftwareUpdateClearTimeout() {
 	[window close];
 	window = nil;
 
-	[updateInfo autorelease];
+	[updateInfo release];
 	updateInfo = nil;
 
 	[super dealloc];

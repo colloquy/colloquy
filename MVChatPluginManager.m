@@ -46,13 +46,12 @@ static MVChatPluginManager *sharedInstance = nil;
 - (void) dealloc {
 	extern MVChatPluginManager *sharedInstance;
 
-	[_plugins autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	if( self == sharedInstance ) sharedInstance = nil;
 
+	[_plugins release];
 	_plugins = nil;
 
-	if( self == sharedInstance ) sharedInstance = nil;
 	[super dealloc];
 }
 

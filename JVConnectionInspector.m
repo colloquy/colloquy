@@ -21,8 +21,8 @@
 }
 
 - (void) dealloc {
-	[_connection autorelease];
-	[_editingRooms autorelease];
+	[_connection release];
+	[_editingRooms release];
 	_connection = nil;
 	_editingRooms = nil;
 	[super dealloc];

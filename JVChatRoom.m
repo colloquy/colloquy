@@ -46,11 +46,11 @@
 - (void) dealloc {
 	[[self connection] partChatForRoom:[self target]];
 
-	[_members autorelease];
-	[_sortedMembers autorelease];
-	[_topic autorelease];
-	[_topicAuth autorelease];
-	[_topicAttributed autorelease];
+	[_members release];
+	[_sortedMembers release];
+	[_topic release];
+	[_topicAuth release];
+	[_topicAttributed release];
 
 	_members = nil;
 	_sortedMembers = nil;

@@ -41,11 +41,11 @@
 }
 
 - (void) dealloc {
-	[_room autorelease];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[_room release];
 	_room = nil;
+
 	[super dealloc];
 }
 

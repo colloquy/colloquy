@@ -55,15 +55,15 @@ static JVChatController *sharedInstance = nil;
 - (void) dealloc {
 	extern JVChatController *sharedInstance;
 
-	[_chatWindows autorelease];
-	[_chatControllers autorelease];
-	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	if( self == sharedInstance ) sharedInstance = nil;
+
+	[_chatWindows release];
+	[_chatControllers release];
 
 	_chatWindows = nil;
 	_chatControllers = nil;
 
-	if( self == sharedInstance ) sharedInstance = nil;
 	[super dealloc];
 }
 
@@ -83,6 +83,7 @@ static JVChatController *sharedInstance = nil;
 - (void) disposeChatWindowController:(JVChatWindowController *) controller {
 	NSParameterAssert( controller != nil );
 //	NSAssert1( [_chatWindows containsObject:controller], @"%@ is not a member of chat controller.", controller );
+	NSLog( @"disposeChatWindowController %d", [controller retainCount] );
 	[_chatControllers minusSet:[NSSet setWithArray:[controller allChatViewControllers]]];
 	[_chatWindows removeObject:controller];
 }

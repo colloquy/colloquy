@@ -29,6 +29,12 @@
 	}
 }
 
+- (void) dealloc {
+	[_actualFont release];
+	_actualFont = nil;
+	[super dealloc];
+}
+
 - (void) selectFont:(id) sender {
 	NSFont *font = [sender convertFont:[self font]];
 

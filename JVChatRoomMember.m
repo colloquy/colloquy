@@ -18,8 +18,8 @@
 }
 
 - (void) dealloc {
-	[_memberName autorelease];
-	[_buddy autorelease];
+	[_memberName release];
+	[_buddy release];
 
 	_parent = nil;
 	_memberName = nil;
