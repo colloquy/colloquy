@@ -23,18 +23,6 @@
 			scrollToBottomIfNeeded();
 		}
 
-		function appendMessages( html ) {
-			checkIfScrollToBottomIsNeeded();
-
-			bodyNode = document.getElementsByTagName( "body" ).item( 0 );
-			range = document.createRange();
-			range.selectNode( bodyNode );
-			documentFragment = range.createContextualFragment( html );
-			bodyNode.appendChild( documentFragment );
-
-			scrollToBottomIfNeeded();
-		}
-
 		function appendMessage( html ) {
 			checkIfScrollToBottomIsNeeded();
 			removeConsecutiveInsertPoint();
@@ -77,11 +65,6 @@
 			return bodyNode.children.length;
 		}
 
-		function firstMessageIdentifier() {
-			bodyNode = document.getElementsByTagName( "body" ).item( 0 );
-			return bodyNode.children[0].id;
-		}
-
 		function enforceScrollBackLimit() {
 			bodyNode = document.getElementsByTagName( "body" ).item( 0 );
 			if( scrollBackLimit > 0 && bodyNode.children.length > scrollBackLimit )
@@ -99,12 +82,8 @@
 			return bodyNode.children[index].offsetTop;
 		}
 
-		function jumpToBottom() {
-			document.body.scrollTop = document.body.offsetHeight;
-		}
-
 		function scrollToBottom() {
-			jumpToBottom();
+			document.body.scrollTop = document.body.offsetHeight;
 		}
 
 		function checkIfScrollToBottomIsNeeded() {
@@ -133,7 +112,7 @@
 	<style id="variantStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 	<base href="%@" />
 </head>
-<body onload="jumpToBottom()">
+<body onload="scrollToBottom()">
 %@
 %@
 </body>
