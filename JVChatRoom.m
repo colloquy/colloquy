@@ -87,6 +87,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	if( _inRoom && ! [MVApplicationController isTerminating] )
 		[[self connection] partChatRoom:[self target]];
 
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[_members release];
 	[_sortedMembers release];
 	[_key release];
