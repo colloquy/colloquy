@@ -697,7 +697,7 @@
 }
 
 - (JVChatRoomMember *) valueInChatMembersWithName:(NSString *) name {
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+	NSEnumerator *enumerator = [_members objectEnumerator];
 	JVChatRoomMember *member = nil;
 
 	while( ( member = [enumerator nextObject] ) )
