@@ -1693,7 +1693,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	BOOL new = YES;
 
 	if( ! ( menu = _emoticonMenu ) ) {
-		menu = [[NSMenu alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar menu title" )];
+		menu = [[NSMenu alloc] initWithTitle:@""];
 		_emoticonMenu = menu;
 	} else {
 		NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
