@@ -1515,9 +1515,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 			}
 		}
 
-		[part replaceOccurrencesOfString:@"&amp;" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"&" withString:@"*amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"~amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+		[part replaceOccurrencesOfString:@"~" withString:@"~tilde;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+		[part replaceOccurrencesOfString:@"&" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+		[part replaceOccurrencesOfString:@"~amp;amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 
 		// catch well-formed IRC channel names like "#php" or "&admins"
 		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;.,?!%^$@#&*~`\\|+/-_"];
@@ -1528,19 +1528,19 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 					urlHandle = [urlHandle substringToIndex:( [urlHandle length] - 1 )];
 				link = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];
 				mutableLink = [NSMutableString stringWithFormat:@"<a href=\"%@\">%@</a>", link, urlHandle];
-				[mutableLink replaceOccurrencesOfString:@"&" withString:@"*amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[mutableLink replaceOccurrencesOfString:@"&" withString:@"~amp;amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 				[part replaceOccurrencesOfString:urlHandle withString:mutableLink options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 
-				[part replaceOccurrencesOfString:@"&" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				[part replaceOccurrencesOfString:@"*amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				[part replaceOccurrencesOfString:@"~amp;" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[part replaceOccurrencesOfString:@"&" withString:@"~amp;amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[part replaceOccurrencesOfString:@"~amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+				[part replaceOccurrencesOfString:@"~tilde;" withString:@"~" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 				goto finish;
 			}
 		}
 
-		[part replaceOccurrencesOfString:@"&" withString:@"~amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"*amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-		[part replaceOccurrencesOfString:@"~amp;" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];		
+		[part replaceOccurrencesOfString:@"&" withString:@"~amp;amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+		[part replaceOccurrencesOfString:@"~amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+		[part replaceOccurrencesOfString:@"~tilde;" withString:@"~" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 
 	finish:
 		[parts replaceObjectAtIndex:i withObject:part];
