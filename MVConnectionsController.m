@@ -701,7 +701,7 @@ static NSMenu *favoritesMenu = nil;
 			} else if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] status] == MVChatConnectionConnectingStatus ) {
 				if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) [cell setImage:[NSImage imageNamed:@"connecting"]];
 				else [cell setImage:[NSImage imageNamed:@"connectingSelected"]];
-			} else if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] status] == MVChatConnectionDisconnectedStatus ) {
+			} else {
 				[cell setImage:nil];
 			}
 		}
@@ -1041,7 +1041,7 @@ static NSMenu *favoritesMenu = nil;
 			case MVChatDisconnectError:
 			case MVChatPacketError:
 			case MVChatPacketSizeError:
-				if( [connection status] == MVChatConnectionConnectedStatus ) {
+				if( ! [connection isConnected] ) {
 					if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), @"Cancel", nil ) == NSOKButton )
 						[connection connect];
 				} else {
@@ -1166,7 +1166,7 @@ static NSMenu *favoritesMenu = nil;
 	BOOL noneSelected = YES, connected = NO;
 
 	if( [connections selectedRow] != -1 ) noneSelected = NO;
-	if( ! noneSelected ) connected = ! ( [(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] status] == MVChatConnectionDisconnectedStatus );
+	if( ! noneSelected ) connected = [(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] isConnected];
 	while( ( item = [enumerator nextObject] ) ) {
 		if( [[item itemIdentifier] isEqualToString:MVToolbarConnectToggleItemIdentifier] ) {
 			if( noneSelected ) {
