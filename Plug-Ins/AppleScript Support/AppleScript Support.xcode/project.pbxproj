@@ -85,6 +85,7 @@
 		089C167CFE841241C02AAC07 = {
 			children = (
 				1C04316407CADBE100304949,
+				1CF7A61407CD661200965F52,
 				1CE3FB5407C7DFD50049A366,
 				8D5B49B7048680CD000E48DA,
 			);
@@ -127,6 +128,7 @@
 //104
 		1058C7ACFEA557BF11CA2CBB = {
 			children = (
+				1CF7A8A707CED4C400965F52,
 				1058C7ADFEA557BF11CA2CBB,
 			);
 			isa = PBXGroup;
@@ -273,6 +275,33 @@
 			settings = {
 			};
 		};
+		1CF7A61407CD661200965F52 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = compile.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF7A61507CD661200965F52 = {
+			fileRef = 1CF7A61407CD661200965F52;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF7A8A707CED4C400965F52 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Carbon.framework;
+			path = /System/Library/Frameworks/Carbon.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		1CF7A8A807CED4C400965F52 = {
+			fileRef = 1CF7A8A707CED4C400965F52;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //1C0
 //1C1
 //1C2
@@ -319,7 +348,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/Frameworks /Library/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\" /Library/Frameworks \"$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Versions/A/Frameworks\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppleScript Support.pch";
@@ -347,6 +376,7 @@
 			files = (
 				1CE3FB5507C7DFD50049A366,
 				1C04316507CADBE100304949,
+				1CF7A61507CD661200965F52,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,6 +395,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D5B49B4048680CD000E48DA,
+				1CF7A8A807CED4C400965F52,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

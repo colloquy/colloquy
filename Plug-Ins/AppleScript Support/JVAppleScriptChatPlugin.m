@@ -60,25 +60,6 @@
 - (NSNumber *) scriptIdentifier {
 	return [NSNumber numberWithUnsignedLong:_compiledScriptID];
 }
-
-/* - (BOOL) saveToFile:(NSString *) path {
-	FSRef ref;
-	FSPathMakeRef( [path UTF8String], &ref, NULL );
-	OSAError result = OSAStoreFile( [NSAppleScript _defaultScriptingComponent], _compiledScriptID, typeOSAGenericStorage, kOSAModeNull, &ref );
-	return ( result == noErr );
-}
-
-- (unsigned long) numberOfProperties {
-	AEDescList properties;
-	OSAError result = OSAGetPropertyNames( [NSAppleScript _defaultScriptingComponent], kOSAModeNull, _compiledScriptID, &properties );
-	if( result != noErr ) return 0;
-
-	long number = -1;
-	AECountItems( &properties, &number );
-	if( number == -1 ) return 0;
-
-	return number;
-} */
 @end
 
 #pragma mark -
@@ -130,13 +111,29 @@
 	return _script;
 }
 
+- (void) setScript:(NSAppleScript *) script {
+	[_script autorelease];
+	_script = [script retain];
+}
+
+#pragma mark -
+
 - (MVChatPluginManager *) pluginManager {
 	return _manager;
 }
 
+#pragma mark -
+
 - (NSString *) scriptFilePath {
 	return _path;
 }
+
+- (void) setScriptFilePath:(NSString *) path {
+	[_path autorelease];
+	_path = [path copyWithZone:[self zone]];
+}
+
+#pragma mark -
 
 - (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
 	if( ! _script ) return nil;

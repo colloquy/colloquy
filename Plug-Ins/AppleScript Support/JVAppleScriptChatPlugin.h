@@ -10,8 +10,13 @@
 - (id) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
 - (NSAppleScript *) script;
+- (void) setScript:(NSAppleScript *) script;
+
 - (MVChatPluginManager *) pluginManager;
+
 - (NSString *) scriptFilePath;
+- (void) setScriptFilePath:(NSString *) path;
+
 - (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector;
 
 - (BOOL) respondsToSelector:(SEL) selector;
