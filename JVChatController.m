@@ -276,7 +276,7 @@ static JVChatController *sharedInstance = nil;
 	[room joined];
 }
 
-- (void) _memberInvitedToRoom:(NSNotification *) notification {
+- (void) _invitedToRoom:(NSNotification *) notification {
 	NSString *room = [[notification userInfo] objectForKey:@"room"];
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatConnection *connection = [notification object];
