@@ -310,8 +310,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
+		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[_chatStyle bundleIdentifier] UTF8String] );
 		xmlSaveFormatFile( [[sheet filename] fileSystemRepresentation], _xmlLog, (int) [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] );
 		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] atPath:[sheet filename]];
+		xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "style" );
 	}
 }
 
