@@ -97,7 +97,10 @@
 	id value = nil;
 
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
-		NSScriptObjectSpecifier *specifier = [value objectSpecifier];
+		NSScriptObjectSpecifier *specifier = nil;
+		if( [value isKindOfClass:[NSScriptObjectSpecifier class]] ) specifier = value;
+		else specifier = [value objectSpecifier];
+
 		if( specifier ) descriptor = [[value objectSpecifier] _asDescriptor]; // custom object, use it's object specitier
 		else descriptor = [[NSAEDescriptorTranslator sharedAEDescriptorTranslator] descriptorByTranslatingObject:value ofType:nil inSuite:nil];
 
