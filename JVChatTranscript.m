@@ -48,6 +48,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
+- (void) _changeChatStyleMenuSelection;
 - (void) _updateChatStylesMenu;
 - (void) _scanForChatStyles;
 - (NSString *) _applyStyleOnXMLDocument:(xmlDocPtr) doc;
@@ -116,6 +117,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 - (void) awakeFromNib {
 	NSView *toolbarItemContainerView = nil;
 
+	[self _updateChatStylesMenu];
+
 	if( ! _chatEmoticons )
 		[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
 
@@ -132,8 +135,6 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[chooseStyle removeFromSuperview];
 
 	[toolbarItemContainerView autorelease];
-
-	[self _updateChatStylesMenu];
 }
 
 - (void) dealloc {
@@ -328,7 +329,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	result = [self _applyStyleOnXMLDocument:_xmlLog];
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:( result ? result : @"" )] baseURL:nil];
 
-	[self _updateChatStylesMenu];
+	[self _changeChatStyleMenuSelection];
 }
 
 - (NSBundle *) chatStyle {
@@ -339,10 +340,10 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 - (IBAction) changeChatStyleVariant:(id) sender {
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
-	NSBundle *style = [[sender representedObject] objectForKey:@"style"];
+	NSString *style = [[sender representedObject] objectForKey:@"style"];
 
-	if( style != _chatStyle ) {
-		[self setChatStyle:style withVariant:variant];
+	if( ! [style isEqualToString:[_chatStyle bundleIdentifier]] ) {
+		[self setChatStyle:[NSBundle bundleWithIdentifier:style] withVariant:variant];
 	} else {
 		[self setChatStyleVariant:variant];
 	}
@@ -354,7 +355,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 	[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [self _chatStyleVariantCSSFileURL]]];
 
-	[self _updateChatStylesMenu];
+	[self _changeChatStyleMenuSelection];
 }
 
 - (NSString *) chatStyleVariant {
@@ -484,6 +485,40 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptPrivate)
+- (NSMenu *) _stylesMenu {
+	if( ! chooseStyle ) [self view];
+	return [[[chooseStyle menu] retain] autorelease];
+}
+
+- (void) _changeChatStyleMenuSelection {
+	NSEnumerator *enumerator = [[[chooseStyle menu] itemArray] objectEnumerator];
+	NSEnumerator *senumerator = nil;
+	NSMenuItem *menuItem = nil, *subMenuItem = nil;
+	BOOL hasPerRoomStyle = NO;
+	NSString *style = nil;
+
+	if( [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]] )
+		hasPerRoomStyle = YES;
+
+	style = [_chatStyle bundleIdentifier];
+
+	while( ( menuItem = [enumerator nextObject] ) ) {
+		if( [style isEqualToString:[menuItem representedObject]] && hasPerRoomStyle ) [menuItem setState:NSOnState];
+		else if( ! [menuItem representedObject] && ! hasPerRoomStyle ) [menuItem setState:NSOnState];
+		else if( [style isEqualToString:[menuItem representedObject]] && ! hasPerRoomStyle ) [menuItem setState:NSMixedState];
+		else [menuItem setState:NSOffState];
+
+		senumerator = [[[menuItem submenu] itemArray] objectEnumerator];
+		while( ( subMenuItem = [senumerator nextObject] ) ) {
+			if( [subMenuItem action] == @selector( changeChatStyle: ) && [style isEqualToString:[subMenuItem representedObject]] && ! [_chatStyleVariant length] )
+				[subMenuItem setState:NSOnState];
+			else if( [subMenuItem action] == @selector( changeChatStyleVariant: ) && [style isEqualToString:[[subMenuItem representedObject] objectForKey:@"style"]] && [_chatStyleVariant isEqualToString:[[subMenuItem representedObject] objectForKey:@"variant"]] ) 
+				[subMenuItem setState:NSOnState];
+			else [subMenuItem setState:NSOffState];
+		}
+	}
+}
+
 - (void) _updateChatStylesMenu {
 	extern NSMutableSet *JVChatStyleBundles;
 	NSEnumerator *enumerator = [[[JVChatStyleBundles allObjects] sortedArrayUsingFunction:sortChatStyles context:self] objectEnumerator];
@@ -491,11 +526,11 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSMenu *menu = nil, *subMenu = nil;
 	NSMenuItem *menuItem = nil, *subMenuItem = nil;
 	NSBundle *style = nil;
-	BOOL hasPerRoomStyle = NO;
 	id file = nil;
 
 	if( ! ( menu = [chooseStyle menu] ) ) {
 		menu = [[[NSMenu alloc] initWithTitle:NSLocalizedString( @"Style", "choose style toolbar menu title" )] autorelease];
+		[chooseStyle setMenu:menu];
 	} else {
 		NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
 
@@ -506,13 +541,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 			[menu removeItem:menuItem];
 	}
 
-	if( [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]] )
-		hasPerRoomStyle = YES;
-
 	style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Default", "default style menu item title" ) action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
 	[menuItem setTarget:self];
-	if( style == _chatStyle && ! hasPerRoomStyle ) [menuItem setState:NSOnState];
 	[menu addItem:menuItem];
 
 	[menu addItem:[NSMenuItem separatorItem]];
@@ -520,8 +551,6 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	while( ( style = [enumerator nextObject] ) ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[self _chatStyleNameForBundle:style] action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
-		if( style == _chatStyle && hasPerRoomStyle ) [menuItem setState:NSOnState];
-		else if( style == _chatStyle && ! hasPerRoomStyle ) [menuItem setState:NSMixedState];
 		[menuItem setRepresentedObject:[style bundleIdentifier]];
 		[menu addItem:menuItem];
 
@@ -529,18 +558,16 @@ void MVChatPlaySoundForAction( NSString *action ) {
 			denumerator = [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] objectEnumerator];
 			subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
-			subMenuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Normal", "normal style variant menu item title" ) action:@selector( changeChatStyleVariant: ) keyEquivalent:@""] autorelease];
+			subMenuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Normal", "normal style variant menu item title" ) action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
 			[subMenuItem setTarget:self];
-			if( style == _chatStyle && ! [_chatStyleVariant length] ) [subMenuItem setState:NSOnState];
-			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
+			[subMenuItem setRepresentedObject:[style bundleIdentifier]];
 			[subMenu addItem:subMenuItem];
 
 			while( ( file = [denumerator nextObject] ) ) {
 				file = [[file lastPathComponent] stringByDeletingPathExtension];
 				subMenuItem = [[[NSMenuItem alloc] initWithTitle:file action:@selector( changeChatStyleVariant: ) keyEquivalent:@""] autorelease];
 				[subMenuItem setTarget:self];
-				if( style == _chatStyle && [_chatStyleVariant isEqualToString:file] ) [subMenuItem setState:NSOnState];
-				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", file, @"variant", nil]];
+				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:[style bundleIdentifier], @"style", file, @"variant", nil]];
 				[subMenu addItem:subMenuItem];
 			}
 
@@ -550,7 +577,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		subMenu = nil;
 	}
 
-	[chooseStyle setMenu:menu];
+	[self _changeChatStyleMenuSelection];
 }
 
 - (void) _scanForChatStyles {
