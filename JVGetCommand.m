@@ -22,6 +22,8 @@
 			}
 		}
 
+		if( class == [ret class] ) return ret; // we are all set, return now.
+
 		if( class && class != [ret class] ) {
 			id newRet = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:ret toClass:class];
 			if( newRet ) return newRet;
