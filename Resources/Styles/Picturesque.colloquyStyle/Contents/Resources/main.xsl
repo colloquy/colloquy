@@ -20,7 +20,7 @@
 				<xsl:value-of select="../sender" />
 				<xsl:text> </xsl:text>
 			</xsl:if>
-			<xsl:apply-templates select="." />
+			<xsl:apply-templates select="child::node()" mode="copy" />
 		</div>
 		<xsl:if test="$subsequent = 'yes'">
 			<div id="consecutiveInsert" />
@@ -76,7 +76,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="a">
+	<xsl:template match="a" mode="copy">
 		<xsl:variable name="extension" select="substring(@href,string-length(@href) - 3, 4)" />
 		<xsl:variable name="extensionLong" select="substring(@href,string-length(@href) - 4, 5)" />
 
@@ -108,24 +108,8 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="b">
-		<xsl:copy-of select="current()"/>
-	</xsl:template>
-
-	<xsl:template match="u">
-		<xsl:copy-of select="current()"/>
-	</xsl:template>
-
-	<xsl:template match="i">
-		<xsl:copy-of select="current()"/>
-	</xsl:template>
-
-	<xsl:template match="font">
-		<xsl:copy-of select="current()"/>
-	</xsl:template>
-
-	<xsl:template match="span">
-		<xsl:copy-of select="current()"/>
+	<xsl:template match="@*|*" mode="copy">
+		<xsl:copy><xsl:apply-templates select="@*|node()" mode="copy" /></xsl:copy>
 	</xsl:template>
 
 	<xsl:template name="short-time">
