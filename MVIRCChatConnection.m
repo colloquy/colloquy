@@ -44,6 +44,7 @@ NSRecursiveLock *MVIRCChatConnectionThreadLock = nil;
 static unsigned int connectionCount = 0;
 static GMainLoop *glibMainLoop = NULL;
 static NSPort *threadConnectionPort = nil;
+static BOOL irssiThreadReady = NO;
 
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
@@ -1067,9 +1068,11 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 		[MVIRCChatConnectionThreadLock unlock];
 
+		while( ! irssiThreadReady ) usleep( 50 );
+
 		extern NSPort *threadConnectionPort;
 		NSConnection *threadConnection = [NSConnection connectionWithReceivePort:threadConnectionPort sendPort:threadConnectionPort];
-		_irssiThreadConnection = [[[threadConnection rootProxy] vendChatConnection:self] retain];
+		_irssiThreadConnection = [[(MVIRCConnectionThreadHelper *)[threadConnection rootProxy] vendChatConnection:self] retain];
 
 		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
 		_irssiThreadProxy = [[connection rootProxy] retain];
@@ -1668,6 +1671,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	extern GMainLoop *glibMainLoop;
 	glibMainLoop = g_main_new( TRUE );
+
+	extern BOOL irssiThreadReady;
+	irssiThreadReady = YES;
 
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
