@@ -35,7 +35,7 @@
 
 		<xsl:variable name="allClasses">
 			<xsl:choose>
-				<xsl:when test="(message[1]/@ignored = 'yes') or (@ignored = 'yes')">
+				<xsl:when test="(message[1]/@ignored = 'yes' or ../@ignored = 'yes') or (@ignored = 'yes')">
 					<xsl:value-of select="$envelopeClasses" />
 					<xsl:text> ignore</xsl:text>
 				</xsl:when>
