@@ -161,6 +161,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 #pragma mark -
 
+static BOOL fileTransferSignalsRegistered = NO;
+
 @implementation MVFileTransfer (MVIRCFileTransferPrivate)
 + (id) _transferForDCCFileRecord:(FILE_DCC_REC *) record {
 	if( ! record ) return nil;
@@ -177,8 +179,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 @implementation MVIRCUploadFileTransfer
 + (void) initialize {
 	[super initialize];
-	static BOOL tooLate = NO;
-	if( ! tooLate ) {
+	if( ! fileTransferSignalsRegistered ) {
 		[MVIRCChatConnectionThreadLock lock];
 		signal_add_last( "dcc connected", (SIGNAL_FUNC) MVFileTransferConnected );
 		signal_add_last( "dcc closed", (SIGNAL_FUNC) MVFileTransferClosed );
@@ -187,7 +188,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 		signal_add_last( "dcc error file open", (SIGNAL_FUNC) MVFileTransferErrorFileOpen );
 		signal_add_last( "dcc error send exists", (SIGNAL_FUNC) MVFileTransferErrorSendExists );
 		[MVIRCChatConnectionThreadLock unlock];
-		tooLate = YES;
+		fileTransferSignalsRegistered = YES;
 	}
 }
 
@@ -382,15 +383,21 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
 		[MVIRCChatConnectionThreadLock lock];
+		signal_add_last( "dcc get receive", (SIGNAL_FUNC) MVIRCDownloadFileTransferSpecifyPath );
+		[MVIRCChatConnectionThreadLock unlock];
+		tooLate = YES;
+	}
+
+	if( ! fileTransferSignalsRegistered ) {
+		[MVIRCChatConnectionThreadLock lock];
 		signal_add_last( "dcc connected", (SIGNAL_FUNC) MVFileTransferConnected );
 		signal_add_last( "dcc closed", (SIGNAL_FUNC) MVFileTransferClosed );
 		signal_add_last( "dcc error connect", (SIGNAL_FUNC) MVFileTransferErrorConnect );
 		signal_add_last( "dcc error file create", (SIGNAL_FUNC) MVFileTransferErrorFileCreate );
 		signal_add_last( "dcc error file open", (SIGNAL_FUNC) MVFileTransferErrorFileOpen );
 		signal_add_last( "dcc error send exists", (SIGNAL_FUNC) MVFileTransferErrorSendExists );
-		signal_add_last( "dcc get receive", (SIGNAL_FUNC) MVIRCDownloadFileTransferSpecifyPath );
 		[MVIRCChatConnectionThreadLock unlock];
-		tooLate = YES;
+		fileTransferSignalsRegistered = YES;
 	}
 }
 

@@ -466,7 +466,7 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user passively:(BOOL) passive {
-	return [[MVUploadFileTransfer transferWithSourceFile:path toUser:user onConnection:self passively:passive] retain];
+	return [MVUploadFileTransfer transferWithSourceFile:path toUser:user onConnection:self passively:passive];
 }
 
 #pragma mark -

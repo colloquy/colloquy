@@ -658,7 +658,6 @@ finish:
 			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2 ) {
 				[_calculationItems removeObject:info];
 				[_transferStorage removeObject:info];
-				[currentFiles reloadData];
 			}
 
 			break;
