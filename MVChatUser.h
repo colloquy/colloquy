@@ -1,5 +1,5 @@
 typedef enum {
-	MVChatRemoteUserType = 'norM',
+	MVChatRemoteUserType = 'remT',
 	MVChatLocalUserType = 'locL',
 	MVChatWildcardUserType = 'wilD'
 } MVChatUserType;
@@ -16,6 +16,7 @@ typedef enum {
 	MVChatUserInvisibleMode = 1 << 0
 } MVChatUserMode;
 
+extern NSString *MVChatUserKnownRoomsAttribute;
 extern NSString *MVChatUserPictureAttribute;
 extern NSString *MVChatUserLocalTimeAttribute;
 extern NSString *MVChatUserClientInfoAttribute;
@@ -37,19 +38,32 @@ extern NSString *MVChatUserServerDigitalSignatureAttribute;
 extern NSString *MVChatUserNicknameChangedNotification;
 extern NSString *MVChatUserStatusChangedNotification;
 extern NSString *MVChatUserAwayStatusMessageChangedNotification;
-extern NSString *MVChatUserIdleStatusChangedNotification;
+extern NSString *MVChatUserIdleTimeUpdatedNotification;
 extern NSString *MVChatUserModeChangedNotification;
-extern NSString *MVChatRoomAttributesUpdatedNotification;
+extern NSString *MVChatUserInformationUpdatedNotification;
+extern NSString *MVChatUserAttributeUpdatedNotification;
+extern NSString *MVChatUserAttributesUpdatedNotification;
+
+@class MVChatConnection;
+@class MVUploadFileTransfer;
 
 @interface MVChatUser : NSObject {
 @protected
 	MVChatConnection *_connection;
+	NSString *_nickname;
+	NSString *_realName;
+	NSString *_username;
+	NSString *_address;
+	NSString *_serverAddress;
+	NSData *_publicKey;
+	NSString *_fingerprint;
 	NSDate *_dateConnected;
 	NSDate *_dateDisconnected;
-	NSData *_awayMessage; // raw away message data
-	NSMutableSet *_attributes;
+	NSMutableDictionary *_attributes;
 	MVChatUserType _type;
 	MVChatUserStatus _status;
+	NSTimeInterval _idleTime;
+	NSTimeInterval _lag;
 	unsigned long _modes;
 	BOOL _identified;
 	BOOL _serverOperator;
@@ -60,13 +74,13 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 
 - (BOOL) isRemoteUser;
 - (BOOL) isLocalUser;
-- (BOOL) isWildcardUser
+- (BOOL) isWildcardUser;
 
 - (BOOL) isIdentified;
 - (BOOL) isServerOperator;
 
 - (BOOL) isEqual:(id) object;
-- (BOOL) isEqualToUser:(MVChatUser *) anotherUser;
+- (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;
 - (unsigned) hash;
 
 - (NSComparisonResult) compare:(MVChatUser *) otherUser;
@@ -83,6 +97,7 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 - (NSTimeInterval) idleTime;
 - (NSTimeInterval) lag;
 
+- (NSString *) displayName;
 - (NSString *) nickname;
 - (NSString *) realName;
 - (NSString *) username;
@@ -90,7 +105,7 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 - (NSString *) serverAddress;
 
 - (id) uniqueIdentifier;
-- (NSString *) publicKey;
+- (NSData *) publicKey;
 - (NSString *) fingerprint;
 
 - (unsigned long) supportedModes;

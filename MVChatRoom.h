@@ -23,6 +23,7 @@ typedef enum {
 extern NSString *MVChatRoomJoinedNotification;
 extern NSString *MVChatRoomPartedNotification;
 extern NSString *MVChatRoomKickedNotification;
+extern NSString *MVChatRoomInvitedNotification;
 
 extern NSString *MVChatRoomUserJoinedNotification;
 extern NSString *MVChatRoomUserPartedNotification;
@@ -36,14 +37,19 @@ extern NSString *MVChatRoomTopicChangedNotification;
 extern NSString *MVChatRoomModeChangedNotification;
 extern NSString *MVChatRoomAttributesUpdatedNotification;
 
+@class MVChatConnection;
+@class MVChatUser;
+
 @interface MVChatRoom : NSObject {
 @protected
 	MVChatConnection *_connection;
+	NSString *_name;
 	NSDate *_dateJoined;
 	NSDate *_dateParted;
-	NSData *_topic; // raw topic data
+	NSData *_topicData;
 	MVChatUser *_topicAuthor;
-	NSMutableSet *_attributes;
+	NSDate *_dateTopicChanged;
+	NSMutableDictionary *_attributes;
 	NSMutableSet *_memberUsers;
 	NSMutableSet *_bannedUsers;
 	NSMutableDictionary *_modeAttributes;
@@ -54,7 +60,7 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 - (MVChatConnection *) connection;
 
 - (BOOL) isEqual:(id) object;
-- (BOOL) isEqualToUser:(MVChatUser *) anotherUser;
+- (BOOL) isEqualToChatRoom:(MVChatRoom *) anotherUser;
 - (unsigned) hash;
 
 - (NSComparisonResult) compare:(MVChatRoom *) otherRoom;
@@ -69,6 +75,7 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 - (void) part;
 - (void) partWithReason:(NSAttributedString *) reason;
 
+- (BOOL) isJoined;
 - (NSDate *) dateJoined;
 - (NSDate *) dateParted;
 
@@ -80,7 +87,7 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments;
 - (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments;
 
-- (NSAttributedString *) topic;
+- (NSData *) topic;
 - (MVChatUser *) topicAuthor;
 - (void) setTopic:(NSAttributedString *) topic;
 
@@ -104,16 +111,19 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 
 - (NSSet *) memberUsers;
 - (NSSet *) memberUsersWithModes:(unsigned long) modes;
-- (BOOL) hasUser:(JVChatUser *) user;
+- (NSSet *) memberUsersWithNickname:(NSString *) nickname;
+- (NSSet *) memberUsersWithFingerprint:(NSString *) fingerprint;
+- (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier;
+- (BOOL) hasUser:(MVChatUser *) user;
 
 - (NSSet *) bannedUsers;
 - (void) addBanForUser:(MVChatUser *) user;
 - (void) removeBanForUser:(MVChatUser *) user;
 
-- (unsigned long) supportedUserModes;
+- (unsigned long) supportedMemberUserModes;
 
-- (unsigned long) modesForUser:(JVChatUser *) user;
+- (unsigned long) modesForMemberUser:(MVChatUser *) user;
 
-- (void) setModes:(unsigned long) modes forUser:(JVChatUser *) user;
-- (void) setMode:(MVChatRoomMemberMode) mode forUser:(JVChatUser *) user;
+- (void) setModes:(unsigned long) modes forMemberUser:(MVChatUser *) user;
+- (void) setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
 @end
