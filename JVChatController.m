@@ -234,7 +234,7 @@ static JVChatController *sharedInstance = nil;
 - (void) _leftRoom:(NSNotification *) notification {
 	id view = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
 	if( ! view ) return;
-	[[JVChatController defaultManager] disposeViewController:view];
+	[self disposeViewController:view];
 }
 
 - (void) _memberJoinedRoom:(NSNotification *) notification {
