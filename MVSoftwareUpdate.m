@@ -1,5 +1,7 @@
 #import <unistd.h>
 #import "MVSoftwareUpdate.h"
+#import "MVFileTransferController.h"
+#import <ChatCore/NSStringAdditions.h>
 
 #define MVSoftwareUpdateURLFormat @"http://colloquy.info/update.php?MVApplicationBuild=%@&MVApplicationName=%@"
 
@@ -35,7 +37,7 @@ static void MVSoftwareUpdateClearTimeout() {
 		if( setjmp( timeoutJump ) ) goto error;
 
 		MVSoftwareUpdateSetTimeout( 5 );
-		updateInfo = [[NSMutableDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:MVSoftwareUpdateURLFormat, [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]]]] retain];
+		updateInfo = [[NSMutableDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:MVSoftwareUpdateURLFormat, [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] stringByEncodingIllegalURLCharacters], [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"] stringByEncodingIllegalURLCharacters]]]] retain];
 		MVSoftwareUpdateClearTimeout();
 
 		if( ! updateInfo ) {
@@ -84,7 +86,9 @@ static void MVSoftwareUpdateClearTimeout() {
 #pragma mark -
 
 - (IBAction) download:(id) sender {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[updateInfo objectForKey:@"MVLatestDownloadURL"]]];
+	NSURL *url = [NSURL URLWithString:[updateInfo objectForKey:@"MVLatestDownloadURL"]];
+	[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
+//	[[NSWorkspace sharedWorkspace] openURL:url];
 	[self autorelease];
 }
 
