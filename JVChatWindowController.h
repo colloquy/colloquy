@@ -3,7 +3,7 @@
 
 @class NSDrawer;
 @class NSOutlineView;
-@class NSPopUpButton;
+@class MVMenuButton;
 @class NSMutableArray;
 @class MVChatConnection;
 @class NSArray;
@@ -25,10 +25,11 @@ extern NSString *JVChatViewPboardType;
 	@private
 	IBOutlet NSDrawer *viewsDrawer;
 	IBOutlet NSOutlineView *chatViewsOutlineView;
-	IBOutlet NSPopUpButton *viewActionButton;
+	IBOutlet MVMenuButton *viewActionButton;
 	NSView *_placeHolder;
 	NSMutableArray *_views;
 	id <JVChatViewController> _activeViewController;
+	BOOL _usesSmallIcons;
 }
 - (void) showChatViewController:(id <JVChatViewController>) controller;
 
@@ -61,6 +62,7 @@ extern NSString *JVChatViewPboardType;
 - (NSView *) view;
 - (NSToolbar *) toolbar;
 - (NSString *) windowTitle;
+- (NSString *) identifier;
 @end
 
 @interface NSObject (JVChatViewControllerOptional)

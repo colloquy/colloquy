@@ -3,6 +3,7 @@
 #import "JVChatController.h"
 #import "JVChatRoom.h"
 #import "JVDetailCell.h"
+#import "MVMenuButton.h"
 
 NSString *JVToolbarToggleChatDrawerItemIdentifier = @"JVToolbarToggleChatDrawerItem";
 NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
@@ -36,6 +37,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		viewActionButton = nil;
 		_activeViewController = nil;
 		_views = [[NSMutableArray array] retain];
+		_usesSmallIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowUseSmallDrawerIcons"];
 
 		[[self window] makeKeyAndOrderFront:nil];
 	}
@@ -47,7 +49,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	id prototypeCell = nil;
 
 	_placeHolder = [[[self window] contentView] retain];
-	[[viewActionButton cell] setArrowPosition:NSPopUpNoArrow];
 
 	column = [chatViewsOutlineView outlineTableColumn];
 	prototypeCell = [[JVDetailCell new] autorelease];
@@ -58,8 +59,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView setMenu:[[[NSMenu alloc] initWithTitle:@""] autorelease]];
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObject:JVChatViewPboardType]];
 	[self _refreshList];
-	
-	[viewsDrawer open];
 }
 
 - (void) dealloc {
@@ -147,6 +146,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[_views addObject:controller];
 	[controller setWindowController:self];
 
+	if( [_views count] >= 2 ) [viewsDrawer open];
+
 	[self _refreshList];
 	[self _refreshWindow];
 }
@@ -158,6 +159,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[_views insertObject:controller atIndex:index];
 	[controller setWindowController:self];
+
+	if( [_views count] >= 2 ) [viewsDrawer open];
 
 	[self _refreshList];
 	[self _refreshWindow];
@@ -306,6 +309,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[viewsDrawer toggle:sender];
 }
 
+- (IBAction) toggleSmallDrawerIcons:(id) sender {
+	_usesSmallIcons = ! _usesSmallIcons;
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:_usesSmallIcons] forKey:@"JVChatWindowUseSmallDrawerIcons"];
+	[self _refreshList];
+}
+
 #pragma mark -
 
 - (void) reloadChatView:(id <JVChatViewController>) controller {
@@ -316,8 +325,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
-	if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
-		[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Close Panel %@", "close current panel menu title" ), [_activeViewController title]]];
+	if( [menuItem action] == @selector( toggleSmallDrawerIcons: ) ) {
+		[menuItem setState:( _usesSmallIcons ? NSOnState : NSOffState )];
 		return YES;
 	} else if( [menuItem action] == @selector( toggleViewsDrawer: ) ) {
 		if( [viewsDrawer state] == NSDrawerClosedState || [viewsDrawer state] == NSDrawerClosingState ) {
@@ -326,7 +335,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Hide Drawer", "hide drawer menu title" )]];
 		}
 		return YES;
-	} else return YES;
+	}
+	return YES;
 }
 @end
 
@@ -388,7 +398,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (id) outlineView:(NSOutlineView *) outlineView objectValueForTableColumn:(NSTableColumn *) tableColumn byItem:(id) item {
-	return [item icon];
+	NSImage *ret = [[[item icon] copy] autorelease];
+	[ret setScalesWhenResized:YES];
+	if( [outlineView levelForRow:[outlineView rowForItem:item]] || _usesSmallIcons ) {
+		[ret setSize:NSMakeSize( 16., 16. )];
+	} else {
+		[ret setSize:NSMakeSize( 32., 32. )];		
+	}
+	return ret;
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldEditTableColumn:(NSTableColumn *) tableColumn item:(id) item {
@@ -396,7 +413,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView heightOfRow:(int) row {
-	return ( [outlineView levelForRow:row] ? 17 : 36 );
+	return ( [outlineView levelForRow:row] || _usesSmallIcons ? 18 : 36 );
 }
 
 - (void) outlineViewSelectionDidChange:(NSNotification *) notification {
@@ -500,6 +517,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[newMenu removeItem:menuItem];
 		[menu addItem:menuItem];
 	}
+
+	[viewActionButton setMenu:menu];
 }
 
 - (void) _refreshWindow {
