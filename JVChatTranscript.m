@@ -217,6 +217,10 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	[super dealloc];
 }
 
+- (NSString *) description {
+	return [NSString stringWithFormat:@"%@ - %@", [super description], [self title]];
+}
+
 #pragma mark -
 #pragma mark Window Controller and Proxy Icon Support
 

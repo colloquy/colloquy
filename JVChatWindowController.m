@@ -436,13 +436,45 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
+	id selectItem = [self selectedListItem];
+
 	[chatViewsOutlineView reloadItem:item reloadChildren:( children && [chatViewsOutlineView isItemExpanded:item] ? YES : NO )];
-	[chatViewsOutlineView sizeLastColumnToFit];
+
 	if( _activeViewController == item )
 		[self _refreshWindowTitle];
-	if( item == [self selectedListItem] )
+
+	if( [self isMemberOfClass:[JVChatWindowController class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVKeepActiveDrawerPanelsVisible"] && [item isKindOfClass:[JVDirectChat class]] && [(id)item newMessagesWaiting] ) {
+		NSRange visibleRows = [chatViewsOutlineView rowsInRect:[chatViewsOutlineView visibleRect]];
+		int row = [chatViewsOutlineView rowForItem:item];
+
+		if( ! NSLocationInRange( row, visibleRows ) && row > 0 ) {
+			int index = [_views indexOfObjectIdenticalTo:item];
+
+			row = ( index > row ? NSMaxRange( visibleRows ) : visibleRows.location + 1 );
+			id <JVChatListItem> rowItem = [chatViewsOutlineView itemAtRow:row];
+
+			// this will break if the list has more than 2 levels
+			if( [chatViewsOutlineView levelForRow:row] > 0 )
+				rowItem = [rowItem parent];
+			if( rowItem ) row = [_views indexOfObjectIdenticalTo:rowItem];
+
+			if( rowItem && row != NSNotFound ) {
+				[item retain];
+				[_views removeObjectAtIndex:index];
+				[_views insertObject:item atIndex:( index > row || ! row ? row : row - 1 )];
+				[item release];
+				[chatViewsOutlineView reloadData];
+			}
+		}
+	}
+
+	if( item == selectItem )
 		[self _refreshSelectionMenu];
-//	[self _refreshChatActivityToolbarItemWithListItem:item];
+
+	if( selectItem ) {
+		int selectedRow = [chatViewsOutlineView rowForItem:selectItem];
+		[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
+	}
 }
 
 - (BOOL) isListItemExpanded:(id <JVChatListItem>) item {
@@ -542,14 +574,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( [item respondsToSelector:@selector( isEnabled )] ) {
 		[cell setEnabled:[item isEnabled]];
 	} else [cell setEnabled:YES];
-
-	// This is needed if we reorder the list and selection dosen't change.
-	// This will catch it incase the previous selected item moved.
-	// We could follow the item through the sort, but we don't sort in
-	// this object, so it is almost impossible.
-
-	if( item == [self selectedListItem] )
-		[self _refreshSelectionMenu];
 }
 
 - (NSString *) outlineView:(NSOutlineView *) outlineView toolTipForItem:(id) item inTrackingRect:(NSRect) rect forCell:(id) cell {
@@ -617,7 +641,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self _refreshWindow];
 
 	[self _refreshSelectionMenu];
-//	[self _refreshChatActivityToolbarItemWithListItem:item];
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView writeItems:(NSArray *) items toPasteboard:(NSPasteboard *) board {
@@ -683,6 +706,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	}
 
 	return NO;
+}
+
+- (void) outlineViewItemDidCollapse:(NSNotification *) notification {
+	[chatViewsOutlineView sizeLastColumnToFit];
 }
 
 - (void) outlineViewItemDidExpand:(NSNotification *) notification {
@@ -783,10 +810,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) _refreshList {
+	id selectItem = [self selectedListItem];
+
 	[chatViewsOutlineView reloadData];
-	[chatViewsOutlineView noteNumberOfRowsChanged];
 	[chatViewsOutlineView sizeLastColumnToFit];
-	[self _refreshSelectionMenu];
+
+	if( selectItem ) {
+		int selectedRow = [chatViewsOutlineView rowForItem:selectItem];
+		[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
+	}
 }
 
 - (void) _switchViews:(id) sender {

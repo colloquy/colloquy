@@ -63,6 +63,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[super dealloc];
 }
 
+- (NSString *) description {
+	return [NSString stringWithFormat:@"%@ - %@", [super description], [self title]];
+}
+
 #pragma mark -
 
 - (IBAction) clearConsole:(id) sender {
