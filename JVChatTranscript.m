@@ -2,12 +2,14 @@
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
+#import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 
 #import "JVChatController.h"
 #import "JVChatMessage.h"
+#import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
 #import "MVMenuButton.h"
 #import "NSPreferences.h"
@@ -719,7 +721,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 
 		if( ! [[results lastObject] boolValue] ) {
-			if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
+			if( [url isChatURL] ) {
+				[[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
+			} else if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
 				[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
 			} else {
 				[[NSWorkspace sharedWorkspace] openURL:url];	
