@@ -138,7 +138,9 @@ void MVChatConnectionFailed( void *c, void *cs, const int error, const char * co
 		case FE_BADUSER:
 			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.", "chat invalid nicknames dialog message" ), [self nickname]], nil, nil, nil );
 			break;
-		default: NSLog( @"unable to login to irc, error %d (%s)", error, reason );
+		default:
+			NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured while connecting", "chat connecting error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The connection could not be made. %s.", "unknown connection error dialog message" ), reason], nil, nil, nil );
+			break;
 	}
 }
 
@@ -159,15 +161,15 @@ void MVChatDisconnect( void *c, void *cs, const int error ) {
 				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
 					[self connect];
 			}
-			NSLog( @"connection lost, error: %s", firetalk_strerror( error ) );
 			break;
-		default: NSLog( @"connection lost, error: %s", firetalk_strerror( error ) );
+		default:
+			NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), [NSString stringWithFormat:NSLocalizedString( @"The connection was terminated between your computer and the server. %s.", "unknown disconnection error dialog message" ), firetalk_strerror( error )], nil, nil, nil );
+			break;
 	}
 }
 
 void MVChatError( void *c, void *cs, const int error, const char * const roomoruser ) {
 	MVChatConnection *self = cs;
-	NSBeep();
 	switch( error ) {
 		case FE_BADUSER:
 			if( roomoruser && strlen( roomoruser ) >= 1 && strchr( "#&+", roomoruser[0] ) )
@@ -178,7 +180,9 @@ void MVChatError( void *c, void *cs, const int error, const char * const roomoru
 				NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname you specified is in use or invalid on this server.", "chat invalid nickname dialog message" ), nil, nil, nil );
 			}
 			break;
-		default: NSLog( @"error from user/room %s: %s", roomoruser, firetalk_strerror( error ) );
+		default:
+			NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured", "unknown error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"An error occured when dealing with %@. %s.", "unknown error dialog message" ), ( roomoruser ? [NSString stringWithUTF8String:roomoruser] : NSLocalizedString( @"server", "singular server label" ) ), firetalk_strerror( error )], nil, nil, nil );
+			break;
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidGetErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:( roomoruser ? [NSString stringWithUTF8String:roomoruser] : [NSNull null] ), @"target", [NSNumber numberWithInt:error], @"error", nil]];
 }
@@ -599,6 +603,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	_joinList = [[NSMutableArray array] retain];
 	_roomsCache = [[NSMutableDictionary dictionary] retain];
 
+	[self setFloodControlIntervals:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:6.], @"messages", [NSNumber numberWithDouble:1.], @"delay", [NSNumber numberWithDouble:1.5], @"factor", [NSNumber numberWithDouble:3.], @"ceiling", nil]];
+
 	[self _registerCallbacks];
 	[self _registerForSleepNotifications];
 
@@ -762,6 +768,18 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 #pragma mark -
 
+- (NSDictionary *) floodControlIntervals {
+	return [[_floodIntervals retain] autorelease];
+}
+
+- (void) setFloodControlIntervals:(NSDictionary *) intervals {
+	firetalk_set_flood_intervals( _chatConnection, [[intervals objectForKey:@"messages"] doubleValue], [[intervals objectForKey:@"delay"] doubleValue], [[intervals objectForKey:@"factor"] doubleValue], [[intervals objectForKey:@"ceiling"] doubleValue] );
+	[_floodIntervals autorelease];
+	_floodIntervals = [intervals copy];
+}
+
+#pragma mark -
+
 - (void) sendMessageToUser:(NSString *) user attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	if( [self isConnected] ) {
 		MVChatWindowController *window = [MVChatWindowController chatWindowWithUser:user withConnection:self ifExists:YES];
@@ -907,9 +925,9 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 #pragma mark -
 
-- (void) fetchInformationForUser:(NSString *) user {
+- (void) fetchInformationForUser:(NSString *) user withPriority:(BOOL) priority {
 	NSParameterAssert( user != nil );
-	if( [self isConnected] ) firetalk_im_get_info( _chatConnection, [user UTF8String], 1 );
+	if( [self isConnected] ) firetalk_im_get_info( _chatConnection, [user UTF8String], priority );
 }
 
 #pragma mark -

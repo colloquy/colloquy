@@ -75,6 +75,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSMutableDictionary *_roomsCache;
 	NSDate *_cachedDate;
 	NSTimeInterval _backlogDelay;
+	NSDictionary *_floodIntervals;
 	io_object_t _sleepNotifier;
 	io_connect_t _powerConnection;
 }
@@ -102,6 +103,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) setServerPort:(unsigned short) port;
 - (unsigned short) serverPort;
 
+- (NSDictionary *) floodControlIntervals;
+- (void) setFloodControlIntervals:(NSDictionary *) intervals;
+	
 - (void) sendMessageToUser:(NSString *) user attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
 - (void) sendMessageToChatRoom:(NSString *) room attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
 
@@ -126,7 +130,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) addUserToNotificationList:(NSString *) user;
 - (void) removeUserFromNotificationList:(NSString *) user;
 
-- (void) fetchInformationForUser:(NSString *) user;
+- (void) fetchInformationForUser:(NSString *) user withPriority:(BOOL) priority;
 
 - (void) fetchRoomList;
 - (void) fetchRoomListWithRooms:(NSArray *) rooms;
