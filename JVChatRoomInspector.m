@@ -28,7 +28,7 @@
 
 @implementation JVChatRoom (JVChatRoomInspection)
 - (id <JVInspector>) inspector {
-	return [[[JVChatRoomInspector alloc] initWithRoom:self] autorelease];
+	return nil; //[[[JVChatRoomInspector alloc] initWithRoom:self] autorelease];
 }
 @end
 

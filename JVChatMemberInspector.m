@@ -5,7 +5,7 @@
 
 @implementation JVChatRoomMember (JVChatRoomMemberInspection)
 - (id <JVInspector>) inspector {
-	return [[[JVChatMemberInspector alloc] initWithChatMember:self] autorelease];
+	return nil; //[[[JVChatMemberInspector alloc] initWithChatMember:self] autorelease];
 }
 @end
 
