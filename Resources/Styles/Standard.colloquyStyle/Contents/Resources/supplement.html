@@ -8,8 +8,16 @@
 		documentFragment = range.createContextualFragment( html );
 		document.body.appendChild( documentFragment );
 
-		regex = /No%20Fade/g;
-		if( ! regex.test( document.getElementById( "variantStyle" ).innerText ) ) {
+		var fadeBool = false;
+		var length = document.styleSheets[2].rules.length;
+		for( var i = 0; i < length; i++ ) {
+			if( document.styleSheets[2].rules[i].selectorText == ".messageFadeIn" ) {
+				regex = /#FFFFFF/g;
+				fadeBool = regex.test( document.styleSheets[2].rules[i].style.cssText );
+			}
+		}
+
+		if( fadeBool ) {
 			document.body.lastChild.previousSibling.style.opacity = '1.0';
 			document.body.lastChild.style.opacity = '0.0';
 			step = 0.0;

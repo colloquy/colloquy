@@ -49,6 +49,24 @@
 		<dict>
 			<key>style</key>
 			<array>
+				<string>.messageFadeIn { color: #000000; }</string>
+				<string>.messageFadeIn { color: #FFFFFF; }</string>
+			</array>
+			<key>default</key>
+			<integer>0</integer>
+			<key>description</key>
+			<string>Message fade</string>
+			<key>type</key>
+			<string>list</string>
+			<key>options</key>
+			<array>
+				<string>Off</string>
+				<string>On</string>
+			</array>
+		</dict>
+		<dict>
+			<key>style</key>
+			<array>
 				<string>.timestamp { display: block; }</string>
 				<string>.timestamp { display: none; }</string>
 			</array>
