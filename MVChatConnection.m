@@ -1594,7 +1594,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 - (void) addUserToNotificationList:(NSString *) user {
 	NSParameterAssert( user != nil );
-	notifylist_add( [[NSString stringWithFormat:@"%@!*@*", user] UTF8String], [self _irssiConnection] -> tag, TRUE, 600 );
+	notifylist_add( [[NSString stringWithFormat:@"%@!*@*", user] UTF8String], NULL, TRUE, 600 );
 }
 
 - (void) removeUserFromNotificationList:(NSString *) user {
