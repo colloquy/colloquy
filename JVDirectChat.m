@@ -1366,7 +1366,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 	}
 
-	if( highlight && ignoreTest != JVNotIgnored ) {
+	if( highlight && ignoreTest == JVNotIgnored ) {
 		_newHighlightMessageCount++;
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
