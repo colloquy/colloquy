@@ -113,7 +113,7 @@ typedef struct {
 - (void) _setIrssiConnection:(SERVER_REC *) server;
 - (SERVER_CONNECT_REC *) _irssiConnectSettings;
 - (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings;
-- (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic;
+- (void) _addRoomToCache:(NSMutableDictionary *) info;
 - (NSString *) _roomWithProperPrefix:(NSString *) room;
 - (void) _setStatus:(MVChatConnectionStatus) status;
 - (void) _nicknameIdentified:(BOOL) identified;
@@ -772,14 +772,16 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( ! self ) return;
 
-    char *channel = NULL, *count = NULL, *topic = NULL;
-    char *params = event_get_params( data, 4 | PARAM_FLAG_GETREST, NULL, &channel, &count, &topic );
+	char *channel = NULL, *count = NULL, *topic = NULL;
+	char *params = event_get_params( data, 4 | PARAM_FLAG_GETREST, NULL, &channel, &count, &topic );
 
-    NSString *r = [self stringWithEncodedBytes:channel];
-    NSData *t = [NSData dataWithBytes:topic length:strlen( topic )];
-    [self _addRoomToCache:r withUsers:strtoul( count, NULL, 10 ) andTopic:t];
+	NSString *r = [self stringWithEncodedBytes:channel];
+	NSData *t = [NSData dataWithBytes:topic length:strlen( topic )];
+	NSMutableDictionary *info = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:strtoul( count, NULL, 10 )], @"users", t, @"topic", [NSDate date], @"cached", r, @"room", nil];
 
-    g_free( params );
+	[self performSelectorOnMainThread:@selector( _addRoomToCache: ) withObject:info waitUntilDone:NO];
+
+	g_free( params );
 }
 
 #pragma mark -
@@ -1794,14 +1796,12 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
-- (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic {
-	if( room ) {
-		NSDictionary *info = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:users], @"users", topic, @"topic", [NSDate date], @"cached", nil];
-		[_roomsCache setObject:info forKey:room];
+- (void) _addRoomToCache:(NSMutableDictionary *) info {
+	[_roomsCache setObject:info forKey:[info objectForKey:@"room"]];
+	[info removeObjectForKey:@"room"];
 
-		NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionGotRoomInfoNotification object:self];
-		[[NSNotificationQueue defaultQueue] enqueueNotificationOnMainThread:notification postingStyle:NSPostASAP];
-	}
+	NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionGotRoomInfoNotification object:self];
+	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP];
 }
 
 - (NSString *) _roomWithProperPrefix:(NSString *) room {
