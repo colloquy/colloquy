@@ -1,15 +1,23 @@
 #import <Cocoa/Cocoa.h>
 #import "JVStandardCommands.h"
+#import "MVChatPluginManager.h"
+#import "MVChatPluginManagerAdditions.h"
 #import "MVConnectionsController.h"
-#import "JVChatController.h"
-#import "JVDirectChat.h"
-#import "JVChatRoom.h"
 #import "MVChatConnection.h"
+#import "JVChatController.h"
+#import "JVChatRoom.h"
+#import "JVDirectChat.h"
 
 @implementation JVStandardCommands
-- (id) initWithBundle:(NSBundle *) bundle {
+- (id) initWithManager:(MVChatPluginManager *) manager {
 	self = [super init];
+	_manager = manager;
 	return self;
+}
+
+- (void) dealloc {
+	_manager = nil;
+	[super dealloc];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments forConnection:(MVChatConnection *) connection {
@@ -52,10 +60,9 @@
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(NSString *) room forConnection:(MVChatConnection *) connection {
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
-		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
-		NSStringEncoding encoding = [(JVChatRoom *)[chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES] encoding];
+		NSStringEncoding encoding = [(JVChatRoom *)[[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES] encoding];
 		if( [arguments length] ) {
-			JVChatRoom *chatView = [chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES];
+			JVChatRoom *chatView = [[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES];
 			[chatView echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 			[connection sendMessageToChatRoom:room attributedMessage:arguments withEncoding:encoding asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 		}
@@ -89,8 +96,7 @@
 		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
 	} else if( [command isEqualToString:@"topic"] ) {
 		if( ! [arguments length] ) return NO;
-		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
-		NSStringEncoding encoding = [(JVChatRoom *)[chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES] encoding];
+		NSStringEncoding encoding = [(JVChatRoom *)[[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES] encoding];
 		if( ! encoding ) encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 		[connection setTopic:arguments withEncoding:encoding forRoom:room];
 		return YES;
@@ -129,14 +135,12 @@
 		}
 		return handled;
 	} else if( [command isEqualToString:@"names"] ) {
-		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
-		JVChatRoom *rm = [chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES];
+		JVChatRoom *rm = [[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES];
 		[[rm windowController] openViewsDrawer:nil];
 		[[rm windowController] expandListItem:rm];
 		return YES;
 	} else if( [command isEqualToString:@"clear"] ) {
-		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
-		[(JVChatRoom *)[chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES] clearDisplay:nil];
+		[(JVChatRoom *)[[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES] clearDisplay:nil];
 		return YES;
 	} else if( [command isEqualToString:@"kick"] ) {
 		NSString *member = nil, *msg = nil;
@@ -164,10 +168,9 @@
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toUser:(NSString *) user forConnection:(MVChatConnection *) connection {
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
-		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
-		NSStringEncoding encoding = [(JVDirectChat *)[chatController chatViewControllerForUser:user withConnection:connection ifExists:YES] encoding];
+		NSStringEncoding encoding = [(JVDirectChat *)[[_manager chatController] chatViewControllerForUser:user withConnection:connection ifExists:YES] encoding];
 		if( [arguments length] ) {
-			JVDirectChat *chatView = [chatController chatViewControllerForUser:user withConnection:connection ifExists:YES];
+			JVDirectChat *chatView = [[_manager chatController] chatViewControllerForUser:user withConnection:connection ifExists:YES];
 			[chatView echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 			[connection sendMessageToUser:user attributedMessage:arguments withEncoding:encoding asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 		}
@@ -200,8 +203,7 @@
 			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
 		return NO;
 	} else if( [command isEqualToString:@"clear"] ) {
-		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
-		[(JVChatRoom *)[chatController chatViewControllerForUser:user withConnection:connection ifExists:YES] clearDisplay:nil];
+		[(JVChatRoom *)[[_manager chatController] chatViewControllerForUser:user withConnection:connection ifExists:YES] clearDisplay:nil];
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
@@ -257,10 +259,9 @@
 }
 
 - (BOOL) handleServerConnectWithArguments:(NSString *) arguments {
-	MVConnectionsController *connectionsController = (MVConnectionsController *)[NSClassFromString( @"MVConnectionsController" ) defaultManager];
 	NSURL *url = nil;
 	if( arguments && ( url = [NSURL URLWithString:arguments] ) ) {
-		[connectionsController handleURL:url andConnectIfPossible:YES];
+		[[_manager connectionsController] handleURL:url andConnectIfPossible:YES];
 	} else if( arguments ) {
 		NSString *address = nil;
 		int port = 0;
@@ -273,10 +274,10 @@
 
 		if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", MVURLEncodeString( address ), port]];
 		else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", MVURLEncodeString( address )]];
-		else [connectionsController newConnection:nil];
+		else [[_manager connectionsController] newConnection:nil];
 
-		if( url ) [connectionsController handleURL:url andConnectIfPossible:YES];
-	} else [connectionsController newConnection:nil];
+		if( url ) [[_manager connectionsController] handleURL:url andConnectIfPossible:YES];
+	} else [[_manager connectionsController] newConnection:nil];
 	return YES;
 }
 
@@ -301,7 +302,6 @@
 }
 
 - (BOOL) handleMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection {
-	JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
 	NSString *to = nil;
 	NSAttributedString *msg = nil;
 	NSScanner *scanner = [NSScanner scannerWithString:[message string]];
@@ -310,7 +310,7 @@
 
 	if( ! to ) return NO;
 
-	NSStringEncoding encoding = [(JVDirectChat *)[chatController chatViewControllerForUser:to withConnection:connection ifExists:YES] encoding];
+	NSStringEncoding encoding = [(JVDirectChat *)[[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:YES] encoding];
 	if( ! encoding ) encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 
 	if( [message length] >= [scanner scanLocation] + 1 ) {
@@ -319,7 +319,7 @@
 	}
 
 	if( [command isEqualToString:@"query"] ) {
-		JVDirectChat *chatView = [chatController chatViewControllerForUser:to withConnection:connection ifExists:NO];
+		JVDirectChat *chatView = [[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:NO];
 		if( [msg length] ) [chatView echoSentMessageToDisplay:msg asAction:NO];
 	}
 
@@ -328,10 +328,9 @@
 }
 
 - (BOOL) handleMassMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection {
-	JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
 	NSStringEncoding encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 	if( ! [message length] ) return NO;
-	NSEnumerator *enumerator = [[chatController chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
+	NSEnumerator *enumerator = [[[_manager chatController] chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
 	id item = nil;
 	while( ( item = [enumerator nextObject] ) ) {
 		[connection sendMessageToChatRoom:[item target] attributedMessage:message withEncoding:encoding asAction:[command isEqualToString:@"ame"]];

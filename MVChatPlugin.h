@@ -3,9 +3,10 @@
 @class NSString;
 @class NSAttributedString;
 @class MVChatConnection;
+@class MVChatPluginManager;
 
 @protocol MVChatPlugin
-- (id) initWithBundle:(NSBundle *) bundle;
+- (id) initWithManager:(MVChatPluginManager *) manager;
 @end
 
 @interface NSObject (MVChatPlugin)

@@ -1,7 +1,14 @@
-#import <Foundation/Foundation.h>
+#import <Foundation/NSObject.h>
 #import "MVChatPlugin.h"
 
-@interface JVStandardCommands : NSObject <MVChatPlugin> {}
+@class NSString;
+@class MVChatConnection;
+@class NSAttributedString;
+@class MVChatPluginManager;
+
+@interface JVStandardCommands : NSObject <MVChatPlugin> {
+	MVChatPluginManager* _manager;
+}
 - (BOOL) handleFileSendWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection;
 - (BOOL) handleCTCPWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection;
 - (BOOL) handleServerConnectWithArguments:(NSString *) arguments;

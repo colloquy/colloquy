@@ -33,7 +33,7 @@ static MVChatPluginManager *sharedInstance = nil;
 				if( [[file pathExtension] isEqualToString:@"bundle"] || [[file pathExtension] isEqualToString:@"plugin"] ) {
 					bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]];
 					if( ! [_plugins objectForKey:[bundle bundleIdentifier]] && [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
-						id plugin = [[[[bundle principalClass] alloc] initWithBundle:bundle] autorelease];
+						id plugin = [[[[bundle principalClass] alloc] initWithManager:self] autorelease];
 						[_plugins setObject:plugin forKey:[bundle bundleIdentifier]];
 					}
 				}
