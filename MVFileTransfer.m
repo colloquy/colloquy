@@ -179,6 +179,15 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 #pragma mark -
 
++ (id) updateExternalIPAddress {
+	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
+	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
+	NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
+	if( result ) settings_set_str( "dcc_own_ip", [[NSString stringWithFormat:@"%*s", [result length], [result bytes]] UTF8String] );
+}
+
+#pragma mark -
+
 - (id) initWithDCCFileRecord:(void *) record fromConnection:(MVChatConnection *) connection {
 	if( ( self = [super init] ) ) {
 		_dcc = NULL;
@@ -353,6 +362,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 @implementation MVUploadFileTransfer
 + (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection passively:(BOOL) passive {
+	[self updateExternalIPAddress];
+
 	int queue = dcc_queue_new();
 	NSString *source = [[path stringByStandardizingPath] copy];
 
