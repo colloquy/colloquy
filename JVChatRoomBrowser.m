@@ -238,10 +238,10 @@
 	[_connection autorelease];
 	_connection = [connection retain];
 
-	if( _connection && ! _collapsed ) {
+	if( _connection && ! _collapsed )
 		[self _startFetch];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _needToFefreshResults: ) name:MVChatConnectionGotRoomInfoNotification object:_connection];
-	}
+
+	if( _connection ) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _needToFefreshResults: ) name:MVChatConnectionGotRoomInfoNotification object:_connection];
 
 	[_roomResults autorelease];
 	_roomResults = [[_connection roomListResults] retain];
