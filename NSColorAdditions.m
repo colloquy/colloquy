@@ -36,12 +36,16 @@
 					if( [scanner scanDouble:&blue] ) {
 						bluePrecent = [scanner scanString:@"%" intoString:nil];
 						[scanner scanCharactersFromSet:whites intoString:nil];
+						red = MAX( 0., MIN( ( redPrecent ? 100. : 255. ), red ) );
+						green = MAX( 0., MIN( ( greenPrecent ? 100. : 255. ), green ) );
+						blue = MAX( 0., MIN( ( bluePrecent ? 100. : 255. ), blue ) );
 						if( hasAlpha ) {
 							[scanner scanString:@"," intoString:nil];
 							[scanner scanCharactersFromSet:whites intoString:nil];
 							if( [scanner scanDouble:&alpha] ) {
 								[scanner scanCharactersFromSet:whites intoString:nil];
 								[scanner scanString:@")" intoString:nil];
+								alpha = MAX( 0., MIN( 1., alpha ) );
 								ret = [self colorWithCalibratedRed:( redPrecent ? red / 100. : red / 255. ) green:( greenPrecent ? green / 100. : green / 255. ) blue:( bluePrecent ? blue / 100. : blue / 255. ) alpha:alpha];
 							}
 						} else {
