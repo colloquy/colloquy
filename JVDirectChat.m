@@ -565,12 +565,25 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		}
 	}
 
+	NSMutableString *valueMute = nil;
 	kenumerator = [attributes keyEnumerator];
 	enumerator = [attributes objectEnumerator];
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
-		if( [value isMemberOfClass:[NSNull class]] )
+		msgStr = nil;
+
+		if( [value isMemberOfClass:[NSNull class]] ) {
 			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
-		else msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+		} else {
+			valueMute = [[value mutableCopy] autorelease];
+			[valueMute replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [valueMute length] )];
+			[valueMute replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, [valueMute length] )];
+			[valueMute replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, [valueMute length] )];
+			[valueMute replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange( 0, [valueMute length] )];
+			[valueMute replaceOccurrencesOfString:@"'" withString:@"&apos;" options:NSLiteralSearch range:NSMakeRange( 0, [valueMute length] )];
+
+			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, valueMute, key] UTF8String];
+		}
+
 		if( msgStr ) {
 			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
@@ -1420,8 +1433,32 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSMutableAttributedString *attributeMsg = [NSMutableAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
 	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
 	BOOL localEcho = ( [[command evaluatedArguments] objectForKey:@"echo"] ? [[[command evaluatedArguments] objectForKey:@"echo"] boolValue] : YES );
+
+	if( ! [[attributeMsg string] length] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Message can't be blank"];
+		return;
+	}
+
 	[self sendAttributedMessage:attributeMsg asAction:action];
 	if( localEcho ) [self echoSentMessageToDisplay:attributeMsg asAction:action];
+}
+
+- (void) addEventMessageScriptCommand:(NSScriptCommand *) command {
+	NSString *message = [[command evaluatedArguments] objectForKey:@"message"];
+	NSString *name = [[command evaluatedArguments] objectForKey:@"name"];
+	id attributes = [[command evaluatedArguments] objectForKey:@"attributes"];
+
+	if( ! [name length] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Event name can't be blank."];
+		return;
+	}
+
+	if( ! [message length] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Event message can't be blank."];
+		return;
+	}
+
+	[self addEventMessageToDisplay:message withName:name andAttributes:( [attributes isKindOfClass:[NSDictionary class]] ? attributes : nil )];
 }
 @end
 
