@@ -7,6 +7,7 @@
 #import "NSColorAdditions.h"
 #import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
+#import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
 
 static SilcPKCS silcPkcs;
@@ -56,9 +57,28 @@ static void silc_channel_message( SilcClient client, SilcClientConnection conn, 
 
 	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> channel_name]];
 	MVChatUser *user = [self _chatUserWithClientEntry:sender];
-	NSData *msgData = [NSData dataWithBytes:message length:message_len];
+	NSString *mimeType = @"text/plain";
+	NSData *msgData = nil;
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSNumber numberWithBool:action], @"action", nil]];
+	if( flags & SILC_MESSAGE_FLAG_DATA ) { // MIME object received
+		char type[128], enc[128];
+		unsigned char *data = NULL;
+		SilcUInt32 data_len = 0;
+
+		memset( type, 0, sizeof( type ) );
+		memset( enc, 0, sizeof( enc ) );
+		if( silc_mime_parse( message, message_len, NULL, 0, type, sizeof( type ) - 1, enc, sizeof( enc ) - 1, &data, &data_len ) ) {
+			if( strstr( enc, "base64" ) ) {
+				NSString *body = [[[NSString alloc] initWithBytes:data length:data_len encoding:NSASCIIStringEncoding] autorelease];
+				msgData = [[[NSData alloc] initWithBase64EncodedString:body] autorelease];
+			} else msgData = [[[NSData alloc] initWithBytes:data length:data_len] autorelease];
+			mimeType = [NSString stringWithBytes:type encoding:NSASCIIStringEncoding];
+		}
+	}
+
+	if( ! msgData ) msgData = [NSData dataWithBytes:message length:message_len];
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", mimeType, @"mimeType", [NSNumber numberWithBool:action], @"action", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -69,9 +89,28 @@ static void silc_private_message( SilcClient client, SilcClientConnection conn, 
 	if( flags & SILC_MESSAGE_FLAG_ACTION ) action = YES;
 
 	MVChatUser *user = [self _chatUserWithClientEntry:sender];
-	NSData *msgData = [NSData dataWithBytes:message length:message_len];
+	NSString *mimeType = @"text/plain";
+	NSData *msgData = nil;
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSNumber numberWithBool:action], @"action", nil]];
+	if( flags & SILC_MESSAGE_FLAG_DATA ) { // MIME object received
+		char type[128], enc[128];
+		unsigned char *data = NULL;
+		SilcUInt32 data_len = 0;
+
+		memset( type, 0, sizeof( type ) );
+		memset( enc, 0, sizeof( enc ) );
+		if( silc_mime_parse( message, message_len, NULL, 0, type, sizeof( type ) - 1, enc, sizeof( enc ) - 1, &data, &data_len ) ) {
+			if( strstr( enc, "base64" ) ) {
+				NSString *body = [[[NSString alloc] initWithBytes:data length:data_len encoding:NSASCIIStringEncoding] autorelease];
+				msgData = [[[NSData alloc] initWithBase64EncodedString:body] autorelease];
+			} else msgData = [[[NSData alloc] initWithBytes:data length:data_len] autorelease];
+			mimeType = [NSString stringWithBytes:type encoding:NSASCIIStringEncoding];
+		}
+	}
+
+	if( ! msgData ) msgData = [NSData dataWithBytes:message length:message_len];
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", mimeType, @"mimeType", [NSNumber numberWithBool:action], @"action", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -82,8 +121,14 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 	va_start( list, type );
 
 	switch( type ) {
-		case SILC_NOTIFY_TYPE_MOTD:
-			break;
+		case SILC_NOTIFY_TYPE_MOTD: {
+			char *message = va_arg( list, char * );
+			if( message ) {
+				NSString *msgString = [NSString stringWithUTF8String:message];
+				NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];
+			}
+		}	break;
 		case SILC_NOTIFY_TYPE_NONE: {
 			char *message = va_arg( list, char * );
 			if( message ) {
@@ -1229,7 +1274,7 @@ static SilcClientOperations silcClientOps = {
 	if( [self isConnected] ) {
 		[self sendRawMessage:@"DETACH"];
 		_status = MVChatConnectionSuspendedStatus;
-		usleep( 5000000 );
+		usleep( 2500000 );
 	}
 }
 
