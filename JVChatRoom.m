@@ -25,6 +25,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
 - (void) _makeHyperlinksInString:(NSMutableString *) string;
+- (void) _performEmoticonSubstitutionOnString:(NSMutableString *) string;
 - (void) _didConnect:(NSNotification *) notification;
 - (void) _didDisconnect:(NSNotification *) notification;
 @end
@@ -629,13 +630,29 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (void) chatMember:(NSString *) member kickedBy:(NSString *) by forReason:(NSData *) reason {
-	NSString *rstring = nil;
-
 	NSParameterAssert( member != nil );
 	NSParameterAssert( by != nil );
 
-	rstring = [[[NSString alloc] initWithData:reason encoding:_encoding] autorelease];
-	if( ! rstring ) rstring = [NSString stringWithCString:[reason bytes] length:[reason length]];
+	NSMutableString *rstring = nil;
+	if( reason && ! [reason isMemberOfClass:[NSNull class]] ) {
+		rstring = [[[NSMutableString alloc] initWithData:reason encoding:_encoding] autorelease];
+		if( ! rstring ) rstring = [NSMutableString stringWithCString:[reason bytes] length:[reason length]];
+
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
+			AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
+			[rstring setString:[regex replaceWithString:@"" inString:rstring]];
+		}
+
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
+			AGRegex *regex = [AGRegex regexWithPattern:@"</?[b|i|u]>" options:AGRegexCaseInsensitive];
+			[rstring setString:[regex replaceWithString:@"" inString:rstring]];
+		}
+
+		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+			[self _makeHyperlinksInString:rstring];
+
+		[self _performEmoticonSubstitutionOnString:rstring];
+	}
 
 	JVChatRoomMember *mbr = [[[self chatRoomMemberWithName:member] retain] autorelease];
 	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
@@ -687,12 +704,28 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (void) kickedFromChatBy:(NSString *) by forReason:(NSData *) reason {
-	NSString *rstring = nil;
-
 	NSParameterAssert( by != nil );
 
-	rstring = [[[NSString alloc] initWithData:reason encoding:_encoding] autorelease];
-	if( ! rstring ) rstring = [NSString stringWithCString:[reason bytes] length:[reason length]];
+	NSMutableString *rstring = nil;
+	if( reason && ! [reason isMemberOfClass:[NSNull class]] ) {
+		rstring = [[[NSMutableString alloc] initWithData:reason encoding:_encoding] autorelease];
+		if( ! rstring ) rstring = [NSMutableString stringWithCString:[reason bytes] length:[reason length]];
+
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
+			AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
+			[rstring setString:[regex replaceWithString:@"" inString:rstring]];
+		}
+
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
+			AGRegex *regex = [AGRegex regexWithPattern:@"</?[b|i|u]>" options:AGRegexCaseInsensitive];
+			[rstring setString:[regex replaceWithString:@"" inString:rstring]];
+		}
+
+		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+			[self _makeHyperlinksInString:rstring];
+
+		[self _performEmoticonSubstitutionOnString:rstring];
+	}
 
 	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), ( byMbr ? [byMbr title] : by )];
@@ -700,7 +733,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSString *byAttr = [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities];
 	NSString *byNickAttr = [by stringByEncodingXMLSpecialCharactersAsEntities];
 	
-	[self addEventMessageToDisplay:message withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byAttr ? byAttr : byNickAttr ), @"by", byNickAttr, @"bynickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+	[self addEventMessageToDisplay:message withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byAttr ? byAttr : byNickAttr ), @"by", byNickAttr, @"bynickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil] entityEncodeAttributes:NO];
 
 	JVChatRoomMember *mbr = [[[self chatRoomMemberWithName:[[self connection] nickname]] retain] autorelease];
 
@@ -1013,10 +1046,25 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	
 	JVChatRoomMember *mbr = nil;
 	if( ( mbr = [[[self chatRoomMemberWithName:member] retain] autorelease] ) ) {
-		NSString *rstring = nil;
+		NSMutableString *rstring = nil;
 		if( reason && ! [reason isMemberOfClass:[NSNull class]] ) {
-			rstring = [[[NSString alloc] initWithData:reason encoding:_encoding] autorelease];
-			if( ! rstring ) rstring = [NSString stringWithCString:[reason bytes] length:[reason length]];
+			rstring = [[[NSMutableString alloc] initWithData:reason encoding:_encoding] autorelease];
+			if( ! rstring ) rstring = [NSMutableString stringWithCString:[reason bytes] length:[reason length]];
+
+			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
+				AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
+				[rstring setString:[regex replaceWithString:@"" inString:rstring]];
+			}
+
+			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
+				AGRegex *regex = [AGRegex regexWithPattern:@"</?[b|i|u]>" options:AGRegexCaseInsensitive];
+				[rstring setString:[regex replaceWithString:@"" inString:rstring]];
+			}
+
+			if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+				[self _makeHyperlinksInString:rstring];
+
+			[self _performEmoticonSubstitutionOnString:rstring];
 		}
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( NSString * ), nil];

@@ -1704,11 +1704,32 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) _awayStatusChanged:(NSNotification *) notification {
 	if( [[[notification userInfo] objectForKey:@"away"] boolValue] ) {
-		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), [[_connection awayStatusMessage] string]] withName:@"awaySet" andAttributes:nil];
+		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"]], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"]], @"NSHTMLIgnoreFontTraits", nil];
+		NSData *msgData = [[_connection awayStatusMessage] HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
+		NSMutableString *messageString = [[[NSMutableString alloc] initWithData:msgData encoding:_encoding] autorelease];
+
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
+			AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
+			[messageString setString:[regex replaceWithString:@"" inString:messageString]];
+		}
+
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
+			AGRegex *regex = [AGRegex regexWithPattern:@"</?[b|i|u]>" options:AGRegexCaseInsensitive];
+			[messageString setString:[regex replaceWithString:@"" inString:messageString]];
+		}
+
+		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+			[self _makeHyperlinksInString:messageString];
+
+		[self _performEmoticonSubstitutionOnString:messageString];
+
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), messageString] withName:@"awaySet" andAttributes:nil];
+
 		unsigned long loc = (unsigned long) NSHeight( [[[[display mainFrame] frameView] documentView] frame] );
 		[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] startShadedAreaAt:loc];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
+
 		unsigned long loc = (unsigned long) NSHeight( [[[[display mainFrame] frameView] documentView] frame] );
 		[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] stopShadedAreaAt:loc];
 	}
@@ -1893,7 +1914,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		return;
 	}
 
-	[self addEventMessageToDisplay:message withName:name andAttributes:( [attributes isKindOfClass:[NSDictionary class]] ? attributes : nil )];
+	[self addEventMessageToDisplay:message withName:name andAttributes:( [attributes isKindOfClass:[NSDictionary class]] ? attributes : nil ) entityEncodeAttributes:NO];
 }
 
 - (unsigned long) scriptTypedEncoding {
