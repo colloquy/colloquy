@@ -68,8 +68,8 @@
 	else [self addAttribute:@"CSSClasses" value:[NSSet setWithArray:classes] range:NSMakeRange( 0, [self length] )];
 }
 
-- (NSArray *) XHTMLStart {
-	return [[self attribute:@"XHTMLStart" atIndex:0 effectiveRange:NULL] allObjects];
+- (NSString *) XHTMLStart {
+	return [self attribute:@"XHTMLStart" atIndex:0 effectiveRange:NULL];
 }
 
 - (void) setXHTMLStart:(NSString *) html {
@@ -77,8 +77,8 @@
 	else [self addAttribute:@"XHTMLStart" value:html range:NSMakeRange( 0, [self length] )];
 }
 
-- (NSArray *) XHTMLEnd {
-	return [[self attribute:@"XHTMLEnd" atIndex:0 effectiveRange:NULL] allObjects];
+- (NSString *) XHTMLEnd {
+	return [self attribute:@"XHTMLEnd" atIndex:0 effectiveRange:NULL];
 }
 
 - (void) setXHTMLEnd:(NSString *) html {
