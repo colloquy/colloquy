@@ -2,6 +2,8 @@
 #import "NSColorAdditions.h"
 #import "NSStringAdditions.h"
 #import "NSScannerAdditions.h"
+#import <CoreFoundation/CFString.h>
+#import <CoreFoundation/CFStringEncodingExt.h>
 
 static const int mIRCColors[][3] = {
 	{ 0xff, 0xff, 0xff },  /* 00) white */
@@ -187,7 +189,7 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 
 - (id) initWithIRCFormat:(NSData *) data options:(NSDictionary *) options {
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
-	if( ! encoding ) encoding = NSUTF8StringEncoding;
+	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	NSString *message = [[[NSString alloc] initWithData:data encoding:encoding] autorelease];
 	if( ! message ) {
@@ -517,47 +519,54 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 	NSRange limitRange, effectiveRange;
 	NSMutableData *ret = [NSMutableData data];
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
-	if( ! encoding ) encoding = NSUTF8StringEncoding;
+	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
+	
+	NSCharacterSet *nonASCIISet = [[NSCharacterSet characterSetWithRange:NSMakeRange(0,128)] invertedSet];
+	
+	if ([[self string] rangeOfCharacterFromSet:nonASCIISet].location != NSNotFound) {
+		char *ctcpEncoding = NULL;
 
-	char ctcpEncoding = NULL;
+		switch( encoding ) {
+		case NSUTF8StringEncoding:
+			ctcpEncoding = "U";
+			break;
+		case NSISOLatin1StringEncoding:
+			ctcpEncoding = "1";
+			break;
+		case NSISOLatin2StringEncoding:
+			ctcpEncoding = "2";
+			break;
+		case 0x80000203:
+			ctcpEncoding = "3";
+			break;
+		case 0x80000204:
+			ctcpEncoding = "4";
+			break;
+		case 0x80000205:
+			ctcpEncoding = "5";
+			break;
+		case 0x80000206:
+			ctcpEncoding = "6";
+			break;
+		case 0x80000207:
+			ctcpEncoding = "7";
+			break;
+		case 0x80000208:
+			ctcpEncoding = "8";
+			break;
+		case 0x80000209:
+			ctcpEncoding = "9";
+			break;
+		case 0x8000020A:
+			ctcpEncoding = "10";
+			break;
+		}
 
-	switch( encoding ) {
-	case NSUTF8StringEncoding:
-		ctcpEncoding = 'U';
-		break;
-	case NSISOLatin1StringEncoding:
-		ctcpEncoding = '1';
-		break;
-	case NSISOLatin2StringEncoding:
-		ctcpEncoding = '2';
-		break;
-	case 0x80000203:
-		ctcpEncoding = '3';
-		break;
-	case 0x80000204:
-		ctcpEncoding = '4';
-		break;
-	case 0x80000205:
-		ctcpEncoding = '5';
-		break;
-	case 0x80000206:
-		ctcpEncoding = '6';
-		break;
-	case 0x80000207:
-		ctcpEncoding = '7';
-		break;
-	case 0x80000208:
-		ctcpEncoding = '8';
-		break;
-	case 0x8000020F:
-		ctcpEncoding = '9';
-		break;
-	}
-
-	if( ctcpEncoding ) {
-		char buffer[5];
-		sprintf( buffer, "\006E%c\006", ctcpEncoding );
-		[ret appendBytes:buffer length:strlen( buffer )];
+		if( ctcpEncoding ) {
+			char buffer[6];
+			sprintf( buffer, "\006E%.2s\006", ctcpEncoding );
+			[ret appendBytes:buffer length:strlen( buffer )];
+		}
 	}
 
 	limitRange = NSMakeRange( 0, [self length] );
