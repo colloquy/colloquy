@@ -1,5 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/MVChatPlugin.h>
 #import "JVChatConsole.h"
 #import "JVChatController.h"
 #import "MVTextView.h"
@@ -11,6 +13,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 @implementation JVChatConsole
 - (id) initWithConnection:(MVChatConnection *) connection {
 	if( ( self = [self init] ) ) {
+		_sendHistory = [[NSMutableArray array] retain];
+		[_sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
+
+		_historyIndex = 0;
+
 		_connection = [connection retain];
 		_verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatVerboseConsoleMessages"];
 		_ignorePRIVMSG = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatConsoleIgnoreUserChatMessages"];
@@ -35,12 +42,14 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) dealloc {
 	[contents autorelease];
+	[_sendHistory autorelease];
 	[_connection autorelease];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	contents = nil;
 	_connection = nil;
+	_sendHistory = nil;
 	_windowController = nil;
 
 	[super dealloc];
@@ -189,7 +198,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		if( [parts count] >= 2 && ( numeric = [[parts objectAtIndex:1] intValue] ) )
 			[parts removeObjectAtIndex:1];
-		else if( [parts count] >= 2 && ( [[parts objectAtIndex:1] isEqualToString:@"PRIVMSG"] && [strMsg rangeOfString:@"\001"].location != NSNotFound ) )
+		else if( [parts count] >= 2 && ( [[parts objectAtIndex:1] isEqualToString:@"PRIVMSG"] && [strMsg rangeOfString:@"\001"].location != NSNotFound && [strMsg rangeOfString:@" ACTION"].location == NSNotFound ) )
 			[parts replaceObjectAtIndex:1 withObject:@"CTCP REQUEST"];
 		else if( [parts count] >= 2 && ( [[parts objectAtIndex:1] isEqualToString:@"NOTICE"] && [strMsg rangeOfString:@"\001"].location != NSNotFound ) )
 			[parts replaceObjectAtIndex:1 withObject:@"CTCP REPLY"];
@@ -212,9 +221,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	} else if( outbound && ! _verbose ) {
 		if( [strMsg rangeOfString:@"NOTICE"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound ) {
 			[strMsg replaceOccurrencesOfString:@"NOTICE" withString:@"CTCP REPLY" options:NSAnchoredSearch range:NSMakeRange( 0, 6 )];
-		} else if( [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound ) {
+		} else if( [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound && [strMsg rangeOfString:@" ACTION"].location == NSNotFound ) {
 			[strMsg replaceOccurrencesOfString:@"PRIVMSG" withString:@"CTCP REQUEST" options:NSAnchoredSearch range:NSMakeRange( 0, 7 )];
-		}		
+		}
 	}
 
 	[para setParagraphSpacing:3.];
@@ -232,6 +241,115 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[[display textStorage] appendAttributedString:msg];
 	if( NSMinY( [display visibleRect] ) >= ( NSHeight( [display bounds] ) - ( NSHeight( [display visibleRect] ) * 1.1 ) ) )
 		[display scrollRangeToVisible:NSMakeRange( [[display textStorage] length], 0 )];
+}
+
+#pragma mark -
+
+- (void) send:(id) sender {
+	NSMutableAttributedString *subMsg = nil;
+	NSRange range;
+
+	if( ! [[self connection] isConnected] ) return;
+
+	_historyIndex = 0;
+	if( ! [[send textStorage] length] ) return;
+	if( [_sendHistory count] )
+		[_sendHistory replaceObjectAtIndex:0 withObject:[[[NSAttributedString alloc] initWithString:@""] autorelease]];
+	[_sendHistory insertObject:[[[send textStorage] copy] autorelease] atIndex:1];
+	if( [_sendHistory count] > [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatMaximumHistory"] unsignedIntValue] )
+		[_sendHistory removeObjectAtIndex:[_sendHistory count] - 1];
+
+	while( [[send textStorage] length] ) {
+		range = [[[send textStorage] string] rangeOfString:@"\n"];
+		if( ! range.length ) range.location = [[send textStorage] length];
+		subMsg = [[[[send textStorage] attributedSubstringFromRange:NSMakeRange( 0, range.location )] mutableCopy] autorelease];
+
+		if( ( [subMsg length] >= 1 && range.length ) || ( [subMsg length] && ! range.length ) ) {
+			if( [[subMsg string] hasPrefix:@"/"] ) {
+				BOOL handled = NO;
+				NSScanner *scanner = [NSScanner scannerWithString:[subMsg string]];
+				NSString *command = nil;
+				NSAttributedString *arguments = nil;
+
+				[scanner scanString:@"/" intoString:nil];
+				[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&command];
+				if( [[subMsg string] length] >= [scanner scanLocation] + 1 )
+					[scanner setScanLocation:[scanner scanLocation] + 1];
+
+				arguments = [subMsg attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], range.location - [scanner scanLocation] )];
+
+				NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:forConnection: )] objectEnumerator];
+				id item = nil;
+
+				while( ( item = [enumerator nextObject] ) ) {
+					handled = [item processUserCommand:command withArguments:arguments forConnection:[self connection]];
+					if( handled ) break;
+				}
+
+				if( ! handled ) [[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
+			} else {
+				[[self connection] sendRawMessage:[subMsg string]];
+			}
+		}
+		if( range.length ) range.location++;
+		[[send textStorage] deleteCharactersInRange:NSMakeRange( 0, range.location )];
+	}
+
+	[send reset:nil];
+	[display scrollRangeToVisible:NSMakeRange( [[display textStorage] length], 0 )];
+}
+
+- (BOOL) textView:(NSTextView *) textView enterHit:(NSEvent *) event {
+	[self send:nil];
+	return YES;
+}
+
+- (BOOL) textView:(NSTextView *) textView returnHit:(NSEvent *) event {
+	[self send:nil];
+	return YES;
+}
+
+- (BOOL) textView:(NSTextView *) textView upArrowHit:(NSEvent *) event {
+	if( ! _historyIndex && [_sendHistory count] )
+		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
+	_historyIndex++;
+	if( _historyIndex >= [_sendHistory count] ) {
+		_historyIndex = [_sendHistory count] - 1;
+		if( (signed) _historyIndex < 0 ) _historyIndex = 0;
+		return YES;
+	}
+	[send reset:nil];
+	[[send textStorage] insertAttributedString:[_sendHistory objectAtIndex:_historyIndex] atIndex:0];
+	return YES;
+}
+
+- (BOOL) textView:(NSTextView *) textView downArrowHit:(NSEvent *) event {
+	if( ! _historyIndex && [_sendHistory count] )
+		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
+	if( [[send textStorage] length] ) _historyIndex--;
+	if( _historyIndex < 0 ) {
+		[send reset:nil];
+		_historyIndex = -1;
+		return YES;
+	} else if( ! [_sendHistory count] ) {
+		_historyIndex = 0;
+		return YES;
+	}
+	[send reset:nil];
+	[[send textStorage] insertAttributedString:[_sendHistory objectAtIndex:_historyIndex] atIndex:0];
+	return YES;
+}
+
+- (BOOL) textView:(NSTextView *) textView tabHit:(NSEvent *) event {
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
+		[textView complete:nil];
+		return YES;
+	}
+	return NO;
+}
+
+- (void) textDidChange:(NSNotification *) notification {
+	_historyIndex = 0;
 }
 
 #pragma mark -

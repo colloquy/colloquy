@@ -15,9 +15,12 @@
 	BOOL _nibLoaded;
 	BOOL _verbose;
 	BOOL _ignorePRIVMSG;
+	int _historyIndex;
+	NSMutableArray *_sendHistory;
 	JVChatWindowController *_windowController;
 	MVChatConnection *_connection;
 }
 - (id) initWithConnection:(MVChatConnection *) connection;
 - (void) addMessageToDisplay:(NSData *) message asOutboundMessage:(BOOL) outbound;
+- (IBAction) send:(id) sender;
 @end
