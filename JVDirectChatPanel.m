@@ -1656,11 +1656,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 @implementation NSApplication (NSApplicationActivePanelScripting)
 - (id) sendMessageScriptCommand:(NSScriptCommand *) command {
-	// check if the subject responds to the command directly, if so execute that implementation
-	if( [command subjectSupportsCommand] ) return [command executeCommandOnSubject];
-
-	// if there is a subject, perform the default implementation
-	if( [command subjectSpecifier] ) return [command performDefaultImplementation];
+	// if there is a subject or target parameter, perform the default implementation
+	if( [command subjectSpecifier] || [[command evaluatedArguments] objectForKey:@"target"] )
+		return [command performDefaultImplementation];
 
 	// if nothing responds to this command make it perform on the active panel of the front window
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
@@ -1672,13 +1670,11 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	if( ! specifier ) return nil;
 
 	[command setSubjectSpecifier:specifier];
-	return [command performDefaultImplementation];
+	[command performDefaultImplementation];
+	return nil;
 }
 
 - (id) addEventMessageScriptCommand:(NSScriptCommand *) command {
-	// check if the subject responds to the command directly, if so execute that implementation
-	if( [command subjectSupportsCommand] ) return [command executeCommandOnSubject];
-
 	// if there is a subject, perform the default implementation
 	if( [command subjectSpecifier] ) return [command performDefaultImplementation];
 
@@ -1692,7 +1688,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	if( ! specifier ) return nil;
 
 	[command setSubjectSpecifier:specifier];
-	return [command performDefaultImplementation];
+	[command performDefaultImplementation];
+	return nil;
 }
 @end
 
