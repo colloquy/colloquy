@@ -55,6 +55,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
+- (void) _invalidateConnection:(id) sender;
 - (void) _switchingStyleEnded:(in NSString *) html;
 - (oneway void) _switchStyle:(id) sender;
 - (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
@@ -156,6 +157,12 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[chooseStyle removeFromSuperview];
 		[toolbarItemContainerView autorelease];
 	}
+}
+
+- (void) release {
+	if( ( [self retainCount] - 1 ) == 1 && [_mainThreadConnection rootObject] )
+		[NSTimer scheduledTimerWithTimeInterval:0. target:self selector:@selector( _invalidateConnection: ) userInfo:NULL repeats:NO];
+	[super release];
 }
 
 - (void) dealloc {
@@ -535,6 +542,11 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptPrivate)
+- (void) _invalidateConnection:(id) sender {
+	[_mainThreadConnection setRootObject:nil];
+	[_mainThreadConnection invalidate];
+}
+
 - (void) _switchingStyleEnded:(in NSString *) html {
 	NSString *queueResult = @"";
 	if( _xmlQueue ) {
