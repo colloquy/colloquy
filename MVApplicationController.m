@@ -257,7 +257,9 @@ static BOOL applicationIsTerminating = NO;
 	NSString *reason = [exception reason];
 	if( [reason hasPrefix:@"*** "] ) reason = [reason substringFromIndex:4];
 
-	NSRunCriticalAlertPanel( NSLocalizedString( @"An unresolved error has occurred.", "exception error title" ), NSLocalizedString( @"Please report this message to the Colloquy development team with a brief synopsis of your actions leading to this message.\n\n%@\n\nThe error occurred in:\n%@", "exception error message" ), nil, nil, nil, reason, trace );
+	if( NSRunCriticalAlertPanel( NSLocalizedString( @"An unresolved error has occurred.", "exception error title" ), NSLocalizedString( @"Please report this message to the Colloquy development team with a brief synopsis of your actions leading to this message. Areas of Colloquy may fail to function normally until you relaunch.\n\n%@\n\nThe error occurred in:\n%@", "exception error message" ), NSLocalizedString( @"Continue", "continue button title" ), NSLocalizedString( @"Quit", "quit button title" ), nil, reason, trace ) == NSCancelButton ) {
+		[[NSApplication sharedApplication] terminate:nil];
+	}
 
 	[ls release];
 
