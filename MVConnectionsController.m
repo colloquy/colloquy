@@ -1141,7 +1141,6 @@ static NSMenu *favoritesMenu = nil;
 - (void) _refresh:(NSNotification *) notification {
 	[self _validateToolbar];
 	[connections reloadData];
-	[connections noteNumberOfRowsChanged];
 }
 
 - (void) _applicationQuitting:(NSNotification *) notification {
@@ -1438,7 +1437,7 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = nil;
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	NSDictionary *info = nil;
-
+	
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [[info objectForKey:@"connection"] isEqual:[notification object]] ) {
 			connection = [notification object];
