@@ -175,6 +175,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) didSelect {
 	_newMessages = 0;
 	_isActive = YES;
+	[JVChatController refreshSmartTranscriptMenu];
 	[super didSelect];
 }
 
@@ -277,6 +278,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
+- (unsigned int) newMessagesWaiting {
+	return _newMessages;
+}
+
 - (void) matchMessage:(JVChatMessage *) message fromView:(id <JVChatViewController>) view {
 	BOOL andOperation = ( _operation == 2 );
 	BOOL ignore = _ignoreCase;
@@ -301,6 +306,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	_newMessages++;
 	[_windowController reloadListItem:self andChildren:NO];
+	if( ! _isActive ) [JVChatController refreshSmartTranscriptMenu];
 }
 
 #pragma mark -

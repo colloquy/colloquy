@@ -20,6 +20,7 @@
 
 - (NSMutableArray *) rules;
 
+- (unsigned int) newMessagesWaiting;
 - (void) matchMessage:(JVChatMessage *) message fromView:(id <JVChatViewController>) view;
 
 - (IBAction) editSettings:(id) sender;

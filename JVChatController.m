@@ -52,12 +52,12 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSSet *items = [[self defaultManager] smartTranscripts];
 	enumerator = [items objectEnumerator];
 	
-	NSImage *icon = [NSImage imageNamed:@"smartTranscriptTab"];
 	JVSmartTranscriptPanel *panel = nil;
 
 	while( ( panel = [enumerator nextObject] ) ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[panel title] action:@selector( showView: ) keyEquivalent:@""] autorelease];
-		[menuItem setImage:icon];
+		if( [panel newMessagesWaiting] ) [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTabActivity"]];
+		else [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTab"]];
 		[menuItem setTarget:[self defaultManager]];
 		[menuItem setRepresentedObject:panel];
 		[smartTranscriptMenu addItem:menuItem];
