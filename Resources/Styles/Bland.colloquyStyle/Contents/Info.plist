@@ -16,8 +16,6 @@
 	<string>coSt</string>
 	<key>JVStyleDescription</key>
 	<string>Old IRC monospaced look.</string>
-	<key>JVStyleName</key>
-	<string>bland</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Josh Gibbs</string>
 </dict>

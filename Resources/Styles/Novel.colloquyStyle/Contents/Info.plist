@@ -14,7 +14,5 @@
 	<string>Novel</string>
 	<key>CFBundlePackageType</key>
 	<string>coSt</string>
-	<key>JVStyleName</key>
-	<string>novel</string>
 </dict>
 </plist>

@@ -14,7 +14,7 @@
 	<string>Bubbles</string>
 	<key>CFBundlePackageType</key>
 	<string>coSt</string>
-	<key>JVStyleName</key>
-	<string>bubbles</string>
+	<key>JVBaseStyleVariantName</key>
+	<string>Orange</string>
 </dict>
 </plist>
