@@ -9,6 +9,7 @@
 
 #import "MVApplicationController.h"
 #import "JVChatController.h"
+#import "JVStyle.h"
 #import "JVChatMessage.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
@@ -29,8 +30,6 @@ NSMutableSet *JVChatEmoticonBundles = nil;
 
 NSString *JVChatStylesScannedNotification = @"JVChatStylesScannedNotification";
 NSString *JVChatEmoticonsScannedNotification = @"JVChatEmoticonsScannedNotification";
-
-NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotification";
 
 static NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
