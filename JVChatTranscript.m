@@ -120,7 +120,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 - (void) awakeFromNib {
 	NSView *toolbarItemContainerView = nil;
-	
+
+	if( xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" ) )
+		[self setChatStyle:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" )]] withVariant:nil];
+
 	if( ! _chatEmoticons )
 		[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
 
