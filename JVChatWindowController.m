@@ -158,6 +158,19 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
+- (id <JVChatViewController>) activeChatViewController {
+	return [[_activeViewController retain] autorelease];
+}
+
+- (id <JVChatListItem>) selectedListItem {
+	long index = -1;
+	if( ( index = [chatViewsOutlineView selectedRow] ) == -1 )
+		return nil;
+	return [chatViewsOutlineView itemAtRow:index];
+}
+
+#pragma mark -
+
 - (void) addChatViewController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ already added.", controller );
@@ -389,12 +402,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[chatViewsOutlineView sizeLastColumnToFit];
 
-	if( ! ( [[chatViewsOutlineView window] firstResponder] == chatViewsOutlineView && [[NSApplication sharedApplication] isActive] ) && [outlineView itemAtRow:[outlineView selectedRow]] == item && ! [item conformsToProtocol:@protocol( JVChatViewController )] ) {
+/*	if( ! ( [[chatViewsOutlineView window] firstResponder] == chatViewsOutlineView && [[NSApplication sharedApplication] isActive] ) && [outlineView itemAtRow:[outlineView selectedRow]] == item && ! [item conformsToProtocol:@protocol( JVChatViewController )] ) {
 		[outlineView selectRow:[outlineView rowForItem:_activeViewController] byExtendingSelection:NO];
 		[outlineView reloadItem:_activeViewController reloadChildren:YES];
 		[outlineView redisplayItemEqualTo:_activeViewController];
 		[outlineView setNeedsDisplay:YES];
-	}
+	}*/
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
