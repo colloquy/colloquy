@@ -59,6 +59,10 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles]; 
 }
 
++ (id) defaultStyle {
+	return [self styleWithIdentifier:@"cc.javelin.colloquy.style.standard"];
+}
+
 + (id) styleWithIdentifier:(NSString *) identifier {
 	extern NSMutableSet *allStyles;
 	NSEnumerator *enumerator = [allStyles objectEnumerator];

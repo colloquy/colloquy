@@ -8,6 +8,7 @@
 	void *_XSLStyle; /* xsltStylesheet */
 }
 + (void) scanForStyles;
++ (id) defaultStyle;
 + (id) styleWithIdentifier:(NSString *) identifier;
 + (id) newWithBundle:(NSBundle *) bundle;
 
