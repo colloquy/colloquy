@@ -7,6 +7,7 @@
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
 #import "MVBuddyListController.h"
+#import "MVChatPluginManager.h"
 //#import <AddressBook/AddressBook.h>
 
 @implementation MVApplicationController
@@ -83,6 +84,8 @@
 		[buddy setValue:value forProperty:@"ColloquyIRC"];
 		[[ABAddressBook sharedAddressBook] save];
 	}*/
+
+	[MVChatPluginManager defaultManager];
 
 	[MVBuddyListController sharedBuddyList];
 	[MVConnectionsController defaultManager];
