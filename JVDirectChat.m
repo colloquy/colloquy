@@ -100,7 +100,7 @@ extern char *irc_irc_to_html(const char * const string);
 	[send setEditable:YES];
 	[send setRichText:YES];
 	[send setImportsGraphics:NO];
-	[send setUsesFontPanel:NO];
+	[send setUsesFontPanel:YES];
 	[send setUsesRuler:NO];
 	[send setDelegate:self];
     [send setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSpellChecking"]];
@@ -381,6 +381,10 @@ extern char *irc_irc_to_html(const char * const string);
 	NSParameterAssert( user != nil );
 
 	messageString = [[[NSMutableString alloc] initWithData:message encoding:_encoding] autorelease];
+	if( ! messageString )
+		messageString = [[[NSMutableString alloc] initWithData:message encoding:NSNonLossyASCIIStringEncoding] autorelease];
+
+	NSLog( @"%@", messageString );
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 		[self _makeHyperlinksInString:messageString];
@@ -684,11 +688,15 @@ extern char *irc_irc_to_html(const char * const string);
 
 @implementation JVDirectChat (JVDirectChatPrivate)
 - (void) _makeHyperlinksInString:(NSMutableString *) string {
-	NSScanner *urlScanner = [NSScanner scannerWithString:string];
+	NSScanner *urlScanner = nil;
 	NSCharacterSet *urlStopSet = [NSCharacterSet characterSetWithCharactersInString:@" \t\n\r\0<>\"'![]{}()|*^!"];
 	NSString *link = nil, *urlHandle = nil;
 	NSMutableString *mutableLink = nil;
 	unsigned int lastLoc = 0;
+
+	if( ! string ) return;
+
+	urlScanner = [NSScanner scannerWithString:string];
 
 	while( ! [urlScanner isAtEnd] ) {
 		while( ! [urlScanner isAtEnd] ) {
