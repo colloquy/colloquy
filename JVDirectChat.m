@@ -1698,18 +1698,24 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	} else {
 		NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
 		new = NO;
+		if( ! [menu indexOfItemWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )] )
+			[enumerator nextObject];
 		while( ( menuItem = [enumerator nextObject] ) )
-			if( [menuItem tag] == 5 ) [menu removeItem:menuItem];
+			if( ! [menuItem tag] && ! [menuItem isSeparatorItem] )
+				[menu removeItem:menuItem];
 	}
 
 	NSDictionary *info = nil;
 	unsigned int count = 0;
+
+	if( ! [menu indexOfItemWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )] )
+		count++;
+
 	NSArray *menuArray = [NSArray arrayWithContentsOfFile:[_chatEmoticons pathForResource:@"menu" ofType:@"plist"]];
 	enumerator = [menuArray objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[info objectForKey:@"name"] action:@selector( _insertEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
-		[menuItem setTag:5];
 		if( [(NSString *)[info objectForKey:@"image"] length] )
 			[menuItem setImage:[[[NSImage alloc] initWithContentsOfFile:[_chatEmoticons pathForResource:[info objectForKey:@"image"] ofType:nil]] autorelease]];
 		[menuItem setRepresentedObject:[info objectForKey:@"insert"]];
@@ -1718,7 +1724,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	if( ! [menuArray count] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Selectable Emoticons", "no selectable emoticons menu item title" ) action:NULL keyEquivalent:@""] autorelease];
-		[menuItem setTag:5];
 		[menuItem setEnabled:NO];
 		[menu insertItem:menuItem atIndex:count++];
 	}
