@@ -217,14 +217,14 @@
 
 	// get partial completion & insertion point location
 	NSRange curPos = [self selectedRange];
-	NSCharacterSet *illegalCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"[]{}-_^|\'`abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"] invertedSet];
+	NSCharacterSet *illegalCharacters = [[NSCharacterSet alphanumericCharacterSet] invertedSet];
 	NSString *partialCompletion = nil;
-	NSRange wordStart = [[self string] rangeOfCharacterFromSet:illegalCharacters options:NSBackwardsSearch range:NSMakeRange(0, curPos.location)];
+	NSRange wordStart = [[self string] rangeOfCharacterFromSet:illegalCharacters options:NSBackwardsSearch range:NSMakeRange( 0, curPos.location )];
 
 	// get the string before
 	if( wordStart.location == NSNotFound )
 		wordStart = NSMakeRange( 0, 0 );
-	NSRange theRange = NSMakeRange(NSMaxRange(wordStart), curPos.location - NSMaxRange(wordStart));
+	NSRange theRange = NSMakeRange( NSMaxRange( wordStart ), curPos.location - NSMaxRange( wordStart ) );
 	partialCompletion = [[self string] substringWithRange:theRange];
 
 	// continue if necessary
