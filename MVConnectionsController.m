@@ -1306,6 +1306,12 @@ static NSMenu *favoritesMenu = nil;
 - (void) _requestPassword:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 
+	NSString *pass = [[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+	if( [pass length] ) {
+		[connection setNicknamePassword:pass];
+		return;
+	}
+
 	if( [nicknameAuth isVisible] ) {
 		// Do somthing better here, like queue requests until the current one is sent
 		return;
