@@ -420,7 +420,7 @@
 
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&to];
 
-	if( ! to ) return NO;
+	if( ! [to length] ) return NO;
 
 	NSStringEncoding encoding = [(JVDirectChat *)[[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:YES] encoding];
 	if( ! encoding ) encoding = [connection encoding];
@@ -435,8 +435,14 @@
 	show = ( ! [msg length] ? YES : show );
 	show = ( always ? YES : show );
 
-	JVDirectChat *chatView = [[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:( ! show )];
 	if( [msg length] ) {
+		NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"#&+!"];
+		JVDirectChat *chatView = nil;
+
+		if( [chanSet characterIsMember:[to characterAtIndex:0]] )
+			chatView = [[_manager chatController] chatViewControllerForRoom:to withConnection:connection ifExists:YES];
+		else chatView = [[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:( ! show )];
+
 		[chatView echoSentMessageToDisplay:msg asAction:NO];
 		[connection sendMessage:msg withEncoding:encoding toUser:to asAction:NO];
 	}
