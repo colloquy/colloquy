@@ -42,7 +42,7 @@
 	NSAppleScript *script = [[[NSAppleScript alloc] initWithSource:string] autorelease];
 	NSAppleEventDescriptor *result = [script executeAndReturnError:NULL];
 
-	if( [result descriptorType] && [result descriptorType] != typeNull )
+	if( [result numberOfItems] )
 		return [result stringValue];
 
 	return nil;
