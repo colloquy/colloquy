@@ -1079,7 +1079,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 - (void) disconnect {
 	if( [self status] != MVChatConnectionDisconnectedStatus ) {
 		[self _willDisconnect];
-		signal_emit( "server quit", 2, [self _irssiConnection], "Quiting" );
+//		signal_emit( "server quit", 2, [self _irssiConnection], "Quiting" );
 		server_disconnect( [self _irssiConnection] );
 	}
 }
