@@ -39,6 +39,7 @@ extern NSString *MVChatRoomModeChangedNotification;
 - (BOOL) keepAfterPart;
 - (void) setKeepAfterPart:(BOOL) keep;
 
+- (void) addWhoInformationToMembers:(NSArray *) members;
 - (void) addExistingMembersToChat:(NSArray *) members;
 - (void) addMemberToChat:(NSString *) member withInformation:(NSDictionary *) info;
 - (void) removeChatMember:(NSString *) member withReason:(NSData *) reason;

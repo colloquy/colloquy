@@ -112,6 +112,7 @@ extern NSString *MVChatConnectionGotUserWhoisCompleteNotification;
 
 extern NSString *MVChatConnectionGotRoomInfoNotification;
 
+extern NSString *MVChatConnectionGotJoinWhoListNotification;
 extern NSString *MVChatConnectionRoomExistingMemberListNotification;
 extern NSString *MVChatConnectionJoinedRoomNotification;
 extern NSString *MVChatConnectionLeftRoomNotification;

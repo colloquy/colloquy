@@ -64,6 +64,7 @@ NSString *MVChatConnectionGotUserWhoisCompleteNotification = @"MVChatConnectionG
 
 NSString *MVChatConnectionGotRoomInfoNotification = @"MVChatConnectionGotRoomInfoNotification";
 
+NSString *MVChatConnectionGotJoinWhoListNotification = @"MVChatConnectionGotJoinWhoListNotification";
 NSString *MVChatConnectionRoomExistingMemberListNotification = @"MVChatConnectionRoomExistingMemberListNotification";
 NSString *MVChatConnectionJoinedRoomNotification = @"MVChatConnectionJoinedRoomNotification";
 NSString *MVChatConnectionLeftRoomNotification = @"MVChatConnectionLeftRoomNotification";
@@ -559,6 +560,25 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 	}
 
 	note = [NSNotification notificationWithName:MVChatConnectionRoomExistingMemberListNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", nickArray, @"members", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+}
+
+static void MVChatJoinedWhoList( CHANNEL_REC *channel ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
+	GSList *nicks = nicklist_getnicks( channel );
+	GSList *nickItem = NULL;
+	NSMutableArray *nickArray = [NSMutableArray arrayWithCapacity:g_slist_length( nicks )];
+
+	for( nickItem = nicks; nickItem != NULL; nickItem = g_slist_next( nickItem ) ) {
+		NICK_REC *nick = nickItem -> data;
+		NSMutableDictionary *info = [NSMutableDictionary dictionary];
+		[info setObject:[NSString stringWithUTF8String:nick -> nick] forKey:@"nickname"];
+		if( nick -> host ) [info setObject:[NSString stringWithUTF8String:nick -> host] forKey:@"address"];
+		if( nick -> realname ) [info setObject:[NSString stringWithUTF8String:nick -> realname] forKey:@"realName"];
+		[nickArray addObject:info];
+	}
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotJoinWhoListNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", nickArray, @"list", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -1657,10 +1677,11 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_add( "server outgoing", (SIGNAL_FUNC) MVChatRawOutgoingMessage );
 
 	signal_add_last( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
+	signal_add_last( "channel wholist", (SIGNAL_FUNC) MVChatJoinedWhoList );
 	signal_add_last( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
 	signal_add_last( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
 	signal_add_last( "channel mode changed", (SIGNAL_FUNC) MVChatGotRoomMode );
-	
+
 	signal_add_last( "ban new", (SIGNAL_FUNC) MVChatBanNew );
 	signal_add_last( "ban remove", (SIGNAL_FUNC) MVChatBanRemove );
 	signal_add_last( "chanquery ban end", (SIGNAL_FUNC) MVChatBanlistReceived );
@@ -1714,10 +1735,11 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_remove( "server outgoing", (SIGNAL_FUNC) MVChatRawOutgoingMessage );
 
 	signal_remove( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
+	signal_remove( "channel wholist", (SIGNAL_FUNC) MVChatJoinedWhoList );
 	signal_remove( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
 	signal_remove( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
 	signal_remove( "channel mode changed", (SIGNAL_FUNC) MVChatGotRoomMode );
-	
+
 	signal_remove( "ban new", (SIGNAL_FUNC) MVChatBanNew );
 	signal_remove( "ban remove", (SIGNAL_FUNC) MVChatBanRemove );
 	signal_remove( "event 368", (SIGNAL_FUNC) MVChatBanlistReceived );
@@ -1735,14 +1757,14 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	signal_remove( "nicklist changed", (SIGNAL_FUNC) MVChatUserNicknameChanged );
 	signal_remove( "nick mode changed", (SIGNAL_FUNC) MVChatGotUserMode );
-	
+
 	signal_remove( "away mode changed", (SIGNAL_FUNC) MVChatSelfAwayChanged );
 
 	signal_remove( "notifylist joined", (SIGNAL_FUNC) MVChatBuddyOnline );
 	signal_remove( "notifylist left", (SIGNAL_FUNC) MVChatBuddyOffline );
 	signal_remove( "notifylist away changed", (SIGNAL_FUNC) MVChatBuddyAway );
 	signal_remove( "notifylist unidle", (SIGNAL_FUNC) MVChatBuddyUnidle );
-	
+
 	signal_remove( "event 311", (SIGNAL_FUNC) MVChatUserWhois );
 	signal_remove( "event 312", (SIGNAL_FUNC) MVChatUserServer );
 	signal_remove( "event 313", (SIGNAL_FUNC) MVChatUserOperator );
@@ -1754,6 +1776,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	signal_remove( "ctcp msg", (SIGNAL_FUNC) MVChatSubcodeRequest );
 	signal_remove( "ctcp reply", (SIGNAL_FUNC) MVChatSubcodeReply );
+
+	signal_remove( "dcc request", (SIGNAL_FUNC) MVChatFileTransferRequest );
 }
 
 + (NSData *) _flattenedHTMLDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc {

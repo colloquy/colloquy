@@ -43,6 +43,7 @@ static JVChatController *sharedInstance = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatConnectionJoinedRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _leftRoom: ) name:MVChatConnectionLeftRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _existingRoomMembers: ) name:MVChatConnectionRoomExistingMemberListNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinWhoList: ) name:MVChatConnectionGotJoinWhoListNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberJoinedRoom: ) name:MVChatConnectionUserJoinedRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberLeftRoom: ) name:MVChatConnectionUserLeftRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberQuit: ) name:MVChatConnectionUserQuitNotification object:nil];
@@ -316,6 +317,11 @@ static JVChatController *sharedInstance = nil;
 - (void) _existingRoomMembers:(NSNotification *) notification {
 	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
 	[controller addExistingMembersToChat:[[notification userInfo] objectForKey:@"members"]];
+}
+
+- (void) _joinWhoList:(NSNotification *) notification {
+	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
+	[controller addWhoInformationToMembers:[[notification userInfo] objectForKey:@"list"]];
 }
 
 - (void) _memberJoinedRoom:(NSNotification *) notification {

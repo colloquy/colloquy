@@ -915,6 +915,17 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	[_windowController reloadListItem:self andChildren:YES];
 }
 
+- (void) addWhoInformationToMembers:(NSArray *) members {
+	NSEnumerator *enumerator = [members objectEnumerator];
+	NSDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		JVChatRoomMember *listItem = [self chatRoomMemberWithName:[info objectForKey:@"nickname"]];
+		[listItem _setAddress:[info objectForKey:@"address"]];
+		[listItem _setRealName:[info objectForKey:@"realName"]];
+	}		
+}
+
 - (void) addExistingMembersToChat:(NSArray *) members {
 	[_members removeAllObjects];
 	[_sortedMembers removeAllObjects];
@@ -928,6 +939,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 		JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] initWithRoom:self andNickname:member] autorelease];
 		[listItem _setAddress:[info objectForKey:@"address"]];
+		[listItem _setRealName:[info objectForKey:@"realName"]];
 		[listItem _setOperator:[[info objectForKey:@"operator"] boolValue]];
 		[listItem _setHalfOperator:[[info objectForKey:@"halfOperator"] boolValue]];
 		[listItem _setServerOperator:[[info objectForKey:@"serverOperator"] boolValue]];
