@@ -129,7 +129,6 @@
 		1058C7ACFEA557BF11CA2CBB = {
 			children = (
 				1058C7ADFEA557BF11CA2CBB,
-				1CA56CE0042A764600000102,
 				F51F91F103796FCD01A35792,
 				F555208B01F0DE0601EE70DE,
 				1C3C112E050265AE000001C8,
@@ -200,18 +199,6 @@
 			isa = PBXTargetDependency;
 			target = 1C51B4BB052DE14B00BB459B;
 			targetProxy = 1C09DFF6052DFF6600D748CF;
-		};
-		1C09DFF8052DFF6600D748CF = {
-			containerPortal = 089C1669FE841209C02AAC07;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 1C51B4F6052DE2B800BB459B;
-			remoteInfo = "iTunes (Plug-In)";
-		};
-		1C09DFF9052DFF6600D748CF = {
-			isa = PBXTargetDependency;
-			target = 1C51B4F6052DE2B800BB459B;
-			targetProxy = 1C09DFF8052DFF6600D748CF;
 		};
 		1C18CD100528DBBA000001C8 = {
 			fileEncoding = 4;
@@ -311,6 +298,40 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		1C1C569C059EAF4F002FBEFB = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVChatScriptPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C1C569D059EAF4F002FBEFB = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVChatScriptPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C1D19F105992D80000BB31A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = ChatCore.scriptSuite;
+			path = Resources/ChatCore.scriptSuite;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C1D19F205992D80000BB31A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = ChatCore.scriptTerminology;
+			path = Resources/ChatCore.scriptTerminology;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		1C20B0940424A11100000102 = {
 			isa = PBXFileReference;
@@ -430,14 +451,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C3B4DA40428C36400000102 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = MVChatPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C3C112E050265AE000001C8 = {
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
@@ -510,7 +523,6 @@
 			files = (
 				1C51B4BD052DE14B00BB459B,
 				1C51B4BE052DE14B00BB459B,
-				1C51B4BF052DE14B00BB459B,
 				1C51B4C0052DE14B00BB459B,
 				1C51B4C1052DE14B00BB459B,
 				1C51B4C2052DE14B00BB459B,
@@ -530,12 +542,6 @@
 		};
 		1C51B4BE052DE14B00BB459B = {
 			fileRef = F52D043101873FC401EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B4BF052DE14B00BB459B = {
-			fileRef = 1C3B4DA40428C36400000102;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -665,11 +671,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C51B4F8052DE2B800BB459B,
-				1C51B4F9052DE2B800BB459B,
-				1C51B4FA052DE2B800BB459B,
-				1CCA2375059604B50050EDE0,
-				1CCA2376059604BB0050EDE0,
-				1CCA2377059605480050EDE0,
 				1CCA2378059605560050EDE0,
 				1CCA2379059605570050EDE0,
 			);
@@ -678,18 +679,6 @@
 		};
 		1C51B4F8052DE2B800BB459B = {
 			fileRef = F52D043101873FC401EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B4F9052DE2B800BB459B = {
-			fileRef = 1C3B4DA40428C36400000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B4FA052DE2B800BB459B = {
-			fileRef = 1CA56CCE042A716200000102;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -711,34 +700,20 @@
 		1C51B4FD052DE2B800BB459B = {
 			buildActionMask = 2147483647;
 			files = (
-				1C51B4FE052DE2B800BB459B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B4FE052DE2B800BB459B = {
-			fileRef = 1CA56CCF042A716200000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1C51B4FF052DE2B800BB459B = {
 			buildActionMask = 2147483647;
 			files = (
 				1C51B500052DE2B800BB459B,
-				1C51B501052DE2B800BB459B,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1C51B500052DE2B800BB459B = {
 			fileRef = 1058C7ADFEA557BF11CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B501052DE2B800BB459B = {
-			fileRef = 1CA56CE0042A764600000102;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -781,12 +756,6 @@
 			settings = {
 			};
 		};
-		1C51B8F3052DFAAD00BB459B = {
-			fileRef = 1C51B505052DE2B800BB459B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C5959010507803F000001C8 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.icns;
@@ -794,6 +763,36 @@
 			path = Resources/Generic.icns;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
+		};
+		1C59BD61059E2E02001487E2 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = ChatPlugIn.scriptSuite;
+			path = Resources/ChatPlugIn.scriptSuite;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C59BD63059E2E16001487E2 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = ChatPlugIn.scriptTerminology;
+			path = Resources/ChatPlugIn.scriptTerminology;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C59BD69059E387A001487E2 = {
+			fileRef = 1C59BD61059E2E02001487E2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C59BD6A059E387B001487E2 = {
+			fileRef = 1C59BD63059E2E16001487E2;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C6075E005138ED600A8FE6E = {
 			isa = PBXFileReference;
@@ -846,6 +845,12 @@
 			path = Resources/newMessage.tif;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
+		};
+		1C72E043059F1CDB00310A65 = {
+			fileRef = 1CA56D18042A83CC00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C746A95050CF86B000001C8 = {
 			fileEncoding = 4;
@@ -954,8 +959,6 @@
 		};
 		1CA56CCD042A713E00000102 = {
 			children = (
-				1CA56CCF042A716200000102,
-				1CA56CCE042A716200000102,
 				1CA56D18042A83CC00000102,
 			);
 			isa = PBXGroup;
@@ -963,33 +966,6 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		1CA56CCE042A716200000102 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = JVTunes.h;
-			path = "Plug-Ins/iTunes/JVTunes.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CA56CCF042A716200000102 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = JVTunes.m;
-			path = "Plug-Ins/iTunes/JVTunes.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CA56CE0042A764600000102 = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			lastKnownFileType = wrapper.framework;
-			name = Carbon.framework;
-			path = /System/Library/Frameworks/Carbon.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
 		};
 		1CA56D18042A83CC00000102 = {
 			fileEncoding = 4;
@@ -1048,7 +1024,6 @@
 			dependencies = (
 				1CFA05FE053C964800C702F9,
 				1C09DFF7052DFF6600D748CF,
-				1C09DFF9052DFF6600D748CF,
 			);
 			isa = PBXNativeTarget;
 			name = "Colloquy (Application)";
@@ -1336,6 +1311,10 @@
 				1C8997E7058806DA00F49617,
 				1CBA56ED058D202200257832,
 				1CBA5855058D739700257832,
+				1CCA510F0598108000F0A4CD,
+				1CCA51100598108000F0A4CD,
+				1C59BD69059E387A001487E2,
+				1C59BD6A059E387B001487E2,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2032,8 +2011,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				1C51B8F3052DFAAD00BB459B,
 				1C51B8F2052DFAAA00BB459B,
+				1C72E043059F1CDB00310A65,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2202,6 +2181,9 @@
 			fileRef = 1CBC62E205488C73009E59E1;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1CBC62E505488C73009E59E1 = {
@@ -2222,6 +2204,9 @@
 			fileRef = 1CBC62E605488CBA009E59E1;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1CBC62F405488D5A009E59E1 = {
@@ -2699,6 +2684,9 @@
 			fileRef = 1CCA236C05956E7C0050EDE0;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1CCA236F05956E7C0050EDE0 = {
@@ -2719,24 +2707,6 @@
 			settings = {
 			};
 		};
-		1CCA2375059604B50050EDE0 = {
-			fileRef = 1CCA236C05956E7C0050EDE0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CCA2376059604BB0050EDE0 = {
-			fileRef = 1C2EF7EB0427A40B00000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CCA2377059605480050EDE0 = {
-			fileRef = 1CE2BC53042F75FB00000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CCA2378059605560050EDE0 = {
 			fileRef = 1CCB279D04FE93FE00A8FE6E;
 			isa = PBXBuildFile;
@@ -2745,6 +2715,36 @@
 		};
 		1CCA2379059605570050EDE0 = {
 			fileRef = 1CE2BC49042F53AD00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CCA510D0598108000F0A4CD = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = Colloquy.scriptSuite;
+			path = Resources/Colloquy.scriptSuite;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CCA510E0598108000F0A4CD = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = Colloquy.scriptTerminology;
+			path = Resources/Colloquy.scriptTerminology;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CCA510F0598108000F0A4CD = {
+			fileRef = 1CCA510D0598108000F0A4CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CCA51100598108000F0A4CD = {
+			fileRef = 1CCA510E0598108000F0A4CD;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2845,6 +2845,9 @@
 			fileRef = F5FB4D1F0393F70E01000102;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1CD0201F05758F26000F93B4 = {
@@ -3158,6 +3161,9 @@
 			fileRef = 1CEE3F03057AEC0200AD6DE2;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1CEE3F06057AEC0200AD6DE2 = {
@@ -3285,6 +3291,10 @@
 		};
 		1CFAFED8053C1BC500C702F9 = {
 			children = (
+				F5F9AF410170EE4A01A84BDE,
+				F5F9AF420170EE4A01A84BDE,
+				1CE2BC54042F75FB00000102,
+				1CE2BC53042F75FB00000102,
 				1CE2BC1E042F4AD300000102,
 				1CE2BC1D042F4AD300000102,
 				F5C497750385713801000102,
@@ -3293,6 +3303,8 @@
 				F51A4F2C01C2DDD201EE70DE,
 				F5FB4D200393F70E01000102,
 				F5FB4D1F0393F70E01000102,
+				1C1ACE420533943900F71D4E,
+				1C1ACE410533943900F71D4E,
 				1CBC62E605488CBA009E59E1,
 				1CBC62E305488C73009E59E1,
 				1CBC62E205488C73009E59E1,
@@ -3332,23 +3344,12 @@
 		};
 		F50B0A9F0170C89301A84BDE = {
 			children = (
-				1CBC62F405488D5A009E59E1,
 				F5394BBA0378DD7601A35792,
 				1CFAFED8053C1BC500C702F9,
 				1CFAFE9A053C1B3D00C702F9,
 				1CFAFED5053C1BA500C702F9,
+				1CBC62F405488D5A009E59E1,
 				1CC478470427BB2C00000102,
-				F50B0AA20170CAD701A84BDE,
-				F5F9AF410170EE4A01A84BDE,
-				F5F9AF420170EE4A01A84BDE,
-				1CE2BC54042F75FB00000102,
-				1CE2BC53042F75FB00000102,
-				1C1ACE420533943900F71D4E,
-				1C1ACE410533943900F71D4E,
-				F555208701F0DC2B01EE70DE,
-				F555208801F0DC2B01EE70DE,
-				F5BEC21401F2256301EE70DE,
-				F5BEC21501F2256301EE70DE,
 			);
 			isa = PBXGroup;
 			name = "Sources & Headers";
@@ -3358,6 +3359,11 @@
 		};
 		F50B0AA00170C89301A84BDE = {
 			children = (
+				F50B0AA20170CAD701A84BDE,
+				F555208701F0DC2B01EE70DE,
+				F555208801F0DC2B01EE70DE,
+				F5BEC21401F2256301EE70DE,
+				F5BEC21501F2256301EE70DE,
 				F5E2538503882A8501000102,
 				F5E2538403882A8501000102,
 				F5F9AF5801711CD401A84BDE,
@@ -3374,7 +3380,7 @@
 				F551EE4A0209FB3301EE70DE,
 			);
 			isa = PBXGroup;
-			name = "Other Sources & Additions";
+			name = "Other Sources";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -3397,6 +3403,12 @@
 				1C746A95050CF86B000001C8,
 				F5675B8601DB767601EE70DE,
 				1CC6FD38054AF1940075807C,
+				1CCA510D0598108000F0A4CD,
+				1CCA510E0598108000F0A4CD,
+				1C59BD61059E2E02001487E2,
+				1C59BD63059E2E16001487E2,
+				1C1D19F105992D80000BB31A,
+				1C1D19F205992D80000BB31A,
 				1C3C116205029E03000001C8,
 				1C258E55050B9656000001C8,
 				F520458E01B1D37701EBB4B5,
@@ -3704,9 +3716,10 @@
 				F52BA273037C13C201A35792,
 				F52D043001873FC401EE70DE,
 				F52D043101873FC401EE70DE,
-				1C3B4DA40428C36400000102,
 				1C2EF7EC0427A40B00000102,
 				1C2EF7EB0427A40B00000102,
+				1C1C569D059EAF4F002FBEFB,
+				1C1C569C059EAF4F002FBEFB,
 				1C18CD110528DBBA000001C8,
 				1C18CD100528DBBA000001C8,
 				F5E98622018B412B01EE70DE,
