@@ -18,4 +18,6 @@
 
 - (void) startShadedAreaAt:(unsigned long long) location;
 - (void) stopShadedAreaAt:(unsigned long long) location;
+
+- (void) removeAllShadedAreas;
 @end

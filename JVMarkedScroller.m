@@ -42,7 +42,7 @@
 	float offset = [self rectForPart:NSScrollerKnobSlot].origin.y + 6.;
 	[transform translateXBy:( sFlags.isHoriz ? offset / scale : 0. ) yBy:( sFlags.isHoriz ? 0. : offset / scale )];
 
-	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 0. : 2. ), ( sFlags.isHoriz ? 2. : 0. ) );
+	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 0. : 3. ), ( sFlags.isHoriz ? 3. : 0. ) );
 	NSRectClip( clip );
 
 	NSBezierPath *shaded = _shadedAreas;
@@ -59,7 +59,7 @@
 		[shaded appendBezierPathWithRect:rect];
 	}
 
-	[[[NSColor knobColor] colorWithAlphaComponent:0.33] set];
+	[[[NSColor knobColor] colorWithAlphaComponent:0.45] set];
 	[[transform transformBezierPath:shaded] fill];
 
 	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 4. : 3. ), ( sFlags.isHoriz ? 3. : 4. ) );
@@ -163,5 +163,13 @@
 		[self buildShadedAreaBetween:[start unsignedLongLongValue] and:location];
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 	}
+}
+
+#pragma mark -
+
+- (void) removeAllShadedAreas {
+	[_shades removeAllObjects];
+	[_shadedAreas removeAllPoints];
+	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 @end

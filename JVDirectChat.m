@@ -837,6 +837,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	_requiresFullMessage = YES;
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 	[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] removeAllMarks];
+	[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] removeAllShadedAreas];
 }
 
 #pragma mark -
