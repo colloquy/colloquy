@@ -49,9 +49,9 @@
 	<key>MVChatActionOnReturn</key>
 	<false/>
 	<key>MVChatSendOnEnter</key>
-	<false/>
-	<key>MVChatActionOnEnter</key>
 	<true/>
+	<key>MVChatActionOnEnter</key>
+	<false/>
 	<key>MVChatNaturalActions</key>
 	<false/>
 	<key>JVChatServers</key>
