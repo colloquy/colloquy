@@ -21,8 +21,6 @@ static JVChatController *sharedInstance = nil;
 - (void) _addWindowController:(JVChatWindowController *) windowController;
 - (void) _addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller;
 - (BOOL) _handlePrivateMessageOnConnection:(MVChatConnection *) connection withInfo:(NSDictionary *) info;
-
-#pragma mark Ignore Stuff
 - (BOOL) _ignoreUser:(NSString *) name withMessage:(NSAttributedString *) message inRoom:(NSString *) room withConnection:(MVChatConnection *) connection;
 @end
 
@@ -245,20 +243,11 @@ static JVChatController *sharedInstance = nil;
 	[windowController showChatViewController:view];
 }
 
+#pragma mark -
 #pragma mark Ignores
-- (void) addIgnore:(NSString *)inIgnoreName withKey:(NSString *)ignoreKeyExpression inRooms:(NSArray *) rooms usesRegex:(BOOL) regex isMember:(BOOL) member {
-	// USAGE: /ignore -[e|m|n] nickname message #rooms...
-	// e activates regex matching, m is primarily for when there is no nickname to affix this to
-	// m is to specify a message
-	// n is to specify a nickname
-	// EXAMPLES: 
-	// /ignore Loser23094 - ignore Loser23094 in the current room
-	// /ignore -em "is listening *" - ignore the message expression "is listening *" from everyone
-	// /ignore -emn eevyl* "is listening *" #adium #colloquy #here
-	// /ignore -en bunny* ##ALL
-	
-	[_ignoreRules setObject:[KAInternalIgnoreRule ruleWithString:ignoreKeyExpression inRooms:rooms usesRegex:regex ignoreMember:member] 
-					 forKey:inIgnoreName];
+
+- (void) addIgnore:(NSString *) inIgnoreName withKey:(NSString *) ignoreKeyExpression inRooms:(NSArray *) rooms usesRegex:(BOOL) regex isMember:(BOOL) member {
+	[_ignoreRules setObject:[KAInternalIgnoreRule ruleWithString:ignoreKeyExpression inRooms:rooms usesRegex:regex ignoreMember:member] forKey:inIgnoreName];
 }
 
 
@@ -267,18 +256,18 @@ static JVChatController *sharedInstance = nil;
 	NSEnumerator *kenum = [_ignoreRules keyEnumerator];
 	NSString *key = nil;
 	KAInternalIgnoreRule *rule = nil;
-	
-	while ( key = [kenum nextObject] ) {
-		if ( [key isEqualToString:user] ) ignoreThisUser = YES;
-		
+
+	while( key = [kenum nextObject] ) {
+		if( [key isEqualToString:user] ) ignoreThisUser = YES;
+
 		rule = [_ignoreRules objectForKey:key];
 		
-		if ( [rule regex] && !ignoreThisUser && [rule isMember] ) {
+		if( [rule regex] && !ignoreThisUser && [rule isMember] ) {
 			AGRegex *matchString = [AGRegex regexWithPattern:[rule key] options:AGRegexCaseInsensitive];
-			if ( [matchString findInString:key] ) ignoreThisUser = YES;
+			if( [matchString findInString:key] ) ignoreThisUser = YES;
 		}
 	}
-	
+
 	return ignoreThisUser;
 }
 
@@ -286,15 +275,14 @@ static JVChatController *sharedInstance = nil;
 	BOOL ignoreThisMessage = NO;
 	NSEnumerator *oenum = [_ignoreRules objectEnumerator];
 	KAInternalIgnoreRule *rule = nil;
-	
-	while ( rule = [oenum nextObject] ) {		
-		if ( [rule regex] && ![rule isMember] ) {
+
+	while( rule = [oenum nextObject] ) {		
+		if( [rule regex] && ![rule isMember] ) {
 			AGRegex *matchPattern = [AGRegex regexWithPattern:[rule key] options:AGRegexCaseInsensitive];
-			if ( [matchPattern findInString:[rule key]] ) ignoreThisMessage = YES;
-		} else if ( [[rule key] isEqualToString:[message string]] ) ignoreThisMessage = YES;
+			if( [matchPattern findInString:[rule key]] ) ignoreThisMessage = YES;
+		} else if( [[rule key] isEqualToString:[message string]] ) ignoreThisMessage = YES;
 	}
-	
-	
+
 	return ignoreThisMessage;
 }
 
@@ -543,14 +531,14 @@ static JVChatController *sharedInstance = nil;
 
 - (BOOL) _ignoreUser:(NSString *) name withMessage:(NSAttributedString *) message inRoom:(NSString *) room withConnection:(MVChatConnection *) connection {
 	BOOL wasIgnored = NO;
-	//second check for ignore: if the object in the dictionary is nil, we ignore the user everywhere
-	//if we have an array we check that the array contains our current room and ignore them
-	
-	if ( [self shouldIgnoreUser:name inRoom:room] ) {
+	// second check for ignore: if the object in the dictionary is nil, we ignore the user everywhere
+	// if we have an array we check that the array contains our current room and ignore them
+
+	if( [self shouldIgnoreUser:name inRoom:room] ) {
 		NSArray *ignoredRooms = [[_ignoreRules objectForKey:name] channels];
-		
-		if ( ignoredRooms == nil ) {
-			//send an ignored Notificatoin
+
+		if( ! ignoredRooms ) {
+			// send an ignored Notificatoin
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"User Message Ignored", "user ignored bubble title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@", name, room] forKey:@"description"];
@@ -561,8 +549,8 @@ static JVChatController *sharedInstance = nil;
 			[[JVNotificationController defaultManager] performNotification:@"JVUserMessageIgnored" withContextInfo:context];
 			wasIgnored = YES;
 		}
-	} else if ( [self shouldIgnoreMessage:message inRoom:room] ) {
-		//send an ignored Notificatoin
+	} else if( [self shouldIgnoreMessage:message inRoom:room] ) {
+		// send an ignored Notificatoin
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) forKey:@"title"];
 		[context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@", name, room] forKey:@"description"];
@@ -572,10 +560,9 @@ static JVChatController *sharedInstance = nil;
 		[context setObject:connection forKey:@"representedObject"];
 		[[JVNotificationController defaultManager] performNotification:@"JVMessageIgnored" withContextInfo:context];
 	}
-	
+
 	return wasIgnored;
 }
-
 @end
 
 #pragma mark -
@@ -950,7 +937,7 @@ static JVChatController *sharedInstance = nil;
 			if( startSpec ) {
 				id startObject = [startSpec objectsByEvaluatingSpecifier];
 				if( [startObject isKindOfClass:[NSArray class]] ) {
-					if( ! [startObject count] ) startObject = nil;
+					if( ! [(NSArray *)startObject count] ) startObject = nil;
 					else startObject = [startObject objectAtIndex:0];
 				}
 				if( ! startObject ) return nil;
@@ -962,7 +949,7 @@ static JVChatController *sharedInstance = nil;
 			if( endSpec ) {
 				id endObject = [endSpec objectsByEvaluatingSpecifier];
 				if( [endObject isKindOfClass:[NSArray class]] ) {
-					if( ! [endObject count] ) endObject = nil;
+					if( ! [(NSArray *)endObject count] ) endObject = nil;
 					else endObject = [endObject lastObject];
 				}
 				if( ! endObject ) return nil;
@@ -1026,7 +1013,7 @@ static JVChatController *sharedInstance = nil;
 
 			id baseObject = [baseSpec objectsByEvaluatingWithContainers:self];
 			if( [baseObject isKindOfClass:[NSArray class]] ) {
-				int baseCount = [baseObject count];
+				int baseCount = [(NSArray *)baseObject count];
 				if( baseCount ) {
 					if( relPos == NSRelativeBefore ) baseObject = [baseObject objectAtIndex:0];
 					else baseObject = [baseObject objectAtIndex:( baseCount - 1 )];

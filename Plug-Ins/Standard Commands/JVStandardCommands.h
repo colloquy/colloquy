@@ -5,6 +5,7 @@
 @class MVChatConnection;
 @class NSAttributedString;
 @class MVChatPluginManager;
+@protocol JVChatViewController;
 
 @interface JVStandardCommands : NSObject <MVChatPlugin> {
 	MVChatPluginManager* _manager;
@@ -16,4 +17,5 @@
 - (BOOL) handlePartWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection;
 - (BOOL) handleMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection;
 - (BOOL) handleMassMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection;
+- (BOOL) handleIgnoreWithArguments:(NSString *) args inView:(id <JVChatViewController>) view;
 @end

@@ -276,46 +276,9 @@
 			return YES;
 		}
 	} else if( [command isEqualToString:@"ignore"] ) {
-		NSString *args = [arguments string];
-		NSArray *argsArray = [args componentsSeparatedByString:@" "];
-		NSString *memberString = nil;
-		NSString *messageString = nil;
-		NSArray *rooms = nil;
-		BOOL regex = NO;
-		BOOL member = YES;
-		BOOL message = NO;
-		
-		if ( [args hasPrefix:@"-"] ) {
-			//parse commands/flags
-			if ( [[argsArray objectAtIndex:0] rangeOfString:@"e"].location != NSNotFound ) regex = YES;
-			if ( [[argsArray objectAtIndex:0] rangeOfString:@"m"].location != NSNotFound ) {
-				member = NO;
-				message = YES;
-			}
-			if ( [[argsArray objectAtIndex:0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
-			
-			args = [args substringFromIndex:NSMaxRange( [args rangeOfString:[argsArray objectAtIndex:0]] )+1];
-			argsArray = [args componentsSeparatedByString:@" "];
-		}
-		
-		if ( member ) {
-			memberString = [argsArray objectAtIndex:0];
-		
-			args = [args substringFromIndex:NSMaxRange( [args rangeOfString:[argsArray objectAtIndex:0]] )+1];
-			argsArray = [args componentsSeparatedByString:@" "];
-		}
-		if ( message ) {
-			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location +1,  
-																  [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ([args rangeOfString:@"\""].location +1) )];
-		}
-		if ( [args rangeOfString:@"#"].location != NSNotFound ) {
-			rooms = [[args substringFromIndex:NSMaxRange( [args rangeOfString:@"#"] )+1] componentsSeparatedByString:@" "];
-		}
-		if ( !rooms ) rooms = [NSArray arrayWithObject:room];
-		
-		//[[KAConnectionHandler defaultHandler] addIgnore:memberString withKey:messageString ? messageString : memberString inRooms:rooms usesRegex:regex isMember:member ];
+		return [self handleIgnoreWithArguments:[arguments string] inView:room];
 	}
-	
+
 	return NO;
 }
 
@@ -402,8 +365,17 @@
 		} else if( [[arguments string] isEqualToString:@"style"] ) {
 			[chat _reloadCurrentStyle:nil];
 			return YES;
+		} else if( [[arguments string] isEqualToString:@"styles"] ) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatStyleInstalledNotification" object:nil]; 
+			return YES;
+		} else if( [[arguments string] isEqualToString:@"emoticons"] ) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatEmoticonSetInstalledNotification" object:nil]; 
+			return YES;
 		}
+	} else if( [command isEqualToString:@"ignore"] ) {
+		return [self handleIgnoreWithArguments:[arguments string] inView:chat];
 	}
+
 	return NO;
 }
 
@@ -517,6 +489,58 @@
 		[connection sendMessage:message withEncoding:encoding toChatRoom:[item target] asAction:[command isEqualToString:@"ame"]];
 		[item echoSentMessageToDisplay:message asAction:[command isEqualToString:@"ame"]];
 	}
+	return YES;
+}
+
+- (BOOL) handleIgnoreWithArguments:(NSString *) args inView:(id <JVChatViewController>) view {
+	// USAGE: /ignore -[e|m|n] nickname message #rooms...
+	// e activates regex matching, m is primarily for when there is no nickname to affix this to
+	// m is to specify a message
+	// n is to specify a nickname
+	
+	// EXAMPLES: 
+	// /ignore Loser23094 - ignore Loser23094 in the current room
+	// /ignore -em "is listening *" - ignore the message expression "is listening *" from everyone
+	// /ignore -emn eevyl* "is listening *" #adium #colloquy #here
+	// /ignore -en bunny* ##ALL
+
+	NSArray *argsArray = [args componentsSeparatedByString:@" "];
+	NSString *memberString = nil;
+	NSString *messageString = nil;
+	NSArray *rooms = nil;
+	BOOL regex = NO;
+	BOOL member = YES;
+	BOOL message = NO;
+
+	if( [args hasPrefix:@"-"] ) { // parse commands/flags
+		if( [[argsArray objectAtIndex:0] rangeOfString:@"e"].location != NSNotFound ) regex = YES;
+		if( [[argsArray objectAtIndex:0] rangeOfString:@"m"].location != NSNotFound ) {
+			member = NO;
+			message = YES;
+		}
+
+		if( [[argsArray objectAtIndex:0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
+
+		args = [args substringFromIndex:NSMaxRange( [args rangeOfString:[argsArray objectAtIndex:0]] ) + 1];
+		argsArray = [args componentsSeparatedByString:@" "];
+	}
+
+	if( member ) {
+		memberString = [argsArray objectAtIndex:0];
+		args = [args substringFromIndex:NSMaxRange( [args rangeOfString:[argsArray objectAtIndex:0]] ) + 1];
+		argsArray = [args componentsSeparatedByString:@" "];
+	}
+
+	if( message )
+		messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location + 1, [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ( [args rangeOfString:@"\""].location + 1 ) )];
+
+	if( [args rangeOfString:@"#"].location != NSNotFound )
+		rooms = [[args substringFromIndex:NSMaxRange( [args rangeOfString:@"#"] ) + 1] componentsSeparatedByString:@" "];
+
+	if( ! rooms && [view isMemberOfClass:NSClassFromString( @"JVChatRoom" )] ) rooms = [NSArray arrayWithObject:[(JVChatRoom *)view target]];
+
+	[[_manager chatController] addIgnore:memberString withKey:( messageString ? messageString : memberString ) inRooms:rooms usesRegex:regex isMember:member];
+
 	return YES;
 }
 @end
