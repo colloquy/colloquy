@@ -1,6 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import "MVConnectionsController.h"
-//#import "MVChatWindowController.h"
+#import "JVChatController.h"
 #import "MVChatConnection.h"
 #import "MVKeyChain.h"
 
@@ -12,6 +12,8 @@ static NSString *MVToolbarDeleteItemIdentifier = @"MVToolbarDeleteItem";
 static NSString *MVToolbarConsoleItemIdentifier = @"MVToolbarConsoleItem";
 static NSString *MVToolbarJoinRoomItemIdentifier = @"MVToolbarJoinRoomItem";
 static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
+
+static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteboard type";
 
 @interface MVConnectionsController (MVConnectionsControllerPrivate)
 - (void) _loadInterfaceIfNeeded;
@@ -100,6 +102,8 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	[prototypeCell setImageAlignment:NSImageAlignCenter];
 	[theColumn setDataCell:prototypeCell];
 
+	[connections registerForDraggedTypes:[NSArray arrayWithObjects:MVConnectionPboardType,NSURLPboardType,@"CorePasteboardFlavorType 0x75726C20",nil]];
+
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
@@ -113,6 +117,10 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 - (IBAction) showConnectionManager:(id) sender {
 	[self _loadInterfaceIfNeeded];
 	[[self window] orderFront:nil];
+}
+
+- (IBAction) openNetworkPreferences:(id) sender {
+	[[NSWorkspace sharedWorkspace] openFile:@"/System/Library/PreferencePanes/Network.prefPane"];
 }
 
 #pragma mark -
@@ -174,7 +182,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	[[self window] makeKeyAndOrderFront:nil];
 
 	if( _target && _targetRoom ) [connection joinChatForRoom:_target];
-//	else if( _target && ! _targetRoom ) [MVChatWindowController chatWindowWithUser:_target withConnection:connection ifExists:NO];
+	else if( _target && ! _targetRoom ) [[JVChatController defaultManager] chatViewControllerForUser:_target withConnection:connection ifExists:NO];
 	[_target autorelease];
 	_target = nil;
 }
@@ -188,7 +196,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	if( [connections selectedRow] == -1 ) return;
 
 	if( [sender tag] ) {
-//		[MVChatWindowController chatWindowWithUser:[userToMessage stringValue] withConnection:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] ifExists:NO];
+		[[JVChatController defaultManager] chatViewControllerForUser:[userToMessage stringValue] withConnection:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] ifExists:NO];
 	}
 }
 
@@ -319,7 +327,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 			if( [[connection server] isEqualToString:[url host]] && ( ! [url user] || [[connection nickname] isEqualToString:[url user]] ) && ( ! [connection serverPort] || ! [[url port] unsignedShortValue] || [connection serverPort] == [[url port] unsignedShortValue] ) ) {
 				if( ! [connection isConnected] && connect ) [connection connect];
 				if( target && isRoom ) [connection joinChatForRoom:target];
-				//else if( target && ! isRoom ) [MVChatWindowController chatWindowWithUser:target withConnection:connection ifExists:NO];
+				else if( target && ! isRoom ) [[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:NO];
 				[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
 				[[self window] makeKeyAndOrderFront:nil];
 				handled = YES;
@@ -343,7 +351,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 			[[self window] makeKeyAndOrderFront:nil];
 
 			if( target && isRoom ) [connection joinChatForRoom:target];
-			//else if( target && ! isRoom ) [MVChatWindowController chatWindowWithUser:target withConnection:connection ifExists:NO];
+			else if( target && ! isRoom ) [[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:NO];
 		}
 	}
 }
@@ -525,6 +533,131 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	}
 }
 
+- (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
+	int row = [[rows lastObject] intValue];
+	NSDictionary *info = nil;
+	MVChatConnection *connection = nil;
+	NSString *string = nil;
+	NSData *data = nil;
+	id plist = nil;
+
+	if( row == -1 ) return NO;
+
+	info = [_bookmarks objectAtIndex:row];
+	connection = [info objectForKey:@"connection"];
+	data = [NSData dataWithBytes:&row length:sizeof( &row )];
+
+	[board declareTypes:[NSArray arrayWithObjects:MVConnectionPboardType, NSURLPboardType, NSStringPboardType, @"CorePasteboardFlavorType 0x75726C20", @"CorePasteboardFlavorType 0x75726C6E", @"WebURLsWithTitlesPboardType", nil] owner:self];
+
+	[board setData:data forType:MVConnectionPboardType];
+
+	[[connection url] writeToPasteboard:board];
+
+	string = [[connection url] absoluteString];
+	data = [string dataUsingEncoding:NSASCIIStringEncoding];
+	[board setString:string forType:NSStringPboardType];
+	[board setData:data forType:NSStringPboardType];
+
+	string = [[connection url] absoluteString];
+	data = [string dataUsingEncoding:NSASCIIStringEncoding];
+	[board setString:string forType:@"CorePasteboardFlavorType 0x75726C20"];
+	[board setData:data forType:@"CorePasteboardFlavorType 0x75726C20"];
+
+	string = [[connection url] host];
+	data = [string dataUsingEncoding:NSASCIIStringEncoding];
+	[board setString:string forType:@"CorePasteboardFlavorType 0x75726C6E"];
+	[board setData:data forType:@"CorePasteboardFlavorType 0x75726C6E"];
+
+	plist = [NSArray arrayWithObjects:[NSArray arrayWithObject:[[connection url] absoluteString]], [NSArray arrayWithObject:[[connection url] host]], nil];
+	data = [NSPropertyListSerialization dataFromPropertyList:plist format:NSPropertyListXMLFormat_v1_0 errorDescription:NULL];
+	string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+	[board setPropertyList:plist forType:@"WebURLsWithTitlesPboardType"];
+	[board setString:string forType:@"WebURLsWithTitlesPboardType"];
+	[board setData:data forType:@"WebURLsWithTitlesPboardType"];
+
+	return YES;
+}
+
+- (NSDragOperation) tableView:(NSTableView *) view validateDrop:(id <NSDraggingInfo>) info proposedRow:(int) row proposedDropOperation:(NSTableViewDropOperation) operation {
+	NSString *string = nil;
+	int index = -1;
+
+	if( operation == NSTableViewDropOn && row != -1 ) return NSDragOperationNone;
+
+	string = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:MVConnectionPboardType]];
+	[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index];
+	if( string && row >= 0 && row != index && ( row - 1 ) != index ) return NSDragOperationEvery;
+	else if( string && row == -1 ) return NSDragOperationNone;
+
+	if( row == -1 ) {
+		if( [[NSURL URLFromPasteboard:[info draggingPasteboard]] isChatURL] ) return NSDragOperationEvery;
+
+		string = [[info draggingPasteboard] stringForType:NSStringPboardType];
+		if( string && [[NSURL URLWithString:string] isChatURL] ) return NSDragOperationEvery;
+
+		string = [[info draggingPasteboard] stringForType:@"CorePasteboardFlavorType 0x75726C20"];
+		if( string && [[NSURL URLWithString:string] isChatURL] ) return NSDragOperationEvery;
+
+		string = [[[[info draggingPasteboard] propertyListForType:@"WebURLsWithTitlesPboardType"] objectAtIndex:0] objectAtIndex:0];
+		if( string && [[NSURL URLWithString:string] isChatURL] ) return NSDragOperationEvery;
+	}
+
+	return NSDragOperationNone;
+}
+
+- (BOOL) tableView:(NSTableView *) view acceptDrop:(id <NSDraggingInfo>) info row:(int) row dropOperation:(NSTableViewDropOperation) operation {
+	if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:MVConnectionPboardType]] ) {
+		int index = -1;
+		id item = nil;
+		[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index];
+		if( row > index ) row--;
+		item = [[[_bookmarks objectAtIndex:index] retain] autorelease];
+		[_bookmarks removeObjectAtIndex:index];
+		[_bookmarks insertObject:item atIndex:row];
+		[self _refresh:nil];
+		return YES;
+	} else {
+		NSString *string = nil;
+		NSURL *url = [NSURL URLFromPasteboard:[info draggingPasteboard]];
+
+		if( ! [url isChatURL] ) {
+			string = [[info draggingPasteboard] stringForType:@"CorePasteboardFlavorType 0x75726C20"];
+			if( string ) url = [NSURL URLWithString:string];
+		}
+
+		if( ! [url isChatURL] ) {
+			string = [[[[info draggingPasteboard] propertyListForType:@"WebURLsWithTitlesPboardType"] objectAtIndex:0] objectAtIndex:0];
+			if( string ) url = [NSURL URLWithString:string];
+		}
+
+		if( ! [url isChatURL] ) {
+			string = [[info draggingPasteboard] stringForType:NSStringPboardType];
+			if( string ) url = [NSURL URLWithString:string];
+		}
+
+		if( [url isChatURL] ) {
+			[self handleURL:url andConnectIfPossible:NO];
+			return YES;
+		}
+	}
+	return NO;
+}
+
+/*- (NSImage *) tableView:(NSTableView *) view dragImageForRows:(NSArray *) rows dragImageOffset:(NSPointPointer) offset {
+	int row = [[rows lastObject] intValue];
+	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:11.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil];
+	NSImage *ret = [[[NSImage alloc] initWithSize:NSMakeSize( 150., 20. )] autorelease];
+
+	[ret lockFocus];
+	[[[[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] url] host] drawAtPoint:NSMakePoint( 2., 2. ) withAttributes:attributes];
+	[ret unlockFocus];
+
+	offset -> x = 0.;
+	offset -> y = 0.;
+
+	return ret;
+}*/
+
 #pragma mark -
 
 - (int) numberOfItemsInComboBox:(NSComboBox *) comboBox {
@@ -655,6 +788,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 		MVChatConnection *connection = [notification object];
 		[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 	}
+	[connections reloadData];
 	[connections noteNumberOfRowsChanged];
 }
 

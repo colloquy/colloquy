@@ -59,6 +59,7 @@
 + (MVConnectionsController *) defaultManager;
 
 - (IBAction) showConnectionManager:(id) sender;
+- (IBAction) openNetworkPreferences:(id) sender;
 
 - (IBAction) newConnection:(id) sender;
 - (IBAction) conenctNewConnection:(id) sender;
