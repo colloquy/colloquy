@@ -162,6 +162,12 @@ static BOOL applicationIsTerminating = NO;
 	[JVChatController defaultManager];
 	[MVFileTransferController defaultManager];
 	[MVBuddyListController sharedBuddyList];
+
+	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
+}
+
+- (void) applicationWillBecomeActive:(NSNotification *) notification {
+	[MVConnectionsController refreshFavoritesMenu];
 }
 
 - (void) applicationWillTerminate:(NSNotification *) notification {
@@ -169,6 +175,8 @@ static BOOL applicationIsTerminating = NO;
 	applicationIsTerminating = YES;
 
 	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
+
+	[NSAutoreleasePool enableRelease:NO];
 
 	[[MVBuddyListController sharedBuddyList] release];
 	[[MVFileTransferController defaultManager] release];
