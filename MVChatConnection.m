@@ -1084,7 +1084,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) disconnect {
-	if( [self status] != MVChatConnectionDisconnectedStatus ) {
+	if( [self status] == MVChatConnectionConnectedStatus ) {
 		[self _willDisconnect];
 //		signal_emit( "server quit", 2, [self _irssiConnection], "Quiting" );
 		server_disconnect( [self _irssiConnection] );
@@ -1427,6 +1427,14 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 - (MVChatConnectionStatus) status {
 	return _status;
 }
+
+- (BOOL) waitingToReconnect {
+	return ( ! [self _irssiConnection] -> no_reconnect && [self _irssiConnection] -> connection_lost );
+}
+
+- (unsigned int) lag {
+	return [self _irssiConnection] -> lag;
+}
 @end
 
 #pragma mark -
@@ -1664,7 +1672,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) _didDisconnect {
-	_status = MVChatConnectionDisconnectedStatus;
+	if( [self _irssiConnection] -> connection_lost ) _status = MVChatConnectionServerDisconnectedStatus;
+	else _status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
 }
 @end

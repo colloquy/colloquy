@@ -8,6 +8,7 @@
 
 typedef enum {
 	MVChatConnectionDisconnectedStatus = 'disC',
+	MVChatConnectionServerDisconnectedStatus = 'sdsC',
 	MVChatConnectionConnectingStatus = 'conG',
 	MVChatConnectionConnectedStatus = 'conD',
 	MVChatConnectionSuspendedStatus = 'susP'
@@ -231,6 +232,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (BOOL) isConnected;
 - (MVChatConnectionStatus) status;
+- (BOOL) waitingToReconnect;
+- (unsigned int) lag;
 @end
 
 @interface MVChatConnection (MVChatConnectionScripting)
