@@ -100,6 +100,8 @@ extern NSArray *chatActionVerbs;
 - (void) addAttributedMessageToDisplay:(NSAttributedString *) message fromUser:(NSString *) user asAction:(BOOL) actio asAlert:(BOOL) alertn;
 
 - (IBAction) send:(id) sender;
+- (IBAction) clear:(id) sender;
+- (IBAction) clearDisplay:(id) sender;
 
 - (void) changeTopic:(NSData *) topic by:(NSString *) author;
 
@@ -115,6 +117,8 @@ extern NSArray *chatActionVerbs;
 - (NSWindow *) window;
 
 - (IBAction) toggleMemberDrawer:(id) sender;
+- (IBAction) openMemberDrawer:(id) sender;
+- (IBAction) closeMemberDrawer:(id) sender;
 
 - (IBAction) startChatWithSelectedUser:(id) sender;
 

@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import "MVChatWindowController.h"
 #import "MVChatConnection.h"
+#import "MVChatPluginManager.h"
 #import "MVTextView.h"
 #import "MVTableView.h"
 #import "MVImageTextCell.h"
@@ -840,6 +841,14 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		}
 	}
 
+	if( [self isChatRoom] ) enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processRoomMessage:fromUser:inRoom:asAction:forConnection: )] objectEnumerator];
+	else enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processPrivateMessage:fromUser:asAction:forConnection: )] objectEnumerator];
+
+	while( ( item = [enumerator nextObject] ) ) {
+		if( [self isChatRoom] ) msgString = [item processRoomMessage:msgString fromUser:user inRoom:[self targetRoom] asAction:action forConnection:[self connection]];
+		else msgString = [item processPrivateMessage:msgString fromUser:user asAction:action forConnection:[self connection]];
+	}
+
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"] ) {
 		[msgString preformHTMLBackgroundColoring];
 	}
@@ -918,19 +927,16 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 - (IBAction) send:(id) sender {
-	NSData *msgData = nil;
-	NSEnumerator *enumerator = [chatActionVerbs objectEnumerator];
-	id verb = nil;
+//	NSData *msgData = nil;
+	NSMutableAttributedString *subMsg = nil;
+	NSEnumerator *enumerator = nil;
+	id item = nil;
 	BOOL action = NO;
+	NSRange range;
 
 	if( ! [[self connection] isConnected] ) {
 		[self disconnected];
 		return;
-	}
-
-	if( [[sendText string] hasPrefix:@"/"] && ! [[sendText string] hasPrefix:@"/me "] ) {
-		if( NSRunInformationalAlertPanelRelativeToWindow( NSLocalizedString( @"No IRC Commands", "no irc commands error dialog title" ), NSLocalizedString( @"You have typed in an IRC command that wont be processed. If you choose Send, the message will be sent exactly as you typed it.", "no irc commands error dialog message" ), @"Cancel", NSLocalizedString( @"Send", "send button name" ), nil, window ) == NSOKButton )
-			return;
 	}
 
 	historyIndex = 0;
@@ -940,47 +946,90 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[sendHistory insertObject:[[[sendText textStorage] copy] autorelease] atIndex:1];
 	if( [sendHistory count] > [[[NSUserDefaults standardUserDefaults] objectForKey:@"MVChatMaximumHistory"] unsignedIntValue] )
 		[sendHistory removeObjectAtIndex:[sendHistory count] - 1];
-	if( [[sendText string] hasPrefix:@"/me "] ) {
-		[[sendText textStorage] deleteCharactersInRange:[[sendText string] rangeOfString:@"/me "]];
-		action = YES;
-	}
+
 	if( [sender isKindOfClass:[NSNumber class]] && [sender boolValue] ) action = YES;
+
 	[[[sendText textStorage] mutableString] replaceString:@"<" withString:@"&lt;" maxTimes:0];
 	[[[sendText textStorage] mutableString] replaceString:@">" withString:@"&gt;" maxTimes:0];
 	[[[sendText textStorage] mutableString] replaceString:@"\r" withString:@"\n" maxTimes:0];
 
 	while( [[sendText textStorage] length] ) {
-		NSRange range = [[[sendText textStorage] string] rangeOfString:@"\n"];
-		NSAttributedString *subMsg = nil;
+		range = [[[sendText textStorage] string] rangeOfString:@"\n"];
 		if( ! range.length ) range.location = [[sendText textStorage] length];
-		subMsg = [[sendText textStorage] attributedSubstringFromRange:NSMakeRange( 0, range.location )];
+		subMsg = [[[[sendText textStorage] attributedSubstringFromRange:NSMakeRange( 0, range.location )] mutableCopy] autorelease];
+
 		if( ( [subMsg length] >= 1 && range.length ) || ( [subMsg length] && ! range.length ) ) {
-			NSString *tempString = [[subMsg string] stringByAppendingString:@" "];
-			msgData = [[self class] _flattenedHTMLFromIRCFormatForMessage:subMsg withEncoding:encoding];
+			if( [[sendText string] hasPrefix:@"/"] ) {
+				BOOL handled = NO;
+				NSScanner *scanner = [NSScanner scannerWithString:[sendText string]];
+				NSString *command = nil;
+				NSAttributedString *arguments = nil;
 
-//			NSLog( @"raw: %s", [[[subMsg string] dataUsingEncoding:encoding allowLossyConversion:YES] bytes] );
-//			NSLog( @"irc: %s", [[[self class] _flattenedIRCFormatForMessage:subMsg withEncoding:encoding] bytes] );
-//			NSLog( @"html: %s", [[[self class] _flattenedHTMLFromIRCFormatForMessage:subMsg withEncoding:encoding] bytes] );
+				if( [self isChatRoom] ) enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toRoom:forConnection: )] objectEnumerator];
+				else enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toUser:forConnection: )] objectEnumerator];
 
-			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
-				while( ( verb = [enumerator nextObject] ) ) {
-					if( [tempString hasPrefix:[verb stringByAppendingString:@" "]] ) {
-						action = YES;
-						break;
+				[scanner scanString:@"/" intoString:nil];
+				[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&command];
+				if( [[sendText string] length] >= [scanner scanLocation] + 1 )
+					[scanner setScanLocation:[scanner scanLocation] + 1];
+
+				arguments = [sendText attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], range.location - [scanner scanLocation] )];
+
+				while( ( item = [enumerator nextObject] ) ) {
+					if( [self isChatRoom] ) handled = [item processUserCommand:command withArguments:arguments toRoom:[self targetRoom] forConnection:[self connection]];
+					else handled = [item processUserCommand:command withArguments:arguments toUser:[self targetUser] forConnection:[self connection]];
+					if( handled ) break;
+				}
+
+				if( ! handled ) {
+					NSRunInformationalAlertPanel( NSLocalizedString( @"Command not recognised", "IRC command not recognised dialog title" ), NSLocalizedString( @"The command you specified is not recognised by Colloquy or it's plugins. No action can be performed.", "IRC command not recognised dialog message" ), nil, nil, nil );
+					return;
+				}
+			} else {
+				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
+					extern NSArray *chatActionVerbs;
+					NSString *tempString = [[subMsg string] stringByAppendingString:@" "];
+					enumerator = [chatActionVerbs objectEnumerator];
+					while( ( item = [enumerator nextObject] ) ) {
+						if( [tempString hasPrefix:[item stringByAppendingString:@" "]] ) {
+							action = YES;
+							break;
+						}
 					}
 				}
+
+				if( [self isChatRoom] ) enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processRoomMessage:toRoom:asAction:forConnection: )] objectEnumerator];
+				else enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processPrivateMessage:toUser:asAction:forConnection: )] objectEnumerator];
+
+				while( ( item = [enumerator nextObject] ) ) {
+					if( [self isChatRoom] ) subMsg = [item processRoomMessage:subMsg toRoom:[self targetRoom] asAction:action forConnection:[self connection]];
+					else subMsg = [item processPrivateMessage:subMsg toUser:[self targetUser] asAction:action forConnection:[self connection]];
+				}
+
+				if( [self isChatRoom] ) [[self connection] sendMessageToChatRoom:[self targetRoom] attributedMessage:subMsg withEncoding:encoding asAction:action];
+				else [[self connection] sendMessageToUser:[self targetUser] attributedMessage:subMsg withEncoding:encoding asAction:action];
+
+//				NSLog( @"raw: %s", [[[subMsg string] dataUsingEncoding:encoding allowLossyConversion:YES] bytes] );
+//				NSLog( @"irc: %s", [[[self class] _flattenedIRCFormatForMessage:subMsg withEncoding:encoding] bytes] );
+//				NSLog( @"html: %s", [[[self class] _flattenedHTMLFromIRCFormatForMessage:subMsg withEncoding:encoding] bytes] );
+
+//				msgData = [[self class] _flattenedHTMLFromIRCFormatForMessage:subMsg withEncoding:encoding];
+//				[self addHTMLMessageToDisplay:msgData fromUser:[[self connection] nickname] asAction:action asAlert:NO];
 			}
-
-			if( chatRoom ) [[self connection] sendMessageToChatRoom:[self targetRoom] attributedMessage:subMsg withEncoding:encoding asAction:action];
-			else [[self connection] sendMessageToUser:[self targetUser] attributedMessage:subMsg withEncoding:encoding asAction:action];
-
-			[self addHTMLMessageToDisplay:msgData fromUser:[[self connection] nickname] asAction:action asAlert:NO];
 		}
 		if( range.length ) range.location++;
 		[[sendText textStorage] deleteCharactersInRange:NSMakeRange( 0, range.location )];
 	}
 	[sendText reset:nil];
 	[displayText scrollRangeToVisible:NSMakeRange( [[displayText textStorage] length], 0 )];
+}
+
+- (IBAction) clear:(id) sender {
+	[sendText reset:nil];
+}
+
+- (IBAction) clearDisplay:(id) sender {
+	[displayText reset:nil];
 }
 
 #pragma mark -
@@ -1063,6 +1112,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	else memberDrawerWasOpen = NO;
 	[memberDrawer close];
 	[window orderOut:nil];
+	[[NSApplication sharedApplication] changeWindowsItem:window title:[window title] filename:NO];
 }
 
 - (NSWindow *) window {
@@ -1072,7 +1122,15 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 - (IBAction) toggleMemberDrawer:(id) sender {
-	[memberDrawer toggle:nil];
+	[memberDrawer toggle:sender];
+}
+
+- (IBAction) openMemberDrawer:(id) sender {
+	[memberDrawer open:sender];
+}
+
+- (IBAction) closeMemberDrawer:(id) sender {
+	[memberDrawer close:sender];
 }
 
 - (IBAction) startChatWithSelectedUser:(id) sender {
@@ -1131,6 +1189,10 @@ void MVChatPlaySoundForAction( NSString *action ) {
 - (void) windowDidBecomeKey:(NSNotification *) notification {
     [window makeFirstResponder:sendText];
 	[window setDocumentEdited:NO];
+	if( memberDrawerWasOpen ) {
+		[self openMemberDrawer:nil];
+		memberDrawerWasOpen = NO;
+	}
 }
 
 #pragma mark -
