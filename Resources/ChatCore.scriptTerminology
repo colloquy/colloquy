@@ -388,7 +388,7 @@
 			<key>UTF8</key>
 			<dict>
 				<key>Name</key>
-				<string>UTF-8</string>
+				<string>UTF8</string>
 			</dict>
 			<key>ASCII</key>
 			<dict>
@@ -398,7 +398,7 @@
 			<key>NonLossyASCII</key>
 			<dict>
 				<key>Name</key>
-				<string>Non-lossy ASCII</string>
+				<string>Nonlossy ASCII</string>
 			</dict>
 			<key>ISOLatin1</key>
 			<dict>
@@ -430,7 +430,7 @@
 				<key>Name</key>
 				<string>ISO Latin 9</string>
 			</dict>
-			<!--<key>MacOSRoman</key>
+			<key>MacOSRoman</key>
 			<dict>
 				<key>Name</key>
 				<string>Mac OS Roman</string>
@@ -464,23 +464,23 @@
 			<dict>
 				<key>Name</key>
 				<string>Mac OS Korean</string>
-			</dict>-->
+			</dict>
 			<key>CP1250</key>
 			<dict>
 				<key>Name</key>
 				<string>Windows Latin 2</string>
 			</dict>
-			<!--<key>CP1251</key>
+			<key>CP1251</key>
 			<dict>
 				<key>Name</key>
 				<string>Windows Cyrllic</string>
-			</dict>-->
+			</dict>
 			<key>CP1252</key>
 			<dict>
 				<key>Name</key>
 				<string>Windows Latin 1</string>
 			</dict>
-			<!--<key>SimpChineseWindows</key>
+			<key>SimpChineseWindows</key>
 			<dict>
 				<key>Name</key>
 				<string>Windows Simp. Chinese</string>
@@ -494,7 +494,7 @@
 			<dict>
 				<key>Name</key>
 				<string>Windows Korean</string>
-			</dict>-->
+			</dict>
 			<key>ShiftJIS</key>
 			<dict>
 				<key>Name</key>
@@ -523,7 +523,7 @@
 			<key>KOI8R</key>
 			<dict>
 				<key>Name</key>
-				<string>KOI8-R</string>
+				<string>KOI8R</string>
 			</dict>
 			<key>KoreanEUC</key>
 			<dict>

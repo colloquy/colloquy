@@ -1217,19 +1217,39 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 		case 'utF8': encoding = NSUTF8StringEncoding; break;
 		case 'ascI': encoding = NSASCIIStringEncoding; break;
 		case 'nlAs': encoding = NSNonLossyASCIIStringEncoding; break;
+
 		case 'isL1': encoding = NSISOLatin1StringEncoding; break;
 		case 'isL2': encoding = NSISOLatin2StringEncoding; break;
 		case 'isL3': encoding = (NSStringEncoding) 0x80000203; break;
 		case 'isL4': encoding = (NSStringEncoding) 0x80000204; break;
 		case 'isL5': encoding = (NSStringEncoding) 0x80000205; break;
 		case 'isL9': encoding = (NSStringEncoding) 0x8000020F; break;
+
 		case 'cp50': encoding = NSWindowsCP1250StringEncoding; break;
+		case 'cp51': encoding = NSWindowsCP1251StringEncoding; break;
 		case 'cp52': encoding = NSWindowsCP1252StringEncoding; break;
+
+		case 'mcRo': encoding = NSMacOSRomanStringEncoding; break;
+		case 'mcEu': encoding = (NSStringEncoding) 0x8000001D; break;
+		case 'mcCy': encoding = (NSStringEncoding) 0x80000007; break;
+		case 'mcJp': encoding = (NSStringEncoding) 0x80000001; break;
+		case 'mcSc': encoding = (NSStringEncoding) 0x80000019; break;
+		case 'mcTc': encoding = (NSStringEncoding) 0x80000002; break;
+		case 'mcKr': encoding = (NSStringEncoding) 0x80000003; break;
+
+		case 'ko8R': encoding = (NSStringEncoding) 0x80000A02; break;
+
+		case 'wnSc': encoding = (NSStringEncoding) 0x80000421; break;
+		case 'wnTc': encoding = (NSStringEncoding) 0x80000423; break;
+		case 'wnKr': encoding = (NSStringEncoding) 0x80000422; break;
+
 		case 'jpUC': encoding = NSJapaneseEUCStringEncoding; break;
+		case 'sJiS': encoding = (NSStringEncoding) 0x80000A01; break;
+
+		case 'krUC': encoding = (NSStringEncoding) 0x80000940; break;
+
 		case 'scUC': encoding = (NSStringEncoding) 0x80000930; break;
 		case 'tcUC': encoding = (NSStringEncoding) 0x80000931; break;
-		case 'krUC': encoding = (NSStringEncoding) 0x80000940; break;
-		case 'sJiS': encoding = NSShiftJISStringEncoding; break;
 		case 'gb30': encoding = (NSStringEncoding) 0x80000632; break;
 		case 'gbKK': encoding = (NSStringEncoding) 0x80000631; break;
 		case 'biG5': encoding = (NSStringEncoding) 0x80000A03; break;

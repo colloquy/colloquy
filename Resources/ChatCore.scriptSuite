@@ -500,7 +500,7 @@
 				<string>isL5</string>
 				<key>ISOLatin9</key>
 				<string>isL9</string>
-				<!--<key>MacOSRoman</key>
+				<key>MacOSRoman</key>
 				<string>mcRo</string>
 				<key>MacOSEuropean</key>
 				<string>mcEu</string>
@@ -513,19 +513,19 @@
 				<key>MacOSTradChinese</key>
 				<string>mcTc</string>
 				<key>MacOSKorean</key>
-				<string>mcKr</string>-->
+				<string>mcKr</string>
 				<key>CP1250</key>
 				<string>cp50</string>
-				<!--<key>CP1251</key>
-				<string>cp51</string>-->
+				<key>CP1251</key>
+				<string>cp51</string>
 				<key>CP1252</key>
 				<string>cp52</string>
-				<!--<key>SimpChineseWindows</key>
+				<key>SimpChineseWindows</key>
 				<string>wnSc</string>
 				<key>TradChineseWindows</key>
 				<string>wnTc</string>
 				<key>KoreanWindows</key>
-				<string>wnKr</string>-->
+				<string>wnKr</string>
 				<key>JapaneseEUC</key>
 				<string>jpUC</string>
 				<key>SimpChineseEUC</key>
