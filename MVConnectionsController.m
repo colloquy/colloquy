@@ -1,6 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import "MVConnectionsController.h"
-#import "MVChatWindowController.h"
+//#import "MVChatWindowController.h"
 #import "MVChatConnection.h"
 #import "MVKeyChain.h"
 
@@ -14,6 +14,7 @@ static NSString *MVToolbarJoinRoomItemIdentifier = @"MVToolbarJoinRoomItem";
 static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 @interface MVConnectionsController (MVConnectionsControllerPrivate)
+- (void) _loadInterfaceIfNeeded;
 - (void) _saveBookmarkList;
 - (void) _loadBookmarkList;
 - (void) _validateToolbar;
@@ -25,20 +26,18 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 @implementation MVConnectionsController
 + (MVConnectionsController *) defaultManager {
 	extern MVConnectionsController *sharedInstance;
-	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
+	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 
 #pragma mark -
 
-- (id) init {
-	if( ( self = [super init] ) ) {
-		_bookmarks = [[NSMutableArray array] retain];
+- (id) initWithWindowNibName:(NSString *) windowNibName {
+	if( ( self = [super initWithWindowNibName:@"MVConnections"] ) ) {
+		_bookmarks = nil;
 		_target = nil;
 		_targetRoom = NO;
 		_editingRooms = nil;
 		_editingRow = -1;
-
-		[NSBundle loadNibNamed:@"MVConnections" owner:self];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionWillConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidConnectNotification object:nil];
@@ -59,36 +58,27 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	extern MVConnectionsController *sharedInstance;
 	[self _saveBookmarkList];
 
-	[[self window] close];
-
-	[editConnection autorelease];
-	[openConnection autorelease];
-	[joinRoom autorelease];
-	[messageUser autorelease];
-	[nicknameAuth autorelease];
+	[connections setDelegate:nil];
+	[connections setDataSource:nil];
 
 	[_bookmarks autorelease];
 	[_target autorelease];
 	[_editingRooms autorelease];
+	[_passConnection autorelease];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
 
-	editConnection = nil;
-	openConnection = nil;
-	joinRoom = nil;
-	messageUser = nil;
-	nicknameAuth = nil;
-
 	_bookmarks = nil;
 	_target = nil;
 	_editingRooms = nil;
+	_passConnection = nil;
 
 	if( self == sharedInstance ) sharedInstance = nil;
 	[super dealloc];
 }
 
-- (void) awakeFromNib {
+- (void) windowDidLoad {
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"connections.toolbar"] autorelease];
 	NSTableColumn *theColumn = nil;
 	id prototypeCell = nil;
@@ -99,14 +89,14 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];
-	prototypeCell = [NSButtonCell new];
+	prototypeCell = [[NSButtonCell new] autorelease];
 	[prototypeCell setButtonType:NSSwitchButton];
 	[prototypeCell setControlSize:NSSmallControlSize];
 	[theColumn setDataCell:prototypeCell];
 
 	theColumn = [connections tableColumnWithIdentifier:@"status"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"statusHeader"]];
-	prototypeCell = [NSImageCell new];
+	prototypeCell = [[NSImageCell new] autorelease];
 	[prototypeCell setImageAlignment:NSImageAlignCenter];
 	[theColumn setDataCell:prototypeCell];
 
@@ -121,12 +111,14 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 #pragma mark -
 
 - (IBAction) showConnectionManager:(id) sender {
+	[self _loadInterfaceIfNeeded];
 	[[self window] orderFront:nil];
 }
 
 #pragma mark -
 
 - (IBAction) newConnection:(id) sender {
+	[self _loadInterfaceIfNeeded];
 	[openConnection center];
 	[openConnection makeKeyAndOrderFront:nil];
 }
@@ -182,7 +174,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	[[self window] makeKeyAndOrderFront:nil];
 
 	if( _target && _targetRoom ) [connection joinChatForRoom:_target];
-	else if( _target && ! _targetRoom ) [MVChatWindowController chatWindowWithUser:_target withConnection:connection ifExists:NO];
+//	else if( _target && ! _targetRoom ) [MVChatWindowController chatWindowWithUser:_target withConnection:connection ifExists:NO];
 	[_target autorelease];
 	_target = nil;
 }
@@ -196,7 +188,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	if( [connections selectedRow] == -1 ) return;
 
 	if( [sender tag] ) {
-		[MVChatWindowController chatWindowWithUser:[userToMessage stringValue] withConnection:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] ifExists:NO];
+//		[MVChatWindowController chatWindowWithUser:[userToMessage stringValue] withConnection:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] ifExists:NO];
 	}
 }
 
@@ -326,7 +318,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 			if( [[connection server] isEqualToString:[url host]] && ( ! [url user] || [[connection nickname] isEqualToString:[url user]] ) && ( ! [connection serverPort] || ! [[url port] unsignedShortValue] || [connection serverPort] == [[url port] unsignedShortValue] ) ) {
 				if( ! [connection isConnected] && connect ) [connection connect];
 				if( target && isRoom ) [connection joinChatForRoom:target];
-				else if( target && ! isRoom ) [MVChatWindowController chatWindowWithUser:target withConnection:connection ifExists:NO];
+				//else if( target && ! isRoom ) [MVChatWindowController chatWindowWithUser:target withConnection:connection ifExists:NO];
 				[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
 				[[self window] makeKeyAndOrderFront:nil];
 				handled = YES;
@@ -350,7 +342,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 			[[self window] makeKeyAndOrderFront:nil];
 
 			if( target && isRoom ) [connection joinChatForRoom:target];
-			else if( target && ! isRoom ) [MVChatWindowController chatWindowWithUser:target withConnection:connection ifExists:NO];
+			//else if( target && ! isRoom ) [MVChatWindowController chatWindowWithUser:target withConnection:connection ifExists:NO];
 		}
 	}
 }
@@ -500,16 +492,20 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 }
 
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
+	MVChatConnection *connection = nil;
 	if( view == connections ) {
 		if( [[column identifier] isEqual:@"auto"] ) {
 			[[_bookmarks objectAtIndex:row] setObject:object forKey:@"automatic"];
 			if( [object boolValue] )
 				[[_bookmarks objectAtIndex:row] setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
 		} else if( [[column identifier] isEqual:@"nickname"] ) {
+			[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:object path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setNickname:object];
 		} else if( [[column identifier] isEqual:@"address"] ) {
+			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:object securityDomain:object account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServer:object];
 		} else if( [[column identifier] isEqual:@"port"] ) {
+			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:(unsigned short)[object intValue] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:(unsigned short)[object intValue]];
 		}
 		[self _saveBookmarkList];
@@ -648,6 +644,10 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 #pragma mark -
 
 @implementation MVConnectionsController (MVConnectionsControllerPrivate)
+- (void) _loadInterfaceIfNeeded {
+	if( [self isWindowLoaded] ) [self window];
+}
+
 - (void) _refresh:(NSNotification *) notification {
 	[self _validateToolbar];
 	if( [[notification name] isEqualToString:MVChatConnectionNicknameAcceptedNotification] ) {

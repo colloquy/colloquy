@@ -1,11 +1,16 @@
-#import <Foundation/NSObject.h>
+#import <AppKit/NSWindowController.h>
 #import <AppKit/NSNibDeclarations.h>
 
-@class NSPanel;
-@class NSProgressIndicator;
-@class NSTextField;
 @class NSTableView;
+@class NSWindow;
+@class NSPanel;
+@class NSTextField;
+@class NSButton;
+@class NSComboBox;
+@class NSString;
+@class NSMutableArray;
 @class MVChatConnection;
+@class NSURL;
 
 @interface MVConnectionsController : NSWindowController {
 @private
