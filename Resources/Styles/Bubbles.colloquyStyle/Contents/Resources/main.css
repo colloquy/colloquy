@@ -1,7 +1,7 @@
 body {
 	margin: 4px 5px 4px 5px;
 	color: black;
-	background-color: white;
+	background-color: white !important;
 }
 
 .error {
@@ -49,116 +49,53 @@ td.sender {
 	color: #aaa;
 }
 
-table.leftBubble {
-	align: left;
-	border: 0;
+table {
+	border: none;
 }
 
-table.leftBubble td.topRight {
-	width: 10px;
+table td {
+	background-repeat: no-repeat;
+}
+
+table td.topRight {
+	width: 18px;
 	height: 9px;
-	background-image: url("LeftTopRight.png");
-	background-repeat: no-repeat;
-}
-
-table.leftBubble td.right {
-	width: 10px;
-	background-image: url("LeftRight.png");
-}
-
-table.leftBubble td.bottom {
-	height: 12px;
-	background-image: url("LeftBottom.png");
-}
-
-table.leftBubble td.bottomRight {
-	width: 10px;
-	height: 12px;
-	background-image: url("LeftBottomRight.png");
-	background-repeat: no-repeat;
+	background-image: url( "topRight.png" );
 	background-position: bottom left;
 }
 
-table.leftBubble td.bottomLeft {
+table td.right {
 	width: 18px;
-	height: 12px;
-	background-image: url("LeftBottomLeft.png");
-	background-repeat: no-repeat;
+	background-image: url( "right.png" );
+	background-repeat: repeat-y;
+	background-position: left;
+}
+
+table td.bottom {
+	height: 11px;
+	background-image: url( "bottom.png" );
+	background-repeat: repeat-x;
+	background-position: top;
+}
+
+table td.left {
+	width: 18px;
+	background-image: url( "left.png" );
+	background-repeat: repeat-y;
+	background-position: right;
+}
+
+table td.topLeft {
+	width: 18px;
+	height: 9px;
+	background-image: url( "topLeft.png" );
 	background-position: bottom right;
 }
 
-table.leftBubble td.left {
-	width: 18px;
-	background-image: url("LeftLeft.png");
-}
-
-table.leftBubble td.topLeft {
-	width: 18px;
-	height: 9px;
-	background-image: url("LeftTopleft.png");
-	background-repeat: no-repeat;
-}
-
-table.leftBubble td.center {
-	background-color: #E0E1E1;
-	background-image: url("LeftTop.png");
+table td.center {
+	background-image: url( "top.png" );
 	background-repeat: repeat-x;
-}
-
-table.rightBubble {
-	align: right;
-	border: 0;
-}
-
-table.rightBubble td.topRight {
-	width: 18px;
-	height: 9px;
-	background-image: url("OrangeRightTopRight.png");
-	background-repeat: no-repeat;
-}
-
-table.rightBubble td.right {
-	width: 18px;
-	background-image: url("OrangeRightRight.png");
-}
-
-table.rightBubble td.bottom {
-	height: 12px;
-	background-image: url("OrangeRightBottom.png");
-}
-
-table.rightBubble td.bottomRight {
-	width: 18px;
-	height: 12px;
-	background-image: url("OrangeRightBottomRight.png");
-	background-repeat: no-repeat;
-	background-position: bottom left;
-}
-
-table.rightBubble td.bottomLeft {
-	width: 10px;
-	height: 12px;
-	background-image: url("OrangeRightBottomLeft.png");
-	background-repeat: no-repeat;
-	background-position: bottom right;
-}
-
-table.rightBubble td.left {
-	width: 10px;
-	background-image: url("OrangeRightLeft.png");
-}
-
-table.rightBubble td.topLeft {
-	width: 10px;
-	height: 9px;
-	background-image: url("OrangeRightTopleft.png");
-	background-repeat: no-repeat;
-}
-
-table.rightBubble td.center {
-	background-color: #e8a630;
-	background-image: url("OrangeRightTop.png");
-	background-repeat: repeat-x;
+	background-position: top;
 }
 
 table td.center .text {
@@ -167,6 +104,50 @@ table td.center .text {
 	overflow: hidden;
 	top: 4px;
 	line-height: 1.1em;
+}
+
+table.leftBubble {
+	align: left;
+}
+
+table.leftBubble td {
+	background-color: rgba( 133, 0, 0, 0.4 );
+}
+
+table.leftBubble td.bottomRight {
+	width: 18px;
+	height: 11px;
+	background-image: url( "leftBottomRight.png" );
+	background-position: bottom left;
+}
+
+table.leftBubble td.bottomLeft {
+	width: 18px;
+	height: 11px;
+	background-image: url("leftBottomLeft.png");
+	background-position: bottom right;
+}
+
+table.rightBubble {
+	align: right;
+}
+
+table.rightBubble td {
+	background-color: rgba( 0, 180, 0, 0.4 );
+}
+
+table.rightBubble td.bottomRight {
+	width: 18px;
+	height: 11px;
+	background-image: url("rightBottomRight.png");
+	background-position: bottom left;
+}
+
+table.rightBubble td.bottomLeft {
+	width: 18px;
+	height: 11px;
+	background-image: url( "rightBottomLeft.png" );
+	background-position: bottom right;
 }
 
 table.leftBubble td.center .text {
