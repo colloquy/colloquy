@@ -1002,12 +1002,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C8CE1EC05A921A00020D841 = {
-			fileRef = 1C8CE1EB05A921A00020D841;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C8CE1ED05A921AB0020D841 = {
 			fileRef = 1C8CE1EB05A921A00020D841;
 			isa = PBXBuildFile;
@@ -1552,7 +1546,6 @@
 				1C59BD6A059E387B001487E2,
 				1C6EA23E05A735D6006A559F,
 				1C6EA66205A76038006A559F,
-				1C8CE1EC05A921A00020D841,
 				1CD4BD9D05AA773800F72EE6,
 				1CD4BD9E05AA773800F72EE6,
 				1CA7CA6605FEC88500887614,
@@ -2254,6 +2247,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				CB9B52CA06351B060055AB73,
 				1C8CE1ED05A921AB0020D841,
 				1C51B8F2052DFAAA00BB459B,
 			);
@@ -2719,6 +2713,7 @@
 				1CCA236C05956E7C0050EDE0,
 				1CC478480427BB5500000102,
 				1CA56CCD042A713E00000102,
+				CB9B52AB06351A130055AB73,
 			);
 			isa = PBXGroup;
 			name = "Plug–Ins";
@@ -3715,6 +3710,29 @@
 		};
 		CB77A8890612622E0076BEE0 = {
 			fileRef = CB77A8880612622E0076BEE0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CB9B52AB06351A130055AB73 = {
+			children = (
+				CB9B52B406351A540055AB73,
+			);
+			isa = PBXGroup;
+			name = Google;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CB9B52B406351A540055AB73 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = Google.scpt;
+			path = "Plug-Ins/Google/Google.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CB9B52CA06351B060055AB73 = {
+			fileRef = CB9B52B406351A540055AB73;
 			isa = PBXBuildFile;
 			settings = {
 			};
