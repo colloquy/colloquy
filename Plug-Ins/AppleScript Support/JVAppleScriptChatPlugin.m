@@ -251,7 +251,8 @@
 - (void) checkForModifications:(NSNotification *) notification {
 	if( [self scriptFilePath] && [[NSFileManager defaultManager] fileExistsAtPath:[self scriptFilePath]] ) {
 		NSDictionary *info = [[NSFileManager defaultManager] fileAttributesAtPath:[self scriptFilePath] traverseLink:YES];
-		if( [[info fileModificationDate] compare:_modDate] == NSOrderedDescending ) { // newer script file
+		NSDate *fileModDate = [info fileModificationDate];
+		if( [fileModDate compare:_modDate] == NSOrderedDescending && [fileModDate compare:[NSDate date]] == NSOrderedAscending ) { // newer script file
 			[_modDate autorelease];
 			_modDate = [[NSDate date] retain];
 			[self performSelector:@selector( promptForReload ) withObject:nil afterDelay:0.];
