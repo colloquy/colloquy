@@ -107,7 +107,19 @@
 }
 
 - (void) reallySetImage:(NSImage *) image {
-    [super setImage:image];
+	[_orgImage autorelease];
+	_orgImage = [[self image] copy];
+
+	NSImageRep *sourceImageRep = [image bestRepresentationForDevice:nil];
+	[_smallImage autorelease];
+	_smallImage = [[NSImage alloc] initWithSize:NSMakeSize( 24., 24. )];
+	[_smallImage lockFocus];
+	[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+	[sourceImageRep drawInRect:NSMakeRect( 0., 0., 24., 24. )];
+	[_smallImage unlockFocus];
+
+	if( _size == NSRegularControlSize ) [super setImage:image];
+	else if( _size == NSSmallControlSize ) [super setImage:_smallImage];
 }
 
 - (NSImage *) smallImage {
