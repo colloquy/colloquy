@@ -1294,6 +1294,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ( self = [super init] ) ) {
 		_npassword = nil;
 		_cachedDate = nil;
+		_lastConnectAttempt = nil;
 		_awayMessage = nil;
 		_nickIdentified = NO;
 		_encoding = NSUTF8StringEncoding;
@@ -1349,6 +1350,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[_npassword release];
 	[_roomsCache release];
 	[_cachedDate release];
+	[_lastConnectAttempt release];
 	[_awayMessage release];
 
 	[self _setIrssiConnection:NULL];
@@ -1357,6 +1359,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	_npassword = nil;
 	_roomsCache = nil;
 	_cachedDate = nil;
+	_lastConnectAttempt = nil;
 	_awayMessage = nil;
 
 	extern unsigned int connectionCount;
@@ -1370,6 +1373,11 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) connect {
 	if( ! [self _irssiConnectSettings] ) return;
 	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
+
+	if( _lastConnectAttempt && [_lastConnectAttempt timeIntervalSinceNow] > -10. ) {
+		[self _scheduleReconnectAttemptEvery:15.];
+		return;
+	}
 
 	CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( [self _irssiConnectSettings] -> chat_type );
 

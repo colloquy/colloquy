@@ -161,6 +161,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	void *_chatConnection /* SERVER_REC */;
 	void *_chatConnectionSettings /* SERVER_CONNECT_REC */;
 	NSMutableDictionary *_roomsCache;
+	NSDate *_lastConnectAttempt;
 	NSDate *_cachedDate;
 	NSAttributedString *_awayMessage;
 	NSArray *_alternateNicks;
