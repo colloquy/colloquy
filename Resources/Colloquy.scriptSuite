@@ -854,6 +854,8 @@
 			<dict>
 				<key>sendMessage</key>
 				<string>sendMessageScriptCommand:</string>
+				<key>addEventMessage</key>
+				<string>addEventMessageScriptCommand:</string>
 			</dict>
 			<key>Superclass</key>
 			<string>JVChatTranscript</string>
@@ -1210,7 +1212,7 @@
 			<key>AppleEventClassCode</key>
 			<string>coRC</string>
 			<key>AppleEventCode</key>
-			<string>sndX</string>
+			<string>sNdX</string>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
 			<key>UnnamedArgument</key>
@@ -1227,7 +1229,7 @@
 					<key>Optional</key>
 					<string>NO</string>
 					<key>AppleEventCode</key>
-					<string>snd1</string>
+					<string>sNd1</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
@@ -1236,7 +1238,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>AppleEventCode</key>
-					<string>snd2</string>
+					<string>sNd2</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
@@ -1245,9 +1247,55 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>AppleEventCode</key>
-					<string>snd3</string>
+					<string>sNd3</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>addEventMessage</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>aEvX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>NSCoreSuite.AbstractObject</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>message</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>aEv1</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>aEv2</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>attributes</key>
+				<dict>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>AppleEventCode</key>
+					<string>aEv3</string>
+					<key>Type</key>
+					<string>NSDictionary</string>
 				</dict>
 			</dict>
 		</dict>

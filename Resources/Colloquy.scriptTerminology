@@ -868,6 +868,42 @@
 				</dict>
 			</dict>
 		</dict>
+		<key>addEventMessage</key>
+		<dict>
+			<key>Description</key>
+			<string>Add an event message a chat room or direct chat.</string>
+			<key>Name</key>
+			<string>add event</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Chat room or direct chat to affect.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>message</key>
+				<dict>
+					<key>Description</key>
+					<string>Message to add. Can include HTML formatting.</string>
+					<key>Name</key>
+					<string>message</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>Description</key>
+					<string>A name for this type of event message.</string>
+					<key>Name</key>
+					<string>with name</string>
+				</dict>
+				<key>attributes</key>
+				<dict>
+					<key>Description</key>
+					<string>Custom information to be stored with this event message. Can be used by chat styles.</string>
+					<key>Name</key>
+					<string>and attributes</string>
+				</dict>
+			</dict>
+		</dict>
 		<key>startChatWith</key>
 		<dict>
 			<key>Description</key>
