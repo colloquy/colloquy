@@ -1095,7 +1095,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 @implementation JVDirectChat (JVDirectChatPrivate)
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
 	NSEnumerator *enumerator = nil, *kenumerator = nil;
-	NSMutableString *key = nil, *value = nil;
+	NSString *key = nil, *value = nil;
 	NSMutableString *messageString = nil;
 	xmlDocPtr doc = NULL, msgDoc = NULL;
 	xmlNodePtr root = NULL, child = NULL;
@@ -1128,8 +1128,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		if( [value isMemberOfClass:[NSNull class]] ) {
 			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
 		} else {
-			value = [[value mutableCopy] autorelease];
-			[value encodeXMLSpecialCharactersAsEntities];
+			value = [value stringByEncodingXMLSpecialCharactersAsEntities];
 			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
 		}
 
@@ -1152,9 +1151,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
 	if( [messageString length] ) {
-		[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
+		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 		[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
 	}
 
@@ -1208,12 +1206,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] ) {
 				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
 			} else {
-				NSMutableString *escapedName = [name mutableCopy];
-				[escapedName escapeCharactersInSet:escapeSet];
-				NSString *pattern = [[NSString alloc] initWithFormat:@"(?:\\W|^)(%@)(?:\\W|$)", escapedName];
+				NSString *pattern = [NSString stringWithFormat:@"(?:\\W|^)(%@)(?:\\W|$)", [name stringByEscapingCharactersInSet:escapeSet]];
 				regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
-				[escapedName release];
-				[pattern release];
 			}
 
 			NSRange searchRange = NSMakeRange( 0, [messageString length] );
@@ -1361,9 +1355,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
 	if( [messageString length] ) {
-		[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
+		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 		if( parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendConsecutiveMessage( \"%@\" );", messageString]];
 		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
 
@@ -1622,29 +1615,33 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) _performEmoticonSubstitutionOnString:(NSMutableString *) string {
-	NSMutableString *str = nil;
+	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 	NSEnumerator *keyEnumerator = [_emoticonMappings keyEnumerator];
 	NSEnumerator *objEnumerator = [_emoticonMappings objectEnumerator];
 	NSEnumerator *srcEnumerator = nil;
-	id key = nil, obj = nil;
+	NSString *result = string;
+	NSString *str = nil;
+	NSString *key = nil;
+	NSArray *obj = nil;
 
 	while( ( key = [keyEnumerator nextObject] ) && ( obj = [objEnumerator nextObject] ) ) {
 		srcEnumerator = [obj objectEnumerator];
 		while( ( str = [srcEnumerator nextObject] ) ) {
-			str = [[str mutableCopy] autorelease];
-			[str encodeXMLSpecialCharactersAsEntities];
+			NSMutableString *search = [str mutableCopy];
+			[search encodeXMLSpecialCharactersAsEntities];
+			[search escapeCharactersInSet:escapeSet];
 
-			NSString *replacement = [NSString stringWithFormat:@"<span class=\"emoticon %@\"><samp>%@</samp></span>", key, str];
+			AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(\\s|^)(%@)", search]]; // Not ideal but this allows consecutive (same) emoticons that share a common space
+			if( [regex findInString:result] ) {
+				NSString *replacement = [NSString stringWithFormat:@"$1<span class=\"emoticon %@\"><samp>$2</samp></span>", key];
+				result = [regex replaceWithString:replacement inString:result];
+			}
 
-			[string replaceOccurrencesOfString:[NSString stringWithFormat:@">%@<", str] withString:[NSString stringWithFormat:@">%@<", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
-			[string replaceOccurrencesOfString:[str stringByAppendingString:@" "] withString:[replacement stringByAppendingString:@" "] options:NSLiteralSearch | NSAnchoredSearch range:NSMakeRange( 0, [string length] )];
-			[string replaceOccurrencesOfString:[@" " stringByAppendingString:str] withString:[@" " stringByAppendingString:replacement] options:NSLiteralSearch | NSAnchoredSearch | NSBackwardsSearch range:NSMakeRange( 0, [string length] )];
-			[string replaceOccurrencesOfString:[NSString stringWithFormat:@" %@ ", str] withString:[NSString stringWithFormat:@" %@ ", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
-			[string replaceOccurrencesOfString:[NSString stringWithFormat:@">%@ ", str] withString:[NSString stringWithFormat:@">%@ ", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
-			[string replaceOccurrencesOfString:[NSString stringWithFormat:@" %@<", str] withString:[NSString stringWithFormat:@" %@<", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
-			if( [string isEqualToString:str] ) [string setString:replacement];
+			[search release];
 		}
 	}
+
+	[string setString:result];
 }
 
 - (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
