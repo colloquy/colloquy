@@ -1,15 +1,15 @@
-/* loading message for the selected pane  */
-"Loading %@..." = "Chargement de %@...";
-
-/* error when loading the selected pane  */
-"Could not load %@" = "Chargement de %@ impossible";
-
-/* show all toolbar item name  */
-"Show All" = "Tout afficher";
-
-/* preferences window title  */
+/* preferences window title */
 "%@ Preferences" = "Préférences de %@";
 
-/* preferences error title  */
+/* error when loading the selected pane */
+"Could not load %@" = "Chargement de %@ impossible";
+
+/* loading message for the selected pane */
+"Loading %@..." = "Chargement de %@...";
+
+/* preferences error title */
 "Preferences Error" = "Erreur de préférences";
+
+/* show all toolbar item name */
+"Show All" = "Tout afficher";
 
