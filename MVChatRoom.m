@@ -96,7 +96,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (BOOL) isEqualToChatRoom:(MVChatRoom *) anotherRoom {
-	NSParameterAssert( anotherRoom != nil );
+	if( ! anotherRoom ) return NO;
 	if( anotherRoom == self ) return YES;
 	if( ! [[self connection] isEqual:[anotherRoom connection]] )
 		return NO;

@@ -407,6 +407,8 @@
 #pragma mark User List Access
 
 - (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name {
+	if( ! [name length] ) return nil;
+
 	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	JVChatRoomMember *member = nil;
 
@@ -424,6 +426,8 @@
 }
 
 - (JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user {
+	if( ! user ) return nil;
+
 	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	JVChatRoomMember *member = nil;
 

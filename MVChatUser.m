@@ -161,7 +161,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser {
-	NSParameterAssert( anotherUser != nil );
+	if( ! anotherUser ) return NO;
 	if( anotherUser == self ) return YES;
 
 	if( [self type] != [anotherUser type] ) return NO;
