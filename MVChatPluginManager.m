@@ -4,6 +4,8 @@
 #import "NSMethodSignatureAdditions.h"
 
 static MVChatPluginManager *sharedInstance = nil;
+NSString *MVChatPluginManagerWillReloadPluginsNotification = @"MVChatPluginManagerWillReloadPluginsNotification";
+NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManagerDidReloadPluginsNotification";
 
 #pragma mark -
 
@@ -52,6 +54,8 @@ static MVChatPluginManager *sharedInstance = nil;
 	NSString *file = nil, *path = nil;
 	NSBundle *bundle = nil;
 
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerWillReloadPluginsNotification object:self];
+
 	// unload all plugins, this resets everything and purges plugins that moved since the last load
 	[_plugins removeAllObjects];
 
@@ -73,6 +77,16 @@ static MVChatPluginManager *sharedInstance = nil;
 			}
 		}
 	}
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidReloadPluginsNotification object:self];
+}
+
+- (void) addPlugin:(id) plugin {
+	if( plugin ) [_plugins addObject:plugin];
+}
+
+- (void) removePlugin:(id) plugin {
+	if( plugin ) [_plugins removeObject:plugin];
 }
 
 #pragma mark -
