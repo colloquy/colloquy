@@ -84,6 +84,12 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 - (void) reloadFromDisk {
 	[self performSelector:@selector( unload )];
 
+	NSString *identifier = nil;
+	NSEnumerator *enumerator = [[[[[self scriptInterpreter] identifiers] copy] autorelease] objectEnumerator];
+	while( ( identifier = [enumerator nextObject] ) )
+		if( ! [identifier isEqualToString:@"sys"] )
+			[[self scriptInterpreter] setObject:nil forIdentifier:identifier];
+
 	NSString *contents = [NSString stringWithContentsOfFile:[self scriptFilePath]];
 	FSInterpreterResult *result = [[self scriptInterpreter] execute:contents];
 
@@ -134,6 +140,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 	id object = [[self scriptInterpreter] objectForIdentifier:blockName found:&found];
 
 	if( found && [object isKindOfClass:[Block class]] ) {
+		if( ! arguments ) arguments = [NSArray arrayWithObject:[NSNull null]];
 		if( [(Block *)object argumentCount] > [arguments count] ) {
 			NSMutableArray *newArgs = [[arguments mutableCopy] autorelease];
 			unsigned int i = 0;
@@ -171,7 +178,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 - (void) unload {
-	[self callScriptBlockNamed:@"unload" withArguments:[NSArray arrayWithObject:[NSNull null]] forSelector:_cmd];
+	[self callScriptBlockNamed:@"unload" withArguments:nil forSelector:_cmd];
 }
 
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view {
