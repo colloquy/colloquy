@@ -25,6 +25,7 @@
                 editRooms = NSTableView; 
                 editServerPassword = NSTextField; 
                 editUsername = NSTextField; 
+                encoding = NSPopUpButton; 
                 view = NSView; 
             }; 
             SUPERCLASS = NSObject; 

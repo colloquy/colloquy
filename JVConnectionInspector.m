@@ -36,7 +36,7 @@
 }
 
 - (NSSize) minSize {
-	return NSMakeSize( 275., 298. );
+	return NSMakeSize( 275., 338. );
 }
 
 - (NSString *) title {
@@ -48,6 +48,8 @@
 }
 
 - (void) willLoad {
+	[self buildEncodingMenu];
+
 	[editAutomatic setState:[[MVConnectionsController defaultManager] autoConnectForConnection:_connection]];
 	[editAddress setObjectValue:[_connection server]];
 	[editProxy selectItemAtIndex:[editProxy indexOfItemWithTag:(int)[_connection proxyType]]];
@@ -70,6 +72,36 @@
 - (void) didUnload {
 	[[MVConnectionsController defaultManager] setJoinRooms:_editingRooms forConnection:_connection];
 	[[MVConnectionsController defaultManager] setConnectCommands:[connectCommands string] forConnection:_connection];
+}
+
+#pragma mark -
+
+- (void) buildEncodingMenu {
+	extern const NSStringEncoding JVAllowedTextEncodings[];
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenuItem *menuItem = nil;
+	unsigned int i = 0;
+	NSStringEncoding defaultEncoding = [_connection encoding];
+	if( ! encoding ) defaultEncoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
+
+	for( i = 0; JVAllowedTextEncodings[i]; i++ ) {
+		if( JVAllowedTextEncodings[i] == (NSStringEncoding) -1 ) {
+			[menu addItem:[NSMenuItem separatorItem]];
+			continue;
+		}
+
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
+		if( defaultEncoding == JVAllowedTextEncodings[i] ) [menuItem setState:NSOnState];
+		[menuItem setTag:JVAllowedTextEncodings[i]];
+		[menuItem setTarget:self];
+		[menu addItem:menuItem];
+	}
+
+	[encoding setMenu:menu];
+}
+
+- (IBAction) changeEncoding:(id) sender {
+	[_connection setEncoding:[sender tag]];
 }
 
 #pragma mark -

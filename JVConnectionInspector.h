@@ -21,6 +21,7 @@
 	IBOutlet NSTextField *editUsername;
 	IBOutlet NSTextField *editServerPassword;
 	IBOutlet NSTextField *editAddress;
+	IBOutlet NSPopUpButton *encoding;
 	IBOutlet NSPopUpButton *editProxy;
 	IBOutlet NSTextField *editPort;
 	IBOutlet NSButton *editAutomatic;
@@ -32,6 +33,9 @@
 	NSMutableArray *_editingRooms;
 }
 - (id) initWithConnection:(MVChatConnection *) connection;
+
+- (void) buildEncodingMenu;
+- (IBAction) changeEncoding:(id) sender;
 
 - (IBAction) openNetworkPreferences:(id) sender;
 - (IBAction) editText:(id) sender;
