@@ -1173,7 +1173,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 	[self writeToLog:root withDoc:doc initializing:NO continuation:NO];
 
-	messageString = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
+	@try {
+		messageString = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
+	} @catch ( NSException *exception ) {
+		messageString = nil;
+		[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
+	}
+
 	if( [messageString length] ) {
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
@@ -1380,7 +1386,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[params setObject:@"'yes'" forKey:@"subsequent"];
 	}
 
-	messageString = [[[_chatStyle transformXMLDocument:doc withParameters:params] mutableCopy] autorelease];
+	@try {
+		messageString = [[[_chatStyle transformXMLDocument:doc withParameters:params] mutableCopy] autorelease];
+	} @catch ( NSException *exception ) {
+		messageString = nil;
+		[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
+	}
+
 	if( [messageString length] ) {
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
@@ -1885,6 +1897,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) _activate:(id) sender {
 	[[self windowController] showChatViewController:self];
 	[[[self windowController] window] makeKeyAndOrderFront:nil];
+}
+
+- (void) _styleError:(NSException *) exception {
+	[self showAlert:NSGetCriticalAlertPanel( NSLocalizedString( @"An internal Style error occurred.", "the stylesheet parse failed" ), NSLocalizedString( @"The %@ Style has been damaged or has an internal error preventing new messages from displaying. Please contact the %@ author about this.", "the style contains and error" ), @"OK", nil, nil, [_chatStyle displayName], [_chatStyle displayName] ) withName:@"styleError"];
 }
 @end
 
