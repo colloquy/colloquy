@@ -15,9 +15,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 @implementation JVSmartTranscriptPanel
 - (id) init {
 	if( ( self = [super init] ) ) {
+		_operation = 1;
 		_newMessages = 0;
 		_origSheetHeight = 0;
 		_isActive = NO;
+		_ignoreCase = YES;
 		_editingRules = nil;
 		_rules = nil;
 		_title = nil;
@@ -32,6 +34,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		_rules = [[settings objectForKey:@"rules"] mutableCopyWithZone:[self zone]];
 		_title = [[settings objectForKey:@"title"] copyWithZone:[self zone]];
+		_operation = [[settings objectForKey:@"operation"] intValue];
+		_ignoreCase = [[settings objectForKey:@"ignoreCase"] boolValue];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];		
 	}
@@ -44,8 +48,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		NSMutableDictionary *settings = [NSMutableDictionary dictionary];
 		[settings setObject:[coder decodeObjectForKey:@"rules"] forKey:@"rules"];
 		[settings setObject:[coder decodeObjectForKey:@"title"] forKey:@"title"];
-//		[settings setObject:[NSNumber numberWithBool:[coder decodeBoolForKey:@"ignoreCase"]] forKey:@"ignoreCase"];
-//		[settings setObject:[NSNumber numberWithInt:[coder decodeIntForKey:@"operation"]] forKey:@"operation"];
+		[settings setObject:[NSNumber numberWithBool:[coder decodeBoolForKey:@"ignoreCase"]] forKey:@"ignoreCase"];
+		[settings setObject:[NSNumber numberWithInt:[coder decodeIntForKey:@"operation"]] forKey:@"operation"];
 		return ( self = [self initWithSettings:settings] );
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 	return nil;
@@ -55,6 +59,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( [coder allowsKeyedCoding] ) {
 		[coder encodeObject:[self rules] forKey:@"rules"];
 		[coder encodeObject:[self title] forKey:@"title"];
+		[coder encodeInt:_operation forKey:@"operation"];
+		[coder encodeBool:_ignoreCase forKey:@"ignoreCase"];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
@@ -231,6 +237,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[self reloadTableView];
 
 	[titleField setStringValue:[self title]];
+	[ignoreCase setState:( _ignoreCase ? NSOnState : NSOffState )];
+	if( [operation indexOfItemWithTag:_operation] != -1 ) [operation selectItemAtIndex:[operation indexOfItemWithTag:_operation]];
 
 	[[NSApplication sharedApplication] beginSheet:settingsSheet modalForWindow:[[self windowController] window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
@@ -241,6 +249,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[[self editingRules] removeAllObjects];
 	[self reloadTableView];
+
+	if( ! [[self rules] count] )
+		[self dispose:nil];
 }
 
 - (IBAction) saveSettings:(id) sender {
@@ -249,6 +260,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[_title autorelease];
 	_title = [[titleField stringValue] copy];
+
+	_ignoreCase = ( [ignoreCase state] == NSOnState );
+	_operation = [operation selectedTag];
 
 	[_windowController reloadListItem:self andChildren:NO];
 
@@ -264,8 +278,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (void) matchMessage:(JVChatMessage *) message fromView:(id <JVChatViewController>) view {
-	BOOL andOperation = ( [operation selectedTag] == 2 );
-	BOOL ignore = ( [ignoreCase state] == NSOnState );
+	BOOL andOperation = ( _operation == 2 );
+	BOOL ignore = _ignoreCase;
 	BOOL match = ( andOperation ? YES : NO );
 
 	NSEnumerator *rules = [[self rules] objectEnumerator];

@@ -10,6 +10,8 @@
 	NSMutableArray *_editingRules;
 	NSMutableArray *_rules;
 	NSString *_title;
+	unsigned int _operation;
+	BOOL _ignoreCase;
 	BOOL _isActive;
 	unsigned long _newMessages;
 	unsigned int _origSheetHeight;
