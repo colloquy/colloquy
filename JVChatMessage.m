@@ -73,7 +73,7 @@
 
 		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "source" );
 		if( prop ) {
-			NSString *sourceStr = [NSString stringWithUTF8String:prop];
+			NSString *sourceStr = [NSString stringWithUTF8String:(char *)prop];
 			if( sourceStr ) _source = [[NSURL allocWithZone:[self zone]] initWithString:sourceStr];
 			xmlFree( prop );			
 		}

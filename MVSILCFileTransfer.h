@@ -18,7 +18,7 @@
 
 #pragma mark -
 
-@interface MVFileTransfer (MVFileTransferPrivate)
+@interface MVFileTransfer (MVSILCFileTransferPrivate)
 - (void) _setStatus:(MVFileTransferStatus) status;
 - (void) _postError:(NSError *) error;
 @end

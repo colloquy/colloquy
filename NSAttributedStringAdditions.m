@@ -146,6 +146,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		NSString *htmlStart = [dict objectForKey:@"XHTMLStart"];
 		NSString *htmlEnd = [dict objectForKey:@"XHTMLEnd"];
 		NSSet *classes = [dict objectForKey:@"CSSClasses"];
+		NSString *title = [dict objectForKey:@"LinkTitle"];
 		BOOL bold = NO, italic = NO, underline = NO, strikethrough = NO;
 
 		NSMutableString *spanString = [NSMutableString stringWithString:@"<span"];
@@ -192,7 +193,11 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		if( underline ) [ret appendString:@"<u>"];
 		if( strikethrough ) [ret appendString:@"<s>"];
 		if( [htmlStart length] ) [ret appendString:htmlStart];
-		if( link ) [ret appendFormat:@"<a href=\"%@\">", [[link description] stringByEncodingXMLSpecialCharactersAsEntities]];
+		if( link ) {
+			[ret appendFormat:@"<a href=\"%@\"", [[link description] stringByEncodingXMLSpecialCharactersAsEntities]];
+			if( title ) [ret appendFormat:@" title=\"%@\"", [title stringByEncodingXMLSpecialCharactersAsEntities]];
+			[ret appendString:@">"];
+		}
 
 		[ret appendString:[[[self attributedSubstringFromRange:effectiveRange] string] stringByEncodingXMLSpecialCharactersAsEntities]];
 

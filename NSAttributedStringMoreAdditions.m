@@ -192,6 +192,11 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 				[newAttributes setObject:[NSString stringWithUTF8String:(char *) link] forKey:NSLinkAttributeName];
 				xmlFree( link );
 				skipTag = YES;
+				xmlChar *title = xmlGetProp( node, (xmlChar *) "title" );
+				if( title ) {
+					[newAttributes setObject:[NSString stringWithUTF8String:(char *) title] forKey:@"LinkTitle"];
+					xmlFree( title );
+				}
 			}
 		}
 		break;

@@ -3,7 +3,11 @@ cd "`echo $0 | sed 's/[^/]*$//'`"
 
 cd ./Core
 rm -rf ./irssi
-svn update irssi
+if [[ ! -d .svn && -x /usr/bin/svk ]]; then
+	svk revert -R  irssi
+else
+	svn update irssi
+fi
 tar xzfk irssi.tar.gz >/dev/null 2>&1
 cd ./irssi
 make distclean
