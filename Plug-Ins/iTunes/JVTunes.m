@@ -1,5 +1,8 @@
 #import "JVTunes.h"
 #import "MVChatConnection.h"
+#import "JVChatController.h"
+#import "JVDirectChat.h"
+#import "JVChatRoom.h"
 
 @implementation JVTunes
 - (id) initWithBundle:(NSBundle *) bundle {
@@ -16,8 +19,11 @@
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(NSString *) room forConnection:(MVChatConnection *) connection {
 	if( [command isEqualToString:@"itunes"] ) {
+		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+		JVChatRoom *rm = [chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES];
 		NSAttributedString *status = [[[NSAttributedString alloc] initWithString:[[self class] executeAppleScriptString:_script]] autorelease];
-		[connection sendMessageToChatRoom:room attributedMessage:status withEncoding:NSUTF8StringEncoding asAction:YES];
+		[connection sendMessageToChatRoom:room attributedMessage:status withEncoding:[rm encoding] asAction:YES];
+		[rm echoSentMessageToDisplay:status asAction:YES];
 		return YES;
 	}
 	return NO;
@@ -25,8 +31,11 @@
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toUser:(NSString *) user forConnection:(MVChatConnection *) connection {
 	if( [command isEqualToString:@"itunes"] ) {
+		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+		JVChatRoom *dc = [chatController chatViewControllerForUser:user withConnection:connection ifExists:YES];
 		NSAttributedString *status = [[[NSAttributedString alloc] initWithString:[[self class] executeAppleScriptString:_script]] autorelease];
-		[connection sendMessageToUser:user attributedMessage:status withEncoding:NSUTF8StringEncoding asAction:YES];
+		[connection sendMessageToUser:user attributedMessage:status withEncoding:[dc encoding] asAction:YES];
+		[dc echoSentMessageToDisplay:status asAction:YES];
 		return YES;
 	}
 	return NO;
