@@ -1211,10 +1211,6 @@ enum firetalk_error irc_got_data_connecting(client_t c, unsigned char * buffer, 
 					firetalk_callback_doinit(c,c->nickname);
 					firetalk_callback_connected(c);
 					break;
-				case 005: // RPL_BOUNCE
-					irc_send_printf(c,1,"QUIT :Bounced");
-					firetalk_callback_connectfailed(c,FE_BLOCKED,"Try another server");
-					return FE_BLOCKED;
 				case 431: // ERR_NONICKNAMEGIVEN
 				case 432: // ERR_ERRONEUSNICKNAME
 				case 461: // ERR_NEEDMOREPARAMS
