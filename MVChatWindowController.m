@@ -461,7 +461,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[window setToolbar:toolbar];
 
 	theColumn = [memberListTable tableColumnWithIdentifier:@"name"];
-	prototypeCell = [MVImageTextCell new];
+	prototypeCell = [[MVImageTextCell new] autorelease];
 	[prototypeCell setEditable:YES];
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
 	[theColumn setDataCell:prototypeCell];
