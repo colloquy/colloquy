@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVFileTransfer.h>
+#import <ChatCore/NSURLAdditions.h>
 #import "MVColorPanel.h"
 #import "MVApplicationController.h"
 #import "JVChatWindowController.h"
