@@ -47,78 +47,6 @@ typedef struct {
 	MVIRCChatConnection *connection;
 } MVIRCChatConnectionModuleData;
 
-@interface MVIRCChatConnection (MVIRCChatConnectionPrivate)
-+ (MVIRCChatConnection *) _connectionForServer:(SERVER_REC *) server;
-
-+ (void) _registerCallbacks;
-+ (void) _deregisterCallbacks;
-
-+ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc;
-
-- (SERVER_REC *) _irssiConnection;
-- (void) _setIrssiConnection:(SERVER_REC *) server;
-
-- (SERVER_CONNECT_REC *) _irssiConnectSettings;
-- (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings;
-
-- (void) _forceDisconnect;
-
-- (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname;
-@end
-
-#pragma mark -
-
-@interface MVChatConnection (MVChatConnectionPrivate)
-- (void) _willConnect;
-- (void) _didConnect;
-- (void) _didNotConnect;
-- (void) _willDisconnect;
-- (void) _didDisconnect;
-
-- (void) _addJoinedRoom:(MVChatRoom *) room;
-- (void) _removeJoinedRoom:(MVChatRoom *) room;
-@end
-
-#pragma mark -
-
-@interface MVChatRoom (MVChatRoomPrivate)
-- (void) _updateMemberUser:(MVChatUser *) user fromOldNickname:(NSString *) oldNickname;
-- (void) _clearMemberUsers;
-- (void) _clearBannedUsers;
-- (void) _addMemberUser:(MVChatUser *) user;
-- (void) _removeMemberUser:(MVChatUser *) user;
-- (void) _addBanForUser:(MVChatUser *) user;
-- (void) _removeBanForUser:(MVChatUser *) user;
-- (void) _setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
-- (void) _removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
-- (void) _setMode:(MVChatRoomMode) mode withAttribute:(id) attribute;
-- (void) _removeMode:(MVChatRoomMode) mode;
-- (void) _clearModes;
-- (void) _setDateJoined:(NSDate *) date;
-- (void) _setDateParted:(NSDate *) date;
-- (void) _setTopic:(NSData *) topic byAuthor:(MVChatUser *) author withDate:(NSDate *) date;
-@end
-
-#pragma mark -
-
-@interface MVChatUser (MVChatUserPrivate)
-- (void) _setUniqueIdentifier:(id) identifier;
-- (void) _setNickname:(NSString *) name;
-- (void) _setRealName:(NSString *) name;
-- (void) _setUsername:(NSString *) name;
-- (void) _setAddress:(NSString *) address;
-- (void) _setServerAddress:(NSString *) address;
-- (void) _setPublicKey:(NSData *) key;
-- (void) _setFingerprint:(NSString *) fingerprint;
-- (void) _setServerOperator:(BOOL) operator;
-- (void) _setIdentified:(BOOL) identified;
-- (void) _setIdleTime:(NSTimeInterval) time;
-- (void) _setDateConnected:(NSDate *) date;
-- (void) _setDateDisconnected:(NSDate *) date;
-@end
-
-#pragma mark -
-
 #define ERR_NOSUCHNICK       401 // <nickname> :No such nick/channel
 #define ERR_NOSUCHSERVER     402 // <server name> :No such server
 #define ERR_NOSUCHCHANNEL    403 // <channel name> :No such channel
@@ -444,12 +372,10 @@ static void MVChatUserQuit( IRC_SERVER_REC *server, const char *data, const char
 	MVChatRoom *room = nil;
 
 	while( ( room = [enumerator nextObject] ) ) {
-		if( ! [room isJoined] ) continue;
-		if( [room hasUser:member] ) {
-			[room _removeMemberUser:member];
-			NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", ( reasonData ? (id) reasonData : (id) [NSNull null] ), @"reason", nil]];
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-		}
+		if( ! [room isJoined] || ! [room hasUser:member] ) continue;
+		[room _removeMemberUser:member];
+		NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", ( reasonData ? (id) reasonData : (id) [NSNull null] ), @"reason", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
 }
 
@@ -934,6 +860,8 @@ static void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, cons
 	NSString *ags = ( args ? [self stringWithEncodedBytes:args] : nil );
 	NSString *frm = [self stringWithEncodedBytes:nick];
 
+	g_free( params );	
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser:forConnection: )];
@@ -961,8 +889,6 @@ static void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, cons
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeRequestNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];		
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	g_free( params );	
 }
 
 static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
@@ -975,6 +901,8 @@ static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const 
 	NSString *cmd = [self stringWithEncodedBytes:command];
 	NSString *ags = ( args ? [self stringWithEncodedBytes:args] : nil );
 	NSString *frm = [self stringWithEncodedBytes:nick];
+
+	g_free( params );	
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -993,8 +921,6 @@ static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const 
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];		
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	g_free( params );	
 }
 
 #pragma mark -

@@ -5,17 +5,10 @@
 
 #define MODULE_NAME "MVFileTransfer"
 
-#import "common.h"
-#import "core.h"
 #import "signals.h"
 #import "settings.h"
-#import "servers.h"
-#import "irc.h"
 #import "config.h"
 #import "dcc.h"
-#import "dcc-file.h"
-#import "dcc-send.h"
-#import "dcc-get.h"
 #import "dcc-queue.h"
 
 void dcc_send_resume( GET_DCC_REC *dcc );
@@ -24,41 +17,6 @@ void dcc_queue_send_next( int queue );
 typedef struct {
 	MVFileTransfer *transfer;
 } MVFileTransferModuleData;
-
-#pragma mark -
-
-@interface MVFileTransfer (MVFileTransferPrivate)
-- (void) _setStatus:(MVFileTransferStatus) status;
-- (void) _postError:(NSError *) error;
-@end
-
-#pragma mark -
-
-@interface MVFileTransfer (MVIRCFileTransferPrivate)
-+ (id) _transferForDCCFileRecord:(FILE_DCC_REC *) record;
-@end
-
-#pragma mark -
-
-@interface MVIRCUploadFileTransfer (MVIRCUploadFileTransferPrivate)
-- (SEND_DCC_REC *) _DCCFileRecord;
-- (void) _setDCCFileRecord:(FILE_DCC_REC *) record;
-- (void) _destroying;
-@end
-
-#pragma mark -
-
-@interface MVIRCDownloadFileTransfer (MVIRCDownloadFileTransferPrivate)
-- (GET_DCC_REC *) _DCCFileRecord;
-- (void) _setDCCFileRecord:(FILE_DCC_REC *) record;
-- (void) _destroying;
-@end
-
-#pragma mark -
-
-@interface MVChatConnection (MVChatConnectionPrivate)
-- (SERVER_REC *) _irssiConnection;
-@end
 
 #pragma mark -
 
@@ -193,7 +151,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	int queue = dcc_queue_new();
 	NSString *source = [[path stringByStandardizingPath] copyWithZone:[self zone]];
 
-	char *tag = [[user connection] _irssiConnection] -> tag;
+	char *tag = [(MVIRCChatConnection *)[user connection] _irssiConnection] -> tag;
 
 	if( ! passive ) dcc_queue_add( queue, DCC_QUEUE_NORMAL, [[user connection] encodedBytesWithString:[user nickname]], [source fileSystemRepresentation], tag, NULL );
 	else dcc_queue_add_passive( queue, DCC_QUEUE_NORMAL, [[user connection] encodedBytesWithString:[user nickname]], [source fileSystemRepresentation], tag, NULL );

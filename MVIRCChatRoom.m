@@ -8,13 +8,6 @@
 #import "irc.h"
 #import "servers.h"
 
-@interface MVChatConnection (MVChatConnectionPrivate)
-+ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc;
-- (SERVER_REC *) _irssiConnection;
-@end
-
-#pragma mark -
-
 @implementation MVIRCChatRoom
 - (id) initWithName:(NSString *) name andConnection:(MVIRCChatConnection *) connection {
 	if( ( self = [super init] ) ) {
