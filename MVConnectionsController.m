@@ -352,7 +352,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 }
 
 - (void) handleURL:(NSURL *) url andConnectIfPossible:(BOOL) connect {
-	if( [[url scheme] isEqualToString:@"irc"] ) {
+	if( [url isChatURL] ) {
 		MVChatConnection *connection = nil;
 		NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 		id data = nil;
@@ -1197,5 +1197,16 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 	[connections noteNumberOfRowsChanged];
 	[self _saveBookmarkList];
+}
+
+- (MVChatConnection *) handleURLScriptcommand:(NSScriptCommand *) command {
+	NSURL *url = [NSURL URLWithString:[[command evaluatedArguments] objectForKey:@"url"]];
+	if( ! url ) return nil;
+
+	MVChatConnection *connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
+	if( ! connection ) return nil;
+
+	[self addInConnectionsArray:connection];
+	return connection;
 }
 @end

@@ -557,6 +557,28 @@
 				<string>The connection manager.</string>
 			</dict>
 		</dict>
+		<key>handleChatUrl</key>
+		<dict>
+			<key>Description</key>
+			<string>Creates a new connection representing the URL (if an applicable URL).</string>
+			<key>Name</key>
+			<string>make new connection</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Connection manager.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<dict>
+					<key>Description</key>
+					<string>The URL to process.</string>
+					<key>Name</key>
+					<string>from URL</string>
+				</dict>
+			</dict>
+		</dict>
 		<key>showBuddyPickerSheet</key>
 		<dict>
 			<key>Description</key>

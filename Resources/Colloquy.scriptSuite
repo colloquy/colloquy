@@ -602,6 +602,8 @@
 			<dict>
 				<key>newConnection</key>
 				<string>newConnection:</string>
+				<key>handleChatUrl</key>
+				<string>handleURLScriptcommand:</string>
 				<key>show</key>
 				<string>showConnectionManager:</string>
 			</dict>
@@ -736,6 +738,38 @@
 				<string>NO</string>
 				<key>Type</key>
 				<string>MVConnectionsController</string>
+			</dict>
+		</dict>
+		<key>handleChatUrl</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>hcuX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>ResultAppleEventCode</key>
+			<string>conM</string>
+			<key>Type</key>
+			<string>ChatCore.MVChatConnection</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>MVConnectionsController</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>urLA</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
 			</dict>
 		</dict>
 		<key>openViewsDrawer</key>
