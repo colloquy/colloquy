@@ -33,7 +33,8 @@ static NSString *MVPreferencesWindowNotification = @"MVPreferencesWindowNotifica
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		NSDirectoryEnumerator *enumerator = [[NSFileManager defaultManager] enumeratorAtPath:[NSString stringWithFormat:@"%@/Contents/PreferencePanes", [[NSBundle mainBundle] bundlePath]]];
+		NSString *path = [NSString stringWithFormat:@"%@/Contents/PreferencePanes", [[NSBundle mainBundle] bundlePath]];
+		NSDirectoryEnumerator *enumerator = [[NSFileManager defaultManager] enumeratorAtPath:path];
 		NSString *file = nil;
 		NSBundle *bundle = nil;
 
@@ -43,7 +44,7 @@ static NSString *MVPreferencesWindowNotification = @"MVPreferencesWindowNotifica
 
 		while( ( file = [enumerator nextObject] ) ) {
 			if( [[file pathExtension] isEqualToString:@"prefPane"] ) {
-				bundle = [NSBundle bundleWithPath:file];
+				bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]];
 				if( [bundle load] ) [panes addObject:bundle];
 			}
 		}
