@@ -8,7 +8,7 @@ static unsigned int bubbleWindowDepth = 0;
 
 #define TIMER_INTERVAL ( 1. / 30. )
 #define FADE_INCREMENT 0.05
-#define DISPLAY_TIME 3.
+#define DISPLAY_TIME 4.
 #define KABubblePadding 10.
 
 #pragma mark -
