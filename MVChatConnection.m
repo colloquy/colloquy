@@ -1598,6 +1598,13 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 	while( ! applicationQuitting && connectionCount ) g_main_iteration( TRUE );
 
+	[self performSelectorOnMainThread:@selector( _deallocIrssi ) withObject:nil waitUntilDone:YES];
+
+	[pool release];
+	[NSThread exit];
+}
+
++ (void) _deallocIrssi {
 	[self _deregisterCallbacks];
 
 	signal_emit( "gui exit", 0 );
@@ -1607,9 +1614,6 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 	irc_deinit();
 	core_deinit();
-
-	[pool release];
-	[NSThread exit];
 }
 
 #pragma mark -
