@@ -985,7 +985,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[invocation setArgument:&nick atIndex:3];
 		[invocation setArgument:&self atIndex:4];
 
-	
 		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	}
 }
