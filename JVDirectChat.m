@@ -1034,7 +1034,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 //	float position = ( NSHeight( [splitView frame] ) - proposedPosition - [splitView dividerThickness] );
 //	int lines = (int) floorf( position / 15. );
 //	NSLog( @"%.2f %.2f / 15. = %.2f (%d)", proposedPosition, position, position / 15., lines );
-	return ( roundf( proposedPosition / 15. ) * 15. ) + [splitView dividerThickness] + 2.;
+//	return ( roundf( proposedPosition / 15. ) * 15. ) + [splitView dividerThickness] + 2.;
+//	return proposedPosition;
 	return proposedPosition;
 }
 
