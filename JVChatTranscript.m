@@ -660,6 +660,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 #pragma mark WebView
 
 #warning Safari 1.3 or greater needs to be installed if the following is defined.
+#warning To compile without Safari 1.3 installed, comment out the line below.
 #define WEBKIT_VERSION_146 1
 
 // Work when not on WebKit/Safari 1.3
