@@ -47,14 +47,27 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	JVColorWellCell *ret = [super copyWithZone:zone];
 	ret -> _color = [_color copyWithZone:zone];
 	ret -> _showsWebValue = _showsWebValue;
+
+	if( ! colorWellCells ) colorWellCells = [[NSMutableSet set] retain];
+	[colorWellCells addObject:ret];
+
 	return ret;
 }
 
 - (void) release {
-	extern NSMutableSet *colorWellCells;
 	if( ( [self retainCount] - 1 ) == 1 )
-		[colorWellCells removeObject:self];
+		[self performSelector:@selector( releaseFromSet ) withObject:nil afterDelay:0.];
+
 	[super release];
+}
+
+- (void) releaseFromSet {
+	extern NSMutableSet *colorWellCells;
+	[colorWellCells removeObject:self];
+	if( ! [colorWellCells count] ) {
+		[colorWellCells autorelease];
+		colorWellCells = nil;
+	}
 }
 
 - (void) dealloc {
