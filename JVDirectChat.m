@@ -1037,7 +1037,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
 	BOOL ret = NO;
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnReturn"] ) {
+	
+	NSLog( @"%i == %i", [event modifierFlags] | NSAlternateKeyMask, NSAlternateKeyMask  );
+	
+	if ( ([event modifierFlags] & NSAlternateKeyMask) != 0 ) {
+		//[self send:[NSNumber numberWithBool:YES]];
+		ret = NO;
+	} else if ( ([event modifierFlags] & NSShiftKeyMask) != 0 ) {
+		[self send:[NSNumber numberWithBool:YES]];
+		ret = YES;
+	} else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnReturn"] ) {
 		[self send:nil];
 		ret = YES;
 	} else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatActionOnReturn"] ) {
