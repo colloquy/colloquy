@@ -193,6 +193,92 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 - (id) initWithChatFormat:(NSData *) data options:(NSDictionary *) options {
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
+	
+	// Search for CTCP/2 encoding tags and act on them
+	NSMutableData *newData = [NSMutableData dataWithCapacity:[data length]];
+	const char *bytes = [data bytes];
+	unsigned length = [data length];
+	int i, j, start, end;
+	NSStringEncoding currentEncoding = encoding;
+	for( i = 0, start = 0; i < length; i++ ) {
+		if( bytes[i] == '\006' ) {
+			end = i;
+			j = ++i;
+			for( ; i < length && bytes[i] != '\006' ; i++ ) ;
+			if( i >= length ) break;
+			if( i == j ) continue;
+			if( bytes[j++] == 'E' ) {
+				NSString *encodingStr = [NSString stringWithCString:&(bytes[j]) length:(i-j)];
+				NSStringEncoding newEncoding = 0;
+				if( ! [encodingStr length] ) {
+					// if no encoding is declared, go back to user default
+					newEncoding = encoding;
+				} else if( [encodingStr isEqualToString:@"U"] ) {
+					newEncoding = NSUTF8StringEncoding;
+				} else {
+					int enc = [encodingStr intValue];
+					switch( enc ) {
+						case 1:
+							newEncoding = NSISOLatin1StringEncoding;
+							break;
+						case 2:
+							newEncoding = NSISOLatin2StringEncoding;
+							break;
+						case 3:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin3);
+							break;
+						case 4:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin4);
+							break;
+						case 5:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatinCyrillic);
+							break;
+						case 6:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatinArabic);
+							break;
+						case 7:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatinGreek);
+							break;
+						case 8:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatinHebrew);
+							break;
+						case 9:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin5);
+							break;
+						case 10:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin6);
+							break;
+					}
+				}
+				if( newEncoding && newEncoding != currentEncoding ) {
+					if( end-start > 0 ) {
+						NSData *subdata = [data subdataWithRange:NSMakeRange(start, end-start)];
+						if( currentEncoding != NSUTF8StringEncoding ) {
+							NSString *tempStr = [[NSString alloc] initWithData:subdata encoding:currentEncoding];
+							// I'd check for nil, except only UTF-8 could fail since the others all
+							// define values for all bytes 0-255
+							subdata = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+						}
+						[newData appendData:subdata];
+					}
+					currentEncoding = newEncoding;
+					start = i + 1;
+				}
+			}
+		}
+	}
+	if( [newData length] > 0 || currentEncoding != encoding ) {
+		if( start < length ) {
+			NSData *subdata = [data subdataWithRange:NSMakeRange(start, length-start)];
+			if( currentEncoding != NSUTF8StringEncoding ) {
+				NSString *tempStr = [[NSString alloc] initWithData:subdata encoding:currentEncoding];
+				subdata = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+			}
+			[newData appendData:subdata];
+		}
+		encoding = NSUTF8StringEncoding;
+		data = newData;
+	}
 
 	NSString *message = [[[NSString alloc] initWithData:data encoding:encoding] autorelease];
 	if( ! message ) {
@@ -409,6 +495,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 						}
 					case 'F': // font size
 					case 'E': // encoding
+						// We actually handle this above, but there could be some encoding tags
+						// left over. For instance, ^FEU^F^FEU^F will leave one of the two tags behind.
 					case 'K': // blinking
 					case 'P': // spacing
 						// not supported yet
@@ -526,9 +614,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	NSCharacterSet *nonASCIISet = [[NSCharacterSet characterSetWithRange:NSMakeRange(0,128)] invertedSet];
 
+	char *ctcpEncoding = NULL;
 	if( [[self string] rangeOfCharacterFromSet:nonASCIISet].location != NSNotFound ) {
-		char *ctcpEncoding = NULL;
-
 		switch( encoding ) {
 		case NSUTF8StringEncoding:
 			ctcpEncoding = "U";
@@ -564,15 +651,9 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			ctcpEncoding = "10";
 			break;
 		}
-
-		if( ctcpEncoding ) {
-			char buffer[6];
-			sprintf( buffer, "\006E%.2s\006", ctcpEncoding );
-			[ret appendBytes:buffer length:strlen( buffer )];
-		}
 	}
 	
-	NSStringEncoding currentEncoding = encoding;
+	NSStringEncoding currentEncoding = NSASCIIStringEncoding;
 	BOOL wasBold = NO, wasItalic = NO, wasUnderline = NO, wasStrikethrough = NO;
 	NSColor *oldForeground = nil, *oldBackground = nil;
 	id oldLink = nil;
@@ -659,6 +740,16 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			}
 			
 			NSData *data = [text dataUsingEncoding:currentEncoding allowLossyConversion:NO];
+			if( data == nil && currentEncoding == NSASCIIStringEncoding && encoding != NSASCIIStringEncoding ) {
+				// Ok, upgrade to declared encoding
+				currentEncoding = encoding;
+				data = [text dataUsingEncoding:currentEncoding allowLossyConversion:NO];
+				if( data != nil ) {
+					[ret appendBytes:"\006E" length:2];
+					[ret appendBytes:ctcpEncoding length:strlen(ctcpEncoding)];
+					[ret appendBytes:"\006" length:1];
+				}
+			}
 			if( data == nil ) {
 				if( currentEncoding == NSUTF8StringEncoding ) {
 					// It shouldn't have failed, but I want to cover all the bases
