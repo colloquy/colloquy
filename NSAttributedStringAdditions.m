@@ -127,7 +127,7 @@
 
 @implementation NSMutableAttributedString (NSMutableAttributedStringImageAdditions)
 - (void) preformImageSubstitutionWithDictionary:(NSDictionary *) dict {
-	NSDictionary *attributes = nil;
+//	NSDictionary *attributes = nil;
 	NSString *string = [self string], *str = nil;
 	NSEnumerator *keyEnumerator = [dict keyEnumerator];
 	NSEnumerator *objEnumerator = [dict objectEnumerator];
