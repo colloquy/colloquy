@@ -7,6 +7,7 @@
 @class NSMutableArray;
 @class NSData;
 @class NSString;
+@class JVChatRoomMember;
 
 @interface JVChatRoom : JVDirectChat {
 	@protected
@@ -39,12 +40,13 @@
 - (BOOL) doesMemberHaveOperatorStatus:(NSString *) member;
 - (BOOL) doesMemberHaveVoiceStatus:(NSString *) member;
 
+- (JVChatRoomMember *) chatRoomMemberWithName:(NSString *) name;
 - (NSString *) preferredNameForMember:(NSString *) member;
 @end
 
 @interface NSObject (MVChatPluginRoomSupport)
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(JVChatRoom *) room;
 
-- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user inRoom:(JVChatRoom *) room;
+- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room;
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room;
 @end

@@ -180,11 +180,12 @@
 }
 
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
+	JVChatRoomMember *member = [self chatRoomMemberWithName:user];
 	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:fromUser:inRoom: )] objectEnumerator];
 	id item = nil;
 
 	while( ( item = [enumerator nextObject] ) )
-		[item processMessage:message asAction:action fromUser:user inRoom:self];
+		[item processMessage:message asAction:action fromMember:member inRoom:self];
 }
 
 - (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
@@ -572,6 +573,17 @@
 
 #pragma mark -
 
+- (JVChatRoomMember *) chatRoomMemberWithName:(NSString *) name {
+	NSEnumerator *enumerator = [_members objectEnumerator];
+	JVChatRoomMember *member = nil;
+	
+	while( ( member = [enumerator nextObject] ) )
+		if( [[member memberName] isEqualToString:name] )
+			return member;
+	
+	return nil;
+}
+
 - (NSString *) preferredNameForMember:(NSString *) member {
 	if( [member isEqualToString:[[self connection] nickname]] ) {
 		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
@@ -707,14 +719,7 @@
 }
 
 - (JVChatRoomMember *) valueInChatMembersWithName:(NSString *) name {
-	NSEnumerator *enumerator = [_members objectEnumerator];
-	JVChatRoomMember *member = nil;
-
-	while( ( member = [enumerator nextObject] ) )
-		if( [[member memberName] isEqualToString:name] )
-			return member;
-
-	return nil;
+	return [self chatRoomMemberWithName:name];
 }
 @end
 
@@ -727,10 +732,10 @@
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
-- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user inRoom:(JVChatRoom *) room {
+- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
 	NSString *messageString = [[[NSString alloc] initWithData:message encoding:[room encoding]] autorelease];
 	if( ! messageString ) messageString = [NSString stringWithCString:[message bytes] length:[message length]];
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:messageString, @"----", [NSNumber numberWithBool:action], @"piM1", user, @"piM2", room, @"piM3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:messageString, @"----", [NSNumber numberWithBool:action], @"piM1", [member memberName], @"piM2", room, @"piM3", nil];
 	id result = [self callScriptHandler:'piMX' withArguments:args];
 	if( [result isKindOfClass:[NSString class]] ) {
 		NSData *resultData = [result dataUsingEncoding:[room encoding] allowLossyConversion:YES];
