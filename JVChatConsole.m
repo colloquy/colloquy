@@ -174,15 +174,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( ! [strMsg length] || ( _ignorePRIVMSG && [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location == NSNotFound ) )
 		return;
 
-	[para setParagraphSpacing:3.];
-	[para setMaximumLineHeight:9.];
-	if( ! outbound ) [para setMaximumLineHeight:9.];
-	else [para setMaximumLineHeight:11.];
-
-	if( outbound ) [attrs setObject:[NSFont boldSystemFontOfSize:11.] forKey:NSFontAttributeName];
-	else [attrs setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Monaco" traits:0 weight:5 size:9.] forKey:NSFontAttributeName];
-	[attrs setObject:para forKey:NSParagraphStyleAttributeName];
-
 	if( ! _verbose ) {
 		[strMsg replaceOccurrencesOfString:@":" withString:@"" options:NSAnchoredSearch range:NSMakeRange( 0, 1 )];
 		[strMsg replaceOccurrencesOfString:@" :" withString:@" " options:NSLiteralSearch range:NSMakeRange( 0, [strMsg length] )];
@@ -226,6 +217,15 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}		
 	}
 
+	[para setParagraphSpacing:3.];
+	[para setMaximumLineHeight:9.];
+	if( ! outbound ) [para setMaximumLineHeight:9.];
+	else [para setMaximumLineHeight:11.];
+	
+	if( outbound ) [attrs setObject:[NSFont boldSystemFontOfSize:11.] forKey:NSFontAttributeName];
+	else [attrs setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Monaco" traits:0 weight:5 size:9.] forKey:NSFontAttributeName];
+	[attrs setObject:para forKey:NSParagraphStyleAttributeName];
+	
 	msg = [[[NSAttributedString alloc] initWithString:strMsg attributes:attrs] autorelease];
 	if( [[display textStorage] length] )
 		[display replaceCharactersInRange:NSMakeRange( [[display textStorage] length], 0 ) withString:@"\n"];
