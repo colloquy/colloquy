@@ -848,7 +848,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 	[paraStyle setMaximumLineHeight:13.];
 	[paraStyle setAlignment:NSCenterTextAlignment];
-	[paraStyle setLineBreakMode:NSLineBreakByTruncatingTail];
+//	[paraStyle setLineBreakMode:NSLineBreakByTruncatingTail];
 	[(NSMutableAttributedString *)_topicAttributed addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange( 0, [_topicAttributed length] )];
 
 	[[topicLine textStorage] setAttributedString:_topicAttributed];
