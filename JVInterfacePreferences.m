@@ -60,7 +60,10 @@
 	[sendHistoryStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
 }
 
-- (void) saveChanges {
+- (IBAction) changeSendHistory:(id) sender {
+	int size = [sender intValue];
+	[sendHistory setIntValue:size];
+	[sendHistoryStepper setIntValue:size];
 	[[NSUserDefaults standardUserDefaults] setInteger:[sendHistory intValue] forKey:@"JVChatMaximumHistory"];
 }
 

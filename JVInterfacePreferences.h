@@ -11,6 +11,7 @@
 	IBOutlet NSTextField *sendHistory;
 	IBOutlet NSStepper *sendHistoryStepper;
 }
+- (IBAction) changeSendHistory:(id) sender;
 - (IBAction) changePreferredWindow:(id) sender;
 - (IBAction) changeSendOnReturnAction:(id) sender;
 - (IBAction) changeSendOnEnterAction:(id) sender;

@@ -46,7 +46,7 @@
 	[openSafe setState:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"]];
 }
 
-- (void) saveChanges {
+- (IBAction) changePortRange:(id) sender {
 	NSRange range = NSMakeRange( [minRate intValue], ( [maxRate intValue] - [minRate intValue] ) );
 	[[NSUserDefaults standardUserDefaults] setObject:NSStringFromRange( range ) forKey:@"JVFileTransferPortRange"];
 	[MVChatConnection setFileTransferPortRange:range];

@@ -9,6 +9,7 @@
 	IBOutlet NSTextField *minRate;
 	IBOutlet NSTextField *maxRate;
 }
+- (IBAction) changePortRange:(id) sender;
 - (IBAction) changeAutoAccept:(id) sender;
 - (IBAction) changeSaveDownloads:(id) sender;
 - (IBAction) changeRemoveTransfers:(id) sender;
