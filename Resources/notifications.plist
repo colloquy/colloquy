@@ -82,6 +82,12 @@
 	</dict>
 	<dict>
 		<key>identifier</key>
+		<string>JVChatReplyAfterAddressing</string>
+		<key>title</key>
+		<string>Reply After Addressing Member</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
 		<string>JVChatFirstMessage</string>
 		<key>title</key>
 		<string>First Private Message</string>
