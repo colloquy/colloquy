@@ -761,11 +761,19 @@ static SilcClientOperations silcClientOps = {
 
 	if( [self status] != MVChatConnectionConnectedStatus ) return;
 
+	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
+	MVChatRoom *room = nil;
+
+	while( ( room = [enumerator nextObject] ) ) {
+		if( ! [room isJoined] ) continue;
+		[room _setDateParted:[NSDate date]];	
+	}
+
 	_sentQuitCommand = YES;
-	
+
 	if( [[reason string] length] ) {
-		const char *tmp = [MVSILCChatConnection _flattenedSILCStringForMessage:reason];
-		[self sendRawMessageWithFormat:@"QUIT %s", tmp];
+		const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:reason];
+		[self sendRawMessageWithFormat:@"QUIT %s", msg];
 	} else {
 		[self sendRawMessage:@"QUIT"];
 	}
