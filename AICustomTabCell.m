@@ -344,10 +344,10 @@ static NSSize		rightCapSize;
 //Mouse entered our tabs (or close button)
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-	//Scrubs the tab if control is down.
-	if(([theEvent modifierFlags] & NSAlternateKeyMask) && !selected){
-		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
-	}
+	//Scrubs the tab if option/alt is down. This is damn annoying!!
+//	if(([theEvent modifierFlags] & NSAlternateKeyMask) && !selected){
+//		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
+//	}
 	
     //Set ourself (or our close button) as hovered
     if((allowsInactiveTabClosing || selected || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask )) &&
