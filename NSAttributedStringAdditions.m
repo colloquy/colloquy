@@ -571,7 +571,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			[ret appendBytes:buffer length:strlen( buffer )];
 		}
 	}
-
+	
+	NSStringEncoding currentEncoding = encoding;
 	BOOL wasBold = NO, wasItalic = NO, wasUnderline = NO, wasStrikethrough = NO;
 	NSColor *oldForeground = nil, *oldBackground = nil;
 	id oldLink = nil;
@@ -648,19 +649,28 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			if( strikethrough != wasStrikethrough )
 				[ret appendBytes:( strikethrough ? "\006S\006" : "\006S-\006" ) length:( strikethrough ? 3 : 4 )];
 
-			NSData *data = nil;
+			NSString *text;
 			if( [link isKindOfClass:[NSURL class]] || [link isKindOfClass:[NSString class]] ) {
-				data = [[link description] dataUsingEncoding:encoding allowLossyConversion:YES];
-				if( data ) {
-					[ret appendBytes:"\006L\006" length:3];
-					[ret appendData:data];
-					[ret appendBytes:"\006L-\006" length:4];
-				}
+				text = [link description];
+				[ret appendBytes:"\006L\006" length:3];
 			} else {
-				NSString *text = [[self attributedSubstringFromRange:effectiveRange] string];
-				data = [text dataUsingEncoding:encoding allowLossyConversion:YES];
-				if( data ) [ret appendData:data];
+				text = [[self string] substringWithRange:effectiveRange];
+				link = nil;
 			}
+			
+			NSData *data = [text dataUsingEncoding:currentEncoding allowLossyConversion:NO];
+			if( data == nil ) {
+				if( currentEncoding == NSUTF8StringEncoding ) {
+					// It shouldn't have failed, but I want to cover all the bases
+					data = [text dataUsingEncoding:currentEncoding allowLossyConversion:YES];
+				} else {
+					// Time to upgrade
+					currentEncoding = NSUTF8StringEncoding;
+					data = [text dataUsingEncoding:currentEncoding allowLossyConversion:YES];
+					[ret appendBytes:"\006EU\006" length:4];
+				}
+			}
+			if( data ) [ret appendData:data];
 			
 			wasBold = bold; wasItalic = italic; wasUnderline = underline; wasStrikethrough = strikethrough;
 			oldForeground = foregroundColor; oldBackground = backgroundColor; oldLink = link;
