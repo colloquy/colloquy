@@ -291,7 +291,6 @@
 				1C51B47A052DE0CB00BB459B,
 				1C51B47B052DE0CB00BB459B,
 				1C51B484052DE0CB00BB459B,
-				1C51B488052DE0CB00BB459B,
 			);
 			buildRules = (
 			);
@@ -427,13 +426,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		1C51B488052DE0CB00BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1C51B48A052DE0CB00BB459B = {
 			isa = PBXFileReference;
