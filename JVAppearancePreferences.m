@@ -136,6 +136,10 @@
 
 	WebPreferences *prefs = [preview preferences];
 	[prefs setAutosaves:YES];
+	
+	// disable the user style sheet for users of 2C4 who got this
+	// turned on, we do this different now and the user style can interfere
+	[prefs setUserStyleSheetEnabled:NO];
 
 	[standardFont setFont:[NSFont fontWithName:[prefs standardFontFamily] size:[prefs defaultFontSize]]];
 
