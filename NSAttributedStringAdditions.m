@@ -43,7 +43,7 @@ static WebView *fragmentWebView = nil;
 	limitRange = NSMakeRange( 0, [result length] );
 	while( limitRange.length > 0 ) {
 		NSColor *color = [result attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
-		if( [[color colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && [[color htmlAttributeValue] isEqualToString:@"#01fe02"] )
+		if( [[color colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && [[color HTMLAttributeValue] isEqualToString:@"#01fe02"] )
 			[result removeAttribute:NSForegroundColorAttributeName range:effectiveRange];
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
@@ -94,7 +94,7 @@ static WebView *fragmentWebView = nil;
 
 	if( [[options objectForKey:@"NSHTMLFullDocument"] boolValue] ) {
 		CFStringEncoding enc = CFStringConvertNSStringEncodingToEncoding( encoding );
-		[out appendFormat:@"<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=%@\"></head><body bgcolor=\"%@\">", [NSString mimeCharsetTagFromStringEncoding:enc], [backColor htmlAttributeValue]];
+		[out appendFormat:@"<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=%@\"></head><body bgcolor=\"%@\">", [NSString mimeCharsetTagFromStringEncoding:enc], [backColor HTMLAttributeValue]];
 	}
 
 	limitRange = NSMakeRange( 0, [self length] );
@@ -119,12 +119,12 @@ static WebView *fragmentWebView = nil;
 			fontstr = [NSMutableString stringWithString:@"<font"];
 
 			if( fColor && ! [[options objectForKey:@"NSHTMLIgnoreFontColors"] boolValue] ) {
-				[fontstr appendFormat:@" color=\"%@\"", [fColor htmlAttributeValue]];
+				[fontstr appendFormat:@" color=\"%@\"", [fColor HTMLAttributeValue]];
 				fontFlag = YES;
 			}
 
 			if( bColor && ! [[options objectForKey:@"NSHTMLIgnoreFontColors"] boolValue] ) {
-				[fontstr appendFormat:@" style=\"background-color: %@\"", [bColor htmlAttributeValue]];
+				[fontstr appendFormat:@" style=\"background-color: %@\"", [bColor HTMLAttributeValue]];
 				fontFlag = YES;
 			}
 

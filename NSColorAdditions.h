@@ -1,5 +1,6 @@
 #import <AppKit/NSColor.h>
 
 @interface NSColor (NSColorAdditions)
-- (NSString *) htmlAttributeValue;
++ (NSColor *) colorWithHTMLAttributeValue:(NSString *) hexcolor;
+- (NSString *) HTMLAttributeValue;
 @end
