@@ -74,6 +74,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (void) dealloc {
+	[self unregisterWithApplicableConnections];
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_person release];
@@ -102,6 +104,18 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		connectionEnumerator = [[[MVConnectionsController defaultManager] connectionsForServerAddress:[nick host]] objectEnumerator];
 		while( ( connection = [connectionEnumerator nextObject] ) )
 			[connection addUserToNotificationList:[nick user]];
+	}
+}
+
+- (void) unregisterWithApplicableConnections {
+	NSEnumerator *enumerator = [_nicknames objectEnumerator];
+	NSEnumerator *connectionEnumerator = nil;
+	MVChatConnection *connection = nil;
+	NSURL *nick = nil;
+	while( ( nick = [enumerator nextObject] ) ) {
+		connectionEnumerator = [[[MVConnectionsController defaultManager] connectionsForServerAddress:[nick host]] objectEnumerator];
+		while( ( connection = [connectionEnumerator nextObject] ) )
+			[connection removeUserFromNotificationList:[nick user]];
 	}
 }
 

@@ -47,6 +47,7 @@ typedef enum {
 - (id) initWithPerson:(ABPerson *) person;
 
 - (void) registerWithApplicableConnections;
+- (void) unregisterWithApplicableConnections;
 
 - (NSURL *) activeNickname;
 - (void) setActiveNickname:(NSURL *) nickname;
