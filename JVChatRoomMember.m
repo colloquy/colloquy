@@ -435,7 +435,7 @@
 	[banTitle setStringValue:[NSString stringWithFormat:NSLocalizedString( @"Ban %@ from the %@ room.", "ban user from room label" ), [self title], [_parent title]]];
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask label")];
 
-	if( _address) [firstField setStringValue:[NSString stringWithFormat:@"%@@%@", _nickname, _address]];
+	if( _address) [firstField setStringValue:[NSString stringWithFormat:@"%@!%@", _nickname, _address]];
 	else [firstField setStringValue:@""];
 
 	[banWindow makeFirstResponder:firstField];
@@ -478,7 +478,7 @@
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask" )];
 	[secondTitle setStringValue:NSLocalizedString( @"And reason:", "kick reason (secondary)" )];
 
-	if( _address ) [firstField setStringValue:[NSString stringWithFormat:@"%@@%@", _nickname, _address]];
+	if( _address ) [firstField setStringValue:[NSString stringWithFormat:@"%@!%@", _nickname, _address]];
 	else [firstField setStringValue:@""];
 	[secondField setStringValue:@""];
 
