@@ -14,6 +14,7 @@
 	BOOL _inRoom;
 	BOOL _keepAfterPart;
 	BOOL _banListSynced;
+	unsigned _joinCount;
 }
 - (void) joined;
 - (void) parting;

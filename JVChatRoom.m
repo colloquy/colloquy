@@ -53,6 +53,7 @@
 		_kickedFromRoom = NO;
 		_keepAfterPart = NO;
 		_banListSynced = NO;
+		_joinCount = 0;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _partedRoom: ) name:MVChatRoomPartedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _kicked: ) name:MVChatRoomKickedNotification object:target];
@@ -357,6 +358,9 @@
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _selfNicknameChanged: ) name:MVChatConnectionNicknameAcceptedNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatRoomTopicChangedNotification object:[self target]];
+
+	if( _joinCount ) [self addEventMessageToDisplay:NSLocalizedString( @"You rejoined the room.", "rejoined the room status message" ) withName:@"rejoined" andAttributes:nil];
+	_joinCount++;
 }	
 
 - (void) parting {
@@ -585,7 +589,6 @@
 @implementation JVChatRoom (JVChatRoomPrivate)
 - (void) _didConnect:(NSNotification *) notification {
 	[[self target] join];
-	[super _didConnect:notification];
 	_cantSendMessages = YES;
 }
 
