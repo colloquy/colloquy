@@ -2139,27 +2139,23 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 @implementation MVChatScriptPlugin (MVChatScriptPluginConnectionSupport)
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psR1", user, @"psR2", connection, @"psR3", nil];
-	id result = [self callScriptHandler:'psRX' withArguments:args];
-	if( ! result ) [self doesNotRespondToSelector:_cmd];
+	id result = [self callScriptHandler:'psRX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psL1", user, @"psL2", connection, @"psL3", nil];
-	id result = [self callScriptHandler:'psLX' withArguments:args];
-	if( ! result ) [self doesNotRespondToSelector:_cmd];
+	id result = [self callScriptHandler:'psLX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (void) connected:(MVChatConnection *) connection {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
-	if( ! [self callScriptHandler:'cTsX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'cTsX' withArguments:args forSelector:_cmd];
 }
 
 - (void) disconnecting:(MVChatConnection *) connection {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
-	if( ! [self callScriptHandler:'dFsX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'dFsX' withArguments:args forSelector:_cmd];
 }
 @end

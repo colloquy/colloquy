@@ -1380,90 +1380,76 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 @implementation MVChatScriptPlugin (MVChatScriptPluginRoomSupport)
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(JVChatRoom *) room {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", room, @"pcC2", nil];
-	id result = [self callScriptHandler:'pcCX' withArguments:args];
-	if( ! result ) [self doesNotRespondToSelector:_cmd];
+	id result = [self callScriptHandler:'pcCX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"piM1", [member nickname], @"piM2", room, @"piM3", nil];
-	id result = [self callScriptHandler:'piMX' withArguments:args];
-	if( ! result ) [self doesNotRespondToSelector:_cmd];
-	else if( [result isKindOfClass:[NSString class]] )
+	id result = [self callScriptHandler:'piMX' withArguments:args forSelector:_cmd];
+	if( [result isKindOfClass:[NSString class]] )
 		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
 }
 
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"poM1", room, @"poM2", nil];
-	id result = [self callScriptHandler:'poMX' withArguments:args];
-	if( ! result ) [self doesNotRespondToSelector:_cmd];
-	else if( [result isKindOfClass:[NSString class]] )
+	id result = [self callScriptHandler:'poMX' withArguments:args forSelector:_cmd];
+	if( [result isKindOfClass:[NSString class]] )
 		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
 }
 
 - (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mJr1", nil];
-	if( ! [self callScriptHandler:'mJrX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'mJrX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoom *) room forReason:(NSAttributedString *) reason {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mPr1", [reason string], @"mPr2", nil];
-	if( ! [self callScriptHandler:'mPrX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'mPrX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mKr1", by, @"mKr2", [reason string], @"mKr3", nil];
-	if( ! [self callScriptHandler:'mKrX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'mKrX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberPromoted:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"cOpr" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
-	if( ! [self callScriptHandler:'mScX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberDemoted:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member voice] ? "VoIc" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
-	if( ! [self callScriptHandler:'mScX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberVoiced:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"VoIc" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
-	if( ! [self callScriptHandler:'mScX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberDevoiced:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member operator] ? "cOpr" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
-	if( ! [self callScriptHandler:'mScX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) joinedRoom:(JVChatRoom *) room; {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
-	if( ! [self callScriptHandler:'jRmX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'jRmX' withArguments:args forSelector:_cmd];
 }
 
 - (void) partingFromRoom:(JVChatRoom *) room; {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
-	if( ! [self callScriptHandler:'pRmX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'pRmX' withArguments:args forSelector:_cmd];
 }
 
 - (void) kickedFromRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", by, @"kRm1", [reason string], @"kRm2", nil];
-	if( ! [self callScriptHandler:'kRmX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'kRmX' withArguments:args forSelector:_cmd];
 }
 
 - (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) member {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[topic string], @"rTc1", member, @"rTc2", room, @"rTc3", nil];
-	if( ! [self callScriptHandler:'rTcX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'rTcX' withArguments:args forSelector:_cmd];
 }
 @end

@@ -248,7 +248,7 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 	return _script;
 }
 
-- (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments {
+- (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
 	int pid = [[NSProcessInfo processInfo] processIdentifier];
 	NSAppleEventDescriptor *targetAddress = [NSAppleEventDescriptor descriptorWithDescriptorType:typeKernelProcessID bytes:&pid length:sizeof( pid )];
 	NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:MVChatScriptPluginClass eventID:handler targetDescriptor:targetAddress returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
@@ -271,8 +271,14 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 		[event setDescriptor:descriptor forKeyword:[key fourCharCode]];
 	}
 
-	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:NULL];
-	if( ! result ) return nil;
+	NSDictionary *error = nil;
+	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:&error];
+	if( error && ! result ) {
+		int code = [[error objectForKey:NSAppleScriptErrorNumber] intValue];
+		if( code == errAEEventNotHandled || code == errAEHandlerNotFound )
+			[self doesNotRespondToSelector:selector]; // disable for future calls
+		return [NSError errorWithDomain:NSOSStatusErrorDomain code:code userInfo:error];
+	}
 
 	return [result objectValue];
 }

@@ -2008,30 +2008,26 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 @implementation MVChatScriptPlugin (MVChatScriptPluginChatSupport)
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toChat:(JVDirectChat *) chat {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", chat, @"pcC2", nil];
-	id result = [self callScriptHandler:'pcCX' withArguments:args];
-	if( ! result ) [self doesNotRespondToSelector:_cmd];
+	id result = [self callScriptHandler:'pcCX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:action], @"piM1", [chat target], @"piM2", chat, @"piM3", nil];
-	id result = [self callScriptHandler:'piMX' withArguments:args];
-	if( ! result ) [self doesNotRespondToSelector:_cmd];
-	else if( [result isKindOfClass:[NSString class]] )
+	id result = [self callScriptHandler:'piMX' withArguments:args forSelector:_cmd];
+	if( [result isKindOfClass:[NSString class]] )
 		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
 }
 
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toChat:(JVDirectChat *) chat {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"poM1", chat, @"poM2", nil];
-	id result = [self callScriptHandler:'poMX' withArguments:args];
-	if( ! result ) [self doesNotRespondToSelector:_cmd];
-	else if( [result isKindOfClass:[NSString class]] )
+	id result = [self callScriptHandler:'poMX' withArguments:args forSelector:_cmd];
+	if( [result isKindOfClass:[NSString class]] )
 		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
 }
 
 - (void) userNamed:(NSString *) nickname isNowKnownAs:(NSString *) newNickname inView:(id <JVChatViewController>) view {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:nickname, @"----", newNickname, @"uNc1", view, @"uNc2", nil];
-	if( ! [self callScriptHandler:'uNcX' withArguments:args] )
-		[self doesNotRespondToSelector:_cmd];
+	[self callScriptHandler:'uNcX' withArguments:args forSelector:_cmd];
 }
 @end

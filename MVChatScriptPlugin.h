@@ -10,7 +10,7 @@ extern unsigned long MVChatScriptPluginClass;
 - (id) initWithScript:(NSAppleScript *) script andManager:(MVChatPluginManager *) manager;
 
 - (NSAppleScript *) script;
-- (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments;
+- (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector;
 
 - (BOOL) respondsToSelector:(SEL) selector;
 - (void) doesNotRespondToSelector:(SEL) selector;

@@ -1216,8 +1216,7 @@ finish:
 @implementation MVChatScriptPlugin (MVChatScriptPluginLinkClickSupport)
 - (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[url absoluteString], @"----", view, @"hCl1", nil];
-	id result = [self callScriptHandler:'hClX' withArguments:args];
-	if( ! result ) [self doesNotRespondToSelector:_cmd];
+	id result = [self callScriptHandler:'hClX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 @end
