@@ -118,8 +118,9 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 		}
 	}
 
-	[[NSColorPanel sharedColorPanel] setColor:_color];
 	[[NSColorPanel sharedColorPanel] setContinuous:YES];
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
+	[[NSColorPanel sharedColorPanel] setColor:_color];
 	[[NSApplication sharedApplication] orderFrontColorPanel:nil];
 
 	[[self controlView] setNeedsDisplay:YES];	
@@ -182,7 +183,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 }
 
 - (void) setStringValue:(NSString *) string {
-	[self setColor:[NSColor colorWithHTMLAttributeValue:string]];
+	[self setColor:[NSColor colorWithCSSAttributeValue:string]];
 }
 
 - (void) setShowsWebValue:(BOOL) web {
