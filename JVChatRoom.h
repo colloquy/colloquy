@@ -15,6 +15,7 @@
 	NSData *_topic;
 	NSString *_topicAuth;
 	BOOL _invalidateMembers;
+	BOOL _kickedFromRoom;
 }
 - (void) addMemberToChat:(NSString *) member asPreviousMember:(BOOL) previous;
 - (void) updateMember:(NSString *) member withInfo:(NSDictionary *) info;

@@ -14,6 +14,8 @@
 		_topicAuth = nil;
 		_members = [[NSMutableDictionary dictionary] retain];
 		_sortedMembers = [[NSMutableArray array] retain];
+		_kickedFromRoom = NO;
+		_invalidateMembers = NO;
 	}
 	return self;
 }
@@ -308,15 +310,13 @@
 #pragma mark -
 
 - (void) chatMember:(NSString *) member kickedBy:(NSString *) by forReason:(NSData *) reason {
-//	NSString *rstring = nil;
-//	NSData *data = nil;
+	NSString *rstring = nil;
 
 	NSParameterAssert( member != nil );
 	NSParameterAssert( by != nil );
 
-/*	rstring = [[[NSString alloc] initWithData:reason encoding:encoding] autorelease];
-	data = [[NSString stringWithFormat:NSLocalizedString( @"booted %@ with this reason '%@'.", "user has been removed by force from a chat room - presented as an action" ), member, rstring] dataUsingEncoding:encoding allowLossyConversion:YES];
-	[self addHTMLMessageToDisplay:data fromUser:by asAction:YES];*/
+	rstring = [[[NSString alloc] initWithData:reason encoding:_encoding] autorelease];
+	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from the chat room by %@.", "user has been removed by force from a chat room status message" ), member, by] withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:by, @"by", member, @"who", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 	[_members removeObjectForKey:member];
 	[_sortedMembers removeObject:member];
@@ -327,19 +327,23 @@
 }
 
 - (void) kickedFromChatBy:(NSString *) by forReason:(NSData *) reason {
-//	NSString *rstring = nil;
-//	NSData *data = nil;
+	NSString *rstring = nil;
 
 	NSParameterAssert( by != nil );
 
-/*	rstring = [[[NSString alloc] initWithData:reason encoding:encoding] autorelease];
-	data = [[NSString stringWithFormat:NSLocalizedString( @"booted you with this reason '%@'.", "you were removed by force from a chat room - presented as an action" ), rstring] dataUsingEncoding:encoding allowLossyConversion:YES];
-	[self addHTMLMessageToDisplay:data fromUser:by asAction:YES];
+	rstring = [[[NSString alloc] initWithData:reason encoding:_encoding] autorelease];
+	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), by] withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:by, @"by", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
-	MVChatPlaySoundForAction( @"MVChatMemberKickedAction" );
+	[_members removeObjectForKey:[[self connection] nickname]];
+	[_sortedMembers removeObject:[[self connection] nickname]];
 
-	NSBeginCriticalAlertSheet( NSLocalizedString( @"Booted", "title of the booted message sheet" ), nil, nil, nil, window, self, NULL, @selector( _kickedFromChatPart:returnCode:contextInfo: ), NULL, NSLocalizedString( @"You have been booted out of this room by %@.", "description for getting booted" ), by );
-*/
+	[_windowController reloadChatView:self];
+
+//	MVChatPlaySoundForAction( @"MVChatMemberKickedAction" );
+	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You were kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You were kicked from the chat room by %@. You are no longer part of this chat and can't send anymore messages.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, by ) withName:nil];
+
+	_kickedFromRoom = YES;
+	_cantSendMessages = YES;
 }
 
 #pragma mark -
@@ -461,5 +465,12 @@
 
 - (BOOL) validateToolbarItem:(NSToolbarItem *) toolbarItem {
 	return [super validateToolbarItem:toolbarItem];
+}
+@end
+
+@implementation JVChatRoom (JVChatRoomPrivate)
+- (void) _didConnect:(NSNotification *) notification {
+	[[self connection] joinChatForRoom:_target];
+	[super _didConnect:notification];
 }
 @end
