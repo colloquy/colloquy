@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Commands</key>
+	<dict>
+		<key>processUserCommand</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Command to process.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>arguments</key>
+				<dict>
+					<key>Description</key>
+					<string>Any arguments given with the command.</string>
+					<key>Name</key>
+					<string>with</string>
+				</dict>
+				<key>view</key>
+				<dict>
+					<key>Description</key>
+					<string>The view the command was entered in.</string>
+					<key>Name</key>
+					<string>for</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when the user types an unhandled "/command".</string>
+			<key>Name</key>
+			<string>process user command</string>
+		</dict>
+		<key>processSubcodeRequest</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>CTCP request to process.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>arguments</key>
+				<dict>
+					<key>Description</key>
+					<string>Any arguments given with the request.</string>
+					<key>Name</key>
+					<string>with</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Description</key>
+					<string>The user this request came from.</string>
+					<key>Name</key>
+					<string>from</string>
+				</dict>
+				<key>connection</key>
+				<dict>
+					<key>Description</key>
+					<string>The conenction this request came on.</string>
+					<key>Name</key>
+					<string>on</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when an unhandled CTCP request gets set to us from another user.</string>
+			<key>Name</key>
+			<string>process subcode request</string>
+		</dict>
+		<key>processSubcodeReply</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>CTCP reply to process.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>arguments</key>
+				<dict>
+					<key>Description</key>
+					<string>Any arguments given with the reply.</string>
+					<key>Name</key>
+					<string>with</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Description</key>
+					<string>The user this reply came from.</string>
+					<key>Name</key>
+					<string>from</string>
+				</dict>
+				<key>connection</key>
+				<dict>
+					<key>Description</key>
+					<string>The conenction this reply came on.</string>
+					<key>Name</key>
+					<string>on</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when an unhandled CTCP reply gets set to us from another user.</string>
+			<key>Name</key>
+			<string>process subcode reply</string>
+		</dict>
+		<key>processIncomingChatMessage</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The incoming message. Can contain HTML formatting. Return a reformated message (if desired).</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>action</key>
+				<dict>
+					<key>Description</key>
+					<string>Is this message an action?</string>
+					<key>Name</key>
+					<string>as</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Description</key>
+					<string>The user this message came from.</string>
+					<key>Name</key>
+					<string>from</string>
+				</dict>
+				<key>view</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room or direct chat this message is in.</string>
+					<key>Name</key>
+					<string>in</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when an incoming message is set to us or a room we are in.</string>
+			<key>Name</key>
+			<string>process incoming chat message</string>
+		</dict>
+		<key>processOutgoingChatMessage</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The outgoing message. Can contain HTML formatting. Return a reformated message (if desired).</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>action</key>
+				<dict>
+					<key>Description</key>
+					<string>Is this message an action?</string>
+					<key>Name</key>
+					<string>as</string>
+				</dict>
+				<key>view</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room or direct chat this message is in.</string>
+					<key>Name</key>
+					<string>in</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a message is set from us to user or a room we are in.</string>
+			<key>Name</key>
+			<string>process outgoing chat message</string>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>commands to be implemented by plug-ins.</string>
+	<key>Name</key>
+	<string>Chat Plug-In Suite</string>
+</dict>
+</plist>
