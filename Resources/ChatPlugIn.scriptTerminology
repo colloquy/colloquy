@@ -166,7 +166,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when a message is sent from us to user or a room we are in. Return a reformatted message (if desired).</string>
+			<string>Called when a message is sent from us to a user or room we are in. Return a reformatted message (if desired).</string>
 			<key>Name</key>
 			<string>process outgoing chat message</string>
 		</dict>
