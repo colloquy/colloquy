@@ -629,7 +629,7 @@ enum firetalk_error irc_flush_modes(client_t c) {
 			c->modestack[index[j]].sign = 0;
 			i--;
 		}
-		j = irc_send_printf(c,1,"%s",outstring);
+		j = irc_send_printf(c,0,"%s",outstring);
 		if (j != FE_SUCCESS) /* TODO: Fix this */
 			return j;
 	}
@@ -752,14 +752,15 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 				firetalk_callback_im_buddyonline(c,irc_get_nickname(args[0]),1);
 				if (irc_compare_nicks(c->nickname,irc_get_nickname(args[0])) == 0) {
 					firetalk_callback_chat_joined(c,args[2]);
-					if (c->identified == 1) {
+/*					if (c->identified == 1) {
 						if (irc_send_printf(c,0,"PRIVMSG ChanServ :OP %s %s",args[2],c->nickname) != FE_SUCCESS) {
 							irc_internal_disconnect(c,FE_PACKET);
 							return FE_PACKET;
 						}
-					}
-				} else
+					}*/
+				} else {
 					firetalk_callback_chat_user_joined(c,args[2],irc_get_nickname(args[0]),0);
+				}
 			} else if (strcmp(args[1],"PART") == 0) {
 				if (irc_compare_nicks(c->nickname,irc_get_nickname(args[0])) == 0)
 					firetalk_callback_chat_left(c,args[2]);
@@ -852,10 +853,10 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 					if (strstr(args[3],"Password accepted") != NULL) {
 						/* we're recognized */
 						c->identified = 1;
-						if (irc_send_printf(c,0,"PRIVMSG ChanServ :OP ALL") != FE_SUCCESS) {
+/*						if (irc_send_printf(c,0,"PRIVMSG ChanServ :OP ALL") != FE_SUCCESS) {
 							irc_internal_disconnect(c,FE_PACKET);
 							return FE_PACKET;
-						}
+						}*/
 					}
 				}
 				if (args[3][0] != '\0') {
@@ -1038,13 +1039,13 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 								firetalk_callback_chat_user_deopped(c,args[2],args[tempint2++],irc_get_nickname(args[0]));
 								if (irc_compare_nicks(args[tempint2-1],c->nickname) == FE_SUCCESS) {
 									firetalk_callback_chat_deopped(c,args[2],irc_get_nickname(args[0]));
-									if (c->identified == 1) {
-										/* this is us, and we're identified, so we can request a reop */
+/*									if (c->identified == 1) {
+										// this is us, and we're identified, so we can request a reop
 										if (irc_send_printf(c,0,"PRIVMSG ChanServ :OP %s %s",args[2],c->nickname) != FE_SUCCESS) {
 											irc_internal_disconnect(c,FE_PACKET);
 											return FE_PACKET;
 										}
-									}
+									}*/
 								}
 							}
 							break;
@@ -1057,13 +1058,13 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 								firetalk_callback_chat_user_devoiced(c,args[2],args[tempint2++],irc_get_nickname(args[0]));
 								if (irc_compare_nicks(args[tempint2-1],c->nickname) == FE_SUCCESS) {
 									firetalk_callback_chat_devoiced(c,args[2],irc_get_nickname(args[0]));
-									if (c->identified == 1) {
-										/* this is us, and we're identified, so we can request a revoice */
+/*									if (c->identified == 1) {
+										// this is us, and we're identified, so we can request a revoice
 										if (irc_send_printf(c,0,"PRIVMSG ChanServ :VOICE %s %s",args[2],c->nickname) != FE_SUCCESS) {
 											irc_internal_disconnect(c,FE_PACKET);
 											return FE_PACKET;
 										}
-									}
+									}*/
 								}
 							}
 							break;
@@ -1367,7 +1368,7 @@ enum firetalk_error irc_stop_roomlist(client_t c) {
 	return irc_send_printf(c,1,"LIST STOP");
 }
 
-enum firetalk_error irc_get_info(client_t c, const char * const nickname) {
+enum firetalk_error irc_get_info(client_t c, const char * const nickname, const int priority) {
 	struct s_irc_whois *whoistemp;
 
 	whoistemp = c->whois_head;
@@ -1377,7 +1378,7 @@ enum firetalk_error irc_get_info(client_t c, const char * const nickname) {
 	c->whois_head->idle = 0;
 	c->whois_head->info = NULL;
 	c->whois_head->next = whoistemp;
-	return irc_send_printf(c,0,"WHOIS %s",nickname);
+	return irc_send_printf(c,priority,"WHOIS %s",nickname);
 }
 
 enum firetalk_error irc_set_away(client_t c, const char * const message) {
@@ -1409,7 +1410,7 @@ enum firetalk_error irc_periodic(struct s_firetalk_handle * const c) {
 			i = safe_strlen(obuf);
 			if (i > 0)
 				obuf[i-1] = '\0';
-			if (irc_send_printf(conn,1,"ISON %s",obuf) != 0) {
+			if (irc_send_printf(conn,0,"ISON %s",obuf) != 0) {
 				irc_internal_disconnect(conn,FE_PACKET);
 				return FE_PACKET;
 			}
@@ -1425,7 +1426,7 @@ enum firetalk_error irc_periodic(struct s_firetalk_handle * const c) {
 	i = safe_strlen(obuf);
 	if (i > 0) {
 		obuf[i-1] = '\0';
-		if (irc_send_printf(conn,1,"ISON %s",obuf) != 0) {
+		if (irc_send_printf(conn,0,"ISON %s",obuf) != 0) {
 			irc_internal_disconnect(conn,FE_PACKET);
 			return FE_PACKET;
 		}
@@ -1438,12 +1439,12 @@ enum firetalk_error irc_periodic(struct s_firetalk_handle * const c) {
 
 enum firetalk_error irc_subcode_send_request(client_t c, const char * const to, const char * const command, const char * const args) {
 	if (args == NULL) {
-		if (irc_send_printf(c,0,"PRIVMSG %s :\001%s\001",to,command) != 0) {
+		if (irc_send_printf(c,1,"PRIVMSG %s :\001%s\001",to,command) != 0) {
 			irc_internal_disconnect(c,FE_PACKET);
 			return FE_PACKET;
 		}
 	} else {
-		if (irc_send_printf(c,0,"PRIVMSG %s :\001%s %s\001",to,command,args) != 0) {
+		if (irc_send_printf(c,1,"PRIVMSG %s :\001%s %s\001",to,command,args) != 0) {
 			irc_internal_disconnect(c,FE_PACKET);
 			return FE_PACKET;
 		}
@@ -1453,12 +1454,12 @@ enum firetalk_error irc_subcode_send_request(client_t c, const char * const to, 
 
 enum firetalk_error irc_subcode_send_reply(client_t c, const char * const to, const char * const command, const char * const args) {
 	if (args == NULL) {
-		if (irc_send_printf(c,0,"NOTICE %s :\001%s\001",to,command) != 0) {
+		if (irc_send_printf(c,1,"NOTICE %s :\001%s\001",to,command) != 0) {
 			irc_internal_disconnect(c,FE_PACKET);
 			return FE_PACKET;
 		}
 	} else {
-		if (irc_send_printf(c,0,"NOTICE %s :\001%s %s\001",to,command,args) != 0) {
+		if (irc_send_printf(c,1,"NOTICE %s :\001%s %s\001",to,command,args) != 0) {
 			irc_internal_disconnect(c,FE_PACKET);
 			return FE_PACKET;
 		}

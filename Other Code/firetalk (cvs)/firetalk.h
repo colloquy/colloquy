@@ -211,7 +211,7 @@ enum firetalk_error firetalk_im_send_message(firetalk_t conn, const char * const
 enum firetalk_error firetalk_im_send_action(firetalk_t conn, const char * const dest, const char * const message, const int auto_flag);
 enum firetalk_error firetalk_im_list_buddies(firetalk_t conn);
 enum firetalk_error firetalk_im_evil(firetalk_t c, const char * const who);
-enum firetalk_error firetalk_im_get_info(firetalk_t conn, const char * const nickname);
+enum firetalk_error firetalk_im_get_info(firetalk_t conn, const char * const nickname, const int priority);
 enum firetalk_error firetalk_im_get_roomlist(firetalk_t conn, const char * const search);
 enum firetalk_error firetalk_im_stop_roomlist(firetalk_t conn);
 

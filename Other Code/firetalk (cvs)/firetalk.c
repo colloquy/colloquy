@@ -2415,13 +2415,13 @@ enum firetalk_error firetalk_im_send_action(firetalk_t conn, const char * const 
 	return FE_SUCCESS;
 }
 
-enum firetalk_error firetalk_im_get_info(firetalk_t conn, const char * const nickname) {
+enum firetalk_error firetalk_im_get_info(firetalk_t conn, const char * const nickname, const int priority) {
 #ifdef DEBUG
 	if (firetalk_check_handle(conn) != FE_SUCCESS)
 		return FE_BADHANDLE;
 #endif
 
-	return protocol_functions[conn->protocol].get_info(conn->handle,nickname);
+	return protocol_functions[conn->protocol].get_info(conn->handle,nickname,priority);
 }
 
 enum firetalk_error firetalk_im_get_roomlist(firetalk_t conn, const char * const search) {

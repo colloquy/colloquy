@@ -148,7 +148,7 @@ enum firetalk_error dummy_im_evil(client_t c, const char * const who) {
 	return FE_SUCCESS;
 }
 
-enum firetalk_error dummy_get_info(client_t c, const char * const nickname) {
+enum firetalk_error dummy_get_info(client_t c, const char * const nickname, const int priority) {
 	return FE_SUCCESS;
 }
 

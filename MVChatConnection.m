@@ -404,7 +404,7 @@ void MVChatUserJoinedRoom( void *c, void *cs, const char * const room, const cha
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
-	if( previousmember ) firetalk_im_get_info( c, who );
+	if( previousmember ) firetalk_im_get_info( c, who, 0 );
 	[[MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES] addMemberToChat:[NSString stringWithUTF8String:who] asPreviousMember:(BOOL) previousmember];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", [NSNumber numberWithBool:previousmember], @"previousMember", nil]];
 }
@@ -837,7 +837,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (void) fetchInformationForUser:(NSString *) user {
 	NSParameterAssert( user != nil );
-	if( [self isConnected] ) firetalk_im_get_info( _chatConnection, [user UTF8String] );
+	if( [self isConnected] ) firetalk_im_get_info( _chatConnection, [user UTF8String], 1 );
 }
 
 #pragma mark -

@@ -40,7 +40,7 @@ enum firetalk_error dummy_set_away(client_t c, const char * const message);
 enum firetalk_error dummy_periodic(struct s_firetalk_handle * const c);
 enum firetalk_error dummy_get_roomlist(client_t c, const char * const search);
 enum firetalk_error dummy_stop_roomlist(client_t c);
-enum firetalk_error dummy_get_info(client_t c, const char * const nickname);
+enum firetalk_error dummy_get_info(client_t c, const char * const nickname, const int priority);
 enum firetalk_error dummy_set_info(client_t c, const char * const info);
 enum firetalk_error dummy_set_nickname(client_t c, const char * const nickname);
 enum firetalk_error dummy_set_password(client_t c, const char * const oldpass, const char * const newpass);
