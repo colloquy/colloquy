@@ -418,7 +418,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( [outlineView levelForRow:[outlineView rowForItem:item]] || _usesSmallIcons ) {
 		[ret setSize:NSMakeSize( 16., 16. )];
 	} else {
-		[ret setSize:NSMakeSize( 32., 32. )];		
+		[ret setSize:NSMakeSize( 32., 32. )];
 	}
 	return ret;
 }
