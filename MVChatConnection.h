@@ -143,6 +143,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) setServerPort:(unsigned short) port;
 - (unsigned short) serverPort;
 
+- (void) setChatFormat:(NSString *) format;
+- (NSString *) chatFormat;
+
 - (void) setProxyUsername:(NSString *) username;
 - (NSString *) proxyUsername;
 

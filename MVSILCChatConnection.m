@@ -1115,6 +1115,16 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
+- (void) setChatFormat:(NSString *) format {
+	// do nothing
+}
+
+- (NSString *) chatFormat {
+	return nil;
+}
+
+#pragma mark -
+
 - (void) publicKeyVerified:(NSDictionary *) dictionary andAccepted:(BOOL) accepted andAlwaysAccept:(BOOL) alwaysAccept {
 	SilcVerifyPublicKey completition;
 	void *context;

@@ -387,6 +387,7 @@ static NSMenu *favoritesMenu = nil;
 
 	connection = [[[MVChatConnection alloc] initWithType:type] autorelease];
 	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
+	[connection setChatFormat:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatFormat"]];
 	[connection setProxyType:[[newProxy selectedItem] tag]];
 	[connection setSecure:[sslConnection state]];
 	[connection setPassword:[newServerPassword stringValue]];
@@ -649,6 +650,7 @@ static NSMenu *favoritesMenu = nil;
 		} else if( ! handled && [url user] ) {
 			connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
 			[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
+			[connection setChatFormat:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatFormat"]];
 
 			if( connect ) {
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
@@ -1399,6 +1401,8 @@ static NSMenu *favoritesMenu = nil;
 
 		if( [[info objectForKey:@"encoding"] longValue] ) [connection setEncoding:[[info objectForKey:@"encoding"] longValue]];
 		else [connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
+		
+		[connection setChatFormat:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatFormat"]];
 
 		if( [info objectForKey:@"realName"] ) [connection setRealName:[info objectForKey:@"realName"]];
 		if( [info objectForKey:@"nickname"] ) [connection setNickname:[info objectForKey:@"nickname"]];

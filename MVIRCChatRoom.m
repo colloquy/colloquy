@@ -49,7 +49,7 @@
 - (void) setTopic:(NSAttributedString *) topic {
 	NSParameterAssert( topic != nil );
 
-	const char *msg = [[[self connection] class] _flattenedIRCStringForMessage:topic withEncoding:[self encoding]];
+	const char *msg = [[[self connection] class] _flattenedIRCStringForMessage:topic withEncoding:[self encoding] withFormat:[[self connection] chatFormat]];
 
 	[MVIRCChatConnectionThreadLock lock];
 
@@ -63,7 +63,7 @@
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
 
-	const char *msg = [[[self connection] class] _flattenedIRCStringForMessage:message withEncoding:encoding];
+	const char *msg = [[[self connection] class] _flattenedIRCStringForMessage:message withEncoding:encoding withFormat:[[self connection] chatFormat]];
 
 	[MVIRCChatConnectionThreadLock lock];
 
@@ -203,7 +203,7 @@
 	[MVIRCChatConnectionThreadLock lock];
 
 	if( reason ) {
-		const char *msg = [[[self connection] class] _flattenedIRCStringForMessage:reason withEncoding:[self encoding]];
+		const char *msg = [[[self connection] class] _flattenedIRCStringForMessage:reason withEncoding:[self encoding] withFormat:[[self connection] chatFormat]];
 		irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "KICK %s %s :%s", [[self connection] encodedBytesWithString:[self name]], [[self connection] encodedBytesWithString:[user nickname]], msg );
 	} else irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "KICK %s %s", [[self connection] encodedBytesWithString:[self name]], [[self connection] encodedBytesWithString:[user nickname]] );
 

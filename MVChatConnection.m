@@ -378,6 +378,19 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+- (void) setChatFormat:(NSString *) foramt {
+// subclass this method
+	[self doesNotRecognizeSelector:_cmd];
+}
+
+- (NSString *) chatFormat {
+// subclass this method
+	[self doesNotRecognizeSelector:_cmd];
+	return nil;
+}
+
+#pragma mark -
+
 - (void) setSecure:(BOOL) ssl {
 // subclass this method, if needed
 }
