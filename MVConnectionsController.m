@@ -196,6 +196,8 @@ static NSMenu *favoritesMenu = nil;
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"statusHeader"]];
 
 	[connections registerForDraggedTypes:[NSArray arrayWithObjects:MVConnectionPboardType,NSURLPboardType,@"CorePasteboardFlavorType 0x75726C20",nil]];
+	[connections setTarget:self];
+	[connections setDoubleAction:@selector( _connect: )];
 
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
