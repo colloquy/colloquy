@@ -1,4 +1,4 @@
-INSTALL_DIR=$(HOME)/Applications
+INSTALL_DIR:=$(shell if [[ -d $(HOME)/Applications/Colloquy.app ]]; then echo $(HOME)/Applications; else echo /Applications; fi)
 BUILD_DIR=build
 PRODUCT_NAME=Colloquy.app
 
