@@ -139,10 +139,17 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) showChatViewController:(id <JVChatViewController>) controller {
 	NSAssert1( [_views containsObject:controller], @"%@ is not a member of this window controller.", controller );
+
+	[[self window] disableFlushWindow];
+
 	[chatViewsOutlineView selectRow:[chatViewsOutlineView rowForItem:controller] byExtendingSelection:NO];
 	[chatViewsOutlineView scrollRowToVisible:[chatViewsOutlineView rowForItem:controller]];
+
 	[self _refreshList];
 	[self _refreshWindow];
+
+	[[self window] displayIfNeeded];
+	[[self window] enableFlushWindow];
 }
 
 #pragma mark -
@@ -840,6 +847,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[self _refreshWindowTitle];
 
+	[[self window] displayIfNeeded];
 	[[self window] enableFlushWindow];
 }
 

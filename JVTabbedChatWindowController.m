@@ -117,11 +117,15 @@
 - (void) showChatViewController:(id <JVChatViewController>) controller {
 	NSAssert1( [_views containsObject:controller], @"%@ is not a member of this window controller.", controller );
 
+	[[self window] disableFlushWindow];
+
 	unsigned int index = [_views indexOfObjectIdenticalTo:controller];
 	[tabView selectTabViewItemAtIndex:index];
 
-	[self _refreshWindow];
-	[self _refreshList];
+	// the _windowRefresh is called in the customTabView:didSelectTabViewItem:
+
+	[[self window] displayIfNeeded];
+	[[self window] enableFlushWindow];
 }
 
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
@@ -474,6 +478,8 @@
 	int distance = ( destHeight - tabSize.height ) * 0.6;
 	if( absolute || ( distance > -1 && distance < 1 ) ) distance = destHeight - tabSize.height;
 
+	[[self window] disableFlushWindow];
+
 	tabSize.height += distance;
 	[customTabsView setFrameSize:tabSize];
 	[customTabsView setNeedsDisplay:YES];
@@ -486,6 +492,7 @@
 	[tabView setNeedsDisplay:YES];
 
 	[[self window] displayIfNeeded];
+	[[self window] enableFlushWindow];
 
 	// return YES when the desired height is reached
 	return ( tabSize.height == destHeight );
@@ -522,6 +529,7 @@
 
 	[self _refreshWindowTitle];
 
+	[[self window] displayIfNeeded];
 	[[self window] enableFlushWindow];
 }
 @end

@@ -911,6 +911,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	[self _setupMarkedScroller];
 
+	[[display window] displayIfNeeded];
 	if( [[display window] isFlushWindowDisabled] )
 		[[display window] enableFlushWindow];
 

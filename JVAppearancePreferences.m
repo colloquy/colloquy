@@ -203,6 +203,7 @@
 	[self updatePreview];
 	[self parseStyleOptions];
 
+	[preview displayIfNeeded];
 	if( [[preview window] isFlushWindowDisabled] )
 		[[preview window] enableFlushWindow];
 }
@@ -370,6 +371,7 @@
 }
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
+	[preview displayIfNeeded];
 	if( [[preview window] isFlushWindowDisabled] )
 		[[preview window] enableFlushWindow];
 }

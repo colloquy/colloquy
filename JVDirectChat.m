@@ -1029,8 +1029,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	// Commit the changes
 	[[[send superview] superview] setFrame:sendFrame];
 	[[[display superview] superview] setFrame:webFrame];
-	[splitView displayIfNeeded]; // makes the WebView draw correctly
-	[splitView setNeedsDisplay:YES]; // makes it redraw correctly
 
 	if( _scrollerIsAtBottom ) {
 		NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
@@ -1038,6 +1036,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[scrollView reflectScrolledClipView:[scrollView contentView]];
 	}
 
+	[splitView displayIfNeeded]; // makes the WebView draw correctly
+	[splitView setNeedsDisplay:YES]; // makes thr divider redraw correctly later
 	[[display window] enableFlushWindow]; // flush everything we have drawn
 }
 
@@ -1303,6 +1303,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	if( [messageString length] ) {
 		[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
 		[self appendMessage:messageString subsequent:NO];
+		[display displayIfNeeded];
 		[[display window] enableFlushWindow];
 	}
 
@@ -1536,6 +1537,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 			if( loc ) [[self _verticalMarkedScroller] addMarkAt:loc];
 		}
 
+		[display displayIfNeeded];
 		[[display window] enableFlushWindow]; // flush everything we have drawn
 
 		_firstMessage = NO; // not the first message anymore
