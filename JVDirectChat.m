@@ -95,8 +95,6 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
-#pragma mark -
-
 @interface JVDirectChat (JVDirectChatPrivate)
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
