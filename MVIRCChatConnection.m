@@ -1040,7 +1040,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ( self = [super init] ) ) {
 		_proxyUsername = nil;
 		_proxyPassword = nil;
-		_chatFormat = nil;
 		_chatConnection = NULL;
 		_chatConnectionSettings = NULL;
 
@@ -1176,7 +1175,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	}
 
 	if( [[reason string] length] ) {
-		const char *msg = [[self class] _flattenedIRCStringForMessage:reason withEncoding:[self encoding] withFormat:[self chatFormat]];
+		const char *msg = [[self class] _flattenedIRCStringForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 		[self sendRawMessage:[NSString stringWithFormat:@"QUIT :%s", msg] immediately:YES];
 	} else [self sendRawMessage:@"QUIT" immediately:YES];
 
@@ -1397,17 +1396,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
-- (void) setChatFormat:(NSString *) format {
-	[_chatFormat autorelease];
-	_chatFormat = [format copyWithZone:[self zone]];
-}
-
-- (NSString *) chatFormat {
-	return [[_chatFormat retain] autorelease];
-}
-
-#pragma mark -
-
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
 	if( ! _chatConnection ) return;
@@ -1525,7 +1513,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	if( [[message string] length] ) {
 		_awayMessage = [message copyWithZone:[self zone]];
-		const char *msg = [[self class] _flattenedIRCStringForMessage:message withEncoding:[self encoding] withFormat:[self chatFormat]];
+		const char *msg = [[self class] _flattenedIRCStringForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 
 		[MVIRCChatConnectionThreadLock lock];
 
@@ -1622,9 +1610,24 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signals_remove_module( MODULE_NAME );
 }
 
-+ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc withFormat:(NSString *) format {
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:enc], @"StringEncoding", [NSNumber numberWithBool:YES], @"NullTerminatedReturn", format, @"FormatType", nil];
-	NSData *data = [message IRCFormatWithOptions:options];
++ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format {
+	NSString *cformat = nil;
+
+	switch( format ) {
+	case MVChatConnectionDefaultMessageFormat:
+	case MVChatWindowsIRCMessageFormat:
+		cformat = NSChatWindowsIRCFormatType;
+		break;
+	case MVChatCTCPTwoMessageFormat:
+		cformat = NSChatCTCPTwoFormatType;
+		break;
+	default:
+	case MVChatNoMessageFormat:
+		cformat = nil;
+	}
+
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:enc], @"StringEncoding", [NSNumber numberWithBool:YES], @"NullTerminatedReturn", cformat, @"FormatType", nil];
+	NSData *data = [message chatFormatWithOptions:options];
 	return [data bytes];
 }
 

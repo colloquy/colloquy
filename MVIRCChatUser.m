@@ -49,7 +49,7 @@
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
 
-	const char *msg = [[[self connection] class] _flattenedIRCStringForMessage:message withEncoding:encoding withFormat:[[self connection] chatFormat]];
+	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding andChatFormat:[[self connection] outgoingChatFormat]];
 
 	[MVIRCChatConnectionThreadLock lock];
 

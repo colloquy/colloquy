@@ -23,6 +23,13 @@ typedef enum {
 	MVChatConnectionClientPublicKeyType = 'clnT'
 } MVChatConnectionPublicKeyType;
 
+typedef enum {
+	MVChatConnectionDefaultMessageFormat = 'cDtF',
+	MVChatNoMessageFormat = 'nOcF',
+	MVChatWindowsIRCMessageFormat = 'mIrF',
+	MVChatCTCPTwoMessageFormat = 'ct2F'
+} MVChatMessageFormat;
+
 @class MVChatRoom;
 @class MVChatUser;
 @class MVUploadFileTransfer;
@@ -54,6 +61,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 @protected
 	MVChatConnectionStatus _status;
 	MVChatConnectionProxy _proxy;
+	MVChatMessageFormat _outgoingChatFormat;
 	NSStringEncoding _encoding;
 
 	NSString *_npassword;
@@ -143,8 +151,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) setServerPort:(unsigned short) port;
 - (unsigned short) serverPort;
 
-- (void) setChatFormat:(NSString *) format;
-- (NSString *) chatFormat;
+- (void) setOutgoingChatFormat:(MVChatMessageFormat) format;
+- (MVChatMessageFormat) outgoingChatFormat;
 
 - (void) setProxyUsername:(NSString *) username;
 - (NSString *) proxyUsername;

@@ -30,7 +30,7 @@
 #pragma mark -
 
 @interface MVChatConnection (MVSILCChatConnectionPrivate)
-+ (const char *) _flattenedSILCStringForMessage:(NSAttributedString *) message;
++ (const char *) _flattenedSILCStringForMessage:(NSAttributedString *) message andChatFormat:(MVChatMessageFormat) format;
 
 - (SilcClient) _silcClient;
 - (SilcClientParams *) _silcClientParams;

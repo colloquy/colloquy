@@ -69,6 +69,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_lastConnectAttempt = nil;
 		_awayMessage = nil;
 		_encoding = NSUTF8StringEncoding;
+		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
 		_nextAltNickIndex = 0;
 
 		_status = MVChatConnectionDisconnectedStatus;
@@ -378,15 +379,13 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setChatFormat:(NSString *) foramt {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+- (void) setOutgoingChatFormat:(MVChatMessageFormat) format {
+	if( ! format ) format = MVChatConnectionDefaultMessageFormat;
+	_outgoingChatFormat = format;
 }
 
-- (NSString *) chatFormat {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-	return nil;
+- (MVChatMessageFormat) outgoingChatFormat {
+	return _outgoingChatFormat;
 }
 
 #pragma mark -

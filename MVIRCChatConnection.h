@@ -8,7 +8,6 @@ extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 	NSMutableDictionary *_knownUsers;
 	NSString *_proxyUsername;
 	NSString *_proxyPassword;
-	NSString *_chatFormat;
 	SERVER_REC *_chatConnection;
 	SERVER_CONNECT_REC *_chatConnectionSettings;
 }
@@ -23,7 +22,7 @@ extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 + (void) _registerCallbacks;
 + (void) _deregisterCallbacks;
 
-+ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc withFormat:(NSString *) format;
++ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format;
 
 - (SERVER_REC *) _irssiConnection;
 - (void) _setIrssiConnection:(SERVER_REC *) server;

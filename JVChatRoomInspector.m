@@ -163,11 +163,11 @@
 
 	NSFont *baseFont = [NSFont userFontOfSize:12.];
 	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[_room encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
-	NSAttributedString *messageString = [NSMutableAttributedString attributedStringWithIRCFormat:[(MVChatRoom *)[_room target] topic] options:options];
+	NSAttributedString *messageString = [NSMutableAttributedString attributedStringWithChatFormat:[(MVChatRoom *)[_room target] topic] options:options];
 
 	if( ! messageString ) {
 		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
-		messageString = [NSAttributedString attributedStringWithIRCFormat:[(MVChatRoom *)[_room target] topic] options:options];
+		messageString = [NSAttributedString attributedStringWithChatFormat:[(MVChatRoom *)[_room target] topic] options:options];
 	}
 
 	[[topic textStorage] setAttributedString:messageString];

@@ -315,10 +315,10 @@ static JVChatController *sharedInstance = nil;
 
 		if( [[user nickname] isEqualToString:@"NickServ"] || [[user nickname] isEqualToString:@"MemoServ"] ) {
 			NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
-			NSAttributedString *messageString = [NSAttributedString attributedStringWithIRCFormat:message options:options];
+			NSAttributedString *messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
 			if( ! messageString ) {
 				[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
-				messageString = [NSAttributedString attributedStringWithIRCFormat:message options:options];
+				messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
 			}
 
 			if( [[user nickname] isEqualToString:@"NickServ"] ) {

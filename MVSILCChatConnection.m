@@ -981,7 +981,7 @@ static SilcClientOperations silcClientOps = {
 	_sentQuitCommand = YES;
 
 	if( [[reason string] length] ) {
-		const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:reason];
+		const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:reason andChatFormat:[self outgoingChatFormat]];
 		[self sendRawMessageWithFormat:@"QUIT %s", msg];
 	} else {
 		[self sendRawMessage:@"QUIT"];
@@ -1115,16 +1115,6 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (void) setChatFormat:(NSString *) format {
-	// do nothing
-}
-
-- (NSString *) chatFormat {
-	return nil;
-}
-
-#pragma mark -
-
 - (void) publicKeyVerified:(NSDictionary *) dictionary andAccepted:(BOOL) accepted andAlwaysAccept:(BOOL) alwaysAccept {
 	SilcVerifyPublicKey completition;
 	void *context;
@@ -1252,7 +1242,7 @@ static SilcClientOperations silcClientOps = {
 		[self sendRawMessage:@"UMODE +g"];
 
 		[[self _silcClientLock] lock];
-		silc_client_set_away_message( [self _silcClient], [self _silcConn], (char *) [MVSILCChatConnection _flattenedSILCStringForMessage:message] );
+		silc_client_set_away_message( [self _silcClient], [self _silcConn], (char *) [MVSILCChatConnection _flattenedSILCStringForMessage:message andChatFormat:[self outgoingChatFormat]] );
 		[[self _silcClientLock] unlock];
 
 		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
@@ -1279,9 +1269,24 @@ static SilcClientOperations silcClientOps = {
 #pragma mark -
 
 @implementation MVSILCChatConnection (MVSILCChatConnectionPrivate)
-+ (const char *) _flattenedSILCStringForMessage:(NSAttributedString *) message {
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NullTerminatedReturn", nil];
-	NSData *data = [message IRCFormatWithOptions:options];
++ (const char *) _flattenedSILCStringForMessage:(NSAttributedString *) message andChatFormat:(MVChatMessageFormat) format {
+	NSString *cformat = nil;
+
+	switch( format ) {
+		case MVChatConnectionDefaultMessageFormat:
+		case MVChatWindowsIRCMessageFormat:
+			cformat = NSChatWindowsIRCFormatType;
+			break;
+		case MVChatCTCPTwoMessageFormat:
+			cformat = NSChatCTCPTwoFormatType;
+			break;
+		default:
+		case MVChatNoMessageFormat:
+			cformat = nil;
+	}
+
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NullTerminatedReturn", cformat, @"FormatType", nil];
+	NSData *data = [message chatFormatWithOptions:options];
 	return [data bytes];
 }
 
@@ -1291,7 +1296,7 @@ static SilcClientOperations silcClientOps = {
 	while( [self isConnected] || [self status] == MVChatConnectionConnectingStatus ) {
 		if( [_silcClientLock tryLock] ) { // prevents some deadlocks
 			if( _silcClient && _silcClient -> schedule )
-				silc_schedule_one(  _silcClient -> schedule, 100000 );
+				silc_schedule_one( _silcClient -> schedule, 100000 );
 				// use silc_schedule_one over silc_client_run_one since we want to block a bit inside the locks
 			[_silcClientLock unlock];
 		}

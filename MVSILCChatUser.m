@@ -87,7 +87,7 @@
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
 
-	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message];
+	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message andChatFormat:[[self connection] outgoingChatFormat]];
 	SilcMessageFlags flags = SILC_MESSAGE_FLAG_UTF8;
 
 	if( action) flags |= SILC_MESSAGE_FLAG_ACTION;

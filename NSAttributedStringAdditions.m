@@ -68,6 +68,9 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 	return YES;
 }
 
+NSString *NSChatWindowsIRCFormatType = @"NSChatWindowsIRCFormatType";
+NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
+
 #pragma mark -
 
 @implementation NSAttributedString (NSAttributedStringHTMLAdditions)
@@ -183,11 +186,11 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 
 #pragma mark -
 
-+ (id) attributedStringWithIRCFormat:(NSData *) data options:(NSDictionary *) options {
-	return [[[self alloc] initWithIRCFormat:data options:options] autorelease];
++ (id) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options {
+	return [[[self alloc] initWithChatFormat:data options:options] autorelease];
 }
 
-- (id) initWithIRCFormat:(NSData *) data options:(NSDictionary *) options {
+- (id) initWithChatFormat:(NSData *) data options:(NSDictionary *) options {
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
@@ -520,10 +523,10 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 	NSMutableData *ret = [NSMutableData data];
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
-	
+
 	NSCharacterSet *nonASCIISet = [[NSCharacterSet characterSetWithRange:NSMakeRange(0,128)] invertedSet];
-	
-	if ([[self string] rangeOfCharacterFromSet:nonASCIISet].location != NSNotFound) {
+
+	if( [[self string] rangeOfCharacterFromSet:nonASCIISet].location != NSNotFound ) {
 		char *ctcpEncoding = NULL;
 
 		switch( encoding ) {
@@ -577,9 +580,8 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 
 		id link = [dict objectForKey:NSLinkAttributeName];
-		
+
 		if( ! ( link && oldLink && [link isEqual:oldLink] ) ) {
-			
 			NSColor *foregroundColor = nil, *backgroundColor = nil;
 			if( ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
 				foregroundColor = [dict objectForKey:NSForegroundColorAttributeName];
@@ -607,6 +609,7 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 					foreColorString = @".";
 				}
 			}
+
 			if( ( backgroundColor && oldBackground && ![backgroundColor isEqual:oldBackground] ) ||
 				( backgroundColor != oldBackground ) ) {
 				if( backgroundColor ) {
@@ -615,22 +618,21 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 					backColorString = @".";
 				}
 			}
+
 			if( foreColorString || backColorString ) {
 				[ret appendBytes:"\006C" length:2];
-				
+
 				// If both foreground and background colors are unset, don't bother
 				// with anything since .. is assumed
 				if( ! ( foregroundColor == nil && backgroundColor == nil ) ) {
 					if( foreColorString ) {
-						[ret appendBytes:[foreColorString UTF8String]
-								  length:strlen( [foreColorString UTF8String] )];
+						[ret appendBytes:[foreColorString UTF8String] length:strlen( [foreColorString UTF8String] )];
 					} else {
 						[ret appendBytes:"-" length:1];
 					}
 
 					if( backColorString ) {
-						[ret appendBytes:[backColorString UTF8String]
-								  length:strlen( [backColorString UTF8String] )];
+						[ret appendBytes:[backColorString UTF8String] length:strlen( [backColorString UTF8String] )];
 					} // If no background, don't bother with "-" since it's assumed
 				}
 
@@ -649,13 +651,15 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 			NSData *data = nil;
 			if( [link isKindOfClass:[NSURL class]] || [link isKindOfClass:[NSString class]] ) {
 				data = [[link description] dataUsingEncoding:encoding allowLossyConversion:YES];
-				[ret appendBytes:"\006L\006" length:3];
-				[ret appendData:data];
-				[ret appendBytes:"\006L-\006" length:4];
+				if( data ) {
+					[ret appendBytes:"\006L\006" length:3];
+					[ret appendData:data];
+					[ret appendBytes:"\006L-\006" length:4];
+				}
 			} else {
 				NSString *text = [[self attributedSubstringFromRange:effectiveRange] string];
 				data = [text dataUsingEncoding:encoding allowLossyConversion:YES];
-				[ret appendData:data];
+				if( data ) [ret appendData:data];
 			}
 			
 			wasBold = bold; wasItalic = italic; wasUnderline = underline; wasStrikethrough = strikethrough;
@@ -672,9 +676,23 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 	return ret;
 }
 
-- (NSData *) IRCFormatWithOptions:(NSDictionary *) options {
-	if( [[options objectForKey:@"FormatType"] isEqualToString:@"CTCP2"] )
-		return [self _CTCP2FormatWithOptions:options];
-	else return [self _mIRCFormatWithOptions:options];
+- (NSData *) chatFormatWithOptions:(NSDictionary *) options {
+	NSString *format = [options objectForKey:@"FormatType"];
+
+	if( [format isEqualToString:NSChatCTCPTwoFormatType] ) return [self _CTCP2FormatWithOptions:options];
+	else if( [format isEqualToString:NSChatWindowsIRCFormatType] ) return [self _mIRCFormatWithOptions:options];
+
+	// No formatting.
+	NSMutableData *ret = [NSMutableData data];
+	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
+	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
+
+	NSData *data = [[self string] dataUsingEncoding:encoding allowLossyConversion:YES];
+	if( data ) [ret appendData:data];
+
+	if( [[options objectForKey:@"NullTerminatedReturn"] boolValue] )
+		[ret appendBytes:"\0" length:1];
+
+	return ret;
 }
 @end

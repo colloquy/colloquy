@@ -639,11 +639,11 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
 
 	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
-	NSTextStorage *messageString = [NSTextStorage attributedStringWithIRCFormat:message options:options];
+	NSTextStorage *messageString = [NSTextStorage attributedStringWithChatFormat:message options:options];
 
 	if( ! messageString ) {
 		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
-		messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
+		messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, nil];
 		NSMutableAttributedString *error = [[[NSMutableAttributedString alloc] initWithString:[@" " stringByAppendingString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )] attributes:attributes] autorelease];
@@ -799,8 +799,23 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) echoSentMessageToDisplay:(JVMutableChatMessage *) message {
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[self encoding]], @"StringEncoding", nil];
-	NSData *msgData = [[message body] IRCFormatWithOptions:options]; // we could save this back to the message object before sending
+	NSString *cformat = nil;
+
+	switch( [[self connection] outgoingChatFormat] ) {
+	case MVChatConnectionDefaultMessageFormat:
+	case MVChatWindowsIRCMessageFormat:
+		cformat = NSChatWindowsIRCFormatType;
+		break;
+	case MVChatCTCPTwoMessageFormat:
+		cformat = NSChatCTCPTwoFormatType;
+		break;
+	default:
+	case MVChatNoMessageFormat:
+		cformat = nil;
+	}
+
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[self encoding]], @"StringEncoding", cformat, @"FormatType", nil];
+	NSData *msgData = [[message body] chatFormatWithOptions:options]; // we could save this back to the message object before sending
 	[self addMessageToDisplay:msgData fromUser:[message sender] asAction:[message isAction] withIdentifier:[message messageIdentifier]];
 }
 
@@ -1362,11 +1377,11 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
 
 	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
-	NSMutableAttributedString *messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
+	NSMutableAttributedString *messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 
 	if( ! messageString ) {
 		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
-		messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
+		messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 	}
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] ) {

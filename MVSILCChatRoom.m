@@ -48,7 +48,7 @@
 
 - (void) setTopic:(NSAttributedString *) topic {
 	NSParameterAssert( topic != nil );
-	const char *msg = [[[self connection] class] _flattenedSILCStringForMessage:topic];
+	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:topic andChatFormat:[[self connection] outgoingChatFormat]];
 	[[self connection] sendRawMessageWithFormat:@"TOPIC %@ %s", [self name], msg];
 }
 
@@ -57,7 +57,7 @@
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
 
-	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message];
+	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message andChatFormat:[[self connection] outgoingChatFormat]];
 	SilcMessageFlags flags = SILC_MESSAGE_FLAG_UTF8;
 
 	if( action ) flags |= SILC_MESSAGE_FLAG_ACTION;
@@ -172,7 +172,7 @@
 	[super kickOutMemberUser:user forReason:reason];
 
 	if( reason ) {
-		const char *msg = [[[self connection] class] _flattenedSILCStringForMessage:reason];
+		const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:reason andChatFormat:[[self connection] outgoingChatFormat]];
 		[[self connection] sendRawMessageWithFormat:@"KICK %@ %@ %s", [self name], [user nickname], msg];
 	} else [[self connection] sendRawMessageWithFormat:@"KICK %@ %@", [self name], [user nickname]];
 }
