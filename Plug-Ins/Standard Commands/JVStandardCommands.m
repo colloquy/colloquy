@@ -42,55 +42,55 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection {
-	if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
+	if( ! [command caseInsensitiveCompare:@"msg"] || ! [command caseInsensitiveCompare:@"query"] ) {
 		return [self handleMessageCommand:command withMessage:arguments forConnection:connection alwaysShow:NO];
-	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"amsg"] || ! [command caseInsensitiveCompare:@"ame"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
-	} else if( [command isEqualToString:@"away"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"away"] ) {
 		[connection setAwayStatusWithMessage:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"aaway"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"aaway"] ) {
 		return [self handleMassAwayWithMessage:arguments];
-	} else if( [command isEqualToString:@"j"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
-	} else if( [command isEqualToString:@"leave"] || [command isEqualToString:@"part"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"leave"] || ! [command caseInsensitiveCompare:@"part"] ) {
 		return [self handlePartWithArguments:[arguments string] forConnection:connection];
-	} else if( [command isEqualToString:@"server"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
-	} else if( [command isEqualToString:@"dcc"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"dcc"] ) {
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&subcmd];
 		if( [subcmd isEqualToString:@"send"] )
 			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
 		return NO;
-	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"raw"] || ! [command caseInsensitiveCompare:@"quote"] ) {
 		[connection sendRawMessage:[arguments string] immediately:YES];
 		return YES;
-	} else if( [command isEqualToString:@"umode"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"umode"] ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [connection nickname], [arguments string]]];
 		return YES;
-	} else if( [command isEqualToString:@"ctcp"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"ctcp"] ) {
 		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
-	} else if( [command isEqualToString:@"wi"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"wi"] ) {
 		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:YES];
 		return YES;
-	} else if( [command isEqualToString:@"wii"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"wii"] ) {
 		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:NO];
 		return YES;
-	} else if( [command isEqualToString:@"globops"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"globops"] ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"GLOBOPS :%@", [arguments string]]];
 		return YES;
-	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"quit"] || ! [command caseInsensitiveCompare:@"disconnect"] ) {
 		[connection disconnectWithReason:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"server"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"reconnect"] || ! [command caseInsensitiveCompare:@"server"] ) {
 		[connection connect];
 		return YES;
-	} else if( [command isEqualToString:@"exit"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
-	} else if( [command isEqualToString:@"reload"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
 		if( [[arguments string] isEqualToString:@"plugins"] ) {
 			[_manager findAndLoadPlugins];
 			return YES;
@@ -100,10 +100,11 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(JVChatRoom *) room {
-	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
+	if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] || ! [command caseInsensitiveCompare:@"say"] ) {
 		if( [arguments length] ) {
-			[room echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
-			[[room connection] sendMessage:arguments withEncoding:[room encoding] toChatRoom:[room target] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+			BOOL action = ( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] );
+			[room echoSentMessageToDisplay:arguments asAction:action];
+			[[room connection] sendMessage:arguments withEncoding:[room encoding] toChatRoom:[room target] asAction:action];
 		}
 		return YES;
 	} else if( [[command substringToIndex:1] isEqualToString:@"/"] ) {
@@ -118,64 +119,64 @@
 			[[room connection] sendMessage:line withEncoding:[room encoding] toUser:[room target] asAction:NO];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"msg"] || ! [command caseInsensitiveCompare:@"query"] ) {
 		return [self handleMessageCommand:command withMessage:arguments forConnection:[room connection] alwaysShow:YES];
-	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"amsg"] || ! [command caseInsensitiveCompare:@"ame"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:[room connection]];
-	} else if( [command isEqualToString:@"away"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"away"] ) {
 		[[room connection] setAwayStatusWithMessage:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"aaway"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"aaway"] ) {
 		return [self handleMassAwayWithMessage:arguments];
-	} else if( [command isEqualToString:@"j"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"j"] || ! [command caseInsensitiveCompare:@"join"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[room connection]];
-	} else if( [command isEqualToString:@"leave"] || [command isEqualToString:@"part"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"leave"] || ! [command caseInsensitiveCompare:@"part"] ) {
 		if( ! [arguments length] ) [self handlePartWithArguments:[room target] forConnection:[room connection]];
 		else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		return YES;
-	} else if( [command isEqualToString:@"server"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
-	} else if( [command isEqualToString:@"list"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"list"] ) {
 		id browser = [NSClassFromString( @"JVChatRoomBrowser" ) chatRoomBrowserForConnection:[room connection]];
 		[browser showWindow:nil];
 		[browser setFilter:[arguments string]];
 		[browser showRoomBrowser:nil];
 		return YES;
-	} else if( [command isEqualToString:@"dcc"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"dcc"] ) {
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&subcmd];
 		if( [subcmd isEqualToString:@"send"] )
 			return [self handleFileSendWithArguments:[arguments string] forConnection:[room connection]];
 		return NO;
-	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"raw"] || ! [command caseInsensitiveCompare:@"quote"] ) {
 		[[room connection] sendRawMessage:[arguments string] immediately:YES];
 		return YES;
-	} else if( [command isEqualToString:@"ctcp"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"ctcp"] ) {
 		return [self handleCTCPWithArguments:[arguments string] forConnection:[room connection]];
-	} else if( [command isEqualToString:@"topic"] || [command isEqualToString:@"t"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"topic"] || ! [command caseInsensitiveCompare:@"t"] ) {
 		if( ! [arguments length] ) return NO;
 		NSStringEncoding encoding = [room encoding];
 		if( ! encoding ) encoding = [[room connection] encoding];
 		[[room connection] setTopic:arguments withEncoding:encoding forRoom:[room target]];
 		return YES;
-	} else if( [command isEqualToString:@"umode"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"umode"] ) {
 		[[room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [[room connection] nickname], [arguments string]]];
 		return YES;
-	} else if( [command isEqualToString:@"names"] && ! [[arguments string] length] ) {
+	} else if( ! [command caseInsensitiveCompare:@"names"] && ! [[arguments string] length] ) {
 		[[room windowController] openViewsDrawer:nil];
 		if( [[room windowController] isListItemExpanded:room] ) [[room windowController] collapseListItem:room];
 		else [[room windowController] expandListItem:room];
 		return YES;
-	} else if( ( [command isEqualToString:@"cycle"] || [command isEqualToString:@"hop"] ) && ! [[arguments string] length] ) {
+	} else if( ( ! [command caseInsensitiveCompare:@"cycle"] || ! [command caseInsensitiveCompare:@"hop"] ) && ! [[arguments string] length] ) {
 		[room setKeepAfterPart:YES];
 		[room partChat:nil];
 		[room joinChat:nil];
 		return YES;
-	} else if( [command isEqualToString:@"clear"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"clear"] ) {
 		[room clearDisplay:nil];
 		return YES;
-	} else if( [command isEqualToString:@"kick"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"kick"] ) {
 		NSString *member = nil, *msg = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 
@@ -189,7 +190,7 @@
 
 		[[room connection] kickMember:member inRoom:[room target] forReason:msg];
 		return YES;
-	} else if( [command isEqualToString:@"op"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"op"] ) {
 		NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 		NSEnumerator *e = [args objectEnumerator];
 		NSString *arg;
@@ -198,7 +199,7 @@
 				[[room connection] promoteMember:arg inRoom:[room target]];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"deop"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"deop"] ) {
 		NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 		NSEnumerator *e = [args objectEnumerator];
 		NSString *arg;
@@ -207,7 +208,7 @@
 				[[room connection] demoteMember:arg inRoom:[room target]];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"halfop"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"halfop"] ) {
 		NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 		NSEnumerator *e = [args objectEnumerator];
 		NSString *arg;
@@ -216,7 +217,7 @@
 				[[room connection] halfopMember:arg inRoom:[room target]];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"dehalfop"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"dehalfop"] ) {
 		NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 		NSEnumerator *e = [args objectEnumerator];
 		NSString *arg;
@@ -225,7 +226,7 @@
 				[[room connection] dehalfopMember:arg inRoom:[room target]];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"voice"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"voice"] ) {
 		NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 		NSEnumerator *e = [args objectEnumerator];
 		NSString *arg;
@@ -234,7 +235,7 @@
 				[[room connection] voiceMember:arg inRoom:[room target]];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"devoice"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"devoice"] ) {
 		NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 		NSEnumerator *e = [args objectEnumerator];
 		NSString *arg;
@@ -243,7 +244,7 @@
 				[[room connection] devoiceMember:arg inRoom:[room target]];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"ban"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"ban"] ) {
 		NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 		NSEnumerator *e = [args objectEnumerator];
 		NSString *arg;
@@ -252,7 +253,7 @@
 				[[room connection] banMember:arg inRoom:[room target]];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"unban"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"unban"] ) {
 		NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 		NSEnumerator *e = [args objectEnumerator];
 		NSString *arg;
@@ -261,33 +262,33 @@
 				[[room connection] unbanMember:arg inRoom:[room target]];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"quit"] || ! [command caseInsensitiveCompare:@"disconnect"] ) {
 		[[room connection] disconnectWithReason:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"server"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"reconnect"] || ! [command caseInsensitiveCompare:@"server"] ) {
 		[[room connection] connect];
 		return YES;
-	} else if( [command isEqualToString:@"exit"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
-	} else if( [command isEqualToString:@"whois"] || [command isEqualToString:@"wi"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"whois"] || ! [command caseInsensitiveCompare:@"wi"] ) {
 		id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
 		id info = [NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member];
 		[(id)[info inspector] setFetchLocalServerInfoOnly:YES];
 		[info show:nil];
 		return YES;
-	} else if( [command isEqualToString:@"wii"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"wii"] ) {
 		id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
 		[[NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member] show:nil];
 		return YES;
-	} else if( [command isEqualToString:@"globops"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"globops"] ) {
 		[[room connection] sendRawMessage:[NSString stringWithFormat:@"GLOBOPS :%@", [arguments string]]];
 		return YES;
-	} else if( [command isEqualToString:@"console"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"console"] ) {
 		id controller = [[_manager chatController] chatConsoleForConnection:[room connection] ifExists:NO];
 		[[controller windowController] showChatViewController:controller];
 		return YES;
-	} else if( [command isEqualToString:@"reload"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
 		if( [[arguments string] isEqualToString:@"plugins"] ) {
 			[_manager findAndLoadPlugins];
 			return YES;
@@ -301,9 +302,9 @@
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatEmoticonSetInstalledNotification" object:nil]; 
 			return YES;
 		}
-	} else if( [command isEqualToString:@"ignore"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"ignore"] ) {
 		return [self handleIgnoreWithArguments:[arguments string] inView:room];
-	} else if( [command isEqualToString:@"invite"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"invite"] ) {
         NSString *nick = nil;
 		NSString *roomName = nil;
         NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
@@ -321,10 +322,11 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toChat:(JVDirectChat *) chat {
-	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
+	if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] || ! [command caseInsensitiveCompare:@"say"] ) {
 		if( [arguments length] ) {
-			[chat echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
-			[[chat connection] sendMessage:arguments withEncoding:[chat encoding] toUser:[chat target] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+			BOOL action = ( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] );
+			[chat echoSentMessageToDisplay:arguments asAction:action];
+			[[chat connection] sendMessage:arguments withEncoding:[chat encoding] toUser:[chat target] asAction:action];
 		}
 		return YES;
 	} else if ( [[command substringToIndex:1] isEqualToString:@"/"] ) {
@@ -341,71 +343,71 @@
 			[[chat connection] sendMessage:line withEncoding:[chat encoding] toUser:[chat target] asAction:NO];
 		}
 		return YES;
-	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"msg"] || ! [command caseInsensitiveCompare:@"query"] ) {
 		return [self handleMessageCommand:command withMessage:arguments forConnection:[chat connection] alwaysShow:YES];
-	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"amsg"] || ! [command caseInsensitiveCompare:@"ame"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:[chat connection]];
-	} else if( [command isEqualToString:@"away"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"away"] ) {
 		[[chat connection] setAwayStatusWithMessage:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"aaway"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"aaway"] ) {
 		return [self handleMassAwayWithMessage:arguments];
-	} else if( [command isEqualToString:@"j"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[chat connection]];
-	} else if( [command isEqualToString:@"leave"] || [command isEqualToString:@"part"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"leave"] || ! [command caseInsensitiveCompare:@"part"] ) {
 		return [self handlePartWithArguments:[arguments string] forConnection:[chat connection]];
-	} else if( [command isEqualToString:@"server"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
-	} else if( [command isEqualToString:@"list"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"list"] ) {
 		id browser = [NSClassFromString( @"JVChatRoomBrowser" ) chatRoomBrowserForConnection:[chat connection]];
 		[browser showWindow:nil];
 		[browser setFilter:[arguments string]];
 		[browser showRoomBrowser:nil];
 		return YES;
-	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"raw"] || ! [command caseInsensitiveCompare:@"quote"] ) {
 		[[chat connection] sendRawMessage:[arguments string] immediately:YES];
 		return YES;
-	} else if( [command isEqualToString:@"umode"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"umode"] ) {
 		[[chat connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [[chat connection] nickname], [arguments string]]];
 		return YES;
-	} else if( [command isEqualToString:@"ctcp"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"ctcp"] ) {
 		return [self handleCTCPWithArguments:[arguments string] forConnection:[chat connection]];
-	} else if( [command isEqualToString:@"dcc"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"dcc"] ) {
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&subcmd];
 		if( [subcmd isEqualToString:@"send"] )
 			return [self handleFileSendWithArguments:[arguments string] forConnection:[chat connection]];
 		return NO;
-	} else if( [command isEqualToString:@"clear"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"clear"] ) {
 		[chat clearDisplay:nil];
-	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"quit"] || ! [command caseInsensitiveCompare:@"disconnect"] ) {
 		[[chat connection] disconnectWithReason:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"server"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"reconnect"] || ! [command caseInsensitiveCompare:@"server"] ) {
 		[[chat connection] connect];
 		return YES;
-	} else if( [command isEqualToString:@"exit"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
-	} else if( [command isEqualToString:@"console"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"console"] ) {
 		id controller = [[_manager chatController] chatConsoleForConnection:[chat connection] ifExists:NO];
 		[[controller windowController] showChatViewController:controller];
 		return YES;
-	} else if( [command isEqualToString:@"whois"] || [command isEqualToString:@"wi"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"whois"] || ! [command caseInsensitiveCompare:@"wi"] ) {
 		id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:(JVChatRoom *)chat andNickname:[arguments string]] autorelease];
 		id info = [NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member];
 		[(id)[info inspector] setFetchLocalServerInfoOnly:YES];
 		[info show:nil];
 		return YES;
-	} else if( [command isEqualToString:@"wii"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"wii"] ) {
 		id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:(JVChatRoom *)chat andNickname:[arguments string]] autorelease];
 		[[NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member] show:nil];
 		return YES;
-	} else if( [command isEqualToString:@"globops"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"globops"] ) {
 		[[chat connection] sendRawMessage:[NSString stringWithFormat:@"GLOBOPS :%@", [arguments string]]];
 		return YES;
-	} else if( [command isEqualToString:@"reload"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
 		if( [[arguments string] isEqualToString:@"plugins"] ) {
 			[_manager findAndLoadPlugins];
 			return YES;
@@ -419,7 +421,7 @@
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatEmoticonSetInstalledNotification" object:nil]; 
 			return YES;
 		}
-	} else if( [command isEqualToString:@"ignore"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"ignore"] ) {
 		return [self handleIgnoreWithArguments:[arguments string] inView:chat];
 	}
 
@@ -536,7 +538,7 @@
 	}
 
 	BOOL show = NO;
-	show = ( [command isEqualToString:@"query"] ? YES : show );
+	show = ( ! [command caseInsensitiveCompare:@"query"] ? YES : show );
 	show = ( ! [msg length] ? YES : show );
 	show = ( always ? YES : show );
 
@@ -558,8 +560,8 @@
 	while( ( item = [enumerator nextObject] ) ) {
 		encoding = [item encoding];
 		if( ! encoding ) encoding = [connection encoding];
-		[connection sendMessage:message withEncoding:encoding toChatRoom:[item target] asAction:[command isEqualToString:@"ame"]];
-		[item echoSentMessageToDisplay:message asAction:[command isEqualToString:@"ame"]];
+		[connection sendMessage:message withEncoding:encoding toChatRoom:[item target] asAction:! [command caseInsensitiveCompare:@"ame"]];
+		[item echoSentMessageToDisplay:message asAction:! [command caseInsensitiveCompare:@"ame"]];
 	}
 
 	return YES;
