@@ -4,6 +4,7 @@
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSURLAdditions.h>
+#import <ChatCore/NSColorAdditions.h>
 #import "MVColorPanel.h"
 #import "MVApplicationController.h"
 #import "JVChatWindowController.h"
@@ -412,7 +413,7 @@ static BOOL applicationIsTerminating = NO;
 				NSNumber *checked = [item objectForKey:@"checked"];
 				NSNumber *indent = [item objectForKey:@"indent"];
 				NSNumber *alternate = [item objectForKey:@"alternate"];
-				NSString *iconPath = [item objectForKey:@"icon"];
+				id iconPath = [item objectForKey:@"icon"];
 				id iconSize = [item objectForKey:@"iconsize"];
 				NSString *tooltip = [item objectForKey:@"tooltip"];
 				id context = [item objectForKey:@"context"];
@@ -423,10 +424,10 @@ static BOOL applicationIsTerminating = NO;
 				if( ! [checked isKindOfClass:[NSNumber class]] ) checked = nil;
 				if( ! [indent isKindOfClass:[NSNumber class]] ) indent = nil;
 				if( ! [alternate isKindOfClass:[NSNumber class]] ) alternate = nil;
-				if( ! [iconPath isKindOfClass:[NSString class]] ) iconPath = nil;
+				if( ! [iconPath isKindOfClass:[NSString class]] && ! [iconPath isKindOfClass:[NSArray class]] ) iconPath = nil;
 				if( ! [iconSize isKindOfClass:[NSArray class]] && ! [iconSize isKindOfClass:[NSNumber class]] ) iconSize = nil;
 				if( ! [sub isKindOfClass:[NSArray class]] && ! [sub isKindOfClass:[NSDictionary class]] ) sub = nil;
-				
+
 				NSMenuItem *mitem = [[[NSMenuItem alloc] initWithTitle:title action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""] autorelease];
 				if( context ) [mitem setRepresentedObject:context];
 				else [mitem setRepresentedObject:object];
@@ -447,9 +448,27 @@ static BOOL applicationIsTerminating = NO;
 					[mitem setAlternate:YES];
 				}
 
-				if( [iconPath length] ) {
-					NSURL *iconURL;
-					if( iconURL = [NSURL URLWithString:iconPath] ) {
+				if( [iconPath isKindOfClass:[NSString class]] && [(NSString *)iconPath length] ) {
+					NSURL *iconURL = nil;
+					if( [iconPath hasPrefix:@"#"] ) {
+						NSSize size = NSZeroSize;
+						if( [iconSize isKindOfClass:[NSArray class]] && [(NSArray *)iconSize count] == 2 ) {
+							size = NSMakeSize( [[iconSize objectAtIndex:0] unsignedIntValue], [[iconSize objectAtIndex:1] unsignedIntValue] );
+						} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
+							size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
+						} else size = NSMakeSize( 24., 12. );
+
+						NSColor *color = [NSColor colorWithHTMLAttributeValue:iconPath];
+						NSImage *icon = [[[NSImage alloc] initWithSize:size] autorelease];
+
+						[icon lockFocus];
+						[[color shadowWithLevel:0.1] set];
+						[NSBezierPath fillRect:NSMakeRect( 0., 0., size.width, size.height )];
+						[color drawSwatchInRect:NSMakeRect( 1., 1., size.width - 2., size.height - 2. )];
+						[icon unlockFocus];
+
+						[mitem setImage:icon];
+					} else if( ( iconURL = [NSURL URLWithString:iconPath] ) ) {
 						// NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingURL:[NSURL URLWithString:iconPath]] autorelease];
 						// Lets download the icon with a 1-second timeout
 						// Let's also ask for the cache if it exists rather than using protocol default
@@ -478,6 +497,24 @@ static BOOL applicationIsTerminating = NO;
 						[[mitem image] setScalesWhenResized:YES];
 						[[mitem image] setSize:size];
 					}
+				} else if( [iconPath isKindOfClass:[NSArray class]] && [(NSArray *)iconPath count] == 3 ) {
+					NSSize size = NSZeroSize;
+					if( [iconSize isKindOfClass:[NSArray class]] && [(NSArray *)iconSize count] == 2 ) {
+						size = NSMakeSize( [[iconSize objectAtIndex:0] unsignedIntValue], [[iconSize objectAtIndex:1] unsignedIntValue] );
+					} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
+						size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
+					} else size = NSMakeSize( 24., 12. );
+
+					NSColor *color = [NSColor colorWithCalibratedRed:( [[iconPath objectAtIndex:0] unsignedIntValue] / 65535. ) green:( [[iconPath objectAtIndex:1] unsignedIntValue] / 65535. ) blue:( [[iconPath objectAtIndex:2] unsignedIntValue] / 65535. ) alpha:1.];
+					NSImage *icon = [[[NSImage alloc] initWithSize:size] autorelease];
+
+					[icon lockFocus];
+					[[color shadowWithLevel:0.1] set];
+					[NSBezierPath fillRect:NSMakeRect( 0., 0., size.width, size.height )];
+					[color drawSwatchInRect:NSMakeRect( 1., 1., size.width - 2., size.height - 2. )];
+					[icon unlockFocus];
+
+					[mitem setImage:icon];
 				}
 
 				[itemList addObject:mitem];
