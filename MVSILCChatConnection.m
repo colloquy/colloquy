@@ -650,8 +650,34 @@ static void silc_disconnected( SilcClient client, SilcClientConnection conn, Sil
 	[[self _silcClientLock] lock]; // lock back up like nothing happened
 }
 
+static void silc_get_auth_method_callback( SilcClient client, SilcClientConnection conn, SilcAuthMethod auth_method, void *context ) {
+	MVSILCChatConnection *self = conn -> context;
+	NSDictionary *dict = context;
+	SilcGetAuthMeth completion = SILC_32_TO_PTR( [(NSNumber *)[dict objectForKey:@"completion"] unsignedIntValue] );
+	void *completionContext = SILC_32_TO_PTR( [(NSNumber *)[dict objectForKey:@"context"] unsignedIntValue] );
+	
+	switch (auth_method) {
+		case SILC_AUTH_NONE:
+			completion( TRUE, auth_method, NULL, 0, completionContext );
+			break;
+		case SILC_AUTH_PASSWORD:
+			if ( ! [self password] ) {
+				completion( TRUE, auth_method, NULL, 0, completionContext );
+				break;
+			}
+			
+			completion( TRUE, auth_method, [[self password] UTF8String], [[self password] length], completionContext );
+			break;
+		case SILC_AUTH_PUBLIC_KEY:
+			completion( TRUE, auth_method, NULL, 0, completionContext );
+			break;
+	}
+}
+
 static void silc_get_auth_method( SilcClient client, SilcClientConnection conn, char *hostname, SilcUInt16 port, SilcGetAuthMeth completion, void *context ) {
-	completion( TRUE, SILC_AUTH_NONE, NULL, 0, context );
+	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(completion)], @"completion", [NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(context)], @"context", nil];
+
+	silc_client_request_authentication_method( client, conn, silc_get_auth_method_callback, dict );
 }
 
 static void silc_verify_public_key( SilcClient client, SilcClientConnection conn, SilcSocketType conn_type, unsigned char *pk, SilcUInt32 pk_len, SilcSKEPKType pk_type, SilcVerifyPublicKey completion, void *context ) {
