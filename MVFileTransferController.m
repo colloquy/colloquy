@@ -3,7 +3,8 @@
 #import <WebKit/WebDownload.h>
 
 #import "MVFileTransferController.h"
-//#import "MVChatWindowController.h"
+#import "MVBuddyListController.h"
+#import "JVBuddy.h"
 #import "JVDetailCell.h"
 
 static MVFileTransferController *sharedInstance = nil;
@@ -61,6 +62,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 @interface MVFileTransferController (MVFileTransferControllerPrivate)
 - (void) _updateProgress:(id) sender;
+- (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
+- (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 @end
 
 #pragma mark -
@@ -554,31 +557,47 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	[info setObject:[notification object] forKey:@"connection"];
 
-	NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *) [info retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [info objectForKey:@"filename"], [info objectForKey:@"from"], MVPrettyFileSize( [[info objectForKey:@"size"] unsignedLongValue] ) );
+	if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 3 ) {
+		[self _incomingFileSheetDidEnd:nil returnCode:NSOKButton contextInfo:(void *) [info retain]];
+	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 2 ) {
+		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:[info objectForKey:@"from"] onServer:[(MVChatConnection *)[notification object] server]];
+		if( buddy ) [self _incomingFileSheetDidEnd:nil returnCode:NSOKButton contextInfo:(void *) [info retain]];
+		else NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *) [info retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [info objectForKey:@"filename"], [info objectForKey:@"from"], MVPrettyFileSize( [[info objectForKey:@"size"] unsignedLongValue] ) );
+	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 1 ) {
+		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *) [info retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [info objectForKey:@"filename"], [info objectForKey:@"from"], MVPrettyFileSize( [[info objectForKey:@"size"] unsignedLongValue] ) );
+	}
 }
 
 - (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	NSDictionary *info = [(NSDictionary *) contextInfo autorelease]; // for the previous retain in _incomingFile:
+	NSMutableDictionary *info = [(NSMutableDictionary *) contextInfo autorelease]; // for the previous retain in _incomingFile:
 	if( returnCode == NSOKButton ) {
-		NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
-		[sheet close];
-		[savePanel setDelegate:self];
-		[savePanel beginSheetForDirectory:NSHomeDirectory() file:[info objectForKey:@"filename"] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
+		if( ! [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVTransferSaveLocation"] isEqualToString:@"ask"] ) {
+			NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVTransferSaveLocation"] stringByAppendingPathComponent:[info objectForKey:@"filename"]];
+			[sheet close];
+			[info setObject:path forKey:@"filename"];
+			[self _incomingFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *) [info retain]];
+		} else {
+			NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
+			[sheet close];
+			[savePanel setDelegate:self];
+			[savePanel beginSheetForDirectory:NSHomeDirectory() file:[info objectForKey:@"filename"] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
+		}
 	}
 }
 
 - (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	NSDictionary *info = [(NSDictionary *) contextInfo autorelease]; // for the previous retain in _incomingFileSheetDidEnd:returnCode:contextInfo:
+	NSMutableDictionary *info = [(NSMutableDictionary *) contextInfo autorelease]; // for the previous retain in _incomingFileSheetDidEnd:returnCode:contextInfo:
 	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
 		NSString *filename = ( [[sheet filename] hasSuffix:@".colloquyFake"] ? [[sheet filename] stringByDeletingPathExtension] : [sheet filename] );
+		if( ! filename ) filename = [info objectForKey:@"filename"];
 		NSNumber *size = [[[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES] objectForKey:@"NSFileSize"];
 		BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filename];
 		BOOL resumePossible = ( fileExists && [size unsignedLongValue] < [[info objectForKey:@"size"] unsignedLongValue] ? YES : NO );
 		int result = NSOKButton;
 
-		if( resumePossible ) result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists. Would you like to resume from where a previous transfer stopped or replace it?", "replace or resume transfer save dialog message" ), NSLocalizedString( @"Resume", "resume button name" ), @"Cancel", NSLocalizedString( @"Replace", "replace button name" ), [filename lastPathComponent], [filename stringByDeletingLastPathComponent] );
-		else if( fileExists ) result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists and can't be resumed. Replace it?", "replace transfer save dialog message" ), NSLocalizedString( @"Replace", "replace button name" ), @"Cancel", nil, [filename lastPathComponent], [filename stringByDeletingLastPathComponent] );
+		if( resumePossible ) result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists. Would you like to resume from where a previous transfer stopped or replace it?", "replace or resume transfer save dialog message" ), NSLocalizedString( @"Resume", "resume button name" ), ( sheet ? @"Cancel" : NSLocalizedString( @"Save As...", "save as button name" ) ), NSLocalizedString( @"Replace", "replace button name" ), [filename lastPathComponent], [filename stringByDeletingLastPathComponent] );
+		else if( fileExists ) result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists and can't be resumed. Replace it?", "replace transfer save dialog message" ), NSLocalizedString( @"Replace", "replace button name" ), ( sheet ? @"Cancel" : NSLocalizedString( @"Save As...", "save as button name" ) ), nil, [filename lastPathComponent], [filename stringByDeletingLastPathComponent] );
 
 		if( result == NSCancelButton ) {
 			NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
