@@ -21,7 +21,7 @@
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>
 
-NSMutableSet *JVChatStyleBundles = nil;
+NSMutableSet *JVChatStyleBundles	= nil;
 NSMutableSet *JVChatEmoticonBundles = nil;
 
 static NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
@@ -55,22 +55,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	extern NSMutableSet *JVChatEmoticonBundles;
 
 	if( ( self = [super init] ) ) {
-		display = nil;
-		contents = nil;
-		chooseStyle = nil;
-		_isArchive = NO;
-		_params = NULL;
-		_styleParams = nil;
-		_chatStyle = nil;
-		_chatStyleVariant = nil;
-		_chatEmoticons = nil;
-		_emoticonMappings = nil;
-		_chatXSLStyle = NULL;
-		_windowController = nil;
-		_filePath = nil;
-		_chatXSLStyle = NULL;
-		_toolbarItems = [[NSMutableDictionary dictionary] retain];
-		_messages = [[NSMutableArray arrayWithCapacity:50] retain];
+		display				= nil;
+		contents			= nil;
+		chooseStyle			= nil;
+		_isArchive			= NO;
+		_params				= NULL;
+		_styleParams		= nil;
+		_chatStyle			= nil;
+		_chatStyleVariant   = nil;
+		_chatEmoticons		= nil;
+		_emoticonMappings   = nil;
+		_chatXSLStyle		= NULL;
+		_windowController   = nil;
+		_filePath			= nil;
+		_chatXSLStyle		= NULL;
+		_toolbarItems		= [[NSMutableDictionary dictionary] retain];
+		_messages				= [[NSMutableArray arrayWithCapacity:50] retain];
 
 		[[self class] _scanForChatStyles];
 		[[self class] _scanForEmoticons];
@@ -293,11 +293,17 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", 
+																 "close contextual menu item title" ) 
+									   action:@selector( leaveChat: ) 
+								keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", 
+																 "detach from window contextual menu item title" ) 
+									   action:@selector( detachView: ) 
+								keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
 	[item setTarget:[JVChatController defaultManager]];
 	[menu addItem:item];
@@ -372,10 +378,25 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	}
 
 	manyMessages = ( xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) > 2000 ? YES : NO );
+	
+	NSString *styleswitch = NSLocalizedString( @"Time Consuming Style Switch", "time consuming style switch alert title" );
 
-	if( _isArchive && _previousStyleSwitch && manyMessages ) result = NSRunInformationalAlertPanel( NSLocalizedString( @"Time Consuming Style Switch", "time consuming style switch alert title" ), NSLocalizedString( @"This transcript is large and will take a considerable amount of time to switch the style. Would you like to continue anyway?", "large transcript style switch alert message" ), NSLocalizedString( @"Continue", "continue button name" ), @"Cancel", nil );
-	else if( ! _isArchive && manyMessages ) result = NSRunInformationalAlertPanel( NSLocalizedString( @"Time Consuming Style Switch", "time consuming style switch alert title" ), NSLocalizedString( @"This converstaion is large and will take a considerable amount of time to switch the style. Would you like to do a full switch and wait until the switch is complete or a quick switch by hiding previous messages and return to the conversation?", "large transcript style switch alert message" ), NSLocalizedString( @"Full Switch", "full switch button name" ), @"Cancel", NSLocalizedString( @"Quick Switch", "clear button name" ) );
-
+	if( _isArchive && _previousStyleSwitch && manyMessages ) {
+		result = NSRunInformationalAlertPanel( styleswitch, 
+											   NSLocalizedString( @"This transcript is large and will take a considerable amount of time to switch the style. Would you like to continue anyway?", 
+																  "large transcript style switch alert message" ), 
+											   NSLocalizedString( @"Continue", "continue button name" ), 
+											   @"Cancel", nil );
+	} else if( ! _isArchive && manyMessages ) {
+		result = NSRunInformationalAlertPanel( styleswitch, 
+											   NSLocalizedString( @"This converstaion is large and will take a considerable amount of time to switch the style. Would you like to do a full switch and wait until the switch is complete or a quick switch by hiding previous messages and return to the conversation?", 
+																  "large transcript style switch alert message" ), 
+											   NSLocalizedString( @"Full Switch", 
+																  "full switch button name" ), 
+											   @"Cancel", 
+											   NSLocalizedString( @"Quick Switch", 
+																  "clear button name" ) );
+	}
 	if( result == NSCancelButton ) return;
 
 	if( ! [_logLock tryLock] ) return;	
@@ -624,12 +645,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarToggleChatActivityItemIdentifier */, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarToggleChatActivityItemIdentifier */, 
+		JVToolbarChooseStyleItemIdentifier, 
+		JVToolbarEmoticonsItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarToggleChatActivityItemIdentifier */, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarShowColorsItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:  JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarToggleChatActivityItemIdentifier */, 
+												JVToolbarChooseStyleItemIdentifier, 
+												JVToolbarEmoticonsItemIdentifier, 
+												NSToolbarShowColorsItemIdentifier, 
+												NSToolbarCustomizeToolbarItemIdentifier, 
+												NSToolbarFlexibleSpaceItemIdentifier, 
+												NSToolbarSpaceItemIdentifier, 
+												NSToolbarSeparatorItemIdentifier, nil];
+	
 	return [[list retain] autorelease];
 }
 
@@ -888,7 +919,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		if( [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] count] ) {
 			denumerator = [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] objectEnumerator];
 			subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-			subMenuItem = [[[NSMenuItem alloc] initWithTitle:( [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] ? [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] : NSLocalizedString( @"Normal", "normal style variant menu item title" ) ) action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
+			subMenuItem = [[[NSMenuItem alloc] initWithTitle:( [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] ? [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] : NSLocalizedString( @"Normal", "normal style variant menu item title" ) ) 
+													  action:@selector( changeChatStyle: ) 
+											   keyEquivalent:@""] autorelease];
 			[subMenuItem setTarget:self];
 			[subMenuItem setRepresentedObject:[style bundleIdentifier]];
 			[subMenu addItem:subMenuItem];

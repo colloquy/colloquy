@@ -22,26 +22,29 @@
 
 @interface JVDirectChat : JVChatTranscript {
 	@protected
-	IBOutlet MVTextView *send;
-	IBOutlet NSPopUpButton *encodingView;
-	NSString *_target;
-	NSStringEncoding _encoding;
-	MVChatConnection *_connection;
-	NSMutableArray *_sendHistory;
-	NSMutableArray *_waitingAlerts;
-	NSMutableDictionary *_waitingAlertNames;
-	NSMutableDictionary *_settings;
-	NSMenu *_spillEncodingMenu;
-	JVBuddy *_buddy;
-	unsigned int _messageId;
-	BOOL _firstMessage;
-	BOOL _requiresFullMessage;
-	BOOL _isActive;
-	BOOL _newMessage;
-	BOOL _newHighlightMessage;
-	BOOL _cantSendMessages;
-	int _historyIndex;
-	float _sendHeight;
+	IBOutlet MVTextView			*send;
+	IBOutlet NSPopUpButton		*encodingView;
+	
+	NSString					*_target;
+	NSStringEncoding			_encoding;
+	MVChatConnection			*_connection;
+	NSMutableArray				*_sendHistory;
+	NSMutableArray				*_waitingAlerts;
+	NSMutableDictionary			*_waitingAlertNames;
+	NSMutableDictionary			*_settings;
+	NSMenu						*_spillEncodingMenu;
+	JVBuddy						*_buddy;
+	
+	unsigned int				_messageId;
+	BOOL						_firstMessage;
+	BOOL						_requiresFullMessage;
+	BOOL						_isActive;
+	BOOL						_newMessage;
+	BOOL						_newHighlightMessage;
+	BOOL						_cantSendMessages;
+	
+	int							_historyIndex;	
+	float						_sendHeight;
 }
 - (id) initWithTarget:(NSString *) target forConnection:(MVChatConnection *) connection;
 

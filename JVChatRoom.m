@@ -317,7 +317,8 @@
 
 			[context setObject:NSLocalizedString( @"Room Member Promoted", "member promoted title" ) 
 						forKey:@"title"];
-			[context setObject:message  forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ in %@.", "bubble message member operator promotion string" ), [message substringToIndex:[message length]-2], _target]
+						forKey:@"description"];
 			[context setObject:member   forKey:@"performedOn"];
 			[context setObject:by		forKey:@"performedBy"];
 			[context setObject:_target  forKey:@"performedInRoom"];
@@ -371,7 +372,8 @@
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Room Member Demoted", "member demoted title" ) forKey:@"title"];
-			[context setObject:message forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ in %@.", "bubble message member operator demotion string" ), [message substringToIndex:[message length]-2], _target]
+						forKey:@"description"];
 			[context setObject:member   forKey:@"performedOn"];
 			[context setObject:by		forKey:@"performedBy"];
 			[context setObject:_target  forKey:@"performedInRoom"];
@@ -426,7 +428,8 @@
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Room Member Voiced", "member voiced title" ) 
 						forKey:@"title"];
-			[context setObject:message forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ in %@.", "bubble message member voiced string" ), [message substringToIndex:[message length]-2], _target]
+						forKey:@"description"];
 			[context setObject:member   forKey:@"performedOn"];
 			[context setObject:by		forKey:@"performedBy"];
 			[context setObject:_target  forKey:@"performedInRoom"];
@@ -481,7 +484,8 @@
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Room Member Lost Voice", "member devoiced title" ) 
 						forKey:@"title"];
-			[context setObject:message forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ in %@.", "bubble message member lost voice string" ), [message substringToIndex:[message length]-2], _target]
+						forKey:@"description"];
 			[context setObject:member   forKey:@"performedOn"];
 			[context setObject:by		forKey:@"performedBy"];
 			[context setObject:_target  forKey:@"performedInRoom"];
@@ -540,7 +544,8 @@
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Room Member Kicked", "member kicked title" ) 
 				forKey:@"title"];
-	[context setObject:message forKey:@"description"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"In %@ %@.", "bubble message member kicked string" ), _target, [message substringToIndex:[message length]-2]]
+				forKey:@"description"];
 	[context setObject:member   forKey:@"performedOn"];
 	[context setObject:by		forKey:@"performedBy"];
 	[context setObject:_target  forKey:@"performedInRoom"];
@@ -587,8 +592,9 @@
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"You Were Kicked", "member kicked title" ) 
 				forKey:@"title"];
-	[context setObject:message forKey:@"description"];		
-	[context setObject:member   forKey:@"performedOn"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"In %@ %@.", "bubble message member kicked string" ), _target, [message substringToIndex:[message length]-2]]
+				forKey:@"description"];
+	[context setObject:[[self connection] nickname]   forKey:@"performedOn"];
 	[context setObject:by		forKey:@"performedBy"];
 	[context setObject:_target  forKey:@"performedInRoom"];
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
@@ -773,7 +779,8 @@
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Room Member Joined", "member joined title" ) 
 						forKey:@"title"];
-			[context setObject:message forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ %@.", "bubble message member joined string" ), [message substringToIndex:[message length]-2], _target]
+						forKey:@"description"];
 			[context setObject:member   forKey:@"performedOn"];
 			[context setObject:_target  forKey:@"performedInRoom"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
@@ -820,7 +827,8 @@
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:NSLocalizedString( @"Room Member Left", "member left title" ) 
 					forKey:@"title"];
-		[context setObject:message forKey:@"description"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ %@.", "bubble message member left string" ), [message substringToIndex:[message length]-2], _target]
+					forKey:@"description"];
 		[context setObject:member   forKey:@"performedOn"];
 		[context setObject:_target  forKey:@"performedInRoom"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];

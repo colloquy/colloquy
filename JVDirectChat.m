@@ -31,45 +31,52 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	/* Universal */
 	NSUTF8StringEncoding,
 	NSNonLossyASCIIStringEncoding,
-	/* Western */	(NSStringEncoding) -1, // Divider
+	/* Western */	
+	(NSStringEncoding) -1,				// Divider
 	NSASCIIStringEncoding,
-	NSISOLatin1StringEncoding, // ISO Latin 1
-	(NSStringEncoding) 0x80000203, // ISO Latin 3
-	(NSStringEncoding) 0x8000020F, // ISO Latin 9
-	NSMacOSRomanStringEncoding, // Mac
-	NSWindowsCP1252StringEncoding, // Windows
-	/* European */	(NSStringEncoding) -1,
-	NSISOLatin2StringEncoding, // ISO Latin 2
-	(NSStringEncoding) 0x80000204, // ISO Latin 4
-	(NSStringEncoding) 0x8000001D, // Mac
-	NSWindowsCP1250StringEncoding, // Windows
-	/* Cyrillic */	(NSStringEncoding) -1,
-	(NSStringEncoding) 0x80000A02, // KOI8-R
-	(NSStringEncoding) 0x80000205, // ISO Latin 5
-	(NSStringEncoding) 0x80000007, // Mac
-	NSWindowsCP1251StringEncoding, // Windows
-	/* Japanese */	(NSStringEncoding) -1, // Divider
-	(NSStringEncoding) 0x80000A01, // ShiftJIS
-//	NSISO2022JPStringEncoding, // ISO-2022-JP
-	NSJapaneseEUCStringEncoding, // EUC
-	(NSStringEncoding) 0x80000001, // Mac
-	NSShiftJISStringEncoding, // Windows
-	/* Simplified Chinese */	(NSStringEncoding) -1, // Divider
-	(NSStringEncoding) 0x80000632, // GB 18030
-	(NSStringEncoding) 0x80000631, // GBK
-	(NSStringEncoding) 0x80000930, // EUC
-	(NSStringEncoding) 0x80000019, // Mac
-	(NSStringEncoding) 0x80000421, // Windows
-	/* Traditional Chinese */	(NSStringEncoding) -1, // Divider
-	(NSStringEncoding) 0x80000A03, // Big5
-	(NSStringEncoding) 0x80000A06, // Big5 HKSCS
-	(NSStringEncoding) 0x80000931, // EUC
-	(NSStringEncoding) 0x80000002, // Mac
-	(NSStringEncoding) 0x80000423, // Windows
-	/* Korean */	(NSStringEncoding) -1,
-	(NSStringEncoding) 0x80000940, // EUC
-	(NSStringEncoding) 0x80000003, // Mac
-	(NSStringEncoding) 0x80000422, // Windows
+	NSISOLatin1StringEncoding,			// ISO Latin 1
+	(NSStringEncoding) 0x80000203,		// ISO Latin 3
+	(NSStringEncoding) 0x8000020F,		// ISO Latin 9
+	NSMacOSRomanStringEncoding,			// Mac
+	NSWindowsCP1252StringEncoding,		// Windows
+	/* European */	
+	(NSStringEncoding) -1,
+	NSISOLatin2StringEncoding,			// ISO Latin 2
+	(NSStringEncoding) 0x80000204,		// ISO Latin 4
+	(NSStringEncoding) 0x8000001D,		// Mac
+	NSWindowsCP1250StringEncoding,		// Windows
+	/* Cyrillic */
+	(NSStringEncoding) -1,
+	(NSStringEncoding) 0x80000A02,		// KOI8-R
+	(NSStringEncoding) 0x80000205,		// ISO Latin 5
+	(NSStringEncoding) 0x80000007,		// Mac
+	NSWindowsCP1251StringEncoding,		// Windows
+	/* Japanese */
+	(NSStringEncoding) -1,				// Divider
+	(NSStringEncoding) 0x80000A01,		// ShiftJIS
+//	NSISO2022JPStringEncoding,			// ISO-2022-JP
+	NSJapaneseEUCStringEncoding,		// EUC
+	(NSStringEncoding) 0x80000001,		// Mac
+	NSShiftJISStringEncoding,			// Windows
+	/* Simplified Chinese */	
+	(NSStringEncoding) -1,				// Divider
+	(NSStringEncoding) 0x80000632,		// GB 18030
+	(NSStringEncoding) 0x80000631,		// GBK
+	(NSStringEncoding) 0x80000930,		// EUC
+	(NSStringEncoding) 0x80000019,		// Mac
+	(NSStringEncoding) 0x80000421,		// Windows
+	/* Traditional Chinese */	
+	(NSStringEncoding) -1,				// Divider
+	(NSStringEncoding) 0x80000A03,		// Big5
+	(NSStringEncoding) 0x80000A06,		// Big5 HKSCS
+	(NSStringEncoding) 0x80000931,		// EUC
+	(NSStringEncoding) 0x80000002,		// Mac
+	(NSStringEncoding) 0x80000423,		// Windows
+	/* Korean */	
+	(NSStringEncoding) -1,
+	(NSStringEncoding) 0x80000940,		// EUC
+	(NSStringEncoding) 0x80000003,		// Mac
+	(NSStringEncoding) 0x80000422,		// Windows
 	/* End */ 0 };
 
 extern char *irc_html_to_irc(const char * const string);
@@ -97,27 +104,27 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 @implementation JVDirectChat
 - (id) init {
 	if( ( self = [super init] ) ) {
-		send = nil;
-		encodingView = nil;
-		_messageId = 0;
-		_target = nil;
-		_buddy = nil;
-		_connection = nil;
-		_firstMessage = YES;
-		_newMessage = NO;
-		_requiresFullMessage = NO;
-		_newHighlightMessage = NO;
-		_cantSendMessages = NO;
-		_isActive = NO;
-		_historyIndex = 0;
-		_sendHeight = 30.;
+		send					= nil;
+		encodingView			= nil;
+		_messageId				= 0;
+		_target					= nil;
+		_buddy					= nil;
+		_connection				= nil;
+		_firstMessage			= YES;
+		_newMessage				= NO;
+		_requiresFullMessage	= NO;
+		_newHighlightMessage	= NO;
+		_cantSendMessages		= NO;
+		_isActive				= NO;
+		_historyIndex			= 0;
+		_sendHeight				= 30.;
 
-		_encoding = NSASCIIStringEncoding;
+		_encoding				= NSASCIIStringEncoding;
 
-		_sendHistory = [[NSMutableArray array] retain];
+		_sendHistory			= [[NSMutableArray array] retain];
 		[_sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
 
-		_waitingAlerts = [[NSMutableArray array] retain];
+		_waitingAlerts			= [[NSMutableArray array] retain];
 		_waitingAlertNames = [[NSMutableDictionary dictionary] retain];
 	}
 	return self;
@@ -142,9 +149,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) awakeFromNib {
-	NSBundle *style = nil;
-	NSString *variant = nil;
-	NSBundle *emoticon = nil;
+	NSBundle *style		= nil;
+	NSString *variant   = nil;
+	NSBundle *emoticon  = nil;
 
 	if( [self preferenceForKey:@"style"] ) {
 		style = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"style"]];
@@ -228,15 +235,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( [JVAutoActionVerbs retainCount] == 1 )
 		JVAutoActionVerbs = nil;
 
-	encodingView = nil;
-	_target = nil;
-	_buddy = nil;
-	_sendHistory = nil;
-	_connection = nil;
-	_waitingAlerts = nil;
-	_waitingAlertNames = nil;
-	_settings = nil;
-	_spillEncodingMenu = nil;
+	encodingView		= nil;
+	_target				= nil;
+	_buddy				= nil;
+	_sendHistory		= nil;
+	_connection			= nil;
+	_waitingAlerts		= nil;
+	_waitingAlertNames  = nil;
+	_settings			= nil;
+	_spillEncodingMenu  = nil;
 
 	[super dealloc];
 }
@@ -288,25 +295,35 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:NULL keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) 
+									   action:NULL 
+								keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") 
+									   action:@selector( addToFavorites: ) 
+								keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFileToSelectedUser: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") 
+									   action:@selector( sendFileToSelectedUser: ) 
+								keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Chat", "leave chat contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Chat", "leave chat contextual menu item title" ) 
+									   action:@selector( leaveChat: ) 
+								keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) 
+									   action:@selector( detachView: ) 
+								keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
 	[item setTarget:[JVChatController defaultManager]];
 	[menu addItem:item];
@@ -320,8 +337,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (NSImage *) statusImage {
 	if( _isActive && [[[self view] window] isKeyWindow] ) {
-		_newMessage = NO;
-		_newHighlightMessage = NO;
+		_newMessage				= NO;
+		_newHighlightMessage	= NO;
 		return nil;
 	}
 
@@ -337,16 +354,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 - (void) didUnselect {
-	_newMessage = NO;
-	_newHighlightMessage = NO;
-	_isActive = NO;
+	_newMessage				= NO;
+	_newHighlightMessage	= NO;
+	_isActive				= NO;
 	[super didUnselect];
 }
 
 - (void) didSelect {
-	_newMessage = NO;
-	_newHighlightMessage = NO;
-	_isActive = YES;
+	_newMessage				= NO;
+	_newHighlightMessage	= NO;
+	_isActive				= YES;
 	[super didSelect];
 	if( [_waitingAlerts count] )
 		[[NSApplication sharedApplication] beginSheet:[_waitingAlerts objectAtIndex:0] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
@@ -408,7 +425,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 - (void) unavailable {
-	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"Message undeliverable", "title of the user offline message sheet" ), NSLocalizedString( @"This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.", "error description for messaging a user that went offline or invalid" ), @"OK", nil, nil ) withName:@"unavailable"];
+	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"Message undeliverable", "title of the user offline message sheet" ), 
+												  NSLocalizedString( @"This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.", "error description for messaging a user that went offline or invalid" ),
+												  @"OK", 
+												  nil, nil ) 
+		   withName:@"unavailable"];
 }
 
 - (IBAction) addToFavorites:(id) sender {
@@ -466,7 +487,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return [[[_settings objectForKey:key] retain] autorelease];
 }
 
-#pragma mark -
+#pragma mark Styles
 
 - (IBAction) changeChatStyle:(id) sender {
 	NSBundle *style = [NSBundle bundleWithIdentifier:[sender representedObject]];
@@ -531,7 +552,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	}
 }
 
-#pragma mark -
+#pragma mark Encoding Support
 
 - (NSStringEncoding) encoding {
 	return _encoding;
@@ -578,12 +599,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark Messages & Events
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
-	NSEnumerator *enumerator = nil, *kenumerator = nil;
-	NSMutableString *key = nil, *value = nil;
-	NSMutableString *messageString = nil;
-	xmlDocPtr doc = NULL, msgDoc = NULL;
-	xmlNodePtr root = NULL, child = NULL;
-	const char *msgStr = NULL;
+	NSEnumerator *enumerator		= nil, *kenumerator		= nil;
+	NSMutableString *key			= nil, *value			= nil;
+	NSMutableString *messageString  = nil;
+	xmlDocPtr doc					= NULL, msgDoc			= NULL;
+	xmlNodePtr root					= NULL, child			= NULL;
+	const char *msgStr				= NULL;
 
 	NSParameterAssert( name != nil );
 	NSParameterAssert( [name length] );
@@ -657,10 +678,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
-	BOOL highlight = NO;
-	xmlDocPtr doc = NULL, msgDoc = NULL;
-	xmlNodePtr root = NULL, child = NULL, parent = NULL;
-	const char *msgStr = NULL;
+	BOOL highlight		= NO;
+	xmlDocPtr doc		= NULL, msgDoc  = NULL;
+	xmlNodePtr root		= NULL, child   = NULL, parent = NULL;
+	const char *msgStr  = NULL;
 	NSMutableData *mutableMsg = [[message mutableCopy] autorelease];
 	NSMutableString *messageString = nil;
 
@@ -694,7 +715,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]]
 						forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
-			[context setObject:member   forKey:@"performedOn"];
+			[context setObject:[[self connection] nickname] forKey:@"performedOn"];
 			[context setObject:user		forKey:@"performedBy"];
 			[context setObject:_target  forKey:@"performedInRoom"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
@@ -706,7 +727,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ sent you another private message.", "new message bubble text" ), [self title]] 
 						forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
-			[context setObject:member   forKey:@"performedOn"];
+			[context setObject:[[self connection] nickname] forKey:@"performedOn"];
 			[context setObject:user		forKey:@"performedBy"];
 			[context setObject:_target  forKey:@"performedInRoom"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
@@ -723,7 +744,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] 
 							forKey:@"description"];
 				[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-				[context setObject:member   forKey:@"performedOn"];
+				[context setObject:[[self connection] nickname] forKey:@"performedOn"];
 				[context setObject:user		forKey:@"performedBy"];
 				[context setObject:_target  forKey:@"performedInRoom"];
 				[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
@@ -870,7 +891,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[self addMessageToDisplay:[NSData dataWithBytes:msg length:strlen( msg )] fromUser:[[self connection] nickname] asAction:action];
 }
 
-#pragma mark -
 
 - (BOOL) newMessageWaiting {
 	return _newMessage;
@@ -880,7 +900,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return _newHighlightMessage;
 }
 
-#pragma mark -
+#pragma mark Input Handling
 
 - (IBAction) send:(id) sender {
 	NSMutableAttributedString *subMsg = nil;
@@ -1153,9 +1173,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	webFrame.origin = NSMakePoint( 0., 0. );
 
 	// Keep the send box the same size
-	sendFrame.size.height = _sendHeight;
-	sendFrame.size.width = newFrame.size.width;
-	sendFrame.origin.y = webFrame.size.height + dividerThickness;
+	sendFrame.size.height   = _sendHeight;
+	sendFrame.size.width	= newFrame.size.width;
+	sendFrame.origin.y		= webFrame.size.height + dividerThickness;
 
 	// Commit the changes
 	[[[send superview] superview] setFrame:sendFrame];

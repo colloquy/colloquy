@@ -15,15 +15,15 @@
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_loaded = NO;
-		_transcript = nil;
-		_messageNumber = 0;
-		_sender = nil;
-		_htmlMessage = nil;
-		_attributedMessage = nil;
-		_date = nil;
-		_action = NO;
-		_highlighted = NO;
+		_loaded				= NO;
+		_transcript			= nil;
+		_messageNumber		= 0;
+		_sender				= nil;
+		_htmlMessage		= nil;
+		_attributedMessage  = nil;
+		_date				= nil;
+		_action				= NO;
+		_highlighted		= NO;
 	}
 
 	return self;
@@ -48,12 +48,12 @@
 	[_attributedMessage release];
 	[_date release];
 
-	_node = NULL;
-	_transcript = NULL;
-	_sender = nil;
-	_htmlMessage = nil;
+	_node			= NULL;
+	_transcript		= NULL;
+	_sender			= nil;
+	_htmlMessage	= nil;
 	_attributedMessage = nil;
-	_date = nil;
+	_date			= nil;
 
 	[super dealloc];
 }
