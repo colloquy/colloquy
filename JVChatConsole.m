@@ -119,6 +119,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear", "clear console contextual menu item title" ) action:@selector( clearConsole: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	[menu addItem:item];
+
+	[menu addItem:[NSMenuItem separatorItem]];
+
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
@@ -151,12 +157,14 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
-- (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound {
+- (void) addMessageToDisplay:(NSData *) message asOutboundMessage:(BOOL) outbound {
 	NSAttributedString *msg = nil;
-	NSMutableString *strMsg = [[message mutableCopy] autorelease];
+	NSMutableString *strMsg = [[[NSMutableString alloc] initWithData:message encoding:NSUTF8StringEncoding] autorelease];
 	NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
 	NSMutableParagraphStyle *para = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 	unsigned int numeric = 0;
+
+	if( ! strMsg ) strMsg = [NSMutableString stringWithCString:[message bytes] length:[message length]];
 
 	if( ! [strMsg length] || ( _ignorePRIVMSG && [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound ) )
 		return;
@@ -168,7 +176,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	if( outbound ) [attrs setObject:[NSFont boldSystemFontOfSize:11.] forKey:NSFontAttributeName];
 	else [attrs setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Monaco" traits:0 weight:5 size:9.] forKey:NSFontAttributeName];
-//	[attrs setObject:( outbound ? [NSColor blueColor] : [NSColor blackColor] ) forKey:NSForegroundColorAttributeName];
 	[attrs setObject:para forKey:NSParagraphStyleAttributeName];
 
 	if( ! _verbose ) {

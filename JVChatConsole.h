@@ -19,5 +19,5 @@
 	MVChatConnection *_connection;
 }
 - (id) initWithConnection:(MVChatConnection *) connection;
-- (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound;
+- (void) addMessageToDisplay:(NSData *) message asOutboundMessage:(BOOL) outbound;
 @end
