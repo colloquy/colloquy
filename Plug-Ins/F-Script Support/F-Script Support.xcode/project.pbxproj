@@ -342,8 +342,10 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OBJROOT = ../../build;
 				OTHER_LDFLAGS = "-undefined dynamic_lookup -weak_framework FScript";
 				PRODUCT_NAME = "F-Script Support";
+				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			dependencies = (
