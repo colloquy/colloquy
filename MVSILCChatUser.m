@@ -78,6 +78,10 @@
 	return MVChatUserNoModes;
 }
 
+- (NSSet *) supportedAttributes {
+	return [NSSet setWithObjects:MVChatUserKnownRoomsAttribute, MVChatUserPictureAttribute, MVChatUserLocalTimeAttribute, MVChatUserClientInfoAttribute, MVChatUserVCardAttribute, MVChatUserServiceAttribute, MVChatUserMoodAttribute, MVChatUserStatusMessageAttribute, MVChatUserPreferredLanguageAttribute, MVChatUserPreferredContactMethodsAttribute, MVChatUserTimezoneAttribute, MVChatUserGeoLocationAttribute, MVChatUserDeviceInfoAttribute, MVChatUserExtensionAttribute, MVChatUserPublicKeyAttribute, MVChatUserServerPublicKeyAttribute, MVChatUserDigitalSignatureAttribute, MVChatUserServerDigitalSignatureAttribute, nil];
+}
+
 #pragma mark -
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {

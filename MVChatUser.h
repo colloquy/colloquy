@@ -60,6 +60,7 @@ extern NSString *MVChatUserAttributesUpdatedNotification;
 	NSString *_fingerprint;
 	NSDate *_dateConnected;
 	NSDate *_dateDisconnected;
+	NSDate *_dateUpdated;
 	NSMutableDictionary *_attributes;
 	MVChatUserType _type;
 	MVChatUserStatus _status;
@@ -97,6 +98,7 @@ extern NSString *MVChatUserAttributesUpdatedNotification;
 
 - (NSDate *) dateConnected;
 - (NSDate *) dateDisconnected;
+- (NSDate *) dateUpdated;
 
 - (NSTimeInterval) idleTime;
 - (NSTimeInterval) lag;

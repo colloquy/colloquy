@@ -39,6 +39,10 @@
 	return MVChatUserInvisibleMode;
 }
 
+- (NSSet *) supportedAttributes {
+	return [NSSet setWithObject:MVChatUserKnownRoomsAttribute];
+}
+
 #pragma mark -
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
@@ -64,5 +68,16 @@
 	NSParameterAssert( command != nil );
 	NSString *request = ( [arguments length] ? [NSString stringWithFormat:@"%@ %@", command, arguments] : command );
 	[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], request];
+}
+
+#pragma mark -
+
+- (void) refreshAttributes {
+	[[self connection] sendRawMessageWithFormat:@"WHOIS %@ %@", [self nickname], [self nickname]];
+}
+
+- (void) refreshAttributeForKey:(NSString *) key {
+	[super refreshAttributeForKey:key];
+	[self refreshAttributes];
 }
 @end

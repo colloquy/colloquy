@@ -815,7 +815,8 @@ static void MVChatUserWhois( IRC_SERVER_REC *server, const char *data ) {
 	char *params = event_get_params( data, 6 | PARAM_FLAG_GETREST, NULL, &nick, &username, &host, NULL, &realname );
 
 	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	[user _setServerOperator:NO]; // set this now so we get the true value later in the WHOIS
+	[user _setServerOperator:NO]; // set these to off/nil now so we get the true values later in the WHOIS
+	[user _setAttribute:nil forKey:MVChatUserKnownRoomsAttribute];
 
 	[user _setRealName:[self stringWithEncodedBytes:realname]];
 	[user _setUsername:[self stringWithEncodedBytes:username]];
@@ -844,11 +845,20 @@ static void MVChatUserChannels( IRC_SERVER_REC *server, const char *data ) {
 	char *nick = NULL, *chanlist = NULL;
 	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, NULL, &nick, &chanlist );
 
-//	store this info in MVChatUserKnownRoomsAttribute
-//	NSArray *chanArray = [[[self stringWithEncodedBytes:chanlist] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
+	NSArray *chanArray = [[[self stringWithEncodedBytes:chanlist] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
+	NSMutableArray *results = [NSMutableArray arrayWithCapacity:[chanArray count]];
+	NSEnumerator *enumerator = [chanArray objectEnumerator];
+	NSString *room = nil;
 
-//	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotUserChannelsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", chanArray, @"channels", nil]];		
-//	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	while( ( room = [enumerator nextObject] ) ) {
+		room = [[self stringWithEncodedBytes:chanlist] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"@\%+"]];
+		if( room ) [results addObject:room];
+	}
+
+	if( [results count] ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+		[user _setAttribute:results forKey:MVChatUserKnownRoomsAttribute];
+	}
 
 	g_free( params );
 }
@@ -907,6 +917,7 @@ static void MVChatUserWhoisComplete( IRC_SERVER_REC *server, const char *data ) 
 		char *params = event_get_params( data, 2, NULL, &nick );
 
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+		[user _setDateUpdated:[NSDate date]];
 
 		NSNotification *note = [NSNotification notificationWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];		
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];

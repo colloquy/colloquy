@@ -487,6 +487,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		[user updateWithClientEntry:client_entry];
 		[user _setIdleTime:idletime];
 		[user _setDateDisconnected:nil];
+		[user _setDateUpdated:[NSDate date]];
 
 		if( channels ) {
 			NSMutableArray *chanArray = [NSMutableArray array];
@@ -502,9 +503,10 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 				}
 
 				silc_channel_payload_list_free( list );
-				//	store this info in MVChatUserKnownRoomsAttribute
+
+				if( [chanArray count] ) [user _setAttribute:chanArray forKey:MVChatUserKnownRoomsAttribute];
 			}
-		}
+		} else [user _setAttribute:nil forKey:MVChatUserKnownRoomsAttribute];
 
 		NSNotification *note = [NSNotification notificationWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];		
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];

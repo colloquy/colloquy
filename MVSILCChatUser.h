@@ -25,4 +25,6 @@
 - (void) _setIdleTime:(NSTimeInterval) time;
 - (void) _setDateConnected:(NSDate *) date;
 - (void) _setDateDisconnected:(NSDate *) date;
+- (void) _setDateUpdated:(NSDate *) date;
+- (void) _setAttribute:(id) attribute forKey:(id) key;
 @end

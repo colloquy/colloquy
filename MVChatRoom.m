@@ -558,4 +558,12 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 	[_dateTopicChanged autorelease];
 	_dateTopicChanged = [date copyWithZone:[self zone]];
 }
+
+- (void) _setAttribute:(id) attribute forKey:(id) key {
+	NSParameterAssert( key != nil );
+	@synchronized( _attributes ) {
+		if( attribute ) [_attributes setObject:attribute forKey:key];
+		else [_attributes removeObjectForKey:key];
+	}
+}
 @end

@@ -235,6 +235,10 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 	return [[_dateDisconnected retain] autorelease];
 }
 
+- (NSDate *) dateUpdated {
+	return [[_dateUpdated retain] autorelease];
+}
+
 #pragma mark -
 
 - (NSTimeInterval) idleTime {
@@ -435,5 +439,18 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 - (void) _setDateDisconnected:(NSDate *) date {
 	[_dateDisconnected autorelease];
 	_dateDisconnected = [date copyWithZone:[self zone]];
+}
+
+- (void) _setDateUpdated:(NSDate *) date {
+	[_dateUpdated autorelease];
+	_dateUpdated = [date copyWithZone:[self zone]];
+}
+
+- (void) _setAttribute:(id) attribute forKey:(id) key {
+	NSParameterAssert( key != nil );
+	@synchronized( _attributes ) {
+		if( attribute ) [_attributes setObject:attribute forKey:key];
+		else [_attributes removeObjectForKey:key];
+	}
 }
 @end
