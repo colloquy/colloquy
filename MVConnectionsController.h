@@ -41,6 +41,7 @@
 	IBOutlet NSPopUpButton *newProxy;
 	IBOutlet NSTableView *newJoinRooms;
 	IBOutlet NSButton *newRemoveRoom;
+	IBOutlet NSButton *sslConnection;
 
 	/* Message User */
 	IBOutlet NSTextField *userToMessage;

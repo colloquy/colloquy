@@ -29,6 +29,7 @@
 	IBOutlet NSTableView *editRooms;
 	IBOutlet NSButton *editRemoveRoom;
 	IBOutlet NSTextView *connectCommands;
+	IBOutlet NSButton *sslConnection;
 	MVChatConnection *_connection;
 	BOOL _nibLoaded;
 	NSMutableArray *_editingRooms;
@@ -41,6 +42,7 @@
 - (IBAction) openNetworkPreferences:(id) sender;
 - (IBAction) editText:(id) sender;
 - (IBAction) toggleAutoConnect:(id) sender;
+- (IBAction) toggleSSLConnection:(id) sender;
 - (IBAction) changeProxy:(id) sender;
 
 - (IBAction) addRoom:(id) sender;

@@ -369,6 +369,7 @@ static NSMenu *favoritesMenu = nil;
 	connection = [[[MVChatConnection alloc] init] autorelease];
 	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 	[connection setProxyType:[[newProxy selectedItem] tag]];
+	[connection setSecure:[sslConnection state]];
 	[connection setPassword:[newServerPassword stringValue]];
 	[connection setUsername:[newUsername stringValue]];
 	[connection setRealName:[newRealName stringValue]];

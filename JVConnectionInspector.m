@@ -51,6 +51,7 @@
 	[self buildEncodingMenu];
 
 	[editAutomatic setState:[[MVConnectionsController defaultManager] autoConnectForConnection:_connection]];
+	[sslConnection setState:[_connection isSecure]];
 	[editAddress setObjectValue:[_connection server]];
 	[editProxy selectItemAtIndex:[editProxy indexOfItemWithTag:(int)[_connection proxyType]]];
 	[editPort setIntValue:[_connection serverPort]];
@@ -141,6 +142,10 @@
 
 - (IBAction) toggleAutoConnect:(id) sender {
 	[[MVConnectionsController defaultManager] setAutoConnect:[sender state] forConnection:_connection];
+}
+
+- (IBAction) toggleSSLConnection:(id) sender {
+	[_connection setSecure:[sender state]];
 }
 
 - (IBAction) changeProxy:(id) sender {

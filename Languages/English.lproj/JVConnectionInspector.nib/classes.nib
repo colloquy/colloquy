@@ -10,6 +10,7 @@
                 openNetworkPreferences = id; 
                 removeRoom = id; 
                 toggleAutoConnect = id; 
+                toggleSSLConnection = id; 
             }; 
             CLASS = JVConnectionInspector; 
             LANGUAGE = ObjC; 
@@ -28,6 +29,7 @@
                 editServerPassword = NSTextField; 
                 editUsername = NSTextField; 
                 encoding = NSPopUpButton; 
+                sslConnection = NSButton; 
                 view = NSView; 
             }; 
             SUPERCLASS = NSObject; 

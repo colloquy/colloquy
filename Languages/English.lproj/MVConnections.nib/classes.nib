@@ -5,6 +5,7 @@
             ACTIONS = {
                 addRoom = id; 
                 conenctNewConnection = id; 
+                hideConnectionManager = id; 
                 messageUser = id; 
                 newConnection = id; 
                 openNetworkPreferences = id; 
@@ -36,6 +37,7 @@
                 nicknameAuth = NSPanel; 
                 openConnection = NSPanel; 
                 showDetails = NSButton; 
+                sslConnection = NSButton; 
                 userToMessage = NSTextField; 
             }; 
             SUPERCLASS = NSWindowController; 
