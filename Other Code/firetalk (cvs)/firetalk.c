@@ -62,7 +62,7 @@ static struct s_firetalk_handle *handle_head = NULL;
 static jmp_buf buf;
 static sighandler_t oldhandler;
 static unsigned short minDCCPort = 1024;
-static unsigned short maxDCCPort = 1028;
+static unsigned short maxDCCPort = 1048;
 
 /* 
  * client can send up to <flood> messages in <delay>
