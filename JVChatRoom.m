@@ -310,9 +310,8 @@
 
 		[_members setObject:listItem forKey:member];
 		[_sortedMembers addObject:listItem];
-		[_sortedMembers sortUsingSelector:@selector( compare: )];
 
-		[_windowController reloadListItem:self andChildren:YES];
+		[self resortMembers];
 
 		if( ! previous ) {
 			NSString *name = [listItem title];
@@ -378,9 +377,10 @@
 		[_members removeObjectForKey:member];
 		[mbr _setNickname:nick];
 
-		[_sortedMembers sortUsingSelector:@selector( compare: )];
-
-		[_windowController reloadListItem:self andChildren:YES];		
+		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
+			[_sortedMembers sortUsingSelector:@selector( compare: )];
+			[_windowController reloadListItem:self andChildren:YES];
+		}
 
 		if( [mbr isLocalUser] ) {
 			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as %@.", "you changed nicknames" ), nick] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[mbr title], @"name", member, @"old", nick, @"new", nil]];
@@ -437,9 +437,15 @@
 			[invocation setArgument:&mbr atIndex:2];
 			[invocation setArgument:&self atIndex:3];
 			[invocation setArgument:&byMbr atIndex:4];
-
+			
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		}
+	}
+
+	// sort again if needed
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
+		[_sortedMembers sortUsingSelector:@selector( compareUsingStatus: )];
+		[_windowController reloadListItem:self andChildren:YES];
 	}
 }
 
@@ -478,9 +484,15 @@
 			[invocation setArgument:&mbr atIndex:2];
 			[invocation setArgument:&self atIndex:3];
 			[invocation setArgument:&byMbr atIndex:4];
-
+		
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		}
+	}
+	
+	// sort again if needed
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
+		[_sortedMembers sortUsingSelector:@selector( compareUsingStatus: )];
+		[_windowController reloadListItem:self andChildren:YES];
 	}
 }
 
@@ -519,9 +531,15 @@
 			[invocation setArgument:&mbr atIndex:2];
 			[invocation setArgument:&self atIndex:3];
 			[invocation setArgument:&byMbr atIndex:4];
-
+		
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		}
+	}
+	
+	// sort again if needed
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
+		[_sortedMembers sortUsingSelector:@selector( compareUsingStatus: )];
+		[_windowController reloadListItem:self andChildren:YES];
 	}
 }
 
@@ -563,6 +581,12 @@
 
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		}
+	}
+	
+	// sort again if needed
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
+		[_sortedMembers sortUsingSelector:@selector( compareUsingStatus: )];
+		[_windowController reloadListItem:self andChildren:YES];
 	}
 }
 
@@ -737,6 +761,14 @@
 			return member;
 
 	return nil;
+}
+
+- (void) resortMembers {
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
+		[_sortedMembers sortUsingSelector:@selector( compareUsingStatus: )];
+	} else [_sortedMembers sortUsingSelector:@selector( compare: )];
+
+	[_windowController reloadListItem:self andChildren:YES];
 }
 
 #pragma mark -

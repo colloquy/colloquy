@@ -39,6 +39,7 @@
 - (NSAttributedString *) topic;
 
 - (JVChatRoomMember *) chatRoomMemberWithName:(NSString *) name;
+- (void) resortMembers;
 @end
 
 @interface NSObject (MVChatPluginRoomSupport)

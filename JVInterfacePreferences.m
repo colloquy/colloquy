@@ -1,5 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import "JVInterfacePreferences.h"
+#import "JVChatController.h"
+#import "JVChatRoom.h"
 
 @implementation JVInterfacePreferences
 - (NSString *) preferencesNibName {
@@ -59,6 +61,8 @@
 	[sendHistory setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
 	[sendHistoryStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
 
+	[sortByStatus setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"]];
+
 	if( NSAppKitVersionNumber >= 700. ) {
 		[tabKeyComplete setEnabled:YES];
 		[tabKeyComplete setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
@@ -69,6 +73,15 @@
 
 - (IBAction) changeTabKeyComplete:(id) sender {
 	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVUsePantherTextCompleteOnTab"];
+}
+
+- (IBAction) changeSortByStatus:(id) sender {
+	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVSortRoomMembersByStatus"];
+
+	NSEnumerator *enumerator = [[[JVChatController defaultManager] chatViewControllersOfClass:[JVChatRoom class]] objectEnumerator];
+	JVChatRoom *room = nil;
+	while( ( room = [enumerator nextObject] ) )
+		[room resortMembers];
 }
 
 - (IBAction) changeSendHistory:(id) sender {

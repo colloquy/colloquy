@@ -11,9 +11,11 @@
 	IBOutlet NSTextField *sendHistory;
 	IBOutlet NSStepper *sendHistoryStepper;
 	IBOutlet NSButton *tabKeyComplete;
+	IBOutlet NSButton *sortByStatus;
 	IBOutlet NSTextField *tabKeyCompleteLabel;
 }
 - (IBAction) changeTabKeyComplete:(id) sender;
+- (IBAction) changeSortByStatus:(id) sender;
 - (IBAction) changeSendHistory:(id) sender;
 - (IBAction) changePreferredWindow:(id) sender;
 - (IBAction) changeSendOnReturnAction:(id) sender;
