@@ -1422,11 +1422,11 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) _systemWillSleep:(NSNotification *) notification {
-	if( [self isConnected] ) {
+/*	if( [self isConnected] ) {
 		[self sendRawMessage:@"DETACH"];
 		_status = MVChatConnectionSuspendedStatus;
 		usleep( 2500000 );
-	}
+	} */
 }
 
 #pragma mark -
