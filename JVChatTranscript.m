@@ -74,6 +74,8 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
 
+- (JVMarkedScroller *) _verticalMarkedScroller;
+- (void) _setupMarkedScroller;
 - (void) _switchingStyleEnded:(in NSString *) html;
 - (void) _changeChatStyleMenuSelection;
 - (void) _updateChatStylesMenu;
@@ -89,6 +91,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 - (unsigned long) visibleMessageCount;
 - (long) locationOfMessage:(JVChatMessage *) message;
+- (long) locationOfMessageWithIdentifier:(NSString *) identifier;
 - (long) locationOfElementByIndex:(unsigned long) index;
 @end
 
@@ -737,21 +740,17 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 #pragma mark Highlight/Message Jumping
 
 - (IBAction) jumpToPreviousHighlight:(id) sender {
-	JVMarkedScroller *scroller = (JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
-	if( [scroller isMemberOfClass:[JVMarkedScroller class]] )
-		[scroller jumpToPreviousMark:sender];
+	[[self _verticalMarkedScroller] jumpToPreviousMark:sender];
 }
 
 - (IBAction) jumpToNextHighlight:(id) sender {
-	JVMarkedScroller *scroller = (JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
-	if( [scroller isMemberOfClass:[JVMarkedScroller class]] )
-		[scroller jumpToNextMark:sender];
+	[[self _verticalMarkedScroller] jumpToNextMark:sender];
 }
 
 - (void) jumpToMessage:(JVChatMessage *) message {
-	unsigned int loc = [self locationOfMessage:message];
+	unsigned long loc = [self locationOfMessage:message];
 	if( loc ) {
-		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+		NSScroller *scroller = [self _verticalMarkedScroller];
 		float scale = NSHeight( [scroller rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [scroller frame] ) / [scroller knobProportion] );
 		float shift = ( ( NSHeight( [scroller rectForPart:NSScrollerKnobSlot] ) * [scroller knobProportion] ) / 2. ) / scale;
 		[[(NSScrollView *)[scroller superview] documentView] scrollPoint:NSMakePoint( 0., loc - shift )];
@@ -910,21 +909,10 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 	[display setPreferencesIdentifier:[_chatStyle identifier]];
 	[[display preferences] setJavaScriptEnabled:YES];
 
+	[self _setupMarkedScroller];
+
 	if( [[display window] isFlushWindowDisabled] )
 		[[display window] enableFlushWindow];
-
-	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
-	[scrollView setHasHorizontalScroller:NO];
-	[scrollView setAllowsHorizontalScrolling:NO];
-
-	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller];
-	if( ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
-		NSRect scrollerFrame = [[scrollView verticalScroller] frame];
-		NSScroller *oldScroller = scroller;
-		scroller = [[[JVMarkedScroller alloc] initWithFrame:scrollerFrame] autorelease];
-		[scroller setFloatValue:[oldScroller floatValue] knobProportion:[oldScroller knobProportion]];
-		[scrollView setVerticalScroller:scroller];
-	}
 
 	if( _switchingStyles )
 		[NSThread detachNewThreadSelector:@selector( _switchStyle: ) toTarget:self withObject:nil];
@@ -955,39 +943,68 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 		[self _reloadCurrentStyle:sender];
 }
 
+- (JVMarkedScroller *) _verticalMarkedScroller {
+	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
+	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller];
+	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
+		[self _setupMarkedScroller];
+		scroller = (JVMarkedScroller *)[scrollView verticalScroller];
+		if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] )
+			return nil; // not sure, but somthing is wrong
+	}
+
+	return scroller;
+}
+
+- (void) _setupMarkedScroller {
+	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
+	[scrollView setHasHorizontalScroller:NO];
+	[scrollView setAllowsHorizontalScrolling:NO];
+
+	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller];
+	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
+		NSRect scrollerFrame = [[scrollView verticalScroller] frame];
+		NSScroller *oldScroller = scroller;
+		scroller = [[[JVMarkedScroller alloc] initWithFrame:scrollerFrame] autorelease];
+		[scroller setFloatValue:[oldScroller floatValue] knobProportion:[oldScroller knobProportion]];
+		[scrollView setVerticalScroller:scroller];
+	}
+}
+
 - (void) _switchingStyleEnded:(id) sender {
 	_switchingStyles = NO;
 	[_logLock unlock];
-	return;
 
-	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
-	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller];
-	if( [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
-		[scroller removeAllMarks];
+	JVMarkedScroller *scroller = [self _verticalMarkedScroller];
+	if( ! scroller ) return;
 
-		xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
-		if( ! ctx ) return;
+	[scroller removeAllMarks];
+	[scroller removeAllShadedAreas];
 
-		xmlXPathObjectPtr result = xmlXPathEval( "/log/envelope/message[@highlight = 'yes']/..", ctx );
-		if( ! result ) {
-			xmlXPathFreeContext( ctx );
-			return;
-		}
+	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
+	if( ! ctx ) return;
 
-		xmlNodePtr cur = NULL;
-		unsigned int c = ( result -> nodesetval ? result -> nodesetval -> nodeNr : 0 );
-		unsigned int i = 0;
-		for( i = 0; i < c; i++ ) {
-			cur = result -> nodesetval -> nodeTab[i];
-			xmlChar *idProp = xmlGetProp( cur, "id" );
-			unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%s\" );", idProp]] intValue];
-			if( loc ) [(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] addMarkAt:loc];
+	xmlXPathObjectPtr result = xmlXPathEval( "/log/envelope/message[@highlight = 'yes']", ctx );
+	if( ! result ) {
+		xmlXPathFreeContext( ctx );
+		return;
+	}
+
+	xmlNodePtr cur = NULL;
+	unsigned int c = ( result -> nodesetval ? result -> nodesetval -> nodeNr : 0 );
+	unsigned int i = 0;
+	for( i = 0; i < c; i++ ) {
+		cur = result -> nodesetval -> nodeTab[i];
+		xmlChar *idProp = xmlGetProp( cur, "id" );
+		if( idProp ) {
+			long loc = [self locationOfMessageWithIdentifier:[NSString stringWithUTF8String:idProp]];
+			if( loc ) [scroller addMarkAt:loc];
 			xmlFree( idProp );
 		}
-
-		xmlXPathFreeContext( ctx );
-		xmlXPathFreeObject( result );
 	}
+
+	xmlXPathFreeContext( ctx );
+	xmlXPathFreeObject( result );
 }
 
 - (oneway void) _switchStyle:(id) sender {
@@ -1343,15 +1360,19 @@ finish:
 
 #pragma mark -
 
-- (long) locationOfMessage:(JVChatMessage *) message {
+- (long) locationOfMessageWithIdentifier:(NSString *) identifier {
 #ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[message messageIdentifier]];
+		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:identifier];
 		return [[element valueForKey:@"offsetTop"] intValue];
 	} else
 #endif
 	// old JavaScript method
-	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%@\" );", [message messageIdentifier]]] intValue];
+	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%@\" );", identifier]] intValue];
+}
+
+- (long) locationOfMessage:(JVChatMessage *) message {
+	return [self locationOfMessageWithIdentifier:[message messageIdentifier]];
 }
 
 - (long) locationOfElementByIndex:(unsigned long) index {

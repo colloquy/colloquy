@@ -124,6 +124,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
+- (JVMarkedScroller *) _verticalMarkedScroller;
 - (void) _changeChatEmoticonsMenuSelection;
 - (void) _switchingStyleEnded:(in NSString *) html;
 - (unsigned long) visibleMessageCount;
@@ -873,8 +874,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (IBAction) clearDisplay:(id) sender {
 	_requiresFullMessage = YES;
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
-	[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] removeAllMarks];
-	[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] removeAllShadedAreas];
+	[[self _verticalMarkedScroller] removeAllMarks];
+	[[self _verticalMarkedScroller] removeAllShadedAreas];
 }
 
 #pragma mark -
@@ -1024,9 +1025,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) splitViewWillResizeSubviews:(NSNotification *) notification {
-	// The scrollbars are two subviews down from the JVWebView (deep in the WebKit bowls).
-	NSScrollView *scrollView = [[[[display subviews] objectAtIndex:0] subviews] objectAtIndex:0];
-	if( [[scrollView verticalScroller] floatValue] == 1. ) _scrollerIsAtBottom = YES;
+	if( [[self _verticalMarkedScroller] floatValue] == 1. ) _scrollerIsAtBottom = YES;
 	else _scrollerIsAtBottom = NO;
 }
 
@@ -1490,11 +1489,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[self appendMessage:transformedMessage subsequent:subsequent];
 
 		if( [cmessage isHighlighted] ) {
-			NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
-			if( [scroller isKindOfClass:[JVMarkedScroller class]] ) {
-				unsigned int loc = [self locationOfMessage:cmessage];
-				if( loc ) [(JVMarkedScroller *)scroller addMarkAt:loc];
-			}
+			long loc = [self locationOfMessage:cmessage];
+			if( loc ) [[self _verticalMarkedScroller] addMarkAt:loc];
 		}
 
 		[[display window] enableFlushWindow]; // flush everything we have drawn
@@ -1529,12 +1525,10 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent {
 	unsigned int messageCount = [self visibleMessageCount];
 	unsigned int scrollbackLimit = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"];
-	NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 
 	if( ! subsequent && ( messageCount + 1 ) > scrollbackLimit ) {
-		int loc = [self locationOfElementByIndex:( ( messageCount + 1 ) - scrollbackLimit )];
-		if( loc > 0 && [scroller isKindOfClass:[JVMarkedScroller class]] )
-			[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1 )];
+		long loc = [self locationOfElementByIndex:( ( messageCount + 1 ) - scrollbackLimit )];
+		if( loc > 0 ) [[self _verticalMarkedScroller] shiftMarksAndShadedAreasBy:( loc * -1 )];
 	}
 
 #ifdef WebKitVersion146
@@ -1826,19 +1820,15 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:messageString, @"away-message", nil]];
 
-		unsigned int messageCount = [self visibleMessageCount];
-		unsigned long loc = [self locationOfElementByIndex:( messageCount - 1 )];
-
-		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
-		if( [scroller isKindOfClass:[JVMarkedScroller class]] ) [(JVMarkedScroller *)scroller startShadedAreaAt:loc];
+		unsigned long messageCount = [self visibleMessageCount];
+		long loc = [self locationOfElementByIndex:( messageCount - 1 )];
+		[[self _verticalMarkedScroller] startShadedAreaAt:loc];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
 
-		unsigned int messageCount = [self visibleMessageCount];
-		unsigned long loc = [self locationOfElementByIndex:( messageCount - 1 )];
-
-		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
-		if( [scroller isKindOfClass:[JVMarkedScroller class]] ) [(JVMarkedScroller *)scroller stopShadedAreaAt:loc];
+		unsigned long messageCount = [self visibleMessageCount];
+		long loc = [self locationOfElementByIndex:( messageCount - 1 )];
+		[[self _verticalMarkedScroller] stopShadedAreaAt:loc];
 	}
 }
 
