@@ -22,7 +22,6 @@
 
 	void *_chatXSLStyle; /* xsltStylesheetPtr */
 	void *_xmlLog; /* xmlDocPtr */
-	void *_xmlQueue; /* xmlDocPtr */
 
 	NSLock *_logLock;
 	JVChatWindowController *_windowController;

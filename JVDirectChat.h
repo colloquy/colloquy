@@ -34,6 +34,8 @@
 	NSMutableDictionary *_settings;
 	NSMenu *_spillEncodingMenu;
 	JVBuddy *_buddy;
+	
+	NSMutableArray *_messageQueue;
 
 	unsigned int _messageId;
 	BOOL _firstMessage;

@@ -185,9 +185,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	xmlFreeDoc( _xmlLog );
 	_xmlLog = NULL;
 
-	xmlFreeDoc( _xmlQueue );
-	_xmlQueue = NULL;
-
 	xsltFreeStylesheet( _chatXSLStyle );
 	_chatXSLStyle = NULL;
 
@@ -823,17 +820,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (void) _switchingStyleEnded:(in NSString *) html {
-	NSString *queueResult = @"";
-	if( _xmlQueue ) {
-		queueResult = [self _applyStyleOnXMLDocument:_xmlQueue];
-		xmlAddChildList( xmlDocGetRootElement( _xmlLog ), xmlCopyNodeList( xmlDocGetRootElement( _xmlQueue ) -> children ) );
-		xmlFreeDoc( _xmlQueue );
-		_xmlQueue = NULL;
-	}
-
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 	// give webkit some time to load the blank before we switch preferences so we don't double refresh
-	[self performSelector:@selector( _finishStyleSwitch: ) withObject:[( html ? html : @"" ) stringByAppendingString:queueResult] afterDelay:0.];
+	[self performSelector:@selector( _finishStyleSwitch: ) withObject:( html ? html : @"" ) afterDelay:0.];
 }
 
 - (oneway void) _switchStyle:(id) sender {

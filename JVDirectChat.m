@@ -89,6 +89,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 @interface JVDirectChat (JVDirectChatPrivate)
+- (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
+- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
+- (void) processQueue;
+- (void) displayQueue;
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
 - (void) _makeHyperlinksInString:(NSMutableString *) string;
@@ -126,6 +130,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 		_waitingAlerts			= [[NSMutableArray array] retain];
 		_waitingAlertNames = [[NSMutableDictionary dictionary] retain];
+		
+		_messageQueue = [[NSMutableArray array] retain];
 	}
 	return self;
 }
@@ -208,7 +214,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[send setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatSpellChecking"]];
 	[send reset:nil];
 
-	[self performSelector:@selector( _loaded: ) withObject:nil afterDelay:0.25];
+	[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
 }
 
 - (void) dealloc {
@@ -223,6 +229,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[_waitingAlertNames release];
 	[_settings release];
 	[_spillEncodingMenu release];
+	[_messageQueue release];
 
 	NSEnumerator *enumerator = [_waitingAlerts objectEnumerator];
 	id alert = nil;
@@ -244,6 +251,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	_waitingAlertNames  = nil;
 	_settings			= nil;
 	_spillEncodingMenu  = nil;
+	_messageQueue		= nil;
 
 	[super dealloc];
 }
@@ -595,247 +603,33 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark Messages & Events
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
-	NSEnumerator *enumerator = nil, *kenumerator = nil;
-	NSMutableString *key = nil, *value = nil;
-	NSMutableString *messageString = nil;
-	xmlDocPtr doc = NULL, msgDoc = NULL;
-	xmlNodePtr root = NULL, child = NULL;
-	const char *msgStr = NULL;
-
-	NSParameterAssert( name != nil );
-	NSParameterAssert( [name length] );
-
-	doc = xmlNewDoc( "1.0" );
-	root = xmlNewNode( NULL, "event" );
-	xmlSetProp( root, "name", [name UTF8String] );
-	xmlSetProp( root, "occurred", [[[NSDate date] description] UTF8String] );
-	xmlDocSetRootElement( doc, root );
-
-	if( message ) {
-		msgStr = [[NSString stringWithFormat:@"<message>%@</message>", message] UTF8String];
-		if( msgStr ) {
-			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
-			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
-			xmlAddChild( root, child );
-			xmlFreeDoc( msgDoc );
-		}
-	}
-
-	kenumerator = [attributes keyEnumerator];
-	enumerator = [attributes objectEnumerator];
-	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
-		msgStr = nil;
-
-		if( [value isMemberOfClass:[NSNull class]] ) {
-			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
-		} else {
-			value = [[value mutableCopy] autorelease];
-			[value encodeXMLSpecialCharactersAsEntities];
-			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
-		}
-
-		if( msgStr ) {
-			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
-			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
-			xmlAddChild( root, child );
-			xmlFreeDoc( msgDoc );
-		}
-	}
-
-	if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
-		[_styleParams removeObjectForKey:@"subsequent"];
-		if( _params ) [[self class] _freeXsltParamArray:_params];
-		_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
-	}
-
-	if( [_logLock tryLock] ) {
-		xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
-
-		messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
-		if( [messageString length] ) {
-			[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
-		}
-
+	if ([_logLock tryLock]) {
+		[self addEventMessageToLogAndDisplay:message withName:name andAttributes:attributes];
 		[_logLock unlock];
 	} else {
-		if( ! _xmlQueue ) {
-			_xmlQueue = xmlNewDoc( "1.0" );
-			xmlDocSetRootElement( _xmlQueue, xmlNewNode( NULL, "queue" ) );
-		}
-		xmlAddChild( xmlDocGetRootElement( _xmlQueue ), xmlDocCopyNode( root, _xmlQueue, 1 ) );
+		NSDictionary *queueEntry = [NSDictionary dictionaryWithObjectsAndKeys:@"event", @"type",
+			message, @"message", name, @"name", attributes, @"attributes", nil];
+		[_messageQueue addObject:queueEntry];
+		if ([_messageQueue count] == 1) // The object we just added
+			[self performSelector:@selector(processQueue) withObject:nil afterDelay:0.25];
 	}
-
-	xmlFreeDoc( doc );
-
-	_requiresFullMessage = YES;
 }
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
-	BOOL highlight = NO;
-	xmlDocPtr doc = NULL, msgDoc = NULL;
-	xmlNodePtr root = NULL, child = NULL, parent = NULL;
-	const char *msgStr = NULL;
-	NSMutableData *mutableMsg = [[message mutableCopy] autorelease];
-	NSMutableString *messageString = nil;
-
-	NSParameterAssert( message != nil );
-	NSParameterAssert( user != nil );
-
-	if( ! [user isEqualToString:[[self connection] nickname]] )
-		[self processMessage:mutableMsg asAction:action fromUser:user];
-
-	if( ! [mutableMsg length] ) return;
-
-	messageString = [[[NSMutableString alloc] initWithData:mutableMsg encoding:_encoding] autorelease];
-	if( ! messageString ) {
-		messageString = [NSMutableString stringWithCString:[mutableMsg bytes] length:[mutableMsg length]];
-		[messageString appendFormat:@" <span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
-	}
-
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
-		[self _makeHyperlinksInString:messageString];
-
-	[self _performEmoticonSubstitutionOnString:messageString];
-
-	if( ! [user isEqualToString:[[self connection] nickname]] ) {
-		NSEnumerator *enumerator = nil;
-		NSMutableArray *names = nil;
-		id item = nil;
-
-		names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
-		[names addObject:[[self connection] nickname]];
-		enumerator = [names objectEnumerator];
-		while( ( item = [enumerator nextObject] ) ) {
-			if( [messageString rangeOfString:item options:NSCaseInsensitiveSearch].length ) {
-				NSMutableDictionary *context = [NSMutableDictionary dictionary];
-				[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
-				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"description"];
-				[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-				[context setObject:_target forKey:@"performedOn"];
-				[context setObject:user forKey:@"performedBy"];
-				[context setObject:_target forKey:@"performedInRoom"];
-				[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
-				_newHighlightMessage = YES;
-				highlight = YES;
-				break;
-			}
-		}
-	}
-
-	doc = xmlNewDoc( "1.0" );
-
-	xmlXPathObjectPtr result = NULL;
-
-	if( [_logLock tryLock] ) {	
-		xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
-		if( ! ctx ) return;
-		result = xmlXPathEval( [[NSString stringWithFormat:@"/log/*[name() = 'envelope' and position() = last() and (sender = '%@' or sender/@nickname = '%@')]", user, user] UTF8String], ctx );
+	if ([_logLock tryLock]) {
+		[self displayQueue];
+		[self addMessageToLogAndDisplay:message fromUser:user asAction:action];
 		[_logLock unlock];
-	} else _requiresFullMessage = YES;
-
-	if( ! _requiresFullMessage && result && result -> nodesetval -> nodeNr ) {
-		if( ! [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
-			[_styleParams setObject:@"'yes'" forKey:@"subsequent"];
-			if( _params ) [[self class] _freeXsltParamArray:_params];
-			_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
-		}
-
-		parent = result -> nodesetval -> nodeTab[0];
-		root = xmlDocCopyNode( parent, doc, 1 );
-		xmlDocSetRootElement( doc, root );
+		
+		[_windowController reloadListItem:self andChildren:NO];
 	} else {
-		if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
-			[_styleParams removeObjectForKey:@"subsequent"];
-			if( _params ) [[self class] _freeXsltParamArray:_params];
-			_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
-		}
-
-		root = xmlNewNode( NULL, "envelope" );
-		xmlSetProp( root, "id", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
-		xmlDocSetRootElement( doc, root );
-
-		if( [user isEqualToString:_target] && _buddy ) {
-			NSString *theirName = user;
-			if( [_buddy preferredNameWillReturn] != JVBuddyActiveNickname ) theirName = [_buddy preferredName];
-			child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
-			if( ! [theirName isEqualToString:user] )
-				xmlSetProp( child, "nickname", [user UTF8String] );
-			xmlSetProp( child, "card", [[_buddy uniqueIdentifier] UTF8String] );
-			[self _saveBuddyIcon:_buddy];
-		} else if( [user isEqualToString:[[self connection] nickname]] ) {
-			NSString *selfName = user;
-			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
-				selfName = [self _selfCompositeName];
-			else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyGivenNickname )
-				selfName = [self _selfStoredNickname];
-			child = xmlNewTextChild( root, NULL, "sender", [selfName UTF8String] );
-			if( ! [selfName isEqualToString:user] )
-				xmlSetProp( child, "nickname", [user UTF8String] );
-			xmlSetProp( child, "self", "yes" );
-			xmlSetProp( child, "card", [[[[ABAddressBook sharedAddressBook] me] uniqueId] UTF8String] );
-			[self _saveSelfIcon];
-		} else {
-			NSString *theirName = user;
-			JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:user onServer:[[self connection] server]];
-			if( buddy && [buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-				theirName = [buddy preferredName];
-			child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
-			if( ! [theirName isEqualToString:user] )
-				xmlSetProp( child, "nickname", [user UTF8String] );		
-			if( buddy ) {
-				xmlSetProp( child, "card", [[buddy uniqueIdentifier] UTF8String] );
-				[self _saveBuddyIcon:buddy];
-			}
-		}
-
-		xmlSetProp( child, "classification", [self _classificationForNickname:user] );		
+		// Queue the message
+		NSDictionary *queueEntry = [NSDictionary dictionaryWithObjectsAndKeys:@"message", @"type",
+			message, @"message", user, @"user", [NSNumber numberWithBool:action], @"action", nil];
+		[_messageQueue addObject:queueEntry];
+		if ([_messageQueue count] == 1) // The object we just added
+			[self performSelector:@selector(processQueue) withObject:nil afterDelay:0.25];
 	}
-
-	xmlXPathFreeObject( result );
-
-	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
-	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
-
-	child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
-	xmlSetProp( child, "received", [[[NSDate date] description] UTF8String] );
-	if( action ) xmlSetProp( child, "action", "yes" );
-	if( highlight ) xmlSetProp( child, "highlight", "yes" );
-	xmlAddChild( root, child );
-
-	xmlFreeDoc( msgDoc );
-
-	if( [_logLock tryLock] ) {
-		if( parent ) xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
-		else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
-
-		messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
-		if( [messageString length] ) {
-			[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			if( parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendConsecutiveMessage( \"%@\" );", messageString]];
-			else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
-		}
-
-		[_logLock unlock];
-	} else {
-		if( ! _xmlQueue ) {
-			_xmlQueue = xmlNewDoc( "1.0" );
-			xmlDocSetRootElement( _xmlQueue, xmlNewNode( NULL, "queue" ) );
-		}
-		xmlAddChild( xmlDocGetRootElement( _xmlQueue ), xmlDocCopyNode( root, _xmlQueue, 1 ) );
-	}
-
-	xmlFreeDoc( doc );
-
-	_requiresFullMessage = NO;
-	_firstMessage = NO;
-	_newMessage = YES;
-
-	[_windowController reloadListItem:self andChildren:NO];
 }
 
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
@@ -1038,9 +832,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
 	BOOL ret = NO;
 	
-	NSLog( @"%i == %i", [event modifierFlags] | NSAlternateKeyMask, NSAlternateKeyMask  );
-	
-	if ( ([event modifierFlags] & NSAlternateKeyMask) != 0 ) {
+	if( ([event modifierFlags] & NSAlternateKeyMask) != 0 ) {
 		//[self send:[NSNumber numberWithBool:YES]];
 		ret = NO;
 	} else if ( ([event modifierFlags] & NSShiftKeyMask) != 0 ) {
@@ -1053,6 +845,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[self send:[NSNumber numberWithBool:YES]];
 		ret = YES;
 	}
+
 	return ret;
 }
 
@@ -1265,23 +1058,255 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 @implementation JVDirectChat (JVDirectChatPrivate)
-- (void) _loaded:(id) sender {
-	if( _xmlQueue && [_logLock tryLock] ) {
-		NSMutableString *queueResult = [[[self _applyStyleOnXMLDocument:_xmlQueue] mutableCopy] autorelease];
-		xmlAddChildList( xmlDocGetRootElement( _xmlLog ), xmlCopyNodeList( xmlDocGetRootElement( _xmlQueue ) -> children ) );
-
-		xmlFreeDoc( _xmlQueue );
-		_xmlQueue = NULL;
-
-		if( [queueResult length] ) {
-			[queueResult replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [queueResult length] )];
-			[queueResult replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [queueResult length] )];
-			[queueResult replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [queueResult length] )];
-			[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", queueResult]];
+- (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
+	NSEnumerator *enumerator = nil, *kenumerator = nil;
+	NSMutableString *key = nil, *value = nil;
+	NSMutableString *messageString = nil;
+	xmlDocPtr doc = NULL, msgDoc = NULL;
+	xmlNodePtr root = NULL, child = NULL;
+	const char *msgStr = NULL;
+	
+	NSParameterAssert( name != nil );
+	NSParameterAssert( [name length] );
+	
+	doc = xmlNewDoc( "1.0" );
+	root = xmlNewNode( NULL, "event" );
+	xmlSetProp( root, "name", [name UTF8String] );
+	xmlSetProp( root, "occurred", [[[NSDate date] description] UTF8String] );
+	xmlDocSetRootElement( doc, root );
+	
+	if( message ) {
+		msgStr = [[NSString stringWithFormat:@"<message>%@</message>", message] UTF8String];
+		if( msgStr ) {
+			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
+			xmlAddChild( root, child );
+			xmlFreeDoc( msgDoc );
 		}
+	}
+	
+	kenumerator = [attributes keyEnumerator];
+	enumerator = [attributes objectEnumerator];
+	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
+		msgStr = nil;
+		
+		if( [value isMemberOfClass:[NSNull class]] ) {
+			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
+		} else {
+			value = [[value mutableCopy] autorelease];
+			[value encodeXMLSpecialCharactersAsEntities];
+			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+		}
+		
+		if( msgStr ) {
+			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
+			xmlAddChild( root, child );
+			xmlFreeDoc( msgDoc );
+		}
+	}
+	
+	if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
+		[_styleParams removeObjectForKey:@"subsequent"];
+		if( _params ) [[self class] _freeXsltParamArray:_params];
+		_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
+	}
+	
+	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
+	
+	messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
+	if( [messageString length] ) {
+		[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+		[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+	[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+	[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
+	}
 
+	xmlFreeDoc( doc );
+
+	_requiresFullMessage = YES;
+}
+
+- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
+	// DO *NOT* call this method without first acquiring _logLock!
+	BOOL highlight = NO;
+	xmlDocPtr doc = NULL, msgDoc = NULL;
+	xmlNodePtr root = NULL, child = NULL, parent = NULL;
+	const char *msgStr = NULL;
+	NSMutableData *mutableMsg = [[message mutableCopy] autorelease];
+	NSMutableString *messageString = nil;
+	
+	NSParameterAssert( message != nil );
+	NSParameterAssert( user != nil );
+	
+	if( ! [user isEqualToString:[[self connection] nickname]] )
+		[self processMessage:mutableMsg asAction:action fromUser:user];
+	
+	if( ! [mutableMsg length] ) return;
+	
+	messageString = [[[NSMutableString alloc] initWithData:mutableMsg encoding:_encoding] autorelease];
+	if( ! messageString ) {
+		messageString = [NSMutableString stringWithCString:[mutableMsg bytes] length:[mutableMsg length]];
+		[messageString appendFormat:@" <span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
+	}
+	
+	if( ! [user isEqualToString:[[self connection] nickname]] ) {
+		NSEnumerator *enumerator = nil;
+		NSMutableArray *names = nil;
+		id item = nil;
+		
+		names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
+		[names addObject:[[self connection] nickname]];
+		enumerator = [names objectEnumerator];
+		while( ( item = [enumerator nextObject] ) ) {
+			if( [messageString rangeOfString:item options:NSCaseInsensitiveSearch].length ) {
+				NSMutableDictionary *context = [NSMutableDictionary dictionary];
+				[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
+				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"description"];
+				[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
+				[context setObject:_target forKey:@"performedOn"];
+				[context setObject:user forKey:@"performedBy"];
+				[context setObject:_target forKey:@"performedInRoom"];
+				[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
+				_newHighlightMessage = YES;
+				highlight = YES;
+				break;
+			}
+		}
+	}
+	
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+		[self _makeHyperlinksInString:messageString];
+	
+	[self _performEmoticonSubstitutionOnString:messageString];
+	
+	doc = xmlNewDoc( "1.0" );
+	
+	xmlXPathObjectPtr result = NULL;
+	
+	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
+	if( ! ctx ) return;
+	result = xmlXPathEval( [[NSString stringWithFormat:@"/log/*[name() = 'envelope' and position() = last() and (sender = '%@' or sender/@nickname = '%@')]", user, user] UTF8String], ctx );
+	 
+	 if( ! _requiresFullMessage && result && result -> nodesetval -> nodeNr ) {
+		 if( ! [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
+			 [_styleParams setObject:@"'yes'" forKey:@"subsequent"];
+			 if( _params ) [[self class] _freeXsltParamArray:_params];
+			 _params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
+		 }
+		 
+		 parent = result -> nodesetval -> nodeTab[0];
+		 root = xmlDocCopyNode( parent, doc, 1 );
+		 xmlDocSetRootElement( doc, root );
+	 } else {
+		 if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
+			 [_styleParams removeObjectForKey:@"subsequent"];
+			 if( _params ) [[self class] _freeXsltParamArray:_params];
+			 _params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
+		 }
+		 
+		 root = xmlNewNode( NULL, "envelope" );
+		 xmlSetProp( root, "id", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
+		 xmlDocSetRootElement( doc, root );
+		 
+		 if( [user isEqualToString:_target] && _buddy ) {
+			 NSString *theirName = user;
+			 if( [_buddy preferredNameWillReturn] != JVBuddyActiveNickname ) theirName = [_buddy preferredName];
+			 child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
+			 if( ! [theirName isEqualToString:user] )
+				 xmlSetProp( child, "nickname", [user UTF8String] );
+			 xmlSetProp( child, "card", [[_buddy uniqueIdentifier] UTF8String] );
+			 [self _saveBuddyIcon:_buddy];
+		 } else if( [user isEqualToString:[[self connection] nickname]] ) {
+			 NSString *selfName = user;
+			 if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
+				 selfName = [self _selfCompositeName];
+			 else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyGivenNickname )
+				 selfName = [self _selfStoredNickname];
+			 child = xmlNewTextChild( root, NULL, "sender", [selfName UTF8String] );
+			 if( ! [selfName isEqualToString:user] )
+				 xmlSetProp( child, "nickname", [user UTF8String] );
+			 xmlSetProp( child, "self", "yes" );
+			 xmlSetProp( child, "card", [[[[ABAddressBook sharedAddressBook] me] uniqueId] UTF8String] );
+			 [self _saveSelfIcon];
+		 } else {
+			 NSString *theirName = user;
+			 JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:user onServer:[[self connection] server]];
+			 if( buddy && [buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+				 theirName = [buddy preferredName];
+			 child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
+			 if( ! [theirName isEqualToString:user] )
+				 xmlSetProp( child, "nickname", [user UTF8String] );		
+			 if( buddy ) {
+				 xmlSetProp( child, "card", [[buddy uniqueIdentifier] UTF8String] );
+				 [self _saveBuddyIcon:buddy];
+			 }
+		 }
+		 
+		 xmlSetProp( child, "classification", [self _classificationForNickname:user] );		
+	 }
+	 
+	 xmlXPathFreeObject( result );
+	 
+	 msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
+	 msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+	 
+	 child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
+	 xmlSetProp( child, "received", [[[NSDate date] description] UTF8String] );
+	 if( action ) xmlSetProp( child, "action", "yes" );
+	 if( highlight ) xmlSetProp( child, "highlight", "yes" );
+	 xmlAddChild( root, child );
+	 
+	 xmlFreeDoc( msgDoc );
+	 
+	 if( parent ) xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
+	 else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
+	 
+	 messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
+	 if( [messageString length] ) {
+		 [messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+		 [messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+	 [messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+	 if( parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendConsecutiveMessage( \"%@\" );", messageString]];
+	 else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
+	}
+	 
+	 xmlFreeDoc( doc );
+	 
+	 _requiresFullMessage = NO;
+	 _firstMessage = NO;
+	 _newMessage = YES;
+}
+
+- (void) processQueue {
+	if ([_logLock tryLock]) {
+		[self displayQueue];
 		[_logLock unlock];
-	} else if( _xmlQueue ) [self performSelector:@selector( _loaded: ) withObject:nil afterDelay:0.25];
+	} else
+		[self performSelector:@selector(processQueue) withObject:nil afterDelay:0.25];
+}
+
+- (void) displayQueue {
+	// DO *NOT* call this without first acquiring _logLock
+	while ([_messageQueue count] > 0) {
+		NSDictionary *aDict = [[[_messageQueue objectAtIndex:0] retain] autorelease];
+		[_messageQueue removeObjectAtIndex:0];
+		if ([[aDict objectForKey:@"type"] isEqualToString:@"message"]) {
+			[self addMessageToLogAndDisplay:[aDict objectForKey:@"message"]
+								   fromUser:[aDict objectForKey:@"user"]
+								   asAction:[[aDict objectForKey:@"action"] boolValue]];
+		} else if ([[aDict objectForKey:@"type"] isEqualToString:@"event"]) {
+			if ([[aDict objectForKey:@"message"] isEqual:[NSNull null]]) {
+				[self addEventMessageToLogAndDisplay:nil
+											withName:[aDict objectForKey:@"name"]
+									   andAttributes:[aDict objectForKey:@"attributes"]];
+			} else {
+				[self addEventMessageToLogAndDisplay:[aDict objectForKey:@"message"]
+											withName:[aDict objectForKey:@"name"]
+									   andAttributes:[aDict objectForKey:@"attributes"]];
+			}
+		}
+	}
 }
 
 - (NSString *) _selfCompositeName {
