@@ -13,6 +13,12 @@ i {
 	font-style: normal;
 }
 
+.hidden {
+	position: fixed;
+	top: -900px;
+	left: -900px;
+}
+
 .error {
 	color: #aaa;
 }
