@@ -156,9 +156,6 @@
 	return [[_activeNicknames objectAtIndex:row] user];
 }
 
-- (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(int) row {
-}
-
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
 	if( ! [(NSString *)object length] ) {
 		[_activeNicknames removeObjectAtIndex:row];
