@@ -8,6 +8,7 @@
                 newConnection = id; 
                 selectNextPanel = id; 
                 selectPreviousPanel = id; 
+                toggleViewsDrawer = id; 
             }; 
             CLASS = FirstResponder; 
             LANGUAGE = ObjC; 

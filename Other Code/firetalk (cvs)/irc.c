@@ -444,7 +444,7 @@ char *irc_irc_to_html(const char * const string) {
 				}
 				break;*/
 			default:
-				if( string[i] >= 32 || string[i] == '\t' || string[i] == '\n' || string[i] == '\r' ) output[o++] = string[i++];
+				if( (unsigned) string[i] >= 0x20 || string[i] == '\t' || string[i] == '\n' || string[i] == '\r' ) output[o++] = string[i++];
 				else i++;
 			}
 		}

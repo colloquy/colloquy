@@ -9,6 +9,7 @@
                 joinRoom = id; 
                 messageUser = id; 
                 newConnection = id; 
+                openNetworkPreferences = id; 
                 removeRoom = id; 
                 sendPassword = id; 
                 showConnectionManager = id; 
@@ -27,6 +28,7 @@
                 editNickname = NSTextField; 
                 editPassword = NSTextField; 
                 editPort = NSTextField; 
+                editProxy = NSPopUpButton; 
                 editRemoveRoom = NSButton; 
                 editRooms = NSTableView; 
                 editServerPassword = NSTextField; 

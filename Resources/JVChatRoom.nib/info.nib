@@ -13,12 +13,7 @@
 	</dict>
 	<key>IBFramework Version</key>
 	<string>291.0</string>
-	<key>IBOpenObjects</key>
-	<array>
-		<integer>68</integer>
-		<integer>78</integer>
-	</array>
 	<key>IBSystem Version</key>
-	<string>6R57</string>
+	<string>6R65</string>
 </dict>
 </plist>
