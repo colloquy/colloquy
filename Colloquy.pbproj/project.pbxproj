@@ -398,7 +398,7 @@ Copyright © 2001, The Massinova Project</string>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1B3</string>
+	<string>1B9</string>
 	<key>NSMainNibFile</key>
 	<string>Colloquy</string>
 	<key>NSPrincipalClass</key>
