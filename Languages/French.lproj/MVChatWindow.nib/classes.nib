@@ -5,10 +5,16 @@
             ACTIONS = {
                 addEmoticon = id; 
                 changeEncoding = id; 
+                clear = id; 
+                clearDisplay = id; 
+                closeMemberDrawer = id; 
                 hideWindow = id; 
+                kickSelectedUser = id; 
+                openMemberDrawer = id; 
                 partChat = id; 
                 promoteSelectedUser = id; 
                 send = id; 
+                sendFileToSelectedUser = id; 
                 showWindow = id; 
                 showWindowAndMakeKey = id; 
                 startChatWithSelectedUser = id; 

@@ -1,6 +1,5 @@
 #import <Cocoa/Cocoa.h>
 #import "JVStandardCommands.h"
-#import "MVChatWindowController.h"
 #import "MVConnectionsController.h"
 
 @implementation JVStandardCommands
@@ -10,9 +9,9 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(NSString *) room forConnection:(MVChatConnection *) connection {
-	Class chatWindowControllerClass = NSClassFromString( @"MVChatWindowController" );
+//	Class chatWindowControllerClass = NSClassFromString( @"MVChatWindowController" );
 	Class connectionsControllerClass = NSClassFromString( @"MVConnectionsController" );
-	NSStringEncoding encoding = [[chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES] encoding];
+	NSStringEncoding encoding = NSUTF8StringEncoding; //[[chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES] encoding];
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
 		if( [arguments length] )
 			[connection sendMessageToChatRoom:room attributedMessage:arguments withEncoding:encoding asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
@@ -32,19 +31,19 @@
 		}
 
 		if( [command isEqualToString:@"query"] ) {
-			MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:to withConnection:connection ifExists:NO];
-			[window showWindowAndMakeKey:nil];
+//			MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:to withConnection:connection ifExists:NO];
+//			[window showWindowAndMakeKey:nil];
 		}
 
 		if( [msg length] ) [connection sendMessageToUser:to attributedMessage:msg withEncoding:encoding asAction:NO];
 		return YES;
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
-		NSEnumerator *enumerator = [[chatWindowControllerClass roomChatWindowsForConnection:connection] keyEnumerator];
-		id item = nil;
-		if( ! [arguments length] ) return NO;
-		while( ( item = [enumerator nextObject] ) )
-			[connection sendMessageToChatRoom:item attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
-		return YES;
+//		NSEnumerator *enumerator = [[chatWindowControllerClass roomChatWindowsForConnection:connection] keyEnumerator];
+//		id item = nil;
+//		if( ! [arguments length] ) return NO;
+//		while( ( item = [enumerator nextObject] ) )
+//			[connection sendMessageToChatRoom:item attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
+//		return YES;
 	} else if( [command isEqualToString:@"nick"] ) {
 		NSString *nick = nil;
 		if( ! [arguments length] ) return NO;
@@ -165,13 +164,13 @@
 		}
 		return handled;
 	} else if( [command isEqualToString:@"names"] ) {
-		MVChatWindowController *window = [chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES];
-		[window openMemberDrawer:nil];
-		return YES;
+//		MVChatWindowController *window = [chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES];
+//		[window openMemberDrawer:nil];
+//		return YES;
 	} else if( [command isEqualToString:@"clear"] ) {
-		MVChatWindowController *window = [chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES];
-		[window clearDisplay:nil];
-		return YES;
+//		MVChatWindowController *window = [chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES];
+//		[window clearDisplay:nil];
+//		return YES;
 	} else if( [command isEqualToString:@"kick"] ) {
 		NSString *member = nil, *msg = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
@@ -197,9 +196,9 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toUser:(NSString *) user forConnection:(MVChatConnection *) connection {
-	Class chatWindowControllerClass = NSClassFromString( @"MVChatWindowController" );
+//	Class chatWindowControllerClass = NSClassFromString( @"MVChatWindowController" );
 	Class connectionsControllerClass = NSClassFromString( @"MVConnectionsController" );
-	NSStringEncoding encoding = [[chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES] encoding];
+	NSStringEncoding encoding = NSUTF8StringEncoding;//[[chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES] encoding];
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
 		if( [arguments length] )
 			[connection sendMessageToUser:user attributedMessage:arguments withEncoding:encoding asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
@@ -219,19 +218,19 @@
 		}
 
 		if( [command isEqualToString:@"query"] ) {
-			MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:to withConnection:connection ifExists:NO];
-			[window showWindowAndMakeKey:nil];
+//			MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:to withConnection:connection ifExists:NO];
+//			[window showWindowAndMakeKey:nil];
 		}
 
 		if( [msg length] ) [connection sendMessageToUser:to attributedMessage:msg withEncoding:encoding asAction:NO];
 		return YES;
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
-		NSEnumerator *enumerator = [[chatWindowControllerClass roomChatWindowsForConnection:connection] keyEnumerator];
-		id item = nil;
-		if( ! [arguments length] ) return NO;
-		while( ( item = [enumerator nextObject] ) )
-			[connection sendMessageToChatRoom:item attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
-		return YES;
+//		NSEnumerator *enumerator = [[chatWindowControllerClass roomChatWindowsForConnection:connection] keyEnumerator];
+//		id item = nil;
+//		if( ! [arguments length] ) return NO;
+//		while( ( item = [enumerator nextObject] ) )
+//			[connection sendMessageToChatRoom:item attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
+//		return YES;
 	} else if( [command isEqualToString:@"nick"] ) {
 		NSString *nick = nil;
 		if( ! [arguments length] ) return NO;
@@ -302,13 +301,13 @@
 		}
 		return NO;
 	} else if( [command isEqualToString:@"names"] ) {
-		MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES];
-		[window openMemberDrawer:nil];
-		return YES;
+//		MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES];
+//		[window openMemberDrawer:nil];
+//		return YES;
 	} else if( [command isEqualToString:@"clear"] ) {
-		MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES];
-		[window clearDisplay:nil];
-		return YES;
+//		MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES];
+//		[window clearDisplay:nil];
+//		return YES;
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;

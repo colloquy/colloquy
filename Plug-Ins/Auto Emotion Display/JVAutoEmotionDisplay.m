@@ -1,5 +1,5 @@
-#import <Foundation/Foundation.h>
 #import "JVAutoEmotionDisplay.h"
+#import "MVChatConnection.h"
 
 @implementation JVAutoEmotionDisplay
 - (id) initWithBundle:(NSBundle *) bundle {

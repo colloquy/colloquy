@@ -5,8 +5,8 @@
 @end
 
 @interface NSObject (MVChatPlugin)
-- (NSMutableAttributedString *) processRoomMessage:(NSMutableAttributedString *) message fromUser:(NSString *) user inRoom:(NSString *) room asAction:(BOOL) action forConnection:(MVChatConnection *) connection;
-- (NSMutableAttributedString *) processPrivateMessage:(NSMutableAttributedString *) message fromUser:(NSString *) user asAction:(BOOL) action forConnection:(MVChatConnection *) connection;
+- (NSMutableData *) processRoomMessage:(NSMutableData *) message fromUser:(NSString *) user inRoom:(NSString *) room asAction:(BOOL) action forConnection:(MVChatConnection *) connection;
+- (NSMutableData *) processPrivateMessage:(NSMutableData *) message fromUser:(NSString *) user asAction:(BOOL) action forConnection:(MVChatConnection *) connection;
 
 - (NSMutableAttributedString *) processRoomMessage:(NSMutableAttributedString *) message toRoom:(NSString *) room asAction:(BOOL) action forConnection:(MVChatConnection *) connection;
 - (NSMutableAttributedString *) processPrivateMessage:(NSMutableAttributedString *) message toUser:(NSString *) user asAction:(BOOL) action forConnection:(MVChatConnection *) connection;
