@@ -1494,7 +1494,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSCharacterSet *legalAddressSet = nil;
 	NSCharacterSet *legalDomainSet = nil;
 	NSCharacterSet *ircChannels = [NSCharacterSet characterSetWithCharactersInString:@"#&"];
-	NSCharacterSet *trailingPuncuation = [NSCharacterSet characterSetWithCharactersInString:@".!?,])}\\"];
+	NSCharacterSet *trailingPuncuation = [NSCharacterSet characterSetWithCharactersInString:@".!?,])}\\'\"&"];
 	NSCharacterSet *seperaters = [NSCharacterSet characterSetWithCharactersInString:@"<> \t\n\r&"];
 	NSString *link = nil, *urlHandle = nil;
 	NSMutableString *mutableLink = nil;
@@ -1512,12 +1512,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			inTag = ! inTag;
 		} else if( [string characterAtIndex:range.location] == ' ' && ! inTag ) {
 			[string insertString:@"\033" atIndex:range.location + 1];
-		} else if( [string characterAtIndex:range.location] == '&' && ! inTag &&
-				   ([string length] < range.location + 5 ||
-					![[string substringWithRange:NSMakeRange(range.location, 5)]
-						isEqualToString:@"&amp;"]) ) {
-			[string insertString:@"\033" atIndex:range.location];
 		}
+
 		if( range.location >= [string length] ) break;
 		srange = NSMakeRange( range.location + 2, [string length] - range.location - 2 );
 		range = [string rangeOfCharacterFromSet:seperaters options:NSLiteralSearch range:srange];
@@ -1533,8 +1529,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		// catch well-formed urls like "http://www.apple.com" or "irc://irc.javelin.cc"
 		legalSchemeSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-"];
-		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;#.,\\/?!&%$-+=_~@*'()[]"];
-		legalDomainSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.!~*'()[]%;:&=+$,"];
+		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;#.,\\/?!&%$-+=_~@*'\"()[]"];
+		legalDomainSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_.!~*'()[]%;:&=+$,"];
 		urlScanner = [NSScanner scannerWithString:part];
 		srange = [part rangeOfString:@"://"];
 		range = [part rangeOfCharacterFromSet:[legalSchemeSet invertedSet] options:( NSLiteralSearch | NSBackwardsSearch ) range:NSMakeRange( 0, ( srange.location != NSNotFound ? srange.location : 0 ) )];
