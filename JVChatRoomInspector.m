@@ -1,4 +1,5 @@
 #import "JVChatRoomInspector.h"
+#import "JVChatRoomMember.h"
 #import "JVDirectChat.h"
 #import "JVChatTranscript.h"
 #import <Cocoa/Cocoa.h>
@@ -169,7 +170,7 @@
 - (void) _refreshEditStatus:(NSNotification *) notification {
 	if( notification && [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame ) return;
 
-	BOOL canEdit = [_room doesMemberHaveOperatorStatus:[[_room connection] nickname]];
+	BOOL canEdit = [[_room chatRoomMemberWithName:[[_room connection] nickname]] operator];
 
 	[topicChangeable setEnabled:canEdit];
 	[privateRoom setEnabled:canEdit];
@@ -208,7 +209,7 @@
 	case MVChatRoomSetTopicOperatorOnlyMode:
 		enabled = [[[notification userInfo] objectForKey:@"enabled"] boolValue];
 		if( enabled ) [self _finishTopicChange:nil];
-		if( [_room doesMemberHaveOperatorStatus:[[_room connection] nickname]] ) {
+		if( [[_room chatRoomMemberWithName:[[_room connection] nickname]] operator] ) {
 			[topic setEditable:YES];
 		} else [topic setEditable:( ! enabled )];
 		[topicChangeable setState:(NSCellStateValue)enabled];
