@@ -59,8 +59,8 @@
 	[editUsername setObjectValue:[_connection username]];
 
 	[_editingRooms autorelease];
-	_editingRooms = [[[MVConnectionsController defaultManager] joinRoomsForConnection:_connection] mutableCopy];
-	if( ! _editingRooms ) _editingRooms = [[NSMutableArray array] retain];
+	_editingRooms = [[NSMutableArray arrayWithArray:[[MVConnectionsController defaultManager] joinRoomsForConnection:_connection]] retain];
+
 	[editRooms reloadData];
 }
 

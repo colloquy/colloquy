@@ -83,7 +83,7 @@
 
 - (void) setMarks:(NSSet *) marks {
 	[_marks autorelease];
-	_marks = [marks mutableCopy];
+	_marks = [[NSMutableSet setWithSet:marks] retain];
 	[self rebuildLines];
 }
 

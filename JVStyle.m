@@ -160,10 +160,10 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 	if( ! _XSLStyle ) [self _setXSLStyle:[self XMLStyleSheetFilePath]];
 	NSAssert( _XSLStyle, @"XSL not allocated." );
 
-	NSDictionary *pms = [self mainParameters];
+	NSMutableDictionary *pms = (NSMutableDictionary *)[self mainParameters];
 	if( parameters ) {
-		pms = [[[self mainParameters] mutableCopy] autorelease];
-		[(NSMutableDictionary *)pms addEntriesFromDictionary:parameters];
+		pms = [NSMutableDictionary dictionaryWithDictionary:[self mainParameters]];
+		[pms addEntriesFromDictionary:parameters];
 	}
 
 	xmlDoc *doc = document;

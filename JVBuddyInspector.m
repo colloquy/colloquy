@@ -76,7 +76,7 @@
 - (IBAction) changeServer:(id) sender {
 	if( [[sender selectedItem] tag] ) {
 		[_activeNicknames autorelease];
-		_activeNicknames = [[[_buddy nicknames] allObjects] mutableCopy];
+		_activeNicknames = [[NSMutableArray arrayWithArray:[[_buddy nicknames] allObjects]] retain];
 		[[nicknames tableColumnWithIdentifier:@"nickname"] setEditable:NO];
 		[addNickname setEnabled:NO];
 	} else {

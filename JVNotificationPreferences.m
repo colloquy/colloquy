@@ -29,8 +29,7 @@
 
 - (void) switchEvent:(id) sender {
 	[_eventPrefs autorelease];
-	_eventPrefs = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:[NSString stringWithFormat:@"JVNotificationSettings %@", [[chatActions selectedItem] representedObject]]] mutableCopy];
-	if( ! _eventPrefs ) _eventPrefs = [[NSMutableDictionary dictionary] retain];
+	_eventPrefs = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[NSString stringWithFormat:@"JVNotificationSettings %@", [[chatActions selectedItem] representedObject]]]] retain];
 
 	BOOL boolValue = [[_eventPrefs objectForKey:@"playSound"] boolValue];
 	[playSound setState:boolValue];
