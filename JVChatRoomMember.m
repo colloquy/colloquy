@@ -38,15 +38,17 @@
 	[item setTarget:[_parent windowController]];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""] autorelease];
-	[item setTarget:self];
-	[menu addItem:item];
+	if( ! [_memberName isEqualToString:[[_parent connection] nickname]] ) {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFile: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	}
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFile: ) keyEquivalent:@""] autorelease];
-	[item setTarget:self];
-	[menu addItem:item];
-
-	if( [(JVChatRoom *)_parent doesMemberHaveOperatorStatus:[[(JVChatRoom *)_parent connection] nickname]] ) {
+	if( [_parent doesMemberHaveOperatorStatus:[[_parent connection] nickname]] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room", "kick from room contextual menu - admin only" ) action:@selector( kick: ) keyEquivalent:@""] autorelease];
