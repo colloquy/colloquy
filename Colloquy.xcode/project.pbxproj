@@ -1491,6 +1491,19 @@
 			settings = {
 			};
 		};
+		1C91DEAC06972EC0007C1638 = {
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "find $BUILD_ROOT/$WRAPPER_NAME -name '.svn' -print0 | xargs -0 rm -rf\n";
+		};
 		1C9437080639F86700618CD9 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1865,6 +1878,7 @@
 				1CB2CD82052DDC560094AAA4,
 				1CB2CD88052DDC560094AAA4,
 				1CF038FF062F8DBB009774D8,
+				1C91DEAC06972EC0007C1638,
 			);
 			buildRules = (
 			);
@@ -4174,7 +4188,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "touch Resources/Styles\ntouch Resources/Emoticons\nfind build/Colloquy.app -name '.svn' -print0 | xargs -0 rm -rf\n";
+			shellScript = "touch Resources/Styles\ntouch Resources/Emoticons\n";
 		};
 		1CF9BB9A04FBE96D00A8FE6E = {
 			isa = PBXFileReference;
