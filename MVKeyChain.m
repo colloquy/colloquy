@@ -3,23 +3,21 @@
 
 #define MVStringByteLength(a) (( [a UTF8String] ? strlen( [a UTF8String] ) : 0 ))
 
-static MVKeyChain *MVDefaultKeyChain = nil;
+static MVKeyChain *sharedInstance = nil;
 
 @implementation MVKeyChain
 + (MVKeyChain *) defaultKeyChain {
-	extern MVKeyChain *MVDefaultKeyChain;
-	return ( MVDefaultKeyChain ? MVDefaultKeyChain : ( MVDefaultKeyChain = [[self alloc] init] ) );
+	extern MVKeyChain *sharedInstance;
+	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
 }
 
 - (void) dealloc {
-	extern MVKeyChain *MVDefaultKeyChain;
-	if( MVDefaultKeyChain == self ) MVDefaultKeyChain = nil;
+	extern MVKeyChain *sharedInstance;
+	if( sharedInstance == self ) sharedInstance = nil;
 	[super dealloc];
 }
 
 - (void) setGenericPassword:(NSString *) password forService:(NSString *) service account:(NSString *) account {
-	OSStatus ret = 0;
-
 	NSParameterAssert( service );
 	NSParameterAssert( account );
 
@@ -27,7 +25,7 @@ static MVKeyChain *MVDefaultKeyChain = nil;
 		[self removeGenericPasswordForService:service account:account];
 	} else if( ! [[self genericPasswordForService:service account:account] isEqualToString:password] ) {
 		[self removeGenericPasswordForService:service account:account];
-		ret = SecKeychainAddGenericPassword( NULL, MVStringByteLength( service ), [service UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( password ), (void *) [password UTF8String], NULL );
+		SecKeychainAddGenericPassword( NULL, MVStringByteLength( service ), [service UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( password ), (void *) [password UTF8String], NULL );
 	}
 }
 
@@ -38,7 +36,8 @@ static MVKeyChain *MVDefaultKeyChain = nil;
 	NSString *string = nil;
 
 	ret = SecKeychainFindGenericPassword( NULL, MVStringByteLength( service ), [service UTF8String], MVStringByteLength( account ), [account UTF8String], &len, &p, NULL );
-	if( ! ret ) string = [NSString stringWithUTF8String:(const char *) p];
+	if( ret == noErr ) string = [NSString stringWithCString:(const char *) p length:len];
+	SecKeychainItemFreeContent( NULL, p );
 
 	return string;
 }
@@ -51,19 +50,17 @@ static MVKeyChain *MVDefaultKeyChain = nil;
 	NSParameterAssert( account );
 
 	ret = SecKeychainFindGenericPassword( NULL, MVStringByteLength( service ), [service UTF8String], MVStringByteLength( account ), [account UTF8String], NULL, NULL, &itemref );
-	SecKeychainItemDelete( itemref );
+	if( ret == noErr ) SecKeychainItemDelete( itemref );
 }
 
 - (void) setInternetPassword:(NSString *) password forServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType {
-	OSStatus ret = 0;
-
 	NSParameterAssert( server || account );
 
 	if( ! [password length] ) {
 		[self removeInternetPasswordForServer:server securityDomain:domain account:account path:nil port:port protocol:protocol authenticationType:authType];
 	} else if( ! [[self internetPasswordForServer:server securityDomain:domain account:account path:nil port:port protocol:protocol authenticationType:authType] isEqualToString:password] ) {
 		[self removeInternetPasswordForServer:server securityDomain:domain account:account path:nil port:port protocol:protocol authenticationType:authType];
-		ret = SecKeychainAddInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, protocol, authType, MVStringByteLength( password ), (void *) [password UTF8String], NULL );
+		SecKeychainAddInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, protocol, authType, MVStringByteLength( password ), (void *) [password UTF8String], NULL );
 	}
 }
 
@@ -74,7 +71,8 @@ static MVKeyChain *MVDefaultKeyChain = nil;
 	NSString *string = nil;
 
 	ret = SecKeychainFindInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, protocol, authType, &len, &p, NULL );
-	if( ! ret ) string = [NSString stringWithUTF8String:(const char *) p];
+	if( ret == noErr ) string = [NSString stringWithCString:(const char *) p length:len];
+	SecKeychainItemFreeContent( NULL, p );
 
 	return string;
 }
@@ -86,6 +84,6 @@ static MVKeyChain *MVDefaultKeyChain = nil;
 	NSParameterAssert( server || account );
 
 	ret = SecKeychainFindInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, protocol, authType, NULL, NULL, &itemref );
-	SecKeychainItemDelete( itemref );
+	if( ret == noErr ) SecKeychainItemDelete( itemref );
 }
 @end
