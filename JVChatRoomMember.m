@@ -7,6 +7,7 @@
 #import "JVChatController.h"
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
+#import "JVChatMemberInspector.h"
 
 @interface JVChatRoomMember (JVChatMemberPrivate)
 - (NSString *) _selfStoredNickname;
@@ -213,12 +214,16 @@
 #pragma mark -
 #pragma mark Contextual Menu
 
+- (IBAction) getInfo:(id) sender {
+	[[JVInspectorController inspectorOfObject:self] show:sender];
+}
+
 - (NSMenu *) menu {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
-	[item setTarget:[_parent windowController]];
+	[item setTarget:self];
 	[menu addItem:item];
 
 	if( ! [self isLocalUser] ) {
