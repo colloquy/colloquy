@@ -1185,7 +1185,10 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"automatic"] boolValue]] forKey:@"automatic"];
 			[data setObject:[NSNumber numberWithInt:(int)[(MVChatConnection *)[info objectForKey:@"connection"] proxyType]] forKey:@"proxy"];
 			[data setObject:[NSNumber numberWithLong:(long)[(MVChatConnection *)[info objectForKey:@"connection"] encoding]] forKey:@"encoding"];
-			[data setObject:[[(MVChatConnection *)[info objectForKey:@"connection"] url] description] forKey:@"url"];
+			[data removeObjectForKey:@"url"];
+			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] server] forKey:@"server"];
+			[data setObject:[NSNumber numberWithUnsignedShort:[(MVChatConnection *)[info objectForKey:@"connection"] serverPort]] forKey:@"port"];
+			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] nickname] forKey:@"nickname"];
 			if( [info objectForKey:@"rooms"] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 			if( [info objectForKey:@"commands"] ) [data setObject:[info objectForKey:@"commands"] forKey:@"commands"];
 			[data setObject:[info objectForKey:@"created"] forKey:@"created"];
@@ -1208,7 +1211,12 @@ static NSMenu *favoritesMenu = nil;
 
 	while( ( info = [enumerator nextObject] ) ) {
 		MVChatConnection *connection = nil;
-		connection = [[[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]] autorelease];
+
+		if( [info objectForKey:@"url"] ) {
+			connection = [[[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]] autorelease];
+		} else {
+			connection = [[[MVChatConnection alloc] initWithServer:[info objectForKey:@"server"] port:[[info objectForKey:@"port"] unsignedShortValue] user:[info objectForKey:@"nickname"]] autorelease];
+		}
 
 		[connection setProxyType:(MVChatConnectionProxy)[[info objectForKey:@"proxy"] unsignedIntValue]];
 
@@ -1216,6 +1224,7 @@ static NSMenu *favoritesMenu = nil;
 		else [connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 
 		if( [info objectForKey:@"realName"] ) [connection setRealName:[info objectForKey:@"realName"]];
+		if( [info objectForKey:@"nickname"] ) [connection setNickname:[info objectForKey:@"nickname"]];
 		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
 
 		if( [[info objectForKey:@"automatic"] boolValue] ) {
