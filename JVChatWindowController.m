@@ -752,6 +752,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) _refreshWindow {
+	[[self window] disableFlushWindow];
+
 	id item = [self selectedListItem];
 
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
@@ -780,6 +782,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	}
 
 	[self _refreshWindowTitle];
+
+	[[self window] enableFlushWindow];
 }
 
 - (void) _refreshWindowTitle {

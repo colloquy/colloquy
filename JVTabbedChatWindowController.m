@@ -419,6 +419,8 @@
 }
 
 - (void) _refreshWindow {
+	[[self window] disableFlushWindow];
+
 	id item = [(JVChatTabItem *)[tabView selectedTabViewItem] chatViewController];
 
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
@@ -446,5 +448,7 @@
 	}
 
 	[self _refreshWindowTitle];
+
+	[[self window] enableFlushWindow];
 }
 @end
