@@ -251,7 +251,7 @@ static BOOL applicationIsTerminating = NO;
 	NSDebugEnabled = YES;
 //	NSZombieEnabled = YES;
 //	NSDeallocateZombies = NO;
-	[NSAutoreleasePool enableFreedObjectCheck:YES];
+//	[NSAutoreleasePool enableFreedObjectCheck:YES];
 #endif
 }
 
@@ -288,7 +288,7 @@ static BOOL applicationIsTerminating = NO;
 	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultManager];
 	[JVChatController defaultManager];
-//	[MVFileTransferController defaultManager];
+	[MVFileTransferController defaultManager];
 //	[MVBuddyListController sharedBuddyList];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
