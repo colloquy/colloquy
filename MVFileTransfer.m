@@ -260,9 +260,10 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 #pragma mark -
 
 - (NSDate *) startDate {
-	if( ! [self _DCCFileRecord] ) return _startDate;
-	if( [self _DCCFileRecord] -> starttime ) return [NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime];
-	return nil;
+	if( _startDate || ! [self _DCCFileRecord] ) return _startDate;
+	if( [self _DCCFileRecord] -> starttime )
+		_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
+	return _startDate;
 }
 
 - (unsigned long long) startOffset {
@@ -273,8 +274,9 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 #pragma mark -
 
 - (NSHost *) host {
-	if( ! [self _DCCFileRecord] ) return _host;
-	return [NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]];
+	if( _host || ! [self _DCCFileRecord] ) return _host;
+	_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
+	return _host;
 }
 
 - (unsigned short) port {
@@ -289,8 +291,9 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 }
 
 - (NSString *) user {
-	if( ! [self _DCCFileRecord] ) return _user;
-	return [[self connection] stringWithEncodedBytes:[self _DCCFileRecord] -> nick];
+	if( _user || ! [self _DCCFileRecord] ) return _user;
+	_user = [[[self connection] stringWithEncodedBytes:[self _DCCFileRecord] -> nick] retain];
+	return _user;
 }
 
 #pragma mark -
@@ -344,11 +347,13 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	_passive = [self isPassive];
 	_finalSize = [self finalSize];
 	_transfered = [self transfered];
-	_startDate = [[self startDate] retain];
-	_host = [[self host] retain];
-	_user = [[self user] retain];
 	_port = [self port];
 	_startOffset = [self startOffset];
+
+	// load the variables simply by calling the accessor
+	[self startDate];
+	[self host];
+	[self user];
 
 	[self _setDCCFileRecord:NULL];
 }
@@ -473,8 +478,9 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (NSString *) originalFileName {
-	if( ! [self _DCCFileRecord] ) return _originalFileName;
-	return [[self connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg];
+	if( _originalFileName || ! [self _DCCFileRecord] ) return _originalFileName;
+	_originalFileName = [[[self connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg] retain];
+	return _originalFileName;
 }
 
 #pragma mark -
@@ -510,7 +516,7 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 }
 
 - (void) _destroying {
-	_originalFileName = [[self originalFileName] retain];
+	[self originalFileName];
 	[super _destroying];
 }
 @end
