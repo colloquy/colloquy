@@ -14,9 +14,6 @@
 }
 + (void) checkAutomatically:(BOOL) flag;
 
-- (id) initAutomatically:(BOOL) flag;
-- (void) dealloc;
-
 - (IBAction) download:(id) sender;
 - (IBAction) dontDownload:(id) sender;
 @end
