@@ -1887,6 +1887,42 @@
 			settings = {
 			};
 		};
+		1CE72A95052C745400A8FE6E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatConsole.h;
+			refType = 4;
+		};
+		1CE72A96052C745400A8FE6E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatConsole.m;
+			refType = 4;
+		};
+		1CE72A97052C745400A8FE6E = {
+			fileRef = 1CE72A95052C745400A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CE72A98052C745400A8FE6E = {
+			fileRef = 1CE72A96052C745400A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CE72A99052C79E700A8FE6E = {
+			isa = PBXFileReference;
+			name = JVChatConsole.nib;
+			path = Resources/JVChatConsole.nib;
+			refType = 4;
+		};
+		1CE72A9A052C79E700A8FE6E = {
+			fileRef = 1CE72A99052C79E700A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CEE50CE042698C000000102 = {
 			isa = PBXFileReference;
 			name = French;
@@ -2242,6 +2278,7 @@
 				1CD6C415051DFA1D00A8FE10,
 				1C18CD120528DBBA000001C8,
 				1C18CD150528DD89000001C8,
+				1CE72A97052C745400A8FE6E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2329,6 +2366,7 @@
 				1CA95D29051B413E00A8FE10,
 				1CD6C418051E0B3000A8FE10,
 				1C18CCC30526665E000001C8,
+				1CE72A9A052C79E700A8FE6E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2357,6 +2395,7 @@
 				1CD6C416051DFA1D00A8FE10,
 				1C18CD130528DBBA000001C8,
 				1C18CD140528DD88000001C8,
+				1CE72A98052C745400A8FE6E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2400,6 +2439,7 @@
 				F5394BF10378E23701A35792,
 				F5394BFD0378E37901A35792,
 				1CBECE390508D58F000001C8,
+				1CE72A99052C79E700A8FE6E,
 				1CD6C417051E0B3000A8FE10,
 				1CBECE3A0508D58F000001C8,
 				1CBECE380508D58F000001C8,
@@ -2716,6 +2756,8 @@
 				1CE2BC53042F75FB00000102,
 				1CE2BC1E042F4AD300000102,
 				1CE2BC1D042F4AD300000102,
+				1CE72A96052C745400A8FE6E,
+				1CE72A95052C745400A8FE6E,
 				1CD6C414051DFA1D00A8FE10,
 				1CD6C413051DFA1C00A8FE10,
 				1CCB279E04FE93FE00A8FE6E,
