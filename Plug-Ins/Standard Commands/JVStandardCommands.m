@@ -387,10 +387,8 @@
 		msg = [message attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [message length] - [scanner scanLocation] )];
 	}
 
-	if( [command isEqualToString:@"query"] ) {
-		JVDirectChat *chatView = [[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:NO];
-		if( [msg length] ) [chatView echoSentMessageToDisplay:msg asAction:NO];
-	}
+	JVDirectChat *chatView = [[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:NO];
+	if( [msg length] ) [chatView echoSentMessageToDisplay:msg asAction:NO];
 
 	if( [msg length] ) [connection sendMessage:msg withEncoding:encoding toUser:to asAction:NO];
 	return YES;
