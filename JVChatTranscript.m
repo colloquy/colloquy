@@ -56,6 +56,7 @@
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (void) _incrementalWriteToLog:(xmlNodePtr) node continuation:(BOOL) cont;
+- (void) _chnageFileAttributesAtPath:(NSString *) path;
 @end
 
 #pragma mark -
@@ -850,7 +851,7 @@
 		[xmlData release];
 	}
 
-	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
+	[self _chnageFileAttributesAtPath:path];
 
 	return ret;
 }
@@ -869,7 +870,7 @@
 		ret = [xmlData writeToURL:url atomically:atomically];
 		[xmlData release];
 
-		if( [url isFileURL] ) [[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:[url path]];
+		if( [url isFileURL] ) [self _chnageFileAttributesAtPath:[url path]];
 	}
 
 	return ret;
@@ -905,7 +906,9 @@
 		[logElement appendString:@"</log>"];
 
 		NSData *xml = [logElement dataUsingEncoding:NSUTF8StringEncoding];
-		[xml writeToFile:[self filePath] atomically:NO];		
+		[xml writeToFile:[self filePath] atomically:NO];
+
+		[self _chnageFileAttributesAtPath:[self filePath]];
 
 		if( ! _logFile && [self automaticallyWritesChangesToFile] ) {
 			_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:[self filePath]] retain];
@@ -954,5 +957,9 @@
 	[_logFile writeData:[@"</log>" dataUsingEncoding:NSUTF8StringEncoding]];
 
 	xmlBufferFree( buf );
+}
+
+- (void) _chnageFileAttributesAtPath:(NSString *) path {
+	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
 }
 @end
