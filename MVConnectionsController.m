@@ -405,7 +405,6 @@ static NSMenu *favoritesMenu = nil;
 
 	if( [sender tag] ) {
 		[_passConnection setNicknamePassword:[authPassword stringValue]];
-
 		if( [authKeychain state] == NSOnState ) {
 			[[MVKeyChain defaultKeyChain] setInternetPassword:[authPassword stringValue] forServer:[_passConnection server] securityDomain:[_passConnection server] account:[_passConnection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 		}
@@ -494,6 +493,10 @@ static NSMenu *favoritesMenu = nil;
 	[info setObject:[NSDate date] forKey:@"created"];
 	[info setObject:connection forKey:@"connection"];
 	if( ! keep ) [info setObject:[NSNumber numberWithBool:YES] forKey:@"temporary"];
+
+	if( keep && [[connection password] length] ) {
+		[[MVKeyChain defaultKeyChain] setInternetPassword:[connection password] forServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+	}
 
 	[_bookmarks addObject:info];
 	[self _saveBookmarkList];
