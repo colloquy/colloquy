@@ -167,7 +167,7 @@
 	[[self window] makeFirstResponder:roomField];
 
 	if( ! _collapsed && ! [_connection isConnected] ) {
-		if( NSRunInformationalAlertPanel( NSLocalizedString( @"Connection is Disconencted", "connection is disconnected dialog title" ), NSLocalizedString( @"Would you like to connect and retrieve the server's chat room listing?", "would you like to connect to get room listing dialog message" ), NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil ) == NSOKButton ) {
+		if( NSRunInformationalAlertPanel( NSLocalizedString( @"Connection is Disconnected", "connection is disconnected dialog title" ), NSLocalizedString( @"Would you like to connect and retrieve the server's chat room listing?", "would you like to connect to get room listing dialog message" ), NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil ) == NSOKButton ) {
 			[_connection connect];
 		} else {
 			[showBroswer setState:NSOffState];
@@ -192,7 +192,7 @@
 	NSRect windowFrame = [[self window] frame];
 
 	if( ! [_connection isConnected] && [sender state] ) {
-		if( NSRunInformationalAlertPanel( NSLocalizedString( @"Connection is Disconencted", "connection is disconnected dialog title" ), NSLocalizedString( @"Would you like to connect and retrieve the server's chat room listing?", "would you like to connect to get room listing dialog message" ), NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil ) == NSOKButton ) {
+		if( NSRunInformationalAlertPanel( NSLocalizedString( @"Connection is Disconnected", "connection is disconnected dialog title" ), NSLocalizedString( @"Would you like to connect and retrieve the server's chat room listing?", "would you like to connect to get room listing dialog message" ), NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil ) == NSOKButton ) {
 			[_connection connect];
 		} else {
 			[sender setState:NSOffState];

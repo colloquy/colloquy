@@ -65,12 +65,13 @@
 - (IBAction) hideConnectionManager:(id) sender;
 
 - (IBAction) newConnection:(id) sender;
+- (IBAction) newConnection:(id) sender withAutoConnect:(BOOL)inFlag;
 - (IBAction) changeNewConnectionProtocol:(id) sender;
 - (IBAction) toggleNewConnectionDetails:(id) sender;
 - (IBAction) addRoom:(id) sender;
 - (IBAction) removeRoom:(id) sender;
 - (IBAction) openNetworkPreferences:(id) sender;
-- (IBAction) conenctNewConnection:(id) sender;
+- (IBAction) connectNewConnection:(id) sender;
 
 - (IBAction) messageUser:(id) sender;
 

@@ -35,7 +35,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The chat conenction.</string>
+				<string>The chat connection.</string>
 			</dict>
 		</dict>
 		<key>Disconnecting</key>
@@ -47,7 +47,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The chat conenction.</string>
+				<string>The chat connection.</string>
 			</dict>
 		</dict>
 		<key>HandleClickedContextualMenuItem</key>
@@ -373,7 +373,7 @@
 				<key>connection</key>
 				<dict>
 					<key>Description</key>
-					<string>The conenction this reply came on.</string>
+					<string>The connection this reply came on.</string>
 					<key>Name</key>
 					<string>on</string>
 				</dict>
@@ -409,7 +409,7 @@
 				<key>connection</key>
 				<dict>
 					<key>Description</key>
-					<string>The conenction this request came on.</string>
+					<string>The connection this request came on.</string>
 					<key>Name</key>
 					<string>on</string>
 				</dict>

@@ -112,7 +112,7 @@ static NSMenu *favoritesMenu = nil;
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"MVConnections"] ) ) {
 		_bookmarks = nil;
-		_joinRooms = nil;
+		_joinRooms = [[NSMutableArray alloc] init];
 		_passConnection = nil;
 		
 		_publicKeyRequestQueue = [[NSMutableSet set] retain];
@@ -237,14 +237,19 @@ static NSMenu *favoritesMenu = nil;
 }
 
 #pragma mark -
-
 - (IBAction) newConnection:(id) sender {
+	[self newConnection:sender withAutoConnect:NO];
+}
+
+- (IBAction) newConnection:(id) sender withAutoConnect:(BOOL)inFlag {
 	[self _loadInterfaceIfNeeded];
 	if( [openConnection isVisible] ) return;
 
-	[_joinRooms autorelease];
-	_joinRooms = [[NSMutableArray array] retain];
-
+	if ( ! inFlag ) {
+		[_joinRooms autorelease];
+		_joinRooms = [[NSMutableArray array] retain];
+	}
+	
 	if( [showDetails state] != NSOffState ) {
 		[showDetails setState:NSOffState];
 		[self toggleNewConnectionDetails:showDetails];
@@ -302,7 +307,7 @@ static NSMenu *favoritesMenu = nil;
 	[[NSWorkspace sharedWorkspace] openFile:@"/System/Library/PreferencePanes/Network.prefPane"];
 }
 
-- (IBAction) conenctNewConnection:(id) sender {
+- (IBAction) connectNewConnection:(id) sender {
 	MVChatConnection *connection = nil;
 
 	if( ! [[newNickname stringValue] length] ) {
@@ -643,14 +648,19 @@ static NSMenu *favoritesMenu = nil;
 
 		while( ( data = [enumerator nextObject] ) ) {
 			connection = [data objectForKey:@"connection"];
-			if( [[connection server] isEqualToString:[url host]] && ( ! [url user] || [[connection nickname] isEqualToString:[url user]] ) && ( ! [connection serverPort] || ! [[url port] unsignedShortValue] || [connection serverPort] == [[url port] unsignedShortValue] ) ) {
+			if( [[connection server] isEqualToString:[url host]] 
+				&& ( ! [url user] || [[connection nickname] isEqualToString:[url user]] ) 
+				&& ( ! [connection serverPort] || ! [[url port] unsignedShortValue] || [connection serverPort] == [[url port] unsignedShortValue] ) ) {
+				
 				if( ! [connection isConnected] && connect ) {
 					if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 						[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
 					[connection connect];
 				}
+				
 				if( target ) [connection joinChatRoomNamed:target];
 				else [[self window] orderFront:nil];
+				
 				[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
 				handled = YES;
 				break;
@@ -664,7 +674,9 @@ static NSMenu *favoritesMenu = nil;
 			unsigned index = [newType indexOfItemWithTag:( [[url scheme] isEqualToString:@"silc"] ? 2 : 1 )];
 			[newType selectItemAtIndex:index];
 
-			[self newConnection:nil];
+			[_joinRooms addObject:target];
+			[self newConnection:nil withAutoConnect:YES];
+			
 			handled = YES;
 		} else if( ! handled && [url user] ) {
 			connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
@@ -674,7 +686,10 @@ static NSMenu *favoritesMenu = nil;
 			if( connect ) {
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 					[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+				[_joinRooms addObject:target];
+
 				[connection connect];
+				if( target ) [connection joinChatRoomNamed:target];
 			}
 
 			[self addConnection:connection keepBookmark:NO];
@@ -1338,7 +1353,7 @@ static NSMenu *favoritesMenu = nil;
 		switch( error ) {
 			case MVChatSocketError:
 			case MVChatDNSError:
-				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are conencted to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
+				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are connected to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
 					[connection connect];
 				break;
 			case MVChatBadUserPasswordError:

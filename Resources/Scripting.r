@@ -960,7 +960,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			'ccoR', 'conX',
 			reply_none__,
 			'conM',
-			"The conenction to connect.",
+			"The connection to connect.",
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
@@ -972,7 +972,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			'ccoR', 'dscX',
 			reply_none__,
 			'conM',
-			"The conenction to disconnect.",
+			"The connection to disconnect.",
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
@@ -1016,7 +1016,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			singleItem, notEnumerated, Reserved13,
 			{
 				"to", 'sRm1', 'conM',
-				"The conenction to send to. Optional if the nearest enclosing tell block accepts this command.",
+				"The connection to send to. Optional if the nearest enclosing tell block accepts this command.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
 				"priority", 'sRm2', 'bool',
@@ -1207,7 +1207,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
 				"password", 'pasA', 'TEXT',
-				"Password to conenct to the server.",
+				"Password to connect to the server.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
 				"proxy", 'pxyA', 'pxyE',
@@ -1464,7 +1464,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				optional,
 				singleItem, notEnumerated, Reserved13,
 				"on", 'psR3', 'conM',
-				"The conenction this request came on.",
+				"The connection this request came on.",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			},
@@ -1489,7 +1489,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				optional,
 				singleItem, notEnumerated, Reserved13,
 				"on", 'psL3', 'conM',
-				"The conenction this reply came on.",
+				"The connection this reply came on.",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			},
@@ -1593,7 +1593,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			'cplG', 'cTsX',
 			reply_none__,
 			'conM',
-			"The chat conenction.",
+			"The chat connection.",
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
@@ -1605,7 +1605,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			'cplG', 'dFsX',
 			reply_none__,
 			'conM',
-			"The chat conenction.",
+			"The chat connection.",
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{

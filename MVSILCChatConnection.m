@@ -873,7 +873,7 @@ static SilcClientOperations silcClientOps = {
 		_silcClientLock = [[NSRecursiveLock alloc] init];
 		_silcClient = silc_client_alloc( &silcClientOps, &_silcClientParams, self, NULL );
 		if( ! _silcClient) {
-			// we need some error handling here.. silc conenction CAN'T work without silc client
+			// we need some error handling here.. silc connection CAN'T work without silc client
 			[self release];
 			return nil;
 		}
@@ -950,7 +950,7 @@ static SilcClientOperations silcClientOps = {
 	}
 
 	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 5. ) {
-		// prevents conencting too quick
+		// prevents connecting too quick
 		// cancel any reconnect attempts, this lets a user cancel the attempts with a "double connect"
 		[self cancelPendingReconnectAttempts];
 		return;

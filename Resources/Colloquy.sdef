@@ -782,7 +782,7 @@
 					<property name="nickname password" code="ncpA" description="The nickname&apos;" type="string" access="rw">
 						<cocoa method="nicknamePassword"/>
 					</property>
-					<property name="password" code="pasA" description="Password to conenct to the server." type="string" access="rw">
+					<property name="password" code="pasA" description="Password to connect to the server." type="string" access="rw">
 						<cocoa method="password"/>
 					</property>
 					<property name="proxy" code="pxyA" description="What system proxy server to use." type="proxy" access="rw">
@@ -857,10 +857,10 @@
 		</classes>
 		<commands>
 			<command name="connect" code="ccoRconX" description="Connect to the server.">
-				<direct-parameter type="connection" description="The conenction to connect."/>
+				<direct-parameter type="connection" description="The connection to connect."/>
 			</command>
 			<command name="disconnect" code="ccoRdscX" description="Disconnect from the server.">
-				<direct-parameter type="connection" description="The conenction to disconnect."/>
+				<direct-parameter type="connection" description="The connection to disconnect."/>
 			</command>
 			<command name="transfer file" code="ccoRsFiX" hidden="hidden" description="Send a file to another user. This will use DCC or another connection specific protocol.">
 				<direct-parameter type="file" description="The file to send."/>
@@ -905,7 +905,7 @@
 			<command name="send raw command" code="ccoRsRmX" description="Send raw server command (message) to server.">
 				<cocoa class="MVSendRawMessageScriptCommand"/>
 				<direct-parameter type="string" description="The raw server command (message) to send. (This is protocol specific.)"/>
-				<parameter name="to" code="sRm1" description="The conenction to send to. Optional if the nearest enclosing tell block accepts this command." type="connection" optional="optional">
+				<parameter name="to" code="sRm1" description="The connection to send to. Optional if the nearest enclosing tell block accepts this command." type="connection" optional="optional">
 					<cocoa key="connection"/>
 				</parameter>
 				<parameter name="priority" code="sRm2" description="Send this command now? (This will bypass any queued commands.)" type="boolean" optional="optional">
@@ -1002,7 +1002,7 @@
 				<parameter name="from" code="psR2" description="The user this request came from." type="chat user" optional="optional">
 					<cocoa key="user"/>
 				</parameter>
-				<parameter name="on" code="psR3" description="The conenction this request came on." type="connection" optional="optional">
+				<parameter name="on" code="psR3" description="The connection this request came on." type="connection" optional="optional">
 					<cocoa key="connection"/>
 				</parameter>
 			</command>
@@ -1015,7 +1015,7 @@
 				<parameter name="from" code="psL2" description="The user this reply came from." type="chat user" optional="optional">
 					<cocoa key="user"/>
 				</parameter>
-				<parameter name="on" code="psL3" description="The conenction this reply came on." type="connection" optional="optional">
+				<parameter name="on" code="psL3" description="The connection this reply came on." type="connection" optional="optional">
 					<cocoa key="connection"/>
 				</parameter>
 			</command>
@@ -1059,10 +1059,10 @@
 				<direct-parameter type="chat room panel" description="The chat room."/>
 			</command>
 			<command name="connected" code="cplGcTsX" description="Called when we have just finished connecting to a chat server.">
-				<direct-parameter type="connection" description="The chat conenction."/>
+				<direct-parameter type="connection" description="The chat connection."/>
 			</command>
 			<command name="disconnecting" code="cplGdFsX" description="Called when we are in the process of disconnecting from a chat server. Commands and messages can still be sent to the server.">
-				<direct-parameter type="connection" description="The chat conenction."/>
+				<direct-parameter type="connection" description="The chat connection."/>
 			</command>
 			<command name="kicked from room" code="cplGkRmX" description="Called when we are kicked out of a room by another member.">
 				<direct-parameter type="chat room panel" description="The chat room."/>

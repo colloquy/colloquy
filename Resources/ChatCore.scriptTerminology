@@ -32,7 +32,7 @@
 				<key>password</key>
 				<dict>
 					<key>Description</key>
-					<string>Password to conenct to the server.</string>
+					<string>Password to connect to the server.</string>
 					<key>Name</key>
 					<string>password</string>
 				</dict>
@@ -400,7 +400,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The conenction to connect.</string>
+				<string>The connection to connect.</string>
 			</dict>
 		</dict>
 		<key>Disconnect</key>
@@ -412,7 +412,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The conenction to disconnect.</string>
+				<string>The connection to disconnect.</string>
 			</dict>
 		</dict>
 		<key>JoinChatRoom</key>
@@ -506,7 +506,7 @@
 				<key>connection</key>
 				<dict>
 					<key>Description</key>
-					<string>The conenction to send to. Optional if the nearest enclosing tell block accepts this command.</string>
+					<string>The connection to send to. Optional if the nearest enclosing tell block accepts this command.</string>
 					<key>Name</key>
 					<string>to</string>
 				</dict>

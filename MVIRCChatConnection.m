@@ -1068,14 +1068,13 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		[MVIRCChatConnectionThreadLock unlock];
 
 		while( ! irssiThreadReady ) usleep( 50 );
-
 		extern NSPort *threadConnectionPort;
 		NSConnection *threadConnection = [NSConnection connectionWithReceivePort:nil sendPort:threadConnectionPort];
 		_irssiThreadConnection = [[(MVIRCConnectionThreadHelper *)[threadConnection rootProxy] vendChatConnection:self] retain];
-
 		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
 		_irssiThreadProxy = [[connection rootProxy] retain];
 		[(NSDistantObject *)_irssiThreadProxy setProtocolForProxy:@protocol( MVIRCChatConnectionIrssiThread )];
+		NSLog( @"got us a distant object");
 	}
 
 	return self;
@@ -1144,7 +1143,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ! _chatConnectionSettings ) return;
 
 	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 5. ) {
-		// prevents conencting too quick
+		// prevents connecting too quick
 		// cancel any reconnect attempts, this lets a user cancel the attempts with a "double connect"
 		[self cancelPendingReconnectAttempts];
 		return;

@@ -1428,7 +1428,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
-	[self addEventMessageToDisplay:NSLocalizedString( @"You left the chat by being disconnected from the server.", "disconenct from the server status message" ) withName:@"disconnected" andAttributes:nil];
+	[self addEventMessageToDisplay:NSLocalizedString( @"You left the chat by being disconnected from the server.", "disconnect from the server status message" ) withName:@"disconnected" andAttributes:nil];
 	_cantSendMessages = YES;
 }
 
