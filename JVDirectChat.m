@@ -14,6 +14,8 @@
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>
 
+#import <AGRegex/AGRegex.h>
+
 #import "JVChatController.h"
 #import "JVChatTranscriptPrivates.h"
 #import "JVNotificationController.h"
@@ -1183,29 +1185,65 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	}
 
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
-		NSEnumerator *enumerator = nil;
-		NSMutableArray *names = nil;
-		id item = nil;
-
-		names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
+		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+		NSMutableArray *names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
 		[names addObject:[[self connection] nickname]];
-		enumerator = [names objectEnumerator];
-		while( ( item = [enumerator nextObject] ) ) {
-			if( [messageString rangeOfString:item options:NSCaseInsensitiveSearch].length ) {
-				NSMutableDictionary *context = [NSMutableDictionary dictionary];
-				[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
-				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"description"];
-				[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-				[context setObject:_target forKey:@"performedOn"];
-				[context setObject:user forKey:@"performedBy"];
-				[context setObject:_target forKey:@"performedInRoom"];
-				[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatMentioned"] forKey:@"coalesceKey"];
-				[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
-				_newHighlightMessageCount++;
-				highlight = YES;
-				break;
+
+		NSEnumerator *enumerator = [names objectEnumerator];
+		AGRegex *regex = nil;
+		NSString *name = nil;
+
+		while( ( name = [enumerator nextObject] ) ) {
+			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] ) {
+				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
+			} else {
+				NSMutableString *escapedName = [name mutableCopy];
+				[escapedName escapeCharactersInSet:escapeSet];
+				NSString *pattern = [[NSString alloc] initWithFormat:@"(?:\\W|^)(%@)(?:\\W|$)", escapedName];
+				regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
+				[escapedName release];
+				[pattern release];
+			}
+
+			NSRange searchRange = NSMakeRange( 0, [messageString length] );
+			NSRange backSearchRange = NSMakeRange( 0, [messageString length] );
+			AGRegexMatch *match = [regex findInString:messageString range:searchRange];
+
+			while( match ) {
+				NSRange foundRange = ( [match count] > 1 ? [match rangeAtIndex:1] : [match rangeAtIndex:0] );
+				backSearchRange.length = foundRange.location - backSearchRange.location;
+
+				// Search to see if we're in a tag
+				NSRange leftRange = [messageString rangeOfString:@"<" options:( NSBackwardsSearch | NSLiteralSearch ) range:backSearchRange];
+				NSRange rightRange = [messageString rangeOfString:@">" options:( NSBackwardsSearch | NSLiteralSearch ) range:backSearchRange];
+
+				if( leftRange.location == NSNotFound || ( rightRange.location != NSNotFound && rightRange.location > leftRange.location ) ) {
+					[messageString replaceCharactersInRange:foundRange withString:[NSString stringWithFormat:@"<span class=\"highlight\">%@</span>", ( [match count] > 1 ? [match groupAtIndex:1] : [match groupAtIndex:0] )]];
+					searchRange.location = NSMaxRange( foundRange ) + 31;
+					searchRange.length = [messageString length] - searchRange.location;
+					backSearchRange.location = searchRange.location;
+					highlight = YES;
+				} else {
+					searchRange.location = NSMaxRange( foundRange );
+					searchRange.length = [messageString length] - searchRange.location;
+				}
+
+				match = [regex findInString:messageString range:searchRange];
 			}
 		}
+	}
+
+	if( highlight ) {
+		_newHighlightMessageCount++;
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"description"];
+		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
+		[context setObject:_target forKey:@"performedOn"];
+		[context setObject:user forKey:@"performedBy"];
+		[context setObject:_target forKey:@"performedInRoom"];
+		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatMentioned"] forKey:@"coalesceKey"];
+		[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
 	}
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
