@@ -2,6 +2,7 @@
 #import <ChatCore/MVChatConnection.h>
 
 #import "MVConnectionsController.h"
+#import "JVConnectionInspector.h"
 #import "JVChatController.h"
 #import "MVKeyChain.h"
 
@@ -40,8 +41,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		_bookmarks = nil;
 		_target = nil;
 		_targetRoom = NO;
-		_editingRooms = nil;
-		_editingRow = -1;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionWillConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidConnectNotification object:nil];
@@ -67,7 +66,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 	[_bookmarks autorelease];
 	[_target autorelease];
-	[_editingRooms autorelease];
 	[_passConnection autorelease];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -75,7 +73,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 	_bookmarks = nil;
 	_target = nil;
-	_editingRooms = nil;
 	_passConnection = nil;
 
 	if( self == sharedInstance ) sharedInstance = nil;
@@ -116,13 +113,21 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 #pragma mark -
 
-- (IBAction) showConnectionManager:(id) sender {
-	[self _loadInterfaceIfNeeded];
-	[[self window] orderFront:nil];
+- (id <JVInspection>) objectToInspect {
+	if( [connections selectedRow] == -1 ) return nil;
+	return [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
 }
 
-- (IBAction) openNetworkPreferences:(id) sender {
-	[[NSWorkspace sharedWorkspace] openFile:@"/System/Library/PreferencePanes/Network.prefPane"];
+- (IBAction) getInfo:(id) sender {
+	if( [connections selectedRow] == -1 ) return;
+	MVChatConnection *conection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
+	[[JVInspectorController inspectorOfObject:conection] show:sender];
+}
+
+#pragma mark -
+
+- (IBAction) showConnectionManager:(id) sender {
+	[[self window] orderFront:nil];
 }
 
 #pragma mark -
@@ -219,58 +224,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 #pragma mark -
 
-- (IBAction) editConnection:(id) sender {
-	[editConnection orderOut:nil];
-	[self _validateToolbar];
-
-	if( _editingRow == -1 ) return;
-
-	if( [sender tag] ) {
-		NSMutableDictionary *info = nil;
-		MVChatConnection *connection = nil;
-
-		info = [_bookmarks objectAtIndex:_editingRow];
-		connection = [info objectForKey:@"connection"];
-
-		[info setObject:[NSNumber numberWithBool:[editAutomatic state]] forKey:@"automatic"];
-
-		if( [editAutomatic state] ) [info setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
-
-		[connection setServer:[editAddress stringValue]];
-		[connection setServerPort:[editPort intValue]];
-		[connection setProxyType:[[editProxy selectedItem] tag]];
-		[connection setNickname:[editNickname stringValue]];
-		[connection setNicknamePassword:[editPassword stringValue]];
-
-		if( ! [[info objectForKey:@"temporary"] boolValue] ) {
-			[[MVKeyChain defaultKeyChain] setInternetPassword:[editServerPassword stringValue] forServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
-			[[MVKeyChain defaultKeyChain] setInternetPassword:[editPassword stringValue] forServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:[editNickname stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
-		}
-
-		[[_bookmarks objectAtIndex:_editingRow] setObject:_editingRooms forKey:@"rooms"];
-
-		[self _saveBookmarkList];
-	}
-
-	[_editingRooms autorelease];
-	_editingRooms = nil;
-}
-
-- (IBAction) addRoom:(id) sender {
-	[_editingRooms addObject:@""];
-	[editRooms noteNumberOfRowsChanged];
-	[editRooms selectRow:([_editingRooms count] - 1) byExtendingSelection:NO];
-	[editRooms editColumn:0 row:([_editingRooms count] - 1) withEvent:nil select:NO];
-}
-
-- (IBAction) removeRoom:(id) sender {
-	if( [editRooms selectedRow] == -1 || [editRooms editedRow] != -1 ) return;
-	[_editingRooms removeObjectAtIndex:[editRooms selectedRow]];
-	[editRooms noteNumberOfRowsChanged];
-}
-
-#pragma mark -
-
 - (IBAction) sendPassword:(id) sender {
 	[nicknameAuth orderOut:nil];
 
@@ -360,6 +313,62 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 #pragma mark -
 
+- (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSMutableDictionary *info = nil;
+	
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [info objectForKey:@"connection"] == connection ) {
+			if( autoConnect ) [info setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
+			[info setObject:[NSNumber numberWithBool:autoConnect] forKey:@"automatic"];
+			break;
+		}
+	}
+}
+
+- (BOOL) autoConnectForConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSMutableDictionary *info = nil;
+	
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [info objectForKey:@"connection"] == connection ) {
+			return [[info objectForKey:@"automatic"] boolValue];
+		}
+	}
+	
+	return NO;
+}
+
+#pragma mark -
+
+- (void) setJoinRooms:(NSArray *) rooms forConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSMutableDictionary *info = nil;
+	
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [info objectForKey:@"connection"] == connection ) {
+			if( rooms ) [info setObject:[[rooms mutableCopy] autorelease] forKey:@"rooms"];
+			else [info removeObjectForKey:@"rooms"];
+			break;
+		}
+	}
+}
+
+- (NSArray *) joinRoomsForConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSMutableDictionary *info = nil;
+	
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [info objectForKey:@"connection"] == connection ) {
+			return [info objectForKey:@"rooms"];
+		}
+	}
+	
+	return nil;
+}
+
+#pragma mark -
+
 - (IBAction) cut:(id) sender {
 	MVChatConnection *connection = nil;
 
@@ -409,6 +418,9 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		if( [connections selectedRow] == -1 ) return NO;
 	} else if( [menuItem action] == @selector( clear: ) ) {
 		if( [connections selectedRow] == -1 || [editConnection isVisible] ) return NO;
+	} else if( [menuItem action] == @selector( getInfo: ) ) {
+		if( [connections selectedRow] == -1 ) return NO;
+		else return YES;
 	}
 	return YES;
 }
@@ -416,123 +428,100 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 #pragma mark -
 
 - (int) numberOfRowsInTableView:(NSTableView *) view {
-	if( view == connections ) return [_bookmarks count];
-	else if( view == editRooms ) return [_editingRooms count];
-	else return 0;
+	return [_bookmarks count];
 }
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
-	if( view == connections ) {
-		if( [[column identifier] isEqual:@"auto"] ) {
-			return [[_bookmarks objectAtIndex:row] objectForKey:@"automatic"];
-		} else if( [[column identifier] isEqual:@"address"] ) {
-			return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] server];
-		} else if( [[column identifier] isEqual:@"port"] ) {
-			return [NSNumber numberWithUnsignedShort:[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] serverPort]];
-		} else if( [[column identifier] isEqual:@"nickname"] ) {
-			return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] nickname];
-		}
-	} else if( view == editRooms ) {
-		if( [[column identifier] isEqual:@"room"] ) {
-			return [_editingRooms objectAtIndex:row];
-		}
+	if( [[column identifier] isEqual:@"auto"] ) {
+		return [[_bookmarks objectAtIndex:row] objectForKey:@"automatic"];
+	} else if( [[column identifier] isEqual:@"address"] ) {
+		return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] server];
+	} else if( [[column identifier] isEqual:@"port"] ) {
+		return [NSNumber numberWithUnsignedShort:[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] serverPort]];
+	} else if( [[column identifier] isEqual:@"nickname"] ) {
+		return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] nickname];
 	}
 	return nil;
 }
 
 - (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(int) row {
-	if( view == connections ) {
-		if( [[column identifier] isEqual:@"status"] ) {
-			if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected] ) {
-				if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) [cell setImage:[NSImage imageNamed:@"connected"]];
-				else [cell setImage:[NSImage imageNamed:@"connectedSelected"]];
-			} else if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] status] == MVChatConnectionConnectingStatus ) {
-				if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) [cell setImage:[NSImage imageNamed:@"connecting"]];
-				else [cell setImage:[NSImage imageNamed:@"connectingSelected"]];
-			} else if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] status] == MVChatConnectionDisconnectedStatus ) {
-				[cell setImage:nil];
-			}
+	if( [[column identifier] isEqual:@"status"] ) {
+		if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected] ) {
+			if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) [cell setImage:[NSImage imageNamed:@"connected"]];
+			else [cell setImage:[NSImage imageNamed:@"connectedSelected"]];
+		} else if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] status] == MVChatConnectionConnectingStatus ) {
+			if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) [cell setImage:[NSImage imageNamed:@"connecting"]];
+			else [cell setImage:[NSImage imageNamed:@"connectingSelected"]];
+		} else if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] status] == MVChatConnectionDisconnectedStatus ) {
+			[cell setImage:nil];
 		}
 	}
 }
 
 - (NSMenu *) tableView:(NSTableView *) view menuForTableColumn:(NSTableColumn *) column row:(int) row {
-	if( view == connections ) {
-		NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-		NSMenuItem *item = nil;
-		BOOL connected = [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected];
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenuItem *item = nil;
+	BOOL connected = [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected];
 
-		if( connected ) {
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Disconnect", "disconnect from server title" ) action:@selector( _disconnect: ) keyEquivalent:@""] autorelease];
-			[item setTarget:self];
-			[menu addItem:item];
-		} else {
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Connect", "connect to server title" ) action:@selector( _connect: ) keyEquivalent:@""] autorelease];
-			[item setTarget:self];
-			[menu addItem:item];
-		}
-
-		[menu addItem:[NSMenuItem separatorItem]];
-
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", "join room contextual menu item title" ) action:@selector( _joinRoom: ) keyEquivalent:@""] autorelease];
+	if( connected ) {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Disconnect", "disconnect from server title" ) action:@selector( _disconnect: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
-		if( ! connected ) [item setAction:NULL];
 		[menu addItem:item];
-
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Message User...", "message user contextual menu item title" ) action:@selector( _messageUser: ) keyEquivalent:@""] autorelease];
+	} else {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Connect", "connect to server title" ) action:@selector( _connect: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
-		if( ! connected ) [item setAction:NULL];
 		[menu addItem:item];
-
-		[menu addItem:[NSMenuItem separatorItem]];
-
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( _editConnection: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		if( [editConnection isVisible] ) [item setAction:NULL];
-		[menu addItem:item];
-
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete item title" ) action:@selector( _delete: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		if( [editConnection isVisible] ) [item setAction:NULL];
-		[menu addItem:item];
-
-		return [[menu retain] autorelease];
 	}
 
-	return nil;
+	[menu addItem:[NSMenuItem separatorItem]];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", "join room contextual menu item title" ) action:@selector( _joinRoom: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	if( ! connected ) [item setAction:NULL];
+	[menu addItem:item];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Message User...", "message user contextual menu item title" ) action:@selector( _messageUser: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	if( ! connected ) [item setAction:NULL];
+	[menu addItem:item];
+
+	[menu addItem:[NSMenuItem separatorItem]];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( _editConnection: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	if( [editConnection isVisible] ) [item setAction:NULL];
+	[menu addItem:item];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete item title" ) action:@selector( _delete: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	if( [editConnection isVisible] ) [item setAction:NULL];
+	[menu addItem:item];
+
+	return [[menu retain] autorelease];
 }
 
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
 	MVChatConnection *connection = nil;
-	if( view == connections ) {
-		if( [[column identifier] isEqual:@"auto"] ) {
-			[[_bookmarks objectAtIndex:row] setObject:object forKey:@"automatic"];
-			if( [object boolValue] )
-				[[_bookmarks objectAtIndex:row] setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
-		} else if( [[column identifier] isEqual:@"nickname"] ) {
-			[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:object path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setNickname:object];
-		} else if( [[column identifier] isEqual:@"address"] ) {
-			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:object securityDomain:object account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServer:object];
-		} else if( [[column identifier] isEqual:@"port"] ) {
-			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[object unsignedShortValue] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:[object unsignedShortValue]];
-		}
-		[self _saveBookmarkList];
-	} else if( view == editRooms ) {
-		if( [[column identifier] isEqual:@"room"] ) {
-			[_editingRooms replaceObjectAtIndex:row withObject:object];
-		}
+	if( [[column identifier] isEqual:@"auto"] ) {
+		[[_bookmarks objectAtIndex:row] setObject:object forKey:@"automatic"];
+		if( [object boolValue] )
+			[[_bookmarks objectAtIndex:row] setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
+	} else if( [[column identifier] isEqual:@"nickname"] ) {
+		[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:object path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+		[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setNickname:object];
+	} else if( [[column identifier] isEqual:@"address"] ) {
+		[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:object securityDomain:object account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+		[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServer:object];
+	} else if( [[column identifier] isEqual:@"port"] ) {
+		[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[object unsignedShortValue] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+		[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:[object unsignedShortValue]];
 	}
+	[self _saveBookmarkList];
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
-	if( [notification object] == connections ) [self _validateToolbar];
-	else if( [notification object] == editRooms ) {
-		[editRemoveRoom setTransparent:( [editRooms selectedRow] == -1 )];
-		[editRemoveRoom highlight:NO];
-	}
+	[[JVInspectorController sharedInspector] inspectObject:[self objectToInspect]];
+	[self _validateToolbar];
 }
 
 - (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
@@ -645,21 +634,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	return NO;
 }
 
-/*- (NSImage *) tableView:(NSTableView *) view dragImageForRows:(NSArray *) rows dragImageOffset:(NSPointPointer) offset {
-	int row = [[rows lastObject] intValue];
-	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:11.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil];
-	NSImage *ret = [[[NSImage alloc] initWithSize:NSMakeSize( 150., 20. )] autorelease];
-
-	[ret lockFocus];
-	[[[[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] url] host] drawAtPoint:NSMakePoint( 2., 2. ) withAttributes:attributes];
-	[ret unlockFocus];
-
-	offset -> x = 0.;
-	offset -> y = 0.;
-
-	return ret;
-}*/
-
 #pragma mark -
 
 - (int) numberOfItemsInComboBox:(NSComboBox *) comboBox {
@@ -763,17 +737,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, MVToolbarConnectToggleItemIdentifier,
 		MVToolbarEditItemIdentifier, MVToolbarDeleteItemIdentifier, MVToolbarConsoleItemIdentifier,
 		MVToolbarJoinRoomItemIdentifier, MVToolbarQueryUserItemIdentifier, nil];
-}
-
-#pragma mark -
-
-- (void) controlTextDidEndEditing:(NSNotification *) notification {
-	id value = nil;
-	if( [[notification object] isEqual:editAddress] || [[notification object] isEqual:editNickname] ) {
-		value = [[MVKeyChain defaultKeyChain] internetPasswordForServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:[editNickname stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
-		if( value ) [editPassword setObjectValue:value];
-		else [editPassword setObjectValue:@""];
-	}
 }
 @end
 
@@ -898,7 +861,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 			else [item setAction:@selector( _openConsole: )];
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarEditItemIdentifier] ) {
 			if( noneSelected || [editConnection isVisible] ) [item setAction:NULL];
-			else [item setAction:@selector( _editConnection: )];
+			else [item setAction:@selector( getInfo: )];
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarDeleteItemIdentifier] ) {
 			if( noneSelected || [editConnection isVisible] ) [item setAction:NULL];
 			else [item setAction:@selector( _delete: )];
@@ -976,36 +939,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 - (void) _openConsole:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
 	[[JVChatController defaultManager] chatConsoleForConnection:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] ifExists:NO];
-}
-
-- (void) _editConnection:(id) sender {
-	MVChatConnection *connection = nil;
-	NSDictionary *info = nil;
-
-	_editingRow = [connections selectedRow];
-
-	if( _editingRow == -1 || [editConnection isVisible] ) return;
-
-	info = [_bookmarks objectAtIndex:_editingRow];
-	connection = [info objectForKey:@"connection"];
-
-	[editAutomatic setState:[[info objectForKey:@"automatic"] boolValue]];
-	[editAddress setObjectValue:[connection server]];
-	[editProxy selectItemAtIndex:[editProxy indexOfItemWithTag:(int)[connection proxyType]]];
-	[editPort setIntValue:[connection serverPort]];
-	[editNickname setObjectValue:[connection nickname]];
-	[editPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-	[editServerPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-
-	[_editingRooms autorelease];
-	_editingRooms = [[[_bookmarks objectAtIndex:_editingRow] objectForKey:@"rooms"] mutableCopy];
-	if( ! _editingRooms ) _editingRooms = [[NSMutableArray array] retain];
-	[editRooms reloadData];
-
-	[editConnection setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ Info", "connection info window title" ), [connection server]]];
-
-	[editConnection makeKeyAndOrderFront:nil];
-	[self _validateToolbar];
 }
 
 - (void) _handleURLEvent:(NSAppleEventDescriptor *) event withReplyEvent:(NSAppleEventDescriptor *) replyEvent {

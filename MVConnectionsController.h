@@ -1,5 +1,6 @@
 #import <AppKit/NSWindowController.h>
 #import <AppKit/NSNibDeclarations.h>
+#import "JVInspectorController.h"
 
 @class NSTableView;
 @class NSWindow;
@@ -12,7 +13,7 @@
 @class MVChatConnection;
 @class NSURL;
 
-@interface MVConnectionsController : NSWindowController {
+@interface MVConnectionsController : NSWindowController <JVInspectionDelegator> {
 @private
 	IBOutlet NSTableView *connections;
 	IBOutlet NSWindow *editConnection;
@@ -33,17 +34,6 @@
 	IBOutlet NSTextField *newPort;
 	IBOutlet NSButton *newRemember;
 
-	/* Edit Connection */
-	IBOutlet NSTextField *editNickname;
-	IBOutlet NSTextField *editPassword;
-	IBOutlet NSTextField *editServerPassword;
-	IBOutlet NSTextField *editAddress;
-	IBOutlet NSPopUpButton *editProxy;
-	IBOutlet NSTextField *editPort;
-	IBOutlet NSButton *editAutomatic;
-	IBOutlet NSTableView *editRooms;
-	IBOutlet NSButton *editRemoveRoom;
-
 	/* Join Room & Message User */
 	IBOutlet NSComboBox *roomToJoin;
 	IBOutlet NSTextField *roomPassword;
@@ -52,14 +42,11 @@
 	NSString *_target;
 	BOOL _targetRoom;
 	NSMutableArray *_bookmarks;
-	int _editingRow;
-	NSMutableArray *_editingRooms;
 	MVChatConnection *_passConnection;
 }
 + (MVConnectionsController *) defaultManager;
 
 - (IBAction) showConnectionManager:(id) sender;
-- (IBAction) openNetworkPreferences:(id) sender;
 
 - (IBAction) newConnection:(id) sender;
 - (IBAction) conenctNewConnection:(id) sender;
@@ -67,11 +54,13 @@
 - (IBAction) messageUser:(id) sender;
 - (IBAction) joinRoom:(id) sender;
 
-- (IBAction) editConnection:(id) sender;
-- (IBAction) addRoom:(id) sender;
-- (IBAction) removeRoom:(id) sender;
-
 - (IBAction) sendPassword:(id) sender;
+
+- (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection;
+- (BOOL) autoConnectForConnection:(MVChatConnection *) connection;
+
+- (void) setJoinRooms:(NSArray *) rooms forConnection:(MVChatConnection *) connection;
+- (NSArray *) joinRoomsForConnection:(MVChatConnection *) connection;
 
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep;
 - (void) handleURL:(NSURL *) url andConnectIfPossible:(BOOL) connect;
