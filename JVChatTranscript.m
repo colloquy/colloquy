@@ -103,11 +103,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (void) awakeFromNib {
-	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
-	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setVerticalScroller:[[[JVMarkedScroller alloc] initWithFrame:NSMakeRect( 0., 0., 10., 20. )] autorelease]];
-
 	[display setUIDelegate:self];
 	[display setPolicyDelegate:self];
+
+	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
+	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setVerticalScroller:[[[JVMarkedScroller alloc] initWithFrame:NSMakeRect( 0., 0., 10., 20. )] autorelease]];
 
 	if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
 		xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
@@ -706,7 +706,35 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
-	[self _finishStyleSwitch];
+	[display setFrameLoadDelegate:nil];
+	[[display preferences] setJavaScriptEnabled:YES];
+	[_logLock unlock];
+
+	NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+	if( [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
+		[(JVMarkedScroller *)scroller removeAllMarks];
+
+		xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
+		if( ! ctx ) return;
+
+		xmlXPathObjectPtr result = xmlXPathEval( "/log/envelope/message[@highlight = 'yes']/..", ctx );
+		if( ! result ) {
+			xmlXPathFreeContext( ctx );
+			return;
+		}
+
+		xmlNodePtr cur = NULL;
+		unsigned int c = ( result -> nodesetval ? result -> nodesetval -> nodeNr : 0 );
+		unsigned int i = 0;
+		for( i = 0; i < c; i++ ) {
+			cur = result -> nodesetval -> nodeTab[i];   	    
+			unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%s\" );", xmlGetProp( cur, "id" )]] intValue];
+			if( loc ) [(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] addMarkAt:loc];
+		}
+
+		xmlXPathFreeContext( ctx );
+		xmlXPathFreeObject( result );
+	}
 }
 @end
 
@@ -803,12 +831,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[self setChatStyle:style withVariant:_chatStyleVariant];
 
 	if( ! _chatStyle ) _chatStyle = [style retain];
-}
-
-- (void) _finishStyleSwitch {
-	[display setFrameLoadDelegate:nil];
-	[[display preferences] setJavaScriptEnabled:YES];
-	[_logLock unlock];
 }
 
 - (void) _switchingStyleEnded:(in NSString *) html {
