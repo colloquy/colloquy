@@ -380,26 +380,30 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
-	NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
-	NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
-
-	[message setAttributedString:[[[NSAttributedString alloc] initWithString:messageString] autorelease]];
-
 	NSSet *plugins = [[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )];
-	NSEnumerator *enumerator = [plugins objectEnumerator];
-	id item = nil;
 
-	while( ( item = [enumerator nextObject] ) )
-		if( [item isKindOfClass:[MVChatScriptPlugin class]] )
-			[item processMessage:message asAction:action toRoom:self];
+	if( [plugins count] ) {
+		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
+		NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
+		NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
+		NSEnumerator *enumerator = [plugins objectEnumerator];
+		id item = nil;
 
-	[message setAttributedString:[NSAttributedString attributedStringWithHTMLFragment:[message string] baseURL:nil]];
+		if( [[MVChatPluginManager defaultManager] numberOfPluginsOfClass:[MVChatScriptPlugin class] thatRespondToSelector:@selector( processMessage:asAction:toChat: )] ) {
+			[message setAttributedString:[[[NSAttributedString alloc] initWithString:messageString] autorelease]];
 
-	enumerator = [plugins objectEnumerator];
-	while( ( item = [enumerator nextObject] ) )
-		if( ! [item isKindOfClass:[MVChatScriptPlugin class]] )
-			[item processMessage:message asAction:action toRoom:self];
+			while( ( item = [enumerator nextObject] ) )
+				if( [item isKindOfClass:[MVChatScriptPlugin class]] )
+					[item processMessage:message asAction:action toRoom:self];
+
+			[message setAttributedString:[NSAttributedString attributedStringWithHTMLFragment:[message string] baseURL:nil]];
+		}
+
+		enumerator = [plugins objectEnumerator];
+		while( ( item = [enumerator nextObject] ) )
+			if( ! [item isKindOfClass:[MVChatScriptPlugin class]] )
+				[item processMessage:message asAction:action toRoom:self];
+	}
 
 	if( [[message string] length] )
 		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
