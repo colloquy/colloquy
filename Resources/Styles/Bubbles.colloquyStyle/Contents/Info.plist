@@ -14,7 +14,48 @@
 	<string>Bubbles</string>
 	<key>CFBundlePackageType</key>
 	<string>coSt</string>
-	<key>JVBaseStyleVariantName</key>
-	<string>Orange</string>
+	<key>JVStyleOptions</key>
+	<array>
+		<dict>
+			<key>style</key>
+			<string>table.rightBubble td { background-color: %@ !important; }</string>
+			<key>default</key>
+			<string>white</string>
+			<key>description</key>
+			<string>Your message</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<string>table.rightBubble td.center .text { color: %@ !important; }</string>
+			<key>default</key>
+			<string>black</string>
+			<key>description</key>
+			<string>Your message text</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<string>table.leftBubble td { background-color: %@ !important; }</string>
+			<key>default</key>
+			<string>white</string>
+			<key>description</key>
+			<string>Other messages</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<string>table.leftBubble td.center .text { color: %@ !important; }</string>
+			<key>default</key>
+			<string>black</string>
+			<key>description</key>
+			<string>Other message text</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+	</array>
 </dict>
 </plist>

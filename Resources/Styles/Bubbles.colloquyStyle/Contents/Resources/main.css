@@ -111,7 +111,7 @@ table.leftBubble {
 }
 
 table.leftBubble td {
-	background-color: rgba( 133, 0, 0, 0.4 );
+	background-color: white;
 }
 
 table.leftBubble td.bottomRight {
@@ -133,7 +133,7 @@ table.rightBubble {
 }
 
 table.rightBubble td {
-	background-color: rgba( 0, 180, 0, 0.4 );
+	background-color: white;
 }
 
 table.rightBubble td.bottomRight {
