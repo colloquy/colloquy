@@ -114,6 +114,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 #pragma mark -
 
 @interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
+- (void) _refreshWindowFileProxy;
 - (void) _changeEmoticonsMenuSelection;
 @end
 
@@ -622,7 +623,10 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[event setAttributes:attributes];
 
 	JVChatEvent *newEvent = [[self transcript] appendEvent:event];
-	[display appendChatTranscriptElement:newEvent];		
+	[display appendChatTranscriptElement:newEvent];
+
+	if( ! [[[_windowController window] representedFilename] length] )
+		[self _refreshWindowFileProxy];
 }
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
@@ -755,6 +759,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[cmessage release];
 
 	[_windowController reloadListItem:self andChildren:NO];
+
+	if( ! [[[_windowController window] representedFilename] length] )
+		[self _refreshWindowFileProxy];	
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message {
