@@ -508,10 +508,10 @@ static void MVChatGetActionMessage( IRC_SERVER_REC *server, const char *data, co
 
 static void MVChatUserNicknameChanged( CHANNEL_REC *channel, NICK_REC *nick, const char *oldnick ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
+	if( ! self || ! channel || ! nick ) return;
 
 	NSNotification *note = nil;
-	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:oldnick]] ) {
+	if( ! strcmp( channel -> server -> nick, nick -> nick ) ) {
 		note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick -> nick], @"nickname", nil]];
 	} else {
 		note = [NSNotification notificationWithName:MVChatConnectionUserNicknameChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:oldnick], @"oldNickname", [self stringWithEncodedBytes:nick -> nick], @"newNickname", nil]];
