@@ -17,6 +17,7 @@ NSLock *silcChatConnectionsLock;
 NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCertificate";
 
 @interface MVSILCChatConnection (MVSILCChatConnectionPrivate)
++ (const char *) _flattenedSILCStringForMessage:(NSAttributedString *) message;
 - (SilcClient) _silcClient;
 - (NSRecursiveLock *) _silcClientLock;
 - (void) _setSilcConn:(SilcClientConnection)aSilcConn;
@@ -749,7 +750,8 @@ static SilcClientOperations silcClientOps = {
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
 	if( [[reason string] length] ) {
-		[self sendRawMessageWithFormat:@"QUIT %@", [reason string]];
+		const char *tmp = [MVSILCChatConnection _flattenedSILCStringForMessage:reason];
+		[self sendRawMessageWithFormat:@"QUIT %s", tmp];
 	} else {
 		[self sendRawMessage:@"QUIT"];
 	}
@@ -967,7 +969,7 @@ static SilcClientOperations silcClientOps = {
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
 
-	const char *msg = [[message string] UTF8String];
+	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message];
 	SilcMessageFlags flags = SILC_MESSAGE_FLAG_UTF8;
 
 	if( action) flags |= SILC_MESSAGE_FLAG_ACTION;
@@ -999,7 +1001,7 @@ static SilcClientOperations silcClientOps = {
 	NSParameterAssert( message != nil );
 	NSParameterAssert( room != nil );
 
-	char *msg = (char *)[[message string] UTF8String];
+	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message];
 	SilcMessageFlags flags = SILC_MESSAGE_FLAG_UTF8;
 
 	if( action ) flags |= SILC_MESSAGE_FLAG_ACTION;
@@ -1013,7 +1015,7 @@ static SilcClientOperations silcClientOps = {
 		return;
 	}
 
-	silc_client_send_channel_message( [self _silcClient], [self _silcConn], channel, NULL, flags, msg, strlen( msg ), false );
+	silc_client_send_channel_message( [self _silcClient], [self _silcConn], channel, NULL, flags, (char *)msg, strlen( msg ), false );
 
 	[[self _silcClientLock] unlock];
 }
@@ -1080,7 +1082,7 @@ static SilcClientOperations silcClientOps = {
 - (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room {
 	NSParameterAssert( topic != nil );
 	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"TOPIC %@ %@", room, [topic string]];
+	[self sendRawMessageWithFormat:@"TOPIC %@ %s", room, [MVSILCChatConnection _flattenedSILCStringForMessage:topic]];
 }
 
 #pragma mark -
@@ -1184,7 +1186,7 @@ static SilcClientOperations silcClientOps = {
 		[self sendRawMessage:@"UMODE +g"];
 
 		[[self _silcClientLock] lock];
-		silc_client_set_away_message( [self _silcClient], [self _silcConn], (char *) [[message string] UTF8String] );
+		silc_client_set_away_message( [self _silcClient], [self _silcConn], (char *) [MVSILCChatConnection _flattenedSILCStringForMessage:message] );
 		[[self _silcClientLock] unlock];
 	} else {
 		[self sendRawMessage:@"UMODE -g"];
