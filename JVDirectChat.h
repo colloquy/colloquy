@@ -42,8 +42,8 @@
 	BOOL _firstMessage;
 	BOOL _requiresFullMessage;
 	BOOL _isActive;
-	BOOL _newMessage;
-	BOOL _newHighlightMessage;
+	unsigned int _newMessageCount;
+	unsigned int _newHighlightMessageCount;
 	BOOL _cantSendMessages;
 
 	int _historyIndex;	
@@ -74,8 +74,8 @@
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user;
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action;
 
-- (BOOL) newMessageWaiting;
-- (BOOL) newHighlightMessageWaiting;
+- (unsigned int) newMessagesWaiting;
+- (unsigned int) newHighlightMessagesWaiting;
 
 - (IBAction) send:(id) sender;
 - (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action;

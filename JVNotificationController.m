@@ -26,14 +26,19 @@ static JVNotificationController *sharedInstance = nil;
 
 - (id) init {
 	self = [super init];
+	_bubbles = [[NSMutableDictionary dictionary] retain];
 	return self;
 }
 
 - (void) dealloc {
 	extern JVNotificationController *sharedInstance;
 
+	[_bubbles release];
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
+
+	_bubbles = nil;
 
 	[super dealloc];
 }
@@ -44,18 +49,18 @@ static JVNotificationController *sharedInstance = nil;
 	if( [[eventPrefs objectForKey:@"playSound"] boolValue] )
 		[self _playSound:[eventPrefs objectForKey:@"soundPath"]];
 
-		if( [[eventPrefs objectForKey:@"bounceIcon"] boolValue] ) {
-			if( [[eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue] )
-				[self _bounceIconContinuously];
-			else [self _bounceIconOnce];
-		}
+	if( [[eventPrefs objectForKey:@"bounceIcon"] boolValue] ) {
+		if( [[eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue] )
+			[self _bounceIconContinuously];
+		else [self _bounceIconOnce];
+	}
 
-		if( [[eventPrefs objectForKey:@"showBubble"] boolValue] ) {
-			if( [[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] && ! [[NSApplication sharedApplication] isActive] )
-				[self _showBubbleWithContext:context andPrefs:eventPrefs];
-			else if( ! [[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] )
-				[self _showBubbleWithContext:context andPrefs:eventPrefs];
-		}
+	if( [[eventPrefs objectForKey:@"showBubble"] boolValue] ) {
+		if( [[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] && ! [[NSApplication sharedApplication] isActive] )
+			[self _showBubbleWithContext:context andPrefs:eventPrefs];
+		else if( ! [[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] )
+			[self _showBubbleWithContext:context andPrefs:eventPrefs];
+	}
 }
 @end
 
@@ -72,8 +77,33 @@ static JVNotificationController *sharedInstance = nil;
 
 - (void) _showBubbleWithContext:(NSDictionary *) context andPrefs:(NSDictionary *) eventPrefs {
 	NSImage *icon = [context objectForKey:@"image"];
-	KABubbleWindowController *bubble = [KABubbleWindowController bubbleWithTitle:[context objectForKey:@"title"] text:[context objectForKey:@"description"] icon:( icon ? icon : [[NSApplication sharedApplication] applicationIconImage] )];
+	KABubbleWindowController *bubble = nil;
+
+	if( ( bubble = [_bubbles objectForKey:[context objectForKey:@"coalesceKey"]] ) ) {
+		[(id)bubble setTitle:[context objectForKey:@"title"]];
+		[(id)bubble setText:[context objectForKey:@"description"]];
+		[(id)bubble setIcon:( icon ? icon : [[NSApplication sharedApplication] applicationIconImage] )];
+	} else {
+		bubble = [KABubbleWindowController bubbleWithTitle:[context objectForKey:@"title"] text:[context objectForKey:@"description"] icon:( icon ? icon : [[NSApplication sharedApplication] applicationIconImage] )];
+	}
+
+	[bubble setAutomaticallyFadesOut:(! [[eventPrefs objectForKey:@"keepBubbleOnScreen"] boolValue] )];
 	[bubble startFadeIn];
+
+	if( [(NSString *)[context objectForKey:@"coalesceKey"] length] ) {
+		[bubble setDelegate:self];
+		[_bubbles setObject:bubble forKey:[context objectForKey:@"coalesceKey"]];
+	}
+}
+
+- (void) bubbleDidFadeOut:(KABubbleWindowController *) bubble {
+	NSEnumerator *e = [[[_bubbles copy] autorelease] objectEnumerator];
+	NSEnumerator *ke = [[[_bubbles copy] autorelease] keyEnumerator];
+	KABubbleWindowController *cBubble = nil;
+	NSString *key = nil;
+
+	while( ( key = [ke nextObject] ) && ( cBubble = [e nextObject] ) )
+		if( cBubble == bubble ) [_bubbles removeObjectForKey:key];
 }
 
 - (void) _playSound:(NSString *) path {

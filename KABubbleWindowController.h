@@ -3,6 +3,7 @@
 @class NSTimer;
 
 @interface KABubbleWindowController : NSWindowController {
+	id _delegate;
 	NSTimer *_animationTimer;
 	unsigned int _depth;
 	BOOL _autoFadeOut;
@@ -23,4 +24,15 @@
 
 - (SEL) action;
 - (void) setAction:(SEL) selector;
+
+- (id) delegate;
+- (void) setDelegate:(id) delegate;
+@end
+
+@interface NSObject (KABubbleWindowControllerDelegate)
+- (void) bubbleWillFadeIn:(KABubbleWindowController *) bubble;
+- (void) bubbleDidFadeIn:(KABubbleWindowController *) bubble;
+
+- (void) bubbleWillFadeOut:(KABubbleWindowController *) bubble;
+- (void) bubbleDidFadeOut:(KABubbleWindowController *) bubble;
 @end

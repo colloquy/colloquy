@@ -10,6 +10,7 @@
 	IBOutlet NSButton *untilAttention;
 	IBOutlet NSButton *showBubble;
 	IBOutlet NSButton *onlyIfBackground;
+	IBOutlet NSButton *keepOnScreen;
 	NSMutableDictionary *_eventPrefs;
 }
 - (void) switchEvent:(id) sender;
@@ -29,4 +30,5 @@
 
 - (void) showBubble:(id) sender;
 - (void) showBubbleIfBackground:(id) sender;
+- (void) keepBubbleOnScreen:(id) sender;
 @end

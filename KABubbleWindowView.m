@@ -83,21 +83,25 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 - (void) setIcon:(NSImage *) icon {
 	[_icon autorelease];
 	_icon = [icon retain];
+	[self setNeedsDisplay:YES];
 }
 
 - (void) setTitle:(NSString *) title {
 	[_title autorelease];
 	_title = [title copy];
+	[self setNeedsDisplay:YES];
 }
 
 - (void) setAttributedText:(NSAttributedString *) text {
 	[_text autorelease];
 	_text = [text copy];
+	[self setNeedsDisplay:YES];
 }
 
 - (void) setText:(NSString *) text {
 	[_text autorelease];
 	_text = [[NSAttributedString alloc] initWithString:text attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont messageFontOfSize:11.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil]];
+	[self setNeedsDisplay:YES];
 }
 
 #pragma mark -

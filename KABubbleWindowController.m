@@ -54,6 +54,7 @@ static unsigned int bubbleWindowDepth = 0;
 
 	_depth = ++bubbleWindowDepth;
 	_autoFadeOut = YES;
+	_delegate = nil;
 	_target = nil;
 	_action = NULL;
 
@@ -61,7 +62,13 @@ static unsigned int bubbleWindowDepth = 0;
 }
 
 - (void) dealloc {
+	[_target release];
 	[_animationTimer release];
+
+	_target = nil;
+	_delegate = nil;
+	_animationTimer = nil;
+
 	[super dealloc];
 }
 
@@ -82,6 +89,8 @@ static unsigned int bubbleWindowDepth = 0;
 	if( [[self window] alphaValue] < 1. ) {
 		[[self window] setAlphaValue:[[self window] alphaValue] + FADE_INCREMENT];
 	} else if( _autoFadeOut ) {
+		if( [_delegate respondsToSelector:@selector( bubbleDidFadeIn: )] )
+			[_delegate bubbleDidFadeIn:self];
 		[self _waitBeforeFadeOut];
 	}
 }
@@ -93,6 +102,8 @@ static unsigned int bubbleWindowDepth = 0;
 	} else {
 		if( _depth == bubbleWindowDepth ) bubbleWindowDepth = 0;
 		[self _stopTimer];
+		if( [_delegate respondsToSelector:@selector( bubbleDidFadeOut: )] )
+			[_delegate bubbleDidFadeOut:self];
 		[self close];
 		[self autorelease]; // Relase, we retained when we faded in.
 	}
@@ -111,6 +122,8 @@ static unsigned int bubbleWindowDepth = 0;
 #pragma mark -
 
 - (void) startFadeIn {
+	if( [_delegate respondsToSelector:@selector( bubbleWillFadeIn: )] )
+		[_delegate bubbleWillFadeIn:self];
 	[self retain]; // Retain, after fade out we relase.
 	[self showWindow:nil];
 	[self _stopTimer];
@@ -118,6 +131,8 @@ static unsigned int bubbleWindowDepth = 0;
 }
 
 - (void) startFadeOut {
+	if( [_delegate respondsToSelector:@selector( bubbleWillFadeOut: )] )
+		[_delegate bubbleWillFadeOut:self];
 	[self _stopTimer];
 	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector( _fadeOut: ) userInfo:nil repeats:YES] retain];
 }
@@ -143,12 +158,24 @@ static unsigned int bubbleWindowDepth = 0;
 	_target = [object retain];
 }
 
+#pragma mark -
+
 - (SEL) action {
 	return _action;
 }
 
 - (void) setAction:(SEL) selector {
 	_action = selector;
+}
+
+#pragma mark -
+
+- (id) delegate {
+	return _delegate;
+}
+
+- (void) setDelegate:(id) delegate {
+	_delegate = delegate;
 }
 
 #pragma mark -

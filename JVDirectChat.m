@@ -116,9 +116,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		_buddy = nil;
 		_connection = nil;
 		_firstMessage = YES;
-		_newMessage = NO;
+		_newMessageCount = 0;
+		_newHighlightMessageCount = 0;
 		_requiresFullMessage = NO;
-		_newHighlightMessage = NO;
 		_cantSendMessages = NO;
 		_isActive = NO;
 		_historyIndex = 0;
@@ -359,12 +359,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (NSImage *) statusImage {
 	if( _isActive && [[[self view] window] isKeyWindow] ) {
-		_newMessage				= NO;
-		_newHighlightMessage	= NO;
+		_newMessageCount = 0;
+		_newHighlightMessageCount = 0;
 		return nil;
 	}
 
-	return ( [_waitingAlerts count] ? [NSImage imageNamed:@"viewAlert"] : ( _newMessage ? ( _newHighlightMessage ? [NSImage imageNamed:@"newHighlightMessage"] : [NSImage imageNamed:@"newMessage"] ) : nil ) );
+	return ( [_waitingAlerts count] ? [NSImage imageNamed:@"viewAlert"] : ( _newMessageCount ? ( _newHighlightMessageCount ? [NSImage imageNamed:@"newHighlightMessage"] : [NSImage imageNamed:@"newMessage"] ) : nil ) );
 }
 
 #pragma mark -
@@ -376,15 +376,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 - (void) didUnselect {
-	_newMessage = NO;
-	_newHighlightMessage = NO;
+	_newMessageCount = 0;
+	_newHighlightMessageCount = 0;
 	_isActive = NO;
 	[super didUnselect];
 }
 
 - (void) didSelect {
-	_newMessage = NO;
-	_newHighlightMessage = NO;
+	_newMessageCount = 0;
+	_newHighlightMessageCount = 0;
 	_isActive = YES;
 	[super didSelect];
 	[[[self view] window] makeFirstResponder:send];
@@ -658,15 +658,18 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 			[context setObject:_target forKey:@"performedOn"];
 			[context setObject:user forKey:@"performedBy"];
 			[context setObject:_target forKey:@"performedInRoom"];
+			[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
 		} else {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ sent you another private message.", "new message bubble text" ), [self title]] forKey:@"description"];
+			if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have 1 message waiting from %@.", "new single message bubble text" ), [self title]] forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have %d messages waiting from %@.", "new messages bubble text" ), [self newMessagesWaiting], [self title]] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
 			[context setObject:_target forKey:@"performedOn"];
 			[context setObject:user forKey:@"performedBy"];
 			[context setObject:_target forKey:@"performedInRoom"];
+			[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
 		}
 	}
@@ -696,12 +699,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 
-- (BOOL) newMessageWaiting {
-	return _newMessage;
+- (unsigned int) newMessagesWaiting {
+	return _newMessageCount;
 }
 
-- (BOOL) newHighlightMessageWaiting {
-	return _newHighlightMessage;
+- (unsigned int) newHighlightMessagesWaiting {
+	return _newHighlightMessageCount;
 }
 
 #pragma mark -
@@ -1157,10 +1160,17 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
 
-	if( ! [user isEqualToString:[[self connection] nickname]] )
+	if( ! [user isEqualToString:[[self connection] nickname]] ) {
+		_newMessageCount++;
 		[self processMessage:mutableMsg asAction:action fromUser:user];
+	}
 
-	if( ! [mutableMsg length] ) return;
+	if( ! [mutableMsg length] ) {
+		_newMessageCount--;
+		return;
+	}
+
+	_firstMessage = NO;
 
 	messageString = [[[NSMutableString alloc] initWithData:mutableMsg encoding:_encoding] autorelease];
 	if( ! messageString ) {
@@ -1185,8 +1195,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				[context setObject:_target forKey:@"performedOn"];
 				[context setObject:user forKey:@"performedBy"];
 				[context setObject:_target forKey:@"performedInRoom"];
+				[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatMentioned"] forKey:@"coalesceKey"];
 				[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
-				_newHighlightMessage = YES;
+				_newHighlightMessageCount++;
 				highlight = YES;
 				break;
 			}
@@ -1297,8 +1308,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	xmlFreeDoc( doc );
 
 	_requiresFullMessage = NO;
-	_firstMessage = NO;
-	_newMessage = YES;
 
 	[_windowController reloadListItem:self andChildren:NO];
 }

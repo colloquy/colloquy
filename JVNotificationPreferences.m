@@ -45,8 +45,14 @@
 	boolValue = [[_eventPrefs objectForKey:@"showBubble"] boolValue];
 	[showBubble setState:boolValue];
 	[onlyIfBackground setEnabled:boolValue];
-	if( ! boolValue ) [onlyIfBackground setState:NSOffState];
-	else [onlyIfBackground setState:[[_eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue]];	
+	[keepOnScreen setEnabled:boolValue];
+	if( ! boolValue ) {
+		[onlyIfBackground setState:NSOffState];
+		[keepOnScreen setState:NSOffState];
+	} else {
+		[onlyIfBackground setState:[[_eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue]];
+		[keepOnScreen setState:[[_eventPrefs objectForKey:@"keepBubbleOnScreen"] boolValue]];
+	}
 }
 
 - (void) saveEventSettings {
@@ -159,14 +165,25 @@
 
 - (void) showBubble:(id) sender {
 	[onlyIfBackground setEnabled:(BOOL)[sender state]];
-	if( [sender state] == NSOffState ) [onlyIfBackground setState:NSOffState];
-	else [onlyIfBackground setState:[[_eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue]];	
+	[keepOnScreen setEnabled:(BOOL)[sender state]];
+	if( [sender state] == NSOffState ) {
+		[onlyIfBackground setState:NSOffState];
+		[keepOnScreen setState:NSOffState];
+	} else {
+		[onlyIfBackground setState:[[_eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue]];
+		[keepOnScreen setState:[[_eventPrefs objectForKey:@"keepBubbleOnScreen"] boolValue]];
+	}
 	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"showBubble"];
 	[self saveEventSettings];
 }
 
 - (void) showBubbleIfBackground:(id) sender {
 	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"showBubbleOnlyIfBackground"];
+	[self saveEventSettings];
+}
+
+- (void) keepBubbleOnScreen:(id) sender {
+	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"keepBubbleOnScreen"];
 	[self saveEventSettings];
 }
 @end
