@@ -100,7 +100,7 @@
 
 	if( isChatRoom ) {
 		if( ! [command caseInsensitiveCompare:@"leave"] || ! [command caseInsensitiveCompare:@"part"] ) {
-			if( ! [arguments length] ) return [self handlePartWithArguments:[room target] forConnection:[room connection]];
+			if( ! [arguments length] ) return [self handlePartWithArguments:[[room target] name] forConnection:[room connection]];
 			else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		} else if( ! [command caseInsensitiveCompare:@"topic"] || ! [command caseInsensitiveCompare:@"t"] ) {
 			if( ! [arguments length] ) return NO;
