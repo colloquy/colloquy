@@ -316,6 +316,18 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	return nil;
 }
 
+- (NSSet *) connectionsForServerAddress:(NSString *) address {
+	NSMutableSet *ret = [NSMutableSet setWithCapacity:[_bookmarks count]];
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	id info = nil;
+
+	while( ( info = [enumerator nextObject] ) )
+		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] caseInsensitiveCompare:address] == NSOrderedSame )
+			[ret addObject:[info objectForKey:@"connection"]];
+
+	return [[ret retain] autorelease];
+}
+
 #pragma mark -
 
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep {

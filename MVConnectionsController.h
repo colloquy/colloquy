@@ -68,6 +68,7 @@
 - (NSSet *) connections;
 - (NSSet *) connectedConnections;
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;
+- (NSSet *) connectionsForServerAddress:(NSString *) address;
 
 - (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection;
 - (BOOL) autoConnectForConnection:(MVChatConnection *) connection;
