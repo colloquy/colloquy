@@ -58,7 +58,7 @@
 #pragma mark -
 
 - (NSToolbar *) toolbar {
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"chat.chatRoom"];
+	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Chat Room"];
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
@@ -125,7 +125,7 @@
 #pragma mark -
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"%@.%@.chatRoom", [[self connection] server], _target];
+	return [NSString stringWithFormat:@"Chat Room %@ (%@)", _target, [[self connection] server]];
 }
 
 #pragma mark -

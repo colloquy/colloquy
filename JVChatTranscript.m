@@ -138,19 +138,24 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 	if( ! _chatStyle ) {
 		NSBundle *style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
-		[self setChatStyle:style withVariant:[[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]]];
+		NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [style bundleIdentifier]]];		
+		if( ! style ) {
+			[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
+			style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
+			variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [style bundleIdentifier]]];
+		}
+		[self setChatStyle:style withVariant:variant];
 	}
 
 	[self _updateChatStylesMenu];
 
 	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 
-	toolbarItemContainerView = [chooseStyle superview];
-
-	[chooseStyle retain];
-	[chooseStyle removeFromSuperview];
-
-	[toolbarItemContainerView autorelease];
+	if( ( toolbarItemContainerView = [chooseStyle superview] ) ) {
+		[chooseStyle retain];
+		[chooseStyle removeFromSuperview];
+		[toolbarItemContainerView autorelease];
+	}
 }
 
 - (void) dealloc {
@@ -215,7 +220,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 }
 
 - (NSToolbar *) toolbar {
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"chat.transcript"];
+	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Chat Transcript"];
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
@@ -299,7 +304,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"%@.transcript", [[_filePath lastPathComponent] stringByDeletingPathExtension]];
+	return [NSString stringWithFormat:@"Transcript %@", [[_filePath lastPathComponent] stringByDeletingPathExtension]];
 }
 
 - (MVChatConnection *) connection {
@@ -337,6 +342,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 - (void) setChatStyle:(NSBundle *) style withVariant:(NSString *) variant {
 	int result = NSOKButton;
 	BOOL manyMessages = NO;
+
+	NSParameterAssert( style != nil );
 
 	manyMessages = ( xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) > 2000 ? YES : NO );
 
@@ -599,8 +606,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	BOOL hasPerRoomStyle = NO;
 	NSString *style = nil;
 
-	if( [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]] )
-		hasPerRoomStyle = YES;
+//	if( [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]] )
+//		hasPerRoomStyle = YES;
 
 	style = [_chatStyle bundleIdentifier];
 

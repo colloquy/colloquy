@@ -80,9 +80,8 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 }
 
 - (void) windowDidLoad {
-	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"connections.toolbar"] autorelease];
+	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"Connections"] autorelease];
 	NSTableColumn *theColumn = nil;
-//	id prototypeCell = nil;
 
 	[newNickname setObjectValue:NSUserName()];
 
@@ -90,16 +89,9 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];
-/*	prototypeCell = [[NSButtonCell new] autorelease];
-	[prototypeCell setButtonType:NSSwitchButton];
-	[prototypeCell setControlSize:NSSmallControlSize];
-	[theColumn setDataCell:prototypeCell]; */
 
 	theColumn = [connections tableColumnWithIdentifier:@"status"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"statusHeader"]];
-/*	prototypeCell = [[NSImageCell new] autorelease];
-	[prototypeCell setImageAlignment:NSImageAlignCenter];
-	[theColumn setDataCell:prototypeCell];*/
 
 	[connections registerForDraggedTypes:[NSArray arrayWithObjects:MVConnectionPboardType,NSURLPboardType,@"CorePasteboardFlavorType 0x75726C20",nil]];
 
@@ -108,7 +100,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[toolbar setAutosavesConfiguration:YES];
 	[[self window] setToolbar:toolbar];
 
-	[self setWindowFrameAutosaveName:@"connections"];
+	[self setWindowFrameAutosaveName:@"Connections"];
 }
 
 #pragma mark -

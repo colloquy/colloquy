@@ -114,7 +114,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 }
 
 - (void) windowDidLoad {
-	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"transfer.toolbar"] autorelease];
+	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"Transfers"] autorelease];
 	NSTableColumn *theColumn = nil;
 	id prototypeCell = nil;
 
@@ -122,7 +122,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	[currentFiles setVerticalMotionCanBeginDrag:NO];
 	[currentFiles setDoubleAction:@selector( _openFile: )];
-	[currentFiles setAutosaveName:@"transfer.table"];
+	[currentFiles setAutosaveName:@"Transfers"];
 	[currentFiles setAutosaveTableColumns:YES];
 
 	theColumn = [currentFiles tableColumnWithIdentifier:@"file"];
@@ -132,9 +132,6 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	theColumn = [currentFiles tableColumnWithIdentifier:@"status"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"statusHeader"]];
-/*	prototypeCell = [[NSImageCell new] autorelease];
-	[prototypeCell setImageAlignment:NSImageAlignCenter];
-	[theColumn setDataCell:prototypeCell];*/
 
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
@@ -145,7 +142,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	[progressBar setUsesThreadedAnimation:YES];
 	[self _updateProgress:nil];
 
-	[self setWindowFrameAutosaveName:@"transfer"];
+	[self setWindowFrameAutosaveName:@"Transfers"];
 }
 
 #pragma mark -
