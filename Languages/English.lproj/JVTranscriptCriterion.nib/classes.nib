@@ -17,6 +17,7 @@
                 dateOperationButton = NSPopUpButton; 
                 dateQuery = NSTextField; 
                 dateUnitsButton = NSPopUpButton; 
+                expandedKindMenu = NSMenu; 
                 kindMenu = NSMenu; 
                 listKindButton = NSPopUpButton; 
                 listOperationButton = NSPopUpButton; 

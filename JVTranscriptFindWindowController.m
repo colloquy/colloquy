@@ -243,7 +243,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 		NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
 		JVTranscriptCriterionController *rule = nil;
 		while( ( rule = [rules nextObject] ) ) {
-			BOOL localMatch = [rule matchMessage:message ignoreCase:ignore];
+			BOOL localMatch = [rule matchMessage:message fromChatView:[self focusedChatTranscriptPanel] ignoringCase:ignore];
 			match = ( andOperation ? ( match & localMatch ) : ( match | localMatch ) );
 			if( ! localMatch && andOperation ) break; // fails, this wont match with all rules
 			else if( localMatch && ! andOperation ) break; // passes one, this is enough to match under "any rules"
@@ -342,7 +342,7 @@ end:
 		NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
 		JVTranscriptCriterionController *rule = nil;
 		while( ( rule = [rules nextObject] ) ) {
-			BOOL localMatch = [rule matchMessage:message ignoreCase:ignore];
+			BOOL localMatch = [rule matchMessage:message fromChatView:[self focusedChatTranscriptPanel] ignoringCase:ignore];
 			match = ( andOperation ? ( match & localMatch ) : ( match | localMatch ) );
 			if( ! localMatch && andOperation ) break; // fails, this wont match with all rules
 			else if( localMatch && ! andOperation ) break; // passes one, this is enough to match under "any rules"
@@ -395,7 +395,7 @@ end:
 		NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
 		JVTranscriptCriterionController *rule = nil;
 		while( ( rule = [rules nextObject] ) ) {
-			BOOL localMatch = [rule matchMessage:message ignoreCase:ignore];
+			BOOL localMatch = [rule matchMessage:message fromChatView:[self focusedChatTranscriptPanel] ignoringCase:ignore];
 			match = ( andOperation ? ( match & localMatch ) : ( match | localMatch ) );
 			if( ! localMatch && andOperation ) break; // fails, this wont match with all rules
 			else if( localMatch && ! andOperation ) break; // passes one, this is enough to match under any rules

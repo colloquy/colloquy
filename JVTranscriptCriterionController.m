@@ -2,8 +2,13 @@
 // Created by Timothy Hatcher for Colloquy.
 // Copyright Joar Wingfors and Timothy Hatcher. All rights reserved.
 
+#import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatUser.h>
+
 #import "JVTranscriptCriterionController.h"
 #import "JVChatMessage.h"
+#import "JVDirectChatPanel.h"
+#import "JVChatRoomPanel.h"
 
 @implementation JVTranscriptCriterionController
 + (id) controller {
@@ -16,6 +21,7 @@
 	if( ( self = [super init] ) ) {
 		_query = @"";
 		_changed = NO;
+		_smartTranscriptCriterion = NO;
 		[self setKind:JVTranscriptMessageBodyCriterionKind];	
 		[self setOperation:JVTranscriptTextContainCriterionOperation];
 		[self setQueryUnits:JVTranscriptNoCriterionQueryUnits];
@@ -31,6 +37,7 @@
 		[self setQuery:[coder decodeObjectForKey:@"query"]];
 		[self setOperation:[coder decodeIntForKey:@"operation"]];
 		[self setQueryUnits:[coder decodeIntForKey:@"queryUnits"]];
+		[self setUsesSmartTranscriptCriterion:[coder decodeBoolForKey:@"smartTranscriptCriterion"]];
 		return self;
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 	return nil;
@@ -42,6 +49,7 @@
 		[coder encodeObject:[self query] forKey:@"query"];
 		[coder encodeInt:[self operation] forKey:@"operation"];
 		[coder encodeInt:[self queryUnits] forKey:@"queryUnits"];
+		[coder encodeBool:[self usesSmartTranscriptCriterion] forKey:@"smartTranscriptCriterion"];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
@@ -51,6 +59,7 @@
 	[ret setQuery:[self query]];
 	[ret setOperation:[self operation]];
 	[ret setQueryUnits:[self queryUnits]];
+	[ret setUsesSmartTranscriptCriterion:[self usesSmartTranscriptCriterion]];
 	return ret;
 }
 
@@ -61,10 +70,12 @@
 - (void) dealloc {
 	[subview release];
 	[kindMenu release];
+	[expandedKindMenu release];
 	[_query release];
 
 	subview = nil;
 	kindMenu = nil;
+	expandedKindMenu = nil;
 	_query = nil;
 
 	[super dealloc];
@@ -74,6 +85,13 @@
 
 - (void) awakeFromNib {
 	[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%d", [self format]]];
+
+	if( [self usesSmartTranscriptCriterion] ) {
+		[textKindButton setMenu:expandedKindMenu];
+		[dateKindButton setMenu:expandedKindMenu];
+		[booleanKindButton setMenu:expandedKindMenu];
+		[listKindButton setMenu:expandedKindMenu];
+	}
 
 	if( [self format] == JVTranscriptTextCriterionFormat ) {
 		[textKindButton selectItemAtIndex:[textKindButton indexOfItemWithTag:[self kind]]];
@@ -141,6 +159,8 @@
 		switch( kind ) {
 		case JVTranscriptSenderNameCriterionKind:
 		case JVTranscriptMessageBodyCriterionKind:
+		case JVTranscriptSourceNameCriterionKind:
+		case JVTranscriptSourceServerAddressCriterionKind:
 			[self setFormat:JVTranscriptTextCriterionFormat];
 			break;
 		case JVTranscriptDateReceivedCriterionKind:
@@ -161,6 +181,11 @@
 		case JVTranscriptMessageNotHighlightedCriterionKind:
 		case JVTranscriptMessageIsActionCriterionKind:
 		case JVTranscriptMessageIsNotActionCriterionKind:
+		case JVTranscriptSourceIsChatRoomCriterionKind:
+		case JVTranscriptSourceIsNotChatRoomCriterionKind:
+		case JVTranscriptSourceIsPrivateChatCriterionKind:
+		case JVTranscriptSourceIsNotPrivateChatCriterionKind:
+		case JVTranscriptEveryMessageCriterionKind:
 			[self setFormat:JVTranscriptBooleanCriterionFormat];
 		}
 	}
@@ -224,12 +249,14 @@
 	return _changed;
 }
 
-- (BOOL) matchMessage:(JVChatMessage *) message ignoreCase:(BOOL) ignoreCase {
+- (BOOL) matchMessage:(JVChatMessage *) message fromChatView:(id <JVChatViewController>) chatView ignoringCase:(BOOL) ignoreCase {
 	_changed = NO;
 	if( [self format] == JVTranscriptTextCriterionFormat ) {
 		NSString *value = nil;
 		if( [self kind] == JVTranscriptSenderNameCriterionKind ) value = [message senderName];
 		else if( [self kind] == JVTranscriptMessageBodyCriterionKind ) value = [message bodyAsPlainText];
+		else if( [self kind] == JVTranscriptSourceNameCriterionKind ) value = [chatView title];
+		else if( [self kind] == JVTranscriptSourceServerAddressCriterionKind ) value = [[chatView connection] server];
 
 		BOOL match = NO;
 		JVTranscriptCriterionOperation oper = [self operation];
@@ -271,10 +298,10 @@
 	} else {
 		switch( [self kind] ) {
 		default:
-			return YES;
+			return NO;
 		case JVTranscriptSenderInBuddyListCriterionKind:
 		case JVTranscriptSenderNotInBuddyListCriterionKind:
-			return YES;
+			return NO;
 		case JVTranscriptSenderIgnoredCriterionKind:
 			return ( [message ignoreStatus] == JVUserIgnored );
 		case JVTranscriptSenderNotIgnoredCriterionKind:
@@ -288,8 +315,13 @@
 		case JVTranscriptMessageNotFromMeCriterionKind:
 			return ( ! [message senderIsLocalUser] );
 		case JVTranscriptMessageAddressedToMeCriterionKind:
-		case JVTranscriptMessageNotAddressedToMeCriterionKind:
-			return YES;
+		case JVTranscriptMessageNotAddressedToMeCriterionKind: {
+			if( ! chatView || ! [chatView connection] ) return NO;
+			AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"^%@[:;,-]", [[[chatView connection] localUser] nickname]] options:( ignoreCase ? AGRegexCaseInsensitive : 0 )];
+			AGRegexMatch *match = [regex findInString:[message bodyAsPlainText]];
+			if( [match count] && [self kind] == JVTranscriptMessageAddressedToMeCriterionKind ) return YES;
+			else if( ! [match count] && [self kind] == JVTranscriptMessageNotAddressedToMeCriterionKind ) return YES;
+			return NO; }
 		case JVTranscriptMessageHighlightedCriterionKind:
 			return [message isHighlighted];
 		case JVTranscriptMessageNotHighlightedCriterionKind:
@@ -298,6 +330,20 @@
 			return [message isAction];
 		case JVTranscriptMessageIsNotActionCriterionKind:
 			return ( ! [message isAction] );
+		case JVTranscriptSourceIsChatRoomCriterionKind:
+			if( ! chatView ) return NO;
+			return [chatView isMemberOfClass:[JVChatRoomPanel class]];
+		case JVTranscriptSourceIsNotChatRoomCriterionKind:
+			if( ! chatView ) return NO;
+			return ( ! [chatView isMemberOfClass:[JVChatRoomPanel class]] );
+		case JVTranscriptSourceIsPrivateChatCriterionKind:
+			if( ! chatView ) return NO;
+			return [chatView isMemberOfClass:[JVDirectChatPanel class]];
+		case JVTranscriptSourceIsNotPrivateChatCriterionKind:
+			if( ! chatView ) return NO;
+			return ( ! [chatView isMemberOfClass:[JVDirectChatPanel class]] );
+		case JVTranscriptEveryMessageCriterionKind:
+			return YES;
 		}
 	}
 
@@ -357,6 +403,38 @@
 	if( [self format] == JVTranscriptDateCriterionFormat ) {
 		[dateUnitsButton selectItemAtIndex:[dateUnitsButton indexOfItemWithTag:[self queryUnits]]];
 	}
+}
+
+#pragma mark -
+
+- (BOOL) usesSmartTranscriptCriterion {
+	return _smartTranscriptCriterion;
+}
+
+- (void) setUsesSmartTranscriptCriterion:(BOOL) use {
+	_smartTranscriptCriterion = use;
+
+	if( use ) {
+		[textKindButton setMenu:expandedKindMenu];
+		[dateKindButton setMenu:expandedKindMenu];
+		[booleanKindButton setMenu:expandedKindMenu];
+		[listKindButton setMenu:expandedKindMenu];
+	} else {
+		[textKindButton setMenu:kindMenu];
+		[dateKindButton setMenu:kindMenu];
+		[booleanKindButton setMenu:kindMenu];
+		[listKindButton setMenu:kindMenu];
+	}
+
+	if( [self format] == JVTranscriptTextCriterionFormat ) {
+		[textKindButton selectItemAtIndex:[textKindButton indexOfItemWithTag:[self kind]]];
+	} else if( [self format] == JVTranscriptDateCriterionFormat ) {
+		[dateKindButton selectItemAtIndex:[dateKindButton indexOfItemWithTag:[self kind]]];
+	} else if( [self format] == JVTranscriptBooleanCriterionFormat ) {
+		[booleanKindButton selectItemAtIndex:[booleanKindButton indexOfItemWithTag:[self kind]]];
+	} else if( [self format] == JVTranscriptListCriterionFormat ) {
+		[listKindButton selectItemAtIndex:[listKindButton indexOfItemWithTag:[self kind]]];
+	}	
 }
 
 #pragma mark -

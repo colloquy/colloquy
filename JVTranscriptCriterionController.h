@@ -1,3 +1,5 @@
+#import "JVChatWindowController.h"
+
 typedef enum JVTranscriptCriterionFormat { // cooresponds to the nib tab view identifiers
 	JVTranscriptTextCriterionFormat = 1,
 	JVTranscriptDateCriterionFormat,
@@ -22,7 +24,14 @@ typedef enum JVTranscriptCriterionKind { // corresponds to the nib menu tags
 	JVTranscriptMessageIsActionCriterionKind,
 	JVTranscriptMessageIsNotActionCriterionKind,
 	JVTranscriptMessageFromMeCriterionKind,
-	JVTranscriptMessageNotFromMeCriterionKind
+	JVTranscriptMessageNotFromMeCriterionKind,
+	JVTranscriptSourceIsChatRoomCriterionKind,
+	JVTranscriptSourceIsNotChatRoomCriterionKind,
+	JVTranscriptSourceIsPrivateChatCriterionKind,
+	JVTranscriptSourceIsNotPrivateChatCriterionKind,
+	JVTranscriptSourceNameCriterionKind,
+	JVTranscriptSourceServerAddressCriterionKind,
+	JVTranscriptEveryMessageCriterionKind
 } JVTranscriptCriterionKind;
 
 typedef enum JVTranscriptCriterionOperation { // corresponds to the nib menu tags
@@ -57,6 +66,7 @@ typedef enum JVTranscriptCriterionQueryUnits { // corresponds to the nib menu ta
 	IBOutlet NSTabView *tabView;
 
 	IBOutlet NSMenu *kindMenu;
+	IBOutlet NSMenu *expandedKindMenu;
 
 	IBOutlet NSPopUpButton *textKindButton;
 	IBOutlet NSPopUpButton *dateKindButton;
@@ -80,6 +90,7 @@ typedef enum JVTranscriptCriterionQueryUnits { // corresponds to the nib menu ta
 
 	id _query;
 
+	BOOL _smartTranscriptCriterion;
 	BOOL _changed;
 }
 + (id) controller;
@@ -98,10 +109,19 @@ typedef enum JVTranscriptCriterionQueryUnits { // corresponds to the nib menu ta
 - (IBAction) noteOtherChanges:(id) sender;
 
 - (BOOL) changedSinceLastMatch;
-- (BOOL) matchMessage:(JVChatMessage *) message ignoreCase:(BOOL) ignoreCase;
+- (BOOL) matchMessage:(JVChatMessage *) message fromChatView:(id <JVChatViewController>) chatView ignoringCase:(BOOL) ignoreCase;
 
 - (id) query;
 - (void) setQuery:(id) query;
+
+- (JVTranscriptCriterionOperation) operation;
+- (void) setOperation:(JVTranscriptCriterionOperation) operation;
+
+- (JVTranscriptCriterionQueryUnits) queryUnits;
+- (void) setQueryUnits:(JVTranscriptCriterionQueryUnits) units;
+
+- (BOOL) usesSmartTranscriptCriterion;
+- (void) setUsesSmartTranscriptCriterion:(BOOL) use;
 
 - (JVTranscriptCriterionOperation) operation;
 - (void) setOperation:(JVTranscriptCriterionOperation) operation;

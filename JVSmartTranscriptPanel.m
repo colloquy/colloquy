@@ -290,7 +290,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSEnumerator *rules = [[self rules] objectEnumerator];
 	JVTranscriptCriterionController *rule = nil;
 	while( ( rule = [rules nextObject] ) ) {
-		BOOL localMatch = [rule matchMessage:message ignoreCase:ignore];
+		BOOL localMatch = [rule matchMessage:message fromChatView:view ignoringCase:ignore];
 		match = ( andOperation ? ( match & localMatch ) : ( match | localMatch ) );
 		if( ! localMatch && andOperation ) break; // fails, this wont match with all rules
 		else if( localMatch && ! andOperation ) break; // passes one, this is enough to match under "any rules"
@@ -300,6 +300,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	JVMutableChatMessage *localMessage = [[message mutableCopy] autorelease];
 	[localMessage setSource:[(JVDirectChatPanel *)view url]];
+	[localMessage setIgnoreStatus:JVNotIgnored];
 
 	localMessage = (id) [[self transcript] appendMessage:localMessage];
 	[display appendChatMessage:localMessage];	
@@ -328,6 +329,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (IBAction) addRow:(id) sender {
 	JVTranscriptCriterionController *criterion = [JVTranscriptCriterionController controller];
+	[criterion setUsesSmartTranscriptCriterion:YES];
+
 	[self insertObject:criterion inCriterionControllersAtIndex:[[subviewTableView selectedRowIndexes] lastIndex]];
 
 	if( sender ) {
