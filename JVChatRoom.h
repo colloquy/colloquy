@@ -3,8 +3,6 @@
 @class JVChatRoomMember;
 @class MVChatUser;
 
-extern NSString *MVChatRoomModeChangedNotification;
-
 @interface JVChatRoom : JVDirectChat {
 	@protected
 	IBOutlet NSTextView *topicLine;
