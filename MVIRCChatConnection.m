@@ -238,7 +238,7 @@ static void MVChatNickTaken( IRC_SERVER_REC *server, const char *data, const cha
 	} else {
 		NSString *nick = [self nextAlternateNickname];
 		if( nick ) {
-			[self sendRawMessage:[NSString stringWithFormat:@"NICK %@", nick] immediately:YES];
+			[self _sendRawMessage:[NSString stringWithFormat:@"NICK %@", nick] immediately:YES];
 			signal_stop();
 		}
 	}
