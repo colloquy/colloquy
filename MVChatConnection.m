@@ -1971,7 +1971,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	signal_remove( "ban new", (SIGNAL_FUNC) MVChatBanNew );
 	signal_remove( "ban remove", (SIGNAL_FUNC) MVChatBanRemove );
-	signal_remove( "event 368", (SIGNAL_FUNC) MVChatBanlistReceived );
+	signal_remove( "chanquery ban end", (SIGNAL_FUNC) MVChatBanlistReceived );
 
 	signal_remove( "event join", (SIGNAL_FUNC) MVChatUserJoinedRoom );
 	signal_remove( "event part", (SIGNAL_FUNC) MVChatUserLeftRoom );
