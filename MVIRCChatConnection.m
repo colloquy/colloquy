@@ -195,8 +195,8 @@ static void MVChatRawOutgoingMessage( SERVER_REC *server, char *data ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
 	if( ! self ) return;
 
-	NSLog( @"self = %x, %s", self, data );
-	NSLog( @"%@", self );
+//	NSLog( @"self = %x, %s", self, data );
+//	NSLog( @"%@", self );
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:data], @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -1629,7 +1629,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) _setIrssiConnection:(SERVER_REC *) server {
 	[MVIRCChatConnectionThreadLock lock];
 
-	NSLog( @"_setIrssiConnection %@ %x", self, server );
+//	NSLog( @"_setIrssiConnection %@ %x", self, server );
 
 	SERVER_REC *old = _chatConnection;
 
