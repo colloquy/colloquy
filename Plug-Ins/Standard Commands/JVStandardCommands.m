@@ -537,7 +537,7 @@
 		offset += [[messageString componentsSeparatedByString:@" "] count];
 	}
 
-	if( offset < [argsArray count] )
+	if( offset < [argsArray count] && [[argsArray objectAtIndex:offset] length] )
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 
 	KAIgnoreRule *rule = [NSClassFromString( @"KAIgnoreRule" ) ruleForUser:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];
