@@ -121,6 +121,8 @@
 	[preview setUIDelegate:self];
 	[optionsTable setRefusesFirstResponder:YES];
 
+	[useStyleFont setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputUsesStyleFont"]];
+
 	NSTableColumn *column = [optionsTable tableColumnWithIdentifier:@"key"];
 	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
 	[prototypeCell setFont:[NSFont boldSystemFontOfSize:11.]];
@@ -211,6 +213,12 @@
 
 - (IBAction) changeDefaultEmoticons:(id) sender {
 	[self selectEmoticonsWithIdentifier:[sender representedObject]];
+}
+
+#pragma mark -
+
+- (IBAction) changeUseStyleFont:(id) sender {
+	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVChatInputUsesStyleFont"];
 }
 
 #pragma mark -
@@ -615,6 +623,9 @@
 		return;
 	}
 
+	if( _variantLocked && [optionsDrawer state] == NSDrawerClosedState )
+		[self showNewVariantSheet];
+
 	[optionsDrawer setParentWindow:[sender window]];
 	[optionsDrawer setPreferredEdge:NSMaxXEdge];
 	if( [optionsDrawer contentSize].width < [optionsDrawer minContentSize].width )
@@ -789,12 +800,16 @@
 - (IBAction) createNewVariant:(id) sender {
 	[self closeNewVariantSheet:sender];
 
+	NSMutableString *name = [[[newVariantName stringValue] mutableCopy] autorelease];
+	[name replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
+	[name replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
+
 	[[NSFileManager defaultManager] createDirectoryAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [_style identifier]] stringByExpandingTildeInPath] attributes:nil];
 
-	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [_style identifier], [newVariantName stringValue]] stringByExpandingTildeInPath];
+	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [_style identifier], name] stringByExpandingTildeInPath];
 	[_userStyle writeToFile:path atomically:YES];
 
-	[_style setDefaultVariantName:[newVariantName stringValue]];
+	[_style setDefaultVariantName:name];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVNewStyleVariantAddedNotification object:_style]; 
 
