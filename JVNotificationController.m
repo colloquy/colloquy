@@ -1,18 +1,13 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
-#import <GrowlAppBridge/GrowlApplicationBridge.h>
-#import <GrowlAppBridge/GrowlDefines.h>
+#import <Growl/GrowlApplicationBridge.h>
 #import "JVNotificationController.h"
 #import "KABubbleWindowController.h"
 #import "KABubbleWindowView.h"
 
-#ifndef GROWL_IS_READY
-#error STOP: You need Growl installed to build Colloquy. Growl can be found at: http://www.growl.info
-#endif
-
 static JVNotificationController *sharedInstance = nil;
 
-@interface JVNotificationController (JVNotificationControllerPrivate)
+@interface JVNotificationController (JVNotificationControllerPrivate) <GrowlApplicationBridgeDelegate>
 - (void) _bounceIconOnce;
 - (void) _bounceIconContinuously;
 - (void) _showBubbleForIdentifier:(NSString *) identifier withContext:(NSDictionary *) context andPrefs:(NSDictionary *) eventPrefs;
@@ -32,10 +27,8 @@ static JVNotificationController *sharedInstance = nil;
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_bubbles = [[NSMutableDictionary dictionary] retain];
-		if( [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
-			_growlInstalled = NO;
-		} else {
-			_growlInstalled = [NSClassFromString( @"GrowlAppBridge" ) launchGrowlIfInstalledNotifyingTarget:self selector:@selector( _growlReady ) context:NULL];
+		if( [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
+			[GrowlApplicationBridge setGrowlDelegate:self];
 		}
 	}
 
@@ -105,12 +98,12 @@ static JVNotificationController *sharedInstance = nil;
 
 	if( ! icon ) icon = [[NSApplication sharedApplication] applicationIconImage];
 
-	if( _growlInstalled ) {
+	if( [GrowlApplicationBridge isGrowlInstalled] ) {
 		NSString *desc = description;
 		if( [desc isKindOfClass:[NSAttributedString class]] ) desc = [description string];
 		NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 		NSDictionary *notification = [NSDictionary dictionaryWithObjectsAndKeys:programName, GROWL_APP_NAME, identifier, GROWL_NOTIFICATION_NAME, title, GROWL_NOTIFICATION_TITLE, desc, GROWL_NOTIFICATION_DESCRIPTION, [icon TIFFRepresentation], GROWL_NOTIFICATION_ICON, [eventPrefs objectForKey:@"keepBubbleOnScreen"], GROWL_NOTIFICATION_STICKY, nil];
-		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:GROWL_NOTIFICATION object:nil userInfo:notification];
+		[GrowlApplicationBridge notifyWithDictionary:notification];
 	} else {
 		if( ( bubble = [_bubbles objectForKey:[context objectForKey:@"coalesceKey"]] ) ) {
 			[(id)bubble setTitle:title];
@@ -143,22 +136,6 @@ static JVNotificationController *sharedInstance = nil;
 		if( cBubble == bubble ) [_bubbles removeObjectForKey:key];
 }
 
-- (void) _growlReady {
-	NSEnumerator *enumerator = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] objectEnumerator];
-	NSMutableArray *notifications = [NSMutableArray array];
-	NSDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) )
-		if( ! [info objectForKey:@"seperator"] )
-			[notifications addObject:[info objectForKey:@"identifier"]];
-
-	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSDictionary *registration = [NSDictionary dictionaryWithObjectsAndKeys:programName, GROWL_APP_NAME, notifications, GROWL_NOTIFICATIONS_ALL, notifications, GROWL_NOTIFICATIONS_DEFAULT, nil];
-	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:GROWL_APP_REGISTRATION object:nil userInfo:registration];
-
-	_growlInstalled = YES;
-}
-
 - (void) _playSound:(NSString *) path {
 	if( ! path ) return;
 
@@ -178,5 +155,17 @@ static JVNotificationController *sharedInstance = nil;
 
 - (void) sound:(NSSound *) sound didFinishPlaying:(BOOL) finish {
 	[sound autorelease];
+}
+
+- (NSDictionary *) registrationDictionaryForGrowl {
+	NSEnumerator *enumerator = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] objectEnumerator];
+	NSMutableArray *notifications = [NSMutableArray array];
+	NSDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) )
+		if( ! [info objectForKey:@"seperator"] )
+			[notifications addObject:[info objectForKey:@"identifier"]];
+	
+	return [NSDictionary dictionaryWithObjectsAndKeys:notifications, GROWL_NOTIFICATIONS_ALL, notifications, GROWL_NOTIFICATIONS_DEFAULT, nil];
 }
 @end

@@ -1,6 +1,5 @@
 @interface JVNotificationController : NSObject {
 	NSMutableDictionary *_bubbles;
-	BOOL _growlInstalled;
 }
 + (JVNotificationController *) defaultManager;
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context;
