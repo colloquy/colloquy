@@ -15,8 +15,8 @@
 
 @interface JVChatController : NSObject {
 	@private
-	NSMutableSet *_chatWindows;
-	NSMutableSet *_chatControllers;
+	NSMutableArray *_chatWindows;
+	NSMutableArray *_chatControllers;
 }
 + (JVChatController *) defaultManager;
 
