@@ -87,8 +87,22 @@
 		if( [arguments length] ) {
 			[room echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 			[[room connection] sendMessage:arguments withEncoding:[room encoding] toChatRoom:[room target] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
-			return YES;
 		}
+		return YES;
+	} else if ( [[command substringToIndex:1] isEqualToString:@"/"] ) {
+		NSMutableAttributedString *line = [[[NSMutableAttributedString alloc] init] autorelease];
+		if( [command length] > 1 ) {
+			[line replaceCharactersInRange:NSMakeRange(0,0) withString:command];
+		}
+		if( [arguments length] ) {
+			[line replaceCharactersInRange:NSMakeRange([line length], 0) withString:@" "];
+			[line appendAttributedString:arguments];
+		}
+		if( [line length] ) {
+			[room echoSentMessageToDisplay:line asAction:NO];
+			[[room connection] sendMessage:line withEncoding:[room encoding] toUser:[room target] asAction:NO];
+		}
+		return YES;
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
 		return [self handleMessageCommand:command withMessage:arguments forConnection:[room connection]];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
@@ -200,8 +214,22 @@
 		if( [arguments length] ) {
 			[chat echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 			[[chat connection] sendMessage:arguments withEncoding:[chat encoding] toUser:[chat target] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
-			return YES;
 		}
+		return YES;
+	} else if ( [[command substringToIndex:1] isEqualToString:@"/"] ) {
+		NSMutableAttributedString *line = [[[NSMutableAttributedString alloc] init] autorelease];
+		if( [command length] > 1 ) {
+			[line replaceCharactersInRange:NSMakeRange(0,0) withString:command];
+		}
+		if( [arguments length] ) {
+			[line replaceCharactersInRange:NSMakeRange([line length], 0) withString:@" "];
+			[line appendAttributedString:arguments];
+		}
+		if( [line length] ) {
+			[chat echoSentMessageToDisplay:line asAction:NO];
+			[[chat connection] sendMessage:line withEncoding:[chat encoding] toUser:[chat target] asAction:NO];
+		}
+		return YES;
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
 		return [self handleMessageCommand:command withMessage:arguments forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
