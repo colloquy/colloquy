@@ -144,7 +144,7 @@
 }
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"Chat Room %@ (%@)", _target, [[self connection] server]];
+	return [NSString stringWithFormat:@"Chat Room %@ (%@)", [self target], [[self connection] server]];
 }
 
 #pragma mark -

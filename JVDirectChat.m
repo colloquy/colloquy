@@ -190,7 +190,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 				logs = [logs stringByAppendingPathComponent:[[self connection] server]];
 				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 
-				logs = [logs stringByAppendingPathComponent:[[self target] description]];
+				logs = [logs stringByAppendingPathComponent:[self title]];
 				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 			}
 
@@ -391,7 +391,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (NSString *) title {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [_buddy preferredName]; */
-	return [[[[self target] description] retain] autorelease];
+	return [[[[self target] displayName] retain] autorelease];
 }
 
 - (NSString *) windowTitle {
@@ -978,8 +978,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (NSArray *) completionsFor:(NSString *) inFragment {
 	NSArray *retVal = nil;
 
-	if( [[[self target] description] rangeOfString:inFragment options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
-		retVal = [NSArray arrayWithObject:[[self target] description]];
+	if( [[self title] rangeOfString:inFragment options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
+		retVal = [NSArray arrayWithObject:[self title]];
 
 	return retVal;	
 }
@@ -992,8 +992,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
 	NSMutableArray *ret = [NSMutableArray array];
-	if( [search length] <= [[[self target] description] length] && [search caseInsensitiveCompare:[[[self target] description] substringToIndex:[search length]]] == NSOrderedSame )
-		[ret addObject:[[self target] description]];
+	if( [search length] <= [[self title] length] && [search caseInsensitiveCompare:[[[self target] description] substringToIndex:[search length]]] == NSOrderedSame )
+		[ret addObject:[self title]];
 	if( [self isMemberOfClass:[JVDirectChat class]] ) [ret addObjectsFromArray:words];
 	return ret;
 }

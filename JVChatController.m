@@ -80,7 +80,6 @@ static JVChatController *sharedInstance = nil;
 		windowController = [[[JVTabbedChatWindowController alloc] init] autorelease];
 	else windowController = [[[JVChatWindowController alloc] init] autorelease];
 	[self _addWindowController:windowController];
-	[windowController showWindow:nil];
 	return [[windowController retain] autorelease];
 }
 
@@ -240,6 +239,15 @@ static JVChatController *sharedInstance = nil;
 
 	JVChatWindowController *windowController = [self newChatWindowController];
 	[[controller windowController] removeChatViewController:controller];
+
+	[[windowController window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
+
+	NSRect frame = [[windowController window] frame];
+	NSPoint point = [[windowController window] cascadeTopLeftFromPoint:NSMakePoint( NSMinX( frame ), NSMaxY( frame ) )];
+	[[windowController window] setFrameTopLeftPoint:point];
+
+	[[windowController window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
+
 	[windowController addChatViewController:controller];
 }
 

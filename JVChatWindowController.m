@@ -25,6 +25,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) _refreshWindow;
 - (void) _refreshWindowTitle;
 - (void) _refreshList;
+- (void) _saveWindowFrame;
 @end
 
 #pragma mark -
@@ -70,9 +71,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 
+	[self setShouldCascadeWindows:NO];
 	[[self window] setFrameUsingName:@"Chat Window"];
-	[[self window] setFrameAutosaveName:@"Chat Window"];
-
+	[[self window] setFrameAutosaveName:@""];
 	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
 	NSSize drawerSize = NSSizeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatWindowDrawerSize"] );
@@ -262,6 +263,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSAssert1( ! [_views containsObject:controller], @"%@ already added.", controller );
 	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
 
+	if( ! [_views count] ) {
+		[[self window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
+		[self showWindow:nil];
+	} else [[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
+
 	[_views insertObject:controller atIndex:index];
 	[controller setWindowController:self];
 
@@ -335,6 +341,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ is already a member of this window controller.", controller );
 	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
+
+	[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
 
 	oldController = [_views objectAtIndex:index];
 
@@ -551,6 +559,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[[self window] makeFirstResponder:[_activeViewController firstResponder]];
 		[self reloadListItem:_activeViewController andChildren:NO];
 	}
+}
+
+- (void) windowDidMove:(NSNotification *) notification {
+	[self _saveWindowFrame];
+}
+
+- (void) windowDidResize:(NSNotification *) notification {
+	[self _saveWindowFrame];
 }
 
 #pragma mark -
@@ -843,6 +859,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		int selectedRow = [chatViewsOutlineView rowForItem:selectItem];
 		[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
 	}
+}
+
+- (void) _saveWindowFrame {
+	NSEnumerator *enumerator = [[self allChatViewControllers] objectEnumerator];
+	id <JVChatViewController> controller = nil;
+
+	while( ( controller = [enumerator nextObject] ) )
+		[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
 }
 
 - (void) _switchViews:(id) sender {

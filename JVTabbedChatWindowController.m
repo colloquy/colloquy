@@ -212,7 +212,7 @@
 }
 
 - (void) customTabView:(AICustomTabsView *) view didMoveTabViewItem:(NSTabViewItem *) tabViewItem toCustomTabView:(AICustomTabsView *) destTabView index:(int) index screenPoint:(NSPoint) screenPoint {
-	id chatController = [(JVChatTabItem *)tabViewItem chatViewController];
+	id <JVChatViewController> chatController = [(JVChatTabItem *)tabViewItem chatViewController];
 	id oldWindowController = [chatController windowController];
 	id newWindowController = [[destTabView window] windowController];
 
@@ -231,11 +231,12 @@
 			}
 
 			[[newWindowController window] setFrame:newFrame display:NO];
+			[[newWindowController window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [chatController identifier]]];
 		}
 
 		[chatController retain];
 		[[chatController windowController] removeChatViewController:chatController];
-		
+
 		if( index > 0 ) [newWindowController insertChatViewController:chatController atIndex:index];
 		else [newWindowController addChatViewController:chatController];
 		[chatController release];

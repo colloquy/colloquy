@@ -239,7 +239,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 }
 
 - (NSString *) description {
-	return [NSString stringWithFormat:@"%@ - %@", [super description], [self title]];
+	return [self identifier];
 }
 
 #pragma mark -

@@ -66,7 +66,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSString *) description {
-	return [NSString stringWithFormat:@"%@ - %@", [super description], [self title]];
+	return [NSString stringWithFormat:@"%@: %@", NSStringFromClass( [self class] ), [[self connection] server]];
 }
 
 #pragma mark -
@@ -123,11 +123,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSString *) title {
-	return [_connection server];
+	return [[self connection] server];
 }
 
 - (NSString *) windowTitle {
-	return [NSString stringWithFormat:NSLocalizedString( @"%@ - Console", "chat console - window title" ), [_connection server]];
+	return [NSString stringWithFormat:NSLocalizedString( @"%@ - Console", "chat console - window title" ), [[self connection] server]];
 }
 
 - (NSString *) information {
@@ -182,7 +182,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"Console %@", [_connection server]];
+	return [NSString stringWithFormat:@"Console %@", [[self connection] server]];
 }
 
 - (MVChatConnection *) connection {
@@ -227,7 +227,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			NSString *tempStr = nil;
 			unsigned i = 0, c = 0;
 
-			if( [parts count] >= 3 && [[parts objectAtIndex:2] isEqualToString:[_connection nickname]] )
+			if( [parts count] >= 3 && [[parts objectAtIndex:2] isEqualToString:[[self connection] nickname]] )
 				[parts removeObjectAtIndex:2];
 
 			if( [parts count] >= 2 && ( numeric = [[parts objectAtIndex:1] intValue] ) )
@@ -240,7 +240,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			tempStr = [parts objectAtIndex:0];
 			if( tempStr && [tempStr rangeOfString:@"@"].location == NSNotFound && [tempStr rangeOfString:@"."].location != NSNotFound && [NSURL URLWithString:[@"irc://" stringByAppendingString:tempStr]] ) {
 				[parts removeObjectAtIndex:0];
-			} else if( [tempStr hasPrefix:[NSString stringWithFormat:@"%@!", [_connection nickname]]] ) {
+			} else if( [tempStr hasPrefix:[NSString stringWithFormat:@"%@!", [[self connection] nickname]]] ) {
 				[parts removeObjectAtIndex:0];
 			}
 
