@@ -19,7 +19,7 @@ static MVBuddyListController *sharedInstance = nil;
 @class ABScrollView;
 
 @interface ABPeoplePickerController : NSObject {
-	@public
+@public
     NSView *_peoplePicker;
     ABUIController *_uiController;
     NSWindow *_window;
@@ -28,8 +28,6 @@ static MVBuddyListController *sharedInstance = nil;
     ABRoundedTextField *_searchField;
 }
 - (id) initWithWindow:(NSWindow *) window;
-- (id) init;
-- (void) awakeFromNib;
 - (NSView *) peoplePickerView;
 - (NSArray *) selectedGroups;
 - (NSArray *) selectedRecords;
@@ -51,8 +49,6 @@ static MVBuddyListController *sharedInstance = nil;
 @interface ABPerson (ABPersonPrivate)
 + (ABPerson *) personFromDictionary:(NSDictionary *) dictionary;
 - (NSDictionary *) dictionaryRepresentation;
-- (NSString *) compositeName;
-- (NSString *) alternateName;
 @end
 
 #pragma mark -
@@ -66,65 +62,6 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) _sortBuddiesAnimatedIfNeeded:(id) sender;
 - (void) _addBuddyToList:(JVBuddy *) buddy;
 @end
-
-#pragma mark -
-
-NSComparisonResult sortBuddiesByLastName( JVBuddy *buddy1, JVBuddy *buddy2, void *context );
-NSComparisonResult sortBuddiesByFirstName( JVBuddy *buddy1, JVBuddy *buddy2, void *context );
-NSComparisonResult sortBuddiesByAvailability( JVBuddy *buddy1, JVBuddy *buddy2, void *context );
-
-NSComparisonResult sortBuddiesByNickname( JVBuddy *buddy1, JVBuddy *buddy2, void *context ) {
-	NSString *name1 = [[buddy1 activeNickname] user];
-	NSString *name2 = [[buddy2 activeNickname] user];
-	return [name1 caseInsensitiveCompare:name2];
-}
-
-NSComparisonResult sortBuddiesByServer( JVBuddy *buddy1, JVBuddy *buddy2, void *context ) {
-	NSString *name1 = [[buddy1 activeNickname] host];
-	NSString *name2 = [[buddy2 activeNickname] host];
-	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
-	return ( ret != NSOrderedSame ? ret : sortBuddiesByAvailability( buddy1, buddy2, context ) );
-}
-
-NSComparisonResult sortBuddiesByFirstName( JVBuddy *buddy1, JVBuddy *buddy2, void *context ) {
-	NSString *name1 = [buddy1 firstName];
-	NSString *name2 = [buddy2 firstName];
-	if( ! [name1 length] ) name1 = [buddy1 lastName];
-	if( ! [name2 length] ) name2 = [buddy2 lastName];
-	if( ! [name1 length] ) return NSOrderedAscending;
-	if( ! [name2 length] ) return NSOrderedDescending;
-	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
-	return ( ret != NSOrderedSame ? ret : sortBuddiesByLastName( buddy1, buddy2, context ) );
-}
-
-NSComparisonResult sortBuddiesByLastName( JVBuddy *buddy1, JVBuddy *buddy2, void *context ) {
-	NSString *name1 = [buddy1 lastName];
-	NSString *name2 = [buddy2 lastName];
-	if( ! [name1 length] ) name1 = [buddy1 firstName];
-	if( ! [name2 length] ) name2 = [buddy2 firstName];
-	if( ! [name1 length] ) return NSOrderedAscending;
-	if( ! [name2 length] ) return NSOrderedDescending;
-	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
-	return ( ret != NSOrderedSame ? ret : sortBuddiesByFirstName( buddy1, buddy2, context ) );
-}
-
-NSComparisonResult sortBuddiesByAvailability( JVBuddy *buddy1, JVBuddy *buddy2, void *context ) {
-	int b1 = 0, b2 = 0;
-
-	if( [buddy1 status] == JVBuddyAwayStatus ) b1 = 2;
-	else if( [buddy1 status] == JVBuddyIdleStatus ) b1 = 1;
-	else if( [buddy1 status] == JVBuddyAvailableStatus ) b1 = 0;
-	else b1 = 3;
-
-	if( [buddy2 status] == JVBuddyAwayStatus ) b2 = 2;
-	else if( [buddy2 status] == JVBuddyIdleStatus ) b2 = 1;
-	else if( [buddy2 status] == JVBuddyAvailableStatus ) b2 = 0;
-	else b2 = 3;
-	
-	if( b1 > b2 ) return NSOrderedDescending;
-	else if( b1 < b2 ) return NSOrderedAscending;
-	return sortBuddiesByLastName( buddy1, buddy2, context );
-}
 
 #pragma mark -
 
@@ -603,10 +540,12 @@ NSComparisonResult sortBuddiesByAvailability( JVBuddy *buddy1, JVBuddy *buddy2, 
 			return ret;
 		} else if( ! _showIcons ) {
 			JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
-			if( [buddy status] == JVBuddyAwayStatus ) return [NSImage imageNamed:@"statusAway"];
-			else if( [buddy status] == JVBuddyIdleStatus ) return [NSImage imageNamed:@"statusIdle"];
-			else if( [buddy status] == JVBuddyAvailableStatus ) return [NSImage imageNamed:@"statusAvailable"];
-			else return [NSImage imageNamed:@"statusOffline"];
+			switch( [buddy status] ) {
+				case JVBuddyAwayStatus: return [NSImage imageNamed:@"statusAway"];
+				case JVBuddyIdleStatus: return [NSImage imageNamed:@"statusIdle"];
+				case JVBuddyAvailableStatus: return [NSImage imageNamed:@"statusAvailable"];
+				default: return [NSImage imageNamed:@"statusOffline"];
+			}
 		} else return nil;
 	}
 
@@ -631,10 +570,19 @@ NSComparisonResult sortBuddiesByAvailability( JVBuddy *buddy1, JVBuddy *buddy2, 
 		[cell setEnabled:[buddy isOnline]];
 
 		if( _showIcons ) {
-			if( [buddy status] == JVBuddyAwayStatus ) [cell setStatusImage:[NSImage imageNamed:@"statusAway"]];
-			else if( [buddy status] == JVBuddyIdleStatus ) [cell setStatusImage:[NSImage imageNamed:@"statusIdle"]];
-			else if( [buddy status] == JVBuddyAvailableStatus ) [cell setStatusImage:[NSImage imageNamed:@"statusAvailable"]];
-			else [cell setStatusImage:[NSImage imageNamed:@"statusOffline"]];
+			switch( [buddy status] ) {
+			case JVBuddyAwayStatus:
+				[cell setStatusImage:[NSImage imageNamed:@"statusAway"]];
+				break;
+			case JVBuddyIdleStatus:
+				[cell setStatusImage:[NSImage imageNamed:@"statusIdle"]];
+				break;
+			case JVBuddyAvailableStatus:
+				[cell setStatusImage:[NSImage imageNamed:@"statusAvailable"]];
+				break;
+			default:
+				[cell setStatusImage:[NSImage imageNamed:@"statusOffline"]];
+			}
 		} else [cell setStatusImage:nil];
 	} else if( [[column identifier] isEqualToString:@"switch"] ) {
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
@@ -797,14 +745,20 @@ NSComparisonResult sortBuddiesByAvailability( JVBuddy *buddy1, JVBuddy *buddy2, 
 }
 
 - (void) _sortBuddies {
-	if( _sortOrder == MVAvailabilitySortOrder )
-		[_buddyOrder sortUsingFunction:sortBuddiesByAvailability context:self];
-	else if( _sortOrder == MVFirstNameSortOrder )
-		[_buddyOrder sortUsingFunction:sortBuddiesByFirstName context:self];
-	else if( _sortOrder == MVLastNameSortOrder )
-		[_buddyOrder sortUsingFunction:sortBuddiesByLastName context:self];
-	else if( _sortOrder == MVServerSortOrder )
-		[_buddyOrder sortUsingFunction:sortBuddiesByServer context:self];
+	switch( _sortOrder ) {
+	default:
+	case MVAvailabilitySortOrder:
+		[_buddyOrder sortUsingSelector:@selector( availabilityCompare: )];
+		break;
+	case MVFirstNameSortOrder:
+		[_buddyOrder sortUsingSelector:@selector( firstNameCompare: )];
+		break;
+	case MVLastNameSortOrder:
+		[_buddyOrder sortUsingSelector:@selector( lastNameCompare: )];
+		break;
+	case MVServerSortOrder:
+		[_buddyOrder sortUsingSelector:@selector( serverCompare: )];
+	}
 }
 
 - (void) _setBuddiesNeedSortAnimated {

@@ -165,6 +165,85 @@ NSString *JVBuddyActiveNicknameChangedNotification = @"JVBuddyActiveNicknameChan
 - (NSString *) uniqueIdentifier {
 	return [_person uniqueId];
 }
+
+#pragma mark -
+
+- (NSComparisonResult) availabilityCompare:(JVBuddy *) buddy {
+	unsigned int b1 = 0, b2 = 0;
+
+	if( [self status] == JVBuddyAwayStatus ) b1 = 2;
+	else if( [self status] == JVBuddyIdleStatus ) b1 = 1;
+	else if( [self status] == JVBuddyAvailableStatus ) b1 = 0;
+	else b1 = 3;
+
+	if( [buddy status] == JVBuddyAwayStatus ) b2 = 2;
+	else if( [buddy status] == JVBuddyIdleStatus ) b2 = 1;
+	else if( [buddy status] == JVBuddyAvailableStatus ) b2 = 0;
+	else b2 = 3;
+
+	if( b1 > b2 ) return NSOrderedDescending;
+	else if( b1 < b2 ) return NSOrderedAscending;
+	return [self lastNameCompare:buddy];
+}
+
+- (NSComparisonResult) firstNameCompare:(JVBuddy *) buddy {
+	NSComparisonResult ret = NSOrderedSame;
+	NSString *name1 = [self firstName];
+	NSString *name2 = [buddy firstName];
+
+	if( ! [name1 length] ) name1 = [self lastName];
+	if( ! [name2 length] ) name2 = [buddy lastName];
+
+	if( ! [name1 length] && [name2 length] ) return NSOrderedAscending;
+	else if( ! [name2 length] && [name1 length]  ) return NSOrderedDescending;
+
+	ret = [name1 localizedCaseInsensitiveCompare:name2];
+	if( ret != NSOrderedSame ) return ret;
+
+	name1 = [self lastName];
+	name2 = [buddy lastName];
+
+	if( ! [name1 length] && [name2 length] ) return NSOrderedAscending;
+	else if( ! [name2 length] && [name1 length]  ) return NSOrderedDescending;
+
+	return [name1 localizedCaseInsensitiveCompare:name2];
+}
+
+- (NSComparisonResult) lastNameCompare:(JVBuddy *) buddy {
+	NSComparisonResult ret = NSOrderedSame;
+	NSString *name1 = [self lastName];
+	NSString *name2 = [buddy lastName];
+
+	if( ! [name1 length] ) name1 = [self firstName];
+	if( ! [name2 length] ) name2 = [buddy firstName];
+
+	if( ! [name1 length] && [name2 length] ) return NSOrderedAscending;
+	else if( ! [name2 length] && [name1 length]  ) return NSOrderedDescending;
+
+	ret = [name1 localizedCaseInsensitiveCompare:name2];
+	if( ret != NSOrderedSame ) return ret;
+
+	name1 = [self firstName];
+	name2 = [buddy firstName];
+
+	if( ! [name1 length] && [name2 length] ) return NSOrderedAscending;
+	else if( ! [name2 length] && [name1 length]  ) return NSOrderedDescending;
+
+	return [name1 localizedCaseInsensitiveCompare:name2];
+}
+
+- (NSComparisonResult) serverCompare:(JVBuddy *) buddy {
+	NSString *name1 = [[self activeNickname] host];
+	NSString *name2 = [[buddy activeNickname] host];
+	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
+	return ( ret != NSOrderedSame ? ret : [self availabilityCompare:buddy] );
+}
+
+- (NSComparisonResult) nicknameCompare:(JVBuddy *) buddy {
+	NSString *name1 = [[self activeNickname] user];
+	NSString *name2 = [[buddy activeNickname] user];
+	return [name1 caseInsensitiveCompare:name2];
+}
 @end
 
 #pragma mark -
@@ -182,6 +261,7 @@ NSString *JVBuddyActiveNicknameChangedNotification = @"JVBuddyActiveNicknameChan
 		if( [self status] == JVBuddyOfflineStatus ) [self setActiveNickname:url];
 		if( cameOnline ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyNicknameCameOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:url, @"nickname", nil]];
+		NSLog( @"_buddyOnline" );
 	}
 }
 
@@ -195,6 +275,7 @@ NSString *JVBuddyActiveNicknameChangedNotification = @"JVBuddyActiveNicknameChan
 		if( [_onlineNicknames count] ) [self setActiveNickname:[_onlineNicknames anyObject]];
 		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyNicknameWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:url, @"nickname", nil]];
 		if( ! [_onlineNicknames count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
+		NSLog( @"_buddyOffline" );
 	}
 }
 

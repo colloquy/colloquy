@@ -49,4 +49,10 @@ typedef enum {
 - (NSString *) lastName;
 
 - (NSString *) uniqueIdentifier;
+
+- (NSComparisonResult) availabilityCompare:(JVBuddy *) buddy;
+- (NSComparisonResult) firstNameCompare:(JVBuddy *) buddy;
+- (NSComparisonResult) lastNameCompare:(JVBuddy *) buddy;
+- (NSComparisonResult) serverCompare:(JVBuddy *) buddy;
+- (NSComparisonResult) nicknameCompare:(JVBuddy *) buddy;
 @end
