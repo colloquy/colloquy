@@ -31,6 +31,8 @@
 		[ret appendFormat:@" identifier=\"%@\"", uniqueId];
 	}
 
+	if( [self isServerOperator] ) [ret appendFormat:@" class=\"%@\"", @"server operator"];
+
 	[ret appendFormat:@">%@</%@>", [[self displayName] stringByEncodingXMLSpecialCharactersAsEntities], tag];
 
 	[ret stripIllegalXMLCharacters];
