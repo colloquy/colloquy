@@ -880,8 +880,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		glibMainLoop = g_main_new( TRUE );
 		irssi_gui = IRSSI_GUI_NONE;
 
-		char *args[] = { "Chat Core" };
-		core_init_paths( 1, args );
+		char *args[] = { "Chat Core", "--home=/tmp/Colloquy/irssi" };
+		core_init_paths( sizeof(args) / sizeof(char*), args );
 		core_init();
 		irc_init();
 
