@@ -1,6 +1,9 @@
 /*  Based on Fiat - by dzhim and nsraffy  */
 
-body {	background-color: #e0e0e0;	margin: 3px 3px;}
+body {
+	background-color: #e0e0e0;
+	margin: 3px 3px;
+}
 
 a img {
 	border: 0;
@@ -13,49 +16,226 @@ img {
 	margin: auto;
 }
 
-a:hover {	text-shadow: rgba( 0, 0, 0, .3 ) 0 1px 1px;}
+a:hover {
+	text-shadow: rgba( 0, 0, 0, .3 ) 0 1px 1px;
+}
 
 #consecutiveInsert {
 	display: none;
 }
-.header_top {	margin-top: 2px;	height: 2px;	background: url( "images/h_shadow_top.png" ) repeat-x;}.header {	position: relative;	height: 22;	background: url( "images/h_shadow_left.png" ) left repeat-y;	padding-left: 4px;}.header > div {	background: url( "images/h_shadow_right.png" ) right repeat-y;	padding-right: 4px;}.header > div > div {	height: 20;	overflow: hidden;}.header .left {	position: absolute;	left: 0;	bottom: -4px;	background: url( "images/h_shadow_corner_left.png" );	width: 4px;	height: 4px;	}.header .right {	position: absolute;	right: 0;	bottom: -4px;	background: url( "images/h_shadow_corner_right.png" );	width: 4px;	height: 4px;	
-}.header .sender {	height: 20;	font-size: 14px;	font-weight: bold;	padding: 2px 6px;	margin: 0;}.header img {	float: right;	margin: 2px 6px;}.messages {	margin: 0 4px;	background: url( "images/m_shadow_left.png" ) left repeat-y;	padding-left: 4px;}.messages > div {	background: url( "images/m_shadow_right.png" ) right repeat-y;	padding-right: 4px;}
-.messages .time {	float: left;	margin: 1px 4px 0;	padding: 0;	overflow: hidden;	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;}.messages .sep {	margin: 3px 4px 0;	height: 1px;}.messages .message {	margin: 1px 4px 0;	padding: 0;	overflow: hidden;}.messages_bottom {	position: relative;	margin: 0 12px;	height: 8px;}.messages_bottom .left {	position: absolute;	left: -8px;	width: 8px;	height: 8px;}.messages_bottom .right {	position: absolute;	right: -8px;	width: 8px;	height: 8px;}.event {	margin: 0 8px 2px;	padding: 0;	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;}.event .time {	float: left;	margin: 0 4px;	padding: 0;	overflow: hidden;	color: #404040;}.event .message {	margin: 0 4px;	padding: 0;	overflow: hidden;	color: #303030;}
 
-.event a {	color: #404040;}
-.incoming .header > div > div {	border: 1px solid rgba( 0, 0, 0, .2 );	background: #a6d984 url( "images/h_light.png" ) top repeat-x;}
+.header_top {
+	margin-top: 2px;
+	height: 2px;
+	background: url( "images/h_shadow_top.png" ) repeat-x;
+}
+
+.header {
+	position: relative;
+	height: 22;
+	background: url( "images/h_shadow_left.png" ) left repeat-y;
+	padding-left: 4px;
+}
+
+.header > div {
+	background: url( "images/h_shadow_right.png" ) right repeat-y;
+	padding-right: 4px;
+}
+
+.header > div > div {
+	height: 20;
+	overflow: hidden;
+}
+
+.header .left {
+	position: absolute;
+	left: 0;
+	bottom: -4px;
+	background: url( "images/h_shadow_corner_left.png" );
+	width: 4px;
+	height: 4px;	
+}
+
+.header .right {
+	position: absolute;
+	right: 0;
+	bottom: -4px;
+	background: url( "images/h_shadow_corner_right.png" );
+	width: 4px;
+	height: 4px;	
+}
+
+.header .sender {
+	height: 20;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 2px 6px;
+	margin: 0;
+}
+
+.header img {
+	float: right;
+	margin: 2px 6px;
+}
+
+.messages {
+	margin: 0 4px;
+	background: url( "images/m_shadow_left.png" ) left repeat-y;
+	padding-left: 4px;
+}
+
+.messages > div {
+	background: url( "images/m_shadow_right.png" ) right repeat-y;
+	padding-right: 4px;
+}
+
+.messages .time {
+	float: left;
+	margin: 1px 4px 0;
+	padding: 0;
+	overflow: hidden;
+	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
+}
+
+.messages .sep {
+	margin: 3px 4px 0;
+	height: 1px;
+}
+
+.messages .message {
+	margin: 1px 4px 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.messages_bottom {
+	position: relative;
+	margin: 0 12px;
+	height: 8px;
+}
+
+.messages_bottom .left {
+	position: absolute;
+	left: -8px;
+	width: 8px;
+	height: 8px;
+}
+
+.messages_bottom .right {
+	position: absolute;
+	right: -8px;
+	width: 8px;
+	height: 8px;
+}
+
+.event {
+	margin: 0 8px 2px;
+	padding: 0;
+	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
+}
+
+.event .time {
+	float: left;
+	margin: 0 4px;
+	padding: 0;
+	overflow: hidden;
+	color: #404040;
+}
+
+.event .message {
+	margin: 0 4px;
+	padding: 0;
+	overflow: hidden;
+	color: #303030;
+}
+
+.event a {
+	color: #404040;
+}
+
+.incoming .header > div > div {
+	border: 1px solid rgba( 0, 0, 0, .2 );
+	background: #a6d984 url( "images/h_light.png" ) top repeat-x;
+}
 
 .incoming .messages .highlight {
 	color: #265904;
 	font-weight: bold;
-	text-shadow: rgba( 0, 0, 0, .3 ) 0 2px 2px;}
+	text-shadow: rgba( 0, 0, 0, .3 ) 0 2px 2px;
+}
 
-.incoming .header .sender {	color: #265904;	text-shadow: rgba( 0, 0, 0, .3 ) 0 2px 2px;}
+.incoming .header .sender {
+	color: #265904;
+	text-shadow: rgba( 0, 0, 0, .3 ) 0 2px 2px;
+}
 
-.incoming .messages > div > div {	border-top: 1px solid rgba( 0, 0, 0, .125 );	background: #fafafa;}
+.incoming .messages > div > div {
+	border-top: 1px solid rgba( 0, 0, 0, .125 );
+	background: #fafafa;
+}
 
-.incoming .messages .time {	color: #265904;}
+.incoming .messages .time {
+	color: #265904;
+}
 
-.incoming .messages .sep {	background-color: #a6d984;	border-bottom: 1px solid rgba( 255, 255, 255, .6 );}
+.incoming .messages .sep {
+	background-color: #a6d984;
+	border-bottom: 1px solid rgba( 255, 255, 255, .6 );
+}
 
-.incoming .messages_bottom {	background: url( "images/m_shadow_bottom.png" ) repeat-x; }
+.incoming .messages_bottom {
+	background: url( "images/m_shadow_bottom.png" ) repeat-x; 
+}
 
-.incoming .messages_bottom .left {	background: url( "images/m_corner_left.png" );}
+.incoming .messages_bottom .left {
+	background: url( "images/m_corner_left.png" );
+}
 
-.incoming .messages_bottom .right {	background: url( "images/m_corner_right.png" );}
+.incoming .messages_bottom .right {
+	background: url( "images/m_corner_right.png" );
+}
 
-.outgoing .header > div > div {	border: 1px solid rgba( 0, 0, 0, .2 );	background: #a3c5f8 url( "images/h_light.png" ) top repeat-x;}
+.outgoing .header > div > div {
+	border: 1px solid rgba( 0, 0, 0, .2 );
+	background: #a3c5f8 url( "images/h_light.png" ) top repeat-x;
+}
 
-.outgoing .header .sender {	color: #234578;	text-shadow: rgba( 0, 0, 0, .3 ) 0 2px 2px;}
+.outgoing .header .sender {
+	color: #234578;
+	text-shadow: rgba( 0, 0, 0, .3 ) 0 2px 2px;
+}
 
-.outgoing .messages > div > div {	border-top: 1px solid rgba( 0, 0, 0, .125 );	background: #fafafa;}
+.outgoing .messages > div > div {
+	border-top: 1px solid rgba( 0, 0, 0, .125 );
+	background: #fafafa;
+}
 
-.outgoing .messages .time {	color: #234578;}
+.outgoing .messages .time {
+	color: #234578;
+}
 
-.outgoing .messages .sep {	background: #a3c5f8;	border-bottom: 1px solid rgba( 255, 255, 255, .6 );}
+.outgoing .messages .sep {
+	background: #a3c5f8;
+	border-bottom: 1px solid rgba( 255, 255, 255, .6 );
+}
 
-.outgoing .messages_bottom {	background: url( "images/m_shadow_bottom.png" ) repeat-x; }
+.outgoing .messages_bottom {
+	background: url( "images/m_shadow_bottom.png" ) repeat-x; 
+}
 
-.outgoing .messages_bottom .left {	background: url( "images/m_corner_left.png" );}
+.outgoing .messages_bottom .left {
+	background: url( "images/m_corner_left.png" );
+}
 
-.outgoing .messages_bottom .right {	background: url( "images/m_corner_right.png" );}
+.outgoing .messages_bottom .right {
+	background: url( "images/m_corner_right.png" );
+}
+
+.itunes {
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
+.itunes > *:hover {
+	text-decoration: underline;
+}
