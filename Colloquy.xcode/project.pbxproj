@@ -1,0 +1,4055 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 39;
+	objects = {
+		014CEA420018CDE011CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "\U0001-DDEBUG";
+				ZERO_LINK = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+//010
+//011
+//012
+//013
+//014
+//080
+//081
+//082
+//083
+//084
+		089C1669FE841209C02AAC07 = {
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				SDKROOT = /Developer/SDKs/MacOSX10.2.7.sdk;
+			};
+			buildStyles = (
+				F52BA31C037C62E801A35792,
+				014CEA420018CDE011CA2923,
+			);
+			hasScannedForEncodings = 1;
+			isa = PBXProject;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				zh_CN,
+				Danish,
+				Finnish,
+				Italian,
+				Korean,
+				pt_BR,
+				Spanish,
+				zh_TW,
+				Norwegian,
+				Engligh,
+			);
+			mainGroup = 089C166AFE841209C02AAC07;
+			productRefGroup = 089C166AFE841209C02AAC07;
+			projectDirPath = "";
+			targets = (
+				1CB2CCF5052DDC560094AAA4,
+				1C51B46E052DE0CB00BB459B,
+				1C51B4BB052DE14B00BB459B,
+				1C51B4F6052DE2B800BB459B,
+			);
+		};
+		089C166AFE841209C02AAC07 = {
+			children = (
+				F5394BB50378DBC301A35792,
+				F5DD34720382B8AE01000102,
+				1CB35B5B042E1B2500000102,
+				F50B0A9F0170C89301A84BDE,
+				F50B0AA00170C89301A84BDE,
+				F5185C82018626F701EE70DE,
+				F50B0AA10170C89301A84BDE,
+				089C1671FE841209C02AAC07,
+				1CC478470427BB2C00000102,
+				1CB2C8CC052DDA360094AAA4,
+			);
+			isa = PBXGroup;
+			name = "Massinova Menu Extra";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 = {
+			children = (
+				1058C7ACFEA557BF11CA2CBB,
+				1058C7AEFEA557BF11CA2CBB,
+			);
+			isa = PBXGroup;
+			name = "Frameworks & Libraries";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		089C1672FE841209C02AAC07 = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = Foundation.framework;
+			path = /System/Library/Frameworks/Foundation.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		089C167FFE841241C02AAC07 = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = AppKit.framework;
+			path = /System/Library/Frameworks/AppKit.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+//080
+//081
+//082
+//083
+//084
+//100
+//101
+//102
+//103
+//104
+		1058C7ACFEA557BF11CA2CBB = {
+			children = (
+				1058C7ADFEA557BF11CA2CBB,
+				1CA56CE0042A764600000102,
+				F51F91F103796FCD01A35792,
+				F540611301A22FC501A35792,
+				F5A89F1C019302BD01EE70DE,
+				F555208B01F0DE0601EE70DE,
+				1CCB3C3705228EFD000001C8,
+				1C3C112E050265AE000001C8,
+				F5FB4CE60393C15601000102,
+				F596A5F5038EBD5601000102,
+				1C7055C80519E56300A8FE6E,
+				1C7055CA0519E56C00A8FE6E,
+				1C7055C40519E54C00A8FE6E,
+				1C7055C60519E55A00A8FE6E,
+			);
+			isa = PBXGroup;
+			name = "Linked Frameworks";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1058C7ADFEA557BF11CA2CBB = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = Cocoa.framework;
+			path = /System/Library/Frameworks/Cocoa.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		1058C7AEFEA557BF11CA2CBB = {
+			children = (
+				089C1672FE841209C02AAC07,
+				089C167FFE841241C02AAC07,
+			);
+			isa = PBXGroup;
+			name = "Other Frameworks";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//100
+//101
+//102
+//103
+//104
+//1C0
+//1C1
+//1C2
+//1C3
+//1C4
+		1C088A0E04FCFEE700A8FE6E = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatRoomMember.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C088A0F04FCFEE700A8FE6E = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatRoomMember.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C09DFE3052DFF4800D748CF = {
+			fileRef = 1C51B48B052DE0CB00BB459B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C09DFF6052DFF6600D748CF = {
+			containerPortal = 089C1669FE841209C02AAC07;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 1C51B4BB052DE14B00BB459B;
+			remoteInfo = "Standard Commands (Plug-In)";
+		};
+		1C09DFF7052DFF6600D748CF = {
+			isa = PBXTargetDependency;
+			target = 1C51B4BB052DE14B00BB459B;
+			targetProxy = 1C09DFF6052DFF6600D748CF;
+		};
+		1C09DFF8052DFF6600D748CF = {
+			containerPortal = 089C1669FE841209C02AAC07;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 1C51B4F6052DE2B800BB459B;
+			remoteInfo = "iTunes (Plug-In)";
+		};
+		1C09DFF9052DFF6600D748CF = {
+			isa = PBXTargetDependency;
+			target = 1C51B4F6052DE2B800BB459B;
+			targetProxy = 1C09DFF8052DFF6600D748CF;
+		};
+		1C09DFFB052DFF7800D748CF = {
+			fileRef = 1C51B48B052DE0CB00BB459B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C18CD100528DBBA000001C8 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = NSColorAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C18CD110528DBBA000001C8 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = NSColorAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B0940424A11100000102 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/Colloquy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B0980424A14100000102 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVBuddyList.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B0990424A15300000102 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVFileTransfer.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B09A0424A16600000102 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVChatWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B09B0424A17700000102 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVConnections.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B09C0424A18B00000102 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVCrashCatcher.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B09D0424A19D00000102 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVSoftwareUpdate.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B09E0424A1B700000102 = {
+			expectedFileType = text.rtf;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/Credits.rtf;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B09F0424A1C500000102 = {
+			expectedFileType = text.plist.strings;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B0A00424A1DE00000102 = {
+			expectedFileType = text.plist.strings;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C20B0A10424A22600000102 = {
+			expectedFileType = text.plist.strings;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVPreferences.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C258E55050B9656000001C8 = {
+			expectedFileType = folder;
+			fallbackIsa = PBXFileReference;
+			includeInIndex = 1;
+			isa = PBXFolderReference;
+			name = Emoticons;
+			path = Resources/Emoticons;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C2EF7EB0427A40B00000102 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVChatPluginManager.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C2EF7EC0427A40B00000102 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVChatPluginManager.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3B4D560427BD5200000102 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = JVStandardCommands.h;
+			path = "Plug-Ins/Standard Commands/JVStandardCommands.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3B4D570427BD5200000102 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = JVStandardCommands.m;
+			path = "Plug-Ins/Standard Commands/JVStandardCommands.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3B4DA40428C36400000102 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVChatPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3C112E050265AE000001C8 = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = WebKit.framework;
+			path = /System/Library/Frameworks/WebKit.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		1C3C116005029DE1000001C8 = {
+			expectedFileType = text.html;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = template.html;
+			path = Resources/template.html;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C3C116205029E03000001C8 = {
+			expectedFileType = folder;
+			fallbackIsa = PBXFileReference;
+			includeInIndex = 1;
+			isa = PBXFolderReference;
+			name = Styles;
+			path = Resources/Styles;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C51B46E052DE0CB00BB459B = {
+			buildPhases = (
+				1C51B46F052DE0CB00BB459B,
+				1C51B47A052DE0CB00BB459B,
+				1C51B47B052DE0CB00BB459B,
+				1C51B484052DE0CB00BB459B,
+				1C51B488052DE0CB00BB459B,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PREPROCESSOR_DEFINITIONS = DISABLE_TOC_PROTOCOL;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				OTHER_CFLAGS = "-fconstant-cfstrings";
+				OTHER_LDFLAGS = "-seg1addr 0x10000000";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRINCIPAL_CLASS = "";
+				PRODUCT_NAME = ChatCore;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = NO;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "Chat Core (Framework)";
+			productInstallPath = "@executable_path/../Frameworks";
+			productName = "Chat Core (Framework)";
+			productReference = 1C51B48B052DE0CB00BB459B;
+			productType = "com.apple.product-type.framework";
+		};
+		1C51B46F052DE0CB00BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+				1C51B470052DE0CB00BB459B,
+				1C51B471052DE0CB00BB459B,
+				1C51B472052DE0CB00BB459B,
+				1C51B473052DE0CB00BB459B,
+				1C51B474052DE0CB00BB459B,
+				1C51B475052DE0CB00BB459B,
+				1C51B476052DE0CB00BB459B,
+				1C51B477052DE0CB00BB459B,
+				1C51B478052DE0CB00BB459B,
+				1C51B479052DE0CB00BB459B,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B470052DE0CB00BB459B = {
+			fileRef = F52D043101873FC401EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1C51B471052DE0CB00BB459B = {
+			fileRef = 1C2EF7EB0427A40B00000102;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1C51B472052DE0CB00BB459B = {
+			fileRef = F50AC514037E2E3801A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B473052DE0CB00BB459B = {
+			fileRef = F52BA287037C13C201A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B474052DE0CB00BB459B = {
+			fileRef = F52BA28D037C13C201A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B475052DE0CB00BB459B = {
+			fileRef = 1CCB3C1505227E74000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B476052DE0CB00BB459B = {
+			fileRef = F52BA281037C13C201A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B477052DE0CB00BB459B = {
+			fileRef = F52BA283037C13C201A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B478052DE0CB00BB459B = {
+			fileRef = 1C3B4DA40428C36400000102;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1C51B479052DE0CB00BB459B = {
+			fileRef = F5E98623018B412B01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B47A052DE0CB00BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B47B052DE0CB00BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+				1C51B47C052DE0CB00BB459B,
+				1C51B47D052DE0CB00BB459B,
+				1C51B47E052DE0CB00BB459B,
+				1C51B47F052DE0CB00BB459B,
+				1C51B480052DE0CB00BB459B,
+				1C51B481052DE0CB00BB459B,
+				1C51B482052DE0CB00BB459B,
+				1C51B483052DE0CB00BB459B,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B47C052DE0CB00BB459B = {
+			fileRef = F52D043001873FC401EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B47D052DE0CB00BB459B = {
+			fileRef = 1C2EF7EC0427A40B00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B47E052DE0CB00BB459B = {
+			fileRef = F50AC513037E2E3801A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B47F052DE0CB00BB459B = {
+			fileRef = F52BA286037C13C201A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B480052DE0CB00BB459B = {
+			fileRef = F52BA28C037C13C201A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B481052DE0CB00BB459B = {
+			fileRef = 1CCB3C1605227E74000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B482052DE0CB00BB459B = {
+			fileRef = F52BA282037C13C201A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B483052DE0CB00BB459B = {
+			fileRef = F5E98622018B412B01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B484052DE0CB00BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+				1C51B485052DE0CB00BB459B,
+				1C51B486052DE0CB00BB459B,
+				1C51B487052DE0CB00BB459B,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B485052DE0CB00BB459B = {
+			fileRef = 1CCB3C3705228EFD000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B486052DE0CB00BB459B = {
+			fileRef = F5A89F1C019302BD01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B487052DE0CB00BB459B = {
+			fileRef = 1058C7ADFEA557BF11CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B488052DE0CB00BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B48A052DE0CB00BB459B = {
+			expectedFileType = text.plist;
+			isa = PBXFileReference;
+			name = "Info-ChatCore.plist";
+			path = "Resources/Info-ChatCore.plist";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C51B48B052DE0CB00BB459B = {
+			expectedFileType = wrapper.framework;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = ChatCore.framework;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C51B4BB052DE14B00BB459B = {
+			buildPhases = (
+				1C51B4BC052DE14B00BB459B,
+				1C51B4C5052DE14B00BB459B,
+				1C51B4C6052DE14B00BB459B,
+				1C51B4C8052DE14B00BB459B,
+				1C51B4CA052DE14B00BB459B,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
+				OTHER_CFLAGS = "-fconstant-cfstrings";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Standard Commands";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = plugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "Standard Commands (Plug-In)";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Standard Commands (Plug–In)";
+			productReference = 1C51B4CD052DE14B00BB459B;
+			productType = "com.apple.product-type.bundle";
+		};
+		1C51B4BC052DE14B00BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+				1C51B4BD052DE14B00BB459B,
+				1C51B4BE052DE14B00BB459B,
+				1C51B4BF052DE14B00BB459B,
+				1C51B4C0052DE14B00BB459B,
+				1C51B4C1052DE14B00BB459B,
+				1C51B4C2052DE14B00BB459B,
+				1C51B4C3052DE14B00BB459B,
+				1C51B4C4052DE14B00BB459B,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B4BD052DE14B00BB459B = {
+			fileRef = 1C3B4D560427BD5200000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4BE052DE14B00BB459B = {
+			fileRef = F52D043101873FC401EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4BF052DE14B00BB459B = {
+			fileRef = 1C3B4DA40428C36400000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4C0052DE14B00BB459B = {
+			fileRef = F5C497740385713801000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4C1052DE14B00BB459B = {
+			fileRef = 1CE2BC53042F75FB00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4C2052DE14B00BB459B = {
+			fileRef = 1CE2BC1D042F4AD300000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4C3052DE14B00BB459B = {
+			fileRef = 1CCB279D04FE93FE00A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4C4052DE14B00BB459B = {
+			fileRef = 1CE2BC49042F53AD00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4C5052DE14B00BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B4C6052DE14B00BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+				1C51B4C7052DE14B00BB459B,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B4C7052DE14B00BB459B = {
+			fileRef = 1C3B4D570427BD5200000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4C8052DE14B00BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+				1C51B4C9052DE14B00BB459B,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B4C9052DE14B00BB459B = {
+			fileRef = 1058C7ADFEA557BF11CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4CA052DE14B00BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B4CC052DE14B00BB459B = {
+			expectedFileType = text.plist;
+			isa = PBXFileReference;
+			name = "Info-StandardCommands.plist";
+			path = "Resources/Info-StandardCommands.plist";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C51B4CD052DE14B00BB459B = {
+			expectedFileType = folder;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Standard Commands.plugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C51B4F6052DE2B800BB459B = {
+			buildPhases = (
+				1C51B4F7052DE2B800BB459B,
+				1C51B4FB052DE2B800BB459B,
+				1C51B4FD052DE2B800BB459B,
+				1C51B4FF052DE2B800BB459B,
+				1C51B502052DE2B800BB459B,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				CC = "/usr/bin/gcc-3.3";
+				CPLUSPLUS = "/usr/bin/g++-3.3";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Resources/Info-iTunes.plist";
+				OTHER_CFLAGS = "-fconstant-cfstrings";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = iTunes;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = plugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "iTunes (Plug-In)";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Standard Commands (Plug–In)";
+			productReference = 1C51B505052DE2B800BB459B;
+			productType = "com.apple.product-type.bundle";
+		};
+		1C51B4F7052DE2B800BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+				1C51B4F8052DE2B800BB459B,
+				1C51B4F9052DE2B800BB459B,
+				1C51B4FA052DE2B800BB459B,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B4F8052DE2B800BB459B = {
+			fileRef = F52D043101873FC401EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4F9052DE2B800BB459B = {
+			fileRef = 1C3B4DA40428C36400000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4FA052DE2B800BB459B = {
+			fileRef = 1CA56CCE042A716200000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4FB052DE2B800BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+				1C51B4FC052DE2B800BB459B,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B4FC052DE2B800BB459B = {
+			fileRef = 1CA56D18042A83CC00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4FD052DE2B800BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+				1C51B4FE052DE2B800BB459B,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B4FE052DE2B800BB459B = {
+			fileRef = 1CA56CCF042A716200000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B4FF052DE2B800BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+				1C51B500052DE2B800BB459B,
+				1C51B501052DE2B800BB459B,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B500052DE2B800BB459B = {
+			fileRef = 1058C7ADFEA557BF11CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B501052DE2B800BB459B = {
+			fileRef = 1CA56CE0042A764600000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B502052DE2B800BB459B = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C51B504052DE2B800BB459B = {
+			expectedFileType = text.plist;
+			isa = PBXFileReference;
+			name = "Info-iTunes.plist";
+			path = "Resources/Info-iTunes.plist";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C51B505052DE2B800BB459B = {
+			expectedFileType = folder;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = iTunes.plugin;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C51B89D052DF91E00BB459B = {
+			expectedFileType = text.plist;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = Info.plist;
+			path = Resources/Info.plist;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C51B8F2052DFAAA00BB459B = {
+			fileRef = 1C51B4CD052DE14B00BB459B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C51B8F3052DFAAD00BB459B = {
+			fileRef = 1C51B505052DE2B800BB459B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C5959010507803F000001C8 = {
+			expectedFileType = image.icns;
+			isa = PBXFileReference;
+			name = Generic.icns;
+			path = Resources/Generic.icns;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C6075E005138ED600A8FE6E = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = "colloquy-alpha.tif";
+			path = "Resources/colloquy-alpha.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C7055C40519E54C00A8FE6E = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = libexslt.framework;
+			path = Frameworks/libexslt.framework;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C7055C60519E55A00A8FE6E = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = libiconv.framework;
+			path = Frameworks/libiconv.framework;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C7055C80519E56300A8FE6E = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = libxml.framework;
+			path = Frameworks/libxml.framework;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C7055CA0519E56C00A8FE6E = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = libxslt.framework;
+			path = Frameworks/libxslt.framework;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C705701051A830200A8FE6E = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = newMessage.tif;
+			path = Resources/newMessage.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C746A95050CF86B000001C8 = {
+			expectedFileType = text.plist;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = emoticons.plist;
+			path = Resources/emoticons.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C95D5B6041FA02C00000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = emoticonSmall.tif;
+			path = "Resources/Toolbar Icons/emoticonSmall.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CA56CCD042A713E00000102 = {
+			children = (
+				1CA56CCF042A716200000102,
+				1CA56CCE042A716200000102,
+				1CA56D18042A83CC00000102,
+			);
+			isa = PBXGroup;
+			name = iTunes;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CA56CCE042A716200000102 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = JVTunes.h;
+			path = "Plug-Ins/iTunes/JVTunes.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CA56CCF042A716200000102 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = JVTunes.m;
+			path = "Plug-Ins/iTunes/JVTunes.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CA56CE0042A764600000102 = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = Carbon.framework;
+			path = /System/Library/Frameworks/Carbon.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		1CA56D18042A83CC00000102 = {
+			expectedFileType = sourcecode.applescript;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = iTunes.applescript;
+			path = "Plug-Ins/iTunes/iTunes.applescript";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CA95D28051B413E00A8FE10 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = newHighlightMessage.tif;
+			path = Resources/newHighlightMessage.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CB2C67C052DAFE30094AAA4 = {
+			containerPortal = 089C1669FE841209C02AAC07;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 1C18CCC905289170000001C8;
+			remoteInfo = "Chat Core (Framework)";
+		};
+		1CB2C8CC052DDA360094AAA4 = {
+			children = (
+				1CB2CD8C052DDC570094AAA4,
+				1C51B48B052DE0CB00BB459B,
+				1C51B4CD052DE14B00BB459B,
+				1C51B505052DE2B800BB459B,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CB2CCF5052DDC560094AAA4 = {
+			buildPhases = (
+				1CB2CCF9052DDC560094AAA4,
+				1CB2CD0F052DDC560094AAA4,
+				1CB2CD61052DDC560094AAA4,
+				1CB2CD78052DDC560094AAA4,
+				1CB2CD82052DDC560094AAA4,
+				1CB2CD88052DDC560094AAA4,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks Frameworks";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "\"Other Code/firetalk (cvs)\"";
+				INFOPLIST_FILE = Resources/Info.plist;
+				LIBRARY_SEARCH_PATHS = "\"Other Code/firetalk (cvs)\"";
+				OTHER_CFLAGS = "-fconstant-cfstrings";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Colloquy;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = app;
+			};
+			dependencies = (
+				1CB2CCF6052DDC560094AAA4,
+				1C09DFF7052DFF6600D748CF,
+				1C09DFF9052DFF6600D748CF,
+			);
+			isa = PBXNativeTarget;
+			name = "Colloquy (Application)";
+			productName = "Massinova (Application)";
+			productReference = 1CB2CD8C052DDC570094AAA4;
+			productType = "com.apple.product-type.application";
+		};
+		1CB2CCF6052DDC560094AAA4 = {
+			isa = PBXTargetDependency;
+			target = 1C51B46E052DE0CB00BB459B;
+			targetProxy = 1CB2C67C052DAFE30094AAA4;
+		};
+		1CB2CCF9052DDC560094AAA4 = {
+			buildActionMask = 2147483647;
+			files = (
+				1CB2CCFA052DDC560094AAA4,
+				1CB2CCFB052DDC560094AAA4,
+				1CB2CCFC052DDC560094AAA4,
+				1CB2CCFD052DDC560094AAA4,
+				1CB2CCFE052DDC560094AAA4,
+				1CB2CCFF052DDC560094AAA4,
+				1CB2CD00052DDC560094AAA4,
+				1CB2CD01052DDC560094AAA4,
+				1CB2CD02052DDC560094AAA4,
+				1CB2CD03052DDC560094AAA4,
+				1CB2CD04052DDC560094AAA4,
+				1CB2CD05052DDC560094AAA4,
+				1CB2CD06052DDC560094AAA4,
+				1CB2CD07052DDC560094AAA4,
+				1CB2CD08052DDC560094AAA4,
+				1CB2CD09052DDC560094AAA4,
+				1CB2CD0A052DDC560094AAA4,
+				1CB2CD0B052DDC560094AAA4,
+				1CB2CD0C052DDC560094AAA4,
+				1CB2CD0D052DDC560094AAA4,
+				1CB2CD0E052DDC560094AAA4,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CB2CCFA052DDC560094AAA4 = {
+			fileRef = F5F9AF420170EE4A01A84BDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CCFB052DDC560094AAA4 = {
+			fileRef = F5F9AF5901711CD401A84BDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CCFC052DDC560094AAA4 = {
+			fileRef = F599994A01890E4601EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CCFD052DDC560094AAA4 = {
+			fileRef = F5E98623018B412B01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CCFE052DDC560094AAA4 = {
+			fileRef = F5BEC21501F2256301EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CCFF052DDC560094AAA4 = {
+			fileRef = F551EE4A0209FB3301EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD00052DDC560094AAA4 = {
+			fileRef = F555208801F0DC2B01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD01052DDC560094AAA4 = {
+			fileRef = F51A4F2C01C2DDD201EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD02052DDC560094AAA4 = {
+			fileRef = F5C497740385713801000102;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1CB2CD03052DDC560094AAA4 = {
+			fileRef = F5E2538403882A8501000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD04052DDC560094AAA4 = {
+			fileRef = 1CE2BC1D042F4AD300000102;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1CB2CD05052DDC560094AAA4 = {
+			fileRef = 1CE2BC49042F53AD00000102;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1CB2CD06052DDC560094AAA4 = {
+			fileRef = 1CE2BC53042F75FB00000102;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1CB2CD07052DDC560094AAA4 = {
+			fileRef = 1CBB23D904F03CA7000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD08052DDC560094AAA4 = {
+			fileRef = 1C088A0E04FCFEE700A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD09052DDC560094AAA4 = {
+			fileRef = 1CCB279D04FE93FE00A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1CB2CD0A052DDC560094AAA4 = {
+			fileRef = F592CAC001824AE801EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD0B052DDC560094AAA4 = {
+			fileRef = 1CD6C413051DFA1C00A8FE10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD0C052DDC560094AAA4 = {
+			fileRef = 1C18CD100528DBBA000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD0D052DDC560094AAA4 = {
+			fileRef = F56CD5440191182601EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD0E052DDC560094AAA4 = {
+			fileRef = 1CE72A95052C745400A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD0F052DDC560094AAA4 = {
+			buildActionMask = 2147483647;
+			files = (
+				1CB2CD10052DDC560094AAA4,
+				1CB2CD11052DDC560094AAA4,
+				1CB2CD12052DDC560094AAA4,
+				1CB2CD13052DDC560094AAA4,
+				1CB2CD14052DDC560094AAA4,
+				1CB2CD15052DDC560094AAA4,
+				1CB2CD16052DDC560094AAA4,
+				1CB2CD17052DDC560094AAA4,
+				1CB2CD18052DDC560094AAA4,
+				1CB2CD19052DDC560094AAA4,
+				1CB2CD1A052DDC560094AAA4,
+				1CB2CD1B052DDC560094AAA4,
+				1CB2CD1C052DDC560094AAA4,
+				1CB2CD1D052DDC560094AAA4,
+				1CB2CD1E052DDC560094AAA4,
+				1CB2CD1F052DDC560094AAA4,
+				1CB2CD20052DDC560094AAA4,
+				1CB2CD21052DDC560094AAA4,
+				1CB2CD22052DDC560094AAA4,
+				1CB2CD23052DDC560094AAA4,
+				1CB2CD24052DDC560094AAA4,
+				1CB2CD25052DDC560094AAA4,
+				1CB2CD26052DDC560094AAA4,
+				1CB2CD27052DDC560094AAA4,
+				1CB2CD28052DDC560094AAA4,
+				1CB2CD29052DDC560094AAA4,
+				1CB2CD2A052DDC560094AAA4,
+				1CB2CD2B052DDC560094AAA4,
+				1CB2CD2C052DDC560094AAA4,
+				1CB2CD2D052DDC560094AAA4,
+				1CB2CD2E052DDC560094AAA4,
+				1CB2CD2F052DDC560094AAA4,
+				1CB2CD30052DDC560094AAA4,
+				1CB2CD31052DDC560094AAA4,
+				1CB2CD32052DDC560094AAA4,
+				1CB2CD33052DDC560094AAA4,
+				1CB2CD34052DDC560094AAA4,
+				1CB2CD35052DDC560094AAA4,
+				1CB2CD36052DDC560094AAA4,
+				1CB2CD37052DDC560094AAA4,
+				1CB2CD38052DDC560094AAA4,
+				1CB2CD39052DDC560094AAA4,
+				1CB2CD3A052DDC560094AAA4,
+				1CB2CD3B052DDC560094AAA4,
+				1CB2CD3C052DDC560094AAA4,
+				1CB2CD3D052DDC560094AAA4,
+				1CB2CD3E052DDC560094AAA4,
+				1CB2CD3F052DDC560094AAA4,
+				1CB2CD40052DDC560094AAA4,
+				1CB2CD41052DDC560094AAA4,
+				1CB2CD42052DDC560094AAA4,
+				1CB2CD43052DDC560094AAA4,
+				1CB2CD44052DDC560094AAA4,
+				1CB2CD45052DDC560094AAA4,
+				1CB2CD46052DDC560094AAA4,
+				1CB2CD47052DDC560094AAA4,
+				1CB2CD48052DDC560094AAA4,
+				1CB2CD49052DDC560094AAA4,
+				1CB2CD4A052DDC560094AAA4,
+				1CB2CD4B052DDC560094AAA4,
+				1CB2CD4C052DDC560094AAA4,
+				1CB2CD4D052DDC560094AAA4,
+				1CB2CD4E052DDC560094AAA4,
+				1CB2CD4F052DDC560094AAA4,
+				1CB2CD50052DDC560094AAA4,
+				1CB2CD51052DDC560094AAA4,
+				1CB2CD52052DDC560094AAA4,
+				1CB2CD53052DDC560094AAA4,
+				1CB2CD54052DDC560094AAA4,
+				1CB2CD55052DDC560094AAA4,
+				1CB2CD56052DDC560094AAA4,
+				1CB2CD57052DDC560094AAA4,
+				1CB2CD58052DDC560094AAA4,
+				1CB2CD59052DDC560094AAA4,
+				1CB2CD5A052DDC560094AAA4,
+				1CB2CD5B052DDC560094AAA4,
+				1CB2CD5C052DDC560094AAA4,
+				1CB2CD5D052DDC560094AAA4,
+				1CB2CD5E052DDC560094AAA4,
+				1CB2CD60052DDC560094AAA4,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CB2CD10052DDC560094AAA4 = {
+			fileRef = F5E98659018CB25601EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD11052DDC560094AAA4 = {
+			fileRef = F54499A0018E46CB01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD12052DDC560094AAA4 = {
+			fileRef = F544999E018E46CB01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD13052DDC560094AAA4 = {
+			fileRef = F544999F018E46CB01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD14052DDC560094AAA4 = {
+			fileRef = F590EA180190A42101EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD15052DDC560094AAA4 = {
+			fileRef = F590EA190190A42101EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD16052DDC560094AAA4 = {
+			fileRef = F590EA1A0190A42101EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD17052DDC560094AAA4 = {
+			fileRef = F5D04C03019489B801A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD18052DDC560094AAA4 = {
+			fileRef = F5BC17DD019655DC01A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD19052DDC560094AAA4 = {
+			fileRef = F5BC17DF019656E901A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD1A052DDC560094AAA4 = {
+			fileRef = F51A4F3101C2ED2C01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD1B052DDC560094AAA4 = {
+			fileRef = F51A4F3201C2ED2C01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD1C052DDC560094AAA4 = {
+			fileRef = F51A4F3701C319D801EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD1D052DDC560094AAA4 = {
+			fileRef = F51A4F3801C319D801EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD1E052DDC560094AAA4 = {
+			fileRef = F51A4F3B01C3204701EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD1F052DDC560094AAA4 = {
+			fileRef = F56539F301C5A91401A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD20052DDC560094AAA4 = {
+			fileRef = F56539F501C5B6C301A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD21052DDC560094AAA4 = {
+			fileRef = F56539F601C5B6C301A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD22052DDC560094AAA4 = {
+			fileRef = F5765F9501C6669D01A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD23052DDC560094AAA4 = {
+			fileRef = F531814201CD139601EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD24052DDC560094AAA4 = {
+			fileRef = F5675B8601DB767601EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD25052DDC560094AAA4 = {
+			fileRef = F5BEC20701F13A8601EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD26052DDC560094AAA4 = {
+			fileRef = F5BEC20901F13AA201EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD27052DDC560094AAA4 = {
+			fileRef = F5BEC20B01F13B0001EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD28052DDC560094AAA4 = {
+			fileRef = F5BEC20D01F1EF1901EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD29052DDC560094AAA4 = {
+			fileRef = F5BEC20E01F1EF1901EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD2A052DDC560094AAA4 = {
+			fileRef = F5394BEB0378E23701A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD2B052DDC560094AAA4 = {
+			fileRef = F5394BEF0378E23701A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD2C052DDC560094AAA4 = {
+			fileRef = F5394BF10378E23701A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD2D052DDC560094AAA4 = {
+			fileRef = F5394C070378E44D01A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD2E052DDC560094AAA4 = {
+			fileRef = F5394C090378E44D01A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD2F052DDC560094AAA4 = {
+			fileRef = F5394C0B0378E44D01A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD30052DDC560094AAA4 = {
+			fileRef = F51F91D7037967CB01A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD31052DDC560094AAA4 = {
+			fileRef = F52BA284037C13C201A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD32052DDC560094AAA4 = {
+			fileRef = F5ED0F58017CD79801EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD33052DDC560094AAA4 = {
+			fileRef = F5DD34730382E5E501000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD34052DDC560094AAA4 = {
+			fileRef = F5C4977B0385785401000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD35052DDC560094AAA4 = {
+			fileRef = F5E2536603874B5601000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD36052DDC560094AAA4 = {
+			fileRef = F5E253690387618E01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD37052DDC560094AAA4 = {
+			fileRef = F5E2536A0387618E01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD38052DDC560094AAA4 = {
+			fileRef = F5E2536D0387657C01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD39052DDC560094AAA4 = {
+			fileRef = F5E2536E0387657C01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD3A052DDC560094AAA4 = {
+			fileRef = F5E253710387690301000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD3B052DDC560094AAA4 = {
+			fileRef = F5E2537C038809A201000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD3C052DDC560094AAA4 = {
+			fileRef = F5E2537D038809A201000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD3D052DDC560094AAA4 = {
+			fileRef = F5E253800388194701000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD3E052DDC560094AAA4 = {
+			fileRef = F5B425E9038C056701000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD3F052DDC560094AAA4 = {
+			fileRef = F5E06408038D6DEB01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD40052DDC560094AAA4 = {
+			fileRef = F5E0640A038D703901000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD41052DDC560094AAA4 = {
+			fileRef = F5844DA70395478101000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD42052DDC560094AAA4 = {
+			fileRef = F5844DA903954C0601000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD43052DDC560094AAA4 = {
+			fileRef = F5C3D42303973E7B01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD44052DDC560094AAA4 = {
+			fileRef = F5C3D42403973E7B01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD45052DDC560094AAA4 = {
+			fileRef = F5C3D42503973E7B01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD46052DDC560094AAA4 = {
+			fileRef = F5C3D42603973E7B01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD47052DDC560094AAA4 = {
+			fileRef = F5C3D46A0398B5B401000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD48052DDC560094AAA4 = {
+			fileRef = 1CC7CAB003C48E8B001C0D62;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD49052DDC560094AAA4 = {
+			fileRef = 1C95D5B6041FA02C00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD4A052DDC560094AAA4 = {
+			fileRef = 1CBB23CD04EFE233000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD4B052DDC560094AAA4 = {
+			fileRef = 1CBB23CE04EFE233000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD4C052DDC560094AAA4 = {
+			fileRef = 1CBB23CF04EFE233000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD4D052DDC560094AAA4 = {
+			fileRef = 1CBB23D004EFE233000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD4E052DDC560094AAA4 = {
+			fileRef = 1CBB23D504EFE24C000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD4F052DDC560094AAA4 = {
+			fileRef = 1CF9BB9A04FBE96D00A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD50052DDC560094AAA4 = {
+			fileRef = 1C3C116005029DE1000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD51052DDC560094AAA4 = {
+			fileRef = 1C3C116205029E03000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD52052DDC560094AAA4 = {
+			fileRef = 1C5959010507803F000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD53052DDC560094AAA4 = {
+			fileRef = 1CBECD660508C61B000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD54052DDC560094AAA4 = {
+			fileRef = 1CBECDCF0508C8AB000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD55052DDC560094AAA4 = {
+			fileRef = 1CBECE380508D58F000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD56052DDC560094AAA4 = {
+			fileRef = 1CBECE390508D58F000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD57052DDC560094AAA4 = {
+			fileRef = 1CBECE3A0508D58F000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD58052DDC560094AAA4 = {
+			fileRef = 1CBECE5D050A8D21000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD59052DDC560094AAA4 = {
+			fileRef = 1C258E55050B9656000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD5A052DDC560094AAA4 = {
+			fileRef = 1C746A95050CF86B000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD5B052DDC560094AAA4 = {
+			fileRef = 1C6075E005138ED600A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD5C052DDC560094AAA4 = {
+			fileRef = 1C705701051A830200A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD5D052DDC560094AAA4 = {
+			fileRef = 1CA95D28051B413E00A8FE10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD5E052DDC560094AAA4 = {
+			fileRef = 1CD6C417051E0B3000A8FE10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD60052DDC560094AAA4 = {
+			fileRef = 1CE72A99052C79E700A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD61052DDC560094AAA4 = {
+			buildActionMask = 2147483647;
+			files = (
+				1CB2CD62052DDC560094AAA4,
+				1CB2CD63052DDC560094AAA4,
+				1CB2CD64052DDC560094AAA4,
+				1CB2CD65052DDC560094AAA4,
+				1CB2CD66052DDC560094AAA4,
+				1CB2CD67052DDC560094AAA4,
+				1CB2CD68052DDC560094AAA4,
+				1CB2CD69052DDC560094AAA4,
+				1CB2CD6A052DDC560094AAA4,
+				1CB2CD6B052DDC560094AAA4,
+				1CB2CD6C052DDC560094AAA4,
+				1CB2CD6D052DDC560094AAA4,
+				1CB2CD6E052DDC560094AAA4,
+				1CB2CD6F052DDC560094AAA4,
+				1CB2CD70052DDC560094AAA4,
+				1CB2CD71052DDC560094AAA4,
+				1CB2CD72052DDC560094AAA4,
+				1CB2CD73052DDC560094AAA4,
+				1CB2CD74052DDC560094AAA4,
+				1CB2CD75052DDC560094AAA4,
+				1CB2CD76052DDC560094AAA4,
+				1CB2CD77052DDC560094AAA4,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CB2CD62052DDC560094AAA4 = {
+			fileRef = F50B0AA20170CAD701A84BDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD63052DDC560094AAA4 = {
+			fileRef = F5F9AF410170EE4A01A84BDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD64052DDC560094AAA4 = {
+			fileRef = F5F9AF5801711CD401A84BDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD65052DDC560094AAA4 = {
+			fileRef = F599994901890E4601EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD66052DDC560094AAA4 = {
+			fileRef = F5E98622018B412B01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD67052DDC560094AAA4 = {
+			fileRef = F555208701F0DC2B01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD68052DDC560094AAA4 = {
+			fileRef = F5BEC21401F2256301EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD69052DDC560094AAA4 = {
+			fileRef = F551EE490209FB3301EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD6A052DDC560094AAA4 = {
+			fileRef = F51A4F2B01C2DDD201EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD6B052DDC560094AAA4 = {
+			fileRef = F5C497750385713801000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD6C052DDC560094AAA4 = {
+			fileRef = F5E2538503882A8501000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD6D052DDC560094AAA4 = {
+			fileRef = 1CE2BC1E042F4AD300000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD6E052DDC560094AAA4 = {
+			fileRef = 1CE2BC4A042F53AD00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD6F052DDC560094AAA4 = {
+			fileRef = 1CE2BC54042F75FB00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD70052DDC560094AAA4 = {
+			fileRef = 1CBB23DA04F03CA7000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD71052DDC560094AAA4 = {
+			fileRef = 1C088A0F04FCFEE700A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD72052DDC560094AAA4 = {
+			fileRef = 1CCB279E04FE93FE00A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD73052DDC560094AAA4 = {
+			fileRef = F592CABF01824AE801EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD74052DDC560094AAA4 = {
+			fileRef = 1CD6C414051DFA1D00A8FE10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD75052DDC560094AAA4 = {
+			fileRef = 1C18CD110528DBBA000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD76052DDC560094AAA4 = {
+			fileRef = F56CD5430191182601EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD77052DDC560094AAA4 = {
+			fileRef = 1CE72A96052C745400A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD78052DDC560094AAA4 = {
+			buildActionMask = 2147483647;
+			files = (
+				1CB2CD79052DDC560094AAA4,
+				1CB2CD7A052DDC560094AAA4,
+				1CB2CD7B052DDC560094AAA4,
+				1CB2CD7C052DDC560094AAA4,
+				1CB2CD7D052DDC560094AAA4,
+				1CB2CD7E052DDC560094AAA4,
+				1CB2CD7F052DDC560094AAA4,
+				1CB2CD80052DDC560094AAA4,
+				1C09DFE3052DFF4800D748CF,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CB2CD79052DDC560094AAA4 = {
+			fileRef = 1058C7ADFEA557BF11CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD7A052DDC560094AAA4 = {
+			fileRef = F555208B01F0DE0601EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD7B052DDC560094AAA4 = {
+			fileRef = F51F91F103796FCD01A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD7C052DDC560094AAA4 = {
+			fileRef = 1C3C112E050265AE000001C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD7D052DDC560094AAA4 = {
+			fileRef = 1C7055C40519E54C00A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD7E052DDC560094AAA4 = {
+			fileRef = 1C7055C60519E55A00A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD7F052DDC560094AAA4 = {
+			fileRef = 1C7055C80519E56300A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD80052DDC560094AAA4 = {
+			fileRef = 1C7055CA0519E56C00A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD82052DDC560094AAA4 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1C09DFFB052DFF7800D748CF,
+				1CB2CD84052DDC560094AAA4,
+				1CB2CD85052DDC560094AAA4,
+				1CB2CD86052DDC560094AAA4,
+				1CB2CD87052DDC560094AAA4,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CB2CD84052DDC560094AAA4 = {
+			fileRef = 1C7055C80519E56300A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD85052DDC560094AAA4 = {
+			fileRef = 1C7055CA0519E56C00A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD86052DDC560094AAA4 = {
+			fileRef = 1C7055C40519E54C00A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD87052DDC560094AAA4 = {
+			fileRef = 1C7055C60519E55A00A8FE6E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB2CD88052DDC560094AAA4 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1C51B8F3052DFAAD00BB459B,
+				1C51B8F2052DFAAA00BB459B,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CB2CD8C052DDC570094AAA4 = {
+			expectedFileType = wrapper.application;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = Colloquy.app;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CB35B5B042E1B2500000102 = {
+			expectedFileType = text.rtf;
+			isa = PBXFileReference;
+			name = "Read Me.rtf";
+			path = "Resources/Read Me.rtf";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBB23CD04EFE233000001C8 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = drawerAction.tif;
+			path = Resources/drawerAction.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBB23CE04EFE233000001C8 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = drawerActionPressed.tif;
+			path = Resources/drawerActionPressed.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBB23CF04EFE233000001C8 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = drawerAdd.tif;
+			path = Resources/drawerAdd.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBB23D004EFE233000001C8 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = drawerAddPressed.tif;
+			path = Resources/drawerAddPressed.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBB23D504EFE24C000001C8 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = viewAlert.tiff;
+			path = Resources/viewAlert.tiff;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBB23D604EFE24C000001C8 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = viewAlertSelected.tiff;
+			path = Resources/viewAlertSelected.tiff;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBB23D904F03CA7000001C8 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVDetailCell.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CBB23DA04F03CA7000001C8 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVDetailCell.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CBECD660508C61B000001C8 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = showdrawer.tiff;
+			path = "Resources/Toolbar Icons/showdrawer.tiff";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBECDCF0508C8AB000001C8 = {
+			expectedFileType = text.plist.xml;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = default.xsl;
+			path = Resources/default.xsl;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBECE380508D58F000001C8 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = JVChatRoom.nib;
+			path = Resources/JVChatRoom.nib;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBECE390508D58F000001C8 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = JVChatWindow.nib;
+			path = Resources/JVChatWindow.nib;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBECE3A0508D58F000001C8 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = JVDirectChat.nib;
+			path = Resources/JVDirectChat.nib;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBECE5D050A8D21000001C8 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = chooseStyle.tiff;
+			path = "Resources/Toolbar Icons/chooseStyle.tiff";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CC478470427BB2C00000102 = {
+			children = (
+				1C3B4DA40428C36400000102,
+				1CC478480427BB5500000102,
+				1CA56CCD042A713E00000102,
+			);
+			isa = PBXGroup;
+			name = "Plug–Ins";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC478480427BB5500000102 = {
+			children = (
+				1C3B4D570427BD5200000102,
+				1C3B4D560427BD5200000102,
+			);
+			isa = PBXGroup;
+			name = "Standard Commands";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC7CAAE03C48E8B001C0D62 = {
+			children = (
+				1CC7CAAF03C48E8B001C0D62,
+				1C20B0980424A14100000102,
+			);
+			isa = PBXVariantGroup;
+			name = MVBuddyList.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC7CAAF03C48E8B001C0D62 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/MVBuddyList.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC7CAB003C48E8B001C0D62 = {
+			children = (
+				1CC7CAB103C48E8B001C0D62,
+				1C20B0990424A15300000102,
+			);
+			isa = PBXVariantGroup;
+			name = MVFileTransfer.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC7CAB103C48E8B001C0D62 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/MVFileTransfer.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CCB279D04FE93FE00A8FE6E = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVDirectChat.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CCB279E04FE93FE00A8FE6E = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVDirectChat.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CCB3C1505227E74000001C8 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = proxy.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CCB3C1605227E74000001C8 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = proxy.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CCB3C3705228EFD000001C8 = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = SystemConfiguration.framework;
+			path = /System/Library/Frameworks/SystemConfiguration.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		1CD6C413051DFA1C00A8FE10 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatTranscript.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD6C414051DFA1D00A8FE10 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatTranscript.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD6C417051E0B3000A8FE10 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = JVChatTranscript.nib;
+			path = Resources/JVChatTranscript.nib;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CE2BC1D042F4AD300000102 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE2BC1E042F4AD300000102 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE2BC49042F53AD00000102 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatRoom.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE2BC4A042F53AD00000102 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatRoom.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE2BC53042F75FB00000102 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE2BC54042F75FB00000102 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE72A95052C745400A8FE6E = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatConsole.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE72A96052C745400A8FE6E = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatConsole.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE72A99052C79E700A8FE6E = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = JVChatConsole.nib;
+			path = Resources/JVChatConsole.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF9BB9A04FBE96D00A8FE6E = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = room.tif;
+			path = Resources/room.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+//1C0
+//1C1
+//1C2
+//1C3
+//1C4
+//F50
+//F51
+//F52
+//F53
+//F54
+		F50AC513037E2E3801A35792 = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = dummy.c;
+			path = "Other Code/firetalk (cvs)/dummy.c";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F50AC514037E2E3801A35792 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = dummy.h;
+			path = "Other Code/firetalk (cvs)/dummy.h";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F50B0A9F0170C89301A84BDE = {
+			children = (
+				F5394BBA0378DD7601A35792,
+				F5FF568201BB430A01B5034F,
+				F5F9AF410170EE4A01A84BDE,
+				F5F9AF420170EE4A01A84BDE,
+				F555208701F0DC2B01EE70DE,
+				F555208801F0DC2B01EE70DE,
+				F5BEC21401F2256301EE70DE,
+				F5BEC21501F2256301EE70DE,
+			);
+			isa = PBXGroup;
+			name = "Sources & Headers";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F50B0AA00170C89301A84BDE = {
+			children = (
+				F50B0AA20170CAD701A84BDE,
+				F5E2538503882A8501000102,
+				F5E2538403882A8501000102,
+				F5F9AF450170EF4C01A84BDE,
+				F5F9AF460170EF4C01A84BDE,
+				F588A8FC019256D101EE70DE,
+				F588A8FD019256D101EE70DE,
+				F5F9AF5801711CD401A84BDE,
+				F5F9AF5901711CD401A84BDE,
+				F592CABF01824AE801EE70DE,
+				F592CAC001824AE801EE70DE,
+				F599994901890E4601EE70DE,
+				F599994A01890E4601EE70DE,
+				F53B3A7101ED57BC01EE70DE,
+				F53B3A7201ED57BC01EE70DE,
+				1CBB23DA04F03CA7000001C8,
+				1CBB23D904F03CA7000001C8,
+				F551EE490209FB3301EE70DE,
+				F551EE4A0209FB3301EE70DE,
+				1C18CD110528DBBA000001C8,
+				1C18CD100528DBBA000001C8,
+				F5E98622018B412B01EE70DE,
+				F5E98623018B412B01EE70DE,
+				F56CD5430191182601EE70DE,
+				F56CD5440191182601EE70DE,
+				F593E6A401A564F201A35792,
+				F593E6A501A564F201A35792,
+				F52BDCC801A8472101A84BDE,
+				F52BDCC901A8472101A84BDE,
+			);
+			isa = PBXGroup;
+			name = "Other Sources & Additions";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F50B0AA10170C89301A84BDE = {
+			children = (
+				F5DD34730382E5E501000102,
+				1C5959010507803F000001C8,
+				F52BA284037C13C201A35792,
+				F5675B8601DB767601EE70DE,
+				F5BC17DD019655DC01A35792,
+				F5394C070378E44D01A35792,
+				1C51B89D052DF91E00BB459B,
+				1C51B48A052DE0CB00BB459B,
+				1C51B4CC052DE14B00BB459B,
+				1C51B504052DE2B800BB459B,
+				F5394C090378E44D01A35792,
+				F5394C0B0378E44D01A35792,
+				F5394C0D0378E44D01A35792,
+				F5FF568301BC76BE01B5034F,
+				1CBECDCF0508C8AB000001C8,
+				1C3C116005029DE1000001C8,
+				1C746A95050CF86B000001C8,
+				1C3C116205029E03000001C8,
+				1C258E55050B9656000001C8,
+				F520458E01B1D37701EBB4B5,
+				F51F91D7037967CB01A35792,
+				F5ED0F46017CD77701EE70DE,
+				F544999D018E46A501EE70DE,
+				F5C3D42203973E7B01000102,
+				F52955590181EB5901EE70DE,
+			);
+			isa = PBXGroup;
+			name = Resources;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F50B0AA20170CAD701A84BDE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = main.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5185C82018626F701EE70DE = {
+			children = (
+				F5394BEB0378E23701A35792,
+				1CC7CAAE03C48E8B001C0D62,
+				1CC7CAB003C48E8B001C0D62,
+				F5394BED0378E23701A35792,
+				F5C4977B0385785401000102,
+				F5394BEF0378E23701A35792,
+				F5394BF10378E23701A35792,
+				F5394BFD0378E37901A35792,
+				1CBECE390508D58F000001C8,
+				1CE72A99052C79E700A8FE6E,
+				1CD6C417051E0B3000A8FE10,
+				1CBECE3A0508D58F000001C8,
+				1CBECE380508D58F000001C8,
+			);
+			isa = PBXGroup;
+			name = Interfaces;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F51A4F2B01C2DDD201EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVFileTransferController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F51A4F2C01C2DDD201EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVFileTransferController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F51A4F3101C2ED2C01EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = download.tif;
+			path = Resources/download.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F51A4F3201C2ED2C01EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = upload.tif;
+			path = Resources/upload.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F51A4F3701C319D801EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = error.tif;
+			path = Resources/error.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F51A4F3801C319D801EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = pending.tif;
+			path = Resources/pending.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F51A4F3B01C3204701EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = done.tif;
+			path = Resources/done.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F51F91D7037967CB01A35792 = {
+			expectedFileType = folder;
+			fallbackIsa = PBXFileReference;
+			includeInIndex = 1;
+			isa = PBXFolderReference;
+			name = Chat.clr;
+			path = Resources/Chat.clr;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F51F91F103796FCD01A35792 = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = Security.framework;
+			path = /System/Library/Frameworks/Security.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		F520458E01B1D37701EBB4B5 = {
+			expectedFileType = folder;
+			fallbackIsa = PBXFileReference;
+			includeInIndex = 0;
+			isa = PBXFolderReference;
+			name = Sounds;
+			path = Resources/Sounds;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52955590181EB5901EE70DE = {
+			children = (
+				1C6075E005138ED600A8FE6E,
+				1CF9BB9A04FBE96D00A8FE6E,
+				1C705701051A830200A8FE6E,
+				1CA95D28051B413E00A8FE10,
+				1CBB23D504EFE24C000001C8,
+				1CBB23D604EFE24C000001C8,
+				F5C3D46A0398B5B401000102,
+				F5FB4D1B0393F2D301000102,
+				F5FB4D1C0393F2D301000102,
+				F5FB4D170393F0CC01000102,
+				F5FB4D180393F0CC01000102,
+				F5FB4D130393F09D01000102,
+				F5FB4D140393F09D01000102,
+				F5FB4D0F0393F04701000102,
+				F5FB4D100393F04701000102,
+				F5E2536D0387657C01000102,
+				F5E2536E0387657C01000102,
+				F5E253690387618E01000102,
+				F5E2536A0387618E01000102,
+				F5E253710387690301000102,
+				F5E2536603874B5601000102,
+				F531814201CD139601EE70DE,
+				F51A4F3101C2ED2C01EE70DE,
+				F51A4F3201C2ED2C01EE70DE,
+				F51A4F3701C319D801EE70DE,
+				F51A4F3801C319D801EE70DE,
+				F5765F9501C6669D01A35792,
+				F51A4F3B01C3204701EE70DE,
+				F56539F301C5A91401A35792,
+				F56539F501C5B6C301A35792,
+				F56539F601C5B6C301A35792,
+				F5765F9701C6A6D601A35792,
+			);
+			isa = PBXGroup;
+			name = Misc.;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BA273037C13C201A35792 = {
+			children = (
+				F52BA282037C13C201A35792,
+				F52BA283037C13C201A35792,
+				F52BA281037C13C201A35792,
+				1CCB3C1605227E74000001C8,
+				1CCB3C1505227E74000001C8,
+				F52BA28C037C13C201A35792,
+				F52BA28D037C13C201A35792,
+				F52BA286037C13C201A35792,
+				F52BA287037C13C201A35792,
+				F50AC513037E2E3801A35792,
+				F50AC514037E2E3801A35792,
+			);
+			isa = PBXGroup;
+			name = "Firetalk Library";
+			path = "Other Code/firetalk (cvs)";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F52BA281037C13C201A35792 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = "firetalk-int.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BA282037C13C201A35792 = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = firetalk.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BA283037C13C201A35792 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = firetalk.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BA284037C13C201A35792 = {
+			expectedFileType = text;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = GPL;
+			path = "Other Code/firetalk (cvs)/GPL";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BA286037C13C201A35792 = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = irc.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BA287037C13C201A35792 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = irc.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BA28C037C13C201A35792 = {
+			expectedFileType = sourcecode.c.c;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = safestring.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BA28D037C13C201A35792 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = safestring.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BA31C037C62E801A35792 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUGGING_SYMBOLS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OPTIMIZATION_CFLAGS = "-Os";
+				ZERO_LINK = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+		F52BDCC401A835AF01A84BDE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVPreferencesIconView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BDCC501A835AF01A84BDE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVPreferencesIconView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BDCC801A8472101A84BDE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = NSImageAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52BDCC901A8472101A84BDE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = NSImageAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52D043001873FC401EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVChatConnection.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F52D043101873FC401EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVChatConnection.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F531814201CD139601EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = personHeader.tif;
+			path = Resources/personHeader.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5394BB50378DBC301A35792 = {
+			expectedFileType = text.rtf;
+			isa = PBXFileReference;
+			name = Agenda.rtf;
+			path = Resources/Agenda.rtf;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5394BBA0378DD7601A35792 = {
+			children = (
+				1CE2BC54042F75FB00000102,
+				1CE2BC53042F75FB00000102,
+				1CE2BC1E042F4AD300000102,
+				1CE2BC1D042F4AD300000102,
+				1CE72A96052C745400A8FE6E,
+				1CE72A95052C745400A8FE6E,
+				1CD6C414051DFA1D00A8FE10,
+				1CD6C413051DFA1C00A8FE10,
+				1CCB279E04FE93FE00A8FE6E,
+				1CCB279D04FE93FE00A8FE6E,
+				1CE2BC4A042F53AD00000102,
+				1CE2BC49042F53AD00000102,
+				1C088A0F04FCFEE700A8FE6E,
+				1C088A0E04FCFEE700A8FE6E,
+				F5FB4D200393F70E01000102,
+				F5FB4D1F0393F70E01000102,
+				F5C497750385713801000102,
+				F5C497740385713801000102,
+				F51A4F2B01C2DDD201EE70DE,
+				F51A4F2C01C2DDD201EE70DE,
+				F5F5A55A0188928D01EE70DE,
+				F5F5A55B0188928D01EE70DE,
+				F52D043001873FC401EE70DE,
+				F52D043101873FC401EE70DE,
+				1C2EF7EC0427A40B00000102,
+				1C2EF7EB0427A40B00000102,
+				F52BA273037C13C201A35792,
+			);
+			isa = PBXGroup;
+			name = "Chat Related";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5394BEB0378E23701A35792 = {
+			children = (
+				F5394BEC0378E23701A35792,
+				1C20B0940424A11100000102,
+			);
+			isa = PBXVariantGroup;
+			name = Colloquy.nib;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5394BEC0378E23701A35792 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/Colloquy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5394BED0378E23701A35792 = {
+			children = (
+				F5394BEE0378E23701A35792,
+				1C20B09A0424A16600000102,
+			);
+			isa = PBXVariantGroup;
+			name = MVChatWindow.nib;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5394BEE0378E23701A35792 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/MVChatWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5394BEF0378E23701A35792 = {
+			children = (
+				F5394BF00378E23701A35792,
+				1C20B09C0424A18B00000102,
+			);
+			isa = PBXVariantGroup;
+			name = MVCrashCatcher.nib;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5394BF00378E23701A35792 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/MVCrashCatcher.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5394BF10378E23701A35792 = {
+			children = (
+				F5394BF20378E23701A35792,
+				1C20B09D0424A19D00000102,
+			);
+			isa = PBXVariantGroup;
+			name = MVSoftwareUpdate.nib;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5394BF20378E23701A35792 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/MVSoftwareUpdate.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5394BFD0378E37901A35792 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = MVPreferences.nib;
+			path = "Preference Panes/MVPreferences.nib";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5394C070378E44D01A35792 = {
+			children = (
+				F5394C080378E44D01A35792,
+				1C20B09E0424A1B700000102,
+			);
+			isa = PBXVariantGroup;
+			name = Credits.rtf;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5394C080378E44D01A35792 = {
+			expectedFileType = text.rtf;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/Credits.rtf;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5394C090378E44D01A35792 = {
+			children = (
+				F5394C0A0378E44D01A35792,
+				1C20B09F0424A1C500000102,
+			);
+			isa = PBXVariantGroup;
+			name = InfoPlist.strings;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5394C0A0378E44D01A35792 = {
+			expectedFileType = text.plist.strings;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5394C0B0378E44D01A35792 = {
+			children = (
+				F5394C0C0378E44D01A35792,
+				1C20B0A00424A1DE00000102,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5394C0C0378E44D01A35792 = {
+			expectedFileType = text.plist.strings;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5394C0D0378E44D01A35792 = {
+			children = (
+				F5394C0E0378E44D01A35792,
+				1C20B0A10424A22600000102,
+			);
+			isa = PBXVariantGroup;
+			name = MVPreferences.strings;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5394C0E0378E44D01A35792 = {
+			expectedFileType = text.plist.strings;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/MVPreferences.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5394C270378E61701A35792 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVPreferencesController.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F53B3A7101ED57BC01EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVImageTextCell.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F53B3A7201ED57BC01EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVImageTextCell.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F540611301A22FC501A35792 = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = PreferencePanes.framework;
+			path = /System/Library/Frameworks/PreferencePanes.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		F544999D018E46A501EE70DE = {
+			children = (
+				F5BEC20D01F1EF1901EE70DE,
+				F5BEC20E01F1EF1901EE70DE,
+				F544999E018E46CB01EE70DE,
+				F5BEC20701F13A8601EE70DE,
+				F5844DA70395478101000102,
+				F5844DA903954C0601000102,
+				F544999F018E46CB01EE70DE,
+				F5BEC20B01F13B0001EE70DE,
+				F54499A0018E46CB01EE70DE,
+				F5BEC20901F13AA201EE70DE,
+			);
+			isa = PBXGroup;
+			name = "Chat Icons";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F544999E018E46CB01EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = person.tif;
+			path = Resources/person.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F544999F018E46CB01EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = voice.tif;
+			path = Resources/voice.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F54499A0018E46CB01EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = op.tif;
+			path = Resources/op.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F54DBE1401A4B44E01A35792 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVPreferencesController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F551EE490209FB3301EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVKeyChain.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F551EE4A0209FB3301EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVKeyChain.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F555208701F0DC2B01EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVCrashCatcher.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F555208801F0DC2B01EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVCrashCatcher.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F555208B01F0DE0601EE70DE = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = Message.framework;
+			path = /System/Library/Frameworks/Message.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		F56539F301C5A91401A35792 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = stop.tif;
+			path = Resources/stop.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F56539F501C5B6C301A35792 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = clear.tif;
+			path = Resources/clear.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F56539F601C5B6C301A35792 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = reveal.tif;
+			path = Resources/reveal.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5675B8601DB767601EE70DE = {
+			expectedFileType = text.plist;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = verbs.plist;
+			path = Resources/verbs.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F56CD5430191182601EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = NSStringAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F56CD5440191182601EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = NSStringAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5765F9501C6669D01A35792 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = stopped.tif;
+			path = Resources/stopped.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5765F9701C6A6D601A35792 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = MVLinkCursor.tif;
+			path = Resources/MVLinkCursor.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F57D9685018CD26001EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = part.tif;
+			path = "Resources/Toolbar Icons/part.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F57D9686018CD26001EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = hide.tif;
+			path = "Resources/Toolbar Icons/hide.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5844DA70395478101000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = "person-half.tif";
+			path = "Resources/person-half.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5844DA903954C0601000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = "person-away.tif";
+			path = "Resources/person-away.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F588A8F001922CDC01EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = members.tif;
+			path = "Resources/Toolbar Icons/members.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F588A8FC019256D101EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVShapePanel.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F588A8FD019256D101EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVShapePanel.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F590EA180190A42101EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = underline.tif;
+			path = "Resources/Toolbar Icons/underline.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F590EA190190A42101EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = italic.tif;
+			path = "Resources/Toolbar Icons/italic.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F590EA1A0190A42101EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = bold.tif;
+			path = "Resources/Toolbar Icons/bold.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F592CABF01824AE801EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVTableView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F592CAC001824AE801EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVTableView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F593E6A401A564F201A35792 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = NSToolbarAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F593E6A501A564F201A35792 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = NSToolbarAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F596A5F5038EBD5601000102 = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = HTMLDisplay.framework;
+			path = /System/Library/PrivateFrameworks/HTMLDisplay.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		F599994901890E4601EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVTextView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F599994A01890E4601EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVTextView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5A6089901979C2C01A35792 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = tag.tif;
+			path = "Resources/Toolbar Icons/tag.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5A6089B0197A3BB01A35792 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = magic.tif;
+			path = "Resources/Toolbar Icons/magic.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5A89F1C019302BD01EE70DE = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = IOKit.framework;
+			path = /System/Library/Frameworks/IOKit.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		F5B425E9038C056701000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = edit.tif;
+			path = "Resources/Toolbar Icons/edit.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5BC17DD019655DC01A35792 = {
+			expectedFileType = text.plist;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = cc.javelin.colloquy.plist;
+			path = Resources/cc.javelin.colloquy.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5BC17DF019656E901A35792 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = info.tif;
+			path = Resources/info.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5BEC20701F13A8601EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = "person-idle.tif";
+			path = "Resources/person-idle.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5BEC20901F13AA201EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = "op-idle.tif";
+			path = "Resources/op-idle.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5BEC20B01F13B0001EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = "voice-idle.tif";
+			path = "Resources/voice-idle.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5BEC20D01F1EF1901EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = admin.tif;
+			path = Resources/admin.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5BEC20E01F1EF1901EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = "admin-idle.tif";
+			path = "Resources/admin-idle.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5BEC21401F2256301EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVSoftwareUpdate.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5BEC21501F2256301EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVSoftwareUpdate.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5C3D42203973E7B01000102 = {
+			children = (
+				F5C3D42303973E7B01000102,
+				F5C3D42403973E7B01000102,
+				F5C3D42503973E7B01000102,
+				F5C3D42603973E7B01000102,
+				1CBB23CD04EFE233000001C8,
+				1CBB23CE04EFE233000001C8,
+				1CBB23CF04EFE233000001C8,
+				1CBB23D004EFE233000001C8,
+			);
+			isa = PBXGroup;
+			name = Widgets;
+			path = Resources/Widget;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5C3D42303973E7B01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			path = addWidget.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5C3D42403973E7B01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			path = addWidgetSelected.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5C3D42503973E7B01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			path = removeWidget.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5C3D42603973E7B01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			path = removeWidgetSelected.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5C3D46A0398B5B401000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = largePerson.tif;
+			path = Resources/largePerson.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5C497740385713801000102 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVConnectionsController.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5C497750385713801000102 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVConnectionsController.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5C4977B0385785401000102 = {
+			children = (
+				F5C4977C0385785401000102,
+				1C20B09B0424A17700000102,
+			);
+			isa = PBXVariantGroup;
+			name = MVConnections.nib;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5C4977C0385785401000102 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/MVConnections.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5C98A8101838CAD01EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = reload.tif;
+			path = "Resources/Toolbar Icons/reload.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5D04C03019489B801A35792 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = encoding.tif;
+			path = "Resources/Toolbar Icons/encoding.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5DD34720382B8AE01000102 = {
+			expectedFileType = text.rtf;
+			isa = PBXFileReference;
+			name = Changes.rtf;
+			path = Resources/Changes.rtf;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5DD34730382E5E501000102 = {
+			expectedFileType = image.icns;
+			isa = PBXFileReference;
+			name = Colloquy.icns;
+			path = Resources/Colloquy.icns;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E06408038D6DEB01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = joinRoom.tif;
+			path = "Resources/Toolbar Icons/joinRoom.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E0640A038D703901000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = messageUser.tif;
+			path = "Resources/Toolbar Icons/messageUser.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E2536603874B5601000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = statusHeader.tif;
+			path = Resources/statusHeader.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5E253690387618E01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = connected.tif;
+			path = Resources/connected.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E2536A0387618E01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = connectedSelected.tif;
+			path = Resources/connectedSelected.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E2536D0387657C01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = connecting.tif;
+			path = Resources/connecting.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E2536E0387657C01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = connectingSelected.tif;
+			path = Resources/connectingSelected.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E253710387690301000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = autoHeader.tif;
+			path = Resources/autoHeader.tif;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E2537C038809A201000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = connect.tif;
+			path = "Resources/Toolbar Icons/connect.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E2537D038809A201000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = disconnect.tif;
+			path = "Resources/Toolbar Icons/disconnect.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E253800388194701000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = console.tif;
+			path = "Resources/Toolbar Icons/console.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5E2538403882A8501000102 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVColorPanel.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5E2538503882A8501000102 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVColorPanel.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5E98622018B412B01EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = NSAttributedStringAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5E98623018B412B01EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = NSAttributedStringAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5E98659018CB25601EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = emoticon.tif;
+			path = "Resources/Toolbar Icons/emoticon.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5ED0F46017CD77701EE70DE = {
+			children = (
+				1CBECE5D050A8D21000001C8,
+				F5E0640A038D703901000102,
+				F5E06408038D6DEB01000102,
+				F5E253800388194701000102,
+				F5E2537C038809A201000102,
+				F5E2537D038809A201000102,
+				F5A6089901979C2C01A35792,
+				F5A6089B0197A3BB01A35792,
+				F5BC17DF019656E901A35792,
+				F5B425E9038C056701000102,
+				F5ED0F58017CD79801EE70DE,
+				F5C98A8101838CAD01EE70DE,
+				F5E98659018CB25601EE70DE,
+				1C95D5B6041FA02C00000102,
+				F57D9685018CD26001EE70DE,
+				F57D9686018CD26001EE70DE,
+				F590EA180190A42101EE70DE,
+				F590EA190190A42101EE70DE,
+				F590EA1A0190A42101EE70DE,
+				F588A8F001922CDC01EE70DE,
+				F5D04C03019489B801A35792,
+				1CBECD660508C61B000001C8,
+			);
+			isa = PBXGroup;
+			name = "Toolbar Icons";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5ED0F58017CD79801EE70DE = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = delete.tif;
+			path = "Resources/Toolbar Icons/delete.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5F5A55A0188928D01EE70DE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVChatWindowController.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5F5A55B0188928D01EE70DE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVChatWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5F9AF410170EE4A01A84BDE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVApplicationController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5F9AF420170EE4A01A84BDE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVApplicationController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5F9AF450170EF4C01A84BDE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVBorderlessPanel.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5F9AF460170EF4C01A84BDE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVBorderlessPanel.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5F9AF5801711CD401A84BDE = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVMenuButton.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5F9AF5901711CD401A84BDE = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVMenuButton.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5FB4CE60393C15601000102 = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = AddressBook.framework;
+			path = /System/Library/Frameworks/AddressBook.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		F5FB4D0F0393F04701000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = buddyOptions.tif;
+			path = "Resources/Palette Icons/buddyOptions.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5FB4D100393F04701000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = buddyOptionsBlue.tif;
+			path = "Resources/Palette Icons/buddyOptionsBlue.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5FB4D130393F09D01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = buddyNew.tif;
+			path = "Resources/Palette Icons/buddyNew.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5FB4D140393F09D01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = buddyNewBlue.tif;
+			path = "Resources/Palette Icons/buddyNewBlue.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5FB4D170393F0CC01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = buddyInfo.tif;
+			path = "Resources/Palette Icons/buddyInfo.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5FB4D180393F0CC01000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = buddyInfoBlue.tif;
+			path = "Resources/Palette Icons/buddyInfoBlue.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5FB4D1B0393F2D301000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = buddyMessage.tif;
+			path = "Resources/Palette Icons/buddyMessage.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5FB4D1C0393F2D301000102 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = buddyMessageBlue.tif;
+			path = "Resources/Palette Icons/buddyMessageBlue.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5FB4D1F0393F70E01000102 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVBuddyListController.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5FB4D200393F70E01000102 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVBuddyListController.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5FF567701BAA6C101B5034F = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVPreferencesGroupedIconView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5FF567801BAA6C101B5034F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVPreferencesGroupedIconView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5FF568201BB430A01B5034F = {
+			children = (
+				F5394C270378E61701A35792,
+				F54DBE1401A4B44E01A35792,
+				F52BDCC401A835AF01A84BDE,
+				F52BDCC501A835AF01A84BDE,
+				F5FF567701BAA6C101B5034F,
+				F5FF567801BAA6C101B5034F,
+			);
+			isa = PBXGroup;
+			name = "Preferences Related";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		F5FF568301BC76BE01B5034F = {
+			expectedFileType = text.plist;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = MVPreferencePaneDefaults.plist;
+			path = Resources/MVPreferencePaneDefaults.plist;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+	};
+	rootObject = 089C1669FE841209C02AAC07;
+}
