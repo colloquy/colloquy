@@ -1193,13 +1193,14 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 	_lookingUpUsers = YES;
 
-	while( _lookingUpUsers ) // asynchronously look up the users
+	NSDate *timeout = [NSDate dateWithTimeIntervalSinceNow:8.];
+	while( _lookingUpUsers && [timeout timeIntervalSinceNow] >= 0 ) // asynchronously look up the users
 		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 
-	SilcUInt32 clientsCount = 0;
 	[[self _silcClientLock] lock];
+
+	SilcUInt32 clientsCount = 0;
 	SilcClientEntry *clients = silc_client_get_clients_local( [self _silcClient], [self _silcConn], [nickname UTF8String], NULL, &clientsCount );
-	[[self _silcClientLock] unlock];
 
 	unsigned int i = 0;
 	NSMutableSet *results = [NSMutableSet setWithCapacity:clientsCount];
@@ -1207,6 +1208,8 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 		MVChatUser *user = [self _chatUserWithClientEntry:clients[i]];
 		[results addObject:user];
 	}
+
+	[[self _silcClientLock] unlock];
 
 	return ( [results count] ? [NSSet setWithSet:results] : nil );
 }
