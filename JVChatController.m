@@ -85,6 +85,7 @@ static JVChatController *sharedInstance = nil;
 	NSParameterAssert( controller != nil );
 	NSAssert1( [_chatWindows containsObject:controller], @"%@ is not a member of chat controller.", controller );
 	[_chatControllers removeObjectsInArray:[controller allChatViewControllers]];
+	[controller removeAllChatViewControllers];
 	[_chatWindows removeObject:controller];
 }
 
