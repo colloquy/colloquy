@@ -648,6 +648,10 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 @implementation MVConnectionsController (MVConnectionsControllerPrivate)
 - (void) _refresh:(NSNotification *) notification {
 	[self _validateToolbar];
+	if( [[notification name] isEqualToString:MVChatConnectionNicknameAcceptedNotification] ) {
+		MVChatConnection *connection = [notification object];
+		[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+	}
 	[connections noteNumberOfRowsChanged];
 }
 
