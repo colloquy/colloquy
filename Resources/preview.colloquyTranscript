@@ -4,33 +4,34 @@
     <message>nonex joined the chat room.</message>
     <who>nonex</who>
   </event>
-  <envelope count="1" received="2003-10-25 13:28:02 -0400">
+  <envelope count="1">
     <sender self="yes">timothy</sender>
-    <message action="yes">waves to nonex</message>
+    <message received="2003-10-25 13:28:02 -0400" action="yes">waves to nonex</message>
   </envelope>
-  <envelope count="2" received="2003-10-25 13:28:32 -0400">
+  <envelope count="2">
     <sender>nonex</sender>
-    <message>hello, what is going on in here?</message>
+    <message received="2003-10-25 13:28:32 -0400">hello, what is going on in here?</message>
   </envelope>
-  <envelope count="3" received="2003-10-25 13:28:40 -0400">
+  <envelope count="3">
     <sender self="yes">timothy</sender>
-    <message>not a whole lot <span class="emoticon smile"><samp>:)</samp></span></message>
+    <message received="2003-10-25 13:28:40 -0400">not a whole lot <span class="emoticon smile"><samp>:)</samp></span></message>
+    <message received="2003-10-25 13:28:52 -0400">just surfing the inertnet.</message>
   </envelope>
-  <envelope count="4" received="2003-10-25 13:28:54 -0400">
+  <envelope count="4">
     <sender self="yes">timothy</sender>
-    <message>seen <a href="http://www.apple.com">http://www.apple.com</a> today?</message>
+    <message received="2003-10-25 13:28:54 -0400">seen <a href="http://www.apple.com">http://www.apple.com</a> today?</message>
   </envelope>
-  <envelope count="5" received="2003-10-25 13:50:38 -0400">
+  <envelope count="5">
     <sender>nonex</sender>
-    <message>no, I haven't had a chance</message>
+    <message received="2003-10-25 13:50:38 -0400">no, I haven't had a chance</message>
   </envelope>
   <event name="memberPromoted" occurred="2003-10-25 13:50:53 -0400">
     <message>nonex was promoted to operator by you.</message>
     <by>timothy</by>
     <who>nonex</who>
   </event>
-  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+  <envelope count="6">
     <sender self="yes">timothy</sender>
-    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+    <message received="2003-10-25 13:51:25 -0400">there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
   </envelope>
 </log>
