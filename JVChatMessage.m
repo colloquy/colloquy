@@ -212,11 +212,11 @@
 #pragma mark -
 
 @implementation JVMutableChatMessage
-+ (id) messageWithText:(NSTextStorage *) body sender:(NSString *) sender andTranscript:(JVChatTranscript *) transcript {
++ (id) messageWithText:(NSAttributedString *) body sender:(NSString *) sender andTranscript:(JVChatTranscript *) transcript {
 	return [[[self alloc] initWithText:body sender:sender andTranscript:transcript] autorelease];
 }
 
-- (id) initWithText:(NSTextStorage *) body sender:(NSString *) sender andTranscript:(JVChatTranscript *) transcript {
+- (id) initWithText:(NSAttributedString *) body sender:(NSString *) sender andTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) ) {
 		_loaded = YES;
 		[self setTranscript:transcript];
