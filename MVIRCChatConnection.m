@@ -656,7 +656,7 @@ static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
 	if( ! self ) return;
 
 	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	MVChatUser *byMember = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:setby]];
+	MVChatUser *byMember = ( setby ? [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:setby]] : nil );
 
 	unsigned int oldModes = [room modes];
 
