@@ -45,7 +45,7 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
 		NSString *file = nil;
 		while( ( file = [denumerator nextObject] ) ) {
-			if( [[file pathExtension] isEqualToString:@"colloquyStyle"] ) {
+			if( [[file pathExtension] isEqualToString:@"colloquyStyle"] || [[file pathExtension] isEqualToString:@"fireStyle"] ) {
 				NSBundle *bundle = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] ) ) {
 					JVStyle *style = [[JVStyle newWithBundle:bundle] autorelease];
