@@ -16,15 +16,33 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 @implementation KABubbleWindowView
 - (id) initWithFrame:(NSRect) frame {
 	if( ! ( self = [super initWithFrame:frame] ) ) {
-		[[NSColor clearColor] set];
-		NSRectFill( [self frame] );
+		_icon = nil;
+		_title = nil;
+		_text = nil;
 		_target = nil;
 		_action = NULL;
 	}
 	return self;
 }
 
+- (void) dealloc {
+	[_icon release];
+	[_title release];
+	[_text release];
+	[_target release];
+
+	_icon = nil;
+	_title = nil;
+	_text = nil;
+	_target = nil;
+
+	[super dealloc];
+}
+
 - (void) drawRect:(NSRect) rect {
+	[[NSColor clearColor] set];
+	NSRectFill( [self frame] );
+
 	float lineWidth = 4.;
 	NSBezierPath *path = [NSBezierPath bezierPath];
 	[path setLineWidth:lineWidth];
@@ -114,6 +132,8 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 	[_target autorelease];
 	_target = [object retain];
 }
+
+#pragma mark -
 
 - (SEL) action {
 	return _action;
