@@ -70,7 +70,11 @@ static void MVFileTransferDestroyed( FILE_DCC_REC *dcc ) {
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
 
+	[MVChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+
 	[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
+
+	[MVChatConnectionThreadLock lock]; // lock back up like nothing happened
 }
 
 static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
@@ -80,7 +84,7 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	if( dcc -> size != dcc -> transfd ) {
 		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];
 		NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
-		[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 	} else {
 		[self _setStatus:MVFileTransferDoneStatus];
 		NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:self];		
@@ -91,38 +95,38 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 static void MVFileTransferErrorConnect( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
-	
+
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer connection could not be made.", NSLocalizedDescriptionKey, nil];
 	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferConnectionError userInfo:info];
-	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 }
 
 static void MVFileTransferErrorFileCreate( FILE_DCC_REC *dcc, char *filename ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
-	
+
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
 	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
-	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 }
 
 static void MVFileTransferErrorFileOpen( FILE_DCC_REC *dcc, char *filename, int errno ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
-	
+
 	NSError *ferror = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be opened, please make sure you have read permissions for this file.", NSLocalizedDescriptionKey, ferror, @"NSUnderlyingErrorKey", nil];
 	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileOpenError userInfo:info];
-	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 }
 
 static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *filename ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
-	
+
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
 	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
-	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 }
 
 #pragma mark -
@@ -132,6 +136,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	[super initialize];
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
+		[MVChatConnectionThreadLock lock];
 		signal_add_last( "dcc connected", (SIGNAL_FUNC) MVFileTransferConnected );
 		signal_add_last( "dcc destroyed", (SIGNAL_FUNC) MVFileTransferDestroyed );
 		signal_add_last( "dcc closed", (SIGNAL_FUNC) MVFileTransferClosed );
@@ -139,6 +144,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 		signal_add_last( "dcc error file create", (SIGNAL_FUNC) MVFileTransferErrorFileCreate );
 		signal_add_last( "dcc error file open", (SIGNAL_FUNC) MVFileTransferErrorFileOpen );
 		signal_add_last( "dcc error send exists", (SIGNAL_FUNC) MVFileTransferErrorSendExists );
+		[MVChatConnectionThreadLock unlock];
 		tooLate = YES;
 	}
 }
@@ -148,11 +154,16 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 + (void) setFileTransferPortRange:(NSRange) range {
 	unsigned short min = (unsigned short)range.location;
 	unsigned short max = (unsigned short)(range.location + range.length);
+	[MVChatConnectionThreadLock lock];
 	settings_set_str( "dcc_port", [[NSString stringWithFormat:@"%uh %uh", min, max] UTF8String] );
+	[MVChatConnectionThreadLock unlock];
 }
 
 + (NSRange) fileTransferPortRange {
+	[MVChatConnectionThreadLock lock];
 	const char *range = settings_get_str( "dcc_port" );
+	[MVChatConnectionThreadLock unlock];
+
 	unsigned short min = 1024;
 	unsigned short max = 1048;
 
@@ -184,7 +195,11 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
 	NSMutableData *result = [[[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopy] autorelease];
 	[result appendBytes:"\0" length:1];
-	if( [result length] ) settings_set_str( "dcc_own_ip", [result bytes] );
+	if( [result length] ) {
+		[MVChatConnectionThreadLock lock];
+		settings_set_str( "dcc_own_ip", [result bytes] );
+		[MVChatConnectionThreadLock unlock];
+	}
 }
 
 #pragma mark -
@@ -234,7 +249,10 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 - (BOOL) isPassive {
 	if( ! [self _DCCFileRecord] ) return _passive;
-	return dcc_is_passive( [self _DCCFileRecord] );
+	[MVChatConnectionThreadLock lock];
+	_passive = dcc_is_passive( [self _DCCFileRecord] );
+	[MVChatConnectionThreadLock unlock];
+	return _passive;
 }
 
 - (MVFileTransferStatus) status {
@@ -249,39 +267,55 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 - (unsigned long long) finalSize {
 	if( ! [self _DCCFileRecord] ) return _finalSize;
-	return [self _DCCFileRecord] -> size;
+	[MVChatConnectionThreadLock lock];
+	_finalSize = [self _DCCFileRecord] -> size;
+	[MVChatConnectionThreadLock unlock];
+	return _finalSize;
 }
 
 - (unsigned long long) transfered {
 	if( ! [self _DCCFileRecord] ) return _transfered;
-	return [self _DCCFileRecord] -> transfd;
+	[MVChatConnectionThreadLock lock];
+	_transfered = [self _DCCFileRecord] -> transfd;
+	[MVChatConnectionThreadLock unlock];
+	return _transfered;
 }
 
 #pragma mark -
 
 - (NSDate *) startDate {
 	if( _startDate || ! [self _DCCFileRecord] ) return _startDate;
+	[MVChatConnectionThreadLock lock];
 	if( [self _DCCFileRecord] -> starttime )
 		_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
+	[MVChatConnectionThreadLock unlock];
 	return _startDate;
 }
 
 - (unsigned long long) startOffset {
 	if( ! [self _DCCFileRecord] ) return _startOffset;
-	return [self _DCCFileRecord] -> skipped;
+	[MVChatConnectionThreadLock lock];
+	_startOffset = [self _DCCFileRecord] -> skipped;
+	[MVChatConnectionThreadLock unlock];
+	return _startOffset;
 }
 
 #pragma mark -
 
 - (NSHost *) host {
 	if( _host || ! [self _DCCFileRecord] ) return _host;
+	[MVChatConnectionThreadLock lock];
 	_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
+	[MVChatConnectionThreadLock unlock];
 	return _host;
 }
 
 - (unsigned short) port {
-	if( ! [self _DCCFileRecord] ) return _port;
-	return [self _DCCFileRecord] -> port;
+	if( _port || ! [self _DCCFileRecord] ) return _port;
+	[MVChatConnectionThreadLock lock];
+	_port = [self _DCCFileRecord] -> port;
+	[MVChatConnectionThreadLock unlock];
+	return _port;
 }
 
 #pragma mark -
@@ -292,7 +326,9 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 - (NSString *) user {
 	if( _user || ! [self _DCCFileRecord] ) return _user;
+	[MVChatConnectionThreadLock lock];
 	_user = [[[self connection] stringWithEncodedBytes:[self _DCCFileRecord] -> nick] retain];
+	[MVChatConnectionThreadLock unlock];
 	return _user;
 }
 
@@ -300,7 +336,9 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 - (void) cancel {
 	if( ! [self _DCCFileRecord] ) return;
+	[MVChatConnectionThreadLock lock];
 	dcc_close( (DCC_REC *)[self _DCCFileRecord] );
+	[MVChatConnectionThreadLock unlock];
 	[self _setStatus:MVFileTransferStoppedStatus];
 }
 @end
@@ -309,8 +347,11 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 @implementation MVFileTransfer (MVFileTransferPrivate)
 + (id) _transferForDCCFileRecord:(FILE_DCC_REC *) record {
+	if( ! record ) return nil;
+
 	MVFileTransferModuleData *data = MODULE_DATA( record );
-	if( data && data -> transfer ) return data -> transfer;
+	if( data ) return data -> transfer;
+
 	return nil;
 }
 
@@ -319,6 +360,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 }
 
 - (void) _setDCCFileRecord:(FILE_DCC_REC *) record {
+	[MVChatConnectionThreadLock lock];
+
 	if( _dcc ) {
 		MVFileTransferModuleData *data = MODULE_DATA( (FILE_DCC_REC *)_dcc );
 		if( data ) data -> transfer = nil;
@@ -332,6 +375,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 		data -> transfer = self;
 		MODULE_DATA_SET( ((DCC_REC *)record), data );
 	}
+
+	[MVChatConnectionThreadLock unlock];
 }
 
 - (void) _setConnection:(MVChatConnection *) connection {
@@ -375,6 +420,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 + (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection passively:(BOOL) passive {
 	[super updateExternalIPAddress];
 
+	[MVChatConnectionThreadLock lock];
+
 	int queue = dcc_queue_new();
 	NSString *source = [[path stringByStandardizingPath] copy];
 
@@ -390,6 +437,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	MVUploadFileTransfer *ret = [[[MVUploadFileTransfer alloc] initWithDCCFileRecord:dcc fromConnection:connection] autorelease];
 	ret -> _source = [[source stringByStandardizingPath] copy];
 	ret -> _transferQueue = queue;
+
+	[MVChatConnectionThreadLock unlock];
 
 	return ret;
 }
@@ -429,7 +478,9 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	[super initialize];
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
+		[MVChatConnectionThreadLock lock];
 		signal_add_last( "dcc get receive", (SIGNAL_FUNC) MVDownloadFileTransferSpecifyPath );
+		[MVChatConnectionThreadLock unlock];
 		tooLate = YES;
 	}
 }
@@ -468,7 +519,9 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	_destination = [[path stringByStandardizingPath] copy];
 
 	if( ! [self _DCCFileRecord] ) return;
+	[MVChatConnectionThreadLock lock];
 	[self _DCCFileRecord] -> get_type = ( rename ? DCC_GET_RENAME : DCC_GET_OVERWRITE );
+	[MVChatConnectionThreadLock unlock];
 }
 
 - (NSString *) destination {
@@ -479,7 +532,9 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 - (NSString *) originalFileName {
 	if( _originalFileName || ! [self _DCCFileRecord] ) return _originalFileName;
+	[MVChatConnectionThreadLock lock];
 	_originalFileName = [[[self connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg] retain];
+	[MVChatConnectionThreadLock unlock];
 	return _originalFileName;
 }
 
@@ -487,7 +542,9 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 - (void) reject {
 	if( ! [self _DCCFileRecord] ) return;
+	[MVChatConnectionThreadLock lock];
 	dcc_reject( (DCC_REC *)[self _DCCFileRecord], [self _DCCFileRecord] -> server );
+	[MVChatConnectionThreadLock unlock];
 }
 
 #pragma mark -
@@ -502,9 +559,13 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	if( ! [[NSFileManager defaultManager] isReadableFileAtPath:[self destination]] )
 		resume = NO;
 
+	[MVChatConnectionThreadLock lock];
+
 	if( resume ) dcc_send_resume( [self _DCCFileRecord] );
 	else if( dcc_is_passive( [self _DCCFileRecord] ) ) dcc_get_passive( [self _DCCFileRecord] );
 	else dcc_get_connect( [self _DCCFileRecord] );
+
+	[MVChatConnectionThreadLock unlock];
 }
 @end
 

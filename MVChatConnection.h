@@ -135,6 +135,8 @@ extern NSString *MVChatConnectionNicknameRejectedNotification;
 extern NSString *MVChatConnectionSubcodeRequestNotification;
 extern NSString *MVChatConnectionSubcodeReplyNotification;
 
+extern NSRecursiveLock *MVChatConnectionThreadLock;
+
 #pragma mark -
 
 @interface MVChatConnection : NSObject {
