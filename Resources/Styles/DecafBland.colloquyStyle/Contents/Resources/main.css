@@ -135,6 +135,17 @@ a.member:hover   { text-decoration: underline; }
 	text-decoration: underline !important;
 }
 
+.traclink :link, .traclink :visited {
+	text-decoration: none;
+	color: #b00;
+	border-bottom: 1px dotted #bbb;
+}
+
+.traclink :link:hover, .traclink :visited:hover {
+	background-color: #eee;
+	color: #555;
+}
+
 .colorself        { color: #888; }
 
 .color0     { color: #cccc00; }
