@@ -1401,8 +1401,14 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
-	if( ! [self _irssiConnection] ) return;
-	if( [self status] != MVChatConnectionConnectingStatus && [self status] != MVChatConnectionConnectedStatus ) return;
+	[self _cancelReconnectAttempts];
+
+	if( [self status] == MVChatConnectionConnectingStatus ) {
+		[self _forceDisconnect];
+		return;
+	}
+
+	if( ! [self _irssiConnection] || [self status] != MVChatConnectionConnectedStatus ) return;
 
 	[self _willDisconnect];
 
@@ -1415,8 +1421,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[self _irssiConnection] -> no_reconnect = YES;
 
 	server_disconnect( [self _irssiConnection] );
-
-	[self _cancelReconnectAttempts];
 }
 
 #pragma mark -
@@ -2200,15 +2204,16 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ! [self _irssiConnection] ) return;
 
 	[self _willDisconnect];
-	[self sendRawMessage:@"QUIT :Quitting" immediately:YES];
 
-	/* fake the server disconnection to auto reconnect */
-	g_io_channel_unref( net_sendbuffer_handle( [self _irssiConnection] -> handle ) );
-	net_sendbuffer_destroy( [self _irssiConnection] -> handle, FALSE);
-	[self _irssiConnection] -> handle = NULL;
+	if( [self _irssiConnection] -> handle ) {
+		g_io_channel_unref( net_sendbuffer_handle( [self _irssiConnection] -> handle ) );
+		net_sendbuffer_destroy( [self _irssiConnection] -> handle, FALSE);
+		[self _irssiConnection] -> handle = NULL;
+	}
 
-	[self _irssiConnection] -> connection_lost = TRUE;
+	[self _irssiConnection] -> connection_lost = FALSE;
 	[self _irssiConnection] -> no_reconnect = FALSE;
+
 	server_disconnect( [self _irssiConnection] );
 }
 

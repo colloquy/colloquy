@@ -1259,10 +1259,11 @@ static NSMenu *favoritesMenu = nil;
 - (void) _validateToolbar {
 	NSEnumerator *enumerator = [[[[self window] toolbar] visibleItems] objectEnumerator];
 	id item = nil;
-	BOOL noneSelected = YES, connected = NO;
+	BOOL noneSelected = YES;
+	MVChatConnectionStatus status = MVChatConnectionDisconnectedStatus;
 
 	if( [connections selectedRow] != -1 ) noneSelected = NO;
-	if( ! noneSelected ) connected = [(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] isConnected];
+	if( ! noneSelected ) status = [(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] status];
 	while( ( item = [enumerator nextObject] ) ) {
 		if( [[item itemIdentifier] isEqualToString:MVToolbarConnectToggleItemIdentifier] ) {
 			if( noneSelected ) {
@@ -1270,12 +1271,12 @@ static NSMenu *favoritesMenu = nil;
 				[item setToolTip:NSLocalizedString( @"New Connection", "new connection tooltip" )];
 				[item setAction:@selector( newConnection: )];
 				[item setImage:[NSImage imageNamed:@"connect"]];
-			} else if( ! connected ) {
+			} else if( status == MVChatConnectionDisconnectedStatus || status == MVChatConnectionServerDisconnectedStatus || status == MVChatConnectionSuspendedStatus ) {
 				[item setLabel:NSLocalizedString( @"Connect", "connect to server title" )];
 				[item setToolTip:NSLocalizedString( @"Connect to Server", "connect button tooltip" )];
 				[item setAction:@selector( _connect: )];
 				[item setImage:[NSImage imageNamed:@"connect"]];
-			} else if( connected ) {
+			} else if( status == MVChatConnectionConnectedStatus || status == MVChatConnectionConnectingStatus ) {
 				[item setLabel:NSLocalizedString( @"Disconnect", "disconnect from server title" )];
 				[item setToolTip:NSLocalizedString( @"Disconnect from Server", "disconnect button tooltip" )];
 				[item setAction:@selector( _disconnect: )];
@@ -1285,7 +1286,7 @@ static NSMenu *favoritesMenu = nil;
 			if( [_bookmarks count] ) [item setAction:@selector( joinRoom: )];
 			else [item setAction:NULL];
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarQueryUserItemIdentifier] ) {
-			if( connected ) [item setAction:@selector( _messageUser: )];
+			if( status == MVChatConnectionConnectedStatus ) [item setAction:@selector( _messageUser: )];
 			else [item setAction:NULL];
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarConsoleItemIdentifier] ) {
 			if( noneSelected ) [item setAction:NULL];
