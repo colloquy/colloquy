@@ -87,9 +87,9 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 - (BOOL) _usingSpecificStyle;
 - (BOOL) _usingSpecificEmoticons;
 
-- (int) visibleMessageCount;
-- (int) locationOfMessage:(unsigned int) identifier;
-- (int) locationOfElementByIndex:(unsigned int) index;
+- (unsigned long) visibleMessageCount;
+- (long) locationOfMessage:(JVChatMessage *) message;
+- (long) locationOfElementByIndex:(unsigned long) index;
 @end
 
 #pragma mark -
@@ -587,10 +587,14 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 		if( [_messages count] > i && [[_messages objectAtIndex:i] isKindOfClass:[JVChatMessage class]] ) {
 			msg = [_messages objectAtIndex:i];
 		} else if( [_messages count] > i && [[_messages objectAtIndex:i] isKindOfClass:[NSNull class]] ) {
-			msg = [JVChatMessage messageWithNode:node messageIndex:i andTranscript:self];
+			msg = [JVChatMessage messageWithNode:node andTranscript:self];
+			id classDesc = [NSClassDescription classDescriptionForClass:[self class]];
+			[msg setObjectSpecifier:[[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[self objectSpecifier] key:@"messages" index:i] autorelease]];
 			[_messages replaceObjectAtIndex:i withObject:msg];
 		} else if( [_messages count] == i ) {
-			msg = [JVChatMessage messageWithNode:node messageIndex:i andTranscript:self];
+			msg = [JVChatMessage messageWithNode:node andTranscript:self];
+			id classDesc = [NSClassDescription classDescriptionForClass:[self class]];
+			[msg setObjectSpecifier:[[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[self objectSpecifier] key:@"messages" index:i] autorelease]];
 			[_messages insertObject:msg atIndex:i];
 		} else continue;
 		if( msg ) [ret addObject:msg];
@@ -604,12 +608,12 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 - (BOOL) messageIsInScrollback:(JVChatMessage *) message {
 #ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[NSString stringWithFormat:@"%u", [message envelopeNumber]]];
+		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[message messageIdentifier]];
 		return ( element ? YES : NO );
 	} else
 #endif
 	// old JavaScript method
-	return (BOOL) [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"messageIsInScrollback( \"%u\" );", [message envelopeNumber]]] intValue];
+	return (BOOL) [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"messageIsInScrollback( \"%@\" );", [message messageIdentifier]]] intValue];
 }
 
 #pragma mark -
@@ -745,7 +749,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 }
 
 - (void) jumpToMessage:(JVChatMessage *) message {
-	unsigned int loc = [self locationOfMessage:[message envelopeNumber]];
+	unsigned int loc = [self locationOfMessage:message];
 	if( loc ) {
 		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 		float scale = NSHeight( [scroller rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [scroller frame] ) / [scroller knobProportion] );
@@ -1339,18 +1343,18 @@ finish:
 
 #pragma mark -
 
-- (int) locationOfMessage:(unsigned int) identifier {
+- (long) locationOfMessage:(JVChatMessage *) message {
 #ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[NSString stringWithFormat:@"%d", identifier]];
+		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[message messageIdentifier]];
 		return [[element valueForKey:@"offsetTop"] intValue];
 	} else
 #endif
 	// old JavaScript method
-	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", identifier]] intValue];
+	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%@\" );", [message messageIdentifier]]] intValue];
 }
 
-- (int) locationOfElementByIndex:(unsigned int) index {
+- (long) locationOfElementByIndex:(unsigned long) index {
 #ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
@@ -1362,7 +1366,7 @@ finish:
 	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", index]] intValue];
 }
 
-- (int) visibleMessageCount {
+- (unsigned long) visibleMessageCount {
 #ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		return [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];

@@ -102,7 +102,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 @interface JVDirectChat (JVDirectChatPrivate) <ABImageClient>
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
-- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action;
+- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier;
 - (void) scrollToBottom;
 - (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent;
 - (void) processQueue;
@@ -126,9 +126,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
 - (void) _changeChatEmoticonsMenuSelection;
 - (void) _switchingStyleEnded:(in NSString *) html;
-- (int) visibleMessageCount;
-- (int) locationOfMessage:(unsigned int) identifier;
-- (int) locationOfElementByIndex:(unsigned int) index;
+- (unsigned long) visibleMessageCount;
+- (long) locationOfMessage:(JVChatMessage *) message;
+- (long) locationOfElementByIndex:(unsigned long) index;
 @end
 
 #pragma mark -
@@ -137,7 +137,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (id) init {
 	if( ( self = [super init] ) ) {
 		send = nil;
-		_messageId = 0;
 		_target = nil;
 		_firstMessage = YES;
 		_newMessageCount = 0;
@@ -684,14 +683,14 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}
 }
 
-- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action {
+- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
 	if( ! _nibLoaded ) [self view];
 	if( [_logLock tryLock] ) {
 		[self displayQueue];
-		[self addMessageToLogAndDisplay:message fromUser:user asAction:action];
+		[self addMessageToLogAndDisplay:message fromUser:user asAction:action withIdentifier:identifier];
 		[_logLock unlock];
 	} else { // Queue the message
-		NSDictionary *queueEntry = [NSDictionary dictionaryWithObjectsAndKeys:@"message", @"type", message, @"message", user, @"user", [NSNumber numberWithBool:action], @"action", nil];
+		NSDictionary *queueEntry = [NSDictionary dictionaryWithObjectsAndKeys:@"message", @"type", message, @"message", user, @"user", identifier, @"identifier", [NSNumber numberWithBool:action], @"action", nil];
 		[_messageQueue addObject:queueEntry];
 		if( [_messageQueue count] == 1 ) // We just added to an empty queue, so we need to attempt to process it soon
 			[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
@@ -731,13 +730,10 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 }
 
-- (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action {
-	NSMutableAttributedString *encodedMsg = [[message mutableCopy] autorelease];
-
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-	NSData *msgData = [encodedMsg IRCFormatWithOptions:options];
-
-	[self addMessageToDisplay:msgData fromUser:[[self connection] localUser] asAction:action];
+- (void) echoSentMessageToDisplay:(JVMutableChatMessage *) message {
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[self encoding]], @"StringEncoding", nil];
+	NSData *msgData = [[message body] IRCFormatWithOptions:options]; // we could save this back to the message object before sending
+	[self addMessageToDisplay:msgData fromUser:[message sender] asAction:[message isAction] withIdentifier:[message messageIdentifier]];
 }
 
 - (unsigned int) newMessagesWaiting {
@@ -816,15 +812,15 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 					}
 				}
 
-				JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] localUser] andTranscript:self];
-				[cmessage setAction:action];
+				if( [[subMsg string] length] ) {
+					JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] localUser] andTranscript:self];
+					[cmessage setAction:action];
 
-				[self sendMessage:cmessage];
+					[self echoSentMessageToDisplay:cmessage];
+					[self sendMessage:cmessage];
 
-				if( [[subMsg string] length] )
-					[self echoSentMessageToDisplay:[cmessage body] asAction:[cmessage isAction]];
-
-				[cmessage release];
+					[cmessage release];
+				}
 			}
 		}
 
@@ -1195,6 +1191,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	xmlDocPtr doc = xmlNewDoc( "1.0" );
 	xmlNodePtr root = xmlNewNode( NULL, "event" );
+	xmlSetProp( root, "id", [[NSString locallyUniqueString] UTF8String] );
 	xmlSetProp( root, "name", [name UTF8String] );
 	xmlSetProp( root, "occurred", [[[NSDate date] description] UTF8String] );
 	xmlDocSetRootElement( doc, root );
@@ -1272,7 +1269,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	_requiresFullMessage = YES;
 }
 
-- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action {
+- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
 	// DO *NOT* call this method without first acquiring _logLock!
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
@@ -1299,6 +1296,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}
 
 	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:user andTranscript:self];
+	[cmessage setEnvelopeIdentifier:[NSString locallyUniqueString]];
+	[cmessage setMessageIdentifier:identifier];
 	[cmessage setAction:action];
 
 	[self _setCurrentMessage:cmessage];
@@ -1397,7 +1396,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		xmlDocSetRootElement( doc, root );
 	} else {
 		root = xmlNewNode( NULL, "envelope" );
-		xmlSetProp( root, "id", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
+		xmlSetProp( root, "id", [[cmessage envelopeIdentifier] UTF8String] );
 		xmlDocSetRootElement( doc, root );
 
 		/* if( [user isEqualToString:[self target]] && _buddy ) {
@@ -1455,6 +1454,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 
 	child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
+	xmlSetProp( child, "id", [[cmessage messageIdentifier] UTF8String] );
 	xmlSetProp( child, "received", [[[cmessage date] description] UTF8String] );
 	if( [cmessage isAction] ) xmlSetProp( child, "action", "yes" );
 	if( [cmessage isHighlighted] ) xmlSetProp( child, "highlight", "yes" );
@@ -1494,7 +1494,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		if( [cmessage isHighlighted] ) {
 			NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 			if( [scroller isKindOfClass:[JVMarkedScroller class]] ) {
-				unsigned int loc = [self locationOfMessage:( _messageId - 1 )];
+				unsigned int loc = [self locationOfMessage:cmessage];
 				if( loc ) [(JVMarkedScroller *)scroller addMarkAt:loc];
 			}
 		}
@@ -1608,7 +1608,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		NSDictionary *msg = [[[_messageQueue objectAtIndex:0] retain] autorelease];
 		[_messageQueue removeObjectAtIndex:0];
 		if( [[msg objectForKey:@"type"] isEqualToString:@"message"] ) {
-			[self addMessageToLogAndDisplay:[msg objectForKey:@"message"] fromUser:[msg objectForKey:@"user"] asAction:[[msg objectForKey:@"action"] boolValue]];
+			[self addMessageToLogAndDisplay:[msg objectForKey:@"message"] fromUser:[msg objectForKey:@"user"] asAction:[[msg objectForKey:@"action"] boolValue] withIdentifier:[msg objectForKey:@"identifier"]];
 		} else if( [[msg objectForKey:@"type"] isEqualToString:@"event"] ) {
 			if( [[msg objectForKey:@"message"] isEqual:[NSNull null]] ) {
 				[self addEventMessageToLogAndDisplay:nil withName:[msg objectForKey:@"name"] andAttributes:[msg objectForKey:@"attributes"] entityEncodeAttributes:[[msg objectForKey:@"encode"] boolValue]];
@@ -1703,8 +1703,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message {
-	// catch IRC rooms like "#room" or "&help" but not HTML colors like "#ab12ef" or HTML entities like "&#135;" or "&amp;"
-	AGRegex *regex = [AGRegex regexWithPattern:@"(?:(?<!&)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)|&(?![\\d\\w#]{2,5};))[\\w-_.+&#]{2,}" options:AGRegexCaseInsensitive];
+	// catch IRC rooms like "#room" but not HTML colors like "#ab12ef" or HTML entities like "&#135;" or "&amp;"
+	AGRegex *regex = [AGRegex regexWithPattern:@"(?:(?<!&)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b))[\\w-_.+&#]{2,}" options:AGRegexCaseInsensitive];
 	NSArray *matches = [regex findAllInString:[message string]];
 	NSEnumerator *enumerator = [matches objectEnumerator];
 	AGRegexMatch *match = nil;
@@ -2082,8 +2082,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[cmessage setAction:action];
 
 	[self sendMessage:cmessage];
-
-	if( localEcho ) [self echoSentMessageToDisplay:[cmessage body] asAction:[cmessage isAction]];
+	if( localEcho ) [self echoSentMessageToDisplay:cmessage];
 
 	[cmessage release];
 }

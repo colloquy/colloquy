@@ -44,18 +44,18 @@
 	if( isChatRoom || isDirectChat ) {
 		if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] || ! [command caseInsensitiveCompare:@"say"] ) {
 			if( [arguments length] ) {
+				JVMutableChatMessage *message = [JVMutableChatMessage messageWithText:arguments sender:[[chat connection] localUser] andTranscript:chat];
 				if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] ) {
 					// This is so plugins can process /me actions as well
 					// We're avoiding /say for now, as that really should just output exactly what
 					// the input was so we should still bypass plugins for /say
-					JVMutableChatMessage *message = [[[JVMutableChatMessage alloc] initWithText:arguments sender:[[chat connection] nickname] andTranscript:chat] autorelease];
 					[message setAction:YES];
+					[chat echoSentMessageToDisplay:message];
 					[chat sendMessage:message];
-					[chat echoSentMessageToDisplay:[message body] asAction:YES];
 				} else {
-					[chat echoSentMessageToDisplay:arguments asAction:NO];
-					if( isChatRoom ) [[room target] sendMessage:arguments asAction:NO];
-					else [[chat target] sendMessage:arguments withEncoding:[chat encoding] asAction:NO];
+					[chat echoSentMessageToDisplay:message];
+					if( isChatRoom ) [[room target] sendMessage:[message body] asAction:NO];
+					else [[chat target] sendMessage:[message body] withEncoding:[chat encoding] asAction:NO];
 				}
 			}
 			return YES;
@@ -485,14 +485,9 @@
 	}
 
 	if( chatView && [msg length] ) {
-		[chatView echoSentMessageToDisplay:msg asAction:NO];
-		if( [[chatView target] isKindOfClass:[MVChatRoom class]] ) {
-			[[chatView target] sendMessage:msg asAction:NO];
-		} else {
-			NSStringEncoding encoding = [chatView encoding];
-			if( ! encoding ) encoding = [connection encoding];
-			[[chatView target] sendMessage:msg withEncoding:encoding asAction:NO];
-		}
+		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:msg sender:[connection localUser] andTranscript:chatView];
+		[chatView echoSentMessageToDisplay:cmessage];
+		[chatView sendMessage:cmessage];
 		return YES;
 	}
 
@@ -506,9 +501,12 @@
 
 	NSEnumerator *enumerator = [[[JVChatController defaultManager] chatViewControllersOfClass:[JVChatRoom class]] objectEnumerator];
 	JVChatRoom *room = nil;
+
 	while( ( room = [enumerator nextObject] ) ) {
-		[room echoSentMessageToDisplay:message asAction:action];
-		[[room target] sendMessage:message asAction:action];
+		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:message sender:[connection localUser] andTranscript:room];
+		[cmessage setAction:action];
+		[room echoSentMessageToDisplay:cmessage];
+		[room sendMessage:cmessage];
 	}
 
 	return YES;

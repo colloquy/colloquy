@@ -1,6 +1,38 @@
 #import "NSStringAdditions.h"
+#include <sys/time.h>
 
 @implementation NSString (NSStringAdditions)
++ (NSString *) locallyUniqueString {
+	struct timeval tv;
+    gettimeofday( &tv, NULL );
+
+	unsigned int m = 36; // base (denominator)
+	unsigned int q = [[NSProcessInfo processInfo] processIdentifier] ^ tv.tv_usec; // input (quotient)
+	unsigned int r = 0; // remainder
+
+	NSMutableString *uniqueId = [NSMutableString stringWithCapacity:10];
+	[uniqueId appendFormat:@"%c", 'A' + ( random() % 26 )]; // always have a random letter first (more ambiguity)
+
+	#define baseConvert	do { \
+		r = q % m; \
+		q = q / m; \
+		if( r >= 10 ) r = 'A' + ( r - 10 ); \
+		else r = '0' + r; \
+		[uniqueId appendFormat:@"%c", r]; \
+	} while( q ) \
+
+	baseConvert;
+
+	q = ( tv.tv_sec - 1104555600 ); // subtract 35 years, we only care about post Jan 1 2005
+	r = 0;
+
+	baseConvert;
+
+	#undef baseConvert;
+
+	return [NSString stringWithString:uniqueId];
+}
+
 + (NSString *) mimeCharsetTagFromStringEncoding:(NSStringEncoding) encoding {
 	switch( encoding ) {
 	default:

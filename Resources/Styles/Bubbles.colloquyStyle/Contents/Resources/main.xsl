@@ -77,7 +77,7 @@
 						<td class="topLeft"></td>
 						<td class="center" rowspan="2">
 							<div class="text">
-							<span>
+							<span id="{message[not( @ignored = 'yes' )][1]/@id}">
 							<xsl:if test="message[not( @ignored = 'yes' )][1]/@action = 'yes'">
 								<span class="member action"><xsl:value-of select="sender" /></span><xsl:text> </xsl:text>
 							</xsl:if>
@@ -137,7 +137,7 @@
 			<xsl:otherwise>
 				<xsl:if test="not( @ignored = 'yes' ) and not( ../@ignored = 'yes' )">
 					<hr />
-					<span>
+					<span id="{@id}">
 					<xsl:if test="@action = 'yes'">
 						<span class="member action"><xsl:value-of select="../sender" /></span><xsl:text> </xsl:text>
 					</xsl:if>

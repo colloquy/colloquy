@@ -16,6 +16,7 @@
 #import "NSColorAdditions.h"
 #import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
+#import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
 
 #import "core.h"
@@ -532,10 +533,10 @@ static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const ch
 	if( ischannel( *target ) ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", nil]];
+		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", nil]];
 	} else {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", nil]];
+		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", nil]];
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -559,10 +560,10 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 		if( ! user ) user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSNumber numberWithBool:YES], @"auto", nil]];
+		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"auto", nil]];
 	} else {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"auto", msgData, @"message", nil]];
+		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"auto", nil]];
 		if( ! strncasecmp( nick, "NickServ", 8 ) && message ) {
 			if( strstr( message, nick ) && strstr( message, "IDENTIFY" ) ) {
 				if( ! [self nicknamePassword] ) {
@@ -595,10 +596,10 @@ static void MVChatGetActionMessage( IRC_SERVER_REC *server, const char *data, co
 		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 		if( ! user ) user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSNumber numberWithBool:YES], @"action", nil]];
+		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
 	} else {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSNumber numberWithBool:YES], @"action", nil]];
+		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];

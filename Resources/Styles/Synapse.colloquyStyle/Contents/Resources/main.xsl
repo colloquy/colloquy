@@ -78,7 +78,7 @@
 						</xsl:choose>
 					</xsl:variable>
 
-					<span class="{$messageClass}">
+					<span id="{@id}" class="{$messageClass}">
 						<span class="hidden">[</span>
 						<span class="time"><xsl:value-of select="$timestamp" /></span>
 						<span class="hidden">] <xsl:if test="not( @action = 'yes' )"><xsl:value-of select="../sender" />: </xsl:if></span>
@@ -138,7 +138,7 @@
 			</xsl:variable>
 
 			<span id="{@id}">
-				<span class="{$messageClass}">
+				<span id="{message[not( @ignored = 'yes' )][1]/@id}" class="{$messageClass}">
 					<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
 					<span class="header">
 						<a href="{$memberLink}" class="name"><xsl:value-of select="sender" /></a>

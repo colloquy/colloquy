@@ -5,8 +5,8 @@
 @interface JVChatMessage : NSObject <NSMutableCopying> {
 	@protected
 	/* xmlNode */ void *_node;
-	unsigned long long _messageNumber;
-	unsigned long long _envelopeNumber;
+	NSString *_messageIdentifier;
+	NSString *_envelopeIdentifier;
 	NSScriptObjectSpecifier *_objectSpecifier;
 	JVChatTranscript *_transcript;
 	id _sender;
@@ -19,8 +19,8 @@
 	BOOL _highlighted;
 	BOOL _loaded;
 }
-+ (id) messageWithNode:(/* xmlNode */ void *) node messageIndex:(unsigned long long) messageIndex andTranscript:(JVChatTranscript *) transcript;
-- (id) initWithNode:(/* xmlNode */ void *) node messageIndex:(unsigned long long) messageIndex andTranscript:(JVChatTranscript *) transcript;
++ (id) messageWithNode:(/* xmlNode */ void *) node andTranscript:(JVChatTranscript *) transcript;
+- (id) initWithNode:(/* xmlNode */ void *) node andTranscript:(JVChatTranscript *) transcript;
 
 - (/* xmlNode */ void *) node;
 
@@ -37,8 +37,8 @@
 - (JVIgnoreMatchResult) ignoreStatus;
 
 - (JVChatTranscript *) transcript;
-- (unsigned long long) messageNumber;
-- (unsigned long long) envelopeNumber;
+- (NSString *) messageIdentifier;
+- (NSString *) envelopeIdentifier;
 
 - (NSScriptObjectSpecifier *) objectSpecifier;
 - (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier;
@@ -62,6 +62,6 @@
 - (void) setIgnoreStatus:(JVIgnoreMatchResult) ignoreStatus;
 
 - (void) setTranscript:(JVChatTranscript *) transcript;
-- (void) setMessageNumber:(unsigned long long) number;
-- (void) setEnvelopeNumber:(unsigned long long) number;
+- (void) setMessageIdentifier:(NSString *) identifier;
+- (void) setEnvelopeIdentifier:(NSString *) identifier;
 @end

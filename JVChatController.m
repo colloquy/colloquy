@@ -346,7 +346,7 @@ static JVChatController *sharedInstance = nil;
 
 	if( ! hideFromUser && ( [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored ) ) {
 		JVDirectChat *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
-		[controller addMessageToDisplay:message fromUser:user asAction:[[[notification userInfo] objectForKey:@"action"] boolValue]];
+		[controller addMessageToDisplay:message fromUser:user asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"]];
 	}
 }
 

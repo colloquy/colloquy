@@ -22,7 +22,6 @@
 	NSMutableArray *_messageQueue;
 	JVMutableChatMessage *_currentMessage;
 
-	unsigned int _messageId;
 	BOOL _firstMessage;
 	BOOL _requiresFullMessage;
 	BOOL _isActive;
@@ -54,9 +53,9 @@
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
-- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action;
+- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier;
 - (void) processIncomingMessage:(JVMutableChatMessage *) message;
-- (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action;
+- (void) echoSentMessageToDisplay:(JVMutableChatMessage *) message;
 - (JVMutableChatMessage *) currentMessage;
 
 - (unsigned int) newMessagesWaiting;

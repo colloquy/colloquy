@@ -1,4 +1,5 @@
 #import <ChatCore/NSAttributedStringAdditions.h>
+#import <ChatCore/NSStringAdditions.h>
 #import <libxml/xinclude.h>
 #import <libxml/debugXML.h>
 #import <libxslt/transform.h>
@@ -33,8 +34,8 @@
 
 #pragma mark -
 
-+ (id) messageWithNode:(/* xmlNode */ void *) node messageIndex:(unsigned long long) messageNumber andTranscript:(JVChatTranscript *) transcript {
-	return [[[self alloc] initWithNode:node messageIndex:messageNumber andTranscript:transcript] autorelease];
++ (id) messageWithNode:(/* xmlNode */ void *) node andTranscript:(JVChatTranscript *) transcript {
+	return [[[self alloc] initWithNode:node andTranscript:transcript] autorelease];
 }
 
 #pragma mark -
@@ -85,8 +86,8 @@
 		_loaded = NO;
 		_objectSpecifier = nil;
 		_transcript = nil;
-		_messageNumber = 0;
-		_envelopeNumber = 0;
+		_messageIdentifier = nil;
+		_envelopeIdentifier = nil;
 		_sender = nil;
 		_htmlMessage = nil;
 		_attributedMessage = nil;
@@ -100,17 +101,17 @@
 	return self;
 }
 
-- (id) initWithNode:(/* xmlNode */ void *) node messageIndex:(unsigned long long) messageNumber andTranscript:(JVChatTranscript *) transcript {
+- (id) initWithNode:(/* xmlNode */ void *) node andTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) ) {
 		_node = node;
-		_transcript = transcript;
-		_messageNumber = messageNumber;
+		_transcript = transcript; // weak reference
 
-		id classDesc = [NSClassDescription classDescriptionForClass:[transcript class]];
-		[self setObjectSpecifier:[[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[transcript objectSpecifier] key:@"messages" index:messageNumber] autorelease]];
+		xmlChar *idStr = xmlGetProp( (xmlNode *) _node, "id" );
+		_messageIdentifier = ( idStr ? [[NSString allocWithZone:[self zone]] initWithUTF8String:idStr] : nil );
+		xmlFree( idStr );
 
-		xmlChar *idStr = xmlGetProp( ((xmlNode *) _node ) -> parent, "id" );
-		_envelopeNumber = ( idStr ? strtoul( idStr, NULL, 0 ) : 0 );
+		idStr = xmlGetProp( ((xmlNode *) _node ) -> parent, "id" );
+		_envelopeIdentifier = ( idStr ? [[NSString allocWithZone:[self zone]] initWithUTF8String:idStr] : nil );
 		xmlFree( idStr );
 	}
 
@@ -124,13 +125,15 @@
 	[ret setDate:_date];
 	[ret setAction:_action];
 	[ret setHighlighted:_highlighted];
-	[ret setMessageNumber:_messageNumber];
-	[ret setEnvelopeNumber:_envelopeNumber];
+	[ret setMessageIdentifier:_messageIdentifier];
+	[ret setEnvelopeIdentifier:_envelopeIdentifier];
 
 	return ret;
 }
 
 - (void) dealloc {
+	[_messageIdentifier release];
+	[_envelopeIdentifier release];
 	[_sender release];
 	[_htmlMessage release];
 	[_attributedMessage release];
@@ -138,8 +141,10 @@
 	[_objectSpecifier release];
 
 	_node = NULL;
-	_transcript = NULL;
+	_transcript = nil;
 	_sender = nil;
+	_messageIdentifier = nil;
+	_envelopeIdentifier = nil;
 	_htmlMessage = nil;
 	_attributedMessage = nil;
 	_date = nil;
@@ -210,12 +215,12 @@
 	return _transcript;
 }
 
-- (unsigned long long) messageNumber {
-	return _messageNumber;
+- (NSString *) messageIdentifier {
+	return _messageIdentifier;
 }
 
-- (unsigned long long) envelopeNumber {
-	return _envelopeNumber;
+- (NSString *) envelopeIdentifier {
+	return _envelopeIdentifier;
 }
 
 #pragma mark -
@@ -256,6 +261,7 @@
 		[self setDate:[NSDate date]];
 		[self setBody:body];
 		[self setSender:sender];
+		[self setMessageIdentifier:[NSString locallyUniqueString]];
 	}
 
 	return self;
@@ -324,15 +330,16 @@
 #pragma mark -
 
 - (void) setTranscript:(JVChatTranscript *) transcript {
-	[_transcript autorelease];
-	_transcript = [transcript retain];
+	_transcript = transcript; // weak reference
 }
 
-- (void) setMessageNumber:(unsigned long long) number {
-	_messageNumber = number;
+- (void) setMessageIdentifier:(NSString *) identifier {
+	[_messageIdentifier autorelease];
+	_messageIdentifier = [identifier copyWithZone:[self zone]];
 }
 
-- (void) setEnvelopeNumber:(unsigned long long) number {
-	_envelopeNumber = number;
+- (void) setEnvelopeIdentifier:(NSString *) identifier {
+	[_envelopeIdentifier autorelease];
+	_envelopeIdentifier = [identifier copyWithZone:[self zone]];
 }
 @end
