@@ -230,6 +230,11 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	return self;
 }
 
+- (void) dealloc {
+	[self _setDCCFileRecord:NULL];
+	[super dealloc];
+}
+
 #pragma mark -
 
 - (BOOL) isPassive {
@@ -389,6 +394,11 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	}
 	
 	return self;
+}
+
+- (void) dealloc {
+	[self _setDCCFileRecord:NULL];
+	[super dealloc];
 }
 
 #pragma mark -
