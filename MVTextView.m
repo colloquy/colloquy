@@ -8,6 +8,13 @@
 #pragma mark -
 
 @implementation MVTextView
+- (id)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer {
+	if (self = [super initWithFrame:frameRect textContainer:aTextContainer]) {
+		defaultTypingAttributes = [[NSDictionary alloc] init];
+	}
+	return self;
+}
+
 - (void) interpretKeyEvents:(NSArray *) eventArray {
 	NSMutableArray *newArray = [NSMutableArray array];
 	NSEnumerator *e = [eventArray objectEnumerator];
@@ -84,7 +91,7 @@
 	[defaultTypingAttributes release];
 	if( font == nil ) {
 		font = [NSFont userFontOfSize:0.];
-		defaultTypingAttributes = nil;
+		defaultTypingAttributes = [[NSDictionary alloc] init];
 	} else {
 		defaultTypingAttributes = [[NSDictionary dictionaryWithObject: font forKey: NSFontAttributeName] retain];
 	}
