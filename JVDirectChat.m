@@ -88,6 +88,7 @@ extern char *MVChatXHTMLToIRC( const char * const string );
 extern char *MVChatIRCToXHTML( const char * const string );
 
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
+static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
@@ -1069,6 +1070,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[menuItem setSubmenu:_spillEncodingMenu];
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
+	} else if( [identifier isEqual:JVToolbarClearItemIdentifier] ) {
+		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear display toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Clear Display", "clear display toolbar customize palette name" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Clear Display", "clear display tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"clear"]];
+
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector( clearDisplay: )];
 	} else return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
 	return toolbarItem;
 }
@@ -1083,6 +1093,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
+	[list addObject:JVToolbarClearItemIdentifier];
 	return list;
 }
 
