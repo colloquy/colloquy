@@ -29,15 +29,11 @@
 - (void) pause;
 - (void) resume;
 - (BOOL) isPaused;
-	
+
 - (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound;
 - (IBAction) send:(id) sender;
 @end
 
 @interface JVChatConsole (JVChatConsoleScripting) <JVChatListItemScripting>
 - (NSNumber *) uniqueIdentifier;
-@end
-
-@interface NSObject (MVChatPluginCommandSupport)
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection;
 @end

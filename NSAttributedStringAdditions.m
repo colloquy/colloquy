@@ -100,7 +100,7 @@ static WebView *fragmentWebView = nil;
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 
-	return result;
+	return [[[self alloc] initWithAttributedString:result] autorelease];
 }
 
 + (void) renderHTMLFragment:(NSDictionary *) info {
@@ -466,7 +466,7 @@ static WebView *fragmentWebView = nil;
 		NSString *text = nil;
  		[scanner scanUpToCharactersFromSet:formatCharacters intoString:&text];
 		if( [text length] ) {
-			NSAttributedString *new = [[NSAttributedString alloc] initWithString:text attributes:attributes];
+			id new = [[[self class] alloc] initWithString:text attributes:attributes];
 			[ret appendAttributedString:new];
 			[new release];
 		}

@@ -139,7 +139,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The incoming message. Can contain HTML formatting.</string>
+				<string>The incoming message. Message and properties are modifiable.</string>
 			</dict>
 			<key>Arguments</key>
 			<dict>
@@ -175,7 +175,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The outgoing message. Can contain HTML formatting.</string>
+				<string>The outgoing message. Message and properties are modifiable.</string>
 			</dict>
 			<key>Arguments</key>
 			<dict>

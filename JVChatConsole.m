@@ -305,13 +305,14 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 				arguments = [subMsg attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], range.location - [scanner scanLocation] )];
 
-				NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), nil];
+				NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), @encode( id ), nil];
 				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-				[invocation setSelector:@selector( processUserCommand:withArguments:toConnection: )];
+				[invocation setSelector:@selector( processUserCommand:withArguments:toConnection:inView: )];
 				[invocation setArgument:&command atIndex:2];
 				[invocation setArgument:&arguments atIndex:3];
 				[invocation setArgument:&_connection atIndex:4];
+				[invocation setArgument:&self atIndex:5];
 
 				NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 

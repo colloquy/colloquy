@@ -195,7 +195,7 @@
 				<key>Optional</key>
 				<string>NO</string>
 				<key>Type</key>
-				<string>NSString</string>
+				<string>JVChatMessage</string>
 			</dict>
 			<key>Arguments</key>
 			<dict>
@@ -204,7 +204,7 @@
 					<key>AppleEventCode</key>
 					<string>piM1</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
@@ -213,7 +213,7 @@
 					<key>AppleEventCode</key>
 					<string>piM2</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
@@ -222,17 +222,13 @@
 					<key>AppleEventCode</key>
 					<string>piM3</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>Colloquy.AbstractChatViewController</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
-			<key>ResultAppleEventCode</key>
-			<string>utxt</string>
-			<key>Type</key>
-			<string>NSString</string>
 		</dict>
 		<key>processOutgoingChatMessage</key>
 		<dict>
@@ -245,7 +241,7 @@
 				<key>Optional</key>
 				<string>NO</string>
 				<key>Type</key>
-				<string>NSString</string>
+				<string>JVChatMessage</string>
 			</dict>
 			<key>Arguments</key>
 			<dict>
@@ -254,7 +250,7 @@
 					<key>AppleEventCode</key>
 					<string>poM1</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
@@ -263,17 +259,13 @@
 					<key>AppleEventCode</key>
 					<string>poM2</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>Colloquy.AbstractChatViewController</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
-			<key>ResultAppleEventCode</key>
-			<string>utxt</string>
-			<key>Type</key>
-			<string>NSString</string>
 		</dict>
 		<key>handleClickedLink</key>
 		<dict>

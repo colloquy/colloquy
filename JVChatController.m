@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <AGRegex/AGRegex.h>
 
@@ -555,6 +556,16 @@ static JVChatController *sharedInstance = nil;
 	[self chatViewControllerForUser:@"MemoServ" withConnection:connection ifExists:NO];
 }
 
+@end
+
+#pragma mark -
+
+@implementation MVChatScriptPlugin (MVChatScriptPluginCommandSupport)
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", view, @"pcC2", nil];
+	id result = [self callScriptHandler:'pcCX' withArguments:args forSelector:_cmd];
+	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
+}
 @end
 
 #pragma mark -

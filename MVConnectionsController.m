@@ -1465,13 +1465,14 @@ static NSMenu *favoritesMenu = nil;
 
 			NSAttributedString *args = [[[NSAttributedString alloc] initWithString:arguments] autorelease];
 
-			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), nil];
+			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), @encode( id ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-			[invocation setSelector:@selector( processUserCommand:withArguments:toConnection: )];
+			[invocation setSelector:@selector( processUserCommand:withArguments:toConnection:inView: )];
 			[invocation setArgument:&command atIndex:2];
 			[invocation setArgument:&args atIndex:3];
 			[invocation setArgument:&connection atIndex:4];
+			[invocation setArgument:NULL atIndex:5];
 
 			NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 			if( ! [[results lastObject] boolValue] )

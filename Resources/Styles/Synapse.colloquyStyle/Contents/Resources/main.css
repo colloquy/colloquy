@@ -137,11 +137,11 @@ a.member.action {
 	display: none;
 }
 
-.itunes {
+.itunes > * {
 	text-decoration: none !important;
 	color: inherit !important;
 }
 
-.itunes > *:hover {
-	text-decoration: underline;
+.itunes > a:hover {
+	text-decoration: underline !important;
 }

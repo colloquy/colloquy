@@ -990,6 +990,64 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1C4671E306D7759100071DC6 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSTextStorageAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C4671E406D7759100071DC6 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSTextStorageAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C4671E506D7759100071DC6 = {
+			fileRef = 1C4671E306D7759100071DC6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C4671E606D7759100071DC6 = {
+			fileRef = 1C4671E406D7759100071DC6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C46784E06D77F0900071DC6 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = NSTextSuite.scriptSuite;
+			path = Resources/NSTextSuite.scriptSuite;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C46784F06D77F0900071DC6 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = NSTextSuite.scriptTerminology;
+			path = Resources/NSTextSuite.scriptTerminology;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C46785006D77F0900071DC6 = {
+			fileRef = 1C46784E06D77F0900071DC6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C46785106D77F0900071DC6 = {
+			fileRef = 1C46784F06D77F0900071DC6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C51B48A052DE0CB00BB459B = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist;
@@ -2115,6 +2173,7 @@
 				1C2391A90677E6B7000E89A7,
 				1C96E93E06AADBBD0013B0A9,
 				1C6A112A06BC0C9E00A66340,
+				1C4671E506D7759100071DC6,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2387,6 +2446,8 @@
 				1C7EF5C206B346E50037F173,
 				1C7EF5C306B346E50037F173,
 				1C7E023E06B42C470037F173,
+				1C46785006D77F0900071DC6,
+				1C46785106D77F0900071DC6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2859,6 +2920,7 @@
 				1C2391AA0677E6B7000E89A7,
 				1C96E93F06AADBBD0013B0A9,
 				1C6A112B06BC0C9E00A66340,
+				1C4671E606D7759100071DC6,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4574,6 +4636,8 @@
 				1CABF8750656414100801C15,
 				1CABFCB00657F10900801C15,
 				1CABFCAF0657F10900801C15,
+				1C4671E406D7759100071DC6,
+				1C4671E306D7759100071DC6,
 			);
 			isa = PBXGroup;
 			name = "Other Sources";
@@ -4600,6 +4664,8 @@
 				1C9982AF0604BEAA006C6417,
 				1CA75A260652537A000141D5,
 				1CC6FD38054AF1940075807C,
+				1C46784E06D77F0900071DC6,
+				1C46784F06D77F0900071DC6,
 				1CCA510D0598108000F0A4CD,
 				1CCA510E0598108000F0A4CD,
 				1C59BD61059E2E02001487E2,

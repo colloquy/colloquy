@@ -306,11 +306,11 @@ a:hover {
 	text-shadow: rgba( 0, 0, 0, .5 ) 0 1px 2px;
 }
 
-.itunes {
+.itunes > * {
 	text-decoration: none !important;
 	color: inherit !important;
 }
 
-.itunes > *:hover {
-	text-decoration: underline;
+.itunes > a:hover {
+	text-decoration: underline !important;
 }

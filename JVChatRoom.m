@@ -18,6 +18,7 @@
 #import "JVNotificationController.h"
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
+#import "JVChatMessage.h"
 #import "MVTextView.h"
 
 NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotification";
@@ -255,8 +256,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 #pragma mark Miscellaneous
 
 - (void) unavailable {
-//	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You're offline", "title of the you're offline message sheet" ), NSLocalizedString( @"You are no longer connected to the server where you were chatting. No messages can be sent at this time. Reconnecting might be in progress.", "chat window error description for loosing connection" ), @"OK", nil, nil ) withName:@"disconnected"];
-	_cantSendMessages = YES;
+	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"Message undeliverable", "title of the user offline message sheet" ), NSLocalizedString( @"You are no longer a member of this room. No messages can be sent at this time.", "error description for sending s message when not in the room" ), @"OK", nil, nil ) withName:@"unavailable"];
 }
 
 - (IBAction) addToFavorites:(id) sender {
@@ -305,23 +305,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 #pragma mark -
 #pragma mark Message Handling
 
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( JVChatRoom * ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-
-	[invocation setSelector:@selector( processUserCommand:withArguments:toRoom: )];
-	[invocation setArgument:&command atIndex:2];
-	[invocation setArgument:&arguments atIndex:3];
-	[invocation setArgument:&self atIndex:4];
-
-	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
-	return [[results lastObject] boolValue];
-}
-
-- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore {
-	JVChatRoomMember *member = [self chatRoomMemberWithName:user];
-
-	if( ignore == JVNotIgnored && ! [user isEqualToString:[[self connection] nickname]] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
+- (void) processIncomingMessage:(JVMutableChatMessage *) message {
+	if( [message ignoreStatus] == JVNotIgnored && ! [[message sender] isLocalUser] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]] forKey:@"title"];
 		if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has 1 message waiting.", "new single room message bubble text" ), [self title]] forKey:@"description"];
@@ -333,16 +318,16 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[[JVNotificationController defaultManager] performNotification:@"JVChatRoomActivity" withContextInfo:context];
 	}
 
-	if( ignore == JVNotIgnored && [_nextMessageAlertMembers containsObject:member] ) {
+	if( [message ignoreStatus] == JVNotIgnored && [_nextMessageAlertMembers containsObject:[message sender]] ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Replied", "member replied bubble title" ), [member title]] forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has possibly replied to your message.", "new room messages bubble text" ), [member title]] forKey:@"description"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Replied", "member replied bubble title" ), [[message sender] title]] forKey:@"title"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has possibly replied to your message.", "new room messages bubble text" ), [[message sender] title]] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatReplyAfterAddressing" withContextInfo:context];
 
-		[_nextMessageAlertMembers removeObject:member];
+		[_nextMessageAlertMembers removeObject:[message sender]];
 	}
 
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
@@ -359,50 +344,45 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[escapedName release];
 		[pattern release];
 
-		NSArray *matches = [regex findAllInString:[message string]];
+		NSArray *matches = [regex findAllInString:[message bodyAsPlainText]];
 		NSEnumerator *enumerator = [matches objectEnumerator];
 		AGRegexMatch *match = nil;
 
 		while( ( match = [enumerator nextObject] ) ) {
 			NSRange foundRange = [match range];
 			// don't highlight nicks in the middle of a link
-			if( ! [message attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL] ) {
-				NSMutableSet *classes = [message attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL];
+			if( ! [[message body] attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL] ) {
+				NSMutableSet *classes = [[message body] attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL];
 				if( ! classes ) classes = [NSMutableSet setWithObject:@"member"];
 				else [classes addObject:@"member"];
-				[message addAttribute:@"CSSClasses" value:classes range:foundRange];
+				[[message body] addAttribute:@"CSSClasses" value:classes range:foundRange];
 			}
 		}
 	}
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableString * ), @encode( BOOL ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVMutableChatMessage * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	[invocation setSelector:@selector( processMessage:asAction:fromMember:inRoom: )];
+	[invocation setSelector:@selector( processIncomingMessage: )];
 	[invocation setArgument:&message atIndex:2];
-	[invocation setArgument:&action atIndex:3];
-	[invocation setArgument:&member atIndex:4];
-	[invocation setArgument:&self atIndex:5];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 }
 
-- (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableAttributedString * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
+- (void) sendMessage:(JVMutableChatMessage *) message {
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVMutableChatMessage * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	[invocation setSelector:@selector( processMessage:asAction:toRoom: )];
+	[invocation setSelector:@selector( processOutgoingMessage: )];
 	[invocation setArgument:&message atIndex:2];
-	[invocation setArgument:&action atIndex:3];
-	[invocation setArgument:&self atIndex:4];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 
-	if( [message length] )
-		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
+	if( [[message body] length] )
+		[[self connection] sendMessage:[message body] withEncoding:_encoding toChatRoom:[self target] asAction:[message isAction]];
 
 	AGRegex *regex = [AGRegex regexWithPattern:@"^(.*?)[:;,-]" options:AGRegexCaseInsensitive];
-	AGRegexMatch *match = [regex findInString:[message string]];
+	AGRegexMatch *match = [regex findInString:[message bodyAsPlainText]];
 	if( [match count] ) {
 		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[match groupAtIndex:1]];
 		if( mbr ) [_nextMessageAlertMembers addObject:mbr];
@@ -1381,26 +1361,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 #pragma mark -
 
 @implementation MVChatScriptPlugin (MVChatScriptPluginRoomSupport)
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(JVChatRoom *) room {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", room, @"pcC2", nil];
-	id result = [self callScriptHandler:'pcCX' withArguments:args forSelector:_cmd];
-	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
-}
-
-- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"piM1", [member nickname], @"piM2", room, @"piM3", nil];
-	id result = [self callScriptHandler:'piMX' withArguments:args forSelector:_cmd];
-	if( [result isKindOfClass:[NSString class]] )
-		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
-}
-
-- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"poM1", room, @"poM2", nil];
-	id result = [self callScriptHandler:'poMX' withArguments:args forSelector:_cmd];
-	if( [result isKindOfClass:[NSString class]] )
-		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
-}
-
 - (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mJr1", nil];
 	[self callScriptHandler:'mJrX' withArguments:args forSelector:_cmd];

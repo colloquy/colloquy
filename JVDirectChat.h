@@ -20,6 +20,7 @@
 @class NSData;
 @class NSAttributedString;
 @class NSMutableAttributedString;
+@class JVMutableChatMessage;
 @class JVBuddy;
 
 @interface JVDirectChat : JVChatTranscript {
@@ -38,6 +39,7 @@
 	JVBuddy *_buddy;
 	NSFileHandle *_logFile;
 	NSMutableArray *_messageQueue;
+	JVMutableChatMessage *_currentMessage;
 
 	unsigned int _messageId;
 	BOOL _firstMessage;
@@ -57,7 +59,7 @@
 
 - (void) setTarget:(NSString *) target;
 - (NSString *) target;
-- (NSURL *) targetURL;
+- (NSURL *) url;
 - (JVBuddy *) buddy;
 
 - (void) unavailable;
@@ -75,14 +77,15 @@
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
-- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore;
+- (void) processIncomingMessage:(JVMutableChatMessage *) message;
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action;
+- (JVMutableChatMessage *) currentMessage;
 
 - (unsigned int) newMessagesWaiting;
 - (unsigned int) newHighlightMessagesWaiting;
 
 - (IBAction) send:(id) sender;
-- (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action;
+- (void) sendMessage:(JVMutableChatMessage *) message;
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments;
 
 - (IBAction) clear:(id) sender;
@@ -90,10 +93,8 @@
 @end
 
 @interface NSObject (MVChatPluginDirectChatSupport)
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toChat:(JVDirectChat *) chat;
-
-- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat;
-- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toChat:(JVDirectChat *) chat;
+- (void) processIncomingMessage:(JVMutableChatMessage *) message;
+- (void) processOutgoingMessage:(JVMutableChatMessage *) message;
 
 - (void) userNamed:(NSString *) nickname isNowKnownAs:(NSString *) newNickname inView:(id <JVChatViewController>) view;
 @end

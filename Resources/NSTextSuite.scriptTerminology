@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Classes</key>
+	<dict>
+		<key>NSAttachmentTextStorage</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>filename</key>
+				<dict>
+					<key>Description</key>
+					<string>The path to the file for the attachment</string>
+					<key>Name</key>
+					<string>file name</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Represents an inline text attachment.  This class is used mainly for make commands.</string>
+			<key>Name</key>
+			<string>attachment</string>
+		</dict>
+		<key>NSTextStorage</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>backgroundColor</key>
+				<dict>
+					<key>Description</key>
+					<string>The background color of the first character.</string>
+					<key>Name</key>
+					<string>background color</string>
+				</dict>
+				<key>boldState</key>
+				<dict>
+					<key>Description</key>
+					<string>The bold state of the first character.</string>
+					<key>Name</key>
+					<string>bold</string>
+				</dict>
+				<key>fontName</key>
+				<dict>
+					<key>Description</key>
+					<string>The name of the font of the first character.</string>
+					<key>Name</key>
+					<string>font</string>
+				</dict>
+				<key>fontSize</key>
+				<dict>
+					<key>Description</key>
+					<string>The size in points of the first character.</string>
+					<key>Name</key>
+					<string>size</string>
+				</dict>
+				<key>foregroundColor</key>
+				<dict>
+					<key>Description</key>
+					<string>The color of the first character.</string>
+					<key>Name</key>
+					<string>color</string>
+				</dict>
+				<key>hyperlink</key>
+				<dict>
+					<key>Description</key>
+					<string>The Internet link of the first character.</string>
+					<key>Name</key>
+					<string>link</string>
+				</dict>
+				<key>styleClasses</key>
+				<dict>
+					<key>Description</key>
+					<string>The stylesheet classes of the first character.</string>
+					<key>Name</key>
+					<string>style classes</string>
+				</dict>
+				<key>italicState</key>
+				<dict>
+					<key>Description</key>
+					<string>The italic state of the first character.</string>
+					<key>Name</key>
+					<string>italic</string>
+				</dict>
+				<key>underlineState</key>
+				<dict>
+					<key>Description</key>
+					<string>The underline state of the first character.</string>
+					<key>Name</key>
+					<string>underline</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Rich (styled) text</string>
+			<key>Name</key>
+			<string>text</string>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>A set of basic classes for text processing.</string>
+	<key>Name</key>
+	<string>Text Suite</string>
+	<key>Synonyms</key>
+	<dict>
+		<key>catr</key>
+		<dict>
+			<key>Description</key>
+			<string>This subdivides the text into chunks that all have the same attributes.</string>
+			<key>Name</key>
+			<string>attribute run</string>
+			<key>PluralName</key>
+			<string>attribute runs</string>
+		</dict>
+		<key>cha </key>
+		<dict>
+			<key>Description</key>
+			<string>This subdivides the text into characters.</string>
+			<key>Name</key>
+			<string>character</string>
+			<key>PluralName</key>
+			<string>characters</string>
+		</dict>
+		<key>cpar</key>
+		<dict>
+			<key>Description</key>
+			<string>This subdivides the text into paragraphs.</string>
+			<key>Name</key>
+			<string>paragraph</string>
+			<key>PluralName</key>
+			<string>paragraphs</string>
+		</dict>
+		<key>cwor</key>
+		<dict>
+			<key>Description</key>
+			<string>This subdivides the text into words.</string>
+			<key>Name</key>
+			<string>word</string>
+			<key>PluralName</key>
+			<string>words</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

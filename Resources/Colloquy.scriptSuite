@@ -102,7 +102,7 @@
 			<key>AppleEventCode</key>
 			<string>cmsM</string>
 			<key>DefaultSubcontainerAttribute</key>
-			<string>message</string>
+			<string>body</string>
 			<key>ToOneRelationships</key>
 			<dict>
 				<key>transcript</key>
@@ -114,7 +114,7 @@
 					<key>Type</key>
 					<string>AbstractChatViewController</string>
 				</dict>
-				<key>message</key>
+				<key>body</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>maPA</string>
@@ -149,7 +149,7 @@
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
-				<key>messageAsHTML</key>
+				<key>bodyAsHTML</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>maHA</string>
@@ -165,7 +165,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>NSCoreSuite.AbstractObject</string>
 				</dict>
 				<key>date</key>
 				<dict>
@@ -813,6 +813,15 @@
 			</dict>
 			<key>Attributes</key>
 			<dict>
+				<key>currentMessage</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>cRmA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>JVChatMessage</string>
+				</dict>
 				<key>cantSendMessages</key>
 				<dict>
 					<key>AppleEventCode</key>

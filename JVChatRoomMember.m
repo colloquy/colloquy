@@ -13,6 +13,7 @@
 @interface JVChatRoomMember (JVChatMemberPrivate)
 - (NSString *) _selfStoredNickname;
 - (NSString *) _selfCompositeName;
+- (void) _setNickname:(NSString *) name;
 @end
 
 #pragma mark -
@@ -21,8 +22,7 @@
 - (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name {
 	if( ( self = [self init] ) ) {
 		_parent = room;
-		_nickname = [[name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] retain];
-		_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_nickname onServer:[[self connection] server]] retain];
+		[self _setNickname:name];
 	}
 	return self;
 }
@@ -446,7 +446,7 @@
 	[banButton setTitle:NSLocalizedString( @"Kick User", "kick user button" )];
 	[banButton setTarget:self];
 
-	[NSApp beginSheet:banWindow modalForWindow:[[_parent view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_parent view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
 - (IBAction) customBan:(id) sender {
@@ -481,7 +481,7 @@
 	[banButton setTitle:NSLocalizedString( @"Ban User", "ban user button" )];
 	[banButton setTarget:self];
 
-	[NSApp beginSheet:banWindow modalForWindow:[[_parent view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_parent view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
 - (IBAction) kickban:(id) sender {
@@ -548,7 +548,7 @@
 - (IBAction) closeKickbanSheet:(id) sender {
 	NSString *hostmask = [firstField stringValue];
 	NSString *reason = [secondField stringValue];
-	[NSApp endSheet:banWindow];
+	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 
 	[[_parent connection] banMember:hostmask inRoom:[_parent target]];
@@ -556,7 +556,7 @@
 }
 
 - (IBAction) cancelSheet:(id) sender {
-	[NSApp endSheet:banWindow];
+	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 }
 @end

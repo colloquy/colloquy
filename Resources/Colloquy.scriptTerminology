@@ -91,7 +91,7 @@
 					<key>Name</key>
 					<string>chat view</string>
 				</dict>
-				<key>message</key>
+				<key>body</key>
 				<dict>
 					<key>Description</key>
 					<string>The body of the message. (Default subcontainer.)</string>
@@ -115,7 +115,7 @@
 					<key>Name</key>
 					<string>highlighted</string>
 				</dict>
-				<key>messageAsHTML</key>
+				<key>bodyAsHTML</key>
 				<dict>
 					<key>Description</key>
 					<string>The message with posiable HTML formatting.</string>
@@ -553,6 +553,13 @@
 			</dict>
 			<key>Attributes</key>
 			<dict>
+				<key>currentMessage</key>
+				<dict>
+					<key>Description</key>
+					<string>Current message being sent or received. Only available during plug-in handlers.</string>
+					<key>Name</key>
+					<string>current message</string>
+				</dict>
 				<key>cantSendMessages</key>
 				<dict>
 					<key>Description</key>

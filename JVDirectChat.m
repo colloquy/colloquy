@@ -23,6 +23,7 @@
 #import "JVTabbedChatWindowController.h"
 #import "JVStyle.h"
 #import "JVChatRoom.h"
+#import "JVChatMessage.h"
 #import "JVNotificationController.h"
 #import "MVConnectionsController.h"
 #import "JVDirectChat.h"
@@ -357,7 +358,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return [[_target retain] autorelease];
 }
 
-- (NSURL *) targetURL {
+- (NSURL *) url {
 	NSString *server = [[_connection url] absoluteString];
 	return [NSURL URLWithString:[server stringByAppendingPathComponent:[_target stringByEncodingIllegalURLCharacters]]];
 }
@@ -731,9 +732,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 }
 
-- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore {
-	if( ! [user isEqualToString:[[self connection] nickname]] ) {
-		if( ignore == JVNotIgnored && _firstMessage ) {
+- (void) processIncomingMessage:(JVMutableChatMessage *) message {
+	if( ! [[message sender] isEqualToString:[[self connection] nickname]] ) {
+		if( [message ignoreStatus] == JVNotIgnored && _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"description"];
@@ -742,7 +743,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
-		} else if( ignore == JVNotIgnored ) {
+		} else if( [message ignoreStatus] == JVNotIgnored ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
 			if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have 1 message waiting from %@.", "new single message bubble text" ), [self title]] forKey:@"description"];
@@ -755,13 +756,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 	}
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableString * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVMutableChatMessage * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	[invocation setSelector:@selector( processMessage:asAction:inChat: )];
+	[invocation setSelector:@selector( processIncomingMessage: )];
 	[invocation setArgument:&message atIndex:2];
-	[invocation setArgument:&action atIndex:3];
-	[invocation setArgument:&self atIndex:4];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 }
@@ -783,15 +782,20 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return _newHighlightMessageCount;
 }
 
+- (JVMutableChatMessage *) currentMessage {
+	return [[_currentMessage retain] autorelease];
+}
+
 #pragma mark -
 #pragma mark Input Handling
 
 - (IBAction) send:(id) sender {
-	NSMutableAttributedString *subMsg = nil;
+	NSTextStorage *subMsg = nil;
 	BOOL action = NO;
 	NSRange range;
 
-	if( ! [[self connection] isConnected] || ( _cantSendMessages && ! [[[send textStorage] string] hasPrefix:@"/"] ) ) return;
+	// allow commands to be passed to plugins if we arn't connected, allow commands to pass to plugins and server if we are just out of the room
+	if( ( _cantSendMessages || ! [[self connection] isConnected] ) && ! [[[send textStorage] string] hasPrefix:@"/"] ) return;
 
 	_historyIndex = 0;
 	if( ! [[send textStorage] length] ) return;
@@ -827,7 +831,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 				arguments = [subMsg attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], range.location - [scanner scanLocation] )];
 
-				if( ! ( handled = [self processUserCommand:command withArguments:arguments] ) )
+				if( ! ( handled = [self processUserCommand:command withArguments:arguments] ) && [[self connection] isConnected] )
 					[[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
 			} else {
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
@@ -845,11 +849,24 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 					}
 				}
 
-				[self sendAttributedMessage:subMsg asAction:action];
+				[_currentMessage autorelease]; // set the message to an object property for plugins, if needed...
+				_currentMessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] nickname] andTranscript:self];
+				[_currentMessage setAction:action];
+
+				id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
+				id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
+				[_currentMessage setObjectSpecifier:msgSpecifier];
+
+				[self sendMessage:_currentMessage];
+
 				if( [[subMsg string] length] )
-					[self echoSentMessageToDisplay:subMsg asAction:action];
+					[self echoSentMessageToDisplay:[_currentMessage body] asAction:[_currentMessage isAction]];
+
+				[_currentMessage release];
+				_currentMessage = nil;
 			}
 		}
+
 		if( range.length ) range.location++;
 		[[send textStorage] deleteCharactersInRange:NSMakeRange( 0, range.location )];
 	}
@@ -858,29 +875,28 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[display stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
 }
 
-- (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableAttributedString * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
+- (void) sendMessage:(JVMutableChatMessage *) message {
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVMutableChatMessage * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	[invocation setSelector:@selector( processMessage:asAction:toChat: )];
+	[invocation setSelector:@selector( processOutgoingMessage: )];
 	[invocation setArgument:&message atIndex:2];
-	[invocation setArgument:&action atIndex:3];
-	[invocation setArgument:&self atIndex:4];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 
-	if( [message length] )
-		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
+	if( [[message body] length] )
+		[[self connection] sendMessage:[message body] withEncoding:_encoding toUser:[self target] asAction:[message isAction]];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( JVDirectChat * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), @encode( id ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	[invocation setSelector:@selector( processUserCommand:withArguments:toChat: )];
+	[invocation setSelector:@selector( processUserCommand:withArguments:toConnection:inView: )];
 	[invocation setArgument:&command atIndex:2];
 	[invocation setArgument:&arguments atIndex:3];
-	[invocation setArgument:&self atIndex:4];
+	[invocation setArgument:&_connection atIndex:4];
+	[invocation setArgument:&self atIndex:5];
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 	return [[results lastObject] boolValue];
@@ -1178,6 +1194,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 @implementation JVDirectChat (JVDirectChatPrivate)
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode {
+	// DO *NOT* call this method without first acquiring _logLock!
 	NSParameterAssert( name != nil );
 	NSParameterAssert( [name length] );
 
@@ -1272,12 +1289,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	// DO *NOT* call this method without first acquiring _logLock!
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
+	NSParameterAssert( [user length] );
 
 	NSFont *baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
 	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
 
 	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
-	NSMutableAttributedString *messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
+	NSTextStorage *messageString = [NSTextStorage attributedStringWithIRCFormat:message options:options];
 
 	if( ! messageString ) {
 		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
@@ -1291,23 +1309,30 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	if( ! [messageString length] ) {
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
-		messageString = [[[NSMutableAttributedString alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes] autorelease];
+		messageString = [[[NSTextStorage alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes] autorelease];
 	}
 
-	JVIgnoreMatchResult ignoreTest = JVNotIgnored;
-	if( ! [user isEqualToString:[[self connection] nickname]] )
-		ignoreTest = [[JVChatController defaultManager] shouldIgnoreUser:user withMessage:messageString inView:self];
+	[_currentMessage autorelease]; // set the message to an object property for plugins, if needed...
+	_currentMessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:user andTranscript:self];
+	[_currentMessage setAction:action];
 
-	if( ! [user isEqualToString:[[self connection] nickname]] && ignoreTest == JVNotIgnored )
+	id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
+	id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
+	[_currentMessage setObjectSpecifier:msgSpecifier];
+
+	if( ! [user isEqualToString:[[self connection] nickname]] )
+		[_currentMessage setIgnoreStatus:[[JVChatController defaultManager] shouldIgnoreUser:user withMessage:messageString inView:self]];
+
+	if( ! [user isEqualToString:[[self connection] nickname]] && [_currentMessage ignoreStatus] == JVNotIgnored )
 		_newMessageCount++;
 
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] ) {
 		[messageString makeLinkAttributesAutomatically];
+		[self _hyperlinkRoomNames:messageString];
+	}
 
-	[self _hyperlinkRoomNames:messageString];
 	[self _performEmoticonSubstitutionOnString:messageString];
 
-	BOOL highlight = NO;
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 		NSMutableArray *names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
@@ -1337,21 +1362,21 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				if( ! classes ) classes = [NSMutableSet setWithObject:@"highlight"];
 				else [classes addObject:@"highlight"];
 				[messageString addAttribute:@"CSSClasses" value:classes range:foundRange];
-				highlight = YES;
+				[_currentMessage setHighlighted:YES];
 			}
 		}
 	}
 
-	[self processMessage:messageString asAction:action fromUser:user ignoreResult:ignoreTest];
+	[self processIncomingMessage:_currentMessage];
 
-	if( ! [messageString length] && ignoreTest == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
+	if( ! [messageString length] && [_currentMessage ignoreStatus] == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
 		_newMessageCount--;
 		return;
 	}
 
 	[self _breakLongLinesInString:messageString];
 
-	if( highlight && ignoreTest == JVNotIgnored ) {
+	if( [_currentMessage isHighlighted] && [_currentMessage ignoreStatus] == JVNotIgnored ) {
 		_newHighlightMessageCount++;
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
@@ -1363,13 +1388,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
 	}
 
-	if( ignoreTest != JVNotIgnored ) {
+	if( [_currentMessage ignoreStatus] != JVNotIgnored ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:( ( ignoreTest == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
+		[context setObject:( ( [_currentMessage ignoreStatus] == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
 		if( [self isMemberOfClass:[JVChatRoom class]] ) [context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", user, [self title]] forKey:@"description"];
 		else [context setObject:[NSString stringWithFormat:@"%@'s message was ignored.", user] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-		[[JVNotificationController defaultManager] performNotification:( ( ignoreTest == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
+		[[JVNotificationController defaultManager] performNotification:( ( [_currentMessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
 
 	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
@@ -1437,10 +1462,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
 	xmlSetProp( child, "received", [[[NSDate date] description] UTF8String] );
-	if( action ) xmlSetProp( child, "action", "yes" );
-	if( highlight ) xmlSetProp( child, "highlight", "yes" );
-	if( ignoreTest == JVMessageIgnored ) xmlSetProp( child, "ignored", "yes" );
-	else if( ignoreTest == JVUserIgnored ) xmlSetProp( root, "ignored", "yes" );
+	if( [_currentMessage isAction] ) xmlSetProp( child, "action", "yes" );
+	if( [_currentMessage isHighlighted] ) xmlSetProp( child, "highlight", "yes" );
+	if( [_currentMessage ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, "ignored", "yes" );
+	else if( [_currentMessage ignoreStatus] == JVUserIgnored ) xmlSetProp( root, "ignored", "yes" );
 	xmlAddChild( root, child );
 
 	[self writeToLog:root withDoc:doc initializing:NO continuation:( parent ? YES : NO )];
@@ -1487,7 +1512,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		if( subsequent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
 		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
 
-		if( highlight && [scroller isKindOfClass:[JVMarkedScroller class]] ) {
+		if( [_currentMessage isHighlighted] && [scroller isKindOfClass:[JVMarkedScroller class]] ) {
 			unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", ( _messageId - 1 )]] intValue];
 			if( loc ) [(JVMarkedScroller *)scroller addMarkAt:loc];
 		}
@@ -1496,13 +1521,16 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		_firstMessage = NO; // not the first message anymore
 		_requiresFullMessage = NO; // next message will not require a new envelope if it is consecutive
-	} else if( ignoreTest == JVNotIgnored ) {
+	} else if( [_currentMessage ignoreStatus] == JVNotIgnored ) {
 		// the style decided to excluded this message, decrease the new message counts
-		if( highlight ) _newHighlightMessageCount--;
+		if( [_currentMessage isHighlighted] ) _newHighlightMessageCount--;
 		_newMessageCount--;		
 	}
 
 	xmlFreeDoc( doc );
+
+	[_currentMessage release]; // not needed anymore
+	_currentMessage = nil;
 
 	[_windowController reloadListItem:self andChildren:NO];
 }
@@ -1600,7 +1628,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	unsigned int lastLoc = 0;
 	unichar zeroWidthSpaceChar = 0x200b;	
 	NSString *zero = [NSString stringWithCharacters:&zeroWidthSpaceChar length:1];
-		
+
 	while( ! [scanner isAtEnd] ) {
 		lastLoc = [scanner scanLocation];
 		[scanner scanUpToCharactersFromSet:stopSet intoString:nil];
@@ -1679,12 +1707,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( ! messageString ) {
 		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
 		messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
-	}		
+	}
 
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] ) {
 		[messageString makeLinkAttributesAutomatically];
-
-	[self _hyperlinkRoomNames:messageString];
+		[self _hyperlinkRoomNames:messageString];
+	}
 
 	[self _performEmoticonSubstitutionOnString:messageString];
 
@@ -1910,12 +1938,24 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		return;
 	}
 
-	NSMutableAttributedString *attributeMsg = [NSMutableAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
+	NSTextStorage *attributeMsg = [NSTextStorage attributedStringWithHTMLFragment:message baseURL:nil];
 	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
 	BOOL localEcho = ( [[command evaluatedArguments] objectForKey:@"echo"] ? [[[command evaluatedArguments] objectForKey:@"echo"] boolValue] : YES );
 
-	[self sendAttributedMessage:attributeMsg asAction:action];
-	if( localEcho ) [self echoSentMessageToDisplay:attributeMsg asAction:action];
+	[_currentMessage autorelease]; // set the message to an object property for plugins, if needed...
+	_currentMessage = [[JVMutableChatMessage alloc] initWithText:attributeMsg sender:[[self connection] nickname] andTranscript:self];
+	[_currentMessage setAction:action];
+
+	id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
+	id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
+	[_currentMessage setObjectSpecifier:msgSpecifier];
+
+	[self sendMessage:_currentMessage];
+
+	if( localEcho ) [self echoSentMessageToDisplay:[_currentMessage body] asAction:[_currentMessage isAction]];
+
+	[_currentMessage release];
+	_currentMessage = nil;
 }
 
 - (void) addEventMessageScriptCommand:(NSScriptCommand *) command {
@@ -2036,24 +2076,14 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 @implementation MVChatScriptPlugin (MVChatScriptPluginChatSupport)
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toChat:(JVDirectChat *) chat {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", chat, @"pcC2", nil];
-	id result = [self callScriptHandler:'pcCX' withArguments:args forSelector:_cmd];
-	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
+- (void) processIncomingMessage:(JVMutableChatMessage *) message {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"piM1", ( [[message sender] isKindOfClass:[JVChatRoomMember class]] ? [[message sender] nickname] : [message sender] ), @"piM2", [message transcript], @"piM3", nil];
+	[self callScriptHandler:'piMX' withArguments:args forSelector:_cmd];
 }
 
-- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:action], @"piM1", [chat target], @"piM2", chat, @"piM3", nil];
-	id result = [self callScriptHandler:'piMX' withArguments:args forSelector:_cmd];
-	if( [result isKindOfClass:[NSString class]] )
-		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
-}
-
-- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toChat:(JVDirectChat *) chat {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"poM1", chat, @"poM2", nil];
-	id result = [self callScriptHandler:'poMX' withArguments:args forSelector:_cmd];
-	if( [result isKindOfClass:[NSString class]] )
-		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
+- (void) processOutgoingMessage:(JVMutableChatMessage *) message {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"poM1", [message transcript], @"poM2", nil];
+	[self callScriptHandler:'poMX' withArguments:args forSelector:_cmd];
 }
 
 - (void) userNamed:(NSString *) nickname isNowKnownAs:(NSString *) newNickname inView:(id <JVChatViewController>) view {
