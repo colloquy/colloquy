@@ -722,7 +722,7 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 	if( ! address ) address = "";
 
 	if( ! strncasecmp( nick, "NickServ", 8 ) && message ) {
-		if( strstr( message, "owned by someone else" ) /* && strstr( message, "NickServ" ) && strstr( message, "IDENTIFY" ) */) {
+		if( strstr( message, "owned by someone else" ) || ( strstr( message, "NickServ" ) && strstr( message, "IDENTIFY" ) ) ) {
 			if( ! [self nicknamePassword] ) {
 				NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
