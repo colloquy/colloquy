@@ -153,6 +153,37 @@
 //1C2
 //1C3
 //1C4
+		1C0D8864067D1E7100E851AC = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSURLAdditions.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C0D8865067D1E7100E851AC = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSURLAdditions.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1C0D8866067D1E7100E851AC = {
+			fileRef = 1C0D8864067D1E7100E851AC;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1C0D8867067D1E7100E851AC = {
+			fileRef = 1C0D8865067D1E7100E851AC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C1C564F059EA8C9002FBEFB = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -311,6 +342,7 @@
 				1C9CF5000615091600330D8D,
 				1C943AAB063C260800618CD9,
 				1C7B83CB0668D765004F1EFE,
+				1C0D8866067D1E7100E851AC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -347,6 +379,7 @@
 				1C9CF5010615091700330D8D,
 				1C943AAC063C260800618CD9,
 				1C7B83CC0668D765004F1EFE,
+				1C0D8867067D1E7100E851AC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -444,6 +477,9 @@
 			fileRef = 1C7B83C90668D765004F1EFE;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1C7B83CC0668D765004F1EFE = {
@@ -3198,6 +3234,8 @@
 				1C3D55B905A4CBBE00F25F5E,
 				1CD020BD057593A9000F93B4,
 				1CD020BC057593A9000F93B4,
+				1C0D8865067D1E7100E851AC,
+				1C0D8864067D1E7100E851AC,
 				1C3D55C005A4DC1E00F25F5E,
 				1C3D55BF05A4DC1E00F25F5E,
 				1C7B83CA0668D765004F1EFE,

@@ -7,7 +7,7 @@
 	const char *fileSystemPath = [[NSFileManager defaultManager] fileSystemRepresentationWithPath:path];
 
 	FSRef ref;
-	if( FSPathMakeRef( (UInt8 *)fileSystemPath, &ref, NULL ) != 0 ) {
+	if( FSPathMakeRef( (UInt8 *)fileSystemPath, &ref, NULL ) ) {
 		NSLog( @"Couldn't make FSRef from: %@", path );
 		return nil;
 	}
@@ -18,13 +18,13 @@
 		return nil;
 	}
 
-	if( Count1Resources('url ') == 0 ) {
+	if( ! Count1Resources('url ') ) {
 		NSLog(@"Inetloc file '%@' contains no 'url ' resources", path);
 		CloseResFile( fileRefNum );
 		return nil;
 	}
 
-	Handle res = Get1IndResource('url ', 1);
+	Handle res = Get1IndResource( 'url ', 1 );
 	NSString *urlString = [[[NSString alloc] initWithBytes:*res length:GetHandleSize( res ) encoding:NSUTF8StringEncoding] autorelease];
 	NSURL *url = [NSURL URLWithString:urlString];
 	ReleaseResource( res );
@@ -44,8 +44,8 @@
 	const char *fileSystemPath = [[NSFileManager defaultManager] fileSystemRepresentationWithPath:parentPath];
 
 	FSRef ref, parentRef;
-	if( FSPathMakeRef(fileSystemPath, &parentRef, FALSE) != 0) {
-		NSLog(@"Couldn't make FSRef from: %@", parentPath);
+	if( FSPathMakeRef( fileSystemPath, &parentRef, FALSE ) ) {
+		NSLog( @"Couldn't make FSRef from: %@", parentPath );
 		return;
 	}
 
@@ -55,8 +55,8 @@
 	FSCreateResFile( &parentRef, [pathName length], buffer, 0, NULL, &ref, NULL );
 	free( buffer );
 
-	if( (fileRefNum = FSOpenResFile(&ref, fsWrPerm)) == -1 ) {
-		NSLog(@"Couldn't open inetloc at: %@", path);
+	if( ( fileRefNum = FSOpenResFile( &ref, fsWrPerm ) ) == -1 ) {
+		NSLog( @"Couldn't open inetloc at: %@", path );
 		[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
 		return;
 	}
@@ -79,17 +79,49 @@
 	NSString *urlString = [self absoluteString];
 	const char *utf8string = [urlString UTF8String];
 
-	res = NewHandle(strlen(utf8string));
-	memcpy(*res, utf8string, strlen(utf8string));
-	AddResource(res, 'TEXT', 256, ""); // This takes over the Handle - don't dispose it
+	res = NewHandle( strlen( utf8string ) );
+	memcpy( *res, utf8string, strlen( utf8string ) );
+	AddResource( res, 'TEXT', 256, "" ); // This takes over the Handle - don't dispose it
 
-	res = NewHandle(strlen(utf8string));
-	memcpy(*res, utf8string, strlen(utf8string));
-	AddResource(res, 'url ', 256, ""); // This takes over the Handle - don't dispose it
+	res = NewHandle( strlen( utf8string ) );
+	memcpy( *res, utf8string, strlen( utf8string ) );
+	AddResource( res, 'url ', 256, "" ); // This takes over the Handle - don't dispose it
 
 	CloseResFile( fileRefNum );
 
 	// Set the file type/creator
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:'ilge'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'MACS'], NSFileHFSCreatorCode, nil] atPath:path];
+}
+
+- (BOOL) isChatURL {
+	if( [[self scheme] isEqualToString:@"irc"] ) return YES;
+	return NO;
+}
+
+- (BOOL) isChatRoomURL {
+	BOOL isRoom = NO;
+	if( [[self scheme] isEqualToString:@"irc"] ) {
+		if( [self fragment] ) {
+			if( [[self fragment] length] > 0 ) isRoom = YES;
+		} else if( [self path] && [[self path] length] >= 2 ) {
+			if( [[[self path] substringFromIndex:1] hasPrefix:@"&"] || [[[self path] substringFromIndex:1] hasPrefix:@"+"] || [[[self path] substringFromIndex:1] hasPrefix:@"!"] )
+				isRoom = YES;
+		}
+	}
+	return isRoom;
+}
+
+- (BOOL) isDirectChatURL {
+	BOOL isDirect = NO;
+	if( [[self scheme] isEqualToString:@"irc"] ) {
+		if( [self fragment] ) {
+			if( [[self fragment] length] > 0 ) isDirect = NO;
+		} else if( [self path] && [[self path] length] >= 2) {
+			if( [[[self path] substringFromIndex:1] hasPrefix:@"&"] || [[[self path] substringFromIndex:1] hasPrefix:@"+"] || [[[self path] substringFromIndex:1] hasPrefix:@"!"] ) {
+				isDirect = NO;
+			} else isDirect = YES;
+		}
+	}
+	return isDirect;
 }
 @end

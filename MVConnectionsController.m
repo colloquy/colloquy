@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
+#import <ChatCore/NSURLAdditions.h>
 
 #import "MVConnectionsController.h"
 #import "JVConnectionInspector.h"
@@ -11,7 +12,6 @@
 #import "MVKeyChain.h"
 #import "JVChatRoom.h"
 #import "JVDirectChat.h"
-#import "NSURLAdditions.h"
 
 static MVConnectionsController *sharedInstance = nil;
 

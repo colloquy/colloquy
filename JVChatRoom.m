@@ -6,6 +6,7 @@
 #import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
+#import <ChatCore/NSURLAdditions.h>
 #import <AGRegex/AGRegex.h>
 
 #import "JVChatController.h"
@@ -17,7 +18,6 @@
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
 #import "MVTextView.h"
-#import "NSURLAdditions.h"
 
 NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotification";
 

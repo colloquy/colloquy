@@ -9,6 +9,7 @@
 #import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSColorAdditions.h>
+#import <ChatCore/NSURLAdditions.h>
 
 #import <libxml/xinclude.h>
 #import <libxml/debugXML.h>
@@ -26,7 +27,6 @@
 #import "JVBuddy.h"
 #import "MVTextView.h"
 #import "MVMenuButton.h"
-#import "NSURLAdditions.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
 #import "NSSplitViewAdditions.h"
