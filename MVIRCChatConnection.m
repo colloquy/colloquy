@@ -374,6 +374,8 @@ static void MVChatUserQuit( IRC_SERVER_REC *server, const char *data, const char
 	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
 	MVChatRoom *room = nil;
 
+	[member _setDateDisconnected:[NSDate date]];
+
 	while( ( room = [enumerator nextObject] ) ) {
 		if( ! [room isJoined] || ! [room hasUser:member] ) continue;
 		[room _removeMemberUser:member];
@@ -1691,7 +1693,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	if( _chatConnectionSettings ) {
 		server_connect_ref( (SERVER_CONNECT_REC *) _chatConnectionSettings );
-
 		((SERVER_CONNECT_REC *) _chatConnectionSettings) -> no_autojoin_channels = TRUE;
 	}
 
