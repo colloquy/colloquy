@@ -35,18 +35,13 @@
 			[self displayInstallationWarning];
 			return YES;
 		}
-		// ok, parse the arguments
-		NSArray *args = [[[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
-							componentsSeparatedByString:@" "];
+
+		NSArray *args = [[[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
 		NSString *subcmd = ( [args count] ? [args objectAtIndex:0] : nil );
 		if( [args count] == 1 ) {
 			if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
 				JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] init] autorelease];
 				[[view windowController] addChatViewController:console];
-				// For some reason the input field wasn't clearing for me
-				// This should fix that
-#warning TODO: Find a better way to deal with this
-				//[[view windowController] showChatViewController:console];
 				[[view windowController] performSelector:@selector(showChatViewController:) withObject:console afterDelay:0];
 			} else if( ! [subcmd caseInsensitiveCompare:@"browse"] ) {
 				FSInterpreter *interpreter = [FSInterpreter interpreter];
@@ -55,7 +50,7 @@
 				[interpreter browse];
 			}
 		} else if( [args count] > 1 ) {
-			NSString *path = [[args subarrayWithRange:NSMakeRange(1, [args count] - 1)] componentsJoinedByString:@" "];
+			NSString *path = [[args subarrayWithRange:NSMakeRange( 1, ( [args count] - 1 ) )] componentsJoinedByString:@" "];
 			path = [path stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			if( path ) {
 				if( ! [subcmd caseInsensitiveCompare:@"eval"] ) {
@@ -65,28 +60,23 @@
 					[interpreter execute:path];
 				} else {
 					path = [path stringByStandardizingPath];
-					
+
 					NSEnumerator *pluginEnum = [_manager enumeratorOfPluginsOfClass:[JVFScriptChatPlugin class] thatRespondToSelector:@selector( init )];
 					JVFScriptChatPlugin *plugin;
-					
+
 					while( plugin = [pluginEnum nextObject] )
 						if( [[plugin scriptFilePath] isEqualToString:path] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
 							break;
-					
+
 					if( ! plugin ) {
 						if( ! [subcmd caseInsensitiveCompare:@"load"] ) {
 							[self loadPluginNamed:path];
-						}
-						if( ! [subcmd caseInsensitiveCompare:@"create"] ) {
-							NSFileManager *fm = [NSFileManager defaultManager];
-							BOOL dir;
+						} else if( ! [subcmd caseInsensitiveCompare:@"create"] ) {
 							path = [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"fscript"];
 							path = [[[[_manager class] pluginSearchPaths] objectAtIndex:0] stringByAppendingPathComponent:path];
-							if( [fm fileExistsAtPath:[path stringByDeletingLastPathComponent] isDirectory:&dir] && dir ) {
-								if( ! [fm fileExistsAtPath:path] ) {
-									[fm createFileAtPath:path contents:[NSData data] attributes:nil];
-									[[NSWorkspace sharedWorkspace] openFile:path];
-								}
+							if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) {
+								[[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil];
+								[[NSWorkspace sharedWorkspace] openFile:path];
 							}
 						}
 					} else if( plugin ) {
@@ -107,7 +97,7 @@
 				}
 			}
 		}
-	
+
 		return YES;
 	}
 	
@@ -117,11 +107,11 @@
 - (void) loadPluginNamed:(NSString *) name {
 	// Look through the standard plugin paths
 	if( ! _manager ) return;
-	
+
 	if( ! [name isAbsolutePath] ) {
 		NSArray *paths = [[_manager class] pluginSearchPaths];
 		NSFileManager *fm = [NSFileManager defaultManager];
-		
+	
 		NSEnumerator *enumerator = [paths objectEnumerator];
 		NSString *path = nil;
 		while( path = [enumerator nextObject] ) {
@@ -132,14 +122,14 @@
 					[self displayInstallationWarning];
 					return;
 				}
-				
+
 				JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager] autorelease];
 				if( plugin ) [_manager addPlugin:plugin];
 				return;
 			}
 		}
 	}
-	
+
 	JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:name withManager:_manager] autorelease];
 	if( plugin ) [_manager addPlugin:plugin];
 }

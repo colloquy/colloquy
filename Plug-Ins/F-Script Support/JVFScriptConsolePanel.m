@@ -74,8 +74,8 @@
 - (NSToolbar *) toolbar {
 	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"F-Script Console"];
 	[toolbar setDelegate:self];
-	[toolbar setAllowsUserCustomization:NO];
-	[toolbar setAutosavesConfiguration:NO];
+	[toolbar setAllowsUserCustomization:YES];
+	[toolbar setAutosavesConfiguration:YES];
 	return [toolbar autorelease];
 }
 
@@ -85,24 +85,26 @@
 		[toolbarItem setLabel:NSLocalizedStringFromTableInBundle( @"Browse", nil, [NSBundle bundleForClass:[self class]], "browse fscript toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedStringFromTableInBundle( @"Object Browser", nil, [NSBundle bundleForClass:[self class]], "browse fscript toolbar customize palette name" )];
 		[toolbarItem setTarget:self];
-		[toolbarItem setAction:@selector(objectBrowser:)];
+		[toolbarItem setAction:@selector( objectBrowser: )];
 		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
 		return toolbarItem;
 	}
+
 	return nil;
 }
 
-- (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
+- (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
 	return [NSArray arrayWithObject:@"JVFScriptBrowseToolbarItem"];
 }
 
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
-	return [NSArray arrayWithObject:@"JVFScriptBrowseToolbarItem"];
+- (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
+	return [NSArray arrayWithObjects:@"JVFScriptBrowseToolbarItem",
+		NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, 
+		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 }
 
 - (NSString *) title {
-	if( [self plugin] )
-		return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"%@ Console", nil, [NSBundle bundleForClass:[self class]], "plugin named console panel title" ), [[[[self plugin] scriptFilePath] lastPathComponent] stringByDeletingPathExtension]];
+	if( [self plugin] ) return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"%@ Console", nil, [NSBundle bundleForClass:[self class]], "plugin named console panel title" ), [[[[self plugin] scriptFilePath] lastPathComponent] stringByDeletingPathExtension]];
 	return NSLocalizedStringFromTableInBundle( @"F-Script Console", nil, [NSBundle bundleForClass:[self class]], "F-Script console panel title" );
 }
 
