@@ -2,6 +2,9 @@
 
 @interface MVTextView : NSTextView {
     NSDictionary *typingAttributes;
+	
+	NSSize			lastPostedSize;
+	NSSize			_desiredSizeCached;
 }
 - (BOOL)checkKeyEvent:(NSEvent *)event;
 

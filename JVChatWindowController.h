@@ -35,6 +35,7 @@ extern NSString *JVChatViewPboardType;
 	NSMutableArray *_views;
 	id <JVChatViewController> _activeViewController;
 	BOOL _usesSmallIcons;
+	BOOL _currentlyDragging;
 }
 - (void) showChatViewController:(id <JVChatViewController>) controller;
 

@@ -256,6 +256,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
 }
 
+- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData {
+	return [self title];
+}
+
 - (IBAction) leaveChat:(id) sender {
 	[[JVChatController defaultManager] disposeViewController:self];
 }

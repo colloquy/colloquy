@@ -125,6 +125,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return nil;
 }
 
+- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData {
+	return [self title];
+}
+
 #pragma mark -
 
 - (id <JVChatListItem>) parent {

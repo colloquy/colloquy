@@ -202,6 +202,10 @@
 	return [_parent isEnabled];
 }
 
+- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData {
+	return [self title];
+}
+	
 #pragma mark -
 #pragma mark Drag & Drop Support
 //not so much drop though

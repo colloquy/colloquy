@@ -50,6 +50,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		activityToolbarButton = nil;
 		_activityToolbarItem = nil;
 		_activeViewController = nil;
+		_currentlyDragging = NO;
 		_views = [[NSMutableArray array] retain];
 		_usesSmallIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowUseSmallDrawerIcons"];
 
@@ -76,6 +77,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
+	_currentlyDragging = NO;
 
 	[activityToolbarButton retain];
 	[activityToolbarButton removeFromSuperview];
@@ -413,6 +415,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
+	[chatViewsOutlineView removeAllToolTips];
+	
 	[chatViewsOutlineView reloadItem:item reloadChildren:( children && [chatViewsOutlineView isItemExpanded:item] ? YES : NO )];
 	if( _activeViewController == item )
 		[self _refreshWindowTitle];
@@ -491,6 +495,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[(JVDetailCell *) cell setMainText:[item title]];
 	[(JVDetailCell *) cell setInformationText:[item information]];
 	[(JVDetailCell *) cell setStatusImage:[item statusImage]];
+	[(JVDetailCell *) cell setRepresentedObject:item];
 		
 	if( [item respondsToSelector:@selector( isEnabled )] ) {
 		[cell setEnabled:[item isEnabled]];
@@ -500,7 +505,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item {
-	[outlineView addToolTipRect:[outlineView frameOfCellAtColumn:0 row:[outlineView rowForItem:item]] owner:item userData:nil];
+	//[outlineView addToolTipRect:[outlineView frameOfCellAtColumn:0 row:[outlineView rowForItem:item]] owner:item userData:nil];
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
@@ -534,8 +539,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldExpandItem:(id) item {
+	BOOL retVal = YES; 
 	// test here if we are dragging, and don't expand
-	return YES;
+	if ( _currentlyDragging ) {
+		retVal = NO;
+	}
+	
+	return retVal;
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView heightOfRow:(int) row {
@@ -568,6 +578,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [item respondsToSelector:@selector( acceptsDraggedFileOfType: )] ) {
 			NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
 			NSEnumerator *enumerator = [files objectEnumerator];
+			_currentlyDragging = NO;
+			
 			id file = nil;
 			while( ( file = [enumerator nextObject] ) )
 				if( [item acceptsDraggedFileOfType:[file pathExtension]] )
@@ -575,12 +587,16 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			return NSDragOperationNone;
 		} else return NSDragOperationNone;
 	} else if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:JVChatViewPboardType]] ) {
+		_currentlyDragging = YES;
 		if( ! item ) return NSDragOperationMove;
 		else return NSDragOperationNone;
 	} else return NSDragOperationNone;
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView acceptDrop:(id <NSDraggingInfo>) info item:(id) item childIndex:(int) index {
+	_currentlyDragging = NO;
+	[chatViewsOutlineView removeAllToolTips];
+	
 	NSPasteboard *board = [info draggingPasteboard];
 	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
 		NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
