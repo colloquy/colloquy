@@ -46,6 +46,15 @@
 					<key>Type</key>
 					<string>NSObject</string>
 				</dict>
+				<key>submenu</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>pcM2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSArray</string>
+				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>

@@ -345,37 +345,99 @@ static BOOL applicationIsTerminating = NO;
 @implementation MVChatScriptPlugin (MVChatPluginContextualMenuSupport)
 - (IBAction) performContextualMenuItemAction:(id) sender {
 	id object = [sender representedObject];
+	NSMutableArray *submenu = [NSMutableArray array];
+
+	NSMenu *menu = [sender menu];
+	NSMenu *parent = nil;
+	while( ( parent = [menu supermenu] ) ) {
+		[submenu insertObject:[menu title] atIndex:0];
+		menu = parent;
+	}
+
 	NSString *title = [sender title];
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:title, @"----", object, @"pcM1", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:title, @"----", object, @"pcM1", submenu, @"pcM2", nil];
 	[self callScriptHandler:'pcMX' withArguments:args forSelector:_cmd];
 }
 
-- (NSArray *) contextualMenuItemsForObject:(id) object {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:object, @"----", nil];
-	id result = [self callScriptHandler:'cMiX' withArguments:args forSelector:_cmd];
-
-	if( [result isKindOfClass:[NSArray class]] ) {
-		NSMutableArray *ret = [NSMutableArray array];
-		NSEnumerator *enumerator = [result objectEnumerator];
+- (void) buildMenuInto:(NSMutableArray *) itemList fromReturnContainer:(id) container withRepresentedObject:(id) object {
+	if( [container respondsToSelector:@selector( objectEnumerator )] ) {
+		NSEnumerator *enumerator = [container objectEnumerator];
 		id item = nil;
 
 		while( ( item = [enumerator nextObject] ) ) {
 			if( [item isKindOfClass:[NSString class]] ) {
 				if( [item isEqualToString:@"-"] ) {
-					[ret addObject:[NSMenuItem separatorItem]];
+					[itemList addObject:[NSMenuItem separatorItem]];
 				} else {
 					NSMenuItem *mitem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""] autorelease];
 					[mitem setTarget:self];
 					[mitem setRepresentedObject:object];
-					[ret addObject:mitem];
+					[itemList addObject:mitem];
+				}
+			} else if( [item isKindOfClass:[NSDictionary class]] ) {
+				NSString *title = [item objectForKey:@"title"];
+				NSArray *sub = [item objectForKey:@"submenu"];
+				NSNumber *enabled = [item objectForKey:@"enabled"];
+				NSNumber *checked = [item objectForKey:@"checked"];
+				NSNumber *indent = [item objectForKey:@"indent"];
+				NSString *iconPath = [item objectForKey:@"icon"];
+				NSString *tooltip = [item objectForKey:@"tooltip"];
+				id context = [item objectForKey:@"context"];
+
+				if( ! [title isKindOfClass:[NSString class]] ) continue;
+				if( ! [tooltip isKindOfClass:[NSString class]] ) tooltip = nil;
+				if( ! [enabled isKindOfClass:[NSNumber class]] ) enabled = nil;
+				if( ! [checked isKindOfClass:[NSNumber class]] ) checked = nil;
+				if( ! [indent isKindOfClass:[NSNumber class]] ) indent = nil;
+				if( ! [iconPath isKindOfClass:[NSString class]] ) iconPath = nil;
+				if( ! [sub isKindOfClass:[NSArray class]] && ! [sub isKindOfClass:[NSDictionary class]] ) sub = nil;
+
+				NSMenuItem *mitem = [[[NSMenuItem alloc] initWithTitle:title action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""] autorelease];
+				if( context ) [mitem setRepresentedObject:context];
+				else [mitem setRepresentedObject:object];
+				if( ! enabled || ( enabled && [enabled boolValue] ) ) [mitem setTarget:self];
+				if( enabled && ! [enabled boolValue] ) [mitem setEnabled:[enabled boolValue]];
+				if( checked ) [mitem setState:[checked intValue]];
+				if( indent ) [mitem setIndentationLevel:MIN( 15, [indent unsignedIntValue] )];
+				if( tooltip ) [mitem setToolTip:tooltip];
+				if( [iconPath length] ) {
+					if( ! [iconPath isAbsolutePath] ) {
+						NSString *dir = [[self scriptFilePath] stringByDeletingLastPathComponent];
+						iconPath = [dir stringByAppendingPathComponent:iconPath];
+					}
+
+					NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingFile:iconPath] autorelease];
+					if( icon ) [mitem setImage:icon];
+				}
+
+				[itemList addObject:mitem];
+
+				if( [sub respondsToSelector:@selector( objectEnumerator )] && [sub respondsToSelector:@selector( count )] && [sub count] ) {
+					NSMenu *submenu = [[[NSMenu allocWithZone:[self zone]] initWithTitle:title] autorelease];
+					NSMutableArray *subArray = [NSMutableArray array];
+
+					[self buildMenuInto:subArray fromReturnContainer:sub withRepresentedObject:object];
+
+					id subItem = nil;
+					NSEnumerator *subenumerator = [subArray objectEnumerator];
+					while( ( subItem = [subenumerator nextObject] ) )
+						[submenu addItem:subItem];
+
+					[mitem setSubmenu:submenu];
 				}
 			}
 		}
-
-		if( [ret count] )
-			return ret;
 	}
+}
 
+- (NSArray *) contextualMenuItemsForObject:(id) object {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:object, @"----", nil];
+	id result = [self callScriptHandler:'cMiX' withArguments:args forSelector:_cmd];
+	NSMutableArray *ret = [NSMutableArray array];
+
+	[self buildMenuInto:ret fromReturnContainer:result withRepresentedObject:object];
+
+	if( [ret count] ) return ret;
 	return nil;
 }
 @end
