@@ -37,12 +37,13 @@
 #include "proxy.h"
 #include "firetalk.h"
 
-#include <SystemConfiguration/SystemConfiguration.h>
 #import <Foundation/Foundation.h>
+#define SC_SCHEMA_DECLARATION(x) extern NSString *x
+#include <SystemConfiguration/SystemConfiguration.h>
 
 #define SOCKS4_SUCCESS 90
 
-#define put(ptr,data) (*(unsigned char*)ptr = data)
+#define put(ptr,data) (*(unsigned char *)ptr = data)
 
 enum firetalk_proxy firetalk_use_proxy( const char *host, enum firetalk_proxy proxyType ) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -60,7 +61,7 @@ enum firetalk_proxy firetalk_use_proxy( const char *host, enum firetalk_proxy pr
 	}
 
 	/* check if it's an excepted host */
-	exceptionList = [proxyDict objectForKey:(NSString *)kSCPropNetProxiesExceptionsList];
+	exceptionList = [proxyDict objectForKey:kSCPropNetProxiesExceptionsList];
 	enumerator = [exceptionList objectEnumerator];
 	while( object = [enumerator nextObject] ) {
 		if( ! fnmatch( [object UTF8String], host, FNM_PERIOD | FNM_PATHNAME ) ) {
@@ -70,13 +71,13 @@ enum firetalk_proxy firetalk_use_proxy( const char *host, enum firetalk_proxy pr
 	}
 
 	/* now check if it's SOCKS */
-	if( proxyType == FX_SOCKS && ! [[NSNumber numberWithInt:0] isEqualToNumber:[proxyDict objectForKey:(NSString *)kSCPropNetProxiesSOCKSEnable]] ) {
+	if( proxyType == FX_SOCKS && ! [[NSNumber numberWithInt:0] isEqualToNumber:[proxyDict objectForKey:kSCPropNetProxiesSOCKSEnable]] ) {
 		[pool release];
 		return FX_SOCKS;
 	}
 
 	/* or if we should use HTTPS */
-	if( proxyType == FX_HTTPS && ! [[NSNumber numberWithInt:0] isEqualToNumber:[proxyDict objectForKey:(NSString *)kSCPropNetProxiesHTTPSEnable]] ) {
+	if( proxyType == FX_HTTPS && ! [[NSNumber numberWithInt:0] isEqualToNumber:[proxyDict objectForKey:@"HTTPSEnable"]] ) { // kSCPropNetProxiesHTTPSEnable
 		[pool release];
 		return FX_HTTPS;
 	}
@@ -136,8 +137,8 @@ int firetalk_connect( int s, const struct sockaddr *name, int namelen, enum fire
 		pool = [[NSAutoreleasePool alloc] init];
 		[proxyDict autorelease];
 
-		proxy.sin_addr.s_addr = inet_addr( [[[NSHost hostWithName:[proxyDict objectForKey:(NSString *)kSCPropNetProxiesSOCKSProxy]] address] UTF8String] );
-		proxy.sin_port = htons( [[proxyDict objectForKey:(NSString *)kSCPropNetProxiesSOCKSPort] shortValue] );
+		proxy.sin_addr.s_addr = inet_addr( [[[NSHost hostWithName:[proxyDict objectForKey:kSCPropNetProxiesSOCKSProxy]] address] UTF8String] );
+		proxy.sin_port = htons( [[proxyDict objectForKey:kSCPropNetProxiesSOCKSPort] unsignedShortValue] );
 
 		[pool release];
 		proxyDict = nil;
@@ -165,8 +166,8 @@ int firetalk_connect( int s, const struct sockaddr *name, int namelen, enum fire
 		pool = [[NSAutoreleasePool alloc] init];
 		[proxyDict autorelease];
 
-		proxy.sin_addr.s_addr = inet_addr( [[[NSHost hostWithName:[proxyDict objectForKey:(NSString *)kSCPropNetProxiesHTTPSProxy]] address] UTF8String] );
-		proxy.sin_port = htons( [[proxyDict objectForKey:(NSString *)kSCPropNetProxiesHTTPSPort] shortValue] );
+		proxy.sin_addr.s_addr = inet_addr( [[[NSHost hostWithName:[proxyDict objectForKey:@"HTTPSProxy"]] address] UTF8String] ); // kSCPropNetProxiesHTTPSProxy
+		proxy.sin_port = htons( [[proxyDict objectForKey:@"HTTPSPort"] unsignedShortValue] ); // kSCPropNetProxiesHTTPSPort
 
 		[pool release];
 		proxyDict = nil;
