@@ -135,16 +135,18 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		if( ! style ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:prefStyle];
 	}
 
-	if( ! style )
+	if( ! style ) {
 		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
-
+		variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]];
+	}
+		
 	if( ! style ) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
 		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
+		variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]];
 	}
 
 	variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], [style bundleIdentifier]]];
-	if( ! variant ) variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]];
 
 	[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
 	[self setChatStyle:style withVariant:variant];
@@ -360,13 +362,21 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 - (IBAction) changeChatStyle:(id) sender {
 	NSBundle *style = [NSBundle bundleWithIdentifier:[sender representedObject]];
 	NSString *key = [NSString stringWithFormat:@"chat.style.%@", [self identifier]];
+	NSString *variant = nil;
 	if( style ) {
 		[[NSUserDefaults standardUserDefaults] setObject:[style bundleIdentifier] forKey:key];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], [style bundleIdentifier]]];
 	} else {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
 		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatDefaultStyle"]];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], [style bundleIdentifier]]];
+		if( ! style ) {
+			[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
+			style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
+			variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]];
+		} else variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]];
 	}
-	[self setChatStyle:style withVariant:nil];
+	[self setChatStyle:style withVariant:variant];
 }
 
 - (IBAction) changeChatStyleVariant:(id) sender {
@@ -377,8 +387,9 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	if( variant ) [[NSUserDefaults standardUserDefaults] setObject:variant forKey:key];
 	else [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
 
+	[[NSUserDefaults standardUserDefaults] setObject:style forKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]];
+
 	if( ! [style isEqualToString:[_chatStyle bundleIdentifier]] ) {
-		[[NSUserDefaults standardUserDefaults] setObject:style forKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]];
 		[self setChatStyle:[NSBundle bundleWithIdentifier:style] withVariant:variant];
 	} else {
 		[self setChatStyleVariant:variant];
@@ -448,6 +459,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
 	NSEnumerator *enumerator = nil, *kenumerator = nil;
 	NSString *key = nil, *value = nil;
+	NSMutableString *messageString = nil;
 	xmlDocPtr doc = NULL, msgDoc = NULL;
 	xmlNodePtr root = NULL, child = NULL;
 	const char *msgStr = NULL;
@@ -473,8 +485,10 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 	kenumerator = [attributes keyEnumerator];
 	enumerator = [attributes objectEnumerator];
-	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) && ! [value isMemberOfClass:[NSNull class]] ) {
-		msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
+		if( [value isMemberOfClass:[NSNull class]] )
+			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
+		else msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
 		if( msgStr ) {
 			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
@@ -485,7 +499,21 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
-//	xmlDocFormatDump( stdout, doc, 1 );
+	if( _firstMessage ) { // If we just got a private message and this panel was just opened WebKit hasn't had time load the template.
+		[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[self _applyStyleOnXMLDocument:doc]] baseURL:nil];
+	} else {
+		messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
+		if( [messageString length] ) {
+			[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottom();", messageString]];
+		}
+	}
+
+	_firstMessage = NO;
+
+	xmlDocFormatDump( stdout, doc, 1 );
 
 	xmlFreeDoc( doc );
 }
@@ -501,9 +529,11 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	NSParameterAssert( user != nil );
 
 	messageString = [[[NSMutableString alloc] initWithData:message encoding:_encoding] autorelease];
-	if( ! messageString )
-		messageString = [[[NSMutableString alloc] initWithData:message encoding:NSNonLossyASCIIStringEncoding] autorelease];
-	
+	if( ! messageString ) {
+		messageString = [NSMutableString stringWithCString:[message bytes] length:[message length]];
+		[messageString appendFormat:@" <span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
+	}
+
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 		[self _makeHyperlinksInString:messageString];
 
@@ -541,7 +571,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	xmlDocSetRootElement( doc, root );
 
 	child = xmlNewTextChild( root, NULL, "sender", [user UTF8String] );
-	if( ! [user caseInsensitiveCompare:[[self connection] nickname]] ) xmlSetProp( child, "self", "yes" );
+	if( [user isEqualToString:[[self connection] nickname]] ) xmlSetProp( child, "self", "yes" );
 
 	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
@@ -555,14 +585,16 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
-	if( _firstMessage ) { // Not sure why we can't do the append the first time.
+	if( _firstMessage ) { // If we just got a private message and this panel was just opened WebKit hasn't had time load the template.
 		[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[self _applyStyleOnXMLDocument:doc]] baseURL:nil];
 	} else {
 		messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
-		[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottom();", messageString]];
+		if( [messageString length] ) {
+			[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottom();", messageString]];
+		}
 	}
 
 //	xmlDocFormatDump( stdout, doc, 1 );
