@@ -5,7 +5,6 @@
             ACTIONS = {
                 addRoom = id; 
                 conenctNewConnection = id; 
-                editConnection = id; 
                 joinRoom = id; 
                 messageUser = id; 
                 newConnection = id; 
@@ -13,6 +12,7 @@
                 removeRoom = id; 
                 sendPassword = id; 
                 showConnectionManager = id; 
+                toggleNewConnectionDetails = id; 
             }; 
             CLASS = MVConnectionsController; 
             LANGUAGE = ObjC; 
@@ -22,26 +22,22 @@
                 authNickname = NSTextField; 
                 authPassword = NSTextField; 
                 connections = NSTableView; 
-                editAddress = NSTextField; 
-                editAutomatic = NSButton; 
-                editConnection = NSWindow; 
-                editNickname = NSTextField; 
-                editPassword = NSTextField; 
-                editPort = NSTextField; 
-                editProxy = NSPopUpButton; 
-                editRemoveRoom = NSButton; 
-                editRooms = NSTableView; 
-                editServerPassword = NSTextField; 
+                detailsTabView = NSTabView; 
                 joinRoom = NSPanel; 
                 messageUser = NSPanel; 
                 newAddress = NSTextField; 
+                newJoinRooms = NSTableView; 
                 newNickname = NSTextField; 
                 newPort = NSTextField; 
+                newProxy = NSPopUpButton; 
                 newRemember = NSButton; 
+                newRemoveRoom = NSButton; 
+                newServerPassword = NSTextField; 
                 nicknameAuth = NSPanel; 
                 openConnection = NSPanel; 
                 roomPassword = NSTextField; 
                 roomToJoin = NSComboBox; 
+                showDetails = NSButton; 
                 userToMessage = NSTextField; 
             }; 
             SUPERCLASS = NSWindowController; 
