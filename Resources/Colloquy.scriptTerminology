@@ -235,9 +235,9 @@
 			<key>Description</key>
 			<string>Direct (private) chat panel with another user.</string>
 			<key>Name</key>
-			<string>chat panel</string>
+			<string>direct chat panel</string>
 			<key>PluralName</key>
-			<string>chat panels</string>
+			<string>direct chat panels</string>
 		</dict>
 		<key>ListItem</key>
 		<dict>
@@ -402,7 +402,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Generic chat panel that all panels inherit from (e.g. chat panel, chat room panel, etc.)</string>
+			<string>Generic window panel that all panels inherit from (e.g. direct chat panel, chat room panel, etc.)</string>
 			<key>Name</key>
 			<string>panel</string>
 			<key>PluralName</key>

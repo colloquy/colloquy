@@ -23,7 +23,7 @@
 				<cocoa class="NSApplication"/>
 				<elements>
 					<element code="chvC" type="panel" access="r">
-						<cocoa method="views"/>
+						<cocoa method="chatViews"/>
 					</element>
 					<element code="ccoM" type="console panel" access="r">
 						<cocoa method="chatConsoles"/>
@@ -31,7 +31,7 @@
 					<element code="ctrM" type="transcript panel" access="r">
 						<cocoa method="chatTranscripts"/>
 					</element>
-					<element code="dchM" type="chat panel" access="r">
+					<element code="dchM" type="direct chat panel" access="r">
 						<cocoa method="directChats"/>
 					</element>
 					<element code="crmM" type="chat room panel" access="r">
@@ -57,7 +57,7 @@
 					<element code="ctrM" type="transcript panel" access="r">
 						<cocoa method="chatTranscripts"/>
 					</element>
-					<element code="dchM" type="chat panel" access="r">
+					<element code="dchM" type="direct chat panel" access="r">
 						<cocoa method="directChats"/>
 					</element>
 					<element code="crmM" type="chat room panel" access="r">
@@ -112,13 +112,13 @@
 					</property>
 				</properties>
 			</class>
-			<class name="panel" code="chvC" description="Generic chat panel that all panels inherit from (e.g. chat panel, chat room panel, etc.)" inherits="list item">
+			<class name="panel" code="chvC" description="Generic window panel that all panels inherit from (e.g. direct chat panel, chat room panel, etc.)" inherits="list item">
 				<properties>
 					<property name="id" code="ID  " description="The unique identifier of the chat view controler." type="number" access="r">
 						<cocoa method="uniqueIdentifier"/>
 					</property>
 					<property name="connection" code="conM" description="Connection this view uses." type="connection" access="r"/>
-					<property name="window" code="chwC" description="Parent window." type="window" access="r">
+					<property name="window" code="cwin" description="Parent window." type="window" access="r">
 						<cocoa method="window"/>
 					</property>
 					<property name="description" code="idtA" description="Consicse description of the chat view." type="string" access="r">
@@ -132,10 +132,10 @@
 			<class name="console panel" code="ccoM" description="Direct server console for advanced users." inherits="panel">
 				<cocoa class="JVChatConsolePanel"/>
 			</class>
-			<class name="chat panel" code="dchM" description="Direct (private) chat panel with another user." inherits="transcript panel">
+			<class name="direct chat panel" code="dchM" description="Direct (private) chat panel with another user." inherits="transcript panel">
 				<cocoa class="JVDirectChatPanel"/>
 			</class>
-			<class name="chat room panel" code="crmM" description="Chat room panel." inherits="chat panel">
+			<class name="chat room panel" code="crmM" description="Chat room panel." inherits="direct chat panel">
 				<cocoa class="JVChatRoomPanel"/>
 			</class>
 			<class name="member" code="chmM" description="Chat room member list item represented in the drawer list." inherits="list item">
@@ -536,7 +536,7 @@
 				<parameter name="from" code="piM2" description="The user this message came from." type="member" optional="optional">
 					<cocoa key="user"/>
 				</parameter>
-				<parameter name="in" code="piM3" description="The chat room or direct chat this message is in." type="chat panel" optional="optional">
+				<parameter name="in" code="piM3" description="The chat room or direct chat this message is in." type="direct chat panel" optional="optional">
 					<cocoa key="view"/>
 				</parameter>
 			</command>
@@ -545,7 +545,7 @@
 				<parameter name="as" code="poM1" description="Is this message an action?" type="boolean" optional="optional">
 					<cocoa key="action"/>
 				</parameter>
-				<parameter name="in" code="poM2" description="The chat room or direct chat this message is in." type="chat panel" optional="optional">
+				<parameter name="in" code="poM2" description="The chat room or direct chat this message is in." type="direct chat panel" optional="optional">
 					<cocoa key="view"/>
 				</parameter>
 			</command>

@@ -334,6 +334,17 @@
 					<key>Type</key>
 					<string>Colloquy.JVChatTranscriptPanel</string>
 				</dict>
+				<key>chatViews</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>chvC</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.Panel</string>
+				</dict>
 				<key>directChats</key>
 				<dict>
 					<key>AppleEventCode</key>
@@ -344,17 +355,6 @@
 					<string>YES</string>
 					<key>Type</key>
 					<string>Colloquy.JVDirectChatPanel</string>
-				</dict>
-				<key>views</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>chvC</string>
-					<key>LocationRequiredToCreate</key>
-					<string>NO</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>Colloquy.Panel</string>
 				</dict>
 			</dict>
 		</dict>
@@ -546,7 +546,7 @@
 				<key>window</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>chwC</string>
+					<string>cwin</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>

@@ -4,6 +4,7 @@
 #import "MVConnectionsController.h"
 #import "JVChatController.h"
 #import "JVChatRoomPanel.h"
+#import "JVChatConsolePanel.h"
 #import "JVChatRoomBrowser.h"
 #import "JVDirectChatPanel.h"
 #import "JVDetailCell.h"
@@ -879,7 +880,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
-@implementation JVChatWindowController (JVChatWindowControllerScripting)
+@implementation NSWindow (JVChatWindowControllerScripting)
 - (NSNumber *) uniqueIdentifier {
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
@@ -887,15 +888,16 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (NSArray *) views {
-	return _views;
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return nil;
+	return [[self windowController] allChatViewControllers];
 }
 
 - (id <JVChatViewController>) valueInViewsAtIndex:(unsigned) index {
-	return [_views objectAtIndex:index];
+	return [[self views] objectAtIndex:index];
 }
 
 - (id <JVChatViewController>) valueInViewsWithUniqueID:(id) identifier {
-	NSEnumerator *enumerator = [_views objectEnumerator];
+	NSEnumerator *enumerator = [[self views] objectEnumerator];
 	id <JVChatViewController, JVChatListItemScripting> view = nil;
 
 	while( ( view = [enumerator nextObject] ) )
@@ -906,7 +908,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (id <JVChatViewController>) valueInViewsWithName:(NSString *) name {
-	NSEnumerator *enumerator = [_views objectEnumerator];
+	NSEnumerator *enumerator = [[self views] objectEnumerator];
 	id <JVChatViewController> view = nil;
 
 	while( ( view = [enumerator nextObject] ) )
@@ -940,7 +942,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (NSArray *) chatViewsWithClass:(Class) class {
 	NSMutableArray *ret = [NSMutableArray array];
-	NSEnumerator *enumerator = [_views objectEnumerator];
+	NSEnumerator *enumerator = [[self views] objectEnumerator];
 	id <JVChatViewController> item = nil;
 
 	while( ( item = [enumerator nextObject] ) )
@@ -970,7 +972,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) addInChatViews:(id <JVChatViewController>) view withClass:(Class) class {
-	unsigned int index = [_views indexOfObject:[[self chatViewsWithClass:class] lastObject]];
+	unsigned int index = [[self views] indexOfObject:[[self chatViewsWithClass:class] lastObject]];
 	[self insertChatViewController:view atIndex:( index + 1 )];
 }
 
@@ -978,18 +980,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( index == [[self chatViewsWithClass:class] count] ) {
 		[self addInChatViews:view withClass:class];
 	} else {
-		unsigned int indx = [_views indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
+		unsigned int indx = [[self views] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
 		[self insertChatViewController:view atIndex:indx];
 	}
 }
 
 - (void) removeFromChatViewsAtIndex:(unsigned) index withClass:(Class) class {
-	unsigned int indx = [_views indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
+	unsigned int indx = [[self views] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
 	[self removeChatViewControllerAtIndex:indx];
 }
 
 - (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index withClass:(Class) class {
-	unsigned int indx = [_views indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
+	unsigned int indx = [[self views] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
 	[self replaceChatViewControllerAtIndex:indx withController:view];
 }
 

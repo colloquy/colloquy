@@ -390,7 +390,7 @@ static BOOL applicationIsTerminating = NO;
 }
 @end
 
-#pragma mark -
+/* #pragma mark -
 
 @implementation JVChatController (JVChatControllerObjectSpecifier)
 - (NSScriptObjectSpecifier *) objectSpecifier {
@@ -418,4 +418,4 @@ static BOOL applicationIsTerminating = NO;
 	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
 	return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"buddyList"] autorelease];
 }
-@end
+@end */
