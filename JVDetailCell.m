@@ -4,11 +4,35 @@
 @implementation JVDetailCell
 - (id) init {
 	self = [super init];
+
+	[self setAlternateImage:nil];
+	[self setMainText:nil];
+	[self setInformationText:nil];
+
 	[self setImageAlignment:NSImageAlignLeft];
 	[self setImageScaling:NSScaleProportionally];
 	[self setImageFrameStyle:NSImageFrameNone];
+
 	return self;
 }
+
+- (id) copyWithZone:(NSZone *) zone {
+	JVDetailCell *cell = (JVDetailCell *)[super copyWithZone:zone];
+	cell -> _altImage = [_altImage retain];
+	cell -> _mainText = [_mainText copy];
+	cell -> _infoText = [_infoText copy];
+	return cell;
+}
+
+- (void) dealloc {
+	[self setAlternateImage:nil];
+	[self setMainText:nil];
+	[self setInformationText:nil];
+
+	[super dealloc];
+}
+
+#pragma mark -
 
 - (void) setAlternateImage:(NSImage *) image {
 	[_altImage autorelease];
@@ -19,6 +43,8 @@
 	return [[_altImage retain] autorelease];
 }
 
+#pragma mark -
+
 - (void) setMainText:(NSString *) text {
 	[_mainText autorelease];
 	_mainText = [text copy];
@@ -28,6 +54,8 @@
 	return [[_mainText retain] autorelease];
 }
 
+#pragma mark -
+
 - (void) setInformationText:(NSString *) text {
 	[_infoText autorelease];
 	_infoText = [text copy];
@@ -36,6 +64,8 @@
 - (NSString *) informationText {
 	return [[_infoText retain] autorelease];
 }
+
+#pragma mark -
 
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	float imageWidth = 0.;
@@ -95,6 +125,8 @@
 		}
 	}
 }
+
+#pragma mark -
 
 - (void) setImageScaling:(NSImageScaling) newScaling {
 	[super setImageScaling:( newScaling == NSScaleProportionally || newScaling == NSScaleNone ? newScaling : NSScaleProportionally )];
