@@ -572,7 +572,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 		_cachedDate = nil;
 		_floodIntervals = nil;
 		_awayMessage = nil;
-		_backlogDelay = 0;
+		_backlogDelay = 0.;
 		_port = 6667;
 
 		_status = MVChatConnectionDisconnectedStatus;
