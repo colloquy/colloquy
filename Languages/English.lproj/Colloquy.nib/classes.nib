@@ -1,7 +1,14 @@
 {
     IBClasses = (
         {
-            ACTIONS = {bold = id; italic = id; newConnection = id; }; 
+            ACTIONS = {
+                bold = id; 
+                closeCurrentPanel = id; 
+                italic = id; 
+                newConnection = id; 
+                selectNextPanel = id; 
+                selectPreviousPanel = id; 
+            }; 
             CLASS = FirstResponder; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSObject; 

@@ -33,14 +33,26 @@
 			<string>540</string>
 			<string>543</string>
 		</array>
+		<key>7</key>
+		<array>
+			<string>565</string>
+			<string>570</string>
+			<string>574</string>
+			<string>580</string>
+		</array>
+		<key>8</key>
+		<array>
+			<string>586</string>
+			<string>594</string>
+		</array>
 	</dict>
 	<key>IBLastGroupID</key>
-	<string>7</string>
+	<string>9</string>
 	<key>IBLockedObjects</key>
 	<array>
 		<integer>5</integer>
 	</array>
 	<key>IBSystem Version</key>
-	<string>6I32</string>
+	<string>6R43</string>
 </dict>
 </plist>
