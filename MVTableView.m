@@ -56,7 +56,7 @@
 }
 
 - (void) keyDown:(NSEvent *) event {
-	NSString *chars = [theEvent charactersIgnoringModifiers];
+	NSString *chars = [event charactersIgnoringModifiers];
 	if( [chars length] && [chars characterAtIndex:0] == NSDeleteCharacter ) {
 		if( [[self delegate] respondsToSelector:@selector( clear: )] ) {
 			[[self delegate] clear:nil];
