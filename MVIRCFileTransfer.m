@@ -1,8 +1,9 @@
+#define HAVE_IPV6 1
+#define MODULE_NAME "MVFileTransfer"
+
 #import "MVIRCFileTransfer.h"
 #import "MVChatConnection.h"
 #import "NSNotificationAdditions.h"
-
-#define MODULE_NAME "MVFileTransfer"
 
 #import "common.h"
 #import "core.h"
