@@ -21,6 +21,10 @@
 			</xsl:call-template>
 		</xsl:variable>
 
+		<xsl:if test="$subsequent = 'yes'">
+			<xsl:processing-instruction name="message">type="subsequent"</xsl:processing-instruction>
+		</xsl:if>
+
 		<span class="sep">&#8203;</span>
 		<span class="hidden">[</span>
 		<span class="time inline"><xsl:value-of select="$timestamp" /></span>

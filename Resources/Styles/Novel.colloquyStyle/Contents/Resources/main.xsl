@@ -34,6 +34,9 @@
 	</xsl:template>
 
 	<xsl:template match="message">
+		<xsl:if test="$subsequent = 'yes'">
+			<xsl:processing-instruction name="message">type="subsequent"</xsl:processing-instruction>
+		</xsl:if>
 		<span class="submessage">
 		<xsl:if test="@action = 'yes'">
 			<xsl:value-of select="../sender" />

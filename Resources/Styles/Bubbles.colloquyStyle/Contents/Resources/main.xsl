@@ -128,6 +128,9 @@
 	</xsl:template>
 
 	<xsl:template match="message">
+		<xsl:if test="$subsequent = 'yes'">
+			<xsl:processing-instruction name="message">type="subsequent"</xsl:processing-instruction>
+		</xsl:if>
 		<hr />
 		<span>
 		<xsl:if test="@action = 'yes'">
