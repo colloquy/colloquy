@@ -70,6 +70,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
+- (NSString *) _applyStyleOnXMLDocument:(xmlDocPtr) doc;
 @end
 
 #pragma mark -
@@ -417,7 +418,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 			continue;
 		}
 		if( new ) menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
-		else menuItem = [[encodingView menu] itemAtIndex:i + 1];
+		else menuItem = (NSMenuItem *)[[encodingView menu] itemAtIndex:i + 1];
 		if( _encoding == JVAllowedTextEncodings[i] ) {
 			[menuItem setState:NSOnState];
 		} else [menuItem setState:NSOffState];
@@ -914,6 +915,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		urlScanner = [NSScanner scannerWithString:part];
 		[urlScanner scanUpToCharactersFromSet:[urlStopSet invertedSet] intoString:NULL];
 		if( [urlScanner scanUpToString:@"@" intoString:&urlHandle] && [urlScanner scanUpToCharactersFromSet:urlStopSet intoString:&link] ) {
+			if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' )
+				link = [link substringToIndex:( [link length] - 1 )];
 			NSRange hasPeriod = [link rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
 			if( [urlHandle length] && [link length] && hasPeriod.location < ([link length] - 1) && hasPeriod.location != NSNotFound ) {
 				link = [urlHandle stringByAppendingString:link];
@@ -926,7 +929,9 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		// catch well-formed IRC channel names like "#php" or "&admins"
 		urlScanner = [NSScanner scannerWithString:part];
 		if( ( [urlScanner scanUpToCharactersFromSet:ircChannels intoString:NULL] || [part rangeOfCharacterFromSet:ircChannels].location == 0 ) && [urlScanner scanUpToCharactersFromSet:urlStopSet intoString:&urlHandle] ) {
-			if( [urlHandle length] > 2 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != 1 && ! [[urlHandle substringFromIndex:1] rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].length ) {
+			if( [urlHandle length] > 2 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != 1 /* && ! [[urlHandle substringFromIndex:1] rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].length */ ) {
+				if( [urlHandle characterAtIndex:([urlHandle length] - 1)] == '.' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '?' )
+					urlHandle = [urlHandle substringToIndex:( [urlHandle length] - 1 )];
 				link = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];
 				link = [NSString stringWithFormat:@"*lt;a href=*quot;%@*quot;*gt;%@*lt;/a*gt;", link, urlHandle];
 				[part replaceOccurrencesOfString:urlHandle withString:link options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
