@@ -477,7 +477,7 @@
 
 	if( ! [command caseInsensitiveCompare:@"msg"] && ( ! chanSet || [chanSet characterIsMember:[to characterAtIndex:0]] ) ) {
 		MVChatRoom *room = [connection joinedChatRoomWithName:to];
-		chatView = [[JVChatController defaultManager] chatViewControllerForRoom:room ifExists:YES];
+		if( room ) chatView = [[JVChatController defaultManager] chatViewControllerForRoom:room ifExists:YES];
 	}
 
 	if( ! chatView ) chatView = [[JVChatController defaultManager] chatViewControllerForUser:user ifExists:( ! show )];
