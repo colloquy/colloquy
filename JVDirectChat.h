@@ -3,10 +3,13 @@
 
 @class NSView;
 @class MVTextView;
+@class NSPopUpButton;
 @class NSString;
+@class NSPanel;
 @class MVChatConnection;
 @class NSDate;
 @class NSMutableArray;
+@class NSMutableDictionary;
 @class NSMutableString;
 @class NSBundle;
 @class NSDictionary;

@@ -128,6 +128,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	NSBundle *style = nil;
 	NSString *variant = nil;
 
+	[self changeEncoding:nil];
+
 	if( prefStyle ) {
 		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:prefStyle]];
 		if( ! style ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:prefStyle];
@@ -369,15 +371,15 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 - (IBAction) changeChatStyleVariant:(id) sender {
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
-	NSBundle *style = [[sender representedObject] objectForKey:@"style"];
-	NSString *key = [NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], [style bundleIdentifier]];
+	NSString *style = [[sender representedObject] objectForKey:@"style"];
+	NSString *key = [NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], style];
 
 	if( variant ) [[NSUserDefaults standardUserDefaults] setObject:variant forKey:key];
 	else [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
 
-	if( style != _chatStyle ) {
-		[[NSUserDefaults standardUserDefaults] setObject:[style bundleIdentifier] forKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]];
-		[self setChatStyle:style withVariant:variant];
+	if( ! [style isEqualToString:[_chatStyle bundleIdentifier]] ) {
+		[[NSUserDefaults standardUserDefaults] setObject:style forKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]];
+		[self setChatStyle:[NSBundle bundleWithIdentifier:style] withVariant:variant];
 	} else {
 		[self setChatStyleVariant:variant];
 	}
@@ -796,8 +798,6 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		[toolbarItem setMinSize:NSMakeSize( 60., 24. )];
 		[toolbarItem setMaxSize:NSMakeSize( 60., 32. )];
 
-		[self changeEncoding:nil];
-
 		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding menu toolbar item" ) action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setImage:[NSImage imageNamed:@"encoding"]];
 		[menuItem setSubmenu:_spillEncodingMenu];
@@ -862,6 +862,11 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 #pragma mark -
 
 @implementation JVDirectChat (JVDirectChatPrivate)
+- (NSMenu *) _encodingMenu {
+	if( ! encodingView ) [self view];
+	return [[[encodingView menu] retain] autorelease];
+}
+
 - (void) _makeHyperlinksInString:(NSMutableString *) string {
 	unsigned i = 0, c = 0;
 	NSMutableArray *parts = nil;
@@ -935,6 +940,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		}
 
 		// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
+		urlStopSet = [NSCharacterSet characterSetWithCharactersInString:@" \t\n\r\"'@,!<>[]{}()|*^!"];
 		urlScanner = [NSScanner scannerWithString:part];
 		[urlScanner scanUpToCharactersFromSet:[urlStopSet invertedSet] intoString:NULL];
 		if( [urlScanner scanUpToString:@"@" intoString:&urlHandle] && [urlScanner scanUpToCharactersFromSet:urlStopSet intoString:&link] ) {
@@ -949,9 +955,10 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		}
 
 		// catch well-formed IRC channel names like "#php" or "&admins"
+		urlStopSet = [NSCharacterSet characterSetWithCharactersInString:@" \t\n\r\"',!<>[]{}()|*^!"];
 		urlScanner = [NSScanner scannerWithString:part];
-		if( ( [urlScanner scanUpToCharactersFromSet:ircChannels intoString:NULL] || [part rangeOfCharacterFromSet:ircChannels].location == 0 ) && [urlScanner scanUpToCharactersFromSet:urlStopSet intoString:&urlHandle] ) {
-			if( [urlHandle length] > 2 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != 1 /* && ! [[urlHandle substringFromIndex:1] rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].length */ ) {
+		if( ( ( [urlScanner scanUpToCharactersFromSet:ircChannels intoString:NULL] && [urlScanner scanLocation] < [part length] && ! [[NSCharacterSet alphanumericCharacterSet] characterIsMember:[part characterAtIndex:( [urlScanner scanLocation] - 1 )]] ) || [part rangeOfCharacterFromSet:ircChannels].location == 0 ) && [urlScanner scanUpToCharactersFromSet:urlStopSet intoString:&urlHandle] ) {
+			if( [urlHandle length] >= 1 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != 1 ) {
 				if( [urlHandle characterAtIndex:([urlHandle length] - 1)] == '.' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '?' )
 					urlHandle = [urlHandle substringToIndex:( [urlHandle length] - 1 )];
 				link = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];
