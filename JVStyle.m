@@ -173,7 +173,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	BOOL ret = YES;
 
 	if( ! [[self displayName] length] ) ret = NO;
-	if( ! [self mainStyleSheetLocation] ) ret = NO;
+	if( ! [[_bundle pathForResource:@"main" ofType:@"css"] length] ) ret = NO;
 	if( ! [[_bundle bundleIdentifier] length] ) ret = NO;
 
 	return ret;
