@@ -30,6 +30,15 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 		if( [cell isActive] ) [cell deactivate];
 }
 
++ (void) initialize {
+	[super initialize];
+	static BOOL tooLate = NO;
+	if( ! tooLate ) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( colorPanelColorChanged: ) name:NSColorPanelColorDidChangeNotification object:nil];
+		tooLate = YES;
+	}
+}
+
 #pragma mark -
 
 - (id) initTextCell:(NSString *) string {
@@ -37,8 +46,11 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 }
 
 - (id) initImageCell:(NSImage *) image {
-	[[NSNotificationCenter defaultCenter] addObserver:[self class] selector:@selector( colorPanelColorChanged: ) name:NSColorPanelColorDidChangeNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:[self class] selector:@selector( colorPanelClosed: ) name:NSWindowWillCloseNotification object:[NSColorPanel sharedColorPanel]];
+	static BOOL observingClose = NO;
+	if( ! observingClose ) {
+		[[NSNotificationCenter defaultCenter] addObserver:[self class] selector:@selector( colorPanelClosed: ) name:NSWindowWillCloseNotification object:[NSColorPanel sharedColorPanel]];
+		observingClose = YES;
+	}
 
 	if( ( self = [super initImageCell:nil] ) ) {
 		extern NSMutableSet *colorWellCells;
