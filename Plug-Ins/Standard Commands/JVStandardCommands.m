@@ -40,6 +40,8 @@
 	} else if( [command isEqualToString:@"away"] ) {
 		[connection setAwayStatusWithMessage:arguments];
 		return YES;
+	} else if( [command isEqualToString:@"aaway"] ) {
+		return [self handleMassAwayWithMessage:arguments];
 	} else if( [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
 	} else if( [command isEqualToString:@"leave"] ) {
@@ -111,6 +113,8 @@
 	} else if( [command isEqualToString:@"away"] ) {
 		[[room connection] setAwayStatusWithMessage:arguments];
 		return YES;
+	} else if( [command isEqualToString:@"aaway"] ) {
+		return [self handleMassAwayWithMessage:arguments];
 	} else if( [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[room connection]];
 	} else if( [command isEqualToString:@"leave"] ) {
@@ -317,6 +321,8 @@
 	} else if( [command isEqualToString:@"away"] ) {
 		[[chat connection] setAwayStatusWithMessage:arguments];
 		return YES;
+	} else if( [command isEqualToString:@"aaway"] ) {
+		return [self handleMassAwayWithMessage:arguments];
 	} else if( [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"leave"] ) {
@@ -500,6 +506,14 @@
 		[connection sendMessage:message withEncoding:encoding toChatRoom:[item target] asAction:[command isEqualToString:@"ame"]];
 		[item echoSentMessageToDisplay:message asAction:[command isEqualToString:@"ame"]];
 	}
+	return YES;
+}
+
+- (BOOL) handleMassAwayWithMessage:(NSAttributedString *) message {
+	NSEnumerator *enumerator = [[[_manager connectionsController] connectedConnections] objectEnumerator];
+	id item = nil;
+	while( ( item = [enumerator nextObject] ) )
+		[item setAwayStatusWithMessage:message];
 	return YES;
 }
 
