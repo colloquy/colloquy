@@ -54,6 +54,11 @@
 	} else if( [command isEqualToString:@"disconnect"] ) {
 		[connection disconnect];
 		return YES;
+	} else if( [command isEqualToString:@"reload"] ) {
+		if( [[arguments string] isEqualToString:@"plugins"] ) {
+			[_manager findAndLoadPlugins];
+			return YES;
+		}
 	}
 	return NO;
 }
@@ -159,6 +164,11 @@
 	} else if( [command isEqualToString:@"disconnect"] ) {
 		[[room connection] disconnect];
 		return YES;
+	} else if( [command isEqualToString:@"reload"] ) {
+		if( [[arguments string] isEqualToString:@"plugins"] ) {
+			[_manager findAndLoadPlugins];
+			return YES;
+		}
 	}
 	return NO;
 }
@@ -205,6 +215,11 @@
 	} else if( [command isEqualToString:@"disconnect"] ) {
 		[[chat connection] disconnect];
 		return YES;
+	} else if( [command isEqualToString:@"reload"] ) {
+		if( [[arguments string] isEqualToString:@"plugins"] ) {
+			[_manager findAndLoadPlugins];
+			return YES;
+		}
 	}
 	return NO;
 }
