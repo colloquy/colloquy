@@ -203,14 +203,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	do {
 		if( [[_views objectAtIndex:index] respondsToSelector:@selector( newMessagesWaiting )] && [[_views objectAtIndex:index] newMessagesWaiting] > 0 ){
 			done = YES;
-			NSLog( @"done" );
 		}
 			
 		if ( !done ) {
 			if ( index == 0 ) index = [_views count]-1;
 			else index--;
 		}
-		NSLog( @"%d %@", index, [_views objectAtIndex:index]);
 	}while ( index != currentIndex && !done );
 
 	
@@ -235,14 +233,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	do {
 		if( [[_views objectAtIndex:index] respondsToSelector:@selector( newMessagesWaiting )] && [[_views objectAtIndex:index] newMessagesWaiting] > 0 ){
 			done = YES;
-			NSLog( @"done" );
 		}
 		
 		if ( !done ) {
 			if ( index == [_views count]-1 ) index = 0;
 			else index++;
 		}
-		NSLog( @"%d  %@", index, [_views objectAtIndex:index]);
 	}while ( index != currentIndex && !done );
 	
 	
