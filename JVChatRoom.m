@@ -437,8 +437,6 @@
 	while( ( member = [enumerator nextObject] ) ) {
 		if( [[member nickname] caseInsensitiveCompare:name] == NSOrderedSame ) {
 			return member;
-		} else if( [[member realName] caseInsensitiveCompare:name] == NSOrderedSame ) {
-			return member;
 		} else if( [[member title] caseInsensitiveCompare:name] == NSOrderedSame ) {
 			return member;
 		}
