@@ -1442,8 +1442,6 @@ static SilcClientOperations silcClientOps = {
 		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
 			[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
 		[self scheduleReconnectAttemptEvery:30.];
-	} else if( _status != MVChatConnectionSuspendedStatus ) {
-		_status = MVChatConnectionDisconnectedStatus;
 	}
 
 	[super _didDisconnect];

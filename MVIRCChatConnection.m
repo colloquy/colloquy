@@ -1726,8 +1726,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
 			[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
 		[self scheduleReconnectAttemptEvery:30.];
-	} else if( _status != MVChatConnectionSuspendedStatus ) {
-		_status = MVChatConnectionDisconnectedStatus;
 	}
 
 	[self _setIrssiConnection:NULL];

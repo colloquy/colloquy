@@ -716,9 +716,10 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) _didDisconnect {
-	if( _status != MVChatConnectionSuspendedStatus && _status != MVChatConnectionServerDisconnectedStatus ) {
+	BOOL wasConnected = ( _status == MVChatConnectionConnectedStatus );
+
+	if( _status != MVChatConnectionSuspendedStatus && _status != MVChatConnectionServerDisconnectedStatus )
 		_status = MVChatConnectionDisconnectedStatus;
-	}
 
 	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
 	MVChatRoom *room = nil;
@@ -731,7 +732,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_localUser release];
 	_localUser = nil;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
+	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
 }
 
 #pragma mark -
