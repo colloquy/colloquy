@@ -1,0 +1,32 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                cancelTranscriptSectionSheet = id; 
+                changeChatEmoticons = id; 
+                changeChatStyle = id; 
+                changeChatStyleVariant = id; 
+                confirmTranscriptSectionSheet = id; 
+                leaveChat = id; 
+                specifyTranscriptSectionSheet = id; 
+            }; 
+            CLASS = JVChatTranscript; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                contents = NSView; 
+                display = WebView; 
+                selectOptions = NSMatrix; 
+                selectSheet = NSPanel; 
+                transcriptDescription = NSTextField; 
+                transcriptFilter = NSTextField; 
+                transcriptMembers = NSPopUpButton; 
+                transcriptSessions = NSPopUpButton; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {CLASS = "java.lang.Object"; LANGUAGE = Java; }
+    ); 
+    IBVersion = 1; 
+}

@@ -130,6 +130,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		_isArchive = YES;
 
 		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:filename]];
+
+//		[NSBundle loadNibNamed:@"JVTranscriptSelectSheet" owner:self];
 	}
 	return self;
 }
@@ -262,7 +264,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	return [NSString stringWithFormat:@"%@\n%@", [self title], [self information]];
 }
 
-- (IBAction) leaveChat:(id) sender {
+- (IBAction) close:(id) sender {
 	[[JVChatController defaultManager] disposeViewController:self];
 }
 
@@ -286,6 +288,23 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 #pragma mark -
 #pragma mark Drawer/Outline View Methods
 
+- (IBAction) specifyTranscriptSectionSheet:(id) sender {
+	[[NSApplication sharedApplication] beginSheet:selectSheet modalForWindow:[_windowController window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+}
+
+- (IBAction) cancelTranscriptSectionSheet:(id) sender {
+	[[NSApplication sharedApplication] endSheet:selectSheet];
+	[selectSheet orderOut:self];
+}
+
+- (IBAction) confirmTranscriptSectionSheet:(id) sender {
+	[[NSApplication sharedApplication] endSheet:selectSheet];
+	[selectSheet orderOut:self];
+}
+
+#pragma mark -
+#pragma mark Drawer/Outline View Methods
+
 - (id <JVChatListItem>) parent {
 	return nil;
 }
@@ -294,13 +313,13 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
-	[item setTarget:self];
-	[menu addItem:item];
-
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
 	[item setTarget:[JVChatController defaultManager]];
+	[menu addItem:item];
+	
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
 	[menu addItem:item];
 
 	return [[menu retain] autorelease];
@@ -384,8 +403,6 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		[self setChatEmoticons:emoticon performRefresh:NO];
 	}
 
-	_previousStyleSwitch = YES;
-
 	[_chatStyle autorelease];
 	_chatStyle = [style retain];
 
@@ -413,6 +430,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	if( result == NSAlertOtherReturn ) {
 		[self _switchingStyleEnded:@""];
 	} else [NSThread detachNewThreadSelector:@selector( _switchStyle: ) toTarget:self withObject:nil];
+
+	_previousStyleSwitch = YES;
 }
 
 - (JVStyle *) chatStyle {

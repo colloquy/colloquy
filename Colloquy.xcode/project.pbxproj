@@ -195,7 +195,6 @@
 				1C7055C80519E56300A8FE6E,
 				1C7055CA0519E56C00A8FE6E,
 				1C7055C40519E54C00A8FE6E,
-				1C7055C60519E55A00A8FE6E,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -1285,14 +1284,6 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
-		1C7055C60519E55A00A8FE6E = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = libiconv.framework;
-			path = Frameworks/libiconv.framework;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
 		1C7055C80519E56300A8FE6E = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -1341,6 +1332,30 @@
 			path = NSNotificationAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1C7E023C06B42C470037F173 = {
+			children = (
+				1C7E023D06B42C470037F173,
+			);
+			isa = PBXVariantGroup;
+			name = JVTranscriptSelectSheet.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7E023D06B42C470037F173 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Languages/English.lproj/JVTranscriptSelectSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7E023E06B42C470037F173 = {
+			fileRef = 1C7E023C06B42C470037F173;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C7EF53D06B341890037F173 = {
 			isa = PBXFileReference;
@@ -2342,6 +2357,7 @@
 				1C7EF54206B341890037F173,
 				1C7EF5C206B346E50037F173,
 				1C7EF5C306B346E50037F173,
+				1C7E023E06B42C470037F173,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2938,7 +2954,6 @@
 				1CB2CD7B052DDC560094AAA4,
 				1CB2CD7C052DDC560094AAA4,
 				1CB2CD7D052DDC560094AAA4,
-				1CB2CD7E052DDC560094AAA4,
 				1CB2CD7F052DDC560094AAA4,
 				1CB2CD80052DDC560094AAA4,
 				1CD0201F05758F26000F93B4,
@@ -2973,12 +2988,6 @@
 			settings = {
 			};
 		};
-		1CB2CD7E052DDC560094AAA4 = {
-			fileRef = 1C7055C60519E55A00A8FE6E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CB2CD7F052DDC560094AAA4 = {
 			fileRef = 1C7055C80519E56300A8FE6E;
 			isa = PBXBuildFile;
@@ -3001,7 +3010,6 @@
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
 				1CB2CD86052DDC560094AAA4,
-				1CB2CD87052DDC560094AAA4,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3020,12 +3028,6 @@
 		};
 		1CB2CD86052DDC560094AAA4 = {
 			fileRef = 1C7055C40519E54C00A8FE6E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CB2CD87052DDC560094AAA4 = {
-			fileRef = 1C7055C60519E55A00A8FE6E;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4624,6 +4626,7 @@
 				1C6EA23C05A735D6006A559F,
 				1C9982040603F097006C6417,
 				0A3187FA067ECEB600271E42,
+				1C7E023C06B42C470037F173,
 			);
 			isa = PBXGroup;
 			name = Interfaces;
