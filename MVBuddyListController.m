@@ -587,6 +587,17 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 #pragma mark -
 
 @implementation MVBuddyListController (MVBuddyListControllerDelegate)
+- (void) clear:(id) sender {
+	if( [buddies selectedRow] == -1 ) return;
+	ABPerson *buddy = [[[_buddyOrder objectAtIndex:[buddies selectedRow]] retain] autorelease];
+	[_buddyInfo removeObjectForKey:[buddy uniqueId]];
+	[_buddyList removeObject:buddy];
+	[_onlineBuddies removeObject:buddy];
+	[_buddyOrder removeObjectIdenticalTo:buddy];
+	[self _manuallySortAndUpdate];
+	[self _saveBuddyList];
+}
+
 - (int) numberOfRowsInTableView:(NSTableView *) view {
 	return [_buddyOrder count];
 }
