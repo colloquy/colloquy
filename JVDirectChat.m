@@ -661,7 +661,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	doc = xmlNewDoc( "1.0" );
 	root = xmlNewNode( NULL, "envelope" );
-	xmlSetProp( root, "count", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
+	xmlSetProp( root, "id", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
 	xmlSetProp( root, "received", [[[NSDate date] description] UTF8String] );
 	xmlDocSetRootElement( doc, root );
 
@@ -669,6 +669,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		NSString *theirName = user;
 		if( [_buddy preferredNameWillReturn] != JVBuddyActiveNickname ) theirName = [_buddy preferredName];
 		child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
+		if( ! [theirName isEqualToString:user] )
+			xmlSetProp( child, "nickname", [user UTF8String] );		
 	} else if( [user isEqualToString:[[self connection] nickname]] ) {
 		NSString *selfName = user;
 		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
@@ -677,12 +679,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 			selfName = [self _selfStoredNickname];
 		child = xmlNewTextChild( root, NULL, "sender", [selfName UTF8String] );
 		xmlSetProp( child, "self", "yes" );		
+		if( ! [selfName isEqualToString:user] )
+			xmlSetProp( child, "nickname", [user UTF8String] );		
 	} else {
 		NSString *theirName = user;
 		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:user onServer:[[self connection] server]];
 		if( buddy && [buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 			theirName = [buddy preferredName];
 		child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
+		if( ! [theirName isEqualToString:user] )
+			xmlSetProp( child, "nickname", [user UTF8String] );		
 	}
 
 	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
