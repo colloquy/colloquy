@@ -357,7 +357,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanned: ) name:MVChatRoomUserBannedNotification object:[self target]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanRemoved: ) name:MVChatRoomUserBanRemovedNotification object:[self target]];
 
-	[self performSelector:@selector( _resetRecentlyJoinedStatus ) withObject:nil afterDelay:1.];
+	[self performSelector:@selector( _resetRecentlyJoinedStatus ) withObject:nil afterDelay:3.];
 }	
 
 - (void) parting {
