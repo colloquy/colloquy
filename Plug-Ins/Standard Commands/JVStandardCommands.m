@@ -4,6 +4,7 @@
 #import "MVChatPluginManagerAdditions.h"
 #import "MVConnectionsController.h"
 #import "MVChatConnection.h"
+#import "NSStringAdditions.h"
 #import "JVChatController.h"
 #import "JVChatRoom.h"
 #import "JVDirectChat.h"
@@ -447,8 +448,8 @@
 			[scanner scanInt:&port];
 		}
 
-		if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", MVURLEncodeString( address ), port]];
-		else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", MVURLEncodeString( address )]];
+		if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", [address stringByEncodingIllegalURLCharacters], port]];
+		else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", [address stringByEncodingIllegalURLCharacters]]];
 		else [[_manager connectionsController] newConnection:nil];
 
 		if( url ) [[_manager connectionsController] handleURL:url andConnectIfPossible:YES];

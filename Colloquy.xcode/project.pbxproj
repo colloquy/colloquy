@@ -134,7 +134,7 @@
 		};
 		0A60C1600630D96D00DC6280 = {
 			children = (
-				1C7B831A06668A0D004F1EFE,
+				1CB795BA066B94120085A69C,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -940,21 +940,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C7B831A06668A0D004F1EFE = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = ChatCore.framework;
-			refType = 3;
-			remoteRef = 1C7B831B06668A1D004F1EFE;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1C7B831B06668A1D004F1EFE = {
-			containerPortal = 0A60C15F0630D96D00DC6280;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
-			remoteInfo = "Chat Core (Framework)";
-		};
 		1C7B83C50668D732004F1EFE = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1144,16 +1129,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		1C9981FD0603EF4A006C6417 = {
-			children = (
-				1C9982010603EFD6006C6417,
-				1C9982000603EFD6006C6417,
-			);
-			isa = PBXGroup;
-			name = Notification;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		1C9982000603EFD6006C6417 = {
 			fileEncoding = 4;
@@ -2631,6 +2606,21 @@
 			settings = {
 			};
 		};
+		1CB795BA066B94120085A69C = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = ChatCore.framework;
+			refType = 3;
+			remoteRef = 1CB795BB066B94300085A69C;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CB795BB066B94300085A69C = {
+			containerPortal = 0A60C15F0630D96D00DC6280;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
 		1CBA4E64062CCDA90082D1BF = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -2777,57 +2767,22 @@
 		};
 		1CBC62F405488D5A009E59E1 = {
 			children = (
-				1CBC62F705488DB1009E59E1,
-				1CBC630205488F99009E59E1,
-				1C9981FD0603EF4A006C6417,
-				1CDEE81D0586C15A000B9075,
-				1CBC62FC05488E6E009E59E1,
-				1CBC62FF05488F89009E59E1,
-			);
-			isa = PBXGroup;
-			name = "Preference Modules";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CBC62F705488DB1009E59E1 = {
-			children = (
 				1CBC630A05489484009E59E1,
 				1CBC630905489484009E59E1,
-			);
-			isa = PBXGroup;
-			name = General;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CBC62FC05488E6E009E59E1 = {
-			children = (
+				1CC6FC510549FCD70075807C,
+				1CC6FC500549FCD70075807C,
+				1C9982010603EFD6006C6417,
+				1C9982000603EFD6006C6417,
+				1CDEE8210586C289000B9075,
+				1CDEE8200586C289000B9075,
 				1CDEE25605823C13000B9075,
 				1CDEE25505823C13000B9075,
-			);
-			isa = PBXGroup;
-			name = "File Transfers";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CBC62FF05488F89009E59E1 = {
-			children = (
 				1CC6FC550549FDD70075807C,
 				1CC6FC540549FDD70075807C,
 			);
 			isa = PBXGroup;
-			name = Advanced;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CBC630205488F99009E59E1 = {
-			children = (
-				1CC6FC510549FCD70075807C,
-				1CC6FC500549FCD70075807C,
-			);
-			isa = PBXGroup;
-			name = Appearance;
+			name = "Preference Modules";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3583,16 +3538,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		1CDEE81D0586C15A000B9075 = {
-			children = (
-				1CDEE8210586C289000B9075,
-				1CDEE8200586C289000B9075,
-			);
-			isa = PBXGroup;
-			name = Interface;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		1CDEE8200586C289000B9075 = {
 			fileEncoding = 4;

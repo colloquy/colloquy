@@ -1096,7 +1096,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
 	if( [[[element objectForKey:WebElementLinkURLKey] scheme] isEqualToString:@"member"] ) {
 		NSMutableArray *ret = [NSMutableArray array];
-		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[[element objectForKey:WebElementLinkURLKey] resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[[element objectForKey:WebElementLinkURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters]];
 		NSMenuItem *item = nil;
 
 		if( mbr ) {
@@ -1104,7 +1104,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			while( ( item = [enumerator nextObject] ) ) [ret addObject:[[item copy] autorelease]];
 		} else {
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:NULL keyEquivalent:@""] autorelease];
-			[item setRepresentedObject:[[[element objectForKey:WebElementLinkURLKey] resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+			[item setRepresentedObject:[[[element objectForKey:WebElementLinkURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters]];
 			[item setTarget:self];
 			[item setAction:@selector( _startChatWithNonMember: )];
 			[ret addObject:item];
@@ -1118,7 +1118,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"member"] ) {
-		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters]];
 		if( mbr ) [mbr startChat:nil];
 		else [[JVChatController defaultManager] chatViewControllerForUser:[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier] withConnection:[self connection] ifExists:NO];
 		[listener ignore];

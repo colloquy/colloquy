@@ -112,7 +112,7 @@ static void MVFileTransferErrorFileOpen( FILE_DCC_REC *dcc, char *filename, int 
 	if( ! self ) return;
 	
 	NSError *ferror = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be opened, please make sure you have read permissions for this file.", NSLocalizedDescriptionKey, ferror, NSUnderlyingErrorKey, nil];
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be opened, please make sure you have read permissions for this file.", NSLocalizedDescriptionKey, ferror, @"NSUnderlyingErrorKey", nil];
 	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileOpenError userInfo:info];
 	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
 }

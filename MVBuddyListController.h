@@ -16,6 +16,7 @@
 @class NSString;
 @class NSTimer;
 @class ABPeoplePickerController;
+@class MVChatConnection;
 
 typedef enum {
 	MVAvailabilitySortOrder = 'avlY',

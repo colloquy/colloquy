@@ -701,8 +701,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 			} else if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
 				[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
 			} else {
-				if( ( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSCommandKeyMask ) &&
-					[[NSWorkspace sharedWorkspace] respondsToSelector:@selector(openURLs:withAppBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifiers:)] ) {
+				if( ( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSCommandKeyMask ) && [[NSWorkspace sharedWorkspace] respondsToSelector:@selector( openURLs:withAppBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifiers: )] ) {
 					[[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:url] withAppBundleIdentifier:nil options:NSWorkspaceLaunchWithoutActivation additionalEventParamDescriptor:nil launchIdentifiers:nil];
 				} else {
 					[[NSWorkspace sharedWorkspace] openURL:url];

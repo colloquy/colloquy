@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/NSStringAdditions.h>
 #import <AddressBook/AddressBook.h>
 
 #import "MVConnectionsController.h"
@@ -166,7 +167,7 @@
 	}
 
 	NSString *server = [servers titleOfSelectedItem];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( object ), MVURLEncodeString( server )]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [object stringByEncodingIllegalURLCharacters], [server stringByEncodingIllegalURLCharacters]]];
 
 	if( [[_activeNicknames objectAtIndex:row] isMemberOfClass:[NSNull class]] ) {
 		[_buddy addNickname:url];

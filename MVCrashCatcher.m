@@ -1,6 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <AddressBook/AddressBook.h>
-#import <ChatCore/MVChatConnection.h>
+#import <ChatCore/NSStringAdditions.h>
 #import "MVCrashCatcher.h"
 
 @implementation MVCrashCatcher
@@ -68,7 +68,7 @@
 	NSString *email = [value valueAtIndex:[value indexForIdentifier:[value primaryIdentifier]]];
 	NSString *name = [NSString stringWithFormat:@"%@ %@", [me valueForProperty:kABFirstNameProperty], [me valueForProperty:kABLastNameProperty]];
 
-	NSString *body = [NSString stringWithFormat:@"build=%@&email=%@&service_name=%@&short_desc=%@&desc=%@&log=%@", MVURLEncodeString( [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] ), MVURLEncodeString( email ), MVURLEncodeString( name ), MVURLEncodeString( shortDesc ), MVURLEncodeString( [[comments textStorage] string] ), MVURLEncodeString( llog )];
+	NSString *body = [NSString stringWithFormat:@"build=%@&email=%@&service_name=%@&short_desc=%@&desc=%@&log=%@", [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] stringByEncodingIllegalURLCharacters], [email stringByEncodingIllegalURLCharacters], [name stringByEncodingIllegalURLCharacters], [shortDesc stringByEncodingIllegalURLCharacters], [[[comments textStorage] string] stringByEncodingIllegalURLCharacters], [llog stringByEncodingIllegalURLCharacters]];
 
 	NSURL *url = [NSURL URLWithString:@"http://www.visualdistortion.org/colloquy/post.jsp"];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.];

@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import <AddressBook/AddressBook.h>
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/NSStringAdditions.h>
 
 #import "JVBuddy.h"
 #import "MVConnectionsController.h"
@@ -62,7 +63,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		unsigned int i = 0, count = [value count];
 		NSURL *url = nil;
 		for( i = 0; i < count; i++ ) {
-			url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( [value valueAtIndex:i] ), MVURLEncodeString( [value labelAtIndex:i] )]];
+			url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [[value valueAtIndex:i] stringByEncodingIllegalURLCharacters], [[value labelAtIndex:i] stringByEncodingIllegalURLCharacters]]];
 			[_nicknames addObject:url];
 			[_nicknameStatus setObject:[NSMutableDictionary dictionary] forKey:url];
 			[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyOfflineStatus] forKey:@"status"];
@@ -425,7 +426,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (void) _buddyOnline:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [who stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
 	if( [_nicknames containsObject:url] ) {
 		BOOL cameOnline = ( ! [_onlineNicknames count] ? YES : NO );
 		[_onlineNicknames addObject:url];
@@ -440,7 +441,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (void) _buddyOffline:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [who stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
 	if( [_onlineNicknames containsObject:url] ) {
 		[_onlineNicknames removeObject:url];
 		[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyOfflineStatus] forKey:@"status"];
@@ -453,7 +454,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (void) _buddyIdleUpdate:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [who stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
 	if( [_onlineNicknames containsObject:url] ) {
 		NSNumber *idle = [[notification userInfo] objectForKey:@"idle"];
 		[[_nicknameStatus objectForKey:url] setObject:idle forKey:@"idle"];
@@ -471,7 +472,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (void) _buddyAwayStatusChange:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [who stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
 	if( [_onlineNicknames containsObject:url] ) {
 		BOOL away = ( [[notification name] isEqualToString:MVChatConnectionBuddyIsAwayNotification] ? YES : NO );
 		[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithBool:away] forKey:@"away"];
@@ -527,11 +528,11 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (void) _nicknameChange:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	NSString *who = [[notification userInfo] objectForKey:@"oldNickname"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( who ), MVURLEncodeString( [connection server] )]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [who stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
 
 	if( [_onlineNicknames containsObject:url] ) {
 		NSString *new = [[notification userInfo] objectForKey:@"newNickname"];
-		NSURL *urlNew = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( new ), MVURLEncodeString( [connection server] )]];
+		NSURL *urlNew = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [new stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
 
 		[_nicknames removeObject:url];
 		[_nicknames addObject:urlNew];

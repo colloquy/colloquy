@@ -8,6 +8,7 @@
 #import "MVFileTransfer.h"
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
+#import "NSStringAdditions.h"
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
 #import "NSMethodSignatureAdditions.h"
@@ -131,7 +132,7 @@ typedef struct {
 
 #pragma mark -
 
-void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t messageType, void *messageArgument ) {
+/* void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t messageType, void *messageArgument ) {
 	MVChatConnection *self = refcon;
 	switch( messageType ) {
 		case kIOMessageSystemWillRestart:
@@ -159,7 +160,7 @@ void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t mess
 	}
 }
 
-#pragma mark -
+#pragma mark - */
 
 static const int MVChatColors[][3] = {
 	{ 0xff, 0xff, 0xff },  /* 00) white */
@@ -1138,6 +1139,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		[self _registerForSleepNotifications];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
 
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
+
 		extern unsigned int connectionCount;
 		connectionCount++;
 
@@ -1244,7 +1248,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (NSURL *) url {
-	NSString *url = [NSString stringWithFormat:@"irc://%@@%@:%hu", MVURLEncodeString( [self preferredNickname] ), MVURLEncodeString( [self server] ), [self serverPort]];
+	NSString *url = [NSString stringWithFormat:@"irc://%@@%@:%hu", [[self preferredNickname] stringByEncodingIllegalURLCharacters], [[self server] stringByEncodingIllegalURLCharacters], [self serverPort]];
 	if( url ) return [NSURL URLWithString:url];
 	return nil;
 }
@@ -1878,18 +1882,18 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (void) _registerForSleepNotifications {
-	IONotificationPortRef sleepNotePort = NULL;
+/*	IONotificationPortRef sleepNotePort = NULL;
 	CFRunLoopSourceRef rls = NULL;
 	_powerConnection = IORegisterForSystemPower( (void *) self, &sleepNotePort, MVChatHandlePowerChange, &_sleepNotifier );
 	if( ! _powerConnection ) return;
 	rls = IONotificationPortGetRunLoopSource( sleepNotePort );
 	CFRunLoopAddSource( CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode );
-	CFRelease( rls );
+	CFRelease( rls ); */
 }
 
 - (void) _deregisterForSleepNotifications {
-	IODeregisterForSystemPower( &_sleepNotifier );
-	_powerConnection = NULL;
+/*	IODeregisterForSystemPower( &_sleepNotifier );
+	_powerConnection = NULL; */
 }
 
 - (void) _applicationWillTerminate:(NSNotification *) notification {

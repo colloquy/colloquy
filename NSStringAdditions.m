@@ -54,10 +54,14 @@
 	}
 }
 
+#pragma mark -
+
 - (unsigned long) UTF8StringByteLength {
 	const char *str = [self UTF8String];
 	return ( str ? strlen( str ) : 0 );
 }
+
+#pragma mark -
 
 - (NSString *) stringByEncodingXMLSpecialCharactersAsEntities {
 	NSMutableString *result = [self mutableCopy];
@@ -75,12 +79,24 @@
 	return immutableResult;
 }
 
+#pragma mark -
+
 - (NSString *) stringByEscapingCharactersInSet:(NSCharacterSet *) set {
 	NSMutableString *result = [self mutableCopy];
 	[result escapeCharactersInSet:set];
 	NSString *immutableResult = [NSString stringWithString:result];
 	[result release];
 	return immutableResult;
+}
+
+#pragma mark -
+
+- (NSString *) stringByEncodingIllegalURLCharacters {
+	return [(NSString *)CFURLCreateStringByAddingPercentEscapes( NULL, (CFStringRef)self, NULL, CFSTR( ",;:/?@&$=|^~`\{}[]" ), kCFStringEncodingUTF8 ) autorelease];
+}
+
+- (NSString *) stringByDecodingIllegalURLCharacters {
+	return [(NSString *)CFURLCreateStringByReplacingPercentEscapes( NULL, (CFStringRef)self, NULL ) autorelease];
 }
 @end
 
@@ -103,6 +119,8 @@
 	[self replaceOccurrencesOfString:@"&apos;" withString:@"'" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
 }
 
+#pragma mark -
+
 - (void) escapeCharactersInSet:(NSCharacterSet *) set {
 	NSScanner *scanner = [[NSScanner alloc] initWithString:self];
 	int offset = 0;
@@ -114,5 +132,15 @@
 		}
 	}
 	[scanner release];
+}
+
+#pragma mark -
+
+- (void) encodeIllegalURLCharacters {
+	[self setString:[self stringByEncodingIllegalURLCharacters]];
+}
+
+- (void) decodeIllegalURLCharacters {
+	[self setString:[self stringByDecodingIllegalURLCharacters]];
 }
 @end

@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import <AddressBook/AddressBook.h>
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/NSStringAdditions.h>
 
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
@@ -214,7 +215,7 @@ static MVBuddyListController *sharedInstance = nil;
 	NSURL *nick = nil;
 
 	while( ( buddy = [enumerator nextObject] ) ) {
-		nick = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( name ), MVURLEncodeString( address )]];
+		nick = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [name stringByEncodingIllegalURLCharacters], [address stringByEncodingIllegalURLCharacters]]];
 		if( [[buddy nicknames] containsObject:nick] ) return buddy;
 	}
 
