@@ -143,8 +143,6 @@ static BOOL applicationIsTerminating = NO;
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
 	[MVCrashCatcher check];
 
-	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"WebKitJavaScriptEnabled"];
-
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] )
 		[MVSoftwareUpdate checkAutomatically:YES];
 
