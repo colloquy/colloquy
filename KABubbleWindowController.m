@@ -70,6 +70,9 @@ static unsigned int bubbleWindowDepth = 0;
 	_target = nil;
 	_delegate = nil;
 	_animationTimer = nil;
+
+	extern unsigned int bubbleWindowDepth;
+	if( _depth == bubbleWindowDepth ) bubbleWindowDepth = 0;
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
@@ -100,11 +103,9 @@ static unsigned int bubbleWindowDepth = 0;
 }
 
 - (void) _fadeOut:(NSTimer *) inTimer {
-	extern unsigned int bubbleWindowDepth;
 	if( [[self window] alphaValue] > 0. ) {
 		[[self window] setAlphaValue:[[self window] alphaValue] - FADE_INCREMENT];
 	} else {
-		if( _depth == bubbleWindowDepth ) bubbleWindowDepth = 0;
 		[self _stopTimer];
 		if( [_delegate respondsToSelector:@selector( bubbleDidFadeOut: )] )
 			[_delegate bubbleDidFadeOut:self];
