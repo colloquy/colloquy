@@ -273,10 +273,10 @@
 	} else if( ! [command caseInsensitiveCompare:@"ctcp"] ) {
 		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
 	} else if( ! [command caseInsensitiveCompare:@"wi"] ) {
-//		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:YES];
+		[connection sendRawMessage:[NSString stringWithFormat:@"WHOIS %@", [arguments string]]];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"wii"] ) {
-//		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:NO];
+		[connection sendRawMessage:[NSString stringWithFormat:@"WHOIS %@ %@", [arguments string], [arguments string]]];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"list"] ) {
 		JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:connection];
