@@ -71,4 +71,7 @@ typedef enum JVTranscriptCriterionKind { // corresponds to the nib menu tags
 
 - (id) query;
 - (void) setQuery:(id) query;
+
+- (NSView *) firstKeyView;
+- (NSView *) lastKeyView;
 @end

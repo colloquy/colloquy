@@ -193,6 +193,8 @@
 	return NO;
 }
 
+#pragma mark -
+
 - (id) query {
 	if( [self format] == JVTranscriptTextCriterionFormat ) {
 		return [textQuery stringValue];
@@ -217,5 +219,31 @@
 		if( [listQuery numberOfItems] < index ) index = -1;
 		[listQuery selectItemAtIndex:index];
 	}
+}
+
+#pragma mark -
+
+- (NSView *) firstKeyView {
+	if( [self format] == JVTranscriptTextCriterionFormat ) {
+		return textKindButton;
+	} else if( [self format] == JVTranscriptDateCriterionFormat ) {
+		return dateKindButton;
+	} else if( [self format] == JVTranscriptBooleanCriterionFormat ) {
+		return booleanKindButton;
+	} else if( [self format] == JVTranscriptListCriterionFormat ) {
+		return listKindButton;
+	} else return nil;
+}
+
+- (NSView *) lastKeyView {
+	if( [self format] == JVTranscriptTextCriterionFormat ) {
+		return textQuery;
+	} else if( [self format] == JVTranscriptDateCriterionFormat ) {
+		return dateUnitsButton;
+	} else if( [self format] == JVTranscriptBooleanCriterionFormat ) {
+		return booleanKindButton;
+	} else if( [self format] == JVTranscriptListCriterionFormat ) {
+		return listQuery;
+	} else return nil;
 }
 @end

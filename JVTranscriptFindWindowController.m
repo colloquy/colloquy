@@ -111,6 +111,21 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 #pragma mark -
 
+- (void) updateKeyViewLoop {
+	NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
+	JVTranscriptCriterionController *previousRule = [rules nextObject];
+	JVTranscriptCriterionController *rule = nil;
+
+	[operation setNextKeyView:[previousRule firstKeyView]];
+
+	while( ( rule = [rules nextObject] ) ) {
+		[[previousRule lastKeyView] setNextKeyView:[rule firstKeyView]];
+		previousRule = rule;
+	}
+
+	[[previousRule lastKeyView] setNextKeyView:scrollbackOnly];
+}
+
 - (IBAction) addRow:(id) sender {
 	JVTranscriptCriterionController *criterion = [JVTranscriptCriterionController controller];
 	[self insertObject:criterion inCriterionControllersAtIndex:[[subviewTableView selectedRowIndexes] lastIndex]];
@@ -130,6 +145,8 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 	[[self results] removeAllObjects];
 	_lastMessageIndex = 0;
+
+	[self updateKeyViewLoop];
 }
 
 - (IBAction) removeRow:(id) sender {
@@ -150,6 +167,8 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 	[[self results] removeAllObjects];
 	_lastMessageIndex = 0;
+
+	[self updateKeyViewLoop];
 }
 
 #pragma mark -
