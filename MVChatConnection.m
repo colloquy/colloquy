@@ -489,8 +489,15 @@ BOOL MVChatApplicationQuitting = NO;
 #pragma mark -
 
 - (void) joinChatRooms:(NSArray *) rooms {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+	NSParameterAssert( rooms != nil );
+
+	if( ! [rooms count] ) return;
+
+	NSEnumerator *enumerator = [rooms objectEnumerator];
+	NSString *room = nil;
+
+	while( ( room = [enumerator nextObject] ) )
+		if( [room length] ) [self joinChatRoom:room];
 }
 
 - (void) joinChatRoom:(NSString *) room {

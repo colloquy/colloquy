@@ -1011,18 +1011,6 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (void) joinChatRooms:(NSArray *) rooms {
-	NSParameterAssert( rooms != nil );
-
-	if( ! [rooms count] ) return;
-
-	NSEnumerator *enumerator = [rooms objectEnumerator];
-	NSString *room = nil;
-
-	while( ( room = [enumerator nextObject] ) )
-		if( [room length] ) [self joinChatRoom:room];
-}
-
 - (void) joinChatRoom:(NSString *) room {
 	NSParameterAssert( room != nil );
 	NSParameterAssert( [room length] > 0 );
