@@ -95,9 +95,8 @@
 
 	if( isChatRoom ) {
 		if( ! [command caseInsensitiveCompare:@"leave"] || ! [command caseInsensitiveCompare:@"part"] ) {
-			if( ! [arguments length] ) [self handlePartWithArguments:[room target] forConnection:[room connection]];
+			if( ! [arguments length] ) return [self handlePartWithArguments:[room target] forConnection:[room connection]];
 			else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
-			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"topic"] || ! [command caseInsensitiveCompare:@"t"] ) {
 			if( ! [arguments length] ) return NO;
 			NSStringEncoding encoding = [room encoding];
@@ -364,39 +363,55 @@
 - (BOOL) handleJoinWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
 	NSArray *channels = [arguments componentsSeparatedByString:@","];
 
-	if( [arguments length] && [channels count] )  {
-		NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"&#+!"];
+	if( [arguments length] && [channels count] == 1 ) {
+		[connection joinChatRoom:arguments];
+		return YES;
+	} else if( [arguments length] && [channels count] > 1 ) {
 		NSEnumerator *chanEnum = [channels objectEnumerator];
 		NSString *channel = nil;
+
+		channels = [NSMutableArray array];
 		while( ( channel = [chanEnum nextObject] ) ) {
 			channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-			if( [channel length] > 0 )
-				[connection sendRawMessage:[NSString stringWithFormat:@"JOIN %@", ( [chanSet characterIsMember:[channel characterAtIndex:0]] ? channel : [@"#" stringByAppendingString:channel] )]];
+			[(NSMutableArray *)channels addObject:channel];
 		}
+
+		[connection joinChatRooms:channels];
+		return YES;
 	} else {
 		id browser = [NSClassFromString( @"JVChatRoomBrowser" ) chatRoomBrowserForConnection:connection];
 		[browser showWindow:nil];
 		[browser setFilter:arguments];
 		[browser showRoomBrowser:nil];
+		return YES;
 	}
 
-	return YES;
+	return NO;
 }
 
 - (BOOL) handlePartWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
-	if( [arguments length] > 0 )  {
-		NSArray *channels = [arguments componentsSeparatedByString:@","];
-		NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"&#+!"];
+	NSArray *channels = [arguments componentsSeparatedByString:@","];
+
+	if( [arguments length] && [channels count] == 1 ) {
+		[connection partChatRoom:arguments];
+		return YES;
+	} else if( [arguments length] && [channels count] > 1 ) {
+		NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"#&+!"];
 		NSEnumerator *chanEnum = [channels objectEnumerator];
 		NSString *channel = nil;
+
+		channels = [NSMutableArray array];
 		while( ( channel = [chanEnum nextObject] ) ) {
 			channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			if( [channel length] )
-				[connection sendRawMessage:[NSString stringWithFormat:@"PART %@", ( [chanSet characterIsMember:[channel characterAtIndex:0]] ? channel : [@"#" stringByAppendingString:channel] )]];
+				[(NSMutableArray *)channels addObject:( [chanSet characterIsMember:[channel characterAtIndex:0]] ? channel : [@"#" stringByAppendingString:channel] )];
 		}
+
+		[connection sendRawMessageWithFormat:@"PART %@", [channels componentsJoinedByString:@","]];
+		return YES;
 	}
 
-	return YES;
+	return NO;
 }
 
 - (BOOL) handleMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection alwaysShow:(BOOL) always {
