@@ -330,6 +330,7 @@
 			files = (
 				1CCA51800598AFBA00F0A4CD,
 				1CCA51810598AFBA00F0A4CD,
+				1C6C83A00632186900698F55,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -415,6 +416,12 @@
 			path = ChatCore.framework;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C6C83A00632186900698F55 = {
+			fileRef = F52BA284037C13C201A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C9CF4190615076700330D8D = {
 			isa = PBXFileReference;
@@ -3192,8 +3199,8 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = text;
-			name = GPL;
-			path = "Other Code/firetalk (cvs)/GPL";
+			name = GPL.txt;
+			path = Resources/GPL.txt;
 			refType = 4;
 			sourceTree = "<group>";
 		};
