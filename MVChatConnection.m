@@ -328,6 +328,7 @@ char *MVChatIRCToXHTML( const char * const string ) {
 	const char *attributsCharSet = "\002\003\026\037\017";
 	unsigned attributes = 0;
 	int fgcolor = -1, bgcolor = -1;
+	unsigned int iso2022esc = 0;
 
 	while( i < l && o < ll ) {
 		/* scan for attributes until we hit character data */
@@ -426,17 +427,26 @@ char *MVChatIRCToXHTML( const char * const string ) {
 		/* write any character data up until next attribute change */
 		while( i < l && o < ll && strcspn( &string[i], attributsCharSet ) ) {
 			switch( string[i] ) {
+			case '\033':
+				// ISO-2022-JP Support; See RFC 1468.
+				if( string[i+1] == '$' && ( string[i+2] == '@' || string[i+2] == 'B' ) ) iso2022esc = 1;
+				else if( string[i+1] == '(' && ( string[i+2] == 'B' || string[i+2] == 'J' ) ) iso2022esc = 0;
+				output[o++] = string[i++];
+				break;
 			case '&':
+				if( iso2022esc ) goto echo;
 				memcpy( &output[o], "&amp;", 5 );
 				o += 5;
 				i++;
 				break;
 			case '<':
+				if( iso2022esc ) goto echo;
 				memcpy( &output[o], "&lt;", 4 );
 				o += 4;
 				i++;
 				break;
 			case '>':
+				if( iso2022esc ) goto echo;
 				memcpy( &output[o], "&gt;", 4 );
 				o += 4;
 				i++;
@@ -451,7 +461,7 @@ char *MVChatIRCToXHTML( const char * const string ) {
 				o += 6;
 				i++;
 				break;
-			default:
+			default: echo:
 				if( (unsigned) string[i] >= 0x20 || string[i] == '\t' || string[i] == '\n' || string[i] == '\r' ) output[o++] = string[i++];
 				else i++;
 			}
