@@ -5,6 +5,8 @@
 #import "MVChatConnection.h"
 #import "NSStringAdditions.h"
 #import "JVChatController.h"
+#import "MVChatRoom.h"
+#import "MVChatUser.h"
 #import "JVChatRoom.h"
 #import "JVDirectChat.h"
 #import "JVChatRoomMember.h"
@@ -40,6 +42,8 @@
 	[super dealloc];
 }
 
+#pragma mark -
+
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
 	BOOL isChatRoom = [view isKindOfClass:NSClassFromString( @"JVChatRoom" )];
 	BOOL isDirectChat = [view isKindOfClass:NSClassFromString( @"JVDirectChat" )];
@@ -52,7 +56,8 @@
 			if( [arguments length] ) {
 				BOOL action = ( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] );
 				[chat echoSentMessageToDisplay:arguments asAction:action];
-				[[chat connection] sendMessage:arguments withEncoding:[chat encoding] toChatRoom:[chat target] asAction:action];
+				if( isChatRoom ) [[room target] sendMessage:arguments asAction:action];
+				else [[chat target] sendMessage:arguments withEncoding:[chat encoding] asAction:action];
 			}
 			return YES;
 		} else if( [[command substringToIndex:1] isEqualToString:@"/"] ) {
@@ -63,8 +68,9 @@
 				[line appendAttributedString:arguments];
 			}
 			if( [line length] ) {
-				[room echoSentMessageToDisplay:line asAction:NO];
-				[[room connection] sendMessage:line withEncoding:[chat encoding] toUser:[chat target] asAction:NO];
+				[chat echoSentMessageToDisplay:line asAction:NO];
+				if( isChatRoom ) [[room target] sendMessage:line asAction:NO];
+				else [[chat target] sendMessage:line withEncoding:[chat encoding] asAction:NO];
 			}
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"clear"] && ! [[arguments string] length] ) {
@@ -80,14 +86,14 @@
 				return YES;
 			}
 		} else if( ! [command caseInsensitiveCompare:@"whois"] || ! [command caseInsensitiveCompare:@"wi"] ) {
-			id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
-			id info = [NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member];
-			[(id)[info inspector] setFetchLocalServerInfoOnly:YES];
-			[info show:nil];
+//			id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
+//			id info = [NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member];
+//			[(id)[info inspector] setFetchLocalServerInfoOnly:YES];
+//			[info show:nil];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"wii"] ) {
-			id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
-			[[NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member] show:nil];
+//			id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
+//			[[NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member] show:nil];
 			return YES;
 		}
 	}
@@ -98,9 +104,7 @@
 			else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		} else if( ! [command caseInsensitiveCompare:@"topic"] || ! [command caseInsensitiveCompare:@"t"] ) {
 			if( ! [arguments length] ) return NO;
-			NSStringEncoding encoding = [room encoding];
-			if( ! encoding ) encoding = [[room connection] encoding];
-			[[room connection] setTopic:arguments withEncoding:encoding forRoom:[room target]];
+			[[room target] setTopic:arguments];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"names"] && ! [[arguments string] length] ) {
 			[[room windowController] openViewsDrawer:nil];
@@ -125,89 +129,133 @@
 			[connection sendRawMessage:[NSString stringWithFormat:@"INVITE %@ %@", nick, ( [roomName length] ? roomName : [room target] )]];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"kick"] ) {
-			NSString *member = nil, *msg = nil;
+			NSString *member = nil;
 			NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 
 			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&member];
-			if( ! member ) return NO;
+			if( ! [member length] ) return NO;
 
-			if( [arguments length] >= [scanner scanLocation] + 1 ) {
-				[scanner setScanLocation:[scanner scanLocation] + 1];
-				msg = [[arguments string] substringFromIndex:[scanner scanLocation]];
-			}
+			NSAttributedString *reason = nil;
+			if( [arguments length] >= [scanner scanLocation] + 1 )
+				reason = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation] + 1, ( [arguments length] - [scanner scanLocation] - 1 ) )];
 
-			[[room connection] kickMember:member inRoom:[room target] forReason:msg];
+			MVChatUser *user = [[[room target] memberUsersWithNickname:member] anyObject];
+			[[room target] kickOutMemberUser:user forReason:reason];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"op"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg;
+			NSString *arg = nil;
 			while( arg = [e nextObject] ) {
-				if( [arg length] )
-					[[room connection] promoteMember:arg inRoom:[room target]];
+				if( [arg length] ) {
+					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					[[room target] setMode:MVChatRoomMemberOperatorMode forMemberUser:user];
+				}
 			}
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"deop"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg;
+			NSString *arg = nil;
 			while( arg = [e nextObject] ) {
-				if( [arg length] )
-					[[room connection] demoteMember:arg inRoom:[room target]];
+				if( [arg length] ) {
+					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					[[room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:user];
+				}
 			}
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"halfop"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg;
+			NSString *arg = nil;
 			while( arg = [e nextObject] ) {
-				if( [arg length] )
-					[[room connection] halfopMember:arg inRoom:[room target]];
+				if( [arg length] ) {
+					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					[[room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
+				}
 			}
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"dehalfop"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg;
+			NSString *arg = nil;
 			while( arg = [e nextObject] ) {
-				if( [arg length] )
-					[[room connection] dehalfopMember:arg inRoom:[room target]];
+				if( [arg length] ) {
+					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					[[room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
+				}
 			}
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"voice"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg;
+			NSString *arg = nil;
 			while( arg = [e nextObject] ) {
-				if( [arg length] )
-					[[room connection] voiceMember:arg inRoom:[room target]];
+				if( [arg length] ) {
+					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					[[room target] setMode:MVChatRoomMemberVoicedMode forMemberUser:user];
+				}
 			}
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"devoice"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg;
+			NSString *arg = nil;
 			while( arg = [e nextObject] ) {
-				if( [arg length] )
-					[[room connection] devoiceMember:arg inRoom:[room target]];
+				if( [arg length] ) {
+					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					[[room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:user];
+				}
+			}
+			return YES;
+		} else if( ! [command caseInsensitiveCompare:@"quiet"] ) {
+			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
+			NSEnumerator *e = [args objectEnumerator];
+			NSString *arg = nil;
+			while( arg = [e nextObject] ) {
+				if( [arg length] ) {
+					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					[[room target] setMode:MVChatRoomMemberQuietedMode forMemberUser:user];
+				}
+			}
+			return YES;
+		} else if( ! [command caseInsensitiveCompare:@"dequiet"] ) {
+			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
+			NSEnumerator *e = [args objectEnumerator];
+			NSString *arg = nil;
+			while( arg = [e nextObject] ) {
+				if( [arg length] ) {
+					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					[[room target] removeMode:MVChatRoomMemberQuietedMode forMemberUser:user];
+				}
 			}
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"ban"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg;
+			NSString *arg = nil;
 			while( arg = [e nextObject] ) {
-				if( [arg length] )
-					[[room connection] banMember:arg inRoom:[room target]];
+				if( [arg length] ) {
+					NSArray *parts = [arg componentsSeparatedByString:@"!"];
+					NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
+					NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
+					MVChatUser *user = [NSClassFromString( @"MVChatUser" ) wildcardUserWithNicknameMask:nickname andHostMask:host];
+					[[room target] addBanForUser:user];
+				}
 			}
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"unban"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg;
+			NSString *arg = nil;
 			while( arg = [e nextObject] ) {
-				if( [arg length] )
-					[[room connection] unbanMember:arg inRoom:[room target]];
+				if( [arg length] ) {
+					NSArray *parts = [arg componentsSeparatedByString:@"!"];
+					NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
+					NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
+					MVChatUser *user = [NSClassFromString( @"MVChatUser" ) wildcardUserWithNicknameMask:nickname andHostMask:host];
+					[[room target] removeBanForUser:user];
+				}
 			}
 			return YES;
 		}
@@ -244,10 +292,10 @@
 	} else if( ! [command caseInsensitiveCompare:@"ctcp"] ) {
 		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
 	} else if( ! [command caseInsensitiveCompare:@"wi"] ) {
-		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:YES];
+//		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:YES];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"wii"] ) {
-		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:NO];
+//		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:NO];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"quit"] || ! [command caseInsensitiveCompare:@"disconnect"] ) {
 		[connection disconnectWithReason:arguments];
@@ -305,7 +353,9 @@
 		if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) return NO;
 	}
 
-	if( ! to ) return NO;
+	if( ! [to length] ) return NO;
+
+	MVChatUser *user = [[connection chatUsersWithNickname:to] anyObject];
 
 	if( ! [path length] ) {
 		NSOpenPanel *panel = [NSOpenPanel openPanel];
@@ -316,23 +366,25 @@
 		if( [panel runModalForTypes:nil] == NSOKButton ) {
 			NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 			while( ( path = [enumerator nextObject] ) )
-				[[_manager fileTransferController] addFileTransfer:[connection sendFile:path toUser:to passively:passive]];
+				[[_manager fileTransferController] addFileTransfer:[user sendFile:path passively:passive]];
 		}
-	} else [[_manager fileTransferController] addFileTransfer:[connection sendFile:path toUser:to passively:passive]];
+	} else [[_manager fileTransferController] addFileTransfer:[user sendFile:path passively:passive]];
 	return YES;
 }
 
 - (BOOL) handleCTCPWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
 	NSString *to = nil, *ctcpRequest = nil, *ctcpArgs = nil;
 	NSScanner *scanner = [NSScanner scannerWithString:arguments];
-	
+
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&ctcpRequest];
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] intoString:&ctcpArgs];
-	
-	if( ! to || ! ctcpRequest ) return NO;
-	
-	[connection sendSubcodeRequest:ctcpRequest toUser:to withArguments:ctcpArgs];
+
+	if( ! [to length] || ! [ctcpRequest length] ) return NO;
+
+	MVChatUser *user = [[connection chatUsersWithNickname:to] anyObject];
+
+	[user sendSubcodeRequest:ctcpRequest withArguments:ctcpArgs];
 	return YES;
 }
 
@@ -392,21 +444,17 @@
 	NSArray *channels = [arguments componentsSeparatedByString:@","];
 
 	if( [arguments length] && [channels count] == 1 ) {
-		[connection partChatRoom:arguments];
+		[[connection joinedChatRoomWithName:arguments] part];
 		return YES;
 	} else if( [arguments length] && [channels count] > 1 ) {
-		NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
 		NSEnumerator *chanEnum = [channels objectEnumerator];
 		NSString *channel = nil;
 
-		channels = [NSMutableArray array];
 		while( ( channel = [chanEnum nextObject] ) ) {
 			channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-			if( [channel length] )
-				[(NSMutableArray *)channels addObject:( [chanSet characterIsMember:[channel characterAtIndex:0]] ? channel : [@"#" stringByAppendingString:channel] )];
+			if( [channel length] ) [[connection joinedChatRoomWithName:channel] part];
 		}
 
-		[connection sendRawMessageWithFormat:@"PART %@", [channels componentsJoinedByString:@","]];
 		return YES;
 	}
 
@@ -422,8 +470,7 @@
 
 	if( ! [to length] ) return NO;
 
-	NSStringEncoding encoding = [(JVDirectChat *)[[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:YES] encoding];
-	if( ! encoding ) encoding = [connection encoding];
+	MVChatUser *user = [[connection chatUsersWithNickname:to] anyObject];
 
 	if( [message length] >= [scanner scanLocation] + 1 ) {
 		[scanner setScanLocation:[scanner scanLocation] + 1];
@@ -438,13 +485,22 @@
 	NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
 	JVDirectChat *chatView = nil;
 
-	if( ! [command caseInsensitiveCompare:@"msg"] && [chanSet characterIsMember:[to characterAtIndex:0]] )
-		chatView = [[_manager chatController] chatViewControllerForRoom:to withConnection:connection ifExists:YES];
-	else chatView = [[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:( ! show )];
+	if( ! [command caseInsensitiveCompare:@"msg"] && ( ! chanSet || [chanSet characterIsMember:[to characterAtIndex:0]] ) ) {
+		MVChatRoom *room = [connection joinedChatRoomWithName:to];
+		chatView = [[_manager chatController] chatViewControllerForRoom:room ifExists:YES];
+	}
+
+	if( ! chatView ) chatView = [[_manager chatController] chatViewControllerForUser:user ifExists:( ! show )];
 
 	if( [msg length] ) {
 		[chatView echoSentMessageToDisplay:msg asAction:NO];
-		[connection sendMessage:msg withEncoding:encoding toUser:to asAction:NO];
+		if( [[chatView target] isKindOfClass:NSClassFromString( @"MVChatRoom" )] ) {
+			[[chatView target] sendMessage:msg asAction:NO];
+		} else {
+			NSStringEncoding encoding = [chatView encoding];
+			if( ! encoding ) encoding = [connection encoding];
+			[[chatView target] sendMessage:msg withEncoding:encoding asAction:NO];
+		}
 	}
 
 	return YES;
@@ -454,14 +510,12 @@
 	if( ! [message length] ) return NO;
 
 	BOOL action = ( ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"bract"] );
-	NSStringEncoding encoding = [connection encoding];
+
 	NSEnumerator *enumerator = [[[_manager chatController] chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
-	id item = nil;
-	while( ( item = [enumerator nextObject] ) ) {
-		encoding = [item encoding];
-		if( ! encoding ) encoding = [connection encoding];
-		[connection sendMessage:message withEncoding:encoding toChatRoom:[item target] asAction:action];
-		[item echoSentMessageToDisplay:message asAction:action];
+	JVChatRoom *room = nil;
+	while( ( room = [enumerator nextObject] ) ) {
+		[room echoSentMessageToDisplay:message asAction:action];
+		[[room target] sendMessage:message asAction:action];
 	}
 
 	return YES;
