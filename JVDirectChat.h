@@ -49,6 +49,8 @@
 
 - (void) unavailable;
 
+- (IBAction) addToFavorites:(id) sender;
+
 - (void) showAlert:(NSPanel *) alert withName:(NSString *) name;
 
 - (void) setPreference:(id) value forKey:(NSString *) key;
