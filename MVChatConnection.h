@@ -149,6 +149,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSDate *_cachedDate;
 	NSTimeInterval _backlogDelay;
 	NSDictionary *_floodIntervals;
+	NSString *_awayMessage;
 	unsigned int /* io_object_t */ _sleepNotifier;
 	unsigned int /* io_connect_t */ _powerConnection;
 }
@@ -221,6 +222,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) stopFetchingRoomList;
 - (NSDictionary *) roomListResults;
 
+- (NSString *) awayStatusMessage;
 - (void) setAwayStatusWithMessage:(NSString *) message;
 - (void) clearAwayStatus;
 
@@ -232,9 +234,12 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (NSNumber *) uniqueIdentifier;
 @end
 
-@interface NSObject (MVChatPluginSubcodeSupport)
+@interface NSObject (MVChatPluginConnectionSupport)
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection;
 - (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection;
+
+- (void) connected:(MVChatConnection *) connection;
+- (void) disconnecting:(MVChatConnection *) connection;
 @end
 
 @interface NSURL (NSURLChatAdditions)

@@ -573,6 +573,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 		_password = nil;
 		_cachedDate = nil;
 		_floodIntervals = nil;
+		_awayMessage = nil;
 		_backlogDelay = 0;
 		_port = 6667;
 
@@ -635,6 +636,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	[_roomsCache release];
 	[_cachedDate release];
 	[_floodIntervals release];
+	[_awayMessage release];
 	[_firetalkSelectTimer release];
 
 	firetalk_destroy_handle( _chatConnection );
@@ -647,6 +649,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	_roomsCache = nil;
 	_cachedDate = nil;
 	_floodIntervals = nil;
+	_awayMessage = nil;
 	_firetalkSelectTimer = nil;
 
 	[super dealloc];
@@ -971,10 +974,19 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 #pragma mark -
 
+- (NSString *) awayStatusMessage {
+	return _awayMessage;
+}
+
 - (void) setAwayStatusWithMessage:(NSString *) message {
 	if( [self isConnected] ) {
-		if( [message length] ) firetalk_set_away( _chatConnection, [message UTF8String] );
-		else firetalk_set_away( _chatConnection, NULL );
+		[_awayMessage autorelease];
+		_awayMessage = nil;
+
+		if( [message length] ) {
+			_awayMessage = [message copy];
+			firetalk_set_away( _chatConnection, [message UTF8String] );
+		} else firetalk_set_away( _chatConnection, NULL );
 	}
 }
 
@@ -1118,7 +1130,15 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (void) _didConnect {
 	_status = MVChatConnectionConnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidConnectNotification object:self];
-	[NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector( _joinRooms: ) userInfo:NULL repeats:NO];
+	[self performSelector:@selector( _joinRooms: ) withObject:nil afterDelay:0.25];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( connected: )];
+	[invocation setArgument:&self atIndex:2];
+
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 }
 
 - (void) _didNotConnect {
@@ -1128,6 +1148,14 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (void) _willDisconnect {
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionWillDisconnectNotification object:self];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( disconnecting: )];
+	[invocation setArgument:&self atIndex:2];
+
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 }
 
 - (void) _didDisconnect {
@@ -1169,6 +1197,21 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	unsigned long enc = [[[command evaluatedArguments] objectForKey:@"encoding"] unsignedLongValue];
 	NSStringEncoding encoding = NSUTF8StringEncoding;
 
+	if( ! [message isKindOfClass:[NSString class]] || ! [message length] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid message."];
+		return;
+	}
+
+	if( ! user && ( ! [room isKindOfClass:[NSString class]] || ! [room length] ) ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid room."];
+		return;
+	}
+
+	if( ! room && ( ! [user isKindOfClass:[NSString class]] || ! [user length] ) ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid user."];
+		return;
+	}
+
 	switch( enc ) {
 		default:
 		case 'utF8': encoding = NSUTF8StringEncoding; break;
@@ -1199,17 +1242,103 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 }
 
 - (void) sendRawMessageScriptCommand:(NSScriptCommand *) command {
+	NSString *msg = [[command evaluatedArguments] objectForKey:@"message"];
+
+	if( ! [msg isKindOfClass:[NSString class]] || ! [msg length] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid raw message."];
+		return;
+	}
+
 	[self sendRawMessage:[[command evaluatedArguments] objectForKey:@"message"]];
+}
+
+- (void) sendSubcodeMessageScriptCommand:(NSScriptCommand *) command {
+	NSString *cmd = [[command evaluatedArguments] objectForKey:@"command"];
+	NSString *user = [[command evaluatedArguments] objectForKey:@"user"];
+	id arguments = [[command evaluatedArguments] objectForKey:@"arguments"];
+	unsigned long type = [[[command evaluatedArguments] objectForKey:@"type"] unsignedLongValue];
+
+	if( ! [cmd isKindOfClass:[NSString class]] || ! [cmd length] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid subcode command."];
+		return;
+	}
+
+	if( ! [user isKindOfClass:[NSString class]] || ! [user length] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid subcode user."];
+		return;
+	}
+
+	if( [arguments isKindOfClass:[NSNull class]] ) arguments = nil;
+
+	if( arguments && ! [arguments isKindOfClass:[NSString class]] && ! [arguments isKindOfClass:[NSArray class]] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid subcode arguments."];
+		return;
+	}
+
+	NSString *argumnentsString = nil;
+	if( [arguments isKindOfClass:[NSArray class]] ) {
+		NSEnumerator *enumerator = [arguments objectEnumerator];
+		id arg = nil;
+
+		argumnentsString = [NSMutableString stringWithFormat:@"%@", [enumerator nextObject]];
+
+		while( ( arg = [enumerator nextObject] ) )
+			[(NSMutableString *)argumnentsString appendFormat:@" %@", arg];
+	} else argumnentsString = arguments;
+
+	if( type == 'srpL' ) [self sendSubcodeReply:cmd toUser:user withArguments:argumnentsString];
+	else [self sendSubcodeRequest:cmd toUser:user withArguments:argumnentsString];
+}
+
+- (void) returnFromAwayStatusScriptCommand:(NSScriptCommand *) command {
+	[self clearAwayStatus];
+}
+
+- (void) joinChatRoomScriptCommand:(NSScriptCommand *) command {
+	id rooms = [[command evaluatedArguments] objectForKey:@"room"];
+
+	if( rooms && ! [rooms isKindOfClass:[NSString class]] && ! [rooms isKindOfClass:[NSArray class]] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid chat room to join."];
+		return;
+	}
+
+	NSArray *rms = nil;
+	if( [rooms isKindOfClass:[NSString class]] )
+		rms = [NSArray arrayWithObject:rooms];
+	else rms = rooms;
+
+	[self joinChatRooms:rms];
+}
+
+- (void) sendFileScriptCommand:(NSScriptCommand *) command {
+	NSString *path = [[command evaluatedArguments] objectForKey:@"path"];
+	NSString *user = [[command evaluatedArguments] objectForKey:@"user"];
+
+	if( ! [path isKindOfClass:[NSString class]] || ! [path length] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid file path."];
+		return;
+	}
+
+	if( ! [user isKindOfClass:[NSString class]] || ! [user length] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid user."];
+		return;
+	}
+
+	[self sendFile:path toUser:user];
 }
 
 - (NSString *) urlString {
 	return [[self url] absoluteString];
 }
+
+- (void) setAwayStatusMessage:(NSString *) message {
+	[self setAwayStatusWithMessage:message];
+}
 @end
 
 #pragma mark -
 
-@implementation MVChatScriptPlugin (MVChatScriptPluginSubcodeSupport)
+@implementation MVChatScriptPlugin (MVChatScriptPluginConnectionSupport)
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psR1", user, @"psR2", connection, @"psR3", nil];
 	id result = [self callScriptHandler:'psRX' withArguments:args];
@@ -1222,6 +1351,18 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	id result = [self callScriptHandler:'psLX' withArguments:args];
 	if( ! result ) [self doesNotRespondToSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
+}
+
+- (void) connected:(MVChatConnection *) connection {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
+	if( ! [self callScriptHandler:'cTsX' withArguments:args] )
+		[self doesNotRespondToSelector:_cmd];
+}
+
+- (void) disconnecting:(MVChatConnection *) connection {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
+	if( ! [self callScriptHandler:'dFsX' withArguments:args] )
+		[self doesNotRespondToSelector:_cmd];
 }
 @end
 
