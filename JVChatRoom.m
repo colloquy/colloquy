@@ -3,6 +3,7 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
+#import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <AGRegex/AGRegex.h>
@@ -312,9 +313,11 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	AGRegex *regex = nil;
 	NSString *name = nil;
+	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
 	while( ( name = [[enumerator nextObject] nickname] ) ) {
-		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"\\b(%@)\\b", name]];
+		NSString *escapedName = [name stringByEscapingCharactersInSet:escapeSet];
+		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"\\b(%@)\\b", escapedName]];
 		NSRange searchRange = NSMakeRange(0, [message length]);
 		NSRange backSearchRange = NSMakeRange(0, [message length]);
 		AGRegexMatch *match = [regex findInString:message range:searchRange];
@@ -983,7 +986,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
 	if( [[[element objectForKey:WebElementLinkURLKey] scheme] isEqualToString:@"member"] ) {
 		NSMutableArray *ret = [NSMutableArray array];
-		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[element objectForKey:WebElementLinkURLKey] resourceSpecifier]];
+		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[[element objectForKey:WebElementLinkURLKey] resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 		NSEnumerator *enumerator = [[[mbr menu] itemArray] objectEnumerator];
 		NSMenuItem *item = nil;
 
@@ -998,7 +1001,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"member"] ) {
-		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier]];
+		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 		if( mbr ) [mbr startChat:nil];
 		else [[JVChatController defaultManager] chatViewControllerForUser:[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier] withConnection:[self connection] ifExists:NO];
 		[listener ignore];
