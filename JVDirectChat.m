@@ -731,7 +731,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user ignoreResult:(JVIgnoreMatchResult) ignore {
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
-		if( ignore != JVNotIgnored && _firstMessage ) {
+		if( ignore == JVNotIgnored && _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"description"];
@@ -740,7 +740,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
-		} else if( ignore != JVNotIgnored ) {
+		} else if( ignore == JVNotIgnored ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
 			if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have 1 message waiting from %@.", "new single message bubble text" ), [self title]] forKey:@"description"];
