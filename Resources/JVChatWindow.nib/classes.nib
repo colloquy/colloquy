@@ -7,6 +7,7 @@
             CLASS = JVChatWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                activityToolbarButton = MVMenuButton; 
                 chatViewsOutlineView = NSOutlineView; 
                 favoritesButton = MVMenuButton; 
                 viewActionButton = MVMenuButton; 
@@ -18,9 +19,10 @@
             ACTIONS = {displayMenu = id; }; 
             CLASS = MVMenuButton; 
             LANGUAGE = ObjC; 
+            OUTLETS = {menu = id; }; 
             SUPERCLASS = NSButton; 
         }, 
-        {CLASS = NSObject; LANGUAGE = ObjC; }
+        {ACTIONS = {doubleClicked = id; }; CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }
