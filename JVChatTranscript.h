@@ -9,7 +9,7 @@
 @class NSBundle;
 @class NSDictionary;
 @class NSMutableDictionary;
-@class NSConnection;
+@class JVChatMessage;
 @class NSLock;
 
 @interface JVChatTranscript : NSObject <JVChatViewController> {
@@ -30,6 +30,7 @@
 	NSBundle *_chatEmoticons;
 	NSDictionary *_emoticonMappings;
 	NSDictionary *_styleParams;
+	NSMutableArray *_messages;
 	NSMutableDictionary *_toolbarItems;
 	const char **_params;
 	BOOL _isArchive;
@@ -50,6 +51,10 @@
 - (void) setChatEmoticons:(NSBundle *) emoticons;
 - (void) setChatEmoticons:(NSBundle *) emoticons preformRefresh:(BOOL) refresh;
 - (NSBundle *) chatEmoticons;
+
+- (unsigned long) numberOfMessages;
+- (JVChatMessage *) messageAtIndex:(unsigned long) index;
+- (NSArray *) messagesInRange:(NSRange) range;
 
 - (IBAction) leaveChat:(id) sender;
 @end

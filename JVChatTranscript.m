@@ -4,6 +4,7 @@
 #import <WebKit/WebKit.h>
 
 #import "JVChatController.h"
+#import "JVChatMessage.h"
 #import "MVFileTransferController.h"
 #import "MVMenuButton.h"
 #import "NSPreferences.h"
@@ -98,6 +99,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		_filePath = nil;
 		_chatXSLStyle = NULL;
 		_toolbarItems = [[NSMutableDictionary dictionary] retain];
+		_messages = [[NSMutableArray arrayWithCapacity:50] retain];
 
 		[[self class] _scanForChatStyles];
 		[[self class] _scanForEmoticons];
@@ -127,11 +129,17 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 - (void) awakeFromNib {
 	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 
-	if( xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" ) )
-		[self setChatStyle:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" )]] withVariant:nil];
+	if( xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
+		xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
+		[self setChatStyle:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:styleProp]] withVariant:nil];
+		xmlFree( styleProp );
+	}
 
-	if( xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) )
-		[self setChatEmoticons:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" )]]];
+	if( xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ) {
+		xmlChar *emoticonProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" );
+		[self setChatEmoticons:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:emoticonProp]]];
+		xmlFree( emoticonProp );
+	}
 
 	if( ! _chatStyle ) {
 		NSBundle *style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
@@ -187,6 +195,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[_styleParams release];
 	[_filePath release];
 	[_toolbarItems release];
+	[_messages release];
 
 	[JVChatStyleBundles autorelease];
 	[JVChatEmoticonBundles autorelease];
@@ -218,6 +227,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	_filePath = nil;
 	_windowController = nil;
 	_toolbarItems = nil;
+	_messages = nil;
 
 	[super dealloc];
 }
@@ -232,6 +242,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	if( [[[_windowController window] representedFilename] isEqualToString:_filePath] )
 		[[_windowController window] setRepresentedFilename:@""];
 	_windowController = controller;
+	[_toolbarItems release];
+	_toolbarItems = [[NSMutableDictionary dictionary] retain];
 	[display setHostWindow:[_windowController window]];
 }
 
@@ -259,18 +271,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (NSString *) windowTitle {
-	NSCalendarDate *date = nil;
-	xmlChar *began = NULL;
-	began = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "began" );
-	date = [NSCalendarDate dateWithString:[NSString stringWithUTF8String:began] calendarFormat:@"%Y-%m-%d %H:%M:%S %z"];
-	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [[_filePath lastPathComponent] stringByDeletingPathExtension], [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
+	xmlChar *began = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "began" );
+	NSCalendarDate *date = ( began ? [NSCalendarDate dateWithString:[NSString stringWithUTF8String:began]] : nil );
+	xmlFree( began );
+	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [[_filePath lastPathComponent] stringByDeletingPathExtension], ( date ? [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]] : @"" )];
 }
 
 - (NSString *) information {
-	NSCalendarDate *date = nil;
-	xmlChar *began = NULL;
-	began = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "began" );
-	date = [NSCalendarDate dateWithString:[NSString stringWithUTF8String:began] calendarFormat:@"%Y-%m-%d %H:%M:%S %z"];
+	xmlChar *began = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "began" );
+	NSCalendarDate *date = ( began ? [NSCalendarDate dateWithString:[NSString stringWithUTF8String:began]] : nil );
+	xmlFree( began );
 	return [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
 }
 
@@ -502,6 +512,75 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 #pragma mark -
 
+- (unsigned long) numberOfMessages {
+	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
+	if( ! ctx ) return 0;
+
+	xmlXPathObjectPtr result = xmlXPathEval( "/log/envelope", ctx );
+	if( ! result ) return 0;
+
+	unsigned long ret = result -> nodesetval -> nodeNr;
+
+	xmlXPathFreeContext( ctx );
+	xmlXPathFreeObject( result );
+
+	return ret;
+}
+
+- (NSArray *) messages {
+	if( [_messages containsObject:[NSNull null]] || [_messages count] < [self numberOfMessages] )
+		[self messagesInRange:NSMakeRange( 0, [self numberOfMessages] )];
+	return _messages;
+}
+
+- (JVChatMessage *) messageAtIndex:(unsigned long) index {
+	NSArray *msgs = [self messagesInRange:NSMakeRange( index, 1 )];
+	if( [msgs count] ) return [msgs objectAtIndex:0];
+	return nil;
+}
+
+- (NSArray *) messagesInRange:(NSRange) range {
+	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
+	if( ! ctx ) return nil;
+
+	xmlXPathObjectPtr result = xmlXPathEval( [[NSString stringWithFormat:@"/log/envelope[@id >= %ld and @id < %ld]", range.location, range.location + range.length] UTF8String], ctx );
+
+	if( ! result || ! result -> nodesetval -> nodeNr )
+		return nil;
+
+	unsigned int i = 0;
+
+	if( [_messages count] < range.location )
+		for( i = [_messages count]; i < range.location; i++ )
+			[_messages insertObject:[NSNull null] atIndex:i];
+
+	xmlNodePtr node = NULL;
+	unsigned int size = result -> nodesetval -> nodeNr;
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:size];
+	JVChatMessage *msg = nil;
+
+	for( i = 0; i < size; i++ ) {
+		node = result -> nodesetval -> nodeTab[i];
+		if( ! node ) continue;
+		if( [_messages count] > (range.location + i) && [[_messages objectAtIndex:(range.location + i)] isKindOfClass:[NSNull class]] ) {
+			msg = [JVChatMessage messageWithNode:node andTranscript:self];
+			[_messages replaceObjectAtIndex:(range.location + i) withObject:msg];
+		} else if( [_messages count] > (range.location + i) && [[_messages objectAtIndex:(range.location + i)] isKindOfClass:[JVChatMessage class]] ) {
+			msg = [_messages objectAtIndex:(range.location + i)];
+		} else if( [_messages count] == (range.location + i) ) {
+			msg = [JVChatMessage messageWithNode:node andTranscript:self];
+			[_messages insertObject:msg atIndex:(range.location + i)];
+		} else continue;
+		if( msg ) [ret addObject:msg];
+	}
+
+	xmlXPathFreeContext( ctx );
+	xmlXPathFreeObject( result );
+	return ret;
+}
+
+#pragma mark -
+
 - (IBAction) leaveChat:(id) sender {
 	[[JVChatController defaultManager] disposeViewController:self];
 }
@@ -514,9 +593,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-	if( [identifier isEqual:JVToolbarChooseStyleItemIdentifier] ) return nil;
-	else if( [identifier isEqual:JVToolbarEmoticonsItemIdentifier] ) return nil;
-
 	if( [_toolbarItems objectForKey:identifier] ) return [_toolbarItems objectForKey:identifier];
 
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
@@ -568,12 +644,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier*/, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier*/, NSToolbarShowColorsItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarShowColorsItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
@@ -998,11 +1074,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (BOOL) _usingSpecificStyle {
-	return ( xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" ) ? YES : NO );
+	return ( xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ? YES : NO );
 }
 
 - (BOOL) _usingSpecificEmoticons {
-	return ( xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ? YES : NO );
+	return ( xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ? YES : NO );
 }
 
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
@@ -1013,8 +1089,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 #pragma mark -
 
+@implementation JVChatMessage (JVChatMessageObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[[self transcript] class]];
+	NSScriptObjectSpecifier *container = [[self transcript] objectSpecifier];
+	return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"messages" index:[self messageNumber]] autorelease];
+}
+@end
+
+#pragma mark -
+
 @implementation JVChatTranscript (JVChatTranscriptScripting)
 - (NSNumber *) uniqueIdentifier {
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+}
+
+- (JVChatMessage *) valueInMessagesAtIndex:(unsigned) index {
+	return [self messageAtIndex:index];
 }
 @end
