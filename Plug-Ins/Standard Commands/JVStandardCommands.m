@@ -35,7 +35,7 @@
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection {
 	if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
-		return [self handleMessageCommand:command withMessage:arguments forConnection:connection];
+		return [self handleMessageCommand:command withMessage:arguments forConnection:connection alwaysShow:NO];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( [command isEqualToString:@"away"] ) {
@@ -111,7 +111,7 @@
 		}
 		return YES;
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
-		return [self handleMessageCommand:command withMessage:arguments forConnection:[room connection]];
+		return [self handleMessageCommand:command withMessage:arguments forConnection:[room connection] alwaysShow:YES];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:[room connection]];
 	} else if( [command isEqualToString:@"away"] ) {
@@ -322,7 +322,7 @@
 		}
 		return YES;
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
-		return [self handleMessageCommand:command withMessage:arguments forConnection:[chat connection]];
+		return [self handleMessageCommand:command withMessage:arguments forConnection:[chat connection] alwaysShow:YES];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"away"] ) {
@@ -484,7 +484,7 @@
 	return YES;
 }
 
-- (BOOL) handleMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection {
+- (BOOL) handleMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection alwaysShow:(BOOL) always {
 	NSString *to = nil;
 	NSAttributedString *msg = nil;
 	NSScanner *scanner = [NSScanner scannerWithString:[message string]];
@@ -504,6 +504,7 @@
 	BOOL show = NO;
 	show = ( [command isEqualToString:@"query"] ? YES : show );
 	show = ( ! [msg length] ? YES : show );
+	show = ( always ? YES : show );
 
 	JVDirectChat *chatView = [[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:( ! show )];
 	if( [msg length] ) {
