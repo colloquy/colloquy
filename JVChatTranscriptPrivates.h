@@ -22,6 +22,7 @@
 - (NSString *) _chatStyleVariantCSSFileURL;
 - (const char *) _chatStyleXSLFilePath;
 - (NSString *) _chatStyleHeaderFileContents;
+- (NSMenu *) _emoticonsMenu;
 - (void) _changeChatEmoticonsMenuSelection;
 - (void) _updateChatEmoticonsMenu;
 - (NSString *) _chatEmoticonsMappingFilePath;

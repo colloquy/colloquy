@@ -1095,6 +1095,26 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (BOOL) validateToolbarItem:(NSToolbarItem *) toolbarItem {
 	return [super validateToolbarItem:toolbarItem];
 }
+
+#pragma mark-
+#pragma mark WebKit Support
+
+- (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
+	NSMutableArray *ret = (NSMutableArray *)[super webView:sender contextMenuItemsForElement:element defaultMenuItems:defaultMenuItems];
+
+	if( ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
+		NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
+		[item setSubmenu:_spillEncodingMenu];
+		[ret addObject:item];
+
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Display", "clear display contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[item setAction:@selector( clearDisplay: )];
+		[ret addObject:item];
+	}
+
+	return ret;
+}
 @end
 
 #pragma mark -
