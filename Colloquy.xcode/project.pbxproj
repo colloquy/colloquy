@@ -475,14 +475,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C18CD110528DBBA000001C8 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSColorAdditions.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C1ACE410533943900F71D4E = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -556,14 +548,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = MVChatScriptPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C1C569D059EAF4F002FBEFB = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVChatScriptPlugin.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -831,14 +815,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C2EF7EC0427A40B00000102 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVChatPluginManager.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C3B290706529E720066197C = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -911,27 +887,11 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C3D55A405A4CB2B00F25F5E = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSNumberAdditions.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C3D562105A4DCCD00F25F5E = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = NSMethodSignatureAdditions.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C3D562205A4DCCD00F25F5E = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSMethodSignatureAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1139,30 +1099,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C5A1A1206F8F42C00A51F10 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVChatConnection.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C5A232006FA4FC000A51F10 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = MVSILCChatConnection.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C5A232106FA4FC000A51F10 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVSILCChatConnection.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C6075E005138ED600A8FE6E = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -1305,22 +1241,6 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
-		1C74459106FE5842009AA696 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = MVIRCFileTransfer.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C74459206FE5842009AA696 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVIRCFileTransfer.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C746A95050CF86B000001C8 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1335,14 +1255,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = NSNotificationAdditions.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C7B83C60668D732004F1EFE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSNotificationAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1527,14 +1439,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = MVFileTransfer.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C8CF8E2066530D60080A2F5 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVFileTransfer.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3679,6 +3583,22 @@
 			settings = {
 			};
 		};
+		1CDDCF830716208300FE11C3 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVChatRoom.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CDDCF840716208300FE11C3 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVChatUser.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		1CDEE25505823C13000B9075 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3980,14 +3900,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = NSDataAdditions.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CF4E51E0698E9FB00986498 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSDataAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4547,22 +4459,6 @@
 			isa = PBXBuildStyle;
 			name = Deployment;
 		};
-		F52D043001873FC401EE70DE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVIRCChatConnection.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52D043101873FC401EE70DE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = MVIRCChatConnection.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F5394BB50378DBC301A35792 = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.rtf;
@@ -4573,33 +4469,18 @@
 		};
 		F5394BBA0378DD7601A35792 = {
 			children = (
-				1C5A1A1206F8F42C00A51F10,
 				1C5A1A1106F8F42C00A51F10,
-				F52D043001873FC401EE70DE,
-				F52D043101873FC401EE70DE,
-				1C5A232106FA4FC000A51F10,
-				1C5A232006FA4FC000A51F10,
-				1C8CF8E2066530D60080A2F5,
+				1CDDCF830716208300FE11C3,
+				1CDDCF840716208300FE11C3,
 				1C8CF8E1066530D60080A2F5,
-				1C74459206FE5842009AA696,
-				1C74459106FE5842009AA696,
-				1C2EF7EC0427A40B00000102,
 				1C2EF7EB0427A40B00000102,
-				1C1C569D059EAF4F002FBEFB,
 				1C1C569C059EAF4F002FBEFB,
-				1C18CD110528DBBA000001C8,
 				1C18CD100528DBBA000001C8,
-				F5E98622018B412B01EE70DE,
 				F5E98623018B412B01EE70DE,
-				F56CD5430191182601EE70DE,
 				F56CD5440191182601EE70DE,
-				1CF4E51E0698E9FB00986498,
 				1CF4E51D0698E9FB00986498,
-				1C3D55A405A4CB2B00F25F5E,
 				1C3D55A305A4CB2B00F25F5E,
-				1C3D562205A4DCCD00F25F5E,
 				1C3D562105A4DCCD00F25F5E,
-				1C7B83C60668D732004F1EFE,
 				1C7B83C50668D732004F1EFE,
 			);
 			isa = PBXGroup;
@@ -4830,14 +4711,6 @@
 			lastKnownFileType = text.plist;
 			name = verbs.plist;
 			path = Resources/verbs.plist;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F56CD5430191182601EE70DE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSStringAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5258,14 +5131,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			path = MVColorPanel.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5E98622018B412B01EE70DE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSAttributedStringAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
