@@ -66,25 +66,49 @@
 		<key>identifier</key>
 		<string>JVChatMemberPromoted</string>
 		<key>title</key>
-		<string>Member Promoted in Room</string>
+		<string>Member Promoted to Operator</string>
 	</dict>
 	<dict>
 		<key>identifier</key>
 		<string>JVChatMemberDemoted</string>
 		<key>title</key>
-		<string>Member Demoted in Room</string>
+		<string>Member Demoted from Operator</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberPromotedHalfOperator</string>
+		<key>title</key>
+		<string>Member Promoted to Half-Operator</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberDemotedHalfOperator</string>
+		<key>title</key>
+		<string>Member Demoted from Half-Operator</string>
 	</dict>
 	<dict>
 		<key>identifier</key>
 		<string>JVChatMemberVoiced</string>
 		<key>title</key>
-		<string>Member Voiced in Room</string>
+		<string>Member Voiced</string>
 	</dict>
 	<dict>
 		<key>identifier</key>
 		<string>JVChatMemberDevoiced</string>
 		<key>title</key>
-		<string>Member Devoiced in Room</string>
+		<string>Member Devoiced</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberQuieted</string>
+		<key>title</key>
+		<string>Member Quieted</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberDequieted</string>
+		<key>title</key>
+		<string>Quieted Member Annulled</string>
 	</dict>
 	<dict>
 		<key>seperator</key>

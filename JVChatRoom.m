@@ -788,7 +788,6 @@
 
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[notification object]];
 	NSString *oldNickname = [[notification userInfo] objectForKey:@"oldNickname"];
-	NSString *newNickname = [member nickname];
 
 	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), oldNickname, [member nickname]] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[member title], @"name", oldNickname, @"old", [member nickname], @"new", nil]];
 }
@@ -869,6 +868,190 @@
 	// sort again if needed
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] )
 		[self resortMembers];
+
+	MVChatUser *user = [[notification userInfo] objectForKey:@"who"];
+	MVChatUser *byUser = [[notification userInfo] objectForKey:@"by"];
+
+	if( ! user || [user isMemberOfClass:[NSNull class]] ) return;
+	if( [byUser isMemberOfClass:[NSNull class]] ) byUser = nil;
+
+	JVChatRoomMember *mbr = [self chatRoomMemberForUser:user];
+	JVChatRoomMember *byMbr = [self chatRoomMemberForUser:byUser];
+
+	NSString *name = nil;
+	NSString *message = nil;
+	NSString *title = nil;
+	NSString *description = nil;
+	NSString *notificationKey = nil;
+	unsigned long mode = [[[notification userInfo] objectForKey:@"mode"] unsignedLongValue];
+	BOOL enabled = [[[notification userInfo] objectForKey:@"enabled"] boolValue];
+
+	if( mode == MVChatRoomMemberFounderMode && enabled ) {
+		name = @"memberPromotedToFounder";
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) { // only server oppers would ever see this
+			message = NSLocalizedString( @"You promoted yourself to room founder.", "we gave ourself the chat room founder privilege status message" );
+			name = @"promotedToFounder";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You were promoted to room founder by <span class=\"member\">%@</span>.", "we are now a chat room founder status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"promotedToFounder";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to room founder by you.", "we gave user chat room founder status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to room founder by <span class=\"member\">%@</span>.", "user is now a chat room founder status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	} else if( mode == MVChatRoomMemberOperatorMode && ! enabled ) {
+		name = @"memberDemotedFromFounder";
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
+			message = NSLocalizedString( @"You demoted yourself from room founder.", "we removed our chat room founder privilege status message" );
+			name = @"demotedFromFounder";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You were demoted from room founder by <span class=\"member\">%@</span>.", "we are no longer a chat room founder status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"demotedFromFounder";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from room founder by you.", "we removed user's chat room founder status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from room founder by <span class=\"member\">%@</span>.", "user is no longer a chat room founder status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	} else if( mode == MVChatRoomMemberOperatorMode && enabled ) {
+		name = @"memberPromotedToOperator";
+		notificationKey = @"JVChatMemberPromoted";
+		title = NSLocalizedString( @"New Room Operator", "member promoted title" );
+		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was promoted to operator by %@ in %@.", "bubble message member operator promotion string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) { // only server oppers would ever see this
+			message = NSLocalizedString( @"You promoted yourself to operator.", "we gave ourself the chat room operator privilege status message" );
+			name = @"promotedToOperator";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You were promoted to operator by <span class=\"member\">%@</span>.", "we are now a chat room operator status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"promotedToOperator";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to operator by you.", "we gave user chat room operator status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to operator by <span class=\"member\">%@</span>.", "user is now a chat room operator status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	} else if( mode == MVChatRoomMemberOperatorMode && ! enabled ) {
+		name = @"memberDemotedFromOperator";
+		notificationKey = @"JVChatMemberDemoted";
+		title = NSLocalizedString( @"Room Operator Demoted", "room operator demoted title" );
+		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was demoted from operator by %@ in %@.", "bubble message member operator demotion string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
+			message = NSLocalizedString( @"You demoted yourself from operator.", "we removed our chat room operator privilege status message" );
+			name = @"demotedFromOperator";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You were demoted from operator by <span class=\"member\">%@</span>.", "we are no longer a chat room operator status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"demotedFromOperator";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from operator by you.", "we removed user's chat room operator status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from operator by <span class=\"member\">%@</span>.", "user is no longer a chat room operator status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	} else if( mode == MVChatRoomMemberHalfOperatorMode && enabled ) {
+		name = @"memberPromotedToHalfOperator";
+		notificationKey = @"JVChatMemberPromotedHalfOperator";
+		title = NSLocalizedString( @"New Room Half-Operator", "member promoted to half-operator title" );
+		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was promoted to half-operator by %@ in %@.", "bubble message member half-operator promotion string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) { // only server oppers would ever see this
+			message = NSLocalizedString( @"You promoted yourself to half-operator.", "we gave ourself the chat room half-operator privilege status message" );
+			name = @"promotedToHalfOperator";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You were promoted to half-operator by <span class=\"member\">%@</span>.", "we are now a chat room half-operator status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"promotedToHalfOperator";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to half-operator by you.", "we gave user chat room half-operator status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to half-operator by <span class=\"member\">%@</span>.", "user is now a chat room half-operator status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	} else if( mode == MVChatRoomMemberHalfOperatorMode && ! enabled ) {
+		name = @"memberDemotedFromHalfOperator";
+		notificationKey = @"JVChatMemberDemotedHalfOperator";
+		title = NSLocalizedString( @"Room Half-Operator Demoted", "room half-operator demoted title" );
+		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was demoted from half-operator by %@ in %@.", "bubble message member operator demotion string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
+			message = NSLocalizedString( @"You demoted yourself from half-operator.", "we removed our chat room half-operator privilege status message" );
+			name = @"demotedFromHalfOperator";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You were demoted from half-operator by <span class=\"member\">%@</span>.", "we are no longer a chat room half-operator status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"demotedFromHalfOperator";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from half-operator by you.", "we removed user's chat room half-operator status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from half-operator by <span class=\"member\">%@</span>.", "user is no longer a chat room half-operator status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	} else if( mode == MVChatRoomMemberVoicedMode && enabled ) {
+		name = @"memberVoiced";
+		notificationKey = @"JVChatMemberVoiced";
+		title = NSLocalizedString( @"Room Member Voiced", "member voiced title" );
+		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was granted voice by %@ in %@.", "bubble message member voiced string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
+			message = NSLocalizedString( @"You gave yourself voice.", "we gave ourself special voice status to talk in moderated rooms status message" );
+			name = @"voiced";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You were granted voice by <span class=\"member\">%@</span>.", "we now have special voice status to talk in moderated rooms status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"voiced";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was granted voice by you.", "we gave user special voice status to talk in moderated rooms status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was granted voice by <span class=\"member\">%@</span>.", "user now has special voice status to talk in moderated rooms status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	} else if( mode == MVChatRoomMemberVoicedMode && ! enabled ) {
+		name = @"memberDevoiced";
+		notificationKey = @"JVChatMemberDevoiced";
+		title = NSLocalizedString( @"Room Member Lost Voice", "member devoiced title" );
+		description = [NSString stringWithFormat:NSLocalizedString( @"%@ had voice removed by %@ in %@.", "bubble message member lost voice string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
+			message = NSLocalizedString( @"You removed voice from yourself.", "we removed our special voice status to talk in moderated rooms status message" );
+			name = @"devoiced";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You had voice removed by <span class=\"member\">%@</span>.", "we no longer has special voice status and can't talk in moderated rooms status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"devoiced";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> had voice removed by you.", "we removed user's special voice status and can't talk in moderated rooms status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> had voice removed by <span class=\"member\">%@</span>.", "user no longer has special voice status and can't talk in moderated rooms status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	} else if( mode == MVChatRoomMemberQuietedMode && enabled ) {
+		name = @"memberQuieted";
+		notificationKey = @"JVChatMemberQuieted";
+		title = NSLocalizedString( @"Room Member Quieted", "member quieted title" );
+		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was quieted by %@ in %@.", "bubble message member quieted string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
+			message = NSLocalizedString( @"You quieted yourself.", "we quieted and can't talk ourself status message" );
+			name = @"quieted";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You were quieted by <span class=\"member\">%@</span>.", "we are now quieted and can't talk status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"quieted";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was quieted by you.", "we quieted someone else in the room status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was quieted by <span class=\"member\">%@</span>.", "user was quieted by someone else in the room status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	} else if( mode == MVChatRoomMemberQuietedMode && ! enabled ) {
+		name = @"memberDequieted";
+		notificationKey = @"JVChatMemberDequieted";
+		title = NSLocalizedString( @"Quieted Room Member Annulled", "quieted member annulled title" );
+		description = [NSString stringWithFormat:NSLocalizedString( @"Quieted %@ was annulled by %@ in %@.", "bubble message quieted member annulled string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
+			message = NSLocalizedString( @"You made yourself no longer quieted.", "we are no longer quieted and can talk ourself status message" );
+			name = @"dequieted";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You are no longer quieted, thanks to <span class=\"member\">%@</span>.", "we are no longer quieted and can talk status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"dequieted";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is no longer quieted because of you.", "a user is no longer quieted because of us status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is no longer quieted because of <span class=\"member\">%@</span>.", "user is no longer quieted because of someone else in the room status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	}
+
+	[self addEventMessageToDisplay:message withName:name andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : [byUser nickname] ), @"by", [byUser nickname], @"by-nickname", ( mbr ? [mbr title] : [user nickname] ), @"who", [user nickname], @"who-nickname", nil]];
+
+	if( title && description && notificationKey ) {
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:title forKey:@"title"];
+		[context setObject:description forKey:@"description"];
+		[context setObject:self forKey:@"target"];
+		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+		[[JVNotificationController defaultManager] performNotification:notificationKey withContextInfo:context];
+	}
 }
 
 - (void) _topicChanged:(id) sender {
