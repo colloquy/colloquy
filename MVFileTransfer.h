@@ -5,10 +5,14 @@
 @class NSString;
 @class NSDate;
 @class NSHost;
+@class NSError;
 
 extern NSString *MVDownloadFileTransferOfferNotification;
 extern NSString *MVFileTransferStartedNotification;
 extern NSString *MVFileTransferFinishedNotification;
+extern NSString *MVFileTransferErrorOccurredNotification;
+
+extern NSString *MVFileTransferErrorDomain;
 
 typedef enum {
 	MVFileTransferDoneStatus = 'trDn',
@@ -17,6 +21,14 @@ typedef enum {
 	MVFileTransferStoppedStatus = 'trSt',
 	MVFileTransferErrorStatus = 'trEr'
 } MVFileTransferStatus;
+
+typedef enum {
+	MVFileTransferConnectionError = -1,
+	MVFileTransferFileCreationError = -2,
+	MVFileTransferFileOpenError = -3,
+	MVFileTransferAlreadyExistsError = -4,
+	MVFileTransferUnexpectedlyEndedError = -5
+} MVFileTransferError;
 
 @interface MVFileTransfer : NSObject {
 	void *_dcc; /* FILE_DCC_REC */
@@ -29,6 +41,7 @@ typedef enum {
 	MVChatConnection *_connection;
 	NSString *_user;
 	MVFileTransferStatus _status;
+	NSError *_lastError;
 }
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;

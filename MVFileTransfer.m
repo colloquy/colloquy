@@ -21,6 +21,9 @@
 NSString *MVDownloadFileTransferOfferNotification = @"MVDownloadFileTransferOfferNotification";
 NSString *MVFileTransferStartedNotification = @"MVFileTransferStartedNotification";
 NSString *MVFileTransferFinishedNotification = @"MVFileTransferFinishedNotification";
+NSString *MVFileTransferErrorOccurredNotification = @"MVFileTransferErrorOccurredNotification";
+
+NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 void dcc_send_resume( GET_DCC_REC *dcc );
 void dcc_queue_send_next( int queue );
@@ -49,7 +52,7 @@ typedef struct {
 #pragma mark -
 
 static void MVFileTransferConnected( FILE_DCC_REC *dcc ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:(FILE_DCC_REC *)dcc];
+	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
 	[self _setStatus:MVFileTransferNormalStatus];
@@ -59,7 +62,7 @@ static void MVFileTransferConnected( FILE_DCC_REC *dcc ) {
 }
 
 static void MVFileTransferDestroyed( FILE_DCC_REC *dcc ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:(FILE_DCC_REC *)dcc];
+	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
 	if( [self status] == MVFileTransferNormalStatus ) {
@@ -72,16 +75,55 @@ static void MVFileTransferDestroyed( FILE_DCC_REC *dcc ) {
 }
 
 static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:(FILE_DCC_REC *)dcc];
+	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
 	if( dcc -> size != dcc -> transfd ) {
-		[self _setStatus:MVFileTransferErrorStatus];
+		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];
+		NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
+		[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
 	} else {
 		[self _setStatus:MVFileTransferDoneStatus];
 		NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:self];		
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
+}
+
+static void MVFileTransferErrorConnect( FILE_DCC_REC *dcc ) {
+	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
+	if( ! self ) return;
+	
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer connection could not be made.", NSLocalizedDescriptionKey, nil];
+	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferConnectionError userInfo:info];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
+}
+
+static void MVFileTransferErrorFileCreate( FILE_DCC_REC *dcc, char *filename ) {
+	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
+	if( ! self ) return;
+	
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
+	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
+}
+
+static void MVFileTransferErrorFileOpen( FILE_DCC_REC *dcc, char *filename, int errno ) {
+	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
+	if( ! self ) return;
+	
+	NSError *ferror = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be opened, please make sure you have read permissions for this file.", NSLocalizedDescriptionKey, ferror, NSUnderlyingErrorKey, nil];
+	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileOpenError userInfo:info];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
+}
+
+static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *filename ) {
+	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
+	if( ! self ) return;
+	
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
+	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:YES];
 }
 
 #pragma mark -
@@ -94,6 +136,10 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 		signal_add_last( "dcc connected", (SIGNAL_FUNC) MVFileTransferConnected );
 		signal_add_last( "dcc destroyed", (SIGNAL_FUNC) MVFileTransferDestroyed );
 		signal_add_last( "dcc closed", (SIGNAL_FUNC) MVFileTransferClosed );
+		signal_add_last( "dcc error connect", (SIGNAL_FUNC) MVFileTransferErrorConnect );
+		signal_add_last( "dcc error file create", (SIGNAL_FUNC) MVFileTransferErrorFileCreate );
+		signal_add_last( "dcc error file open", (SIGNAL_FUNC) MVFileTransferErrorFileOpen );
+		signal_add_last( "dcc error send exists", (SIGNAL_FUNC) MVFileTransferErrorSendExists );
 		tooLate = YES;
 	}
 }
@@ -182,7 +228,7 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 }
 
 - (NSError *) lastError {
-	return nil;
+	return _lastError;
 }
 
 #pragma mark -
@@ -290,6 +336,16 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	_startOffset = [self startOffset];
 
 	[self _setDCCFileRecord:NULL];
+}
+
+- (void) _postError:(NSError *) error {
+	[self _setStatus:MVFileTransferErrorStatus];
+
+	[_lastError autorelease];
+	_lastError = [error retain];
+
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:error, @"error", nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
 }
 @end
 
