@@ -58,6 +58,17 @@
 
 	[sendHistory setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
 	[sendHistoryStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
+
+	if( NSAppKitVersionNumber >= 700. ) {
+		[tabKeyComplete setEnabled:YES];
+		[tabKeyComplete setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
+	} else {
+		[tabKeyCompleteLabel setObjectValue:@""];
+	}
+}
+
+- (IBAction) changeTabKeyComplete:(id) sender {
+	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVUsePantherTextCompleteOnTab"];
 }
 
 - (IBAction) changeSendHistory:(id) sender {

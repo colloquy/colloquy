@@ -10,7 +10,10 @@
 	IBOutlet NSPopUpButton *enterKeyAction;
 	IBOutlet NSTextField *sendHistory;
 	IBOutlet NSStepper *sendHistoryStepper;
+	IBOutlet NSButton *tabKeyComplete;
+	IBOutlet NSTextField *tabKeyCompleteLabel;
 }
+- (IBAction) changeTabKeyComplete:(id) sender;
 - (IBAction) changeSendHistory:(id) sender;
 - (IBAction) changePreferredWindow:(id) sender;
 - (IBAction) changeSendOnReturnAction:(id) sender;
