@@ -9,6 +9,7 @@
 	BOOL _autoFadeOut;
 	SEL _action;
 	id _target;
+	id _representedObject;
 }
 + (KABubbleWindowController *) bubble;
 + (KABubbleWindowController *) bubbleWithTitle:(NSString *) title text:(id) text icon:(NSImage *) icon;
@@ -24,6 +25,9 @@
 
 - (SEL) action;
 - (void) setAction:(SEL) selector;
+
+- (id) representedObject;
+- (void) setRepresentedObject:(id) object;
 
 - (id) delegate;
 - (void) setDelegate:(id) delegate;

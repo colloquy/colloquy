@@ -56,6 +56,7 @@ static unsigned int bubbleWindowDepth = 0;
 	_autoFadeOut = YES;
 	_delegate = nil;
 	_target = nil;
+	_representedObject = nil;
 	_action = NULL;
 	_animationTimer = nil;
 
@@ -63,19 +64,21 @@ static unsigned int bubbleWindowDepth = 0;
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
 	[_target release];
+	[_representedObject release];
 	[_animationTimer invalidate];
 	[_animationTimer release];
 
 	_target = nil;
+	_representedObject = nil;
 	_delegate = nil;
 	_animationTimer = nil;
 
 	extern unsigned int bubbleWindowDepth;
 	if( _depth == bubbleWindowDepth ) bubbleWindowDepth = 0;
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
+
 	[super dealloc];
 }
 
@@ -119,9 +122,9 @@ static unsigned int bubbleWindowDepth = 0;
 }
 
 - (void) _bubbleClicked:(id) sender {
-	[self startFadeOut];
 	if( _target && _action && [_target respondsToSelector:_action] )
 		[_target performSelector:_action withObject:self];
+	[self startFadeOut];
 }
 
 #pragma mark -
@@ -171,6 +174,17 @@ static unsigned int bubbleWindowDepth = 0;
 
 - (void) setAction:(SEL) selector {
 	_action = selector;
+}
+
+#pragma mark -
+
+- (id) representedObject {
+	return _representedObject;
+}
+
+- (void) setRepresentedObject:(id) object {
+	[_representedObject autorelease];
+	_representedObject = [object retain];
 }
 
 #pragma mark -

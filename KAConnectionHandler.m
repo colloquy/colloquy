@@ -51,10 +51,20 @@ static KAConnectionHandler *sharedHandler = nil;
 			[context setObject:[NSImage imageNamed:@"Stickies"] forKey:@"image"];
 			[context setObject:[connection nickname] forKey:@"performedOn"];
 			[context setObject:user forKey:@"performedBy"];
+			[context setObject:self forKey:@"target"];
+			[context setObject:NSStringFromSelector( @selector( checkMemos: ) ) forKey:@"action"];
+			[context setObject:connection forKey:@"representedObject"];
 			[[JVNotificationController defaultManager] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
 		}	
 	}
 
 	return hideFromUser;
+}
+
+- (IBAction) checkMemos:(id) sender {
+	MVChatConnection *connection = [sender representedObject];
+	NSAttributedString *message = [[[NSAttributedString alloc] initWithString:@"read all"] autorelease];
+	[connection sendMessage:message withEncoding:NSUTF8StringEncoding toUser:@"MemoServ" asAction:NO];
+	[[JVChatController defaultManager] chatViewControllerForUser:@"MemoServ" withConnection:connection ifExists:NO];
 }
 @end

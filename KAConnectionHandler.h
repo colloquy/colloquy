@@ -9,4 +9,6 @@
 + (KAConnectionHandler *) defaultHandler;
 
 - (BOOL) connection:(MVChatConnection *) connection willPostMessage:(NSData *) message from:(NSString *) user toRoom:(BOOL) flag;
+
+- (IBAction) checkMemos:(id) sender;
 @end

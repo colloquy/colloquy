@@ -2,6 +2,7 @@
 #import "JVNotificationController.h"
 #import "MVApplicationController.h"
 #import "KABubbleWindowController.h"
+#import "KABubbleWindowView.h"
 
 static JVNotificationController *sharedInstance = nil;
 
@@ -88,6 +89,9 @@ static JVNotificationController *sharedInstance = nil;
 	}
 
 	[bubble setAutomaticallyFadesOut:(! [[eventPrefs objectForKey:@"keepBubbleOnScreen"] boolValue] )];
+	[bubble setTarget:[context objectForKey:@"target"]];
+	[bubble setAction:NSSelectorFromString( [context objectForKey:@"action"] )];
+	[bubble setRepresentedObject:[context objectForKey:@"representedObject"]];
 	[bubble startFadeIn];
 
 	if( [(NSString *)[context objectForKey:@"coalesceKey"] length] ) {
