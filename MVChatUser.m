@@ -252,6 +252,8 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #pragma mark -
 
 - (NSString *) displayName {
+	if( [self type] == MVChatWildcardUserType )
+		return [NSString stringWithFormat:@"%@!%@@%@", ( [self nickname] ? [self nickname] : @"*" ), ( [self username] ? [self username] : @"*" ), ( [self address] ? [self address] : @"*" )];
 	return [self nickname];
 }
 
@@ -379,9 +381,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #pragma mark -
 
 - (NSString *) description {
-	if( [self type] == MVChatWildcardUserType )
-		return [NSString stringWithFormat:@"%@!%@@%@", ( [self nickname] ? [self nickname] : @"*" ), ( [self username] ? [self username] : @"*" ), ( [self address] ? [self address] : @"*" )];
-	return [self nickname];
+	return [self displayName];
 }
 @end
 
