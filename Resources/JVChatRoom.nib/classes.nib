@@ -1,10 +1,15 @@
 {
     IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {toggleSmallDrawerIcons = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
         {
             CLASS = JVChatRoom; 
             LANGUAGE = ObjC; 
-            OUTLETS = {topicLine = NSTextField; topicRenderer = WebView; }; 
+            OUTLETS = {topicLine = NSTextView; topicRenderer = WebView; }; 
             SUPERCLASS = JVDirectChat; 
         }, 
         {

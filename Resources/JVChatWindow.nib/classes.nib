@@ -3,11 +3,12 @@
         {CLASS = ASExtendedOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {toggleViewsDrawer = id; }; 
             CLASS = JVChatWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 chatViewsOutlineView = NSOutlineView; 
-                viewActionButton = NSPopUpButton; 
+                viewActionButton = MVMenuButton; 
                 viewsDrawer = NSDrawer; 
             }; 
             SUPERCLASS = NSWindowController; 
@@ -16,9 +17,9 @@
             ACTIONS = {displayMenu = id; }; 
             CLASS = MVMenuButton; 
             LANGUAGE = ObjC; 
-            OUTLETS = {menu = id; }; 
             SUPERCLASS = NSButton; 
-        }
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }
