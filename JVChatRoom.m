@@ -412,7 +412,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	}
 
 	if( [[message string] length] )
-		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
+		[[self connection] sendMessage:message withEncoding:_encoding toChatRoom:[self target] asAction:action];
 
 	AGRegex *regex = [AGRegex regexWithPattern:@"^(.*?)[:;,-]" options:AGRegexCaseInsensitive];
 	AGRegexMatch *match = [regex findInString:[message string]];
