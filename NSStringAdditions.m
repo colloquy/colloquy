@@ -89,10 +89,11 @@
 
 - (void) escapeCharactersInSet:(NSCharacterSet *) set {
 	NSScanner *scanner = [[NSScanner alloc] initWithString:self];
+	int offset = 0;
 	while( ! [scanner isAtEnd] ) {
 		[scanner scanUpToCharactersFromSet:set intoString:nil];
 		if( ! [scanner isAtEnd] ) {
-			[self insertString:@"\\"atIndex:[scanner scanLocation]];
+			[self insertString:@"\\"atIndex:[scanner scanLocation] + offset++];
 			[scanner setScanLocation:[scanner scanLocation] + 1];
 		}
 	}
