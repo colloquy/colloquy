@@ -771,6 +771,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 	[WebCoreCache empty];
 
+	[style reload];
+
 	[_chatStyle autorelease];
 	_chatStyle = nil;
 

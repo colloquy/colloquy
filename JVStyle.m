@@ -141,16 +141,22 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return self;
 }
 
+- (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[self _setBundle:nil]; // this will dealloc all other dependant objects
+	[super dealloc];
+}
+
+#pragma mark -
+
 - (void) unlink {
 	extern NSMutableSet *allStyles;
 	[allStyles removeObject:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles]; 
 }
 
-- (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[self _setBundle:nil]; // this will dealloc all other dependant objects
-	[super dealloc];
+- (void) reload {
+	[self _setBundle:_bundle];
 }
 
 #pragma mark -
