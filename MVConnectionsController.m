@@ -676,7 +676,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 }
 
 - (void) _loadBookmarkList {
-	NSMutableArray *list = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"MVChatBookmarks"] mutableCopy] autorelease];
+	NSMutableArray *list = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"MVChatBookmarks"]];
 	NSEnumerator *enumerator = [list objectEnumerator];
 	id info = nil;
 	BOOL autoConnect = NO;
