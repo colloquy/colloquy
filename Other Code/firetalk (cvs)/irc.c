@@ -866,14 +866,14 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 					memmove(tempchr,&tempchr2[1],safe_strlen(&tempchr2[1]) + 1);
 				}
 				if (!strcasecmp(irc_get_nickname(args[0]),"NickServ")) {
-					if ((strstr(args[3],"IDENTIFY") != NULL) && (strstr(args[3],"/msg") != NULL) && (strstr(args[3],"NickServ") != NULL)) {
+					if ((strstr(args[3],"/msg") != NULL) && (strstr(args[3],"NickServ") != NULL) && (strstr(args[3],"IDENTIFY") != NULL)) {
 						c->identified = 0;
 						/* nickserv seems to be asking us to identify ourselves, and we have a password */
 						if (!c->password) {
 							c->password = safe_malloc(128);
 							firetalk_callback_needpass(c,c->password,128);
 						}
-						if ((c->password != NULL) && irc_send_printf(c,1,"PRIVMSG NickServ :IDENTIFY %s",c->password) != 0) {
+						if (c->password && safe_strlen( c->password ) && irc_send_printf(c,1,"PRIVMSG NickServ :IDENTIFY %s",c->password) != 0) {
 							irc_internal_disconnect(c,FE_PACKET);
 							return FE_PACKET;
 						}
@@ -897,6 +897,12 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 					if (strstr(args[3],"Password accepted") != NULL) {
 						/* we're recognized */
 						c->identified = 1;
+					}
+					if (strstr(args[3],"Password Incorrect") != NULL) {
+						/* we didn't identify */
+						c->identified = 0;
+						if( c->password ) free( c->password );
+						c->password = NULL;
 					}
 				}
 				if (args[3][0] != '\0') {
