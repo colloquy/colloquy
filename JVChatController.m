@@ -14,6 +14,7 @@
 #import "JVChatConsolePanel.h"
 #import "KAIgnoreRule.h"
 #import "JVChatMessage.h"
+#import "JVChatRoomMember.h"
 
 #import <libxml/parser.h>
 
@@ -492,29 +493,68 @@ static JVChatController *sharedInstance = nil;
 
 #pragma mark -
 
-@implementation NSApplication (JVChatControllerScripting)
-/*- (void) startChatScriptCommand:(NSScriptCommand *) command {
-	MVChatConnection *connection = [[command evaluatedArguments] objectForKey:@"connection"];
-	NSString *user = [[command evaluatedArguments] objectForKey:@"user"];
+@interface JVStartChatScriptCommand : NSScriptCommand {}
+@end
 
-	if( ! [user length] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid user nickname."];
-		return;
+#pragma mark -
+
+@implementation JVStartChatScriptCommand
+- (id) performDefaultImplementation {
+	NSDictionary *args = [self evaluatedArguments];
+	id target = [args objectForKey:@"target"];
+
+	if( target && [target isKindOfClass:[NSString class]] ) {
+		MVChatConnection *connection = [args objectForKey:@"connection"];
+		if( ! connection ) {
+			[self setScriptErrorNumber:1000];
+			[self setScriptErrorString:@"The connection parameter was missing and is required when the user is a nickname string."];
+			return nil;
+		}
+
+		if( ! [connection isConnected] ) {
+			[self setScriptErrorNumber:1000];
+			[self setScriptErrorString:@"The connection needs to be connected before you can find a chat user by their nickname."];
+			return nil;
+		}
+
+		NSString *nickname = target;
+		target = [[connection chatUsersWithNickname:nickname] anyObject];
+
+		if( ! target ) {
+			[self setScriptErrorNumber:1000];
+			[self setScriptErrorString:[NSString stringWithFormat:@"The connection did not find a chat user with the nickname \"%@\".", nickname]];
+			return nil;
+		}
 	}
 
-	if( ! connection || ! [connection isConnected] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid conenction or it is not connected."];
-		return;
+	if( ! target || ( ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[JVChatRoomMember class]] ) ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The \"for\" parameter was missing or not a chat user or member object."];
+		return nil;
 	}
 
-	MVChatUser *u = [connection chatUserWithUniqueIdentifier:user];
-	[self chatViewControllerForUser:u ifExists:NO];
+	if( [target isKindOfClass:[MVChatUser class]] && [(MVChatUser *)target type] == MVChatWildcardUserType ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The \"for\" parameter cannot be a wildcard user."];
+		return nil;
+	}
+
+	if( [target isKindOfClass:[JVChatRoomMember class]] )
+		target = [(JVChatRoomMember *)target user];
+
+	JVDirectChatPanel *panel = [[JVChatController defaultManager] chatViewControllerForUser:target ifExists:NO];
+	[[panel windowController] showChatViewController:panel];
+
+	return panel;
 }
+@end
 
-#pragma mark -*/
+#pragma mark -
 
+@implementation NSApplication (JVChatControllerScripting)
 - (void) raiseCantAddChatViewsException {
-	[NSException raise:NSOperationNotSupportedForKeyException format:@"Can't insert a chat view. Read only."];
+	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't add, insert or replace a panel at the application level."];
+	[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 }
 
 #pragma mark -

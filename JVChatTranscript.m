@@ -984,11 +984,54 @@
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptScripting)
+- (void) saveScriptCommand:(NSScriptCommand *) command {
+	NSDictionary *args = [command evaluatedArguments];
+	id path = [args objectForKey:@"File"];
+
+	if( path && ! [path isKindOfClass:[NSString class]] ) {
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The file path needs to be a string."];
+		return;
+	}
+
+	if( ! path && ! [self filePath] ) {
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"A file must be specified since the transcript has no associated file."];
+		return;
+	}
+
+	if( ! path ) path = [self filePath];
+
+	[self writeToFile:path atomically:YES];
+}
+
+#pragma mark -
+
+- (void) raiseCantRemoveMessageException {
+	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't remove or replace a message in a transcript."];
+	[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+}
+
+- (void) raiseCantInsertMessageException {
+	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't insert a message in the middle of a transcript. You can only add to the end."];
+	[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+}
+
+#pragma mark -
+
 - (NSNumber *) uniqueIdentifier {
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
 
-- (JVChatMessage *) valueInMessagesAtIndex:(unsigned) index {
+- (JVChatMessage *) valueInMessagesAtIndex:(long long) index {
+	if( index == -1 ) return [self lastMessage];
+
+	if( index < 0 ) {
+		unsigned long count = [self messageCount];
+		if( ABS( index ) > count ) return nil;
+		index = count + index;
+	}
+
 	return [self messageAtIndex:index];
 }
 
@@ -1002,5 +1045,17 @@
 
 - (void) insertInMessages:(JVChatMessage *) message {
 	[self appendMessage:message];
+}
+
+- (void) insertInMessages:(JVChatMessage *) message atIndex:(unsigned) index {
+	[self raiseCantInsertMessageException];
+}
+
+- (void) removeFromMessagesAtIndex:(unsigned) index {
+	[self raiseCantRemoveMessageException];
+}
+
+- (void) replaceInMessages:(JVChatMessage *) message atIndex:(unsigned) index {
+	[self raiseCantRemoveMessageException];
 }
 @end

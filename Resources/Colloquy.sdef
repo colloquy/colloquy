@@ -44,6 +44,11 @@
 						<cocoa method="chatBuddies"/>
 					</element>
 				</elements>
+				<responds-to-commands>
+					<responds-to name="display new connection dialog">
+						<cocoa method="newConnection:"/>
+					</responds-to>
+				</responds-to-commands>
 			</class>
 			<class name="window" code="cwin" description="Colloquy window." inherits="window">
 				<cocoa class="NSWindow"/>
@@ -149,6 +154,11 @@
 						<cocoa method="identifier"/>
 					</property>
 				</properties>
+				<responds-to-commands>
+					<responds-to name="close">
+						<cocoa method="close:"/>
+					</responds-to>
+				</responds-to-commands>
 			</class>
 			<class name="transcript panel" code="ctrM" description="A log panel of some previous conversation." inherits="panel">
 				<contents name="transcript" code="traM" description="The transcript shown in the panel." type="transcript" access="r">
@@ -168,11 +178,11 @@
 					<property name="current message" code="cRmA" description="The current emssage that is being passed to plugins to process." type="message" access="r">
 						<cocoa method="currentMessage"/>
 					</property>
-					<property name="new message" code="nemA" description="Whether the chat has had a recent message that hasn&apos;t been seen yet." type="boolean" access="r">
-						<cocoa method="newMessage"/>
+					<property name="new messages waiting" code="nemA" description="The number of new messages since the panel was last active." type="number" access="r">
+						<cocoa method="newMessagesWaiting"/>
 					</property>
-					<property name="new highlight message" code="nhmA" description="Whether the chat has had a recent highlighted message that hasn&apos;t been seen yet." type="boolean" access="r">
-						<cocoa method="newHighlightMessage"/>
+					<property name="new highlight messages waiting" code="nhmA" description="The number of new highlight messages since the panel was last active." type="number" access="r">
+						<cocoa method="newHighlightMessagesWaiting"/>
 					</property>
 					<property name="unavailable" code="csmA" description="Can send messages?" type="boolean" access="r">
 						<cocoa method="cantSendMessages"/>
@@ -259,6 +269,22 @@
 						<cocoa method="messages"/>
 					</element>
 				</elements>
+				<properties>
+					<property name="id" code="ID  " description="The unique identifier of the transcript." type="number" access="r">
+						<cocoa method="uniqueIdentifier"/>
+					</property>
+					<property name="file" code="kfil" description="The file (if any) this transcript represents." type="file">
+						<cocoa method="filePath"/>
+					</property>
+					<property name="auto save changes" code="atSA" description="Save any changes to disk as they occur? Always false when there is no file association." type="boolean">
+						<cocoa method="automaticallyWritesChangesToFile"/>
+					</property>
+				</properties>
+				<responds-to-commands>
+					<responds-to name="save">
+						<cocoa method="saveScriptCommand:"/>
+					</responds-to>
+				</responds-to-commands>
 			</class>
 			<class name="message" code="cmsM" description="A chat message.">
 				<contents name="body" code="maPA" description="The body of the message. (Default subcontainer.)" type="text">
@@ -293,7 +319,7 @@
 		</classes>
 		<commands>
 			<command name="send" code="coRCsNdX" description="Send message to chat room or user that is represented by a panel.">
-				<cocoa name="sendMessage" class="NSScriptCommand"/>
+				<cocoa name="sendMessage"/>
 				<direct-parameter type="chat room panel | direct chat panel" description="Chat room panel or direct chat panel to send through."/>
 				<parameter name="message" code="sNd1" description="Message to send. Can include HTML formatting." type="string">
 					<cocoa key="message"/>
@@ -305,8 +331,8 @@
 					<cocoa key="echo"/>
 				</parameter>
 			</command>
-			<command name="add event" code="coRCaEvX" description="Add an event message a chat room panel or direct chat panel.">
-				<cocoa name="addEventMessage" class="NSScriptCommand"/>
+			<command name="add event" code="coRCaEvX" description="Add an event message to a chat room panel or direct chat panel.">
+				<cocoa name="addEventMessage"/>
 				<direct-parameter type="chat room panel | direct chat panel" description="Chat room panel or direct chat panel to affect."/>
 				<parameter name="message" code="aEv1" description="Message to add. Can include HTML formatting." type="string">
 					<cocoa key="message"/>
@@ -316,6 +342,19 @@
 				</parameter>
 				<parameter name="and attributes" code="aEv3" description="Custom information to be stored with this event message. Can be used by chat styles." type="record" optional="optional">
 					<cocoa key="attributes"/>
+				</parameter>
+			</command>
+			<command name="display new connection dialog" code="coRCnwcX" description="Prompts to make a new connection.">
+				<cocoa name="newConnection"/>
+			</command>
+			<command name="display direct chat panel" code="coRCsChX" description="Open a direct chat panel to chat with another user.  Focuses an existing panel or makes a new panel.">
+				<cocoa class="JVStartChatScriptCommand"/>
+				<result type="direct chat panel" description="The direct chat panel."/>
+				<parameter name="for" code="sCh1" description="The member or chat user. You may also pass a string nickname if you also provide the connection." type="member | chat user | string">
+					<cocoa key="target"/>
+				</parameter>
+				<parameter name="on" code="sCh2" description="Only required if the user is a string. The connection where to find the user by nickname." type="connection" optional="optional">
+					<cocoa key="connection"/>
 				</parameter>
 			</command>
 		</commands>

@@ -375,11 +375,3 @@ static BOOL applicationIsTerminating = NO;
 	return YES;
 }
 @end
-
-#pragma mark -
-
-@implementation NSApplication (NSApplicationScripting)
-- (void) newConnection:(NSScriptCommand *) command {
-	[[MVConnectionsController defaultManager] newConnection:nil];
-}
-@end

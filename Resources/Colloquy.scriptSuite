@@ -262,8 +262,39 @@
 		<dict>
 			<key>AppleEventCode</key>
 			<string>traM</string>
+			<key>Attributes</key>
+			<dict>
+				<key>automaticallyWritesChangesToFile</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>atSA</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>filePath</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>kfil</string>
+					<key>Type</key>
+					<string>NSString&lt;FilePath&gt;</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ID  </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber</string>
+				</dict>
+			</dict>
 			<key>Superclass</key>
 			<string>NSCoreSuite.AbstractObject</string>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>NSCoreSuite.Save</key>
+				<string>saveScriptCommand:</string>
+			</dict>
 			<key>ToManyRelationships</key>
 			<dict>
 				<key>messages</key>
@@ -331,23 +362,23 @@
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
-				<key>newHighlightMessage</key>
+				<key>newHighlightMessagesWaiting</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>nhmA</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
+					<string>NSNumber</string>
 				</dict>
-				<key>newMessage</key>
+				<key>newMessagesWaiting</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>nemA</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
+					<string>NSNumber</string>
 				</dict>
 				<key>scriptTypedEncoding</key>
 				<dict>
@@ -446,6 +477,11 @@
 			<string>capp</string>
 			<key>Superclass</key>
 			<string>NSCoreSuite.NSApplication</string>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>Colloquy.newConnection</key>
+				<string>newConnection:</string>
+			</dict>
 			<key>ToManyRelationships</key>
 			<dict>
 				<key>chatBuddies</key>
@@ -720,10 +756,47 @@
 			</dict>
 			<key>Superclass</key>
 			<string>Colloquy.ListItem</string>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>NSCoreSuite.Close</key>
+				<string>close:</string>
+			</dict>
 		</dict>
 	</dict>
 	<key>Commands</key>
 	<dict>
+		<key>DisplayDirectChatPanel</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>sChX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>connection</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sCh2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatConnection</string>
+				</dict>
+				<key>target</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sCh1</string>
+					<key>Type</key>
+					<string>NSObject</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>JVStartChatScriptCommand</string>
+			<key>ResultAppleEventCode</key>
+			<string>dchM</string>
+			<key>Type</key>
+			<string>Colloquy.JVDirectChatPanel</string>
+		</dict>
 		<key>addEventMessage</key>
 		<dict>
 			<key>AppleEventClassCode</key>
@@ -763,6 +836,15 @@
 				<key>Type</key>
 				<string>NSObject</string>
 			</dict>
+		</dict>
+		<key>newConnection</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>nwcX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
 		</dict>
 		<key>sendMessage</key>
 		<dict>

@@ -228,6 +228,30 @@
 		</dict>
 		<key>JVChatTranscript</key>
 		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>automaticallyWritesChangesToFile</key>
+				<dict>
+					<key>Description</key>
+					<string>Save any changes to disk as they occur? Always false when there is no file association.</string>
+					<key>Name</key>
+					<string>auto save changes</string>
+				</dict>
+				<key>filePath</key>
+				<dict>
+					<key>Description</key>
+					<string>The file (if any) this transcript represents.</string>
+					<key>Name</key>
+					<string>file</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the transcript.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
+			</dict>
 			<key>Description</key>
 			<string>A log of a previous conversation.</string>
 			<key>Name</key>
@@ -279,19 +303,19 @@
 					<key>Name</key>
 					<string>active</string>
 				</dict>
-				<key>newHighlightMessage</key>
+				<key>newHighlightMessagesWaiting</key>
 				<dict>
 					<key>Description</key>
-					<string>Whether the chat has had a recent highlighted message that hasn't been seen yet.</string>
+					<string>The number of new highlight messages since the panel was last active.</string>
 					<key>Name</key>
-					<string>new highlight message</string>
+					<string>new highlight messages waiting</string>
 				</dict>
-				<key>newMessage</key>
+				<key>newMessagesWaiting</key>
 				<dict>
 					<key>Description</key>
-					<string>Whether the chat has had a recent message that hasn't been seen yet.</string>
+					<string>The number of new messages since the panel was last active.</string>
 					<key>Name</key>
-					<string>new message</string>
+					<string>new messages waiting</string>
 				</dict>
 				<key>scriptTypedEncoding</key>
 				<dict>
@@ -515,6 +539,30 @@
 	</dict>
 	<key>Commands</key>
 	<dict>
+		<key>DisplayDirectChatPanel</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>connection</key>
+				<dict>
+					<key>Description</key>
+					<string>Only required if the user is a string. The connection where to find the user by nickname.</string>
+					<key>Name</key>
+					<string>on</string>
+				</dict>
+				<key>target</key>
+				<dict>
+					<key>Description</key>
+					<string>The member or chat user. You may also pass a string nickname if you also provide the connection.</string>
+					<key>Name</key>
+					<string>for</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Open a direct chat panel to chat with another user.  Focuses an existing panel or makes a new panel.</string>
+			<key>Name</key>
+			<string>display direct chat panel</string>
+		</dict>
 		<key>addEventMessage</key>
 		<dict>
 			<key>Arguments</key>
@@ -542,7 +590,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Add an event message a chat room panel or direct chat panel.</string>
+			<string>Add an event message to a chat room panel or direct chat panel.</string>
 			<key>Name</key>
 			<string>add event</string>
 			<key>UnnamedArgument</key>
@@ -550,6 +598,13 @@
 				<key>Description</key>
 				<string>Chat room panel or direct chat panel to affect.</string>
 			</dict>
+		</dict>
+		<key>newConnection</key>
+		<dict>
+			<key>Description</key>
+			<string>Prompts to make a new connection.</string>
+			<key>Name</key>
+			<string>display new connection dialog</string>
 		</dict>
 		<key>sendMessage</key>
 		<dict>

@@ -1752,6 +1752,12 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 @implementation NSApplication (MVConnectionsControllerScripting)
+- (void) newConnection:(NSScriptCommand *) command {
+	[[MVConnectionsController defaultManager] newConnection:nil];
+}
+
+#pragma mark -
+
 - (NSArray *) chatConnections {
 	return [[MVConnectionsController defaultManager] connections];
 }
@@ -1791,17 +1797,4 @@ static NSMenu *favoritesMenu = nil;
 - (void) replaceInChatConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
 	[[MVConnectionsController defaultManager] replaceConnectionAtIndex:index withConnection:connection];
 }
-
-/* - (MVChatConnection *) handleURLScriptCommand:(NSScriptCommand *) command {
-	NSURL *url = [NSURL URLWithString:[[command evaluatedArguments] objectForKey:@"url"]];
-	if( ! url ) return nil;
-
-	MVChatConnection *connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
-	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
-
-	if( ! connection ) return nil;
-
-	[self addConnection:connection];
-	return connection;
-} */
 @end
