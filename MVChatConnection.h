@@ -227,6 +227,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) voiceMember:(NSString *) member inRoom:(NSString *) room;
 - (void) devoiceMember:(NSString *) member inRoom:(NSString *) room;
 - (void) kickMember:(NSString *) member inRoom:(NSString *) room forReason:(NSString *) reason;
+- (void) banMember:(NSString *) member inRoom:(NSString *) room;
 
 - (void) addUserToNotificationList:(NSString *) user;
 - (void) removeUserFromNotificationList:(NSString *) user;

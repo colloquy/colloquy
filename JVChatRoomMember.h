@@ -42,6 +42,7 @@
 - (IBAction) toggleOperatorStatus:(id) sender;
 - (IBAction) toggleVoiceStatus:(id) sender;
 - (IBAction) kick:(id) sender;
+- (IBAction) ban:(id) sender;
 @end
 
 #pragma mark -

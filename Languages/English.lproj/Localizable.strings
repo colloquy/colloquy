@@ -79,6 +79,9 @@
 /* buddy list available status message with the number of servers entered at runtime */
 "Available (%d %@)" = "Available (%d %@)";
 
+/* ban from room contextual menu - admin only */
+"Ban From Room" = "Ban From Room";
+
 /* bold font toolbar item */
 "Bold" = "Bold";
 

@@ -249,6 +249,12 @@
 		[item setTarget:self];
 		[menu addItem:item];
 		
+		if ( _address ) {
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ban From Room", "ban from room contextual menu - admin only" ) action:@selector( ban: ) keyEquivalent:@""] autorelease];
+			[item setTarget:self];
+			[menu addItem:item];
+		}
+		
 		[menu addItem:[NSMenuItem separatorItem]];
 		
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" ) action:@selector( toggleOperatorStatus: ) keyEquivalent:@""] autorelease];
@@ -342,6 +348,19 @@
 
 - (IBAction) kick:(id) sender {
 	[[_parent connection] kickMember:_nickname inRoom:[_parent target] forReason:@""];
+}
+
+- (IBAction) ban:(id) sender {
+	if( _address ) {
+		// Address is in the form of user@hostmask
+		// Lets get rid of the user bit
+		NSArray *parts = [_address componentsSeparatedByString:@"@"];
+		if( [parts count] == 2 ) {
+			NSString *hostmask = [parts objectAtIndex:1];
+			[[_parent connection] banMember:[NSString stringWithFormat:@"*!*@%@", hostmask]
+									 inRoom:[_parent target]];
+		}
+	}
 }
 @end
 
