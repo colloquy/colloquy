@@ -27,6 +27,12 @@
             SUPERCLASS = JVChatTranscript; 
         }, 
         {
+            CLASS = JVWebView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {nextTextView = NSTextView; }; 
+            SUPERCLASS = WebView; 
+        }, 
+        {
             ACTIONS = {displayMenu = id; }; 
             CLASS = MVMenuButton; 
             LANGUAGE = ObjC; 
