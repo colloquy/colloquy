@@ -72,6 +72,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[[preview preferences] setMinimumFontSize:[minimumFontSize intValue]];
 }
 
+- (void) finishStyleSwitch:(id) sender {
+	[self changePreferences];
+	[self updateChatStylesMenu];
+	[self updatePreview];
+}
+
 - (IBAction) changeDefaultChatStyle:(id) sender {
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
 	NSString *style = [[sender representedObject] objectForKey:@"style"];
@@ -80,14 +86,17 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( ! variant ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
 	else [[NSUserDefaults standardUserDefaults] setObject:variant forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
 
-	[self changePreferences];
-	[self updateChatStylesMenu];
-	[self updatePreview];
+	[[preview mainFrame] loadHTMLString:@"" baseURL:nil];
+	// give webkit some time to load the blank before we switch preferences so we don't double refresh	
+	[self performSelector:@selector( finishStyleSwitch: ) withObject:nil afterDelay:0.];
 }
 
 - (void) changePreferences {
-	WebPreferences *prefs = [[[preview preferences] retain] autorelease];
 	[preview setPreferencesIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
+	// we shouldn't have to post this notification manually, but this seems to make webkit refresh with new prefs
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"WebPreferencesChangedNotification" object:[preview preferences]];
+
+	WebPreferences *prefs = [[[preview preferences] retain] autorelease];
 	[prefs setMinimumFontSize:[minimumFontSize intValue]];
 	[[preview preferences] setAutosaves:YES];
 	[standardFont setFont:[NSFont fontWithName:[[preview preferences] standardFontFamily] size:[[preview preferences] defaultFontSize]]];
