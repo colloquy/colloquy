@@ -231,11 +231,15 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 }
 
 - (void) setDefaultVariantName:(NSString *) name {
-	if( [self isUserVariantName:name] ) {
-		NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [self identifier], name] stringByExpandingTildeInPath];
-		[[NSUserDefaults standardUserDefaults] setObject:path forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
+	if( ! [name length] ) {
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 	} else {
-		[[NSUserDefaults standardUserDefaults] setObject:name forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
+		if( [self isUserVariantName:name] ) {
+			NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [self identifier], name] stringByExpandingTildeInPath];
+			[[NSUserDefaults standardUserDefaults] setObject:path forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
+		} else {
+			[[NSUserDefaults standardUserDefaults] setObject:name forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
+		}
 	}
 }
 
@@ -308,15 +312,18 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 #pragma mark -
 
 - (NSString *) contentsOfMainStyleSheet {
-	return [NSString stringWithContentsOfURL:[self mainStyleSheetLocation]];
+	NSString *contents = [NSString stringWithContentsOfURL:[self mainStyleSheetLocation]];
+	return ( contents ? contents : @"" );
 }
 
 - (NSString *) contentsOfVariantStyleSheetWithName:(NSString *) name {
-	return [NSString stringWithContentsOfURL:[self variantStyleSheetLocationWithName:name]];
+	NSString *contents = [NSString stringWithContentsOfURL:[self variantStyleSheetLocationWithName:name]];
+	return ( contents ? contents : @"" );
 }
 
 - (NSString *) contentsOfHeaderFile {
-	return [NSString stringWithContentsOfFile:[self headerFilePath]];
+	NSString *contents = [NSString stringWithContentsOfFile:[self headerFilePath]];
+	return ( contents ? contents : @"" );
 }
 @end
 
