@@ -8,6 +8,7 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 @interface JVInspectorController (JVInspectionControllerPrivate)
 - (void) _loadInspector;
 - (void) _resizeWindowForContentSize:(NSSize) size;
+- (void) _inspectWindow:(NSWindow *)window;
 @end
 
 #pragma mark -
@@ -26,7 +27,12 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 #pragma mark -
 
 - (id) initWithObject:(id <JVInspection>) object lockedOn:(BOOL) locked {
-	NSWindow *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 20., 20., 175., 200. ) styleMask:( ( ! locked ? NSUtilityWindowMask : 0 ) | NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:YES] autorelease];
+	NSRect panelRect;
+	panelRect.origin.x = 200; panelRect.origin.y = NSMaxY([[NSScreen mainScreen] visibleFrame]) + 400;
+	panelRect.size.width = 175; panelRect.size.height = 200;
+	NSWindow *panel = [[[NSPanel alloc] initWithContentRect:panelRect styleMask:( ( ! locked ? NSUtilityWindowMask : 0 ) | NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:YES] autorelease];
+	if( ! locked )
+		[panel setFrameAutosaveName:@"inspector"];
 	[panel setDelegate:self];
 	if( locked ) {
 		[(NSPanel *)panel setFloatingPanel:YES];
@@ -36,7 +42,10 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 		_locked = locked;
 		_object = [object retain];
 		_inspector = [[_object inspector] retain];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( keyWindowChanged: ) name:NSWindowDidBecomeKeyNotification object:nil];
+		if( ! _locked )
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( keyWindowChanged: ) name:NSWindowDidBecomeKeyNotification object:nil];
+		if( _object == nil )
+			[self _inspectWindow:[NSApp keyWindow]];
 	}
 	return self;
 }
@@ -66,7 +75,8 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 - (IBAction) show:(id) sender {
 	extern NSPoint inspectorLastPoint;
 	[self _loadInspector];
-	inspectorLastPoint = [[self window] cascadeTopLeftFromPoint:inspectorLastPoint];
+	if( _locked )
+		inspectorLastPoint = [[self window] cascadeTopLeftFromPoint:inspectorLastPoint];
 	[[self window] makeKeyAndOrderFront:nil];
 }
 
@@ -120,9 +130,8 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 }
 
 - (void) keyWindowChanged:(NSNotification *) notification {
-	if( ! _locked && [[[notification object] delegate] conformsToProtocol:@protocol( JVInspectionDelegator )] ) {
-		id obj = [[[notification object] delegate] objectToInspect];
-		if( obj != _object ) [self inspectObject:obj];
+	if( ! _locked ) {
+		[self _inspectWindow:[notification object]];
 	}
 }
 @end
@@ -164,5 +173,12 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 	NSRect windowFrame = [NSWindow contentRectForFrameRect:[[self window] frame] styleMask:[[self window] styleMask]];
 	NSRect newWindowFrame = [NSWindow frameRectForContentRect:NSMakeRect( NSMinX( windowFrame ), NSMaxY( windowFrame ) - size.height, size.width, size.height ) styleMask:[[self window] styleMask]];
 	[[self window] setFrame:newWindowFrame display:YES animate:[[self window] isVisible]];
+}
+
+- (void) _inspectWindow:(NSWindow *)window {
+	if( [[window delegate] conformsToProtocol:@protocol( JVInspectionDelegator )] ) {
+		id obj = [[window delegate] objectToInspect];
+		if( obj != _object ) [self inspectObject:obj];
+	}
 }
 @end
