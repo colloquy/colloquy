@@ -66,7 +66,7 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (IBAction) showInspector:(id) sender {
-	if ( [[[JVInspectorController sharedInspector] window] isVisible] )
+	if( [[[JVInspectorController sharedInspector] window] isKeyWindow] )
 		[[[JVInspectorController sharedInspector] window] orderOut:nil];
 	else [[JVInspectorController sharedInspector] show:nil];
 }
@@ -76,19 +76,19 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) showTransferManager:(id) sender {
-	if( [[[MVFileTransferController defaultManager] window] isVisible] )
+	if( [[[MVFileTransferController defaultManager] window] isKeyWindow] )
 		[[MVFileTransferController defaultManager] hideTransferManager:nil];
 	else [[MVFileTransferController defaultManager] showTransferManager:nil];
 }
 
 - (IBAction) showConnectionManager:(id) sender {
-	if( [[[MVConnectionsController defaultManager] window] isVisible] )
+	if( [[[MVConnectionsController defaultManager] window] isKeyWindow] )
 		[[MVConnectionsController defaultManager] hideConnectionManager:nil];
 	else [[MVConnectionsController defaultManager] showConnectionManager:nil];
 }
 
 - (IBAction) showBuddyList:(id) sender {
-	if( [[[MVBuddyListController sharedBuddyList] window] isVisible] )
+	if( [[[MVBuddyListController sharedBuddyList] window] isKeyWindow] )
 		[[MVBuddyListController sharedBuddyList] hideBuddyList:nil];
 	else [[MVBuddyListController sharedBuddyList] showBuddyList:nil];
 }
