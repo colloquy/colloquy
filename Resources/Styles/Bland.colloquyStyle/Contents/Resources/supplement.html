@@ -42,5 +42,22 @@
 			document.styleSheets[3].cssRules[1].style.marginLeft = ( maxNickLength - 1 ) + 'ex';
 			document.styleSheets[3].cssRules[2].style.marginLeft = ( maxNickLength + 1 ) + 'ex';
 		}
+
+		bottomAlignChat();
 	}
+
+	function bottomAlignChat() {
+		var windowHeight = window.innerHeight;
+		if( windowHeight > 0 ) {
+			var contentElement = document.getElementsByTagName( "body" ).item( 0 );
+			var contentHeight = contentElement.offsetHeight;
+			if( windowHeight - contentHeight - 5 > 0 ) {
+				contentElement.style.marginTop = ( windowHeight - contentHeight - 5 ) + 'px';
+			} else {
+				contentElement.style.marginTop = '4px';
+			}
+		}
+	}
+
+	window.onresize = bottomAlignChat;
 </script>
