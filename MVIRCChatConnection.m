@@ -816,7 +816,6 @@ static void MVChatUserWhois( IRC_SERVER_REC *server, const char *data ) {
 
 	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 	[user _setServerOperator:NO]; // set these to off/nil now so we get the true values later in the WHOIS
-	[user _setAttribute:nil forKey:MVChatUserKnownRoomsAttribute];
 
 	[user _setRealName:[self stringWithEncodedBytes:realname]];
 	[user _setUsername:[self stringWithEncodedBytes:username]];
@@ -900,7 +899,9 @@ static void MVChatUserIdle( IRC_SERVER_REC *server, const char *data ) {
 
 	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 	[user _setIdleTime:[[self stringWithEncodedBytes:idle] intValue]];
-	[user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:[[self stringWithEncodedBytes:connected] intValue]]];
+	if( [[self stringWithEncodedBytes:connected] intValue] > 631138520 ) // prevent showing 34+ years connected time, this makes sure it is a viable date
+		[user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:[[self stringWithEncodedBytes:connected] intValue]]];
+	else [user _setDateConnected:nil];
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatUserIdleTimeUpdatedNotification object:user userInfo:nil];		
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
