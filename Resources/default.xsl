@@ -66,10 +66,10 @@
 			<span class="message">
 				<xsl:choose>
 					<xsl:when test="message[1]">
-						<xsl:copy-of select="message[1]/child::node()" />
+						<xsl:apply-templates select="message[1]/child::node()" mode="copy" />
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:copy-of select="child::node()" />
+						<xsl:apply-templates select="child::node()" mode="copy" />
 					</xsl:otherwise>
 				</xsl:choose>
 			</span>
@@ -80,8 +80,16 @@
 
 	<xsl:template match="event">
 		<div class="event">
-			<xsl:copy-of select="message/child::node()" />
+			<xsl:apply-templates select="message/child::node()" mode="copy" />
 		</div>
+	</xsl:template>
+
+	<xsl:template match="span[@class='member']" mode="copy">
+		<a href="member:{current()}" class="member"><xsl:value-of select="current()" /></a>
+	</xsl:template>
+
+	<xsl:template match="@*|*" mode="copy">
+		<xsl:copy><xsl:apply-templates select="@*|node()" mode="copy" /></xsl:copy>
 	</xsl:template>
 
 	<xsl:template name="short-time">
