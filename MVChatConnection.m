@@ -967,7 +967,7 @@ void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, const char 
 	if( ! strcasecmp( command, "VERSION" ) ) {
 		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 		NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
-		NSString *reply = [NSString stringWithFormat:@"%@ %@ - %@ %@ - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
+		NSString *reply = [NSString stringWithFormat:@"%@ %@ (%@) - %@ %@ - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
 		[self sendSubcodeReply:@"VERSION" toUser:frm withArguments:reply];
 		signal_stop();
 		return;
@@ -1069,15 +1069,6 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 		CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
 		SERVER_CONNECT_REC *conn = server_create_conn( proto -> id, "irc.javelin.cc", 6667, [[NSString stringWithFormat:@"%x", self] UTF8String], NULL, [NSUserName() UTF8String] );
 		server_connect_ref( conn );
-
-	// Proxy Settings, pull code from proxy.m
-	/*	if( 0 ) {
-			conn -> proxy = g_strdup( "" );
-			conn -> proxy_port = 0;
-			conn -> proxy_string = g_strdup( "" );
-			conn -> proxy_string_after = g_strdup( "" );
-			conn -> proxy_password = g_strdup( "" );
-		} */
 
 		[self _setIrssiConnection:proto -> server_init_connect( conn )];
 		server_connect_unref( conn );
@@ -1303,7 +1294,25 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) setProxyType:(MVChatConnectionProxy) type {
+	if( ! [self _irssiConnection] ) return;
+
 	_proxy = type;
+
+	if( _proxy == MVChatConnectionHTTPSProxy ) {
+		g_free_not_null( [self _irssiConnection] -> connrec -> proxy );
+		[self _irssiConnection] -> connrec -> proxy = g_strdup( "127.0.0.1" );
+
+		[self _irssiConnection] -> connrec -> proxy_port = 8000;
+
+		g_free_not_null( [self _irssiConnection] -> connrec -> proxy_string );
+		[self _irssiConnection] -> connrec -> proxy_string = g_strdup( "CONNECT %s:%d\nProxy-Authorization: %%BASE64(user:pass)%%\n\n" );
+
+		g_free_not_null( [self _irssiConnection] -> connrec -> proxy_string_after );
+		[self _irssiConnection] -> connrec -> proxy_string_after = NULL;
+
+		g_free_not_null( [self _irssiConnection] -> connrec -> proxy_password );
+		[self _irssiConnection] -> connrec -> proxy_password = NULL;
+	}
 }
 
 - (MVChatConnectionProxy) proxyType {
