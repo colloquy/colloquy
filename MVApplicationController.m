@@ -3,6 +3,7 @@
 #import "MVApplicationController.h"
 #import "MVCrashCatcher.h"
 #import "MVSoftwareUpdate.h"
+#import "JVInspectorController.h"
 //#import "MVPreferencesController.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
@@ -48,6 +49,10 @@
 }
 
 #pragma mark -
+
+- (IBAction) showInspector:(id) sender {
+	[[JVInspectorController sharedInspector] show:nil];
+}
 
 - (IBAction) showPreferences:(id) sender {
 //	[[MVPreferencesController sharedInstance] showPreferences:nil];
