@@ -165,7 +165,10 @@ static void MVChatConnected( SERVER_REC *server ) {
 
 static void MVChatDisconnect( SERVER_REC *server ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
-	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
+
+	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
+	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
 }
 
 static void MVChatConnectFailed( SERVER_REC *server ) {
@@ -173,7 +176,10 @@ static void MVChatConnectFailed( SERVER_REC *server ) {
 	if( ! self ) return;
 
 	server_ref( server );
-	[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
+
+	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+	[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:YES];
+	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
 }
 
 static void MVChatRawIncomingMessage( SERVER_REC *server, char *data ) {
@@ -1584,7 +1590,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
 	while( ! MVChatApplicationQuitting || connectionCount ) {
-		usleep( 1 ); // give time for other theads to lock
+		usleep( 10 ); // give time for other theads to lock
 		if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
 			g_main_iteration( TRUE );
 			[MVIRCChatConnectionThreadLock unlock];
@@ -1697,10 +1703,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	[super _didDisconnect];
 
-	[self performSelector:@selector( _detachConnection ) withObject:nil afterDelay:0.]; // wait until the next run loop, so we are done disconnecting
-}
-
-- (void) _detachConnection {
 	[self _setIrssiConnection:NULL];
 }
 
