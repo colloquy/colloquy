@@ -215,7 +215,7 @@
 
 	if( ! [command caseInsensitiveCompare:@"msg"] || ! [command caseInsensitiveCompare:@"query"] ) {
 		return [self handleMessageCommand:command withMessage:arguments forConnection:connection alwaysShow:NO];
-	} else if( ! [command caseInsensitiveCompare:@"amsg"] || ! [command caseInsensitiveCompare:@"ame"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"amsg"] || ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"broadcast"] || ! [command caseInsensitiveCompare:@"bract"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( ! [command caseInsensitiveCompare:@"away"] ) {
 		[connection setAwayStatusWithMessage:arguments];
@@ -447,14 +447,15 @@
 - (BOOL) handleMassMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection {
 	if( ! [message length] ) return NO;
 
+	BOOL action = ( ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"bract"] );
 	NSStringEncoding encoding = [connection encoding];
 	NSEnumerator *enumerator = [[[_manager chatController] chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
 	id item = nil;
 	while( ( item = [enumerator nextObject] ) ) {
 		encoding = [item encoding];
 		if( ! encoding ) encoding = [connection encoding];
-		[connection sendMessage:message withEncoding:encoding toChatRoom:[item target] asAction:! [command caseInsensitiveCompare:@"ame"]];
-		[item echoSentMessageToDisplay:message asAction:! [command caseInsensitiveCompare:@"ame"]];
+		[connection sendMessage:message withEncoding:encoding toChatRoom:[item target] asAction:action];
+		[item echoSentMessageToDisplay:message asAction:action];
 	}
 
 	return YES;
