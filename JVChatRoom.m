@@ -131,7 +131,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	if( ! [_sortedMembers count] )
 		return NSLocalizedString( @"joining...", "joining status info line in drawer" );
 	if( [[self connection] isConnected] ) {
-		if ( [[[MVConnectionsController defaultManager] connectedConnections] count] == 1 ) return [NSString stringWithFormat:@"%d members", [_sortedMembers count]];
+		if( [[[MVConnectionsController defaultManager] connectedConnections] count] == 1 )
+			return [NSString stringWithFormat:NSLocalizedString( @"%d members", "number of room members information line" ), [_sortedMembers count]];
 		else return [_connection server];
 	}
 	return NSLocalizedString( @"disconnected", "disconnected status info line in drawer" );
