@@ -185,7 +185,7 @@ static void server_init(IRC_SERVER_REC *server)
 					    (GCompareFunc) g_istr_equal);
 
 	/* set the standards */
-	g_hash_table_insert(server->isupport, g_strdup("CHANMODES"), g_strdup("beI,k,l,imnpst"));
+	g_hash_table_insert(server->isupport, g_strdup("CHANMODES"), g_strdup("beIqd,k,lfJ,imnpst"));
 	g_hash_table_insert(server->isupport, g_strdup("PREFIX"), g_strdup("(ohv)@%+"));
 
 	server->cmdcount = 0;
@@ -216,7 +216,7 @@ SERVER_REC *irc_server_init_connect(SERVER_CONNECT_REC *conn)
 
 	if (server->connrec->port <= 0) {
 		server->connrec->port =
-			server->connrec->use_ssl ? 9999 : 6667;
+			server->connrec->use_ssl ? 6697 : 6667;
 	}
 
 	server->cmd_queue_speed = ircconn->cmd_queue_speed > 0 ?
@@ -506,8 +506,8 @@ static int sig_set_user_mode(IRC_SERVER_REC *server)
 	const char *mode;
 	char *newmode, *args;
 
-	if (g_slist_find(servers, server) == NULL)
-		return 0; /* got disconnected */
+	if (!IS_IRC_SERVER(server) || g_slist_find(servers, server) == NULL)
+		return 0; /* not an irc server or got disconnected */
 
 	mode = server->connrec->usermode;
 	newmode = server->usermode == NULL ? NULL :
@@ -526,6 +526,17 @@ static int sig_set_user_mode(IRC_SERVER_REC *server)
 
 	g_free_not_null(newmode);
 	return 0;
+}
+
+/* Bugfix: http://bugs.irssi.org/?do=details&id=121
+ * Author: Geert Hauwaerts <geert@irssi.org>
+ * Date:   Wed Sep 15 23:25:30 CEST 2004
+ */
+
+static void real_connected(IRC_SERVER_REC *server)
+{
+	if (server->connrec->usermode != NULL)
+		sig_set_user_mode(server);
 }
 
 static void event_connected(IRC_SERVER_REC *server, const char *data, const char *from)
@@ -551,11 +562,6 @@ static void event_connected(IRC_SERVER_REC *server, const char *data, const char
 	/* last welcome message found - commands can be sent to server now. */
 	server->connected = 1;
 	server->real_connect_time = time(NULL);
-
-	if (server->connrec->usermode != NULL) {
-		/* wait a second and then send the user mode */
-		g_timeout_add(1000, (GSourceFunc) sig_set_user_mode, server);
-	}
 
 	/* let the queue send in 1 second now that we are identified */
 	GTimeVal now;
@@ -803,6 +809,7 @@ void irc_servers_init(void)
 	signal_add_first("server connected", (SIGNAL_FUNC) sig_connected);
 	signal_add_last("server disconnected", (SIGNAL_FUNC) sig_disconnected);
 	signal_add_last("server quit", (SIGNAL_FUNC) sig_server_quit);
+	signal_add_first("event connected", (SIGNAL_FUNC) real_connected);
 	signal_add("event 001", (SIGNAL_FUNC) event_connected);
 	signal_add("event 004", (SIGNAL_FUNC) event_server_info);
 	signal_add("event 005", (SIGNAL_FUNC) event_isupport);
@@ -829,7 +836,8 @@ void irc_servers_deinit(void)
 
 	signal_remove("server connected", (SIGNAL_FUNC) sig_connected);
 	signal_remove("server disconnected", (SIGNAL_FUNC) sig_disconnected);
-        signal_remove("server quit", (SIGNAL_FUNC) sig_server_quit);
+	signal_remove("server quit", (SIGNAL_FUNC) sig_server_quit);
+	signal_remove("event connected", (SIGNAL_FUNC) real_connected);
 	signal_remove("event 001", (SIGNAL_FUNC) event_connected);
 	signal_remove("event 004", (SIGNAL_FUNC) event_server_info);
 	signal_remove("event 005", (SIGNAL_FUNC) event_isupport);
