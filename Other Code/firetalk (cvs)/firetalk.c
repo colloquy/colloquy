@@ -2180,8 +2180,8 @@ void firetalk_get_dcc_port_range(unsigned short * const min, unsigned short * co
 void firetalk_set_dcc_port_range(const unsigned short min, const unsigned short max) {
 	extern unsigned short minDCCPort;
 	extern unsigned short maxDCCPort;
-	minDCCPort = ( min >= 1024 && min <= 65534 ? min : 1024 );
-	maxDCCPort = ( max >= 1025 && max <= 65535 ? max : 1048 );
+	minDCCPort = (unsigned short) MAX( 1024, MIN( 65534, min ) );
+	maxDCCPort = (unsigned short) MAX( 1025, MIN( 65535, max ) );
 }
 
 void firetalk_set_flood_intervals(firetalk_t conn, const double flood, const double delay, const double backoff, const double ceiling ) {
@@ -2896,11 +2896,15 @@ enum firetalk_error firetalk_file_offer(firetalk_t conn, void **filehandle, cons
 
 	conn->file_head->filefd = open(filename,O_RDONLY);
 	if (conn->file_head->filefd == -1) {
+		if (conn->callbacks[FC_FILE_ERROR])
+			conn->callbacks[FC_FILE_ERROR](conn,conn->clientstruct,conn->file_head,conn->file_head->clientfilestruct,FE_IOERROR);
 		firetalk_file_cancel(conn,conn->file_head);
 		return FE_IOERROR;
 	}
 
 	if (fstat(conn->file_head->filefd,&s) != 0) {
+		if (conn->callbacks[FC_FILE_ERROR])
+			conn->callbacks[FC_FILE_ERROR](conn,conn->clientstruct,conn->file_head,conn->file_head->clientfilestruct,FE_IOERROR);
 		firetalk_file_cancel(conn,conn->file_head);
 		return FE_IOERROR;
 	}
@@ -2909,6 +2913,8 @@ enum firetalk_error firetalk_file_offer(firetalk_t conn, void **filehandle, cons
 
 	conn->file_head->sockfd = socket(PF_INET, SOCK_STREAM, 0);
 	if (conn->file_head->sockfd == -1) {
+		if (conn->callbacks[FC_FILE_ERROR])
+			conn->callbacks[FC_FILE_ERROR](conn,conn->clientstruct,conn->file_head,conn->file_head->clientfilestruct,FE_SOCKET);
 		firetalk_file_cancel(conn,conn->file_head);
 		return FE_SOCKET;
 	}
@@ -2923,10 +2929,12 @@ enum firetalk_error firetalk_file_offer(firetalk_t conn, void **filehandle, cons
 
 	while(1) {
 		if (bind(conn->file_head->sockfd,(struct sockaddr *) &addr,sizeof(struct sockaddr_in)) != 0) {
-			addr.sin_port++;
-			if( addr.sin_port > maxDCCPort )
-				addr.sin_port = minDCCPort;
-			if( addr.sin_port == startPort ) {
+			addr.sin_port = htons( ntohs(addr.sin_port) + 1 );
+			if( addr.sin_port > htons(maxDCCPort) )
+				addr.sin_port = htons(minDCCPort);
+			if( addr.sin_port == htons(startPort) ) {
+				if (conn->callbacks[FC_FILE_ERROR])
+					conn->callbacks[FC_FILE_ERROR](conn,conn->clientstruct,conn->file_head,conn->file_head->clientfilestruct,FE_SOCKET);
 				firetalk_file_cancel(conn,conn->file_head);
 				return FE_SOCKET;
 			}
@@ -2934,18 +2942,17 @@ enum firetalk_error firetalk_file_offer(firetalk_t conn, void **filehandle, cons
 		} else break;
 	}
 
-/*	if (bind(conn->file_head->sockfd,(struct sockaddr *) &addr,sizeof(struct sockaddr_in)) != 0) {
-		firetalk_file_cancel(conn,conn->file_head);
-		return FE_SOCKET;
-	} */
-
 	if (listen(conn->file_head->sockfd,1) != 0) {
+		if (conn->callbacks[FC_FILE_ERROR])
+			conn->callbacks[FC_FILE_ERROR](conn,conn->clientstruct,conn->file_head,conn->file_head->clientfilestruct,FE_SOCKET);
 		firetalk_file_cancel(conn,conn->file_head);
 		return FE_SOCKET;
 	}
 
 	l = (unsigned int) sizeof(struct sockaddr_in);
 	if (getsockname(conn->file_head->sockfd,(struct sockaddr *) &addr,&l) != 0) {
+		if (conn->callbacks[FC_FILE_ERROR])
+			conn->callbacks[FC_FILE_ERROR](conn,conn->clientstruct,conn->file_head,conn->file_head->clientfilestruct,FE_SOCKET);
 		firetalk_file_cancel(conn,conn->file_head);
 		return FE_SOCKET;
 	}
@@ -2984,8 +2991,11 @@ enum firetalk_error firetalk_file_accept(firetalk_t conn, void *filehandle, void
 	fileiter->filename = safe_strdup(localfile);
 
 	fileiter->filefd = open(localfile,O_WRONLY | O_CREAT | O_TRUNC,S_IRUSR | S_IWUSR);
-	if (fileiter->filefd == -1)
+	if (fileiter->filefd == -1) {
+		if (conn->callbacks[FC_FILE_ERROR])
+			conn->callbacks[FC_FILE_ERROR](conn,conn->clientstruct,fileiter,fileiter->clientfilestruct,FE_NOPERMS);
 		return FE_NOPERMS;
+	}
 
 	addr.sin_family = AF_INET;
 	addr.sin_port = fileiter->port;
@@ -2996,9 +3006,11 @@ enum firetalk_error firetalk_file_accept(firetalk_t conn, void *filehandle, void
 #ifdef _FC_USE_IPV6
 	, NULL
 #endif
-	,conn->proxy
-	);
+	,conn->proxy );
+
 	if (fileiter->sockfd == -1) {
+		if (conn->callbacks[FC_FILE_ERROR])
+			conn->callbacks[FC_FILE_ERROR](conn,conn->clientstruct,fileiter,fileiter->clientfilestruct,FE_SOCKET);
 		firetalk_file_cancel(conn,filehandle);
 		return FE_SOCKET;
 	}
@@ -3019,8 +3031,11 @@ enum firetalk_error firetalk_file_resume(firetalk_t conn, void *filehandle, void
 	fileiter = filehandle;
 	fileiter->clientfilestruct = clientfilestruct;
 
-	if( stat( localfile, &statbuf ) )
+	if( stat( localfile, &statbuf ) ) {
+		if (conn->callbacks[FC_FILE_ERROR])
+			conn->callbacks[FC_FILE_ERROR](conn,conn->clientstruct,fileiter,fileiter->clientfilestruct,FE_NOPERMS);
 		return FE_NOPERMS;
+	}
 
 	safe_snprintf(dccargs,256,"RESUME %s %u %l",fileiter->filename,fileiter->port,(unsigned long) statbuf.st_size);
 	firetalk_subcode_send_request(conn,fileiter->who,"DCC",dccargs);
