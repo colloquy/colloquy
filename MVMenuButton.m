@@ -1,84 +1,69 @@
 #import "MVMenuButton.h"
 
 @implementation MVMenuButton
-- (id) copyWithZone:(NSZone *) zone {
-	id newObj = [[[self class] allocWithZone:zone] init];
-
-	[newObj setImage:[self image]];
-	[newObj setSmallImage:[self smallImage]];
-	[newObj setAlternateImage:[self alternateImage]];
-	[newObj setImagePosition:[self imagePosition]];
-	[newObj setButtonType:NSMomentaryChangeButton];
-	[newObj setState:[self state]];
-	[newObj setBordered:[self isBordered]];
-	[newObj setTransparent:[self isTransparent]];
-	[newObj setBezelStyle:[self bezelStyle]];
-	[newObj setMenu:[self menu]];
-	[newObj setMenuDelay:[self menuDelay]];
-	[newObj setControlSize:[self controlSize]];
-	[newObj setToolbarItem:nil];
-
-	return newObj;
-}
-
 - (void) encodeWithCoder:(NSCoder *) coder {
 	[super encodeWithCoder:coder];
 	if( [coder allowsKeyedCoding] ) {
-		[coder encodeObject:menu forKey:@"menu"];
-		[coder encodeDouble:menuDelay forKey:@"menuDelay"];
+		[coder encodeDouble:_menuDelay forKey:@"menuDelay"];
+		[coder encodeInt:_size forKey:@"controlSize"];
 	} else {
-		[coder encodeObject:menu];
-		[coder encodeValueOfObjCType:@encode( double ) at:&menuDelay];
+		[coder encodeValueOfObjCType:@encode( double ) at:&_menuDelay];
+		[coder encodeValueOfObjCType:@encode( int ) at:&_size];
 	}
 }
 
 - (id) initWithCoder:(NSCoder *) coder {
 	self = [super initWithCoder:coder];
 	if( [coder allowsKeyedCoding] ) {
-		menu = [[coder decodeObjectForKey:@"menu"] retain];
-		menuDelay = [coder decodeDoubleForKey:@"menuDelay"];
+		_menuDelay = [coder decodeDoubleForKey:@"menuDelay"];
+		_size = (NSControlSize) [coder decodeIntForKey:@"controlSize"];
 	} else {
-		menu = [[coder decodeObject] retain];
-		[coder decodeValueOfObjCType:@encode( double ) at:&menuDelay];
+		[coder decodeValueOfObjCType:@encode( double ) at:&_menuDelay];
+		[coder decodeValueOfObjCType:@encode( int ) at:&_size];
 	}
-	menuDidDisplay = NO;
-	clickHoldTimer = nil;
-	tbitem = nil;
+	_orgImage = nil;
+	_smallImage = nil;
+	_menuDidDisplay = NO;
+	_clickHoldTimer = nil;
+	_toolbarItem = nil;
 	return self;
 }
 
 - (void) dealloc {
-	[clickHoldTimer invalidate];
-	[clickHoldTimer autorelease];
-	[menu autorelease];
+	[_clickHoldTimer invalidate];
+	[_clickHoldTimer autorelease];
+	[_orgImage autorelease];
+	[_smallImage autorelease];
 
-	clickHoldTimer = nil;
-	menu = nil;
+	_clickHoldTimer = nil;
+	_orgImage = nil;
+	_smallImage = nil;
+	_toolbarItem = nil;
 
 	[super dealloc];
 }
 
 - (void) mouseDown:(NSEvent *) theEvent {
 	if( ! [self isEnabled] ) return;
-	if( ! menu ) {
+	if( ! [self menu] ) {
 		[super mouseDown:theEvent];
 		return;
 	}
 	[self highlight:YES];
-	[clickHoldTimer invalidate];
-	[clickHoldTimer autorelease];
-	menuDidDisplay = NO;
-	clickHoldTimer = [[NSTimer scheduledTimerWithTimeInterval:menuDelay target:self selector:@selector( displayMenu: ) userInfo:nil repeats:NO] retain];
+	[_clickHoldTimer invalidate];
+	[_clickHoldTimer autorelease];
+	_menuDidDisplay = NO;
+	_clickHoldTimer = [[NSTimer scheduledTimerWithTimeInterval:_menuDelay target:self selector:@selector( displayMenu: ) userInfo:nil repeats:NO] retain];
 }
 
 - (void) mouseUp:(NSEvent *) theEvent {
-	[clickHoldTimer invalidate];
-	[clickHoldTimer autorelease];
-	clickHoldTimer = nil;
-	if( ! menuDidDisplay && ([theEvent type] & NSLeftMouseUp) )
+	[_clickHoldTimer invalidate];
+	[_clickHoldTimer autorelease];
+	_clickHoldTimer = nil;
+	if( ! _menuDidDisplay && ([theEvent type] & NSLeftMouseUp) )
 		[self sendAction:[self action] to:[self target]];
-	if( menuDidDisplay && ([theEvent type] & NSLeftMouseUp) )
-		menuDidDisplay = NO;
+	if( _menuDidDisplay && ([theEvent type] & NSLeftMouseUp) )
+		_menuDidDisplay = NO;
 	[self highlight:NO];
 	[super mouseUp:theEvent];
 }
@@ -87,67 +72,66 @@
 	return;
 }
 
-- (void) setMenuDelay:(NSTimeInterval) aDelay {
-	menuDelay = aDelay;
+- (void) setMenuDelay:(NSTimeInterval) delay {
+	_menuDelay = delay;
 }
 
 - (NSTimeInterval) menuDelay {
-	return menuDelay;
-}
-
-- (void) setMenu:(NSMenu *) aMenu {
-	[menu autorelease];
-	menu = [aMenu copy];
-}
-
-- (NSMenu *) menu {
-	return [[menu retain] autorelease];
+	return _menuDelay;
 }
 
 - (void) displayMenu:(id) sender {
-	[NSMenu popUpContextMenu:menu withEvent:[[NSApplication sharedApplication] currentEvent] forView:self];
-	menuDidDisplay = YES;
+	NSPoint point = [self convertPoint:[self bounds].origin toView:nil];
+	NSEvent *currentEvent = [[NSApplication sharedApplication] currentEvent];
+	NSEvent *event = nil;
+
+	point.y -= NSHeight( [self frame] ) + 2.;
+	point.x -= 1.;
+
+	event = [NSEvent mouseEventWithType:[currentEvent type] location:point modifierFlags:[currentEvent modifierFlags] timestamp:[currentEvent timestamp] windowNumber:[[currentEvent window] windowNumber] context:[currentEvent context] eventNumber:[currentEvent eventNumber] clickCount:[currentEvent clickCount] pressure:[currentEvent pressure]];
+
+	[NSMenu popUpContextMenu:[self menu] withEvent:event forView:self];
+	_menuDidDisplay = YES;
 	[self mouseUp:[[NSApplication sharedApplication] currentEvent]];
 }
 
 - (NSControlSize) controlSize {
-	return ( size ? size : NSRegularControlSize );
+	return ( _size ? _size : NSRegularControlSize );
 }
 
 - (void) setControlSize:(NSControlSize) controlSize {
-	if( ! orgImage ) orgImage = [[self image] copy];
+	if( ! _orgImage ) _orgImage = [[self image] copy];
 	if( controlSize == NSRegularControlSize ) {
-		[self setImage:orgImage];
-		[tbitem setMinSize:NSMakeSize( 32., 32. )];
-		[tbitem setMaxSize:NSMakeSize( 32., 32. )];
+		[self setImage:_orgImage];
+		[_toolbarItem setMinSize:NSMakeSize( 32., 32. )];
+		[_toolbarItem setMaxSize:NSMakeSize( 32., 32. )];
 	} else if( controlSize == NSSmallControlSize ) {
-		if( ! smallImage ) {
-			smallImage = [orgImage copy];
-			[smallImage setScalesWhenResized:YES];
-			[smallImage setSize:NSMakeSize( 22., 22. )];
+		if( ! _smallImage ) {
+			_smallImage = [_orgImage copy];
+			[_smallImage setScalesWhenResized:YES];
+			[_smallImage setSize:NSMakeSize( 24., 24. )];
 		}
-		[self setImage:smallImage];
-		[tbitem setMinSize:NSMakeSize( 24., 24. )];
-		[tbitem setMaxSize:NSMakeSize( 24., 24. )];
+		[self setImage:_smallImage];
+		[_toolbarItem setMinSize:NSMakeSize( 24., 24. )];
+		[_toolbarItem setMaxSize:NSMakeSize( 24., 24. )];
 	}
-	size = controlSize;
+	_size = controlSize;
 }
 
 - (NSImage *) smallImage {
-	return [[smallImage retain] autorelease];
+	return [[_smallImage retain] autorelease];
 }
 
-- (void) setSmallImage:(NSImage *) smimg {
-	[smallImage autorelease];
-	smallImage = [smimg copy];
+- (void) setSmallImage:(NSImage *) image {
+	[_smallImage autorelease];
+	_smallImage = [image copy];
 }
 
 - (NSToolbarItem *) toolbarItem {
-	return [[tbitem retain] autorelease];
+	return [[_toolbarItem retain] autorelease];
 }
 
 - (void) setToolbarItem:(NSToolbarItem *) item {
-	[tbitem autorelease];
-	tbitem = [item retain];
+	_toolbarItem = item;
 }
 @end

@@ -1,19 +1,16 @@
 #import <Cocoa/Cocoa.h>
 
-@interface MVMenuButton : NSButton <NSCopying, NSCoding> {
-	NSTimer *clickHoldTimer;
-	IBOutlet NSMenu *menu;
-	BOOL menuDidDisplay;
-	NSTimeInterval menuDelay;
-	NSImage *orgImage, *smallImage;
-	NSControlSize size;
-	NSToolbarItem *tbitem;
+@interface MVMenuButton : NSButton <NSCoding> {
+@protected
+	NSTimer *_clickHoldTimer;
+	BOOL _menuDidDisplay;
+	NSTimeInterval _menuDelay;
+	NSImage *_orgImage, *_smallImage;
+	NSControlSize _size;
+	NSToolbarItem *_toolbarItem;
 }
-- (void) setMenuDelay:(NSTimeInterval) aDelay;
+- (void) setMenuDelay:(NSTimeInterval) delay;
 - (NSTimeInterval) menuDelay;
-
-- (void) setMenu:(NSMenu *) aMenu;
-- (NSMenu *) menu;
 
 - (void) displayMenu:(id) sender;
 
@@ -21,7 +18,7 @@
 - (void) setControlSize:(NSControlSize) controlSize;
 
 - (NSImage *) smallImage;
-- (void) setSmallImage:(NSImage *) smimg;
+- (void) setSmallImage:(NSImage *) image;
 
 - (NSToolbarItem *) toolbarItem;
 - (void) setToolbarItem:(NSToolbarItem *) item;
