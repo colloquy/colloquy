@@ -65,7 +65,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when an unhandled CTCP request gets set to us from another user. Return true to prevent other plugins from processing this request.</string>
+			<string>Called when an unhandled CTCP request gets sent to us from another user. Return true to prevent other plugins from processing this request.</string>
 			<key>Name</key>
 			<string>process subcode request</string>
 		</dict>
@@ -101,7 +101,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when an unhandled CTCP reply gets set to us from another user. Return true to prevent other plugins from processing this reply.</string>
+			<string>Called when an unhandled CTCP reply gets sent to us from another user. Return true to prevent other plugins from processing this reply.</string>
 			<key>Name</key>
 			<string>process subcode reply</string>
 		</dict>
@@ -137,7 +137,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when an incoming message is set to us or a room we are in. Return a reformatted message (if desired).</string>
+			<string>Called when an incoming message is sent to us or a room we are in. Return a reformatted message (if desired).</string>
 			<key>Name</key>
 			<string>process incoming chat message</string>
 		</dict>
@@ -166,7 +166,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when a message is set from us to user or a room we are in. Return a reformatted message (if desired).</string>
+			<string>Called when a message is sent from us to user or a room we are in. Return a reformatted message (if desired).</string>
 			<key>Name</key>
 			<string>process outgoing chat message</string>
 		</dict>
