@@ -81,7 +81,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( drawerSize.width ) [viewsDrawer setContentSize:drawerSize];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] )
-		[viewsDrawer open:nil];
+		[viewsDrawer performSelector:@selector( open: ) withObject:nil afterDelay:0.0];
 
 	[self _refreshList];
 }
