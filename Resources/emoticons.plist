@@ -1,0 +1,107 @@
+{
+	menu = (
+		{
+			image = smile.tif;
+			title = Smile;
+			emoticon = ":)";
+			class = smile;
+		},
+		{
+			image = wink.tif;
+			title = Wink;
+			emoticon = ";)";
+			class = wink;
+		},
+		{
+			image = happy.tif;
+			title = Happy;
+			emoticon = ":D";
+			class = happy;
+		},
+		{
+			image = stoic.tif;
+			title = Stoic;
+			emoticon = ":|";
+			class = stoic;
+		},
+		{
+			image = frown.tif;
+			title = Frown;
+			emoticon = ":(";
+			class = frown;
+		},
+		{
+			image = annoyed.tif;
+			title = Annoyed;
+			emoticon = ":\\";
+			class = annoyed;
+		},
+		{
+			image = razz.tif;
+			title = Razz;
+			emoticon = ":P";
+			class = razz;
+		},
+		{
+			image = angry.tif;
+			title = Angry;
+			emoticon = ":X";
+			class = angry;
+		},
+		{
+			image = cool.tif;
+			title = Cool;
+			emoticon = "8)";
+			class = cool;
+		},
+		{
+			image = headphones.tif;
+			title = Jamming;
+			emoticon = "[:)";
+			class = headphones;
+		},
+		{
+			image = hat.tif;
+			title = Relaxed;
+			emoticon = "d:)";
+			class = hat;
+		},
+		{
+			image = angel.tif;
+			title = Angel;
+			emoticon = "O:)";
+			class = angel;
+		},
+		{
+			image = evil.tif;
+			title = Evil;
+			emoticon = ">:)";
+			class = evil;
+		}
+	);
+	classes = {
+	    smile = (":)", ":-)", "=)", "=-)", ":o)", ":}");
+	    frown = (":(", ":-(", "=(", "=-(", ":((", ":o(", ":[", "D:");
+	    wink = ("^-~", ";)", ";-)");
+	    angry = (":x", ":X", ":-x", "=x", "=-x", "x-(", "x(", "X(", ">.<", ">:-|", ":<", ">:(");
+	    happy = (":D", ":-D", "=-D", "=D", "xD", ":))", ":*)", ":-*)");
+	    razz = (":P", ":-P", "=P", "=-P", ":p", ":-p", "=p", "=-p", ":oP", ":op", "d:P", "q:P", "d=P", "q=P");
+	    annoyed = (":/", ":-/", ":\\", ":-\\", "=/", "=-/", "=\\", "=-\\");
+	    stoic = (":|", ":-|", "=|", "=-|", "-.-", "-.-~", "-_-");
+	    cool = ("8)", "8-)", "B-)", "B)");
+	    suprised = (":O", ":-O", "=O", "=-O", ":o", ":-o", "=o", "=-o", ":C", "=C", ":c", "=c");
+	    confused = ("o.O", "O.o", "O.O", "0.o", "o.0", "o_O", "O_o");
+		sarcasm = ("9.9", "c.c", ":>", ":]");
+	    anime = ("^-^", "^_^", "^,^", "^.^", "^_-", "(^3^)");
+	    angel = ("O:)", "O:-)", "O;)", "O;-)", "O=)", "O=-)");
+	    evil = (">:)", ">:-)", ">;)", ">;-)", ">=)", ">=-)", ">=>");
+	    hat = ("d:)", "q:)", "d;)", "q;)", "d=)", "q=)", "q=]", "d=]", "q:]", "d:]");
+	    headphones = ("[:)", "[=)", "[:-)", "[=-)");
+	    frosty = ("=^)", ":^)");
+		pumpkin = ("(~~)");
+	    kirby = ("<('.'<)", "<(''<)", "<(\"<)");
+	    pikachu = ("(o^.^o)");
+		flag = ("**==");
+		rose = ("@};-");
+	};
+}
