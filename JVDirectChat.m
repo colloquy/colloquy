@@ -1371,11 +1371,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( ! init ) [_logFile writeData:[@"</log>" dataUsingEncoding:NSUTF8StringEncoding]];
 	xmlBufferFree( buf );
 
-	// If we are initializing, we wrote a singleton <log> tag and we need to back up over the />
+	// If we are initializing, we wrote a singleton <log/> tag and we need to back up over the />
 	// and write ></log> instead.
 	if( init ) {
 		[_logFile seekToEndOfFile];
-		[_logFile seekToFileOffset:[_logFile offsetInFile] - 2];
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] )
+			[_logFile seekToFileOffset:[_logFile offsetInFile] - 3];
+		else [_logFile seekToFileOffset:[_logFile offsetInFile] - 2];
 		_previousLogOffset = [_logFile offsetInFile];
 		[_logFile writeData:[@">\n</log>" dataUsingEncoding:NSUTF8StringEncoding]];
 	}
