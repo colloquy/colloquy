@@ -33,23 +33,20 @@ static NSString *MVPreferencesWindowNotification = @"MVPreferencesWindowNotifica
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		unsigned i = 0, count = 0;
+		NSDirectoryEnumerator *enumerator = [[NSFileManager defaultManager] enumeratorAtPath:[NSString stringWithFormat:@"%@/Contents/PreferencePanes", [[NSBundle mainBundle] bundlePath]]];
+		NSString *file = nil;
 		NSBundle *bundle = nil;
-		NSString *bundlePath = [NSString stringWithFormat:@"%@/Contents/PreferencePanes", [[NSBundle mainBundle] bundlePath]];
 
-		panes = [[[NSFileManager defaultManager] directoryContentsAtPath:bundlePath] mutableCopy];
-		for( i = 0, count = [panes count]; i < count; i++ ) {
-			bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", bundlePath, [panes objectAtIndex:i]]];
-			[bundle load];
-			if( bundle ) [panes replaceObjectAtIndex:i withObject:bundle];
-			else {
-				[panes removeObjectAtIndex:i];
-				i--;
-			}
-		}
-
+		panes = [[NSMutableArray array] retain];
 		loadedPanes = [[NSMutableDictionary dictionary] retain];
 		paneInfo = [[NSMutableDictionary dictionary] retain];
+
+		while( ( file = [enumerator nextObject] ) ) {
+			if( [[file pathExtension] isEqualToString:@"prefPane"] ) {
+				bundle = [NSBundle bundleWithPath:file];
+				if( [bundle load] ) [panes addObject:bundle];
+			}
+		}
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _doUnselect: ) name:NSPreferencePaneDoUnselectNotification object:nil];
 	}
