@@ -420,12 +420,12 @@ static JVChatController *sharedInstance = nil;
 	NSString *user = [info objectForKey:@"from"];
 	NSData *message = [info objectForKey:@"message"];
 	BOOL hideFromUser = YES;
-	
+
 	if( [self chatViewControllerForUser:user withConnection:connection ifExists:YES] ) hideFromUser = NO;
-	
+
 	NSString *curMsg = [[[NSString alloc] initWithData:message encoding:NSUTF8StringEncoding] autorelease];
 	if( ! curMsg ) curMsg = [NSString stringWithCString:[message bytes] length:[message length]];
-	
+
 	if( [user isEqualToString:@"NickServ"] ) {
 		if( [curMsg rangeOfString:@"password accepted" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -437,7 +437,7 @@ static JVChatController *sharedInstance = nil;
 			[[JVNotificationController defaultManager] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
 		}
 	}
-	
+
 	if( [user isEqualToString:@"MemoServ"] ) {
 		if( [curMsg rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [curMsg rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
 			NSAttributedString *curAMsg = [NSAttributedString attributedStringWithHTMLFragment:[NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@ on %@</span>", curMsg, [connection server]] baseURL:NULL]; 
@@ -448,13 +448,20 @@ static JVChatController *sharedInstance = nil;
 			[context setObject:[connection nickname] forKey:@"performedOn"];
 			[context setObject:user forKey:@"performedBy"];
 			[context setObject:self forKey:@"target"];
-			[context setObject:NSStringFromSelector( @selector( checkMemos: ) ) forKey:@"action"];
+			[context setObject:NSStringFromSelector( @selector( _checkMemos: ) ) forKey:@"action"];
 			[context setObject:connection forKey:@"representedObject"];
 			[[JVNotificationController defaultManager] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
 		}	
 	}
-	
+
 	return hideFromUser;
+}
+
+- (IBAction) _checkMemos:(id) sender {
+	MVChatConnection *connection = [sender representedObject];
+	NSAttributedString *message = [[[NSAttributedString alloc] initWithString:@"read all"] autorelease];
+	[connection sendMessage:message withEncoding:NSUTF8StringEncoding toUser:@"MemoServ" asAction:NO];
+	[self chatViewControllerForUser:@"MemoServ" withConnection:connection ifExists:NO];
 }
 @end
 

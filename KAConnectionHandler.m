@@ -165,15 +165,6 @@ static KAConnectionHandler *sharedHandler = nil;
 - (BOOL) shouldIgnoreMessage:(NSAttributedString *) message fromUser:(NSString *)user inRoom:(NSString *) room {
 	return ( [self shouldIgnoreUser:user inRoom:room] || [self shouldIgnoreMessage:message inRoom:room] );
 }
-
-#pragma mark Target Actions
-
-- (IBAction) checkMemos:(id) sender {
-	MVChatConnection *connection = [sender representedObject];
-	NSAttributedString *message = [[[NSAttributedString alloc] initWithString:@"read all"] autorelease];
-	[connection sendMessage:message withEncoding:NSUTF8StringEncoding toUser:@"MemoServ" asAction:NO];
-	[[JVChatController defaultManager] chatViewControllerForUser:@"MemoServ" withConnection:connection ifExists:NO];
-}
 @end
 
 #pragma mark -
