@@ -154,15 +154,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (id <JVInspection>) objectToInspect {
-	if( [chatViewsOutlineView selectedRow] == -1 ) return nil;
-	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
+	id item = [self selectedListItem];
 	if( [item conformsToProtocol:@protocol( JVInspection )] ) return item;
 	else return nil;
 }
 
 - (IBAction) getInfo:(id) sender {
-	if( [chatViewsOutlineView selectedRow] == -1 ) return;
-	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
+	id item = [self selectedListItem];
 	if( [item conformsToProtocol:@protocol( JVInspection )] )
 		[[JVInspectorController inspectorOfObject:item] show:sender];
 }
@@ -464,7 +462,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView reloadItem:item reloadChildren:( children && [chatViewsOutlineView isItemExpanded:item] ? YES : NO )];
 	if( _activeViewController == item )
 		[self _refreshWindowTitle];
-	if( item == [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]] )
+	if( item == [self selectedListItem] )
 		[self _refreshSelectionMenu];
 //	[self _refreshChatActivityToolbarItemWithListItem:item];
 }
@@ -487,10 +485,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		}
 		return YES;
 	} else if( [menuItem action] == @selector( getInfo: ) ) {
-		if( [chatViewsOutlineView selectedRow] == -1 ) return NO;
-		id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
-		if( [item conformsToProtocol:@protocol( JVInspection )] )
-			return YES;
+		id item = [self selectedListItem];
+		if( [item conformsToProtocol:@protocol( JVInspection )] ) return YES;
 		else return NO;
 	} else if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
 		return YES;
@@ -552,6 +548,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	} else [cell setEnabled:YES];
 
 	[chatViewsOutlineView sizeLastColumnToFit];
+
+	if( item == [self selectedListItem] )
+		[self _refreshSelectionMenu];
 }
 
 - (NSString *) outlineView:(NSOutlineView *) outlineView toolTipForItem:(id) item inTrackingRect:(NSRect) rect forCell:(id) cell {
@@ -599,6 +598,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldCollapseItem:(id) item {
+	if( [self selectedListItem] != [self activeChatViewController] )
+		[outlineView selectRow:[outlineView rowForItem:[self activeChatViewController]] byExtendingSelection:NO];
 	return YES;
 }
 
@@ -607,7 +608,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) outlineViewSelectionDidChange:(NSNotification *) notification {
-	id item = [[notification object] itemAtRow:[[notification object] selectedRow]];
+	id item = [self selectedListItem];
 
 	[[JVInspectorController sharedInspector] inspectObject:[self objectToInspect]];
 
@@ -711,13 +712,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) _doubleClickedListItem:(id) sender {
-	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
+	id item = [self selectedListItem];
 	if( [item respondsToSelector:@selector( doubleClicked: )] )
 		[item doubleClicked:sender];
 }
 
 - (void) _refreshSelectionMenu {
-	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
+	id item = [self selectedListItem];
 	id menuItem = nil;
 	NSMenu *menu = [chatViewsOutlineView menu];
 	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
@@ -736,7 +737,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) _refreshWindow {
-	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
+	id item = [self selectedListItem];
 
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
 		id lastActive = _activeViewController;
