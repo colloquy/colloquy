@@ -1206,6 +1206,7 @@
 				1C9982BA0604D94D006C6417,
 				1CB37171060CC7E200F6A81F,
 				1CB37179060CC81C00F6A81F,
+				CB77A8890612622E0076BEE0,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2407,6 +2408,7 @@
 			);
 			isa = PBXGroup;
 			name = "Preference Modules";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3502,6 +3504,7 @@
 				1CE72A96052C745400A8FE6E,
 				1CE72A95052C745400A8FE6E,
 				1CD6C414051DFA1D00A8FE10,
+				CB77A8880612622E0076BEE0,
 				1CD6C413051DFA1C00A8FE10,
 				1CD733CA05A0E2470080F952,
 				1CD733C905A0E2470080F952,
@@ -3571,6 +3574,30 @@
 //1C2
 //1C3
 //1C4
+//CB0
+//CB1
+//CB2
+//CB3
+//CB4
+		CB77A8880612622E0076BEE0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVChatTranscriptPrivates.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CB77A8890612622E0076BEE0 = {
+			fileRef = CB77A8880612622E0076BEE0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//CB0
+//CB1
+//CB2
+//CB3
+//CB4
 //F50
 //F51
 //F52

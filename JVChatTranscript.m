@@ -14,6 +14,7 @@
 #import "MVMenuButton.h"
 #import "NSPreferences.h"
 #import "JVAppearancePreferences.h"
+#import "JVChatTranscriptExtensions.h"
 
 #import <libxml/xinclude.h>
 #import <libxml/debugXML.h>
@@ -25,6 +26,20 @@ NSMutableSet *JVChatEmoticonBundles = nil;
 
 static NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
+
+#pragma mark -
+
+@interface WebCoreCache
++ (void) setDisabled:(BOOL) disabled;
+@end
+
+#pragma mark -
+
+@interface NSScrollView (NSScrollViewWebKitPrivate)
+- (void) setAllowsHorizontalScrolling:(BOOL) allow;
+@end
+
+#pragma mark C Functions
 
 void MVChatPlaySoundForAction( NSString *action ) {
 	NSSound *sound = nil;
@@ -39,49 +54,6 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	}
 	[sound play];
 }
-
-#pragma mark -
-
-@interface WebCoreCache
-+ (void) setDisabled:(BOOL) disabled;
-@end
-
-#pragma mark -
-
-@interface NSScrollView (NSScrollViewWebKitPrivate)
-- (void) setAllowsHorizontalScrolling:(BOOL) allow;
-@end
-
-#pragma mark -
-
-@interface JVChatTranscript (JVChatTranscriptPrivate)
-- (void) _switchingStyleEnded:(in NSString *) html;
-- (oneway void) _switchStyle:(id) sender;
-+ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
-+ (void) _freeXsltParamArray:(const char **) params;
-- (void) _changeChatStyleMenuSelection;
-- (void) _updateChatStylesMenu;
-+ (NSSet *) _chatStyleBundles;
-+ (void) _scanForChatStyles;
-- (NSString *) _applyStyleOnXMLDocument:(xmlDocPtr) doc;
-- (NSString *) _chatStyleBaseURL;
-- (NSString *) _chatStyleCSSFileURL;
-- (NSString *) _chatStyleVariantCSSFileURL;
-- (const char *) _chatStyleXSLFilePath;
-- (NSString *) _chatStyleHeaderFileContents;
-+ (NSString *) _nameForBundle:(NSBundle *) style;
-- (void) _changeChatEmoticonsMenuSelection;
-- (void) _updateChatEmoticonsMenu;
-+ (NSSet *) _emoticonBundles;
-+ (void) _scanForEmoticons;
-- (NSString *) _chatEmoticonsMappingFilePath;
-- (NSString *) _chatEmoticonsCSSFileURL;
-- (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
-- (BOOL) _usingSpecificStyle;
-- (BOOL) _usingSpecificEmoticons;
-@end
-
-#pragma mark -
 
 NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSString *styleName1 = [JVChatTranscript _nameForBundle:style1];
@@ -255,7 +227,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[super dealloc];
 }
 
-#pragma mark -
+#pragma mark Window Controller and Proxy Icon Support
 
 - (JVChatWindowController *) windowController {
 	return [[_windowController retain] autorelease];
@@ -270,26 +242,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[display setHostWindow:[_windowController window]];
 }
 
-#pragma mark -
-
-- (NSView *) view {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatTranscript" owner:self];
-	return contents;
+- (void) didUnselect {
+	[[_windowController window] setRepresentedFilename:@""];
 }
 
-- (NSToolbar *) toolbar {
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Chat Transcript"];
-	[toolbar setDelegate:self];
-	[toolbar setAllowsUserCustomization:YES];
-	[toolbar setAutosavesConfiguration:YES];
-
-	[_toolbarItems release];
-	_toolbarItems = [[NSMutableDictionary dictionary] retain];
-
-	return [toolbar autorelease];
+- (void) didSelect {
+	[[_windowController window] setRepresentedFilename:( _filePath ? _filePath : @"" )];
 }
 
-#pragma mark -
+#pragma mark Miscellaneous Window Info
 
 - (NSString *) title {
 	return [[NSFileManager defaultManager] displayNameAtPath:_filePath];
@@ -309,7 +270,24 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
 }
 
-#pragma mark -
+- (IBAction) leaveChat:(id) sender {
+	[[JVChatController defaultManager] disposeViewController:self];
+}
+
+- (NSString *) identifier {
+	return [NSString stringWithFormat:@"Transcript %@", [self title]];
+}
+
+- (MVChatConnection *) connection {
+	return nil;
+}
+
+- (NSView *) view {
+	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatTranscript" owner:self];
+	return contents;
+}
+
+#pragma mark Drawer/Outline View Methods
 
 - (id <JVChatListItem>) parent {
 	return nil;
@@ -323,7 +301,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return nil;
 }
 
-#pragma mark -
+#pragma mark Contextual Menu
 
 - (NSMenu *) menu {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
@@ -351,27 +329,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return nil;
 }
 
-#pragma mark -
-
-- (void) didUnselect {
-	[[_windowController window] setRepresentedFilename:@""];
-}
-
-- (void) didSelect {
-	[[_windowController window] setRepresentedFilename:( _filePath ? _filePath : @"" )];
-}
-
-#pragma mark -
-
-- (NSString *) identifier {
-	return [NSString stringWithFormat:@"Transcript %@", [self title]];
-}
-
-- (MVChatConnection *) connection {
-	return nil;
-}
-
-#pragma mark -
+#pragma mark File Saving
 
 - (IBAction) saveDocumentTo:(id) sender {
 	NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
@@ -398,7 +356,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
 }
 
-#pragma mark -
+- (void) downloadLinkToDisk:(id) sender {
+	NSURL *url = [[sender representedObject] objectForKey:@"WebElementLinkURL"];
+	[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
+}
+
+#pragma mark Styles
 
 - (IBAction) changeChatStyle:(id) sender {
 	NSBundle *style = [NSBundle bundleWithIdentifier:[sender representedObject]];
@@ -470,8 +433,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return [[_chatStyle retain] autorelease];
 }
 
-#pragma mark -
-
 - (IBAction) changeChatStyleVariant:(id) sender {
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
 	NSString *style = [[sender representedObject] objectForKey:@"style"];
@@ -496,7 +457,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return [[_chatStyleVariant retain] autorelease];
 }
 
-#pragma mark -
+#pragma mark Emoticons
 
 - (IBAction) changeChatEmoticons:(id) sender {
 	if( [sender representedObject] && ! [(NSString *)[sender representedObject] length] ) {
@@ -539,7 +500,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return [[_chatEmoticons retain] autorelease];
 }
 
-#pragma mark -
+#pragma mark Message Numbering
 
 - (unsigned long) numberOfMessages {
 	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
@@ -608,18 +569,19 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return ret;
 }
 
-#pragma mark -
+#pragma mark Toolbar Methods
 
-- (IBAction) leaveChat:(id) sender {
-	[[JVChatController defaultManager] disposeViewController:self];
+- (NSToolbar *) toolbar {
+	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Chat Transcript"];
+	[toolbar setDelegate:self];
+	[toolbar setAllowsUserCustomization:YES];
+	[toolbar setAutosavesConfiguration:YES];
+	
+	[_toolbarItems release];
+	_toolbarItems = [[NSMutableDictionary dictionary] retain];
+	
+	return [toolbar autorelease];
 }
-
-- (void) downloadLinkToDisk:(id) sender {
-	NSURL *url = [[sender representedObject] objectForKey:@"WebElementLinkURL"];
-	[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
-}
-
-#pragma mark -
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	if( [_toolbarItems objectForKey:identifier] ) return [_toolbarItems objectForKey:identifier];
@@ -691,6 +653,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return YES;
 }
 
+#pragma mark WebView
+
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
 	NSMutableArray *ret = [[defaultMenuItems mutableCopy] autorelease];
 	NSMenuItem *item = nil;
@@ -750,6 +714,84 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptPrivate)
++ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
+	NSEnumerator *keyEnumerator = [dictionary keyEnumerator];
+	NSEnumerator *enumerator = [dictionary objectEnumerator];
+	NSString *key = nil;
+	NSString *value = nil;
+	const char **temp = NULL, **ret = NULL;
+	
+	if( ! [dictionary count] ) return NULL;
+	
+	ret = temp = malloc( ( ( [dictionary count] * 2 ) + 1 ) * sizeof( char * ) );
+	
+	while( ( key = [keyEnumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
+		*(temp++) = (char *) strdup( [key UTF8String] );
+		*(temp++) = (char *) strdup( [value UTF8String] );
+	}
+	
+	*(temp) = NULL;
+	
+	return ret;
+}
+
++ (void) _freeXsltParamArray:(const char **) params {
+	const char **temp = params;
+	
+	if( ! params ) return;
+	
+	while( *(temp) ) {
+		free( (void *)*(temp++) );
+		free( (void *)*(temp++) );
+	}
+	
+	free( params );
+}
+
++ (NSString *) _nameForBundle:(NSBundle *) bundle {
+	NSDictionary *info = [bundle localizedInfoDictionary];
+	NSString *label = [info objectForKey:@"CFBundleName"];
+	if( ! label ) label = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
+	if( ! label ) label = [bundle bundleIdentifier];
+	return [[label retain] autorelease];
+}
+
+#pragma mark Styles Support
+
++ (NSSet *) _chatStyleBundles {
+	extern NSMutableSet *JVChatStyleBundles;
+	return [[JVChatStyleBundles retain] autorelease];
+}
+
++ (void) _scanForChatStyles {
+	extern NSMutableSet *JVChatStyleBundles;
+	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
+	NSEnumerator *enumerator = nil, *denumerator = nil;
+	NSString *file = nil, *path = nil;
+	NSBundle *bundle = nil;
+	
+	if( ! JVChatStyleBundles )
+		JVChatStyleBundles = [NSMutableSet set];
+	
+	[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle mainBundle] resourcePath]]];
+	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
+	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
+	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
+	
+	enumerator = [paths objectEnumerator];
+	while( ( path = [enumerator nextObject] ) ) {
+		denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
+		while( ( file = [denumerator nextObject] ) ) {
+			if( [[file pathExtension] isEqualToString:@"colloquyStyle"] ) {
+				if( ( bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] ) ) {
+					[bundle load];
+					[JVChatStyleBundles addObject:bundle];
+				}
+			}
+		}
+	}
+}
+
 - (void) _reloadCurrentStyle:(id) sender {
 	NSBundle *style = [[_chatStyle retain] autorelease];
 
@@ -792,39 +834,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[pool release];
 }
 
-+ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
-	NSEnumerator *keyEnumerator = [dictionary keyEnumerator];
-	NSEnumerator *enumerator = [dictionary objectEnumerator];
-	NSString *key = nil;
-	NSString *value = nil;
-	const char **temp = NULL, **ret = NULL;
-
-	if( ! [dictionary count] ) return NULL;
-
-	ret = temp = malloc( ( ( [dictionary count] * 2 ) + 1 ) * sizeof( char * ) );
-
-	while( ( key = [keyEnumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
-		*(temp++) = (char *) strdup( [key UTF8String] );
-		*(temp++) = (char *) strdup( [value UTF8String] );
-	}
-
-	*(temp) = NULL;
-
-	return ret;
-}
-
-+ (void) _freeXsltParamArray:(const char **) params {
-	const char **temp = params;
-
-	if( ! params ) return;
-
-	while( *(temp) ) {
-		free( (void *)*(temp++) );
-		free( (void *)*(temp++) );
-	}
-
-	free( params );
-}
 
 - (NSMenu *) _stylesMenu {
 	if( ! _nibLoaded ) [self view];
@@ -922,40 +931,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[self _changeChatStyleMenuSelection];
 }
 
-+ (NSSet *) _chatStyleBundles {
-	extern NSMutableSet *JVChatStyleBundles;
-	return [[JVChatStyleBundles retain] autorelease];
-}
-
-+ (void) _scanForChatStyles {
-	extern NSMutableSet *JVChatStyleBundles;
-	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
-	NSEnumerator *enumerator = nil, *denumerator = nil;
-	NSString *file = nil, *path = nil;
-	NSBundle *bundle = nil;
-
-	if( ! JVChatStyleBundles )
-		JVChatStyleBundles = [NSMutableSet set];
-
-	[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle mainBundle] resourcePath]]];
-	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
-	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
-	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
-
-	enumerator = [paths objectEnumerator];
-	while( ( path = [enumerator nextObject] ) ) {
-		denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
-		while( ( file = [denumerator nextObject] ) ) {
-			if( [[file pathExtension] isEqualToString:@"colloquyStyle"] ) {
-				if( ( bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] ) ) {
-					[bundle load];
-					[JVChatStyleBundles addObject:bundle];
-				}
-			}
-		}
-	}
-}
-
 - (NSString *) _applyStyleOnXMLDocument:(xmlDocPtr) doc {
 	xmlDocPtr res = NULL;
 	xmlChar *result = NULL;
@@ -1021,12 +996,44 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return ( path ? [NSString stringWithContentsOfFile:path] : @"" );
 }
 
-+ (NSString *) _nameForBundle:(NSBundle *) bundle {
-	NSDictionary *info = [bundle localizedInfoDictionary];
-	NSString *label = [info objectForKey:@"CFBundleName"];
-	if( ! label ) label = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
-	if( ! label ) label = [bundle bundleIdentifier];
-	return [[label retain] autorelease];
+- (BOOL) _usingSpecificStyle {
+	return ( xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ? YES : NO );
+}
+
+#pragma mark Emoticons Support
+
++ (NSSet *) _emoticonBundles {
+	extern NSMutableSet *JVChatEmoticonBundles;
+	return [[JVChatEmoticonBundles retain] autorelease];
+}
+
++ (void) _scanForEmoticons {
+	extern NSMutableSet *JVChatEmoticonBundles;
+	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
+	NSEnumerator *enumerator = nil, *denumerator = nil;
+	NSString *file = nil, *path = nil;
+	NSBundle *bundle = nil;
+	
+	if( ! JVChatEmoticonBundles )
+		JVChatEmoticonBundles = [NSMutableSet set];
+	
+	[paths addObject:[NSString stringWithFormat:@"%@/Emoticons", [[NSBundle mainBundle] resourcePath]]];
+	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Emoticons", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
+	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Emoticons", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
+	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Emoticons", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
+	
+	enumerator = [paths objectEnumerator];
+	while( ( path = [enumerator nextObject] ) ) {
+		denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
+		while( ( file = [denumerator nextObject] ) ) {
+			if( [[file pathExtension] isEqualToString:@"colloquyEmoticons"] ) {
+				if( ( bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] ) ) {
+					[bundle load];
+					[JVChatEmoticonBundles addObject:bundle];
+				}
+			}
+		}
+	}
 }
 
 - (NSMenu *) _emoticonsMenu {
@@ -1104,40 +1111,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[self _changeChatEmoticonsMenuSelection];
 }
 
-+ (NSSet *) _emoticonBundles {
-	extern NSMutableSet *JVChatEmoticonBundles;
-	return [[JVChatEmoticonBundles retain] autorelease];
-}
-
-+ (void) _scanForEmoticons {
-	extern NSMutableSet *JVChatEmoticonBundles;
-	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
-	NSEnumerator *enumerator = nil, *denumerator = nil;
-	NSString *file = nil, *path = nil;
-	NSBundle *bundle = nil;
-
-	if( ! JVChatEmoticonBundles )
-		JVChatEmoticonBundles = [NSMutableSet set];
-
-	[paths addObject:[NSString stringWithFormat:@"%@/Emoticons", [[NSBundle mainBundle] resourcePath]]];
-	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Emoticons", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
-	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Emoticons", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
-	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Emoticons", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
-
-	enumerator = [paths objectEnumerator];
-	while( ( path = [enumerator nextObject] ) ) {
-		denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
-		while( ( file = [denumerator nextObject] ) ) {
-			if( [[file pathExtension] isEqualToString:@"colloquyEmoticons"] ) {
-				if( ( bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] ) ) {
-					[bundle load];
-					[JVChatEmoticonBundles addObject:bundle];
-				}
-			}
-		}
-	}
-}
-
 - (NSString *) _chatEmoticonsMappingFilePath {
 	NSString *path = [_chatEmoticons pathForResource:@"emoticons" ofType:@"plist"];
 	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"emoticons" ofType:@"plist"];
@@ -1154,27 +1127,14 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[[NSPreferences sharedPreferences] showPreferencesPanelForOwner:[JVAppearancePreferences sharedInstance]];
 }
 
-- (BOOL) _usingSpecificStyle {
-	return ( xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ? YES : NO );
-}
-
 - (BOOL) _usingSpecificEmoticons {
 	return ( xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ? YES : NO );
 }
 
+#pragma mark Webview
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	return [[[NSString stringWithFormat:shell, [self title], [self _chatEmoticonsCSSFileURL], [self _chatStyleCSSFileURL], [self _chatStyleVariantCSSFileURL], [self _chatStyleBaseURL], [self _chatStyleHeaderFileContents], html] retain] autorelease];
-}
-@end
-
-#pragma mark -
-
-@implementation JVChatMessage (JVChatMessageObjectSpecifier)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[[self transcript] class]];
-	NSScriptObjectSpecifier *container = [[self transcript] objectSpecifier];
-	return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"messages" index:[self messageNumber]] autorelease];
 }
 @end
 

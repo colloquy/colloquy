@@ -61,6 +61,8 @@
 - (IBAction) leaveChat:(id) sender;
 @end
 
+#pragma mark -
+
 @interface JVChatTranscript (JVChatTranscriptScripting) <JVChatListItemScripting>
 - (NSNumber *) uniqueIdentifier;
 @end

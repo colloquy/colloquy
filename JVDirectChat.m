@@ -15,6 +15,7 @@
 #import <libxslt/xsltutils.h>
 
 #import "JVChatController.h"
+#import "JVChatTranscriptExtensions.h"
 #import "JVNotificationController.h"
 #import "MVConnectionsController.h"
 #import "JVDirectChat.h"
@@ -79,21 +80,6 @@ static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingIt
 #pragma mark -
 
 NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
-
-#pragma mark -
-
-@interface JVChatTranscript (JVChatTranscriptPrivate)
-+ (NSString *) _nameForBundle:(NSBundle *) style;
-+ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
-+ (void) _freeXsltParamArray:(const char **) params;
-- (void) _changeChatEmoticonsMenuSelection;
-- (void) _updateChatEmoticonsMenu;
-- (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
-- (NSString *) _applyStyleOnXMLDocument:(xmlDocPtr) doc;
-- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
-- (BOOL) _usingSpecificStyle;
-- (BOOL) _usingSpecificEmoticons;
-@end
 
 #pragma mark -
 

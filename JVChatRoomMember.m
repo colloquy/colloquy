@@ -8,13 +8,6 @@
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
 
-@interface JVChatRoomMember (JVChatRoomMemberPrivate)
-- (NSString *) _selfStoredNickname;
-- (NSString *) _selfCompositeName;
-@end
-
-#pragma mark -
-
 @implementation JVChatRoomMember
 - (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name {
 	if( ( self = [self init] ) ) {
@@ -48,7 +41,7 @@
 	[super dealloc];
 }
 
-#pragma mark -
+#pragma mark Comparisons
 
 - (NSComparisonResult) compare:(JVChatRoomMember *) member {
 	return [[self title] caseInsensitiveCompare:[member title]];
@@ -73,6 +66,47 @@
 	return retVal;
 }
 
+#pragma mark User Info
+
+- (NSString *) nickname {
+	return [[_nickname retain] autorelease];
+}
+
+- (NSImage *) icon {
+	return ( _operator ? [NSImage imageNamed:@"op"] : ( _voice ? [NSImage imageNamed:@"voice"] : [NSImage imageNamed:@"person"] ) );
+}
+
+- (JVBuddy *) buddy {
+	return [[_buddy retain] autorelease];
+}
+
+- (NSImage *) statusImage {
+	if( _buddy ) switch( [_buddy status] ) {
+		case JVBuddyAwayStatus: return [NSImage imageNamed:@"statusAway"];
+		case JVBuddyIdleStatus: return [NSImage imageNamed:@"statusIdle"];
+		case JVBuddyAvailableStatus: return [NSImage imageNamed:@"statusAvailable"];
+		case JVBuddyOfflineStatus:
+		default: return nil;
+	}
+		return nil;
+}
+
+- (BOOL) voice {
+	return _voice;
+}
+
+- (BOOL) operator {
+	return _operator;
+}
+
+- (BOOL) isLocalUser {
+	return [_nickname isEqualToString:[[_parent connection] nickname]];
+}
+
+- (MVChatConnection *) connection {
+	return [[[_parent connection] retain] autorelease];
+}
+
 - (NSComparisonResult) compareUsingBuddyStatus:(JVChatRoomMember *) member {
 	NSComparisonResult retVal;
 
@@ -95,11 +129,7 @@
 	return retVal;
 }
 
-#pragma mark -
-
-- (BOOL) isEnabled {
-	return [_parent isEnabled];
-}
+#pragma mark Outline View Support
 
 - (NSString *) title {
 	if( [self isLocalUser] ) {
@@ -124,95 +154,16 @@
 	return nil;
 }
 
-- (NSMenu *) menu {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-	NSMenuItem *item = nil;
-
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
-	[item setTarget:[_parent windowController]];
-	[menu addItem:item];
-
-	if( ! [self isLocalUser] ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-	
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFile: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
-
-	if( ( [self isLocalUser] && _operator ) || [[_parent chatRoomMemberWithName:[[_parent connection] nickname]] operator] ) {
-		[menu addItem:[NSMenuItem separatorItem]];
-
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room", "kick from room contextual menu - admin only" ) action:@selector( kick: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-
-		[menu addItem:[NSMenuItem separatorItem]];
-
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" ) action:@selector( toggleOperatorStatus: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" ) action:@selector( toggleVoiceStatus: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
-
-	return [[menu retain] autorelease];
-}
-
-- (NSImage *) icon {
-	return ( _operator ? [NSImage imageNamed:@"op"] : ( _voice ? [NSImage imageNamed:@"voice"] : [NSImage imageNamed:@"person"] ) );
-}
-
-- (NSImage *) statusImage {
-	if( _buddy ) switch( [_buddy status] ) {
-		case JVBuddyAwayStatus: return [NSImage imageNamed:@"statusAway"];
-		case JVBuddyIdleStatus: return [NSImage imageNamed:@"statusIdle"];
-		case JVBuddyAvailableStatus: return [NSImage imageNamed:@"statusAvailable"];
-		case JVBuddyOfflineStatus:
-		default: return nil;
-	}
-	return nil;
-}
-
 - (id <JVChatListItem>) parent {
 	return _parent;
 }
 
-#pragma mark -
-
-- (NSString *) nickname {
-	return [[_nickname retain] autorelease];
+- (BOOL) isEnabled {
+	return [_parent isEnabled];
 }
 
-- (JVBuddy *) buddy {
-	return [[_buddy retain] autorelease];
-}
-
-#pragma mark -
-
-- (BOOL) voice {
-	return _voice;
-}
-
-- (BOOL) operator {
-	return _operator;
-}
-
-- (BOOL) isLocalUser {
-	return [_nickname isEqualToString:[[_parent connection] nickname]];
-}
-
-#pragma mark -
-
-- (MVChatConnection *) connection {
-	return [[[_parent connection] retain] autorelease];
-}
-
-#pragma mark -
+#pragma mark Drag & Drop Support
+//not so much drop though
 
 - (BOOL) acceptsDraggedFileOfType:(NSString *) type {
 	return YES;
@@ -222,7 +173,46 @@
 	[[self connection] sendFile:path toUser:_nickname];
 }
 
-#pragma mark -
+#pragma mark Contextual Menu
+
+- (NSMenu *) menu {
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenuItem *item = nil;
+	
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
+	[item setTarget:[_parent windowController]];
+	[menu addItem:item];
+	
+	if( ! [self isLocalUser] ) {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+		
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFile: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	}
+	
+	if( ( [self isLocalUser] && _operator ) || [[_parent chatRoomMemberWithName:[[_parent connection] nickname]] operator] ) {
+		[menu addItem:[NSMenuItem separatorItem]];
+		
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room", "kick from room contextual menu - admin only" ) action:@selector( kick: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+		
+		[menu addItem:[NSMenuItem separatorItem]];
+		
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" ) action:@selector( toggleOperatorStatus: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+		
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" ) action:@selector( toggleVoiceStatus: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	}
+	
+	return [[menu retain] autorelease];
+}
 
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( toggleVoiceStatus: ) ) {
@@ -243,7 +233,7 @@
 	return YES;
 }
 
-#pragma mark -
+#pragma mark GUI Actions
 
 - (IBAction) doubleClicked:(id) sender {
 	[self startChat:sender];
@@ -268,7 +258,7 @@
 	}
 }
 
-#pragma mark -
+#pragma mark Operator commands/Modifiers
 
 - (IBAction) toggleOperatorStatus:(id) sender {
 	if( _operator ) [[_parent connection] demoteMember:_nickname inRoom:[_parent target]];
@@ -282,6 +272,16 @@
 
 - (IBAction) kick:(id) sender {
 	[[_parent connection] kickMember:_nickname inRoom:[_parent target] forReason:@""];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatRoomMember (JVChatRoomMemberObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoom class]];
+	NSScriptObjectSpecifier *container = [_parent objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]] autorelease];
 }
 @end
 

@@ -343,7 +343,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	[[NSWorkspace sharedWorkspace] openURL:url];
 }
 
-#pragma mark -
+#pragma mark Comparisons
 
 - (NSComparisonResult) availabilityCompare:(JVBuddy *) buddy {
 	unsigned int b1 = 0, b2 = 0;

@@ -155,4 +155,15 @@
 	[self load];
 	return [NSString stringWithFormat:@"<%@ 0x%x: (%@) %@>", NSStringFromClass( [self class] ), (unsigned long) self, _sender, _htmlMessage];
 }
+
+@end
+
+#pragma mark -
+
+@implementation JVChatMessage (JVChatMessageObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[[self transcript] class]];
+	NSScriptObjectSpecifier *container = [[self transcript] objectSpecifier];
+	return [[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"messages" index:[self messageNumber]] autorelease];
+}
 @end

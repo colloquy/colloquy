@@ -35,6 +35,19 @@
 - (IBAction) kick:(id) sender;
 @end
 
+#pragma mark -
+
+@interface JVChatRoomMember (JVChatMemberPrivate)
+- (NSString *) _selfStoredNickname;
+- (NSString *) _selfCompositeName;
+
+- (void) _setNickname:(NSString *) name;
+- (void) _setVoice:(BOOL) voice;
+- (void) _setOperator:(BOOL) operator;
+@end
+
+#pragma mark -
+
 @interface JVChatRoomMember (JVChatRoomMemberScripting) <JVChatListItemScripting>
 - (NSNumber *) uniqueIdentifier;
 @end
