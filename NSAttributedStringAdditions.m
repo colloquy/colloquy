@@ -59,8 +59,8 @@ static int colorRGBToMIRCColor( unsigned int red, unsigned int green, unsigned i
 
 static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 	NSCharacterSet *characterSet = [NSCharacterSet decimalDigitCharacterSet];
-	NSString *chars;
-	
+	NSString *chars = nil;
+
 	if( ! [scanner scanCharactersFromSet:characterSet maxLength:2 intoString:&chars] )
 		return NO;
 
@@ -71,16 +71,12 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 	NSFontManager *fm = [NSFontManager sharedFontManager];
 	NSFont *font = [attrs objectForKey:NSFontAttributeName];
-	if( ! font )
-		font = [NSFont userFontOfSize:12];
+	if( ! font ) font = [NSFont userFontOfSize:12];
 	if( ! ( [fm traitsOfFont:font] & NSItalicFontMask ) ) {
 		NSFont *newFont = [fm convertFont:font toHaveTrait:NSItalicFontMask];
-		if( newFont == font ) {
-			// font couldn't be made italic
-			[attrs setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue]
-					  forKey:NSObliquenessAttributeName];
-		} else {
-			// We got an italic font
+		if( newFont == font ) { // font couldn't be made italic
+			[attrs setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue] forKey:NSObliquenessAttributeName];
+		} else { // we got an italic font
 			[attrs setObject:newFont forKey:NSFontAttributeName];
 			[attrs removeObjectForKey:NSObliquenessAttributeName];
 		}
@@ -90,12 +86,12 @@ static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 static void removeItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 	NSFontManager *fm = [NSFontManager sharedFontManager];
 	NSFont *font = [attrs objectForKey:NSFontAttributeName];
-	if( ! font )
-		font = [NSFont userFontOfSize:12];
+	if( ! font ) font = [NSFont userFontOfSize:12];
 	if( [fm traitsOfFont:font] & NSItalicFontMask ) {
 		font = [fm convertFont:font toNotHaveTrait:NSItalicFontMask];
 		[attrs setObject:font forKey:NSFontAttributeName];
 	}
+
 	[attrs removeObjectForKey:NSObliquenessAttributeName];
 }
 
@@ -243,8 +239,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			if( bytes[j++] == 'E' ) {
 				NSString *encodingStr = [NSString stringWithCString:&(bytes[j]) length:(i-j)];
 				NSStringEncoding newEncoding = 0;
-				if( ! [encodingStr length] ) {
-					// if no encoding is declared, go back to user default
+				if( ! [encodingStr length] ) { // if no encoding is declared, go back to user default
 					newEncoding = encoding;
 				} else if( [encodingStr isEqualToString:@"U"] ) {
 					newEncoding = NSUTF8StringEncoding;
@@ -258,33 +253,34 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 							newEncoding = NSISOLatin2StringEncoding;
 							break;
 						case 3:
-							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin3);
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatin3 );
 							break;
 						case 4:
-							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin4);
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatin4 );
 							break;
 						case 5:
-							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatinCyrillic);
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatinCyrillic );
 							break;
 						case 6:
-							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatinArabic);
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatinArabic );
 							break;
 						case 7:
-							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatinGreek);
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatinGreek );
 							break;
 						case 8:
-							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatinHebrew);
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatinHebrew );
 							break;
 						case 9:
-							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin5);
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatin5 );
 							break;
 						case 10:
-							newEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin6);
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatin6 );
 							break;
 					}
 				}
+
 				if( newEncoding && newEncoding != currentEncoding ) {
-					if( end-start > 0 ) {
+					if( ( end - start ) > 0 ) {
 						NSData *subdata = [data subdataWithRange:NSMakeRange(start, end-start)];
 						if( currentEncoding != NSUTF8StringEncoding ) {
 							NSString *tempStr = [[NSString alloc] initWithData:subdata encoding:currentEncoding];
@@ -292,14 +288,17 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 							// define values for all bytes 0-255
 							subdata = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
 						}
+
 						[newData appendData:subdata];
 					}
+
 					currentEncoding = newEncoding;
 					start = i + 1;
 				}
 			}
 		}
 	}
+
 	if( [newData length] > 0 || currentEncoding != encoding ) {
 		if( start < length ) {
 			NSData *subdata = [data subdataWithRange:NSMakeRange(start, length-start)];
@@ -307,8 +306,10 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				NSString *tempStr = [[NSString alloc] initWithData:subdata encoding:currentEncoding];
 				subdata = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
 			}
+
 			[newData appendData:subdata];
 		}
+
 		encoding = NSUTF8StringEncoding;
 		data = newData;
 	}
@@ -337,7 +338,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	char boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0;
 
 	while( ! [scanner isAtEnd] ) {
-		NSString *cStr;
+		NSString *cStr = nil;
 		if( [scanner scanCharactersFromSet:formatCharacters maxLength:1 intoString:&cStr] ) {
 			unichar c = [cStr characterAtIndex:0];
 			switch( c ) {
@@ -618,9 +619,11 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		if( underline ) [ret appendBytes:"\037" length:1];
 
 		NSData *data = nil;
-		if( [link isKindOfClass:[NSURL class]] ) data = [[link absoluteString] dataUsingEncoding:encoding allowLossyConversion:YES];
-		else if( [link isKindOfClass:[NSString class]] ) data = [link dataUsingEncoding:encoding allowLossyConversion:YES];
-		else {
+		if( [link isKindOfClass:[NSURL class]] ) {
+			data = [[link absoluteString] dataUsingEncoding:encoding allowLossyConversion:YES];
+		} else if( [link isKindOfClass:[NSString class]] ) {
+			data = [link dataUsingEncoding:encoding allowLossyConversion:YES];
+		} else {
 			NSString *text = [[self attributedSubstringFromRange:effectiveRange] string];
 			data = [text dataUsingEncoding:encoding allowLossyConversion:YES];
 		}
@@ -775,7 +778,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			}
 			
 			NSData *data = [text dataUsingEncoding:currentEncoding allowLossyConversion:NO];
-			if( data == nil && currentEncoding == NSASCIIStringEncoding && encoding != NSASCIIStringEncoding ) {
+			if( ! data && currentEncoding == NSASCIIStringEncoding && encoding != NSASCIIStringEncoding ) {
 				// Ok, upgrade to declared encoding
 				currentEncoding = encoding;
 				data = [text dataUsingEncoding:currentEncoding allowLossyConversion:NO];
@@ -784,8 +787,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 					[ret appendBytes:ctcpEncoding length:strlen(ctcpEncoding)];
 					[ret appendBytes:"\006" length:1];
 				}
-			}
-			if( data == nil ) {
+			} else if( ! data ) {
 				if( currentEncoding == NSUTF8StringEncoding ) {
 					// It shouldn't have failed, but I want to cover all the bases
 					data = [text dataUsingEncoding:currentEncoding allowLossyConversion:YES];
@@ -795,9 +797,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 					data = [text dataUsingEncoding:currentEncoding allowLossyConversion:YES];
 					[ret appendBytes:"\006EU\006" length:4];
 				}
-			}
-			if( data ) [ret appendData:data];
-			
+			} else if( data ) [ret appendData:data];
+
 			wasBold = bold; wasItalic = italic; wasUnderline = underline; wasStrikethrough = strikethrough;
 			oldForeground = foregroundColor; oldBackground = backgroundColor; oldLink = link;
 			
