@@ -1533,7 +1533,10 @@ enum firetalk_error irc_periodic(struct s_firetalk_handle * const c) {
 
 	conn = c->handle;
 
-	if (conn->lasttime > (time(NULL) - 20))
+	if (c->connected != FCS_ACTIVE)
+		return FE_SUCCESS;
+
+	if (conn->lasttime > (time(NULL) - 30))
 		return FE_IDLEFAST;
 
 	if (conn->isons > 0)
