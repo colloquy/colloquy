@@ -727,7 +727,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message {
-	if( ! [[message sender] isEqualToString:[[self connection] nickname]] ) {
+	if( [[message sender] isKindOfClass:[NSString class]] && ! [[message sender] isEqualToString:[[self connection] nickname]] ) {
 		if( [message ignoreStatus] == JVNotIgnored && _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];

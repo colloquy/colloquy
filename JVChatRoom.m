@@ -300,7 +300,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 #pragma mark Message Handling
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message {
-	if( [message ignoreStatus] == JVNotIgnored && ! [[message sender] isLocalUser] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
+	if( [message ignoreStatus] == JVNotIgnored && [[message sender] isKindOfClass:[JVChatRoomMember class]] && ! [[message sender] isLocalUser] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]] forKey:@"title"];
 		if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has 1 message waiting.", "new single room message bubble text" ), [self title]] forKey:@"description"];
