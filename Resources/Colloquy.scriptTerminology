@@ -41,6 +41,13 @@
 					<key>Name</key>
 					<string>chat window</string>
 				</dict>
+				<key>connection</key>
+				<dict>
+					<key>Description</key>
+					<string>Connection this view uses.</string>
+					<key>Name</key>
+					<string>connection</string>
+				</dict>
 			</dict>
 			<key>Attributes</key>
 			<dict>
@@ -649,6 +656,42 @@
 			<dict>
 				<key>Description</key>
 				<string>The buddy to edit.</string>
+			</dict>
+		</dict>
+		<key>sendMessage</key>
+		<dict>
+			<key>Description</key>
+			<string>Send message to chat room or direct chat with a user.</string>
+			<key>Name</key>
+			<string>send</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Chat room or direct chat to send to.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>message</key>
+				<dict>
+					<key>Description</key>
+					<string>Message to send. Can include HTML formatting.</string>
+					<key>Name</key>
+					<string>message</string>
+				</dict>
+				<key>action</key>
+				<dict>
+					<key>Description</key>
+					<string>Send as an action?</string>
+					<key>Name</key>
+					<string>action tense</string>
+				</dict>
+				<key>echo</key>
+				<dict>
+					<key>Description</key>
+					<string>Show message in conversation? (Defaults on.)</string>
+					<key>Name</key>
+					<string>local echo</string>
+				</dict>
 			</dict>
 		</dict>
 	</dict>
