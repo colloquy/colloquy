@@ -207,7 +207,7 @@
 				1C7055C80519E56300A8FE6E,
 				1C7055CA0519E56C00A8FE6E,
 				1C7055C40519E54C00A8FE6E,
-				1C16362607021F240020D94D,
+				1CF5F8D107D537E50019DC13,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -659,20 +659,6 @@
 		};
 		1C0A4CF70799BEA70093B702 = {
 			fileRef = 1C0A4CF50799BEA70093B702;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C16362607021F240020D94D = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = GrowlAppBridge.framework;
-			path = /Library/Frameworks/GrowlAppBridge.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		1C16362707021F240020D94D = {
-			fileRef = 1C16362607021F240020D94D;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2164,7 +2150,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/Frameworks $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks Frameworks build";
+				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\" \"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks build /Users/Timothy/Projects/Colloquy/Frameworks";
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_CW_ASM_SYNTAX = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
@@ -2961,10 +2947,10 @@
 				1C6C75460630AD5300698F55,
 				1C3B290806529E720066197C,
 				1C8D2E72065D0BB600AC28C5,
-				1C16362707021F240020D94D,
 				1CF8FC0F070A5BEF00C9B54C,
 				1CF8030E070C893500C9B54C,
 				1CF8030F070C893500C9B54C,
+				1CF5F8D207D537E50019DC13,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3017,6 +3003,7 @@
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
 				1CB2CD86052DDC560094AAA4,
+				1CF5F8DD07D537F70019DC13,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4663,6 +4650,26 @@
 			path = NSDataAdditions.h;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1CF5F8D107D537E50019DC13 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Growl.framework;
+			path = Frameworks/Growl.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF5F8D207D537E50019DC13 = {
+			fileRef = 1CF5F8D107D537E50019DC13;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF5F8DD07D537F70019DC13 = {
+			fileRef = 1CF5F8D107D537E50019DC13;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1CF627CA07558F79005DFCFA = {
 			isa = PBXFileReference;
