@@ -101,13 +101,7 @@ extern NSString *JVChatViewPboardType;
 - (id <JVChatListItem>) parent;
 
 - (NSImage *) icon;
-- (NSMenu *) menu;
 - (NSString *) title;
-- (NSString *) information;
-- (NSImage *) statusImage;
-
-- (int) numberOfChildren;
-- (id) childAtIndex:(int) index;
 @end
 
 @interface NSObject (JVChatListItemOptional)
@@ -115,4 +109,12 @@ extern NSString *JVChatViewPboardType;
 - (void) handleDraggedFile:(NSString *) path;
 - (IBAction) doubleClicked:(id) sender;
 - (BOOL) isEnabled;
+
+- (NSMenu *) menu;
+- (NSString *) information;
+- (NSString *) toolTip;
+- (NSImage *) statusImage;
+
+- (int) numberOfChildren;
+- (id) childAtIndex:(int) index;
 @end

@@ -256,7 +256,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
 }
 
-- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData {
+- (NSString *) toolTip {
 	return [self title];
 }
 

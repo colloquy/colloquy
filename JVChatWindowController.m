@@ -69,7 +69,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	prototypeCell = [[JVDetailCell new] autorelease];
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
 	[column setDataCell:prototypeCell];
-	
 
 	[chatViewsOutlineView setDoubleAction:@selector( _doubleClickedListItem: )];
 	[chatViewsOutlineView setAutoresizesOutlineColumn:YES];
@@ -415,8 +414,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
-	[chatViewsOutlineView removeAllToolTips];
-	
 	[chatViewsOutlineView reloadItem:item reloadChildren:( children && [chatViewsOutlineView isItemExpanded:item] ? YES : NO )];
 	if( _activeViewController == item )
 		[self _refreshWindowTitle];
@@ -504,8 +501,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView sizeLastColumnToFit];
 }
 
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item {
-	//[outlineView addToolTipRect:[outlineView frameOfCellAtColumn:0 row:[outlineView rowForItem:item]] owner:item userData:nil];
+- (NSString *) outlineView:(NSOutlineView *) outlineView toolTipForItem:(id) item inTrackingRect:(NSRect) rect forCell:(id) cell {
+	if( [item respondsToSelector:@selector( toolTip )] )
+		return [item toolTip];
+	return nil;
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
@@ -595,7 +594,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView acceptDrop:(id <NSDraggingInfo>) info item:(id) item childIndex:(int) index {
 	_currentlyDragging = NO;
-	[chatViewsOutlineView removeAllToolTips];
 	
 	NSPasteboard *board = [info draggingPasteboard];
 	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {

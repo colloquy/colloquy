@@ -132,6 +132,10 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	return NSLocalizedString( @"disconnected", "disconnected status info line in drawer" );
 }
 
+- (NSString *) toolTip {
+	return [NSString stringWithFormat:NSLocalizedString( @"%@\n%@\n%d members", "room status info tooltip in drawer" ), [self title], [_connection server], [_sortedMembers count]];
+}
+
 - (NSView *) view {
 	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatRoom" owner:self];
 	return contents;
@@ -139,10 +143,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 - (NSString *) identifier {
 	return [NSString stringWithFormat:@"Chat Room %@ (%@)", _target, [[self connection] server]];
-}
-
-- (NSString *) view:(NSView *) view stringForToolTip:(NSToolTipTag) tag point:(NSPoint) point userData:(void *) userData {
-	return [NSString stringWithFormat:NSLocalizedString( @"%@\n%@\n%d members", "room status info tooltip in drawer" ), [self title], [_connection server], [_sortedMembers count]];
 }
 
 #pragma mark -

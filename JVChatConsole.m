@@ -125,7 +125,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return nil;
 }
 
-- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData {
+- (NSString *) toolTip {
 	return [self title];
 }
 

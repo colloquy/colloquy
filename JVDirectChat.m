@@ -321,8 +321,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return [[self connection] server];
 }
 
-- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData {
-	return [NSString stringWithFormat:@"%@ \n %@", _target, [[self connection] server]];
+- (NSString *) toolTip {
+	return [NSString stringWithFormat:@"%@\n%@", _target, [[self connection] server]];
 }
 
 #pragma mark -

@@ -92,8 +92,6 @@
 	float imageWidth = 0.;
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[controlView window] isKeyWindow] && [[NSApplication sharedApplication] isActive] );
 	
-	[controlView addToolTipRect:cellFrame owner:[self representedObject] userData:nil];
-	
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 	[paraStyle setLineBreakMode:_lineBreakMode];
 
