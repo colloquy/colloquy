@@ -38,6 +38,7 @@
 		_halfOperator = NO;
 		_serverOperator = NO;
 		_voice = NO;
+		_nibLoaded = NO;
 	}
 
 	return self;
@@ -250,8 +251,32 @@
 		[item setTarget:self];
 		[menu addItem:item];
 		
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kick From Room…"], "kick from room (customized) contextual menu - admin only" ) action:@selector( customKick: ) keyEquivalent:@""] autorelease];
+		[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+		[item setAlternate:YES];
+		[item setTarget:self];
+		[menu addItem:item];
+		
 		if ( _address ) {
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ban From Room", "ban from room contextual menu - admin only" ) action:@selector( ban: ) keyEquivalent:@""] autorelease];
+			[item setTarget:self];
+			[menu addItem:item];
+			
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Ban From Room…"], "ban from room (customized) contextual menu - admin only" ) action:@selector( customBan: ) keyEquivalent:@""] autorelease];
+			[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+			[item setAlternate:YES];
+			[item setTarget:self];
+			[menu addItem:item];
+			
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kickban From Room", "kickban from room contextual menu - admin only" ) action:@selector( kickban: ) keyEquivalent:@""] autorelease];
+			[item setKeyEquivalentModifierMask:NSShiftKeyMask];
+			[item setAlternate:YES];
+			[item setTarget:self];
+			[menu addItem:item];
+			
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kickban From Room…"], "kickban from room (customized) contextual menu - admin only" ) action:@selector( customKickban: ) keyEquivalent:@""] autorelease];
+			[item setKeyEquivalentModifierMask:NSShiftKeyMask | NSAlternateKeyMask];
+			[item setAlternate:YES];
 			[item setTarget:self];
 			[menu addItem:item];
 		}
@@ -365,6 +390,173 @@
 									 inRoom:[_parent target]];
 		}
 	}
+}
+
+- (IBAction) customKick:(id) sender {
+	if (!_nibLoaded) _nibLoaded = [NSBundle loadNibNamed:@"TSCustomBan" owner:self];
+	if (!_nibLoaded) { NSLog(@"Can't load TSCustomBan.nib"); return; }
+	
+	[banTitle setStringValue:
+		[NSString stringWithFormat:NSLocalizedString(@"Kick %@ from %@", "kick user from room"),
+			_nickname, [_parent target]]];
+	//[banTitle sizeToFit];
+	[firstTitle setStringValue:NSLocalizedString(@"With reason:", "kick reason (primary)")];
+	//[firstTitle sizeToFit];
+	
+	[firstField setStringValue:@""];
+	
+	[banWindow makeFirstResponder:firstField];
+	
+	if ([secondTitle respondsToSelector:@selector(setHidden:)]) {
+		[secondTitle setHidden:YES];
+		[secondField setHidden:YES];
+	} else {
+		NSRect frame = [secondTitle frame];
+		frame.origin.x = 0 - frame.size.width - 10;
+		[secondTitle setFrame:frame];
+		frame = [secondField frame];
+		frame.origin.x = 0 - frame.size.width - 10;
+		[secondField setFrame:frame];
+	}
+	
+	NSRect frame = [banWindow frame];
+	frame.size.height = (frame.size.height - [firstField frame].origin.y) + 60;
+	[banWindow setFrame:frame display:YES];
+	
+	[banButton setAction:@selector(closeKickSheet:)];
+	[banButton setTarget:self];
+	
+	[NSApp beginSheet:banWindow modalForWindow:[[_parent view] window]
+		modalDelegate:nil didEndSelector:nil contextInfo:nil];
+}
+
+- (IBAction) customBan:(id) sender {
+	if (!_nibLoaded) _nibLoaded = [NSBundle loadNibNamed:@"TSCustomBan" owner:self];
+	if (!_nibLoaded) { NSLog(@"Can't load TSCustomBan.nib"); return; }
+	
+	[banTitle setStringValue:
+		[NSString stringWithFormat:NSLocalizedString(@"Ban %@ from %@", "ban user from room"),
+			_nickname, [_parent target]]];
+	//[banTitle sizeToFit];
+	[firstTitle setStringValue:NSLocalizedString(@"With hostmask:", "ban hostmask")];
+	//[firstTitle sizeToFit];
+	
+	if( _address) {
+		[firstField setStringValue:[NSString stringWithFormat:@"%@@%@", _nickname, _address]];
+	} else {
+		[firstField setStringValue:@""];
+	}
+	
+	[banWindow makeFirstResponder:firstField];
+	
+	if ([secondTitle respondsToSelector:@selector(setHidden:)]) {
+		[secondTitle setHidden:YES];
+		[secondField setHidden:YES];
+	} else {
+		NSRect frame = [secondTitle frame];
+		frame.origin.x = 0 - frame.size.width - 10;
+		[secondTitle setFrame:frame];
+		frame = [secondField frame];
+		frame.origin.x = 0 - frame.size.width - 10;
+		[secondField setFrame:frame];
+	}
+	
+	NSRect frame = [banWindow frame];
+	frame.size.height = (frame.size.height - [firstField frame].origin.y) + 60;
+	[banWindow setFrame:frame display:YES];
+	
+	[banButton setAction:@selector(closeBanSheet:)];
+	[banButton setTarget:self];
+	
+	[NSApp beginSheet:banWindow modalForWindow:[[_parent view] window]
+		modalDelegate:nil didEndSelector:nil contextInfo:nil];
+}
+
+- (IBAction) kickban:(id) sender {
+	[self ban:nil];
+	[self kick:nil];
+}
+
+- (IBAction) customKickban:(id) sender {
+	if (!_nibLoaded) _nibLoaded = [NSBundle loadNibNamed:@"TSCustomBan" owner:self];
+	if (!_nibLoaded) { NSLog(@"Can't load TSCustomBan.nib"); return; }
+	
+	[banTitle setStringValue:
+		[NSString stringWithFormat:NSLocalizedString(@"Kickban %@ from %@", "kickban user from room"),
+			_nickname, [_parent target]]];
+	[banTitle sizeToFit];
+	[firstTitle setStringValue:NSLocalizedString(@"With hostmask:", "ban hostmask")];
+	//[firstTitle sizeToFit];
+	[secondTitle setStringValue:NSLocalizedString(@"And reason:", "kick reason (secondary)")];
+	//[secondTitle sizeToFit];
+	
+	if( _address) {
+		[firstField setStringValue:[NSString stringWithFormat:@"%@@%@", _nickname, _address]];
+	} else {
+		[firstField setStringValue:@""];
+	}
+	[secondField setStringValue:@""];
+	
+	[banWindow makeFirstResponder:firstField];
+	
+	if ([secondTitle respondsToSelector:@selector(setHidden:)]) {
+		[secondTitle setHidden:NO];
+		[secondField setHidden:NO];
+	} else {
+		NSRect frame = [secondTitle frame];
+		frame.origin.y = [firstField frame].origin.y - frame.size.height - 8;
+		frame.origin.x = [firstField frame].origin.x;
+		[secondTitle setFrame:frame];
+		frame.size = [secondField frame].size;
+		frame.origin.y = frame.origin.y - frame.size.height - 8;
+		[secondField setFrame:frame];
+	}
+	
+	NSRect frame = [banWindow frame];
+	frame.size.height = (frame.size.height - [secondField frame].origin.y) + 60;
+	[banWindow setFrame:frame display:YES];
+	
+	[banButton setAction:@selector(closeKickbanSheet:)];
+	[banButton setTarget:self];
+	
+	[NSApp beginSheet:banWindow modalForWindow:[[_parent view] window]
+		modalDelegate:nil didEndSelector:nil contextInfo:nil];
+}
+
+- (IBAction) closeKickSheet:(id) sender {
+	NSString *reason = [firstField stringValue];
+	[NSApp endSheet:banWindow];
+	[banWindow orderOut:self];
+	
+	// kick
+	[[_parent connection] kickMember:_nickname inRoom:[_parent target] forReason:reason];
+}
+
+- (IBAction) closeBanSheet:(id) sender {
+	NSString *hostmask = [firstField stringValue];
+	[NSApp endSheet:banWindow];
+	[banWindow orderOut:self];
+	
+	// ban
+	[[_parent connection] banMember:hostmask inRoom:[_parent target]];
+}
+
+- (IBAction) closeKickbanSheet:(id) sender {
+	NSString *hostmask = [firstField stringValue];
+	NSString *reason = [secondField stringValue];
+	[NSApp endSheet:banWindow];
+	[banWindow orderOut:self];
+	
+	// ban
+	[[_parent connection] banMember:hostmask inRoom:[_parent target]];
+	
+	// kick
+	[[_parent connection] kickMember:_nickname inRoom:[_parent target] forReason:reason];
+}
+
+- (IBAction) cancelSheet:(id) sender {
+	[NSApp endSheet:banWindow];
+	[banWindow orderOut:self];
 }
 @end
 

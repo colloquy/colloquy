@@ -123,6 +123,30 @@
 //0A2
 //0A3
 //0A4
+		0A3187FA067ECEB600271E42 = {
+			children = (
+				0A3187FB067ECEB600271E42,
+			);
+			isa = PBXVariantGroup;
+			name = TSCustomBan.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0A3187FB067ECEB600271E42 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Languages/English.lproj/TSCustomBan.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0A3187FC067ECEB600271E42 = {
+			fileRef = 0A3187FA067ECEB600271E42;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		0A60C15F0630D96D00DC6280 = {
 			isa = PBXFileReference;
 			lastKnownFileType = "wrapper.pb-project";
@@ -2193,6 +2217,7 @@
 				1C2391C20677E8F2000E89A7,
 				1C2391C30677E8F2000E89A7,
 				1C23927306795020000E89A7,
+				0A3187FC067ECEB600271E42,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4473,6 +4498,7 @@
 				1CC6FC60054A003C0075807C,
 				1C6EA23C05A735D6006A559F,
 				1C9982040603F097006C6417,
+				0A3187FA067ECEB600271E42,
 			);
 			isa = PBXGroup;
 			name = Interfaces;

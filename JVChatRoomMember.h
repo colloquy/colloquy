@@ -16,6 +16,17 @@
 	BOOL _halfOperator;
 	BOOL _serverOperator;
 	BOOL _voice;
+	
+	// Custom ban ivars
+	BOOL _nibLoaded;
+	IBOutlet NSTextField *banTitle;
+	IBOutlet NSTextField *firstTitle;
+	IBOutlet NSTextField *secondTitle;
+	IBOutlet NSTextField *firstField;
+	IBOutlet NSTextField *secondField;
+	IBOutlet NSButton *banButton;
+	IBOutlet NSButton *cancelButton;
+	IBOutlet NSWindow *banWindow;
 }
 - (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name;
 
@@ -43,6 +54,15 @@
 - (IBAction) toggleVoiceStatus:(id) sender;
 - (IBAction) kick:(id) sender;
 - (IBAction) ban:(id) sender;
+- (IBAction) customKick:(id) sender;
+- (IBAction) customBan:(id) sender;
+- (IBAction) kickban:(id) sender;
+- (IBAction) customKickban:(id) sender;
+
+- (IBAction) closeKickSheet:(id) sender;
+- (IBAction) closeBanSheet:(id) sender;
+- (IBAction) closeKickbanSheet:(id) sender;
+- (IBAction) cancelSheet:(id) sender;
 @end
 
 #pragma mark -
