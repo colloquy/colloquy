@@ -9,6 +9,9 @@
 - (void) setBaseFont:(NSFont *) font;
 
 - (void) reset:(id) sender;
+
+- (NSSize) minimumSizeForContent;
+
 - (void) bold:(id) sender;
 - (void) italic:(id) sender;
 
