@@ -313,6 +313,8 @@ static WebView *fragmentWebView = nil;
 - (NSData *) _mIRCFormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
 	NSMutableData *ret = [NSMutableData data];
+	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
+	if( ! encoding ) encoding = NSUTF8StringEncoding;
 
 	limitRange = NSMakeRange( 0, [self length] );
 	while( limitRange.length > 0 ) {
@@ -331,12 +333,11 @@ static WebView *fragmentWebView = nil;
 			if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
 		}
 
-		char buffer[64];
-
 		if( backgroundColor && ! foregroundColor )
 			foregroundColor = [NSColor colorWithCalibratedRed:0. green:0. blue:0. alpha:1.];
 
 		if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
+			char buffer[6];
 			float red = 0., green = 0., blue = 0.;
 			[foregroundColor getRed:&red green:&green blue:&blue alpha:NULL];
 
@@ -358,14 +359,13 @@ static WebView *fragmentWebView = nil;
 		if( italic ) [ret appendBytes:"\026" length:1];
 		if( underline ) [ret appendBytes:"\037" length:1];
 
-		NSString *text = [[self attributedSubstringFromRange:effectiveRange] string];
-		NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
-		if( ! encoding ) encoding = NSUTF8StringEncoding;
-
 		NSData *data = nil;
-		if( link && [link isKindOfClass:[NSURL class]] ) data = [[link absoluteString] dataUsingEncoding:encoding allowLossyConversion:YES];
-		else if( link && [link isKindOfClass:[NSString class]] ) data = [link dataUsingEncoding:encoding allowLossyConversion:YES];
-		else data = [text dataUsingEncoding:encoding allowLossyConversion:YES];
+		if( [link isKindOfClass:[NSURL class]] ) data = [[link absoluteString] dataUsingEncoding:encoding allowLossyConversion:YES];
+		else if( [link isKindOfClass:[NSString class]] ) data = [link dataUsingEncoding:encoding allowLossyConversion:YES];
+		else {
+			NSString *text = [[self attributedSubstringFromRange:effectiveRange] string];
+			data = [text dataUsingEncoding:encoding allowLossyConversion:YES];
+		}
 
 		[ret appendData:data];
 		[ret appendBytes:"\017" length:1];
