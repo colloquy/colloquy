@@ -1188,7 +1188,7 @@ static SilcClientOperations silcClientOps = {
 		[silcChatConnectionsLock lock];
 		if( ! [silcChatConnections count] ) {
 			[silcChatConnectionsLock unlock];
-			usleep( 2000000 ); // run really still (every 2 seconds) since we have no connections
+			usleep( 2000000 ); // run really slow (every 2 seconds) since we have no connections
 			continue;
 		}
 
@@ -1208,8 +1208,8 @@ static SilcClientOperations silcClientOps = {
 
 		[silcChatConnectionsLock unlock];
 
-		if( connectionsActive ) usleep( 5000 ); // give time to other threads
-		else usleep( 500000 ); // run really still (every 1/2 second) since we have no active connections
+		if( connectionsActive ) usleep( 10000 ); // give time to other threads (1/100th of a second)
+		else usleep( 500000 ); // run really slow (every 1/2 second) since we have no active connections
 	}
 
 	[pool release];
