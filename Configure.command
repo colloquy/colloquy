@@ -10,4 +10,5 @@ make distclean
 cd ../..
 
 cd ./Frameworks
+rm -rf ./*.framework
 tar xzf frameworks.tar.gz
