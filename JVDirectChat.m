@@ -844,6 +844,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
 
+	unichar zeroWidthSpaceChar = 0x200b;	
+	[[[send textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
+
 	while( [[send textStorage] length] ) {
 		range = [[[send textStorage] string] rangeOfString:@"\n"];
 		if( ! range.length ) range.location = [[send textStorage] length];
