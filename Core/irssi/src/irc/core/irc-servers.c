@@ -56,6 +56,7 @@ void irc_servers_reconnect_init(void);
 void irc_servers_reconnect_deinit(void);
 
 static int cmd_tag;
+static int signal_server_outgoing;
 
 static int isnickflag_func(SERVER_REC *server, char flag)
 {
@@ -346,6 +347,8 @@ void irc_server_send_data(IRC_SERVER_REC *server, const char *data, int len)
 		server->connection_lost = TRUE;
 		return;
 	}
+
+	signal_emit_id(signal_server_outgoing, 2, server, data);
 
 	g_get_current_time(&server->last_cmd);
 
@@ -777,6 +780,8 @@ void irc_servers_init(void)
 	signal_add("event error", (SIGNAL_FUNC) event_error);
 	signal_add("event ping", (SIGNAL_FUNC) event_ping);
 	signal_add("event empty", (SIGNAL_FUNC) event_empty);
+
+	signal_server_outgoing = signal_get_uniq_id("server outgoing");
 
 	irc_servers_setup_init();
 	irc_servers_reconnect_init();
