@@ -1151,7 +1151,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) disconnect {
-	if( [self status] != MVChatConnectionConnectedStatus ) return;
+	if( [self status] != MVChatConnectionConnectingStatus
+		&& [self status] != MVChatConnectionConnectedStatus ) return;
 
 	[self _willDisconnect];
 
