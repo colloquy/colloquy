@@ -765,7 +765,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (void) sendMessageToUser:(NSString *) user attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	if( [self isConnected] ) {
 		MVChatWindowController *window = [MVChatWindowController chatWindowWithUser:user withConnection:self ifExists:YES];
-		NSData *encodedData = [MVChatWindowController flattenedHTMLDataForMessage:message withEncoding:encoding];
+		NSMutableData *encodedData = [[[MVChatWindowController flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
+		[encodedData appendBytes:"\0" length:1];
 
 		if( action ) firetalk_im_send_action( _chatConnection, [user UTF8String], (char *) [encodedData bytes], 0 );
 		else firetalk_im_send_message( _chatConnection, [user UTF8String], (char *) [encodedData bytes], 0 );
@@ -779,7 +780,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (void) sendMessageToChatRoom:(NSString *) room attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	if( [self isConnected] ) {
 		MVChatWindowController *window = [MVChatWindowController chatWindowForRoom:room withConnection:self ifExists:YES];
-		NSData *encodedData = [MVChatWindowController flattenedHTMLDataForMessage:message withEncoding:encoding];
+		NSMutableData *encodedData = [[[MVChatWindowController flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
+		[encodedData appendBytes:"\0" length:1];
 
 		if( action ) firetalk_chat_send_action( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes], 0 );
 		else firetalk_chat_send_message( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes], 0 );
