@@ -19,6 +19,8 @@
 @implementation JVChatRoom
 - (id) init {
 	if( ( self = [super init] ) ) {
+		topicLine = nil;
+		topicRenderer = nil;
 		_topic = nil;
 		_topicAuth = nil;
 		_topicAttributed = nil;
