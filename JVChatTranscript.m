@@ -273,6 +273,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return contents;
 }
 
+- (NSResponder *) firstResponder {
+	return display;
+}
+
 #pragma mark Drawer/Outline View Methods
 
 - (id <JVChatListItem>) parent {

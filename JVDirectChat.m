@@ -265,6 +265,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return contents;
 }
 
+- (NSResponder *) firstResponder {
+	return send;
+}
+
 #pragma mark -
 
 - (BOOL) isEnabled {

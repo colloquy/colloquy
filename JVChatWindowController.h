@@ -76,6 +76,7 @@ extern NSString *JVChatViewPboardType;
 - (void) setWindowController:(JVChatWindowController *) controller;
 
 - (NSView *) view;
+- (NSResponder *) firstResponder;
 - (NSToolbar *) toolbar;
 - (NSString *) windowTitle;
 - (NSString *) identifier;

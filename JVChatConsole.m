@@ -93,6 +93,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return contents;
 }
 
+- (NSResponder *) firstResponder {
+	return send;
+}
+
 - (NSToolbar *) toolbar {
 	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Console"];
 	[toolbar setDelegate:self];
