@@ -30,6 +30,8 @@
 #import "mode-lists.h"
 #import "settings.h"
 
+#import "config.h"
+
 #pragma mark -
 
 NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";

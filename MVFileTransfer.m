@@ -13,6 +13,8 @@
 #import "dcc-get.h"
 #import "dcc-file.h"
 
+#import "config.h"
+
 NSString *MVFileTransferOfferNotification = @"MVFileTransferOfferNotification";
 
 void dcc_send_resume( GET_DCC_REC *dcc );
@@ -181,7 +183,7 @@ typedef struct {
 - (void) acceptByResumingIfPossible:(BOOL) resume {
 	settings_set_str( "dcc_download_path", [[_destination stringByDeletingLastPathComponent] fileSystemRepresentation] );
 
-	NSLog( @"incomming file: %s", [self _DCCFileRecord] -> arg );
+	NSLog( @"incoming file: %s", [self _DCCFileRecord] -> arg );
 
 	g_free_not_null( [self _DCCFileRecord] -> arg );
 	[self _DCCFileRecord] -> arg = g_strdup( [[_destination lastPathComponent] fileSystemRepresentation] );
