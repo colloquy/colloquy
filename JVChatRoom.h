@@ -9,6 +9,8 @@
 @class NSString;
 @class JVChatRoomMember;
 
+extern NSString *MVChatRoomModeChangedNotification;
+
 @interface JVChatRoom : JVDirectChat {
 	@protected
 	IBOutlet NSTextView *topicLine;
@@ -18,6 +20,9 @@
 	NSAttributedString *_topicAttributed;
 	NSData *_topic;
 	NSString *_topicAuth;
+	unsigned int _modes;
+	NSString *_key;
+	int _limit;
 
 	BOOL _kickedFromRoom;
 	BOOL _inRoom;
@@ -43,6 +48,15 @@
 
 - (void) changeTopic:(NSData *) topic by:(NSString *) author displayChange:(BOOL) showChange;
 - (NSAttributedString *) topic;
+
+- (void) setModes:(unsigned int)modes;
+- (unsigned int) modes;
+
+- (void) setKey:(NSString *)key;
+- (NSString *) key;
+
+- (void) setLimit:(int)limit;
+- (int) limit;
 
 - (JVChatRoomMember *) chatRoomMemberWithName:(NSString *) name;
 - (void) resortMembers;

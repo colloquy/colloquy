@@ -19,7 +19,7 @@
 - (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name {
 	if( ( self = [self init] ) ) {
 		_parent = room;
-		_nickname = [name copy];
+		_nickname = [[name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] retain];
 		_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_nickname onServer:[[self connection] server]] retain];
 	}
 	return self;

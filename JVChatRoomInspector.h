@@ -31,9 +31,11 @@
 	IBOutlet NSButton *requiresPassword;
 	IBOutlet NSTextField *password;
 	IBOutlet NSTextView *topic;
-	IBOutlet NSProgressIndicator *loadProgress;
 	JVChatRoom *_room;
 	BOOL _nibLoaded;
+	unsigned int _modes;
+	NSString *_key;
+	int _limit;
 }
 - (id) initWithRoom:(JVChatRoom *) room;
 - (IBAction) changeChatOption:(id) sender;

@@ -10,7 +10,6 @@
                 encodingSelection = NSPopUpButton; 
                 inviteOnly = NSButtonCell; 
                 limitMembers = NSButton; 
-                loadProgress = NSProgressIndicator; 
                 memberLimit = NSTextField; 
                 moderated = NSButtonCell; 
                 noOutside = NSButtonCell; 

@@ -833,6 +833,13 @@ static void MVChatGotUserMode( CHANNEL_REC *channel, NICK_REC *nick, char *by, c
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
 
+static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRoomModeNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel->name], @"room", [NSString stringWithUTF8String:(channel->mode ? channel->mode : "")], @"mode", [NSNumber numberWithInt:channel->limit], @"limit", [NSString stringWithUTF8String:(channel->key ? channel->key : "")], @"key", (setby ? [NSString stringWithUTF8String:setby] : [NSNull null]), @"by", nil]];
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+}
+
 #pragma mark -
 
 static void MVChatBuddyOnline( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
@@ -1550,6 +1557,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	signal_add_last( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
 	signal_add_last( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
 	signal_add_last( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
+	signal_add_last( "channel mode changed", (SIGNAL_FUNC) MVChatGotRoomMode );
 
 	signal_add_last( "event join", (SIGNAL_FUNC) MVChatUserJoinedRoom );
 	signal_add_last( "event part", (SIGNAL_FUNC) MVChatUserLeftRoom );
@@ -1603,6 +1611,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	signal_remove( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
 	signal_remove( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
 	signal_remove( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
+	signal_remove( "channel mode changed", (SIGNAL_FUNC) MVChatGotRoomMode );
 
 	signal_remove( "event join", (SIGNAL_FUNC) MVChatUserJoinedRoom );
 	signal_remove( "event part", (SIGNAL_FUNC) MVChatUserLeftRoom );
