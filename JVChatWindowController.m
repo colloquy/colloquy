@@ -492,7 +492,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [item conformsToProtocol:@protocol( JVInspection )] ) return YES;
 		else return NO;
 	} else if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
-		return YES;
+		if( [[menuItem keyEquivalent] length] ) return YES;
+		else return NO;
 	}
 	return YES;
 }
