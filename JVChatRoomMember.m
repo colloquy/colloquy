@@ -563,16 +563,6 @@
 
 #pragma mark -
 
-@implementation JVChatRoomMember (JVChatRoomMemberObjectSpecifier)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoom class]];
-	NSScriptObjectSpecifier *container = [_parent objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]] autorelease];
-}
-@end
-
-#pragma mark -
-
 @implementation JVChatRoomMember (JVChatMemberPrivate)
 - (void) _setNickname:(NSString *) name {
 	[_nickname autorelease];
@@ -634,6 +624,12 @@
 #pragma mark -
 
 @implementation JVChatRoomMember (JVChatRoomMemberScripting)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoom class]];
+	NSScriptObjectSpecifier *container = [_parent objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]] autorelease];
+}
+
 - (NSNumber *) uniqueIdentifier {
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
