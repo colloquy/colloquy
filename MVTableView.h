@@ -7,9 +7,16 @@
 
 - (BOOL) autosaveTableColumnHighlight;
 - (void) setAutosaveTableColumnHighlight:(BOOL) flag;
+
+- (NSRect) originalRectOfRow:(int) row;
 @end
 
 @interface NSObject (MVTableViewDataSource)
-- (NSImage *) tableView:(NSTableView *) tableView dragImageForRows:(NSArray *) rows dragImageOffset:(NSPointPointer) dragImageOffset;
-- (NSMenu *) tableView:(NSTableView *) view menuForTableColumn:(NSTableColumn *) column row:(int) row;
+- (NSImage *) tableView:(MVTableView *) tableView dragImageForRows:(NSArray *) rows dragImageOffset:(NSPointPointer) dragImageOffset;
+- (NSMenu *) tableView:(MVTableView *) view menuForTableColumn:(NSTableColumn *) column row:(int) row;
+@end
+
+@interface NSObject (MVTableViewDelegate)
+- (NSRect) tableView:(MVTableView *) tableView rectOfRow:(int) row defaultRect:(NSRect) defaultRect;
+- (NSRange) tableView:(MVTableView *) tableView rowsInRect:(NSRect) rect defaultRange:(NSRange) defaultRange;
 @end

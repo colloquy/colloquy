@@ -47,12 +47,11 @@
 	
 		if( [[self dataSource] respondsToSelector:@selector( tableView:menuForTableColumn:row: )] )
 			return [[self dataSource] tableView:self menuForTableColumn:column row:row];
-	} else {
-		[self deselectAll:nil];
-		return [self menu];
+		else return [self menu];
 	}
 
-	return nil;
+	[self deselectAll:nil];
+	return [self menu];
 }
 
 - (void) keyDown:(NSEvent *) event {
@@ -64,5 +63,23 @@
 		}
 	}
 	[super keyDown:event];
+}
+
+- (NSRect) rectOfRow:(int) row {
+	NSRect defaultRect = [super rectOfRow:row];
+	if( [[self delegate] respondsToSelector:@selector( tableView:rectOfRow:defaultRect: )] )
+		return [[self delegate] tableView:self rectOfRow:row defaultRect:defaultRect];
+	return defaultRect;
+}
+
+- (NSRect) originalRectOfRow:(int) row {
+	return [super rectOfRow:row];
+}
+
+- (NSRange) rowsInRect:(NSRect) rect {
+	NSRange defaultRange = [super rowsInRect:rect];
+	if( [[self delegate] respondsToSelector:@selector( tableView:rowsInRect:defaultRange: )] )
+		return [[self delegate] tableView:self rowsInRect:rect defaultRange:defaultRange];
+	return defaultRange;
 }
 @end
