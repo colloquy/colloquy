@@ -132,6 +132,8 @@ static NSMenu *favoritesMenu = nil;
 		_joinRooms = nil;
 		_passConnection = nil;
 
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuiting: ) name:NSApplicationWillTerminateNotification object:nil];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionWillConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidNotConnectNotification object:nil];
@@ -1010,6 +1012,17 @@ static NSMenu *favoritesMenu = nil;
 	}
 	[connections reloadData];
 	[connections noteNumberOfRowsChanged];
+}
+
+- (void) _applicationQuiting:(NSNotification *) notification {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	MVChatConnection *connection = nil;
+	NSDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		connection = [info objectForKey:@"connection"];
+		[connection sendRawMessage:@"QUIT"];
+	}
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
