@@ -112,6 +112,8 @@
 	<string>Lucida Grande</string>
 	<key>WebKitStandardFont</key>
 	<string>Lucida Grande</string>
+	<key>WebKitJavaScriptEnabled</key>
+	<integer>1</integer>
 	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
 	<dict>
 		<key>TB Is Shown</key>
