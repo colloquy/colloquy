@@ -61,7 +61,7 @@
 		<span class="{$messageClass}">
 			<span class="hidden">[</span>
 			<span class="time"><xsl:value-of select="$timestamp" /></span>
-			<span class="hidden">] <xsl:value-of select="../sender" />: </span>
+			<span class="hidden">] <xsl:if test="@action != 'yes'"><xsl:value-of select="../sender" />: </xsl:if></span>
       		<xsl:if test="@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
 				<a href="member:{../sender}" class="member action">
