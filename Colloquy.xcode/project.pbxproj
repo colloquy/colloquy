@@ -989,6 +989,82 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
+		1C9981F90603EF2F006C6417 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = NotificationPreferences.tif;
+			path = "Resources/Preference Related/NotificationPreferences.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9981FA0603EF2F006C6417 = {
+			fileRef = 1C9981F90603EF2F006C6417;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9981FD0603EF4A006C6417 = {
+			children = (
+				1C9982010603EFD6006C6417,
+				1C9982000603EFD6006C6417,
+			);
+			isa = PBXGroup;
+			name = Notification;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9982000603EFD6006C6417 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVNotificationPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9982010603EFD6006C6417 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVNotificationPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9982020603EFD6006C6417 = {
+			fileRef = 1C9982000603EFD6006C6417;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9982030603EFD6006C6417 = {
+			fileRef = 1C9982010603EFD6006C6417;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9982040603F097006C6417 = {
+			children = (
+				1C9982050603F097006C6417,
+			);
+			isa = PBXVariantGroup;
+			name = JVNotificationPreferences.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9982050603F097006C6417 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Languages/English.lproj/JVNotificationPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9982060603F097006C6417 = {
+			fileRef = 1C9982040603F097006C6417;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CA56CCD042A713E00000102 = {
 			children = (
 				1C8CE1EB05A921A00020D841,
@@ -1056,18 +1132,6 @@
 			path = JVNotificationController.m;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		1CA7D0F206015DBA00887614 = {
-			fileRef = 1CA7D0F006015DBA00887614;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CA7D0F306015DBA00887614 = {
-			fileRef = 1CA7D0F106015DBA00887614;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1CA95D28051B413E00A8FE10 = {
 			isa = PBXFileReference;
@@ -1165,7 +1229,7 @@
 				1C6EA24305A738DD006A559F,
 				1CD4BD9505AA309A00F72EE6,
 				1C2462A405F9205900505752,
-				1CA7D0F206015DBA00887614,
+				1C9982020603EFD6006C6417,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1417,6 +1481,8 @@
 				1CA7CA6605FEC88500887614,
 				1CA7CA6705FEC88600887614,
 				1CA7CA6805FEC88600887614,
+				1C9981FA0603EF2F006C6417,
+				1C9982060603F097006C6417,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1870,7 +1936,7 @@
 				1C6EA24405A738DD006A559F,
 				1CD4BD9605AA309A00F72EE6,
 				1C2462A505F9205900505752,
-				1CA7D0F306015DBA00887614,
+				1C9982030603EFD6006C6417,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2296,6 +2362,7 @@
 			children = (
 				1CBC62F705488DB1009E59E1,
 				1CBC630205488F99009E59E1,
+				1C9981FD0603EF4A006C6417,
 				1CBC62FC05488E6E009E59E1,
 				1CDEE81D0586C15A000B9075,
 				1CBC62FF05488F89009E59E1,
@@ -2380,6 +2447,7 @@
 				1CC6FCD4054A2BF80075807C,
 				1CC6FCD2054A25040075807C,
 				1CC6FC6F054A02F70075807C,
+				1C9981F90603EF2F006C6417,
 			);
 			isa = PBXGroup;
 			name = Preferences;
@@ -3621,6 +3689,7 @@
 				1CC6FC64054A003C0075807C,
 				1CC6FC60054A003C0075807C,
 				1C6EA23C05A735D6006A559F,
+				1C9982040603F097006C6417,
 			);
 			isa = PBXGroup;
 			name = Interfaces;
