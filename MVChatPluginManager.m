@@ -52,7 +52,6 @@ static MVChatPluginManager *sharedInstance = nil;
 	NSEnumerator *enumerator = nil, *denumerator = nil;
 	NSString *file = nil, *path = nil;
 	NSBundle *bundle = nil;
-	id item = nil;
 
 	// unload all plugins, this resets everything and purges plugins that moved since the last load
 	[_plugins removeAllObjects];
@@ -162,7 +161,13 @@ static MVChatPluginManager *sharedInstance = nil;
 	NSMethodSignature *sig = [invocation methodSignature];
 
 	while( ( plugin = [enumerator nextObject] ) ) {
-		[invocation invokeWithTarget:plugin];
+		@try {
+			[invocation invokeWithTarget:plugin];
+		} @catch ( NSException *exception ) {
+			NSString *pluginName = [[NSBundle bundleForClass:[plugin class]] objectForInfoDictionaryKey:@"CFBundleName"];
+			NSLog( @"An error occured when calling %@ of plugin %@. %@. The %@ plug-in has been disabled.", NSStringFromSelector( [invocation selector] ), pluginName, [exception reason], pluginName );
+			continue;
+		}
 
 		if( ! strcmp( [sig methodReturnType], @encode( id ) ) ) {
 			id ret = nil;
