@@ -61,6 +61,11 @@
 			if( senderStr ) _sender = [NSString stringWithUTF8String:senderStr];
 			xmlFree( senderStr );
 
+			xmlChar *selfStr = xmlGetProp( subNode, "self" );
+			if( selfStr && ! strcmp( selfStr, "yes" ) ) _senderIsLocalUser = YES;
+			else _senderIsLocalUser = NO;
+			xmlFree( selfStr );
+
 /*			if( _sender && [[self transcript] isKindOfClass:[JVChatRoom class]] ) {
 				JVChatRoomMember *member = [(JVChatRoom *)[self transcript] chatRoomMemberWithName:_sender];
 				if( member ) _sender = member;
@@ -88,6 +93,7 @@
 		_date = nil;
 		_action = NO;
 		_highlighted = NO;
+		_senderIsLocalUser = NO;
 		_ignoreStatus = JVNotIgnored;
 	}
 
@@ -158,6 +164,11 @@
 - (id) sender {
 	[self load];
 	return _sender;
+}
+
+- (BOOL) senderIsLocalUser {
+	[self load];
+	return _senderIsLocalUser;
 }
 
 #pragma mark -

@@ -102,9 +102,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 @interface JVDirectChat (JVDirectChatPrivate) <ABImageClient>
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action;
-- (int) visibleMessageCount;
-- (int) locationOfMessage:(unsigned int) identifier;
-- (int) locationOfElementByIndex:(unsigned int) index;
 - (void) scrollToBottom;
 - (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent;
 - (void) processQueue;
@@ -129,6 +126,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
 - (void) _changeChatEmoticonsMenuSelection;
 - (void) _switchingStyleEnded:(in NSString *) html;
+- (int) visibleMessageCount;
+- (int) locationOfMessage:(unsigned int) identifier;
+- (int) locationOfElementByIndex:(unsigned int) index;
 @end
 
 #pragma mark -
@@ -1514,39 +1514,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[cmessage release];
 
 	[_windowController reloadListItem:self andChildren:NO];
-}
-
-- (int) locationOfMessage:(unsigned int) identifier {
-#ifdef WebKitVersion146
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[NSString stringWithFormat:@"%d", identifier]];
-		return [[element valueForKey:@"offsetTop"] intValue];
-	} else
-#endif
-	// old JavaScript method
-	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", identifier]] intValue];
-}
-
-- (int) locationOfElementByIndex:(unsigned int) index {
-#ifdef WebKitVersion146
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
-		if( index < [[body children] length] ) return [[[[body children] item:index] valueForKey:@"offsetTop"] intValue];
-		else return 0;
-	} else
-#endif
-	// old JavaScript method
-	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", index]] intValue];
-}
-
-- (int) visibleMessageCount {
-#ifdef WebKitVersion146
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-		return [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
-	} else
-#endif
-	// old JavaScript method
-	return [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
 }
 
 - (void) scrollToBottom {

@@ -1,0 +1,35 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {noteOtherChanges = id; selectCriterionKind = id; }; 
+            CLASS = JVTranscriptCriterionController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                booleanKindButton = NSPopUpButton; 
+                dateKindButton = NSPopUpButton; 
+                dateOperationButton = NSPopUpButton; 
+                dateQuery = NSTextField; 
+                dateUnitsButton = NSPopUpButton; 
+                kindMenu = NSMenu; 
+                listKindButton = NSPopUpButton; 
+                listOperationButton = NSPopUpButton; 
+                listQuery = NSPopUpButton; 
+                subview = NSView; 
+                tabView = NSTabView; 
+                textKindButton = NSPopUpButton; 
+                textOperationButton = NSPopUpButton; 
+                textQuery = NSTextField; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = NoHitView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            CLASS = RuleCriteriaController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {subview = NSView; tabView = NSTabView; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

@@ -55,8 +55,12 @@ extern NSString *JVChatEmoticonsScannedNotification;
 - (NSBundle *) chatEmoticons;
 
 - (unsigned long) numberOfMessages;
+- (NSArray *) messages;
 - (JVChatMessage *) messageAtIndex:(unsigned long) index;
 - (NSArray *) messagesInRange:(NSRange) range;
+- (BOOL) messageIsInScrollback:(JVChatMessage *) message;
+
+- (void) jumpToMessage:(JVChatMessage *) message;
 
 - (IBAction) close:(id) sender;
 - (IBAction) activate:(id) sender;

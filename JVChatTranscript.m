@@ -7,6 +7,7 @@
 #import <ChatCore/NSStringAdditions.h>
 
 #import "MVApplicationController.h"
+#import "JVTranscriptFindWindowController.h"
 #import "JVChatController.h"
 #import "JVStyle.h"
 #import "JVChatMessage.h"
@@ -32,6 +33,7 @@ NSString *JVChatEmoticonsScannedNotification = @"JVChatEmoticonsScannedNotificat
 
 static NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
+static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 
 static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 	xmlNodePtr current = node -> children;
@@ -84,6 +86,10 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 - (BOOL) _usingSpecificStyle;
 - (BOOL) _usingSpecificEmoticons;
+
+- (int) visibleMessageCount;
+- (int) locationOfMessage:(unsigned int) identifier;
+- (int) locationOfElementByIndex:(unsigned int) index;
 @end
 
 #pragma mark -
@@ -501,7 +507,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 }
 
 #pragma mark -
-#pragma mark Message Numbering
+#pragma mark Message Level Access
 
 - (unsigned long) numberOfMessages {
 	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
@@ -519,61 +525,91 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 }
 
 - (NSArray *) messages {
-	if( [_messages containsObject:[NSNull null]] || [_messages count] < [self numberOfMessages] )
-		[self messagesInRange:NSMakeRange( 0, [self numberOfMessages] )];
-	return _messages;
+	return [self messagesInRange:NSMakeRange( 0, -1 )]; // will stop at the total number of messages
 }
 
 - (JVChatMessage *) messageAtIndex:(unsigned long) index {
+	if( [_messages count] > index ) {
+		id obj = [_messages objectAtIndex:index];
+		if( ! [obj isKindOfClass:[NSNull class]] ) return obj;
+	}
+
 	NSArray *msgs = [self messagesInRange:NSMakeRange( index, 1 )];
 	if( [msgs count] ) return [msgs objectAtIndex:0];
 	return nil;
 }
 
 - (NSArray *) messagesInRange:(NSRange) range {
+	if( ! range.length ) return [NSArray array];
+
+	if( ( range.location + range.length ) > range.location && [_messages count] >= ( range.location + range.length ) ) {
+		NSArray *sub = [_messages subarrayWithRange:range];
+		if( ! [sub containsObject:[NSNull null]] ) return sub;
+	}
+
 	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
 	if( ! ctx ) return nil;
-	
+
  /* We need to discover all messages which are children of envelope, within the specified range. 
 	We don't have a counter attribute to work with, and the Xpath position() doesn't help us - we need 
 	to get a Nodeset, and then apply the range to that.
 	Note that the nodeset is unsorted by default. */
 
-	xmlXPathObjectPtr result = xmlXPathEval("/log/envelope/message", ctx );
-	if( ! result || ! result -> nodesetval )
+	xmlXPathObjectPtr result = xmlXPathEval( "/log/envelope/message", ctx );
+	if( ! result || ! result -> nodesetval ) {
+		xmlXPathFreeContext( ctx );
 		return nil;
-
-	xmlXPathNodeSetSort( result -> nodesetval ); // now sort the resultant nodeset in document order
+	}
 
 	unsigned int i = 0;
+	unsigned int size = result -> nodesetval -> nodeNr;
+
+	if( [_messages count] == size && ! [_messages containsObject:[NSNull null]] ) {
+		xmlXPathFreeContext( ctx );
+		xmlXPathFreeObject( result );
+		return [NSArray arrayWithArray:_messages];
+	}
 
 	if( [_messages count] < range.location )
 		for( i = [_messages count]; i < range.location; i++ )
 			[_messages insertObject:[NSNull null] atIndex:i];
 
-	xmlNodePtr node = NULL;
-	unsigned int size = result -> nodesetval -> nodeNr;
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:size];
-	JVChatMessage *msg = nil;
+	xmlXPathNodeSetSort( result -> nodesetval ); // now sort the resultant nodeset in document order
 
-	for( i = range.location; i < ( range.location + range.length ); i++ ) {
-		node = result -> nodesetval -> nodeTab[i];
-		if( ! node ) continue;
-		if( [_messages count] > (i) && [[_messages objectAtIndex:(i)] isKindOfClass:[NSNull class]] ) {
+	unsigned int stop = MIN( ( ( range.location + range.length ) < range.location ? (unsigned) -1 : ( range.location + range.length ) ), size );
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:( stop - range.location )];
+	JVChatMessage *msg = nil;
+	xmlNodePtr node = NULL;
+
+	// note: the range is allowed to be longer than the number of messages, we will stop at whatever comes sooner
+	for( i = range.location; i < stop; i++ ) {
+		if( ! ( node = result -> nodesetval -> nodeTab[i] ) ) continue;
+		if( [_messages count] > i && [[_messages objectAtIndex:i] isKindOfClass:[JVChatMessage class]] ) {
+			msg = [_messages objectAtIndex:i];
+		} else if( [_messages count] > i && [[_messages objectAtIndex:i] isKindOfClass:[NSNull class]] ) {
 			msg = [JVChatMessage messageWithNode:node messageIndex:i andTranscript:self];
-			[_messages replaceObjectAtIndex:(i) withObject:msg];
-		} else if( [_messages count] > (i) && [[_messages objectAtIndex:(i)] isKindOfClass:[JVChatMessage class]] ) {
-			msg = [_messages objectAtIndex:(i)];
-		} else if( [_messages count] == (i) ) {
+			[_messages replaceObjectAtIndex:i withObject:msg];
+		} else if( [_messages count] == i ) {
 			msg = [JVChatMessage messageWithNode:node messageIndex:i andTranscript:self];
-			[_messages insertObject:msg atIndex:(i)];
+			[_messages insertObject:msg atIndex:i];
 		} else continue;
 		if( msg ) [ret addObject:msg];
 	}
 
 	xmlXPathFreeContext( ctx );
 	xmlXPathFreeObject( result );
-	return ret;
+	return [NSArray arrayWithArray:ret];
+}
+
+- (BOOL) messageIsInScrollback:(JVChatMessage *) message {
+#ifdef WebKitVersion146
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[NSString stringWithFormat:@"%u", [message envelopeNumber]]];
+		return ( element ? YES : NO );
+	} else
+#endif
+	// old JavaScript method
+	return (BOOL) [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"messageIsInScrollback( \"%u\" );", [message envelopeNumber]]] intValue];
 }
 
 #pragma mark -
@@ -592,6 +628,13 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	if( [identifier isEqualToString:JVToolbarToggleChatDrawerItemIdentifier] ) {
 		toolbarItem = [_windowController toggleChatDrawerToolbarItem];
+	} else if( [identifier isEqualToString:JVToolbarFindItemIdentifier] ) {
+		[toolbarItem setLabel:NSLocalizedString( @"Find", "find toolbar item label" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Find", "find toolbar item patlette label" )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Show Find Panel", "find toolbar item tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
+		[toolbarItem setTarget:[JVTranscriptFindWindowController sharedController]];
+		[toolbarItem setAction:@selector( showWindow: )];
 	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] && ! willBeInserted ) {
 		[toolbarItem setLabel:NSLocalizedString( @"Style", "choose style toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Style", "choose style toolbar item patlette label" )];
@@ -658,7 +701,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSArray *list = [NSArray arrayWithObjects: JVToolbarToggleChatDrawerItemIdentifier, 
-		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarShowColorsItemIdentifier,
+		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, JVToolbarFindItemIdentifier, NSToolbarShowColorsItemIdentifier,
 		NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, 
 		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 
@@ -672,7 +715,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 }
 
 #pragma mark -
-#pragma mark Highlight Jumping
+#pragma mark Highlight/Message Jumping
 
 - (IBAction) jumpToPreviousHighlight:(id) sender {
 	JVMarkedScroller *scroller = (JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
@@ -684,6 +727,16 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 	JVMarkedScroller *scroller = (JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 	if( [scroller isMemberOfClass:[JVMarkedScroller class]] )
 		[scroller jumpToNextMark:sender];
+}
+
+- (void) jumpToMessage:(JVChatMessage *) message {
+	unsigned int loc = [self locationOfMessage:[message envelopeNumber]];
+	if( loc ) {
+		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+		float scale = NSHeight( [scroller rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [scroller frame] ) / [scroller knobProportion] );
+		float shift = ( ( NSHeight( [scroller rectForPart:NSScrollerKnobSlot] ) * [scroller knobProportion] ) / 2. ) / scale;
+		[[(NSScrollView *)[scroller superview] documentView] scrollPoint:NSMakePoint( 0., loc - shift )];
+	}
 }
 
 #pragma mark -
@@ -1267,6 +1320,41 @@ finish:
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	return [NSString stringWithFormat:shell, [self title], [self _chatEmoticonsCSSFileURL], [[_chatStyle mainStyleSheetLocation] absoluteString], [[_chatStyle variantStyleSheetLocationWithName:_chatStyleVariant] absoluteString], [[_chatStyle baseLocation] absoluteString], [_chatStyle contentsOfHeaderFile], html];
+}
+
+#pragma mark -
+
+- (int) locationOfMessage:(unsigned int) identifier {
+#ifdef WebKitVersion146
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[NSString stringWithFormat:@"%d", identifier]];
+		return [[element valueForKey:@"offsetTop"] intValue];
+	} else
+#endif
+	// old JavaScript method
+	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", identifier]] intValue];
+}
+
+- (int) locationOfElementByIndex:(unsigned int) index {
+#ifdef WebKitVersion146
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
+		if( index < [[body children] length] ) return [[[[body children] item:index] valueForKey:@"offsetTop"] intValue];
+		else return 0;
+	} else
+#endif
+	// old JavaScript method
+	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", index]] intValue];
+}
+
+- (int) visibleMessageCount {
+#ifdef WebKitVersion146
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+		return [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
+	} else
+#endif
+	// old JavaScript method
+	return [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
 }
 @end
 

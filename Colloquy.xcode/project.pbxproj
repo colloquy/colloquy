@@ -11,7 +11,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				OTHER_CFLAGS = "\U0001-DDEBUG";
+				OTHER_CFLAGS = "\U0001-DDEBUG -falign-loops=16";
 				PREBINDING = NO;
 				UNSTRIPPED_PRODUCT = YES;
 				ZERO_LINK = YES;
@@ -455,6 +455,142 @@
 			isa = PBXTargetDependency;
 			target = 1C51B4BB052DE14B00BB459B;
 			targetProxy = 1C09DFF6052DFF6600D748CF;
+		};
+		1C0A4C980799BDAF0093B702 = {
+			children = (
+				1C0A4C990799BDAF0093B702,
+			);
+			isa = PBXVariantGroup;
+			name = JVFind.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4C990799BDAF0093B702 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Languages/English.lproj/JVFind.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4C9A0799BDAF0093B702 = {
+			children = (
+				1C0A4C9B0799BDB00093B702,
+			);
+			isa = PBXVariantGroup;
+			name = JVTranscriptCriterion.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4C9B0799BDB00093B702 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Languages/English.lproj/JVTranscriptCriterion.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4C9C0799BDB00093B702 = {
+			fileRef = 1C0A4C980799BDAF0093B702;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C0A4C9D0799BDB00093B702 = {
+			fileRef = 1C0A4C9A0799BDAF0093B702;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C0A4CA50799BDD00093B702 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVTabbedChatWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4CA70799BDD00093B702 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVTranscriptCriterionController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4CA80799BDD00093B702 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVTranscriptCriterionController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4CAC0799BDD00093B702 = {
+			fileRef = 1C0A4CA80799BDD00093B702;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C0A4CB90799BE000093B702 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVTabbedChatWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4CBA0799BE000093B702 = {
+			fileRef = 1C0A4CB90799BE000093B702;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C0A4CC50799BE110093B702 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVTranscriptFindWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4CE40799BE660093B702 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVTranscriptFindWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4CE50799BE660093B702 = {
+			fileRef = 1C0A4CE40799BE660093B702;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C0A4CF40799BEA70093B702 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVViewCell.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4CF50799BEA70093B702 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVViewCell.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C0A4CF70799BEA70093B702 = {
+			fileRef = 1C0A4CF50799BEA70093B702;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C16362607021F240020D94D = {
 			isa = PBXFileReference;
@@ -1360,28 +1496,6 @@
 			settings = {
 			};
 		};
-		1C889DEA0677AC7F00D98F3C = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = JVTabbedChatWindowController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C889DEB0677AC7F00D98F3C = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = JVTabbedChatWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C889DED0677AC7F00D98F3C = {
-			fileRef = 1C889DEB0677AC7F00D98F3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C8BDCF1054345160035B84A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -2068,6 +2182,8 @@
 				1C46785106D77F0900071DC6,
 				1CF627CB07558F79005DFCFA,
 				1CD4C099078249C10003620F,
+				1C0A4C9C0799BDB00093B702,
+				1C0A4C9D0799BDB00093B702,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2535,12 +2651,15 @@
 				1C0730D00677765B008D8AD9,
 				1C0730D406777678008D8AD9,
 				1C0730E50677A63B008D8AD9,
-				1C889DED0677AC7F00D98F3C,
 				1C2391AA0677E6B7000E89A7,
 				1C96E93F06AADBBD0013B0A9,
 				1C6A112B06BC0C9E00A66340,
 				1C4671E606D7759100071DC6,
 				1CF803F1070C948000C9B54C,
+				1C0A4CAC0799BDD00093B702,
+				1C0A4CBA0799BE000093B702,
+				1C0A4CE50799BE660093B702,
+				1C0A4CF70799BEA70093B702,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4424,8 +4543,12 @@
 				1CE2BC53042F75FB00000102,
 				1CE2BC1E042F4AD300000102,
 				1CE2BC1D042F4AD300000102,
-				1C889DEB0677AC7F00D98F3C,
-				1C889DEA0677AC7F00D98F3C,
+				1C0A4CB90799BE000093B702,
+				1C0A4CA50799BDD00093B702,
+				1C0A4CE40799BE660093B702,
+				1C0A4CC50799BE110093B702,
+				1C0A4CA80799BDD00093B702,
+				1C0A4CA70799BDD00093B702,
 				F5C497750385713801000102,
 				F5C497740385713801000102,
 				1C6EA24205A738DD006A559F,
@@ -4592,6 +4715,8 @@
 				1CBB23D904F03CA7000001C8,
 				1C06077A064A5DE8002438AF,
 				1C060779064A5DE8002438AF,
+				1C0A4CF50799BEA70093B702,
+				1C0A4CF40799BEA70093B702,
 				1CC6FD63054B70BC0075807C,
 				1CC6FD62054B70BC0075807C,
 				1C6A112906BC0C9E00A66340,
@@ -4680,6 +4805,8 @@
 				1CD6C417051E0B3000A8FE10,
 				1CBECE3A0508D58F000001C8,
 				1CBECE380508D58F000001C8,
+				1C0A4C980799BDAF0093B702,
+				1C0A4C9A0799BDAF0093B702,
 				1C1AD009053487ED00F71D4E,
 				1CB4DCA9053627C00080D36F,
 				1C8BDD2005436A020035B84A,
@@ -4842,6 +4969,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
+				OTHER_CFLAGS = "-falign-loops=16";
 				PREBINDING = YES;
 				UNSTRIPPED_PRODUCT = YES;
 				ZERO_LINK = NO;

@@ -72,6 +72,10 @@
 					bodyNode.removeChild( bodyNode.children[0] );
 		}
 
+		function messageIsInScrollback( id ) {
+			return ( document.getElementById( id ).id.length ? 1 : 0 );
+		}
+
 		function locationOfMessage( id ) {
 			element = document.getElementById( id );
 			return element.offsetTop;

@@ -14,6 +14,7 @@
 	NSTextStorage *_attributedMessage;
 	NSDate *_date;
 	JVIgnoreMatchResult _ignoreStatus;
+	BOOL _senderIsLocalUser;
 	BOOL _action;
 	BOOL _highlighted;
 	BOOL _loaded;
@@ -25,6 +26,7 @@
 
 - (NSDate *) date;
 - (id) sender;
+- (BOOL) senderIsLocalUser;
 
 - (NSTextStorage *) body;
 - (NSString *) bodyAsPlainText;
