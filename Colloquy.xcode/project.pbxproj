@@ -1595,7 +1595,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find $BUILD_ROOT/$WRAPPER_NAME -name '.svn' -print0 | xargs -0 rm -rf\nfind $BUILD_ROOT/$WRAPPER_NAME -name '.DS_Store' -print0 | xargs -0 rm -rf\n";
+			shellScript = "find $BUILD_ROOT/$WRAPPER_NAME -name '.svn' -print0 | xargs -0 rm -rf\nfind $BUILD_ROOT/$WRAPPER_NAME -name 'Headers' -print0 | xargs -0 rm -rf\n";
 		};
 		1C9437080639F86700618CD9 = {
 			fileEncoding = 4;
@@ -2009,7 +2009,7 @@
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_ENABLE_PASCAL_STRINGS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
