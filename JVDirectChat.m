@@ -146,20 +146,20 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
 		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
 
-        // Set up log directories
-        NSString *logs = [[NSString stringWithFormat:@"~/Documents/%@ Transcripts", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath];
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
-        logs = [logs stringByAppendingPathComponent:[_connection server]];
-        if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
-        logs = [logs stringByAppendingPathComponent:_target];
-        if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
-        logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.colloquyTranscript", [[NSDate date] description]]];
-        // 'touch' the new logfile, otherwise fileHandleForUpdatingAtPath returns nil
-        [fileManager createFileAtPath:logs contents:[NSData data] attributes:nil];
-        _logFile = [[NSFileHandle fileHandleForUpdatingAtPath:logs] retain];
+		// Set up log directories
+		NSString *logs = [[NSString stringWithFormat:@"~/Documents/%@ Transcripts", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath];
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+		logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", _target, [_connection server]]];
+		if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+		logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.colloquyTranscript", [[NSDate date] description]]];
 
-        // Write the <log> element to the logfile
+		[fileManager createFileAtPath:logs contents:[NSData data] attributes:nil];
+		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:logs];
+
+		_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:logs] retain];
+
+		// Write the <log> element to the logfile
 		[self writeToLog:xmlDocGetRootElement( _xmlLog ) withDoc:_xmlLog initializing:YES continuation:NO];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
@@ -1330,7 +1330,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (void) writeToLog:(void *) root withDoc:(void *) doc initializing:(BOOL) init continuation:(BOOL) cont {
 	// Append a node to the logfile for this chat
 	xmlBufferPtr buf = xmlBufferCreate();
-	xmlNodeDump( buf, doc, root, 0, 0 );
+	xmlNodeDump( buf, doc, root, 0, (int) [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] );
 
 	// To keep the XML valid at all times, we need to preserve a </log> close tag at the end of
 	// the file at all times. So, we seek to the end of the file minus 6 characters.
@@ -1343,6 +1343,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	_previousLogOffset = [_logFile offsetInFile];
 	[_logFile writeData:[NSData dataWithBytesNoCopy:buf -> content length:buf -> use freeWhenDone:NO]];
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] )
+		[_logFile writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
 	if( ! init ) [_logFile writeData:[@"</log>" dataUsingEncoding:NSUTF8StringEncoding]];
 	xmlBufferFree( buf );
 
@@ -1352,7 +1354,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[_logFile seekToEndOfFile];
 		[_logFile seekToFileOffset:[_logFile offsetInFile] - 2];
 		_previousLogOffset = [_logFile offsetInFile];
-		[_logFile writeData:[@"></log>" dataUsingEncoding:NSUTF8StringEncoding]];
+		[_logFile writeData:[@">\n</log>" dataUsingEncoding:NSUTF8StringEncoding]];
 	}
 }
 
@@ -1364,13 +1366,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( ! firstName && lastName ) return lastName;
 	else if( firstName && ! lastName ) return firstName;
 	else if( firstName && lastName ) {
-		switch( [[ABAddressBook sharedAddressBook] defaultNameOrdering] ) {
-			default:
-			case kABFirstNameFirst:
-				return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-			case kABLastNameFirst:
-				return [NSString stringWithFormat:@"%@ %@", lastName, firstName];
-		}
+		return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
 	}
 
 	firstName = [_person valueForProperty:kABNicknameProperty];
