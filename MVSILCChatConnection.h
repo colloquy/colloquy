@@ -31,7 +31,7 @@
 
 #pragma mark -
 
-@interface MVSILCChatConnection (MVSILCChatConnectionPrivate)
+@interface MVChatConnection (MVSILCChatConnectionPrivate)
 + (const char *) _flattenedSILCStringForMessage:(NSAttributedString *) message;
 
 - (SilcClient) _silcClient;
@@ -71,7 +71,7 @@
 
 #pragma mark -
 
-@interface MVChatConnection (MVChatConnectionPrivate)
+@interface MVChatConnection (MVSILCChatConnectionPrivateSuper)
 - (void) _willConnect;
 - (void) _didConnect;
 - (void) _didNotConnect;

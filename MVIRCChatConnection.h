@@ -36,7 +36,7 @@ extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 
 #pragma mark -
 
-@interface MVChatConnection (MVChatConnectionPrivate)
+@interface MVChatConnection (MVIRCChatConnectionPrivateSuper)
 - (void) _willConnect;
 - (void) _didConnect;
 - (void) _didNotConnect;
