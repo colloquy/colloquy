@@ -1060,6 +1060,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
+	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
+	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	return list;
 }
 
