@@ -144,10 +144,13 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 			BlockStackElem *stack = [[[exception userInfo] objectForKey:@"blockStack"] lastObject];
 			NSString *locationError = @"";
 			if( stack ) locationError = [NSString stringWithFormat:@" The error occured near character %d inside the block.", [stack firstCharIndex]];
-			if( NSRunCriticalAlertPanel( NSLocalizedString( @"F-Script Plugin Error", "F-Script plugin error title" ), NSLocalizedString( @"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@", "F-Script plugin error message" ), nil, NSLocalizedString( @"Inspect", "inspect button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], blockName, locationError, [exception reason] ) == NSCancelButton ) {
+			int result = NSRunCriticalAlertPanel( NSLocalizedString( @"F-Script Plugin Error", "F-Script plugin error title" ), NSLocalizedString( @"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@", "F-Script plugin error message" ), nil, NSLocalizedString( @"Inspect", "inspect button title" ), NSLocalizedString( @"Edit...", "edit button title" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], blockName, locationError, [exception reason] );
+			if( result == NSCancelButton ) {
 				if( stack && [stack lastCharIndex] != -1 ) [(Block *)object showError:[stack errorStr] start:[stack firstCharIndex] end:[stack lastCharIndex]];
 				else if( stack ) [(Block *)object showError:[stack errorStr]];
 				else [(Block *)object inspect];
+			} else if( result != NSOKButton && result != NSCancelButton ) {
+				[[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
 			}
 		}
 	}
