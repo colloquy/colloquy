@@ -830,6 +830,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}
 
 	[send reset:nil];
+	[self textDidChange:nil];
 	[self scrollToBottom];
 }
 
@@ -1554,14 +1555,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) scrollToBottom {
-#ifdef WebKitVersion146
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
-		[body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
-	} else
-#endif
-	// old JavaScript method
-	[display stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
+	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
+	[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint( 0, [[scrollView documentView] bounds].size.height )]];
+	[scrollView reflectScrolledClipView:[scrollView contentView]];
 }
 
 - (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent {
