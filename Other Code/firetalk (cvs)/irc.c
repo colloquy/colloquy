@@ -758,7 +758,7 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 				if (irc_compare_nicks(c->nickname,irc_get_nickname(args[0])) == 0)
 					irc_internal_disconnect(c,FE_DISCONNECT);
 				else
-					firetalk_callback_chat_user_quit(c,irc_get_nickname(args[0]),args[2]);
+					firetalk_callback_chat_user_quit(c,irc_get_nickname(args[0]),irc_irc_to_html(args[2]));
 			}
 		}
 		if ((args[1] != NULL) && (args[2] != NULL)) {
@@ -767,12 +767,6 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 				firetalk_callback_im_buddyonline(c,irc_get_nickname(args[0]),1);
 				if (irc_compare_nicks(c->nickname,irc_get_nickname(args[0])) == 0) {
 					firetalk_callback_chat_joined(c,args[2]);
-/*					if (c->identified == 1) {
-						if (irc_send_printf(c,0,"PRIVMSG ChanServ :OP %s %s",args[2],c->nickname) != FE_SUCCESS) {
-							irc_internal_disconnect(c,FE_PACKET);
-							return FE_PACKET;
-						}
-					}*/
 				} else {
 					firetalk_callback_chat_user_joined(c,args[2],irc_get_nickname(args[0]),0);
 				}
@@ -868,10 +862,6 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 					if (strstr(args[3],"Password accepted") != NULL) {
 						/* we're recognized */
 						c->identified = 1;
-/*						if (irc_send_printf(c,0,"PRIVMSG ChanServ :OP ALL") != FE_SUCCESS) {
-							irc_internal_disconnect(c,FE_PACKET);
-							return FE_PACKET;
-						}*/
 					}
 				}
 				if (args[3][0] != '\0') {
