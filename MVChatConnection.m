@@ -36,6 +36,7 @@
 #import "config.h"
 #import "dcc.h"
 #import "dcc-file.h"
+#import "dcc-get.h"
 
 #pragma mark -
 
@@ -1250,10 +1251,11 @@ static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const 
 static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)dcc -> server];
 	if( ! self ) return;
-
-	MVDownloadFileTransfer *transfer = [[[MVDownloadFileTransfer alloc] initWithDCCFileRecord:dcc fromConnection:self] autorelease];
-	NSNotification *note = [NSNotification notificationWithName:MVDownloadFileTransferOfferNotification object:transfer];		
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	if( IS_DCC_GET( dcc ) ) {
+		MVDownloadFileTransfer *transfer = [[[MVDownloadFileTransfer alloc] initWithDCCFileRecord:dcc fromConnection:self] autorelease];
+		NSNotification *note = [NSNotification notificationWithName:MVDownloadFileTransferOfferNotification object:transfer];		
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	}
 }
 
 #pragma mark -
