@@ -103,6 +103,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
+- (BOOL) isEnabled {
+	return ! ( ! [[self connection] isConnected] && [[self connection] status] != MVChatConnectionConnectingStatus );
+}
+
 - (NSString *) title {
 	return [_connection server];
 }
@@ -112,6 +116,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSString *) information {
+	if( ! [[self connection] isConnected] && [[self connection] status] != MVChatConnectionConnectingStatus )
+		return [NSString stringWithFormat:NSLocalizedString( @"disconnected", "disconnected status info line in drawer" )];
 	return nil;
 }
 

@@ -97,6 +97,10 @@
 
 #pragma mark -
 
+- (BOOL) isEnabled {
+	return [_parent isEnabled];
+}
+
 - (NSString *) title {
 	if( [self isLocalUser] ) {
 		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )

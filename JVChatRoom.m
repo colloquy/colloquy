@@ -111,6 +111,10 @@
 
 #pragma mark -
 
+- (BOOL) isEnabled {
+	return ! _invalidateMembers;
+}
+
 - (NSString *) title {
 	NSMutableString *title = [NSMutableString stringWithString:_target];
 	[title deleteCharactersInRange:NSMakeRange( 0, 1 )];
@@ -124,7 +128,11 @@
 }
 
 - (NSString *) information {
-	return [NSString stringWithFormat:@"%d members", [_sortedMembers count]];
+	if( _kickedFromRoom )
+		return [NSString stringWithFormat:NSLocalizedString( @"kicked out", "chat room kicked status line in drawer" )];
+	if( [[self connection] isConnected] )
+		return [NSString stringWithFormat:@"%d members", [_sortedMembers count]];
+	return [NSString stringWithFormat:NSLocalizedString( @"disconnected", "disconnected status info line in drawer" )];
 }
 
 #pragma mark -
@@ -276,6 +284,10 @@
 		[_sortedMembers removeAllObjects];
 		_invalidateMembers = NO;
 	}
+
+	_cantSendMessages = NO;
+	_kickedFromRoom = NO;
+	[_windowController reloadListItem:self andChildren:YES];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -654,6 +666,7 @@
 
 	[_windowController reloadListItem:self andChildren:YES];
 
+	_invalidateMembers = YES;
 	_kickedFromRoom = YES;
 	_cantSendMessages = YES;
 
@@ -855,6 +868,13 @@
 	_invalidateMembers = YES;
 	[[self connection] joinChatRoom:_target];
 	[super _didConnect:notification];
+}
+
+- (void) _didDisconnect:(NSNotification *) notification {
+	_kickedFromRoom = NO;
+	_invalidateMembers = YES;
+	[super _didDisconnect:notification];
+	[_windowController reloadListItem:self andChildren:YES];
 }
 
 - (char *) _classificationForNickname:(NSString *) nickname {

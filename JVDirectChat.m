@@ -289,6 +289,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 #pragma mark -
 
+- (BOOL) isEnabled {
+	return [[self connection] isConnected];
+}
+
 - (NSString *) title {
 	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [_buddy preferredName];
@@ -434,7 +438,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (void) unavailable {
 	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"Message undeliverable", "title of the user offline message sheet" ), NSLocalizedString( @"This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.", "error description for messaging a user that went offline or invalid" ), @"OK", nil, nil ) withName:@"unavailable"];
-	_cantSendMessages = YES;
 }
 
 - (IBAction) addToFavorites:(id) sender {
@@ -1477,12 +1480,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) _didConnect:(NSNotification *) notification {
-	[self showAlert:nil withName:@"disconnected"]; // cancel the disconnected alert
+//	[self showAlert:nil withName:@"disconnected"]; // cancel the disconnected alert
 	_cantSendMessages = NO;
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
-	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You're now offline", "title of the you're offline message sheet" ), NSLocalizedString( @"You are no longer connected to the server where you were chatting. No messages can be sent at this time. Reconnecting might be in progress.", "chat window error description for loosing connection" ), @"OK", nil, nil ) withName:@"disconnected"];
+//	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You're now offline", "title of the you're offline message sheet" ), NSLocalizedString( @"You are no longer connected to the server where you were chatting. No messages can be sent at this time. Reconnecting might be in progress.", "chat window error description for loosing connection" ), @"OK", nil, nil ) withName:@"disconnected"];
 	_cantSendMessages = YES;
 }
 
