@@ -893,43 +893,76 @@
 		return YES;
 	}
 
-	NSArray *tabArr = [[send string] componentsSeparatedByString:@" "];
-	NSMutableArray *found = [NSMutableArray array];
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
-	NSString *name = nil, *shortest = nil;
-	unsigned len = [(NSString *)[tabArr lastObject] length], count = 0;
-	if( ! len ) return YES;
-	while( ( name = [[enumerator nextObject] nickname] ) ) {
-		if( len <= [name length] && [(NSString *)[tabArr lastObject] caseInsensitiveCompare:[name substringToIndex:len]] == NSOrderedSame ) {
-			[found addObject:name];
-			if( [name length] < [shortest length] || ! shortest ) shortest = [[name copy] autorelease];
-			count++;
-		}
+	//get partial completion & insertion point location
+	NSRange curPos = [textView selectedRange];
+	NSString *partialCompletion = nil;
+	NSRange wordStart = [[textView string] rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet] options:NSBackwardsSearch range:NSMakeRange(0, curPos.location)];
+	NSLog( @"wordStart = %@;", NSStringFromRange( wordStart ) );
+
+	//get the string before
+	if ( wordStart.location == NSNotFound ) {
+		partialCompletion = [[textView string] substringToIndex:curPos.location];
+	} else {
+		NSRange theRange = NSMakeRange(wordStart.location +1, curPos.location - NSMaxRange(wordStart));
+		partialCompletion = [[textView string] substringWithRange:theRange];
 	}
-	if( count == 1 ) {
-		[[send textStorage] replaceCharactersInRange:NSMakeRange([[send textStorage] length] - len, len) withString:shortest];
-		if( ! [[send string] rangeOfString:@" "].length ) [send replaceCharactersInRange:NSMakeRange([[send textStorage] length], 0) withString:@": "];
-		else [send replaceCharactersInRange:NSMakeRange([[send textStorage] length], 0) withString:@" "];
-	} else if( count > 1 ) {
-		BOOL match = YES;
-		unsigned i = 0;
-		NSString *cut = nil;
-		count = NSNotFound;
-		while( 1 ) {
-			if( count == NSNotFound ) count = [shortest length];
-			if( (signed) count <= 0 ) return YES;
-			cut = [shortest substringToIndex:count];
-			for( i = 0, match = YES; i < [found count]; i++ ) {
-				if( ! [[found objectAtIndex:i] hasPrefix:cut] ) {
-					match = NO;
-					break;
+	NSLog( @"partialCompletion = %@;", partialCompletion );
+	
+	//continue if necessary
+	if ( ![partialCompletion isEqualToString:@""] ) {
+		//compile list of possible completions
+		NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+		NSMutableArray *possibleNicks = [NSMutableArray array];
+		NSString *name = nil;
+		
+		while ( name = [[enumerator nextObject] nickname] ) {
+			if ( [name rangeOfString:partialCompletion options:NSCaseInsensitiveSearch|NSAnchoredSearch].location == 0 ) {
+				[possibleNicks addObject:name];
+			}
+		}
+		
+		//insert word or suggestion
+		if ( [possibleNicks count] == 1 && ( curPos.location == [[textView string] length] || [[textView string] characterAtIndex:curPos.location] == 0x0020 ) ) {
+			name = [possibleNicks objectAtIndex:0];
+			NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length]);
+			
+			[textView replaceCharactersInRange:replacementRange withString:name];
+			if ( replacementRange.location == 0 ) [textView insertText:@": "];
+			else [textView insertText:@" "];
+		} else if ( [possibleNicks count] > 1 ) {
+			//since several are available, we leave the insertion point where it was unless it is the last suggestion
+			
+			if ( curPos.location == [[textView string] length] || [[textView string] characterAtIndex:curPos.location] == 0x0020 ) {
+				name = [possibleNicks objectAtIndex:0];
+				NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length]);
+				[textView replaceCharactersInRange:replacementRange withString:name];
+				[textView setSelectedRange:curPos];
+			} else {
+				//we already completed, time to swap it out for something else
+				NSRange wordRange;
+				bool keepSearching = true;
+				int count = 0;
+				
+				while ( keepSearching && count <= [possibleNicks count]-1 ) {
+					wordRange = [[textView string] rangeOfString:[possibleNicks objectAtIndex:count]];
+					keepSearching = (wordRange.location == NSNotFound);
+					
+					if ( count + 1 != [possibleNicks count] ) {
+						count++;
+					}
+				}
+				
+				[textView replaceCharactersInRange:wordRange withString:[possibleNicks objectAtIndex:count]];
+				if (count + 1 != [possibleNicks count] ) {
+					[textView setSelectedRange:curPos];
+				} else {
+					if ( wprdRange.location == 0 ) [textView insertText:@": "];
+					else [textView insertText:@" "];
 				}
 			}
-			count--;
-			if( match ) break;
 		}
-		[[send textStorage] replaceCharactersInRange:NSMakeRange([[send textStorage] length] - len, len) withString:cut];
 	}
+	
 	return YES;
 }
 
