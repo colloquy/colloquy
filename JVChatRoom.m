@@ -746,13 +746,18 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }	
 
 - (void) parting {
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	if (_inRoom) {
+		_inRoom = NO;
+		_cantSendMessages = YES;
+		
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), nil];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	[invocation setSelector:@selector( partingFromRoom: )];
-	[invocation setArgument:&self atIndex:2];
+		[invocation setSelector:@selector( partingFromRoom: )];
+		[invocation setArgument:&self atIndex:2];
 
-	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	}
 }
 
 - (void) joinChat:(id) sender {
@@ -760,7 +765,10 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (void) partChat:(id) sender {
-	if( _inRoom ) [[self connection] partChatRoom:_target];
+	if( _inRoom ) {
+		[self parting];
+		[[self connection] partChatRoom:_target];
+	}
 }
 
 #pragma mark -
