@@ -122,6 +122,30 @@
 //0A2
 //0A3
 //0A4
+		0A2614C10740C241003BF2D9 = {
+			children = (
+				0A2614C20740C241003BF2D9,
+			);
+			isa = PBXGroup;
+			name = WebSearch;
+			path = "Plug-Ins/WebSearch";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0A2614C20740C241003BF2D9 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.scpt;
+			path = WebSearch.scpt;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0A2614C40740C24D003BF2D9 = {
+			fileRef = 0A2614C20740C241003BF2D9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		0A3187FA067ECEB600271E42 = {
 			children = (
 				0A3187FB067ECEB600271E42,
@@ -2877,6 +2901,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				CB9B52CA06351B060055AB73,
+				0A2614C40740C24D003BF2D9,
 				1C8CE1ED05A921AB0020D841,
 				1C51B8F2052DFAAA00BB459B,
 			);
@@ -3270,6 +3295,7 @@
 				1CC478480427BB5500000102,
 				1CA56CCD042A713E00000102,
 				CB9B52AB06351A130055AB73,
+				0A2614C10740C241003BF2D9,
 			);
 			isa = PBXGroup;
 			name = "Plug–Ins";
