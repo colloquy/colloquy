@@ -176,15 +176,8 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 
 			skipTag = YES;
 		} else */ if( ! strcmp( node -> name, "i" ) ) {
-			NSFont *oldFont = [newAttributes objectForKey:NSFontAttributeName];
-			NSFont *font = [[NSFontManager sharedFontManager] convertFont:oldFont toHaveTrait:NSItalicFontMask];
-			if( ! [font isEqual:oldFont] ) {
-				[newAttributes setObject:font forKey:NSFontAttributeName];
-				skipTag = YES;
-			} else {
-				[newAttributes setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue] forKey:NSObliquenessAttributeName];
-				skipTag = YES;
-			}
+			setItalicOrObliqueFont( newAttributes );
+			skipTag = YES;
 		}
 		break;
 	case 'u':
