@@ -6,9 +6,7 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-@class ESFloater;
-@class AICustomTabsView;
-@class AICustomTabCell;
+@class ESFloater, AICustomTabsView, AICustomTabCell;
 
 @interface AICustomTabDragWindow : NSObject {
 	NSImage				*floaterTabImage;
