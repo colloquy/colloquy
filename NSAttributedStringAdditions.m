@@ -25,7 +25,6 @@
 - (NSData *) HTMLWithOptions:(NSDictionary *) options usingEncoding:(NSStringEncoding) encoding allowLossyConversion:(BOOL) loss {
 	NSRange limitRange, effectiveRange;
 	NSMutableString *out = nil;
-	NSMutableData *ret = nil;
 	NSColor *backColor = nil, *foreColor = nil;
 	NSFont *baseFont = [NSFont userFontOfSize:12.];
 
@@ -118,10 +117,7 @@
 	if( [[options objectForKey:@"NSHTMLFullDocument"] boolValue] )
 		[out appendString: @"</body></html>"];
 
-	ret = [[[out dataUsingEncoding:encoding allowLossyConversion:loss] mutableCopy] autorelease];
-	[ret appendBytes:"\0" length:1];
-
-	return ret;
+	return [out dataUsingEncoding:encoding allowLossyConversion:loss];
 }
 @end
 
