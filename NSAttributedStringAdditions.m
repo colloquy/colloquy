@@ -442,7 +442,7 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 	NSRange limitRange, effectiveRange;
 	NSMutableData *ret = [NSMutableData data];
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
-	if( ! encoding ) encoding = NSUTF8StringEncoding;
+	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	limitRange = NSMakeRange( 0, [self length] );
 	while( limitRange.length > 0 ) {
