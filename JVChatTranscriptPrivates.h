@@ -8,7 +8,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 + (void) _freeXsltParamArray:(const char **) params;
 + (NSSet *) _chatStyleBundles;
 + (void) _scanForChatStyles;
-+ (NSString *) _nameForBundle:(NSBundle *) style;
 + (NSSet *) _emoticonBundles;
 + (void) _scanForEmoticons;
 
