@@ -221,7 +221,6 @@ void MVChatGetMessage( void *c, void *cs, const char * const who, const int auto
 
 	msgData = [NSData dataWithBytes:message length:strlen( message )];
 
-//	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"from", [NSNumber numberWithBool:automessage], @"auto", msgData, @"message", nil]];
 }
 
@@ -234,7 +233,6 @@ void MVChatGetAction( void *c, void *cs, const char * const who, const int autom
 
 	msgData = [NSData dataWithBytes:message length:strlen( message )];
 
-//	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"from", [NSNumber numberWithBool:automessage], @"auto", [NSNumber numberWithBool:YES], @"action", msgData, @"message", nil]];
 }
 
@@ -244,7 +242,6 @@ void MVChatBuddyOnline( void *c, void *cs, const char * const who ) {
 	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
-	NSLog( @"buddy online: %s", who );
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", nil]];
 }
 
@@ -252,7 +249,6 @@ void MVChatBuddyOffline( void *c, void *cs, const char * const who ) {
 	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
-	NSLog( @"buddy offline: %s", who );
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", nil]];
 }
 
@@ -260,7 +256,6 @@ void MVChatBuddyAway( void *c, void *cs, const char * const who ) {
 	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
-	NSLog( @"buddy away: %s", who );
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsAwayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", nil]];
 }
 
@@ -268,7 +263,6 @@ void MVChatBuddyUnaway( void *c, void *cs, const char * const who ) {
 	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
-	NSLog( @"buddy unaway: %s", who );
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsUnawayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", nil]];
 }
 
@@ -276,15 +270,7 @@ void MVChatBuddyGotIdle( void *c, void *cs, const char * const who, const long i
 	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
-//	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:idletime] forKey:@"idle"] forConnection:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsIdleNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", [NSNumber numberWithLong:idletime], @"idle", nil]];
-	NSLog( @"buddy idle: %s, %d minute(s)", who, idletime );
-}
-
-void MVChatListBuddy( void *c, void *cs, const char * const nickname, const int online, const int away ) {
-	NSCParameterAssert( c != NULL );
-	NSCParameterAssert( nickname != NULL );
-	NSLog(@"listbuddy: %s online: %d, away: %d", nickname, online, away );
 }
 
 #pragma mark -
@@ -334,8 +320,6 @@ void MVChatGetRoomMessage( void *c, void *cs, const char * const room, const cha
 	NSCParameterAssert( message != NULL );
 	{
 		NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
-
-//		[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:from] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", [NSNumber numberWithBool:automessage], @"auto", msgData, @"message", nil]];
 	}
 }
@@ -348,8 +332,6 @@ void MVChatGetRoomAction( void *c, void *cs, const char * const room, const char
 	NSCParameterAssert( message != NULL );
 	{
 		NSData *msgData = [NSData dataWithBytes:message length:strlen(message)];
-
-//		[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:from] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", [NSNumber numberWithBool:automessage], @"auto", [NSNumber numberWithBool:YES], @"action", msgData, @"message", nil]];
 	}
 }
@@ -787,8 +769,6 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 		if( action ) firetalk_im_send_action( _chatConnection, [user UTF8String], (char *) [encodedData bytes], 0 );
 		else firetalk_im_send_message( _chatConnection, [user UTF8String], (char *) [encodedData bytes], 0 );
-
-//		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	}
 }
 
@@ -799,8 +779,6 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 		if( action ) firetalk_chat_send_action( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes], 0 );
 		else firetalk_chat_send_message( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes], 0 );
-
-//		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	}
 }
 
@@ -884,7 +862,6 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 		[encodedData appendBytes:"\0" length:1];
 
 		firetalk_chat_set_topic( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes] );
-//		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	}
 }
 
@@ -1036,7 +1013,6 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	firetalk_register_callback( _chatConnection, FC_IM_BUDDYOFFLINE, (firetalk_callback) MVChatBuddyOffline );
 	firetalk_register_callback( _chatConnection, FC_IM_BUDDYAWAY, (firetalk_callback) MVChatBuddyAway );
 	firetalk_register_callback( _chatConnection, FC_IM_BUDDYUNAWAY, (firetalk_callback) MVChatBuddyUnaway );
-	firetalk_register_callback( _chatConnection, FC_IM_LISTBUDDY, (firetalk_callback) MVChatListBuddy );
 	firetalk_register_callback( _chatConnection, FC_IM_LISTROOM, (firetalk_callback) MVChatListRoom );
 	firetalk_register_callback( _chatConnection, FC_IM_GOTINFO, (firetalk_callback) MVChatGotInfo );
 	firetalk_register_callback( _chatConnection, FC_IM_IDLEINFO, (firetalk_callback) MVChatBuddyGotIdle );
