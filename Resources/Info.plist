@@ -98,7 +98,7 @@
 	<key>CFBundleVersion</key>
 	<string>2B101.1</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
-	<string>http://www.javelin.cc?colloquy</string>
+	<string>http://colloquy.info</string>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
 	<key>NSMainNibFile</key>
