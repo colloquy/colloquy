@@ -615,7 +615,7 @@
 
 	if( offset < [argsArray count] ) {
 		NSArray *typedRooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
-		if( [typedRooms containsObject:@"*"] ) rooms = nil; // We want all rooms.
+		if( [typedRooms containsObject:@"*"] ) rooms = [NSArray arrayWithObject:[[view connection] url]]; // We want all rooms on this same server.
 		else {
 			rooms = [NSMutableArray array];
 			NSEnumerator *rEnum = [typedRooms objectEnumerator];

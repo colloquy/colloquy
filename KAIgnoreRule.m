@@ -3,10 +3,12 @@
 //  Created by Karl Adam on Thu Apr 15 2004.
 
 #import <Cocoa/Cocoa.h>
+#import <AGRegex/AGRegex.h>
+#import <ChatCore/MVChatConnection.h>
+
 #import "KAIgnoreRule.h"
 #import "JVChatWindowController.h"
 #import "JVDirectChat.h"
-#import <AGRegex/AGRegex.h>
 
 @implementation KAIgnoreRule
 + (id) ruleForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex isPermanent:(BOOL) permanent {
@@ -58,7 +60,7 @@
 }
 
 - (JVIgnoreMatchResult) matchUser:(NSString *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
-	if( ! _inRooms || ( [view isKindOfClass:[JVDirectChat class]] && [_inRooms containsObject:[(JVDirectChat *)view targetURL]] ) ) {
+	if( [view isKindOfClass:[JVDirectChat class]] && ( [_inRooms containsObject:[(JVDirectChat *)view targetURL]] || [_inRooms containsObject:[[view connection] url]] ) ) {
 		BOOL userFound = NO, messageFound = NO;
 		BOOL userRequired = ( _userRegex || _ignoredUser ), messageRequired = ( _messageRegex || _ignoredMessage );
 
