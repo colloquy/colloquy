@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import "JVNotificationPreferences.h"
+#import <AGRegex/AGRegex.h>
 
 @implementation JVNotificationPreferences
 - (NSString *) preferencesNibName {
@@ -60,7 +61,20 @@
 }
 
 - (void) saveHighlightWords:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setObject:[[highlightWords stringValue] componentsSeparatedByString:@" "] forKey:@"MVChatHighlightNames"];
+	// We want to be able to let Regex's contain spaces, so lets split intelligently
+	NSMutableArray *components = [NSMutableArray array];
+	NSString *words = [highlightWords stringValue];
+	AGRegex *regex = [AGRegex regexWithPattern:@"(?:\\s|^)(/.*?/)(?:\\s|$)"];
+	NSArray *matches = [regex findAllInString:words];
+	NSEnumerator *e = [matches objectEnumerator];
+	AGRegexMatch *match;
+	while( match = [e nextObject] ) {
+		[components addObject:[match groupAtIndex:1]];
+	}
+	words = [regex replaceWithString:@"" inString:words];
+	[components addObjectsFromArray:[words componentsSeparatedByString:@" "]];
+	[components removeObject:@""];
+	[[NSUserDefaults standardUserDefaults] setObject:components forKey:@"MVChatHighlightNames"];
 }
 
 - (void) buildEventsMenu {

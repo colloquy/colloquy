@@ -1209,7 +1209,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		while( ( name = [enumerator nextObject] ) ) {
 			if( ! [name length] ) continue;
 
-			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] ) {
+			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] && [name length] > 1 ) {
 				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
 			} else {
 				NSString *pattern = [NSString stringWithFormat:@"(?:\\W|^)(%@)(?:\\W|$)", [name stringByEscapingCharactersInSet:escapeSet]];
