@@ -44,6 +44,10 @@
 - (id) initWithObject:(id <JVInspection>) object lockedOn:(BOOL) locked;
 
 - (IBAction) show:(id) sender;
+- (BOOL) locked;
 
 - (void) inspectObject:(id <JVInspection>) object;
+
+- (id <JVInspection>) inspectedObject;
+- (id <JVInspector>) inspector;
 @end

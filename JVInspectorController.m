@@ -70,6 +70,10 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 	[[self window] orderFront:nil];
 }
 
+- (BOOL) locked {
+	return _locked;
+}
+
 #pragma mark -
 
 - (void) inspectObject:(id <JVInspection>) object {
@@ -91,6 +95,16 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 
 		[self _loadInspector];
 	}
+}
+
+#pragma mark -
+
+- (id <JVInspection>) inspectedObject {
+	return [[_object retain] autorelease];
+}
+
+- (id <JVInspector>) inspector {
+	return [[_inspector retain] autorelease];
 }
 
 #pragma mark -
