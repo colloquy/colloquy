@@ -163,7 +163,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (IBAction) getInfo:(id) sender {
 	id item = [self selectedListItem];
 	if( [item conformsToProtocol:@protocol( JVInspection )] )
-		[[JVInspectorController inspectorOfObject:item] show:sender];
+		if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSAlternateKeyMask )
+			[JVInspectorController showInspector:sender];
+		else [[JVInspectorController inspectorOfObject:item] show:sender];
 }
 
 #pragma mark -
