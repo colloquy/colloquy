@@ -8,12 +8,38 @@
 	<string>cc.javelin.colloquy.emoticons.standard</string>
 	<key>JVChatEncoding</key>
 	<integer>5</integer>
+	<key>JVDisplayMinimumFontSize</key>
+	<integer>8</integer>
+	<key>JVDefaultFixedWidthFont</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAZOU0ZvbnQVhIQITlNPYmplY3QAhYQBaRiEBVsy
+	NGNdBgAAAA4AAAD+/wBNAG8AbgBhAGMAbwAAhAFmDYQBYwCYAZgAmACG
+	</data>
+	<key>JVDefaultSansSerifFont</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAZOU0ZvbnQVhIQITlNPYmplY3QAhYQBaRiEBVsy
+	NGNdBgAAABAAAAD+/wBWAGUAcgBkAGEAbgBhhAFmDIQBYwCYAZgAmACG
+	</data>
+	<key>JVDefaultSerifFont</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAZOU0ZvbnQVhIQITlNPYmplY3QAhYQBaSCEBVsz
+	MmNdBgAAABgAAAD+/wBUAGkAbQBlAHMALQBSAG8AbQBhAG6EAWYMhAFjAJgBmACYAIY=
+	</data>
+	<key>JVDefaultStandardFont</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAZOU0ZvbnQVhIQITlNPYmplY3QAhYQBaSCEBVsz
+	MmNdBgAAABgAAAD+/wBUAGkAbQBlAHMALQBSAG8AbQBhAG6EAWYQhAFjAJgBmACYAIY=
+	</data>
 	<key>MVChatHighlightNames</key>
 	<array></array>
 	<key>MVChatBookmarks</key>
 	<array></array>
 	<key>JVEnableAutomaticSoftwareUpdateCheck</key>
 	<true/>
+	<key>JVChatSpellChecking</key>
+	<true/>
+	<key>JVChatMaximumHistory</key>
+	<integer>15</integer>
 	<key>MVChatSendOnReturn</key>
 	<true/>
 	<key>MVChatActionOnReturn</key>
@@ -24,12 +50,6 @@
 	<true/>
 	<key>MVChatBounceIconOnMessage</key>
 	<true/>
-	<key>MVChatSpellChecking</key>
-	<true/>
-	<key>MVChatIdleLimit</key>
-	<integer>5</integer>
-	<key>MVChatMaximumHistory</key>
-	<integer>15</integer>
 	<key>MVChatActionSounds</key>
 	<dict>
 		<key>MVChatAdditionalMessagesAction</key>
