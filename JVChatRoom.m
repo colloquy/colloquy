@@ -132,6 +132,17 @@
 
 #pragma mark -
 
+- (BOOL) acceptsDraggedFileOfType:(NSString *) type {
+	return NO;
+}
+
+- (void) handleDraggedFile:(NSString *) path {
+	NSAssert( YES, @"JVChatRoom does not implement handleDraggedFile:" );
+	return;
+}
+
+#pragma mark -
+
 - (void) setTarget:(NSString *) target {
 	NSAssert( YES, @"JVChatRoom does not implement setTarget:" );
 	return;
