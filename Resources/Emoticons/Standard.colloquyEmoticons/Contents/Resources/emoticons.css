@@ -3,7 +3,7 @@
 }
 
 .emoticon:after {
-	vertical-align: middle;
+	vertical-align: -40%;
 }
 
 .emoticon.smile:after {
