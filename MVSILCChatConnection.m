@@ -1182,24 +1182,31 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
-	NSParameterAssert( [identifier isKindOfClass:[NSData class]] );
+	NSParameterAssert( [identifier isKindOfClass:[NSData class]] || [identifier isKindOfClass:[NSString class]] );
+	
+	NSData *data;
+	
+	if ( [identifier isKindOfClass:[NSString class]] ) {
+		data = [[[NSData alloc] initWithBase64EncodedString:identifier] autorelease];
+	} else 
+		data = identifier;
 
-	if( [identifier isEqualToData:[[self localUser] uniqueIdentifier]] )
+	if( [data isEqualToData:[[self localUser] uniqueIdentifier]] )
 		return [self localUser];
 
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
-		user = [_knownUsers objectForKey:identifier];
+		user = [_knownUsers objectForKey:data];
 		if( user ) return [[user retain] autorelease];
 
-		SilcClientID *clientID = silc_id_str2id( [(NSData *)identifier bytes], [(NSData *)identifier length], SILC_ID_CLIENT );
+		SilcClientID *clientID = silc_id_str2id( [(NSData *)data bytes], [(NSData *)data length], SILC_ID_CLIENT );
 		if( clientID ) {
 			[[self _silcClientLock] lock];
 			SilcClientEntry client = silc_client_get_client_by_id( [self _silcClient], [self _silcConn], clientID );
 			[[self _silcClientLock] unlock];
 			if( client ) {
 				user = [[[MVSILCChatUser allocWithZone:[self zone]] initWithClientEntry:client andConnection:self] autorelease];
-				[_knownUsers setObject:user forKey:identifier];
+				[_knownUsers setObject:user forKey:data];
 			}
 		}
 	}
