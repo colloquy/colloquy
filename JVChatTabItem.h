@@ -4,5 +4,5 @@
 	id <JVChatViewController> _controller;
 }
 - (id) initWithChatViewController:(id <JVChatViewController>) controller;
-- (id) chatViewController;
+- (id <JVChatViewController>) chatViewController;
 @end

@@ -190,6 +190,12 @@
 	if( tabViewItem ) {
 		[self _refreshWindow];
 		[self _refreshList];
+
+		id controller = [(JVChatTabItem *)tabViewItem chatViewController];
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] && 
+			[controller respondsToSelector:@selector( numberOfChildren )] && [controller numberOfChildren] ) {
+			[viewsDrawer open:nil];
+		} else [viewsDrawer close:nil];
 	}
 }
 
@@ -283,7 +289,7 @@
 
 - (NSString *) customTabView:(AICustomTabsView *) view toolTipForTabViewItem:(NSTabViewItem *) tabViewItem {
 	if( [[(JVChatTabItem *)tabViewItem chatViewController] respondsToSelector:@selector( toolTip )] )
-		return [[(JVChatTabItem *)tabViewItem chatViewController] toolTip];
+		return [(NSObject *)[(JVChatTabItem *)tabViewItem chatViewController] toolTip];
 	return nil;
 }
 
@@ -300,8 +306,8 @@
 	id file = nil;
 
 	while( ( file = [enumerator nextObject] ) ) {
-		if( [[(JVChatTabItem *)tabViewItem chatViewController] acceptsDraggedFileOfType:[file pathExtension]] ) {
-			[[(JVChatTabItem *)tabViewItem chatViewController] handleDraggedFile:file];
+		if( [(NSObject *)[(JVChatTabItem *)tabViewItem chatViewController] acceptsDraggedFileOfType:[file pathExtension]] ) {
+			[(NSObject *)[(JVChatTabItem *)tabViewItem chatViewController] handleDraggedFile:file];
 			accepted = YES;
 		}
 	}
