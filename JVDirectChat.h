@@ -70,6 +70,4 @@
 @interface NSObject (MVChatPluginDirectChatSupport)
 - (void) processIncomingMessage:(JVMutableChatMessage *) message;
 - (void) processOutgoingMessage:(JVMutableChatMessage *) message;
-
-- (void) userNamed:(NSString *) nickname isNowKnownAs:(NSString *) newNickname inView:(id <JVChatViewController>) view;
 @end

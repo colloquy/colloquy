@@ -15,7 +15,6 @@
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>
 
-
 #import "JVChatController.h"
 #import "KAIgnoreRule.h"
 #import "JVTabbedChatWindowController.h"
@@ -242,6 +241,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidNotConnectNotification object:[self connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusChangedNotification object:[self connection]];
 
 		_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]] retain];
@@ -2057,8 +2057,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[self callScriptHandler:'poMX' withArguments:args forSelector:_cmd];
 }
 
-- (void) userNamed:(NSString *) nickname isNowKnownAs:(NSString *) newNickname inView:(id <JVChatViewController>) view {
+/*- (void) userNamed:(NSString *) nickname isNowKnownAs:(NSString *) newNickname inView:(id <JVChatViewController>) view {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:nickname, @"----", newNickname, @"uNc1", view, @"uNc2", nil];
 	[self callScriptHandler:'uNcX' withArguments:args forSelector:_cmd];
-}
+}*/
 @end
