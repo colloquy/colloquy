@@ -134,6 +134,9 @@
 			return YES;
 		}
 		return NO;
+	} else if( [command isEqualToString:@"raw"] ) {
+		[connection sendRawMessage:[arguments string]];
+		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
 		NSString *to = nil, *ctcpRequest = nil, *ctcpArgs = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
@@ -294,6 +297,9 @@
 
 			if( url ) [connectionsController handleURL:url andConnectIfPossible:YES];
 		} else [connectionsController newConnection:nil];
+		return YES;
+	} else if( [command isEqualToString:@"raw"] ) {
+		[connection sendRawMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
 		NSString *to = nil, *ctcpRequest = nil, *ctcpArgs = nil;
