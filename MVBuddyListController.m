@@ -583,13 +583,13 @@ static MVBuddyListController *sharedInstance = nil;
 	if( [[column identifier] isEqualToString:@"buddy"] ) {
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 		NSURL *url = [buddy activeNickname];
-		if( ! _showFullNames || ! [[buddy compositeName] length] ) {
+		if( url && ( ! _showFullNames || ! [[buddy compositeName] length] ) ) {
 			[cell setMainText:[url user]];
 			if( _showNicknameAndServer ) [cell setInformationText:[url host]];
 			else [cell setInformationText:nil];
 		} else {
 			[cell setMainText:[buddy compositeName]];
-			if( _showNicknameAndServer ) [cell setInformationText:[NSString stringWithFormat:@"%@ (%@)", [url user], [url host]]];
+			if( url && _showNicknameAndServer ) [cell setInformationText:[NSString stringWithFormat:@"%@ (%@)", [url user], [url host]]];
 			else [cell setInformationText:nil];
 		}
 
@@ -694,6 +694,7 @@ static MVBuddyListController *sharedInstance = nil;
 	BOOL enabled = ! ( [buddies selectedRow] == -1 );
 	[sendMessageButton setEnabled:enabled];
 	[infoButton setEnabled:enabled];
+	[[JVInspectorController sharedInspector] inspectObject:[self objectToInspect]];
 }
 
 - (NSDragOperation) tableView:(NSTableView *) tableView validateDrop:(id <NSDraggingInfo>) info proposedRow:(int) row proposedDropOperation:(NSTableViewDropOperation) operation {
@@ -808,13 +809,13 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[self _sortBuddies];
 
+	if( [oldOrder isEqualToArray:_buddyOrder] ) return;
+	
 	if( selectedObject ) {
 		[buddies deselectAll:nil];
 		[buddies selectRow:[_buddyOrder indexOfObjectIdenticalTo:selectedObject] byExtendingSelection:NO];
 		[buddies setNeedsDisplay:NO];
 	}
-
-	if( [oldOrder isEqualToArray:_buddyOrder] ) return;
 
 	_animating = YES;
 
