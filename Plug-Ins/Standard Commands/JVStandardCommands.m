@@ -214,7 +214,7 @@
 	}
 
 	if( ! [command caseInsensitiveCompare:@"msg"] || ! [command caseInsensitiveCompare:@"query"] ) {
-		return [self handleMessageCommand:command withMessage:arguments forConnection:connection alwaysShow:NO];
+		return [self handleMessageCommand:command withMessage:arguments forConnection:connection alwaysShow:( isChatRoom || isDirectChat )];
 	} else if( ! [command caseInsensitiveCompare:@"amsg"] || ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"broadcast"] || ! [command caseInsensitiveCompare:@"bract"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( ! [command caseInsensitiveCompare:@"away"] ) {
@@ -435,14 +435,14 @@
 	show = ( ! [msg length] ? YES : show );
 	show = ( always ? YES : show );
 
+	NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
+	JVDirectChat *chatView = nil;
+
+	if( ! [command caseInsensitiveCompare:@"msg"] && [chanSet characterIsMember:[to characterAtIndex:0]] )
+		chatView = [[_manager chatController] chatViewControllerForRoom:to withConnection:connection ifExists:YES];
+	else chatView = [[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:( ! show )];
+
 	if( [msg length] ) {
-		NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
-		JVDirectChat *chatView = nil;
-
-		if( [chanSet characterIsMember:[to characterAtIndex:0]] )
-			chatView = [[_manager chatController] chatViewControllerForRoom:to withConnection:connection ifExists:YES];
-		else chatView = [[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:( ! show )];
-
 		[chatView echoSentMessageToDisplay:msg asAction:NO];
 		[connection sendMessage:msg withEncoding:encoding toUser:to asAction:NO];
 	}
