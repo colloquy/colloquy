@@ -80,6 +80,7 @@ static NSSize		rightCapSize;
     tabViewItem = [inTabViewItem retain];
 	view = inView;
     allowsInactiveTabClosing = NO;
+	wasEnabled = YES;
     trackingClose = NO;
     hoveringClose = NO;
     selected = NO;
@@ -249,7 +250,7 @@ static NSSize		rightCapSize;
         }
 		
         //Draw the right cap
-        [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
+        [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver fraction:( [tabViewItem isEnabled] ? 1. : 0.5 )];
 		
     }else if(highlighted){
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.1] set];
@@ -291,7 +292,8 @@ static NSSize		rightCapSize;
 {
 	NSString	*label = [tabViewItem label];
 	
-	if(![label isEqualToString:[attributedLabel string]]){
+	if(![label isEqualToString:[attributedLabel string]] || wasEnabled != [tabViewItem isEnabled] ){
+		wasEnabled = [tabViewItem isEnabled];
 		//Paragraph Style (Turn off clipping by word)
 		NSMutableParagraphStyle *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 		[paragraphStyle setAlignment:NSCenterTextAlignment];
@@ -301,7 +303,7 @@ static NSSize		rightCapSize;
 		[attributedLabel release];
 		attributedLabel = [[NSAttributedString alloc] initWithString:[tabViewItem label] attributes:
 			[NSDictionary dictionaryWithObjectsAndKeys:
-				[NSColor controlTextColor], NSForegroundColorAttributeName,
+				( wasEnabled ? [NSColor controlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.5] ), NSForegroundColorAttributeName,
 				[NSFont systemFontOfSize:11], NSFontAttributeName,
 				paragraphStyle, NSParagraphStyleAttributeName,
 				nil]];
