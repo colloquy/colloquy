@@ -77,7 +77,6 @@
 				F5185C82018626F701EE70DE,
 				F50B0AA10170C89301A84BDE,
 				089C1671FE841209C02AAC07,
-				1CC478470427BB2C00000102,
 				1CB2C8CC052DDA360094AAA4,
 			);
 			isa = PBXGroup;
@@ -128,13 +127,11 @@
 				1058C7ADFEA557BF11CA2CBB,
 				1CA56CE0042A764600000102,
 				F51F91F103796FCD01A35792,
-				F540611301A22FC501A35792,
 				F5A89F1C019302BD01EE70DE,
 				F555208B01F0DE0601EE70DE,
 				1CCB3C3705228EFD000001C8,
 				1C3C112E050265AE000001C8,
 				F5FB4CE60393C15601000102,
-				F596A5F5038EBD5601000102,
 				1C7055C80519E56300A8FE6E,
 				1C7055CA0519E56C00A8FE6E,
 				1C7055C40519E54C00A8FE6E,
@@ -346,14 +343,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C20B09A0424A16600000102 = {
-			expectedFileType = wrapper.nib;
-			isa = PBXFileReference;
-			name = French;
-			path = Languages/French.lproj/MVChatWindow.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C20B09B0424A17700000102 = {
 			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
@@ -401,15 +390,6 @@
 			isa = PBXFileReference;
 			name = French;
 			path = Languages/French.lproj/Localizable.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C20B0A10424A22600000102 = {
-			expectedFileType = text.plist.strings;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = French;
-			path = Languages/French.lproj/MVPreferences.strings;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -2426,7 +2406,6 @@
 		};
 		1CC478470427BB2C00000102 = {
 			children = (
-				1C3B4DA40428C36400000102,
 				1CC478480427BB5500000102,
 				1CA56CCD042A713E00000102,
 			);
@@ -2629,6 +2608,52 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
+		1CFAFE9A053C1B3D00C702F9 = {
+			children = (
+				1CE72A96052C745400A8FE6E,
+				1CE72A95052C745400A8FE6E,
+				1CD6C414051DFA1D00A8FE10,
+				1CD6C413051DFA1C00A8FE10,
+				1CCB279E04FE93FE00A8FE6E,
+				1CCB279D04FE93FE00A8FE6E,
+				1CE2BC4A042F53AD00000102,
+				1CE2BC49042F53AD00000102,
+				1C088A0F04FCFEE700A8FE6E,
+				1C088A0E04FCFEE700A8FE6E,
+			);
+			isa = PBXGroup;
+			name = "Chat Panels & List Members";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CFAFED5053C1BA500C702F9 = {
+			children = (
+				1C1ACFB605344FCC00F71D4E,
+				1C1ACFB505344FCC00F71D4E,
+				1CB4DCAF0536282B0080D36F,
+				1CB4DCAE0536282B0080D36F,
+			);
+			isa = PBXGroup;
+			name = Inspectors;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CFAFED8053C1BC500C702F9 = {
+			children = (
+				1CE2BC1E042F4AD300000102,
+				1CE2BC1D042F4AD300000102,
+				F5C497750385713801000102,
+				F5C497740385713801000102,
+				F51A4F2B01C2DDD201EE70DE,
+				F51A4F2C01C2DDD201EE70DE,
+				F5FB4D200393F70E01000102,
+				F5FB4D1F0393F70E01000102,
+			);
+			isa = PBXGroup;
+			name = "Window Controllers";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 //1C0
 //1C1
 //1C2
@@ -2659,10 +2684,16 @@
 		};
 		F50B0A9F0170C89301A84BDE = {
 			children = (
+				1CFAFED8053C1BC500C702F9,
+				1CFAFED5053C1BA500C702F9,
+				1CFAFE9A053C1B3D00C702F9,
 				F5394BBA0378DD7601A35792,
-				F5FF568201BB430A01B5034F,
+				1CC478470427BB2C00000102,
+				F50B0AA20170CAD701A84BDE,
 				F5F9AF410170EE4A01A84BDE,
 				F5F9AF420170EE4A01A84BDE,
+				1CE2BC54042F75FB00000102,
+				1CE2BC53042F75FB00000102,
 				1C1ACE420533943900F71D4E,
 				1C1ACE410533943900F71D4E,
 				F555208701F0DC2B01EE70DE,
@@ -2678,21 +2709,14 @@
 		};
 		F50B0AA00170C89301A84BDE = {
 			children = (
-				F50B0AA20170CAD701A84BDE,
 				F5E2538503882A8501000102,
 				F5E2538403882A8501000102,
-				F5F9AF450170EF4C01A84BDE,
-				F5F9AF460170EF4C01A84BDE,
-				F588A8FC019256D101EE70DE,
-				F588A8FD019256D101EE70DE,
 				F5F9AF5801711CD401A84BDE,
 				F5F9AF5901711CD401A84BDE,
 				F592CABF01824AE801EE70DE,
 				F592CAC001824AE801EE70DE,
 				F599994901890E4601EE70DE,
 				F599994A01890E4601EE70DE,
-				F53B3A7101ED57BC01EE70DE,
-				F53B3A7201ED57BC01EE70DE,
 				1CBB23DA04F03CA7000001C8,
 				1CBB23D904F03CA7000001C8,
 				F551EE490209FB3301EE70DE,
@@ -2719,20 +2743,18 @@
 				F5DD34730382E5E501000102,
 				1C5959010507803F000001C8,
 				F52BA284037C13C201A35792,
-				F5675B8601DB767601EE70DE,
-				F5BC17DD019655DC01A35792,
-				F5394C070378E44D01A35792,
 				1C51B89D052DF91E00BB459B,
 				1C51B48A052DE0CB00BB459B,
 				1C51B4CC052DE14B00BB459B,
 				1C51B504052DE2B800BB459B,
+				F5394C070378E44D01A35792,
 				F5394C090378E44D01A35792,
 				F5394C0B0378E44D01A35792,
-				F5394C0D0378E44D01A35792,
-				F5FF568301BC76BE01B5034F,
+				F5BC17DD019655DC01A35792,
 				1CBECDCF0508C8AB000001C8,
 				1C3C116005029DE1000001C8,
 				1C746A95050CF86B000001C8,
+				F5675B8601DB767601EE70DE,
 				1C3C116205029E03000001C8,
 				1C258E55050B9656000001C8,
 				F520458E01B1D37701EBB4B5,
@@ -2761,11 +2783,9 @@
 				F5394BEB0378E23701A35792,
 				1CC7CAAE03C48E8B001C0D62,
 				1CC7CAB003C48E8B001C0D62,
-				F5394BED0378E23701A35792,
 				F5C4977B0385785401000102,
 				F5394BEF0378E23701A35792,
 				F5394BF10378E23701A35792,
-				F5394BFD0378E37901A35792,
 				1CBECE390508D58F000001C8,
 				1CE72A99052C79E700A8FE6E,
 				1CD6C417051E0B3000A8FE10,
@@ -3006,22 +3026,6 @@
 			isa = PBXBuildStyle;
 			name = Deployment;
 		};
-		F52BDCC401A835AF01A84BDE = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVPreferencesIconView.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52BDCC501A835AF01A84BDE = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVPreferencesIconView.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F52BDCC801A8472101A84BDE = {
 			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
@@ -3072,40 +3076,15 @@
 		};
 		F5394BBA0378DD7601A35792 = {
 			children = (
-				1CE2BC54042F75FB00000102,
-				1CE2BC53042F75FB00000102,
-				1CE2BC1E042F4AD300000102,
-				1CE2BC1D042F4AD300000102,
-				1CE72A96052C745400A8FE6E,
-				1CE72A95052C745400A8FE6E,
-				1CD6C414051DFA1D00A8FE10,
-				1CD6C413051DFA1C00A8FE10,
-				1CCB279E04FE93FE00A8FE6E,
-				1CCB279D04FE93FE00A8FE6E,
-				1CE2BC4A042F53AD00000102,
-				1CE2BC49042F53AD00000102,
-				1CB4DCAF0536282B0080D36F,
-				1CB4DCAE0536282B0080D36F,
-				1C088A0F04FCFEE700A8FE6E,
-				1C088A0E04FCFEE700A8FE6E,
-				F5FB4D200393F70E01000102,
-				F5FB4D1F0393F70E01000102,
-				F5C497750385713801000102,
-				F5C497740385713801000102,
-				1C1ACFB605344FCC00F71D4E,
-				1C1ACFB505344FCC00F71D4E,
-				F51A4F2B01C2DDD201EE70DE,
-				F51A4F2C01C2DDD201EE70DE,
-				F5F5A55A0188928D01EE70DE,
-				F5F5A55B0188928D01EE70DE,
+				F52BA273037C13C201A35792,
 				F52D043001873FC401EE70DE,
 				F52D043101873FC401EE70DE,
+				1C3B4DA40428C36400000102,
 				1C2EF7EC0427A40B00000102,
 				1C2EF7EB0427A40B00000102,
-				F52BA273037C13C201A35792,
 			);
 			isa = PBXGroup;
-			name = "Chat Related";
+			name = "Chat Core";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3125,25 +3104,6 @@
 			isa = PBXFileReference;
 			name = English;
 			path = Languages/English.lproj/Colloquy.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5394BED0378E23701A35792 = {
-			children = (
-				F5394BEE0378E23701A35792,
-				1C20B09A0424A16600000102,
-			);
-			isa = PBXVariantGroup;
-			name = MVChatWindow.nib;
-			path = "";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		F5394BEE0378E23701A35792 = {
-			expectedFileType = wrapper.nib;
-			isa = PBXFileReference;
-			name = English;
-			path = Languages/English.lproj/MVChatWindow.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3184,14 +3144,6 @@
 			path = Languages/English.lproj/MVSoftwareUpdate.nib;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		F5394BFD0378E37901A35792 = {
-			expectedFileType = wrapper.nib;
-			isa = PBXFileReference;
-			name = MVPreferences.nib;
-			path = "Preference Panes/MVPreferences.nib";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
 		};
 		F5394C070378E44D01A35792 = {
 			children = (
@@ -3252,59 +3204,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5394C0D0378E44D01A35792 = {
-			children = (
-				F5394C0E0378E44D01A35792,
-				1C20B0A10424A22600000102,
-			);
-			isa = PBXVariantGroup;
-			name = MVPreferences.strings;
-			path = "";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		F5394C0E0378E44D01A35792 = {
-			expectedFileType = text.plist.strings;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = English;
-			path = Languages/English.lproj/MVPreferences.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5394C270378E61701A35792 = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVPreferencesController.m;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		F53B3A7101ED57BC01EE70DE = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVImageTextCell.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F53B3A7201ED57BC01EE70DE = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVImageTextCell.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F540611301A22FC501A35792 = {
-			expectedFileType = wrapper.framework;
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			name = PreferencePanes.framework;
-			path = /System/Library/Frameworks/PreferencePanes.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
 		F544999D018E46A501EE70DE = {
 			children = (
 				F5BEC20D01F1EF1901EE70DE,
@@ -3345,14 +3244,6 @@
 			isa = PBXFileReference;
 			name = op.tif;
 			path = Resources/op.tif;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F54DBE1401A4B44E01A35792 = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVPreferencesController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3502,22 +3393,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F588A8FC019256D101EE70DE = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVShapePanel.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F588A8FD019256D101EE70DE = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVShapePanel.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F590EA180190A42101EE70DE = {
 			expectedFileType = image.tiff;
 			isa = PBXFileReference;
@@ -3573,15 +3448,6 @@
 			path = NSToolbarAdditions.h;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		F596A5F5038EBD5601000102 = {
-			expectedFileType = wrapper.framework;
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			name = HTMLDisplay.framework;
-			path = /System/Library/PrivateFrameworks/HTMLDisplay.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
 		};
 		F599994901890E4601EE70DE = {
 			expectedFileType = sourcecode.c.objc;
@@ -3991,22 +3857,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5F5A55A0188928D01EE70DE = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVChatWindowController.m;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		F5F5A55B0188928D01EE70DE = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVChatWindowController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F5F9AF410170EE4A01A84BDE = {
 			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
@@ -4020,22 +3870,6 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			path = MVApplicationController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5F9AF450170EF4C01A84BDE = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVBorderlessPanel.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5F9AF460170EF4C01A84BDE = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVBorderlessPanel.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4141,46 +3975,6 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			path = MVBuddyListController.m;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		F5FF567701BAA6C101B5034F = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVPreferencesGroupedIconView.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5FF567801BAA6C101B5034F = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = MVPreferencesGroupedIconView.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5FF568201BB430A01B5034F = {
-			children = (
-				F5394C270378E61701A35792,
-				F54DBE1401A4B44E01A35792,
-				F52BDCC401A835AF01A84BDE,
-				F52BDCC501A835AF01A84BDE,
-				F5FF567701BAA6C101B5034F,
-				F5FF567801BAA6C101B5034F,
-			);
-			isa = PBXGroup;
-			name = "Preferences Related";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5FF568301BC76BE01B5034F = {
-			expectedFileType = text.plist;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = MVPreferencePaneDefaults.plist;
-			path = Resources/MVPreferencePaneDefaults.plist;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
