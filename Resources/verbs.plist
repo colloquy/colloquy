@@ -383,6 +383,7 @@
     waves, 
     kicks, 
     kisses, 
+    pounces, 
     slaps, 
     stops, 
     shoots, 
@@ -570,8 +571,6 @@
     capitalized, 
     captured, 
     carried, 
-    out, 
-    cast, 
     cataloged, 
     centralized, 
     challenged, 
@@ -1168,6 +1167,7 @@
     pummeled, 
     pummelled, 
     confused, 
+    pounced, 
     "'s", 
     "'" 
 )
