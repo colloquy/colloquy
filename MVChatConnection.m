@@ -880,7 +880,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		glibMainLoop = g_main_new( TRUE );
 		irssi_gui = IRSSI_GUI_NONE;
 
-		char *args[] = { "Chat Core", "--home=/tmp/Colloquy/irssi" };
+		NSString *temp = NSTemporaryDirectory();
+		temp = [temp stringByAppendingPathComponent:@"Colloquy/irssi"];
+		temp = [@"--home=" stringByAppendingString:temp];
+		char *args[] = { "Chat Core", (char *)[temp cString] };
 		core_init_paths( sizeof(args) / sizeof(char*), args );
 		core_init();
 		irc_init();
