@@ -221,7 +221,7 @@
 			<key>Description</key>
 			<string>Called when are in the process of laveing a room. Messages can still be sent.</string>
 			<key>Name</key>
-			<string>parting from chat room</string>
+			<string>part from chat room</string>
 		</dict>
 		<key>memberJoinedRoom</key>
 		<dict>
