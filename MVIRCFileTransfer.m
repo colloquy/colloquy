@@ -172,7 +172,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 #pragma mark -
 
 - (id) initWithDCCFileRecord:(void *) record toUser:(MVChatUser *) user {
-	if( ( self = [super initWithUser:user] ) ) {
+	if( ( self = [self initWithUser:user] ) ) {
 		[self _setDCCFileRecord:record];
 	}
 
@@ -332,7 +332,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (id) initWithDCCFileRecord:(void *) record fromUser:(MVChatUser *) user {
-	if( ( self = [super initWithUser:user] ) ) {
+	if( ( self = [self initWithUser:user] ) ) {
 		[self _setDCCFileRecord:record];
 	}
 

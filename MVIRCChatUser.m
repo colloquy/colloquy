@@ -18,7 +18,7 @@
 }
 
 - (id) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection {
-	if( ( self = [super init] ) ) {
+	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
 		_nickname = [nickname copyWithZone:[self zone]];
 		_uniqueIdentifier = [[nickname lowercaseString] retain];

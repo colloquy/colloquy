@@ -4,7 +4,7 @@
 
 @implementation MVSILCChatRoom
 - (id) initWithName:(NSString *) name andConnection:(MVSILCChatConnection *) connection andUniqueIdentifier:(NSString *) identifier {
-	if( ( self = [super init] ) ) {
+	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
 		_name = [name copyWithZone:[self zone]];
 		_uniqueIdentifier = [identifier retain];

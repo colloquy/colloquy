@@ -63,7 +63,7 @@ finish:
 }
 
 - (id) initWithClientEntry:(SilcClientEntry) clientEntry andConnection:(MVSILCChatConnection *) connection {
-	if( ( self = [super init] ) ) {
+	if( ( self = [self init] ) ) {
 		_type = MVChatRemoteUserType;
 		_connection = connection; // prevent circular retain
 
