@@ -55,6 +55,12 @@ body {
 	font-weight: inherit;
 }
 
+.envelope > .member:after {
+	content: ":";
+	margin-right: 0.5ex;
+	white-space: nowrap;
+}
+
 .action > .member:before {
 	content: "\2022";
 	margin-right: 0.3ex;
@@ -62,12 +68,6 @@ body {
 
 .action > .member:after {
 	content: "";
-}
-
-.envelope > .member:after {
-	content: ":";
-	margin-right: 0.5ex;
-	white-space: nowrap;
 }
 
 .timestamp {
