@@ -126,19 +126,4 @@
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 	[self autorelease];
 }
-
-#pragma mark -
-
-- (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
-	if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
-		[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Close Panel %@", "close current panel menu title" ), @""]];
-		return NO;
-	} else return YES;
-}
-
-#pragma mark -
-
-- (IBAction) closeCurrentPanel:(id) sender {
-	return;
-}
 @end
