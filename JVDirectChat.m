@@ -483,6 +483,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	NSParameterAssert( name != nil );
 	NSParameterAssert( [name length] );
 
+	if( ! _nibLoaded ) [self view];
+
 	doc = xmlNewDoc( "1.0" );
 	root = xmlNewNode( NULL, "event" );
 	xmlSetProp( root, "name", [name UTF8String] );
@@ -551,6 +553,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
+
+	if( ! _nibLoaded ) [self view];
 
 	messageString = [[[NSMutableString alloc] initWithData:message encoding:_encoding] autorelease];
 	if( ! messageString ) {
@@ -640,6 +644,18 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	[_windowController reloadListItem:self andChildren:NO];
 }
 
+- (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action {
+	char *msg = NULL;
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"]], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"]], @"NSHTMLIgnoreFontTraits", nil];
+	NSMutableData *msgData = [[[message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES] mutableCopy] autorelease];
+	[msgData appendBytes:"\0" length:1];
+
+	msg = irc_html_to_irc( (const char * const) [msgData bytes] );
+	msg = irc_irc_to_html( msg );
+
+	[self addMessageToDisplay:[[[NSData dataWithBytes:msg length:strlen( msg )] retain] autorelease] fromUser:[[self connection] nickname] asAction:action];
+}
+
 #pragma mark -
 
 - (IBAction) send:(id) sender {
@@ -693,10 +709,6 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 //					return;
 				}
 			} else {
-				char *msg = NULL;
-				NSMutableData *msgData = nil;
-				NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"]], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"]], @"NSHTMLIgnoreFontTraits", nil];
-
 /*				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
 					extern NSArray *chatActionVerbs;
 					NSString *tempString = [[subMsg string] stringByAppendingString:@" "];
@@ -710,14 +722,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 				}*/
 
 				subMsg = [self sendAttributedMessage:subMsg asAction:action];
-
-				msgData = [[[subMsg HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES] mutableCopy] autorelease];
-				[msgData appendBytes:"\0" length:1];
-
-				msg = irc_html_to_irc( (const char * const) [msgData bytes] );
-				msg = irc_irc_to_html( msg );
-
-				[self addMessageToDisplay:[[[NSData dataWithBytes:msg length:strlen( msg )] retain] autorelease] fromUser:[[self connection] nickname] asAction:action];
+				[self echoSentMessageToDisplay:subMsg asAction:action];
 			}
 		}
 		if( range.length ) range.location++;
@@ -923,7 +928,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 @implementation JVDirectChat (JVDirectChatPrivate)
 - (NSMenu *) _encodingMenu {
-	if( ! encodingView ) [self view];
+	if( ! _nibLoaded ) [self view];
 	return [[[encodingView menu] retain] autorelease];
 }
 

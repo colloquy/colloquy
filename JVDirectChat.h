@@ -53,6 +53,7 @@
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
+- (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action;
 
 - (IBAction) send:(id) sender;
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments;
