@@ -4,13 +4,8 @@
 <dict>
 	<key>Commands</key>
 	<dict>
-		<key>buildContextualMenu</key>
+		<key>BuildContextualMenuForItem</key>
 		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, chat connection, etc.</string>
-			</dict>
 			<key>Arguments</key>
 			<dict>
 				<key>view</key>
@@ -22,17 +17,41 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called for every object that the user can access a contextual/action menu. This handler is called when the selection changes in a table or right before the menu is shown, allowing you to provide a list of titles to show. The title "-" will insert a menu separator. Sub-menus can be added by inserting into your list a record looking like: {title:"Parent Item", submenu:{"Item 1", "Item 2"}}. The depth of the sub-menu is virtually unlimited. When the user selects on of the titles you provided the "handle clicked contextual menu item" handler is called with the same title and object passed as arguments.</string>
+			<string>Called for every object that the user can access a contextual/action menu. This handler is called when the selection changes in a table or right before the menu is shown, allowing you to provide a list of titles to show. The title "-" will insert a menu separator. Sub-menus can be added by inserting into your list a record looking like: {title:"Parent Item", submenu:{"Item 1", "Item 2"}}. The depth of the sub-menu is virtually unlimited. When the user selects on of the titles you provided the "handle clicked contextual menu item"</string>
 			<key>Name</key>
 			<string>build contextual menu for item</string>
-		</dict>
-		<key>performContextualMenuItemAction</key>
-		<dict>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>Menu item title you returned from the "build contextual menu for item" handler.</string>
+				<string>Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, chat connection, etc.</string>
 			</dict>
+		</dict>
+		<key>Connected</key>
+		<dict>
+			<key>Description</key>
+			<string>Called when we have just finished connecting to a chat server.</string>
+			<key>Name</key>
+			<string>connected</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat conenction.</string>
+			</dict>
+		</dict>
+		<key>Disconnecting</key>
+		<dict>
+			<key>Description</key>
+			<string>Called when we are in the process of disconnecting from a chat server. Commands and messages can still be sent to the server.</string>
+			<key>Name</key>
+			<string>disconnecting</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat conenction.</string>
+			</dict>
+		</dict>
+		<key>HandleClickedContextualMenuItem</key>
+		<dict>
 			<key>Arguments</key>
 			<dict>
 				<key>object</key>
@@ -51,17 +70,186 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when the user clicks on one of the supplied menu item titles you returned from the "build contextual menu for item" handler.</string>
+			<string>Called when the user clicks on one of the supplied menu item titles you returned from the "build contextual menu for item"</string>
 			<key>Name</key>
 			<string>handle clicked contextual menu item</string>
-		</dict>
-		<key>performNotification</key>
-		<dict>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>Identifier of the notification to perform.</string>
+				<string>Menu item title you returned from the "build contextual menu for item"</string>
 			</dict>
+		</dict>
+		<key>HandleClickedLink</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>view</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room, direct chat or chat transcript this link was clicked in.</string>
+					<key>Name</key>
+					<string>in</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a (currently unhandled) link is clicked in a conversation. Return true to prevent Colloquy and other plugins from handling this clicked link.</string>
+			<key>Name</key>
+			<string>handle clicked link</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The URL of the clicked link.</string>
+			</dict>
+		</dict>
+		<key>Idle</key>
+		<dict>
+			<key>Description</key>
+			<string>Automatically starts firing as soon as the script initializes, it will continue to fire periodically until the user quits the application. The default interval is 5 seconds, return a new interval to change the wait period for the next call.</string>
+			<key>Name</key>
+			<string>idle</string>
+		</dict>
+		<key>JoinedChatRoom</key>
+		<dict>
+			<key>Description</key>
+			<string>Called when we join a room.</string>
+			<key>Name</key>
+			<string>joined chat room</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat room.</string>
+			</dict>
+		</dict>
+		<key>KickedFromRoom</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>by</key>
+				<dict>
+					<key>Description</key>
+					<string>The member who kicked us out.</string>
+					<key>Name</key>
+					<string>by</string>
+				</dict>
+				<key>reason</key>
+				<dict>
+					<key>Description</key>
+					<string>The reason given for kicking us out.</string>
+					<key>Name</key>
+					<string>for</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when we are kicked out of a room by another member.</string>
+			<key>Name</key>
+			<string>kicked from room</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat room.</string>
+			</dict>
+		</dict>
+		<key>MemberJoined</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room.</string>
+					<key>Name</key>
+					<string>in</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a member joins a room we are also a member of.</string>
+			<key>Name</key>
+			<string>member joined</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The member.</string>
+			</dict>
+		</dict>
+		<key>MemberKicked</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>by</key>
+				<dict>
+					<key>Description</key>
+					<string>The member who kicked the other member out.</string>
+					<key>Name</key>
+					<string>by</string>
+				</dict>
+				<key>reason</key>
+				<dict>
+					<key>Description</key>
+					<string>The reason the member was kicked.</string>
+					<key>Name</key>
+					<string>for</string>
+				</dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room.</string>
+					<key>Name</key>
+					<string>from</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a member is kicked out of a room we are also a member of.</string>
+			<key>Name</key>
+			<string>member kicked</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The member.</string>
+			</dict>
+		</dict>
+		<key>MemberParted</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>reason</key>
+				<dict>
+					<key>Description</key>
+					<string>The reason the member left.</string>
+					<key>Name</key>
+					<string>for</string>
+				</dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room.</string>
+					<key>Name</key>
+					<string>from</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a member leaves a room we are also a member of.</string>
+			<key>Name</key>
+			<string>member parted</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The member.</string>
+			</dict>
+		</dict>
+		<key>PartingChatRoom</key>
+		<dict>
+			<key>Description</key>
+			<string>Called when we are in the process of laveing a room. Messages can still be sent.</string>
+			<key>Name</key>
+			<string>parting chat room</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat room.</string>
+			</dict>
+		</dict>
+		<key>PerformNotification</key>
+		<dict>
 			<key>Arguments</key>
 			<dict>
 				<key>context</key>
@@ -83,115 +271,14 @@
 			<string>Called for every notification event like Buddy Offline, Name Mentioned, Message Ignored, etc. If you want to trigger on select events you should use a more specific handler; this handler is intended for limited context, high-level notifications only.</string>
 			<key>Name</key>
 			<string>perform notification</string>
-		</dict>
-		<key>processUserCommand</key>
-		<dict>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>Command to process.</string>
+				<string>Identifier of the notification to perform.</string>
 			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>arguments</key>
-				<dict>
-					<key>Description</key>
-					<string>Any arguments given with the command.</string>
-					<key>Name</key>
-					<string>with</string>
-				</dict>
-				<key>view</key>
-				<dict>
-					<key>Description</key>
-					<string>The view the command was entered in.</string>
-					<key>Name</key>
-					<string>for</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Called when the user types an unhandled "/command". Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent "raw" to the server.</string>
-			<key>Name</key>
-			<string>process user command</string>
 		</dict>
-		<key>processSubcodeRequest</key>
+		<key>ProcessIncomingChatMessage</key>
 		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>CTCP request to process.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>arguments</key>
-				<dict>
-					<key>Description</key>
-					<string>Any arguments given with the request.</string>
-					<key>Name</key>
-					<string>with</string>
-				</dict>
-				<key>user</key>
-				<dict>
-					<key>Description</key>
-					<string>The user this request came from.</string>
-					<key>Name</key>
-					<string>from</string>
-				</dict>
-				<key>connection</key>
-				<dict>
-					<key>Description</key>
-					<string>The conenction this request came on.</string>
-					<key>Name</key>
-					<string>on</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Called when an unhandled CTCP request gets sent to us from another user. Return true to prevent other plugins from processing this request.</string>
-			<key>Name</key>
-			<string>process subcode request</string>
-		</dict>
-		<key>processSubcodeReply</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>CTCP reply to process.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>arguments</key>
-				<dict>
-					<key>Description</key>
-					<string>Any arguments given with the reply.</string>
-					<key>Name</key>
-					<string>with</string>
-				</dict>
-				<key>user</key>
-				<dict>
-					<key>Description</key>
-					<string>The user this reply came from.</string>
-					<key>Name</key>
-					<string>from</string>
-				</dict>
-				<key>connection</key>
-				<dict>
-					<key>Description</key>
-					<string>The conenction this reply came on.</string>
-					<key>Name</key>
-					<string>on</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Called when an unhandled CTCP reply gets sent to us from another user. Return true to prevent other plugins from processing this reply.</string>
-			<key>Name</key>
-			<string>process subcode reply</string>
-		</dict>
-		<key>processIncomingChatMessage</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The incoming message. Message and properties are modifiable.</string>
-			</dict>
 			<key>Arguments</key>
 			<dict>
 				<key>action</key>
@@ -217,17 +304,17 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when an incoming message is sent to us or a room we are in.</string>
+			<string>Called when an incoming message is sent to us or a room we are in. (Any messages echoed to the screen that are sent from the local user will also be passed through this handler.)</string>
 			<key>Name</key>
 			<string>process incoming chat message</string>
-		</dict>
-		<key>processOutgoingChatMessage</key>
-		<dict>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The outgoing message. Message and properties are modifiable.</string>
+				<string>The incoming message. Message and properties are modifiable.</string>
 			</dict>
+		</dict>
+		<key>ProcessOutgoingChatMessage</key>
+		<dict>
 			<key>Arguments</key>
 			<dict>
 				<key>action</key>
@@ -249,240 +336,117 @@
 			<string>Called when a message is sent from us to a user or room we are in.</string>
 			<key>Name</key>
 			<string>process outgoing chat message</string>
-		</dict>
-		<key>handleClickedLink</key>
-		<dict>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The URL of the clicked link.</string>
+				<string>The outgoing message. Message and properties are modifiable.</string>
 			</dict>
+		</dict>
+		<key>ProcessSubcodeReply</key>
+		<dict>
 			<key>Arguments</key>
 			<dict>
+				<key>arguments</key>
+				<dict>
+					<key>Description</key>
+					<string>Any arguments given with the reply.</string>
+					<key>Name</key>
+					<string>with</string>
+				</dict>
+				<key>connection</key>
+				<dict>
+					<key>Description</key>
+					<string>The conenction this reply came on.</string>
+					<key>Name</key>
+					<string>on</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Description</key>
+					<string>The user this reply came from.</string>
+					<key>Name</key>
+					<string>from</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when an unhandled CTCP reply gets sent to us from another user. Return true to prevent other plugins from processing this reply.</string>
+			<key>Name</key>
+			<string>process subcode reply</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>CTCP request to process.</string>
+			</dict>
+		</dict>
+		<key>ProcessSubcodeRequest</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>arguments</key>
+				<dict>
+					<key>Description</key>
+					<string>Any arguments given with the request.</string>
+					<key>Name</key>
+					<string>with</string>
+				</dict>
+				<key>connection</key>
+				<dict>
+					<key>Description</key>
+					<string>The conenction this request came on.</string>
+					<key>Name</key>
+					<string>on</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Description</key>
+					<string>The user this request came from.</string>
+					<key>Name</key>
+					<string>from</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when an unhandled CTCP request gets sent to us from another user. Return true to prevent other plugins from processing this request.</string>
+			<key>Name</key>
+			<string>process subcode request</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>CTCP request to process.</string>
+			</dict>
+		</dict>
+		<key>ProcessUserCommand</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>arguments</key>
+				<dict>
+					<key>Description</key>
+					<string>Any arguments given with the command.</string>
+					<key>Name</key>
+					<string>with</string>
+				</dict>
 				<key>view</key>
 				<dict>
 					<key>Description</key>
-					<string>The chat room, direct chat or chat transcript this link was clicked in.</string>
-					<key>Name</key>
-					<string>in</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Called when a (currently unhandled) link is clicked in a conversation. Return true to prevent Colloquy and other plugins from handling this clicked link.</string>
-			<key>Name</key>
-			<string>handle clicked link</string>
-		</dict>
-		<key>joinedRoom</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat room.</string>
-			</dict>
-			<key>Description</key>
-			<string>Called when we join a room.</string>
-			<key>Name</key>
-			<string>joined chat room</string>
-		</dict>
-		<key>partingRoom</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat room.</string>
-			</dict>
-			<key>Description</key>
-			<string>Called when we are in the process of laveing a room. Messages can still be sent.</string>
-			<key>Name</key>
-			<string>parting chat room</string>
-		</dict>
-		<key>connected</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat conenction.</string>
-			</dict>
-			<key>Description</key>
-			<string>Called when we have just finished connecting to a chat server.</string>
-			<key>Name</key>
-			<string>connected</string>
-		</dict>
-		<key>disconnecting</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat conenction.</string>
-			</dict>
-			<key>Description</key>
-			<string>Called when we are in the process of disconnecting from a chat server. Messages can still be sent.</string>
-			<key>Name</key>
-			<string>disconnecting</string>
-		</dict>
-		<key>kickedFromRoom</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat room.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>by</key>
-				<dict>
-					<key>Description</key>
-					<string>The member who kicked us out.</string>
-					<key>Name</key>
-					<string>by</string>
-				</dict>
-				<key>reason</key>
-				<dict>
-					<key>Description</key>
-					<string>The reason given for kicking us out.</string>
+					<string>The view the command was entered in.</string>
 					<key>Name</key>
 					<string>for</string>
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when we are kicked out of a room by another member.</string>
+			<string>Called when the user types an unhandled "/command". Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent "raw"</string>
 			<key>Name</key>
-			<string>kicked from room</string>
-		</dict>
-		<key>memberJoinedRoom</key>
-		<dict>
+			<string>process user command</string>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The member.</string>
+				<string>Command to process.</string>
 			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>room</key>
-				<dict>
-					<key>Description</key>
-					<string>The chat room.</string>
-					<key>Name</key>
-					<string>in</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Called when a member joins a room we are also members of.</string>
-			<key>Name</key>
-			<string>member joined</string>
 		</dict>
-		<key>memberPartedRoom</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The member.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>room</key>
-				<dict>
-					<key>Description</key>
-					<string>The chat room.</string>
-					<key>Name</key>
-					<string>from</string>
-				</dict>
-				<key>reason</key>
-				<dict>
-					<key>Description</key>
-					<string>The reason the member left.</string>
-					<key>Name</key>
-					<string>for</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Called when a member leaves a room we are also members of.</string>
-			<key>Name</key>
-			<string>member parted</string>
-		</dict>
-		<key>memberKickedFromRoom</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The member.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>room</key>
-				<dict>
-					<key>Description</key>
-					<string>The chat room.</string>
-					<key>Name</key>
-					<string>from</string>
-				</dict>
-				<key>by</key>
-				<dict>
-					<key>Description</key>
-					<string>The member who kicked the other member out.</string>
-					<key>Name</key>
-					<string>by</string>
-				</dict>
-				<key>reason</key>
-				<dict>
-					<key>Description</key>
-					<string>The reason the member was kicked.</string>
-					<key>Name</key>
-					<string>for</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Called when a member is kicked out of a room we are also members of.</string>
-			<key>Name</key>
-			<string>member kicked</string>
-		</dict>
-		<key>memberStatusChanged</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The member.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>status</key>
-				<dict>
-					<key>Description</key>
-					<string>The new distinction this member has.</string>
-					<key>Name</key>
-					<string>to</string>
-				</dict>
-				<key>by</key>
-				<dict>
-					<key>Description</key>
-					<string>The member who gave this distinction.</string>
-					<key>Name</key>
-					<string>thanks to</string>
-				</dict>
-				<key>room</key>
-				<dict>
-					<key>Description</key>
-					<string>The chat room.</string>
-					<key>Name</key>
-					<string>in</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Called when a member is granted voice or jurisdiction of the room; or when those powers are revoked.</string>
-			<key>Name</key>
-			<string>member distinction changed</string>
-		</dict>
-		<key>topicChanged</key>
+		<key>TopicChanged</key>
 		<dict>
 			<key>Arguments</key>
 			<dict>
-				<key>topic</key>
-				<dict>
-					<key>Description</key>
-					<string>The new room topic.</string>
-					<key>Name</key>
-					<string>to</string>
-				</dict>
 				<key>by</key>
 				<dict>
 					<key>Description</key>
@@ -497,72 +461,22 @@
 					<key>Name</key>
 					<string>in</string>
 				</dict>
+				<key>topic</key>
+				<dict>
+					<key>Description</key>
+					<string>The new room topic.</string>
+					<key>Name</key>
+					<string>to</string>
+				</dict>
 			</dict>
 			<key>Description</key>
 			<string>Called when a member changes the room topic.</string>
 			<key>Name</key>
 			<string>topic changed</string>
 		</dict>
-		<key>userNicknameChanged</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The user's old nickname.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>now</key>
-				<dict>
-					<key>Description</key>
-					<string>The new nickname for the user.</string>
-					<key>Name</key>
-					<string>is now known as</string>
-				</dict>
-				<key>view</key>
-				<dict>
-					<key>Description</key>
-					<string>The chat room or direct chat the change happened.</string>
-					<key>Name</key>
-					<string>in</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Called when a user changes their nickname. This is called for all chat views you are in with the user (from one to many times). You can't get notifications for users you don't see in a chat room or direct chat.</string>
-			<key>Name</key>
-			<string>user named</string>
-		</dict>
-		<key>idle</key>
-		<dict>
-			<key>Description</key>
-			<string>Automatically starts firing as soon as the script initializes, it will continue to fire periodically until the user quits the application. The default interval is 5 seconds, return a new interval to change the wait period for the next call.</string>
-			<key>Name</key>
-			<string>idle</string>
-		</dict>
-	</dict>
-	<key>Enumerations</key>
-	<dict>
-		<key>MemberStatus</key>
-		<dict>
-			<key>Normal</key>
-			<dict>
-				<key>Name</key>
-				<string>normal</string>
-			</dict>
-			<key>Voice</key>
-			<dict>
-				<key>Name</key>
-				<string>voice</string>
-			</dict>
-			<key>Operator</key>
-			<dict>
-				<key>Name</key>
-				<string>operator</string>
-			</dict>
-		</dict>
 	</dict>
 	<key>Description</key>
-	<string>commands to be implemented by plug-ins.</string>
+	<string>Commands to be implemented by plug-ins.</string>
 	<key>Name</key>
 	<string>Chat Plug-In Suite</string>
 </dict>

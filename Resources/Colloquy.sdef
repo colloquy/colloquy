@@ -1,6 +1,175 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
-<dictionary title="Standard Terminology">
+<dictionary title="Colloquy Terminology">
+	<suite name="Colloquy Suite" code="coRC" description="Commands and classes for Colloquy scripting.">
+		<cocoa name="Colloquy"/>
+		<types>
+			<enumeration name="buddy status" code="bstE">
+				<cocoa name="BuddyStatus"/>
+				<enumerator name="away" code="awaY"/>
+				<enumerator name="offline" code="oflN"/>
+				<enumerator name="available" code="avaL"/>
+				<enumerator name="idle" code="idlE"/>
+			</enumeration>
+			<enumeration name="ignore status" code="igsE">
+				<cocoa name="IgnoreStatus"/>
+				<enumerator name="message ignored" code="msIg"/>
+				<enumerator name="not ignored" code="noIg"/>
+				<enumerator name="user ignored" code="usIg"/>
+			</enumeration>
+		</types>
+		<classes>
+			<class name="chat window" code="chwC" description="Controls the window and one or more chat views (direct chats, chat rooms, etc.)" inherits="item">
+				<contents name="window" code="cwin" description="User interface window. (Default subcontainer.)" type="window" access="r"/>
+				<cocoa class="JVChatWindowController"/>
+				<elements>
+					<element code="chvC" type="panel" access="r">
+						<cocoa method="views"/>
+					</element>
+					<element code="ccoM" type="console panel" access="r">
+						<cocoa method="chatConsoles"/>
+					</element>
+					<element code="ctrM" type="transcript panel" access="r">
+						<cocoa method="chatTranscripts"/>
+					</element>
+					<element code="dchM" type="chat panel" access="r">
+						<cocoa method="directChats"/>
+					</element>
+					<element code="crmM" type="chat room panel" access="r">
+						<cocoa method="chatRooms"/>
+					</element>
+				</elements>
+				<properties>
+					<property name="id" code="ID  " description="The unique identifier of the chat window." type="number" access="r">
+						<cocoa method="uniqueIdentifier"/>
+					</property>
+					<property name="selected list item" code="SclM" description="Current selection in the drawer list." type="list item" access="r">
+						<cocoa method="selectedListItem"/>
+					</property>
+					<property name="active chat view" code="AcvC" description="Current visible view for this chat window." type="panel" access="r">
+						<cocoa method="activeChatViewController"/>
+					</property>
+				</properties>
+			</class>
+			<class name="list item" code="cliM" description="Generic chat list item that all drawer items inherit from (e.g. members, etc.).">
+				<properties>
+					<property name="name" code="pnam" description="Title to show in the list." type="string" access="r">
+						<cocoa method="title"/>
+					</property>
+					<property name="subtitle" code="infA" description="Sub-title information to show hwen list has room." type="string" access="r">
+						<cocoa method="information"/>
+					</property>
+				</properties>
+			</class>
+			<class name="panel" code="chvC" description="Generic chat panel that all panels inherit from (e.g. chat panel, chat room panel, etc.)" inherits="list item">
+				<properties>
+					<property name="id" code="ID  " description="The unique identifier of the chat view controler." type="number" access="r">
+						<cocoa method="uniqueIdentifier"/>
+					</property>
+					<property name="connection" code="conM" description="Connection this view uses." type="connection" access="r"/>
+					<property name="chat window" code="chwC" description="Owning chat window." type="chat window" access="r">
+						<cocoa method="windowController"/>
+					</property>
+					<property name="window title" code="wtiA" description="Title used when active in the chat window." type="string" access="r">
+						<cocoa method="windowTitle"/>
+					</property>
+					<property name="description" code="idtA" description="Consicse description of the chat view." type="string" access="r">
+						<cocoa method="identifier"/>
+					</property>
+				</properties>
+			</class>
+			<class name="transcript panel" code="ctrM" description="A log panel of some previous conversation." inherits="panel">
+				<cocoa class="JVChatTranscriptPanel"/>
+			</class>
+			<class name="console panel" code="dchM" description="Direct server console for advanced users." inherits="panel">
+				<cocoa class="JVChatConsolePanel"/>
+			</class>
+			<class name="chat panel" code="dchM" description="Direct (private) chat panel with another user." inherits="transcript panel">
+				<cocoa class="JVDirectChatPanel"/>
+			</class>
+			<class name="chat room panel" code="crmM" description="Chat room panel." inherits="chat panel">
+				<cocoa class="JVChatRoomPanel"/>
+			</class>
+			<class name="member" code="chmM" description="Chat room member list item represented in the drawer list." inherits="list item">
+				<cocoa class="JVChatRoomMember"/>
+				<properties>
+					<property name="id" code="ID  " description="The unique identifier of the member. Unique even if member changes nicknames." type="number" access="r">
+						<cocoa method="uniqueIdentifier"/>
+					</property>
+					<property name="name" code="pnam" description="Member&apos;" type="string" access="r">
+						<cocoa method="nickname"/>
+					</property>
+					<property name="username" code="uNaA" description="The user&apos;" type="string" access="r"/>
+					<property name="real name" code="rNaA" description="The user&apos;" type="string" access="r">
+						<cocoa method="realName"/>
+					</property>
+				</properties>
+			</class>
+			<class name="buddy" code="budM" description="A buddy." plural="buddies">
+				<cocoa class="JVBuddy"/>
+				<properties>
+					<property name="id" code="ID  " description="The unique identifier of the buddy. Same as the associated AddressBook entry." type="string" access="r">
+						<cocoa method="uniqueIdentifier"/>
+					</property>
+					<property name="given nickname" code="gvnA" description="Given nickname from AddressBook." type="string" access="rw">
+						<cocoa method="givenNickname"/>
+					</property>
+					<property name="preferred name" code="prnA" description="Returns the user&apos;" type="string" access="r">
+						<cocoa method="preferredName"/>
+					</property>
+					<property name="name" code="pnam" description="The buddies full name in the user&apos;" type="string" access="r">
+						<cocoa method="compositeName"/>
+					</property>
+					<property name="first name" code="fsnA" description="First name from AddressBook." type="string" access="rw">
+						<cocoa method="firstName"/>
+					</property>
+					<property name="last name" code="lsnA" description="Last name from AddressBook." type="string" access="rw">
+						<cocoa method="lastName"/>
+					</property>
+					<property name="online" code="isoA" description="Weither the active nickname is online." type="boolean" access="r">
+						<cocoa method="isOnline"/>
+					</property>
+					<property name="idle time" code="idlA" description="Current idle time in seconds for the active nickname." type="real" access="r">
+						<cocoa method="idleTime"/>
+					</property>
+					<property name="away message" code="awmA" description="Away message for active nickname." type="string" access="r">
+						<cocoa method="awayMessage"/>
+					</property>
+					<property name="primary email" code="pemA" description="Primary email address from AddressBook." type="string" access="rw">
+						<cocoa method="primaryEmail"/>
+					</property>
+					<property name="status" code="stsA" description="The current status of the active nickname." type="buddy status" access="r"/>
+				</properties>
+			</class>
+			<class name="transcript" code="traM" description="A log of a previous conversation.">
+				<cocoa class="JVChatTranscript"/>
+			</class>
+			<class name="message" code="cmsM" description="A chat message.">
+				<cocoa class="JVChatMessage"/>
+				<properties>
+					<property name="id" code="ID  " description="The id of this message." type="integer" access="rw">
+						<cocoa method="messageNumber"/>
+					</property>
+					<property name="sender" code="sNdA" description="The sender of this message" type="item" access="rw"/>
+					<property name="timestamp" code="dteA" description="The date and time this message occurred." type="date" access="rw">
+						<cocoa method="date"/>
+					</property>
+					<property name="highlighted" code="iHlt" description="Was the message highlighted for some reason?" type="boolean" access="rw">
+						<cocoa method="isHighlighted"/>
+					</property>
+					<property name="action tense" code="isAc" description="Does the message have action tense?" type="boolean" access="rw">
+						<cocoa method="isAction"/>
+					</property>
+					<property name="HTML" code="maHA" description="The message with posiable HTML formatting." type="string" access="rw">
+						<cocoa method="bodyAsHTML"/>
+					</property>
+					<property name="ignore status" code="iGsA" description="If the message was ignored with one of the ignore rules." type="ignore status" access="rw">
+						<cocoa method="ignoreStatus"/>
+					</property>
+				</properties>
+			</class>
+		</classes>
+	</suite>
 	<suite name="Chat Core Suite" code="ccoR" description="Commands and classes for Chat Core scripting. Chat Core is the lowest level of Colloquy.">
 		<cocoa name="ChatCore"/>
 		<types>
@@ -64,46 +233,46 @@
 			<class name="chat user" code="chUs" description="Represents a user on a chat server.">
 				<cocoa class="MVChatUser"/>
 				<properties>
-					<property name="id" code="ID  " type="any" access="r" description="The unique identifier of the room.">
+					<property name="id" code="ID  " description="The unique identifier of the room." type="any" access="r">
 						<cocoa method="uniqueIdentifier"/>
 					</property>
-					<property name="name" code="pnam" type="string" access="r" description="Full room name.">
+					<property name="name" code="pnam" description="Full room name." type="string" access="r">
 						<cocoa method="nickname"/>
 					</property>
-					<property name="display name" code="dNmA" type="string" access="r" description="Display name, almost always the nickname.">
+					<property name="display name" code="dNmA" description="Display name, almost always the nickname." type="string" access="r">
 						<cocoa method="displayName"/>
 					</property>
-					<property name="real name" code="rElA" type="string" access="r" description="The real name supplied by the user, not always a person's name. This might require a &quot;refresh information&quot; command to be sent in advance.">
+					<property name="real name" code="rElA" description="The real name supplied by the user, not always a person&apos;s name. This might require a &quot;refresh information&quot;" type="string" access="r">
 						<cocoa method="realName"/>
 					</property>
-					<property name="user name" code="uSnA" type="string" access="r" description="The user name supplied by the user. This might require a &quot;refresh information&quot; command to be sent in advance.">
+					<property name="user name" code="uSnA" description="The user name supplied by the user. This might require a &quot;refresh information&quot;" type="string" access="r">
 						<cocoa method="username"/>
 					</property>
-					<property name="address" code="adRA" type="string" access="r" description="The address the user connected to the server from. Somtimes this is a fake (masked) address. This might require a &quot;refresh information&quot; command to be sent in advance.">
+					<property name="address" code="adRA" description="The address the user connected to the server from. Somtimes this is a fake (masked) address. This might require a &quot;refresh information&quot;" type="string" access="r">
 						<cocoa method="address"/>
 					</property>
-					<property name="server address" code="sevA" type="string" access="r" description="The server address the user is connected to. This might be a different address than you are connected to, since servers are sometimes clustered. This might require a &quot;refresh information&quot; command to be sent in advance.">
+					<property name="server address" code="sevA" description="The server address the user is connected to. This might be a different address than you are connected to, since servers are sometimes clustered. This might require a &quot;refresh information&quot;" type="string" access="r">
 						<cocoa method="serverAddress"/>
 					</property>
-					<property name="idle time" code="iDlA" type="real" access="r" description="The number of seconds the user has been idle on the server. This isn't a live number and requires a &quot;refresh information&quot; command to be sent in advance.">
+					<property name="idle time" code="iDlA" description="The number of seconds the user has been idle on the server. This isn&apos;t a live number and requires a &quot;refresh information&quot;" type="real" access="r">
 						<cocoa method="serverAddress"/>
 					</property>
-					<property name="date updated" code="uPdA" type="date" access="r" description="The last time the &quot;refresh information&quot; command finished.">
+					<property name="date updated" code="uPdA" description="The last time the &quot;refresh information&quot;" type="date" access="r">
 						<cocoa method="serverAddress"/>
 					</property>
-					<property name="date connected" code="dCoA" type="date" access="r" description="The date the user connected to the server. This might require a &quot;refresh information&quot; command to be sent in advance.">
+					<property name="date connected" code="dCoA" description="The date the user connected to the server. This might require a &quot;refresh information&quot;" type="date" access="r">
 						<cocoa method="dateConnected"/>
 					</property>
-					<property name="date disconnected" code="dDcA" type="date" access="r" description="The date the user disconnected from the server. This will not be available for all users.">
+					<property name="date disconnected" code="dDcA" description="The date the user disconnected from the server. This will not be available for all users." type="date" access="r">
 						<cocoa method="dateDisconnected"/>
 					</property>
-					<property name="user status" code="stsA" type="user status" access="r" description="The current status of the user. This isn't a live value and requires a &quot;refresh information&quot; command to be sent in advance.">
+					<property name="user status" code="stsA" description="The current status of the user. This isn&apos;t a live value and requires a &quot;refresh information&quot;" type="user status" access="r">
 						<cocoa method="status"/>
 					</property>
-					<property name="away message" code="aStA" type="text" access="r" description="The user's current away message. This might require a &quot;refresh information&quot; command to be sent in advance.">
+					<property name="away message" code="aStA" description="The user&apos;s current away message. This might require a &quot;refresh information&quot;" type="text" access="r">
 						<cocoa method="scriptTypedAwayMessage"/>
 					</property>
-					<property name="attributes" code="atRA" type="record" access="rw" description="User attributes containing various itmes.">
+					<property name="attributes" code="atRA" description="User attributes containing various itmes." type="record" access="rw">
 						<cocoa method="attributes"/>
 					</property>
 				</properties>
@@ -111,39 +280,39 @@
 			<class name="chat room" code="chRm" description="Represents a join chat room.">
 				<cocoa class="MVChatRoom"/>
 				<elements>
-					<element type="chat user" access="r" description="Member chat users.">
+					<element description="Member chat users." type="chat user" access="r">
 						<cocoa method="memberUsersArray"/>
 					</element>
 				</elements>
 				<properties>
-					<property name="id" code="ID  " type="any" access="r" description="The unique identifier of the room.">
+					<property name="id" code="ID  " description="The unique identifier of the room." type="any" access="r">
 						<cocoa method="uniqueIdentifier"/>
 					</property>
-					<property name="name" code="pnam" type="string" access="r" description="Full room name.">
+					<property name="name" code="pnam" description="Full room name." type="string" access="r">
 						<cocoa method="name"/>
 					</property>
-					<property name="display name" code="dNmA" type="string" access="r" description="Full room name without any prefixes.">
+					<property name="display name" code="dNmA" description="Full room name without any prefixes." type="string" access="r">
 						<cocoa method="displayName"/>
 					</property>
-					<property name="URL" code="url " type="string" access="r" description="The full room URL containing the server and room name.">
+					<property name="URL" code="url " description="The full room URL containing the server and room name." type="string" access="r">
 						<cocoa method="urlString"/>
 					</property>
-					<property name="banned users" code="bnSA" type="list of chat user" access="r" description="Current chat room members.">
+					<property name="banned users" code="bnSA" description="Current chat room members." type="list of chat user" access="r">
 						<cocoa method="bannedUsersArray"/>
 					</property>
-					<property name="encoding" code="enCA" type="encoding" access="rw" description="Default encoding for outgoing messages.">
+					<property name="encoding" code="enCA" description="Default encoding for outgoing messages." type="encoding" access="rw">
 						<cocoa method="scriptTypedEncoding"/>
 					</property>
-					<property name="attributes" code="atRA" type="record" access="rw" description="Room attributes containing various itmes.">
+					<property name="attributes" code="atRA" description="Room attributes containing various itmes." type="record" access="rw">
 						<cocoa method="attributes"/>
 					</property>
-					<property name="joined" code="joIA" type="boolean" access="r" description="Are we currently in the room?">
+					<property name="joined" code="joIA" description="Are we currently in the room?" type="boolean" access="r">
 						<cocoa method="isJoined"/>
 					</property>
-					<property name="date joined" code="daJA" type="date" access="r" description="Date we joined the room. Missing value if we haven't joined yet.">
+					<property name="date joined" code="daJA" description="Date we joined the room. Missing value if we haven&apos;" type="date" access="r">
 						<cocoa method="dateJoined"/>
 					</property>
-					<property name="date parted" code="daPA" type="date" access="r" description="Date we parted the room. Missing value if we haven't parted yet.">
+					<property name="date parted" code="daPA" description="Date we parted the room. Missing value if we haven&apos;" type="date" access="r">
 						<cocoa method="dateParted"/>
 					</property>
 				</properties>
@@ -151,45 +320,45 @@
 			<class name="connection" code="conM" description="Manages all chat communication with a chat server.">
 				<cocoa class="MVChatConnection"/>
 				<elements>
-					<element type="chat room" access="r" description="Joined chat rooms.">
+					<element description="Joined chat rooms." type="chat room" access="r">
 						<cocoa method="joinedChatRoomsArray"/>
 					</element>
-					<element type="chat user" access="r" description="Known chat users.">
+					<element description="Known chat users." type="chat user" access="r">
 						<cocoa method="knownChatUsersArray"/>
 					</element>
 				</elements>
 				<properties>
-					<property name="local user" code="lcuA" type="chat user" access="r" description="Current local user when connected.">
+					<property name="local user" code="lcuA" description="Current local user when connected." type="chat user" access="r">
 						<cocoa method="localUser"/>
 					</property>
-					<property name="nickanme" code="nicA" type="string" access="rw" description="Current nickname on the server.">
+					<property name="nickanme" code="nicA" description="Current nickname on the server." type="string" access="rw">
 						<cocoa method="nickname"/>
 					</property>
-					<property name="nickname password" code="ncpA" type="string" access="rw" description="The nickname's password (if any). Used for nickname registration.">
+					<property name="nickname password" code="ncpA" description="The nickname&apos;" type="string" access="rw">
 						<cocoa method="nicknamePassword"/>
 					</property>
-					<property name="password" code="pasA" type="string" access="rw" description="Password to conenct to the server.">
+					<property name="password" code="pasA" description="Password to conenct to the server." type="string" access="rw">
 						<cocoa method="password"/>
 					</property>
-					<property name="proxy" code="pxyA" type="proxy" access="rw" description="What system proxy server to use.">
+					<property name="proxy" code="pxyA" description="What system proxy server to use." type="proxy" access="rw">
 						<cocoa method="proxy"/>
 					</property>
-					<property name="server address" code="sevA" type="string" access="rw" description="Server IP address or domain name.">
+					<property name="server address" code="sevA" description="Server IP address or domain name." type="string" access="rw">
 						<cocoa method="server"/>
 					</property>
-					<property name="port number" code="prtA" type="number" access="rw" description="Port to connect on.">
+					<property name="port number" code="prtA" description="Port to connect on." type="number" access="rw">
 						<cocoa method="serverPort"/>
 					</property>
-					<property name="URL" code="url " type="string" access="r" description="Chat URL containing nickname, server and port.">
+					<property name="URL" code="url " description="Chat URL containing nickname, server and port." type="string" access="r">
 						<cocoa method="urlString"/>
 					</property>
-					<property name="status" code="stsA" type="connection status" access="r" description="Current connection status.">
+					<property name="status" code="stsA" description="Current connection status." type="connection status" access="r">
 						<cocoa method="status"/>
 					</property>
-					<property name="away message" code="aStA" type="text" access="rw" description="Away message for other users to see that your not there.">
+					<property name="away message" code="aStA" description="Away message for other users to see that your not there." type="text" access="rw">
 						<cocoa method="scriptTypedAwayMessage"/>
 					</property>
-					<property name="id" code="ID  " type="number" access="r" description="The unique identifier of the connection.">
+					<property name="id" code="ID  " description="The unique identifier of the connection." type="number" access="r">
 						<cocoa method="uniqueIdentifier"/>
 					</property>
 				</properties>
@@ -219,32 +388,187 @@
 			<command name="send chat message" code="ccoRsCmX" description="Send a chat message to a room or user.">
 				<cocoa class="MVSendMessageScriptCommand"/>
 				<direct-parameter type="string" description="The message to send. (Plain text with HTML formatting. Must entity encode HTML special characters.)"/>
-				<parameter name="to" code="sCm1" type="chat user | chat room" description="The chat user or chat room to send to.">
+				<parameter name="to" code="sCm1" description="The chat user or chat room to send to." type="chat user | chat room">
 					<cocoa key="target"/>
 				</parameter>
-				<parameter name="encoded as" code="sCm2" type="encoding" optional="optional" description="The encoding to send the message as (will default to the room or connection encoding if omitted).">
+				<parameter name="encoded as" code="sCm2" description="The encoding to send the message as (will default to the room or connection encoding if omitted)." type="encoding" optional="optional">
 					<cocoa key="encoding"/>
 				</parameter>
-				<parameter name="action tense" code="sCm3" type="boolean" optional="optional" description="Send as an action?">
+				<parameter name="action tense" code="sCm3" description="Send as an action?" type="boolean" optional="optional">
 					<cocoa key="action"/>
 				</parameter>
 			</command>
 			<command name="send raw command" code="ccoRsRmX" description="Send raw server command (message) to server.">
 				<cocoa class="MVSendRawMessageScriptCommand"/>
 				<direct-parameter type="string" description="The raw server command (message) to send. (This is protocol specific.)"/>
-				<parameter name="to" code="sRm1" type="connection" description="The conenction to send to.">
+				<parameter name="to" code="sRm1" description="The conenction to send to." type="connection">
 					<cocoa key="connection"/>
 				</parameter>
-				<parameter name="priority" code="sRm2" type="boolean" optional="optional" description="Send this command now? (This will bypass any queued commands.)">
+				<parameter name="priority" code="sRm2" description="Send this command now? (This will bypass any queued commands.)" type="boolean" optional="optional">
 					<cocoa key="priority"/>
 				</parameter>
 			</command>
 			<command name="join chat room" code="ccoRjCrX" description="Join a chat room.">
 				<cocoa class="MVJoinChatRoomScriptCommand"/>
 				<direct-parameter type="string | list of string" description="Room to join. (Can also be a list of rooms.)"/>
-				<parameter name="on" code="jCr1" type="connection" description="The connection to join on.">
+				<parameter name="on" code="jCr1" description="The connection to join on." type="connection">
 					<cocoa key="connection"/>
 				</parameter>
+			</command>
+		</commands>
+	</suite>
+	<suite name="Chat Plug-In Suite" code="cplG" description="Commands to be implemented by plug-ins.">
+		<cocoa name="ChatPlugIn"/>
+		<commands>
+			<command name="build contextual menu for item" code="cplGcMiX" description="Called for every object that the user can access a contextual/action menu. This handler is called when the selection changes in a table or right before the menu is shown, allowing you to provide a list of titles to show. The title &quot;-&quot; will insert a menu separator. Sub-menus can be added by inserting into your list a record looking like: {title:&quot;Parent Item&quot;, submenu:{&quot;Item 1&quot;, &quot;Item 2&quot;}}. The depth of the sub-menu is virtually unlimited. When the user selects on of the titles you provided the &quot;handle clicked contextual menu item&quot;">
+				<direct-parameter type="any" description="Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, chat connection, etc."/>
+				<parameter name="in" code="cMi1" description="The chat room or direct chat this context menu is assocated with, if any." type="panel" optional="optional">
+					<cocoa key="view"/>
+				</parameter>
+			</command>
+			<command name="handle clicked contextual menu item" code="cplGpcMX" description="Called when the user clicks on one of the supplied menu item titles you returned from the &quot;build contextual menu for item&quot;">
+				<direct-parameter type="string" description="Menu item title you returned from the &quot;build contextual menu for item&quot;"/>
+				<parameter name="for" code="pcM1" description="Item the menu item was built for, can be a member, chat room, direct chat, transcript, chat connection, etc." type="any" optional="optional">
+					<cocoa key="object"/>
+				</parameter>
+				<parameter name="within" code="pcM2" description="A list of parent menu item titles the clicked menu item was when displayed. You only need to reference this when you use multiple items with the same name in different sub-menus." type="list of any" optional="optional">
+					<cocoa key="submenu"/>
+				</parameter>
+			</command>
+			<command name="perform notification" code="cplGnOtX" description="Called for every notification event like Buddy Offline, Name Mentioned, Message Ignored, etc. If you want to trigger on select events you should use a more specific handler; this handler is intended for limited context, high-level notifications only.">
+				<direct-parameter type="string" description="Identifier of the notification to perform."/>
+				<parameter name="with" code="nOt1" description="Notification specific context information. Usually contains a human-readable message to display." type="record" optional="optional">
+					<cocoa key="context"/>
+				</parameter>
+				<parameter name="and" code="nOt2" description="Preferences for the notification. From the Notification preferences panel." type="record" optional="optional">
+					<cocoa key="preferences"/>
+				</parameter>
+			</command>
+			<command name="process user command" code="cplGpcCX" description="Called when the user types an unhandled &quot;/command&quot;. Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent &quot;raw&quot;">
+				<direct-parameter type="string" description="Command to process."/>
+				<result type="boolean" description="Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent &quot;raw&quot;"/>
+				<parameter name="with" code="pcC1" description="Any arguments given with the command." type="string" optional="optional">
+					<cocoa key="arguments"/>
+				</parameter>
+				<parameter name="for" code="pcC2" description="The view the command was entered in." type="panel" optional="optional">
+					<cocoa key="view"/>
+				</parameter>
+			</command>
+			<command name="process subcode request" code="cplGpsRX" description="Called when an unhandled CTCP request gets sent to us from another user. Return true to prevent other plugins from processing this request.">
+				<direct-parameter type="string" description="CTCP request to process."/>
+				<result type="boolean" description="Return true to prevent other plugins from processing this request."/>
+				<parameter name="with" code="psR1" description="Any arguments given with the request." type="string" optional="optional">
+					<cocoa key="arguments"/>
+				</parameter>
+				<parameter name="from" code="psR2" description="The user this request came from." type="chat user" optional="optional">
+					<cocoa key="user"/>
+				</parameter>
+				<parameter name="on" code="psR3" description="The conenction this request came on." type="connection" optional="optional">
+					<cocoa key="connection"/>
+				</parameter>
+			</command>
+			<command name="process subcode reply" code="cplGpsLX" description="Called when an unhandled CTCP reply gets sent to us from another user. Return true to prevent other plugins from processing this reply.">
+				<direct-parameter type="string" description="CTCP request to process."/>
+				<result type="boolean" description="Return true to prevent other plugins from processing this reply."/>
+				<parameter name="with" code="psL1" description="Any arguments given with the reply." type="string" optional="optional">
+					<cocoa key="arguments"/>
+				</parameter>
+				<parameter name="from" code="psL2" description="The user this reply came from." type="chat user" optional="optional">
+					<cocoa key="user"/>
+				</parameter>
+				<parameter name="on" code="psL3" description="The conenction this reply came on." type="connection" optional="optional">
+					<cocoa key="connection"/>
+				</parameter>
+			</command>
+			<command name="process incoming chat message" code="cplGpiMX" description="Called when an incoming message is sent to us or a room we are in. (Any messages echoed to the screen that are sent from the local user will also be passed through this handler.)">
+				<direct-parameter type="message" description="The incoming message. Message and properties are modifiable."/>
+				<parameter name="as" code="piM1" description="Is this message an action?" type="boolean" optional="optional">
+					<cocoa key="action"/>
+				</parameter>
+				<parameter name="from" code="piM2" description="The user this message came from." type="member" optional="optional">
+					<cocoa key="user"/>
+				</parameter>
+				<parameter name="in" code="piM3" description="The chat room or direct chat this message is in." type="chat panel" optional="optional">
+					<cocoa key="view"/>
+				</parameter>
+			</command>
+			<command name="process outgoing chat message" code="cplGpoMX" description="Called when a message is sent from us to a user or room we are in.">
+				<direct-parameter type="message" description="The outgoing message. Message and properties are modifiable."/>
+				<parameter name="as" code="poM1" description="Is this message an action?" type="boolean" optional="optional">
+					<cocoa key="action"/>
+				</parameter>
+				<parameter name="in" code="poM2" description="The chat room or direct chat this message is in." type="chat panel" optional="optional">
+					<cocoa key="view"/>
+				</parameter>
+			</command>
+			<command name="handle clicked link" code="cplGhClX" description="Called when a (currently unhandled) link is clicked in a conversation. Return true to prevent Colloquy and other plugins from handling this clicked link.">
+				<direct-parameter type="string" description="The URL of the clicked link."/>
+				<result type="boolean" description="Return true to prevent other plugins from handling this link."/>
+				<parameter name="in" code="hCl1" description="The chat room, direct chat or chat transcript this link was clicked in." type="panel" optional="optional">
+					<cocoa key="view"/>
+				</parameter>
+			</command>
+			<command name="joined chat room" code="cplGjRmX" description="Called when we join a room.">
+				<direct-parameter type="chat room panel" description="The chat room."/>
+			</command>
+			<command name="parting chat room" code="cplGpRmX" description="Called when we are in the process of laveing a room. Messages can still be sent.">
+				<direct-parameter type="chat room panel" description="The chat room."/>
+			</command>
+			<command name="connected" code="cplGcTsX" description="Called when we have just finished connecting to a chat server.">
+				<direct-parameter type="connection" description="The chat conenction."/>
+			</command>
+			<command name="disconnecting" code="cplGdFsX" description="Called when we are in the process of disconnecting from a chat server. Commands and messages can still be sent to the server.">
+				<direct-parameter type="connection" description="The chat conenction."/>
+			</command>
+			<command name="kicked from room" code="cplGkRmX" description="Called when we are kicked out of a room by another member.">
+				<direct-parameter type="chat room panel" description="The chat room."/>
+				<parameter name="by" code="kRm1" description="The member who kicked us out." type="member" optional="optional">
+					<cocoa key="by"/>
+				</parameter>
+				<parameter name="for" code="kRm2" description="The reason given for kicking us out." type="string" optional="optional">
+					<cocoa key="reason"/>
+				</parameter>
+			</command>
+			<command name="member joined" code="cplGmJrX" description="Called when a member joins a room we are also a member of.">
+				<direct-parameter type="connection" description="The member."/>
+				<parameter name="in" code="mJr1" description="The chat room." type="chat room panel" optional="optional">
+					<cocoa key="room"/>
+				</parameter>
+			</command>
+			<command name="member parted" code="cplGmPrX" description="Called when a member leaves a room we are also a member of.">
+				<direct-parameter type="connection" description="The member."/>
+				<parameter name="from" code="mPr1" description="The chat room." type="chat room panel" optional="optional">
+					<cocoa key="room"/>
+				</parameter>
+				<parameter name="for" code="mPr2" description="The reason the member left." type="string" optional="optional">
+					<cocoa key="reason"/>
+				</parameter>
+			</command>
+			<command name="member kicked" code="cplGmKrX" description="Called when a member is kicked out of a room we are also a member of.">
+				<direct-parameter type="connection" description="The member."/>
+				<parameter name="from" code="mKr1" description="The chat room." type="chat room panel" optional="optional">
+					<cocoa key="room"/>
+				</parameter>
+				<parameter name="by" code="mKr2" description="The member who kicked the other member out." type="member" optional="optional">
+					<cocoa key="by"/>
+				</parameter>
+				<parameter name="for" code="mKr3" description="The reason the member was kicked." type="string" optional="optional">
+					<cocoa key="reason"/>
+				</parameter>
+			</command>
+			<command name="topic changed" code="cplGrTcX" description="Called when a member changes the room topic.">
+				<parameter name="in" code="rTc3" description="The chat room." type="chat room panel" optional="optional">
+					<cocoa key="room"/>
+				</parameter>
+				<parameter name="by" code="rTc2" description="The member who changed the topic." type="member" optional="optional">
+					<cocoa key="by"/>
+				</parameter>
+				<parameter name="to" code="rTc1" description="The new room topic." type="string" optional="optional">
+					<cocoa key="topic"/>
+				</parameter>
+			</command>
+			<command name="idle" code="cplGiDlX" description="Automatically starts firing as soon as the script initializes, it will continue to fire periodically until the user quits the application. The default interval is 5 seconds, return a new interval to change the wait period for the next call.">
+				<result type="real" description="Return a new interval to change the wait period for the next call."/>
 			</command>
 		</commands>
 	</suite>

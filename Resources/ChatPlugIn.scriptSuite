@@ -6,19 +6,12 @@
 	<string>cplG</string>
 	<key>Commands</key>
 	<dict>
-		<key>buildContextualMenu</key>
+		<key>BuildContextualMenuForItem</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>cplG</string>
 			<key>AppleEventCode</key>
 			<string>cMiX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>NSObject</string>
-			</dict>
 			<key>Arguments</key>
 			<dict>
 				<key>view</key>
@@ -28,25 +21,51 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.AbstractChatViewController</string>
+					<string>Colloquy.Panel</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSObject</string>
+			</dict>
 		</dict>
-		<key>performContextualMenuItemAction</key>
+		<key>Connected</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>cTsX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>ChatCore.MVChatConnection</string>
+			</dict>
+		</dict>
+		<key>Disconnecting</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>dFsX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>ChatCore.MVChatConnection</string>
+			</dict>
+		</dict>
+		<key>HandleClickedContextualMenuItem</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>cplG</string>
 			<key>AppleEventCode</key>
 			<string>pcMX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>NSString</string>
-			</dict>
 			<key>Arguments</key>
 			<dict>
 				<key>object</key>
@@ -70,20 +89,229 @@
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSString</string>
+			</dict>
 		</dict>
-		<key>performNotification</key>
+		<key>HandleClickedLink</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>hClX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>view</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>hCl1</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.Panel</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>ResultAppleEventCode</key>
+			<string>bool</string>
+			<key>Type</key>
+			<string>NSNumber&lt;Bool&gt;</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSString</string>
+			</dict>
+		</dict>
+		<key>Idle</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>iDlX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>ResultAppleEventCode</key>
+			<string>doub</string>
+			<key>Type</key>
+			<string>NSNumber&lt;Double&gt;</string>
+		</dict>
+		<key>JoinedChatRoom</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>jRmX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>Colloquy.JVChatRoomPanel</string>
+			</dict>
+		</dict>
+		<key>KickedFromRoom</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>kRmX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>by</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>kRm1</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatRoomMember</string>
+				</dict>
+				<key>reason</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>kRm2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>Colloquy.JVChatRoomPanel</string>
+			</dict>
+		</dict>
+		<key>MemberJoined</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>mJrX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>room</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>mJr1</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatRoomPanel</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>ChatCore.MVChatConnection</string>
+			</dict>
+		</dict>
+		<key>MemberKicked</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>mKrX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>by</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>mKr2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatRoomMember</string>
+				</dict>
+				<key>reason</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>mKr3</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>room</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>mKr1</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatRoomPanel</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>ChatCore.MVChatConnection</string>
+			</dict>
+		</dict>
+		<key>MemberParted</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>mPrX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>reason</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>mPr2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>room</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>mPr1</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatRoomPanel</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>ChatCore.MVChatConnection</string>
+			</dict>
+		</dict>
+		<key>PartingChatRoom</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>pRmX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>Colloquy.JVChatRoomPanel</string>
+			</dict>
+		</dict>
+		<key>PerformNotification</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>cplG</string>
 			<key>AppleEventCode</key>
 			<string>nOtX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>NSString</string>
-			</dict>
 			<key>Arguments</key>
 			<dict>
 				<key>context</key>
@@ -91,7 +319,7 @@
 					<key>AppleEventCode</key>
 					<string>nOt1</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSDictionary</string>
 				</dict>
@@ -100,168 +328,25 @@
 					<key>AppleEventCode</key>
 					<string>nOt2</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSDictionary</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
-		</dict>
-		<key>processUserCommand</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>pcCX</string>
 			<key>UnnamedArgument</key>
 			<dict>
-				<key>Optional</key>
-				<string>NO</string>
 				<key>Type</key>
 				<string>NSString</string>
 			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>arguments</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pcC1</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-				<key>view</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pcC2</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>Colloquy.AbstractChatViewController</string>
-				</dict>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-			<key>ResultAppleEventCode</key>
-			<string>bool</string>
-			<key>Type</key>
-			<string>NSNumber&lt;Bool&gt;</string>
 		</dict>
-		<key>processSubcodeRequest</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>psRX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>NSString</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>arguments</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>psR1</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-				<key>user</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>psR2</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-				<key>connection</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>psR3</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>MVChatConnection</string>
-				</dict>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-			<key>ResultAppleEventCode</key>
-			<string>bool</string>
-			<key>Type</key>
-			<string>NSNumber&lt;Bool&gt;</string>
-		</dict>
-		<key>processSubcodeReply</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>psLX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>NSString</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>arguments</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>psL1</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-				<key>user</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>psL2</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-				<key>connection</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>psL3</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>MVChatConnection</string>
-				</dict>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-			<key>ResultAppleEventCode</key>
-			<string>bool</string>
-			<key>Type</key>
-			<string>NSNumber&lt;Bool&gt;</string>
-		</dict>
-		<key>processIncomingChatMessage</key>
+		<key>ProcessIncomingChatMessage</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>cplG</string>
 			<key>AppleEventCode</key>
 			<string>piMX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>JVChatMessage</string>
-			</dict>
 			<key>Arguments</key>
 			<dict>
 				<key>action</key>
@@ -280,7 +365,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>Colloquy.JVChatRoomMember</string>
 				</dict>
 				<key>view</key>
 				<dict>
@@ -289,25 +374,23 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.AbstractChatViewController</string>
+					<string>Colloquy.JVDirectChatPanel</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>Colloquy.JVChatMessage</string>
+			</dict>
 		</dict>
-		<key>processOutgoingChatMessage</key>
+		<key>ProcessOutgoingChatMessage</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>cplG</string>
 			<key>AppleEventCode</key>
 			<string>poMX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>JVChatMessage</string>
-			</dict>
 			<key>Arguments</key>
 			<dict>
 				<key>action</key>
@@ -326,35 +409,51 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.AbstractChatViewController</string>
+					<string>Colloquy.JVDirectChatPanel</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>Colloquy.JVChatMessage</string>
+			</dict>
 		</dict>
-		<key>handleClickedLink</key>
+		<key>ProcessSubcodeReply</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>cplG</string>
 			<key>AppleEventCode</key>
-			<string>hClX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>NSString</string>
-			</dict>
+			<string>psLX</string>
 			<key>Arguments</key>
 			<dict>
-				<key>view</key>
+				<key>arguments</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>hCl1</string>
+					<string>psL1</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.AbstractChatViewController</string>
+					<string>NSString</string>
+				</dict>
+				<key>connection</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>psL3</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatConnection</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>psL2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatUser</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
@@ -363,266 +462,100 @@
 			<string>bool</string>
 			<key>Type</key>
 			<string>NSNumber&lt;Bool&gt;</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSString</string>
+			</dict>
 		</dict>
-		<key>joinedRoom</key>
+		<key>ProcessSubcodeRequest</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>cplG</string>
 			<key>AppleEventCode</key>
-			<string>jRmX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>Colloquy.JVChatRoomPanel</string>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-		</dict>
-		<key>partingRoom</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>pRmX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>Colloquy.JVChatRoomPanel</string>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-		</dict>
-		<key>kickedFromRoom</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>kRmX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>Colloquy.JVChatRoomPanel</string>
-			</dict>
+			<string>psRX</string>
 			<key>Arguments</key>
 			<dict>
-				<key>by</key>
+				<key>arguments</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>kRm1</string>
+					<string>psR1</string>
 					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>Colloquy.JVChatRoomMember</string>
-				</dict>
-				<key>reason</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>kRm2</string>
-					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-		</dict>
-		<key>connected</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>cTsX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>ChatCore.MVChatConnection</string>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-		</dict>
-		<key>disconnecting</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>dFsX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>ChatCore.MVChatConnection</string>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-		</dict>
-		<key>memberJoinedRoom</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>mJrX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>Colloquy.JVChatRoomMember</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>room</key>
+				<key>connection</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>mJr1</string>
+					<string>psR3</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.JVChatRoomPanel</string>
+					<string>ChatCore.MVChatConnection</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>psR2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatUser</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
+			<key>ResultAppleEventCode</key>
+			<string>bool</string>
+			<key>Type</key>
+			<string>NSNumber&lt;Bool&gt;</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSString</string>
+			</dict>
 		</dict>
-		<key>memberPartedRoom</key>
+		<key>ProcessUserCommand</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>cplG</string>
 			<key>AppleEventCode</key>
-			<string>mPrX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>Colloquy.JVChatRoomMember</string>
-			</dict>
+			<string>pcCX</string>
 			<key>Arguments</key>
 			<dict>
-				<key>room</key>
+				<key>arguments</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>mPr1</string>
+					<string>pcC1</string>
 					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>Colloquy.JVChatRoomPanel</string>
-				</dict>
-				<key>reason</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>mPr2</string>
-					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
+				<key>view</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>pcC2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.Panel</string>
+				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
-		</dict>
-		<key>memberKickedFromRoom</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>mKrX</string>
+			<key>ResultAppleEventCode</key>
+			<string>bool</string>
+			<key>Type</key>
+			<string>NSNumber&lt;Bool&gt;</string>
 			<key>UnnamedArgument</key>
 			<dict>
-				<key>Optional</key>
-				<string>NO</string>
 				<key>Type</key>
-				<string>Colloquy.JVChatRoomMember</string>
+				<string>NSString</string>
 			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>room</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>mKr1</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>Colloquy.JVChatRoomPanel</string>
-				</dict>
-				<key>by</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>mKr2</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>Colloquy.JVChatRoomMember</string>
-				</dict>
-				<key>reason</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>mKr3</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
 		</dict>
-		<key>memberStatusChanged</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>mScX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>Colloquy.JVChatRoomMember</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>status</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>mSc1</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>NSNumber&lt;MemberStatus&gt;</string>
-				</dict>
-				<key>by</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>mSc2</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>Colloquy.JVChatRoomMember</string>
-				</dict>
-				<key>room</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>mSc3</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>Colloquy.JVChatRoomPanel</string>
-				</dict>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-		</dict>
-		<key>topicChanged</key>
+		<key>TopicChanged</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>cplG</string>
@@ -630,21 +563,12 @@
 			<string>rTcX</string>
 			<key>Arguments</key>
 			<dict>
-				<key>topic</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>rTc1</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
 				<key>by</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>rTc2</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>Colloquy.JVChatRoomMember</string>
 				</dict>
@@ -653,80 +577,22 @@
 					<key>AppleEventCode</key>
 					<string>rTc3</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>Colloquy.JVChatRoomPanel</string>
 				</dict>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-		</dict>
-		<key>userNicknameChanged</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>uNcX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>NSString</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>now</key>
+				<key>topic</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>uNc1</string>
+					<string>rTc1</string>
 					<key>Optional</key>
-					<string>NO</string>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
-				<key>view</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>uNc2</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>Colloquy.AbstractChatViewController</string>
-				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
-		</dict>
-		<key>idle</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>iDlX</string>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-			<key>ResultAppleEventCode</key>
-			<string>long</string>
-			<key>Type</key>
-			<string>NSNumber&lt;UnsignedLong&gt;</string>
-		</dict>
-	</dict>
-	<key>Enumerations</key>
-	<dict>
-		<key>MemberStatus</key>
-		<dict>
-			<key>AppleEventCode</key>
-			<string>rmSE</string>
-			<key>Enumerators</key>
-			<dict>
-				<key>Normal</key>
-				<string>noRm</string>
-				<key>Voice</key>
-				<string>VoIc</string>
-				<key>Operator</key>
-				<string>cOpr</string>
-			</dict>
 		</dict>
 	</dict>
 	<key>Name</key>

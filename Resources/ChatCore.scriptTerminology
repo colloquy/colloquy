@@ -25,7 +25,7 @@
 				<key>nicknamePassword</key>
 				<dict>
 					<key>Description</key>
-					<string>The nickname's password (if any). Used for nickname registration.</string>
+					<string>The nickname'</string>
 					<key>Name</key>
 					<string>nickname password</string>
 				</dict>
@@ -114,14 +114,14 @@
 				<key>dateJoined</key>
 				<dict>
 					<key>Description</key>
-					<string>Date we joined the room. Missing value if we haven't joined yet.</string>
+					<string>Date we joined the room. Missing value if we haven'</string>
 					<key>Name</key>
 					<string>date joined</string>
 				</dict>
 				<key>dateParted</key>
 				<dict>
 					<key>Description</key>
-					<string>Date we parted the room. Missing value if we haven't parted yet.</string>
+					<string>Date we parted the room. Missing value if we haven'</string>
 					<key>Name</key>
 					<string>date parted</string>
 				</dict>
@@ -182,7 +182,7 @@
 				<key>address</key>
 				<dict>
 					<key>Description</key>
-					<string>The address the user connected to the server from. Somtimes this is a fake (masked) address. This might require a "refresh information" command to be sent in advance.</string>
+					<string>The address the user connected to the server from. Somtimes this is a fake (masked) address. This might require a "refresh information"</string>
 					<key>Name</key>
 					<string>address</string>
 				</dict>
@@ -196,7 +196,7 @@
 				<key>dateConnected</key>
 				<dict>
 					<key>Description</key>
-					<string>The date the user connected to the server. This might require a "refresh information" command to be sent in advance.</string>
+					<string>The date the user connected to the server. This might require a "refresh information"</string>
 					<key>Name</key>
 					<string>date connected</string>
 				</dict>
@@ -224,28 +224,28 @@
 				<key>realName</key>
 				<dict>
 					<key>Description</key>
-					<string>The real name supplied by the user, not always a person's name. This might require a "refresh information" command to be sent in advance.</string>
+					<string>The real name supplied by the user, not always a person's name. This might require a "refresh information"</string>
 					<key>Name</key>
 					<string>real name</string>
 				</dict>
 				<key>scriptTypedAwayMessage</key>
 				<dict>
 					<key>Description</key>
-					<string>The user's current away message. This might require a "refresh information" command to be sent in advance.</string>
+					<string>The user's current away message. This might require a "refresh information"</string>
 					<key>Name</key>
 					<string>away message</string>
 				</dict>
 				<key>serverAddress</key>
 				<dict>
 					<key>Description</key>
-					<string>The server address the user is connected to. This might be a different address than you are connected to, since servers are sometimes clustered. This might require a "refresh information" command to be sent in advance.</string>
+					<string>The server address the user is connected to. This might be a different address than you are connected to, since servers are sometimes clustered. This might require a "refresh information"</string>
 					<key>Name</key>
 					<string>server address</string>
 				</dict>
 				<key>status</key>
 				<dict>
 					<key>Description</key>
-					<string>The current status of the user. This isn't a live value and requires a "refresh information" command to be sent in advance.</string>
+					<string>The current status of the user. This isn't a live value and requires a "refresh information"</string>
 					<key>Name</key>
 					<string>user status</string>
 				</dict>
@@ -259,7 +259,7 @@
 				<key>username</key>
 				<dict>
 					<key>Description</key>
-					<string>The user name supplied by the user. This might require a "refresh information" command to be sent in advance.</string>
+					<string>The user name supplied by the user. This might require a "refresh information"</string>
 					<key>Name</key>
 					<string>user name</string>
 				</dict>

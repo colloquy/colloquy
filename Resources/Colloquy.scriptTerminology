@@ -4,171 +4,10 @@
 <dict>
 	<key>Classes</key>
 	<dict>
-		<key>AbstractChatListItem</key>
-		<dict>
-			<key>Attributes</key>
-			<dict>
-				<key>information</key>
-				<dict>
-					<key>Description</key>
-					<string>Sub-title information to show hwen list has room.</string>
-					<key>Name</key>
-					<string>subtitle</string>
-				</dict>
-				<key>title</key>
-				<dict>
-					<key>Description</key>
-					<string>Title to show in the list.</string>
-					<key>Name</key>
-					<string>name</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Generic chat list item that all views inherit from.</string>
-			<key>Name</key>
-			<string>chat list item</string>
-			<key>PluralName</key>
-			<string>chat list items</string>
-		</dict>
-		<key>AbstractChatViewController</key>
-		<dict>
-			<key>ToOneRelationships</key>
-			<dict>
-				<key>windowController</key>
-				<dict>
-					<key>Description</key>
-					<string>Owning chat window.</string>
-					<key>Name</key>
-					<string>chat window</string>
-				</dict>
-				<key>connection</key>
-				<dict>
-					<key>Description</key>
-					<string>Connection this view uses.</string>
-					<key>Name</key>
-					<string>connection</string>
-				</dict>
-			</dict>
-			<key>Attributes</key>
-			<dict>
-				<key>identifier</key>
-				<dict>
-					<key>Description</key>
-					<string>Consicse description of the chat view.</string>
-					<key>Name</key>
-					<string>description</string>
-				</dict>
-				<key>uniqueIdentifier</key>
-				<dict>
-					<key>Description</key>
-					<string>The unique identifier of the chat view controler.</string>
-					<key>Name</key>
-					<string>id</string>
-				</dict>
-				<key>windowTitle</key>
-				<dict>
-					<key>Description</key>
-					<string>Title used when active in the chat window.</string>
-					<key>Name</key>
-					<string>window title</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Generic chat view that all views inherit from (direct chat, chat room, etc.)</string>
-			<key>Name</key>
-			<string>chat view</string>
-			<key>PluralName</key>
-			<string>chat views</string>
-		</dict>
-		<key>JVChatMessage</key>
-		<dict>
-			<key>ToOneRelationships</key>
-			<dict>
-				<key>transcript</key>
-				<dict>
-					<key>Description</key>
-					<string>The chat room, direct chat or transcript this message is from.</string>
-					<key>Name</key>
-					<string>chat view</string>
-				</dict>
-				<key>body</key>
-				<dict>
-					<key>Description</key>
-					<string>The body of the message. (Default subcontainer.)</string>
-					<key>Name</key>
-					<string>body</string>
-				</dict>
-			</dict>
-			<key>Attributes</key>
-			<dict>
-				<key>isAction</key>
-				<dict>
-					<key>Description</key>
-					<string>Does the message have action tense?</string>
-					<key>Name</key>
-					<string>action tense</string>
-				</dict>
-				<key>isHighlighted</key>
-				<dict>
-					<key>Description</key>
-					<string>Was the message highlighted for some reason?</string>
-					<key>Name</key>
-					<string>highlighted</string>
-				</dict>
-				<key>bodyAsHTML</key>
-				<dict>
-					<key>Description</key>
-					<string>The message with posiable HTML formatting.</string>
-					<key>Name</key>
-					<string>HTML</string>
-				</dict>
-				<key>sender</key>
-				<dict>
-					<key>Description</key>
-					<string>The sender of this message</string>
-					<key>Name</key>
-					<string>sender</string>
-				</dict>
-				<key>date</key>
-				<dict>
-					<key>Description</key>
-					<string>The date and time this message occurred.</string>
-					<key>Name</key>
-					<string>timestamp</string>
-				</dict>
-				<key>ignoreStatus</key>
-				<dict>
-					<key>Description</key>
-					<string>If the message was ignored with one of the ignore rules.</string>
-					<key>Name</key>
-					<string>ignore status</string>
-				</dict>
-				<key>messageNumber</key>
-				<dict>
-					<key>Description</key>
-					<string>The id of this message.</string>
-					<key>Name</key>
-					<string>id</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>A chat message.</string>
-			<key>Name</key>
-			<string>message</string>
-			<key>PluralName</key>
-			<string>messages</string>
-		</dict>
 		<key>JVBuddy</key>
 		<dict>
 			<key>Attributes</key>
 			<dict>
-				<key>activeNicknameDictionary</key>
-				<dict>
-					<key>Description</key>
-					<string>Current nickname that determins the information returned by status, is online, away message and idle time.</string>
-					<key>Name</key>
-					<string>active nickname</string>
-				</dict>
 				<key>awayMessage</key>
 				<dict>
 					<key>Description</key>
@@ -179,7 +18,7 @@
 				<key>compositeName</key>
 				<dict>
 					<key>Description</key>
-					<string>The buddies full name in the user's preferred order (First Name or Last Name first).</string>
+					<string>The buddies full name in the user'</string>
 					<key>Name</key>
 					<string>name</string>
 				</dict>
@@ -218,24 +57,10 @@
 					<key>Name</key>
 					<string>last name</string>
 				</dict>
-				<key>nicknamesArray</key>
-				<dict>
-					<key>Description</key>
-					<string>All the nicknames and servers taged to this buddy.</string>
-					<key>Name</key>
-					<string>nicknames</string>
-				</dict>
-				<key>onlineNicknamesArray</key>
-				<dict>
-					<key>Description</key>
-					<string>All the curently online nicknames and servers.</string>
-					<key>Name</key>
-					<string>online nicknames</string>
-				</dict>
 				<key>preferredName</key>
 				<dict>
 					<key>Description</key>
-					<string>Returns the user's preferred name for the buddy.</string>
+					<string>Returns the user'</string>
 					<key>Name</key>
 					<string>preferred name</string>
 				</dict>
@@ -268,127 +93,93 @@
 			<key>PluralName</key>
 			<string>buddies</string>
 		</dict>
-		<key>JVBuddyListController</key>
-		<dict>
-			<key>ToOneRelationships</key>
-			<dict>
-				<key>window</key>
-				<dict>
-					<key>Description</key>
-					<string>Buddy list window.</string>
-					<key>Name</key>
-					<string>window</string>
-				</dict>
-			</dict>
-			<key>Attributes</key>
-			<dict>
-				<key>showFullNames</key>
-				<dict>
-					<key>Description</key>
-					<string>Show full buddy names, or just nickanmes?</string>
-					<key>Name</key>
-					<string>show full names</string>
-				</dict>
-				<key>showIcons</key>
-				<dict>
-					<key>Description</key>
-					<string>Show buddy icons?</string>
-					<key>Name</key>
-					<string>show icons</string>
-				</dict>
-				<key>showNicknameAndServer</key>
-				<dict>
-					<key>Description</key>
-					<string>Show the active nickname and related chat server?</string>
-					<key>Name</key>
-					<string>show nickname and server</string>
-				</dict>
-				<key>showOfflineBuddies</key>
-				<dict>
-					<key>Description</key>
-					<string>Show offline buddies?</string>
-					<key>Name</key>
-					<string>show offline buddies</string>
-				</dict>
-				<key>sortOrder</key>
-				<dict>
-					<key>Description</key>
-					<string>How to sort the buddies in the list.</string>
-					<key>Name</key>
-					<string>sort order</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Buddy list controller for interacting with buddies.</string>
-			<key>Name</key>
-			<string>buddy list</string>
-		</dict>
-		<key>JVChatController</key>
+		<key>JVChatConsolePanel</key>
 		<dict>
 			<key>Description</key>
-			<string>Master control for anything chat related.</string>
+			<string>Direct server console for advanced users.</string>
 			<key>Name</key>
-			<string>chat manager</string>
-		</dict>
-		<key>JVChatRoomPanel</key>
-		<dict>
-			<key>Description</key>
-			<string>Chat room.</string>
-			<key>Name</key>
-			<string>chat room</string>
+			<string>console panel</string>
 			<key>PluralName</key>
-			<string>chat rooms</string>
+			<string>console panels</string>
+		</dict>
+		<key>JVChatMessage</key>
+		<dict>
 			<key>Attributes</key>
 			<dict>
-				<key>numberOfChildren</key>
+				<key>bodyAsHTML</key>
 				<dict>
 					<key>Description</key>
-					<string>Number of members in the room.</string>
+					<string>The message with posiable HTML formatting.</string>
 					<key>Name</key>
-					<string>number of members</string>
+					<string>HTML</string>
 				</dict>
-				<key>scriptTypedTopic</key>
+				<key>date</key>
 				<dict>
 					<key>Description</key>
-					<string>Topic of the room. Can include HTML formatting.</string>
+					<string>The date and time this message occurred.</string>
 					<key>Name</key>
-					<string>topic</string>
+					<string>timestamp</string>
+				</dict>
+				<key>ignoreStatus</key>
+				<dict>
+					<key>Description</key>
+					<string>If the message was ignored with one of the ignore rules.</string>
+					<key>Name</key>
+					<string>ignore status</string>
+				</dict>
+				<key>isAction</key>
+				<dict>
+					<key>Description</key>
+					<string>Does the message have action tense?</string>
+					<key>Name</key>
+					<string>action tense</string>
+				</dict>
+				<key>isHighlighted</key>
+				<dict>
+					<key>Description</key>
+					<string>Was the message highlighted for some reason?</string>
+					<key>Name</key>
+					<string>highlighted</string>
+				</dict>
+				<key>messageNumber</key>
+				<dict>
+					<key>Description</key>
+					<string>The id of this message.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
+				<key>sender</key>
+				<dict>
+					<key>Description</key>
+					<string>The sender of this message</string>
+					<key>Name</key>
+					<string>sender</string>
 				</dict>
 			</dict>
+			<key>Description</key>
+			<string>A chat message.</string>
+			<key>Name</key>
+			<string>message</string>
+			<key>PluralName</key>
+			<string>messages</string>
 		</dict>
 		<key>JVChatRoomMember</key>
 		<dict>
-			<key>Description</key>
-			<string>Chat room member.</string>
-			<key>Name</key>
-			<string>member</string>
-			<key>PluralName</key>
-			<string>members</string>
-			<key>ToOneRelationships</key>
-			<dict>
-				<key>buddy</key>
-				<dict>
-					<key>Description</key>
-					<string>Buddy (if any) this member represents. (Default subcontainer.)</string>
-					<key>Name</key>
-					<string>buddy</string>
-				</dict>
-				<key>parent</key>
-				<dict>
-					<key>Description</key>
-					<string>Chat room.</string>
-					<key>Name</key>
-					<string>chat room</string>
-				</dict>
-			</dict>
 			<key>Attributes</key>
 			<dict>
 				<key>nickname</key>
 				<dict>
 					<key>Description</key>
-					<string>Member's nickname in the room.</string>
+					<string>Member'</string>
 					<key>Name</key>
 					<string>name</string>
+				</dict>
+				<key>realName</key>
+				<dict>
+					<key>Description</key>
+					<string>The user'</string>
+					<key>Name</key>
+					<string>real name</string>
 				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>
@@ -397,89 +188,52 @@
 					<key>Name</key>
 					<string>id</string>
 				</dict>
-				<key>voice</key>
-				<dict>
-					<key>Description</key>
-					<string>Has voice in the room?</string>
-					<key>Name</key>
-					<string>voice status</string>
-				</dict>
-				<key>operator</key>
-				<dict>
-					<key>Description</key>
-					<string>Is an operator of the room?</string>
-					<key>Name</key>
-					<string>operator</string>
-				</dict>
-				<key>realName</key>
-				<dict>
-					<key>Description</key>
-					<string>The user's supplied real name, sometimes not a name at all.</string>
-					<key>Name</key>
-					<string>real name</string>
-				</dict>
 				<key>username</key>
 				<dict>
 					<key>Description</key>
-					<string>The user's supplied username.</string>
+					<string>The user'</string>
 					<key>Name</key>
 					<string>username</string>
 				</dict>
-				<key>address</key>
-				<dict>
-					<key>Description</key>
-					<string>The user's supplied hostname given to the server when they connected. Sometimes this is cloaked with a fake host.</string>
-					<key>Name</key>
-					<string>address</string>
-				</dict>
-				<key>hostmask</key>
-				<dict>
-					<key>Description</key>
-					<string>The user's hostmask. The combination of the username and address in an email address format.</string>
-					<key>Name</key>
-					<string>hostmask</string>
-				</dict>
 			</dict>
+			<key>Description</key>
+			<string>Chat room member list item represented in the drawer list.</string>
+			<key>Name</key>
+			<string>member</string>
+			<key>PluralName</key>
+			<string>members</string>
 		</dict>
-		<key>JVChatConsolePanel</key>
+		<key>JVChatRoomPanel</key>
 		<dict>
 			<key>Description</key>
-			<string>Chat console for advanced users.</string>
+			<string>Chat room panel.</string>
 			<key>Name</key>
-			<string>chat console</string>
+			<string>chat room panel</string>
 			<key>PluralName</key>
-			<string>chat consoles</string>
+			<string>chat room panels</string>
+		</dict>
+		<key>JVChatTranscript</key>
+		<dict>
+			<key>Description</key>
+			<string>A log of a previous conversation.</string>
+			<key>Name</key>
+			<string>transcript</string>
+			<key>PluralName</key>
+			<string>transcripts</string>
 		</dict>
 		<key>JVChatTranscriptPanel</key>
 		<dict>
 			<key>Description</key>
-			<string>A log of some previous conversation.</string>
+			<string>A log panel of some previous conversation.</string>
 			<key>Name</key>
-			<string>chat transcript</string>
+			<string>transcript panel</string>
 			<key>PluralName</key>
-			<string>chat transcripts</string>
-			<key>Attributes</key>
-			<dict>
-				<key>numberOfMessages</key>
-				<dict>
-					<key>Description</key>
-					<string>The number of messages currently in the transcript.</string>
-					<key>Name</key>
-					<string>message count</string>
-				</dict>
-			</dict>
+			<string>transcript panels</string>
 		</dict>
 		<key>JVChatWindowController</key>
 		<dict>
-			<key>ToOneRelationships</key>
+			<key>Attributes</key>
 			<dict>
-				<key>window</key>
-				<dict>
-					<key>Description</key>
-					<string>User interface window. (Default subcontainer.)</string>
-					<key>Name</key>
-					<string>window</string>
-				</dict>
 				<key>activeChatViewController</key>
 				<dict>
 					<key>Description</key>
@@ -494,15 +248,19 @@
 					<key>Name</key>
 					<string>selected list item</string>
 				</dict>
-			</dict>
-			<key>Attributes</key>
-			<dict>
 				<key>uniqueIdentifier</key>
 				<dict>
 					<key>Description</key>
 					<string>The unique identifier of the chat window.</string>
 					<key>Name</key>
 					<string>id</string>
+				</dict>
+				<key>window</key>
+				<dict>
+					<key>Description</key>
+					<string>User interface window. (Default subcontainer.)</string>
+					<key>Name</key>
+					<string>window</string>
 				</dict>
 			</dict>
 			<key>Description</key>
@@ -512,502 +270,93 @@
 			<key>PluralName</key>
 			<string>chat windows</string>
 		</dict>
-		<key>MVBuddyListController</key>
-		<dict>
-			<key>ToOneRelationships</key>
-			<dict>
-				<key>window</key>
-				<dict>
-					<key>Description</key>
-					<string>Buddy list window.</string>
-					<key>Name</key>
-					<string>window</string>
-				</dict>
-			</dict>
-			<key>Attributes</key>
-			<dict>
-				<key>showFullNames</key>
-				<dict>
-					<key>Description</key>
-					<string>Show full buddy names, or just nickanmes?</string>
-					<key>Name</key>
-					<string>show full names</string>
-				</dict>
-				<key>showIcons</key>
-				<dict>
-					<key>Description</key>
-					<string>Show buddy icons?</string>
-					<key>Name</key>
-					<string>show icons</string>
-				</dict>
-				<key>showNicknameAndServer</key>
-				<dict>
-					<key>Description</key>
-					<string>Show the active nickname and related chat server?</string>
-					<key>Name</key>
-					<string>show nickname and server</string>
-				</dict>
-				<key>showOfflineBuddies</key>
-				<dict>
-					<key>Description</key>
-					<string>Show offline buddies?</string>
-					<key>Name</key>
-					<string>show offline buddies</string>
-				</dict>
-				<key>sortOrder</key>
-				<dict>
-					<key>Description</key>
-					<string>How to sort the buddies in the list.</string>
-					<key>Name</key>
-					<string>sort order</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Buddy list controller for interacting with buddies.</string>
-			<key>Name</key>
-			<string>buddy list</string>
-		</dict>
 		<key>JVDirectChatPanel</key>
 		<dict>
-			<key>ToOneRelationships</key>
-			<dict>
-				<key>buddy</key>
-				<dict>
-					<key>Description</key>
-					<string>Buddy (if any) this chat is with.</string>
-					<key>Name</key>
-					<string>buddy</string>
-				</dict>
-			</dict>
+			<key>Description</key>
+			<string>Direct (private) chat panel with another user.</string>
+			<key>Name</key>
+			<string>chat panel</string>
+			<key>PluralName</key>
+			<string>chat panels</string>
+		</dict>
+		<key>ListItem</key>
+		<dict>
 			<key>Attributes</key>
 			<dict>
-				<key>currentMessage</key>
+				<key>information</key>
 				<dict>
 					<key>Description</key>
-					<string>Current message being sent or received. Only available during plug-in handlers.</string>
+					<string>Sub-title information to show hwen list has room.</string>
 					<key>Name</key>
-					<string>current message</string>
+					<string>subtitle</string>
 				</dict>
-				<key>cantSendMessages</key>
+				<key>title</key>
 				<dict>
 					<key>Description</key>
-					<string>Can send messages?</string>
+					<string>Title to show in the list.</string>
 					<key>Name</key>
-					<string>unavailable</string>
-				</dict>
-				<key>isActive</key>
-				<dict>
-					<key>Description</key>
-					<string>Is the active (visible) view?</string>
-					<key>Name</key>
-					<string>active</string>
-				</dict>
-				<key>newHighlightMessage</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the chat has had a recent highlighted message that hasn't been seen yet.</string>
-					<key>Name</key>
-					<string>new highlight message</string>
-				</dict>
-				<key>newMessage</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the chat has had a recent message that hasn't been seen yet.</string>
-					<key>Name</key>
-					<string>new message</string>
-				</dict>
-				<key>target</key>
-				<dict>
-					<key>Description</key>
-					<string>The user or room that we engaged in conversation with.</string>
-					<key>Name</key>
-					<string>target</string>
-				</dict>
-				<key>scriptTypedEncoding</key>
-				<dict>
-					<key>Description</key>
-					<string>The encoding to use when reading and sending messages.</string>
-					<key>Name</key>
-					<string>encoding</string>
+					<string>name</string>
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Direct (private) chat with another user.</string>
+			<string>Generic chat list item that all drawer items inherit from (e.g. members, etc.).</string>
 			<key>Name</key>
-			<string>direct chat</string>
+			<string>list item</string>
 			<key>PluralName</key>
-			<string>direct chats</string>
+			<string>list items</string>
 		</dict>
-		<key>MVConnectionsController</key>
+		<key>Panel</key>
 		<dict>
-			<key>Description</key>
-			<string>Manages all chat connections, active or inactive ones.</string>
-			<key>Name</key>
-			<string>connection manager</string>
-			<key>ToOneRelationships</key>
+			<key>Attributes</key>
 			<dict>
-				<key>window</key>
-				<dict>
-					<key>Description</key>
-					<string>Connections window.</string>
-					<key>Name</key>
-					<string>window</string>
-				</dict>
-			</dict>
-		</dict>
-		<key>NSApplication</key>
-		<dict>
-			<key>Description</key>
-			<string>Colloquy application.</string>
-			<key>Name</key>
-			<string>application</string>
-			<key>PluralName</key>
-			<string>applications</string>
-			<key>ToOneRelationships</key>
-			<dict>
-				<key>buddyListController</key>
-				<dict>
-					<key>Description</key>
-					<string>Buddy list, tracks all buddies.</string>
-					<key>Name</key>
-					<string>buddy list</string>
-				</dict>
-				<key>chatController</key>
-				<dict>
-					<key>Description</key>
-					<string>Chat manager, handles all windows and views. (Default subcontainer.)</string>
-					<key>Name</key>
-					<string>chat manager</string>
-				</dict>
-				<key>connectionsController</key>
-				<dict>
-					<key>Description</key>
-					<string>Connection manager, handles all server communication.</string>
-					<key>Name</key>
-					<string>connection manager</string>
-				</dict>
-			</dict>
-		</dict>
-	</dict>
-	<key>Commands</key>
-	<dict>
-		<key>show</key>
-		<dict>
-			<key>Description</key>
-			<string>Show connection manager or buddy list.</string>
-			<key>Name</key>
-			<string>show</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The connection manager or buddy list.</string>
-			</dict>
-		</dict>
-		<key>newConnection</key>
-		<dict>
-			<key>Description</key>
-			<string>Prompts to make a new connection.</string>
-			<key>Name</key>
-			<string>show new connection dialog</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The application.</string>
-			</dict>
-		</dict>
-		<key>handleChatUrl</key>
-		<dict>
-			<key>Description</key>
-			<string>Creates a new connection representing the URL (if an applicable URL).</string>
-			<key>Name</key>
-			<string>make new connection</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Connection manager.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>url</key>
-				<dict>
-					<key>Description</key>
-					<string>The URL to process.</string>
-					<key>Name</key>
-					<string>from URL</string>
-				</dict>
-			</dict>
-		</dict>
-		<key>showBuddyPickerSheet</key>
-		<dict>
-			<key>Description</key>
-			<string>Show the buddy selection sheet on the Buddy List window.</string>
-			<key>Name</key>
-			<string>show buddy picker sheet</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The buddy list.</string>
-			</dict>
-		</dict>
-		<key>kick</key>
-		<dict>
-			<key>Description</key>
-			<string>Kick member for the chat room (if we have operator status).</string>
-			<key>Name</key>
-			<string>kick</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat member to kick out.</string>
-			</dict>
-		</dict>
-		<key>voice</key>
-		<dict>
-			<key>Description</key>
-			<string>Grant voice status to a member of a chat room (if we have operator status).</string>
-			<key>Name</key>
-			<string>voice</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat member to affect.</string>
-			</dict>
-		</dict>
-		<key>devoice</key>
-		<dict>
-			<key>Description</key>
-			<string>Revoke voice status for a member of a chat room (if we have operator status).</string>
-			<key>Name</key>
-			<string>devoice</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat member to affect.</string>
-			</dict>
-		</dict>
-		<key>promote</key>
-		<dict>
-			<key>Description</key>
-			<string>Grant operator status to a member of a chat room (if we have operator status).</string>
-			<key>Name</key>
-			<string>promote</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat member to affect.</string>
-			</dict>
-		</dict>
-		<key>demote</key>
-		<dict>
-			<key>Description</key>
-			<string>Revoke operator status for a member of a chat room (if we have operator status).</string>
-			<key>Name</key>
-			<string>demote</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat member to affect.</string>
-			</dict>
-		</dict>
-		<key>startChat</key>
-		<dict>
-			<key>Description</key>
-			<string>Open a direct chat with a chat room member.</string>
-			<key>Name</key>
-			<string>open direct chat</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat member.</string>
-			</dict>
-		</dict>
-		<key>openViewsDrawer</key>
-		<dict>
-			<key>Description</key>
-			<string>Open drawer if it is closed, else dose nothing.</string>
-			<key>Name</key>
-			<string>open drawer</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat window to affect.</string>
-			</dict>
-		</dict>
-		<key>closeViewsDrawer</key>
-		<dict>
-			<key>Description</key>
-			<string>Close drawer if it is open, else dose nothing.</string>
-			<key>Name</key>
-			<string>close drawer</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat window to affect.</string>
-			</dict>
-		</dict>
-		<key>toggleViewsDrawer</key>
-		<dict>
-			<key>Description</key>
-			<string>Toggle drawer; if it is open—close it, else open it.</string>
-			<key>Name</key>
-			<string>toggle drawer</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat window to affect.</string>
-			</dict>
-		</dict>
-		<key>viewInAddressBook</key>
-		<dict>
-			<key>Description</key>
-			<string>View Buddy information in the system Address Book.</string>
-			<key>Name</key>
-			<string>view card</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The buddy to view.</string>
-			</dict>
-		</dict>
-		<key>editInAddressBook</key>
-		<dict>
-			<key>Description</key>
-			<string>Edit Buddy information in the system Address Book.</string>
-			<key>Name</key>
-			<string>edit card</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The buddy to edit.</string>
-			</dict>
-		</dict>
-		<key>sendMessage</key>
-		<dict>
-			<key>Description</key>
-			<string>Send message to chat room or direct chat with a user.</string>
-			<key>Name</key>
-			<string>send</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Chat room or direct chat to send to.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>message</key>
-				<dict>
-					<key>Description</key>
-					<string>Message to send. Can include HTML formatting.</string>
-					<key>Name</key>
-					<string>message</string>
-				</dict>
-				<key>action</key>
-				<dict>
-					<key>Description</key>
-					<string>Send as an action?</string>
-					<key>Name</key>
-					<string>action tense</string>
-				</dict>
-				<key>echo</key>
-				<dict>
-					<key>Description</key>
-					<string>Show message in conversation? (Defaults on.)</string>
-					<key>Name</key>
-					<string>local echo</string>
-				</dict>
-			</dict>
-		</dict>
-		<key>addEventMessage</key>
-		<dict>
-			<key>Description</key>
-			<string>Add an event message a chat room or direct chat.</string>
-			<key>Name</key>
-			<string>add event</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Chat room or direct chat to affect.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>message</key>
-				<dict>
-					<key>Description</key>
-					<string>Message to add. Can include HTML formatting.</string>
-					<key>Name</key>
-					<string>message</string>
-				</dict>
-				<key>name</key>
-				<dict>
-					<key>Description</key>
-					<string>A name for this type of event message.</string>
-					<key>Name</key>
-					<string>with name</string>
-				</dict>
-				<key>attributes</key>
-				<dict>
-					<key>Description</key>
-					<string>Custom information to be stored with this event message. Can be used by chat styles.</string>
-					<key>Name</key>
-					<string>and attributes</string>
-				</dict>
-			</dict>
-		</dict>
-		<key>startChatWith</key>
-		<dict>
-			<key>Description</key>
-			<string>Open a direct chat with a user on a connected connection.</string>
-			<key>Name</key>
-			<string>start chat</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The chat manager</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>user</key>
-				<dict>
-					<key>Description</key>
-					<string>Nickname of user to chat with.</string>
-					<key>Name</key>
-					<string>with user</string>
-				</dict>
 				<key>connection</key>
 				<dict>
 					<key>Description</key>
-					<string>Connection the user is on. (Must be connected.)</string>
+					<string>Connection this view uses.</string>
 					<key>Name</key>
-					<string>connected on</string>
+					<string>connection</string>
+				</dict>
+				<key>identifier</key>
+				<dict>
+					<key>Description</key>
+					<string>Consicse description of the chat view.</string>
+					<key>Name</key>
+					<string>description</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the chat view controler.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
+				<key>windowController</key>
+				<dict>
+					<key>Description</key>
+					<string>Owning chat window.</string>
+					<key>Name</key>
+					<string>chat window</string>
+				</dict>
+				<key>windowTitle</key>
+				<dict>
+					<key>Description</key>
+					<string>Title used when active in the chat window.</string>
+					<key>Name</key>
+					<string>window title</string>
 				</dict>
 			</dict>
+			<key>Description</key>
+			<string>Generic chat panel that all panels inherit from (e.g. chat panel, chat room panel, etc.)</string>
+			<key>Name</key>
+			<string>panel</string>
+			<key>PluralName</key>
+			<string>panels</string>
 		</dict>
 	</dict>
+	<key>Description</key>
+	<string>Commands and classes for Colloquy scripting.</string>
 	<key>Enumerations</key>
 	<dict>
-		<key>BuddyListSortOrder</key>
-		<dict>
-			<key>Availability</key>
-			<dict>
-				<key>Name</key>
-				<string>availability</string>
-			</dict>
-			<key>FirstName</key>
-			<dict>
-				<key>Name</key>
-				<string>first name</string>
-			</dict>
-			<key>LastName</key>
-			<dict>
-				<key>Name</key>
-				<string>last name</string>
-			</dict>
-			<key>Server</key>
-			<dict>
-				<key>Name</key>
-				<string>server</string>
-			</dict>
-		</dict>
 		<key>BuddyStatus</key>
 		<dict>
 			<key>Available</key>
@@ -1033,15 +382,15 @@
 		</dict>
 		<key>IgnoreStatus</key>
 		<dict>
-			<key>NotIgnored</key>
-			<dict>
-				<key>Name</key>
-				<string>not ignored</string>
-			</dict>
 			<key>MessageIgnored</key>
 			<dict>
 				<key>Name</key>
 				<string>message ignored</string>
+			</dict>
+			<key>NotIgnored</key>
+			<dict>
+				<key>Name</key>
+				<string>not ignored</string>
 			</dict>
 			<key>UserIgnored</key>
 			<dict>
@@ -1050,19 +399,7 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>Synonyms</key>
-	<dict>
-		<key>maPA</key>
-		<dict>
-			<key>Name</key>
-			<string>body</string>
-			<key>Description</key>
-			<string>Body of a chat message. (Note: font and size are inaccurate and should be ignored.)</string>
-		</dict>
-	</dict>
 	<key>Name</key>
 	<string>Colloquy Suite</string>
-	<key>Description</key>
-	<string>commands and classes for Colloquy scripting.</string>
 </dict>
 </plist>
