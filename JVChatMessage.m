@@ -212,11 +212,11 @@
 #pragma mark -
 
 @implementation JVMutableChatMessage
-+ (id) messageWithText:(NSTextStorage *) body sender:(NSString *) sender andTranscript:(JVChatTranscript *) transcript {
++ (id) messageWithText:(id) body sender:(id) sender andTranscript:(JVChatTranscript *) transcript {
 	return [[[self alloc] initWithText:body sender:sender andTranscript:transcript] autorelease];
 }
 
-- (id) initWithText:(NSTextStorage *) body sender:(NSString *) sender andTranscript:(JVChatTranscript *) transcript {
+- (id) initWithText:(id) body sender:(id) sender andTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) ) {
 		_loaded = YES;
 		[self setTranscript:transcript];
@@ -253,7 +253,7 @@
 
 #pragma mark -
 
-- (void) setBody:(NSAttributedString *) message {
+- (void) setBody:(id) message {
 	if( ! _attributedMessage ) {
 		if( [message isKindOfClass:[NSTextStorage class]] ) _attributedMessage = [message retain];
 		else if( [message isKindOfClass:[NSAttributedString class]] ) _attributedMessage = [[NSTextStorage alloc] initWithAttributedString:message];
