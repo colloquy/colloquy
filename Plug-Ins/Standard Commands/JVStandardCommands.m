@@ -51,7 +51,7 @@
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"aaway"] ) {
 		return [self handleMassAwayWithMessage:arguments];
-	} else if( ! [command caseInsensitiveCompare:@"j"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"j"] || ! [command caseInsensitiveCompare:@"join"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
 	} else if( ! [command caseInsensitiveCompare:@"leave"] || ! [command caseInsensitiveCompare:@"part"] ) {
 		return [self handlePartWithArguments:[arguments string] forConnection:connection];
@@ -498,25 +498,40 @@
 
 - (BOOL) handleJoinWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
 	NSArray *channels = [arguments componentsSeparatedByString:@","];
-	NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"&#+!"];
-	NSEnumerator *chanEnum = [channels objectEnumerator];
-	NSString *channel = nil;
-	while( ( channel = [chanEnum nextObject] ) ) {
-		channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-		[connection sendRawMessage:[NSString stringWithFormat:@"JOIN %@", ( [chanSet characterIsMember:[channel characterAtIndex:0]] ? channel : [@"#" stringByAppendingString:channel] )]];
+
+	if( [arguments length] && [channels count] )  {
+		NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"&#+!"];
+		NSEnumerator *chanEnum = [channels objectEnumerator];
+		NSString *channel = nil;
+		while( ( channel = [chanEnum nextObject] ) ) {
+			channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			if( [channel length] > 0 )
+				[connection sendRawMessage:[NSString stringWithFormat:@"JOIN %@", ( [chanSet characterIsMember:[channel characterAtIndex:0]] ? channel : [@"#" stringByAppendingString:channel] )]];
+		}
+	} else {
+		id browser = [NSClassFromString( @"JVChatRoomBrowser" ) chatRoomBrowserForConnection:connection];
+		[browser showWindow:nil];
+		[browser setFilter:arguments];
+		[browser showRoomBrowser:nil];
 	}
+
 	return YES;
 }
 
 - (BOOL) handlePartWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
-	NSArray *channels = [arguments componentsSeparatedByString:@","];
-	NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"&#+!"];
-	NSEnumerator *chanEnum = [channels objectEnumerator];
-	NSString *channel = nil;
-	while( ( channel = [chanEnum nextObject] ) ) {
-		channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-		[connection sendRawMessage:[NSString stringWithFormat:@"PART %@", ( [chanSet characterIsMember:[channel characterAtIndex:0]] ? channel : [@"#" stringByAppendingString:channel] )]];
-	}
+    if( [arguments length] > 0 )
+    {
+        NSArray *channels = [arguments componentsSeparatedByString:@","];
+        NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"&#+!"];
+        NSEnumerator *chanEnum = [channels objectEnumerator];
+        NSString *channel = nil;
+        while( ( channel = [chanEnum nextObject] ) ) {
+            channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if( [channel length] )
+                [connection sendRawMessage:[NSString stringWithFormat:@"PART %@", ( [chanSet characterIsMember:[channel characterAtIndex:0]] ? channel : [@"#" stringByAppendingString:channel] )]];
+        }
+    }
+    
 	return YES;
 }
 
@@ -601,7 +616,7 @@
 	if( ! [args length] ) {
 		id info = [NSClassFromString( @"JVInspectorController" ) inspectorOfObject:[view connection]];
 		[info show:nil];		
-		[(id)[info inspector] selectTabWithIdentifier:@"Ignores"];
+		[(id)[info inspector] performSelector:@selector(selectTabWithIdentifier:) withObject:@"Ignores"];
 		return YES;
 	}
 
