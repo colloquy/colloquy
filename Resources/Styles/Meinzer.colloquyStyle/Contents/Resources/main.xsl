@@ -1,6 +1,7 @@
 <xsl:transform xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output omit-xml-declaration="yes" indent="yes" />
 	<xsl:param name="subsequent" />
+	<xsl:param name="timeFormat" />
 
 	<xsl:template match="/">
 		<xsl:choose>
@@ -116,28 +117,37 @@
 
 	<xsl:template name="short-time">
 		<xsl:param name="date" /> <!-- YYYY-MM-DD HH:MM:SS +/-HHMM -->
+		<xsl:variable name='hour' select='substring($date, 12, 2)' />
+		<xsl:variable name='minute' select='substring($date, 15, 2)' />
 		<xsl:choose>
-			<xsl:when test="number(substring($date, 12, 2)) &gt; 12">
-				<xsl:value-of select="number(substring($date, 12, 2)) - 12" />
-			</xsl:when>
-			<xsl:when test="number(substring($date, 12, 2)) = 0">
-				<xsl:text>12</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="number(substring($date, 12, 2))" />
-			</xsl:otherwise>
-		</xsl:choose>
-		<xsl:text>:</xsl:text>
-		<xsl:value-of select="substring($date, 15, 2)" />
-		<xsl:text>:</xsl:text>
-		<xsl:value-of select="substring($date, 18, 2)" />
-		<xsl:choose>
-			<xsl:when test="number(substring($date, 12, 2)) &gt;= 12">
-				<xsl:text> PM</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text> AM</xsl:text>
-			</xsl:otherwise>
+		  <xsl:when test="starts-with($timeFormat,'%H')">
+		    <!-- 24hr format -->
+		    <xsl:value-of select="concat($hour,':',$minute)" />
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <!-- am/pm format -->
+		    <xsl:choose>
+		      <xsl:when test="number($hour) &gt; 12">
+			<xsl:value-of select="number($hour) - 12" />
+		      </xsl:when>
+		      <xsl:when test="number($hour) = 0">
+			<xsl:text>12</xsl:text>
+		      </xsl:when>
+		      <xsl:otherwise>
+			<xsl:value-of select="$hour" />
+		      </xsl:otherwise>
+		    </xsl:choose>
+		    <xsl:text>:</xsl:text>
+		    <xsl:value-of select="$minute" />
+		    <xsl:choose>
+		      <xsl:when test="number($hour) &gt;= 12">
+			<xsl:text>PM</xsl:text>
+		      </xsl:when>
+		      <xsl:otherwise>
+			<xsl:text>AM</xsl:text>
+		      </xsl:otherwise>
+		    </xsl:choose>
+		  </xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 </xsl:transform>

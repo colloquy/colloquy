@@ -386,8 +386,13 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	[_styleParams autorelease];
 	_styleParams = [[NSMutableDictionary dictionary] retain];
 
+	// add single-quotes so that these are not interpreted as XPath expressions
+
 	[_styleParams setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];
 	[_styleParams setObject:@"'.tif'" forKey:@"buddyIconExtension"];
+
+	NSString *timeFormatParameter = [NSString stringWithFormat:@"'%@'", [[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString]];
+	[_styleParams setObject:timeFormatParameter forKey:@"timeFormat"];
 
 	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[_chatStyle identifier] UTF8String] );
 
