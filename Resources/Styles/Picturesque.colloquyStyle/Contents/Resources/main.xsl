@@ -93,6 +93,9 @@
 			<xsl:when test="$extension = '.tif' or $extension = '.TIF' or $extensionLong = '.tiff' or $extensionLong = '.TIFF'">
 				<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
 			</xsl:when>
+			<xsl:when test="$extension = '.pdf' or $extension = '.PDF'">
+				<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
+			</xsl:when>
 			<xsl:when test="$extension = '.bmp' or $extension = '.BMP'">
 				<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
 			</xsl:when>
