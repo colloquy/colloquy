@@ -57,13 +57,94 @@
 				<string>application/xml</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Chat transcript</string>
+			<string>Chat Transcript</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>coTr</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+		</dict>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>cc.javelin.colloquy.colloquystyle</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://www.colloquy.info/</string>
+			<key>UTTypeDescription</key>
+			<string>Colloquy View Style</string>
+			<key>UTTypeIconName</key>
+			<string>Generic.icns</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.bundle</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<string>coSt</string>
+				<key>public.filename-extension</key>
+				<array>
+					<string>colloquyStyle</string>
+					<string>colloquystyle</string>
+				</array>
+				<key>public.mime-type</key>
+				<string>application/data</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>cc.javelin.colloquy.colloquyemoticons</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://www.colloquy.info/</string>
+			<key>UTTypeDescription</key>
+			<string>Colloquy Emoticon Set</string>
+			<key>UTTypeIconName</key>
+			<string>Generic.icns</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.bundle</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<string>coEm</string>
+				<key>public.filename-extension</key>
+				<array>
+					<string>colloquyEmoticons</string>
+					<string>colloquyemoticons</string>
+				</array>
+				<key>public.mime-type</key>
+				<string>application/data</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>cc.javelin.colloquy.colloquytranscript</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://www.colloquy.info/</string>
+			<key>UTTypeDescription</key>
+			<string>Colloquy Chat Transcript</string>
+			<key>UTTypeIconName</key>
+			<string>Generic.icns</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.xml</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<string>coTr</string>
+				<key>public.filename-extension</key>
+				<array>
+					<string>colloquyTranscript</string>
+					<string>colloquytranscript</string>
+				</array>
+				<key>public.mime-type</key>
+				<string>application/xml</string>
+			</dict>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
