@@ -7,6 +7,7 @@
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 
+#import "MVApplicationController.h"
 #import "JVChatController.h"
 #import "JVChatMessage.h"
 #import "MVConnectionsController.h"
@@ -25,6 +26,9 @@
 
 NSMutableSet *JVChatStyleBundles = nil;
 NSMutableSet *JVChatEmoticonBundles = nil;
+
+NSString *JVChatStylesScannedNotification = @"JVChatStylesScannedNotification";
+NSString *JVChatEmoticonsScannedNotification = @"JVChatEmoticonsScannedNotification";
 
 static NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
@@ -51,6 +55,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 
 @implementation JVChatTranscript
++ (void) initialize {
+	[super initialize];
+	static BOOL tooLate = NO;
+	if( ! tooLate ) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _scanForChatStyles ) name:JVChatStyleInstalledNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _scanForEmoticons ) name:JVChatEmoticonSetInstalledNotification object:nil];
+		tooLate = YES;
+	}
+}
+
 - (id) init {
 	extern NSMutableSet *JVChatStyleBundles;
 	extern NSMutableSet *JVChatEmoticonBundles;
@@ -75,6 +89,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 		[[self class] _scanForChatStyles];
 		[[self class] _scanForEmoticons];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateChatStylesMenu ) name:JVChatStylesScannedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateChatEmoticonsMenu ) name:JVChatEmoticonsScannedNotification object:nil];
 
 		[JVChatStyleBundles retain];
 		[JVChatEmoticonBundles retain];
@@ -147,6 +164,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 - (void) dealloc {
 	extern NSMutableSet *JVChatStyleBundles;
 	extern NSMutableSet *JVChatEmoticonBundles;
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[display setUIDelegate:nil];
 	[display setPolicyDelegate:nil];
@@ -788,26 +807,21 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 #pragma mark Style Support
 
-+ (NSSet *) _chatStyleBundles {
-	extern NSMutableSet *JVChatStyleBundles;
-	return [[JVChatStyleBundles retain] autorelease];
-}
-
 + (void) _scanForChatStyles {
 	extern NSMutableSet *JVChatStyleBundles;
 	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
 	NSEnumerator *enumerator = nil, *denumerator = nil;
 	NSString *file = nil, *path = nil;
 	NSBundle *bundle = nil;
-	
+
 	if( ! JVChatStyleBundles )
-		JVChatStyleBundles = [NSMutableSet set];
-	
+		JVChatStyleBundles = [[NSMutableSet set] retain];
+
 	[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle mainBundle] resourcePath]]];
 	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
 	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
 	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
-	
+
 	enumerator = [paths objectEnumerator];
 	while( ( path = [enumerator nextObject] ) ) {
 		denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
@@ -820,6 +834,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 			}
 		}
 	}
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatStylesScannedNotification object:JVChatStyleBundles]; 
 }
 
 - (void) _reloadCurrentStyle:(id) sender {
@@ -1030,26 +1046,21 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 #pragma mark Emoticons Support
 
-+ (NSSet *) _emoticonBundles {
-	extern NSMutableSet *JVChatEmoticonBundles;
-	return [[JVChatEmoticonBundles retain] autorelease];
-}
-
 + (void) _scanForEmoticons {
 	extern NSMutableSet *JVChatEmoticonBundles;
 	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
 	NSEnumerator *enumerator = nil, *denumerator = nil;
 	NSString *file = nil, *path = nil;
 	NSBundle *bundle = nil;
-	
+
 	if( ! JVChatEmoticonBundles )
-		JVChatEmoticonBundles = [NSMutableSet set];
-	
+		JVChatEmoticonBundles = [[NSMutableSet set] retain];
+
 	[paths addObject:[NSString stringWithFormat:@"%@/Emoticons", [[NSBundle mainBundle] resourcePath]]];
 	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Emoticons", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
 	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Emoticons", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
 	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Emoticons", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
-	
+
 	enumerator = [paths objectEnumerator];
 	while( ( path = [enumerator nextObject] ) ) {
 		denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
@@ -1062,6 +1073,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 			}
 		}
 	}
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatEmoticonsScannedNotification object:JVChatEmoticonBundles]; 
 }
 
 - (NSMenu *) _emoticonsMenu {

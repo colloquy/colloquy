@@ -251,6 +251,12 @@
 		} else if( [[arguments string] isEqualToString:@"style"] ) {
 			[room _reloadCurrentStyle:nil];
 			return YES;
+		} else if( [[arguments string] isEqualToString:@"styles"] ) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatStyleInstalledNotification" object:nil]; 
+			return YES;
+		} else if( [[arguments string] isEqualToString:@"emoticons"] ) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatEmoticonSetInstalledNotification" object:nil]; 
+			return YES;
 		}
 	} else if( [command isEqualToString:@"ignore"] ) {
 		NSString *args = [arguments string];

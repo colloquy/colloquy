@@ -31,6 +31,9 @@
 	NSMutableArray *_styleOptions;
 	NSString *_userStyle;
 }
+- (void) selectStyleWithIdentifier:(NSString *) identifier;
+- (void) selectEmoticonsWithIdentifier:(NSString *) identifier;
+
 - (void) changePreferences:(id) sender;
 
 - (IBAction) changeBaseFontSize:(id) sender;

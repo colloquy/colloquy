@@ -5,12 +5,19 @@
 
 @class WebView;
 @class MVMenuButton;
+@class NSMutableSet;
 @class NSString;
 @class NSBundle;
 @class NSDictionary;
 @class NSMutableDictionary;
 @class JVChatMessage;
 @class NSLock;
+
+extern NSMutableSet *JVChatStyleBundles;
+extern NSMutableSet *JVChatEmoticonBundles;
+
+extern NSString *JVChatStylesScannedNotification;
+extern NSString *JVChatEmoticonsScannedNotification;
 
 @interface JVChatTranscript : NSObject <JVChatViewController> {
 	@protected

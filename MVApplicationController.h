@@ -1,6 +1,9 @@
 #import <Foundation/NSObject.h>
 #import <Foundation/NSKeyValueCoding.h>
 
+extern NSString *JVChatStyleInstalledNotification;
+extern NSString *JVChatEmoticonSetInstalledNotification;
+
 @interface MVApplicationController : NSObject {}
 - (IBAction) checkForUpdate:(id) sender;
 - (IBAction) connectToSupportRoom:(id) sender;

@@ -5,6 +5,8 @@
 #import <ChatCore/NSStringAdditions.h>
 
 #import "JVAppearancePreferences.h"
+#import "MVApplicationController.h"
+#import "JVChatTranscript.h"
 #import "JVChatTranscriptPrivates.h"
 #import "JVFontPreviewField.h"
 #import "JVColorWellCell.h"
@@ -19,12 +21,14 @@
 - (id) init {
 	if( ( self = [super init] ) ) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( colorWellDidChangeColor: ) name:JVColorWellCellColorDidChangeNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVChatStylesScannedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVChatEmoticonsScannedNotification object:nil];
 
 		[JVChatTranscript _scanForChatStyles];
 		[JVChatTranscript _scanForEmoticons];
 
-		_styleBundles = [[JVChatTranscript _chatStyleBundles] retain];
-		_emoticonBundles = [[JVChatTranscript _emoticonBundles] retain];
+		_styleBundles = [JVChatStyleBundles retain];
+		_emoticonBundles = [JVChatEmoticonBundles retain];
 	}
 	return self;
 }
@@ -59,6 +63,20 @@
 
 - (void) moduleWillBeRemoved {
 	[optionsDrawer close];
+}
+
+#pragma mark -
+
+- (void) selectStyleWithIdentifier:(NSString *) identifier {
+	[[NSUserDefaults standardUserDefaults] setObject:identifier forKey:@"JVChatDefaultStyle"];
+	[self performSelector:@selector( changePreferences: ) withObject:nil afterDelay:0.];
+}
+
+- (void) selectEmoticonsWithIdentifier:(NSString *) identifier {
+	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
+	[[NSUserDefaults standardUserDefaults] setObject:identifier forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
+	[self updateEmoticonsMenu];
+	[self updatePreview];
 }
 
 #pragma mark -
@@ -134,15 +152,11 @@
 }
 
 - (IBAction) noGraphicEmoticons:(id) sender {
-	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
-	[[NSUserDefaults standardUserDefaults] setObject:@"" forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
-	[self updatePreview];
+	[self selectEmoticonsWithIdentifier:@""];
 }
 
 - (IBAction) changeDefaultEmoticons:(id) sender {
-	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
-	[[NSUserDefaults standardUserDefaults] setObject:[sender representedObject] forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
-	[self updatePreview];
+	[self selectEmoticonsWithIdentifier:[sender representedObject]];
 }
 
 #pragma mark -

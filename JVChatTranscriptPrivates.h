@@ -6,9 +6,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 + (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
 + (void) _freeXsltParamArray:(const char **) params;
-+ (NSSet *) _chatStyleBundles;
 + (void) _scanForChatStyles;
-+ (NSSet *) _emoticonBundles;
 + (void) _scanForEmoticons;
 
 #pragma mark -
