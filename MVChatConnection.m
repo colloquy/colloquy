@@ -1073,12 +1073,13 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	if( [self _irssiConnection] ) server_unref( [self _irssiConnection] );
 	_chatConnection = proto -> server_init_connect( conn );
 
+	server_connect_unref( conn );
+
 	g_free_not_null( [self _irssiConnection] -> tag );
 	[self _irssiConnection] -> tag = g_strdup( [[NSString stringWithFormat:@"%x", self] UTF8String] );
 
 	proto -> server_connect( [self _irssiConnection] );
 	server_ref( [self _irssiConnection] );
-	server_connect_unref( conn );
 }
 
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname {
@@ -1640,8 +1641,11 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) _didDisconnect {
-	g_free_not_null( [self _irssiConnection] -> tag );
-	[self _irssiConnection] -> tag = NULL;
+	extern BOOL applicationQuitting;
+	if( applicationQuitting ) {
+		g_free_not_null( [self _irssiConnection] -> tag );
+		[self _irssiConnection] -> tag = NULL;
+	}
 
 	if( [self _irssiConnection] ) server_unref( [self _irssiConnection] );
 	_chatConnection = NULL;
