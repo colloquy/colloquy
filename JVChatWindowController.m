@@ -4,6 +4,7 @@
 #import "MVConnectionsController.h"
 #import "JVChatController.h"
 #import "JVChatRoom.h"
+#import "JVChatRoomBrowser.h"
 #import "JVDirectChat.h"
 #import "JVDetailCell.h"
 #import "MVMenuButton.h"
@@ -164,6 +165,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
 	if( [item conformsToProtocol:@protocol( JVInspection )] )
 		[[JVInspectorController inspectorOfObject:item] show:sender];
+}
+
+#pragma mark -
+
+- (IBAction) joinRoom:(id) sender {
+	[[JVChatRoomBrowser chatRoomBrowserForConnection:[_activeViewController connection]] showWindow:nil];
 }
 
 #pragma mark -

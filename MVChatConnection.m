@@ -107,6 +107,7 @@ static GMainLoop *glibMainLoop = NULL;
 - (void) _registerForSleepNotifications;
 - (void) _deregisterForSleepNotifications;
 - (void) _postNotification:(NSNotification *) notification;
+- (void) _queueNotification:(NSNotification *) notification;
 - (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic;
 - (NSString *) _roomWithProperPrefix:(NSString *) room;
 - (void) _setStatus:(MVChatConnectionStatus) status;
@@ -1736,6 +1737,10 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	[[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
+- (void) _queueNotification:(NSNotification *) notification {
+	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
+}
+
 #pragma mark -
 
 - (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic {
@@ -1744,7 +1749,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 		[_roomsCache setObject:info forKey:room];
 
 		NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionGotRoomInfoNotification object:self];
-		[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
+		[self performSelectorOnMainThread:@selector( _queueNotification: ) withObject:notification waitUntilDone:NO];
 	}
 }
 

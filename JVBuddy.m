@@ -421,6 +421,10 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 @implementation JVBuddy (JVBuddyPrivate)
+- (void) _queueNotification:(NSNotification *) notification {
+	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
+}
+
 - (void) _buddyOnline:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	NSString *who = [[notification userInfo] objectForKey:@"who"];
@@ -463,7 +467,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		}
 
 		NSNotification *notification = [NSNotification notificationWithName:JVBuddyNicknameStatusChangedNotification object:self];
-		[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
+		[self performSelectorOnMainThread:@selector( _queueNotification: ) withObject:notification waitUntilDone:NO];
 	}
 }
 
@@ -485,7 +489,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		}
 
 		NSNotification *notification = [NSNotification notificationWithName:JVBuddyNicknameStatusChangedNotification object:self];
-		[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
+		[self performSelectorOnMainThread:@selector( _queueNotification: ) withObject:notification waitUntilDone:NO];
 	}
 }
 

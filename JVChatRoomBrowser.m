@@ -16,7 +16,7 @@
 #pragma mark -
 
 @interface JVChatRoomBrowser (JVChatRoomBrowserPrivate)
-- (void) _needToFefreshResults:(id) sender;
+- (void) _needToRefreshResults:(id) sender;
 - (void) _refreshResults:(id) sender;
 - (void) _resortResults;
 - (void) _connectionChange:(NSNotification *) notification;
@@ -241,7 +241,7 @@
 	if( _connection && ! _collapsed )
 		[self _startFetch];
 
-	if( _connection ) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _needToFefreshResults: ) name:MVChatConnectionGotRoomInfoNotification object:_connection];
+	if( _connection ) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _needToRefreshResults: ) name:MVChatConnectionGotRoomInfoNotification object:_connection];
 
 	[_roomResults autorelease];
 	_roomResults = [[_connection roomListResults] retain];
@@ -457,7 +457,7 @@ NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *r
 	}
 }
 
-- (void) _needToFefreshResults:(id) sender {
+- (void) _needToRefreshResults:(id) sender {
 	_needsRefresh = YES;
 }
 

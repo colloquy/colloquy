@@ -58,6 +58,8 @@ extern NSString *JVChatViewPboardType;
 
 - (IBAction) getInfo:(id) sender;
 
+- (IBAction) joinRoom:(id) sender;
+
 - (NSToolbarItem *) toggleChatDrawerToolbarItem;
 - (NSToolbarItem *) chatActivityToolbarItem;
 - (IBAction) toggleViewsDrawer:(id) sender;
