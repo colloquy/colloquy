@@ -691,8 +691,6 @@
 	[_windowController reloadListItem:self andChildren:YES];
 }
 
-#pragma mark -
-
 - (void) addMemberToChat:(NSString *) member asPreviousMember:(BOOL) previous {
 	NSParameterAssert( member != nil );
 	
@@ -728,7 +726,7 @@
 
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"ChatRoom Member Kicked", "member kicked title" ) 
+			[context setObject:NSLocalizedString( @"ChatRoom Member Joined", "member joined title" ) 
 						forKey:@"title"];
 			[context setObject:message forKey:@"description"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
