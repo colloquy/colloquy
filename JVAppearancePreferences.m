@@ -342,6 +342,7 @@
 
 #pragma mark -
 
+// Called when Colloquy reactivates.
 - (void) reloadStyles:(NSNotification *) notification {
 	if( ! [[preview window] isVisible] ) return;
 	[JVStyle scanForStyles];
@@ -351,6 +352,7 @@
 	[self updateVariant];
 }
 
+// Parses the style options plist and reads the CSS files to figure out the current selected values.
 - (void) parseStyleOptions {
 	[self setUserStyle:[_style contentsOfVariantStyleSheetWithName:[_style defaultVariantName]]];
 
@@ -360,6 +362,7 @@
 	NSEnumerator *enumerator = [_styleOptions objectEnumerator];
 	NSMutableDictionary *info = nil;
 
+	// Step through each options.
 	while( ( info = [enumerator nextObject] ) ) {
 		NSMutableArray *styleLayouts = [NSMutableArray array];
 		NSArray *sarray = nil;
@@ -370,21 +373,28 @@
 		else sarray = [NSArray arrayWithObject:[info objectForKey:@"style"]];
 		senumerator = [sarray objectEnumerator];
 
-		int listOption = -1, count = 0;
+		[info removeObjectForKey:@"value"]; // Clear any old values, we will get the new value later on.
+
+		// Step through each style choice per option, colors have only one; lists have one style per list item.
+		int count = 0;
 		NSString *style = nil;
 		while( ( style = [senumerator nextObject] ) ) {
-			AGRegex *regex = [AGRegex regexWithPattern:@"([^\\s].*?)\\s*\{([^\\}]*?)\\}" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
+			// Parse all the selectors in the style.
+			AGRegex *regex = [AGRegex regexWithPattern:@"(\\S.*?)\\s*\{([^\\}]*?)\\}" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
 			NSEnumerator *selectors = [regex findEnumeratorInString:style];
 			AGRegexMatch *selector = nil;
 
 			NSMutableArray *styleLayout = [NSMutableArray array];
 			[styleLayouts addObject:styleLayout];
 
+			// Step through the selectors.
 			while( ( selector = [selectors nextObject] ) ) {
-				regex = [AGRegex regexWithPattern:@"([^\\s]*?):\\s*(.*?);" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
+				// Parse all the properties for the selector.
+				regex = [AGRegex regexWithPattern:@"(\\S*?):\\s*(.*?);" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
 				NSEnumerator *properties = [regex findEnumeratorInString:[selector groupAtIndex:2]];
 				AGRegexMatch *property = nil;
 
+				// Step through all the properties and build a dictionary on this selector/property/value combo.
 				while( ( property = [properties nextObject] ) ) {
 					NSMutableDictionary *propertyInfo = [NSMutableDictionary dictionary];
 					NSString *p = [property groupAtIndex:1];
@@ -396,23 +406,29 @@
 					[propertyInfo setObject:v forKey:@"value"];
 					[styleLayout addObject:propertyInfo];
 
+					// Get the current value of this selector/property from the Variant CSS and the Main CSS to compare.
 					NSString *value = [self valueOfProperty:p forSelector:s inStyle:css];
 					if( [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
+						// Strip the "!important" flag to compare correctly.
 						regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
-						NSString *compare = [regex replaceWithString:@"" inString:[propertyInfo objectForKey:@"value"]];
+						NSString *compare = [regex replaceWithString:@"" inString:v];
 
-						listOption = count;
-
-						if( ! [value isEqualToString:compare] ) listOption = -1;
-						else [info setObject:[NSNumber numberWithInt:listOption] forKey:@"value"];
+						// Try to pick which option the list needs to select.
+						if( ! [value isEqualToString:compare] ) { // Didn't match.
+							NSNumber *value = [info objectForKey:@"value"];
+							if( [value intValue] == count ) [info removeObjectForKey:@"value"];
+						} else [info setObject:[NSNumber numberWithInt:count] forKey:@"value"]; // Matched for now.
 					} else if( [[info objectForKey:@"type"] isEqualToString:@"color"] ) {
-						if( value && [[propertyInfo objectForKey:@"value"] rangeOfString:@"%@"].location != NSNotFound ) {
+						if( value && [v rangeOfString:@"%@"].location != NSNotFound ) {
+							// Strip the "!important" flag to compare correctly.
 							regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
 
+							// Replace %@ with (.*) so we can pull the color value out.
 							NSString *expression = [regex replaceWithString:@"" inString:v];
 							expression = [expression stringByEscapingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"]];
 							expression = [NSString stringWithFormat:expression, @"(.*)"];
 
+							// Store the color value if we found one.
 							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
 							AGRegexMatch *vmatch = [regex findInString:value];
 							if( [vmatch count] ) [info setObject:[vmatch groupAtIndex:1] forKey:@"value"];
@@ -430,6 +446,7 @@
 	[optionsTable reloadData];
 }
 
+// reads a value form a CSS file for the property and selector provided.
 - (NSString *) valueOfProperty:(NSString *) property forSelector:(NSString *) selector inStyle:(NSString *) style {
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 	selector = [selector stringByEscapingCharactersInSet:escapeSet];
@@ -442,6 +459,7 @@
 	return nil;
 }
 
+// Saves a CSS value to the specified property and selector, creating it if one isn't already in the file.
 - (void) setStyleProperty:(NSString *) property forSelector:(NSString *) selector toValue:(NSString *) value {
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 	NSString *rselector = [selector stringByEscapingCharactersInSet:escapeSet];
@@ -466,6 +484,7 @@
 	else _userStyle = [style retain];
 }
 
+// Saves the custom variant to the user's area.
 - (void) saveStyleOptions {
 	if( _variantLocked ) return;
 	[_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:NO];
@@ -475,6 +494,7 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleVariantChangedNotification object:_style userInfo:info];
 }
 
+// Shows the drawer, option clicking the button will open the custom variant CSS file.
 - (IBAction) showOptions:(id) sender {
 	if( ! _variantLocked && [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSAlternateKeyMask ) {
 		[[NSWorkspace sharedWorkspace] openURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]]];
@@ -530,6 +550,7 @@
 	}
 }
 
+// Called when JVColorWell's color changes.
 - (void) colorWellDidChangeColor:(NSNotification *) notification {
 	if( _variantLocked ) return;
 
@@ -556,12 +577,12 @@
 }
 
 - (BOOL) tableView:(NSTableView *) view shouldSelectRow:(int) row {
-	static int lastRow = -1;
-	if( _variantLocked && lastRow != row ) {
+	static NSTimeInterval lastTime = 0;
+	if( _variantLocked && ( [NSDate timeIntervalSinceReferenceDate] - lastTime ) > 1. ) {
 		[self showNewVariantSheet];
 	}
 
-	lastRow = row;
+	lastTime = [NSDate timeIntervalSinceReferenceDate];
 	return ( ! _variantLocked );
 }
 
@@ -590,6 +611,7 @@
 
 #pragma mark -
 
+// Shows the new variant sheet asking for a name.
 - (void) showNewVariantSheet {
 	[newVariantName setStringValue:NSLocalizedString( @"Untitled Variant", "new variant name" )];
 	[[NSApplication sharedApplication] beginSheet:newVariantPanel modalForWindow:[preview window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
@@ -600,6 +622,7 @@
 	[[NSApplication sharedApplication] endSheet:newVariantPanel];
 }
 
+// Creates the new variant, making the proper folder and copying the current CSS settings.
 - (IBAction) createNewVariant:(id) sender {
 	[self closeNewVariantSheet:sender];
 
