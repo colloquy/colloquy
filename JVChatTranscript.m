@@ -40,6 +40,12 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 #pragma mark -
 
+@interface WebCoreCache
++ (void) setDisabled:(BOOL) disabled;
+@end
+
+#pragma mark -
+
 @interface NSScrollView (NSScrollViewWebKitPrivate)
 - (void) setAllowsHorizontalScrolling:(BOOL) allow;
 @end
@@ -728,6 +734,19 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptPrivate)
+- (void) _reloadCurrentStyle:(id) sender {
+	NSBundle *style = [[_chatStyle retain] autorelease];
+
+	[WebCoreCache setDisabled:YES];
+
+	[_chatStyle autorelease];
+	_chatStyle = nil;
+
+	[self setChatStyle:style withVariant:_chatStyleVariant];
+
+	if( ! _chatStyle ) _chatStyle = [style retain];
+}
+
 - (void) _finishStyleSwitch:(id) sender {
 	[display setPreferencesIdentifier:[_chatStyle bundleIdentifier]];
 	// we shouldn't have to post this notification manually, but this seems to make webkit refresh with new prefs
