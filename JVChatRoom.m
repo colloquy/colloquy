@@ -765,16 +765,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSString *newNickname = [member nickname];
 
 	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), oldNickname, [member nickname]] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[member title], @"name", oldNickname, @"old", [member nickname], @"new", nil]];
-
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( NSString * ), @encode( JVChatRoom * ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-
-	[invocation setSelector:@selector( userNamed:isNowKnownAs:inView: )];
-	[invocation setArgument:&oldNickname atIndex:2];
-	[invocation setArgument:&newNickname atIndex:3];
-	[invocation setArgument:&self atIndex:4];
-
-	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 }
 
 - (void) _gotMessage:(NSNotification *) notification {
