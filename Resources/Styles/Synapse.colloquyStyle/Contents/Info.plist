@@ -5,13 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Meinzer Colloquy Chat Style</string>
+	<string>Synapse Colloquy Chat Style</string>
 	<key>CFBundleIdentifier</key>
-	<string>cc.javelin.colloquy.style.meinzer</string>
+	<string>cc.javelin.colloquy.style.synapse</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Meinzer</string>
+	<string>Synapse</string>
 	<key>CFBundlePackageType</key>
 	<string>coSt</string>
 	<key>JVBaseStyleVariantName</key>
@@ -19,73 +19,75 @@
 	<key>JVStyleOptions</key>
 	<array>
 		<dict>
-			<key>style</key>
-			<string>.message.self { background-color: %@ !important; } .submessage.self { background-color: %@ !important; }</string>
 			<key>default</key>
 			<string>rgba( 255, 191, 78, 0.6 )</string>
 			<key>description</key>
 			<string>Your message</string>
+			<key>style</key>
+			<string>.message.self { background-color: %@ !important; } .submessage.self { background-color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.message { background-color: %@ !important; } .submessage { background-color: %@ !important; }</string>
 			<key>default</key>
 			<string>rgba( 255, 191, 78, 0.6 )</string>
 			<key>description</key>
 			<string>Message</string>
+			<key>style</key>
+			<string>.message { background-color: %@ !important; } .submessage { background-color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.message.highlight { background-color: %@ !important; } .submessage.highlight { background-color: %@ !important; }</string>
 			<key>default</key>
 			<string>rgba( 255, 191, 78, 0.6 )</string>
 			<key>description</key>
 			<string>Message highlight</string>
+			<key>style</key>
+			<string>.message.highlight { background-color: %@ !important; } .submessage.highlight { background-color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<array>
-				<string>.time { display: block; }</string>
-				<string>.time { display: none; }</string>
-			</array>
 			<key>default</key>
 			<integer>0</integer>
 			<key>description</key>
 			<string>Timestamp</string>
-			<key>type</key>
-			<string>list</string>
 			<key>options</key>
 			<array>
 				<string>Visible</string>
 				<string>Hidden</string>
 			</array>
-		</dict>
-		<dict>
 			<key>style</key>
 			<array>
-				<string>a.member { border-bottom: none !important; } .event a.member { border-bottom: none !important; }</string>
-				<string>a.member { border-bottom: 1px black dotted !important; } .event a.member { border-bottom: 1px white dotted !important; }</string>
-				<string>a.member { border-bottom: 1px black solid !important; } .event a.member { border-bottom: 1px white solid !important; }</string>
+				<string>.time { display: block; }</string>
+				<string>.time { display: none; }</string>
 			</array>
+			<key>type</key>
+			<string>list</string>
+		</dict>
+		<dict>
 			<key>default</key>
 			<integer>1</integer>
 			<key>description</key>
 			<string>Member underline</string>
-			<key>type</key>
-			<string>list</string>
 			<key>options</key>
 			<array>
 				<string>Hidden</string>
 				<string>Dotted</string>
 				<string>Solid</string>
 			</array>
+			<key>style</key>
+			<array>
+				<string>a.member { border-bottom: none !important; } .event a.member { border-bottom: none !important; }</string>
+				<string>a.member { border-bottom: 1px black dotted !important; } .event a.member { border-bottom: 1px white dotted !important; }</string>
+				<string>a.member { border-bottom: 1px black solid !important; } .event a.member { border-bottom: 1px white solid !important; }</string>
+			</array>
+			<key>type</key>
+			<string>list</string>
 		</dict>
 	</array>
+	<key>NSHumanReadableCopyright</key>
+	<string>Scott Menizer</string>
 </dict>
 </plist>
