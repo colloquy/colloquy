@@ -1,6 +1,7 @@
 <xsl:transform xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output omit-xml-declaration="yes" indent="no" />
 	<xsl:param name="bulkTransform" />
+	<xsl:param name="timeFormat" />
 
 	<xsl:template match="/">
 		<xsl:choose>
