@@ -73,7 +73,6 @@
 #pragma mark -
 
 - (void) willDispose {
-	NSLog( @"willDispose" );
 	[self parting];
 }
 
@@ -254,7 +253,6 @@
 }
 
 - (void) parting {
-	NSLog( @"parting" );
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
