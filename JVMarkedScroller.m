@@ -184,7 +184,7 @@
 		_currentMark = _nearestPreviousMark;
 		_jumpingToMark = YES;
 		float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
-		float shift = ( NSHeight( [self rectForPart:NSScrollerKnob] ) / 2. ) / scale;
+		float shift = ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _nearestPreviousMark - shift )];
 		_jumpingToMark = NO;
 	}
@@ -195,7 +195,7 @@
 		_currentMark = _nearestNextMark;
 		_jumpingToMark = YES;
 		float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
-		float shift = ( NSHeight( [self rectForPart:NSScrollerKnob] ) / 2. ) / scale;
+		float shift = ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _nearestNextMark - shift )];
 		_jumpingToMark = NO;
 	}
@@ -207,6 +207,15 @@
 	BOOL negative = ( displacement >= 0 ? NO : YES );
 	NSMutableSet *shiftedMarks = [NSMutableSet set];
 	NSNumber *location = nil;
+
+	if( ! ( negative && _nearestPreviousMark < ABS( displacement ) ) ) _nearestPreviousMark += displacement;
+	else _nearestPreviousMark = NSNotFound;
+
+	if( ! ( negative && _nearestNextMark < ABS( displacement ) ) ) _nearestNextMark += displacement;
+	else _nearestNextMark = NSNotFound;
+
+	if( ! ( negative && _currentMark < ABS( displacement ) ) ) _currentMark += displacement;
+	else _currentMark = NSNotFound;
 
 	NSEnumerator *enumerator = [_marks objectEnumerator];
 	while( ( location = [enumerator nextObject] ) ) {
