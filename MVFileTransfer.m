@@ -156,22 +156,24 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	const char *range = settings_get_str( "dcc_port" );
 	char *temp = NULL;
 	unsigned short min = 1024;
-	unsigned short max = 65535;
+	unsigned short max = 1048;
 
-	min = strtoul( range, NULL, 10 );
-	temp = strchr( range, ' ' );
-	if( ! temp ) temp = strchr( range, '-' );
+	if( range && strlen( range ) ) {
+		min = strtoul( range, NULL, 10 );
+		temp = strchr( range, ' ' );
+		if( ! temp ) temp = strchr( range, '-' );
 
-	if( ! temp ) max = min;
-	else {
-		max = strtoul( temp + 1, NULL, 10 );
-		if( ! max ) max = min;
-	}
+		if( ! temp ) max = min;
+		else {
+			max = strtoul( temp + 1, NULL, 10 );
+			if( ! max ) max = min;
+		}
 
-	if( max < min ) {
-		unsigned int t = min;
-		min = max;
-		max = t;
+		if( max < min ) {
+			unsigned int t = min;
+			min = max;
+			max = t;
+		}
 	}
 
 	return NSMakeRange( (unsigned int) min, (unsigned int)( max - min ) );
