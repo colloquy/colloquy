@@ -84,7 +84,7 @@
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	float imageWidth = 0.;
 	float longestStringWidth = 0.;
-	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[NSApplication sharedApplication] isActive] );
+	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[controlView window] isKeyWindow] && [[NSApplication sharedApplication] isActive] );
 	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ), NSForegroundColorAttributeName, nil];
 	NSDictionary *subAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:9.], NSFontAttributeName, ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.75] ), NSForegroundColorAttributeName, nil];
 	NSImage *mainImage = nil;
