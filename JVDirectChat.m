@@ -332,7 +332,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (NSImage *) statusImage {
-	return ( _isActive ? nil : ( [_waitingAlerts count] ? [NSImage imageNamed:@"viewAlert"] : ( _newMessage ? ( _newHighlightMessage ? [NSImage imageNamed:@"newHighlightMessage"] : [NSImage imageNamed:@"newMessage"] ) : nil ) ) );
+	if( _isActive && [[[self view] window] isKeyWindow] ) {
+		_newMessage = NO;
+		_newHighlightMessage = NO;
+		return nil;
+	}
+
+	return ( [_waitingAlerts count] ? [NSImage imageNamed:@"viewAlert"] : ( _newMessage ? ( _newHighlightMessage ? [NSImage imageNamed:@"newHighlightMessage"] : [NSImage imageNamed:@"newMessage"] ) : nil ) );
 }
 
 #pragma mark -
