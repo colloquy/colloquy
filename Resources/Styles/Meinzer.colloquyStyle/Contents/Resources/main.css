@@ -108,3 +108,11 @@ a.member.action {
 #consecutiveInsert {
 	display: none;
 }
+
+.itunes {
+	text-decoration: none;
+}
+
+.itunes > *:hover {
+	text-decoration: underline;
+}
