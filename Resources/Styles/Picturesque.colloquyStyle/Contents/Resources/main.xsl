@@ -115,26 +115,23 @@
 
 		<xsl:choose>
 			<xsl:when test="$extension = '.jpg' or $extension = '.JPG' or $extensionLong = '.jpeg' or $extensionLong = '.JPEG'">
-				<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
+				<a href="{@href}" title="{@href}"><img src="{@href}" alt="Loading Image..." onload="resizeIfNeeded( this )" /></a>
 			</xsl:when>
 			<xsl:when test="$extension = '.gif' or $extension = '.GIF'">
-				<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
+				<a href="{@href}" title="{@href}"><img src="{@href}" alt="Loading Image..." onload="resizeIfNeeded( this )" /></a>
 			</xsl:when>
 			<xsl:when test="$extension = '.png' or $extension = '.PNG'">
-				<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
+				<a href="{@href}" title="{@href}"><img src="{@href}" alt="Loading Image..." onload="resizeIfNeeded( this )" /></a>
 			</xsl:when>
 			<xsl:when test="$extension = '.tif' or $extension = '.TIF' or $extensionLong = '.tiff' or $extensionLong = '.TIFF'">
-				<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
+				<a href="{@href}" title="{@href}"><img src="{@href}" alt="Loading Image..." onload="resizeIfNeeded( this )" /></a>
 			</xsl:when>
 			<xsl:when test="$extension = '.pdf' or $extension = '.PDF'">
-				<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
+				<a href="{@href}" title="{@href}"><img src="{@href}" alt="Loading Image..." onload="resizeIfNeeded( this )" /></a>
 			</xsl:when>
 			<xsl:when test="$extension = '.bmp' or $extension = '.BMP'">
-				<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
+				<a href="{@href}" title="{@href}"><img src="{@href}" alt="Loading Image..." onload="resizeIfNeeded( this )" /></a>
 			</xsl:when>
-	<!--    <xsl:when test="$extension = '.mp3' or $extension = '.m4a' or $extension = '.MP3' or $extension = '.M4A'">
-				<embed controller="true" src="{@href}" height="18" width="150" align="absmiddle" type="video/quicktime"></embed>
-			</xsl:when> -->
 			<xsl:otherwise>
 				<xsl:copy-of select="current()"/>
 			</xsl:otherwise>
