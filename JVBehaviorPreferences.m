@@ -67,6 +67,9 @@
 	[sendHistory setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
 	[sendHistoryStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
 
+	[messageScrollback setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
+	[messageScrollbackStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
+
 	if( NSAppKitVersionNumber >= 700. ) {
 		[tabKeyComplete setEnabled:YES];
 		[tabKeyComplete setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
@@ -167,6 +170,13 @@
 	[sendHistory setIntValue:size];
 	[sendHistoryStepper setIntValue:size];
 	[[NSUserDefaults standardUserDefaults] setInteger:[sendHistory intValue] forKey:@"JVChatMaximumHistory"];
+}
+
+- (IBAction) changeMessageScrollback:(id) sender {
+	int size = [sender intValue];
+	[messageScrollback setIntValue:size];
+	[messageScrollbackStepper setIntValue:size];
+	[[NSUserDefaults standardUserDefaults] setInteger:[messageScrollback intValue] forKey:@"JVChatScrollbackLimit"];
 }
 
 - (IBAction) changeTabKeyComplete:(id) sender {

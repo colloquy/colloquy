@@ -17,6 +17,8 @@
 	IBOutlet NSPopUpButton *enterKeyAction;
 	IBOutlet NSTextField *sendHistory;
 	IBOutlet NSStepper *sendHistoryStepper;
+	IBOutlet NSTextField *messageScrollback;
+	IBOutlet NSStepper *messageScrollbackStepper;
 	IBOutlet NSButton *tabKeyComplete;
 	IBOutlet NSTextField *tabKeyCompleteLabel;
 }
@@ -27,6 +29,7 @@
 - (IBAction) changeSendOnReturnAction:(id) sender;
 - (IBAction) changeSendOnEnterAction:(id) sender;
 - (IBAction) changeSendHistory:(id) sender;
+- (IBAction) changeMessageScrollback:(id) sender;
 - (IBAction) changeTabKeyComplete:(id) sender;
 - (IBAction) changeSpellChecking:(id) sender;
 - (IBAction) changeNaturalActionDetection:(id) sender;
