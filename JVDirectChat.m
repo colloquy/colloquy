@@ -768,7 +768,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action {
 	NSMutableAttributedString *encodedMsg = [[message mutableCopy] autorelease];
 
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
 	NSData *msgData = [encodedMsg IRCFormatWithOptions:options];
 
 	[self addMessageToDisplay:msgData fromUser:[[self connection] nickname] asAction:action];
@@ -1700,10 +1700,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 			[messageString makeLinkAttributesAutomatically];
-		
+
 		[self _performEmoticonSubstitutionOnString:messageString];
-		
-		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), messageString] withName:@"awaySet" andAttributes:nil];
+
+		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+		NSString *msgString = [messageString HTMLFormatWithOptions:options];
+
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:messageString, @"away-message", nil]];
 
 		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
 		unsigned long loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
