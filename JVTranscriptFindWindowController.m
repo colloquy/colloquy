@@ -24,6 +24,10 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	if( ( self = [super initWithWindowNibName:@"JVFind"] ) ) {
 		_rules = nil;
 		_lastFoundMessage = nil;
+		_findPasteboardNeedsUpdated = NO;
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationDidActivate: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationWillDeactivate: ) name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
 	}
 
 	return self;
@@ -54,6 +58,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	[column setDataCell:[[JVViewCell new] autorelease]];
 
 	[self addRow:nil];
+	[self performSelector:@selector( loadFindStringFromPasteboard )];
 }
 
 #pragma mark -
@@ -159,8 +164,6 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	[resultProgress setIndeterminate:YES];
 	[resultProgress startAnimation:nil];
 	[resultProgress displayIfNeeded];
-	if( [scrollbackOnly state] == NSOnState )
-		[hiddenResults setHidden:YES];
 
 	NSArray *allMessages = [transcript messages];
 	NSRange range;
@@ -171,6 +174,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 			range = NSMakeRange( index + 1, [allMessages count] - ( index + 1 ) );
 		} else {
 			[resultProgress stopAnimation:nil];
+			[resultProgress setHidden:YES];
 			return;
 		}
 	} else {
@@ -180,9 +184,15 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	}
 
 	if( ! range.length ) {
+		[resultProgress stopAnimation:nil];
 		[resultProgress setHidden:YES];
 		return;
 	}
+
+	if( ! range.location || [scrollbackOnly state] == NSOnState )
+		[hiddenResults setHidden:YES];
+
+	_findPasteboardNeedsUpdated = YES;
 
 	NSArray *rangeMsgs = [transcript messagesInRange:range];
 	NSEnumerator *messages = [rangeMsgs objectEnumerator];
@@ -225,22 +235,18 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 				break;
 			} else if( ! range.location && ! scrollback ) {
 				hiddenMsgs++;
+				[hiddenResults setHidden:NO];
+				[hiddenResultsCount setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%u hidden", "number of hidden messages" ), hiddenMsgs]];
+				[hiddenResults displayIfNeeded];
 			}
 		}
 	}
 
 	NSLog( @"%@ %@", NSStringFromRange( range ), _lastFoundMessage );
-	
+
 	[resultProgress setDoubleValue:[resultProgress maxValue]];
 	[resultProgress displayIfNeeded];
 	[self performSelector:@selector( hideProgress ) withObject:nil afterDelay:0.75];
-
-	if( ! range.location && hiddenMsgs ) {
-		[hiddenResults setHidden:NO];
-		[hiddenResultsCount setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%u hidden", "number of hidden messages" ), hiddenMsgs]];
-	} else if( ! range.location && ! hiddenMsgs ) {
-		[hiddenResults setHidden:YES];
-	}
 }
 
 - (IBAction) findPrevious:(id) sender {
@@ -252,8 +258,6 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	[resultProgress setIndeterminate:YES];
 	[resultProgress startAnimation:nil];
 	[resultProgress displayIfNeeded];
-	if( [scrollbackOnly state] == NSOnState )
-		[hiddenResults setHidden:YES];
 
 	NSArray *allMessages = [transcript messages];
 	NSRange range;
@@ -264,6 +268,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 			range = NSMakeRange( 0, index );
 		} else {
 			[resultProgress stopAnimation:nil];
+			[resultProgress setHidden:YES];
 			return;
 		}
 	} else {
@@ -273,9 +278,15 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	}	
 
 	if( ! range.length ) {
+		[resultProgress stopAnimation:nil];
 		[resultProgress setHidden:YES];
 		return;
 	}
+
+	if( ! range.location || [scrollbackOnly state] == NSOnState )
+		[hiddenResults setHidden:YES];
+
+	_findPasteboardNeedsUpdated = YES;
 
 	NSArray *rangeMsgs = [transcript messagesInRange:range];
 	NSEnumerator *messages = [rangeMsgs reverseObjectEnumerator];
@@ -318,27 +329,25 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 				break;
 			} else if( ! range.location && ! scrollback ) {
 				hiddenMsgs++;
+				[hiddenResults setHidden:NO];
+				[hiddenResultsCount setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%u hidden", "number of hidden messages" ), hiddenMsgs]];
+				[hiddenResults displayIfNeeded];
 			}
 		}
 	}
-	
+
 	NSLog( @"%@ %@", NSStringFromRange( range ), _lastFoundMessage );
 
 	[resultProgress setDoubleValue:[resultProgress maxValue]];
 	[resultProgress displayIfNeeded];
 	[self performSelector:@selector( hideProgress ) withObject:nil afterDelay:0.75];
-
-	if( ! range.location && hiddenMsgs ) {
-		[hiddenResults setHidden:NO];
-		[hiddenResultsCount setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%u hidden", "number of hidden messages" ), hiddenMsgs]];
-	} else if( ! range.location && ! hiddenMsgs ) {
-		[hiddenResults setHidden:YES];
-	}
 }
 
 - (IBAction) findAll:(id) sender {
 	JVChatTranscript *transcript = [self focusedChatTranscript];
 	if( ! transcript ) return;
+
+	_findPasteboardNeedsUpdated = YES;
 
 	NSEnumerator *messages = [[transcript messages] objectEnumerator];
 	JVChatMessage *message = nil;
@@ -375,5 +384,56 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	} else if( [[tableColumn identifier] isEqualToString:@"remove"] ) {
 		[cell setEnabled:( [self numberOfRowsInTableView:tableView] > 1 )];
 	}
+}
+
+#pragma mark -
+
+- (void) loadFindStringFromPasteboard {
+	_findPasteboardNeedsUpdated = NO;
+
+	NSPasteboard *pasteboard = [NSPasteboard pasteboardWithName:NSFindPboard];
+	if( [[pasteboard types] containsObject:NSStringPboardType] ) {
+		NSString *string = [pasteboard stringForType:NSStringPboardType];
+		if( [string isKindOfClass:[NSString class]] && [string length] ) {
+			NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
+			JVTranscriptCriterionController *rule = nil;
+			while( ( rule = [rules nextObject] ) ) {
+				if( [rule format] == JVTranscriptTextCriterionFormat ) {
+					[rule setQuery:string];
+					break;
+				}
+			}
+		}
+	}
+}
+
+- (void) loadFindStringToPasteboard {
+	_findPasteboardNeedsUpdated = NO;
+
+	NSString *findString = nil;
+	NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
+	JVTranscriptCriterionController *rule = nil;
+	while( ( rule = [rules nextObject] ) ) {
+		if( [rule format] == JVTranscriptTextCriterionFormat ) {
+			findString = [rule query];
+			break;
+		}
+	}
+
+	if( ! findString || ! [findString isKindOfClass:[NSString class]] ) return;
+
+	NSPasteboard *pasteboard = [NSPasteboard pasteboardWithName:NSFindPboard];
+	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+	[pasteboard setString:findString forType:NSStringPboardType];
+}
+
+#pragma mark -
+
+- (void) applicationDidActivate:(NSNotification *) notification {
+	[self loadFindStringFromPasteboard];
+}
+
+- (void) applicationWillDeactivate:(NSNotification *) notification {
+	if( _findPasteboardNeedsUpdated ) [self loadFindStringToPasteboard];
 }
 @end

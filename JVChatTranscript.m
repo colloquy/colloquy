@@ -613,6 +613,21 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 }
 
 #pragma mark -
+#pragma mark Find Support
+
+- (IBAction) orderFrontFindPanel:(id) sender {
+	[[JVTranscriptFindWindowController sharedController] showWindow:sender];
+}
+
+- (IBAction) findNext:(id) sender {
+	[[JVTranscriptFindWindowController sharedController] findNext:sender];
+}
+
+- (IBAction) findPrevious:(id) sender {
+	[[JVTranscriptFindWindowController sharedController] findPrevious:sender];
+}
+
+#pragma mark -
 #pragma mark Toolbar Methods
 
 - (NSToolbar *) toolbar {
@@ -633,8 +648,8 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Find", "find toolbar item patlette label" )];
 		[toolbarItem setToolTip:NSLocalizedString( @"Show Find Panel", "find toolbar item tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
-		[toolbarItem setTarget:[JVTranscriptFindWindowController sharedController]];
-		[toolbarItem setAction:@selector( showWindow: )];
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector( orderFrontFindPanel: )];
 	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] && ! willBeInserted ) {
 		[toolbarItem setLabel:NSLocalizedString( @"Style", "choose style toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Style", "choose style toolbar item patlette label" )];

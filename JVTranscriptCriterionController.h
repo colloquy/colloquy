@@ -68,4 +68,7 @@ typedef enum JVTranscriptCriterionKind { // corresponds to the nib menu tags
 
 - (BOOL) changedSinceLastMatch;
 - (BOOL) matchMessage:(JVChatMessage *) message ignoreCase:(BOOL) ignoreCase;
+
+- (id) query;
+- (void) setQuery:(id) query;
 @end

@@ -192,4 +192,30 @@
 
 	return NO;
 }
+
+- (id) query {
+	if( [self format] == JVTranscriptTextCriterionFormat ) {
+		return [textQuery stringValue];
+	} else if( [self format] == JVTranscriptDateCriterionFormat ) {
+		return [dateQuery stringValue];
+	} else if( [self format] == JVTranscriptListCriterionFormat ) {
+		NSMenuItem *mitem = [listQuery selectedItem];
+		if( [mitem representedObject] ) return [mitem representedObject];
+		else return [NSNumber numberWithInt:[listQuery indexOfSelectedItem]];
+	} else return nil;
+}
+
+- (void) setQuery:(id) query {
+	if( [self format] == JVTranscriptTextCriterionFormat ) {
+		[textQuery setObjectValue:query];
+	} else if( [self format] == JVTranscriptDateCriterionFormat ) {
+		[dateQuery setObjectValue:query];
+	} else if( [self format] == JVTranscriptListCriterionFormat ) {
+		int index = [listQuery indexOfItemWithRepresentedObject:query];
+		if( index == -1 && [query isKindOfClass:[NSNumber class]] )
+			index = [(NSNumber *)query intValue];
+		if( [listQuery numberOfItems] < index ) index = -1;
+		[listQuery selectItemAtIndex:index];
+	}
+}
 @end
