@@ -1,0 +1,31 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {editStatus = id; showBuddyList = id; }; 
+            CLASS = MVBuddyListController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                buddies = NSTableView; 
+                editStatusButton = NSButton; 
+                myIcon = NSImageView; 
+                myName = NSTextField; 
+                myStatus = NSTextField; 
+                pickerView = NSView; 
+                pickerWindow = NSWindow; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {displayMenu = id; }; 
+            CLASS = MVMenuButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {menu = NSMenu; }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

@@ -1,0 +1,282 @@
+/* reveal button tooltip  */
+"Reveal File in Finder" = "Reveal File in Finder";
+
+/* clear finished transfers toolbar customize palette name  */
+"Clear Finished" = "Clear Finished";
+
+/* singular  */
+"second" = "seconde";
+
+/* show filein Finder toolbar customize palette name  */
+"Reveal File" = "Reveal File";
+
+/* short toolbar stop button name  */
+"Stop" = "Arrêter";
+
+/* plural  */
+"minutes" = "minutes";
+
+/* clear finished transfers toolbar button name  */
+"Clear" = "Effacer";
+
+/* singular  */
+"hour" = "heure";
+
+/* no files have been transfered or in the process of transfering  */
+"No recent file transfers." = "Aucun transfert récent.";
+
+/* name for stop button in customize palette  */
+"Stop Tranfser" = "Arrêter Transfert";
+
+/* file size measured in bytes  */
+"%lu bytes" = "%lu octets";
+
+/* clear finished transfers tooltip  */
+"Clear Finished Transfers" = "Effacer transferts terminés";
+
+/* singular  */
+"minute" = "minute";
+
+/* file size measured in gigabytes  */
+"%.3f GB" = "%.3f Go";
+
+/* singular  */
+"week" = "semaine";
+
+/* file size measured in kilobytes  */
+"%.1f KB" = "%.1f Ko";
+
+/* plural  */
+"months" = "mois";
+
+/* status of current download file transfer  */
+"%@ of %@ downloaded, at %@ per second" = "%@ sur %@ téléchargés, à %@ par seconde";
+
+/* file size measured in megabytes  */
+"%.2f MB" = "%.2f Mo";
+
+/* time that has passed and time that remains on selected transfer  */
+"%@ elapsed, %@ remaining" = "%@ écoulées, %@ restant";
+
+/* plural  */
+"weeks" = "semaines";
+
+/* show file in Finder toolbar button name  */
+"Reveal" = "Reveal";
+
+/* status of current upload file transfer  */
+"%@ of %@ uploaded, at %@ per second" = "%@ sur %@ transmis, à %@ par seconde";
+
+/* plural  */
+"years" = "ans";
+
+/* file size measured in terabytes  */
+"%.4f TB" = "%.4f To";
+
+/* singular  */
+"month" = "mois";
+
+/* singular  */
+"year" = "an";
+
+/* time that has passed on selected transfer  */
+"%@ elapsed" = "%@ écoulées";
+
+/* plural  */
+"seconds" = "secondes";
+
+/* singular  */
+"day" = "jour";
+
+/* no file size is empty  */
+"Zero bytes" = "Zéro octet";
+
+/* plural  */
+"days" = "jours";
+
+/* plural  */
+"hours" = "heures";
+
+/* stop button tooltip  */
+"Stop File Tranfser" = "Arrêter transfert de fichier";
+
+/* emoticons options title - used in a few places like toolbar and menus  */
+"Emoticons" = "Emoticons";
+
+/* you were removed by force from a chat room - presented as an action  */
+"booted you with this reason '%@'." = "vous a viré pour cette raison '%@'.";
+
+/* grin emoticon name  */
+"Grin" = "Grand Sourire";
+
+/* jamming emoticon name - headphones on  */
+"Jamming" = "Écouteurs";
+
+/* title of the youre offline message sheet  */
+"You're offline" = "Vous êtes déconnecté";
+
+/* cool guy emoticon name  */
+"Cool" = "Cool";
+
+/* chat room members toolbar item name  */
+"Members" = "Connectés";
+
+/* user now has special voice status - presented as an action  */
+"has been granted voice by %@." = "%@ vous a accordé la parole.";
+
+/* annoyed emoticon name  */
+"Annoyed" = "Ennuyé";
+
+/* user is now a chat room operator - presented as an action  */
+"has been promoted to operator by %@." = "a été promus administrateur par %@.";
+
+/* user was removed from chat room operator status - presented as an action  */
+"has been demoted from operator by %@." = "%@ vous a enlevé les droits d'administrateur.";
+
+/* bold font toolbar item  */
+"Bold" = "Gras";
+
+/* wink emoticon name  */
+"Wink" = "Clin d'oeil";
+
+/* chat room members toolbar item tooltip  */
+"Toggle Chat Members" = "Afficher/masquer le tiroir des connectés";
+
+/* title of the booted message sheet  */
+"Booted" = "Viré";
+
+/* emoticons toolbar button tooltip  */
+"Add Emotions with Emoticons" = "Ajouter de l'Emotions avec des Emoticons";
+
+/* razz emoticon name - tounge out  */
+"Razz" = "Langue tirée";
+
+/* angel emoticon name  */
+"Angel" = "Ange";
+
+/* private message with user - window title  */
+"%@ - Private Message" = "%@ - Message Privé";
+
+/* user was removed from chat room special voice status - presented as an action  */
+"has voice removed by %@." = "%@ ne vous autorise plus à parler.";
+
+/* relaxed emoticon name - hat on  */
+"Relaxed" = "Détendu";
+
+/* error description for gettign booted  */
+"You have been booted out of this room by %@. They passed this reason: %@" = "Vous avez été viré de cette chambre par %@. La raison inviquée est : %@";
+
+/* user has been removed by force from a chat room - presented as an action  */
+"booted %@ with this reason '%@'." = "a viré %@ pour cette raison '%@'.";
+
+/* hide current chat toolbar item  */
+"Hide Chat" = "Masquer Discussion";
+
+/* chat room members toolbar customize palette name  */
+"Chat Members" = "Connectés";
+
+/* encoding menu toolbar item tooltip  */
+"Text Encoding Options" = "Options d'encodage texte";
+
+/* encoding menu toolbar customize palette name  */
+"Text Encoding" = "Encodage Texte";
+
+/* close window button text  */
+"Close" = "Fermer";
+
+/* smile emoticon name  */
+"Smile" = "Sourire";
+
+/* chat room topic prefix  */
+"Topic" = "Sujet";
+
+/* angry emoticon name  */
+"Angry" = "En colère";
+
+/* stoic emoticon name - flat face  */
+"Stoic" = "Stoïque";
+
+/* who posted the current topic  */
+" posted by " = " posté par ";
+
+/* title of the user offline message sheet  */
+"User Offline" = "Utilisateur déconnecté";
+
+/* error description for messageing a user that went offline  */
+"This user is now offline or you have been disconnected. Any messages sent will not be received by the other user." = "Cet utilisateur s'est déconnecté ou bien vous avez été déconnecté. Aucun message envoyé ne sera reçu par l'utilisateur.";
+
+/* frown emoticon name  */
+"Frown" = "Froncement de sourcils";
+
+/* evil emoticon name  */
+"Evil" = "Diable";
+
+/* leave chat toolbar item  */
+"Leave Chat" = "Quitter Discussion";
+
+/* user you sent a message to is ofline - presented as an action  */
+"is offline." = "est déconnecté.";
+
+/* encoding menu toolbar item  */
+"Encoding" = "Encodage";
+
+/* chat room window - window title  */
+"%@ - Chat Room" = "%@ - Chambre de discussion";
+
+/* italic font style toolbar item  */
+"Italic" = "Italique";
+
+/* hide chat tooltip  */
+"Hide this Chat Window" = "Masquer cette fenêtre de discussion";
+
+/* error description for loseing connection  */
+"Any messages sent will not be received by this room. Reconnecting could be in progress." = "Aucun message envoyé ne sera reçu par cette chambre. La reconnexion peut être en cours.";
+
+/* bold font tooltip  */
+"Toggle Bold Style" = "Activer/Désactiver style Gras";
+
+/* italic style tooltip  */
+"Toggle Italic Style" = "Activer/Désactiver style Italique";
+
+/* user has changed nicknames - presented as an action  */
+"is now known as %@." = "est maintenant connu comme %@.";
+
+/* a user has join a chat room - presented as an action  */
+"joined the chat room." = "a rejoins la chambre de discussion.";
+
+/* underline style tooltip  */
+"Toggle Underline Style" = "Activer/Désactiver style Souligné";
+
+/* underline font style toolbar item  */
+"Underline" = "Souligné";
+
+/* leave chat tooltip  */
+"Leave this Chat" = "Quitter cette discussion";
+
+/* a user has left a chat room - presented as an action  */
+"left the chat room." = "a quitté la chambre de discussion.";
+
+/* new file transfer dialog title  */
+"File Transfer" = "Transfert de fichier";
+
+/* invited to a chat room - sheet title  */
+"Invited to Chat" = "Invité sur discussion";
+
+/* invited to chat room description - sheet message  */
+"You have been invited to chat in the %@ room by %@." = "Vous avez été invité à discuter dans la chambre %@ par %@.";
+
+/* accept button name  */
+"Accept" = "Accepter";
+
+/* refuse button name  */
+"Refuse" = "Refuser";
+
+/* new file transfer dialog message  */
+"A file named \"%@\" is being sent to you from %@. This file is %ld bytes in size." = "Un fichier nommé \"%@\" est en train de vous être envoyé par %@. Ce fichier a une taille de %ld octets.";
+
+/* relay is full with listeners - relay menu  */
+"full" = "plein";
+
+/* relay is down or out of service - relay menu  */
+"down" = "indisponible";
+

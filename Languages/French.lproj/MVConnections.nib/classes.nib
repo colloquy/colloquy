@@ -1,0 +1,51 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addRoom = id; 
+                conenctNewConnection = id; 
+                editConnection = id; 
+                joinRoom = id; 
+                messageUser = id; 
+                newConnection = id; 
+                removeRoom = id; 
+                sendPassword = id; 
+                showConnectionManager = id; 
+            }; 
+            CLASS = MVConnectionsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                authAddress = NSTextField; 
+                authKeychain = NSButton; 
+                authNickname = NSTextField; 
+                authPassword = NSTextField; 
+                connections = NSTableView; 
+                editAddress = NSTextField; 
+                editAutomatic = NSButton; 
+                editConnection = NSWindow; 
+                editNickname = NSTextField; 
+                editPassword = NSTextField; 
+                editPort = NSTextField; 
+                editRemoveRoom = NSButton; 
+                editRooms = NSTableView; 
+                joinRoom = NSPanel; 
+                messageUser = NSPanel; 
+                newAddress = NSTextField; 
+                newNickname = NSTextField; 
+                newPort = NSTextField; 
+                newRemember = NSButton; 
+                nicknameAuth = NSPanel; 
+                openConnection = NSPanel; 
+                panel = NSPanel; 
+                roomPassword = NSTextField; 
+                roomToJoin = NSComboBox; 
+                userToMessage = NSTextField; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
