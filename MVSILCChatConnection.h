@@ -14,6 +14,7 @@
 	unsigned short _silcPort;
 
 	NSString *_silcPassword;
+	NSData *_detachInfo;
 
 	NSString *_certificatePassword;
 	BOOL _waitForCertificatePassword;
@@ -44,6 +45,9 @@
 
 - (NSMutableArray *) _queuedCommands;
 - (NSMutableDictionary *) _sentCommands;
+
+- (NSData *) _detachInfo;
+- (void) _setDetachInfo:(NSData *) info;
 
 - (void) _addCommand:(NSString *) raw forNumber:(SilcUInt16) cmd_ident;
 - (NSString *) _getCommandForNumber:(SilcUInt16) cmd_ident;
