@@ -861,29 +861,29 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 						}
 					}
 				}
-
+				
 				[_currentMessage autorelease]; // set the message to an object property for plugins, if needed...
 				_currentMessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] nickname] andTranscript:self];
 				[_currentMessage setAction:action];
-
+				
 				id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
 				id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
 				[_currentMessage setObjectSpecifier:msgSpecifier];
-
+				
 				[self sendMessage:_currentMessage];
-
+				
 				if( [[subMsg string] length] )
 					[self echoSentMessageToDisplay:[_currentMessage body] asAction:[_currentMessage isAction]];
-
+				
 				[_currentMessage release];
 				_currentMessage = nil;
 			}
 		}
-
+		
 		if( range.length ) range.location++;
 		[[send textStorage] deleteCharactersInRange:NSMakeRange( 0, range.location )];
 	}
-
+	
 	[send reset:nil];
 	[self scrollToBottom];
 }
@@ -891,20 +891,40 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (void) sendMessage:(JVMutableChatMessage *) message {
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVMutableChatMessage * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-
+	
 	[invocation setSelector:@selector( processOutgoingMessage: )];
 	[invocation setArgument:&message atIndex:2];
-
+	
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
-
+	
 	if( [[message body] length] )
 		[[self connection] sendMessage:[message body] withEncoding:_encoding toUser:[self target] asAction:[message isAction]];
+}
+
+- (NSAttributedString *) sendActionMessage:(NSAttributedString *) message {
+	[_currentMessage autorelease]; // set the message to an object property for plugins, if needed...
+	NSTextStorage *subMsg = [[[NSTextStorage alloc] initWithAttributedString:message] autorelease];
+	_currentMessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] nickname] andTranscript:self];
+	[_currentMessage setAction:YES];
+	
+	id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
+	id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
+	[_currentMessage setObjectSpecifier:msgSpecifier];
+	
+	[self sendMessage:_currentMessage];
+	
+	NSAttributedString *result = [[_currentMessage body] retain];
+	
+	[_currentMessage release];
+	_currentMessage = nil;
+	
+	return [result autorelease];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), @encode( id ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-
+	
 	[invocation setSelector:@selector( processUserCommand:withArguments:toConnection:inView: )];
 	[invocation setArgument:&command atIndex:2];
 	[invocation setArgument:&arguments atIndex:3];

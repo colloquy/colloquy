@@ -73,6 +73,7 @@
 
 - (IBAction) send:(id) sender;
 - (void) sendMessage:(JVMutableChatMessage *) message;
+- (NSAttributedString *) sendActionMessage:(NSAttributedString *) message;
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments;
 
 - (IBAction) clear:(id) sender;

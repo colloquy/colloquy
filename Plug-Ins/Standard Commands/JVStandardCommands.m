@@ -51,8 +51,16 @@
 		if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] || ! [command caseInsensitiveCompare:@"say"] ) {
 			if( [arguments length] ) {
 				BOOL action = ( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] );
-				[chat echoSentMessageToDisplay:arguments asAction:action];
-				[[chat connection] sendMessage:arguments withEncoding:[chat encoding] toChatRoom:[chat target] asAction:action];
+				if (action && [view respondsToSelector:@selector(sendActionMessage:)]) {
+					// This is so plugins can respond to actions as well
+					// We're avoiding /say for now, as that really should just output exactly what the input was
+					// so we should still bypass plugins for that
+					NSAttributedString *result = [chat sendActionMessage:arguments];
+					[chat echoSentMessageToDisplay:result asAction:YES];
+				} else {
+					[[chat connection] sendMessage:arguments withEncoding:[chat encoding] toChatRoom:[chat target] asAction:action];
+					[chat echoSentMessageToDisplay:arguments asAction:action];
+				}
 			}
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"clear"] && ! [[arguments string] length] ) {
