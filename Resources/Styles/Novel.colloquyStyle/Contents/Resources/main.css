@@ -9,16 +9,30 @@ q:before, q:after {
 	font-weight: bold;
 }
 
-div.envelope {
-	overflow: hidden;	padding: 1px 5px 1px 5px;
+.error {
+	color: #aaa;
+}
+
+.error:before {
+	content: "{";
+}
+
+.error:after {
+	content: "}";
+}
+
+.event, .envelope {
+	overflow: hidden;
+	padding: 1px 5px 1px 5px;
 	margin-bottom: 5px;
 	font-family: serif;
 	font-size: 10pt;
 	line-height: 11pt;
 }
 
-div.envelopeHighlight {
-	overflow: hidden;	padding: 1px 5px 1px 5px;
+.envelopeHighlight {
+	overflow: hidden;
+	padding: 1px 5px 1px 5px;
 	margin-bottom: 5px;
 	background-color: #efefec;
 }
