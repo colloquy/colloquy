@@ -154,13 +154,12 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 + (NSRange) fileTransferPortRange {
 	const char *range = settings_get_str( "dcc_port" );
-	char *temp = NULL;
 	unsigned short min = 1024;
 	unsigned short max = 1048;
 
 	if( range && strlen( range ) ) {
 		min = strtoul( range, NULL, 10 );
-		temp = strchr( range, ' ' );
+		char *temp = strchr( range, ' ' );
 		if( ! temp ) temp = strchr( range, '-' );
 
 		if( ! temp ) max = min;
