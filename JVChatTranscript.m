@@ -551,6 +551,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		xmlFreeDoc( _xmlQueue );
 		_xmlQueue = NULL;
 	}
+
+	// we shouldn't have to post this notification manually
+	[display setPreferencesIdentifier:[_chatStyle bundleIdentifier]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"WebPreferencesChangedNotification" object:[display preferences]];
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[( html ? html : @"" ) stringByAppendingString:queueResult]] baseURL:nil];
 	[_logLock unlock];
 }
