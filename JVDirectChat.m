@@ -104,7 +104,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (NSString *) _selfStoredNickname;
 - (void) _makeHyperlinksInString:(NSMutableString *) string;
 - (void) _breakLongLinesInString:(NSMutableString *) string;
-- (void) _preformEmoticonSubstitutionOnString:(NSMutableString *) string;
+- (void) _performEmoticonSubstitutionOnString:(NSMutableString *) string;
 - (char *) _classificationForNickname:(NSString *) nickname;
 - (void) _saveSelfIcon;
 - (void) _saveBuddyIcon:(JVBuddy *) buddy;
@@ -217,6 +217,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[send setDelegate:self];
 	[send setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatSpellChecking"]];
 	[send reset:nil];
+
+	[self performSelector:@selector( _loaded: ) withObject:nil afterDelay:0.25];
 }
 
 - (void) dealloc {
@@ -278,10 +280,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
-	
+
 	[_toolbarItems release];
 	_toolbarItems = [[NSMutableDictionary dictionary] retain];
-	
+
 	return [toolbar autorelease];
 }
 
@@ -511,7 +513,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	if( ! [self _usingSpecificEmoticons] ) {
 		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style bundleIdentifier]]]];
-		[self setChatEmoticons:emoticon preformRefresh:NO];		
+		[self setChatEmoticons:emoticon performRefresh:NO];		
 	}
 
 	[self setChatStyle:style withVariant:variant];
@@ -527,7 +529,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( ! [style isEqual:_chatStyle] ) {
 		if( ! [self _usingSpecificEmoticons] ) {
 			NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]]];
-			[self setChatEmoticons:emoticon preformRefresh:NO];
+			[self setChatEmoticons:emoticon performRefresh:NO];
 		}
 
 		[self setChatStyle:[NSBundle bundleWithIdentifier:style] withVariant:variant];
@@ -612,8 +614,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSParameterAssert( name != nil );
 	NSParameterAssert( [name length] );
 
-	if( ! _nibLoaded ) [self view];
-
 	doc = xmlNewDoc( "1.0" );
 	root = xmlNewNode( NULL, "event" );
 	xmlSetProp( root, "name", [name UTF8String] );
@@ -660,16 +660,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( [_logLock tryLock] ) {
 		xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
-		if( _firstMessage ) { // If we just got a private message and this panel was just opened WebKit hasn't had time load the template.
-			[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[self _applyStyleOnXMLDocument:doc]] baseURL:nil];
-		} else {
-			messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
-			if( [messageString length] ) {
-				[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-				[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-				[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
-			}
+		messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
+		if( [messageString length] ) {
+			[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
 		}
 
 		[_logLock unlock];
@@ -683,7 +679,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	xmlFreeDoc( doc );
 
-	_firstMessage = NO;
+	_requiresFullMessage = YES;
 }
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
@@ -696,8 +692,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
-
-	if( ! _nibLoaded ) [self view];
 
 	if( ! [user isEqualToString:[[self connection] nickname]] )
 		[self processMessage:mutableMsg asAction:action fromUser:user];
@@ -713,7 +707,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 		[self _makeHyperlinksInString:messageString];
 
-	[self _preformEmoticonSubstitutionOnString:messageString];
+	[self _performEmoticonSubstitutionOnString:messageString];
 
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		NSEnumerator *enumerator = nil;
@@ -824,17 +818,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		if( parent ) xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
 		else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
-		if( _firstMessage ) { // If we just got a private message and this panel was just opened WebKit hasn't had time load the template.
-			[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[self _applyStyleOnXMLDocument:doc]] baseURL:nil];
-		} else {
-			messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
-			if( [messageString length] ) {
-				[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-				[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-				[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-				if( parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendConsecutiveMessage( \"%@\" );", messageString]];
-				else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
-			}
+		messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
+		if( [messageString length] ) {
+			[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+			if( parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendConsecutiveMessage( \"%@\" );", messageString]];
+			else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
 		}
 
 		[_logLock unlock];
@@ -1219,6 +1209,25 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 @implementation JVDirectChat (JVDirectChatPrivate)
+- (void) _loaded:(id) sender {
+	if( _xmlQueue && [_logLock tryLock] ) {
+		NSMutableString *queueResult = [[[self _applyStyleOnXMLDocument:_xmlQueue] mutableCopy] autorelease];
+		xmlAddChildList( xmlDocGetRootElement( _xmlLog ), xmlCopyNodeList( xmlDocGetRootElement( _xmlQueue ) -> children ) );
+
+		xmlFreeDoc( _xmlQueue );
+		_xmlQueue = NULL;
+
+		if( [queueResult length] ) {
+			[queueResult replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [queueResult length] )];
+			[queueResult replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [queueResult length] )];
+			[queueResult replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [queueResult length] )];
+			[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", queueResult]];
+		}
+
+		[_logLock unlock];
+	} else if( _xmlQueue ) [self performSelector:@selector( _loaded: ) withObject:nil afterDelay:0.25];
+}
+
 - (NSString *) _selfCompositeName {
 	ABPerson *_person = [[ABAddressBook sharedAddressBook] me];
 	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
@@ -1419,7 +1428,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	}
 }
 
-- (void) _preformEmoticonSubstitutionOnString:(NSMutableString *) string {
+- (void) _performEmoticonSubstitutionOnString:(NSMutableString *) string {
 	NSMutableString *str = nil;
 	NSEnumerator *keyEnumerator = [_emoticonMappings keyEnumerator];
 	NSEnumerator *objEnumerator = [_emoticonMappings objectEnumerator];
