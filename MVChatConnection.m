@@ -918,62 +918,81 @@ static const NSStringEncoding supportedEncodings[] = {
 		MVChatConnection *connection = message;
 		message = [args objectForKey:@"message"];
 
+		if( ! [connection isConnected] ) return nil;
+
 		NSString *nickname = target;
-		target = [[connection chatUsersWithNickname:[target description]] anyObject];
+		target = [[connection chatUsersWithNickname:[target description]] allObjects];
 
-		if( ! [connection isConnected] ) {
-			[self setScriptErrorNumber:1000];
-			[self setScriptErrorString:@"The connection needs to be connected before you can find a chat user by their nickname."];
-			return nil;
-		}
-
-		if( ! target ) {
-			[self setScriptErrorNumber:1000];
-			[self setScriptErrorString:[NSString stringWithFormat:@"The connection did not find a chat user with the nickname \"%@\".", nickname]];
-			return nil;
-		}
+		if( ! target || ( target && [target isKindOfClass:[NSArray class]] && ! [target count] ) )
+			return nil; // silently fail like normal tell blocks do when the target is nil or an empty list
 	}
 
-	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The message was missing or not a string value."];
+	if( ! message ) {
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The message was missing."];
 		return nil;
 	}
 
+	if( ! [message isKindOfClass:[NSString class]] ) {
+		message = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:message toClass:[NSString class]];
+		if( ! [message isKindOfClass:[NSString class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The message was not a string value and coercion failed."];
+			return nil;
+		}
+	}
+
 	if( ! [(NSString *)message length] ) {
-		[self setScriptErrorNumber:1000];
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
 		[self setScriptErrorString:@"The message can't be blank."];
 		return nil;
 	}
 
-	if( ! target ) target = [self subjectParameter];
+	if( ! target ) {
+		target = [self subjectParameter];
+		if( ! target || ( target && [target isKindOfClass:[NSArray class]] && ! [target count] ) )
+			return nil; // silently fail like normal tell blocks do when the target is nil or an empty list
+
+		if( ! [target isKindOfClass:[NSArray class]] && ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[MVChatRoom class]] ) {
+			[self setScriptErrorNumber:-1703]; // errAEWrongDataType
+			[self setScriptErrorString:@"The nearest enclosing tell block target is not a chat user nor a chat room specifier."];
+			return nil;
+		}
+	}
+
 	if( ! target || ( ! [target isKindOfClass:[NSArray class]] && ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[MVChatRoom class]] ) ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"to\" parameter was missing, not a chat user nor a chat room object. The nearest enclosing tell block also did not accept this command."];
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The \"to\" parameter was missing, not a chat user nor a chat room specifier."];
 		return nil;
 	}
 
 	if( [target isKindOfClass:[MVChatUser class]] && [(MVChatUser *)target type] == MVChatWildcardUserType ) {
-		[self setScriptErrorNumber:1000];
+		[self setScriptErrorNumber:-1703]; // errAEWrongDataType
 		[self setScriptErrorString:@"The \"to\" parameter cannot be a wildcard user."];
 		return nil;
 	}
 
 	if( action && ! [action isKindOfClass:[NSNumber class]] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"action tense\" parameter was not a boolean value."];
-		return nil;
+		action = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:action toClass:[NSNumber class]];
+		if( ! [action isKindOfClass:[NSNumber class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The action tense parameter was not a boolean value and coercion failed."];
+			return nil;
+		}
 	}
 
 	if( localEcho && ! [localEcho isKindOfClass:[NSNumber class]] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"local echo\" parameter was not a boolean value."];
-		return nil;
+		localEcho = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:localEcho toClass:[NSNumber class]];
+		if( ! [localEcho isKindOfClass:[NSNumber class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The local echo parameter was not a boolean value and coercion failed."];
+			return nil;
+		}
 	}
 
 	if( encoding && ! [encoding isKindOfClass:[NSNumber class]] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"encoding\" was an invalid type."];
+		[self setScriptErrorNumber:-1703]; // errAEWrongDataType
+		[self setScriptErrorString:@"The encoding was an invalid type."];
 		return nil;
 	}
 
@@ -1005,7 +1024,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			NSString *cformat = nil;
 
 			switch( [[(MVChatRoom *)target connection] outgoingChatFormat] ) {
-				case MVChatConnectionDefaultMessageFormat:
+				case MVChatConnectionDefaultMessageFormat: // we can't really support the connection default, assume what it is
 				case MVChatWindowsIRCMessageFormat:
 					cformat = NSChatWindowsIRCFormatType;
 					break;
@@ -1047,28 +1066,65 @@ static const NSStringEncoding supportedEncodings[] = {
 	id connection = [args objectForKey:@"connection"];
 	id priority = [args objectForKey:@"priority"];
 
-	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The command was missing or not a string value."];
+	if( ! message ) {
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The message was missing."];
 		return nil;
 	}
 
-	if( ! connection ) connection = [self subjectParameter];
-	if( ! connection || ! [connection isKindOfClass:[MVChatConnection class]] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"to\" parameter was missing or not a connection object. The nearest enclosing tell block also did not accept this command."];
+	if( ! [message isKindOfClass:[NSString class]] ) {
+		message = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:message toClass:[NSString class]];
+		if( ! [message isKindOfClass:[NSString class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The message was not a string value and coercion failed."];
+			return nil;
+		}
+	}
+
+	if( ! [(NSString *)message length] ) {
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The message can't be blank."];
 		return nil;
 	}
-	
-	if( priority && ! [priority isKindOfClass:[NSNumber class]] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"priority\" was not a boolean value."];
+
+	if( ! connection ) {
+		connection = [self subjectParameter];
+		if( ! connection || ( connection && [connection isKindOfClass:[NSArray class]] && ! [connection count] ) )
+			return nil; // silently fail like normal tell blocks do when the target is nil or an empty list
+
+		if( ! [connection isKindOfClass:[NSArray class]] && ! [connection isKindOfClass:[MVChatConnection class]] ) {
+			[self setScriptErrorNumber:-1703]; // errAEWrongDataType
+			[self setScriptErrorString:@"The nearest enclosing tell block target is not a connection specifier."];
+			return nil;
+		}
+	}
+
+	if( ! connection || ( ! [connection isKindOfClass:[NSArray class]] && ! [connection isKindOfClass:[MVChatConnection class]] ) ) {
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The \"to\" parameter was missing or not a connection specifier."];
 		return nil;
+	}
+
+	if( priority && ! [priority isKindOfClass:[NSNumber class]] ) {
+		priority = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:priority toClass:[NSNumber class]];
+		if( ! [priority isKindOfClass:[NSNumber class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The priority parameter was not a boolean value and coercion failed."];
+			return nil;
+		}
 	}
 
 	BOOL realPriority = ( priority ? [priority boolValue] : NO );
 
-	[connection sendRawMessage:message immediately:realPriority];
+	NSArray *targets = nil;
+	if( [connection isKindOfClass:[NSArray class]] ) targets = connection;
+	else targets = [NSArray arrayWithObject:connection];
+
+	NSEnumerator *enumerator = [targets objectEnumerator];
+	while( ( connection = [enumerator nextObject] ) ) {
+		if( ! [connection isKindOfClass:[MVChatConnection class]] ) continue;
+		[connection sendRawMessage:message immediately:realPriority];
+	}
 
 	return nil;
 }
@@ -1090,20 +1146,39 @@ static const NSStringEncoding supportedEncodings[] = {
 	id connection = [args objectForKey:@"connection"];
 
 	if( ! room || ( ! [room isKindOfClass:[NSString class]] && ! [room isKindOfClass:[NSArray class]] ) ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The room was missing, not a string value nor a list or strings."];
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The room was missing, not a string value nor a list of strings."];
 		return nil;
 	}
 
-	if( ! connection ) connection = [self subjectParameter];
-	if( ! connection || ! [connection isKindOfClass:[MVChatConnection class]] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"on\" parameter was missing or not a connection object. The nearest enclosing tell block also did not accept this command."];
+	if( ! connection ) {
+		connection = [self subjectParameter];
+		if( ! connection || ( connection && [connection isKindOfClass:[NSArray class]] && ! [connection count] ) )
+			return nil; // silently fail like normal tell blocks do when the target is nil or an empty list
+
+		if( ! [connection isKindOfClass:[NSArray class]] && ! [connection isKindOfClass:[MVChatConnection class]] ) {
+			[self setScriptErrorNumber:-1703]; // errAEWrongDataType
+			[self setScriptErrorString:@"The nearest enclosing tell block target is not a connection specifier."];
+			return nil;
+		}
+	}
+
+	if( ! connection || ( ! [connection isKindOfClass:[NSArray class]] && ! [connection isKindOfClass:[MVChatConnection class]] ) ) {
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The \"on\" parameter was missing or not a connection specifier."];
 		return nil;
 	}
 
-	if( [room isKindOfClass:[NSArray class]] ) [connection joinChatRoomsNamed:room];
-	else [connection joinChatRoomNamed:room];
+	NSArray *targets = nil;
+	if( [connection isKindOfClass:[NSArray class]] ) targets = connection;
+	else targets = [NSArray arrayWithObject:connection];
+
+	NSEnumerator *enumerator = [targets objectEnumerator];
+	while( ( connection = [enumerator nextObject] ) ) {
+		if( ! [connection isKindOfClass:[MVChatConnection class]] ) continue;
+		if( [room isKindOfClass:[NSArray class]] ) [connection joinChatRoomsNamed:room];
+		else [connection joinChatRoomNamed:room];
+	}
 
 	return nil;
 }

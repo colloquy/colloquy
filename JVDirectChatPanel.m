@@ -1664,28 +1664,43 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	if( [args objectForKey:@"message"] ) // support the old command that had a message parameter instead
 		message = [args objectForKey:@"message"];
 
-	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
-		[command setScriptErrorNumber:1000];
-		[command setScriptErrorString:@"The message was missing or not a string value."];
+	if( ! message ) {
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The message was missing."];
 		return nil;
 	}
 
+	if( ! [message isKindOfClass:[NSString class]] ) {
+		message = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:message toClass:[NSString class]];
+		if( ! [message isKindOfClass:[NSString class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The message was not a string value and coercion failed."];
+			return nil;
+		}
+	}
+
 	if( ! [(NSString *)message length] ) {
-		[command setScriptErrorNumber:1000];
-		[command setScriptErrorString:@"The message can't be blank."];
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The message can't be blank."];
 		return nil;
 	}
 
 	if( action && ! [action isKindOfClass:[NSNumber class]] ) {
-		[command setScriptErrorNumber:1000];
-		[command setScriptErrorString:@"The \"action tense\" parameter was not a boolean value."];
-		return nil;
+		action = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:action toClass:[NSNumber class]];
+		if( ! [action isKindOfClass:[NSNumber class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The action tense parameter was not a boolean value and coercion failed."];
+			return nil;
+		}
 	}
 
 	if( localEcho && ! [localEcho isKindOfClass:[NSNumber class]] ) {
-		[command setScriptErrorNumber:1000];
-		[command setScriptErrorString:@"The \"local echo\" parameter was not a boolean value."];
-		return nil;
+		localEcho = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:localEcho toClass:[NSNumber class]];
+		if( ! [localEcho isKindOfClass:[NSNumber class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The local echo parameter was not a boolean value and coercion failed."];
+			return nil;
+		}
 	}
 
 	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
@@ -1736,43 +1751,76 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		message = [args objectForKey:@"message"];
 	}
 
-	if( ! target ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The nearest enclosing tell block target returns a missing value."];
-		return nil;
-	}
+	if( ! target || ( target && [target isKindOfClass:[NSArray class]] && ! [target count] ) )
+		return nil; // silently fail like normal tell blocks do when the target is nil or an empty list
 
-	if( ! [target isKindOfClass:[JVDirectChatPanel class]] ) {
-		[self setScriptErrorNumber:1000];
+	if( ! [target isKindOfClass:[JVDirectChatPanel class]] && ! [target isKindOfClass:[NSArray class]] ) {
+		[self setScriptErrorNumber:-1703]; // errAEWrongDataType
 		[self setScriptErrorString:@"The nearest enclosing tell block target does not inherit from the direct chat panel class."];
 		return nil;
 	}
 
-	if( ! name || ! [name isKindOfClass:[NSString class]] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The event name was missing or not a string value."];
+	if( ! message ) {
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The event message was missing."];
 		return nil;
 	}
 
-	if( ! [(NSString *)name length] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The event name can't be blank."];
-		return nil;
-	}
-
-	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
-		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The event message was missing or not a string value."];
-		return nil;
+	if( ! [message isKindOfClass:[NSString class]] ) {
+		message = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:message toClass:[NSString class]];
+		if( ! [message isKindOfClass:[NSString class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The event message was not a string value and coercion failed."];
+			return nil;
+		}
 	}
 
 	if( ! [(NSString *)message length] ) {
-		[self setScriptErrorNumber:1000];
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
 		[self setScriptErrorString:@"The event message can't be blank."];
 		return nil;
 	}
 
-	[target addEventMessageToDisplay:message withName:name andAttributes:( [attributes isKindOfClass:[NSDictionary class]] ? attributes : nil )];
+	if( ! name ) {
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The event name was missing."];
+		return nil;
+	}
+
+	if( ! [name isKindOfClass:[NSString class]] ) {
+		name = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:name toClass:[NSString class]];
+		if( ! [name isKindOfClass:[NSString class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The event name was not a string value and coercion failed."];
+			return nil;
+		}
+	}
+
+	if( ! [(NSString *)name length] ) {
+		[self setScriptErrorNumber:-1715]; // errAEParamMissed
+		[self setScriptErrorString:@"The event name can't be blank."];
+		return nil;
+	}
+
+	if( attributes && ! [attributes isKindOfClass:[NSDictionary class]] ) {
+		attributes = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:attributes toClass:[NSDictionary class]];
+		if( ! [attributes isKindOfClass:[NSDictionary class]] ) {
+			[self setScriptErrorNumber:-1700]; // errAECoercionFail
+			[self setScriptErrorString:@"The event attributes was not a record value and coercion failed."];
+			return nil;
+		}
+	}
+
+	NSArray *targets = nil;
+	if( [target isKindOfClass:[NSArray class]] ) targets = target;
+	else targets = [NSArray arrayWithObject:target];
+
+	NSEnumerator *enumerator = [targets objectEnumerator];
+	while( ( target = [enumerator nextObject] ) ) {
+		if( ! [target isKindOfClass:[JVDirectChatPanel class]] ) continue;
+		[target addEventMessageToDisplay:message withName:name andAttributes:attributes];
+	}
+
 	return nil;
 }
 @end
