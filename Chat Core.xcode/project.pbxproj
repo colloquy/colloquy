@@ -7,13 +7,9 @@
 	objects = {
 		014CEA420018CDE011CA2923 = {
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				OTHER_CFLAGS = "\U0001-DDEBUG";
 				PREBINDING = NO;
-				UNSTRIPPED_PRODUCT = YES;
-				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
 			name = Development;
@@ -246,10 +242,13 @@
 			buildRules = (
 			);
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_SEARCH_PATHS = Frameworks;
 				FRAMEWORK_VERSION = A;
+				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_CW_ASM_SYNTAX = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
@@ -257,24 +256,18 @@
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ChatCore.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "Core/irssi Core/irssi/glib Core/irssi/src Core/irssi/src/irc Core/irssi/src/irc/core Core/irssi/src/irc/dcc Core/irssi/src/irc/flood Core/irssi/src/irc/notifylist Core/irssi/src/core Core/irssi/src/fe-common/core Core/irssi/src/fe-common/irc Core/irssi/src/fe-common/irc/dcc Core/irssi/src/fe-common/irc/notifylist";
+				HEADER_SEARCH_PATHS = "Core/irssi Core/irssi/glib Core/irssi/glib/gmodule Core/irssi/src Core/irssi/src/irc Core/irssi/src/irc/core Core/irssi/src/irc/dcc Core/irssi/src/irc/flood Core/irssi/src/irc/notifylist Core/irssi/src/core Core/irssi/src/fe-common/core Core/irssi/src/fe-common/irc Core/irssi/src/fe-common/irc/dcc Core/irssi/src/fe-common/irc/notifylist";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "Core/irssi/src/irc Core/irssi/src/irc/core Core/irssi/src/irc/dcc Core/irssi/src/irc/flood Core/irssi/src/irc/notifylist Core/irssi/src/core Core/irssi/glib/.libs Core/irssi/src/lib-config Core/irssi/src/lib-popt Core/irssi/src/fe-common/core Core/irssi/src/fe-common/irc Core/irssi/src/fe-common/irc/dcc Core/irssi/src/fe-common/irc/notifylist";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-fconstant-cfstrings -DUOFF_T_LONG_LONG";
+				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16 -DHAVE_CONFIG_H";
 				OTHER_LDFLAGS = "-seg1addr 0xa10000 -lssl -lcrypto";
-				OTHER_LIBTOOL_FLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRINCIPAL_CLASS = "";
 				PRODUCT_NAME = ChatCore;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
+				SKIP_INSTALL = YES;
+				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = NO;
 			};
 			dependencies = (
 				1CB3748B060E4F4D00F6A81F,
@@ -3588,14 +3581,6 @@
 		};
 		F52BA31C037C62E801A35792 = {
 			buildSettings = {
-				DEPLOYMENT_POSTPROCESSING = YES;
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				PREBINDING = YES;
-				UNSTRIPPED_PRODUCT = NO;
-				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
 			name = Deployment;

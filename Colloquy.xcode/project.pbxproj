@@ -7,13 +7,10 @@
 	objects = {
 		014CEA420018CDE011CA2923 = {
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				OTHER_CFLAGS = "\U0001-DDEBUG -falign-loops=16";
+				OTHER_CFLAGS = "\U0001-DDEBUG -fconstant-cfstrings -falign-loops=16";
 				PREBINDING = NO;
-				UNSTRIPPED_PRODUCT = YES;
 				ZERO_LINK = YES;
 			};
 			isa = PBXBuildStyle;
@@ -1105,19 +1102,24 @@
 			buildRules = (
 			);
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				HEADER_SEARCH_PATHS = "\"Plug-Ins/Standard Commands\"";
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-fconstant-cfstrings";
+				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
 				OTHER_LDFLAGS = "-undefined dynamic_lookup";
-				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = "Standard Commands";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
+				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = plugin;
 			};
 			dependencies = (
@@ -1996,27 +1998,23 @@
 			buildRules = (
 			);
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks build";
+				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_CW_ASM_SYNTAX = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
-				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-fconstant-cfstrings";
+				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
 				OTHER_LDFLAGS = "-weak_framework GrowlAppBridge";
-				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = Colloquy;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
+				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
@@ -4963,16 +4961,6 @@
 		};
 		F52BA31C037C62E801A35792 = {
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				OTHER_CFLAGS = "-falign-loops=16";
-				PREBINDING = YES;
-				UNSTRIPPED_PRODUCT = YES;
-				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
 			name = Deployment;
