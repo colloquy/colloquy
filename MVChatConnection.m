@@ -1407,6 +1407,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[self _irssiConnection] -> no_reconnect = YES;
 
 	server_disconnect( [self _irssiConnection] );
+
+	[self _cancelReconnectAttempts];
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
@@ -1427,6 +1429,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[self _irssiConnection] -> no_reconnect = YES;
 
 	server_disconnect( [self _irssiConnection] );
+
+	[self _cancelReconnectAttempts];
 }
 
 #pragma mark -
