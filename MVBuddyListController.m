@@ -783,11 +783,17 @@ static MVBuddyListController *sharedInstance = nil;
 @implementation MVBuddyListController (MVBuddyListControllerPrivate)
 - (void) _animateStep:(NSTimer *) timer {
 	static NSDate *start = nil;
-	if( ! _animationPosition ) start = [[NSDate date] retain];
+	if( ! _animationPosition ) {
+		[start autorelease];
+		start = [[NSDate date] retain];
+	}
+
 	NSTimeInterval elapsed = fabs( [start timeIntervalSinceNow] );
 	_animationPosition = MIN( 1., elapsed / .25 );
 
 	if( fabs( _animationPosition - 1. ) <= 0.01 ) {
+		[start autorelease];
+		start = nil;
 		[timer invalidate];
 		[timer autorelease];
 		_animationPosition = 0.;
