@@ -83,7 +83,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[[self window] setFrameUsingName:@"Chat Window"];
 	[[self window] setFrameAutosaveName:@"Chat Window"];
 
-	[[self window] setAlphaValue:0.999]; // let us poke transparant holes in the window
+	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
 	NSSize drawerSize = NSSizeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatWindowDrawerSize"] );
 	if( drawerSize.width ) [viewsDrawer setContentSize:drawerSize];
