@@ -1,5 +1,9 @@
 #import <ExceptionHandling/NSExceptionHandler.h>
 #import <ChatCore/MVFileTransfer.h>
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
+#import <ChatCore/MVChatScriptPlugin.h>
+#import "NSURLAdditions.h"
 #import "MVColorPanel.h"
 #import "MVApplicationController.h"
 #import "JVChatWindowController.h"
@@ -16,12 +20,10 @@
 #import "MVFileTransferController.h"
 #import "JVTranscriptPreferences.h"
 #import "MVBuddyListController.h"
-#import "MVChatPluginManager.h"
 #import "JVChatController.h"
 #import "MVChatConnection.h"
 #import "JVChatRoomBrowser.h"
 #import "NSBundleAdditions.h"
-#import "NSURLAdditions.h"
 #import "JVStyle.h"
 
 #import <Foundation/NSDebug.h>
@@ -324,6 +326,36 @@ static BOOL applicationIsTerminating = NO;
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
+- (NSMenu *) applicationDockMenu:(NSApplication *) sender {
+	NSMenu *menu = [[[NSMenu allocWithZone:[self zone]] initWithTitle:@""] autorelease];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	id view = nil;
+
+	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
+	[invocation setArgument:&sender atIndex:2];
+	[invocation setArgument:&view atIndex:3];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	if( [results count] ) {
+		NSArray *items = nil;
+		NSMenuItem *item = nil;
+		NSEnumerator *enumerator = [results objectEnumerator];
+		while( ( items = [enumerator nextObject] ) ) {
+			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+			NSEnumerator *ienumerator = [items objectEnumerator];
+			while( ( item = [ienumerator nextObject] ) )
+				if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
+		}
+
+		if( [[[menu itemArray] lastObject] isSeparatorItem] )
+			[menu removeItem:[[menu itemArray] lastObject]];
+	}
+
+	return menu;
+}
+
 - (BOOL) application:(NSApplication *) sender delegateHandlesKey:(NSString *) key {
 	if( [key isEqualToString:@"chatController"] || [key isEqualToString:@"connectionsController"] || [key isEqualToString:@"transferManager"] || [key isEqualToString:@"buddyList"] )
 		return YES;
@@ -336,6 +368,151 @@ static BOOL applicationIsTerminating = NO;
 		else return NO;
 	}
 	return YES;
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatScriptPlugin (MVChatPluginContextualMenuSupport)
+- (IBAction) performContextualMenuItemAction:(id) sender {
+	id object = [sender representedObject];
+	NSMutableArray *submenu = [NSMutableArray array];
+
+	NSMenu *menu = [sender menu];
+	NSMenu *parent = nil;
+	while( ( parent = [menu supermenu] ) ) {
+		[submenu insertObject:[menu title] atIndex:0];
+		menu = parent;
+	}
+
+	NSString *title = [sender title];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:title, @"----", object, @"pcM1", submenu, @"pcM2", nil];
+	[self callScriptHandler:'pcMX' withArguments:args forSelector:_cmd];
+}
+
+- (void) buildMenuInto:(NSMutableArray *) itemList fromReturnContainer:(id) container withRepresentedObject:(id) object {
+	if( [container respondsToSelector:@selector( objectEnumerator )] ) {
+		NSEnumerator *enumerator = [container objectEnumerator];
+		id item = nil;
+
+		while( ( item = [enumerator nextObject] ) ) {
+			if( [item isKindOfClass:[NSString class]] ) {
+				if( [item isEqualToString:@"-"] ) {
+					[itemList addObject:[NSMenuItem separatorItem]];
+				} else {
+					NSMenuItem *mitem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""] autorelease];
+					[mitem setTarget:self];
+					[mitem setRepresentedObject:object];
+					[itemList addObject:mitem];
+				}
+			} else if( [item isKindOfClass:[NSDictionary class]] ) {
+				NSString *title = [item objectForKey:@"title"];
+				NSArray *sub = [item objectForKey:@"submenu"];
+				NSNumber *enabled = [item objectForKey:@"enabled"];
+				NSNumber *checked = [item objectForKey:@"checked"];
+				NSNumber *indent = [item objectForKey:@"indent"];
+				NSNumber *alternate = [item objectForKey:@"alternate"];
+				NSString *iconPath = [item objectForKey:@"icon"];
+				id iconSize = [item objectForKey:@"iconsize"];
+				NSString *tooltip = [item objectForKey:@"tooltip"];
+				id context = [item objectForKey:@"context"];
+
+				if( ! [title isKindOfClass:[NSString class]] ) continue;
+				if( ! [tooltip isKindOfClass:[NSString class]] ) tooltip = nil;
+				if( ! [enabled isKindOfClass:[NSNumber class]] ) enabled = nil;
+				if( ! [checked isKindOfClass:[NSNumber class]] ) checked = nil;
+				if( ! [indent isKindOfClass:[NSNumber class]] ) indent = nil;
+				if( ! [alternate isKindOfClass:[NSNumber class]] ) alternate = nil;
+				if( ! [iconPath isKindOfClass:[NSString class]] ) iconPath = nil;
+				if( ! [iconSize isKindOfClass:[NSArray class]] && ! [iconSize isKindOfClass:[NSNumber class]] ) iconSize = nil;
+				if( ! [sub isKindOfClass:[NSArray class]] && ! [sub isKindOfClass:[NSDictionary class]] ) sub = nil;
+				
+				NSMenuItem *mitem = [[[NSMenuItem alloc] initWithTitle:title action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""] autorelease];
+				if( context ) [mitem setRepresentedObject:context];
+				else [mitem setRepresentedObject:object];
+				if( ! enabled || ( enabled && [enabled boolValue] ) ) [mitem setTarget:self];
+				if( enabled && ! [enabled boolValue] ) [mitem setEnabled:[enabled boolValue]];
+				if( checked ) [mitem setState:[checked intValue]];
+				if( indent ) [mitem setIndentationLevel:MIN( 15, [indent unsignedIntValue] )];
+				if( tooltip ) [mitem setToolTip:tooltip];
+
+				if( alternate && [alternate unsignedIntValue] == 1 ) {
+					[mitem setKeyEquivalentModifierMask:NSAlternateKeyMask];
+					[mitem setAlternate:YES];
+				} else if( alternate && [alternate unsignedIntValue] == 2 ) {
+					[mitem setKeyEquivalentModifierMask:( NSShiftKeyMask | NSAlternateKeyMask )];
+					[mitem setAlternate:YES];
+				} else if( alternate && [alternate unsignedIntValue] == 3 ) {
+					[mitem setKeyEquivalentModifierMask:( NSShiftKeyMask | NSAlternateKeyMask | NSControlKeyMask )];
+					[mitem setAlternate:YES];
+				}
+
+				if( [iconPath length] ) {
+					NSURL *iconURL;
+					if( iconURL = [NSURL URLWithString:iconPath] ) {
+						// NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingURL:[NSURL URLWithString:iconPath]] autorelease];
+						// Lets download the icon with a 1-second timeout
+						// Let's also ask for the cache if it exists rather than using protocol default
+						NSURLRequest *iconRequest = [NSURLRequest requestWithURL:iconURL cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:1.0];
+						NSData *iconData = [NSURLConnection sendSynchronousRequest:iconRequest returningResponse:nil error:nil];
+						NSImage *icon = [[[NSImage alloc] initWithData:iconData] autorelease];
+						if( icon ) [mitem setImage:icon];
+					} else {
+						if( ! [iconPath isAbsolutePath] ) {
+							NSString *dir = [[self scriptFilePath] stringByDeletingLastPathComponent];
+							iconPath = [dir stringByAppendingPathComponent:iconPath];
+						}
+
+						NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingFile:iconPath] autorelease];
+						if( icon ) [mitem setImage:icon];
+					}
+
+					NSSize size = NSZeroSize;
+					if( [iconSize isKindOfClass:[NSArray class]] && [(NSArray *)iconSize count] == 2 ) {
+						size = NSMakeSize( [[iconSize objectAtIndex:0] unsignedIntValue], [[iconSize objectAtIndex:1] unsignedIntValue] );
+					} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
+						size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
+					}
+
+					if( [mitem image] && ! NSEqualSizes( size, NSZeroSize ) ) {
+						[[mitem image] setScalesWhenResized:YES];
+						[[mitem image] setSize:size];
+					}
+				}
+
+				[itemList addObject:mitem];
+
+				if( [sub respondsToSelector:@selector( objectEnumerator )] && [sub respondsToSelector:@selector( count )] && [sub count] ) {
+					NSMenu *submenu = [[[NSMenu allocWithZone:[self zone]] initWithTitle:title] autorelease];
+					NSMutableArray *subArray = [NSMutableArray array];
+
+					[self buildMenuInto:subArray fromReturnContainer:sub withRepresentedObject:object];
+
+					id subItem = nil;
+					NSEnumerator *subenumerator = [subArray objectEnumerator];
+					while( ( subItem = [subenumerator nextObject] ) )
+						[submenu addItem:subItem];
+
+					[mitem setSubmenu:submenu];
+				}
+			}
+		}
+	}
+}
+
+- (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:object, @"----", view, @"cMi1", nil];
+	id result = [self callScriptHandler:'cMiX' withArguments:args forSelector:_cmd];
+	NSMutableArray *ret = [NSMutableArray array];
+
+	if( ! result ) return nil;
+	if( ! [result isKindOfClass:[NSArray class]] )
+		result = [NSArray arrayWithObject:result];
+
+	[self buildMenuInto:ret fromReturnContainer:result withRepresentedObject:object];
+
+	if( [ret count] ) return ret;
+	return nil;
 }
 @end
 
