@@ -866,7 +866,7 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 					memmove(tempchr,&tempchr2[1],safe_strlen(&tempchr2[1]) + 1);
 				}
 				if (!strcasecmp(irc_get_nickname(args[0]),"NickServ")) {
-					if ((strstr(args[3],"IDENTIFY") != NULL) && (strstr(args[3],"/msg") != NULL) && (strstr(args[3],"HELP") == NULL)) {
+					if ((strstr(args[3],"IDENTIFY") != NULL) && (strstr(args[3],"/msg") != NULL) && (strstr(args[3],"NickServ") != NULL)) {
 						c->identified = 0;
 						/* nickserv seems to be asking us to identify ourselves, and we have a password */
 						if (!c->password) {
