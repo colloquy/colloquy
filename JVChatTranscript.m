@@ -571,7 +571,7 @@
 				NSString *source = ( sourceStr ? [NSString stringWithUTF8String:(char *) sourceStr] : nil );
 				xmlFree( sourceStr );
 
-				if( [msgSource isEqualToString:source] ) { // different rooms/chats, give up early
+				if( ( ! msgSource && ! source ) || [msgSource isEqualToString:source] ) { // same chat source, proceed to sender check
 					xmlNode *subNode = lastChild -> children;
 					do {
 						if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
