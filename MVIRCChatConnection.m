@@ -1022,6 +1022,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	}
 }
 
++ (NSArray *) defaultServerPorts {
+	return [NSArray arrayWithObjects:[NSNumber numberWithUnsignedShort:6667],[NSNumber numberWithUnsignedShort:6660],[NSNumber numberWithUnsignedShort:6669],[NSNumber numberWithUnsignedShort:7000],[NSNumber numberWithUnsignedShort:994], nil];
+}
+
 #pragma mark -
 
 - (id) init {

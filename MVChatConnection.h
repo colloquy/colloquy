@@ -64,6 +64,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	unsigned int _nextAltNickIndex;
 }
 + (BOOL) supportsURLScheme:(NSString *) scheme;
++ (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type;
 
 #pragma mark -
 

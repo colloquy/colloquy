@@ -11,6 +11,7 @@ extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 	SERVER_REC *_chatConnection;
 	SERVER_CONNECT_REC *_chatConnectionSettings;
 }
++ (NSArray *) defaultServerPorts;
 @end
 
 #pragma mark -

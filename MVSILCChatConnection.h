@@ -24,6 +24,7 @@
 
 	BOOL _sentQuitCommand;
 }
++ (NSArray *) defaultServerPorts;
 @end
 
 #pragma mark -

@@ -52,6 +52,12 @@ static const NSStringEncoding supportedEncodings[] = {
 	return ( [scheme isEqualToString:@"irc"] || [scheme isEqualToString:@"silc"] );
 }
 
++ (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type {
+	if( type == MVChatConnectionIRCType ) return [MVIRCChatConnection defaultServerPorts];
+	else if( type == MVChatConnectionSILCType ) return [MVSILCChatConnection defaultServerPorts];
+	return [NSArray array];
+}
+
 #pragma mark -
 
 - (id) init {

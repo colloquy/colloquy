@@ -699,6 +699,10 @@ static SilcClientOperations silcClientOps = {
 	}
 }
 
++ (NSArray *) defaultServerPorts {
+	return [NSArray arrayWithObject:[NSNumber numberWithUnsignedShort:706]];
+}
+
 #pragma mark -
 
 - (id) init {
