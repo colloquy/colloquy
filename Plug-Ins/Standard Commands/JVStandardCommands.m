@@ -71,15 +71,10 @@
 				[chat _reloadCurrentStyle:nil];
 				return YES;
 			}
-		} else if( ! [command caseInsensitiveCompare:@"whois"] || ! [command caseInsensitiveCompare:@"wi"] ) {
-//			id member = [[[JVChatRoomMember alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
-//			id info = [JVInspectorController inspectorOfObject:member];
-//			[(id)[info inspector] setFetchLocalServerInfoOnly:YES];
-//			[info show:nil];
-			return YES;
-		} else if( ! [command caseInsensitiveCompare:@"wii"] ) {
-//			id member = [[[JVChatRoomMember alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
-//			[[JVInspectorController inspectorOfObject:member] show:nil];
+		} else if( ! [command caseInsensitiveCompare:@"whois"] || ! [command caseInsensitiveCompare:@"wi"] || ! [command caseInsensitiveCompare:@"wii"] ) {
+			MVChatUser *user = [[connection chatUsersWithNickname:[arguments string]] anyObject];
+			JVChatRoomMember *member = [[[JVChatRoomMember alloc] initWithRoom:nil andUser:user] autorelease];
+			[[JVInspectorController inspectorOfObject:member] show:nil];
 			return YES;
 		}
 	}
