@@ -264,7 +264,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] stopFetchingRoomList];
 
 	if( [sender tag] ) {
-		[(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] joinChatForRoom:[roomToJoin stringValue]];
+		[(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] joinChatRoom:[roomToJoin stringValue]];
 	}
 }
 
@@ -379,7 +379,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 			connection = [data objectForKey:@"connection"];
 			if( [[connection server] isEqualToString:[url host]] && ( ! [url user] || [[connection nickname] isEqualToString:[url user]] ) && ( ! [connection serverPort] || ! [[url port] unsignedShortValue] || [connection serverPort] == [[url port] unsignedShortValue] ) ) {
 				if( ! [connection isConnected] && connect ) [connection connect];
-				if( target && isRoom ) [connection joinChatForRoom:target];
+				if( target && isRoom ) [connection joinChatRoom:target];
 				else if( target && ! isRoom ) [[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:NO];
 				[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
 				[[self window] makeKeyAndOrderFront:nil];
@@ -401,7 +401,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 			[[self window] makeKeyAndOrderFront:nil];
 
-			if( target && isRoom ) [connection joinChatForRoom:target];
+			if( target && isRoom ) [connection joinChatRoom:target];
 			else if( target && ! isRoom ) [[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:NO];
 		}
 	}
@@ -990,7 +990,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 			renumerator = [[info objectForKey:@"rooms"] objectEnumerator];
 			while( ( item = [renumerator nextObject] ) )
-				[connection joinChatForRoom:item];
+				[connection joinChatRoom:item];
 		}
 
 		[info setObject:connection forKey:@"connection"];
@@ -1098,7 +1098,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	enumerator = [[info objectForKey:@"rooms"] objectEnumerator];
 	id item = nil;
 	while( ( item = [enumerator nextObject] ) )
-		[connection joinChatForRoom:item];
+		[connection joinChatRoom:item];
 }
 
 - (void) _disconnect:(id) sender {
@@ -1209,7 +1209,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[self _saveBookmarkList];
 }
 
-- (MVChatConnection *) handleURLScriptcommand:(NSScriptCommand *) command {
+- (MVChatConnection *) handleURLScriptCommand:(NSScriptCommand *) command {
 	NSURL *url = [NSURL URLWithString:[[command evaluatedArguments] objectForKey:@"url"]];
 	if( ! url ) return nil;
 

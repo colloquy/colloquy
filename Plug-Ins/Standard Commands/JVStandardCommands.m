@@ -75,7 +75,7 @@
 	} else if( [command isEqualToString:@"join"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[room connection]];
 	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
-		if( ! [arguments length] ) [[room connection] partChatForRoom:[room target]];
+		if( ! [arguments length] ) [[room connection] partChatRoom:[room target]];
 		else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		return YES;
 	} else if( [command isEqualToString:@"server"] ) {
@@ -282,7 +282,7 @@
 	id item = nil;
 	if( ! [rooms count] ) return NO;
 	while( ( item = [enumerator nextObject] ) )
-		[connection joinChatForRoom:item];
+		[connection joinChatRoom:item];
 	return YES;
 }
 
@@ -292,7 +292,7 @@
 	id item = nil;
 	if( ! [rooms count] ) return NO;
 	while( ( item = [enumerator nextObject] ) )
-		[connection partChatForRoom:item];
+		[connection partChatRoom:item];
 	return YES;
 }
 

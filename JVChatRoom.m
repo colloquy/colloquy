@@ -45,7 +45,7 @@
 }
 
 - (void) dealloc {
-	[[self connection] partChatForRoom:[self target]];
+	[[self connection] partChatRoom:[self target]];
 
 	[_members release];
 	[_sortedMembers release];
@@ -644,7 +644,7 @@
 @implementation JVChatRoom (JVChatRoomPrivate)
 - (void) _didConnect:(NSNotification *) notification {
 	_invalidateMembers = YES;
-	[[self connection] joinChatForRoom:_target];
+	[[self connection] joinChatRoom:_target];
 	[super _didConnect:notification];
 }
 

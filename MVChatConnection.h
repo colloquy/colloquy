@@ -200,8 +200,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) sendSubcodeReply:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments;
 
 - (void) joinChatRooms:(NSArray *) rooms;
-- (void) joinChatForRoom:(NSString *) room;
-- (void) partChatForRoom:(NSString *) room;
+- (void) joinChatRoom:(NSString *) room;
+- (void) partChatRoom:(NSString *) room;
 
 - (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room;
 

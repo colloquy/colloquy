@@ -310,7 +310,7 @@ void MVChatInvited( void *c, void *cs, const char * const room, const char * con
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( from != NULL );
 /*	if( NSRunAlertPanelRelativeToWindow( NSLocalizedString( @"Invited to Chat", "invited to a chat room - sheet title" ), [NSString stringWithFormat:NSLocalizedString( @"You have been invited to chat in the %@ room by %@.", "invited to chat room description - sheet message" ), [NSString stringWithUTF8String:room], [NSString stringWithUTF8String:from]], nil, NSLocalizedString( @"Refuse", "refuse button name" ), nil, win ) == NSOKButton ) {
-		[self joinChatForRoom:[NSString stringWithUTF8String:room]];
+		[self joinChatRoom:[NSString stringWithUTF8String:room]];
 	}*/
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionInvitedToRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", nil]];
 }
@@ -572,9 +572,9 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 		[self setNicknamePassword:[url password]];
 
 		if( [url fragment] && [[url fragment] length] > 0 ) {
-			[self joinChatForRoom:[url fragment]];
+			[self joinChatRoom:[url fragment]];
 		} else if( [url path] && [[url path] length] >= 2 && ( [[[url path] substringFromIndex:1] hasPrefix:@"&"] || [[[url path] substringFromIndex:1] hasPrefix:@"+"] ) ) {
-			[self joinChatForRoom:[[url path] substringFromIndex:1]];
+			[self joinChatRoom:[[url path] substringFromIndex:1]];
 		}
 	}
 	return self;
@@ -842,12 +842,12 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	if( [self isConnected] ) [self _joinRooms:nil];
 }
 
-- (void) joinChatForRoom:(NSString *) room {
+- (void) joinChatRoom:(NSString *) room {
 	if( [self isConnected] ) firetalk_chat_join( _chatConnection, [[room lowercaseString] UTF8String] );
 	else [_joinList addObject:room];
 }
 
-- (void) partChatForRoom:(NSString *) room {
+- (void) partChatRoom:(NSString *) room {
 	if( [self isConnected] ) firetalk_chat_part( _chatConnection, [[room lowercaseString] UTF8String] );
 }
 
@@ -1114,7 +1114,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) )
-		[self joinChatForRoom:room];
+		[self joinChatRoom:room];
 
 	[_joinList removeAllObjects];	
 }
@@ -1226,6 +1226,10 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	}
 
 	[self sendMessage:attributeMsg withEncoding:encoding toUser:user asAction:action];
+}
+
+- (void) sendRawMessageScriptCommand:(NSScriptCommand *) command {
+	[self sendRawMessage:[[command evaluatedArguments] objectForKey:@"message"]];
 }
 
 - (NSString *) urlString {
