@@ -21,7 +21,6 @@
 
 - (void) initializeFromDefaults {
 	NSRange range = [MVChatConnection fileTransferPortRange];
-	NSLog( @"%@", NSStringFromRange( range ) );
 	[minRate setIntValue:range.location];
 	[maxRate setIntValue:( range.location + range.length )];
 
@@ -39,6 +38,8 @@
 		[menuItem setRepresentedObject:path];
 	} else {
 		NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVTransferSaveLocation"] stringByExpandingTildeInPath];
+		if( ! [path length] ) path = [@"~/Desktop" stringByExpandingTildeInPath];
+
 		NSMenuItem *menuItem = [saveDownloads itemAtIndex:[saveDownloads indexOfItemWithTag:2]];
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
 		[icon setScalesWhenResized:YES];
