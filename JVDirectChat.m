@@ -54,7 +54,7 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	/* Japanese */
 	(NSStringEncoding) -1,				// Divider
 	(NSStringEncoding) 0x80000A01,		// ShiftJIS
-//	NSISO2022JPStringEncoding,			// ISO-2022-JP
+	NSISO2022JPStringEncoding,			// ISO-2022-JP
 	NSJapaneseEUCStringEncoding,		// EUC
 	(NSStringEncoding) 0x80000001,		// Mac
 	NSShiftJISStringEncoding,			// Windows
