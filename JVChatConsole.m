@@ -27,6 +27,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRawMessage: ) name:MVChatConnectionGotRawMessageNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( clearConsole: ) name:MVChatConnectionWillConnectNotification object:connection];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:connection];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:connection];
 	}
 	return self;
 }
@@ -519,6 +522,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) _gotRawMessage:(NSNotification *) notification {
 	if( _paused ) return;
 	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] asOutboundMessage:[[[notification userInfo] objectForKey:@"outbound"] boolValue]];
+}
+
+- (void) _refreshIcon:(NSNotification *) notification {
+	[_windowController reloadListItem:self andChildren:NO];
 }
 @end
 

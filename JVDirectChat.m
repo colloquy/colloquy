@@ -255,7 +255,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	JVStyle *style = nil;
 	NSString *variant = nil;
 	NSBundle *emoticon = nil;
-
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
+	
 	if( [self preferenceForKey:@"style"] ) {
 		style = [JVStyle styleWithIdentifier:[self preferenceForKey:@"style"]];
 		variant = [self preferenceForKey:@"style variant"];
@@ -1916,6 +1919,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) _styleError:(NSException *) exception {
 	[self showAlert:NSGetCriticalAlertPanel( NSLocalizedString( @"An internal Style error occurred.", "the stylesheet parse failed" ), NSLocalizedString( @"The %@ Style has been damaged or has an internal error preventing new messages from displaying. Please contact the %@ author about this.", "the style contains and error" ), @"OK", nil, nil, [_chatStyle displayName], [_chatStyle displayName] ) withName:@"styleError"];
+}
+
+- (void) _refreshIcon:(NSNotification *) notification {
+	[_windowController reloadListItem:self andChildren:NO];
 }
 @end
 
