@@ -114,15 +114,11 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 #pragma mark Miscellaneous Support
 
 - (NSString *) title {
-	NSMutableString *title = [NSMutableString stringWithString:_target];
-	[title deleteCharactersInRange:NSMakeRange( 0, 1 )];
-	return [[title retain] autorelease];
+	return [[self connection] displayNameFromChatRoom:_target];
 }
 
 - (NSString *) windowTitle {
-	NSMutableString *title = [NSMutableString stringWithString:_target];
-	[title deleteCharactersInRange:NSMakeRange( 0, 1 )];
-	return [NSString stringWithFormat:@"%@ (%@)", title, [[self connection] server]];
+	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self connection] server]];
 }
 
 - (NSString *) information {
