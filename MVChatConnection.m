@@ -35,7 +35,7 @@ NSString *MVChatConnectionWillDisconnectNotification = @"MVChatConnectionWillDis
 NSString *MVChatConnectionDidDisconnectNotification = @"MVChatConnectionDidDisconnectNotification";
 NSString *MVChatConnectionErrorNotification = @"MVChatConnectionErrorNotification";
 
-NSString *MVChatConnectionNeedPasswordNotification = @"MVChatConnectionNeedPasswordNotification";
+NSString *MVChatConnectionNeedNicknamePasswordNotification = @"MVChatConnectionNeedNicknamePasswordNotification";
 NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotPrivateMessageNotification";
 
 NSString *MVChatConnectionBuddyIsOnlineNotification = @"MVChatConnectionBuddyIsOnlineNotification";
@@ -100,6 +100,7 @@ static GMainLoop *glibMainLoop = NULL;
 - (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic;
 - (NSString *) _roomWithProperPrefix:(NSString *) room;
 - (void) _setStatus:(MVChatConnectionStatus) status;
+- (void) _nicknameIdentified:(BOOL) identified;
 - (void) _willConnect;
 - (void) _didConnect;
 - (void) _didNotConnect;
@@ -157,7 +158,7 @@ void MVChatNeedPassword( void *c, void *cs, char *password, const int size ) {
 	MVChatConnection *self = cs;
 	const char *pass = [[self nicknamePassword] UTF8String];
 	if( ! pass ) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedPasswordNotification object:self userInfo:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 		return;
 	}
 
@@ -757,6 +758,19 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &target, &message );
 	if( ! address ) address = "";
 
+	if( ! strncasecmp( nick, "NickServ", 8 ) && message ) {
+		if( strstr( message, "/msg" ) && strstr( message, "NickServ" ) && strstr( message, "IDENTIFY" ) ) {
+			if( ! [self nicknamePassword] ) {
+				NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+				[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+			} else irc_send_cmdv( server, "PRIVMSG %s :IDENTIFY %s", nick, [[self nicknamePassword] UTF8String] );
+		} else if( strstr( message, "Password accepted" ) ) {
+			[self _nicknameIdentified:YES];
+		} else if( strstr( message, "authentication required" ) ) {
+			[self _nicknameIdentified:NO];
+		}
+	}
+
 	message = MVChatIRCToXHTML( message );
 	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"from", [NSNumber numberWithBool:YES], @"auto", msgData, @"message", nil]];
@@ -955,6 +969,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 		_cachedDate = nil;
 		_awayMessage = nil;
 		_port = 6667;
+		_nickIdentified = NO;
 
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
@@ -1132,6 +1147,9 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) setNicknamePassword:(NSString *) password {
+	if( ! _nickIdentified && password && [self isConnected] )
+		[self sendRawMessageWithFormat:@"PRIVMSG NickServ :IDENTIFY %@", password];
+
 	[_npassword autorelease];
 	if( [password length] ) _npassword = [password copy];
 	else _npassword = nil;
@@ -1569,6 +1587,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) _confirmNewNickname:(NSString *) nickname {
+	_nickIdentified = NO;
 	[_nickname autorelease];
 	_nickname = [nickname copy];
 }
@@ -1592,6 +1611,10 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) _setStatus:(MVChatConnectionStatus) status {
 	_status = status;
+}
+
+- (void) _nicknameIdentified:(BOOL) identified {
+	_nickIdentified = identified;
 }
 
 - (void) _willConnect {

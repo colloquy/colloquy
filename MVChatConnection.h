@@ -90,7 +90,7 @@ extern NSString *MVChatConnectionWillDisconnectNotification;
 extern NSString *MVChatConnectionDidDisconnectNotification;
 extern NSString *MVChatConnectionErrorNotification;
 
-extern NSString *MVChatConnectionNeedPasswordNotification;
+extern NSString *MVChatConnectionNeedNicknamePasswordNotification;
 
 extern NSString *MVChatConnectionGotPrivateMessageNotification;
 
@@ -154,6 +154,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSMutableDictionary *_roomsCache;
 	NSDate *_cachedDate;
 	NSAttributedString *_awayMessage;
+	BOOL _nickIdentified;
 	unsigned int _sleepNotifier; /* io_object_t */
 	unsigned int _powerConnection; /* io_connect_t */
 }
