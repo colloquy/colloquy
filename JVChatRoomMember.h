@@ -4,7 +4,7 @@
 
 @class JVChatRoom;
 @class NSString;
-@class MVChatConenction;
+@class MVChatConnection;
 
 @interface JVChatRoomMember : NSObject <JVChatListItem> {
 	JVChatRoom *_parent;
@@ -14,7 +14,7 @@
 }
 - (void) setParent:(id <JVChatListItem>) parent;
 
-- (MVChatConenction *) connection;
+- (MVChatConnection *) connection;
 
 - (void) setMemberName:(NSString *) name;
 - (NSString *) memberName;

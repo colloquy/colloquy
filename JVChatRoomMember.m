@@ -103,8 +103,16 @@
 	_operator = operator;
 }
 
-- (MVChatConenction *) connection {
+- (MVChatConnection *) connection {
 	return [[[_parent connection] retain] autorelease];
+}
+
+- (BOOL) acceptsDraggedFileOfType:(NSString *) type {
+	return YES;
+}
+
+- (void) handleDraggedFile:(NSString *) path {
+	[[self connection] sendFileToUser:_memberName withFilePath:path];
 }
 
 #pragma mark -
