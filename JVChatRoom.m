@@ -123,7 +123,8 @@
 	if( ! [_sortedMembers count] )
 		return NSLocalizedString( @"joining...", "joining status info line in drawer" );
 	if( [[self connection] isConnected] )
-		return [NSString stringWithFormat:NSLocalizedString( @"%d members", "member count status info line in drawer" ), [_sortedMembers count]];
+		//return [NSString stringWithFormat:NSLocalizedString( @"%d members", "member count status info line in drawer" ), [_sortedMembers count]];
+		return [NSString stringWithFormat:@"(%@)", [_connection server]];
 	return NSLocalizedString( @"disconnected", "disconnected status info line in drawer" );
 }
 
@@ -134,6 +135,15 @@
 
 - (NSString *) identifier {
 	return [NSString stringWithFormat:@"Chat Room %@ (%@)", _target, [[self connection] server]];
+}
+
+- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData {
+	return [NSString stringWithFormat:NSLocalizedString( @"%d members", "member count status info line in drawer" ), [_sortedMembers count]];
+}
+
+- (NSString *)description {
+	NSLog( @"description called" );
+	return [NSString stringWithFormat:NSLocalizedString( @"%d members", "member count status info line in drawer" ), [_sortedMembers count]];
 }
 
 #pragma mark -
