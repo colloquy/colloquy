@@ -192,6 +192,9 @@ static void MVChatNickFinal( IRC_SERVER_REC *server, const char *data, const cha
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( ! self ) return;
 
+	// incase our nickname changes since we started
+	[[self localUser] _setUniqueIdentifier:[[self nickname] lowercaseString]];
+
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
