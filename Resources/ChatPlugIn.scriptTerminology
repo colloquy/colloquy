@@ -170,35 +170,6 @@
 			<key>Name</key>
 			<string>process outgoing chat message</string>
 		</dict>
-		<key>processNewChatTopic</key>
-		<dict>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>The new room topic. Can contain HTML formatting.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>by</key>
-				<dict>
-					<key>Description</key>
-					<string>The member who set the topic.</string>
-					<key>Name</key>
-					<string>set by</string>
-				</dict>
-				<key>room</key>
-				<dict>
-					<key>Description</key>
-					<string>The chat room.</string>
-					<key>Name</key>
-					<string>in</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Called when a new topic is for a room we are in. Return a reformatted message (if desired).</string>
-			<key>Name</key>
-			<string>process chat topic</string>
-		</dict>
 		<key>handleClickedLink</key>
 		<dict>
 			<key>UnnamedArgument</key>
@@ -241,9 +212,38 @@
 				<string>The chat room.</string>
 			</dict>
 			<key>Description</key>
-			<string>Called when are in the process of laveing a room. Messages can still be sent.</string>
+			<string>Called when we are in the process of laveing a room. Messages can still be sent.</string>
 			<key>Name</key>
 			<string>part from chat room</string>
+		</dict>
+		<key>kickedFromRoom</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat room.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>by</key>
+				<dict>
+					<key>Description</key>
+					<string>The member who kicked us out.</string>
+					<key>Name</key>
+					<string>by</string>
+				</dict>
+				<key>reason</key>
+				<dict>
+					<key>Description</key>
+					<string>The reason given for kicking us out.</string>
+					<key>Name</key>
+					<string>for</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when we are kicked out of a room by another member.</string>
+			<key>Name</key>
+			<string>kicked from room</string>
 		</dict>
 		<key>memberJoinedRoom</key>
 		<dict>
@@ -322,7 +322,7 @@
 				<key>reason</key>
 				<dict>
 					<key>Description</key>
-					<string>The reason the member left.</string>
+					<string>The reason the member was kicked.</string>
 					<key>Name</key>
 					<string>for</string>
 				</dict>

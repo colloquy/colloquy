@@ -238,47 +238,6 @@
 			<key>Type</key>
 			<string>NSString</string>
 		</dict>
-		<key>processNewChatTopic</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>cplG</string>
-			<key>AppleEventCode</key>
-			<string>pcTX</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>NSString</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>by</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pcT1</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>Colloquy.JVChatRoomMember</string>
-				</dict>
-				<key>room</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pcT2</string>
-					<key>Optional</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>Colloquy.JVChatRoom</string>
-				</dict>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-			<key>ResultAppleEventCode</key>
-			<string>utxt</string>
-			<key>Type</key>
-			<string>NSString</string>
-		</dict>
 		<key>handleClickedLink</key>
 		<dict>
 			<key>AppleEventClassCode</key>
@@ -339,6 +298,43 @@
 				<string>NO</string>
 				<key>Type</key>
 				<string>Colloquy.JVChatRoom</string>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+		</dict>
+		<key>kickedFromRoom</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>kRmX</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>Colloquy.JVChatRoom</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>by</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>kRm1</string>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatRoomMember</string>
+				</dict>
+				<key>reason</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>kRm2</string>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
