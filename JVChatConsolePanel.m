@@ -285,9 +285,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[attrs setObject:para forKey:NSParagraphStyleAttributeName];
 
 	msg = [[[NSAttributedString alloc] initWithString:strMsg attributes:attrs] autorelease];
+	[[display textStorage] beginEditing];
 	if( [[display textStorage] length] )
 		[display replaceCharactersInRange:NSMakeRange( [[display textStorage] length], 0 ) withString:@"\n"];
 	[[display textStorage] appendAttributedString:msg];
+	[[display textStorage] endEditing];
 	if( NSMinY( [display visibleRect] ) >= ( NSHeight( [display bounds] ) - ( NSHeight( [display visibleRect] ) * 1.1 ) ) )
 		[display scrollRangeToVisible:NSMakeRange( [[display textStorage] length], 0 )];
 }
