@@ -87,6 +87,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 - (id) init {
 	if( ( self = [super init] ) ) {
 		send = nil;
+		encodingView = nil;
 		_messageId = 0;
 		_target = nil;
 		_connection = nil;
