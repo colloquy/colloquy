@@ -325,7 +325,7 @@
 }
 
 - (IBAction) toggleHalfOperatorStatus:(id) sender {
-	if( _halfOperator ) [[_parent connection] dehalfopMember:_nickname inRoom:[_parent targer]];
+	if( _halfOperator ) [[_parent connection] dehalfopMember:_nickname inRoom:[_parent target]];
 	else [[_parent connection] halfopMember:_nickname inRoom:[_parent target]];
 }
 
