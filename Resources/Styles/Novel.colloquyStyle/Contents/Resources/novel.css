@@ -1,0 +1,28 @@
+[lang |= en] > * { quotes: "\201C" "\201D" "\2018" "\2019" }
+
+body {
+	margin: 4px 0 0 0;
+	background-color: white;
+}
+
+q:before, q:after {
+	font-weight: bold;
+}
+
+div.envelope {
+	overflow: hidden;	padding: 1px 5px 1px 5px;
+	margin-bottom: 5px;
+	font-family: serif;
+	font-size: 10pt;
+	line-height: 11pt;
+}
+
+div.envelopeHighlight {
+	overflow: hidden;	padding: 1px 5px 1px 5px;
+	margin-bottom: 5px;
+	background-color: #efefec;
+}
+
+span.sender {
+	color: #129;
+}

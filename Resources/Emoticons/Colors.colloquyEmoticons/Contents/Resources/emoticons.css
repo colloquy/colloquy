@@ -1,0 +1,33 @@
+.emoticon samp {
+	font-family: inherit;
+	font-weight: bold;
+	letter-spacing: 2px;
+}
+
+.emoticon.smile, .emoticon.anime, .emoticon.happy {
+	color: green;
+}
+
+.emoticon.angel, .emoticon.frosty, .emoticon.wink, .emoticon.cool, .emoticon.headphones, .emoticon.hat {
+	color: blue;
+}
+
+.emoticon.frown, .emoticon.stoic, .emoticon.confused {
+	color: grey;
+}
+
+.emoticon.razz, .emoticon.sarcasm, .emoticon.suprised, .emoticon.pumpkin {
+	color: orange;
+}
+
+.emoticon.angry, .emoticon.rose, .emoticon.evil, .emoticon.flag {
+	color: red;
+}
+
+.emoticon.pikachu {
+	color: yellow;
+}
+
+.emoticon.kirby {
+	color: pink;
+}

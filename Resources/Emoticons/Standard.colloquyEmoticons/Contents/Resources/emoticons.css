@@ -1,0 +1,99 @@
+.emoticon samp {
+	display: none;
+}
+
+.emoticon:after {
+	vertical-align: middle;
+}
+
+.emoticon.smile:after {
+	content: url( "smile.tif" );
+}
+
+.emoticon.wink:after {
+	content: url( "wink.tif" );
+}
+
+.emoticon.happy:after {
+	content: url( "happy.tif" );
+}
+
+.emoticon.stoic:after {
+	content: url( "stoic.tif" );
+}
+
+.emoticon.frown:after {
+	content: url( "frown.tif" );
+}
+
+.emoticon.annoyed:after {
+	content: url( "annoyed.tif" );
+}
+
+.emoticon.razz:after {
+	content: url( "razz.tif" );
+}
+
+.emoticon.angry:after {
+	content: url( "angry.tif" );
+}
+
+.emoticon.cool:after {
+	content: url( "cool.tif" );
+}
+
+.emoticon.headphones:after {
+	content: url( "headphones.tif" );
+}
+
+.emoticon.hat:after {
+	content: url( "hat.tif" );
+}
+
+.emoticon.angel:after {
+	content: url( "angel.tif" );
+}
+
+.emoticon.evil:after {
+	content: url( "evil.tif" );
+}
+
+.emoticon.anime:after {
+	content: url( "anime.tif" );
+}
+
+.emoticon.frosty:after {
+	content: url( "frosty.tif" );
+}
+
+.emoticon.kirby:after {
+	content: url( "kirby.tif" );
+}
+
+.emoticon.pikachu:after {
+	content: url( "pikachu.tif" );
+}
+
+.emoticon.suprised:after {
+	content: url( "suprised.tif" );
+}
+
+.emoticon.confused:after {
+	content: url( "confused.tif" );
+}
+
+.emoticon.sarcasm:after {
+	content: url( "sarcasm.tif" );
+}
+
+.emoticon.pumpkin:after {
+	content: url( "pumpkin.tif" );
+}
+
+.emoticon.flag:after {
+	content: url( "flag.tif" );
+}
+
+.emoticon.rose:after {
+	content: url( "rose.tif" );
+}

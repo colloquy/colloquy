@@ -1,0 +1,52 @@
+body {
+	margin: 4px 0 0 0;
+	color: black;	background-color: white;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: bottom right;
+	background-image: url( "colloquy.png" );
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 12px;
+}
+
+.envelope {
+	overflow: hidden;	padding: 1px 5px 1px 5px;
+	margin-bottom: 3px;
+}
+
+.envelope.highlight {
+	background-color: #efefec;
+}
+
+.member {
+	font-weight: bold;
+	color: #f90;
+}
+
+.member.self {
+	color: #a21;
+}
+
+.action .member:before {
+	content: "\2022";
+	margin-right: 0.3ex;
+}
+
+.action .member:after {
+	content: "";
+}
+
+.member:after {
+	content: ":";
+	margin-right: 0.5ex;
+	white-space: nowrap;}
+
+.timestamp {
+	margin-top: 3px;
+	margin-left: 5px;
+	float: right;
+	font-size: 9px;
+	line-height: 10px;
+	color: #aaa;
+}
