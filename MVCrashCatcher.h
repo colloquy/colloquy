@@ -7,16 +7,13 @@
 @class NSWindow;
 
 @interface MVCrashCatcher : NSObject {
-	NSString *programName, *logPath;
-	IBOutlet NSTextView *comments, *log;
+	IBOutlet NSTextView *comments;
+	IBOutlet NSTextView *log;
 	IBOutlet NSTextField *description;
 	IBOutlet NSWindow *window;
-	BOOL crashLogExists;
+	NSString *logPath;
 }
 + (void) check;
-
-- (id) init;
-- (void) dealloc;
 
 - (IBAction) sendCrashLog:(id) sender;
 - (IBAction) dontSend:(id) sender;
