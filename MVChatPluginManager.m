@@ -109,6 +109,10 @@ static MVChatPluginManager *sharedInstance = nil;
 
 #pragma mark -
 
+- (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation {
+	return [self makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
+}
+
 - (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
 	NSParameterAssert( invocation != nil );	
 	NSParameterAssert( [invocation selector] != NULL );	

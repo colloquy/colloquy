@@ -20,6 +20,7 @@
 - (NSEnumerator *) pluginEnumerator;
 - (NSEnumerator *) enumeratorOfPluginsThatRespondToSelector:(SEL) selector;
 
+- (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation;
 - (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop;
 @end
 
