@@ -98,6 +98,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 @interface JVDirectChat (JVDirectChatPrivate) <ABImageClient>
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
+- (int) locationOfMessage:(unsigned int) identifier;
+- (int) locationOfElementByIndex:(unsigned int) index;
+- (void) scrollToBottom;
+- (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent;
 - (void) processQueue;
 - (void) displayQueue;
 - (void) writeToLog:(void *) root withDoc:(void *) doc initializing:(BOOL) init continuation:(BOOL) cont;
@@ -874,7 +878,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 
 	[send reset:nil];
-	[display stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
+	[self scrollToBottom];
 }
 
 - (void) sendMessage:(JVMutableChatMessage *) message {
@@ -1270,10 +1274,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 	[self writeToLog:root withDoc:doc initializing:NO continuation:NO];
 
-	NSMutableString *messageString = nil;
+	NSString *messageString = nil;
 
 	@try {
-		messageString = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
+		messageString = [_chatStyle transformXMLDocument:doc withParameters:_styleParams];
 	} @catch ( NSException *exception ) {
 		messageString = nil;
 		[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
@@ -1281,21 +1285,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	if( [messageString length] ) {
 		[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
-
-		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
-		unsigned int scrollbackLimit = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"];
-		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
-
-		if( ( messageCount + 1 ) > scrollbackLimit ) {
-			float loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( ( messageCount + 1 ) - scrollbackLimit )]] floatValue];
-			if( loc > 0. && [scroller isKindOfClass:[JVMarkedScroller class]] )
-				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1. )];
-		}
-		
-		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
-		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
-
+		[self appendMessage:messageString subsequent:NO];
 		[[display window] enableFlushWindow];
 	}
 
@@ -1496,7 +1486,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( parent ) xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
 	else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
-	NSMutableString *transformedMessage = nil;
+	NSString *transformedMessage = nil;
 	NSMutableDictionary *params = _styleParams;
 	if( parent ) {
 		// compatibility parameter for pre-2C9 styles, styles can test for consecutive messages alone now
@@ -1515,27 +1505,15 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( [transformedMessage length] ) {
 		[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
 
-		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
-		unsigned int scrollbackLimit = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"];
-		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
-
-		if( ( messageCount + 1 ) > scrollbackLimit ) {
-			float loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( ( messageCount + 1 ) - scrollbackLimit )]] floatValue];
-			if( loc > 0. && [scroller isKindOfClass:[JVMarkedScroller class]] )
-				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1. )];
-		}
-
 		BOOL subsequent = ( [transformedMessage rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
+		[self appendMessage:transformedMessage subsequent:subsequent];
 
-		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
-		[transformedMessage replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-		[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-		if( subsequent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
-		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
-
-		if( [_currentMessage isHighlighted] && [scroller isKindOfClass:[JVMarkedScroller class]] ) {
-			unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", ( _messageId - 1 )]] intValue];
-			if( loc ) [(JVMarkedScroller *)scroller addMarkAt:loc];
+		if( [_currentMessage isHighlighted] ) {
+			NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+			if( [scroller isKindOfClass:[JVMarkedScroller class]] ) {
+				unsigned int loc = [self locationOfMessage:( _messageId - 1 )];
+				if( loc ) [(JVMarkedScroller *)scroller addMarkAt:loc];
+			}
 		}
 
 		[[display window] enableFlushWindow]; // flush everything we have drawn
@@ -1554,6 +1532,112 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	_currentMessage = nil;
 
 	[_windowController reloadListItem:self andChildren:NO];
+}
+
+- (int) locationOfMessage:(unsigned int) identifier {
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+#ifdef _WEB_SCRIPT_OBJECT_H_
+		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[NSString stringWithFormat:@"%d", identifier]];
+		return [[element valueForKey:@"offsetTop"] intValue];
+#endif
+	} else { // old JavaScript method
+		return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", identifier]] intValue];
+	}
+}
+
+- (int) locationOfElementByIndex:(unsigned int) index {
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+#ifdef _WEB_SCRIPT_OBJECT_H_
+		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
+		if( index < [[body children] length] ) return [[[[body children] item:index] valueForKey:@"offsetTop"] intValue];
+		else return 0;
+#endif
+	} else { // old JavaScript method
+		return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", index]] intValue];
+	}
+}
+
+- (void) scrollToBottom {
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+#ifdef _WEB_SCRIPT_OBJECT_H_
+		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
+		[body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
+#endif
+	} else {
+		[display stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
+	}
+}
+
+- (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent {
+	unsigned int messageCount = 0;
+	unsigned int scrollbackLimit = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"];
+	NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+#ifdef _WEB_SCRIPT_OBJECT_H_
+		messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
+#endif
+	} else messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+
+	if( ( messageCount + 1 ) > scrollbackLimit ) {
+		int loc = [self locationOfElementByIndex:( ( messageCount + 1 ) - scrollbackLimit )];
+		if( loc > 0 && [scroller isKindOfClass:[JVMarkedScroller class]] )
+			[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1 )];
+	}
+
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+#ifdef _WEB_SCRIPT_OBJECT_H_
+		DOMHTMLElement *element = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] createElement:@"span"];
+		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] getElementById:@"consecutiveInsert"];
+		if( ! replaceElement ) subsequent = NO;
+
+		NSMutableString *transformedMessage = [html mutableCopy];
+		[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
+		[transformedMessage replaceOccurrencesOfString:@"<?message type=\"subsequent\"?>" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
+
+		// parses the message so we can get the DOM tree
+		[element setInnerHTML:transformedMessage];
+
+		[transformedMessage release];
+		transformedMessage = nil;
+
+		// check if we are near the bottom of the chat area, and if we should scroll down later
+		NSNumber *scrollNeeded = [[[display mainFrame] DOMDocument] evaluateWebScript:@"( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.1 ) ) )"];
+		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
+
+		unsigned int i = 0;
+		if( ! subsequent ) { // append message normally
+			[[replaceElement parentNode] removeChild:replaceElement];
+			while( [[element children] length] ) // append all children
+				[body appendChild:[element firstChild]];
+		} else if( [[element children] length] >= 1 ) { // append as a subsequent message
+			DOMNode *parent = [replaceElement parentNode];
+			DOMNode *nextSib = [replaceElement nextSibling];
+			[parent replaceChild:[element firstChild] :replaceElement]; // replaces the consecutiveInsert node
+			while( [[element children] length] ) { // append all remaining children (in reverse order)
+				if( nextSib ) [parent insertBefore:[element firstChild] :nextSib];
+				else [parent appendChild:[element firstChild]];
+			}
+		}
+
+		// enforce the scrollback limit
+		if( scrollbackLimit > 0 && [[body children] length] > scrollbackLimit )
+			for( i = 0; [[body children] length] > scrollbackLimit && i < ( [[body children] length] - scrollbackLimit ); i++ )
+				[body removeChild:[[body children] item:0]];		
+
+		// scroll down if we need to
+		if( [scrollNeeded boolValue] ) [self scrollToBottom];
+#endif
+	} else { // old JavaScript method
+		NSMutableString *transformedMessage = [html mutableCopy];
+		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
+		[transformedMessage replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
+		[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
+		[transformedMessage replaceOccurrencesOfString:@"<?message type=\"subsequent\"?>" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
+		if( subsequent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
+		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
+		[transformedMessage release];
+	}
 }
 
 - (void) processQueue {
@@ -1788,14 +1872,36 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:messageString, @"away-message", nil]];
 
-		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
-		unsigned long loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
+		unsigned int messageCount = 0;
+		unsigned long loc = 0;
+
+		if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+#ifdef _WEB_SCRIPT_OBJECT_H_
+			messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
+			loc = [self locationOfElementByIndex:( messageCount - 1 )];
+#endif
+		} else {
+			messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+			loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
+		}
+
 		[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] startShadedAreaAt:loc];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
 
-		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
-		unsigned long loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
+		unsigned int messageCount = 0;
+		unsigned long loc = 0;
+
+		if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+#ifdef _WEB_SCRIPT_OBJECT_H_
+			messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
+			loc = [self locationOfElementByIndex:( messageCount - 1 )];
+#endif
+		} else {
+			messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+			loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
+		}
+
 		[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] stopShadedAreaAt:loc];
 	}
 }
