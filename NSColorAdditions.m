@@ -7,7 +7,7 @@
 	NSScanner *scanner = [NSScanner scannerWithString:( [attribute hasPrefix:@"#"] ? [attribute substringFromIndex:1] : attribute )];
 	NSString *code = nil;
 
-	if( ! [scanner scanCharactersFromSet:hex intoString:&code] ) return nil;
+	[scanner scanCharactersFromSet:hex intoString:&code];
 
 	if( [code length] == 6 ) { // decode colors like #ffee33
 		unsigned int color = 0;
@@ -19,6 +19,15 @@
 		scanner = [NSScanner scannerWithString:code];
 		if( ! [scanner scanHexInt:&color] ) return nil;
 		return [self colorWithCalibratedRed:( ( ( ( ( color >> 8 ) & 0xf ) << 4 ) | ( ( color >> 8 ) & 0xf ) ) / 255. ) green:( ( ( ( ( color >> 4 ) & 0xf ) << 4 ) | ( ( color >> 4 ) & 0xf ) ) / 255. ) blue:( ( ( ( color & 0xf ) << 4 ) | ( color & 0xf ) ) / 255. ) alpha:1.];
+	} else if( ! [attribute hasPrefix:@"#"] ) {
+		if( [attribute hasPrefix:@"white"] ) return [NSColor whiteColor];
+		else if( [attribute hasPrefix:@"black"] ) return [NSColor blackColor];
+		else if( [attribute hasPrefix:@"aqua"] ) return [NSColor cyanColor];
+		else if( [attribute hasPrefix:@"blue"] ) return [NSColor blueColor];
+		else if( [attribute hasPrefix:@"yellow"] ) return [NSColor yellowColor];
+		else if( [attribute hasPrefix:@"lime"] ) return [NSColor greenColor];
+		else if( [attribute hasPrefix:@"fuchsia"] ) return [NSColor magentaColor];
+		else if( [attribute hasPrefix:@"red"] ) return [NSColor redColor];
 	}
 
 	return nil;
@@ -123,7 +132,7 @@
 - (NSString *) CSSAttributeValue {
 	float red = 0., green = 0., blue = 0., alpha = 0.;
 	[[self colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getRed:&red green:&green blue:&blue alpha:&alpha];
-	if( alpha < 1. ) return [NSString stringWithFormat:@"rgba(%d,%d,%d,%f)", (int)(red * 255), (int)(green * 255), (int)(blue * 255), alpha];
+	if( alpha < 1. ) return [NSString stringWithFormat:@"rgba( %d, %d, %d, %.3f )", (int)(red * 255), (int)(green * 255), (int)(blue * 255), alpha];
 	return [NSString stringWithFormat:@"#%02x%02x%02x", (int)(red * 255), (int)(green * 255), (int)(blue * 255)];
 }
 @end
