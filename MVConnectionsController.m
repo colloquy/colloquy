@@ -266,25 +266,39 @@ static NSMenu *favoritesMenu = nil;
 
 	if( ! [[newNickname stringValue] length] ) {
 		[[self window] makeFirstResponder:newNickname];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Nickname is blank", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname you specified is invalid because it was left blank.", "chat nickname blank dialog message" ), nil, nil, nil );
-		return;
-	}
-
-	if( ! [[newUsername stringValue] length] ) {
-		[[self window] makeFirstResponder:newUsername];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Username is blank", "chat invalid username dialog title" ), NSLocalizedString( @"The username you specified is invalid because it was left blank.", "chat username blank dialog message" ), nil, nil, nil );
+		NSRunCriticalAlertPanel( NSLocalizedString( @"Nickname is blank", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname is invalid because it was left blank.", "chat nickname blank dialog message" ), nil, nil, nil );
 		return;
 	}
 
 	if( ! [[newAddress stringValue] length] ) {
 		[[self window] makeFirstResponder:newAddress];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server is blank", "chat invalid nickname dialog title" ), NSLocalizedString( @"The chat server you specified is invalid because it was left blank.", "chat server blank dialog message" ), nil, nil, nil );
+		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server is blank", "chat invalid nickname dialog title" ), NSLocalizedString( @"The chat server is invalid because it was left blank.", "chat server blank dialog message" ), nil, nil, nil );
 		return;
 	}
 
 	if( [newPort intValue] < 0 || [newPort intValue] > 65535 ) {
 		[[self window] makeFirstResponder:newPort];
 		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server Port is invalid", "chat invalid nickname dialog title" ), NSLocalizedString( @"The chat server port you specified is invalid because it can't be negative or greater than 65535.", "chat server port invalid dialog message" ), nil, nil, nil );
+		return;
+	}
+
+	if( ! [[newUsername stringValue] length] ) {
+		if( [showDetails state] != NSOnState ) {
+			[showDetails setState:NSOnState];
+			[self toggleNewConnectionDetails:showDetails];
+		}
+		[[self window] makeFirstResponder:newUsername];
+		NSRunCriticalAlertPanel( NSLocalizedString( @"Username is blank", "chat blank username dialog title" ), NSLocalizedString( @"The username is invalid because it was left blank.", "chat username blank dialog message" ), nil, nil, nil );
+		return;
+	}
+
+	if( [[newUsername stringValue] rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].location != NSNotFound ) {
+		if( [showDetails state] != NSOnState ) {
+			[showDetails setState:NSOnState];
+			[self toggleNewConnectionDetails:showDetails];
+		}
+		[[self window] makeFirstResponder:newUsername];
+		NSRunCriticalAlertPanel( NSLocalizedString( @"Username invalid", "chat invalid username dialog title" ), NSLocalizedString( @"The username you specified is invalid because it contains spaces or other non-alphanumeric characters.", "chat username blank dialog message" ), nil, nil, nil );
 		return;
 	}
 
@@ -883,6 +897,28 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
+- (int) numberOfItemsInComboBox:(NSComboBox *) comboBox {
+	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] count];
+}
+
+- (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(int) index {
+	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectAtIndex:index];
+}
+
+- (unsigned int) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
+	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] indexOfObject:string];
+}
+
+- (NSString *) comboBox:(NSComboBox *) comboBox completedString:(NSString *) substring {
+	NSEnumerator *enumerator = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectEnumerator];
+	NSString *server = nil;
+	while( ( server = [enumerator nextObject] ) )
+		if( [server hasPrefix:substring] ) return server;
+	return nil;
+}
+
+#pragma mark -
+
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
 
@@ -1062,7 +1098,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _loadBookmarkList {
-	NSMutableArray *list = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"MVChatBookmarks"]];
+	NSMutableArray *list = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"]];
 	NSEnumerator *enumerator = [list objectEnumerator];
 	id info = nil;
 

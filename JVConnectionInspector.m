@@ -139,4 +139,26 @@
 	[editRemoveRoom setTransparent:( [editRooms selectedRow] == -1 )];
 	[editRemoveRoom highlight:NO];
 }
+
+#pragma mark -
+
+- (int) numberOfItemsInComboBox:(NSComboBox *) comboBox {
+	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] count];
+}
+
+- (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(int) index {
+	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectAtIndex:index];
+}
+
+- (unsigned int) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
+	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] indexOfObject:string];
+}
+
+- (NSString *) comboBox:(NSComboBox *) comboBox completedString:(NSString *) substring {
+	NSEnumerator *enumerator = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectEnumerator];
+	NSString *server = nil;
+	while( ( server = [enumerator nextObject] ) )
+		if( [server hasPrefix:substring] ) return server;
+	return nil;
+}
 @end
