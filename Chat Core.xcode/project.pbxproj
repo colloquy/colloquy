@@ -114,7 +114,6 @@
 //104
 		1058C7ACFEA557BF11CA2CBB = {
 			children = (
-				1CB61DB7059D2DC400FE75AD,
 				1058C7ADFEA557BF11CA2CBB,
 				1CCB3C3705228EFD000001C8,
 				1C5A233D06FA4FEE00A51F10,
@@ -366,7 +365,6 @@
 			files = (
 				1C51B485052DE0CB00BB459B,
 				1C51B487052DE0CB00BB459B,
-				1CB61DB8059D2DC400FE75AD,
 				1CB37348060E315400F6A81F,
 				1CB3734C060E317700F6A81F,
 				1CB3734E060E31B200F6A81F,
@@ -3114,20 +3112,6 @@
 			isa = PBXTargetDependency;
 			target = 1CB37489060E4F1900F6A81F;
 			targetProxy = 1CB3748A060E4F4D00F6A81F;
-		};
-		1CB61DB7059D2DC400FE75AD = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = WebKit.framework;
-			path = /System/Library/Frameworks/WebKit.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		1CB61DB8059D2DC400FE75AD = {
-			fileRef = 1CB61DB7059D2DC400FE75AD;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1CCA517E0598AFBA00F0A4CD = {
 			fileEncoding = 4;
