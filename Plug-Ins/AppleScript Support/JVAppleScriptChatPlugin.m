@@ -8,6 +8,19 @@
 #import "JVChatRoomMember.h"
 #import "NSColorAdditions.h"
 
+@interface NSTerminologyRegistry : NSObject // Private Foundation Class
+- (id) initWithSuiteName:(NSString *) name bundle:(NSBundle *) bundle;
+- (NSString *) suiteName;
+- (NSArray *) suiteNameArray;
+- (NSString *) suiteDescription;
+- (NSDictionary *) classTerminologyDictionary:(NSString *) className;
+- (NSDictionary *) commandTerminologyDictionary:(NSString *) commandName;
+- (NSDictionary *) enumerationTerminologyDictionary:(NSString *) enumName;
+- (NSDictionary *) synonymTerminologyDictionary:(NSString *) synonymName;
+@end
+
+#pragma mark -
+
 @interface NSScriptObjectSpecifier (NSScriptObjectSpecifierPrivate) // Private Foundation Methods
 + (id) _objectSpecifierFromDescriptor:(NSAppleEventDescriptor *) descriptor inCommandConstructionContext:(id) context;
 - (NSAppleEventDescriptor *) _asDescriptor;
@@ -194,10 +207,23 @@
 
 	NSDictionary *error = nil;
 	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:&error];
+
 	if( error && ! result ) { // an error
 		int code = [[error objectForKey:NSAppleScriptErrorNumber] intValue];
-		if( code == errAEEventNotHandled || code == errAEHandlerNotFound )
+		if( code == errAEEventNotHandled || code == errAEHandlerNotFound ) {
 			[self doesNotRespondToSelector:selector]; // disable for future calls
+		} else {
+			NSString *errorDesc = [error objectForKey:NSAppleScriptErrorMessage];
+			NSScriptCommandDescription *commandDesc = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] commandDescriptionWithAppleEventClass:'cplG' andAppleEventCode:handler];
+			NSString *scriptSuiteName = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] suiteForAppleEventCode:'cplG'];
+			NSTerminologyRegistry *term = [[[NSTerminologyRegistry alloc] initWithSuiteName:scriptSuiteName bundle:[NSBundle mainBundle]] autorelease];
+			NSString *handlerName = [[term commandTerminologyDictionary:[commandDesc commandName]] objectForKey:@"Name"];
+			if( ! handlerName ) handlerName = @"unknown";
+			if( NSRunCriticalAlertPanel( NSLocalizedString( @"AppleScript Plugin Error", "AppleScript plugin error title" ), NSLocalizedString( @"The AppleScript plugin \"%@\" had an error while calling the \"%@\" handler.\n\n%@", "AppleScript plugin error message" ), nil, NSLocalizedString( @"Edit...", "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], handlerName, errorDesc ) == NSCancelButton ) {
+				[[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
+			}
+		}
+
 		return [NSError errorWithDomain:NSOSStatusErrorDomain code:code userInfo:error];
 	}
 
