@@ -15,7 +15,7 @@
   <envelope count="3">
     <sender self="yes">timothy</sender>
     <message received="2003-10-25 13:28:40 -0400">not a whole lot <span class="emoticon smile"><samp>:)</samp></span></message>
-    <message received="2003-10-25 13:28:52 -0400">just surfing the inertnet.</message>
+    <message received="2003-10-25 13:28:52 -0400">just surfing the internet.</message>
   </envelope>
   <envelope count="4">
     <sender self="yes">timothy</sender>
