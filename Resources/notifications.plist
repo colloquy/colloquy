@@ -4,6 +4,22 @@
 <array>
 	<dict>
 		<key>identifier</key>
+		<string>JVChatConnected</string>
+		<key>title</key>
+		<string>Server Connected</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatDisconnected</string>
+		<key>title</key>
+		<string>Server Disconnected</string>
+	</dict>
+	<dict>
+	<key>seperator</key>
+		<true />
+	</dict>
+	<dict>
+		<key>identifier</key>
 		<string>JVChatMemberJoinedRoom</string>
 		<key>title</key>
 		<string>Member Joined Chat Room</string>
