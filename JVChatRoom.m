@@ -1289,7 +1289,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	}
 }
 
--(void) _startChatWithNonMember:(id) sender {
+- (void) _startChatWithNonMember:(id) sender {
 	[[JVChatController defaultManager] chatViewControllerForUser:[sender representedObject] withConnection:[self connection] ifExists:NO];
 }
 @end
