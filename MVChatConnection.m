@@ -1594,7 +1594,6 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	extern BOOL applicationQuitting;
 	extern unsigned int connectionCount;
-	extern GMainLoop *glibMainLoop;
 
 	while( ! applicationQuitting && connectionCount ) g_main_iteration( TRUE );
 
@@ -1609,6 +1608,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 	signal_emit( "gui exit", 0 );
 
+	extern GMainLoop *glibMainLoop;
 	g_main_destroy( glibMainLoop );
 	glibMainLoop = NULL;
 
