@@ -1691,8 +1691,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) _awayStatusChanged:(NSNotification *) notification {
 	if( [[[notification userInfo] objectForKey:@"away"] boolValue] ) {
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), [[_connection awayStatusMessage] string]] withName:@"awaySet" andAttributes:nil];
+		unsigned long loc = (unsigned long) NSHeight( [[[[display mainFrame] frameView] documentView] frame] );
+		[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] startShadedAreaAt:loc];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
+		unsigned long loc = (unsigned long) NSHeight( [[[[display mainFrame] frameView] documentView] frame] );
+		[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] stopShadedAreaAt:loc];
 	}
 }
 

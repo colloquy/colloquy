@@ -5,26 +5,33 @@
 - (id) initWithFrame:(NSRect) frame {
 	if( ( self = [super initWithFrame:frame] ) ) {
 		_marks = [[NSMutableSet set] retain];
+		_shades = [[NSMutableArray array] retain];
+
 		_lines = [[NSBezierPath bezierPath] retain];
 		[_lines setLineWidth:1.];
+
+		_shadedAreas = [[NSBezierPath bezierPath] retain];
 	}
 	return self;
 }
 
 - (void) dealloc {
 	[_marks release];
+	[_shades release];
 	[_lines release];
+	[_shadedAreas release];
 
 	_marks = nil;
+	_shades = nil;
 	_lines = nil;
+	_shadedAreas = nil;
 
 	[super dealloc];
 }
 
 - (void) drawRect:(NSRect) rect {
+	NSEraseRect( rect );
 	[super drawRect:rect];
-
-	if( [_lines isEmpty] ) return;
 
 	NSAffineTransform *transform = [NSAffineTransform transform];
 
@@ -35,8 +42,28 @@
 	float offset = [self rectForPart:NSScrollerKnobSlot].origin.y + 6.;
 	[transform translateXBy:( sFlags.isHoriz ? offset / scale : 0. ) yBy:( sFlags.isHoriz ? 0. : offset / scale )];
 
-	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 4. : 0. ), ( sFlags.isHoriz ? 0. : 4. ) );
-	[[NSBezierPath bezierPathWithRect:clip] setClip];
+	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 0. : 2. ), ( sFlags.isHoriz ? 2. : 0. ) );
+	NSRectClip( clip );
+
+	NSBezierPath *shaded = _shadedAreas;
+	if( ( [_shades count] % 2 ) == 1 ) {
+		shaded = [[_shadedAreas copy] autorelease];
+
+		unsigned long long start = [[_shades lastObject] unsignedLongLongValue];
+		unsigned long long stop = ( NSHeight( [self frame] ) / [self knobProportion] );
+		float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
+		NSRect rect = NSZeroRect;
+
+		if( sFlags.isHoriz ) rect = NSMakeRect( start, 0., ( stop - start ), width );
+		else rect = NSMakeRect( 0., start, width, ( stop - start ) );
+		[shaded appendBezierPathWithRect:rect];
+	}
+
+	[[[NSColor knobColor] colorWithAlphaComponent:0.33] set];
+	[[transform transformBezierPath:shaded] fill];
+
+	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 4. : 3. ), ( sFlags.isHoriz ? 3. : 4. ) );
+	NSRectClip( clip );
 
 	[[NSColor selectedKnobColor] set];
 	[[transform transformBezierPath:_lines] stroke];
@@ -49,28 +76,34 @@
 	[super setFloatValue:position knobProportion:percent];
 }
 
+#pragma mark -
+
+- (void) buildLineAtLocation:(unsigned long long) location {
+	float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
+	[_lines moveToPoint:NSMakePoint( ( sFlags.isHoriz ? location : 0. ), ( sFlags.isHoriz ? 0. : location ) )];
+	[_lines relativeLineToPoint:NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) )];
+}
+
 - (void) rebuildLines {
 	NSEnumerator *enumerator = [_marks objectEnumerator];
 	NSNumber *location = nil;
 
 	[_lines removeAllPoints];
 
-	while( ( location = [enumerator nextObject] ) ) {
-		float l = [location floatValue];
-		[_lines moveToPoint:NSMakePoint( ( sFlags.isHoriz ? l : 3. ), ( sFlags.isHoriz ? 3. : l ) )];
-		[_lines relativeLineToPoint:NSMakePoint( ( sFlags.isHoriz ? 0. : 8. ), ( sFlags.isHoriz ? 8. : 0. ) )];
-	}
+	while( ( location = [enumerator nextObject] ) )
+		[self buildLineAtLocation:[location unsignedLongLongValue]];
 }
 
-- (void) addMarkAt:(unsigned int) location {
-	[_marks addObject:[NSNumber numberWithUnsignedInt:location]];
-	[_lines moveToPoint:NSMakePoint( ( sFlags.isHoriz ? location : 3. ), ( sFlags.isHoriz ? 3. : location ) )];
-	[_lines relativeLineToPoint:NSMakePoint( ( sFlags.isHoriz ? 0. : 8. ), ( sFlags.isHoriz ? 8. : 0. ) )];
+#pragma mark -
+
+- (void) addMarkAt:(unsigned long long) location {
+	[_marks addObject:[NSNumber numberWithUnsignedLongLong:location]];
+	[self buildLineAtLocation:location];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
-- (void) removeMarkAt:(unsigned int) location {
-	[_marks removeObject:[NSNumber numberWithUnsignedInt:location]];
+- (void) removeMarkAt:(unsigned long long) location {
+	[_marks removeObject:[NSNumber numberWithUnsignedLongLong:location]];
 	[self rebuildLines];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
@@ -81,6 +114,8 @@
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
+#pragma mark -
+
 - (void) setMarks:(NSSet *) marks {
 	[_marks autorelease];
 	_marks = [[NSMutableSet setWithSet:marks] retain];
@@ -89,5 +124,44 @@
 
 - (NSSet *) marks {
 	return [[_marks retain] autorelease];
+}
+
+#pragma mark -
+
+- (void) buildShadedAreaBetween:(unsigned long long) start and:(unsigned long long) stop {
+	NSRect rect = NSZeroRect;
+	float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
+	if( sFlags.isHoriz ) rect = NSMakeRect( start, 0., ( stop - start ), width );
+	else rect = NSMakeRect( 0., start, width, ( stop - start ) );
+	[_shadedAreas appendBezierPathWithRect:rect];
+}
+
+- (void) rebuildShadedAreas {
+	NSEnumerator *enumerator = [_marks objectEnumerator];
+	NSNumber *start = nil;
+	NSNumber *stop = nil;
+
+	[_shadedAreas removeAllPoints];
+
+	while( ( start = [enumerator nextObject] ) && ( stop = [enumerator nextObject] ) )
+		[self buildShadedAreaBetween:[start unsignedLongLongValue] and:[stop unsignedLongLongValue]];
+}
+
+#pragma mark -
+
+- (void) startShadedAreaAt:(unsigned long long) location {
+	if( ! [_shades count] || ! ( [_shades count] % 2 ) ) {
+		[_shades addObject:[NSNumber numberWithUnsignedLongLong:location]];
+		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
+	}
+}
+
+- (void) stopShadedAreaAt:(unsigned long long) location {
+	if( [_shades count] && ( [_shades count] % 2 ) == 1 ) {
+		NSNumber *start = [_shades lastObject];
+		[_shades addObject:[NSNumber numberWithUnsignedLongLong:location]];
+		[self buildShadedAreaBetween:[start unsignedLongLongValue] and:location];
+		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
+	}
 }
 @end
