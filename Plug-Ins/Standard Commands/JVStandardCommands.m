@@ -73,6 +73,7 @@
 			}
 		} else if( ! [command caseInsensitiveCompare:@"whois"] || ! [command caseInsensitiveCompare:@"wi"] || ! [command caseInsensitiveCompare:@"wii"] ) {
 			MVChatUser *user = [[connection chatUsersWithNickname:[arguments string]] anyObject];
+			if( ! user ) return NO;
 			JVChatRoomMember *member = [[[JVChatRoomMember alloc] initWithRoom:nil andUser:user] autorelease];
 			[[JVInspectorController inspectorOfObject:member] show:nil];
 			return YES;
@@ -460,8 +461,6 @@
 
 	if( ! [to length] ) return NO;
 
-	MVChatUser *user = [[connection chatUsersWithNickname:to] anyObject];
-
 	if( [message length] >= [scanner scanLocation] + 1 ) {
 		[scanner setScanLocation:[scanner scanLocation] + 1];
 		msg = [message attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [message length] - [scanner scanLocation] )];
@@ -480,9 +479,12 @@
 		if( room ) chatView = [[JVChatController defaultManager] chatViewControllerForRoom:room ifExists:YES];
 	}
 
-	if( ! chatView ) chatView = [[JVChatController defaultManager] chatViewControllerForUser:user ifExists:( ! show )];
+	if( ! chatView ) {
+		MVChatUser *user = [[connection chatUsersWithNickname:to] anyObject];
+		if( user ) chatView = [[JVChatController defaultManager] chatViewControllerForUser:user ifExists:( ! show )];
+	}
 
-	if( [msg length] ) {
+	if( chatView && [msg length] ) {
 		[chatView echoSentMessageToDisplay:msg asAction:NO];
 		if( [[chatView target] isKindOfClass:[MVChatRoom class]] ) {
 			[[chatView target] sendMessage:msg asAction:NO];
@@ -491,9 +493,10 @@
 			if( ! encoding ) encoding = [connection encoding];
 			[[chatView target] sendMessage:msg withEncoding:encoding asAction:NO];
 		}
+		return YES;
 	}
 
-	return YES;
+	return NO;
 }
 
 - (BOOL) handleMassMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection {
