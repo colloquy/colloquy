@@ -8,6 +8,12 @@ body {
 	margin: 3px 3px;
 }
 
+.hidden {
+	position: fixed;
+	top: -900px;
+	left: -900px;
+}
+
 a img {
 	border: 0;
 }
@@ -40,29 +46,34 @@ a:hover {
 }
 
 .header_top {
+	display: block;
 	margin-top: 2px;
 	height: 2px;
 	background: url( "images/h_shadow_top.png" ) repeat-x;
 }
 
 .header {
+	display: block;
 	position: relative;
 	height: 22;
 	background: url( "images/h_shadow_left.png" ) left repeat-y;
 	padding-left: 4px;
 }
 
-.header > div {
+.header > span {
+	display: block;
 	background: url( "images/h_shadow_right.png" ) right repeat-y;
 	padding-right: 4px;
 }
 
-.header > div > div {
+.header > span > span {
+	display: block;
 	height: 20;
 	overflow: hidden;
 }
 
 .header .left {
+	display: block;
 	position: absolute;
 	left: 0;
 	bottom: -4px;
@@ -72,6 +83,7 @@ a:hover {
 }
 
 .header .right {
+	display: block;
 	position: absolute;
 	right: 0;
 	bottom: -4px;
@@ -81,6 +93,7 @@ a:hover {
 }
 
 .header .sender {
+	display: block;
 	height: 20;
 	font-size: 14px;
 	font-weight: bold;
@@ -94,21 +107,38 @@ a:hover {
 }
 
 .messages {
+	display: block;
 	margin: 0 4px;
 	background: url( "images/m_shadow_left.png" ) left repeat-y;
 	padding-left: 4px;
 }
 
-.messages > div {
+.messages > span {
+	display: block;
 	background: url( "images/m_shadow_right.png" ) right repeat-y;
 	padding-right: 4px;
 }
 
+.messages > span > span {
+	display: block;
+	border-top: 1px solid rgba( 0, 0, 0, .125 );
+	background: #fafafa;
+}
+
 .messages .time {
+	display: block;
 	float: left;
 }
 
-.messages .time:after {
+.messages .time.inline {
+	margin: 1px 4px 0;
+	padding: 0;
+	overflow: hidden;
+	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
+}
+
+.messages .time[title]:after {
+	display: block;
 	float: left;
 	margin: 1px 4px 0;
 	padding: 0;
@@ -118,23 +148,27 @@ a:hover {
 }
 
 .messages .sep {
+	display: block;
 	margin: 3px 4px 0;
 	height: 1px;
 }
 
 .messages .message {
+	display: block;
 	margin: 1px 4px 0;
 	padding: 0;
 	overflow: hidden;
 }
 
 .messages_bottom {
+	display: block;
 	position: relative;
 	margin: 0 12px;
 	height: 8px;
 }
 
 .messages_bottom .left {
+	display: block;
 	position: absolute;
 	left: -8px;
 	width: 8px;
@@ -142,6 +176,7 @@ a:hover {
 }
 
 .messages_bottom .right {
+	display: block;
 	position: absolute;
 	right: -8px;
 	width: 8px;
@@ -149,16 +184,25 @@ a:hover {
 }
 
 .event {
+	display: block;
 	margin: 0 8px 2px;
 	padding: 0;
 	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
 }
 
 .event .time {
+	display: block;
 	float: left;
 }
 
-.event .time:after {
+.event .time.inline {
+	margin: 0 4px;
+	padding: 0;
+	overflow: hidden;
+	color: #404040;
+}
+
+.event .time[title]:after {
 	float: left;
 	margin: 0 4px;
 	padding: 0;
@@ -178,7 +222,7 @@ a:hover {
 	color: #404040;
 }
 
-.incoming .header > div > div {
+.incoming .header > span > span {
 	border: 1px solid rgba( 0, 0, 0, .2 );
 	background: #a6d984 url( "images/h_light.png" ) top repeat-x;
 }
@@ -194,12 +238,11 @@ a:hover {
 	text-shadow: rgba( 0, 0, 0, .3 ) 0 2px 2px;
 }
 
-.incoming .messages > div > div {
-	border-top: 1px solid rgba( 0, 0, 0, .125 );
-	background: #fafafa;
+.incoming .messages .time.inline {
+	color: #265904;
 }
 
-.incoming .messages .time {
+.incoming .messages .time[title]:after {
 	color: #265904;
 }
 
@@ -220,7 +263,7 @@ a:hover {
 	background: url( "images/m_corner_right.png" );
 }
 
-.outgoing .header > div > div {
+.outgoing .header > span > span {
 	border: 1px solid rgba( 0, 0, 0, .2 );
 	background: #a3c5f8 url( "images/h_light.png" ) top repeat-x;
 }
@@ -230,12 +273,11 @@ a:hover {
 	text-shadow: rgba( 0, 0, 0, .3 ) 0 2px 2px;
 }
 
-.outgoing .messages > div > div {
-	border-top: 1px solid rgba( 0, 0, 0, .125 );
-	background: #fafafa;
+.outgoing .messages .time.inline {
+	color: #234578;
 }
 
-.outgoing .messages .time {
+.outgoing .messages .time[title]:after {
 	color: #234578;
 }
 
