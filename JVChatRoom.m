@@ -118,7 +118,9 @@
 }
 
 - (NSString *) windowTitle {
-	return [NSString stringWithFormat:NSLocalizedString( @"%@ - Chat Room", "chat room window - window title" ), _target];
+	NSMutableString *title = [NSMutableString stringWithString:_target];
+	[title deleteCharactersInRange:NSMakeRange( 0, 1 )];
+	return [NSString stringWithFormat:NSLocalizedString( @"%@ (%@)", "chat room window - window title" ), title, [[self connection] server]];
 }
 
 - (NSString *) information {
