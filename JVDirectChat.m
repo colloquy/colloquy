@@ -15,6 +15,7 @@
 #import <libxslt/xsltutils.h>
 
 #import "JVChatController.h"
+#import "JVNotificationController.h"
 #import "MVConnectionsController.h"
 #import "JVDirectChat.h"
 #import "MVBuddyListController.h"
@@ -714,24 +715,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		NSMutableArray *names = nil;
 		id item = nil;
 
-//		if( _firstMessage ) MVChatPlaySoundForAction( @"MVChatFisrtMessageAction" );
-//		if( ! _firstMessage ) MVChatPlaySoundForAction( @"MVChatAdditionalMessagesAction" );
+		if( [self isMemberOfClass:[JVDirectChat class]] && _firstMessage )
+			[[JVNotificationController defaultManager] performNotification:@"JVChatFisrtMessage" withContextInfo:nil];
+		if( [self isMemberOfClass:[JVDirectChat class]] && ! _firstMessage )
+			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:nil];
 
 		names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
 		[names addObject:[[self connection] nickname]];
 		enumerator = [names objectEnumerator];
 		while( ( item = [enumerator nextObject] ) ) {
 			if( [[messageString lowercaseString] rangeOfString:item].length ) {
-//				MVChatPlaySoundForAction( @"MVChatMentionedAction" );
+				[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:nil];
 				_newHighlightMessage = YES;
 				highlight = YES;
 				break;
 			}
 		}
-
-//		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatBounceIconUntilFront"] )
-//			[[NSApplication sharedApplication] requestUserAttention:NSCriticalRequest];
-//		else [[NSApplication sharedApplication] requestUserAttention:NSInformationalRequest];
 	}
 
 	doc = xmlNewDoc( "1.0" );
