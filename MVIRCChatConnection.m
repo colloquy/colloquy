@@ -695,7 +695,7 @@ static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
 
 	unsigned int changedModes = ( oldModes ^ [room modes] );
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", ( byMember ? (id) byMember : (id) [NSNull null] ), @"by", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", [NSNumber numberWithUnsignedInt:oldModes], @"oldModes", ( byMember ? (id) byMember : (id) [NSNull null] ), @"by", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
