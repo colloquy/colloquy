@@ -1391,12 +1391,16 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) _updateKnownUser:(MVChatUser *) user withClientEntry:(SilcClientEntry) clientEntry {
+	unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
+	unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
+	NSData *uniqueIdentfier = [NSData dataWithBytes:identifier length:len];
+
 	@synchronized( _knownUsers ) {
 		[user retain];
-//		[_knownUsers removeObjectForKey:[user uniqueIdentifier]];
-//		[user _setUniqueIdentifier:[nickname lowercaseString]];
-//		[user _setNickname:nickname];
-//		[_knownUsers setObject:user forKey:[user uniqueIdentifier]];
+		[_knownUsers removeObjectForKey:[user uniqueIdentifier]];
+		[user _setUniqueIdentifier:uniqueIdentfier];
+		[user _setNickname:[NSString stringWithUTF8String:clientEntry -> nickname]];
+		[_knownUsers setObject:user forKey:uniqueIdentfier];
 		[user release];
 	}
 }
