@@ -6,6 +6,7 @@
 @class NSWindow;
 @class NSPanel;
 @class NSTextField;
+@class NSPopUpButton;
 @class NSButton;
 @class NSTabView;
 @class NSComboBox;
