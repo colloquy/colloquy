@@ -12,7 +12,7 @@
 	return NO;
 }
 
-#ifndef _preferencesPanel
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_2
 #define _preferencesPanel (id)0
 #endif
 
