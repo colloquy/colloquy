@@ -78,7 +78,7 @@ NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeRe
 - (void) _registerForSleepNotifications;
 - (void) _deregisterForSleepNotifications;
 - (void) _confirmNewNickname:(NSString *) nickname;
-- (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSString *) topic;
+- (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic;
 - (void) _setBacklogDelay:(NSTimeInterval) delay;
 - (void) _setStatus:(MVChatConnectionStatus) status;
 - (void) _willConnect;
@@ -252,10 +252,8 @@ void MVChatListRoom( void *c, void *cs, const char * const room, const int users
 
 	MVChatConnection *self = cs;
 	NSString *r = [NSString stringWithUTF8String:room];
-	NSString *t = [NSString stringWithUTF8String:topic];
+	NSData *t = [NSData dataWithBytes:topic length:strlen( topic )];
 	[self _addRoomToCache:r withUsers:users andTopic:t];
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomInfoNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:r, @"room", [NSNumber numberWithUnsignedInt:users], @"users", t, @"topic", nil]];
 }
 
 #pragma mark -
@@ -1108,10 +1106,18 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	_nickname = [nickname copy];
 }
 
-- (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSString *) topic {
+- (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic {
 	if( room ) {
-		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:users], @"users", ( topic ? (id) topic : (id) [NSNull null] ), @"topic", [NSDate date], @"cached", nil];
+		NSString *topicString = [[[NSString alloc] initWithData:topic encoding:NSUTF8StringEncoding] autorelease];
+		if( ! topicString ) topicString = [NSString stringWithCString:[topic bytes] length:[topic length]];
+		topicString = [NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", topicString];
+
+		NSAttributedString *t = [NSAttributedString attributedStringWithHTMLFragment:topicString baseURL:nil];
+		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:users], @"users", t, @"topic", [NSDate date], @"cached", nil];
 		[_roomsCache setObject:info forKey:room];
+
+		NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionGotRoomInfoNotification object:self];
+		[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 	}
 }
 
