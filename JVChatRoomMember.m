@@ -80,6 +80,10 @@
 	return ( _operator ? [NSImage imageNamed:@"op"] : ( _voice ? [NSImage imageNamed:@"voice"] : [NSImage imageNamed:@"person"] ) );
 }
 
+- (NSImage *) statusImage {
+	return nil;
+}
+
 - (void) setParent:(id <JVChatListItem>) parent {
 	_parent = parent;
 }
