@@ -53,8 +53,6 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 				JVStyle *style = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) )
 					style = [[JVStyle newWithBundle:bundle] autorelease];
-				[style reload];
-				if( [style isCompliant] ) [styles addObject:style];
 			}
 		}
 	}
@@ -149,6 +147,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self _setBundle:nil]; // this will dealloc all other dependant objects
+	[self unlink];
 	[super dealloc];
 }
 
@@ -165,6 +164,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	[self _setStyleOptions:nil];
 	[self _setVariants:nil];
 	[self _setUserVariants:nil];
+
+	if( _bundle && ! [self isCompliant] ) [self unlink];
 }
 
 - (BOOL) isCompliant {
@@ -173,7 +174,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	if( ! [[self displayName] length] ) ret = NO;
 	if( ! [[_bundle pathForResource:@"main" ofType:@"css"] length] ) ret = NO;
 	if( ! [[_bundle bundleIdentifier] length] ) ret = NO;
-
+	
 	return ret;
 }
 
