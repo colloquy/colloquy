@@ -164,7 +164,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusNotification object:connection];
 
+		
 		_settings = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]] mutableCopy];
 		if( ! _settings ) _settings = [[NSMutableDictionary dictionary] retain];
 	}
@@ -1616,6 +1618,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 //	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You're now offline", "title of the you're offline message sheet" ), NSLocalizedString( @"You are no longer connected to the server where you were chatting. No messages can be sent at this time. Reconnecting might be in progress.", "chat window error description for loosing connection" ), @"OK", nil, nil ) withName:@"disconnected"];
 	[self addEventMessageToDisplay:NSLocalizedString( @"You left the chat by being disconnected from the server.", "disconenct from the server status message" ) withName:@"disconnected" andAttributes:nil];
 	_cantSendMessages = YES;
+}
+
+- (void) _awayStatusChanged:(NSNotification *) notification {
+	NSLog( @"I got called" );
+	if ( [[[notification userInfo] objectForKey:@"away"] boolValue] ) {
+		[self addEventMessageToDisplay:NSLocalizedString( @"You have set yourself away.", "self away status set message" ) withName:@"awaySet" andAttributes:nil];
+	} else {
+		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
+	}
 }
 
 - (void) _updateChatEmoticonsMenu {
