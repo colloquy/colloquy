@@ -566,7 +566,7 @@
 			</dict>
 			<key>Attributes</key>
 			<dict>
-				<key>memberName</key>
+				<key>nickname</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>mncA</string>

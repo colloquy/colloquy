@@ -369,7 +369,7 @@
 			</dict>
 			<key>Attributes</key>
 			<dict>
-				<key>memberName</key>
+				<key>nickname</key>
 				<dict>
 					<key>Description</key>
 					<string>Member's nickname in the room.</string>
