@@ -658,14 +658,6 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
 	if( ! self ) return;
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel -> name], @"room", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	char *topic = MVChatIRCToXHTML( channel -> topic );
-	NSData *msgData = [NSData dataWithBytes:topic length:strlen( topic )];
-	note = [NSNotification notificationWithName:MVChatConnectionGotRoomTopicNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel -> name], @"room", ( channel -> topic_by ? (id) [self stringWithEncodedBytes:channel -> topic_by] : (id) [NSNull null] ), @"author", ( msgData ? (id) msgData : (id) [NSNull null] ), @"topic", [NSDate dateWithTimeIntervalSince1970:channel -> topic_time], @"time", [NSNumber numberWithBool:YES], @"justJoined", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
 	GSList *nicks = nicklist_getnicks( channel );
 	GSList *nickItem = NULL;
 	NSMutableArray *nickArray = [NSMutableArray arrayWithCapacity:g_slist_length( nicks )];
@@ -689,7 +681,7 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 		[nickArray addObject:info];
 	}
 
-	note = [NSNotification notificationWithName:MVChatConnectionRoomExistingMemberListNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel -> name], @"room", nickArray, @"members", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionRoomExistingMemberListNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel -> name], @"room", nickArray, @"members", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -736,7 +728,7 @@ static void MVChatRoomTopicChanged( CHANNEL_REC *channel ) {
 
 	char *topic = MVChatIRCToXHTML( channel -> topic );
 	NSData *msgData = [NSData dataWithBytes:topic length:strlen( topic )];
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRoomTopicNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel -> name], @"room", ( channel -> topic_by ? (id) [self stringWithEncodedBytes:channel -> topic_by] : (id) [NSNull null] ), @"author", ( msgData ? (id) msgData : (id) [NSNull null] ), @"topic", [NSDate dateWithTimeIntervalSince1970:channel -> topic_time], @"time", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRoomTopicNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel -> name], @"room", ( channel -> topic_by ? (id) [self stringWithEncodedBytes:channel -> topic_by] : (id) [NSNull null] ), @"author", ( msgData ? (id) msgData : (id) [NSNull null] ), @"topic", [NSDate dateWithTimeIntervalSince1970:channel -> topic_time], @"time", [NSNumber numberWithBool:( ! channel -> synced )], @"justJoined", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -746,13 +738,17 @@ static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, cons
 	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( ! self ) return;
 
-	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) return;
-
 	char *channel = NULL;
 	char *params = event_get_params( data, 1, &channel );
 
 	CHANNEL_REC *room = channel_find( (SERVER_REC *) server, channel );
 	NICK_REC *nickname = nicklist_find( room, nick );
+
+	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) {
+		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel], @"room", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+		return;
+	}
 
 	if( ! nickname ) return;
 
