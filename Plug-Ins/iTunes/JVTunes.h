@@ -2,9 +2,9 @@
 #import "MVChatPlugin.h"
 
 @class NSString;
+@class JVChatRoom;
 
 @interface JVTunes : NSObject <MVChatPlugin> {
-	NSString *_script;
+	NSAppleScript *_script;
 }
-+ (NSString *) executeAppleScriptString:(NSString *) string;	
 @end
