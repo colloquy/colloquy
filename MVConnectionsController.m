@@ -219,7 +219,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (IBAction) showConnectionManager:(id) sender {
-	[[self window] orderFront:nil];
+	[[self window] makeKeyAndOrderFront:nil];
 }
 
 - (IBAction) hideConnectionManager:(id) sender {

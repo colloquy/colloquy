@@ -143,6 +143,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[(NSPanel *)[self window] setFloatingPanel:NO];
 	[(NSPanel *)[self window] setHidesOnDeactivate:NO];
+	[[self window] setFrameAutosaveName:@"buddylist"];
 
 	[buddies setVerticalMotionCanBeginDrag:NO];
 	[buddies setTarget:self];
@@ -197,7 +198,7 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 - (IBAction) showBuddyList:(id) sender {
-	[[self window] orderFront:nil];
+	[[self window] makeKeyAndOrderFront:nil];
 }
 
 - (IBAction) hideBuddyList:(id) sender {

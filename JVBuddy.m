@@ -188,9 +188,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( ! [_nicknames containsObject:nickname] ) return;
 
 	ABMutableMultiValue *value = [[[_person valueForProperty:@"IRCNickname"] mutableCopy] autorelease];
-	unsigned int i = 0, count = [value count];
+	int i = 0, count = [value count];
 
-	for( i = 0; i < count; i++ )
+	for( i = count - 1; i >= 0; i-- )
 		if( [[nickname user] caseInsensitiveCompare:[value valueAtIndex:i]] == NSOrderedSame && [[nickname host] caseInsensitiveCompare:[value labelAtIndex:i]] == NSOrderedSame )
 			[value removeValueAndLabelAtIndex:i];
 

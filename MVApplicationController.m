@@ -56,7 +56,9 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (IBAction) showInspector:(id) sender {
-	[[JVInspectorController sharedInspector] show:nil];
+	if ( [[[JVInspectorController sharedInspector] window] isVisible] )
+		[[[JVInspectorController sharedInspector] window] orderOut:nil];
+	else [[JVInspectorController sharedInspector] show:nil];
 }
 
 - (IBAction) showPreferences:(id) sender {

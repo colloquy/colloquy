@@ -223,7 +223,7 @@ finish:
 #pragma mark -
 
 - (IBAction) showTransferManager:(id) sender {
-	[[self window] orderFront:nil];
+	[[self window] makeKeyAndOrderFront:nil];
 }
 
 - (IBAction) hideTransferManager:(id) sender {
