@@ -741,7 +741,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
 			[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
-			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
+			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
 		} else if( [message ignoreStatus] == JVNotIgnored ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -751,7 +751,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
 			[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
-			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
+			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
 		}
 	}
@@ -1386,7 +1386,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
 		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatMentioned"] forKey:@"coalesceKey"];
 		[context setObject:self forKey:@"target"];
-		[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
+		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
 	}
 
@@ -1917,11 +1917,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( [[NSFileManager defaultManager] isReadableFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]]] )
 		return;
 	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] atomically:NO];
-}
-
-- (void) _activate:(id) sender {
-	[[self windowController] showChatViewController:self];
-	[[[self windowController] window] makeKeyAndOrderFront:nil];
 }
 
 - (void) _styleError:(NSException *) exception {

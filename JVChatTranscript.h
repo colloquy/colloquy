@@ -84,6 +84,7 @@ extern NSString *JVChatEmoticonsScannedNotification;
 - (NSArray *) messagesInRange:(NSRange) range;
 
 - (IBAction) close:(id) sender;
+- (IBAction) activate:(id) sender;
 @end
 
 #pragma mark -

@@ -270,6 +270,11 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	[[JVChatController defaultManager] disposeViewController:self];
 }
 
+- (IBAction) activate:(id) sender {
+	[[self windowController] showChatViewController:self];
+	[[[self windowController] window] makeKeyAndOrderFront:nil];
+}
+
 - (NSString *) identifier {
 	return [NSString stringWithFormat:@"Transcript %@", [self title]];
 }
