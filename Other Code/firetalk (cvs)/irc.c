@@ -127,15 +127,21 @@ tempint2 = away, default 0, used during WHOIS checks
 
 */
 
+#define IRC_BOLD 0x1
+#define IRC_ITALIC 0x2
+#define IRC_UNDERLINE 0x4
+#define IRC_COLOR 0x8
+
 char *irc_html_to_irc(const char * const string) {
-	static char *output = NULL;
-	int o = 0;
-	int inbold = 0, initalics = 0, inunderline = 0, incolor = 0;
-	int tagmatch = 0;
-	size_t l, i = 0;
-	l = safe_strlen(string);
-	output = safe_realloc(output,l + 1);
-	while (i < l && o < l) {
+	static char output[513];
+	unsigned attributes = 0;
+	unsigned colorStack = 0;
+	size_t l = safe_strlen(string);
+	size_t ll = 513;
+	size_t i = 0;
+	size_t o = 0;
+
+	while (i < l && o < ll) {
 		switch(string[i]) {
 			case '&':
 				if (!safe_strncasecmp(&string[i],"&amp;",5)) {
@@ -153,53 +159,63 @@ char *irc_html_to_irc(const char * const string) {
 				} else if (!safe_strncasecmp(&string[i],"&quot;",6)) {
 					output[o++] = '"';
 					i += 6;
-				} else
-					output[o++] = string[i++];
+				} else if (!safe_strncasecmp(&string[i],"&apos;",6)) {
+					output[o++] = '\'';
+					i += 6;
+				} else output[o++] = string[i++];
 				break;
 			case '<':
 				if (!safe_strncasecmp(&string[i],"<b>",3)) {
 					output[o++] = '\002';
 					i += 3;
-					inbold = 1; tagmatch = 1;
+					attributes |= IRC_BOLD;
 				} else if (!safe_strncasecmp(&string[i],"</b>",4)) {
 					output[o++] = '\002';
 					i += 4;
-					inbold = 0; tagmatch = 1;
+					attributes &= ~IRC_BOLD;
 				} else if (!safe_strncasecmp(&string[i],"<i>",3)) {
 					output[o++] = '\026';
 					i += 3;
-					initalics = 1; tagmatch = 1;
+					attributes |= IRC_ITALIC;
 				} else if (!safe_strncasecmp(&string[i],"</i>",4)) {
 					output[o++] = '\026';
 					i += 4;
-					initalics = 0; tagmatch = 1;
+					attributes &= ~IRC_ITALIC;
 				} else if (!safe_strncasecmp(&string[i],"<u>",3)) {
 					output[o++] = '\037';
 					i += 3;
-					inunderline = 1; tagmatch = 1;
+					attributes |= IRC_UNDERLINE;
 				} else if (!safe_strncasecmp(&string[i],"</u>",4)) {
 					output[o++] = '\037';
 					i += 4;
-					inunderline = 0; tagmatch = 1;
+					attributes &= ~IRC_UNDERLINE;
 				} else if (!safe_strncasecmp(&string[i],"<br>",4)) {
-					output[o++] = '\020';
+// disabled CTCP quoting since no one does it
+/*					output[o++] = '\\';
 					output[o++] = 'r';
-					output[o++] = '\020';
-					output[o++] = 'n';
-					i += 4; tagmatch = 1;
+					output[o++] = '\\';
+					output[o++] = 'n';*/
+					output[o++] = ' ';
+					i += 4;
 				} else if (!safe_strncasecmp(&string[i],"<a href=",8)) {
 					if( string[i + 8] == '"' || string[i + 8] == '\'' ) i += 9;
 					else i += 8;
 					output[o++] = '\037';
+
 					while( i < l && string[i] != '"' && string[i] != '\'' )
 						output[o++] = string[i++];
+
 					while( i < l && safe_strncasecmp(&string[i],"</a>",4) ) i++;
+
 					output[o++] = '\037';
-					i += 4; tagmatch = 1;
+					i += 4;
 				} else if (!safe_strncasecmp(&string[i],"<font",5)) {
-					unsigned int fgcolor[3] = { 0x00, 0x00, 0x00 }, bgcolor[3] = { 0xff, 0xff, 0xff };
-					char fgfound = 0, bgfound = 0;
-					int oi = i, ti = l;
+					unsigned int fgcolor[3] = { 0x00, 0x00, 0x00 };
+					unsigned int bgcolor[3] = { 0xff, 0xff, 0xff };
+					char fgfound = 0;
+					char bgfound = 0;
+					int oi = i;
+					int ti = l;
 
 					oi = i;
 					while( i < l && safe_strncasecmp(&string[i],">",1) ) i++;
@@ -225,38 +241,43 @@ char *irc_html_to_irc(const char * const string) {
 					i = ti;
 
 					if( fgfound ) {
-						incolor++;
+						attributes |= IRC_COLOR;
+						colorStack++;
 						o += sprintf( &output[o], "\003%02d", irc_rgb_to_irc( fgcolor[0], fgcolor[1], fgcolor[2] ) );
 						if( bgfound ) {
 							o += sprintf( &output[o], ",%02d", irc_rgb_to_irc( bgcolor[0], bgcolor[1], bgcolor[2] ) );
 						}
 					}
-					incolor = 1; tagmatch = 1;
 				} else if (!strncasecmp(&string[i],"</font>",7)) {
-					if( incolor ) output[o++] = '\003';
+					colorStack--;
+					if( colorStack < 0 ) colorStack = 0;
+					if( ( attributes & IRC_COLOR ) && ! colorStack ) {
+						output[o++] = '\003';
+						attributes &= ~IRC_COLOR;
+					}
 					i += 7;
-					incolor--;
-					if (incolor < 0) incolor = 0;
-					tagmatch = 1;
 				} else output[o++] = string[i++];
-
-				if( tagmatch && ! inbold && ! initalics && ! inunderline && ! incolor )
-					output[o++] = '\017';
-
-				tagmatch = 0;
+				break;
+/*			case '\0':
+				output[o++] = '\\';
+				output[o++] = '0';
+				break;
+			case '\001':
+				output[o++] = '\\';
+				output[o++] = '1';
 				break;
 			case '\r':
-				output[o++] = '\020';
+				output[o++] = '\\';
 				output[o++] = 'r';
 				break;
 			case '\n':
-				output[o++] = '\020';
+				output[o++] = '\\';
 				output[o++] = 'n';
 				break;
-			case '\020':
-				output[o++] = '\020';
-				output[o++] = '\020';
-				break;
+			case '\\':
+				output[o++] = '\\';
+				output[o++] = '\\';
+				break;*/
 			default:
 				output[o++] = string[i++];
 				break;
@@ -267,64 +288,32 @@ char *irc_html_to_irc(const char * const string) {
 }
 
 char *irc_irc_to_html(const char * const string) {
-	static char *output = NULL;
-	int o = 0;
-	size_t l = 0, ll = 0, i = 0;
-	int wasbold = 0, wasitalics = 0, wasunderline = 0, wascolor = 0;
-	int inbold = 0, initalics = 0, inunderline = 0, incolor = 0;
+	size_t l = safe_strlen(string);
+	size_t i = 0;
+	size_t o = 0;
+	size_t ll = (45 * 1024); // the maximum size for a 512 byte message with all attributes/entity replacement
+	static char output[(45 * 1024)+1];
+	const char *attributsCharSet = "\002\003\026\037\017";
+	unsigned attributes = 0;
 	int fgcolor = -1, bgcolor = -1;
-	int iso2022esc = 0;
-	int reset = 0;
-	l = safe_strlen(string);
-	ll = (l * 20);
-	output = safe_realloc(output,(l * 40) + 1);
-	while (i < l && o < ll) {
-		if (wasunderline == 1) {
-			memcpy(&output[o],"</u>",4);
-			o += 4;
-			wasunderline = 0;
-		}
-		if (wasitalics == 1) {
-			memcpy(&output[o],"</i>",4);
-			o += 4;
-			wasitalics = 0;
-		}
-		if (wasbold == 1) {
-			memcpy(&output[o],"</b>",4);
-			o += 4;
-			wasbold = 0;
-		}
-		if (wascolor == 1) {
-			memcpy(&output[o],"</font>",7);
-			o += 7;
-			wascolor = 0;
-		}
 
-		switch(string[i]) {
-			case '\033':
-				if( string[i+1] == '$' && ( string[i+2] == 'B' || string[i+2] == '@' ) ) iso2022esc = 1;
-				else if( string[i+1] == '(' && ( string[i+2] == 'B' || string[i+2] == 'J' ) ) iso2022esc = 0;
-				goto echo;
-			case '\017':
-				if (!wasunderline) wasunderline = inunderline;
-				inunderline = 0;
-				if (!wasitalics) wasitalics = initalics;
-				initalics = 0;
-				if (!wasbold) wasbold = inbold;
-				inbold = 0;
-				if (!wascolor) wascolor = incolor;
+	while( i < l && o < ll ) {
+		/* scan for attributes until we hit character data */
+		while( i < l && strspn( &string[i], attributsCharSet ) ) {
+			switch( string[i] ) {
+			case '\017': /* reset all */
+				attributes = IRC_BOLD;
 				fgcolor = -1;
 				bgcolor = -1;
-				incolor = 0;
-				reset = 1;
+				i++;
 				break;
-			case '\002':
-				wasbold = inbold;
-				inbold = ! inbold;
-				reset = 1;
+			case '\002': /* toggle bold */
+				attributes ^= IRC_BOLD;
+				i++;
 				break;
-			case '\003':
-				wascolor = incolor;
+			case '\003': /* color */
+				fgcolor = -1;
+				attributes &= ~IRC_COLOR;
 				if( isdigit( string[i + 1] ) ) {
 					if( isdigit( string[i + 2] ) ) {
 						fgcolor = ( string[i + 1] - '0' ) * 10;
@@ -334,139 +323,152 @@ char *irc_irc_to_html(const char * const string) {
 								if( isdigit( string[i + 5] ) ) {
 									bgcolor = ( string[i + 4] - '0' ) * 10;
 									bgcolor += ( string[i + 5] - '0' );
-									i += 1;
+									i++;
 								} else bgcolor = ( string[i + 4] - '0' );
-								i += 1;
+								i++;
 							}
-							i += 1;
+							i++;
 						}
-						i += 1;
+						i++;
 					} else if( string[i + 2] == ',' ) {
 						fgcolor = ( string[i + 1] - '0' );
 						if( isdigit( string[i + 3] ) ) {
 							if( isdigit( string[i + 4] ) ) {
 								bgcolor = ( string[i + 3] - '0' ) * 10;
 								bgcolor += ( string[i + 4] - '0' );
-								i += 1;
+								i++;
 							} else bgcolor = ( string[i + 3] - '0' );
-							i += 1;
+							i++;
 						}
-						i += 1;
+						i++;
 					} else fgcolor = ( string[i + 1] - '0' );
-					i += 1;
+					i++;
 
-					if( fgcolor != -1 ) {
+					if( fgcolor >= 0 ) {
 						fgcolor %= 16;
-						incolor = 1;
+						attributes |= IRC_COLOR;
 					}
+
 					if( bgcolor == 99 ) bgcolor = -1;
-					if( bgcolor != -1 ) {
+					if( ( attributes & IRC_COLOR ) && bgcolor >= 0 )
 						bgcolor %= 16;
-						incolor = 1;
-					}
-				} else {
-					fgcolor = -1;
-					bgcolor = -1;
-					incolor = 0;
-				}
-				reset = 1;
+				} else bgcolor = -1;
+				i++;
 				break;
-			case '\026':
-				wasitalics = initalics;
-				initalics = ! initalics;
-				reset = 1;
+			case '\026': /* toggle italic */
+				attributes ^= IRC_ITALIC;
+				i++;
 				break;
-			case '\037':
-				wasunderline = inunderline;
-				inunderline = ! inunderline;
-				reset = 1;
+			case '\037': /* toggle underline */
+				attributes ^= IRC_UNDERLINE;
+				i++;
 				break;
+			}
+		}
+
+		/* write attributes to output as XHTML */
+		if (attributes & IRC_COLOR && fgcolor >= 0 ) {
+			o += sprintf( &output[o], "<font color=\"#%02x%02x%02x\"", ircrgb[fgcolor][0], ircrgb[fgcolor][1], ircrgb[fgcolor][2] );
+			if( bgcolor >= 0 ) {
+				o += sprintf( &output[o], " style=\"background-color: #%02x%02x%02x\"", ircrgb[bgcolor][0], ircrgb[bgcolor][1], ircrgb[bgcolor][2] );
+			}
+			memcpy(&output[o],">",1);
+			o += 1;
+		}
+
+		if (attributes & IRC_BOLD) {
+			memcpy(&output[o],"<b>",3);
+			o += 3;
+		}
+
+		if (attributes & IRC_ITALIC) {
+			memcpy(&output[o],"<i>",3);
+			o += 3;
+		}
+
+		if (attributes & IRC_UNDERLINE) {
+			memcpy(&output[o],"<u>",3);
+			o += 3;
+		}
+
+		/* write any character data up until next attribute change */
+		while( i < l && o < ll && strcspn( &string[i], attributsCharSet ) ) {
+			switch( string[i] ) {
 			case '&':
-				if( ! iso2022esc ) {
-					memcpy(&output[o],"&amp;",5);
-					o += 5;
-				} else goto echo;
+				memcpy(&output[o],"&amp;",5);
+				o += 5;
+				i++;
 				break;
 			case '<':
-				if( ! iso2022esc ) {
-					memcpy(&output[o],"&lt;",4);
-					o += 4;
-				} else output[o++] = string[i];
+				memcpy(&output[o],"&lt;",4);
+				o += 4;
+				i++;
 				break;
 			case '>':
-				if( ! iso2022esc ) {
-					memcpy(&output[o],"&gt;",4);
-					o += 4;
-				} else goto echo;
+				memcpy(&output[o],"&gt;",4);
+				o += 4;
+				i++;
 				break;
-			case '\020':
+			case '"':
+				memcpy(&output[o],"&quot;",6);
+				o += 6;
+				i++;
+				break;
+			case '\'':
+				memcpy(&output[o],"&apos;",6);
+				o += 6;
+				i++;
+				break;
+// disabled CTCP quoting since no one does it
+/*			case '\\':
 				switch(string[++i]) {
-					case '\020':
-						output[o++] = '\020';
-						break;
-					case 'r':
-						if (string[i+1] == '\020' && string[i+2] == 'n') {
-							i += 2;
-							memcpy(&output[o],"<br>",4);
-							o += 4;
-						} else
-							output[o++] = '\r';
-						break;
-					case 'n':
-						output[o++] = '\n';
-						break;
-					default:
-						goto echo;
+				case '\\':
+					output[o++] = '\\';
+					break;
+				case 'r':
+					if (string[i+1] == '\\' && string[i+2] == 'n') {
+						i += 2;
+						memcpy(&output[o],"<br>",4);
+						o += 4;
+					} else output[o++] = '\r';
+					break;
+				case 'n':
+					output[o++] = '\n';
+					break;
+				case '0':
+					output[o++] = '\0';
+					break;
+				case '1':
+					output[o++] = '\001';
+					break;
 				}
-				break;
-			default: echo:
-				if (reset) {
-					if (incolor == 1) {
-						o += sprintf( &output[o], "<font color=\"#%02x%02x%02x\"", ircrgb[fgcolor][0], ircrgb[fgcolor][1], ircrgb[fgcolor][2] );
-						if( bgcolor != -1 ) {
-							o += sprintf( &output[o], " style=\"background-color: #%02x%02x%02x\"", ircrgb[bgcolor][0], ircrgb[bgcolor][1], ircrgb[bgcolor][2] );
-						}
-						memcpy(&output[o],">",1);
-						o += 1;
-					}
-					if (inbold == 1) {
-						memcpy(&output[o],"<b>",3);
-						o += 3;
-					}
-					if (initalics == 1) {
-						memcpy(&output[o],"<i>",3);
-						o += 3;
-					}
-					if (inunderline == 1) {
-						memcpy(&output[o],"<u>",3);
-						o += 3;
-					}
-					reset = 0;
-				}
-				output[o++] = string[i];
-				break;
+				break;*/
+			default:
+				if( string[i] >= 32 || string[i] == '\t' || string[i] == '\n' || string[i] == '\r' ) output[o++] = string[i++];
+				else i++;
+			}
 		}
-		i++;
-	}
 
-	if (inunderline == 1) {
-		memcpy(&output[o],"</u>",4);
-		o += 4;
-		inunderline = 0;
-	}
-	if (initalics == 1) {
-		memcpy(&output[o],"</i>",4);
-		o += 4;
-		initalics = 0;
-	}
-	if (inbold == 1) {
-		memcpy(&output[o],"</b>",4);
-		o += 4;
-		inbold = 0;
-	}
-	if (incolor == 1) {
-		memcpy(&output[o],"</font>",7);
-		o += 7;
+		/* close all HTML tags and loop again */
+		if (attributes & IRC_UNDERLINE) {
+			memcpy(&output[o],"</u>",4);
+			o += 4;
+		}
+
+		if (attributes & IRC_ITALIC) {
+			memcpy(&output[o],"</i>",4);
+			o += 4;
+		}
+
+		if (attributes & IRC_BOLD) {
+			memcpy(&output[o],"</b>",4);
+			o += 4;
+		}
+
+		if (attributes & IRC_COLOR && fgcolor >= 0 ) {
+			memcpy(&output[o],"</font>",7);
+			o += 7;
+		}
 	}
 
 	output[o] = '\0';
