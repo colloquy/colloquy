@@ -25,6 +25,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserWhoisComplete: ) name:MVChatConnectionGotUserWhoisCompleteNotification object:[_member connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotAwayStatus: ) name:MVChatConnectionUserAwayStatusNotification object:[_member connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( errorOccurred : ) name:MVChatConnectionErrorNotification object:[_member connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotCTCPResponse: ) name:MVChatConnectionSubcodeReplyNotification object:[_member connection]];
 	}
 	return self;
 }
@@ -171,15 +172,22 @@
 	}
 }
 
+- (void) gotCTCPResponse:(NSNotification *) notification {
+	if( [[[notification userInfo] objectForKey:@"from"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
+	if( [[[notification userInfo] objectForKey:@"command"] caseInsensitiveCompare:@"VERSION"] == NSOrderedSame ) {
+		[clientInfo setStringValue:[[notification userInfo] objectForKey:@"arguments"]];
+	}
+}
+
 - (IBAction) sendPing:(id) sender {
-	
+	[[_member connection] sendSubcodeRequest:@"PING" toUser:[_member nickname] withArguments:nil];
 }
 
 - (IBAction) requestLocalTime:(id) sender {
-	
+	[[_member connection] sendSubcodeRequest:@"TIME" toUser:[_member nickname] withArguments:nil];
 }
 
 - (IBAction) requestClientInfo:(id) sender {
-	
+	[[_member connection] sendSubcodeRequest:@"VERSION" toUser:[_member nickname] withArguments:nil];
 }
 @end
