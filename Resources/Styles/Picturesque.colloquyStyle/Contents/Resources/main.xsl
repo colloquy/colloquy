@@ -68,6 +68,11 @@
 						</xsl:call-template>
 						</div>
 						<div class="message">
+						<xsl:if test="message[1]/@action = 'yes'">
+							<xsl:text>&#8226; </xsl:text>
+							<xsl:value-of select="sender" />
+							<xsl:text> </xsl:text>
+						</xsl:if>
 							<xsl:apply-templates select="message[1]/child::node()" mode="copy" />
 						</div>
 						<xsl:apply-templates select="message[position() &gt; 1]" mode="subsequent" />
