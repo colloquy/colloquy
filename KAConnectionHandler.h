@@ -16,5 +16,6 @@
 - (void) addIgnore:(NSString *)inIgnoreName withKey:(NSString *)ignoreKeyExpression inRooms:(NSArray *) rooms usesRegex:(BOOL) regex isMember:(BOOL) member; 
 - (BOOL) shouldIgnoreUser:(NSString *) user inRoom:(NSString *) room;
 - (BOOL) shouldIgnoreMessage:(NSAttributedString *) message inRoom:(NSString *) room;
+- (BOOL) shouldIgnoreMessage:(NSAttributedString *) message fromUser:(NSString *)user inRoom:(NSString *) room;
 - (IBAction) checkMemos:(id) sender;
 @end

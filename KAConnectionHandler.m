@@ -143,14 +143,30 @@ static KAConnectionHandler *sharedHandler = nil;
 		}
 	}
 	
-	return [[_ignoreRules allKeys] containsObject:user];
+	return ignoreThisUser;
 }
 
 - (BOOL) shouldIgnoreMessage:(NSAttributedString *) message inRoom:(NSString *) room {
-	return NO;
+	BOOL ignoreThisMessage = NO;
+	NSEnumerator *enum = [_ignoreRules objectEnumerator];
+	KAInternalIgnoreRule *rule = nil;
+	
+	while ( rule = [enum nextObject] ) {		
+		if ( [rule regex] && ![rule isMember] ) {
+			AGRegex *matchPattern = [AGRegex regexWithPattern:[rule key] options:AGRegexCaseInsensitive];
+			if ( [matchPattern findInString:key] ) ignoreThisMessage = YES;
+		} else if ( [[rule key] isEqualToString:[message string]] ) ignoreThisMessage = YES;
+	}
+	
+	
+	return ignoreThisMessage;
 }
 
-#pragma mark Targets Actions
+- (BOOL) shouldIgnoreMessage:(NSAttributedString *) message fromUser:(NSString *)user inRoom:(NSString *) room {
+	return ( [self shouldIgnoreUser:user inRoom:room] || [self shouldIgnoreMessage:message inRoom:room] );
+}
+
+#pragma mark Target Actions
 
 - (IBAction) checkMemos:(id) sender {
 	MVChatConnection *connection = [sender representedObject];
