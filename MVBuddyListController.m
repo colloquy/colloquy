@@ -7,6 +7,7 @@
 #import "JVChatController.h"
 #import "MVApplicationController.h"
 #import "MVConnectionsController.h"
+#import "JVNotificationController.h"
 #import "JVInspectorController.h"
 #import "MVTableView.h"
 #import "JVDetailCell.h"
@@ -866,6 +867,8 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[self _setBuddiesNeedSortAnimated];
 	if( ! _animating ) [buddies reloadData];
+
+	[[JVNotificationController defaultManager] performNotification:@"JVChatBuddyOnline" withContextInfo:nil];
 }
 
 - (void) _buddyOffline:(NSNotification *) notification {
@@ -880,6 +883,8 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[self _setBuddiesNeedSortAnimated];
 	if( ! _animating ) [buddies reloadData];
+
+	[[JVNotificationController defaultManager] performNotification:@"JVChatBuddyOffline" withContextInfo:nil];
 }
 
 - (void) _buddyChanged:(NSNotification *) notification {
