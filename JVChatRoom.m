@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+#import <WebKit/WebKit.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatPlugin.h>
@@ -455,7 +456,7 @@
 }
 
 - (void) _finishTopicChange:(id) sender {
-	NSMutableAttributedString *topic = [[[[[[topicRenderer mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
+	NSMutableAttributedString *topic = [[[(id <WebDocumentText>)[[[topicRenderer mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 	[paraStyle setMaximumLineHeight:13.];
 	[paraStyle setAlignment:NSCenterTextAlignment];
