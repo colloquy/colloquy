@@ -59,6 +59,12 @@
 	</dict>
 	<dict>
 		<key>identifier</key>
+		<string>JVChatRoomActivity</string>
+		<key>title</key>
+		<string>Chat Room Activity</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
 		<string>JVChatFirstMessage</string>
 		<key>title</key>
 		<string>First Private Message</string>
