@@ -21,6 +21,7 @@
 	NSSet *_styleBundles;
 	NSSet *_emoticonBundles;
 }
+- (void) changePreferences;
 - (void) updateChatStylesMenu;
 - (void) updateEmoticonsMenu;
 - (void) updatePreview;
