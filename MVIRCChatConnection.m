@@ -1073,7 +1073,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		NSConnection *threadConnection = [NSConnection connectionWithReceivePort:nil sendPort:threadConnectionPort];
 		_irssiThreadConnection = [[(MVIRCConnectionThreadHelper *)[threadConnection rootProxy] vendChatConnection:self] retain];
 
-		NSConnection *connection = [NSConnection connectionWithReceivePort:nil sendPort:[_irssiThreadConnection receivePort]];
+		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
 		_irssiThreadProxy = [[connection rootProxy] retain];
 		[(NSDistantObject *)_irssiThreadProxy setProtocolForProxy:@protocol( MVIRCChatConnectionIrssiThread )];
 	}
@@ -1926,7 +1926,7 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 
 @implementation MVIRCConnectionThreadHelper
 - (NSConnection *) vendChatConnection:(MVIRCChatConnection *) connection {
-	NSConnection *server = [[[NSConnection alloc] init] autorelease];
+	NSConnection *server = [[[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:[NSPort port]] autorelease];
 	[server setRootObject:connection];
 	[server enableMultipleThreads];
 	return server;
