@@ -703,6 +703,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode {
+	if( ! _nibLoaded ) [self view];
 	if( [_logLock tryLock] ) {
 		[self displayQueue];
 		[self addEventMessageToLogAndDisplay:message withName:name andAttributes:attributes entityEncodeAttributes:encode];
@@ -716,6 +717,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
+	if( ! _nibLoaded ) [self view];
 	if( [_logLock tryLock] ) {
 		[self displayQueue];
 		[self addMessageToLogAndDisplay:message fromUser:user asAction:action];
@@ -1439,7 +1441,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	NSMutableString *transformedMessage = nil;
 	NSMutableDictionary *params = _styleParams;
-	if( parent ) { // compatiability parameter for pre 2C9 styles, styles can test for consecutive messages alone
+	if( parent ) {
+		// compatibility parameter for pre-2C9 styles, styles can test for consecutive messages alone now
+		// we now for a <?message type="subsequent"?> processing instruction to determ the proper handeling
 		params = [[_styleParams mutableCopy] autorelease];
 		[params setObject:@"'yes'" forKey:@"subsequent"];
 	}
