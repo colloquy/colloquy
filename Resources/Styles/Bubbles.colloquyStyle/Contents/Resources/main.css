@@ -13,7 +13,6 @@
 .event {
 	font-size: 75%;
 	line-height: 1.1em;
-	font-family: sans-serif;
 	color: #888;
 	text-align: center;
 }
@@ -41,7 +40,6 @@ td.icon {
 }
 
 td.sender {
-	font-family: sans-serif;
 	font-weight: bold;
 	color: #aaa;
 }
@@ -164,7 +162,6 @@ table td.center .text {
 	overflow: hidden;
 	top: 4px;
 	line-height: 1.1em;
-	font-family: sans-serif;
 }
 
 table.leftBubble td.center .text {
