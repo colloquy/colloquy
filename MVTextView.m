@@ -13,6 +13,10 @@
 
 - (void) keyDown:(NSEvent *) theEvent {
 	NSString *chars = [theEvent charactersIgnoringModifiers];
+	if( ! [self isEditable] ) {
+		[super keyDown:theEvent];
+		return;
+	}
 	if( [chars length] && [chars characterAtIndex:0] == kReturnCharCode ) {
 		if ([[self delegate] respondsToSelector:@selector(textView:returnHit:)]) {
 			if( [[self delegate] textView:self returnHit:theEvent] ) return;
@@ -38,6 +42,7 @@
 }
 
 - (void) reset:(id) sender {
+	if( ! [self isEditable] ) return;
 	[self setString:@""];
 	[self setTypingAttributes:nil];
 	[[self textStorage] setAttributes:nil range:NSMakeRange( 0, 0 )];
@@ -64,6 +69,7 @@
 }
 
 - (void) bold:(id) sender {
+	if( ! [self isEditable] ) return;
 	if( [self selectedRange].length ) {
 		NSRange limitRange, effectiveRange;
 		NSTextStorage *text = [[[self textStorage] retain] autorelease];
@@ -95,6 +101,7 @@
 }
 
 - (void) italic:(id) sender {
+	if( ! [self isEditable] ) return;
 	if( [self selectedRange].length ) {
 		NSRange limitRange, effectiveRange;
 		NSTextStorage *text = [[[self textStorage] retain] autorelease];
@@ -128,11 +135,21 @@
 - (void) changeBackgroundColor:(id) sender {
 	NSColor *color = [sender color];
 	NSRange range = [self selectedRange];
+	if( ! [self isEditable] ) return;
 	if( [color alphaComponent] == 0. ) color = nil;
 	if( ! range.length ) {
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self typingAttributes]];
 		[attributes setObject:color forKey:NSBackgroundColorAttributeName];
 		[self setTypingAttributes:attributes];
 	} else [[self textStorage] addAttribute:NSBackgroundColorAttributeName value:color range:range];
+}
+
+- (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
+	if( [menuItem action] == @selector( bold: ) ) {
+		return [self isEditable];
+	} else if( [menuItem action] == @selector( italic: ) ) {
+		return [self isEditable];
+	}
+	return [super validateMenuItem:menuItem];
 }
 @end
