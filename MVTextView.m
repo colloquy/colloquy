@@ -72,7 +72,7 @@
 	if( ! [self isEditable] ) return;
 	if( [self selectedRange].length ) {
 		NSRange limitRange, effectiveRange;
-		NSTextStorage *text = [[[self textStorage] retain] autorelease];
+		NSTextStorage *text = [self textStorage];
 		NSFont *font = nil;
 		BOOL hasBold = NO;
 
@@ -104,7 +104,7 @@
 	if( ! [self isEditable] ) return;
 	if( [self selectedRange].length ) {
 		NSRange limitRange, effectiveRange;
-		NSTextStorage *text = [[[self textStorage] retain] autorelease];
+		NSTextStorage *text = [self textStorage];
 		NSFont *font = nil;
 		BOOL hasBold = NO;
 

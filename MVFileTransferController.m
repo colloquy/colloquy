@@ -810,7 +810,7 @@ finish:
 	else enumerator = [_transferStorage objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [[info objectForKey:@"status"] unsignedIntValue] == MVTransferNormal )
-			startDate = [[[info objectForKey:@"started"] retain] autorelease];
+			startDate = [info objectForKey:@"started"];
 		else startDate = nil;
 		if( [[info objectForKey:@"type"] unsignedIntValue] == MVUploadTransfer ) {
 			totalSizeUp += [[info objectForKey:@"size"] unsignedLongValue];
