@@ -225,7 +225,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			SilcClientEntry newclient = va_arg( list, SilcClientEntry );
 
 			// we can't change the nick if any of these two doesn't exist - we return for now
-			if ( ! oldclient -> nickname || ! newclient -> nickname) return;
+			if ( ! oldclient -> nickname || ! newclient -> nickname) break;
 			
 			NSString *oldnick = [NSString stringWithUTF8String:oldclient -> nickname];
 			NSString *newnick = [NSString stringWithUTF8String:newclient -> nickname];
@@ -241,7 +241,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			SilcUInt32 clients_count = va_arg( list, int );
 			int i;
 			
-			if ( ! clients ) return;
+			if ( ! clients ) break;
 			
 			const char *signoff_message = "Server signoff";
 			NSData *signoff_data = [NSData dataWithBytes:signoff_message length:strlen( signoff_message )];
@@ -270,12 +270,12 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			SilcClientEntry joining_client = va_arg( list, SilcClientEntry );
 			SilcChannelEntry channel = va_arg( list, SilcChannelEntry );
 			
-			if ( ! joining_client || ! channel ) return;
-			if ( ! joining_client -> nickname || ! channel -> channel_name ) return;
+			if ( ! joining_client || ! channel ) break;
+			if ( ! joining_client -> nickname || ! channel -> channel_name ) break;
 			
 			if ( [[self nickname] isEqualToString:[NSString stringWithUTF8String:joining_client -> nickname]] ) {
 				// we send a notification that we joined the channel in the COMMAND callback, no need to do it here too.
-				return;
+				break;
 			}
 			
 			NSString *nickname = [NSString stringWithUTF8String:joining_client -> nickname];
@@ -315,8 +315,8 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			SilcClientEntry leaving_client = va_arg( list, SilcClientEntry );
 			SilcChannelEntry channel = va_arg( list, SilcChannelEntry );
 			
-			if ( ! leaving_client || ! channel ) return;
-			if ( ! leaving_client -> nickname || ! channel -> channel_name ) return;
+			if ( ! leaving_client || ! channel ) break;
+			if ( ! leaving_client -> nickname || ! channel -> channel_name ) break;
 			
 			NSString *hostname;
 			if ( leaving_client -> hostname ) hostname = [NSString stringWithUTF8String:leaving_client -> hostname];
@@ -333,8 +333,8 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			char *topic = va_arg( list, char * );
 			SilcChannelEntry channel = va_arg( list, SilcChannelEntry );
 			
-			if ( ! setter_entry || ! channel ) return;
-			if ( ! channel -> channel_name ) return;
+			if ( ! setter_entry || ! channel ) break;
+			if ( ! channel -> channel_name ) break;
 			
 			SilcClientEntry client_setter;
 			SilcChannelEntry channel_setter;
@@ -376,8 +376,8 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			SilcClientEntry target_client = va_arg( list, SilcClientEntry );
 			SilcChannelEntry channel = va_arg( list, SilcChannelEntry );
 			
-			if ( ! changer_entry || ! target_client || ! channel ) return;
-			if ( ! target_client -> nickname || ! channel -> channel_name ) return;
+			if ( ! changer_entry || ! target_client || ! channel ) break;
+			if ( ! target_client -> nickname || ! channel -> channel_name ) break;
 			
 			NSString *nickname = [NSString stringWithUTF8String:target_client -> nickname];
 			NSString *channelname = [NSString stringWithUTF8String:channel -> channel_name];
@@ -450,8 +450,8 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			SilcClientEntry kicker = va_arg( list, SilcClientEntry );
 			SilcChannelEntry channel = va_arg( list, SilcChannelEntry );
 			
-			if ( ! kicked || ! kicker || ! channel ) return;
-			if ( ! kicked -> nickname || ! kicker -> nickname || ! channel -> channel_name ) return;
+			if ( ! kicked || ! kicker || ! channel ) break;
+			if ( ! kicked -> nickname || ! kicker -> nickname || ! channel -> channel_name ) break;
 			
 			NSString *kickedNickname = [NSString stringWithUTF8String:kicked -> nickname];
 			NSString *kickerNickname = [NSString stringWithUTF8String:kicker -> nickname];
@@ -477,8 +477,8 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			SilcIdType killer_type = va_arg( list, int );
 			void *killer = va_arg( list, void * );
 			
-			if ( ! killed || ! killer ) return;
-			if ( ! killed -> nickname ) return;
+			if ( ! killed || ! killer ) break;
+			if ( ! killed -> nickname ) break;
 
 			NSString *killedNickname = [NSString stringWithUTF8String:killed -> nickname];
 			
@@ -538,13 +538,13 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			if ( ! channelName ) {
 				// we don't get the channel name .. I don't understand this, but silc toolkit documentation
 				// tells us that channel_name *can* be NULL ... we just return ...
-				return;
+				break;
 			}
 			
 			NSString *by = nil;
 			if ( inviter && inviter -> nickname ) by = [NSString stringWithUTF8String:inviter -> nickname];
 			if ( ! by ) {
-				return;
+				break;
 			}
 			
 			NSNotification *note = [NSNotification notificationWithName:MVChatConnectionInvitedToRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:channelName, @"room", by, @"from", nil]];		
