@@ -225,6 +225,13 @@ void irc_server_connect(SERVER_REC *server)
                 server_connect_unref(server->connrec);
 		g_free(server);
 	}
+
+	/* prevent the queue from sending too early, we have a max cut off of 120 secs */
+	/* this will reset to 1 sec after we get the 001 event */
+	GTimeVal now;
+	g_get_current_time(&now);
+	memcpy(&((IRC_SERVER_REC *)server)->wait_cmd, &now, sizeof(GTimeVal));
+	((IRC_SERVER_REC *)server)->wait_cmd.tv_sec += 120;
 }
 
 /* Returns TRUE if `command' is sent to `target' */
@@ -531,6 +538,12 @@ static void event_connected(IRC_SERVER_REC *server, const char *data, const char
 		/* wait a second and then send the user mode */
 		g_timeout_add(1000, (GSourceFunc) sig_set_user_mode, server);
 	}
+
+	/* let the queue send in 1 second now that we are identified */
+	GTimeVal now;
+	g_get_current_time(&now);
+	memcpy(&server->wait_cmd, &now, sizeof(GTimeVal));
+	server->wait_cmd.tv_sec += 1;
 
 	signal_emit("event connected", 1, server);
 	g_free(params);
