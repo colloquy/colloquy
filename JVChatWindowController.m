@@ -443,9 +443,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
-	if( item ) {
-		return [item numberOfChildren];
-	} else return [_views count];
+	if( item ) return [item numberOfChildren];
+	else return [_views count];
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView isItemExpandable:(id) item {
@@ -593,9 +592,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[_activeViewController autorelease];
 		_activeViewController = [item retain];
 
-		[[self window] setContentView:[item view]];
-		[[self window] setToolbar:[item toolbar]];
-		[[self window] makeFirstResponder:[[item view] nextKeyView]];
+		[[self window] setContentView:[_activeViewController view]];
+		[[self window] setToolbar:[_activeViewController toolbar]];
+		[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
 
 		if( [lastActive respondsToSelector:@selector( didUnselect )] )
 			[(NSObject *)lastActive didUnselect];
