@@ -39,6 +39,8 @@ double jRandom() {
 - (void) dealloc {
 	[_nick release];
 	_nick = nil;
+	
+	[super dealloc];
 }
 
 #pragma mark Accessors

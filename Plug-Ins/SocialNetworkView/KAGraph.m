@@ -28,6 +28,22 @@
 	return self;
 }
 
+- (void) dealloc {
+	[_label release];
+	[_nodes release];
+	[_edges release];
+	[_allSeenNodes release];
+	[_config release];
+	
+	_label = nil;
+	_nodes = nil;
+	_edges = nil;
+	_allSeenNodes = nil;
+	_config = nil;
+	
+	[super dealloc];
+}
+
 #pragma mark -
 
 - (KANode *) getNode:(KANode *) inNode {

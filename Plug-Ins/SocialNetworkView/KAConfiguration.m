@@ -95,6 +95,8 @@
 - (void) dealloc {
 	[properties release];
 	properties = nil;
+	
+	[super dealloc];
 }
 
 - (void) saveToFile:(NSString *) inPath {

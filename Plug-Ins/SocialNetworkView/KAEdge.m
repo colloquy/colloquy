@@ -32,6 +32,8 @@
 	
 	[_endNode release];
 	_endNode = nil;
+	
+	[super dealloc];
 }
 
 #pragma mark Accessors
