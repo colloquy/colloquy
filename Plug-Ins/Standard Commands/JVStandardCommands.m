@@ -23,8 +23,10 @@
 
 @implementation JVStandardCommands
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	self = [super init];
-	_manager = manager;
+	if( ( self = [super init] ) ) {
+		_manager = manager;
+	}
+
 	return self;
 }
 
@@ -475,12 +477,26 @@
 }
 
 - (BOOL) handleJoinWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
-	[connection sendRawMessage:[NSString stringWithFormat:@"JOIN %@", arguments]];
+	NSArray *channels = [arguments componentsSeparatedByString:@","];
+	NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"&#+!"];
+	NSEnumerator *chanEnum = [channels objectEnumerator];
+	NSString *channel = nil;
+	while( ( channel = [chanEnum nextObject] ) ) {
+		channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		[connection sendRawMessage:[NSString stringWithFormat:@"JOIN %@", ( [chanSet characterIsMember:[channel characterAtIndex:0]] ? channel : [@"#" stringByAppendingString:channel] )]];
+	}
 	return YES;
 }
 
 - (BOOL) handlePartWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
-	[connection sendRawMessage:[NSString stringWithFormat:@"PART %@", arguments]];
+	NSArray *channels = [arguments componentsSeparatedByString:@","];
+	NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"&#+!"];
+	NSEnumerator *chanEnum = [channels objectEnumerator];
+	NSString *channel = nil;
+	while( ( channel = [chanEnum nextObject] ) ) {
+		channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		[connection sendRawMessage:[NSString stringWithFormat:@"PART %@", ( [chanSet characterIsMember:[channel characterAtIndex:0]] ? channel : [@"#" stringByAppendingString:channel] )]];
+	}
 	return YES;
 }
 
@@ -540,19 +556,16 @@
 }
 
 - (BOOL) handleIgnoreWithArguments:(NSString *) args inView:(id <JVChatViewController>) view {
-	// /ignore crashes too much, disabled until fixed.
-	return NO;
-
-	// USAGE: /ignore -[e|m|n] nickname message #rooms...
+	// USAGE: /ignore -[e|m|n] nickname "message" #rooms...
 	// e activates regex matching, m is primarily for when there is no nickname to affix this to
 	// m is to specify a message
 	// n is to specify a nickname
 
 	// EXAMPLES: 
 	// /ignore Loser23094 - ignore Loser23094 in the current room
-	// /ignore -em "is listening *" - ignore the message expression "is listening *" from everyone
-	// /ignore -emn eevyl* "is listening *" #adium #colloquy #here
-	// /ignore -en bunny* ##ALL
+	// /ignore -em "is listening .*" - ignore the message expression "is listening *" from everyone
+	// /ignore -emn eevyl* "is listening .*" #adium #colloquy #here
+	// /ignore -en bunny.* ##ALL
 
 	NSArray *argsArray = [args componentsSeparatedByString:@" "];
 	NSString *memberString = nil;
@@ -561,6 +574,7 @@
 	BOOL regex = NO;
 	BOOL member = YES;
 	BOOL message = NO;
+	int offset = 0;
 
 	if( [args hasPrefix:@"-"] ) { // parse commands/flags
 		if( [[argsArray objectAtIndex:0] rangeOfString:@"e"].location != NSNotFound ) regex = YES;
@@ -571,25 +585,28 @@
 
 		if( [[argsArray objectAtIndex:0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
 
-		args = [args substringFromIndex:NSMaxRange( [args rangeOfString:[argsArray objectAtIndex:0]] ) + 1];
-		argsArray = [args componentsSeparatedByString:@" "];
+		if( [argsArray count] < ( 1 + ( message ? 1 : 0 ) + ( member ? 1 : 0 ) ) ) return NO;
+		// wrong number of arguments
+
+		offset++; // lookup next arg.
 	}
 
 	if( member ) {
-		memberString = [argsArray objectAtIndex:0];
-		args = [args substringFromIndex:NSMaxRange( [args rangeOfString:[argsArray objectAtIndex:0]] ) + 1];
-		argsArray = [args componentsSeparatedByString:@" "];
+		memberString = [argsArray objectAtIndex:offset];
+		offset++;
 	}
 
-	if( message )
+	if( message ) {
 		messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location + 1, [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ( [args rangeOfString:@"\""].location + 1 ) )];
+		offset += [[messageString componentsSeparatedByString:@" "] count];
+	}
 
 	if( [args rangeOfString:@"#"].location != NSNotFound )
-		rooms = [[args substringFromIndex:NSMaxRange( [args rangeOfString:@"#"] ) + 1] componentsSeparatedByString:@" "];
+		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 
 	if( ! rooms && [view isMemberOfClass:NSClassFromString( @"JVChatRoom" )] ) rooms = [NSArray arrayWithObject:[(JVChatRoom *)view target]];
 
-	[[_manager chatController] addIgnore:memberString withKey:( messageString ? messageString : memberString ) inRooms:rooms usesRegex:regex isMember:member];
+	[[_manager chatController] addIgnore:( memberString ? memberString : messageString ) withKey:( messageString ? messageString : memberString ) inRooms:rooms usesRegex:regex isMember:member];
 
 	return YES;
 }

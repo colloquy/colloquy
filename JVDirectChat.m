@@ -1431,9 +1431,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 		 
 		xmlSetProp( child, "classification", [self _classificationForNickname:user] );
-		if ( [[JVChatController defaultManager] shouldIgnoreMessage:[NSAttributedString attributedStringWithHTMLFragment:[NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", messageString] baseURL:NULL] inRoom:_target] ) {
-			xmlSetProp( child, "ignore", "yes" );
-		}
 	}
 
 	xmlXPathFreeObject( result );
@@ -1447,6 +1444,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	xmlSetProp( child, "received", [[[NSDate date] description] UTF8String] );
 	if( action ) xmlSetProp( child, "action", "yes" );
 	if( highlight ) xmlSetProp( child, "highlight", "yes" );
+	if ( [[JVChatController defaultManager] ignoreUser:user withMessage:[NSAttributedString attributedStringWithHTMLFragment:[NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, sans-serif\">%@</span>", messageString] baseURL:NULL] inRoom:_target withConnection:[self connection]] )
+		 xmlSetProp( child, "ignore", "yes" );
 	xmlAddChild( root, child );
 
     [self writeToLog:root withDoc:doc initializing:NO continuation:continuation];

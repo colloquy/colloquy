@@ -11,6 +11,7 @@
 @class JVChatTranscript;
 @class JVChatConsole;
 @class NSAttributedString;
+@class KAInternalIgnoreRule;
 
 @protocol JVChatViewController;
 
@@ -42,7 +43,7 @@
 - (IBAction) detachView:(id) sender;
 
 - (void) addIgnore:(NSString *)inIgnoreName withKey:(NSString *)ignoreKeyExpression inRooms:(NSArray *) rooms usesRegex:(BOOL) regex isMember:(BOOL) member;
-- (BOOL) shouldIgnoreUser:(NSString *) user inRoom:(NSString *) room;
-- (BOOL) shouldIgnoreMessage:(NSAttributedString *) message inRoom:(NSString *) room;
-- (BOOL) shouldIgnoreMessage:(NSAttributedString *) message fromUser:(NSString *)user inRoom:(NSString *) room;
+- (KAInternalIgnoreRule *) shouldIgnoreUser:(NSString *) user inRoom:(NSString *) room;
+- (KAInternalIgnoreRule *) shouldIgnoreMessage:(NSAttributedString *) message inRoom:(NSString *) room;
+- (BOOL) ignoreUser:(NSString *) name withMessage:(NSAttributedString *) message inRoom:(NSString *) room withConnection:(MVChatConnection *) connection;
 @end

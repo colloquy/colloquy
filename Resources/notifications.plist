@@ -136,5 +136,21 @@
 		<key>title</key>
 		<string>Buddy Went Offline</string>
 	</dict>
+	<dict>
+		<key>seperator</key>
+		<true />
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVMessageIgnored</string>
+		<key>title</key>
+		<string>Message Ignored</string>
+	</dict>
+		<dict>
+		<key>identifier</key>
+		<string>JVUserMessageIgnored</string>
+		<key>title</key>
+		<string>User Message Ignored</string>
+	</dict>
 </array>
 </plist>
