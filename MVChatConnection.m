@@ -1068,7 +1068,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 			[NSThread detachNewThreadSelector:@selector( _glibRunloop: ) toTarget:[self class] withObject:nil];
 		}
 
-		CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
+		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
 		SERVER_CONNECT_REC *conn = server_create_conn( proto -> id, "irc.javelin.cc", 6667, [[NSString stringWithFormat:@"%x", self] UTF8String], NULL, [NSUserName() UTF8String] );
 		server_connect_ref( conn );
 
@@ -1128,21 +1128,29 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) connect {
-	if( [self status] != MVChatConnectionDisconnectedStatus
+	if( [self _irssiConnection] && [self status] != MVChatConnectionDisconnectedStatus
 		&& [self status] != MVChatConnectionServerDisconnectedStatus ) return;
 
 	[self _willConnect];
 	[self _removePendingIrssiReconnections];
 
-	if( ! [self _irssiConnection] -> connect_time ) {
-		CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
-		proto -> server_connect( [self _irssiConnection] );
-	} else {
-		CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
-		SERVER_REC *newConnection = proto -> server_init_connect( [self _irssiConnection] -> connrec );
-		proto -> server_connect( newConnection );
-		[self _setIrssiConnection:newConnection];
+	CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( [self _irssiConnection] -> chat_type );
+
+	if( ! proto ) {
+		[self _didNotConnect];
+		return;
 	}
+
+	if( [self _irssiConnection] -> connect_time ) {
+		SERVER_REC *newConnection = proto -> server_init_connect( [self _irssiConnection] -> connrec );
+		[self _setIrssiConnection:newConnection];
+		if( ! newConnection ) {
+			[self _didNotConnect];
+			return;
+		}
+	}
+
+	proto -> server_connect( [self _irssiConnection] );
 }
 
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname {
@@ -1154,12 +1162,12 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) disconnect {
-	if( [self status] != MVChatConnectionConnectingStatus
+	if( [self _irssiConnection] && [self status] != MVChatConnectionConnectingStatus
 		&& [self status] != MVChatConnectionConnectedStatus ) return;
 
 	[self _willDisconnect];
+	[self sendRawMessage:@"QUIT :Quitting" immediately:YES];
 
-//  signal_emit( "server quit", 2, [self _irssiConnection], "Quiting" );
 	server_disconnect( [self _irssiConnection] );
 }
 
@@ -1348,17 +1356,21 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) sendRawMessage:(NSString *) raw {
+	[self sendRawMessage:raw immediately:NO];
+}
+
+- (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
 	if( ! raw ) return;
 	if( ! [self _irssiConnection] ) return;
-	irc_send_cmd_full( (IRC_SERVER_REC *) [self _irssiConnection], [raw UTF8String], FALSE, FALSE, FALSE);
+	irc_send_cmd_full( (IRC_SERVER_REC *) [self _irssiConnection], [raw UTF8String], now, FALSE, FALSE);
 }
 
 - (void) sendRawMessageWithFormat:(NSString *) format, ... {
 	if( ! format ) return;
-	va_list ap;		
+	va_list ap;
 	va_start( ap, format );
 	NSString *command = [[[NSString alloc] initWithFormat:format arguments:ap] autorelease];
-	[self sendRawMessage:command];
+	[self sendRawMessage:command immediately:NO];
 	va_end( ap );
 }
 
