@@ -13,6 +13,12 @@ typedef enum {
 	MVChatConnectionSuspendedStatus = 0x3
 } MVChatConnectionStatus;
 
+typedef enum {
+	MVChatConnectionNoProxy = 0x0,
+	MVChatConnectionHTTPSProxy = 0x1,
+	MVChatConnectionSOCKSProxy = 0x2
+} MVChatConnectionProxy;
+
 extern NSString *MVChatConnectionWillConnectNotification;
 extern NSString *MVChatConnectionDidConnectNotification;
 extern NSString *MVChatConnectionDidNotConnectNotification;
@@ -72,6 +78,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSString *_server;
 	unsigned short _port;
 	MVChatConnectionStatus _status;
+	MVChatConnectionProxy _proxy;
 	void *_chatConnection;
 	NSTimer *_firetalkSelectTimer;
 	NSMutableArray *_joinList;
@@ -105,6 +112,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) setServerPort:(unsigned short) port;
 - (unsigned short) serverPort;
+
+- (void) setProxyType:(MVChatConnectionProxy) type;
+- (MVChatConnectionProxy) proxyType;
 
 - (NSDictionary *) floodControlIntervals;
 - (void) setFloodControlIntervals:(NSDictionary *) intervals;

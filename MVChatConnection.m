@@ -578,8 +578,6 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 	_firetalkSelectTimer = [[NSTimer scheduledTimerWithTimeInterval:.100 target:self selector:@selector( _executeRunLoopCheck: ) userInfo:nil repeats:YES] retain];
 
-	firetalk_set_proxy_type( _chatConnection, FX_NONE );
-
 	return self;
 }
 
@@ -740,6 +738,17 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (unsigned short) serverPort {
 	return _port;
+}
+
+#pragma mark -
+
+- (void) setProxyType:(MVChatConnectionProxy) type {
+	firetalk_set_proxy_type( _chatConnection, (enum firetalk_proxy) type );
+	_proxy = type;
+}
+
+- (MVChatConnectionProxy) proxyType {
+	return _proxy;
 }
 
 #pragma mark -
