@@ -20,8 +20,8 @@ static MVKeyChain *MVDefaultKeyChain = nil;
 - (void) setGenericPassword:(NSString *) password forService:(NSString *) service account:(NSString *) account {
 	OSStatus ret = 0;
 
-	NSParameterAssert( [service length] != 0 );
-	NSParameterAssert( [account length] != 0 );
+	NSParameterAssert( service );
+	NSParameterAssert( account );
 
 	if( ! [password length] ) {
 		[self removeGenericPasswordForService:service account:account];
@@ -47,8 +47,8 @@ static MVKeyChain *MVDefaultKeyChain = nil;
 	OSStatus ret = 0;
 	SecKeychainItemRef itemref = NULL;
 
-	NSParameterAssert( [service length] != 0 );
-	NSParameterAssert( [account length] != 0 );
+	NSParameterAssert( service );
+	NSParameterAssert( account );
 
 	ret = SecKeychainFindGenericPassword( NULL, MVStringByteLength( service ), [service UTF8String], MVStringByteLength( account ), [account UTF8String], NULL, NULL, &itemref );
 	SecKeychainItemDelete( itemref );
@@ -57,8 +57,7 @@ static MVKeyChain *MVDefaultKeyChain = nil;
 - (void) setInternetPassword:(NSString *) password forServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType {
 	OSStatus ret = 0;
 
-	NSParameterAssert( [server length] != 0 );
-	NSParameterAssert( [account length] != 0 );
+	NSParameterAssert( server || account );
 
 	if( ! [password length] ) {
 		[self removeInternetPasswordForServer:server securityDomain:domain account:account path:nil port:port protocol:protocol authenticationType:authType];
@@ -84,8 +83,7 @@ static MVKeyChain *MVDefaultKeyChain = nil;
 	OSStatus ret = 0;
 	SecKeychainItemRef itemref = NULL;
 
-	NSParameterAssert( [server length] != 0 );
-	NSParameterAssert( [account length] != 0 );
+	NSParameterAssert( server || account );
 
 	ret = SecKeychainFindInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, protocol, authType, NULL, NULL, &itemref );
 	SecKeychainItemDelete( itemref );
