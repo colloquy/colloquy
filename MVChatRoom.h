@@ -118,6 +118,8 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 - (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier;
 - (BOOL) hasUser:(MVChatUser *) user;
 
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason;
+
 - (NSSet *) bannedUsers;
 - (void) addBanForUser:(MVChatUser *) user;
 - (void) removeBanForUser:(MVChatUser *) user;

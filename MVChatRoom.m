@@ -377,6 +377,13 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 
 #pragma mark -
 
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
+	NSParameterAssert( user != nil );
+// subclass this method, call super first	
+}
+
+#pragma mark -
+
 - (NSSet *) bannedUsers {
 	@synchronized( _bannedUsers ) {
 		return [NSSet setWithSet:_bannedUsers];
