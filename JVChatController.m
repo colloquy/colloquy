@@ -532,7 +532,8 @@ static JVChatController *sharedInstance = nil;
 	if( ! windowController ) windowController = [self newChatWindowController];
 
 	[windowController addChatViewController:controller];
-	[windowController showChatViewController:controller];
+	if( [[windowController allChatViewControllers] count] == 1 || ! [controller isMemberOfClass:[JVDirectChat class]] )
+		[windowController showChatViewController:controller];
 }
 
 - (BOOL) _handlePrivateMessageOnConnection:(MVChatConnection *) connection withInfo:(NSDictionary *) info {
