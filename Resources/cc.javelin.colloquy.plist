@@ -45,7 +45,7 @@
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.bland</key>
 	<string></string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.bubbles</key>
-	<string>cc.javelin.colloquy.emoticons.standard</string>
+	<string>cc.javelin.colloquy.emoticons.ichat</string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.novel</key>
 	<string></string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.standard</key>
