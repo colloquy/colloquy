@@ -188,7 +188,7 @@
 		[_sortedMembers addObject:member];
 		[_sortedMembers sortUsingSelector:@selector( caseInsensitiveCompare: )];
 
-		[_windowController reloadChatView:self];
+		[_windowController reloadListItem:self andChildren:YES];
 
 		if( ! previous ) {
 			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room.", "a user has join a chat room status message" ), member] withName:@"memberJoined" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", nil]];
@@ -202,7 +202,7 @@
 	NSParameterAssert( info != nil );
 	if( [_members objectForKey:member] ) {
 		[[_members objectForKey:member] addEntriesFromDictionary:info];
-		[_windowController reloadChatView:self];		
+//		[_windowController reloadListItem:self andChildren:YES];		
 	}
 }
 
@@ -212,7 +212,7 @@
 		NSString *rstring = nil;
 		[_members removeObjectForKey:member];
 		[_sortedMembers removeObject:member];
-		[_windowController reloadChatView:self];		
+		[_windowController reloadListItem:self andChildren:YES];		
 
 		if( reason && ! [reason isMemberOfClass:[NSNull class]] ) {
 			rstring = [[[NSString alloc] initWithData:reason encoding:_encoding] autorelease];
@@ -237,7 +237,7 @@
 
 		[(JVChatRoomMember *)[[_members objectForKey:nick] objectForKey:@"listItem"] setMemberName:nick];
 
-		[_windowController reloadChatView:self];		
+		[_windowController reloadListItem:[[_members objectForKey:nick] objectForKey:@"listItem"] andChildren:NO];		
 
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as %@.", "user has changed nicknames" ), member, nick] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"old", nick, @"new", nil]];
 	}
@@ -271,7 +271,7 @@
 
 		[(JVChatRoomMember *)[[_members objectForKey:member] objectForKey:@"listItem"] setOperator:YES];
 
-		[_windowController reloadChatView:self];
+		[_windowController reloadListItem:[[_members objectForKey:member] objectForKey:@"listItem"] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
 			NSString *message = nil;
@@ -298,7 +298,7 @@
 
 		[(JVChatRoomMember *)[[_members objectForKey:member] objectForKey:@"listItem"] setOperator:NO];
 
-		[_windowController reloadChatView:self];
+		[_windowController reloadListItem:[[_members objectForKey:member] objectForKey:@"listItem"] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
 			NSString *message = nil;
@@ -325,7 +325,7 @@
 
 		[(JVChatRoomMember *)[[_members objectForKey:member] objectForKey:@"listItem"] setVoice:YES];
 
-		[_windowController reloadChatView:self];
+		[_windowController reloadListItem:[[_members objectForKey:member] objectForKey:@"listItem"] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
 			NSString *message = nil;
@@ -352,7 +352,7 @@
 
 		[(JVChatRoomMember *)[[_members objectForKey:member] objectForKey:@"listItem"] setVoice:NO];
 
-		[_windowController reloadChatView:self];
+		[_windowController reloadListItem:[[_members objectForKey:member] objectForKey:@"listItem"] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
 			NSString *message = nil;
@@ -390,7 +390,7 @@
 	[_members removeObjectForKey:member];
 	[_sortedMembers removeObject:member];
 
-	[_windowController reloadChatView:self];
+	[_windowController reloadListItem:self andChildren:YES];
 
 //	MVChatPlaySoundForAction( @"MVChatMemberKickedAction" );
 }
@@ -408,7 +408,7 @@
 	[_members removeObjectForKey:[[self connection] nickname]];
 	[_sortedMembers removeObject:[[self connection] nickname]];
 
-	[_windowController reloadChatView:self];
+	[_windowController reloadListItem:self andChildren:YES];
 
 //	MVChatPlaySoundForAction( @"MVChatMemberKickedAction" );
 	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You were kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You were kicked from the chat room by %@. You are no longer part of this chat and can't send anymore messages.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, by ) withName:nil];
@@ -555,6 +555,7 @@
 
 @implementation JVChatRoom (JVChatRoomPrivate)
 - (void) _didConnect:(NSNotification *) notification {
+	_invalidateMembers = YES;
 	[[self connection] joinChatForRoom:_target];
 	[super _didConnect:notification];
 }
