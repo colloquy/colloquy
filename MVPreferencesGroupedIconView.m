@@ -139,7 +139,7 @@ const unsigned int extraRowHeight = 69;
 - (void) _generateGroupViewAtIndex:(unsigned int) index {
 	MVPreferencesIconView *multiIconView = nil;
 	NSString *identifier = [[preferencePaneGroups objectAtIndex:index] objectForKey:@"identifier"];
-	NSString *name = NSLocalizedStringFromTable( identifier, @"MVPreferencePaneGroups", nil );
+	NSString *name = [[NSBundle mainBundle] localizedStringForKey:identifier value:@"" table:@"MVPreferencePaneGroups"];
 	NSDictionary *attributesDictionary;
 	unsigned nameHeight = 0;
 
