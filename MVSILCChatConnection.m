@@ -992,6 +992,8 @@ static SilcClientOperations silcClientOps = {
 #pragma mark -
 
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
+	// do silc_client_get_clients_local first, then if no local matches
+	// do a silc_client_get_clients_whois on another thread and wait for the callback to return
 	return nil;
 }
 
@@ -1008,7 +1010,9 @@ static SilcClientOperations silcClientOps = {
 
 		SilcClientID *clientID = silc_id_str2id( [(NSData *)identifier bytes], [(NSData *)identifier length], SILC_ID_CLIENT );
 		if( clientID ) {
+			[[self _silcClientLock] lock];
 			SilcClientEntry client = silc_client_get_client_by_id( [self _silcClient], [self _silcConn], clientID );
+			[[self _silcClientLock] unlock];
 			if( client ) {
 				user = [[[MVSILCChatUser allocWithZone:[self zone]] initWithClientEntry:client andConnection:self] autorelease];
 				[_knownUsers setObject:user forKey:identifier];
@@ -1030,7 +1034,7 @@ static SilcClientOperations silcClientOps = {
 #pragma mark -
 
 - (void) fetchChatRoomList {
-	if( ! _cachedDate || [_cachedDate timeIntervalSinceNow] < -900. ) {
+	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 900. ) {
 		[self sendRawMessage:@"LIST"];
 		[_cachedDate autorelease];
 		_cachedDate = [[NSDate date] retain];

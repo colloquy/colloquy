@@ -6,11 +6,16 @@
 - (id) initWithChannelEntry:(SilcChannelEntry) channelEntry andConnection:(MVSILCChatConnection *) connection {
 	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
+
+		[[connection _silcClientLock] lock];
+
 		_name = [[NSString allocWithZone:[self zone]] initWithUTF8String:channelEntry -> channel_name];
 
 		unsigned char *identifier = silc_id_id2str( channelEntry -> id, SILC_ID_CHANNEL );
 		unsigned len = silc_id_get_len( channelEntry -> id, SILC_ID_CHANNEL );
 		_uniqueIdentifier = [[NSData allocWithZone:[self zone]] initWithBytes:identifier length:len];
+
+		[[connection _silcClientLock] unlock];
 	}
 
 	return self;
@@ -42,7 +47,6 @@
 
 - (void) setTopic:(NSAttributedString *) topic {
 	NSParameterAssert( topic != nil );
-
 	const char *msg = [[[self connection] class] _flattenedSILCStringForMessage:topic];
 	[[self connection] sendRawMessageWithFormat:@"TOPIC %@ %s", [self name], msg];
 }
