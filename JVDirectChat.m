@@ -236,7 +236,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[send setUsesSystemCompleteOnTab:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
 	[send reset:nil];
 
-	[(NSSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
+//	[(NSSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
 
 	[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
 }

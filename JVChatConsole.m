@@ -45,7 +45,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[display setUsesRuler:NO];
 	[display setImportsGraphics:NO];
 
-	[(NSSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVConsoleSplitViewPosition"];
+//	[(NSSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVConsoleSplitViewPosition"];
 }
 
 - (void) dealloc {
