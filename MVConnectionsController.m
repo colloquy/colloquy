@@ -34,6 +34,8 @@ static NSMenu *favoritesMenu = nil;
 - (void) _loadBookmarkList;
 - (void) _validateToolbar;
 - (void) _delete:(id) sender;
+- (void) _registerNotificationsForConnection:(MVChatConnection *) connection;
+- (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection;
 @end
 
 #pragma mark -
@@ -115,21 +117,6 @@ static NSMenu *favoritesMenu = nil;
 		_publicKeyRequestQueue = [[NSMutableSet set] retain];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuitting: ) name:NSApplicationWillTerminateNotification object:nil];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionWillConnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidConnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidNotConnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidDisconnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionNicknameAcceptedNotification object:nil];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _willConnect: ) name:MVChatConnectionWillConnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:nil];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestCertificatePassword: ) name:MVChatConnectionNeedCertificatePasswordNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPublicKeyVerification: ) name:MVChatConnectionNeedPublicKeyVerificationNotification object:nil];
 
 		[self _loadBookmarkList];
 	}
@@ -542,6 +529,17 @@ static NSMenu *favoritesMenu = nil;
 	return [[ret retain] autorelease];
 }
 
+- (BOOL) managesConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) )
+		if( [[info objectForKey:@"connection"] isEqual:connection] )
+			return YES;
+
+	return NO;
+}
+
 #pragma mark -
 
 - (void) addConnection:(MVChatConnection *) connection {
@@ -562,6 +560,8 @@ static NSMenu *favoritesMenu = nil;
 	[self _saveBookmarkList];
 
 	[connections noteNumberOfRowsChanged];
+
+	[self _registerNotificationsForConnection:connection];
 }
 
 - (void) insertConnection:(MVChatConnection *) connection atIndex:(unsigned) index {
@@ -573,11 +573,30 @@ static NSMenu *favoritesMenu = nil;
 	[self _saveBookmarkList];
 
 	[connections noteNumberOfRowsChanged];
+
+	[self _registerNotificationsForConnection:connection];
+}
+
+- (void) removeConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSDictionary *info = nil;
+	unsigned index = 0;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [[info objectForKey:@"connection"] isEqual:connection] )
+			break;
+		index++;
+	}
+
+	[self removeConnectionAtIndex:index];
 }
 
 - (void) removeConnectionAtIndex:(unsigned) index {
-	MVChatConnection *connection = [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
-    [connection disconnect];
+	MVChatConnection *connection = [[[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain] autorelease];
+    if( ! connection ) return;
+
+	[connection disconnect];
+	[self _deregisterNotificationsForConnection:connection];
 
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
@@ -593,8 +612,9 @@ static NSMenu *favoritesMenu = nil;
 	[info setObject:[NSDate date] forKey:@"created"];
 	[info setObject:connection forKey:@"connection"];
 
-	MVChatConnection *oldConnection = [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
+	MVChatConnection *oldConnection = [[[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain] autorelease];
     [oldConnection disconnect];
+	[self _deregisterNotificationsForConnection:connection];
 
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[oldConnection server] securityDomain:[oldConnection server] account:[oldConnection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[oldConnection server] securityDomain:[oldConnection server] account:nil path:nil port:[oldConnection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
@@ -1253,6 +1273,27 @@ static NSMenu *favoritesMenu = nil;
 	if( ! [self isWindowLoaded] ) [self window];
 }
 
+- (void) _registerNotificationsForConnection:(MVChatConnection *) connection {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionWillConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidNotConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidDisconnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionNicknameAcceptedNotification object:nil];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _willConnect: ) name:MVChatConnectionWillConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:nil];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestCertificatePassword: ) name:MVChatConnectionNeedCertificatePasswordNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPublicKeyVerification: ) name:MVChatConnectionNeedPublicKeyVerificationNotification object:nil];	
+}
+
+- (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:connection];
+}
+
 - (void) _refresh:(NSNotification *) notification {
 	[self _validateToolbar];
 	[connections reloadData];
@@ -1387,6 +1428,8 @@ static NSMenu *favoritesMenu = nil;
 	NSMutableArray *bookmarks = [NSMutableArray array];
 	NSMutableDictionary *info = nil;
 
+	[self _registerNotificationsForConnection:nil]; // deregister all connections
+
 	while( ( info = [enumerator nextObject] ) ) {
 		info = [NSMutableDictionary dictionaryWithDictionary:info];
 
@@ -1437,6 +1480,8 @@ static NSMenu *favoritesMenu = nil;
 		}
 
 		[info setObject:connection forKey:@"connection"];
+		[self _registerNotificationsForConnection:connection];
+
 		[bookmarks addObject:info];
 	}
 
@@ -1554,12 +1599,12 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _requestPublicKeyVerification:(NSNotification *) notification {
 	NSDictionary *dict = [notification object];
-	
+
 	if ( [publicKeyVerification isVisible] ) {
 		[_publicKeyRequestQueue addObject:notification];
 		return;
 	}
-	
+
 	switch ( (MVChatConnectionPublicKeyType) [[dict objectForKey:@"publicKeyType"] unsignedIntValue] ) {
 		case MVChatConnectionClientPublicKeyType:
 			[publicKeyNameDescription setObjectValue:@"User name:"];
@@ -1570,15 +1615,15 @@ static NSMenu *favoritesMenu = nil;
 			[publicKeyDescription setObjectValue:@"Please verify the servers public key."];
 			break;
 	}
-	
+
 	[publicKeyName setObjectValue:[dict objectForKey:@"name"]];
 	[publicKeyFingerprint setObjectValue:[dict objectForKey:@"fingerprint"]];
 	[publicKeyBabbleprint setObjectValue:[dict objectForKey:@"babbleprint"]];
 	[publicKeyAlwaysAccept setState:NSOffState];
-	
+
 	[_publicKeyDictionary autorelease];
 	_publicKeyDictionary = [dict retain];
-	
+
 	[publicKeyVerification center];
 	[publicKeyVerification orderFront:nil];
 }
@@ -1593,41 +1638,20 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _willConnect:(NSNotification *) notification {
-	MVChatConnection *connection = nil;
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSDictionary *info = nil;
-	
-	while( ( info = [enumerator nextObject] ) ) {
-		if( [[info objectForKey:@"connection"] isEqual:[notification object]] ) {
-			connection = [notification object];
-			break;
-		}
-	}
-
-	if( ! connection ) return;
-
+	MVChatConnection *connection = [notification object];
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 		[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
 }
 
 - (void) _didConnect:(NSNotification *) notification {
-	MVChatConnection *connection = nil;
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSDictionary *info = nil;
+	MVChatConnection *connection = [notification object];
+	NSArray *rooms = [self joinRoomsForConnection:connection];
+	NSString *strcommands = [self connectCommandsForConnection:connection];
 
-	while( ( info = [enumerator nextObject] ) ) {
-		if( [[info objectForKey:@"connection"] isEqual:[notification object]] ) {
-			connection = [notification object];
-			break;
-		}
-	}
+	if( [rooms count] && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVPreventAutoJoinRooms"] )
+		[connection joinChatRoomsNamed:rooms];
 
-	if( ! connection ) return;
-
-	if( [(NSArray *)[info objectForKey:@"rooms"] count] && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVPreventAutoJoinRooms"] )
-		[connection joinChatRoomsNamed:[info objectForKey:@"rooms"]];
-
-	NSEnumerator *commands = [[[info objectForKey:@"commands"] componentsSeparatedByString:@"\n"] objectEnumerator];
+	NSEnumerator *commands = [[strcommands componentsSeparatedByString:@"\n"] objectEnumerator];
 	NSMutableString *command = nil;
 
 	while( ( command = [commands nextObject] ) ) {
@@ -1673,10 +1697,11 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
-	if( [(MVChatConnection *)[notification object] status] == MVChatConnectionServerDisconnectedStatus ) {
+	MVChatConnection *connection = [notification object];
+	if( [connection status] == MVChatConnectionServerDisconnectedStatus ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:NSLocalizedString( @"Disconnected", "disconnected bubble title" ) forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You're were disconnected from %@.", "you were disconnected bubble text" ), [(MVChatConnection *)[notification object] server]] forKey:@"description"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You're were disconnected from %@.", "you were disconnected bubble text" ), [connection server]] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"disconnect"] forKey:@"image"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatDisconnected" withContextInfo:context];
 	}

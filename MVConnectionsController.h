@@ -84,6 +84,7 @@
 - (NSArray *) connectedConnections;
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;
 - (NSArray *) connectionsForServerAddress:(NSString *) address;
+- (BOOL) managesConnection:(MVChatConnection *) connection;
 
 - (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection;
 - (BOOL) autoConnectForConnection:(MVChatConnection *) connection;
@@ -100,6 +101,7 @@
 - (void) addConnection:(MVChatConnection *) connection;
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep;
 - (void) insertConnection:(MVChatConnection *) connection atIndex:(unsigned) index;
+- (void) removeConnection:(MVChatConnection *) connection;
 - (void) removeConnectionAtIndex:(unsigned) index;
 - (void) replaceConnectionAtIndex:(unsigned) index withConnection:(MVChatConnection *) connection;
 

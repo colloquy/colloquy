@@ -279,7 +279,9 @@ static JVChatController *sharedInstance = nil;
 
 @implementation JVChatController (JVChatControllerPrivate)
 - (void) _joinedRoom:(NSNotification *) notification {
-	JVChatRoomPanel *room = [self chatViewControllerForRoom:[notification object] ifExists:NO];
+	MVChatRoom *rm = [notification object];
+	if( ! [[MVConnectionsController defaultManager] managesConnection:[rm connection]] ) return;
+	JVChatRoomPanel *room = [self chatViewControllerForRoom:rm ifExists:NO];
 	[room joined];
 }
 
@@ -287,6 +289,8 @@ static JVChatController *sharedInstance = nil;
 	NSString *room = [[notification userInfo] objectForKey:@"room"];
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatConnection *connection = [notification object];
+
+	if( ! [[MVConnectionsController defaultManager] managesConnection:connection] ) return;
 
 	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, [user nickname]];
@@ -304,6 +308,8 @@ static JVChatController *sharedInstance = nil;
 	BOOL hideFromUser = NO;
 	MVChatUser *user = [notification object];
 	NSData *message = [[notification userInfo] objectForKey:@"message"];
+
+	if( ! [[MVConnectionsController defaultManager] managesConnection:[user connection]] ) return;
 
 	if( [[[notification userInfo] objectForKey:@"notice"] boolValue] ) {
 		MVChatConnection *connection = [user connection];
