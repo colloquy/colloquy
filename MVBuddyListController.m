@@ -19,7 +19,7 @@ static MVBuddyListController *sharedInstance = nil;
 @class ABScrollView;
 
 @interface ABPeoplePickerController : NSObject {
-@public
+	@public
     NSView *_peoplePicker;
     ABUIController *_uiController;
     NSWindow *_window;
@@ -91,11 +91,11 @@ static MVBuddyListController *sharedInstance = nil;
 		
 		[self _loadBuddyList];
 
-		[self setShowIcons:YES];
-		[self setShowFullNames:YES];
-		[self setShowNicknameAndServer:YES];
-		[self setShowOfflineBuddies:YES];
-		[self setSortOrder:MVAvailabilitySortOrder];
+		[self setShowIcons:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowIcons"]];
+		[self setShowFullNames:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowFullNames"]];
+		[self setShowNicknameAndServer:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowNicknameAndServer"]];
+		[self setShowOfflineBuddies:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowOfflineBuddies"]];
+		[self setSortOrder:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyListSortOrder"]];
 	}
 	return self;
 }
@@ -181,6 +181,21 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (IBAction) showBuddyList:(id) sender {
 	[[self window] makeKeyAndOrderFront:nil];
+}
+
+#pragma mark -
+
+- (JVBuddy *) buddyForNickname:(NSString *) name onServer:(NSString *) address {
+	NSEnumerator *enumerator = [_buddyList objectEnumerator];
+	JVBuddy *buddy = nil;
+	NSURL *nick = nil;
+
+	while( ( buddy = [enumerator nextObject] ) ) {
+		nick = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( name ), MVURLEncodeString( address )]];
+		if( [[buddy nicknames] containsObject:nick] ) return buddy;
+	}
+
+	return nil;
 }
 
 #pragma mark -
@@ -384,6 +399,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[buddies reloadData];
 	[self _setBuddiesNeedSortAnimated];
 	[self _sortBuddiesAnimatedIfNeeded:nil];
+	[[NSUserDefaults standardUserDefaults] setBool:flag forKey:@"JVChatBuddyListShowFullNames"];
 }
 
 - (BOOL) showFullNames {
@@ -401,6 +417,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( _showIcons || _showNicknameAndServer ) [buddies setRowHeight:36.];
 	else [buddies setRowHeight:18.];
 	[buddies reloadData];
+	[[NSUserDefaults standardUserDefaults] setBool:flag forKey:@"JVChatBuddyListShowNicknameAndServer"];
 }
 
 - (BOOL) showNicknameAndServer {
@@ -418,6 +435,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( _showIcons || _showNicknameAndServer ) [buddies setRowHeight:36.];
 	else [buddies setRowHeight:18.];
 	[buddies reloadData];
+	[[NSUserDefaults standardUserDefaults] setBool:flag forKey:@"JVChatBuddyListShowIcons"];
 }
 
 - (BOOL) showIcons {
@@ -437,6 +455,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( ! _showOfflineBuddies ) [_buddyOrder removeObjectsInArray:[offlineBuddies allObjects]];
 	else [_buddyOrder addObjectsFromArray:[offlineBuddies allObjects]];
 	[self _manuallySortAndUpdate];
+	[[NSUserDefaults standardUserDefaults] setBool:flag forKey:@"JVChatBuddyListShowOfflineBuddies"];
 }
 
 - (BOOL) showOfflineBuddies {
@@ -453,6 +472,7 @@ static MVBuddyListController *sharedInstance = nil;
 	_sortOrder = order;
 	[self _setBuddiesNeedSortAnimated];
 	[self _sortBuddiesAnimatedIfNeeded:nil];
+	[[NSUserDefaults standardUserDefaults] setInteger:order forKey:@"JVChatBuddyListSortOrder"];
 }
 
 - (MVBuddyListSortOrder) sortOrder {
@@ -493,8 +513,14 @@ static MVBuddyListController *sharedInstance = nil;
 	} else if( [menuItem action] == @selector( messageSelectedBuddy: ) ) {
 		if( [buddies selectedRow] == -1 ) return NO;
 		else return YES;
+	} else if( [menuItem action] == @selector( sendFileToSelectedBuddy: ) ) {
+		if( [buddies selectedRow] == -1 ) return NO;
+		else return YES;
+	} else if( [menuItem action] == @selector( getInfo: ) ) {
+		if( [buddies selectedRow] == -1 ) return NO;
+		else return YES;
 	} else if( [menuItem action] == @selector( sortByAvailability: ) ) {
-		[menuItem setState:( _sortOrder == MVAvailabilitySortOrder ? NSOnState : NSOffState )];
+		[menuItem setState:( _sortOrder == MVAvailabilitySortOrder || ! _sortOrder ? NSOnState : NSOffState )];
 		return YES;
 	} else if( [menuItem action] == @selector( sortByFirstName: ) ) {
 		[menuItem setState:( _sortOrder == MVFirstNameSortOrder ? NSOnState : NSOffState )];
@@ -647,10 +673,19 @@ static MVBuddyListController *sharedInstance = nil;
 	[ret appendFormat:@"%@\n", [buddy compositeName]];
 	[ret appendFormat:@"%@ (%@)\n", [url user], [url host]];
 
-	if( [buddy status] == JVBuddyAwayStatus ) [ret appendString:NSLocalizedString( @"Away", "away buddy status" )];
-	else if( [buddy status] == JVBuddyIdleStatus ) [ret appendString:NSLocalizedString( @"Idle", "idle buddy status" )];
-	else if( [buddy status] == JVBuddyAvailableStatus ) [ret appendString:NSLocalizedString( @"Available", "available buddy status" )];
-	else [ret appendString:NSLocalizedString( @"Offline", "offline buddy status" )];
+	switch( [buddy status] ) {
+	case JVBuddyAwayStatus:
+		[ret appendString:NSLocalizedString( @"Away", "away buddy status" )];
+		break;
+	case JVBuddyIdleStatus:
+		[ret appendString:NSLocalizedString( @"Idle", "idle buddy status" )];
+		break;
+	case JVBuddyAvailableStatus:
+		[ret appendString:NSLocalizedString( @"Available", "available buddy status" )];
+		break;
+	default:
+		[ret appendString:NSLocalizedString( @"Offline", "offline buddy status" )];
+	}
 
 	return ret;
 }
@@ -696,25 +731,20 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (NSRect) tableView:(MVTableView *) tableView rectOfRow:(int) row defaultRect:(NSRect) defaultRect {
 	if( _animating ) {
-		// Get the rectangles of where the row originally was, and where it will end up.
 		int oldPosition = [[_oldPositions objectAtIndex:row] intValue];
 		NSRect oldR = [tableView originalRectOfRow:oldPosition];
 		NSRect newR = [tableView originalRectOfRow:row];
 
-		// t will be our fraction between 0 and 1 of how far along the row should be.
-		float t = _animationPosition; // start with linear position based on time
+		float t = _animationPosition;
 
-		// Adjust t so that the animation is asymmetrical; it will look like it's curved.
-		// If viewing the top half of the table, flip it so our rows don't go out of view.
-		float rowPos = ( (float) row / [_buddyOrder count] );	// fractional position of row in table
+		float rowPos = ( (float) row / [_buddyOrder count] );
 		float rowPosAdjusted = _viewingTop ? ( 1. - rowPos ) : rowPos;
 		float curve = 0.3;
-		float p = rowPosAdjusted * ( curve * 2. ) + 1. - curve; // 0 -> 0.8; n/2 -> 1.0; n -> 1.2
+		float p = rowPosAdjusted * ( curve * 2. ) + 1. - curve;
 
-		t = curveFunction( t, p );	// comment this out to "straighten" the sort
-		t = easeFunction( t );  // comment this out to make it linear acceleration
+		t = curveFunction( t, p );
+		t = easeFunction( t );
 
-		// Calculate a rectangle between the original and the final rectangles.
 		return NSMakeRect( NSMinX( oldR ) + ( t * ( NSMinX( newR ) - NSMinX( oldR ) ) ), NSMinY( oldR ) + ( t * ( NSMinY( newR ) - NSMinY( oldR ) ) ), NSWidth( newR ), NSHeight( newR ) );
 	} else return defaultRect;
 }

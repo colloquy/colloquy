@@ -2,11 +2,19 @@
 #import <AppKit/NSNibDeclarations.h>
 #import "JVInspectorController.h"
 
-@class ABPerson;
-@class NSWindow;
-@class NSTableView;
 @class MVTableView;
-@class MVChatConnection;
+@class NSWindow;
+@class NSView;
+@class NSMenu;
+@class NSButton;
+@class NSImageView;
+@class NSTextField;
+@class NSPopUpButton;
+@class JVBuddy;
+@class NSMutableSet;
+@class NSMutableArray;
+@class NSString;
+@class NSTimer;
 @class ABPeoplePickerController;
 
 typedef enum {
@@ -18,7 +26,7 @@ typedef enum {
 } MVBuddyListSortOrder;
 
 @interface MVBuddyListController : NSWindowController <JVInspectionDelegator> {
-@private
+	@private
 	IBOutlet MVTableView *buddies;
 	IBOutlet NSMenu *actionMenu;
 	IBOutlet NSButton *sendMessageButton;
@@ -60,6 +68,8 @@ typedef enum {
 - (IBAction) getInfo:(id) sender;
 
 - (IBAction) showBuddyList:(id) sender;
+
+- (JVBuddy *) buddyForNickname:(NSString *) name onServer:(NSString *) address;
 
 - (IBAction) showBuddyPickerSheet:(id) sender;
 - (IBAction) cancelBuddySelection:(id) sender;
