@@ -1006,7 +1006,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		MVIRCChatConnectionThreadLock = [[NSRecursiveLock alloc] init];
 
 		extern NSString *threadConnectionName;
-		threadConnectionName = [[NSString alloc] initWithFormat:@"Colloquy Irssi Thread %@", [[NSProcessInfo processInfo] processIdentifier]];
+		threadConnectionName = [[NSString alloc] initWithFormat:@"Colloquy Irssi Thread %d", [[NSProcessInfo processInfo] processIdentifier]];
 
 		irssi_gui = IRSSI_GUI_NONE;
 
