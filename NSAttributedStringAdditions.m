@@ -467,7 +467,6 @@ static WebView *fragmentWebView = nil;
  		[scanner scanUpToCharactersFromSet:formatCharacters intoString:&text];
 		if( [text length] ) {
 			NSAttributedString *new = [[NSAttributedString alloc] initWithString:text attributes:attributes];
-			NSLog( @"%@", new );
 			[ret appendAttributedString:new];
 			[new release];
 		}
