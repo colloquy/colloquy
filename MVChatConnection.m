@@ -589,6 +589,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 		[self _registerForSleepNotifications];
 
 		_firetalkSelectTimer = [[NSTimer scheduledTimerWithTimeInterval:.100 target:self selector:@selector( _executeRunLoopCheck: ) userInfo:nil repeats:YES] retain];
+		_pingTimer = [[NSTimer scheduledTimerWithTimeInterval:300 target:self selector:@selector( _pingServer: ) userInfo:nil repeats:YES] retain];
 	}
 	return self;
 }
@@ -617,8 +618,10 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 }
 
 - (void) release {
-	if( ( [self retainCount] - 1 ) == 1 )
+	if( ( [self retainCount] - 1 ) == 2 ) {
 		[_firetalkSelectTimer invalidate];
+		[_pingTimer invalidate];
+	}
 	[super release];
 }
 
@@ -638,6 +641,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	[_floodIntervals release];
 	[_awayMessage release];
 	[_firetalkSelectTimer release];
+	[_pingTimer release];
 
 	firetalk_destroy_handle( _chatConnection );
 	_chatConnection = NULL;
@@ -651,6 +655,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	_floodIntervals = nil;
 	_awayMessage = nil;
 	_firetalkSelectTimer = nil;
+	_pingTimer = nil;
 
 	[super dealloc];
 }
@@ -1048,6 +1053,10 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 }
 
 #pragma mark -
+
+- (void) _pingServer:(NSTimer *) timer {
+	[self sendRawMessage:[NSString stringWithFormat:@"PING %@", _server]];
+}
 
 - (void) _executeRunLoopCheck:(NSTimer *) timer {
 	struct timeval timeout = { 0, 050 };

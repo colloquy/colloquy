@@ -146,6 +146,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	MVChatConnectionProxy _proxy;
 	void *_chatConnection;
 	NSTimer *_firetalkSelectTimer;
+	NSTimer *_pingTimer;
 	NSMutableArray *_joinList;
 	NSMutableDictionary *_roomsCache;
 	NSDate *_cachedDate;
