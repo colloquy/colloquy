@@ -8,7 +8,10 @@
 @class NSURL;
 
 extern NSString *JVStylesScannedNotification;
+extern NSString *JVDefaultStyleChangedNotification;
+extern NSString *JVDefaultStyleVariantChangedNotification;
 extern NSString *JVNewStyleVariantAddedNotification;
+extern NSString *JVStyleVariantChangedNotification;
 
 @interface JVStyle : NSObject {
 	NSBundle *_bundle;

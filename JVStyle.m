@@ -24,7 +24,10 @@
 static NSMutableSet *allStyles = nil;
 
 NSString *JVStylesScannedNotification = @"JVStylesScannedNotification";
+NSString *JVDefaultStyleChangedNotification = @"JVDefaultStyleChangedNotification";
+NSString *JVDefaultStyleVariantChangedNotification = @"JVDefaultStyleVariantChangedNotification";
 NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotification";
+NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotification";
 
 @implementation JVStyle
 + (void) scanForStyles {
@@ -98,8 +101,14 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 }
 
 + (void) setDefaultStyle:(JVStyle *) style {
+	JVStyle *oldDefault = [self defaultStyle];
+	if( style == oldDefault ) return;
+
 	if( ! style ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
 	else [[NSUserDefaults standardUserDefaults] setObject:[style identifier] forKey:@"JVChatDefaultStyle"];
+
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[self defaultStyle], @"default", nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleVariantChangedNotification object:oldDefault userInfo:info];
 }
 
 #pragma mark -
@@ -263,6 +272,8 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 }
 
 - (void) setDefaultVariantName:(NSString *) name {
+	if( [name isEqualToString:[self defaultVariantName]] ) return;
+
 	if( ! [name length] ) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 	} else {
@@ -273,6 +284,9 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 			[[NSUserDefaults standardUserDefaults] setObject:name forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 		}
 	}
+
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[self defaultVariantName], @"variant", nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVDefaultStyleVariantChangedNotification object:self userInfo:info];
 }
 
 #pragma mark -
