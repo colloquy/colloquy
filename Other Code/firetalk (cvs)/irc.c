@@ -694,18 +694,13 @@ client_t irc_create_handle() {
 }
 
 enum firetalk_error irc_signon(client_t c, const char * const nickname) {
-	char hostname[256];
-
 	if ( safe_strlen( c->password ) ) if (irc_send_printf(c,1,"PASS %s",c->password) != FE_SUCCESS)
 		return FE_PACKET;
 
 	if (irc_send_printf(c,1,"NICK %s",nickname) != FE_SUCCESS)
 		return FE_PACKET;
 
-	if( gethostname( hostname, 256 ) )
-		safe_strncpy( hostname, "localhost", 10 );
-
-	if (irc_send_printf(c,1,"USER %s %s %s :%s",nickname,hostname,hostname,nickname) != FE_SUCCESS)
+	if (irc_send_printf(c,1,"USER %s 0 * :%s",nickname,nickname) != FE_SUCCESS)
 		return FE_PACKET;
 
 	c->nickname = safe_strdup(nickname);
@@ -1021,6 +1016,8 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 					case 433: /* ERR_NICKNAMEINUSE */
 						firetalk_callback_error(c,FE_BADUSER,NULL,"Nickname in use.");
 						break;
+					case 466: /* ERR_YOUWILLBEBANNED */
+						break;
 					case 482: /* ERR_CHANOPRIVSNEEDED */
 						firetalk_callback_error(c,FE_NOPERMS,&args[3][1],"You need to be a channel operator.");
 						break;
@@ -1182,7 +1179,7 @@ enum firetalk_error irc_got_data_connecting(client_t c, unsigned char * buffer, 
 		}
 		/* zero argument items */
 		if (strcmp(args[0],"ERROR") == 0) {
-			irc_send_printf(c,1,"QUIT :error");
+			irc_send_printf(c,1,"QUIT :Error");
 			firetalk_callback_connectfailed(c,FE_PACKET,"Server returned ERROR");
 			return FE_PACKET;
 		}
@@ -1191,18 +1188,20 @@ enum firetalk_error irc_got_data_connecting(client_t c, unsigned char * buffer, 
 			continue;
 		/* one argument items */
 		if (strcmp(args[1],"ERROR") == 0) {
-			irc_send_printf(c,1,"QUIT :error");
+			irc_send_printf(c,1,"QUIT :Error");
 			firetalk_callback_connectfailed(c,FE_PACKET,"Server returned ERROR");
 			return FE_PACKET;
 		}
 		if (strcmp(args[0],"PING") == 0) {
 			if (irc_send_printf(c,1,"PONG %s",args[1]) != 0) {
-				irc_send_printf(c,1,"QUIT :error");
+				irc_send_printf(c,1,"QUIT :Error");
 				firetalk_callback_connectfailed(c,FE_PACKET,"Packet transfer error");
 				return FE_PACKET;
 			}
 		} else {
+			printf( "%s\n", args[1] );
 			switch (atoi(args[1])) {
+				case 001: // RPL_WELCOME
 				case 376: // RPL_ENDOFMOTD
 				case 422: // ERR_NOMOTD
 					// reset the password to clear the server password
@@ -1213,25 +1212,37 @@ enum firetalk_error irc_got_data_connecting(client_t c, unsigned char * buffer, 
 					firetalk_callback_doinit(c,c->nickname);
 					firetalk_callback_connected(c);
 					break;
+				case 005: // RPL_BOUNCE
+					irc_send_printf(c,1,"QUIT :Bounced");
+					firetalk_callback_connectfailed(c,FE_BLOCKED,"Try another server");
+					return FE_BLOCKED;
 				case 431: // ERR_NONICKNAMEGIVEN
 				case 432: // ERR_ERRONEUSNICKNAME
-				case 436: // ERR_NICKCOLLISION
 				case 461: // ERR_NEEDMOREPARAMS
 					irc_send_printf(c,1,"QUIT :Invalid nickname");
 					firetalk_callback_connectfailed(c,FE_BADUSER,"Invalid nickname");
 					return FE_BADUSER;
 				case 433: // ERR_NICKNAMEINUSE
+				case 436: // ERR_NICKCOLLISION
+				case 437: // ERR_UNAVAILRESOURCE
 					irc_send_printf(c,1,"QUIT :Nickname in use");
 					firetalk_callback_connectfailed(c,FE_BADUSER,"Nickname in use");
 					return FE_BADUSER;
+				case 463: // ERR_NOPERMFORHOST
+					irc_send_printf(c,1,"QUIT :Host blocked");
+					firetalk_callback_connectfailed(c,FE_BLOCKED,"Your host isn't among the privileged");
+					return FE_BLOCKED;
 				case 464: // ERR_PASSWDMISMATCH
 					irc_send_printf(c,1,"QUIT :Invalid connection password");
-					firetalk_callback_connectfailed(c,FE_BADUSER,"Invalid server password");
+					firetalk_callback_connectfailed(c,FE_BADUSERPASS,"Invalid server password");
 					return FE_BADUSERPASS;
 				case 465: // ERR_YOUREBANNEDCREEP
 					irc_send_printf(c,1,"QUIT :Banned");
 					firetalk_callback_connectfailed(c,FE_BLOCKED,"You are banned");
 					return FE_BLOCKED;
+				case 484: // ERR_RESTRICTED
+					//log we are restricted with connection
+					break;
 			}
 		}
 		args = irc_recv_parse(c,buffer,bufferpos);
