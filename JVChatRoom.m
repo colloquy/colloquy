@@ -21,6 +21,14 @@
 
 #pragma mark -
 
+@interface JVChatRoomMember (JVChatMemberPrivate)
+- (void) _setNickname:(NSString *) name;
+- (void) _setVoice:(BOOL) voice;
+- (void) _setOperator:(BOOL) operator;
+@end
+
+#pragma mark -
+
 @implementation JVChatRoom
 - (id) init {
 	if( ( self = [super init] ) ) {
@@ -141,19 +149,19 @@
 }
 
 - (void) handleDraggedFile:(NSString *) path {
-	NSAssert( YES, @"JVChatRoom does not implement handleDraggedFile:" );
+	[NSException raise:NSIllegalSelectorException format:@"JVChatRoom does not implement handleDraggedFile:"];
 	return;
 }
 
 #pragma mark -
 
 - (void) setTarget:(NSString *) target {
-	NSAssert( YES, @"JVChatRoom does not implement setTarget:" );
+	[NSException raise:NSIllegalSelectorException format:@"JVChatRoom does not implement setTarget:"];
 	return;
 }
 
 - (JVBuddy *) buddy {
-	NSAssert( YES, @"JVChatRoom does not implement buddy:" );
+	[NSException raise:NSIllegalSelectorException format:@"JVChatRoom does not implement buddy:"];
 	return nil;
 }
 
@@ -224,10 +232,7 @@
 	}
 
 	if( ! [_members objectForKey:member] ) {
-		JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] init] autorelease];
-
-		[listItem setParent:self];
-		[listItem setMemberName:member];
+		JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] initWithRoom:self andNickname:member] autorelease];
 		[_members setObject:listItem forKey:member];
 
 		[_sortedMembers addObject:member];
@@ -282,7 +287,7 @@
 		[_sortedMembers addObject:nick];
 		[_sortedMembers sortUsingSelector:@selector( caseInsensitiveCompare: )];
 
-		[(JVChatRoomMember *)[_members objectForKey:nick] setMemberName:nick];
+		[(JVChatRoomMember *)[_members objectForKey:nick] _setNickname:nick];
 
 		[_windowController reloadListItem:[_members objectForKey:nick] andChildren:NO];		
 
@@ -299,15 +304,19 @@
 
 	while( ( item = [enumerator nextObject] ) ) {
 		if( [item isLocalUser] ) {
-			if( ! [[item memberName] isEqualToString:nick] ) {
-				NSString *oldNick = [[[item memberName] copy] autorelease];
-				[_members setObject:item forKey:nick];
-				[_members removeObjectForKey:oldNick];
-				[_sortedMembers removeObject:oldNick];
-				[_sortedMembers addObject:nick];
-				[_sortedMembers sortUsingSelector:@selector( caseInsensitiveCompare: )];
-				[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as %@.", "you changed nicknames" ), nick] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:oldNick, @"old", nick, @"new", nil]];
-			}
+			NSString *oldNick = [[[item nickname] copy] autorelease];
+
+			[_members setObject:item forKey:nick];
+			[_members removeObjectForKey:oldNick];
+			[_sortedMembers removeObject:oldNick];
+			[_sortedMembers addObject:nick];
+			[_sortedMembers sortUsingSelector:@selector( caseInsensitiveCompare: )];
+
+			[item _setNickname:nick];
+
+			[_windowController reloadListItem:item andChildren:NO];		
+
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as %@.", "you changed nicknames" ), nick] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:oldNick, @"old", nick, @"new", nil]];
 			break;
 		}
 	}
@@ -318,7 +327,7 @@
 - (void) promoteChatMember:(NSString *) member by:(NSString *) by {
 	NSParameterAssert( member != nil );
 	if( [_members objectForKey:member] ) {
-		[(JVChatRoomMember *)[_members objectForKey:member] setOperator:YES];
+		[(JVChatRoomMember *)[_members objectForKey:member] _setOperator:YES];
 		[_windowController reloadListItem:[_members objectForKey:member] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
@@ -348,7 +357,7 @@
 - (void) demoteChatMember:(NSString *) member by:(NSString *) by {
 	NSParameterAssert( member != nil );
 	if( [_members objectForKey:member] ) {
-		[(JVChatRoomMember *)[_members objectForKey:member] setOperator:NO];
+		[(JVChatRoomMember *)[_members objectForKey:member] _setOperator:NO];
 		[_windowController reloadListItem:[_members objectForKey:member] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
@@ -378,7 +387,7 @@
 - (void) voiceChatMember:(NSString *) member by:(NSString *) by {
 	NSParameterAssert( member != nil );
 	if( [_members objectForKey:member] ) {
-		[(JVChatRoomMember *)[_members objectForKey:member] setVoice:YES];
+		[(JVChatRoomMember *)[_members objectForKey:member] _setVoice:YES];
 		[_windowController reloadListItem:[_members objectForKey:member] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
@@ -408,7 +417,7 @@
 - (void) devoiceChatMember:(NSString *) member by:(NSString *) by {
 	NSParameterAssert( member != nil );
 	if( [_members objectForKey:member] ) {
-		[(JVChatRoomMember *)[_members objectForKey:member] setVoice:NO];
+		[(JVChatRoomMember *)[_members objectForKey:member] _setVoice:NO];
 		[_windowController reloadListItem:[_members objectForKey:member] andChildren:NO];
 
 		if( by && ! [by isMemberOfClass:[NSNull class]] ) {
@@ -554,7 +563,7 @@
 	JVChatRoomMember *item = nil;
 
 	while( ( item = [enumerator nextObject] ) )
-		if( [[item memberName] isEqualToString:member] )
+		if( [[item nickname] isEqualToString:member] )
 			return [item operator];
 
 	return NO;
@@ -565,7 +574,7 @@
 	JVChatRoomMember *item = nil;
 
 	while( ( item = [enumerator nextObject] ) )
-		if( [[item memberName] isEqualToString:member] )
+		if( [[item nickname] isEqualToString:member] )
 			return [item voice];
 
 	return NO;
@@ -578,7 +587,7 @@
 	JVChatRoomMember *member = nil;
 	
 	while( ( member = [enumerator nextObject] ) )
-		if( [[member memberName] isEqualToString:name] )
+		if( [[member nickname] isEqualToString:name] )
 			return member;
 	
 	return nil;
@@ -735,7 +744,7 @@
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
 	NSString *messageString = [[[NSString alloc] initWithData:message encoding:[room encoding]] autorelease];
 	if( ! messageString ) messageString = [NSString stringWithCString:[message bytes] length:[message length]];
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:messageString, @"----", [NSNumber numberWithBool:action], @"piM1", [member memberName], @"piM2", room, @"piM3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:messageString, @"----", [NSNumber numberWithBool:action], @"piM1", [member nickname], @"piM2", room, @"piM3", nil];
 	id result = [self callScriptHandler:'piMX' withArguments:args];
 	if( [result isKindOfClass:[NSString class]] ) {
 		NSData *resultData = [result dataUsingEncoding:[room encoding] allowLossyConversion:YES];

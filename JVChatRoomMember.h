@@ -8,26 +8,27 @@
 
 @interface JVChatRoomMember : NSObject <JVChatListItem> {
 	JVChatRoom *_parent;
-	NSString *_memberName;
+	NSString *_nickname;
 	JVBuddy *_buddy;
 	BOOL _operator;
 	BOOL _voice;
 }
-- (void) setParent:(JVChatRoom *) parent;
+- (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name;
 
 - (MVChatConnection *) connection;
-
-- (void) setMemberName:(NSString *) name;
-- (NSString *) memberName;
+- (NSString *) nickname;
 - (JVBuddy *) buddy;
 
-- (void) setVoice:(BOOL) voice;
 - (BOOL) voice;
-
-- (void) setOperator:(BOOL) operator;
 - (BOOL) operator;
-
 - (BOOL) isLocalUser;
+
+- (IBAction) startChat:(id) sender;
+- (IBAction) sendFile:(id) sender;
+
+- (IBAction) toggleOperatorStatus:(id) sender;
+- (IBAction) toggleVoiceStatus:(id) sender;
+- (IBAction) kick:(id) sender;
 @end
 
 @interface JVChatRoomMember (JVChatRoomMemberScripting) <JVChatListItemScripting>

@@ -7,31 +7,44 @@
 #import "JVBuddy.h"
 
 @implementation JVChatRoomMember
+- (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name {
+	if( ( self = [self init] ) ) {
+		_parent = room;
+		_nickname = [name copy];
+		_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_nickname onServer:[[self connection] server]] retain];
+	}
+	return self;
+}
+
 - (id) init {
-	self = [super init];
-	_parent = nil;
-	_memberName = nil;
-	_buddy = nil;
-	_operator = NO;
-	_voice = NO;
+	if( ( self = [super init] ) ) {
+		_parent = nil;
+		_nickname = nil;
+		_buddy = nil;
+		_operator = NO;
+		_voice = NO;
+	}
+
 	return self;
 }
 
 - (void) dealloc {
-	[_memberName release];
+	[_nickname release];
 	[_buddy release];
 
 	_parent = nil;
-	_memberName = nil;
+	_nickname = nil;
 	_buddy = nil;
 
 	[super dealloc];
 }
 
+#pragma mark -
+
 - (NSString *) title {
 	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [_buddy preferredName];
-	return [[_memberName retain] autorelease];
+	return [[_nickname retain] autorelease];
 }
 
 - (NSString *) information {
@@ -73,11 +86,11 @@
 
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" ) action:@selector( promote: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" ) action:@selector( toggleOperatorStatus: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" ) action:@selector( voice: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" ) action:@selector( toggleVoiceStatus: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
 	}
@@ -100,36 +113,21 @@
 	return nil;
 }
 
-- (void) setParent:(JVChatRoom *) parent {
-	_parent = parent;
-}
-
 - (id <JVChatListItem>) parent {
 	return _parent;
 }
 
-- (void) setMemberName:(NSString *) name {
-	[_memberName autorelease];
-	_memberName = [name copy];
-	[_buddy autorelease];
-	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_memberName onServer:[[self connection] server]] retain];
-}
+#pragma mark -
 
-- (NSString *) memberName {
-	return [[_memberName retain] autorelease];
+- (NSString *) nickname {
+	return [[_nickname retain] autorelease];
 }
 
 - (JVBuddy *) buddy {
 	return [[_buddy retain] autorelease];
 }
 
-- (void) setVoice:(BOOL) voice {
-	_voice = voice;
-}
-
-- (void) setOperator:(BOOL) operator {
-	_operator = operator;
-}
+#pragma mark -
 
 - (BOOL) voice {
 	return _voice;
@@ -140,8 +138,10 @@
 }
 
 - (BOOL) isLocalUser {
-	return [_memberName isEqualToString:[[_parent connection] nickname]];
+	return [_nickname isEqualToString:[[_parent connection] nickname]];
 }
+
+#pragma mark -
 
 - (MVChatConnection *) connection {
 	return [[[_parent connection] retain] autorelease];
@@ -152,20 +152,20 @@
 }
 
 - (void) handleDraggedFile:(NSString *) path {
-	[[self connection] sendFile:path toUser:_memberName];
+	[[self connection] sendFile:path toUser:_nickname];
 }
 
 #pragma mark -
 
 - (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
-	if( [menuItem action] == @selector( voice: ) ) {
+	if( [menuItem action] == @selector( toggleVoiceStatus: ) ) {
 		if( _voice ) {
 			[menuItem setTitle:NSLocalizedString( @"Remove Voice", "remove voice contextual menu - admin only" )];
 		} else {
 			[menuItem setTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" )];
 			if( _operator ) return NO;
 		}
-	} else if( [menuItem action] == @selector( promote: ) ) {
+	} else if( [menuItem action] == @selector( toggleOperatorStatus: ) ) {
 		if( _operator ) {
 			[menuItem setTitle:NSLocalizedString( @"Demote Operator", "demote operator contextual menu - admin only" )];
 		} else {
@@ -175,8 +175,10 @@
 	return YES;
 }
 
+#pragma mark -
+
 - (IBAction) startChat:(id) sender {
-	[[JVChatController defaultManager] chatViewControllerForUser:_memberName withConnection:[_parent connection] ifExists:NO];
+	[[JVChatController defaultManager] chatViewControllerForUser:_nickname withConnection:[_parent connection] ifExists:NO];
 }
 
 - (IBAction) sendFile:(id) sender {
@@ -189,22 +191,43 @@
 	if( [panel runModalForTypes:nil] == NSOKButton ) {
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		while( ( path = [enumerator nextObject] ) )
-			[[_parent connection] sendFile:path toUser:_memberName];
+			[[_parent connection] sendFile:path toUser:_nickname];
 	}
 }
 
-- (IBAction) promote:(id) sender {
-	if( _operator ) [[_parent connection] demoteMember:_memberName inRoom:[_parent target]];
-	else [[_parent connection] promoteMember:_memberName inRoom:[_parent target]];
+#pragma mark -
+
+- (IBAction) toggleOperatorStatus:(id) sender {
+	if( _operator ) [[_parent connection] demoteMember:_nickname inRoom:[_parent target]];
+	else [[_parent connection] promoteMember:_nickname inRoom:[_parent target]];
 }
 
-- (IBAction) voice:(id) sender {
-	if( _voice ) [[_parent connection] devoiceMember:_memberName inRoom:[_parent target]];
-	else [[_parent connection] voiceMember:_memberName inRoom:[_parent target]];
+- (IBAction) toggleVoiceStatus:(id) sender {
+	if( _voice ) [[_parent connection] devoiceMember:_nickname inRoom:[_parent target]];
+	else [[_parent connection] voiceMember:_nickname inRoom:[_parent target]];
 }
 
 - (IBAction) kick:(id) sender {
-	[[_parent connection] kickMember:_memberName inRoom:[_parent target] forReason:@""];
+	[[_parent connection] kickMember:_nickname inRoom:[_parent target] forReason:@""];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatRoomMember (JVChatMemberPrivate)
+- (void) _setNickname:(NSString *) name {
+	[_nickname autorelease];
+	_nickname = [name copy];
+	[_buddy autorelease];
+	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_nickname onServer:[[self connection] server]] retain];
+}
+
+- (void) _setVoice:(BOOL) voice {
+	_voice = voice;
+}
+
+- (void) _setOperator:(BOOL) operator {
+	_operator = operator;
 }
 @end
 
@@ -213,5 +236,23 @@
 @implementation JVChatRoomMember (JVChatRoomMemberScripting)
 - (NSNumber *) uniqueIdentifier {
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+}
+
+#pragma mark -
+
+- (void) voiceScriptCommand:(NSScriptCommand *) command {
+	if( ! _voice ) [self toggleVoiceStatus:nil];
+}
+
+- (void) devoiceScriptCommand:(NSScriptCommand *) command {
+	if( _voice ) [self toggleVoiceStatus:nil];
+}
+
+- (void) promoteScriptCommand:(NSScriptCommand *) command {
+	if( ! _operator ) [self toggleOperatorStatus:nil];
+}
+
+- (void) demoteScriptCommand:(NSScriptCommand *) command {
+	if( _operator ) [self toggleOperatorStatus:nil];
 }
 @end
