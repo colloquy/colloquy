@@ -1,5 +1,6 @@
 #import "MVFileTransfer.h"
 #import "MVIRCFileTransfer.h"
+#import "MVSILCFileTransfer.h"
 #import "MVChatConnection.h"
 #import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
@@ -140,6 +141,23 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 #pragma mark -
 
+- (void) setFinalSize:(unsigned long long) finalSize {
+	_finalSize = finalSize;
+}
+
+- (void) setTransfered:(unsigned long long) transfered {
+	_transfered = transfered;
+}
+
+- (void) setStartDate:(NSDate *) startDate {
+	if ( _startDate ) 
+		[_startDate release];
+	
+	_startDate = [startDate retain];
+}
+
+#pragma mark -
+
 - (MVChatUser *) user {
 	return [[_user retain] autorelease];
 }
@@ -176,6 +194,8 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	if( [[user connection] type] == MVChatConnectionIRCType ) {
 		return [MVIRCUploadFileTransfer transferWithSourceFile:path toUser:user passively:passive];
+	} else if ( [[user connection] type] == MVChatConnectionSILCType ) {
+		return [MVSILCUploadFileTransfer transferWithSourceFile:path toUser:user passively:passive];
 	}
 
 	return nil;

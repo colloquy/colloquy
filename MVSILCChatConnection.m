@@ -656,10 +656,30 @@ static void silc_failure( SilcClient client, SilcClientConnection conn, SilcProt
 }
 
 static bool silc_key_agreement( SilcClient client, SilcClientConnection conn, SilcClientEntry client_entry, const char *hostname, SilcUInt16 port, SilcKeyAgreementCallback *completion, void **context) {
+#if 0
+	if ( hostname ) {
+		silc_client_perform_key_agreement( client, conn, client_entry, hostname, port, silcgaim_buddy_keyagr_cb, ai );
+	} else {
+		// other user didn't supply hostname - we need to make the connection
+		NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
+		NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
+		NSMutableData *result = [[[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopy] autorelease];
+		[result appendBytes:"\0" length:1];
+		
+		silc_client_send_key_agreement( client, conn, client_entry, [result bytes], NULL, 0, 60, silcgaim_buddy_keyagr_cb, a );
+	}
+#endif
+	
 	return FALSE;
-}
+}I 
 
 static void silc_ftp( SilcClient client, SilcClientConnection conn, SilcClientEntry client_entry, SilcUInt32 session_id, const char *hostname, SilcUInt16 port ) {
+/*	MVSILCChatConnection *self = conn -> context;
+	
+	MVChatUser *user = [self _chatUserWithClientEntry:client_entry];
+	MVSILCDownloadFileTransfer *transfer = [[[MVSILCDownloadFileTransfer alloc] initWithSessionID:session_id toUser:user]
+	NSNotification *note = [NSNotification notificationWithName:MVDownloadFileTransferOfferNotification object:transfer];		
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note]; */
 }
 
 static void silc_detach( SilcClient client, SilcClientConnection conn, const unsigned char *detach_data, SilcUInt32 detach_data_len ) {

@@ -21,7 +21,8 @@ typedef enum {
 	MVFileTransferFileCreationError = -2,
 	MVFileTransferFileOpenError = -3,
 	MVFileTransferAlreadyExistsError = -4,
-	MVFileTransferUnexpectedlyEndedError = -5
+	MVFileTransferUnexpectedlyEndedError = -5,
+	MVFileTransferKeyAgreementError = -6
 } MVFileTransferError;
 
 @interface MVFileTransfer : NSObject {
@@ -56,6 +57,10 @@ typedef enum {
 
 - (NSHost *) host;
 - (unsigned short) port;
+
+- (void) setFinalSize:(unsigned long long) finalSize;
+- (void) setTransfered:(unsigned long long) transfered;
+- (void) setStartDate:(NSDate *) startDate;
 
 - (MVChatUser *) user;
 
