@@ -578,16 +578,6 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 	NSData *msgData = [NSData dataWithBytes:topic length:strlen( topic )];
 	note = [NSNotification notificationWithName:MVChatConnectionGotRoomTopicNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", ( channel -> topic_by ? (id) [NSString stringWithUTF8String:channel -> topic_by] : (id) [NSNull null] ), @"author", ( msgData ? (id) msgData : (id) [NSNull null] ), @"topic", [NSDate dateWithTimeIntervalSince1970:channel -> topic_time], @"time", [NSNumber numberWithBool:YES], @"justJoined", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
-}
-
-static void MVChatLeftRoom( CHANNEL_REC *channel ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:channel -> server -> tag];
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", nil]];
-	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
-}
-
-static void MVChatJoinedRoomNickList( CHANNEL_REC *channel ) {
-	MVChatConnection *self = [MVChatConnection _connectionWithTag:channel -> server -> tag];
 
 	GSList *nicks = nicklist_getnicks( channel );
 	GSList *nickItem = NULL;
@@ -606,7 +596,13 @@ static void MVChatJoinedRoomNickList( CHANNEL_REC *channel ) {
 		[nickArray addObject:info];
 	}
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionRoomExistingMemberListNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", nickArray, @"members", nil]];
+	note = [NSNotification notificationWithName:MVChatConnectionRoomExistingMemberListNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", nickArray, @"members", nil]];
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];	
+}
+
+static void MVChatLeftRoom( CHANNEL_REC *channel ) {
+	MVChatConnection *self = [MVChatConnection _connectionWithTag:channel -> server -> tag];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
 
@@ -1443,7 +1439,6 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	signal_add( "server incoming", (SIGNAL_FUNC) MVChatRawMessage );
 
 	signal_add_last( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
-	signal_add_last( "channel wholist", (SIGNAL_FUNC) MVChatJoinedRoomNickList );
 	signal_add_last( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
 	signal_add_last( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
 
@@ -1489,7 +1484,6 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	signal_remove( "server incoming", (SIGNAL_FUNC) MVChatRawMessage );
 
 	signal_remove( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
-	signal_remove( "channel wholist", (SIGNAL_FUNC) MVChatJoinedRoomNickList );
 	signal_remove( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
 	signal_remove( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
 
