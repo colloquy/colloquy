@@ -353,7 +353,7 @@ static NSMenu *favoritesMenu = nil;
 
 	if( [sender tag] ) {
 		[_passConnection setNicknamePassword:[authPassword stringValue]];
-	
+
 		if( [authKeychain state] == NSOnState ) {
 			[[MVKeyChain defaultKeyChain] setInternetPassword:[authPassword stringValue] forServer:[_passConnection server] securityDomain:[_passConnection server] account:[_passConnection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 		}
@@ -1072,9 +1072,6 @@ static NSMenu *favoritesMenu = nil;
 
 		[connection setProxyType:(MVChatConnectionProxy)[[info objectForKey:@"proxy"] unsignedIntValue]];
 
-		[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-		[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-
 		if( [info objectForKey:@"realName"] ) [connection setRealName:[info objectForKey:@"realName"]];
 		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
 
@@ -1084,6 +1081,9 @@ static NSMenu *favoritesMenu = nil;
 
 			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 				[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+
+			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+			[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 
 			[connection connect];
 
@@ -1176,6 +1176,8 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) _connect:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
+	[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+	[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 	[connection connect];
 }
 
@@ -1211,6 +1213,7 @@ static NSMenu *favoritesMenu = nil;
 - (void) _delete:(id) sender {
 	unsigned int row = [connections selectedRow];
 	if( row == -1 ) return;
+	[connections deselectAll:nil];
 	[self removeConnectionAtIndex:row];
 }
 
