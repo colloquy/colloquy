@@ -1418,7 +1418,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSScanner *urlScanner = nil;
 	NSCharacterSet *legalSchemeSet = nil;
 	NSCharacterSet *legalAddressSet = nil;
-	NSCharacterSet *ircChannels = [NSCharacterSet characterSetWithCharactersInString:@"#&+"];
+	NSCharacterSet *ircChannels = [NSCharacterSet characterSetWithCharactersInString:@"#&"];
 	NSCharacterSet *seperaters = [NSCharacterSet characterSetWithCharactersInString:@"<> \t\n\r"];
 	NSString *link = nil, *urlHandle = nil;
 	NSMutableString *mutableLink = nil;
