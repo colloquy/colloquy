@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<log began="2003-10-25 13:26:25 -0400" source="irc://timothy@irc.javelin.cc:6667/#colloquy" ended="2003-10-25 13:52:33 -0400" style="cc.javelin.colloquy.style.standard">
+  <event name="memberJoined" occurred="2003-10-25 13:26:37 -0400">
+    <message>nonex joined the chat room.</message>
+    <who>nonex</who>
+  </event>
+  <envelope count="1" received="2003-10-25 13:28:02 -0400">
+    <sender self="yes">deusx</sender>
+    <message action="yes">waves to nonex</message>
+  </envelope>
+  <envelope count="2" received="2003-10-25 13:28:32 -0400">
+    <sender>no</sender>
+    <message>hello, what is going on in here?</message>
+  </envelope>
+  <envelope count="3" received="2003-10-25 13:28:40 -0400">
+    <sender>Suw</sender>
+    <message>not a whole lot <span class="emoticon smile"><samp>:)</samp></span></message>
+  </envelope>
+  <envelope count="4" received="2003-10-25 13:28:54 -0400">
+    <sender>timo</sender>
+    <message>seen <a href="http://www.apple.com">http://www.apple.com</a> today?</message>
+  </envelope>
+  <envelope count="5" received="2003-10-25 13:50:38 -0400">
+    <sender self="yes">deusx</sender>
+    <message>no, I haven't had a chance</message>
+  </envelope>
+  <event name="memberPromoted" occurred="2003-10-25 13:50:53 -0400">
+    <message>nonex was promoted to operator by you.</message>
+    <by>timothy</by>
+    <who>nonex</who>
+  </event>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>wanges</sender>
+    <message action="yes">eats a sammich and kicks a ball</message>
+  </envelope>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>wanges</sender>
+    <message highlight="yes">there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>morbus2</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>screwtape</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>beefstick</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>DrForrester</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>screw</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+r  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>screwt</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>screwta</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>scrt</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>scr</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+  <envelope count="6" received="2003-10-25 13:51:25 -0400">
+    <sender>scrasdasdas</sender>
+    <message>there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  </envelope>
+</log>

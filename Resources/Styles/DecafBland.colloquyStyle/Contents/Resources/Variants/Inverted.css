@@ -1,0 +1,58 @@
+body {
+  color: white;
+  background-color: black;
+}
+
+i {
+  background-color: white;
+  color: black;
+  font-style: normal;
+}
+
+.envelope.highlight {
+  background-color: #212;
+  color: #0ff;
+}
+
+a.member   { color: #aaa; }
+.timestamp { color: #666; }
+
+.envelope > .member:before { color: #444; }
+.envelope > .member:after  { color: #444; } 
+
+.colorself  { color: #444; }
+.color0     { color: #f40; }
+.colormore0 { color: #c10; }
+.color1     { color: #f0f; }
+.colormore1 { color: #c0c; }
+.color2     { color: #0ff; }
+.colormore2 { color: #0cc; }
+.color3     { color: #8f0; }
+.colormore3 { color: #5c0; }
+.color4     { color: #0f0; }
+.colormore4 { color: #0c0; }
+.color5     { color: #0f8; }
+.colormore5 { color: #0c5; }
+.color6     { color: #44f; }
+.colormore6 { color: #00f; }
+.color7     { color: #48f; }
+.colormore7 { color: #15c; }
+.color8     { color: #80f; }
+.colormore8 { color: #50c; }
+.color9     { color: #84f; }
+.colormore9 { color: #51c; }
+.color10    { color: #f84; }
+.colormore10{ color: #c51; }
+.color11    { color: #f08; }
+.colormore11{ color: #c05; }
+.color12    { color: #f48; }
+.colormore12{ color: #c05; }
+.color13    { color: #f80; }
+.colormore13{ color: #c50; }
+.color14    { color: #08f; }
+.colormore14{ color: #05c; }
+
+/* For the hell of it... */
+.colorNaN    { color: #08f; }
+.colormoreNaN{ color: #05c; }
+
