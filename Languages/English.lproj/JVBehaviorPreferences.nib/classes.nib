@@ -3,6 +3,7 @@
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {
+                changeMessageScrollback = id; 
                 changeNaturalActionDetection = id; 
                 changePreferredWindow = id; 
                 changeSendHistory = id; 
@@ -19,6 +20,8 @@
                 checkSpelling = NSButton; 
                 detectNaturalActions = NSButton; 
                 enterKeyAction = NSPopUpButton; 
+                messageScrollback = NSTextField; 
+                messageScrollbackStepper = NSStepper; 
                 newChats = NSPopUpButton; 
                 newConsoles = NSPopUpButton; 
                 newRooms = NSPopUpButton; 
