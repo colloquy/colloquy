@@ -293,6 +293,15 @@
 	} else if( ! [command caseInsensitiveCompare:@"wii"] ) {
 //		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:NO];
 		return YES;
+	} else if( ! [command caseInsensitiveCompare:@"list"] ) {
+		JVChatRoomBrowser *browser = [NSClassFromString( @"JVChatRoomBrowser" ) chatRoomBrowserForConnection:connection];
+		[connection fetchChatRoomList];
+		[browser showWindow:nil];
+		if( [[arguments string] length] ) {
+			[browser setFilter:[arguments string]];
+			[browser showRoomBrowser:nil];
+		}
+		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"quit"] || ! [command caseInsensitiveCompare:@"disconnect"] ) {
 		[connection disconnectWithReason:arguments];
 		return YES;
