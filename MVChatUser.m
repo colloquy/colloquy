@@ -31,6 +31,34 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdatedNotification";
 
 @implementation MVChatUser
++ (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host {
+	MVChatUser *ret = [[[self alloc] init] autorelease];
+	ret -> _type = MVChatWildcardUserType;
+
+	NSArray *parts = [nickname componentsSeparatedByString:@"@"];
+	if( [parts count] >= 1 )
+		ret -> _nickname = [[parts objectAtIndex:0] copyWithZone:[ret zone]];
+	if( [parts count] >= 2 )
+		ret -> _serverAddress = [[parts objectAtIndex:1] copyWithZone:[ret zone]];
+
+	parts = [host componentsSeparatedByString:@"@"];
+	if( [parts count] >= 1 )
+		ret -> _username = [[parts objectAtIndex:0] copyWithZone:[ret zone]];
+	if( [parts count] >= 2 )
+		ret -> _address = [[parts objectAtIndex:1] copyWithZone:[ret zone]];
+
+	return ret;
+}
+
++ (id) wildcardUserWithFingerprint:(NSString *) fingerprint {
+	MVChatUser *ret = [[[self alloc] init] autorelease];
+	ret -> _type = MVChatWildcardUserType;
+	ret -> _fingerprint = [fingerprint copyWithZone:[ret zone]];
+	return ret;
+}
+
+#pragma mark -
+
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_connection = nil;
