@@ -430,6 +430,9 @@
 	if( _variantLocked ) return;
 	[_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:NO];
 	[WebCoreCache empty];
+
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[_style defaultVariantName], @"variant", nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleVariantChangedNotification object:_style userInfo:info];
 }
 
 - (IBAction) showOptions:(id) sender {

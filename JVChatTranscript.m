@@ -367,6 +367,9 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	[_chatStyle autorelease];
 	_chatStyle = [style retain];
 
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _styleVariantChanged: ) name:JVStyleVariantChangedNotification object:_chatStyle];
+
 	[_chatStyleVariant autorelease];
 	_chatStyleVariant = [variant retain];
 
@@ -880,6 +883,11 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 - (BOOL) _usingSpecificStyle {
 	return ( xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ? YES : NO );
+}
+
+- (void) _styleVariantChanged:(NSNotification *) notification {
+	if( [[[notification userInfo] objectForKey:@"variant"] isEqualToString:_chatStyleVariant] )
+		[self setChatStyleVariant:[[notification userInfo] objectForKey:@"variant"]];
 }
 
 #pragma mark -
