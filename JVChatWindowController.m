@@ -593,14 +593,17 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (id) outlineView:(NSOutlineView *) outlineView objectValueForTableColumn:(NSTableColumn *) tableColumn byItem:(id) item {
-	NSImage *ret = [[[item icon] copy] autorelease];
-	[ret setScalesWhenResized:YES];
-	if( [outlineView levelForRow:[outlineView rowForItem:item]] || _usesSmallIcons ) {
-		[ret setSize:NSMakeSize( 16., 16. )];
-	} else {
-		[ret setSize:NSMakeSize( 32., 32. )];
+	float maxSideSize = ( ( _usesSmallIcons || [outlineView levelForRow:[outlineView rowForItem:item]] ) ? 16. : 32. );
+	NSImage *org = [item icon];
+
+	if( [org size].width > maxSideSize || [org size].height > maxSideSize ) {
+		NSImage *ret = [[[item icon] copy] autorelease];
+		[ret setScalesWhenResized:YES];
+		[ret setSize:NSMakeSize( maxSideSize, maxSideSize )];
+		org = ret;
 	}
-	return ret;
+
+	return org;
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldEditTableColumn:(NSTableColumn *) tableColumn item:(id) item {

@@ -644,8 +644,10 @@ static MVBuddyListController *sharedInstance = nil;
 			JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 			NSImage *ret = [buddy picture];
 			if( ! ret ) ret = [[[NSImage imageNamed:@"largePerson"] copy] autorelease];
-			[ret setScalesWhenResized:YES];
-			[ret setSize:NSMakeSize( 32., 32. )];
+			if( [ret size].width > 32 || [ret size].height > 32 ) {
+				[ret setScalesWhenResized:YES];
+				[ret setSize:NSMakeSize( 32., 32. )];
+			}
 			return ret;
 		} else return nil;
 	}

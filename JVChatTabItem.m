@@ -30,11 +30,14 @@
 	if( [_controller respondsToSelector:@selector( statusImage )] && [(id)_controller statusImage] )
 		active = [(id)_controller statusImage];
 
-	NSImage *ret = [[active copy] autorelease];
-	[ret setScalesWhenResized:YES];
-	[ret setSize:NSMakeSize( 16., 16. )];
+	if( [active size].width > 16. || [active size].height > 16. ) {
+		NSImage *ret = [[active copy] autorelease];
+		[ret setScalesWhenResized:YES];
+		[ret setSize:NSMakeSize( 16., 16. )];
+		active = ret;
+	}
 
-	return ret;
+	return active;
 }
 
 - (id) view {
