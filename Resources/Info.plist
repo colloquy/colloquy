@@ -94,6 +94,14 @@
 				<string>irc</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>Secure Internet Live Conferencing Server</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>silc</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>2C10</string>
