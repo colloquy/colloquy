@@ -12,7 +12,6 @@
 		[result appendString:NSStringFromRect( [subview frame] )];
 	}
 
-//	NSLog( @"save: %@", result );
 	return result;
 }
 
@@ -24,7 +23,6 @@
 	NSView *subview = nil;
 	NSString *frame = nil;
 
-//	NSLog( @"restore: %@", string );
 	while( ( subview = [subviews nextObject] ) ) {
 		frame = [frames nextObject];
 		if( [frame length] ) [subview setFrame:NSRectFromString( frame )];

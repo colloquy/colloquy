@@ -50,6 +50,7 @@
 	float _sendHeight;
 	BOOL _scrollerIsAtBottom;
 	long _previousLogOffset;
+	BOOL _forceSplitViewPosition;
 }
 - (id) initWithTarget:(NSString *) target forConnection:(MVChatConnection *) connection;
 

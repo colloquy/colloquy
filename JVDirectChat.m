@@ -133,6 +133,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		_requiresFullMessage = NO;
 		_cantSendMessages = NO;
 		_isActive = NO;
+		_forceSplitViewPosition = YES;
 		_historyIndex = 0;
 		_sendHeight = 30.;
 
@@ -948,17 +949,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 #pragma mark SplitView Support
 
-- (BOOL) splitView:(NSSplitView *) sender canCollapseSubview:(NSView *) subview {
-	return NO;
-}
-
-- (float) splitView:(NSSplitView *) splitView constrainSplitPosition:(float) proposedPosition ofSubviewAt:(int) index {
+/*- (float) splitView:(NSSplitView *) splitView constrainSplitPosition:(float) proposedPosition ofSubviewAt:(int) index {
 //	float position = ( NSHeight( [splitView frame] ) - proposedPosition - [splitView dividerThickness] );
 //	int lines = (int) floorf( position / 15. );
 //	NSLog( @"%.2f %.2f / 15. = %.2f (%d)", proposedPosition, position, position / 15., lines );
 //	return ( roundf( proposedPosition / 15. ) * 15. ) + [splitView dividerThickness] + 2.;
 	return proposedPosition;
-}
+}*/
 
 - (void) splitViewDidResizeSubviews:(NSNotification *) notification {
 	// Cache the height of the send box so we can keep it constant during window resizes.
@@ -967,14 +964,15 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	if( _scrollerIsAtBottom ) {
 		NSScrollView *scrollView = [[[[display subviews] objectAtIndex:0] subviews] objectAtIndex:0];
-		[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint(0, [[scrollView documentView] bounds].size.height)]];
+		[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint( 0, [[scrollView documentView] bounds].size.height )]];
 		[scrollView reflectScrolledClipView:[scrollView contentView]];
 	}
 
-	[(NSSplitView *)[[[send superview] superview] superview] savePositionUsingName:@"JVChatSplitViewPosition"];
+	[[notification object] savePositionUsingName:@"JVChatSplitViewPosition"];
+	_forceSplitViewPosition = NO;
 }
 
-- (void) splitViewWillResizeSubviews:(NSNotification *) aNotification {
+- (void) splitViewWillResizeSubviews:(NSNotification *) notification {
 	// The scrollbars are two subviews down from the JVWebView (deep in the WebKit bowls).
 	NSScrollView *scrollView = [[[[display subviews] objectAtIndex:0] subviews] objectAtIndex:0];
 	if( [[scrollView verticalScroller] floatValue] == 1. ) _scrollerIsAtBottom = YES;
@@ -982,6 +980,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) splitView:(NSSplitView *) sender resizeSubviewsWithOldSize:(NSSize) oldSize {
+	if( _forceSplitViewPosition ) {
+		[sender adjustSubviews];
+		return;
+	}
+
 	float dividerThickness = [sender dividerThickness];
 	NSRect newFrame = [sender frame];
 

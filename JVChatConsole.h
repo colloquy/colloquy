@@ -16,6 +16,9 @@
 	BOOL _verbose;
 	BOOL _ignorePRIVMSG;
 	BOOL _paused;
+	float _sendHeight;
+	BOOL _scrollerIsAtBottom;
+	BOOL _forceSplitViewPosition;
 	int _historyIndex;
 	NSMutableArray *_sendHistory;
 	JVChatWindowController *_windowController;

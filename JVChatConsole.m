@@ -6,6 +6,7 @@
 #import "JVChatConsole.h"
 #import "JVChatController.h"
 #import "MVTextView.h"
+#import "NSSplitViewAdditions.h"
 
 static NSString *JVToolbarToggleVerboseItemIdentifier = @"JVToolbarToggleVerboseItem";
 static NSString *JVToolbarTogglePrivateMessagesItemIdentifier = @"JVToolbarTogglePrivateMessagesItem";
@@ -19,6 +20,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		_historyIndex = 0;
 		_paused = NO;
+		_forceSplitViewPosition = YES;
 
 		_connection = [connection retain];
 		_verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatVerboseConsoleMessages"];
@@ -42,6 +44,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[display setUsesFontPanel:NO];
 	[display setUsesRuler:NO];
 	[display setImportsGraphics:NO];
+
+	[(NSSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVConsoleSplitViewPosition"];
 }
 
 - (void) dealloc {
@@ -396,7 +400,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	_historyIndex = 0;
 }
 
-#pragma mark ToolBar methods
+#pragma mark -
+#pragma mark Toolbar Support
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
@@ -441,6 +446,61 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarToggleVerboseItemIdentifier, JVToolbarTogglePrivateMessagesItemIdentifier, JVToolbarClearItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 	return [[list retain] autorelease];
+}
+#pragma mark -
+#pragma mark SplitView Support
+
+- (void) splitViewDidResizeSubviews:(NSNotification *) notification {
+	// Cache the height of the send box so we can keep it constant during window resizes.
+	NSRect sendFrame = [[[send superview] superview] frame];
+	_sendHeight = sendFrame.size.height;
+
+	if( _scrollerIsAtBottom ) {
+		NSScrollView *scrollView = (NSScrollView *)[[display superview] superview];
+		[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint( 0, [[scrollView documentView] bounds].size.height )]];
+		[scrollView reflectScrolledClipView:[scrollView contentView]];
+	}
+
+	[[notification object] savePositionUsingName:@"JVConsoleSplitViewPosition"];
+	_forceSplitViewPosition = NO;
+}
+
+- (void) splitViewWillResizeSubviews:(NSNotification *) notification {
+	// The scrollbars are two subviews down from the JVWebView (deep in the WebKit bowls).
+	NSScrollView *scrollView = (NSScrollView *)[[display superview] superview];
+	if( [[scrollView verticalScroller] floatValue] == 1. ) _scrollerIsAtBottom = YES;
+	else _scrollerIsAtBottom = NO;
+}
+
+- (void) splitView:(NSSplitView *) sender resizeSubviewsWithOldSize:(NSSize) oldSize {
+	if( _forceSplitViewPosition ) {
+		[sender adjustSubviews];
+		return;
+	}
+
+	float dividerThickness = [sender dividerThickness];
+	NSRect newFrame = [sender frame];
+
+	// Keep the size of the send box constant during window resizes
+
+	// We need to resize the scroll view frames of the webview and the textview.
+	// The scroll views are two superviews up: NSTextView(WebView) -> NSClipView -> NSScrollView
+	NSRect sendFrame = [[[send superview] superview] frame];
+	NSRect displayFrame = [[[display superview] superview] frame];
+
+	// Set size of the web view to the maximum size possible
+	displayFrame.size.height = newFrame.size.height - dividerThickness - _sendHeight;
+	displayFrame.size.width = newFrame.size.width;
+	displayFrame.origin = NSMakePoint( 0., 0. );
+
+	// Keep the send box the same size
+	sendFrame.size.height = _sendHeight;
+	sendFrame.size.width = newFrame.size.width;
+	sendFrame.origin.y = displayFrame.size.height + dividerThickness;
+
+	// Commit the changes
+	[[[send superview] superview] setFrame:sendFrame];
+	[[[display superview] superview] setFrame:displayFrame];
 }
 @end
 
