@@ -539,6 +539,8 @@ static int irc_send_printf(client_t c, int urgent, const char * const format, ..
 	}
 	data[datai] = '\0';
 
+	firetalk_callback_raw_message(c,data,1);
+
 	safe_strncat(data,"\r\n",513);
 	datai = safe_strlen(data);
 
@@ -565,6 +567,8 @@ static char **irc_recv_parse(client_t c, unsigned char *buffer, unsigned short *
 	tempchr[0] = '\0';
 	*bufferpos -= (tempchr - data + 2);
 	memmove(buffer,&buffer[tempchr - data + 2],*bufferpos);
+
+	firetalk_callback_raw_message(c,data,0);
 
 	curarg = 0;
 	tempchr = data;

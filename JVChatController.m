@@ -6,6 +6,7 @@
 #import "JVChatTranscript.h"
 #import "JVDirectChat.h"
 #import "JVChatRoom.h"
+#import "JVChatConsole.h"
 
 #import <libxml/parser.h>
 
@@ -158,6 +159,27 @@ static JVChatController *sharedInstance = nil;
 		[_chatControllers addObject:ret];
 		[self _addViewControllerToPreferedWindowController:ret];
 	}
+	return [[ret retain] autorelease];
+}
+
+- (id <JVChatViewController>) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
+	id <JVChatViewController> ret = nil;
+	NSEnumerator *enumerator = nil;
+
+	NSParameterAssert( connection != nil );
+
+	enumerator = [_chatControllers objectEnumerator];
+	while( ( ret = [enumerator nextObject] ) )
+		if( [ret isMemberOfClass:[JVChatConsole class]] && [ret connection] == connection )
+			break;
+
+	if( ! ret && ! exists ) {
+		if( ( ret = [[[JVChatConsole alloc] initWithConnection:connection] autorelease] ) ) {
+			[_chatControllers addObject:ret];
+			[self _addViewControllerToPreferedWindowController:ret];
+		}
+	}
+
 	return [[ret retain] autorelease];
 }
 

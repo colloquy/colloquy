@@ -838,6 +838,9 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 			NSEnumerator *renumerator = nil;
 			id item = nil;
 
+			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+				[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+
 			[connection connect];
 
 			renumerator = [[info objectForKey:@"rooms"] objectEnumerator];
@@ -890,6 +893,9 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarQueryUserItemIdentifier] ) {
 			if( connected ) [item setAction:@selector( _messageUser: )];
 			else [item setAction:NULL];
+		} else if( [[item itemIdentifier] isEqualToString:MVToolbarConsoleItemIdentifier] ) {
+			if( noneSelected ) [item setAction:NULL];
+			else [item setAction:@selector( _openConsole: )];
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarEditItemIdentifier] ) {
 			if( noneSelected || [editConnection isVisible] ) [item setAction:NULL];
 			else [item setAction:@selector( _editConnection: )];
@@ -934,6 +940,9 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	info = [_bookmarks objectAtIndex:[connections selectedRow]];
 	connection = [info objectForKey:@"connection"];
 
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+		[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+
 	[connection connect];
 
 	enumerator = [[info objectForKey:@"rooms"] objectEnumerator];
@@ -962,6 +971,11 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshRooms: ) name:MVChatConnectionGotRoomInfoNotification object:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"]];
 	[(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] fetchRoomList];
 	[[NSApplication sharedApplication] beginSheet:joinRoom modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+}
+
+- (void) _openConsole:(id) sender {
+	if( [connections selectedRow] == -1 ) return;
+	[[JVChatController defaultManager] chatConsoleForConnection:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] ifExists:NO];
 }
 
 - (void) _editConnection:(id) sender {

@@ -15,6 +15,8 @@ typedef void (*firetalk_subcode_callback)(firetalk_t, void *, const char * const
 
 #pragma mark -
 
+NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";
+
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
 NSString *MVChatConnectionDidNotConnectNotification = @"MVChatConnectionDidNotConnectNotification";
@@ -114,7 +116,9 @@ void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t mess
 
 #pragma mark -
 
-void MVChatLoad( void *c, void *cs, const char * const nickname ) {
+void MVChatRawMessage( void *c, void *cs, const char * const raw, int outbound ) {
+	MVChatConnection *self = cs;
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:raw], @"message", [NSNumber numberWithBool:(BOOL)outbound], @"outbound", nil]];
 }
 
 void MVChatConnected( void *c, void *cs ) {
@@ -995,7 +999,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (void) _registerCallbacks {
 	if( ! _chatConnection ) return;
-	firetalk_register_callback( _chatConnection, FC_DOINIT, (firetalk_callback) MVChatLoad );
+	firetalk_register_callback( _chatConnection, FC_RAW_MESSAGE, (firetalk_callback) MVChatRawMessage );
 	firetalk_register_callback( _chatConnection, FC_CONNECTED, (firetalk_callback) MVChatConnected );
 	firetalk_register_callback( _chatConnection, FC_CONNECTFAILED, (firetalk_callback) MVChatConnectionFailed );
 	firetalk_register_callback( _chatConnection, FC_DISCONNECT, (firetalk_callback) MVChatDisconnect );

@@ -19,6 +19,8 @@ typedef enum {
 	MVChatConnectionSOCKSProxy = 0x2
 } MVChatConnectionProxy;
 
+extern NSString *MVChatConnectionGotRawMessageNotification;
+
 extern NSString *MVChatConnectionWillConnectNotification;
 extern NSString *MVChatConnectionDidConnectNotification;
 extern NSString *MVChatConnectionDidNotConnectNotification;

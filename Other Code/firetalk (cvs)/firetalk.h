@@ -134,6 +134,8 @@ enum firetalk_callback {
 		/* void *connection, void *clientstruct, char *room, char *oldnick, char *newnick */
 	FC_CHAT_LISTMEMBER,
 		/* void *connection, vodi *clientstruct, char *room, char *membername, int opped */
+	FC_RAW_MESSAGE,
+		/* void *connection, vodi *clientstruct, char *message, int output */
 	FC_FILE_OFFER,
 		/* void *connection, void *clientstruct, void *filehandle, char *from, char *filename, long size */
 	FC_FILE_START,

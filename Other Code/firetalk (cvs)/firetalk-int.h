@@ -219,6 +219,7 @@ enum firetalk_connectstate {
 
 double firetalk_gettime();
 
+void firetalk_callback_raw_message(client_t c, const char * const raw, int output);
 void firetalk_callback_im_getmessage(client_t c, const char * const sender, const int automessage, const char * const message);
 void firetalk_callback_im_getaction(client_t c, const char * const sender, const int automessage, const char * const message);
 void firetalk_callback_im_buddyonline(client_t c, const char * const nickname, const int online);

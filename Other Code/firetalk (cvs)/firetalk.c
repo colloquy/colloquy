@@ -814,6 +814,16 @@ static struct s_firetalk_member *firetalk_find_member(firetalk_t c, struct s_fir
 	return NULL;
 }
 
+void firetalk_callback_raw_message(client_t c, const char * const raw, int output) {
+	struct s_firetalk_handle *conn;
+	conn = firetalk_find_handle(c);
+	if (conn == NULL)
+		return;
+	if (conn->callbacks[FC_RAW_MESSAGE])
+		conn->callbacks[FC_RAW_MESSAGE](conn,conn->clientstruct,raw,output);
+	return;
+}
+
 void firetalk_callback_needpass(client_t c, char *pass, const int size) {
 	struct s_firetalk_handle *conn;
 	conn = firetalk_find_handle(c);

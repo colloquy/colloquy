@@ -25,5 +25,6 @@
 - (id <JVChatViewController>) chatViewControllerForRoom:(NSString *) room withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 - (id <JVChatViewController>) chatViewControllerForUser:(NSString *) user withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 - (id <JVChatViewController>) chatViewControllerForTranscript:(NSString *) filename;
+- (id <JVChatViewController>) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 - (void) disposeViewController:(id <JVChatViewController>) controller;
 @end
