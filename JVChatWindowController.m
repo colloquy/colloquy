@@ -364,7 +364,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (NSToolbarItem *) chatActivityToolbarItem {
-	if( _activityToolbarItem ) return _activityToolbarItem;
+	return nil;
+
+/*	if( _activityToolbarItem ) return _activityToolbarItem;
 
 	_activityToolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:JVToolbarToggleChatActivityItemIdentifier];
 
@@ -374,7 +376,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[activityToolbarButton setToolbarItem:_activityToolbarItem];
 	[_activityToolbarItem setView:activityToolbarButton];
 
-	return _activityToolbarItem;
+	return _activityToolbarItem;*/
 }
 
 - (IBAction) toggleViewsDrawer:(id) sender {
@@ -407,7 +409,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
 	[chatViewsOutlineView reloadItem:item reloadChildren:( children && [chatViewsOutlineView isItemExpanded:item] ? YES : NO )];
 	if( _activeViewController == item ) [self _refreshWindowTitle];
-	[self _refreshChatActivityToolbarItemWithListItem:item];
+//	[self _refreshChatActivityToolbarItemWithListItem:item];
 }
 
 - (void) expandListItem:(id <JVChatListItem>) item {
@@ -532,7 +534,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self _refreshWindow];
 
 	[self _refreshSelectionMenu];
-	[self _refreshChatActivityToolbarItemWithListItem:item];
+//	[self _refreshChatActivityToolbarItemWithListItem:item];
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView writeItems:(NSArray *) items toPasteboard:(NSPasteboard *) board {
