@@ -3,6 +3,7 @@
 @class WebView;
 @class NSPopUpButton;
 @class NSTextView;
+@class JVFontPreviewField;
 @class NSTextField;
 @class NSStepper;
 @class NSSet;
@@ -11,10 +12,10 @@
 	IBOutlet WebView *preview;
 	IBOutlet NSPopUpButton *styles;
 	IBOutlet NSPopUpButton *emoticons;
-	IBOutlet NSTextField *standardFont;
-	IBOutlet NSTextField *fixedWidthFont;
-	IBOutlet NSTextField *serifFont;
-	IBOutlet NSTextField *sansSerifFont;
+	IBOutlet JVFontPreviewField *standardFont;
+	IBOutlet JVFontPreviewField *fixedWidthFont;
+	IBOutlet JVFontPreviewField *serifFont;
+	IBOutlet JVFontPreviewField *sansSerifFont;
 	IBOutlet NSTextField *minimumFontSize;
 	IBOutlet NSStepper *minimumFontSizeStepper;
 	NSSet *_styleBundles;

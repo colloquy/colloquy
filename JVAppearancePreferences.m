@@ -60,19 +60,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 - (void) initializeFromDefaults {
-	[standardFont setFont:[NSUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVDefaultStandardFont"]]];
-	[fixedWidthFont setFont:[NSUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVDefaultFixedWidthFont"]]];
-	[serifFont setFont:[NSUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVDefaultSerifFont"]]];
-	[sansSerifFont setFont:[NSUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVDefaultSansSerifFont"]]];
-	[minimumFontSize setIntValue:[[[NSUserDefaults standardUserDefaults] objectForKey:@"JVDisplayMinimumFontSize"] unsignedIntValue]];
-	[minimumFontSizeStepper setIntValue:[[[NSUserDefaults standardUserDefaults] objectForKey:@"JVDisplayMinimumFontSize"] unsignedIntValue]];
+	[[WebPreferences standardPreferences] setAutosaves:YES];
+	[standardFont setShowPointSize:YES];
+	[fixedWidthFont setShowPointSize:YES];
+	[standardFont setFont:[NSFont fontWithName:[[WebPreferences standardPreferences] standardFontFamily] size:[[WebPreferences standardPreferences] defaultFontSize]]];
+	[fixedWidthFont setFont:[NSFont fontWithName:[[WebPreferences standardPreferences] fixedFontFamily] size:[[WebPreferences standardPreferences] defaultFixedFontSize]]];
+	[serifFont setFont:[NSFont fontWithName:[[WebPreferences standardPreferences] serifFontFamily] size:[[WebPreferences standardPreferences] defaultFontSize]]];
+	[sansSerifFont setFont:[NSFont fontWithName:[[WebPreferences standardPreferences] sansSerifFontFamily] size:[[WebPreferences standardPreferences] defaultFontSize]]];
+	[minimumFontSize setIntValue:[[WebPreferences standardPreferences] minimumFontSize]];
+	[minimumFontSizeStepper setIntValue:[[WebPreferences standardPreferences] minimumFontSize]];
 	[self updateChatStylesMenu];
 	[self updateEmoticonsMenu];
 	[self updatePreview];
 }
 
 - (void) saveChanges {
-	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithUnsignedInt:[minimumFontSize intValue]] forKey:@"JVDisplayMinimumFontSize"];
+	[[WebPreferences standardPreferences] setMinimumFontSize:[minimumFontSize intValue]];
 }
 
 - (IBAction) changeDefaultChatStyle:(id) sender {
@@ -163,7 +166,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSMenuItem *menuItem = nil;
 	NSString *defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"];
 	NSBundle *emoticon = nil;
-	id file = nil;
 
 	if( ! defaultEmoticons ) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultEmoticons"];
@@ -206,7 +208,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [style bundleIdentifier]]];
 	NSBundle *emoticon = nil;
 	NSString *emoticonStyle = @"";
-	
+
 	if( [(NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"] length] ) {
 		if( [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"] isEqualToString:@"hidden"] ) {
 			emoticonStyle = [[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"emoticonsHidden" ofType:@"css"]] absoluteString];
@@ -243,18 +245,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	else path = @"";
 	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, ( style ? [[NSURL fileURLWithPath:[style pathForResource:@"main" ofType:@"css"]] absoluteString] : @"" ), path, html];
 
+	[preview setPreferences:[WebPreferences standardPreferences]];
 	[[preview mainFrame] loadHTMLString:html baseURL:nil];
 }
 
 - (void) fontPreviewField:(JVFontPreviewField *) field didChangeToFont:(NSFont *) font {
 	if( field == standardFont ) {
-		[[NSUserDefaults standardUserDefaults] setObject:[NSArchiver archivedDataWithRootObject:font] forKey:@"JVDefaultStandardFont"];
+		[[WebPreferences standardPreferences] setStandardFontFamily:[font familyName]];
+		[[WebPreferences standardPreferences] setDefaultFontSize:[font pointSize]];
 	} else if( field == fixedWidthFont ) {
-		[[NSUserDefaults standardUserDefaults] setObject:[NSArchiver archivedDataWithRootObject:font] forKey:@"JVDefaultFixedWidthFont"];
+		[[WebPreferences standardPreferences] setFixedFontFamily:[font familyName]];
+		[[WebPreferences standardPreferences] setDefaultFixedFontSize:[font pointSize]];
 	} else if( field == serifFont ) {
-		[[NSUserDefaults standardUserDefaults] setObject:[NSArchiver archivedDataWithRootObject:font] forKey:@"JVDefaultSerifFont"];
+		[[WebPreferences standardPreferences] setSerifFontFamily:[font familyName]];
 	} else if( field == sansSerifFont ) {
-		[[NSUserDefaults standardUserDefaults] setObject:[NSArchiver archivedDataWithRootObject:font] forKey:@"JVDefaultSansSerifFont"];
+		[[WebPreferences standardPreferences] setSansSerifFontFamily:[font familyName]];
 	}
+	[self updatePreview];
 }
 @end
