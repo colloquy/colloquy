@@ -881,12 +881,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 @implementation NSWindow (JVChatWindowControllerScripting)
-- (NSNumber *) uniqueIdentifier {
-	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
-}
-
-#pragma mark -
-
 - (NSArray *) views {
 	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return nil;
 	return [[self windowController] allChatViewControllers];

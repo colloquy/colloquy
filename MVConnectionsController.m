@@ -1738,31 +1738,33 @@ static NSMenu *favoritesMenu = nil;
 	[[MVConnectionsController defaultManager] handleURL:[sender representedObject] andConnectIfPossible:YES];
 }
 @end
-/*
+
 #pragma mark -
 
 @implementation MVChatConnection (MVChatConnectionObjectSpecifier)
 - (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[MVConnectionsController class]];
-	NSScriptObjectSpecifier *container = [[MVConnectionsController defaultManager] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"connections" uniqueID:[self uniqueIdentifier]] autorelease];
+	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
+	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatConnections" uniqueID:[self uniqueIdentifier]] autorelease];
 }
 @end
 
 #pragma mark -
 
-@implementation MVConnectionsController (MVConnectionsControllerScripting)
-- (MVChatConnection *) valueInConnectionsAtIndex:(unsigned) index {
-	return [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
+@implementation NSApplication (MVConnectionsControllerScripting)
+- (NSArray *) chatConnections {
+	return [[MVConnectionsController defaultManager] connections];
 }
 
-- (MVChatConnection *) valueInConnectionsWithUniqueID:(id) identifier {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	MVChatConnection *connection = nil;
-	NSDictionary *info = nil;
+- (MVChatConnection *) valueInChatConnectionsAtIndex:(unsigned) index {
+	return [[self chatConnections] objectAtIndex:index];
+}
 
-	while( ( info = [enumerator nextObject] ) ) {
-		connection = [info objectForKey:@"connection"];
+- (MVChatConnection *) valueInChatConnectionsWithUniqueID:(id) identifier {
+	NSEnumerator *enumerator = [[self chatConnections] objectEnumerator];
+	MVChatConnection *connection = nil;
+
+	while( ( connection = [enumerator nextObject] ) ) {
 		if( [[connection uniqueIdentifier] isEqual:identifier] )
 			return connection;
 	}
@@ -1770,27 +1772,27 @@ static NSMenu *favoritesMenu = nil;
 	return nil;
 }
 
-- (void) addInConnections:(MVChatConnection *) connection {
-	[self addConnection:connection];
+- (void) addInChatConnections:(MVChatConnection *) connection {
+	[[MVConnectionsController defaultManager] addConnection:connection];
 }
 
-- (void) insertInConnections:(MVChatConnection *) connection {
-	[self addConnection:connection];
+- (void) insertInChatConnections:(MVChatConnection *) connection {
+	[[MVConnectionsController defaultManager] addConnection:connection];
 }
 
-- (void) insertInConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
-	[self insertConnection:connection atIndex:index];
+- (void) insertInChatConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
+	[[MVConnectionsController defaultManager] insertConnection:connection atIndex:index];
 }
 
-- (void) removeFromConnectionsAtIndex:(unsigned) index {
-	[self removeConnectionAtIndex:index];
+- (void) removeFromChatConnectionsAtIndex:(unsigned) index {
+	[[MVConnectionsController defaultManager] removeConnectionAtIndex:index];
 }
 
-- (void) replaceInConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
-	[self replaceConnectionAtIndex:index withConnection:connection];
+- (void) replaceInChatConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
+	[[MVConnectionsController defaultManager] replaceConnectionAtIndex:index withConnection:connection];
 }
 
-- (MVChatConnection *) handleURLScriptCommand:(NSScriptCommand *) command {
+/* - (MVChatConnection *) handleURLScriptCommand:(NSScriptCommand *) command {
 	NSURL *url = [NSURL URLWithString:[[command evaluatedArguments] objectForKey:@"url"]];
 	if( ! url ) return nil;
 
@@ -1801,5 +1803,5 @@ static NSMenu *favoritesMenu = nil;
 
 	[self addConnection:connection];
 	return connection;
-}
-@end */
+} */
+@end

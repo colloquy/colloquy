@@ -20,7 +20,7 @@
 					<key>Description</key>
 					<string>Current nickname on the server.</string>
 					<key>Name</key>
-					<string>nickanme</string>
+					<string>nickname</string>
 				</dict>
 				<key>nicknamePassword</key>
 				<dict>

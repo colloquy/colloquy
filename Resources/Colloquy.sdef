@@ -191,8 +191,16 @@
 			</class>
 			<class name="transcript" code="traM" description="A log of a previous conversation.">
 				<cocoa class="JVChatTranscript"/>
+				<elements>
+					<element type="message">
+						<cocoa method="messages"/>
+					</element>
+				</elements>
 			</class>
 			<class name="message" code="cmsM" description="A chat message.">
+				<contents name="body" code="maPA" description="The body of the message. (Default subcontainer.)" type="text">
+					<cocoa method="body"/>
+				</contents>
 				<cocoa class="JVChatMessage"/>
 				<properties>
 					<property name="id" code="ID  " description="The id of this message." type="integer" access="rw">
@@ -213,6 +221,9 @@
 					</property>
 					<property name="ignore status" code="iGsA" description="If the message was ignored with one of the ignore rules." type="ignore status" access="rw">
 						<cocoa method="ignoreStatus"/>
+					</property>
+					<property name="transcript" code="trnA" description="The transcript (log) this message belongs to." type="transcript" access="r">
+						<cocoa method="transcript"/>
 					</property>
 				</properties>
 			</class>
@@ -379,7 +390,7 @@
 					<property name="local user" code="lcuA" description="Current local user when connected." type="chat user" access="r">
 						<cocoa method="localUser"/>
 					</property>
-					<property name="nickanme" code="nicA" description="Current nickname on the server." type="string" access="rw">
+					<property name="nickname" code="nicA" description="Current nickname on the server." type="string" access="rw">
 						<cocoa method="nickname"/>
 					</property>
 					<property name="nickname password" code="ncpA" description="The nickname&apos;" type="string" access="rw">

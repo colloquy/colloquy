@@ -106,10 +106,17 @@
 		<dict>
 			<key>Attributes</key>
 			<dict>
+				<key>body</key>
+				<dict>
+					<key>Description</key>
+					<string>The body of the message. (Default subcontainer.)</string>
+					<key>Name</key>
+					<string>body</string>
+				</dict>
 				<key>bodyAsHTML</key>
 				<dict>
 					<key>Description</key>
-					<string>The message with posiable HTML formatting.</string>
+					<string>The message with possible HTML formatting.</string>
 					<key>Name</key>
 					<string>HTML</string>
 				</dict>
@@ -154,6 +161,13 @@
 					<string>The sender of this message</string>
 					<key>Name</key>
 					<string>sender</string>
+				</dict>
+				<key>transcript</key>
+				<dict>
+					<key>Description</key>
+					<string>The transcript (log) this message belongs to.</string>
+					<key>Name</key>
+					<string>transcript</string>
 				</dict>
 			</dict>
 			<key>Description</key>

@@ -120,6 +120,13 @@
 			<string>cmsM</string>
 			<key>Attributes</key>
 			<dict>
+				<key>body</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>maPA</string>
+					<key>Type</key>
+					<string>NSTextSuite.NSTextStorage</string>
+				</dict>
 				<key>bodyAsHTML</key>
 				<dict>
 					<key>AppleEventCode</key>
@@ -169,7 +176,18 @@
 					<key>Type</key>
 					<string>NSCoreSuite.AbstractObject</string>
 				</dict>
+				<key>transcript</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>trnA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatTranscript</string>
+				</dict>
 			</dict>
+			<key>DefaultSubcontainerAttribute</key>
+			<string>body</string>
 			<key>Superclass</key>
 			<string>NSCoreSuite.AbstractObject</string>
 		</dict>
@@ -232,6 +250,18 @@
 			<string>traM</string>
 			<key>Superclass</key>
 			<string>NSCoreSuite.AbstractObject</string>
+			<key>ToManyRelationships</key>
+			<dict>
+				<key>messages</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>cmsM</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatMessage</string>
+				</dict>
+			</dict>
 		</dict>
 		<key>JVChatTranscriptPanel</key>
 		<dict>

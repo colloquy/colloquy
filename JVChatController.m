@@ -503,11 +503,7 @@ static JVChatController *sharedInstance = nil;
 #pragma mark -
 
 @implementation NSApplication (JVChatControllerScripting)
-/*- (JVChatWindowController *) newChatWindowScriptCommand:(NSScriptCommand *) command {
-	return [self newChatWindowController];
-}
-
-- (void) startChatScriptCommand:(NSScriptCommand *) command {
+/*- (void) startChatScriptCommand:(NSScriptCommand *) command {
 	MVChatConnection *connection = [[command evaluatedArguments] objectForKey:@"connection"];
 	NSString *user = [[command evaluatedArguments] objectForKey:@"user"];
 
