@@ -63,6 +63,38 @@
 
 #pragma mark -
 
+- (id) initWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding {
+	if( bytes && strlen( bytes ) ) {
+		id ret = [self initWithBytes:bytes length:strlen( bytes ) encoding:encoding];
+		if( ! ret ) ret = [self initWithCString:bytes];
+		if( ! ret ) [self release];
+		return ( self = ret );
+	}
+
+	[self release];
+	return nil;
+}
+
++ (id) stringWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding {
+	if( bytes && strlen( bytes ) )
+		return [[[self alloc] initWithBytes:bytes encoding:encoding] autorelease];
+	return nil;
+}
+
+#pragma mark -
+
+- (const char *) bytesUsingEncoding:(NSStringEncoding) encoding allowLossyConversion:(BOOL) lossy {
+	NSMutableData *ret = [[[self dataUsingEncoding:encoding allowLossyConversion:lossy] mutableCopy] autorelease];
+	[ret appendBytes:"\0" length:1];
+	return [ret bytes];
+}
+
+- (const char *) bytesUsingEncoding:(NSStringEncoding) encoding {
+	return [self bytesUsingEncoding:encoding allowLossyConversion:NO];
+}
+
+#pragma mark -
+
 - (NSString *) stringByEncodingXMLSpecialCharactersAsEntities {
 	NSMutableString *result = [self mutableCopy];
 	[result encodeXMLSpecialCharactersAsEntities];

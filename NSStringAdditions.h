@@ -5,6 +5,12 @@
 
 - (unsigned long) UTF8StringByteLength;
 
+- (id) initWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding;
++ (id) stringWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding;
+
+- (const char *) bytesUsingEncoding:(NSStringEncoding) encoding allowLossyConversion:(BOOL) lossy;
+- (const char *) bytesUsingEncoding:(NSStringEncoding) encoding;
+
 - (NSString *) stringByEncodingXMLSpecialCharactersAsEntities;
 - (NSString *) stringByDecodingXMLSpecialCharacterEntities;
 
