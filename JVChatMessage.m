@@ -38,7 +38,7 @@
 }
 
 + (id) coerceMessage:(id) value toTextStorage:(Class) class {
-	return [value body];
+	return [value performSelector:@selector(body)];
 }
 
 #pragma mark -
