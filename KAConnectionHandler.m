@@ -148,13 +148,13 @@ static KAConnectionHandler *sharedHandler = nil;
 
 - (BOOL) shouldIgnoreMessage:(NSAttributedString *) message inRoom:(NSString *) room {
 	BOOL ignoreThisMessage = NO;
-	NSEnumerator *enum = [_ignoreRules objectEnumerator];
+	NSEnumerator *oenum = [_ignoreRules objectEnumerator];
 	KAInternalIgnoreRule *rule = nil;
 	
-	while ( rule = [enum nextObject] ) {		
+	while ( rule = [oenum nextObject] ) {		
 		if ( [rule regex] && ![rule isMember] ) {
 			AGRegex *matchPattern = [AGRegex regexWithPattern:[rule key] options:AGRegexCaseInsensitive];
-			if ( [matchPattern findInString:key] ) ignoreThisMessage = YES;
+			if ( [matchPattern findInString:[rule key]] ) ignoreThisMessage = YES;
 		} else if ( [[rule key] isEqualToString:[message string]] ) ignoreThisMessage = YES;
 	}
 	
