@@ -18,6 +18,7 @@
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) connection {
 	if( ( self = [self initWithNickname:nil andConnection:connection] ) ) {
 		_type = MVChatLocalUserType;
+		_uniqueIdentifier = [[[self nickname] lowercaseString] retain];
 	}
 
 	return self;
@@ -32,6 +33,12 @@
 	}
 
 	return self;
+}
+
+#pragma mark -
+
+- (unsigned long) supportedModes {
+	return MVChatUserInvisibleMode;
 }
 
 #pragma mark -

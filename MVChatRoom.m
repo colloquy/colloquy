@@ -102,7 +102,8 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 }
 
 - (unsigned) hash {
-	return ( [[self uniqueIdentifier] hash] ^ [[self connection] hash] );
+	// this hash assumes the MVChatConnection will return the same instance for equal rooms
+	return ( [[self uniqueIdentifier] hash] ^ [[self connection] hash] ^ (unsigned long) self );
 }
 
 #pragma mark -
@@ -235,26 +236,23 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 #pragma mark -
 
 - (NSDictionary *) attributes {
-	NSDictionary *ret = nil;
 	@synchronized( _attributes ) {
-		ret = [NSDictionary dictionaryWithDictionary:_attributes];
-	} return ret;
+		return [NSDictionary dictionaryWithDictionary:_attributes];
+	} return nil;
 }
 
 - (BOOL) hasAttributeForKey:(NSString *) key {
 	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
-	BOOL ret = NO;
 	@synchronized( _attributes ) {
-		ret = ( [_attributes objectForKey:key] ? YES : NO );
-	} return ret;
+		return ( [_attributes objectForKey:key] ? YES : NO );
+	} return NO;
 }
 
 - (id) attributeForKey:(NSString *) key {
 	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
-	id ret = nil;
 	@synchronized( _attributes ) {
-		ret = [_attributes objectForKey:key];
-	} return [[ret retain] autorelease];
+		return [[[_attributes objectForKey:key] retain] autorelease];
+	} return nil;
 }
 
 #pragma mark -
@@ -272,22 +270,30 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 
 - (id) attributeForMode:(MVChatRoomMode) mode {
 	NSParameterAssert( [self supportedModes] & mode );
-	id ret = nil;
 	@synchronized( _modeAttributes ) {
-		ret = [_modeAttributes objectForKey:[NSNumber numberWithUnsignedInt:mode]];
-	} return [[ret retain] autorelease];
+		return [[[_modeAttributes objectForKey:[NSNumber numberWithUnsignedInt:mode]] retain] autorelease];
+	} return nil;
 }
 
 #pragma mark -
 
 - (void) setModes:(unsigned long) modes {
 	NSParameterAssert( [self supportedModes] & modes );
-// subclass this method, call super first	
+
+	unsigned long curModes = [self modes];
+	unsigned long diffModes = ( curModes ^ modes );
+
+	unsigned i = 0;
+	for( i = 0; i <= 8; i++ ) {
+		if( ( 1 << i ) & diffModes ) {
+			if( ( 1 << i ) & modes ) [self setMode:( 1 << i ) withAttribute:nil];
+			else [self removeMode:( 1 << i )];
+		}
+	}
 }
 
 - (void) setMode:(MVChatRoomMode) mode {
-	NSParameterAssert( [self supportedModes] & mode );
-// subclass this method, call super first	
+	[self setMode:mode withAttribute:nil];
 }
 
 - (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute {
@@ -295,13 +301,17 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 // subclass this method, call super first	
 }
 
+- (void) removeMode:(MVChatRoomMode) mode {
+	NSParameterAssert( [self supportedModes] & mode );
+// subclass this method, call super first	
+}
+
 #pragma mark -
 
 - (NSSet *) memberUsers {
-	NSSet *ret = nil;
 	@synchronized( _memberUsers ) {
-		ret = [NSSet setWithSet:_memberUsers];
-	} return ret;
+		return [NSSet setWithSet:_memberUsers];
+	} return nil;
 }
 
 - (NSSet *) memberUsersWithModes:(unsigned long) modes {
@@ -347,33 +357,30 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 }
 
 - (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier {
-	MVChatUser *user = nil;
-
 	@synchronized( _memberUsers ) {
+		MVChatUser *user = nil;
 		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
 		while( ( user = [enumerator nextObject] ) )
 			if( [[user uniqueIdentifier] isEqual:identifier] )
-				break;
+				return [[user retain] autorelease];
 	}
 
-	return user;
+	return nil;
 }
 
 - (BOOL) hasUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
-	BOOL ret = NO;
 	@synchronized( _memberUsers ) {
-		ret = [_memberUsers containsObject:user];
-	} return ret;
+		return [_memberUsers containsObject:user];
+	} return NO;
 }
 
 #pragma mark -
 
 - (NSSet *) bannedUsers {
-	NSSet *ret = nil;
 	@synchronized( _bannedUsers ) {
-		ret = [NSSet setWithSet:_bannedUsers];
-	} return ret;
+		return [NSSet setWithSet:_bannedUsers];
+	} return nil;
 }
 
 - (void) addBanForUser:(MVChatUser *) user {
@@ -397,10 +404,9 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 
 - (unsigned long) modesForMemberUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
-	unsigned long ret = 0;
 	@synchronized( _memberModes ) {
-		ret = [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue];
-	} return ret;
+		return [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue];
+	} return 0;
 }
 
 #pragma mark -
@@ -408,10 +414,26 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 - (void) setModes:(unsigned long) modes forMemberUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
 	NSParameterAssert( [self supportedMemberUserModes] & modes );
-// subclass this method, call super first	
+
+	unsigned long curModes = [self modesForMemberUser:user];
+	unsigned long diffModes = ( curModes ^ modes );
+
+	unsigned i = 0;
+	for( i = 0; i <= 8; i++ ) {
+		if( ( 1 << i ) & diffModes ) {
+			if( ( 1 << i ) & modes ) [self setMode:( 1 << i ) forMemberUser:user];
+			else [self removeMode:( 1 << i ) forMemberUser:user];
+		}
+	}
 }
 
 - (void) setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
+	NSParameterAssert( user != nil );
+	NSParameterAssert( [self supportedMemberUserModes] & mode );
+// subclass this method, call super first	
+}
+
+- (void) removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
 	NSParameterAssert( [self supportedMemberUserModes] & mode );
 // subclass this method, call super first	
@@ -441,6 +463,14 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 	}
 }
 
+- (void) _clearMemberUsers {
+	@synchronized( _memberModes ) {
+		[_memberModes removeAllObjects];
+	} @synchronized( _memberUsers ) {
+		[_memberUsers removeAllObjects];
+	}
+}
+
 - (void) _addBanForUser:(MVChatUser *) user {
 	@synchronized( _bannedUsers ) {
 		[_bannedUsers addObject:user];
@@ -460,6 +490,13 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 	}
 }
 
+- (void) _removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
+	@synchronized( _memberModes ) {
+		unsigned long modes = ( [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue] & ~mode );
+		[_memberModes setObject:[NSNumber numberWithUnsignedLong:modes] forKey:[user uniqueIdentifier]];
+	}
+}
+
 - (void) _clearModes {
 	_modes = 0;
 	@synchronized( _modeAttributes ) {
@@ -472,6 +509,13 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 	@synchronized( _modeAttributes ) {
 		if( attribute ) [_modeAttributes setObject:attribute forKey:[NSNumber numberWithUnsignedLong:mode]];
 		else [_modeAttributes removeObjectForKey:[NSNumber numberWithUnsignedLong:mode]];
+	}
+}
+
+- (void) _removeMode:(MVChatRoomMode) mode {
+	_modes &= ~mode;
+	@synchronized( _modeAttributes ) {
+		[_modeAttributes removeObjectForKey:[NSNumber numberWithUnsignedLong:mode]];
 	}
 }
 

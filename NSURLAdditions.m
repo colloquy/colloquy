@@ -90,36 +90,4 @@
 	// Set the file type/creator
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:'ilge'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'MACS'], NSFileHFSCreatorCode, nil] atPath:path];
 }
-
-- (BOOL) isChatURL {
-	if( [[self scheme] isEqualToString:@"irc"] || [[self scheme] isEqualToString:@"silc"] ) return YES;
-	return NO;
-}
-
-- (BOOL) isChatRoomURL {
-	BOOL isRoom = NO;
-	if( [[self scheme] isEqualToString:@"irc"] || [[self scheme] isEqualToString:@"silc"] ) {
-		if( [self fragment] ) {
-			if( [[self fragment] length] > 0 ) isRoom = YES;
-		} else if( [self path] && [[self path] length] >= 2 ) {
-			if( [[[self path] substringFromIndex:1] hasPrefix:@"&"] || [[[self path] substringFromIndex:1] hasPrefix:@"+"] || [[[self path] substringFromIndex:1] hasPrefix:@"!"] )
-				isRoom = YES;
-		}
-	}
-	return isRoom;
-}
-
-- (BOOL) isDirectChatURL {
-	BOOL isDirect = NO;
-	if( [[self scheme] isEqualToString:@"irc"] || [[self scheme] isEqualToString:@"silc"] ) {
-		if( [self fragment] ) {
-			if( [[self fragment] length] > 0 ) isDirect = NO;
-		} else if( [self path] && [[self path] length] >= 2) {
-			if( [[[self path] substringFromIndex:1] hasPrefix:@"&"] || [[[self path] substringFromIndex:1] hasPrefix:@"+"] || [[[self path] substringFromIndex:1] hasPrefix:@"!"] ) {
-				isDirect = NO;
-			} else isDirect = YES;
-		}
-	}
-	return isDirect;
-}
 @end

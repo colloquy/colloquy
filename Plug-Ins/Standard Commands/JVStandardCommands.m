@@ -363,7 +363,7 @@
 	NSArray *channels = [arguments componentsSeparatedByString:@","];
 
 	if( [arguments length] && [channels count] == 1 ) {
-		[connection joinChatRoom:arguments];
+		[connection joinChatRoomNamed:arguments];
 		return YES;
 	} else if( [arguments length] && [channels count] > 1 ) {
 		NSEnumerator *chanEnum = [channels objectEnumerator];
@@ -375,7 +375,7 @@
 			[(NSMutableArray *)channels addObject:channel];
 		}
 
-		[connection joinChatRooms:channels];
+		[connection joinChatRoomsNamed:channels];
 		return YES;
 	} else {
 		id browser = [NSClassFromString( @"JVChatRoomBrowser" ) chatRoomBrowserForConnection:connection];

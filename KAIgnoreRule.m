@@ -3,7 +3,8 @@
 //  Created by Karl Adam on Thu Apr 15 2004.
 
 #import "KAIgnoreRule.h"
-#import "MVChatConnection.h"
+#import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatUser.h>
 #import "JVChatWindowController.h"
 #import "JVDirectChat.h"
 
@@ -59,15 +60,15 @@
 
 #pragma mark -
 
-- (JVIgnoreMatchResult) matchUser:(NSString *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
+- (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
 	if( ! [_rooms count] || ( [view isKindOfClass:[JVDirectChat class]] && [_rooms containsObject:[(JVDirectChat *)view target]] ) ) {
 		BOOL userFound = NO;
 		BOOL messageFound = NO;
 		BOOL userRequired = ( _userRegex || [_ignoredUser length] );
 		BOOL messageRequired = ( _messageRegex || [_ignoredMessage length] );
 
-		if( _userRegex && [_userRegex findInString:user] ) userFound = YES;
-		else if( [_ignoredUser length] ) userFound = [_ignoredUser isEqualToString:user];
+		if( _userRegex && [_userRegex findInString:[user nickname]] ) userFound = YES;
+		else if( [_ignoredUser length] ) userFound = [_ignoredUser isEqualToString:[user nickname]];
 
 		if( _messageRegex && [_messageRegex findInString:message] ) messageFound = YES;
 		else if( [_ignoredMessage length] ) messageFound = ( [message rangeOfString:_ignoredMessage options:NSCaseInsensitiveSearch].location != NSNotFound );

@@ -3,6 +3,7 @@
 #import "JVDirectChat.h"
 #import "JVChatTranscript.h"
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatRoom.h>
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (NSMenu *) _stylesMenu;
@@ -75,8 +76,8 @@
 - (void) willLoad {
 	[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@", [_room target]]];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatConnectionGotRoomTopicNotification object:[_room connection]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatConnectionGotMemberModeNotification object:[_room connection]];
+//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatConnectionGotRoomTopicNotification object:[_room connection]];
+//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatConnectionGotMemberModeNotification object:[_room connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatRoomModeChangedNotification object:_room];
 
 	[encodingSelection setMenu:[_room _encodingMenu]];
@@ -134,9 +135,9 @@
 }
 
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
-	unichar zeroWidthSpaceChar = 0x200b;	
+/*	unichar zeroWidthSpaceChar = 0x200b;	
 	[[[topic textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[topic textStorage] length] )];
-	[[_room connection] setTopic:[topic textStorage] withEncoding:[_room encoding] forRoom:[_room target]];
+	[[_room connection] setTopic:[topic textStorage] withEncoding:[_room encoding] forRoom:[_room target]]; */
 	return YES;
 }
 
@@ -146,7 +147,7 @@
 }
 
 - (void) textDidEndEditing:(NSNotification *) notification {
-	[[_room connection] setTopic:[topic textStorage] withEncoding:[_room encoding] forRoom:[_room target]];
+//	[[_room connection] setTopic:[topic textStorage] withEncoding:[_room encoding] forRoom:[_room target]];
 }
 @end
 
@@ -157,7 +158,7 @@
 	if( [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame ) return;
 	if( [[topic window] firstResponder] == topic && [topic isEditable] ) return;
 
-	NSMutableAttributedString *topicString = [[[_room topic] mutableCopy] autorelease];
+	NSMutableAttributedString *topicString = [[[[_room target] topic] mutableCopy] autorelease];
 	[topicString removeAttribute:NSParagraphStyleAttributeName range:NSMakeRange( 0, [topicString length] )];
 	[topicString removeAttribute:NSLinkAttributeName range:NSMakeRange( 0, [topicString length] )];
 	[[topic textStorage] setAttributedString:topicString];
@@ -166,7 +167,7 @@
 - (void) _refreshEditStatus:(NSNotification *) notification {
 	if( notification && [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame && [[[_room connection] nickname] isEqualToString:[[notification userInfo] objectForKey:@"who"]] ) return;
 
-	BOOL canEdit = [[_room chatRoomMemberWithName:[[_room connection] nickname]] operator];
+	BOOL canEdit = NO; // [[_room chatRoomMemberWithName:[[_room connection] nickname]] operator];
 
 	[topicChangeable setEnabled:canEdit];
 	[privateRoom setEnabled:canEdit];
@@ -175,7 +176,7 @@
 	[noOutside setEnabled:canEdit];
 	[moderated setEnabled:canEdit];
 	
-	[topic setEditable:(canEdit || ! (_modes & MVChatRoomSetTopicOperatorOnlyMode))];
+//	[topic setEditable:(canEdit || ! (_modes & MVChatRoomSetTopicOperatorOnlyMode))];
 
 	[limitMembers setEnabled:canEdit];
 	if( [limitMembers state] == NSOnState ) [memberLimit setEnabled:canEdit];
@@ -189,7 +190,7 @@
 - (void) _roomModeChanged:(NSNotification *) notification {
 	//if( [notification object] != _room ) return;
 	
-	unsigned int currentModes = [_room modes];
+/*	unsigned int currentModes = [_room modes];
 	unsigned int newModes = currentModes & ~ _modes;
 	unsigned int oldModes = _modes & ~ currentModes;
 	unsigned int changedModes = newModes | oldModes;
@@ -242,7 +243,6 @@
 		}
 	}
 	
-	[self _refreshEditStatus:nil];
+	[self _refreshEditStatus:nil]; */
 }
-
 @end

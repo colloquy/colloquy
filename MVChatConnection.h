@@ -18,28 +18,9 @@ typedef enum {
 	MVChatConnectionSOCKSProxy = 'sokS'
 } MVChatConnectionProxy;
 
-typedef enum {
-	MVChatRoomNoModes = 0x0,
-	MVChatRoomPrivateMode = 0x1,
-	MVChatRoomSecretMode = 0x2,
-	MVChatRoomInviteOnlyMode = 0x4,
-	MVChatRoomModeratedMode = 0x8,
-	MVChatRoomSetTopicOperatorOnlyMode = 0x10,
-	MVChatRoomNoOutsideMessagesMode = 0x20,
-	MVChatRoomPasswordRequiredMode = 0x40,
-	MVChatRoomMemberLimitMode = 0x80
-} MVChatRoomMode;
-
-typedef enum {
-	MVChatMemberNoModes = 0x0,
-	MVChatMemberOperatorMode = 0x1,
-	MVChatMemberHalfOperatorMode = 0x2,
-	MVChatMemberVoiceMode = 0x4
-} MVChatMemberMode;
-
+@class MVChatRoom;
+@class MVChatUser;
 @class MVUploadFileTransfer;
-
-extern NSString *MVChatConnectionGotRawMessageNotification;
 
 extern NSString *MVChatConnectionWillConnectNotification;
 extern NSString *MVChatConnectionDidConnectNotification;
@@ -51,46 +32,11 @@ extern NSString *MVChatConnectionErrorNotification;
 extern NSString *MVChatConnectionNeedNicknamePasswordNotification;
 extern NSString *MVChatConnectionNeedCertificatePasswordNotification;
 
+extern NSString *MVChatConnectionGotRawMessageNotification;
 extern NSString *MVChatConnectionGotPrivateMessageNotification;
+extern NSString *MVChatConnectionChatRoomlistUpdatedNotification;
 
-extern NSString *MVChatConnectionBuddyIsOnlineNotification;
-extern NSString *MVChatConnectionBuddyIsOfflineNotification;
-extern NSString *MVChatConnectionBuddyIsAwayNotification;
-extern NSString *MVChatConnectionBuddyIsUnawayNotification;
-extern NSString *MVChatConnectionBuddyIsIdleNotification;
-
-extern NSString *MVChatConnectionSelfAwayStatusNotification;
-
-extern NSString *MVChatConnectionGotUserWhoisNotification;
-extern NSString *MVChatConnectionGotUserServerNotification;
-extern NSString *MVChatConnectionGotUserChannelsNotification;
-extern NSString *MVChatConnectionGotUserOperatorNotification;
-extern NSString *MVChatConnectionGotUserIdleNotification;
-extern NSString *MVChatConnectionGotUserWhoisCompleteNotification;
-
-extern NSString *MVChatConnectionGotRoomInfoNotification;
-
-extern NSString *MVChatConnectionGotJoinWhoListNotification;
-extern NSString *MVChatConnectionRoomExistingMemberListNotification;
-extern NSString *MVChatConnectionJoinedRoomNotification;
-extern NSString *MVChatConnectionLeftRoomNotification;
-extern NSString *MVChatConnectionUserJoinedRoomNotification;
-extern NSString *MVChatConnectionUserLeftRoomNotification;
-extern NSString *MVChatConnectionUserQuitNotification;
-extern NSString *MVChatConnectionUserNicknameChangedNotification;
-extern NSString *MVChatConnectionUserKickedFromRoomNotification;
-extern NSString *MVChatConnectionUserAwayStatusNotification;
-extern NSString *MVChatConnectionGotMemberModeNotification;
-extern NSString *MVChatConnectionGotRoomModeNotification;
-extern NSString *MVChatConnectionGotRoomMessageNotification;
-extern NSString *MVChatConnectionGotRoomTopicNotification;
-
-extern NSString *MVChatConnectionNewBanNotification;
-extern NSString *MVChatConnectionRemovedBanNotification;
-extern NSString *MVChatConnectionBanlistReceivedNotification;
-
-extern NSString *MVChatConnectionKickedFromRoomNotification;
-extern NSString *MVChatConnectionInvitedToRoomNotification;
+extern NSString *MVChatConnectionSelfAwayStatusChangedNotification;
 
 extern NSString *MVChatConnectionNicknameAcceptedNotification;
 extern NSString *MVChatConnectionNicknameRejectedNotification;
@@ -105,6 +51,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSStringEncoding _encoding;
 
 	NSString *_npassword;
+	NSMutableSet *_joinedRooms;
+	MVChatUser *_localUser;
 	NSMutableDictionary *_roomsCache;
 	NSDate *_cachedDate;
 	NSDate *_lastConnectAttempt;
@@ -114,11 +62,21 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSArray *_alternateNicks;
 	unsigned int _nextAltNickIndex;
 }
++ (BOOL) supportsURLScheme:(NSString *) scheme;
+
+#pragma mark -
+
 - (id) initWithType:(MVChatConnectionType) type;
 - (id) initWithURL:(NSURL *) url;
 - (id) initWithServer:(NSString *) server type:(MVChatConnectionType) type port:(unsigned short) port user:(NSString *) nickname;
 
+#pragma mark -
+
 - (MVChatConnectionType) type;
+- (NSSet *) supportedFeatures;
+- (BOOL) supportsFeature:(NSString *) key;
+
+#pragma mark -
 
 - (void) connect;
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname;
@@ -191,61 +149,43 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action;
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action;
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action;
-
 - (void) sendRawMessage:(NSString *) raw;
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now;
 - (void) sendRawMessageWithFormat:(NSString *) format, ...;
 
-- (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user;
-- (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user passively:(BOOL) passive;
+#pragma mark -
+
+- (void) joinChatRoomsNamed:(NSArray *) rooms;
+- (void) joinChatRoomNamed:(NSString *) room;
+- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase;
 
 #pragma mark -
 
-- (void) sendSubcodeRequest:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments;
-- (void) sendSubcodeReply:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments;
-
-#pragma mark -
-
-- (void) joinChatRooms:(NSArray *) rooms;
-- (void) joinChatRoom:(NSString *) room;
-- (void) partChatRoom:(NSString *) room;
+- (NSSet *) joinedChatRooms;
+- (MVChatRoom *) joinedChatRoomWithName:(NSString *) room;
 
 #pragma mark -
 
 - (NSCharacterSet *) chatRoomNamePrefixes;
-- (NSString *) displayNameForChatRoom:(NSString *) room;
-- (NSString *) properNameForChatRoom:(NSString *) room;
+- (NSString *) properNameForChatRoomNamed:(NSString *) room;
 
 #pragma mark -
 
-- (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room;
-
-- (void) promoteMember:(NSString *) member inRoom:(NSString *) room;
-- (void) demoteMember:(NSString *) member inRoom:(NSString *) room;
-- (void) halfopMember:(NSString *) member inRoom:(NSString *) room;
-- (void) dehalfopMember:(NSString *) member inRoom:(NSString *) room;
-- (void) voiceMember:(NSString *) member inRoom:(NSString *) room;
-- (void) devoiceMember:(NSString *) member inRoom:(NSString *) room;
-- (void) kickMember:(NSString *) member inRoom:(NSString *) room forReason:(NSString *) reason;
-- (void) banMember:(NSString *) member inRoom:(NSString *) room;
-- (void) unbanMember:(NSString *) member inRoom:(NSString *) room;
+- (NSSet *) chatUsersWithNickname:(NSString *) nickname;
+- (NSSet *) chatUsersWithFingerprint:(NSString *) fingerprint;
+- (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier;
+- (MVChatUser *) localUser;
 
 #pragma mark -
 
-- (void) addUserToNotificationList:(NSString *) user;
-- (void) removeUserFromNotificationList:(NSString *) user;
-
-- (void) fetchInformationForUser:(NSString *) user withPriority:(BOOL) priority fromLocalServer:(BOOL) localOnly;
+- (void) addUserToNotificationList:(MVChatUser *) user;
+- (void) removeUserFromNotificationList:(MVChatUser *) user;
 
 #pragma mark -
 
-- (void) fetchRoomList;
-- (void) fetchRoomListWithRooms:(NSArray *) rooms;
-- (void) stopFetchingRoomList;
-- (NSMutableDictionary *) roomListResults;
+- (void) fetchChatRoomList;
+- (void) stopFetchingChatRoomList;
+- (NSMutableDictionary *) chatRoomListResults;
 
 #pragma mark -
 
@@ -265,7 +205,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) cancelPendingReconnectAttempts;
 - (BOOL) isWaitingToReconnect;
 @end
-
+/*
 #pragma mark -
 
 @interface MVChatConnection (MVChatConnectionScripting)
@@ -280,4 +220,4 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) connected:(MVChatConnection *) connection;
 - (void) disconnecting:(MVChatConnection *) connection;
-@end
+@end */

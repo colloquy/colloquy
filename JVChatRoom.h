@@ -1,7 +1,7 @@
 #import "JVDirectChat.h"
 
-@class WebView;
 @class JVChatRoomMember;
+@class MVChatUser;
 
 extern NSString *MVChatRoomModeChangedNotification;
 
@@ -9,21 +9,12 @@ extern NSString *MVChatRoomModeChangedNotification;
 	@protected
 	IBOutlet NSTextView *topicLine;
 
-	NSMutableDictionary *_members;
 	NSMutableArray *_sortedMembers;
 	NSMutableSet *_nextMessageAlertMembers;
-	NSAttributedString *_topicAttributed;
-	NSData *_topic;
-	NSString *_topicAuth;
-	NSString *_key;
-	unsigned int _modes;
-	unsigned int _limit;
 
 	BOOL _kickedFromRoom;
 	BOOL _inRoom;
 	BOOL _keepAfterPart;
-	
-	BOOL _initialBanlistReceived;
 }
 - (void) joined;
 - (void) parting;
@@ -34,37 +25,9 @@ extern NSString *MVChatRoomModeChangedNotification;
 - (BOOL) keepAfterPart;
 - (void) setKeepAfterPart:(BOOL) keep;
 
-- (void) addWhoInformationToMembers:(NSArray *) members;
-- (void) addExistingMembersToChat:(NSArray *) members;
-- (void) addMemberToChat:(NSString *) member withInformation:(NSDictionary *) info;
-- (void) removeChatMember:(NSString *) member withReason:(NSData *) reason;
-- (void) changeChatMember:(NSString *) member to:(NSString *) nick;
-
-- (void) promoteChatMember:(NSString *) member by:(NSString *) by;
-- (void) demoteChatMember:(NSString *) member by:(NSString *) by;
-- (void) voiceChatMember:(NSString *) member by:(NSString *) by;
-- (void) devoiceChatMember:(NSString *) member by:(NSString *) by;
-
-- (void) chatMember:(NSString *) member kickedBy:(NSString *) by forReason:(NSData *) reason;
-- (void) kickedFromChatBy:(NSString *) by forReason:(NSData *) reason;
-
-- (void) newBan:(NSString *) ban by:(NSString *) by;
-- (void) removedBan:(NSString *) ban by:(NSString *) by;
-- (void) banlistReceived;
-
-- (void) changeTopic:(NSData *) topic by:(NSString *) author displayChange:(BOOL) showChange;
-- (NSAttributedString *) topic;
-
-- (void) setModes:(unsigned int) modes;
-- (unsigned int) modes;
-
-- (void) setKey:(NSString *) key;
-- (NSString *) key;
-
-- (void) setLimit:(unsigned int) limit;
-- (unsigned int) limit;
-
-- (JVChatRoomMember *) chatRoomMemberWithName:(NSString *) name;
+- (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name;
+- (JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user;
+- (JVChatRoomMember *) localChatRoomMember;
 - (void) resortMembers;
 @end
 

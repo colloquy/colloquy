@@ -1,13 +1,14 @@
 #import <AddressBook/AddressBook.h>
 
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatUser.h>
+#import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSColorAdditions.h>
-#import <ChatCore/NSURLAdditions.h>
 
 #import <libxml/xinclude.h>
 #import <libxml/debugXML.h>
@@ -30,6 +31,7 @@
 #import "MVMenuButton.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
+#import "NSURLAdditions.h"
 #import "NSSplitViewAdditions.h"
 #import "NSAttributedStringMoreAdditions.h"
 
@@ -97,7 +99,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 @interface JVDirectChat (JVDirectChatPrivate)
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
-- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
+- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action;
 - (void) processQueue;
 - (void) displayQueue;
 - (void) writeToLog:(void *) root withDoc:(void *) doc initializing:(BOOL) init continuation:(BOOL) cont;
@@ -108,7 +110,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
-- (char *) _classificationForNickname:(NSString *) nickname;
+- (char *) _classificationForUser:(MVChatUser *) user;
 - (void) _saveSelfIcon;
 - (void) _saveBuddyIcon:(JVBuddy *) buddy;
 @end
@@ -129,8 +131,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		send = nil;
 		_messageId = 0;
 		_target = nil;
-		_buddy = nil;
-		_connection = nil;
 		_firstMessage = YES;
 		_newMessageCount = 0;
 		_newHighlightMessageCount = 0;
@@ -156,13 +156,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return self;
 }
 
-- (id) initWithTarget:(NSString *) target forConnection:(MVChatConnection *) connection {
+- (id) initWithTarget:(id) target {
 	if( ( self = [self init] ) ) {
-		NSString *source = nil;
-		_target = [target copy];
-		_connection = [connection retain];
-		_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_target onServer:[_connection server]] retain];
-		source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
+		_target = [target retain];
+
+		NSString *source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], [self target]];
 		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
 
 		if( ( [self isMemberOfClass:[JVDirectChat class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"] ) ||
@@ -175,16 +173,16 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			int org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
 
 			if( org == 1 ) {
-				logs = [logs stringByAppendingPathComponent:[_connection server]];
+				logs = [logs stringByAppendingPathComponent:[[self connection] server]];
 				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 			} else if( org == 2 ) {
-				logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", _target, [_connection server]]];
+				logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", [self target], [[self connection] server]]];
 				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 			} else if( org == 3 ) {
-				logs = [logs stringByAppendingPathComponent:[_connection server]];
+				logs = [logs stringByAppendingPathComponent:[[self connection] server]];
 				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 
-				logs = [logs stringByAppendingPathComponent:_target];
+				logs = [logs stringByAppendingPathComponent:[[self target] description]];
 				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 			}
 
@@ -195,21 +193,21 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				BOOL nameFound = NO;
 				unsigned int i = 1;
 
-				if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", _target];
-				else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", _target, [_connection server]];
+				if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
+				else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self connection] server]];
 				nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
 
 				while( ! nameFound ) {
-					if( org ) logName = [NSString stringWithFormat:@"%@ %d.colloquyTranscript", _target, i++];
-					else logName = [NSString stringWithFormat:@"%@ (%@) %d.colloquyTranscript", _target, [_connection server], i++];
+					if( org ) logName = [NSString stringWithFormat:@"%@ %d.colloquyTranscript", [self target], i++];
+					else logName = [NSString stringWithFormat:@"%@ (%@) %d.colloquyTranscript", [self target], [[self connection] server], i++];
 					nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
 				}
 			} else if( session == 1 ) {
-				if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", _target];
-				else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", _target, [_connection server]];
+				if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
+				else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self connection] server]];
 			} else if( session == 2 ) {
-				if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", _target, [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
-				else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", _target, [_connection server], [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
+				if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", [self target], [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
+				else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", [self target], [[self connection] server], [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
 				[(NSMutableString *)logName replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
 				[(NSMutableString *)logName replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
 			}
@@ -242,9 +240,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			}
 		} else _logFile = nil;
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusNotification object:connection];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusChangedNotification object:[self connection]];
 
 		_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]] retain];
 	}
@@ -275,9 +273,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[self changeEncoding:nil];
 
 	if( [self isMemberOfClass:[JVDirectChat class]] ) {
-		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [self target]]];
 
-		NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath];
+		NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", [self target], [[self connection] server]] stringByExpandingTildeInPath];
 
 		[url writeToInternetLocationFile:path];
 		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
@@ -307,8 +305,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_target release];
-	[_buddy release];
-	[_connection release];
 	[_sendHistory release];
 	[_waitingAlertNames release];
 	[_settings release];
@@ -335,9 +331,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		JVAutoActionVerbs = nil;
 
 	_target = nil;
-	_buddy = nil;
 	_sendHistory = nil;
-	_connection = nil;
 	_waitingAlerts = nil;
 	_waitingAlertNames = nil;
 	_settings = nil;
@@ -356,12 +350,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSURL *) url {
-	NSString *server = [[_connection url] absoluteString];
-	return [NSURL URLWithString:[server stringByAppendingPathComponent:[_target stringByEncodingIllegalURLCharacters]]];
+	NSString *server = [[[self connection] url] absoluteString];
+	return [NSURL URLWithString:[server stringByAppendingPathComponent:[[[self target] description] stringByEncodingIllegalURLCharacters]]];
 }
 
 - (MVChatConnection *) connection {
-	return [[_connection retain] autorelease];
+	return [(MVChatUser *)[self target] connection];
 }
 
 #pragma mark -
@@ -382,20 +376,20 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSString *) title {
-	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-		return [_buddy preferredName];
-	return [[_target retain] autorelease];
+/*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+		return [_buddy preferredName]; */
+	return [[[[self target] description] retain] autorelease];
 }
 
 - (NSString *) windowTitle {
-	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-		return [NSString stringWithFormat:@"%@ (%@)", [_buddy preferredName], [[self connection] server]];
-	return [NSString stringWithFormat:@"%@ (%@)", _target, [[self connection] server]];
+/*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+		return [NSString stringWithFormat:@"%@ (%@)", [_buddy preferredName], [[self connection] server]]; */
+	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self connection] server]];
 }
 
 - (NSString *) information {
-	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname && ! [_target isEqualToString:[_buddy preferredName]] )
-		return [NSString stringWithFormat:@"%@ (%@)", _target, [[self connection] server]];
+/*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname && ! [[self target] isEqualToString:[_buddy preferredName]] )
+		return [NSString stringWithFormat:@"%@ (%@)", [self target], [[self connection] server]]; */
 	return [[self connection] server];
 }
 
@@ -404,9 +398,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( [self newMessagesWaiting] == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
 	else if( [self newMessagesWaiting] == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
 	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
-	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-		return [NSString stringWithFormat:@"%@\n%@ (%@)\n%@", [_buddy preferredName], _target, [[self connection] server], messageCount];
-	return [NSString stringWithFormat:@"%@ (%@)\n%@", _target, [[self connection] server], messageCount];
+/*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+		return [NSString stringWithFormat:@"%@\n%@ (%@)\n%@", [_buddy preferredName], [self target], [[self connection] server], messageCount]; */
+	return [NSString stringWithFormat:@"%@ (%@)\n%@", [self target], [[self connection] server], messageCount];
 }
 
 #pragma mark -
@@ -463,7 +457,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"Direct Chat %@ (%@)", _target, [[self connection] server]];
+	return [NSString stringWithFormat:@"Direct Chat %@ (%@)", [self target], [[self connection] server]];
 }
 
 #pragma mark -
@@ -494,7 +488,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) handleDraggedFile:(NSString *) path {
-	[[self connection] sendFile:path toUser:_target];
+	[[self target] sendFile:path passively:NO];
 }
 
 #pragma mark -
@@ -507,47 +501,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
-- (void) setTarget:(NSString *) target {
-	NSString *oldNick = _target;
-
-	[_target autorelease];
-	_target = [target copy];
-
-	[_windowController reloadListItem:self andChildren:YES];
-
-	[_settings autorelease];
-	_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]] retain];
-
-	NSString *source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
-	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
-
-	[_buddy autorelease];
-	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_target onServer:[[self connection] server]] retain];
-
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( NSString * ), @encode( JVDirectChat * ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-
-	[invocation setSelector:@selector( userNamed:isNowKnownAs:inView: )];
-	[invocation setArgument:&oldNick atIndex:2];
-	[invocation setArgument:&target atIndex:3];
-	[invocation setArgument:&self atIndex:4];
-
-	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-}
-
-- (JVBuddy *) buddy {
-	return [[_buddy retain] autorelease];
-}
-
-#pragma mark -
-
-- (void) unavailable {
-	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"Message undeliverable", "title of the user offline message sheet" ), NSLocalizedString( @"This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.", "error description for messaging a user that went offline or invalid" ), @"OK", nil, nil ) withName:@"unavailable"];
-}
-
 - (IBAction) addToFavorites:(id) sender {
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
-	NSString *path = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath] retain];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [self target]]];
+	NSString *path = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", [self target], [[self connection] server]] stringByExpandingTildeInPath] retain];
 
 	[url writeToInternetLocationFile:path];
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
@@ -656,7 +612,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	BOOL new = NO;
 	if( ! [sender tag] ) {
 		_encoding = (NSStringEncoding) [[self preferenceForKey:@"encoding"] intValue];
-		if( ! _encoding ) _encoding = [_connection encoding];
+		if( ! _encoding ) _encoding = [[self connection] encoding];
 	} else _encoding = (NSStringEncoding) [sender tag];
 
 	if( ! _encodingMenu ) {
@@ -689,7 +645,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	count = [_encodingMenu numberOfItems];
 	for( i = 1; i < count; i++ ) [_spillEncodingMenu addItem:[[(NSMenuItem *)[_encodingMenu itemAtIndex:i] copy] autorelease]];
 
-	if( _encoding != [_connection encoding] ) {
+	if( _encoding != [[self connection] encoding] ) {
 		[self setPreference:[NSNumber numberWithInt:_encoding] forKey:@"encoding"];
 	} else [self setPreference:nil forKey:@"encoding"];
 }
@@ -715,7 +671,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 }
 
-- (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
+- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action {
 	if( ! _nibLoaded ) [self view];
 	if( [_logLock tryLock] ) {
 		[self displayQueue];
@@ -768,7 +724,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
 	NSData *msgData = [encodedMsg IRCFormatWithOptions:options];
 
-	[self addMessageToDisplay:msgData fromUser:[[self connection] nickname] asAction:action];
+	[self addMessageToDisplay:msgData fromUser:[[self connection] localUser] asAction:action];
 }
 
 - (unsigned int) newMessagesWaiting {
@@ -882,17 +838,19 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 
 	if( [[message body] length] )
-		[[self connection] sendMessage:[message body] withEncoding:_encoding toUser:[self target] asAction:[message isAction]];
+		[[self target] sendMessage:[message body] withEncoding:_encoding asAction:[message isAction]];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), @encode( id ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
+	MVChatConnection *connection = [self connection];
+
 	[invocation setSelector:@selector( processUserCommand:withArguments:toConnection:inView: )];
 	[invocation setArgument:&command atIndex:2];
 	[invocation setArgument:&arguments atIndex:3];
-	[invocation setArgument:&_connection atIndex:4];
+	[invocation setArgument:&connection atIndex:4];
 	[invocation setArgument:&self atIndex:5];
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
@@ -1009,8 +967,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (NSArray *) completionsFor:(NSString *) inFragment {
 	NSArray *retVal = nil;
 
-	if( [_target rangeOfString:inFragment options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
-		retVal = [NSArray arrayWithObject:_target];
+	if( [[[self target] description] rangeOfString:inFragment options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
+		retVal = [NSArray arrayWithObject:[[self target] description]];
 
 	return retVal;	
 }
@@ -1023,8 +981,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
 	NSMutableArray *ret = [NSMutableArray array];
-	if( [search length] <= [_target length] && [search caseInsensitiveCompare:[_target substringToIndex:[search length]]] == NSOrderedSame )
-		[ret addObject:_target];
+	if( [search length] <= [[[self target] description] length] && [search caseInsensitiveCompare:[[[self target] description] substringToIndex:[search length]]] == NSOrderedSame )
+		[ret addObject:[[self target] description]];
 	if( [self isMemberOfClass:[JVDirectChat class]] ) [ret addObjectsFromArray:words];
 	return ret;
 }
@@ -1282,11 +1240,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	_requiresFullMessage = YES;
 }
 
-- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
+- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action {
 	// DO *NOT* call this method without first acquiring _logLock!
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
-	NSParameterAssert( [user length] );
 
 	NSFont *baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
 	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
@@ -1310,17 +1267,17 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 
 	[_currentMessage autorelease]; // set the message to an object property for plugins, if needed...
-	_currentMessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:user andTranscript:self];
+	_currentMessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:[user nickname] andTranscript:self];
 	[_currentMessage setAction:action];
 
 	id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
 	id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
 	[_currentMessage setObjectSpecifier:msgSpecifier];
 
-	if( ! [user isEqualToString:[[self connection] nickname]] )
+	if( ! [user isLocalUser] )
 		[_currentMessage setIgnoreStatus:[[JVChatController defaultManager] shouldIgnoreUser:user withMessage:messageString inView:self]];
 
-	if( ! [user isEqualToString:[[self connection] nickname]] && [_currentMessage ignoreStatus] == JVNotIgnored )
+	if( ! [user isLocalUser] && [_currentMessage ignoreStatus] == JVNotIgnored )
 		_newMessageCount++;
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] ) {
@@ -1330,7 +1287,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[self _performEmoticonSubstitutionOnString:messageString];
 
-	if( ! [user isEqualToString:[[self connection] nickname]] ) {
+	if( ! [user isLocalUser] ) {
 		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 		NSMutableArray *names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
 		[names addObject:[[self connection] nickname]];
@@ -1366,7 +1323,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[self processIncomingMessage:_currentMessage];
 
-	user = [[_currentMessage sender] description]; // if plugins changed the sending user for some reason, allow it
+//	user = [[_currentMessage sender] description]; // if plugins changed the sending user for some reason, allow it
 
 	if( ! [messageString length] && [_currentMessage ignoreStatus] == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
 		_newMessageCount--;
@@ -1412,7 +1369,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		xmlSetProp( root, "id", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
 		xmlDocSetRootElement( doc, root );
 
-		if( [user isEqualToString:_target] && _buddy ) {
+		/* if( [user isEqualToString:[self target]] && _buddy ) {
 			NSString *theirName = user;
 			if( [_buddy preferredNameWillReturn] != JVBuddyActiveNickname ) theirName = [_buddy preferredName];
 			child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
@@ -1420,7 +1377,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				xmlSetProp( child, "nickname", [user UTF8String] );
 			xmlSetProp( child, "card", [[_buddy uniqueIdentifier] UTF8String] );
 			[self _saveBuddyIcon:_buddy];
-		} else if( [user isEqualToString:[[self connection] nickname]] ) {
+		} else if( [user isLocalUser]] ) {
 			NSString *selfName = user;
 			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
 				selfName = [self _selfCompositeName];
@@ -1444,9 +1401,20 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				xmlSetProp( child, "card", [[buddy uniqueIdentifier] UTF8String] );
 				[self _saveBuddyIcon:buddy];
 			}
-		}
+		} */
 
-		xmlSetProp( child, "classification", [self _classificationForNickname:user] );
+		child = xmlNewTextChild( root, NULL, "sender", [[user displayName] UTF8String] );
+
+		if( ! [[[user uniqueIdentifier] description] isEqualToString:[user displayName]] )
+			xmlSetProp( child, "identifier", [[[user uniqueIdentifier] description] UTF8String] );		
+
+		if( [[self target] isKindOfClass:[MVChatRoom class]] )
+			xmlSetProp( child, "classification", [self _classificationForUser:user] );
+
+		if( [user isLocalUser] ) {
+			xmlSetProp( child, "self", "yes" );
+			xmlSetProp( child, "card", [[[[ABAddressBook sharedAddressBook] me] uniqueId] UTF8String] );
+		}
 	}
 
 	xmlXPathFreeObject( result );
@@ -1753,8 +1721,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) _awayStatusChanged:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"away"] boolValue] ) {
-		NSMutableAttributedString *messageString = [[[_connection awayStatusMessage] mutableCopy] autorelease];
+	if( [[self connection] awayStatusMessage] ) {
+		NSMutableAttributedString *messageString = [[[[self connection] awayStatusMessage] mutableCopy] autorelease];
 
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 			[messageString makeLinkAttributesAutomatically];
@@ -1893,7 +1861,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return ( [self preferenceForKey:@"emoticon"] ? YES : NO );
 }
 
-- (char *) _classificationForNickname:(NSString *) nickname {
+- (char *) _classificationForUser:(MVChatUser *) user {
 	return "normal";
 }
 

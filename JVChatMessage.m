@@ -39,10 +39,10 @@
 			if( senderStr ) _sender = [NSString stringWithUTF8String:senderStr];
 			xmlFree( senderStr );
 
-			if( _sender && [[self transcript] isKindOfClass:[JVChatRoom class]] ) {
+/*			if( _sender && [[self transcript] isKindOfClass:[JVChatRoom class]] ) {
 				JVChatRoomMember *member = [(JVChatRoom *)[self transcript] chatRoomMemberWithName:_sender];
 				if( member ) _sender = member;
-			}
+			} */
 
 			[_sender retain];
 		}
@@ -242,10 +242,10 @@
 }
 
 - (void) setSender:(id) sender {
-	if( [sender isKindOfClass:[NSString class]] && [[self transcript] isKindOfClass:[JVChatRoom class]] ) {
+/*	if( [sender isKindOfClass:[NSString class]] && [[self transcript] isKindOfClass:[JVChatRoom class]] ) {
 		JVChatRoomMember *member = [(JVChatRoom *)[self transcript] chatRoomMemberWithName:sender];
 		if( member ) sender = member;
-	}
+	} */
 
 	[_sender autorelease];
 	_sender = ( [sender conformsToProtocol:@protocol( NSCopying)] ? [sender copy] : [sender retain] );

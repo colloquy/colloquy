@@ -1,5 +1,6 @@
 #import "MVIRCFileTransfer.h"
-#import "MVChatConnection.h"
+#import "MVIRCChatConnection.h"
+#import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
 
 #define MODULE_NAME "MVFileTransfer"
@@ -17,8 +18,6 @@
 #import "dcc-get.h"
 #import "dcc-queue.h"
 
-extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
-
 void dcc_send_resume( GET_DCC_REC *dcc );
 void dcc_queue_send_next( int queue );
 
@@ -29,7 +28,6 @@ typedef struct {
 #pragma mark -
 
 @interface MVFileTransfer (MVFileTransferPrivate)
-- (void) _setConnection:(MVChatConnection *) connection;
 - (void) _setStatus:(MVFileTransferStatus) status;
 - (void) _postError:(NSError *) error;
 @end
@@ -176,7 +174,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	}
 }
 
-+ (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection passively:(BOOL) passive {
++ (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 // don't call super, super calls us!!
 
 	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
@@ -195,16 +193,16 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	int queue = dcc_queue_new();
 	NSString *source = [[path stringByStandardizingPath] copy];
 
-	char *tag = [connection _irssiConnection] -> tag;
+	char *tag = [[user connection] _irssiConnection] -> tag;
 
-	if( ! passive ) dcc_queue_add( queue, DCC_QUEUE_NORMAL, [nickname UTF8String], [source fileSystemRepresentation], tag, NULL );
-	else dcc_queue_add_passive( queue, DCC_QUEUE_NORMAL, [nickname UTF8String], [source fileSystemRepresentation], tag, NULL );
+	if( ! passive ) dcc_queue_add( queue, DCC_QUEUE_NORMAL, [[user connection] encodedBytesWithString:[user nickname]], [source fileSystemRepresentation], tag, NULL );
+	else dcc_queue_add_passive( queue, DCC_QUEUE_NORMAL, [[user connection] encodedBytesWithString:[user nickname]], [source fileSystemRepresentation], tag, NULL );
 
 	dcc_queue_send_next( queue );
 
-	DCC_REC *dcc = dcc_find_request( DCC_SEND_TYPE, [nickname UTF8String], [[source lastPathComponent] fileSystemRepresentation] );
+	DCC_REC *dcc = dcc_find_request( DCC_SEND_TYPE, [[user connection] encodedBytesWithString:[user nickname]], [[source lastPathComponent] fileSystemRepresentation] );
 
-	MVIRCUploadFileTransfer *ret = [[[MVIRCUploadFileTransfer alloc] initWithDCCFileRecord:dcc fromConnection:connection] autorelease];
+	MVIRCUploadFileTransfer *ret = [[[MVIRCUploadFileTransfer alloc] initWithDCCFileRecord:dcc toUser:user] autorelease];
 	ret -> _source = [[source stringByStandardizingPath] copy];
 	ret -> _transferQueue = queue;
 
@@ -215,12 +213,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 #pragma mark -
 
-- (id) initWithDCCFileRecord:(void *) record fromConnection:(MVChatConnection *) connection {
-	[MVIRCChatConnectionThreadLock lock];
-	NSString *user = [[connection stringWithEncodedBytes:((FILE_DCC_REC *)record) -> nick] retain];
-	[MVIRCChatConnectionThreadLock unlock];
-
-	if( ( self = [super initWithUser:user fromConnection:connection] ) ) {
+- (id) initWithDCCFileRecord:(void *) record toUser:(MVChatUser *) user {
+	if( ( self = [super initWithUser:user] ) ) {
 		[self _setDCCFileRecord:record];
 	}
 
@@ -258,12 +252,13 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 #pragma mark -
 
 - (NSDate *) startDate {
-	if( _startDate || ! [self _DCCFileRecord] ) return _startDate;
+	if( _startDate || ! [self _DCCFileRecord] )
+		return [[_startDate retain] autorelease];
 	[MVIRCChatConnectionThreadLock lock];
 	if( [self _DCCFileRecord] -> starttime )
 		_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
 	[MVIRCChatConnectionThreadLock unlock];
-	return _startDate;
+	return [[_startDate retain] autorelease];
 }
 
 - (unsigned long long) startOffset {
@@ -277,11 +272,12 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 #pragma mark -
 
 - (NSHost *) host {
-	if( _host || ! [self _DCCFileRecord] ) return _host;
+	if( _host || ! [self _DCCFileRecord] )
+		return [[_host retain] autorelease];
 	[MVIRCChatConnectionThreadLock lock];
 	_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
 	[MVIRCChatConnectionThreadLock unlock];
-	return _host;
+	return [[_host retain] autorelease];
 }
 
 - (unsigned short) port {
@@ -377,15 +373,11 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 #pragma mark -
 
-- (id) initWithDCCFileRecord:(void *) record fromConnection:(MVChatConnection *) connection {
-	[MVIRCChatConnectionThreadLock lock];
-	NSString *user = [[connection stringWithEncodedBytes:((FILE_DCC_REC *)record) -> nick] retain];
-	[MVIRCChatConnectionThreadLock unlock];
-
-	if( ( self = [super initWithUser:user fromConnection:connection] ) ) {
+- (id) initWithDCCFileRecord:(void *) record fromUser:(MVChatUser *) user {
+	if( ( self = [super initWithUser:user] ) ) {
 		[self _setDCCFileRecord:record];
 	}
-	
+
 	return self;
 }
 
@@ -459,7 +451,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (NSString *) originalFileName {
 	if( _originalFileName || ! [self _DCCFileRecord] ) return _originalFileName;
 	[MVIRCChatConnectionThreadLock lock];
-	_originalFileName = [[[self connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg] retain];
+	_originalFileName = [[[[self user] connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg] retain];
 	[MVIRCChatConnectionThreadLock unlock];
 	return _originalFileName;
 }

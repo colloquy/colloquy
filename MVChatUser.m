@@ -135,6 +135,7 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser {
 	NSParameterAssert( anotherUser != nil );
 	if( anotherUser == self ) return YES;
+	if( [self type] != [anotherUser type] ) return NO;
 	if( ! [[self connection] isEqual:[anotherUser connection]] )
 		return NO;
 	if( ! [[self uniqueIdentifier] isEqual:[anotherUser uniqueIdentifier]] )
@@ -143,7 +144,8 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 }
 
 - (unsigned) hash {
-	return ( [self type] ^ [[self connection] hash] );
+	// this hash assumes the MVChatConnection will return the same instance for equal users
+	return ( [self type] ^ [[self connection] hash] ^ (unsigned long) self );
 }
 
 #pragma mark -
@@ -275,26 +277,23 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 #pragma mark -
 
 - (NSDictionary *) attributes {
-	NSDictionary *ret = nil;
 	@synchronized( _attributes ) {
-		ret = [NSDictionary dictionaryWithDictionary:_attributes];
-	} return ret;
+		return [NSDictionary dictionaryWithDictionary:_attributes];
+	} return nil;
 }
 
 - (BOOL) hasAttributeForKey:(NSString *) key {
 	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
-	BOOL ret = NO;
 	@synchronized( _attributes ) {
-		ret = ( [_attributes objectForKey:key] ? YES : NO );
-	} return ret;
+		return ( [_attributes objectForKey:key] ? YES : NO );
+	} return NO;
 }
 
 - (id) attributeForKey:(NSString *) key {
 	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
-	id ret = nil;
 	@synchronized( _attributes ) {
-		ret = [_attributes objectForKey:key];
-	} return [[ret retain] autorelease];
+		return [[[_attributes objectForKey:key] retain] autorelease];
+	} return nil;
 }
 
 #pragma mark -

@@ -370,7 +370,7 @@ finish:
 		unsigned long long size = [[[self _infoForTransferAtIndex:row] objectForKey:@"size"] unsignedLongLongValue];
 		return ( size ? MVPrettyFileSize( size ) : @"--" );
 	} else if( [[column identifier] isEqual:@"user"] ) {
-		NSString *ret = [[self _infoForTransferAtIndex:row] objectForKey:@"user"];
+		NSString *ret = [[[self _infoForTransferAtIndex:row] objectForKey:@"user"] displayName];
 		return ( ret ? ret : NSLocalizedString( @"n/a", "not applicable identifier" ) );
 	}
 	return nil;
