@@ -3,11 +3,9 @@
 <plist version="0.9">
 <dict>
 	<key>JVChatSelfNameStyle</key>
-	<integer>2</integer>
-	<key>JVChatDefaultStyle</key>
-	<string>cc.javelin.colloquy.style.standard</string>
-	<key>JVChatDefaultEmoticons</key>
-	<string>cc.javelin.colloquy.emoticons.standard</string>
+	<integer>1</integer>
+	<key>JVChatBuddyNameStyle</key>
+	<integer>1</integer>
 	<key>JVChatEncoding</key>
 	<integer>5</integer>
 	<key>MVChatHighlightNames</key>
@@ -40,71 +38,80 @@
 	<false/>
 	<key>MVChatActionOnEnter</key>
 	<true/>
+	<key>MVChatNaturalActions</key>
+	<false/>
+	<key>JVChatDefaultStyle</key>
+	<string>cc.javelin.colloquy.style.standard</string>
+	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.bland</key>
+	<string>none</string>
+	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.bubbles</key>
+	<string>cc.javelin.colloquy.emoticons.standard</string>
+	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.novel</key>
+	<string>none</string>
+	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.standard</key>
+	<string>cc.javelin.colloquy.emoticons.standard</string>
 	<key>cc.javelin.colloquy.style.blandWebKitDefaultFixedFontSize</key>
 	<integer>9</integer>
 	<key>cc.javelin.colloquy.style.blandWebKitDefaultFontSize</key>
-	<integer>10</integer>
+	<integer>9</integer>
 	<key>cc.javelin.colloquy.style.blandWebKitFixedFont</key>
 	<string>Monaco</string>
+	<key>cc.javelin.colloquy.style.blandWebKitMinimumFontSize</key>
+	<integer>9</integer>
+	<key>cc.javelin.colloquy.style.blandWebKitSansSerifFont</key>
+	<string>Monaco</string>
+	<key>cc.javelin.colloquy.style.blandWebKitSerifFont</key>
+	<string>Monaco</string>
 	<key>cc.javelin.colloquy.style.blandWebKitStandardFont</key>
-	<string>Times</string>
-	<key>cc.javelin.colloquy.style.bubblesWebKitDefaultFixedFontSize</key>
-	<integer>12</integer>
+	<string>Monaco</string>
 	<key>cc.javelin.colloquy.style.bubblesWebKitDefaultFontSize</key>
 	<integer>11</integer>
 	<key>cc.javelin.colloquy.style.bubblesWebKitFixedFont</key>
-	<string>Courier</string>
+	<string>Helvetica</string>
+	<key>cc.javelin.colloquy.style.bubblesWebKitMinimumFontSize</key>
+	<integer>9</integer>
+	<key>cc.javelin.colloquy.style.bubblesWebKitSansSerifFont</key>
+	<string>Helvetica</string>
+	<key>cc.javelin.colloquy.style.bubblesWebKitSerifFont</key>
+	<string>Helvetica</string>
 	<key>cc.javelin.colloquy.style.bubblesWebKitStandardFont</key>
-	<string>Lucida Grande</string>
-	<key>cc.javelin.colloquy.style.novelWebKitDefaultFixedFontSize</key>
-	<integer>13</integer>
+	<string>Helvetica</string>
 	<key>cc.javelin.colloquy.style.novelWebKitDefaultFontSize</key>
-	<integer>13</integer>
+	<integer>14</integer>
 	<key>cc.javelin.colloquy.style.novelWebKitFixedFont</key>
-	<string>Courier</string>
+	<string>Times</string>
+	<key>cc.javelin.colloquy.style.novelWebKitMinimumFontSize</key>
+	<integer>9</integer>
+	<key>cc.javelin.colloquy.style.novelWebKitSansSerifFont</key>
+	<string>Times</string>
+	<key>cc.javelin.colloquy.style.novelWebKitSerifFont</key>
+	<string>Times</string>
 	<key>cc.javelin.colloquy.style.novelWebKitStandardFont</key>
 	<string>Times</string>
 	<key>cc.javelin.colloquy.style.standardWebKitDefaultFontSize</key>
 	<integer>11</integer>
-	<key>cc.javelin.colloquy.style.standardWebKitDefaultFixedFontSize</key>
-	<integer>13</integer>
+	<key>cc.javelin.colloquy.style.standardWebKitFixedFont</key>
+	<string>Lucida Grande</string>
+	<key>cc.javelin.colloquy.style.standardWebKitMinimumFontSize</key>
+	<integer>9</integer>
 	<key>cc.javelin.colloquy.style.standardWebKitSansSerifFont</key>
 	<string>Lucida Grande</string>
+	<key>cc.javelin.colloquy.style.standardWebKitSerifFont</key>
+	<string>Lucida Grande</string>
 	<key>cc.javelin.colloquy.style.standardWebKitStandardFont</key>
-	<string>Times</string>
-	<key>MVChatNaturalActions</key>
-	<false/>
-	<key>MVChatBounceIconOnMessage</key>
-	<true/>
-	<key>MVChatActionSounds</key>
-	<dict>
-		<key>MVChatAdditionalMessagesAction</key>
-		<string>/System/Library/Sounds/Funk.aiff</string>
-		<key>MVChatFisrtMessageAction</key>
-		<string>Stoof.aiff</string>
-		<key>MVChatFriendOfflineAction</key>
-		<string>Whip.aiff</string>
-		<key>MVChatFriendOnlineAction</key>
-		<string>Cymbal.aiff</string>
-		<key>MVChatInlineMessageBeepAction</key>
-		<string>/System/Library/Sounds/Tink.aiff</string>
-		<key>MVChatMemberDemotedAction</key>
-		<string>Electronic Signal.aiff</string>
-		<key>MVChatMemberDevoicedAction</key>
-		<string>Rattle.aiff</string>
-		<key>MVChatMemberJoinedRoomAction</key>
-		<string>/System/Library/Sounds/Pop.aiff</string>
-		<key>MVChatMemberKickedAction</key>
-		<string>Explosion.aiff</string>
-		<key>MVChatMemberLeftRoomAction</key>
-		<string>Clap.aiff</string>
-		<key>MVChatMemberPromotedAction</key>
-		<string>DJ Scratch.aiff</string>
-		<key>MVChatMemberVoicedAction</key>
-		<string>Pop.aiff</string>
-		<key>MVChatMentionedAction</key>
-		<string>Beep 2.aiff</string>
-	</dict>
+	<string>Lucida Grande</string>
+	<key>WebKitDefaultFontSize</key>
+	<integer>11</integer>
+	<key>WebKitFixedFont</key>
+	<string>Lucida Grande</string>
+	<key>WebKitMinimumFontSize</key>
+	<integer>9</integer>
+	<key>WebKitSansSerifFont</key>
+	<string>Lucida Grande</string>
+	<key>WebKitSerifFont</key>
+	<string>Lucida Grande</string>
+	<key>WebKitStandardFont</key>
+	<string>Lucida Grande</string>
 	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
 	<dict>
 		<key>TB Is Shown</key>

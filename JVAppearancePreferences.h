@@ -14,15 +14,24 @@
 	IBOutlet NSPopUpButton *styles;
 	IBOutlet NSPopUpButton *emoticons;
 	IBOutlet JVFontPreviewField *standardFont;
-	IBOutlet JVFontPreviewField *fixedWidthFont;
-	IBOutlet JVFontPreviewField *serifFont;
-	IBOutlet JVFontPreviewField *sansSerifFont;
 	IBOutlet NSTextField *minimumFontSize;
 	IBOutlet NSStepper *minimumFontSizeStepper;
+	IBOutlet NSTextField *baseFontSize;
+	IBOutlet NSStepper *baseFontSizeStepper;
 	NSSet *_styleBundles;
 	NSSet *_emoticonBundles;
 }
-- (void) changePreferences;
+- (void) changePreferences:(id) sender;
+
+- (IBAction) changeBaseFontSize:(id) sender;
+- (IBAction) changeMinimumFontSize:(id) sender;
+
+- (IBAction) changeDefaultChatStyle:(id) sender;
+
+- (IBAction) noGraphicEmoticons:(id) sender;
+- (IBAction) hideEmoticons:(id) sender;
+- (IBAction) changeDefaultEmoticons:(id) sender;
+
 - (void) updateChatStylesMenu;
 - (void) updateEmoticonsMenu;
 - (void) updatePreview;

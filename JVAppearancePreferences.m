@@ -60,22 +60,21 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 - (void) initializeFromDefaults {
-	[standardFont setShowPointSize:YES];
-	[fixedWidthFont setShowPointSize:YES];
-	[self changePreferences];
-	[self updateChatStylesMenu];
-	[self updateEmoticonsMenu];
-	[self updatePreview];
+	[self changePreferences:nil];
 }
 
-- (void) saveChanges {
-	[[preview preferences] setMinimumFontSize:[minimumFontSize intValue]];
+- (IBAction) changeBaseFontSize:(id) sender {
+	int size = [sender intValue];
+	[baseFontSize setIntValue:size];
+	[baseFontSizeStepper setIntValue:size];
+	[[preview preferences] setDefaultFontSize:size];
 }
 
-- (void) finishStyleSwitch:(id) sender {
-	[self changePreferences];
-	[self updateChatStylesMenu];
-	[self updatePreview];
+- (IBAction) changeMinimumFontSize:(id) sender {
+	int size = [sender intValue];
+	[minimumFontSize setIntValue:size];
+	[minimumFontSizeStepper setIntValue:size];
+	[[preview preferences] setMinimumFontSize:size];
 }
 
 - (IBAction) changeDefaultChatStyle:(id) sender {
@@ -88,10 +87,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	[[preview mainFrame] loadHTMLString:@"" baseURL:nil];
 	// give webkit some time to load the blank before we switch preferences so we don't double refresh	
-	[self performSelector:@selector( finishStyleSwitch: ) withObject:nil afterDelay:0.];
+	[self performSelector:@selector( changePreferences: ) withObject:nil afterDelay:0.];
 }
 
-- (void) changePreferences {
+- (void) changePreferences:(id) sender {
+	[self updateChatStylesMenu];
+	[self updateEmoticonsMenu];
+
 	[preview setPreferencesIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 	// we shouldn't have to post this notification manually, but this seems to make webkit refresh with new prefs
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"WebPreferencesChangedNotification" object:[preview preferences]];
@@ -99,12 +101,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	WebPreferences *prefs = [[[preview preferences] retain] autorelease];
 	[prefs setMinimumFontSize:[minimumFontSize intValue]];
 	[[preview preferences] setAutosaves:YES];
+
 	[standardFont setFont:[NSFont fontWithName:[[preview preferences] standardFontFamily] size:[[preview preferences] defaultFontSize]]];
-	[fixedWidthFont setFont:[NSFont fontWithName:[[preview preferences] fixedFontFamily] size:[[preview preferences] defaultFixedFontSize]]];
-	[serifFont setFont:[NSFont fontWithName:[[preview preferences] serifFontFamily] size:[[preview preferences] defaultFontSize]]];
-	[sansSerifFont setFont:[NSFont fontWithName:[[preview preferences] sansSerifFontFamily] size:[[preview preferences] defaultFontSize]]];
+
 	[minimumFontSize setIntValue:[[preview preferences] minimumFontSize]];
 	[minimumFontSizeStepper setIntValue:[[preview preferences] minimumFontSize]];
+
+	[baseFontSize setIntValue:[[preview preferences] defaultFontSize]];
+	[baseFontSizeStepper setIntValue:[[preview preferences] defaultFontSize]];
+
+	[self updatePreview];
 }
 
 - (void) updateChatStylesMenu {
@@ -114,10 +120,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSMenuItem *menuItem = nil, *subMenuItem = nil;
 	NSString *defaultStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
 	NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", defaultStyle]];		
-	NSBundle *style = nil;
+	NSBundle *style = [NSBundle bundleWithIdentifier:defaultStyle];
 	id file = nil;
 
-	if( ! defaultStyle ) {
+	if( ! style ) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
 		defaultStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
 		variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", defaultStyle]];
@@ -163,17 +169,20 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (IBAction) noGraphicEmoticons:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setObject:@"none" forKey:@"JVChatDefaultEmoticons"];
+	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
+	[[NSUserDefaults standardUserDefaults] setObject:@"none" forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
 	[self updatePreview];
 }
 
 - (IBAction) hideEmoticons:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setObject:@"hidden" forKey:@"JVChatDefaultEmoticons"];
+	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
+	[[NSUserDefaults standardUserDefaults] setObject:@"hidden" forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
 	[self updatePreview];
 }
 
 - (IBAction) changeDefaultEmoticons:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setObject:[sender representedObject] forKey:@"JVChatDefaultEmoticons"];
+	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
+	[[NSUserDefaults standardUserDefaults] setObject:[sender representedObject] forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
 	[self updatePreview];
 }
 
@@ -181,22 +190,25 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSEnumerator *enumerator = [[[_emoticonBundles allObjects] sortedArrayUsingFunction:sortBundlesByName context:self] objectEnumerator];
 	NSMenu *menu = nil;
 	NSMenuItem *menuItem = nil;
-	NSString *defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"];
-	NSBundle *emoticon = nil;
+	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
+	NSString *defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
+	NSBundle *emoticon = [NSBundle bundleWithIdentifier:defaultEmoticons];
 
-	if( ! defaultEmoticons ) {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultEmoticons"];
-		defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"];
+	if( ! emoticon && ! [defaultEmoticons isEqualToString:@"hidden"] && ! [defaultEmoticons isEqualToString:@"none"] ) {
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
+		defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
 	}
 
 	menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
 	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Graphics", "no graphic emoticons menu item title" ) action:@selector( noGraphicEmoticons: ) keyEquivalent:@""] autorelease];
 	[menuItem setTarget:self];
+	if( [defaultEmoticons isEqualToString:@"none"] ) [menuItem setState:NSOnState];
 	[menu addItem:menuItem];
 
 	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Hidden", "hide emoticons menu item title" ) action:@selector( hideEmoticons: ) keyEquivalent:@""] autorelease];
 	[menuItem setTarget:self];
+	if( [defaultEmoticons isEqualToString:@"hidden"] ) [menuItem setState:NSOnState];
 	[menu addItem:menuItem];
 
 	[menu addItem:[NSMenuItem separatorItem]];
@@ -226,11 +238,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSBundle *emoticon = nil;
 	NSString *emoticonStyle = @"";
 
-	if( [(NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"] length] ) {
-		if( [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"] isEqualToString:@"hidden"] ) {
+	if( [(NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style bundleIdentifier]]] length] ) {
+		NSString *emoticonSetting = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style bundleIdentifier]]];
+		if( [emoticonSetting isEqualToString:@"hidden"] ) {
 			emoticonStyle = [[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"emoticonsHidden" ofType:@"css"]] absoluteString];
-		} else {
-			emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]];
+		} else if( ! [emoticonSetting isEqualToString:@"none"] ) {
+			emoticon = [NSBundle bundleWithIdentifier:emoticonSetting];
 			emoticonStyle = ( emoticon ? [[NSURL fileURLWithPath:[emoticon pathForResource:@"emoticons" ofType:@"css"]] absoluteString] : @"" );
 		}
 	}
@@ -265,30 +278,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[[preview mainFrame] loadHTMLString:html baseURL:nil];
 }
 
-- (BOOL) fontPreviewField:(JVFontPreviewField *) field shouldChangeToFont:(NSFont *) font {
-	if( field == serifFont || field == sansSerifFont ) {
-		NSFont *newFont = [NSFont fontWithName:( [font familyName] ? [font familyName] : [font fontName] ) size:11.];
-		[field setFont:newFont];
-		[self fontPreviewField:field didChangeToFont:newFont];
-		return NO;
-	}
-	return YES;
-}
-
 - (void) fontPreviewField:(JVFontPreviewField *) field didChangeToFont:(NSFont *) font {
-	if( field == standardFont ) {
-		[[preview preferences] setStandardFontFamily:[font familyName]];
-		[[preview preferences] setDefaultFontSize:[font pointSize]];
-	} else if( field == fixedWidthFont ) {
-		[[preview preferences] setFixedFontFamily:[font familyName]];
-		[[preview preferences] setDefaultFixedFontSize:[font pointSize]];
-	} else if( field == serifFont ) {
-		[[preview preferences] setSerifFontFamily:[font familyName]];
-		[standardFont setFont:[NSFont fontWithName:[[preview preferences] standardFontFamily] size:[[preview preferences] defaultFontSize]]];
-	} else if( field == sansSerifFont ) {
-		[[preview preferences] setSansSerifFontFamily:[font familyName]];
-		[standardFont setFont:[NSFont fontWithName:[[preview preferences] standardFontFamily] size:[[preview preferences] defaultFontSize]]];
-	}
+	[[preview preferences] setStandardFontFamily:[font familyName]];
+	[[preview preferences] setFixedFontFamily:[font familyName]];
+	[[preview preferences] setSerifFontFamily:[font familyName]];
+	[[preview preferences] setSansSerifFontFamily:[font familyName]];
 	[self updatePreview];
 }
 @end
