@@ -1,7 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/MVChatPlugin.h>
 #import "JVChatConsole.h"
 #import "JVChatController.h"
 #import "MVTextView.h"
