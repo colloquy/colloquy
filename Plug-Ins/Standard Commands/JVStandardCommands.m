@@ -55,18 +55,6 @@
 				[[chat connection] sendMessage:arguments withEncoding:[chat encoding] toChatRoom:[chat target] asAction:action];
 			}
 			return YES;
-		} else if( [[command substringToIndex:1] isEqualToString:@"/"] ) {
-			NSMutableAttributedString *line = [[[NSMutableAttributedString alloc] init] autorelease];
-			if( [command length] > 1 ) [line replaceCharactersInRange:NSMakeRange( 0, 0 ) withString:command];
-			if( [arguments length] ) {
-				[line replaceCharactersInRange:NSMakeRange( [line length], 0 ) withString:@" "];
-				[line appendAttributedString:arguments];
-			}
-			if( [line length] ) {
-				[room echoSentMessageToDisplay:line asAction:NO];
-				[[room connection] sendMessage:line withEncoding:[chat encoding] toUser:[chat target] asAction:NO];
-			}
-			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"clear"] && ! [[arguments string] length] ) {
 			[chat clearDisplay:nil];
 			return YES;
@@ -537,7 +525,7 @@
 		offset += [[messageString componentsSeparatedByString:@" "] count];
 	}
 
-	if( offset < [argsArray count] && [[argsArray objectAtIndex:offset] length] )
+	if( offset < [argsArray count] && [(NSString *)[argsArray objectAtIndex:offset] length] )
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 
 	KAIgnoreRule *rule = [NSClassFromString( @"KAIgnoreRule" ) ruleForUser:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];

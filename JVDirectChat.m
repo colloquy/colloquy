@@ -792,7 +792,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSRange range;
 
 	// allow commands to be passed to plugins if we arn't connected, allow commands to pass to plugins and server if we are just out of the room
-	if( ( _cantSendMessages || ! [[self connection] isConnected] ) && ! [[[send textStorage] string] hasPrefix:@"/"] ) return;
+	if( ( _cantSendMessages || ! [[self connection] isConnected] ) && ( ! [[[send textStorage] string] hasPrefix:@"/"] || [[[send textStorage] string] hasPrefix:@"//"] ) ) return;
 
 	_historyIndex = 0;
 	if( ! [[send textStorage] length] ) return;
@@ -815,7 +815,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		subMsg = [[[[send textStorage] attributedSubstringFromRange:NSMakeRange( 0, range.location )] mutableCopy] autorelease];
 
 		if( ( [subMsg length] >= 1 && range.length ) || ( [subMsg length] && ! range.length ) ) {
-			if( [[subMsg string] hasPrefix:@"/"] ) {
+			if( [[subMsg string] hasPrefix:@"/"] && ! [[subMsg string] hasPrefix:@"//"] ) {
 				BOOL handled = NO;
 				NSScanner *scanner = [NSScanner scannerWithString:[subMsg string]];
 				NSString *command = nil;
@@ -831,6 +831,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				if( ! ( handled = [self processUserCommand:command withArguments:arguments] ) && [[self connection] isConnected] )
 					[[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
 			} else {
+				if( [[subMsg string] hasPrefix:@"//"] ) {
+					[subMsg deleteCharactersInRange:NSMakeRange(0,1)];
+				}
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
 					extern NSArray *JVAutoActionVerbs;
 					if( ! JVAutoActionVerbs ) JVAutoActionVerbs = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]] retain];
