@@ -594,6 +594,11 @@ char *MVChatIRCToXHTML( const char * const string ) {
 
 #pragma mark -
 
+static void MVChatConnecting( SERVER_REC *server ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
+	[self performSelectorOnMainThread:@selector( _willConnect ) withObject:nil waitUntilDone:YES];
+}
+
 static void MVChatConnected( SERVER_REC *server ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:YES];
@@ -1308,9 +1313,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ! [self _irssiConnectSettings] ) return;
 	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
 
-	_nextAltNickIndex = 0;
-
-	[self _willConnect];
 	[self _removePendingIrssiReconnections];
 
 	CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( [self _irssiConnectSettings] -> chat_type );
@@ -1820,6 +1822,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 + (void) _registerCallbacks {
+	signal_add_last( "server looking", (SIGNAL_FUNC) MVChatConnecting );
 	signal_add_last( "server connected", (SIGNAL_FUNC) MVChatConnected );
 	signal_add_last( "server disconnected", (SIGNAL_FUNC) MVChatDisconnect );
 	signal_add_last( "server connect failed", (SIGNAL_FUNC) MVChatConnectFailed );
@@ -1882,6 +1885,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 + (void) _deregisterCallbacks {
+	signal_remove( "server looking", (SIGNAL_FUNC) MVChatConnecting );
 	signal_remove( "server connected", (SIGNAL_FUNC) MVChatConnected );
 	signal_remove( "server disconnected", (SIGNAL_FUNC) MVChatDisconnect );
 	signal_remove( "server connect failed", (SIGNAL_FUNC) MVChatConnectFailed );
@@ -2101,6 +2105,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 - (void) _willConnect {
+	_nextAltNickIndex = 0;
 	_status = MVChatConnectionConnectingStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionWillConnectNotification object:self];
 }
