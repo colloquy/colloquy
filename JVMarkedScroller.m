@@ -6,7 +6,7 @@
 	if( ( self = [super initWithFrame:frame] ) ) {
 		_marks = [[NSMutableSet set] retain];
 		_lines = [[NSBezierPath bezierPath] retain];
-		[_lines setLineWidth:1.5];
+		[_lines setLineWidth:1.];
 	}
 	return self;
 }
