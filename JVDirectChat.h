@@ -24,10 +24,10 @@
 @interface JVDirectChat : JVChatTranscript {
 	@protected
 	IBOutlet MVTextView *send;
-	IBOutlet NSPopUpButton *encodingView;
 
 	NSString *_target;
 	NSStringEncoding _encoding;
+	NSMenu *_encodingMenu;
 	MVChatConnection *_connection;
 	NSMutableArray *_sendHistory;
 	NSMutableArray *_waitingAlerts;

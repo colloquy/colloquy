@@ -15,10 +15,7 @@
 @interface JVChatTranscript : NSObject <JVChatViewController> {
 	@protected
 	IBOutlet NSView *contents;
-	IBOutlet NSView *toolbarItems;
 	IBOutlet WebView *display;
-	IBOutlet MVMenuButton *chooseStyle;
-	IBOutlet MVMenuButton *chooseEmoticon;
 
 	void *_chatXSLStyle; /* xsltStylesheetPtr */
 	void *_xmlLog; /* xmlDocPtr */
@@ -26,13 +23,14 @@
 	NSLock *_logLock;
 	JVChatWindowController *_windowController;
 	NSString *_filePath;
+	NSMenu *_styleMenu;
 	NSBundle *_chatStyle;
 	NSString *_chatStyleVariant;
+	NSMenu *_emoticonMenu;
 	NSBundle *_chatEmoticons;
 	NSDictionary *_emoticonMappings;
 	NSMutableDictionary *_styleParams;
 	NSMutableArray *_messages;
-	NSMutableDictionary *_toolbarItems;
 
 	const char **_params;
 	BOOL _isArchive;

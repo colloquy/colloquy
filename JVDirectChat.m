@@ -110,7 +110,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (id) init {
 	if( ( self = [super init] ) ) {
 		send = nil;
-		encodingView = nil;
 		_messageId = 0;
 		_target = nil;
 		_buddy = nil;
@@ -125,6 +124,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		_sendHeight = 30.;
 
 		_encoding = NSASCIIStringEncoding;
+		_encodingMenu = nil;
+		_spillEncodingMenu = nil;
 
 		_sendHistory = [[NSMutableArray array] retain];
 		[_sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
@@ -166,7 +167,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusNotification object:connection];
 
-		
 		_settings = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]] mutableCopy];
 		if( ! _settings ) _settings = [[NSMutableDictionary dictionary] retain];
 	}
@@ -196,12 +196,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[self setChatEmoticons:emoticon];
 
 	[self changeEncoding:nil];
-	[[[encodingView menu] itemAtIndex:0] setImage:[NSImage imageNamed:@"encoding"]];	
-
-	if( [encodingView superview] ) {
-		[encodingView retain];
-		[encodingView removeFromSuperview];
-	}
 
 	[super awakeFromNib];
 
@@ -240,13 +234,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	extern NSArray *JVAutoActionVerbs;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[encodingView release];
 	[_target release];
 	[_buddy release];
 	[_connection release];
 	[_sendHistory release];
 	[_waitingAlertNames release];
 	[_settings release];
+	[_encodingMenu release];
 	[_spillEncodingMenu release];
 	[_messageQueue release];
 	// TODO: Read in the logfile and write it back out again after adding the 'ended' attribute to the log node.
@@ -263,7 +257,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( [JVAutoActionVerbs retainCount] == 1 )
 		JVAutoActionVerbs = nil;
 
-	encodingView = nil;
 	_target = nil;
 	_buddy = nil;
 	_sendHistory = nil;
@@ -271,6 +264,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	_waitingAlerts = nil;
 	_waitingAlertNames = nil;
 	_settings = nil;
+	_encodingMenu = nil;
 	_spillEncodingMenu = nil;
 	_messageQueue = nil;
 	_logFile = nil;
@@ -596,35 +590,41 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (IBAction) changeEncoding:(id) sender {
 	NSMenuItem *menuItem = nil;
 	unsigned i = 0, count = 0;
-	BOOL new = YES;
+	BOOL new = NO;
 	if( ! [sender tag] ) {
 		_encoding = (NSStringEncoding) [[self preferenceForKey:@"encoding"] intValue];
 		if( ! _encoding ) _encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 	} else _encoding = (NSStringEncoding) [sender tag];
 
-	if( [[encodingView menu] numberOfItems] > 1 ) new = NO;
+	if( ! _encodingMenu ) {
+		_encodingMenu = [[NSMenu alloc] initWithTitle:@""];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""] autorelease];
+		[menuItem setImage:[NSImage imageNamed:@"encoding"]];
+		[_encodingMenu addItem:menuItem];
+		new = YES;
+	}
 
 	for( i = 0; JVAllowedTextEncodings[i]; i++ ) {
 		if( JVAllowedTextEncodings[i] == (NSStringEncoding) -1 ) {
-			if( new ) [[encodingView menu] addItem:[NSMenuItem separatorItem]];
+			if( new ) [_encodingMenu addItem:[NSMenuItem separatorItem]];
 			continue;
 		}
 		if( new ) menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
-		else menuItem = (NSMenuItem *)[[encodingView menu] itemAtIndex:i + 1];
+		else menuItem = (NSMenuItem *)[_encodingMenu itemAtIndex:i + 1];
 		if( _encoding == JVAllowedTextEncodings[i] ) {
 			[menuItem setState:NSOnState];
 		} else [menuItem setState:NSOffState];
 		if( new ) {
 			[menuItem setTag:JVAllowedTextEncodings[i]];
-			[[encodingView menu] addItem:menuItem];
+			[_encodingMenu addItem:menuItem];
 		}
 	}
 
 	if( ! _spillEncodingMenu ) _spillEncodingMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding menu toolbar item" )];
 	count = [_spillEncodingMenu numberOfItems];
 	for( i = 0; i < count; i++ ) [_spillEncodingMenu removeItemAtIndex:0];
-	count = [[encodingView menu] numberOfItems];
-	for( i = 1; i < count; i++ ) [_spillEncodingMenu addItem:[[(NSMenuItem *)[[encodingView menu] itemAtIndex:i] copy] autorelease]];
+	count = [_encodingMenu numberOfItems];
+	for( i = 1; i < count; i++ ) [_spillEncodingMenu addItem:[[(NSMenuItem *)[_encodingMenu itemAtIndex:i] copy] autorelease]];
 
 	if( _encoding != (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"] ) {
 		[self setPreference:[NSNumber numberWithInt:_encoding] forKey:@"encoding"];
@@ -862,8 +862,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
 	BOOL ret = NO;
 	
-	if( ([event modifierFlags] & NSAlternateKeyMask) != 0 ) {
-		//[self send:[NSNumber numberWithBool:YES]];
+	if( ( [event modifierFlags] & NSAlternateKeyMask ) != 0 ) {
 		ret = NO;
 	} else if ( ([event modifierFlags] & NSControlKeyMask) != 0 ) {
 		[self send:[NSNumber numberWithBool:YES]];
@@ -979,7 +978,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 //	int lines = (int) floorf( position / 15. );
 //	NSLog( @"%.2f %.2f / 15. = %.2f (%d)", proposedPosition, position, position / 15., lines );
 //	return ( roundf( proposedPosition / 15. ) * 15. ) + [splitView dividerThickness] + 2.;
-//	return proposedPosition;
 	return proposedPosition;
 }
 
@@ -1019,9 +1017,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	webFrame.origin = NSMakePoint( 0., 0. );
 
 	// Keep the send box the same size
-	sendFrame.size.height   = _sendHeight;
-	sendFrame.size.width	= newFrame.size.width;
-	sendFrame.origin.y		= webFrame.size.height + dividerThickness;
+	sendFrame.size.height = _sendHeight;
+	sendFrame.size.width = newFrame.size.width;
+	sendFrame.origin.y = webFrame.size.height + dividerThickness;
 
 	// Commit the changes
 	[[[send superview] superview] setFrame:sendFrame];
@@ -1036,21 +1034,14 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
-	
-	[_toolbarItems release];
-	_toolbarItems = [[NSMutableDictionary dictionary] retain];
-	
 	return [toolbar autorelease];
 }
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-	if( [_toolbarItems objectForKey:identifier] ) return [_toolbarItems objectForKey:identifier];
-
 	NSToolbarItem *toolbarItem = nil;
 
 	if( [identifier isEqual:JVToolbarTextEncodingItemIdentifier] ) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
-		[_toolbarItems setObject:toolbarItem forKey:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Encoding", "encoding menu toolbar item" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Text Encoding", "encoding menu toolbar customize palette name" )];
@@ -1058,8 +1049,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[toolbarItem setTarget:nil];
 		[toolbarItem setAction:NULL];
 
+		NSPopUpButton *button = [[NSPopUpButton alloc] initWithFrame:NSMakeRect( 0., 0., 53., 20. ) pullsDown:YES];
+		[button setMenu:_encodingMenu];
+
 		[toolbarItem setToolTip:NSLocalizedString( @"Text Encoding Options", "encoding menu toolbar item tooltip" )];
-		[toolbarItem setView:encodingView];
+		[toolbarItem setView:button];
 		[toolbarItem setMinSize:NSMakeSize( 60., 24. )];
 		[toolbarItem setMaxSize:NSMakeSize( 60., 32. )];
 
@@ -1411,7 +1405,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (NSMenu *) _encodingMenu {
 	if( ! _nibLoaded ) [self view];
-	return [[[encodingView menu] retain] autorelease];
+	return [[_encodingMenu retain] autorelease];
 }
 
 - (void) _makeHyperlinksInString:(NSMutableString *) string {
@@ -1644,9 +1638,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSMenuItem *menuItem = nil;
 	BOOL new = YES;
 
-	if( ! ( menu = [chooseEmoticon menu] ) ) {
-		menu = [[[NSMenu alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar menu title" )] autorelease];
-		[chooseEmoticon setMenu:menu];
+	if( ! ( menu = _emoticonMenu ) ) {
+		menu = [[NSMenu alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar menu title" )];
+		_emoticonMenu = menu;
 	} else {
 		NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
 		new = NO;

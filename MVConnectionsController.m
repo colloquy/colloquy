@@ -1169,9 +1169,6 @@ static NSMenu *favoritesMenu = nil;
 		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
 
 		if( [[info objectForKey:@"automatic"] boolValue] ) {
-			NSEnumerator *renumerator = nil;
-			id item = nil;
-
 			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 				[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
 

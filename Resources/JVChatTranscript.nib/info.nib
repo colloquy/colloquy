@@ -8,12 +8,10 @@
 	<dict>
 		<key>37</key>
 		<string>390 406 500 325 0 0 1280 832 </string>
-		<key>64</key>
-		<string>594 489 92 159 0 0 1280 832 </string>
 	</dict>
 	<key>IBFramework Version</key>
-	<string>349.0</string>
+	<string>364.0</string>
 	<key>IBSystem Version</key>
-	<string>7C107</string>
+	<string>7F44</string>
 </dict>
 </plist>

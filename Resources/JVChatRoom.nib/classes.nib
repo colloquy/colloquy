@@ -7,6 +7,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {
+            ACTIONS = {joinChat = id; partChat = id; }; 
             CLASS = JVChatRoom; 
             LANGUAGE = ObjC; 
             OUTLETS = {topicLine = NSTextView; }; 
@@ -21,20 +22,20 @@
             }; 
             CLASS = JVChatTranscript; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                chooseEmoticon = MVMenuButton; 
-                chooseStyle = MVMenuButton; 
-                contents = NSView; 
-                display = WebView; 
-                toolbarItems = NSView; 
-            }; 
+            OUTLETS = {contents = NSView; display = WebView; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {clear = id; clearDisplay = id; send = id; }; 
+            ACTIONS = {
+                addToFavorites = id; 
+                changeEncoding = id; 
+                clear = id; 
+                clearDisplay = id; 
+                send = id; 
+            }; 
             CLASS = JVDirectChat; 
             LANGUAGE = ObjC; 
-            OUTLETS = {encodingView = NSPopUpButton; send = MVTextView; }; 
+            OUTLETS = {send = MVTextView; }; 
             SUPERCLASS = JVChatTranscript; 
         }, 
         {

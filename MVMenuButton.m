@@ -5,13 +5,22 @@
 	[super encodeWithCoder:coder];
 }
 
+- (id) initWithFrame:(NSRect) frame {
+	if( ( self = [super initWithFrame:frame] ) ) {
+		[self setBordered:NO];
+		[self setButtonType:NSMomentaryChangeButton];
+	}
+	return self;
+}
+
 - (id) initWithCoder:(NSCoder *) coder {
-	self = [super initWithCoder:coder];
-	_size = NSRegularControlSize;
-	_drawsArrow = NO;
-	_orgImage = [[self image] copy];
-	_smallImage = nil;
-	_toolbarItem = nil;
+	if( ( self = [super initWithCoder:coder] ) ) {
+		_size = NSRegularControlSize;
+		_drawsArrow = NO;
+		_orgImage = [[self image] copy];
+		_smallImage = nil;
+		_toolbarItem = nil;
+	}
 	return self;
 }
 
@@ -103,10 +112,6 @@
 }
 
 - (void) setImage:(NSImage *) image {
-	return;
-}
-
-- (void) reallySetImage:(NSImage *) image {
 	[_orgImage autorelease];
 	_orgImage = [[self image] copy];
 
