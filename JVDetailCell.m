@@ -186,4 +186,20 @@
 - (void) setLineBreakMode:(NSLineBreakMode) mode {
 	_lineBreakMode = mode;
 }
+
+- (void) setObjectValue:(id <NSCopying>) obj {
+	if( [(NSObject *)obj isKindOfClass:[NSImage class]] ) {
+		[self setImage:(NSImage *)obj];
+	} else if( [(NSObject *)obj isKindOfClass:[NSString class]] ) {
+		[self setStringValue:(NSString *)obj];
+	}
+}
+
+- (NSString *) stringValue {
+	return _mainText;
+}
+
+- (void) setStringValue:(NSString *) string {
+	[self setMainText:string];
+}
 @end
