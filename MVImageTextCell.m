@@ -3,14 +3,13 @@
 
 @implementation MVImageTextCell
 - (void) dealloc {
-	[image release];
-	image = nil;
+	[self setImage:nil];
 	[super dealloc];
 }
 
 - (id) copyWithZone:(NSZone *) zone {
 	MVImageTextCell *cell = (MVImageTextCell *)[super copyWithZone:zone];
-	cell->image = [image retain];
+	cell -> image = [image retain];
 	return cell;
 }
 
@@ -25,7 +24,7 @@
 
 - (NSRect) imageFrameForCellFrame:(NSRect) cellFrame {
 	if( image ) {
-		NSRect imageFrame;
+		NSRect imageFrame = NSZeroRect;
 		imageFrame.size = [image size];
 		imageFrame.origin = cellFrame.origin;
 		imageFrame.origin.x += 3.;
@@ -35,21 +34,21 @@
 }
 
 - (void) editWithFrame:(NSRect) aRect inView:(NSView *) controlView editor:(NSText *) textObj delegate:(id) anObject event:(NSEvent *) theEvent {
-	NSRect textFrame, imageFrame;
+	NSRect textFrame = NSZeroRect, imageFrame = NSZeroRect;
 	NSDivideRect( aRect, &imageFrame, &textFrame, 3. + [image size].width, NSMinXEdge );
 	[super editWithFrame:textFrame inView:controlView editor:textObj delegate:anObject event:theEvent];
 }
 
 - (void) selectWithFrame:(NSRect) aRect inView:(NSView *) controlView editor:(NSText *) textObj delegate:(id) anObject start:(int) selStart length:(int) selLength {
-	NSRect textFrame, imageFrame;
+	NSRect textFrame = NSZeroRect, imageFrame = NSZeroRect;
 	NSDivideRect( aRect, &imageFrame, &textFrame, 3. + [image size].width, NSMinXEdge );
 	[super selectWithFrame:textFrame inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	if( image != nil ) {
-		NSSize imageSize;
-		NSRect imageFrame;
+		NSSize imageSize = NSZeroSize;
+		NSRect imageFrame = NSZeroRect;
 
 		imageSize = [image size];
 		NSDivideRect( cellFrame, &imageFrame, &cellFrame, 3. + imageSize.width, NSMinXEdge );
