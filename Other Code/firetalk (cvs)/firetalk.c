@@ -2180,8 +2180,10 @@ void firetalk_get_dcc_port_range(unsigned short * const min, unsigned short * co
 void firetalk_set_dcc_port_range(const unsigned short min, const unsigned short max) {
 	extern unsigned short minDCCPort;
 	extern unsigned short maxDCCPort;
-	minDCCPort = (unsigned short) MAX( 1024, MIN( 65534, min ) );
-	maxDCCPort = (unsigned short) MAX( 1025, MIN( 65535, max ) );
+	unsigned int imin = min;
+	unsigned int imax = max;
+	minDCCPort = (unsigned short) MAX( 1024, MIN( 65534, imin ) );
+	maxDCCPort = (unsigned short) MAX( 1025, MIN( 65535, imax ) );
 }
 
 void firetalk_set_flood_intervals(firetalk_t conn, const double flood, const double delay, const double backoff, const double ceiling ) {
