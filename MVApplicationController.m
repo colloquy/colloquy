@@ -4,7 +4,8 @@
 #import "MVCrashCatcher.h"
 #import "MVSoftwareUpdate.h"
 #import "JVInspectorController.h"
-//#import "MVPreferencesController.h"
+#import "JVPreferencesController.h"
+#import "JVGeneralPreferences.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
 //#import "MVBuddyListController.h"
@@ -20,7 +21,6 @@
 
 @implementation MVApplicationController
 - (void) dealloc {
-//	[[MVPreferencesController sharedInstance] autorelease];
 	[[JVChatController defaultManager] autorelease];
 	[[MVConnectionsController defaultManager] autorelease];
 	[[MVFileTransferController defaultManager] autorelease];
@@ -57,7 +57,7 @@
 }
 
 - (IBAction) showPreferences:(id) sender {
-//	[[MVPreferencesController sharedInstance] showPreferences:nil];
+	[[NSPreferences sharedPreferences] showPreferencesPanel];
 }
 
 - (IBAction) showTransferManager:(id) sender {
@@ -124,9 +124,12 @@
 
 		[buddy setValue:value forProperty:@"ColloquyIRC"];
 		[[ABAddressBook sharedAddressBook] save];
-	}*/
+	} */
 
 	[WebCoreCache setDisabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"]];
+
+	[NSPreferences setDefaultPreferencesClass:[JVPreferencesController class]];
+	[[NSPreferences sharedPreferences] addPreferenceNamed:@"General" owner:[JVGeneralPreferences sharedInstance]];
 
 	[JVChatController defaultManager];
 //	[MVBuddyListController sharedBuddyList];
