@@ -72,6 +72,10 @@ body {
 	color: inherit;
 }
 
+.time {
+	float: right;
+}
+
 .time:before {
 	float: right;
 	font-size: smaller;

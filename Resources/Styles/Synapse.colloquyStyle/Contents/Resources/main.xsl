@@ -54,7 +54,7 @@
 		</xsl:variable>
 
 		<div class="{$messageClass}">
-			<span class="time" title="{$timestamp}" />
+			<span class="time" title="{$timestamp}">&#8203;</span>
       		<xsl:if test="@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
 				<a href="member:{../sender}" class="member action">
@@ -94,7 +94,7 @@
 			<div class="header">
 				<a href="member:{sender}" class="name"><xsl:value-of select="sender" /></a>
 			</div>
-			<span class="time" title="{$timestamp}" />
+			<span class="time" title="{$timestamp}">&#8203;</span>
       		<xsl:if test="message[1]/@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
 				<a href="member:{sender}" class="member action">
