@@ -1,5 +1,0 @@
-/* Localized versions of Info.plist keys */
-
-CFBundleName = "Appearance";
-NSPrefPaneIconLabel = "Appearance";
-NSHumanReadableCopyright = "Copyright © 2003, Timothy Hatcher";

@@ -1,5 +1,0 @@
-/* Localized versions of Info.plist keys */
-
-CFBundleName = "Identité";
-NSPrefPaneIconLabel = "Identité";
-NSHumanReadableCopyright = "Copyright © 2003, Timothy Hatcher";
