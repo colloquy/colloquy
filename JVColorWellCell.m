@@ -66,6 +66,10 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 		[self setImagePosition:NSImageOnly];
 		[super setTarget:self];
 		[super setAction:@selector( clicked: )];
+		[super setTitle:@""];
+		[super setAlternateTitle:@""];
+		[super setImage:nil];
+		[super setAlternateImage:nil];
 	}
 
 	return self;
