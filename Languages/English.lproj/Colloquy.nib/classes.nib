@@ -4,10 +4,13 @@
             ACTIONS = {
                 bold = id; 
                 closeCurrentPanel = id; 
+                getInfo = id; 
                 italic = id; 
                 newConnection = id; 
                 selectNextPanel = id; 
                 selectPreviousPanel = id; 
+                showInspector = id; 
+                toggleSmallDrawerIcons = id; 
                 toggleViewsDrawer = id; 
             }; 
             CLASS = FirstResponder; 
