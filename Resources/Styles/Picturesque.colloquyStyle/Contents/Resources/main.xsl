@@ -73,6 +73,11 @@
 	<xsl:template match="event">
 		<div class="event">
 			<xsl:copy-of select="message/child::node()" />
+			<xsl:if test="reason!=''">
+				<xsl:text> (</xsl:text>
+				<xsl:apply-templates select="reason/child::node()" mode="copy"/>
+				<xsl:text>)</xsl:text>
+			</xsl:if>
 		</div>
 	</xsl:template>
 

@@ -21,6 +21,11 @@
 				<xsl:with-param name="date" select="@occurred" />
 			</xsl:call-template>
 			<xsl:text>)</xsl:text>
+			<xsl:if test="reason!=''">
+				<br/>
+				<xsl:text>Reason: </xsl:text>
+				<xsl:apply-templates select="reason/child::node()" mode="copy"/>
+			</xsl:if>
 		</div>
 	</xsl:template>
 
