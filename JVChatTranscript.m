@@ -58,6 +58,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 - (void) _changeChatEmoticonsMenuSelection;
 - (void) _updateChatEmoticonsMenu;
+- (NSMenu *) _emoticonsMenu;
 - (NSString *) _chatEmoticonsMappingFilePath;
 - (NSString *) _chatEmoticonsCSSFileURL;
 
@@ -676,7 +677,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		[ret addObject:item];
 
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
-		[item setSubmenu:_emoticonMenu];
+		NSMenu *menu = [[[self _emoticonsMenu] copy] autorelease];
+		[item setSubmenu:menu];
 		[ret addObject:item];
 	}
 
