@@ -14,7 +14,6 @@ static JVNotificationController *sharedInstance = nil;
 - (void) _bounceIconContinuously;
 - (void) _showBubbleForIdentifier:(NSString *) identifier withContext:(NSDictionary *) context andPrefs:(NSDictionary *) eventPrefs;
 - (void) _playSound:(NSString *) path;
-- (void) _threadPlaySound:(NSString *) path;
 @end
 
 #pragma mark -
@@ -31,7 +30,7 @@ static JVNotificationController *sharedInstance = nil;
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_bubbles = [[NSMutableDictionary dictionary] retain];
-		if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue]) {
+		if( [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
 			_growlInstalled = NO;
 		} else {
 			_growlInstalled = [NSClassFromString( @"GrowlAppBridge" ) launchGrowlIfInstalledNotifyingTarget:self selector:@selector( _growlReady ) context:NULL];
@@ -158,26 +157,19 @@ static JVNotificationController *sharedInstance = nil;
 
 - (void) _playSound:(NSString *) path {
 	if( ! path ) return;
-	[NSThread detachNewThreadSelector:@selector( _threadPlaySound: ) toTarget:self withObject:path];
-}
-
-- (void) _threadPlaySound:(NSString *) path {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	if( ! [path isAbsolutePath] ) path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
 
 	NSSound *sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
 	[sound setDelegate:self];
 
-// When run on a laptop using battery power, the play method may block while the audio
-// hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
-// To get around this, we check to make sure the sound is playing, and if it isn't
-// we call the play method again.
+	// When run on a laptop using battery power, the play method may block while the audio
+	// hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
+	// To get around this, we check to make sure the sound is playing, and if it isn't
+	// we call the play method again.
 
 	[sound play];
 	if( ! [sound isPlaying] ) [sound play];
-
-	[pool release];
 }
 
 - (void) sound:(NSSound *) sound didFinishPlaying:(BOOL) finish {
