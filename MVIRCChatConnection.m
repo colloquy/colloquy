@@ -618,6 +618,8 @@ static void MVChatUserNicknameChanged( IRC_SERVER_REC *server, const char *data,
 	if( ! strcasecmp( ((SERVER_REC *)server) -> nick, newNick ) ) user = [self localUser];
 	else user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 
+	if( ! user ) return;
+
 	NSString *nickname = [self stringWithEncodedBytes:newNick];
 	NSString *oldNickname = [self stringWithEncodedBytes:nick];
 

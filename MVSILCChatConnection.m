@@ -177,6 +177,8 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 
 			NSString *oldNickname = [NSString stringWithUTF8String:oldclient -> nickname];
 			MVChatUser *user = [self _chatUserWithClientEntry:oldclient];
+			if( ! user ) break;
+
 			[self _updateKnownUser:user withClientEntry:newclient];
 
 			NSNotification *note = [NSNotification notificationWithName:MVChatUserNicknameChangedNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"oldNickname", nil]];
