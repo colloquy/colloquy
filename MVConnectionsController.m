@@ -375,7 +375,7 @@ static NSMenu *favoritesMenu = nil;
 	[connection setPassword:[newServerPassword stringValue]];
 	[connection setUsername:[newUsername stringValue]];
 	[connection setRealName:[newRealName stringValue]];
-	[connection joinChatRooms:_joinRooms];
+	if( [_joinRooms count] ) [connection joinChatRooms:_joinRooms];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 		[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
@@ -1440,7 +1440,8 @@ static NSMenu *favoritesMenu = nil;
 
 	if( ! connection ) return;
 
-	[connection joinChatRooms:[info objectForKey:@"rooms"]];
+	if( [[info objectForKey:@"rooms"] count] )
+		[connection joinChatRooms:[info objectForKey:@"rooms"]];
 
 	NSEnumerator *commands = [[[info objectForKey:@"commands"] componentsSeparatedByString:@"\n"] objectEnumerator];
 	NSMutableString *command = nil;
