@@ -104,7 +104,12 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 + (id) defaultStyle {
-	return [self styleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
+	id ret = [self styleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
+	if( ! ret ) {
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
+		ret = [self styleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
+	}
+	return ret;
 }
 
 + (void) setDefaultStyle:(JVStyle *) style {
