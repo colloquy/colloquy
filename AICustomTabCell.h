@@ -13,12 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#include <AppKit/NSCell.h>
-
-@class NSDictionary;
-@class NSTabViewItem;
-@class NSView;
-@class NSEvent;
+@interface NSObject (AICustomTabViewItem)
+- (NSString *)label;
+- (NSImage *)icon;
+@end
 
 @interface AICustomTabCell : NSCell {
     BOOL				selected;
@@ -34,6 +32,7 @@
     NSDictionary        *closeUserData;
 	NSToolTipTag		toolTipTag;
     
+	NSAttributedString	*attributedLabel;
     NSTabViewItem		*tabViewItem;
     NSRect				frame;
 }
@@ -60,5 +59,6 @@
 - (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView;
 - (BOOL)continueTracking:(NSPoint)lastPoint at:(NSPoint)currentPoint inView:(NSView *)controlView;
 - (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag;
+- (NSAttributedString *)attributedLabel;
 
 @end

@@ -58,6 +58,12 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	return(destTabBar);
 }
 
+//Set the currently active source tab view
+- (AICustomTabsView *)sourceTabView
+{
+	return(sourceTabBar);
+}
+
 //Set the currently hovered screen point
 - (void)setDestinationHoverPoint:(NSPoint)inPoint
 {
@@ -81,67 +87,70 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
     NSPoint			startPoint;
     BOOL			sourceWindowWillHide;
     
-	if( [sourceView allowsTabDragging] ) {
-		
-		//Setup
-		[destTabBar release]; destTabBar = nil;
-		sourceTabBar = [sourceView retain];
-		dragTabCell = [inTabCell retain];
-		selectTabAfterDrag = shouldSelect;
-		
-		//Determine if the source window will hide as a result of this drag
-		sourceWindowWillHide = ([sourceTabBar removingLastTabHidesWindow] && [sourceTabBar numberOfTabViewItems] < 1);
-		
-		//Adjust the drag offset so the cursor is atleast always touching the tab drag image
-		int width = [inTabCell frame].size.width;
-		int height = [inTabCell frame].size.height;
-		
-		dragOffset = NSMakeSize([inTabCell frame].origin.x - clickLocation.x, [inTabCell frame].origin.y - clickLocation.y);
-		if(dragOffset.width > width) dragOffset.width = width;
-		if(dragOffset.width < -width) dragOffset.width = -width;
-		if(dragOffset.height > height) dragOffset.height = height;
-		if(dragOffset.height < -height) dragOffset.height = -height;
-		
-		//Create the drag window for our custom drag tracking
-		tabDragWindow = [AICustomTabDragWindow dragWindowForCustomTabView:sourceView cell:inTabCell];
-		[tabDragWindow setDisplayingFullWindow:sourceWindowWillHide animate:NO];
-		
-		//Position the drag window
-		startPoint = [[inEvent window] convertBaseToScreen:[inEvent locationInWindow]];
-		startPoint = NSMakePoint(startPoint.x + dragOffset.width, startPoint.y + dragOffset.height);
-		[tabDragWindow moveToPoint:startPoint];
-		
-		//Hide the source window
-		if(sourceWindowWillHide){
-			[[sourceTabBar window] setAlphaValue:0.0];
-			[[[sourceTabBar window] drawers] makeObjectsPerformSelector:@selector( close )];
-		}
-		
-		//Perform the drag
-		pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
-		[pboard declareTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER, nil] owner:self];
-		[pboard setString:TAB_CELL_IDENTIFIER forType:TAB_CELL_IDENTIFIER];
-		[[inEvent window] dragImage:[tabDragWindow dragImage]
-								 at:NSMakePoint(clickLocation.x + dragOffset.width, clickLocation.y + dragOffset.height)
-							 offset:NSMakeSize(0,0)
-							  event:inEvent
-						 pasteboard:pboard
-							 source:self
-						  slideBack:NO];
-		
-		//Sneaky Bug Fix ---
-		//After dropping a tab into a tab bar, the tabbar's cursor tracking is rebuilt.  Unfortunately, since the floating
-		//window (With an image of the tab) used for dragging is still over the tab bar, any cursor rects we attempt to 
-		//install below it will not work.  A sneaky solution to this is to remember the destination tab bar of the drag,
-		//and reset it's cursor tracking again, after the drag window has closed.
-		[tabDragWindow closeWindow];
-		if(_destinationOfLastDrag){
-			[_destinationOfLastDrag resetCursorTracking];
-			[_destinationOfLastDrag release]; _destinationOfLastDrag= nil;
-		}
-		
-		//}
+	//Post the dragging will begin notification
+	[[NSNotificationCenter defaultCenter] postNotificationName:AICustomTabDragWillBegin object:self];
+	
+	//Setup
+	[destTabBar release]; destTabBar = nil;
+	sourceTabBar = [sourceView retain];
+	dragTabCell = [inTabCell retain];
+	selectTabAfterDrag = shouldSelect;
+	
+	//Determine if the source window will hide as a result of this drag
+	sourceWindowWillHide = ([sourceTabBar removingLastTabHidesWindow] && [sourceTabBar numberOfTabViewItems] == 1);
+	if(!sourceWindowWillHide){
+		destTabBar = [sourceView retain];
 	}
+	
+	//Adjust the drag offset so the cursor is atleast always touching the tab drag image
+	int width = [inTabCell frame].size.width;
+	int height = [inTabCell frame].size.height;
+	
+	dragOffset = NSMakeSize([inTabCell frame].origin.x - clickLocation.x, [inTabCell frame].origin.y - clickLocation.y);
+	if(dragOffset.width > width) dragOffset.width = width;
+	if(dragOffset.width < -width) dragOffset.width = -width;
+	if(dragOffset.height > height) dragOffset.height = height;
+	if(dragOffset.height < -height) dragOffset.height = -height;
+	
+	//Create the drag window for our custom drag tracking
+	tabDragWindow = [AICustomTabDragWindow dragWindowForCustomTabView:sourceView
+																 cell:inTabCell
+														  transparent:!([sourceTabBar removingLastTabHidesWindow])];
+	[tabDragWindow setDisplayingFullWindow:sourceWindowWillHide animate:NO];
+	
+	//Position the drag window
+	startPoint = [[inEvent window] convertBaseToScreen:[inEvent locationInWindow]];
+	startPoint = NSMakePoint(startPoint.x + dragOffset.width, startPoint.y + dragOffset.height);
+	[tabDragWindow moveToPoint:startPoint];
+	
+	//Hide the source window
+	if(sourceWindowWillHide){
+		[[sourceTabBar window] setAlphaValue:0.0];
+	}
+	
+	//Perform the drag
+	pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
+	[pboard declareTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER, nil] owner:self];
+	[pboard setString:TAB_CELL_IDENTIFIER forType:TAB_CELL_IDENTIFIER];
+	[[inEvent window] dragImage:[tabDragWindow dragImage]
+							 at:NSMakePoint(clickLocation.x + dragOffset.width, clickLocation.y + dragOffset.height)
+						 offset:NSMakeSize(0,0)
+						  event:inEvent
+					 pasteboard:pboard
+						 source:self
+					  slideBack:NO];
+	
+	//Sneaky Bug Fix ---
+	//After dropping a tab into a tab bar, the tabbar's cursor tracking is rebuilt.  Unfortunately, since the floating
+	//window (With an image of the tab) used for dragging is still over the tab bar, any cursor rects we attempt to 
+	//install below it will not work.  A sneaky solution to this is to remember the destination tab bar of the drag,
+	//and reset it's cursor tracking again, after the drag window has closed.
+	[tabDragWindow closeWindow];
+	if(_destinationOfLastDrag){
+		[_destinationOfLastDrag resetCursorTracking];
+		[_destinationOfLastDrag release]; _destinationOfLastDrag= nil;
+	}
+	
 }
 
 //End a drag
@@ -149,41 +158,25 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 {	
 	if(destTabView == sourceTabBar){
 		//Tab re-arranging we handle internally
-		int oldIndex = [[sourceTabBar tabView] indexOfTabViewItem:[dragTabCell tabViewItem]];
-
-		
-		if ((oldIndex == destIndex) || !([sourceTabBar allowsTabRearranging])){
-			//Rebuild our tab list to add the tab back to our list
-			[sourceTabBar rebuildTabCells];			
-			if(selectTabAfterDrag){
-				[[sourceTabBar tabView] selectTabViewItem:[dragTabCell tabViewItem]];
-			}
-			
-		}else{
-			[sourceTabBar moveTab:dragTabCell toIndex:destIndex selectTab:selectTabAfterDrag];
-
-			/*
-			if( ![sourceTabBar allowsTabRearranging] && oldIndex != NSNotFound )
-				[sourceTabBar moveTab:dragTabCell toIndex:oldIndex selectTab:selectTabAfterDrag];
-			 */
-		}
-		
+		[sourceTabBar moveTab:[dragTabCell tabViewItem] toIndex:destIndex selectTab:selectTabAfterDrag animate:NO];
 
 	}else{
-			//Moving tabs between bars is handled by the tab view delegate.  It probably shouldn't be done this way.
-			if([[sourceTabBar delegate] respondsToSelector:@selector(customTabView:didMoveTabViewItem:toCustomTabView:index:screenPoint:)]){
-				[[sourceTabBar delegate] customTabView:sourceTabBar
-									didMoveTabViewItem:[dragTabCell tabViewItem]
-									   toCustomTabView:destTabView
-												 index:destIndex
-										   screenPoint:NSMakePoint(-1,-1)];
-			}
-		
+		//Moving tabs between bars is handled by the tab view delegate
+		if([[sourceTabBar delegate] respondsToSelector:@selector(customTabView:didMoveTabViewItem:toCustomTabView:index:screenPoint:)]){
+			[[sourceTabBar delegate] customTabView:sourceTabBar
+								didMoveTabViewItem:[dragTabCell tabViewItem]
+								   toCustomTabView:destTabView
+											 index:destIndex
+									   screenPoint:NSMakePoint(-1,-1)];
+		}
 	}
 	
 	//Remember the dest tab bar so we can reset cursor tracking (see dragTabCell:fromCustomTabsView:withEvent:)
 	_destinationOfLastDrag = [destTabBar retain];
 	[self cleanupDrag];
+
+	//Post the dragging did finish notification
+	[[NSNotificationCenter defaultCenter] postNotificationName:AICustomTabDragDidComplete object:self];
 }
 
 
@@ -238,6 +231,11 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	[dragTabCell release]; dragTabCell = nil;
 	[destTabBar release]; destTabBar = nil;
 	[sourceTabBar release]; sourceTabBar = nil;		
+}
+
+- (NSTabViewItem *)draggedTabViewItem
+{
+	return([dragTabCell tabViewItem]);
 }
 
 @end

@@ -8,13 +8,10 @@
 
 #define TAB_CELL_IDENTIFIER                     @"Tab Cell Identifier"
 
-#import <Foundation/NSObject.h>
-#import <Foundation/NSGeometry.h>
+#define AICustomTabDragWillBegin	@"AICustomTabDragWillBegin"
+#define AICustomTabDragDidComplete	@"AICustomTabDragDidComplete"
 
-@class AICustomTabDragWindow;
-@class AICustomTabCell;
-@class AICustomTabsView;
-@class NSEvent;
+@class AICustomTabDragWindow, AICustomTabsView, AICustomTabCell;
 
 @interface AICustomTabDragging : NSObject {
 	AICustomTabCell         *dragTabCell;			//Custom tab cell being dragged
@@ -29,9 +26,13 @@
 + (AICustomTabDragging *)sharedInstance;
 - (void)dragTabCell:(AICustomTabCell *)inTabCell fromCustomTabsView:(AICustomTabsView *)sourceView withEvent:(NSEvent *)inEvent selectTab:(BOOL)shouldSelect;
 - (void)setDestinationTabView:(AICustomTabsView *)inDest;
+
 - (AICustomTabsView *)destinationTabView;
+- (AICustomTabsView *)sourceTabView;
+
 - (void)setDestinationHoverPoint:(NSPoint)inPoint;
 - (NSSize)sizeOfDraggedCell;
 - (void)acceptDragIntoTabView:(AICustomTabsView *)destTabView atIndex:(int)destIndex;
+- (NSTabViewItem *)draggedTabViewItem;
 
 @end

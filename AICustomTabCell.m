@@ -1,17 +1,17 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
-| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
-| General Public License as published by the Free Software Foundation; either version 2 of the License,
-| or (at your option) any later version.
-|
-| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
-| Public License for more details.
-|
-| You should have received a copy of the GNU General Public License along with this program; if not,
-| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-\------------------------------------------------------------------------------------------------------ */
+ | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ | General Public License as published by the Free Software Foundation; either version 2 of the License,
+ | or (at your option) any later version.
+ |
+ | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ | Public License for more details.
+ |
+ | You should have received a copy of the GNU General Public License along with this program; if not,
+ | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
 #import "AICustomTabCell.h"
@@ -28,12 +28,15 @@ static NSImage		*tabCloseBack = nil;
 static NSImage		*tabCloseFrontPressed = nil;
 static NSImage		*tabCloseFrontRollover = nil;
 
-#define TAB_CLOSE_LEFTPAD		1		//Padding left of close button
+#define TAB_CLOSE_LEFTPAD		2		//Padding left of close button
 #define TAB_CLOSE_RIGHTPAD		3		//Padding right of close button
+
 #define TAB_CLOSE_Y_OFFSET		1       //Vertical offset of close button from center
-#define TAB_LABEL_Y_OFFSET		1       //Vertical offset of label text from center
+
 #define TAB_RIGHT_PAD			5       //Tab right edge padding
-#define TAB_MIN_WIDTH			16      //(Could be used to) Enforce a mininum tab size safari style
+#define TAB_LABEL_Y_OFFSET		1       //Vertical offset of label text from center
+
+#define TAB_MIN_WIDTH			48      //(Could be used to) Enforce a mininum tab size safari style
 #define TAB_SELECTED_HIGHER     NO     	//Draw the selected tab higher?
 
 @interface AICustomTabCell (PRIVATE)
@@ -71,7 +74,7 @@ static NSImage		*tabCloseFrontRollover = nil;
         haveLoadedImages = YES;
     }
 	
-    tabViewItem = inTabViewItem;
+    tabViewItem = [inTabViewItem retain];
     allowsInactiveTabClosing = NO;
     trackingClose = NO;
     hoveringClose = NO;
@@ -86,9 +89,60 @@ static NSImage		*tabCloseFrontRollover = nil;
 //dealloc
 - (void)dealloc
 {
+	[attributedLabel release];
+	[tabViewItem release];
+
     [super dealloc];
 }
 
+//Return the desired size of this tab
+- (NSSize)size
+{
+	int width = [tabFrontLeft size].width + [[self attributedLabel] size].width + [tabFrontRight size].width +
+	(TAB_CLOSE_LEFTPAD + [[tabViewItem icon] size].width + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
+	
+    return( NSMakeSize((width > TAB_MIN_WIDTH ? width : TAB_MIN_WIDTH), [tabFrontLeft size].height) );
+}
+
+//Compare the width of this tab to another
+- (NSComparisonResult)compareWidth:(AICustomTabCell *)tab
+{
+    int	tabWidth = [tab size].width;
+    int	ourWidth = [self size].width;
+	
+    if(tabWidth > ourWidth){
+        return(NSOrderedAscending);
+        
+    }else if(tabWidth < ourWidth){
+        return(NSOrderedDescending);
+        
+    }else{
+        return(NSOrderedSame);
+        
+    }
+}
+
+//Return the tab view item this tab is representing
+- (NSTabViewItem *)tabViewItem
+{
+    return(tabViewItem);
+}
+
+//Frame of our close button
+- (NSRect)_closeButtonRect
+{
+	NSSize	iconSize = [[tabViewItem icon] size];
+	NSSize	closeSize = [tabCloseFront size];
+    int 	centeredYPos = frame.origin.y + (frame.size.height - [tabCloseFront size].height) / 2.0;
+    return(NSMakeRect(frame.origin.x + [tabFrontLeft size].width + TAB_CLOSE_LEFTPAD + ((iconSize.width - closeSize.width) / 2.0),
+					  centeredYPos + TAB_CLOSE_Y_OFFSET + 1,
+					  [tabCloseFront size].width,
+					  [tabCloseFront size].height));
+}
+
+
+//Configure ------------------------------------------------------------------------------------------------------------
+#pragma mark Configure
 //Allow the user to close this tab even if it's not active
 - (void)setAllowsInactiveTabClosing:(BOOL)inValue
 {
@@ -125,48 +179,6 @@ static NSImage		*tabCloseFrontRollover = nil;
     return(frame);
 }
 
-//Return the desired size of this tab
-- (NSSize)size
-{
-    float width = [tabFrontLeft size].width + [tabViewItem sizeOfLabel:NO].width + [tabFrontRight size].width + (TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
-    
-    return( NSMakeSize((width > TAB_MIN_WIDTH ? width : TAB_MIN_WIDTH), [tabFrontLeft size].height) );
-}
-
-//Compare the width of this tab to another
-- (NSComparisonResult)compareWidth:(AICustomTabCell *)tab
-{
-    int	tabWidth = [tab size].width;
-    int	ourWidth = [self size].width;
-	
-    if(tabWidth > ourWidth){
-        return(NSOrderedAscending);
-        
-    }else if(tabWidth < ourWidth){
-        return(NSOrderedDescending);
-        
-    }else{
-        return(NSOrderedSame);
-        
-    }
-}
-
-//Return the tab view item this tab is representing
-- (NSTabViewItem *)tabViewItem
-{
-    return(tabViewItem);
-}
-
-//Frame of our close button
-- (NSRect)_closeButtonRect
-{
-    int centeredYPos = frame.origin.y + (frame.size.height - [tabCloseFront size].height) / 2.0;
-    return(NSMakeRect(frame.origin.x + [tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
-					  centeredYPos + TAB_CLOSE_Y_OFFSET,
-					  [tabCloseFront size].width,
-					  [tabCloseFront size].height));
-}
-
 
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
@@ -179,9 +191,10 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Draw.  Pass ignore selection to ignore whether this tab is selected or not when drawing
 - (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView ignoreSelection:(BOOL)ignoreSelection
 {
-    int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge, tabCloseWidth;
+    int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge;
     NSRect	sourceRect, destRect;
     NSSize	labelSize;
+	NSPoint destPoint;
     
     //Pre-calc some dimensions
     labelSize = [tabViewItem sizeOfLabel:NO];
@@ -190,7 +203,6 @@ static NSImage		*tabCloseFrontRollover = nil;
     middleSourceWidth = [tabFrontMiddle size].width;
     middleRightEdge = (rect.origin.x + rect.size.width - rightCapWidth);
     middleLeftEdge = (rect.origin.x + leftCapWidth);
-    tabCloseWidth = [tabCloseFront size].width;
 	
     //Background
     if(selected && !ignoreSelection){
@@ -217,31 +229,69 @@ static NSImage		*tabCloseFrontRollover = nil;
         [NSBezierPath fillRect:NSMakeRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)];
     }
 	
-    //
+    //Offset for icon
     rect.origin.x += leftCapWidth;
     rect.size.width -= leftCapWidth + rightCapWidth;
     
-    //Close Button
-    NSPoint destPoint = [self _closeButtonRect].origin;
+	//We'll display our close icon if the user is hovering.  Otherwise, we display the tab specified icon
+	NSImage *leftIcon = [tabViewItem icon];
+	if((hoveringClose && (selected || allowsInactiveTabClosing || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ))) || !leftIcon){		
+		if(hoveringClose){
+			leftIcon = (trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover);
+		}else{
+			leftIcon = ((selected && !ignoreSelection) ? tabCloseFront : tabCloseBack);
+		}
+		destPoint = [self _closeButtonRect].origin;
+
+	}else{
+		destPoint = NSMakePoint(frame.origin.x + [tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
+								((frame.size.height - [leftIcon size].height) / 2.0) + TAB_CLOSE_Y_OFFSET);
+	}
+
+	// Draw at whole pixel points only.
+	destPoint.y = ceilf( destPoint.y );
+	destPoint.x = ceilf( destPoint.x );
+
+	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
+
+	//Move over for label drawing.  We always move based on the tab icon and not on the close button.  This prevents
+	//tab text from jumping when hovered if the tab icons are a different size from the close button
+	NSSize leftIconSize = [[tabViewItem icon] size];
+	rect.origin.x += TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD;
+	rect.size.width -= TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD + TAB_RIGHT_PAD;
+
 	
-    if(TAB_SELECTED_HIGHER && !ignoreSelection && selected) destPoint.y += 1;
-    if(hoveringClose){
-		[(trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover) compositeToPoint:destPoint operation:NSCompositeSourceOver];
-    }else{
-		[((selected && !ignoreSelection) ? tabCloseFront : tabCloseBack) compositeToPoint:destPoint operation:NSCompositeSourceOver];
-    }
-	
-    rect.origin.x += TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD;
-    rect.size.width -= (TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
-    
-    //Draw the title
-    destRect = NSMakeRect(rect.origin.x,
-						  rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0) + TAB_LABEL_Y_OFFSET, //center it vertically
+	//Draw our label
+	destRect = NSMakeRect(rect.origin.x,
+						  rect.origin.y + TAB_LABEL_Y_OFFSET,
 						  rect.size.width,
-						  labelSize.height);
+						  rect.size.height - ((rect.size.height - labelSize.height) / 2.0));
     if(TAB_SELECTED_HIGHER && !ignoreSelection && selected) destRect.origin.y += 1.0;
-    [tabViewItem drawLabel:YES inRect:destRect];
+	[[self attributedLabel] drawInRect:destRect];	
+}
+
+//Returns the attributed form of our label for drawing (cached)
+- (NSAttributedString *)attributedLabel
+{
+	NSString	*label = [tabViewItem label];
 	
+	if(![label isEqualToString:[attributedLabel string]]){
+		//Paragraph Style (Turn off clipping by word)
+		NSMutableParagraphStyle *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+		[paragraphStyle setAlignment:NSCenterTextAlignment];
+		[paragraphStyle setLineBreakMode:NSLineBreakByClipping];
+
+		//Update the attributed string
+		[attributedLabel release];
+		attributedLabel = [[NSAttributedString alloc] initWithString:[tabViewItem label] attributes:
+			[NSDictionary dictionaryWithObjectsAndKeys:
+				[NSColor controlTextColor], NSForegroundColorAttributeName,
+				[NSFont systemFontOfSize:11], NSFontAttributeName,
+				paragraphStyle, NSParagraphStyleAttributeName,
+				nil]];
+	}
+	
+	return(attributedLabel);
 }
 
 
@@ -293,7 +343,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     //Set ourself (or our close button) has hovered
     if((allowsInactiveTabClosing || selected || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ) && [[eventData objectForKey:@"close"] boolValue]){
         hoveringClose = YES;
-        [view setNeedsDisplayInRect:[self _closeButtonRect]];
+        [view setNeedsDisplayInRect:[self frame]];
     }else{
         highlighted = YES;
         [view setNeedsDisplayInRect:[self frame]];
@@ -309,7 +359,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     //Set ourself (or our close button) has not hovered
     if([[eventData objectForKey:@"close"] boolValue]){
         hoveringClose = NO;
-        [view setNeedsDisplayInRect:[self _closeButtonRect]];
+        [view setNeedsDisplayInRect:[self frame]];
     }else{
         highlighted = NO;
         [view setNeedsDisplayInRect:[self frame]];

@@ -17,17 +17,18 @@
 
 
 @interface AICustomTabDragWindow (PRIVATE)
-- (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell;
+- (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent;
 @end
 
 @implementation AICustomTabDragWindow
-+ (AICustomTabDragWindow *)dragWindowForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell
++ (AICustomTabDragWindow *)dragWindowForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
 {
-	return([[[self alloc] initForCustomTabView:inTabView cell:inTabCell] autorelease]);
+	return([[[self alloc] initForCustomTabView:inTabView cell:inTabCell transparent:transparent] autorelease]);
 }
 
 //init
-- (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell
+- (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
+
 {
 	[super init];
 	
