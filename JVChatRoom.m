@@ -774,7 +774,7 @@
 		[context setObject:NSLocalizedString( @"ChatRoom Member Left", "member left title" ) 
 					forKey:@"title"];
 		[context setObject:message forKey:@"description"];
-		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:nil];
+		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
 	}
 }
 
