@@ -6,6 +6,7 @@
                 addRoom = id; 
                 changeProxy = id; 
                 editText = id; 
+                openNetworkPreferences = id; 
                 removeRoom = id; 
                 toggleAutoConnect = id; 
             }; 
