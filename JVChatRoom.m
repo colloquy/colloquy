@@ -854,6 +854,13 @@
 	[[self connection] joinChatRoom:_target];
 	[super _didConnect:notification];
 }
+
+- (char *) _classificationForNickname:(NSString *) nickname {
+	JVChatRoomMember *member = [self chatRoomMemberWithName:nickname];
+	if( [member operator] ) return "operator";
+	else if( [member voice] ) return "voice";
+	return "normal";
+}
 @end
 
 #pragma mark -
