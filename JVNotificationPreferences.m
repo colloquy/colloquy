@@ -24,6 +24,7 @@
 	[self buildEventsMenu];
 	[self buildSoundsMenu];
 	[self switchEvent:chatActions];
+	[muteAllSounds setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatNotificationsMuted"]];
 	[highlightWords setStringValue:[[[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatHighlightNames"] componentsJoinedByString:@" "]];
 }
 
@@ -198,5 +199,9 @@
 - (void) keepBubbleOnScreen:(id) sender {
 	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"keepBubbleOnScreen"];
 	[self saveEventSettings];
+}
+
+- (void) muteAllSounds:(id) sender {
+	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVChatNotificationsMuted"];
 }
 @end

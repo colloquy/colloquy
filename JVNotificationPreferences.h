@@ -4,6 +4,7 @@
 @interface JVNotificationPreferences : NSPreferencesModule {
 	IBOutlet NSTextField *highlightWords;
 	IBOutlet NSPopUpButton *chatActions;
+	IBOutlet NSButton *muteAllSounds;
 	IBOutlet NSButton *playSound;
 	IBOutlet NSPopUpButton *sounds;
 	IBOutlet NSButton *bounceIcon;
@@ -31,4 +32,6 @@
 - (void) showBubble:(id) sender;
 - (void) showBubbleIfBackground:(id) sender;
 - (void) keepBubbleOnScreen:(id) sender;
+
+- (void) muteAllSounds:(id) sender;
 @end
