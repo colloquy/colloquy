@@ -99,19 +99,18 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 @interface MVChatConnection : NSObject {
 @protected
-	NSTimer *_reconnectTimer;
-	NSString *_npassword;
 	MVChatConnectionStatus _status;
 	MVChatConnectionProxy _proxy;
 	NSStringEncoding _encoding;
 
+	NSString *_npassword;
 	NSMutableDictionary *_roomsCache;
-	NSDate *_lastConnectAttempt;
 	NSDate *_cachedDate;
+	NSDate *_lastConnectAttempt;
+	NSTimer *_reconnectTimer;
 	NSAttributedString *_awayMessage;
-	NSArray *_alternateNicks;
 
-	BOOL _nickIdentified;
+	NSArray *_alternateNicks;
 	unsigned int _nextAltNickIndex;
 }
 - (id) initWithURL:(NSURL *) url;
@@ -210,7 +209,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 #pragma mark -
 
-- (NSString *) displayNameFromChatRoom:(NSString *) room;
+- (NSCharacterSet *) chatRoomNamePrefixes;
+- (NSString *) displayNameForChatRoom:(NSString *) room;
+- (NSString *) properNameForChatRoom:(NSString *) room;
 
 #pragma mark -
 

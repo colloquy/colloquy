@@ -40,6 +40,7 @@ void irc_deinit( void );
 
 NSRecursiveLock *MVIRCChatConnectionThreadLock = nil;
 static unsigned int connectionCount = 0;
+static BOOL irssiSetupFinished = NO;
 static GMainLoop *glibMainLoop = NULL;
 
 typedef struct {
@@ -56,10 +57,11 @@ typedef struct {
 - (SERVER_CONNECT_REC *) _irssiConnectSettings;
 - (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings;
 - (void) _addRoomToCache:(NSMutableDictionary *) info;
-- (NSString *) _roomWithProperPrefix:(NSString *) room;
 - (void) _nicknameIdentified:(BOOL) identified;
 - (void) _forceDisconnect;
 @end
+
+#pragma mark -
 
 @interface MVChatConnection (MVChatConnectionPrivate)
 - (void) _willConnect;
@@ -830,13 +832,33 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 - (id) init {
 	if( ( self = [super init] ) ) {
+		_nickIdentified = NO;
+		_proxyUsername = nil;
+		_proxyPassword = nil;
+		_chatConnection = NULL;
+		_chatConnectionSettings = NULL;
+
+		// wait for the Irssi thread to get to a stable point
+		while( ! irssiSetupFinished ) usleep( 10 );
+
 		extern unsigned int connectionCount;
 		connectionCount++;
 
 		[MVIRCChatConnectionThreadLock lock];
 
 		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
+		if( ! proto ) {
+			[MVIRCChatConnectionThreadLock unlock];
+			[self release];
+			return nil;
+		}
+
 		SERVER_CONNECT_REC *settings = server_create_conn( proto -> id, "irc.freenode.net", 6667, NULL, NULL, [self encodedBytesWithString:NSUserName()] );
+		if( ! settings ) {
+			[MVIRCChatConnectionThreadLock unlock];
+			[self release];
+			return nil;
+		}
 
 		[self _setIrssiConnectSettings:settings];
 
@@ -848,6 +870,12 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 - (void) dealloc {
 	[super dealloc];
+
+	[_proxyUsername release];
+	_proxyUsername = nil;
+
+	[_proxyPassword release];
+	_proxyPassword = nil;
 
 	[self _setIrssiConnection:NULL];
 	[self _setIrssiConnectSettings:NULL];
@@ -1202,7 +1230,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) )
-		if( [room length] ) [roomList addObject:[self _roomWithProperPrefix:room]];
+		if( [room length] ) [roomList addObject:[self properNameForChatRoom:room]];
 
 	if( ! [roomList count] ) return;
 
@@ -1212,21 +1240,29 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) joinChatRoom:(NSString *) room {
 	NSParameterAssert( room != nil );
 	NSParameterAssert( [room length] > 0 );
-	[self sendRawMessageWithFormat:@"JOIN %@", [self _roomWithProperPrefix:room]];
+	[self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoom:room]];
 }
 
 - (void) partChatRoom:(NSString *) room {
 	NSParameterAssert( room != nil );
 	NSParameterAssert( [room length] > 0 );
-	[self sendRawMessageWithFormat:@"PART %@", [self _roomWithProperPrefix:room]];
+	[self sendRawMessageWithFormat:@"PART %@", [self properNameForChatRoom:room]];
 }
 
 #pragma mark -
 
-- (NSString *) displayNameFromChatRoom:(NSString *) room {
+- (NSCharacterSet *) chatRoomNamePrefixes {
+	return [NSCharacterSet characterSetWithCharactersInString:@"#&+!"];
+}
+
+- (NSString *) displayNameForChatRoom:(NSString *) room {
 	if( ! [room length] ) return room;
-	NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"#&+!"];
-	return ( [set characterIsMember:[room characterAtIndex:0]] ? [room substringFromIndex:1] : room );
+	return ( [[self chatRoomNamePrefixes] characterIsMember:[room characterAtIndex:0]] ? [room substringFromIndex:1] : room );
+}
+
+- (NSString *) properNameForChatRoom:(NSString *) room {
+	if( ! [room length] ) return room;
+	return ( [[self chatRoomNamePrefixes] characterIsMember:[room characterAtIndex:0]] ? room : [@"#" stringByAppendingString:room] );
 }
 
 #pragma mark -
@@ -1250,56 +1286,56 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) promoteMember:(NSString *) member inRoom:(NSString *) room {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"MODE %@ +o %@", [self _roomWithProperPrefix:room], member];
+	[self sendRawMessageWithFormat:@"MODE %@ +o %@", [self properNameForChatRoom:room], member];
 }
 
 - (void) demoteMember:(NSString *) member inRoom:(NSString *) room {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"MODE %@ -o %@", [self _roomWithProperPrefix:room], member];
+	[self sendRawMessageWithFormat:@"MODE %@ -o %@", [self properNameForChatRoom:room], member];
 }
 
 - (void) halfopMember:(NSString *) member inRoom:(NSString *) room {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"MODE %@ +h %@", [self _roomWithProperPrefix:room], member];
+	[self sendRawMessageWithFormat:@"MODE %@ +h %@", [self properNameForChatRoom:room], member];
 }
 
 - (void) dehalfopMember:(NSString *) member inRoom:(NSString *) room {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"MODE %@ -h %@", [self _roomWithProperPrefix:room], member];
+	[self sendRawMessageWithFormat:@"MODE %@ -h %@", [self properNameForChatRoom:room], member];
 }
 
 - (void) voiceMember:(NSString *) member inRoom:(NSString *) room {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"MODE %@ +v %@", [self _roomWithProperPrefix:room], member];
+	[self sendRawMessageWithFormat:@"MODE %@ +v %@", [self properNameForChatRoom:room], member];
 }
 
 - (void) devoiceMember:(NSString *) member inRoom:(NSString *) room {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"MODE %@ -v %@", [self _roomWithProperPrefix:room], member];
+	[self sendRawMessageWithFormat:@"MODE %@ -v %@", [self properNameForChatRoom:room], member];
 }
 
 - (void) kickMember:(NSString *) member inRoom:(NSString *) room forReason:(NSString *) reason {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( room != nil );
-	if( reason ) [self sendRawMessageWithFormat:@"KICK %@ %@ :%@", [self _roomWithProperPrefix:room], member, reason];
-	else [self sendRawMessageWithFormat:@"KICK %@ %@", [self _roomWithProperPrefix:room], member];		
+	if( reason ) [self sendRawMessageWithFormat:@"KICK %@ %@ :%@", [self properNameForChatRoom:room], member, reason];
+	else [self sendRawMessageWithFormat:@"KICK %@ %@", [self properNameForChatRoom:room], member];		
 }
 
 - (void) banMember:(NSString *) member inRoom:(NSString *) room {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"MODE %@ +b %@", [self _roomWithProperPrefix:room], member];
+	[self sendRawMessageWithFormat:@"MODE %@ +b %@", [self properNameForChatRoom:room], member];
 }
 
 - (void) unbanMember:(NSString *) member inRoom:(NSString *) room {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"MODE %@ -b %@", [self _roomWithProperPrefix:room], member];
+	[self sendRawMessageWithFormat:@"MODE %@ -b %@", [self properNameForChatRoom:room], member];
 }
 
 #pragma mark -
@@ -1542,6 +1578,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	[MVIRCChatConnectionThreadLock unlock];
 
+	extern BOOL irssiSetupFinished;
+	irssiSetupFinished = YES;
+
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
 	while( ! MVChatApplicationQuitting || connectionCount ) {
@@ -1638,12 +1677,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionGotRoomInfoNotification object:self];
 	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP];
-}
-
-- (NSString *) _roomWithProperPrefix:(NSString *) room {
-	if( ! [room length] ) return room;
-	NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"#&+!"];
-	return ( [set characterIsMember:[room characterAtIndex:0]] ? room : [@"#" stringByAppendingString:room] );
 }
 
 #pragma mark -

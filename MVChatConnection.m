@@ -87,7 +87,6 @@ BOOL MVChatApplicationQuitting = NO;
 		_cachedDate = nil;
 		_lastConnectAttempt = nil;
 		_awayMessage = nil;
-		_nickIdentified = NO;
 		_encoding = NSUTF8StringEncoding;
 		_nextAltNickIndex = 0;
 
@@ -505,8 +504,18 @@ BOOL MVChatApplicationQuitting = NO;
 
 #pragma mark -
 
-- (NSString *) displayNameFromChatRoom:(NSString *) room {
+- (NSCharacterSet *) chatRoomNamePrefixes {
 // subclass this method, if needed
+	return nil;
+}
+
+- (NSString *) displayNameForChatRoom:(NSString *) room {
+// subclass this method, if needed
+	return room;
+}
+
+- (NSString *) properNameForChatRoom:(NSString *) room {
+	// subclass this method, if needed
 	return room;
 }
 

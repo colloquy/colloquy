@@ -395,7 +395,7 @@
 		[connection partChatRoom:arguments];
 		return YES;
 	} else if( [arguments length] && [channels count] > 1 ) {
-		NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"#&+!"];
+		NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
 		NSEnumerator *chanEnum = [channels objectEnumerator];
 		NSString *channel = nil;
 
@@ -436,7 +436,7 @@
 	show = ( always ? YES : show );
 
 	if( [msg length] ) {
-		NSCharacterSet *chanSet = [NSCharacterSet characterSetWithCharactersInString:@"#&+!"];
+		NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
 		JVDirectChat *chatView = nil;
 
 		if( [chanSet characterIsMember:[to characterAtIndex:0]] )

@@ -115,7 +115,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 #pragma mark Miscellaneous Support
 
 - (NSString *) title {
-	return [[self connection] displayNameFromChatRoom:_target];
+	return [[self connection] displayNameForChatRoom:_target];
 }
 
 - (NSString *) windowTitle {
