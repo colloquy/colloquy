@@ -305,7 +305,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	}
 
 	// catch www urls like "www.apple.com"
-	regex = [AGRegex regexWithPattern:@"www.(?:[\\w-]+\\.)+[\\w-]+(?:/[\\w-+./?%&=]*)?" options:AGRegexCaseInsensitive];
+	regex = [AGRegex regexWithPattern:@"www.(?:[\\w-]+\\.)+[\\w-]+(?:/[\\w-_+./?%&=~#,]*)?" options:AGRegexCaseInsensitive];
 	matches = [regex findAllInString:[self string]];
 	enumerator = [matches objectEnumerator];
 	match = nil;
