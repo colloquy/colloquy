@@ -24,3 +24,7 @@
 - (void) addMessageToDisplay:(NSData *) message asOutboundMessage:(BOOL) outbound;
 - (IBAction) send:(id) sender;
 @end
+
+@interface NSObject (MVChatPluginCommandSupport)
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments forConnection:(MVChatConnection *) connection;
+@end

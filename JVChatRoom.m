@@ -4,7 +4,6 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatPlugin.h>
 
-#import "MVChatPluginSupport.h"
 #import "JVChatController.h"
 #import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
@@ -174,7 +173,7 @@
 	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toRoom:forConnection: )] objectEnumerator];
 
 	while( ( item = [enumerator nextObject] ) ) {
-		handled = [item processUserCommand:command withArguments:arguments toRoom:[self target] forConnection:[self connection]];
+		handled = [item processUserCommand:command withArguments:arguments toRoom:self];
 		if( handled ) break;
 	}
 
@@ -186,7 +185,7 @@
 	id item = nil;
 
 	while( ( item = [enumerator nextObject] ) )
-		message = [item processRoomMessage:message toRoom:[self target] asAction:action forConnection:[self connection]];
+		message = [item processMessage:message asAction:action toRoom:self];
 
 	[[self connection] sendMessageToChatRoom:[self target] attributedMessage:message withEncoding:_encoding asAction:action];
 

@@ -5,7 +5,6 @@
 
 @interface JVTunes : NSObject <MVChatPlugin> {
 	NSString *_script;
-	MVChatPluginManager* _manager;
 }
 + (NSString *) executeAppleScriptString:(NSString *) string;	
 @end

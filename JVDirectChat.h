@@ -8,6 +8,7 @@
 @class NSPanel;
 @class MVChatConnection;
 @class NSDate;
+@class NSMutableData;
 @class NSMutableArray;
 @class NSMutableDictionary;
 @class NSMutableString;
@@ -66,4 +67,11 @@
 
 - (IBAction) clear:(id) sender;
 - (IBAction) clearDisplay:(id) sender;
+@end
+
+@interface NSObject (MVChatPluginDirectChatSupport)
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toChat:(JVDirectChat *) chat;
+
+- (NSMutableData *) processMessage:(NSMutableData *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat;
+- (NSMutableAttributedString *) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toChat:(JVDirectChat *) chat;
 @end

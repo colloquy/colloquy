@@ -2,7 +2,6 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatPlugin.h>
-#import "MVChatPluginSupport.h"
 #import "JVChatConsole.h"
 #import "JVChatController.h"
 #import "MVTextView.h"
@@ -282,7 +281,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				id item = nil;
 
 				while( ( item = [enumerator nextObject] ) ) {
-					handled = [item processUserCommand:command withArguments:arguments forConnection:[self connection]];
+					handled = [item processUserCommand:command withArguments:arguments toConnection:[self connection]];
 					if( handled ) break;
 				}
 

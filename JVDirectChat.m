@@ -8,7 +8,6 @@
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <libxml/xinclude.h>
 
-#import "MVChatPluginSupport.h"
 #import "JVChatController.h"
 #import "JVDirectChat.h"
 #import "MVBuddyListController.h"
@@ -820,7 +819,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toUser:forConnection: )] objectEnumerator];
 
 	while( ( item = [enumerator nextObject] ) ) {
-		handled = [item processUserCommand:command withArguments:arguments toUser:[self target] forConnection:[self connection]];
+		handled = [item processUserCommand:command withArguments:arguments toChat:self];
 		if( handled ) break;
 	}
 
@@ -832,7 +831,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processPrivateMessage:toUser:asAction:forConnection: )] objectEnumerator];
 
 	while( ( item = [enumerator nextObject] ) )
-		message = [item processPrivateMessage:message toUser:[self target] asAction:action forConnection:[self connection]];
+		message = [item processMessage:message asAction:action toChat:self];
 
 	[[self connection] sendMessageToUser:[self target] attributedMessage:message withEncoding:_encoding asAction:action];
 

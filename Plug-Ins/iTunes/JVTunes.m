@@ -12,34 +12,30 @@
 - (id) initWithManager:(MVChatPluginManager *) manager {
 	self = [super init];
 	_script = [[NSString stringWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"iTunes" ofType:@"applescript"]] retain];
-	_manager = manager;
 	return self;
 }
 
 - (void) dealloc {
 	[_script release];
 	_script = nil;
-	_manager = nil;
 	[super dealloc];
 }
 
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(NSString *) room forConnection:(MVChatConnection *) connection {
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(JVChatRoom *) room {
 	if( [command isEqualToString:@"itunes"] ) {
-		JVChatRoom *rm = [[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES];
 		NSAttributedString *status = [[[NSAttributedString alloc] initWithString:[[self class] executeAppleScriptString:_script]] autorelease];
-		[connection sendMessageToChatRoom:room attributedMessage:status withEncoding:[rm encoding] asAction:YES];
-		[rm echoSentMessageToDisplay:status asAction:YES];
+		[[room connection] sendMessageToChatRoom:[room target] attributedMessage:status withEncoding:[room encoding] asAction:YES];
+		[room echoSentMessageToDisplay:status asAction:YES];
 		return YES;
 	}
 	return NO;
 }
 
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toUser:(NSString *) user forConnection:(MVChatConnection *) connection {
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toChat:(JVDirectChat *) chat {
 	if( [command isEqualToString:@"itunes"] ) {
-		JVDirectChat *dc = [[_manager chatController] chatViewControllerForUser:user withConnection:connection ifExists:YES];
 		NSAttributedString *status = [[[NSAttributedString alloc] initWithString:[[self class] executeAppleScriptString:_script]] autorelease];
-		[connection sendMessageToUser:user attributedMessage:status withEncoding:[dc encoding] asAction:YES];
-		[dc echoSentMessageToDisplay:status asAction:YES];
+		[[chat connection] sendMessageToUser:[chat target] attributedMessage:status withEncoding:[chat encoding] asAction:YES];
+		[chat echoSentMessageToDisplay:status asAction:YES];
 		return YES;
 	}
 	return NO;

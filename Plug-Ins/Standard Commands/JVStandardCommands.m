@@ -20,7 +20,7 @@
 	[super dealloc];
 }
 
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments forConnection:(MVChatConnection *) connection {
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection {
 	if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
 		return [self handleMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
@@ -58,27 +58,25 @@
 	return NO;
 }
 
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(NSString *) room forConnection:(MVChatConnection *) connection {
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(JVChatRoom *) room {
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
-		NSStringEncoding encoding = [(JVChatRoom *)[[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES] encoding];
 		if( [arguments length] ) {
-			JVChatRoom *chatView = [[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES];
-			[chatView echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
-			[connection sendMessageToChatRoom:room attributedMessage:arguments withEncoding:encoding asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+			[room echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+			[[room connection] sendMessageToChatRoom:[room target] attributedMessage:arguments withEncoding:[room encoding] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+			return YES;
 		}
-		return YES;
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
-		return [self handleMessageCommand:command withMessage:arguments forConnection:connection];
+		return [self handleMessageCommand:command withMessage:arguments forConnection:[room connection]];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
-		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
+		return [self handleMassMessageCommand:command withMessage:arguments forConnection:[room connection]];
 	} else if( [command isEqualToString:@"away"] ) {
-		[connection setAwayStatusWithMessage:[arguments string]];
+		[[room connection] setAwayStatusWithMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"join"] ) {
-		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
+		return [self handleJoinWithArguments:[arguments string] forConnection:[room connection]];
 	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
-		if( ! [arguments length] ) [connection partChatForRoom:room];
-		else return [self handlePartWithArguments:[arguments string] forConnection:connection];
+		if( ! [arguments length] ) [[room connection] partChatForRoom:[room target]];
+		else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		return YES;
 	} else if( [command isEqualToString:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
@@ -87,18 +85,18 @@
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&subcmd];
 		if( [subcmd isEqualToString:@"send"] )
-			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
+			return [self handleFileSendWithArguments:[arguments string] forConnection:[room connection]];
 		return NO;
 	} else if( [command isEqualToString:@"raw"] ) {
-		[connection sendRawMessage:[arguments string]];
+		[[room connection] sendRawMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
-		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
+		return [self handleCTCPWithArguments:[arguments string] forConnection:[room connection]];
 	} else if( [command isEqualToString:@"topic"] ) {
 		if( ! [arguments length] ) return NO;
-		NSStringEncoding encoding = [(JVChatRoom *)[[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES] encoding];
+		NSStringEncoding encoding = [room encoding];
 		if( ! encoding ) encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
-		[connection setTopic:arguments withEncoding:encoding forRoom:room];
+		[[room connection] setTopic:arguments withEncoding:encoding forRoom:[room target]];
 		return YES;
 	} else if( [command isEqualToString:@"mode"] ) {
 		NSRange vrange, orange, vsrange, osrange;
@@ -123,24 +121,23 @@
 		if( ! who ) return NO;
 
 		if( vrange.location != NSNotFound && vsrange.location != NSNotFound ) {
-			if( [modes characterAtIndex:vsrange.location] == '+' ) [connection voiceMember:who inRoom:room];
-			else [connection devoiceMember:who inRoom:room];
+			if( [modes characterAtIndex:vsrange.location] == '+' ) [[room connection] voiceMember:who inRoom:[room target]];
+			else [[room connection] devoiceMember:who inRoom:[room target]];
 			handled = YES;
 		}
 
 		if( orange.location != NSNotFound && osrange.location != NSNotFound ) {
-			if( [modes characterAtIndex:osrange.location] == '+' ) [connection promoteMember:who inRoom:room];
-			else [connection demoteMember:who inRoom:room];
+			if( [modes characterAtIndex:osrange.location] == '+' ) [[room connection] promoteMember:who inRoom:[room target]];
+			else [[room connection] demoteMember:who inRoom:[room target]];
 			handled = YES;
 		}
 		return handled;
 	} else if( [command isEqualToString:@"names"] ) {
-		JVChatRoom *rm = [[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES];
-		[[rm windowController] openViewsDrawer:nil];
-		[[rm windowController] expandListItem:rm];
+		[[room windowController] openViewsDrawer:nil];
+		[[room windowController] expandListItem:room];
 		return YES;
 	} else if( [command isEqualToString:@"clear"] ) {
-		[(JVChatRoom *)[[_manager chatController] chatViewControllerForRoom:room withConnection:connection ifExists:YES] clearDisplay:nil];
+		[room clearDisplay:nil];
 		return YES;
 	} else if( [command isEqualToString:@"kick"] ) {
 		NSString *member = nil, *msg = nil;
@@ -154,61 +151,59 @@
 			msg = [[arguments string] substringFromIndex:[scanner scanLocation]];
 		}
 
-		[connection kickMember:member inRoom:room forReason:msg];
+		[[room connection] kickMember:member inRoom:[room target] forReason:msg];
 		return YES;
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
 	} else if( [command isEqualToString:@"disconnect"] ) {
-		[connection disconnect];
+		[[room connection] disconnect];
 		return YES;
 	}
 	return NO;
 }
 
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toUser:(NSString *) user forConnection:(MVChatConnection *) connection {
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toChat:(JVDirectChat *) chat {
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
-		NSStringEncoding encoding = [(JVDirectChat *)[[_manager chatController] chatViewControllerForUser:user withConnection:connection ifExists:YES] encoding];
 		if( [arguments length] ) {
-			JVDirectChat *chatView = [[_manager chatController] chatViewControllerForUser:user withConnection:connection ifExists:YES];
-			[chatView echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
-			[connection sendMessageToUser:user attributedMessage:arguments withEncoding:encoding asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+			[chat echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+			[[chat connection] sendMessageToUser:[chat target] attributedMessage:arguments withEncoding:[chat encoding] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
+			return YES;
 		}
-		return YES;
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
-		return [self handleMessageCommand:command withMessage:arguments forConnection:connection];
+		return [self handleMessageCommand:command withMessage:arguments forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
-		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
+		return [self handleMassMessageCommand:command withMessage:arguments forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"away"] ) {
-		[connection setAwayStatusWithMessage:[arguments string]];
+		[[chat connection] setAwayStatusWithMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"join"] ) {
-		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
+		return [self handleJoinWithArguments:[arguments string] forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
 		if( [arguments length] )
-			return [self handlePartWithArguments:[arguments string] forConnection:connection];
+			return [self handlePartWithArguments:[arguments string] forConnection:[chat connection]];
 		return NO;
 	} else if( [command isEqualToString:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
 	} else if( [command isEqualToString:@"raw"] ) {
-		[connection sendRawMessage:[arguments string]];
+		[[chat connection] sendRawMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
-		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
+		return [self handleCTCPWithArguments:[arguments string] forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"dcc"] ) {
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&subcmd];
 		if( [subcmd isEqualToString:@"send"] )
-			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
+			return [self handleFileSendWithArguments:[arguments string] forConnection:[chat connection]];
 		return NO;
 	} else if( [command isEqualToString:@"clear"] ) {
-		[(JVChatRoom *)[[_manager chatController] chatViewControllerForUser:user withConnection:connection ifExists:YES] clearDisplay:nil];
+		[chat clearDisplay:nil];
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
 	} else if( [command isEqualToString:@"disconnect"] ) {
-		[connection disconnect];
+		[[chat connection] disconnect];
 		return YES;
 	}
 	return NO;
