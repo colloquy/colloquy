@@ -393,7 +393,7 @@ void MVChatUserJoinedRoom( void *c, void *cs, const char * const room, const cha
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
-	firetalk_im_get_info( c, who, 0 );
+//	firetalk_im_get_info( c, who, 0 );
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", [NSNumber numberWithBool:previousmember], @"previousMember", nil]];
 }
 
