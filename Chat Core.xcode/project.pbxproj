@@ -303,7 +303,6 @@
 				1CF6528B06EA2C8E0073DEA8,
 				1C91405E07051A9200CBA5F1,
 				1CDDD9AD0718BD2E00FE11C3,
-				431261C2072EE37A00720AD1,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3517,12 +3516,6 @@
 			path = MVSILCFileTransfer.m;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		431261C2072EE37A00720AD1 = {
-			fileRef = 431261C0072EE37A00720AD1;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		431261C3072EE37A00720AD1 = {
 			fileRef = 431261C1072EE37A00720AD1;
