@@ -463,6 +463,10 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	NSMenuItem *item = nil;
 	BOOL connected = [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected];
 
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	[menu addItem:item];
+
 	if( connected ) {
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Disconnect", "disconnect from server title" ) action:@selector( _disconnect: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
@@ -486,11 +490,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[menu addItem:item];
 
 	[menu addItem:[NSMenuItem separatorItem]];
-
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( _editConnection: ) keyEquivalent:@""] autorelease];
-	[item setTarget:self];
-	if( [editConnection isVisible] ) [item setAction:NULL];
-	[menu addItem:item];
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete item title" ) action:@selector( _delete: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
