@@ -10,6 +10,7 @@
 #import "JVChatRoomMember.h"
 #import "JVInspectorController.h"
 #import "JVChatMemberInspector.h"
+#import "JVChatRoomBrowser.h"
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (void) _reloadCurrentStyle:(id) sender;
@@ -89,13 +90,11 @@
 			[[room connection] sendMessage:arguments withEncoding:[room encoding] toChatRoom:[room target] asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
 		}
 		return YES;
-	} else if ( [[command substringToIndex:1] isEqualToString:@"/"] ) {
+	} else if( [[command substringToIndex:1] isEqualToString:@"/"] ) {
 		NSMutableAttributedString *line = [[[NSMutableAttributedString alloc] init] autorelease];
-		if( [command length] > 1 ) {
-			[line replaceCharactersInRange:NSMakeRange(0,0) withString:command];
-		}
+		if( [command length] > 1 ) [line replaceCharactersInRange:NSMakeRange( 0, 0 ) withString:command];
 		if( [arguments length] ) {
-			[line replaceCharactersInRange:NSMakeRange([line length], 0) withString:@" "];
+			[line replaceCharactersInRange:NSMakeRange( [line length], 0 ) withString:@" "];
 			[line appendAttributedString:arguments];
 		}
 		if( [line length] ) {
@@ -118,6 +117,12 @@
 		return YES;
 	} else if( [command isEqualToString:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
+	} else if( [command isEqualToString:@"list"] ) {
+		id browser = [NSClassFromString( @"JVChatRoomBrowser" ) chatRoomBrowserForConnection:[room connection]];
+		[browser showWindow:nil];
+		[browser setFilter:[arguments string]];
+		[browser showRoomBrowser:nil];
+		return YES;
 	} else if( [command isEqualToString:@"dcc"] ) {
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
@@ -279,6 +284,12 @@
 		return [self handlePartWithArguments:[arguments string] forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
+	} else if( [command isEqualToString:@"list"] ) {
+		id browser = [NSClassFromString( @"JVChatRoomBrowser" ) chatRoomBrowserForConnection:[chat connection]];
+		[browser showWindow:nil];
+		[browser setFilter:[arguments string]];
+		[browser showRoomBrowser:nil];
+		return YES;
 	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
 		[[chat connection] sendRawMessage:[arguments string]];
 		return YES;

@@ -159,8 +159,7 @@
 }
 
 - (IBAction) filterResults:(id) sender {
-	[_currentFilter autorelease];
-	_currentFilter = [[searchField stringValue] copy];
+	[self setFilter:[searchField stringValue]];
 	_needsRefresh = YES;
 	[self _refreshResults:nil];
 }
@@ -179,6 +178,18 @@
 	}
 }
 
+- (IBAction) hideRoomBrowser:(id) sender {
+	if( _collapsed ) return;
+	[showBroswer setState:NSOffState];
+	[self toggleRoomBrowser:showBroswer];	
+}
+
+- (IBAction) showRoomBrowser:(id) sender {
+	if( ! _collapsed ) return;
+	[showBroswer setState:NSOnState];
+	[self toggleRoomBrowser:showBroswer];	
+}
+
 - (IBAction) toggleRoomBrowser:(id) sender {
 	NSRect windowFrame = [[self window] frame];
 
@@ -186,7 +197,7 @@
 		if( NSRunInformationalAlertPanel( NSLocalizedString( @"Connection is Disconencted", "connection is disconnected dialog title" ), NSLocalizedString( @"Would you like to connect and retrieve the server's chat room listing?", "would you like to connect to get room listing dialog message" ), NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil ) == NSOKButton ) {
 			[_connection connect];
 		} else {
-			[showBroswer setState:NSOffState];
+			[sender setState:NSOffState];
 			return;
 		}
 	}
@@ -225,6 +236,18 @@
 
 	_needsRefresh = YES;
 	[self _refreshResults:nil];
+}
+
+#pragma mark -
+
+- (void) setFilter:(NSString *) filter {
+	[_currentFilter autorelease];
+	_currentFilter = [filter copy];
+	[searchField setStringValue:_currentFilter];
+}
+
+- (NSString *) filter {
+	return [[_currentFilter retain] autorelease];
 }
 
 #pragma mark -

@@ -37,8 +37,15 @@
 
 - (IBAction) close:(id) sender;
 - (IBAction) joinRoom:(id) sender;
+
+- (IBAction) hideRoomBrowser:(id) sender;
+- (IBAction) showRoomBrowser:(id) sender;
 - (IBAction) toggleRoomBrowser:(id) sender;
+
 - (IBAction) changeConnection:(id) sender;
+
+- (void) setFilter:(NSString *) filter;
+- (NSString *) filter;
 
 - (void) setConnection:(MVChatConnection *) connection;
 - (MVChatConnection *) connection;
