@@ -23,6 +23,7 @@
 		_nickname = [nickname copyWithZone:[self zone]];
 		_uniqueIdentifier = [[nickname lowercaseString] retain];
 		_type = MVChatRemoteUserType;
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
 	}
 
 	return self;
@@ -83,5 +84,17 @@
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
 		[self sendSubcodeRequest:@"VERSION" withArguments:nil];
 	} else [self refreshAttributes];
+}
+
+#pragma mark -
+
+- (void) ctcpReplyNotification:(NSNotification *) notification {
+	NSString *command = [[notification userInfo] objectForKey:@"command"];
+	NSString *arguments = [[notification userInfo] objectForKey:@"arguments"];
+	if( ! [command caseInsensitiveCompare:@"version"] ) {
+		[self _setAttribute:arguments forKey:MVChatUserClientInfoAttribute];
+	} else if( ! [command caseInsensitiveCompare:@"time"] ) {
+		[self _setAttribute:[NSDate dateWithNaturalLanguageString:arguments] forKey:MVChatUserLocalTimeAttribute];
+	}
 }
 @end

@@ -956,37 +956,14 @@ static void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, cons
 
 	NSString *cmd = [self stringWithEncodedBytes:command];
 	NSString *ags = ( args ? [self stringWithEncodedBytes:args] : nil );
-	NSString *frm = [self stringWithEncodedBytes:nick];
+	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 
-	g_free( params );	
+	g_free( params );
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-	[invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser:forConnection: )];
-	[invocation setArgument:&cmd atIndex:2];
-	[invocation setArgument:&ags atIndex:3];
-	[invocation setArgument:&frm atIndex:4];
-	[invocation setArgument:&self atIndex:5];
-
-	// FIX!! Do this on the main thread.
-	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
-	if( [[results lastObject] boolValue] ) {
-		signal_stop();
-		return;
-	}
-
-	if( ! strcasecmp( command, "VERSION" ) ) {
-		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
-		NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
-		NSString *reply = [NSString stringWithFormat:@"%@ %@ (%@) - %@ %@ - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:frm];
-		[user sendSubcodeReply:@"VERSION" withArguments:reply];
-		signal_stop();
-		return;
-	}
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeRequestNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ags, @"arguments", nil]];		
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:cmd, @"command", user, @"user", ags, @"arguments", nil];
+	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+	[self performSelectorOnMainThread:@selector( _processSubcodeRequest: ) withObject:info waitUntilDone:YES];
+	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
 }
 
 static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
@@ -998,27 +975,14 @@ static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const 
 
 	NSString *cmd = [self stringWithEncodedBytes:command];
 	NSString *ags = ( args ? [self stringWithEncodedBytes:args] : nil );
-	NSString *frm = [self stringWithEncodedBytes:nick];
+	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 
-	g_free( params );	
+	g_free( params );
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-	[invocation setSelector:@selector( processSubcodeReply:withArguments:fromUser:forConnection: )];
-	[invocation setArgument:&cmd atIndex:2];
-	[invocation setArgument:&ags atIndex:3];
-	[invocation setArgument:&frm atIndex:4];
-	[invocation setArgument:&self atIndex:5];
-
-	// FIX!! Do this on the main thread.
-	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
-	if( [[results lastObject] boolValue] ) {
-		signal_stop();
-		return;
-	}
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ags, @"arguments", nil]];		
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:cmd, @"command", user, @"user", ags, @"arguments", nil];
+	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+	[self performSelectorOnMainThread:@selector( _processSubcodeReply: ) withObject:info waitUntilDone:YES];
+	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
 }
 
 #pragma mark -
@@ -1644,60 +1608,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 + (void) _deregisterCallbacks {
-	signal_remove( "server looking", (SIGNAL_FUNC) MVChatConnecting );
-	signal_remove( "server connected", (SIGNAL_FUNC) MVChatConnected );
-	signal_remove( "server disconnected", (SIGNAL_FUNC) MVChatDisconnect );
-	signal_remove( "server connect failed", (SIGNAL_FUNC) MVChatConnectFailed );
-
-	signal_remove( "server incoming", (SIGNAL_FUNC) MVChatRawIncomingMessage );
-	signal_remove( "server outgoing", (SIGNAL_FUNC) MVChatRawOutgoingMessage );
-
-	signal_remove( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
-	signal_remove( "channel wholist", (SIGNAL_FUNC) MVChatJoinedWhoList );
-	signal_remove( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
-	signal_remove( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
-	signal_remove( "channel mode changed", (SIGNAL_FUNC) MVChatGotRoomMode );
-
-	signal_remove( "ban new", (SIGNAL_FUNC) MVChatBanNew );
-	signal_remove( "ban remove", (SIGNAL_FUNC) MVChatBanRemove );
-
-	signal_remove( "event join", (SIGNAL_FUNC) MVChatUserJoinedRoom );
-	signal_remove( "event part", (SIGNAL_FUNC) MVChatUserLeftRoom );
-	signal_remove( "event quit", (SIGNAL_FUNC) MVChatUserQuit );
-	signal_remove( "event kick", (SIGNAL_FUNC) MVChatUserKicked );
-	signal_remove( "event invite", (SIGNAL_FUNC) MVChatInvited );
-	signal_remove( "event nick", (SIGNAL_FUNC) MVChatUserNicknameChanged );
-
-	signal_remove( "event privmsg", (SIGNAL_FUNC) MVChatGetMessage );
-	signal_remove( "event notice", (SIGNAL_FUNC) MVChatGetAutoMessage );
-	signal_remove( "ctcp action", (SIGNAL_FUNC) MVChatGetActionMessage );
-
-	signal_remove( "nick mode changed", (SIGNAL_FUNC) MVChatGotUserMode );
-
-	signal_remove( "away mode changed", (SIGNAL_FUNC) MVChatSelfAwayChanged );
-
-	signal_remove( "notifylist joined", (SIGNAL_FUNC) MVChatBuddyOnline );
-	signal_remove( "notifylist left", (SIGNAL_FUNC) MVChatBuddyOffline );
-	signal_remove( "notifylist away changed", (SIGNAL_FUNC) MVChatBuddyAway );
-	signal_remove( "notifylist unidle", (SIGNAL_FUNC) MVChatBuddyUnidle );
-
-	signal_remove( "event 301", (SIGNAL_FUNC) MVChatUserAway );
-	signal_remove( "event 311", (SIGNAL_FUNC) MVChatUserWhois );
-	signal_remove( "event 312", (SIGNAL_FUNC) MVChatUserServer );
-	signal_remove( "event 313", (SIGNAL_FUNC) MVChatUserOperator );
-	signal_remove( "event 317", (SIGNAL_FUNC) MVChatUserIdle );
-	signal_remove( "event 318", (SIGNAL_FUNC) MVChatUserWhoisComplete );
-	signal_remove( "event 319", (SIGNAL_FUNC) MVChatUserChannels );
-	signal_remove( "event 320", (SIGNAL_FUNC) MVChatUserIdentified );
-	signal_remove( "event 322", (SIGNAL_FUNC) MVChatListRoom );
-	signal_remove( "event 368", (SIGNAL_FUNC) MVChatBanListFinished );
-	signal_remove( "event 433", (SIGNAL_FUNC) MVChatNickTaken );
-	signal_remove( "event 001", (SIGNAL_FUNC) MVChatNickFinal );
-
-	signal_remove( "ctcp msg", (SIGNAL_FUNC) MVChatSubcodeRequest );
-	signal_remove( "ctcp reply", (SIGNAL_FUNC) MVChatSubcodeReply );
-
-	signal_remove( "dcc request", (SIGNAL_FUNC) MVChatFileTransferRequest );
+	signals_remove_module( MODULE_NAME );
 }
 
 + (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc {
@@ -1848,6 +1759,61 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[self _setIrssiConnection:NULL];
 
 	[MVIRCChatConnectionThreadLock unlock];
+}
+
+#pragma mark -
+
+- (void) _processSubcodeRequest:(NSDictionary *) info {
+	NSString *command = [info objectForKey:@"command"];
+	NSString *arguments = [info objectForKey:@"arguments"];
+	MVChatUser *user = [info objectForKey:@"user"];
+	
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), @encode( MVChatConnection * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	[invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser: )];
+	[invocation setArgument:&command atIndex:2];
+	[invocation setArgument:&arguments atIndex:3];
+	[invocation setArgument:&user atIndex:4];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+	if( [[results lastObject] boolValue] ) {
+		signal_stop();
+		return;
+	}
+
+	if( ! [command caseInsensitiveCompare:@"version"] ) {
+		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+		NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
+		NSString *reply = [NSString stringWithFormat:@"%@ %@ (%@) - %@ %@ - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
+		[user sendSubcodeReply:@"VERSION" withArguments:reply];
+		signal_stop();
+		return;
+	}
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeRequestNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+}
+
+- (void) _processSubcodeReply:(NSDictionary *) info {
+	NSString *command = [info objectForKey:@"command"];
+	NSString *arguments = [info objectForKey:@"arguments"];
+	MVChatUser *user = [info objectForKey:@"user"];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), @encode( MVChatConnection * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	[invocation setSelector:@selector( processSubcodeReply:withArguments:fromUser: )];
+	[invocation setArgument:&command atIndex:2];
+	[invocation setArgument:&arguments atIndex:3];
+	[invocation setArgument:&user atIndex:4];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+	if( [[results lastObject] boolValue] ) {
+		signal_stop();
+		return;
+	}
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeReplyNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];	
 }
 
 #pragma mark -
