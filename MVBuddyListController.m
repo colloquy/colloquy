@@ -583,7 +583,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( [[column identifier] isEqualToString:@"buddy"] ) {
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 		NSURL *url = [buddy activeNickname];
-		if( ! _showFullNames || [[buddy compositeName] length] ) {
+		if( ! _showFullNames || ! [[buddy compositeName] length] ) {
 			[cell setMainText:[url user]];
 			if( _showNicknameAndServer ) [cell setInformationText:[url host]];
 			else [cell setInformationText:nil];
