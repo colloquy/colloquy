@@ -401,6 +401,9 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (void) setNewBuddyNickname:(NSString *) nick {
 	[nickname setObjectValue:nick];
+
+	if( [nick length] >= 1 ) [addButton setEnabled:YES];
+	else [addButton setEnabled:NO];
 }
 
 - (void) setNewBuddyFullname:(NSString *) name {
