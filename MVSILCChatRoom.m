@@ -91,16 +91,16 @@
 		[[self connection] sendRawMessageWithFormat:@"CMODE %@ +i", [self name]];
 		break;
 	case MVChatRoomNormalUsersSilencedMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ +m", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ +m", [self name]];
 		break;
 	case MVChatRoomOperatorsOnlySetTopicMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ +t", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ +t", [self name]];
 		break;
 	case MVChatRoomPassphraseToJoinMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ +k %@", [self name], attribute];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ +k %@", [self name], attribute];
 		break;
 	case MVChatRoomLimitNumberOfMembersMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ +l %@", [self name], attribute];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ +l %@", [self name], attribute];
 	default:
 		break;
 	}
@@ -111,25 +111,25 @@
 	
 	switch( mode ) {
 	case MVChatRoomPrivateMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -p", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ -p", [self name]];
 		break;
 	case MVChatRoomSecretMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -s", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ -s", [self name]];
 		break;
 	case MVChatRoomInviteOnlyMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -i", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ -i", [self name]];
 		break;
 	case MVChatRoomNormalUsersSilencedMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -m", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ -m", [self name]];
 		break;
 	case MVChatRoomOperatorsOnlySetTopicMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -t", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ -t", [self name]];
 		break;
 	case MVChatRoomPassphraseToJoinMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -k *", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ -k *", [self name]];
 		break;
 	case MVChatRoomLimitNumberOfMembersMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -l *", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"CMODE %@ -l *", [self name]];
 	default:
 		break;
 	}
@@ -142,10 +142,10 @@
 	
 	switch( mode ) {
 	case MVChatRoomMemberOperatorMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ +o %@", [self name], [user nickname]];
+		[[self connection] sendRawMessageWithFormat:@"CUMODE %@ +o %@", [self name], [user nickname]];
 		break;
 	case MVChatRoomMemberQuietedMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ +q %@", [self name], [user nickname]];
+		[[self connection] sendRawMessageWithFormat:@"CUMODE %@ +q %@", [self name], [user nickname]];
 	default:
 		break;
 	}
@@ -156,10 +156,10 @@
 	
 	switch( mode ) {
 	case MVChatRoomMemberOperatorMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -o %@", [self name], [user nickname]];
+		[[self connection] sendRawMessageWithFormat:@"CUMODE %@ -o %@", [self name], [user nickname]];
 		break;
 	case MVChatRoomMemberQuietedMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -q %@", [self name], [user nickname]];
+		[[self connection] sendRawMessageWithFormat:@"CUMODE %@ -q %@", [self name], [user nickname]];
 	default:
 		break;
 	}
