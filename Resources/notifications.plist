@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberJoinedRoom</string>
+		<key>title</key>
+		<string>Member Joined Chat Room</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberLeftRoom</string>
+		<key>title</key>
+		<string>Member Left Chat Room</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberKicked</string>
+		<key>title</key>
+		<string>Member Kicked From Room</string>
+	</dict>
+	<dict>
+		<key>seperator</key>
+		<true />
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberPromoted</string>
+		<key>title</key>
+		<string>Member Promoted in Room</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberDemoted</string>
+		<key>title</key>
+		<string>Member Demoted in Room</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberVoiced</string>
+		<key>title</key>
+		<string>Member Voiced in Room</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberDevoiced</string>
+		<key>title</key>
+		<string>Member Devoiced in Room</string>
+	</dict>
+	<dict>
+		<key>seperator</key>
+		<true />
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatFisrtMessage</string>
+		<key>title</key>
+		<string>First Private Message</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatAdditionalMessages</string>
+		<key>title</key>
+		<string>Additional Private Messages</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMentioned</string>
+		<key>title</key>
+		<string>Someone Mentioned You</string>
+	</dict>
+	<dict>
+		<key>seperator</key>
+		<true />
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatBuddyOnline</string>
+		<key>title</key>
+		<string>Buddy Came Online</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatBuddyOffline</string>
+		<key>title</key>
+		<string>Buddy Went Offline</string>
+	</dict>
+</array>
+</plist>
