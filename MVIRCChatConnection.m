@@ -1064,14 +1064,14 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 		[self _setIrssiConnectSettings:settings];
 
+		[MVIRCChatConnectionThreadLock unlock];
+
 		id threadHelper = [NSConnection rootProxyForConnectionWithRegisteredName:@"irssiThread" host:nil];
 		_irssiThreadConnection = [[threadHelper vendChatConnection:self] retain];
 
 		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
 		_irssiThreadProxy = [[connection rootProxy] retain];
 		[(NSDistantObject *)_irssiThreadProxy setProtocolForProxy:@protocol( MVIRCChatConnectionIrssiThread )];
-
-		[MVIRCChatConnectionThreadLock unlock];
 	}
 
 	return self;
@@ -1656,9 +1656,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 + (void) _irssiRunLoop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	MVIRCConnectionThreadHelper *helper = [[[MVIRCConnectionThreadHelper alloc] init] autorelease];
+	MVIRCConnectionThreadHelper *helper = [[MVIRCConnectionThreadHelper alloc] init];
 
-	NSConnection *server = [NSConnection defaultConnection];
+	NSConnection *server = [[NSConnection defaultConnection] retain];
+	[server enableMultipleThreads];
 	[server registerName:@"irssiThread"];
 	[server setRootObject:helper];
 
@@ -1691,6 +1692,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	[MVIRCChatConnectionThreadLock unlock];
 
+	[server release];
+	[helper release];
 	[pool release];
 }
 
