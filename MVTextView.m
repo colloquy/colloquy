@@ -45,7 +45,6 @@
 	if( ! [self isEditable] ) return;
 	[self setString:@""];
 	[self setTypingAttributes:nil];
-	[[self textStorage] setAttributes:nil range:NSMakeRange( 0, 0 )];
 	[self resetCursorRects];
 }
 
