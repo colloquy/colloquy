@@ -53,7 +53,7 @@ static WebView *fragmentWebView = nil;
 	NSString *fragment = [info objectForKey:@"fragment"];
 	NSURL *url = [info objectForKey:@"url"];
 
-	fragmentWebView = [[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 300., 100. ) frameName:nil groupName:nil];
+	fragmentWebView = [[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 2000., 100. ) frameName:nil groupName:nil];
 	[fragmentWebView setFrameLoadDelegate:self];
 	[[fragmentWebView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", fragment] baseURL:url];
 
