@@ -5,6 +5,7 @@
 #import "MVTextView.h"
 
 static NSString *JVToolbarToggleVerboseItemIdentifier = @"JVToolbarToggleVerboseItem";
+static NSString *JVToolbarTogglePrivateMessagesItemIdentifier = @"JVToolbarTogglePrivateMessagesItem";
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 @implementation JVChatConsole
@@ -53,6 +54,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (IBAction) toggleVerbose:(id) sender {
 	_verbose = ! _verbose;
+}
+
+- (IBAction) toggleMessages:(id) sender {
+	_ignorePRIVMSG = ! _ignorePRIVMSG;
 }
 
 - (IBAction) close:(id) sender {
@@ -166,7 +171,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	if( ! strMsg ) strMsg = [NSMutableString stringWithCString:[message bytes] length:[message length]];
 
-	if( ! [strMsg length] || ( _ignorePRIVMSG && [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound ) )
+	if( ! [strMsg length] || ( _ignorePRIVMSG && [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location == NSNotFound ) )
 		return;
 
 	[para setParagraphSpacing:3.];
@@ -193,6 +198,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		if( [parts count] >= 2 && ( numeric = [[parts objectAtIndex:1] intValue] ) )
 			[parts removeObjectAtIndex:1];
+		else if( [parts count] >= 2 && ( [[parts objectAtIndex:1] isEqualToString:@"PRIVMSG"] && [strMsg rangeOfString:@"\001"].location != NSNotFound ) )
+			[parts replaceObjectAtIndex:1 withObject:@"CTCP REQUEST"];
+		else if( [parts count] >= 2 && ( [[parts objectAtIndex:1] isEqualToString:@"NOTICE"] && [strMsg rangeOfString:@"\001"].location != NSNotFound ) )
+			[parts replaceObjectAtIndex:1 withObject:@"CTCP REPLY"];
 
 		tempStr = [parts objectAtIndex:0];
 		if( tempStr && [tempStr rangeOfString:@"@"].location == NSNotFound && [tempStr rangeOfString:@"."].location != NSNotFound && [NSURL URLWithString:[@"irc://" stringByAppendingString:tempStr]] ) {
@@ -209,6 +218,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		strMsg = (NSMutableString *) [parts componentsJoinedByString:@" "];
 		if( numeric) strMsg = [NSString stringWithFormat:@"%03u: %@", numeric, strMsg];
+	} else if( outbound && ! _verbose ) {
+		if( [strMsg rangeOfString:@"NOTICE"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound ) {
+			[strMsg replaceOccurrencesOfString:@"NOTICE" withString:@"CTCP REPLY" options:NSAnchoredSearch range:NSMakeRange( 0, 6 )];
+		} else if( [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound ) {
+			[strMsg replaceOccurrencesOfString:@"PRIVMSG" withString:@"CTCP REQUEST" options:NSAnchoredSearch range:NSMakeRange( 0, 7 )];
+		}		
 	}
 
 	msg = [[[NSAttributedString alloc] initWithString:strMsg attributes:attrs] autorelease];
@@ -243,6 +258,15 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( toggleVerbose: )];
+	} else if( [identifier isEqual:JVToolbarTogglePrivateMessagesItemIdentifier] ) {
+		[toolbarItem setLabel:NSLocalizedString( @"Messages", "toggle private messages toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Toggle Messages", "toggle private messages toolbar customize palette name" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Private Messages Output", "toggle private messages output tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"room"]];
+
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector( toggleMessages: )];
 	} else toolbarItem = nil;
 	return toolbarItem;
 }
@@ -253,7 +277,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarToggleVerboseItemIdentifier, JVToolbarClearItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarToggleVerboseItemIdentifier, JVToolbarTogglePrivateMessagesItemIdentifier, JVToolbarClearItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 @end
