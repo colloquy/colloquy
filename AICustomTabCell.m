@@ -286,9 +286,9 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSView          *view = [eventData objectForKey:@"view"];
 
 	//Scrubs the tab if control is down.
-	if(([theEvent modifierFlags] & NSAlternateKeyMask) && !selected){
-		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
-	}
+//	if(([theEvent modifierFlags] & NSAlternateKeyMask) && !selected){
+//		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
+//	}
 	
     //Set ourself (or our close button) has hovered
     if((allowsInactiveTabClosing || selected || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ) && [[eventData objectForKey:@"close"] boolValue]){
