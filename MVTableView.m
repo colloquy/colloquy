@@ -109,21 +109,30 @@
 	return defaultRange;
 }
 
-- (NSRect) frameOfCellAtColumn:(int) column row:(int) row {
-	NSRect ret = [super frameOfCellAtColumn:column row:row];
-	int enc = ( row | ( ( column && 0xFFFF ) << 16 ) );
-	[self addToolTipRect:ret owner:self userData:(void *)enc];
-	return ret;
+- (void) rebuildTooltipRects {
+	int rows = [self numberOfRows];
+	int columns = [self numberOfColumns];
+	int ri = 0, ci = 0;
+
+	[self removeAllToolTips];
+
+	for( ri = 0; ri < rows; ri++ ) {
+		for( ci = 0; ci < columns; ci++ ) {
+			NSRect rect = [self frameOfCellAtColumn:ci row:ri];
+			int enc = ( ri | ( ( ci && 0xFFFF ) << 16 ) );
+			[self addToolTipRect:rect owner:self userData:(void *)enc];
+		}
+	}
 }
 
-- (void) display {
-	[self removeAllToolTips];
-	[super display];
+- (void) reloadData {
+	[self rebuildTooltipRects];
+	[super reloadData];
 }
 
-- (void) displayRect:(NSRect) rect {
-	[self removeAllToolTips];
-	[super displayRect:rect];
+- (void) noteNumberOfRowsChanged {
+	[self rebuildTooltipRects];
+	[super noteNumberOfRowsChanged];
 }
 
 - (NSString *) view:(NSView *) view stringForToolTip:(NSToolTipTag) tag point:(NSPoint) point userData:(void *) userData {
