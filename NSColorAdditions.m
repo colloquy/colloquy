@@ -98,10 +98,10 @@
 								[scanner scanCharactersFromSet:whites intoString:nil];
 								[scanner scanString:@")" intoString:nil];
 								alpha = MAX( 0., MIN( 1., alpha ) );
-								ret = [self colorWithCalibratedHue:( hue / 365. ) saturation:( saturation / 100. ) brightness:( lightness / 100. ) alpha:alpha];
+								ret = [self colorWithCalibratedHue:( hue / 360. ) saturation:( saturation / 100. ) brightness:( lightness / 100. ) alpha:alpha];
 							}
 						} else {
-							ret = [self colorWithCalibratedHue:( hue / 365. ) saturation:( saturation / 100. ) brightness:( lightness / 100. ) alpha:1.];
+							ret = [self colorWithCalibratedHue:( hue / 360. ) saturation:( saturation / 100. ) brightness:( lightness / 100. ) alpha:1.];
 						}
 					}
 				}
