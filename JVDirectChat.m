@@ -97,7 +97,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		_isActive = NO;
 		_historyIndex = 0;
 
-		_encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"];
+		_encoding = NSASCIIStringEncoding;
 
 		_sendHistory = [[NSMutableArray array] retain];
 		[_sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
@@ -118,48 +118,41 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
+
+		_settings = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]] mutableCopy];
+		if( ! _settings ) _settings = [[NSMutableDictionary dictionary] retain];
 	}
 	return self;
 }
 
 - (void) awakeFromNib {
 	NSView *toolbarItemContainerView = nil;
-	NSString *prefStyle = [NSString stringWithFormat:@"chat.style.%@", [self identifier]];
 	NSBundle *style = nil;
 	NSString *variant = nil;
 
 	[self changeEncoding:nil];
 
-	if( prefStyle ) {
-		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:prefStyle]];
-		if( ! style ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:prefStyle];
+	if( [self preferenceForKey:@"style"] ) {
+		style = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"style"]];
+		variant = [self preferenceForKey:@"style variant"];
+		if( ! style ) {
+			[self setPreference:nil forKey:@"style"];
+			[self setPreference:nil forKey:@"style variant"];
+		}
 	}
 
-	if( ! style ) {
-		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
-		variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]];
+//	[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
+	if( style ) [self setChatStyle:style withVariant:variant];
+
+	if( ( toolbarItemContainerView = [chooseStyle superview] ) ) {
+		[chooseStyle retain];
+		[chooseStyle removeFromSuperview];
+	
+		[encodingView retain];
+		[encodingView removeFromSuperview];
+	
+		[toolbarItemContainerView autorelease];
 	}
-		
-	if( ! style ) {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
-		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
-		variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]];
-	}
-
-	variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], [style bundleIdentifier]]];
-
-	[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
-	[self setChatStyle:style withVariant:variant];
-
-	toolbarItemContainerView = [chooseStyle superview];
-
-	[chooseStyle retain];
-	[chooseStyle removeFromSuperview];
-
-	[encodingView retain];
-	[encodingView removeFromSuperview];
-
-	[toolbarItemContainerView autorelease];
 
 	[super awakeFromNib];
 
@@ -223,7 +216,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 }
 
 - (NSToolbar *) toolbar {
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"chat.directChat"];
+	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Direct Chat"];
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
@@ -283,7 +276,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 #pragma mark -
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"%@.%@.directChat", [[self connection] server], _target];
+	return [NSString stringWithFormat:@"Direct Chat %@ (%@)", _target, [[self connection] server]];
 }
 
 #pragma mark -
@@ -316,12 +309,12 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
-		NSString *source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
 		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "ended", [[[NSDate date] description] UTF8String] );
-		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
+		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[_chatStyle bundleIdentifier] UTF8String] );
 		xmlSaveFormatFile( [[sheet filename] fileSystemRepresentation], _xmlLog, (int) [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] );
 		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] atPath:[sheet filename]];
 		xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "ended" );
+		xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "style" );
 	}
 }
 
@@ -330,7 +323,15 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 - (void) setTarget:(NSString *) target {
 	[_target autorelease];
 	_target = [target copy];
+
 	[_windowController reloadListItem:self andChildren:YES];
+
+	[_settings autorelease];
+	_settings = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]] mutableCopy];
+	if( ! _settings ) _settings = [[NSMutableDictionary dictionary] retain];
+
+	NSString *source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
+	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
 }
 
 #pragma mark -
@@ -359,22 +360,41 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 #pragma mark -
 
+- (void) setPreference:(id) value forKey:(NSString *) key {
+	NSParameterAssert( key != nil );
+	NSParameterAssert( [key length] );
+
+	if( value ) [_settings setObject:value forKey:key];
+	else [_settings removeObjectForKey:key];
+
+	[[NSUserDefaults standardUserDefaults] setObject:_settings forKey:[[self identifier] stringByAppendingString:@" Settings"]];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (id) preferenceForKey:(NSString *) key {
+	NSParameterAssert( key != nil );
+	NSParameterAssert( [key length] );
+
+	return [[[_settings objectForKey:key] retain] autorelease];
+}
+
+#pragma mark -
+
 - (IBAction) changeChatStyle:(id) sender {
 	NSBundle *style = [NSBundle bundleWithIdentifier:[sender representedObject]];
-	NSString *key = [NSString stringWithFormat:@"chat.style.%@", [self identifier]];
 	NSString *variant = nil;
 	if( style ) {
-		[[NSUserDefaults standardUserDefaults] setObject:[style bundleIdentifier] forKey:key];
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], [style bundleIdentifier]]];
+		[self setPreference:[style bundleIdentifier] forKey:@"style"];
+		[self setPreference:nil forKey:@"style variant"];
 	} else {
 		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatDefaultStyle"]];
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], [style bundleIdentifier]]];
+		[self setPreference:nil forKey:@"style"];
+		[self setPreference:nil forKey:@"style variant"];
 		if( ! style ) {
 			[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
 			style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
-			variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]];
-		} else variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]];
+		}
+		variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [style bundleIdentifier]]];
 	}
 	[self setChatStyle:style withVariant:variant];
 }
@@ -382,12 +402,9 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 - (IBAction) changeChatStyleVariant:(id) sender {
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
 	NSString *style = [[sender representedObject] objectForKey:@"style"];
-	NSString *key = [NSString stringWithFormat:@"chat.style.%@ %@ variant", [self identifier], style];
 
-	if( variant ) [[NSUserDefaults standardUserDefaults] setObject:variant forKey:key];
-	else [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
-
-	[[NSUserDefaults standardUserDefaults] setObject:style forKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]];
+	[self setPreference:style forKey:@"style"];
+	[self setPreference:variant forKey:@"style variant"];
 
 	if( ! [style isEqualToString:[_chatStyle bundleIdentifier]] ) {
 		[self setChatStyle:[NSBundle bundleWithIdentifier:style] withVariant:variant];
@@ -419,8 +436,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	unsigned i = 0, count = 0;
 	BOOL new = YES;
 	if( ! [sender tag] ) {
-		_encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:[NSString stringWithFormat:@"chat.encoding.%@", [self identifier]]];
-		if( ! _encoding ) _encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"];
+		_encoding = (NSStringEncoding) [[self preferenceForKey:@"encoding"] intValue];
+		if( ! _encoding ) _encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 	} else _encoding = (NSStringEncoding) [sender tag];
 
 	if( [[encodingView menu] numberOfItems] > 1 ) new = NO;
@@ -447,11 +464,9 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	count = [[encodingView menu] numberOfItems];
 	for( i = 1; i < count; i++ ) [_spillEncodingMenu addItem:[[(NSMenuItem *)[[encodingView menu] itemAtIndex:i] copy] autorelease]];
 
-	if( _encoding != (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"] ) {
-		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithUnsignedInt:_encoding] forKey:[NSString stringWithFormat:@"chat.encoding.%@", [self identifier]]];
-	} else {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"chat.encoding.%@", [self identifier]]];
-	}
+	if( _encoding != (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"] ) {
+		[self setPreference:[NSNumber numberWithInt:_encoding] forKey:@"encoding"];
+	} else [self setPreference:nil forKey:@"encoding"];
 }
 
 #pragma mark -

@@ -28,6 +28,7 @@
 	NSMutableArray *_sendHistory;
 	NSMutableArray *_waitingAlerts;
 	NSMutableDictionary *_waitingAlertNames;
+	NSMutableDictionary *_settings;
 	NSMenu *_spillEncodingMenu;
 	unsigned int _messageId;
 	BOOL _firstMessage;
@@ -43,6 +44,9 @@
 - (NSString *) target;
 
 - (void) showAlert:(NSPanel *) alert withName:(NSString *) name;
+
+- (void) setPreference:(id) value forKey:(NSString *) key;
+- (id) preferenceForKey:(NSString *) key;
 
 - (NSStringEncoding) encoding;
 - (IBAction) changeEncoding:(id) sender;	
