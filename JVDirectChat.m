@@ -169,7 +169,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	[send setUsesFontPanel:YES];
 	[send setUsesRuler:NO];
 	[send setDelegate:self];
-    [send setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSpellChecking"]];
+	[send setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatSpellChecking"]];
 	[send reset:nil];
 }
 
@@ -654,7 +654,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	if( [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[NSAttributedString alloc] initWithString:@""] autorelease]];
 	[_sendHistory insertObject:[[[send textStorage] copy] autorelease] atIndex:1];
-	if( [_sendHistory count] > [[[NSUserDefaults standardUserDefaults] objectForKey:@"MVChatMaximumHistory"] unsignedIntValue] )
+	if( [_sendHistory count] > [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatMaximumHistory"] unsignedIntValue] )
 		[_sendHistory removeObjectAtIndex:[_sendHistory count] - 1];
 
 	if( [sender isKindOfClass:[NSNumber class]] && [sender boolValue] ) action = YES;
@@ -689,7 +689,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 				if( ! handled ) {
 //					NSRunInformationalAlertPanel( NSLocalizedString( @"Command not recognised", "IRC command not recognised dialog title" ), NSLocalizedString( @"The command you specified is not recognised by Colloquy or it's plugins. No action can be performed.", "IRC command not recognised dialog message" ), nil, nil, nil );
-                    [[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
+					[[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
 //					return;
 				}
 			} else {
