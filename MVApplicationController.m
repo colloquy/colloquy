@@ -1,6 +1,7 @@
 #import <ExceptionHandling/NSExceptionHandler.h>
 #import <ChatCore/MVFileTransfer.h>
 #import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSURLAdditions.h>
 #import "MVColorPanel.h"
@@ -325,6 +326,36 @@ static BOOL applicationIsTerminating = NO;
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
+- (NSMenu *) applicationDockMenu:(NSApplication *) sender {
+	NSMenu *menu = [[[NSMenu allocWithZone:[self zone]] initWithTitle:@""] autorelease];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	id view = nil;
+
+	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
+	[invocation setArgument:&sender atIndex:2];
+	[invocation setArgument:&view atIndex:3];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	if( [results count] ) {
+		NSArray *items = nil;
+		NSMenuItem *item = nil;
+		NSEnumerator *enumerator = [results objectEnumerator];
+		while( ( items = [enumerator nextObject] ) ) {
+			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+			NSEnumerator *ienumerator = [items objectEnumerator];
+			while( ( item = [ienumerator nextObject] ) )
+				if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
+		}
+
+		if( [[[menu itemArray] lastObject] isSeparatorItem] )
+			[menu removeItem:[[menu itemArray] lastObject]];
+	}
+
+	return menu;
+}
+
 - (BOOL) application:(NSApplication *) sender delegateHandlesKey:(NSString *) key {
 	if( [key isEqualToString:@"chatController"] || [key isEqualToString:@"connectionsController"] || [key isEqualToString:@"transferManager"] || [key isEqualToString:@"buddyList"] )
 		return YES;
@@ -380,6 +411,7 @@ static BOOL applicationIsTerminating = NO;
 				NSNumber *enabled = [item objectForKey:@"enabled"];
 				NSNumber *checked = [item objectForKey:@"checked"];
 				NSNumber *indent = [item objectForKey:@"indent"];
+				NSNumber *alternate = [item objectForKey:@"alternate"];
 				NSString *iconPath = [item objectForKey:@"icon"];
 				NSString *tooltip = [item objectForKey:@"tooltip"];
 				id context = [item objectForKey:@"context"];
@@ -389,6 +421,7 @@ static BOOL applicationIsTerminating = NO;
 				if( ! [enabled isKindOfClass:[NSNumber class]] ) enabled = nil;
 				if( ! [checked isKindOfClass:[NSNumber class]] ) checked = nil;
 				if( ! [indent isKindOfClass:[NSNumber class]] ) indent = nil;
+				if( ! [alternate isKindOfClass:[NSNumber class]] ) alternate = nil;
 				if( ! [iconPath isKindOfClass:[NSString class]] ) iconPath = nil;
 				if( ! [sub isKindOfClass:[NSArray class]] && ! [sub isKindOfClass:[NSDictionary class]] ) sub = nil;
 
@@ -400,6 +433,18 @@ static BOOL applicationIsTerminating = NO;
 				if( checked ) [mitem setState:[checked intValue]];
 				if( indent ) [mitem setIndentationLevel:MIN( 15, [indent unsignedIntValue] )];
 				if( tooltip ) [mitem setToolTip:tooltip];
+
+				if( alternate && [alternate unsignedIntValue] == 1 ) {
+					[mitem setKeyEquivalentModifierMask:NSAlternateKeyMask];
+					[mitem setAlternate:YES];
+				} else if( alternate && [alternate unsignedIntValue] == 2 ) {
+					[mitem setKeyEquivalentModifierMask:( NSShiftKeyMask | NSAlternateKeyMask )];
+					[mitem setAlternate:YES];
+				} else if( alternate && [alternate unsignedIntValue] == 3 ) {
+					[mitem setKeyEquivalentModifierMask:( NSShiftKeyMask | NSAlternateKeyMask | NSControlKeyMask )];
+					[mitem setAlternate:YES];
+				}
+
 				if( [iconPath length] ) {
 					if( ! [iconPath isAbsolutePath] ) {
 						NSString *dir = [[self scriptFilePath] stringByDeletingLastPathComponent];
@@ -435,6 +480,7 @@ static BOOL applicationIsTerminating = NO;
 	id result = [self callScriptHandler:'cMiX' withArguments:args forSelector:_cmd];
 	NSMutableArray *ret = [NSMutableArray array];
 
+	if( ! result ) return nil;
 	if( ! [result isKindOfClass:[NSArray class]] )
 		result = [NSArray arrayWithObject:result];
 

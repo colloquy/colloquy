@@ -725,31 +725,36 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 		[ret addObject:item];
 	}
 
-/*	if( [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
-		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
-		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-		[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
-		[invocation setArgument:&element atIndex:2];
-		[invocation setArgument:&self atIndex:3];
+	id object = [[element objectForKey:WebElementImageURLKey] description];
+	if( ! object ) object = [[element objectForKey:WebElementLinkURLKey] description];
+#ifdef _WEB_SCRIPT_OBJECT_H_
+	if( ! object && [display respondsToSelector:@selector( selectedDOMRange )] )
+		object = [[display selectedDOMRange] toString];
+#endif
 
-		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-		if( [results count] ) {
-			if( [ret count] ) [ret addObject:[NSMenuItem separatorItem]];
+	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
+	[invocation setArgument:&object atIndex:2];
+	[invocation setArgument:&self atIndex:3];
 
-			NSArray *items = nil;
-			NSEnumerator *enumerator = [results objectEnumerator];
-			while( ( items = [enumerator nextObject] ) ) {
-				if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
-				NSEnumerator *ienumerator = [items objectEnumerator];
-				while( ( item = [ienumerator nextObject] ) )
-					if( [item isKindOfClass:[NSMenuItem class]] ) [ret addObject:item];
-			}
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	if( [results count] ) {
+		if( [ret count] ) [ret addObject:[NSMenuItem separatorItem]];
 
-			if( [[ret lastObject] isSeparatorItem] )
-				[ret removeObjectIdenticalTo:[ret lastObject]];
+		NSArray *items = nil;
+		NSEnumerator *enumerator = [results objectEnumerator];
+		while( ( items = [enumerator nextObject] ) ) {
+			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+			NSEnumerator *ienumerator = [items objectEnumerator];
+			while( ( item = [ienumerator nextObject] ) )
+				if( [item isKindOfClass:[NSMenuItem class]] ) [ret addObject:item];
 		}
-	} */
+
+		if( [[ret lastObject] isSeparatorItem] )
+			[ret removeObjectIdenticalTo:[ret lastObject]];
+	}
 
 	return ret;
 }
