@@ -351,9 +351,6 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 }
 
 - (void) setChatStyle:(JVStyle *) style withVariant:(NSString *) variant {
-	int result = NSOKButton;
-	BOOL manyMessages = NO;
-
 	NSParameterAssert( style != nil );
 
 	if( style == _chatStyle ) {
@@ -362,10 +359,11 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		return;
 	}
 
-	manyMessages = ( xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) > 2000 ? YES : NO );
+	BOOL manyMessages = ( xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) > 2000 ? YES : NO );
 
 	NSString *styleswitch = NSLocalizedString( @"Time Consuming Style Switch", "time consuming style switch alert title" );
 
+	int result = NSOKButton;
 	if( _isArchive && _previousStyleSwitch && manyMessages ) {
 		result = NSRunInformationalAlertPanel( styleswitch, NSLocalizedString( @"This transcript is large and will take a considerable amount of time to switch the style. Would you like to continue anyway?", "large transcript style switch alert message" ), NSLocalizedString( @"Continue", "continue button name" ), @"Cancel", nil );
 	} else if( ! _isArchive && manyMessages ) {
