@@ -138,6 +138,8 @@
 	<dict>
 		<key>showBubble</key>
 		<true/>
+		<key>keepBubbleOnScreen</key>
+		<true/>
 	</dict>
 	<key>JVNotificationSettings JVChatMemberDemoted</key>
 	<dict>
