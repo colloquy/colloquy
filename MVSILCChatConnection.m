@@ -20,7 +20,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSUTF8StringEncoding, 0
 };
 
-void silc_channel_get_clients_per_list_callback( SilcClient client, SilcClientConnection conn, SilcClientEntry *clients, SilcUInt32 clients_count, void *context ) {
+static void silc_channel_get_clients_per_list_callback( SilcClient client, SilcClientConnection conn, SilcClientEntry *clients, SilcUInt32 clients_count, void *context ) {
 	MVSILCChatRoom *room = context;
 	MVSILCChatConnection *self = (MVSILCChatConnection *)[room connection];
 
@@ -1175,25 +1175,49 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
+static void usersFoundCallback( SilcClient client, SilcClientConnection conn, SilcClientEntry *clients, SilcUInt32 clients_count, void *context ) {
+	MVSILCChatConnection *self = context;
+	self -> _lookingUpUsers = NO;
+}
+
+#pragma mark -
+
 - (NSSet *) knownChatUsers {
 	return [NSSet setWithArray:[_knownUsers allValues]];
 }
 
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
-	// do silc_client_get_clients_local first, then if no local matches
-	// do a silc_client_get_clients_whois on another thread and wait for the callback to return
-	return nil;
+	[[self _silcClientLock] lock];
+	silc_client_get_clients_whois( [self _silcClient], [self _silcConn], [nickname UTF8String], NULL, NULL, usersFoundCallback, self );
+	[[self _silcClientLock] unlock];
+
+	_lookingUpUsers = YES;
+
+	while( _lookingUpUsers ) // asynchronously look up the users
+		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+
+	SilcUInt32 clientsCount = 0;
+	[[self _silcClientLock] lock];
+	SilcClientEntry *clients = silc_client_get_clients_local( [self _silcClient], [self _silcConn], [nickname UTF8String], NULL, &clientsCount );
+	[[self _silcClientLock] unlock];
+
+	unsigned int i = 0;
+	NSMutableSet *results = [NSMutableSet setWithCapacity:clientsCount];
+	for( i = 0; i < clientsCount; i++ ) {
+		MVChatUser *user = [self _chatUserWithClientEntry:clients[i]];
+		[results addObject:user];
+	}
+
+	return ( [results count] ? [NSSet setWithSet:results] : nil );
 }
 
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSData class]] || [identifier isKindOfClass:[NSString class]] );
-	
-	NSData *data;
-	
-	if ( [identifier isKindOfClass:[NSString class]] ) {
+
+	NSData *data = nil;
+	if( [identifier isKindOfClass:[NSString class]] ) {
 		data = [[[NSData alloc] initWithBase64EncodedString:identifier] autorelease];
-	} else 
-		data = identifier;
+	} else data = identifier;
 
 	if( [data isEqualToData:[[self localUser] uniqueIdentifier]] )
 		return [self localUser];
