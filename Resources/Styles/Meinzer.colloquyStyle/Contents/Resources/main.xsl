@@ -120,7 +120,7 @@
 		<xsl:variable name='hour' select='substring($date, 12, 2)' />
 		<xsl:variable name='minute' select='substring($date, 15, 2)' />
 		<xsl:choose>
-		  <xsl:when test="starts-with($timeFormat,'%H')">
+		  <xsl:when test="contains($timeFormat,'H')">
 		    <!-- 24hr format -->
 		    <xsl:value-of select="concat($hour,':',$minute)" />
 		  </xsl:when>
