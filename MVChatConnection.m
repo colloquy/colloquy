@@ -793,7 +793,7 @@ static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
 	if( strchr( channel -> mode, 'l' ) )
 		currentModes |= MVChatRoomMemberLimitMode;
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRoomModeNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", [NSNumber numberWithUnsignedInt:currentModes], @"mode", [NSNumber numberWithUnsignedInt:channel -> limit], @"limit", [NSString stringWithUTF8String:( channel -> key ? channel -> key : "")], @"key", ( setby ? [NSString stringWithUTF8String:setby] : [NSNull null] ), @"by", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRoomModeNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:( channel -> name ? [NSString stringWithUTF8String:channel -> name] : @"" ), @"room", [NSNumber numberWithUnsignedInt:currentModes], @"mode", [NSNumber numberWithUnsignedInt:channel -> limit], @"limit", ( channel -> key ? [NSString stringWithUTF8String:channel -> key] : @"" ), @"key", ( setby ? [NSString stringWithUTF8String:setby] : [NSNull null] ), @"by", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
 
