@@ -88,7 +88,7 @@
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Left", "clear marks from here left contextual menu") action:@selector( clearMarksHereLess: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
-		
+
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Right", "clear marks from here right contextual menu") action:@selector( clearMarksHereGreater: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
@@ -96,7 +96,7 @@
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Up", "clear marks from here up contextual menu") action:@selector( clearMarksHereLess: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
-		
+
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Down", "clear marks from here up contextual menu") action:@selector( clearMarksHereGreater: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
@@ -127,18 +127,16 @@
 	NSAffineTransform *transform = [NSAffineTransform transform];
 	[transform translateXBy:(float)( sFlags.isHoriz ? displacement : 0. ) yBy:(float)( sFlags.isHoriz ? 0. : displacement )];
 
-	[_lines transformUsingAffineTransform:transform];
-	[_shadedAreas transformUsingAffineTransform:transform];
-
 	NSMutableSet *shiftedMarks = [NSMutableSet set];
 	NSEnumerator *enumerator = [_marks objectEnumerator];
 	NSNumber *location = nil;
 
 	while( ( location = [enumerator nextObject] ) ) {
 		long long shifted = ( [location unsignedLongLongValue] + displacement );
-		if( shifted >= 0. ) [shiftedMarks addObject:[NSNumber numberWithUnsignedLongLong:shifted]];
+		if( shifted >= 0 ) [shiftedMarks addObject:[NSNumber numberWithUnsignedLongLong:shifted]];
 	}
 
+	[_lines transformUsingAffineTransform:transform];
 	[_marks setSet:shiftedMarks];
 
 	NSMutableArray *shiftedShades = [NSMutableArray array];
@@ -147,9 +145,10 @@
 
 	while( ( location = [enumerator nextObject] ) ) {
 		long long shifted = ( [location unsignedLongLongValue] + displacement );
-		[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:shifted]];
+		[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:MAX( shifted, 0 )]];
 	}
 
+	[_shadedAreas transformUsingAffineTransform:transform];
 	[_shades setArray:shiftedShades];
 
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];

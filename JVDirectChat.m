@@ -1242,9 +1242,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 
 		if( ( messageCount + 1 ) > scrollbackLimit ) {
-			float loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - scrollbackLimit )]] floatValue];
+			float loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( ( messageCount + 1 ) - scrollbackLimit )]] floatValue];
 			if( loc && [scroller isKindOfClass:[JVMarkedScroller class]] )
-				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1 )];
+				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1. )];
 		}
 
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
@@ -1466,7 +1466,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 
 		if( ( messageCount + 1 ) > scrollbackLimit ) {
-			float loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - scrollbackLimit )]] floatValue];
+			float loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( ( messageCount + 1 ) - scrollbackLimit )]] floatValue];
 			if( loc && [scroller isKindOfClass:[JVMarkedScroller class]] )
 				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1. )];
 		}
@@ -1826,12 +1826,14 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), messageString] withName:@"awaySet" andAttributes:nil];
 
-		unsigned long loc = (unsigned long) NSHeight( [[[[display mainFrame] frameView] documentView] frame] );
+		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+		unsigned long loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
 		[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] startShadedAreaAt:loc];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
 
-		unsigned long loc = (unsigned long) NSHeight( [[[[display mainFrame] frameView] documentView] frame] );
+		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+		unsigned long loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
 		[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] stopShadedAreaAt:loc];
 	}
 }
