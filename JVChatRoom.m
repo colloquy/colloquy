@@ -29,6 +29,7 @@
 
 - (void) awakeFromNib {
 	[super awakeFromNib];
+	[self changeTopic:nil by:nil];
 }
 
 - (void) dealloc {
@@ -355,58 +356,30 @@
 
 #pragma mark -
 
+- (IBAction) changeEncoding:(id) sender {
+	[super changeEncoding:sender];
+	[self changeTopic:_topic by:_topicAuth];
+}
+
 - (void) changeTopic:(NSData *) topic by:(NSString *) author {
-/*	NSData *tData = nil;
-	NSRange limitRange, effectiveRange;
-	NSMutableAttributedString *topicAttr = [[[NSAttributedString attributedStringWithHTML:tData usingEncoding:_encoding documentAttributes:NULL] mutableCopy] autorelease];
-	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-	NSMutableAttributedString *addons = nil;
-	NSMutableDictionary *attributes = nil;
+	NSString *topicString = [[[NSString alloc] initWithData:topic encoding:_encoding] autorelease];
+	if( ! topicString )
+		topicString = [[[NSString alloc] initWithData:topic encoding:NSNonLossyASCIIStringEncoding] autorelease];
 
-	NSParameterAssert( topic != nil );
+	if( ! [topicString length] )
+		topicString = [NSString stringWithFormat:@"<span style=\"color: #6c6c6c\">%@</span>", NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" )];
 
-	if( [topic length] ) {
-		tData = topic;
-	} else {
-		tData = [[NSString stringWithFormat:@"<font color=\"#6c6c6c\">%@</font>", NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" )] dataUsingEncoding:NSUTF8StringEncoding];
-		author = nil;
-	}
+	topicString = [NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", topicString];
+
+	[[topicRenderer mainFrame] loadHTMLString:topicString baseURL:nil];
 
 	[_topic autorelease];
-	_topic = [topic retain];
+	_topic = [topic copy];
+
 	[_topicAuth autorelease];
 	_topicAuth = [author retain];
 
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"] ) {
-		[topicAttr preformHTMLBackgroundColoring];
-	}
-
-	attributes = [NSMutableDictionary dictionaryWithObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Helvetica" traits:NSBoldFontMask weight:5 size:0.] forKey:NSFontAttributeName];
-	addons = [[[NSMutableAttributedString alloc] initWithString:NSLocalizedString( @"Topic: ", "chat room topic prefix" ) attributes:attributes] autorelease];
-	[topicAttr insertAttributedString:addons atIndex:0];
-
-	if( author ) {
-		attributes = [NSMutableDictionary dictionaryWithObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Helvetica" traits:NSItalicFontMask weight:5 size:0.] forKey:NSFontAttributeName];
-		addons = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString( @" posted by %@", "who posted the current topic" ), author] attributes:attributes] autorelease];
-		[topicAttr appendAttributedString:addons];
-	}
-
-	limitRange = NSMakeRange( 0, [topicAttr length] );
-	while( limitRange.length > 0 ) {
-		NSFont *font = [topicAttr attribute:NSFontAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
-		font = [[NSFontManager sharedFontManager] convertFont:font toFamily:@"Helvetica"];
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"] )
-			font = [[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:NSItalicFontMask | NSBoldFontMask];
-		[topicAttr addAttribute:NSFontAttributeName value:font range:effectiveRange];
-		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
-	}
-
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"] )
-		[topicAttr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:0] range:NSMakeRange( 0, [topicAttr length] )];		
-
-	[paraStyle setMaximumLineHeight:15.];
-	[topicAttr addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange( 0, [topicAttr length] )];
-	[topicLine setAttributedStringValue:topicAttr];*/
+	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _finishTopicChange: ) userInfo:NULL repeats:NO];
 }
 
 #pragma mark -
@@ -479,5 +452,14 @@
 - (void) _didConnect:(NSNotification *) notification {
 	[[self connection] joinChatForRoom:_target];
 	[super _didConnect:notification];
+}
+
+- (void) _finishTopicChange:(id) sender {
+	NSMutableAttributedString *topic = [[[[[[topicRenderer mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
+	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	[paraStyle setMaximumLineHeight:13.];
+	[paraStyle setAlignment:NSCenterTextAlignment];
+	[topic addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange( 0, [topic length] )];
+	[topicLine setAttributedStringValue:topic];
 }
 @end
