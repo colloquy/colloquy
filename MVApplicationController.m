@@ -446,13 +446,18 @@ static BOOL applicationIsTerminating = NO;
 				}
 
 				if( [iconPath length] ) {
-					if( ! [iconPath isAbsolutePath] ) {
-						NSString *dir = [[self scriptFilePath] stringByDeletingLastPathComponent];
-						iconPath = [dir stringByAppendingPathComponent:iconPath];
-					}
+					if( [NSURL URLWithString:iconPath] ) {
+						NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingURL:[NSURL URLWithString:iconPath]] autorelease];
+						if( icon ) [mitem setImage:icon];
+					} else {
+						if( ! [iconPath isAbsolutePath] ) {
+							NSString *dir = [[self scriptFilePath] stringByDeletingLastPathComponent];
+							iconPath = [dir stringByAppendingPathComponent:iconPath];
+						}
 
-					NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingFile:iconPath] autorelease];
-					if( icon ) [mitem setImage:icon];
+						NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingFile:iconPath] autorelease];
+						if( icon ) [mitem setImage:icon];
+					}
 				}
 
 				[itemList addObject:mitem];
