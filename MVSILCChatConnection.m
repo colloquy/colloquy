@@ -11,8 +11,6 @@
 static SilcPKCS silcPkcs;
 static SilcPublicKey silcPublicKey;
 static SilcPrivateKey silcPrivateKey;
-static NSMutableArray *silcChatConnections;
-NSLock *silcChatConnectionsLock;
 
 NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCertificate";
 
@@ -573,6 +571,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		char *nickname = va_arg( list, char * );
 		/*const SilcClientID *old_client_id =*/ va_arg( list, SilcClientID * );
 
+		NSLog( @"self nick change %s", nickname );
 		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nickname], @"nickname", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}	break;
@@ -764,11 +763,6 @@ static SilcClientOperations silcClientOps = {
 		silc_cipher_register_default();
 		silc_hmac_register_default();
 
-		silcChatConnections = [[NSMutableArray array] retain];
-		silcChatConnectionsLock = [[NSLock alloc] init];
-
-		[NSThread detachNewThreadSelector:@selector( _silcRunloop: ) toTarget:self withObject:nil];
-
 		tooLate = YES;
 	}
 }
@@ -777,6 +771,8 @@ static SilcClientOperations silcClientOps = {
 
 - (id) init {
 	if( ( self = [super init] ) ) {
+		_encoding = NSUTF8StringEncoding; // the only encoding we support
+
 		memset( &_silcClientParams, 0, sizeof( _silcClientParams ) );
 		strcat( _silcClientParams.nickname_format, "%n@%h%a" );
 		_silcClientParams.nickname_parse = silc_nickname_format_parse;
@@ -787,14 +783,10 @@ static SilcClientOperations silcClientOps = {
 		[self setUsername:NSUserName()];
 		[self setRealName:NSFullUserName()];
 
-		[silcChatConnectionsLock lock];
-		[silcChatConnections addObject:self];
-		[silcChatConnectionsLock unlock];
-
 		_joinedChannels = [[NSMutableArray array] retain];
 		_queuedCommands = [[NSMutableArray array] retain];
 		_queuedCommandsLock = [[NSLock alloc] init];
-		
+
 		_sentCommands = [[NSMutableDictionary dictionary] retain];
 		_sentCommandsLock = [[NSLock alloc] init];
 	}
@@ -805,17 +797,13 @@ static SilcClientOperations silcClientOps = {
 - (void) dealloc {
 	[self disconnect];
 
-	[silcChatConnectionsLock lock];
-	[silcChatConnections removeObject:self];
-	[silcChatConnectionsLock unlock];
-
 	[_silcClientLock lock];
 	if( _silcClient -> realname ) free( _silcClient -> realname );
 	if( _silcClient -> username ) free( _silcClient -> username );
 	if( _silcClient -> hostname ) free( _silcClient -> hostname );
 	if( _silcClient -> nickname ) free( _silcClient -> nickname );
 
-	silc_client_free(_silcClient);
+	silc_client_free( _silcClient );
 	[_silcClientLock unlock];
 	_silcClient = NULL;
 
@@ -861,7 +849,7 @@ static SilcClientOperations silcClientOps = {
 	}
 
 	[super connect];
-	
+
 	_sentQuitCommand = NO;
 
 	// check if nickname/username and realname are set
@@ -885,6 +873,8 @@ static SilcClientOperations silcClientOps = {
 
 	[self _willConnect];
 	if( errorOnConnect) [self _didNotConnect];
+
+	[NSThread detachNewThreadSelector:@selector( _silcRunloop ) toTarget:self withObject:nil];
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
@@ -906,9 +896,12 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-// we don't support encodings other than UTF8.
+- (void) setEncoding:(NSStringEncoding) encoding {
+	// we don't support encodings other than UTF8.
+}
+
 - (NSStringEncoding) encoding {
-	return NSUTF8StringEncoding;
+	return NSUTF8StringEncoding; // we don't support encodings other than UTF8.
 }
 
 #pragma mark -
@@ -970,7 +963,6 @@ static SilcClientOperations silcClientOps = {
 - (NSString *) nicknamePassword {
 	return nil;
 }
-
 
 #pragma mark -
 
@@ -1363,36 +1355,18 @@ static SilcClientOperations silcClientOps = {
 	return [data bytes];
 }
 
-+ (void) _silcRunloop:(id) sender {
+- (void) _silcRunloop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	extern BOOL MVChatApplicationQuitting;
 
-	while( ! MVChatApplicationQuitting ) {
-		[silcChatConnectionsLock lock];
-		if( ! [silcChatConnections count] ) {
-			[silcChatConnectionsLock unlock];
-			usleep( 2000000 ); // run really slow (every 2 seconds) since we have no connections
-			continue;
+	while( [self isConnected] || [self status] == MVChatConnectionConnectingStatus ) {
+		if( [_silcClientLock tryLock] ) { // give up quick and let another SILC connection run sooner
+			if( _silcClient && _silcClient -> schedule )
+				silc_schedule_one(  _silcClient -> schedule, 50000 );
+				// use silc_schedule_one over silc_client_run_one since we want to block a bit inside the locks
+			[_silcClientLock unlock];
 		}
 
-		NSEnumerator *enumerator = [silcChatConnections objectEnumerator];
-		MVSILCChatConnection *connection = nil;
-		unsigned connectionsActive = 0;
-
-		while( ( connection = [enumerator nextObject] ) ) {
-			if( [connection isConnected] || [connection status] == MVChatConnectionConnectingStatus ) {
-				connectionsActive++;
-				[[connection _silcClientLock] lock];
-				if( [connection _silcClient] && [connection _silcClient] -> schedule ) 
-					silc_client_run_one( [connection _silcClient] );
-				[[connection _silcClientLock] unlock];
-			}
-		}
-
-		[silcChatConnectionsLock unlock];
-
-		if( connectionsActive ) usleep( 10000 ); // give time to other threads (1/100th of a second)
-		else usleep( 500000 ); // run really slow (every 1/2 second) since we have no active connections
+		usleep( 500 ); // give time to other threads
 	}
 
 	[pool release];
@@ -1646,12 +1620,14 @@ static SilcClientOperations silcClientOps = {
 
 - (void) _sendCommandSucceededNotify:(NSString *) message {
 	NSString *raw = [NSString stringWithFormat:@"Command succeeded: %@", message];
+	NSLog( @"%@", raw );
 	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];
 }
 
 - (void) _sendCommandFailedNotify:(NSString *) message {
 	NSString *raw = [NSString stringWithFormat:@"Command failure: %@", message];
+	NSLog( @"%@", raw );
 	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];	
 }
