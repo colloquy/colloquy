@@ -302,6 +302,7 @@
 				1CF6528A06EA2C8C0073DEA8,
 				1CF6528B06EA2C8E0073DEA8,
 				1C91405E07051A9200CBA5F1,
+				1CDDD9AD0718BD2E00FE11C3,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3324,6 +3325,15 @@
 			fileRef = 1CD020BD057593A9000F93B4;
 			isa = PBXBuildFile;
 			settings = {
+			};
+		};
+		1CDDD9AD0718BD2E00FE11C3 = {
+			fileRef = 1C5CC07A06FFCB0B0006C5B1;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1CF4E50F0698E9E900986498 = {
