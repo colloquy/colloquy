@@ -101,7 +101,7 @@
 				<key>connect</key>
 				<string>connectScriptCommand:</string>
 				<key>disconnect</key>
-				<string>disconnectScriptCommand</string>
+				<string>disconnectScriptCommand:</string>
 			</dict>
 		</dict>
 	</dict>

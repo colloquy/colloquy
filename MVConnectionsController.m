@@ -60,6 +60,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidDisconnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionNicknameAcceptedNotification object:nil];
 
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _willConnect: ) name:MVChatConnectionWillConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedPasswordNotification object:nil];
 
@@ -1072,29 +1073,38 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 }
 
 - (void) _connect:(id) sender {
-	MVChatConnection *connection = nil;
-	NSDictionary *info = nil;
-	NSEnumerator *enumerator = nil;
-	id item = nil;
-
 	if( [connections selectedRow] == -1 ) return;
+	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
+	[connection connect];
+}
 
-	info = [_bookmarks objectAtIndex:[connections selectedRow]];
-	connection = [info objectForKey:@"connection"];
+- (void) _willConnect:(NSNotification *) notification {
+	MVChatConnection *connection = nil;
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [[info objectForKey:@"connection"] isEqual:[notification object]] ) {
+			connection = [notification object];
+			break;
+		}
+	}
+
+	if( ! connection ) return;
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 		[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
 
-	[connection connect];
-
 	enumerator = [[info objectForKey:@"rooms"] objectEnumerator];
+	id item = nil;
 	while( ( item = [enumerator nextObject] ) )
 		[connection joinChatForRoom:item];
 }
 
 - (void) _disconnect:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
-	[(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] disconnect];
+	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
+	[connection disconnect];
 }
 
 - (void) _delete:(id) sender {

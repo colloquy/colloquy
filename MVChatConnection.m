@@ -582,7 +582,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	if( ( self = [self init] ) ) {
 		if( [nickname length] ) [self setNickname:nickname];
 		if( [server length] ) [self setServer:server];
-		if( port ) [self setServerPort:port];
+		[self setServerPort:port];
 	}
 	return self;
 }
@@ -627,19 +627,24 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 #pragma mark -
 
 - (void) connect {
-	if( ! _server ) return;
-	if( ! _nickname ) return;
 	if( [self status] == MVChatConnectionConnectingStatus ) return;
-	[self _willConnect];
-	firetalk_set_password( _chatConnection, NULL, [_password UTF8String] );
-	if( firetalk_signon( _chatConnection, [_server UTF8String], _port, [_nickname UTF8String] ) != FE_SUCCESS ) {
+
+	if( ! [_server length] || ! [_nickname length] ) {
 		[self _didNotConnect];
+		return;
 	}
+
+	[self _willConnect];
+
+	firetalk_set_password( _chatConnection, NULL, [_password UTF8String] );
+
+	if( firetalk_signon( _chatConnection, [_server UTF8String], _port, [_nickname UTF8String] ) != FE_SUCCESS )
+		[self _didNotConnect];
 }
 
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname {
-	[self setNickname:nickname];
-	[self setServer:server];
+	if( [nickname length] ) [self setNickname:nickname];
+	if( [server length] ) [self setServer:server];
 	[self setServerPort:port];
 
 	[self connect];
@@ -1118,6 +1123,14 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 @implementation MVChatConnection (MVChatConnectionScripting)
 - (NSNumber *) uniqueIdentifier {
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+}
+
+- (void) connectScriptCommand:(NSScriptCommand *) command {
+	[self connect];
+}
+
+- (void) disconnectScriptCommand:(NSScriptCommand *) command {
+	[self disconnect];
 }
 @end
 
