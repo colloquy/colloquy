@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
+#import <AddressBook/AddressBook.h>
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
@@ -78,6 +79,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 #pragma mark -
 
 @interface JVDirectChat (JVDirectChatPrivate)
+- (NSString *) _selfCompositeName;
+- (NSString *) _selfStoredNickname;
 - (void) _makeHyperlinksInString:(NSMutableString *) string;
 - (void) _breakLongLinesInString:(NSMutableString *) string;
 - (void) _preformEmoticonSubstitutionOnString:(NSMutableString *) string;
@@ -609,8 +612,23 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	xmlSetProp( root, "received", [[[NSDate date] description] UTF8String] );
 	xmlDocSetRootElement( doc, root );
 
-	child = xmlNewTextChild( root, NULL, "sender", [user UTF8String] );
-	if( [user isEqualToString:[[self connection] nickname]] ) xmlSetProp( child, "self", "yes" );
+	if( [user isEqualToString:_target] && _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+		child = xmlNewTextChild( root, NULL, "sender", [[_buddy preferredName] UTF8String] );
+	else if( [user isEqualToString:[[self connection] nickname]] ) {
+		NSString *selfName = user;
+		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
+			selfName = [self _selfCompositeName];
+		else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyStoredNickname )
+			selfName = [self _selfStoredNickname];
+		child = xmlNewTextChild( root, NULL, "sender", [selfName UTF8String] );
+		xmlSetProp( child, "self", "yes" );		
+	} else {
+		NSString *theirName = user;
+		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:user onServer:[[self connection] server]];
+		if( buddy && [buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+			theirName = [buddy preferredName];
+		child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
+	}
 
 	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
@@ -944,6 +962,35 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 #pragma mark -
 
 @implementation JVDirectChat (JVDirectChatPrivate)
+- (NSString *) _selfCompositeName {
+	ABPerson *_person = [[ABAddressBook sharedAddressBook] me];
+	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
+	NSString *lastName = [_person valueForProperty:kABLastNameProperty];
+
+	if( ! firstName && lastName ) return lastName;
+	else if( firstName && ! lastName ) return firstName;
+	else if( firstName && lastName ) {
+		switch( [[ABAddressBook sharedAddressBook] defaultNameOrdering] ) {
+			default:
+			case kABFirstNameFirst:
+				return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+			case kABLastNameFirst:
+				return [NSString stringWithFormat:@"%@ %@", lastName, firstName];
+		}
+	}
+
+	firstName = [_person valueForProperty:kABNicknameProperty];
+	if( firstName ) return firstName;
+
+	return [[self connection] nickname];
+}
+
+- (NSString *) _selfStoredNickname {
+	NSString *nickname = [[[ABAddressBook sharedAddressBook] me] valueForProperty:kABNicknameProperty];
+	if( nickname ) return nickname;
+	return [[self connection] nickname];
+}
+
 - (NSMenu *) _encodingMenu {
 	if( ! _nibLoaded ) [self view];
 	return [[[encodingView menu] retain] autorelease];
