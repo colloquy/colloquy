@@ -1,0 +1,46 @@
+{
+    IBClasses = (
+        {
+            CLASS = AICustomTabsView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; tabView = NSTabView; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {CLASS = ASExtendedOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                closeViewsDrawer = id; 
+                getInfo = id; 
+                joinRoom = id; 
+                openViewsDrawer = id; 
+                toggleViewsDrawer = id; 
+            }; 
+            CLASS = JVChatWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                activityToolbarButton = MVMenuButton; 
+                chatViewsOutlineView = NSOutlineView; 
+                favoritesButton = MVMenuButton; 
+                viewActionButton = MVMenuButton; 
+                viewsDrawer = NSDrawer; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            CLASS = JVTabbedChatWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {customTabsView = AICustomTabsView; tabView = NSTabView; }; 
+            SUPERCLASS = JVChatWindowController; 
+        }, 
+        {
+            ACTIONS = {displayMenu = id; }; 
+            CLASS = MVMenuButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {menu = id; }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {ACTIONS = {doubleClicked = id; }; CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

@@ -24,7 +24,7 @@ extern NSString *JVToolbarToggleChatActivityItemIdentifier;
 extern NSString *JVChatViewPboardType;
 
 @interface JVChatWindowController : NSWindowController <JVInspectionDelegator> {
-	@private
+	@protected
 	IBOutlet NSDrawer *viewsDrawer;
 	IBOutlet NSOutlineView *chatViewsOutlineView;
 	IBOutlet MVMenuButton *viewActionButton;

@@ -62,6 +62,7 @@
 	[sendHistoryStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
 
 	[sortByStatus setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"]];
+	[tabbedWindows setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUseTabbedWindows"]];
 
 	if( NSAppKitVersionNumber >= 700. ) {
 		[tabKeyComplete setEnabled:YES];
@@ -82,6 +83,10 @@
 	JVChatRoom *room = nil;
 	while( ( room = [enumerator nextObject] ) )
 		[room resortMembers];
+}
+
+- (IBAction) changeTabbedWindows:(id) sender {
+	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVUseTabbedWindows"];
 }
 
 - (IBAction) changeSendHistory:(id) sender {

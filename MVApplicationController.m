@@ -2,6 +2,7 @@
 #import <ChatCore/MVFileTransfer.h>
 #import "MVColorPanel.h"
 #import "MVApplicationController.h"
+#import "JVChatWindowController.h"
 #import "MVCrashCatcher.h"
 #import "MVSoftwareUpdate.h"
 #import "JVInspectorController.h"

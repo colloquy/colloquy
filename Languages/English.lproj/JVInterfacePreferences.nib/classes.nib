@@ -9,6 +9,7 @@
                 changeSendOnReturnAction = id; 
                 changeSortByStatus = id; 
                 changeTabKeyComplete = id; 
+                changeTabbedWindows = id; 
             }; 
             CLASS = JVInterfacePreferences; 
             LANGUAGE = ObjC; 
@@ -24,6 +25,7 @@
                 sortByStatus = NSButton; 
                 tabKeyComplete = NSButton; 
                 tabKeyCompleteLabel = NSTextField; 
+                tabbedWindows = NSButton; 
             }; 
             SUPERCLASS = NSPreferencesModule; 
         }, 

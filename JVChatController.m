@@ -6,6 +6,7 @@
 #import "JVChatController.h"
 #import "MVApplicationController.h"
 #import "JVChatWindowController.h"
+#import "JVTabbedChatWindowController.h"
 #import "JVNotificationController.h"
 #import "JVChatTranscript.h"
 #import "JVDirectChat.h"
@@ -87,7 +88,10 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (JVChatWindowController *) newChatWindowController {
-	JVChatWindowController *windowController = [[[JVChatWindowController alloc] initWithWindowNibName:nil] autorelease];
+	JVChatWindowController *windowController = nil;
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUseTabbedWindows"] )
+		windowController = [[[JVTabbedChatWindowController alloc] init] autorelease];
+	else windowController = [[[JVChatWindowController alloc] init] autorelease];
 	[self _addWindowController:windowController];
 	return [[windowController retain] autorelease];
 }

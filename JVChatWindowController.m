@@ -39,11 +39,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 @implementation JVChatWindowController
 - (id) init {
-	return ( self = [self initWithWindowNibName:nil] );
+	return ( self = [self initWithWindowNibName:@"JVChatWindow"] );
 }
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {
-	if( ( self = [super initWithWindowNibName:@"JVChatWindow"] ) ) {
+	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		viewsDrawer = nil;
 		chatViewsOutlineView = nil;
 		viewActionButton = nil;
@@ -263,16 +263,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (void) addChatViewController:(id <JVChatViewController>) controller {
-	NSParameterAssert( controller != nil );
-	NSAssert1( ! [_views containsObject:controller], @"%@ already added.", controller );
-
-	[_views addObject:controller];
-	[controller setWindowController:self];
-
-	if( [_views count] >= 2 ) [viewsDrawer open];
-
-	[self _refreshList];
-	[self _refreshWindow];
+	[self insertChatViewController:controller atIndex:[_views count]];
 }
 
 - (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(unsigned int) index {
@@ -283,7 +274,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[_views insertObject:controller atIndex:index];
 	[controller setWindowController:self];
 
-	if( [_views count] >= 2 ) [viewsDrawer open];
+	if( [self isMemberOfClass:[JVChatWindowController class]] && [_views count] >= 2 ) [viewsDrawer open];
 
 	[self _refreshList];
 	[self _refreshWindow];
