@@ -1,4 +1,6 @@
 #import <Cocoa/Cocoa.h>
+#import <ChatCore/MVChatScriptPlugin.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
 #import "JVNotificationController.h"
 #import "MVApplicationController.h"
 #import "KABubbleWindowController.h"
@@ -62,6 +64,16 @@ static JVNotificationController *sharedInstance = nil;
 		else if( ! [[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] )
 			[self _showBubbleWithContext:context andPrefs:eventPrefs];
 	}
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( NSDictionary * ), @encode( NSDictionary * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( performNotification:withContextInfo:andPreferences: )];
+	[invocation setArgument:&identifier atIndex:2];
+	[invocation setArgument:&context atIndex:3];
+	[invocation setArgument:&eventPrefs atIndex:4];
+
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 }
 @end
 
@@ -136,5 +148,14 @@ static JVNotificationController *sharedInstance = nil;
 
 - (void) sound:(NSSound *) sound didFinishPlaying:(BOOL) finish {
 	[sound autorelease];
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatScriptPlugin (MVChatScriptPluginNotificationSupport)
+- (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context andPreferences:(NSDictionary *) preferences {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:identifier, @"----", context, @"nOt1", preferences, @"nOt2", nil];
+	[self callScriptHandler:'nOtX' withArguments:args forSelector:_cmd];
 }
 @end

@@ -6,6 +6,43 @@
 	<string>cplG</string>
 	<key>Commands</key>
 	<dict>
+		<key>performNotification</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>nOtX</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>NSString</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>context</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>nOt1</string>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSDictionary</string>
+				</dict>
+				<key>preferences</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>nOt2</string>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSDictionary</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+		</dict>
 		<key>processUserCommand</key>
 		<dict>
 			<key>AppleEventClassCode</key>

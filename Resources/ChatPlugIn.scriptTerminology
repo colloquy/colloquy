@@ -4,6 +4,35 @@
 <dict>
 	<key>Commands</key>
 	<dict>
+		<key>performNotification</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Identifier of the notification to perform.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>context</key>
+				<dict>
+					<key>Description</key>
+					<string>Notification specific context information. Usually contains a human-readable message to display.</string>
+					<key>Name</key>
+					<string>with</string>
+				</dict>
+				<key>preferences</key>
+				<dict>
+					<key>Description</key>
+					<string>Preferences for the notification. From the Notification preferences panel.</string>
+					<key>Name</key>
+					<string>and</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called for every notification event like Buddy Offline, Name Mentioned, Message Ignored, etc. If you want to trigger on select events you should use a more specific handler; this handler is intended for limited context, high-level notifications only.</string>
+			<key>Name</key>
+			<string>perform notification</string>
+		</dict>
 		<key>processUserCommand</key>
 		<dict>
 			<key>UnnamedArgument</key>
