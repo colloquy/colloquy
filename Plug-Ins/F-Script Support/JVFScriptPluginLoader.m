@@ -3,6 +3,7 @@
 #import "JVFScriptChatPlugin.h"
 #import "MVChatConnection.h"
 #import "JVChatWindowController.h"
+#import <FScript/FSInterpreter.h>
 
 #ifndef __FScript_FSNSObject_H__
 #error STOP: You need F-Script installed to build Colloquy. F-Script can be found at: http://www.fscript.org
@@ -29,61 +30,73 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
-	if( view && ! [command caseInsensitiveCompare:@"fscript"] && ! [[arguments string] caseInsensitiveCompare:@"console"] ) {
+	if( ! [command caseInsensitiveCompare:@"fscript"] ) {
 		if( ! _fscriptInstalled ) {
 			[self displayInstallationWarning];
 			return YES;
 		}
-
-		JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] init] autorelease];
-		[[view windowController] addChatViewController:console];
-		// For some reason the input field wasn't clearing for me
-		// This should fix that
+		// ok, parse the arguments
+		NSArray *args = [[[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
+							componentsSeparatedByString:@" "];
+		NSString *subcmd = ( [args count] ? [args objectAtIndex:0] : nil );
+		if( [args count] == 1 ) {
+			if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
+				JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] init] autorelease];
+				[[view windowController] addChatViewController:console];
+				// For some reason the input field wasn't clearing for me
+				// This should fix that
 #warning TODO: Find a better way to deal with this
-		//[[view windowController] showChatViewController:console];
-		[[view windowController] performSelector:@selector(showChatViewController:) withObject:console afterDelay:0.1];
-		return YES;
-	} else if( ! [command caseInsensitiveCompare:@"fscript"] ) {
-		if( ! _fscriptInstalled ) {
-			[self displayInstallationWarning];
-			return NO;
+				//[[view windowController] showChatViewController:console];
+				[[view windowController] performSelector:@selector(showChatViewController:) withObject:console afterDelay:0];
+			} else if( ! [subcmd caseInsensitiveCompare:@"browse"] ) {
+				FSInterpreter *interpreter = [FSInterpreter interpreter];
+				if( connection) [interpreter setObject:connection forIdentifier:@"connection"];
+				if( view ) [interpreter setObject:view forIdentifier:@"view"];
+				[interpreter browse];
+			}
+		} else if( [args count] > 1 ) {
+			NSString *path = [[args subarrayWithRange:NSMakeRange(1, [args count] - 1)] componentsJoinedByString:@" "];
+			path = [path stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			if( path ) {
+				if( ! [subcmd caseInsensitiveCompare:@"eval"] ) {
+					FSInterpreter *interpreter = [FSInterpreter interpreter];
+					if( connection) [interpreter setObject:connection forIdentifier:@"connection"];
+					if( view ) [interpreter setObject:view forIdentifier:@"view"];
+					[interpreter execute:path];
+				} else {
+					path = [path stringByStandardizingPath];
+					
+					NSEnumerator *pluginEnum = [_manager enumeratorOfPluginsOfClass:[JVFScriptChatPlugin class] thatRespondToSelector:@selector( init )];
+					JVFScriptChatPlugin *plugin;
+					
+					while( plugin = [pluginEnum nextObject] )
+						if( [[plugin scriptFilePath] isEqualToString:path] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
+							break;
+					
+					if( ! plugin && ! [subcmd caseInsensitiveCompare:@"load"] ) {
+						[self loadPluginNamed:path];
+					} else if( plugin ) {
+						if( ! [subcmd caseInsensitiveCompare:@"reload"] || ! [subcmd caseInsensitiveCompare:@"load"] ) {
+							[plugin reloadFromDisk];
+						} else if( ! [subcmd caseInsensitiveCompare:@"unload"] ) {
+							[_manager removePlugin:plugin];
+						} else if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
+							JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] initWithFScriptChatPlugin:plugin] autorelease];
+							[[view windowController] addChatViewController:console];
+							[[view windowController] showChatViewController:console];
+						} else if( ! [subcmd caseInsensitiveCompare:@"edit"] ) {
+							[[NSWorkspace sharedWorkspace] openFile:[plugin scriptFilePath]];
+						} else if( ! [subcmd caseInsensitiveCompare:@"browse"] ) {
+							[[plugin scriptInterpreter] browse];
+						}
+					}
+				}
+			}
 		}
-
-		NSString *subcmd = nil;
-		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&subcmd];
-		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:nil];
-
-		NSString *path = nil;
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] intoString:&path];
-		if( ! [path length] ) return YES;
-
-		path = [path stringByStandardizingPath];
-
-		NSEnumerator *enumerator = [_manager enumeratorOfPluginsOfClass:[JVFScriptChatPlugin class] thatRespondToSelector:@selector( init )];
-		JVFScriptChatPlugin *plugin = nil;
-
-		while( ( plugin = [enumerator nextObject] ) )
-			if( [[plugin scriptFilePath] isEqualToString:path] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
-				break;
-
-		if( ! plugin && ! [subcmd caseInsensitiveCompare:@"load"] ) {
-			[self loadPluginNamed:path];
-		} else if( ( ! [subcmd caseInsensitiveCompare:@"reload"] || ! [subcmd caseInsensitiveCompare:@"load"] ) && plugin ) {
-			[plugin reloadFromDisk];
-		} else if( ! [subcmd caseInsensitiveCompare:@"unload"] && plugin ) {
-			[_manager removePlugin:plugin];
-		} else if( ! [subcmd caseInsensitiveCompare:@"console"] && plugin && view ) {
-			JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] initWithFScriptChatPlugin:plugin] autorelease];
-			[[view windowController] addChatViewController:console];
-			[[view windowController] showChatViewController:console];
-		} else if( ! [subcmd caseInsensitiveCompare:@"edit"] && plugin ) {
-			[[NSWorkspace sharedWorkspace] openFile:[plugin scriptFilePath]];
-		}
-
+	
 		return YES;
 	}
-
+	
 	return NO;
 }
 
