@@ -60,6 +60,96 @@
 		<string>irc.esper.net</string>
 		<string>irc.mozilla.org</string>
 	</array>
+	<key>JVNotificationSettings JVChatAdditionalMessages</key>
+	<dict>
+		<key>bounceIcon</key>
+		<true/>
+		<key>playSound</key>
+		<false/>
+		<key>soundPath</key>
+		<string>Whip.aiff</string>
+	</dict>
+	<key>JVNotificationSettings JVChatBuddyOffline</key>
+	<dict>
+		<key>playSound</key>
+		<false/>
+	</dict>
+	<key>JVNotificationSettings JVChatBuddyOnline</key>
+	<dict>
+		<key>playSound</key>
+		<false/>
+	</dict>
+	<key>JVNotificationSettings JVChatFisrtMessage</key>
+	<dict>
+		<key>bounceIcon</key>
+		<true/>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>Stoof.aiff</string>
+	</dict>
+	<key>JVNotificationSettings JVChatMemberDemoted</key>
+	<dict>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>Electronic Signal.aiff</string>
+	</dict>
+	<key>JVNotificationSettings JVChatMemberDevoiced</key>
+	<dict>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>Rattle.aiff</string>
+	</dict>
+	<key>JVNotificationSettings JVChatMemberJoinedRoom</key>
+	<dict>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>/System/Library/Sounds/Pop.aiff</string>
+	</dict>
+	<key>JVNotificationSettings JVChatMemberKicked</key>
+	<dict>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>Explosion.aiff</string>
+	</dict>
+	<key>JVNotificationSettings JVChatMemberLeftRoom</key>
+	<dict>
+		<key>bounceIcon</key>
+		<false/>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>Whip.aiff</string>
+	</dict>
+	<key>JVNotificationSettings JVChatMemberPromoted</key>
+	<dict>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>DJ Scratch.aiff</string>
+	</dict>
+	<key>JVNotificationSettings JVChatMemberVoiced</key>
+	<dict>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>Switch.aiff</string>
+	</dict>
+	<key>JVNotificationSettings JVChatMentioned</key>
+	<dict>
+		<key>bounceIcon</key>
+		<true/>
+		<key>bounceIconUntilFront</key>
+		<true/>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>/System/Library/Sounds/Morse.aiff</string>
+	</dict>
 	<key>JVChatDefaultStyle</key>
 	<string>cc.javelin.colloquy.style.standard</string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.bland</key>
