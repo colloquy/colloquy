@@ -53,8 +53,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		_activeViewController = nil;
 		_views = [[NSMutableArray array] retain];
 		_usesSmallIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowUseSmallDrawerIcons"];
-
-		[[self window] makeKeyAndOrderFront:nil];
 	}
 	return self;
 }

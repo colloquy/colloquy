@@ -14,6 +14,7 @@
                 selectPreviousPanel = id; 
                 showInspector = id; 
                 toggleSmallDrawerIcons = id; 
+                toggleTabBarVisible = id; 
                 toggleViewsDrawer = id; 
             }; 
             CLASS = FirstResponder; 

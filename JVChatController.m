@@ -93,6 +93,7 @@ static JVChatController *sharedInstance = nil;
 		windowController = [[[JVTabbedChatWindowController alloc] init] autorelease];
 	else windowController = [[[JVChatWindowController alloc] init] autorelease];
 	[self _addWindowController:windowController];
+	[windowController showWindow:nil];
 	return [[windowController retain] autorelease];
 }
 
