@@ -309,23 +309,7 @@ static BOOL applicationIsTerminating = NO;
 	[[NSFileManager defaultManager] createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc/Server Keys" stringByExpandingTildeInPath] attributes:nil];
 	[[NSFileManager defaultManager] createDirectoryAtPath:[@"~/Library/Scripts/Applications" stringByExpandingTildeInPath] attributes:nil];
 	[[NSFileManager defaultManager] createDirectoryAtPath:[@"~/Library/Scripts/Applications/Colloquy" stringByExpandingTildeInPath] attributes:nil];
-
-	id val = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVDirectChatPreferredOpenMode"];
-	[[NSUserDefaults standardUserDefaults] setObject:val forKey:@"JVDirectChatPanelPreferredOpenMode"];
-	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVDirectChatPreferredOpenMode"];
-
-	val = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatRoomPreferredOpenMode"];
-	[[NSUserDefaults standardUserDefaults] setObject:val forKey:@"JVChatRoomPanelPreferredOpenMode"];
-	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatRoomPreferredOpenMode"];
-
-	val = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatTranscriptPreferredOpenMode"];
-	[[NSUserDefaults standardUserDefaults] setObject:val forKey:@"JVChatTranscriptPanelPreferredOpenMode"];
-	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatTranscriptPreferredOpenMode"];
-
-	val = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatConsolePreferredOpenMode"];
-	[[NSUserDefaults standardUserDefaults] setObject:val forKey:@"JVChatConsolePanelPreferredOpenMode"];
-	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatConsolePreferredOpenMode"];
-
+	
 	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultManager];
 	[JVChatController defaultManager];
