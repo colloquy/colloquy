@@ -1,4 +1,8 @@
-#import <Foundation/Foundation.h>
+#import <Foundation/NSObject.h>
+
+@class NSMutableDictionary;
+@class NSSet;
+@class NSEnumerator;
 
 @interface MVChatPluginManager : NSObject {
 	@private

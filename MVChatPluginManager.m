@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatPlugin.h>
