@@ -6,6 +6,7 @@
 
 #import "JVAppearancePreferences.h"
 #import "MVApplicationController.h"
+#import "JVStyle.h"
 #import "JVChatTranscript.h"
 #import "JVChatTranscriptPrivates.h"
 #import "JVFontPreviewField.h"
@@ -30,10 +31,9 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVChatStylesScannedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVChatEmoticonsScannedNotification object:nil];
 
-		[JVChatTranscript _scanForChatStyles];
 		[JVChatTranscript _scanForEmoticons];
 
-		_styleBundles = [JVChatStyleBundles retain];
+		_style = nil;
 		_emoticonBundles = [JVChatEmoticonBundles retain];
 	}
 	return self;
@@ -42,11 +42,11 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_styleBundles release];
 	[_emoticonBundles release];
+	[_style release];
 
-	_styleBundles = nil;
 	_emoticonBundles = nil;
+	_style = nil;
 
 	[super dealloc];
 }
@@ -79,7 +79,7 @@
 }
 
 - (void) selectEmoticonsWithIdentifier:(NSString *) identifier {
-	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
+	NSString *style = [_style identifier];
 	[[NSUserDefaults standardUserDefaults] setObject:identifier forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
 	[self updateEmoticonsMenu];
 	[self updatePreview];
@@ -96,6 +96,9 @@
 	[prototypeCell setFont:[NSFont boldSystemFontOfSize:11.]];
 	[prototypeCell setAlignment:NSRightTextAlignment];
 	[column setDataCell:prototypeCell];
+
+	[_style autorelease];
+	_style = [[JVStyle defaultStyle] retain];
 
 	[self changePreferences:nil];
 }
@@ -116,11 +119,14 @@
 
 - (IBAction) changeDefaultChatStyle:(id) sender {
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
-	NSString *style = [[sender representedObject] objectForKey:@"style"];
 
-	[[NSUserDefaults standardUserDefaults] setObject:style forKey:@"JVChatDefaultStyle"];
-	if( ! variant ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
-	else [[NSUserDefaults standardUserDefaults] setObject:variant forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
+	[_style autorelease];
+	_style = [[[sender representedObject] objectForKey:@"style"] retain];
+
+	[JVStyle setDefaultStyle:_style];
+
+	if( ! variant ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [_style identifier]]];
+	else [[NSUserDefaults standardUserDefaults] setObject:variant forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [_style identifier]]];
 
 	[self performSelector:@selector( changePreferences: ) withObject:nil afterDelay:0.];
 }
@@ -129,14 +135,10 @@
 	[self updateChatStylesMenu];
 	[self updateEmoticonsMenu];
 
-	NSBundle *style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
-
 	[_styleOptions autorelease];
-	_styleOptions = [[NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"styleOptions" ofType:@"plist"]] retain];
-	if( [style objectForInfoDictionaryKey:@"JVStyleOptions"] )
-		[_styleOptions addObjectsFromArray:[[[style objectForInfoDictionaryKey:@"JVStyleOptions"] mutableCopy] autorelease]];
+	_styleOptions = [[_style styleSheetOptions] mutableCopy];
 
-	[preview setPreferencesIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
+	[preview setPreferencesIdentifier:[_style identifier]];
 	// we shouldn't have to post this notification manually, but this seems to make webkit refresh with new prefs
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"WebPreferencesChangedNotification" object:[preview preferences]];
 
@@ -172,69 +174,64 @@
 #pragma mark -
 
 - (void) updateChatStylesMenu {
-	NSEnumerator *enumerator = [[[_styleBundles allObjects] sortedArrayUsingFunction:sortBundlesByName context:self] objectEnumerator];
-	NSEnumerator *denumerator = nil;
-	NSMenu *menu = nil, *subMenu = nil;
-	NSMenuItem *menuItem = nil, *subMenuItem = nil;
-	NSString *defaultStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
-	NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", defaultStyle]];		
-	NSBundle *style = [NSBundle bundleWithIdentifier:defaultStyle];
-	id file = nil;
+	JVStyle *defaultStyle = [JVStyle defaultStyle];
+	NSString *variant = [defaultStyle defaultVariantName];		
 
-	if( ! style ) {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
-		defaultStyle = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
-		variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", defaultStyle]];
+	if( ! defaultStyle ) {
+		[JVStyle setDefaultStyle:nil];
+		defaultStyle = [JVStyle defaultStyle];
+		variant = [defaultStyle defaultVariantName];
 	}
 
-	_variantLocked = ! ( [variant isAbsolutePath] && [[NSFileManager defaultManager] isWritableFileAtPath:variant] );
+	_variantLocked = ! [defaultStyle isUserVariantName:variant];
 
-	menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease], *subMenu = nil;
+	NSMenuItem *menuItem = nil, *subMenuItem = nil;
+
+	NSEnumerator *enumerator = [[[[JVStyle styles] allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
+	NSEnumerator *venumerator = nil;
+	JVStyle *style = nil;
+	id item = nil;
 
 	while( ( style = [enumerator nextObject] ) ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:[style bundleIdentifier], @"style", nil]];
-		if( [defaultStyle isEqualToString:[style bundleIdentifier]] )
-			[menuItem setState:NSOnState];
+		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
+		if( [defaultStyle isEqualTo:style] ) [menuItem setState:NSOnState];
 		[menu addItem:menuItem];
 
-		NSArray *userVariants = [[NSFileManager defaultManager] directoryContentsAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [style bundleIdentifier]] stringByExpandingTildeInPath]];
-		
-		if( [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] count] || [userVariants count] ) {
+		NSArray *variants = [style variantStyleSheetNames];
+		NSArray *userVariants = [style userVariantStyleSheetNames];
+
+		if( [variants count] || [userVariants count] ) {
 			subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
-			subMenuItem = [[[NSMenuItem alloc] initWithTitle:( [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] ? [style objectForInfoDictionaryKey:@"JVBaseStyleVariantName"] : NSLocalizedString( @"Normal", "normal style variant menu item title" ) ) action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
+			subMenuItem = [[[NSMenuItem alloc] initWithTitle:[style mainVariantDisplayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 			[subMenuItem setTarget:self];
-			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:[style bundleIdentifier], @"style", nil]];
-			if( [defaultStyle isEqualToString:[style bundleIdentifier]] && ! variant )
-				[subMenuItem setState:NSOnState];
+			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
+			if( [defaultStyle isEqualTo:style] && ! variant ) [subMenuItem setState:NSOnState];
 			[subMenu addItem:subMenuItem];
 
-			denumerator = [[style pathsForResourcesOfType:@"css" inDirectory:@"Variants"] objectEnumerator];
-			while( ( file = [denumerator nextObject] ) ) {
-				file = [[file lastPathComponent] stringByDeletingPathExtension];
-				subMenuItem = [[[NSMenuItem alloc] initWithTitle:file action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
+			venumerator = [variants objectEnumerator];
+			while( ( item = [venumerator nextObject] ) ) {
+				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 				[subMenuItem setTarget:self];
-				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:[style bundleIdentifier], @"style", file, @"variant", nil]];
-				if( [defaultStyle isEqualToString:[style bundleIdentifier]] && [variant isEqualToString:file] )
+				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
+				if( [defaultStyle isEqualTo:style] && [variant isEqualToString:item] )
 					[subMenuItem setState:NSOnState];
 				[subMenu addItem:subMenuItem];
 			}
 
 			if( [userVariants count] ) [subMenu addItem:[NSMenuItem separatorItem]];
 
-			denumerator = [userVariants objectEnumerator];
-			while( ( file = [denumerator nextObject] ) ) {
-				if( [[file pathExtension] isEqualToString:@"css"] ) {
-					NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@", [style bundleIdentifier], file] stringByExpandingTildeInPath];
-					subMenuItem = [[[NSMenuItem alloc] initWithTitle:[[file lastPathComponent] stringByDeletingPathExtension] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
-					[subMenuItem setTarget:self];
-					[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:[style bundleIdentifier], @"style", path, @"variant", nil]];
-					if( [defaultStyle isEqualToString:[style bundleIdentifier]] && [variant isEqualToString:path] )
-						[subMenuItem setState:NSOnState];
-					[subMenu addItem:subMenuItem];
-				}
+			venumerator = [userVariants objectEnumerator];
+			while( ( item = [venumerator nextObject] ) ) {
+				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
+				[subMenuItem setTarget:self];
+				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
+				if( [defaultStyle isEqualTo:style] && [variant isEqualToString:item] )
+					[subMenuItem setState:NSOnState];
+				[subMenu addItem:subMenuItem];
 			}
 
 			[menuItem setSubmenu:subMenu];
@@ -281,56 +278,17 @@
 }
 
 - (void) updatePreview {
-	xsltStylesheetPtr xsltStyle = NULL;
-	xmlDocPtr doc = NULL;
-	xmlDocPtr res = NULL;
-	xmlChar *result = NULL;
-	NSString *html = nil;
-	int len = 0;
-	const char **params = NULL;
-	NSBundle *style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
-	NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [style bundleIdentifier]]];
 	NSBundle *emoticon = nil;
 	NSString *emoticonStyle = @"";
-	NSString *emoticonSetting = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style bundleIdentifier]]];
+	NSString *emoticonSetting = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_style identifier]]];
 	if( [emoticonSetting length] ) {
 		emoticon = [NSBundle bundleWithIdentifier:emoticonSetting];
 		emoticonStyle = ( emoticon ? [[NSURL fileURLWithPath:[emoticon pathForResource:@"emoticons" ofType:@"css"]] absoluteString] : @"" );
 	}
 
-	NSString *path = [style pathForResource:@"main" ofType:@"xsl"];
-	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"default" ofType:@"xsl"];	
-
-	params = [JVChatTranscript _xsltParamArrayWithDictionary:[NSDictionary dictionaryWithContentsOfFile:[style pathForResource:@"parameters" ofType:@"plist"]]];
-	xsltStyle = xsltParseStylesheetFile( (const xmlChar *)[path fileSystemRepresentation] );
-
-	if( [style pathForResource:@"preview" ofType:@"colloquyTranscript"] ) {
-		doc = xmlParseFile( [[style pathForResource:@"preview" ofType:@"colloquyTranscript"] fileSystemRepresentation] );
-	} else {
-		doc = xmlParseFile( [[[NSBundle mainBundle] pathForResource:@"preview" ofType:@"colloquyTranscript"] fileSystemRepresentation] );
-	}
-
-	if( ( res = xsltApplyStylesheet( xsltStyle, doc, params ) ) ) {
-		xsltSaveResultToString( &result, &len, res, xsltStyle );
-		xmlFreeDoc( res );
-		xmlFreeDoc( doc );
-	}
-
-	if( xsltStyle ) xsltFreeStylesheet( xsltStyle );
-	if( params ) [JVChatTranscript _freeXsltParamArray:params];
-
-	if( result ) {
-		html = [NSString stringWithUTF8String:result];
-		free( result );
-	}
-
-	NSString *headerPath = [style pathForResource:@"supplement" ofType:@"html"];
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
-	if( variant ) path = ( [variant isAbsolutePath] ? [[NSURL fileURLWithPath:variant] absoluteString] : [[NSURL fileURLWithPath:[style pathForResource:variant ofType:@"css" inDirectory:@"Variants"]] absoluteString] );
-	else path = @"";
-	NSString *basePath = [style resourcePath];
-	basePath = ( basePath ? [[NSURL fileURLWithPath:basePath] absoluteString] : @"" );
-	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, ( style ? [[NSURL fileURLWithPath:[style pathForResource:@"main" ofType:@"css"]] absoluteString] : @"" ), path, basePath, ( headerPath ? [NSString stringWithContentsOfFile:headerPath] : @"" ), html];
+	NSString *html = [_style transformXML:[NSString stringWithContentsOfFile:[_style previewTranscriptFilePath]] withParameters:nil];
+	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, [[_style mainStyleSheetLocation] absoluteString], [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString], [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
 
 	[[preview mainFrame] loadHTMLString:html baseURL:nil];
 }
@@ -358,15 +316,10 @@
 #pragma mark -
 
 - (void) parseStyleOptions {
-	NSBundle *bundle = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
-	NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [bundle bundleIdentifier]]];
-	NSString *css = nil;
+	[self setUserStyle:[_style contentsOfVariantStyleSheetWithName:[_style defaultVariantName]]];
 
-	if( variant ) css = [NSString stringWithContentsOfFile:( [variant isAbsolutePath] ? variant : [bundle pathForResource:variant ofType:@"css" inDirectory:@"Variants"] )];
-	[self setUserStyle:css];
-
-	css = _userStyle;
-	css = [css stringByAppendingString:[NSString stringWithContentsOfFile:( bundle ? [bundle pathForResource:@"main" ofType:@"css"] : @"" )]];
+	NSString *css = _userStyle;
+	css = [css stringByAppendingString:[_style contentsOfMainStyleSheet]];
 
 	NSEnumerator *enumerator = [_styleOptions objectEnumerator];
 	NSMutableDictionary *info = nil;
@@ -479,14 +432,7 @@
 
 - (void) saveStyleOptions {
 	if( _variantLocked ) return;
-
-	NSString *path = nil;
-	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
-	NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
-	if( [variant isAbsolutePath] ) path = variant;
-
-	if( path ) [_userStyle writeToFile:path atomically:NO];
-
+	[_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:NO];
 	[WebCoreCache empty];
 }
 

@@ -10,6 +10,7 @@
 @class NSSet;
 @class NSDrawer;
 @class NSTableView;
+@class JVStyle;
 
 @interface JVAppearancePreferences : NSPreferencesModule {
 	IBOutlet WebView *preview;
@@ -26,7 +27,7 @@
 	IBOutlet NSTextField *newVariantName;
 	BOOL _variantLocked;
 	BOOL _alertDisplayed;
-	NSSet *_styleBundles;
+	JVStyle *_style;
 	NSSet *_emoticonBundles;
 	NSMutableArray *_styleOptions;
 	NSString *_userStyle;
