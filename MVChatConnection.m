@@ -1503,6 +1503,12 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	[self sendRawMessageWithFormat:@"MODE %@ +b %@", [self _roomWithProperPrefix:room], member];
 }
 
+- (void) unbanMember:(NSString *) member inRoom:(NSString *) room {
+	NSParameterAssert( member != nil );
+	NSParameterAssert( room != nil );
+	[self sendRawMessageWithFormat:@"MODE %@ -b %@", [self _roomWithProperPrefix:room], member];
+}
+
 #pragma mark -
 
 - (void) addUserToNotificationList:(NSString *) user {

@@ -225,6 +225,24 @@
 				[[room connection] devoiceMember:arg inRoom:[room target]];
 		}
 		return YES;
+	} else if( [command isEqualToString:@"ban"] ) {
+		NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
+		NSEnumerator *e = [args objectEnumerator];
+		NSString *arg;
+		while( arg = [e nextObject] ) {
+			if( [arg length] )
+				[[room connection] banMember:arg inRoom:[room target]];
+		}
+		return YES;
+	} else if( [command isEqualToString:@"unban"] ) {
+		NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
+		NSEnumerator *e = [args objectEnumerator];
+		NSString *arg;
+		while( arg = [e nextObject] ) {
+			if( [arg length] )
+				[[room connection] unbanMember:arg inRoom:[room target]];
+		}
+		return YES;
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
