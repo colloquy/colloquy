@@ -96,6 +96,10 @@ NSComparisonResult sortBuddiesByFirstName( ABPerson *buddy1, ABPerson *buddy2, v
 	if( ! [self showFullNames] ) return sortBuddiesByNickname( buddy1, buddy2, context );
 	NSString *name1 = [buddy1 valueForProperty:kABFirstNameProperty];
 	NSString *name2 = [buddy2 valueForProperty:kABFirstNameProperty];
+	if( ! [name1 length] ) name1 = [buddy1 valueForProperty:kABLastNameProperty];
+	if( ! [name2 length] ) name2 = [buddy2 valueForProperty:kABLastNameProperty];
+	if( ! [name1 length] ) return NSOrderedAscending;
+	if( ! [name2 length] ) return NSOrderedDescending;
 	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
 	return ( ret != NSOrderedSame ? ret : sortBuddiesByLastName( buddy1, buddy2, context ) );
 }
@@ -105,6 +109,10 @@ NSComparisonResult sortBuddiesByLastName( ABPerson *buddy1, ABPerson *buddy2, vo
 	if( ! [self showFullNames] ) return sortBuddiesByNickname( buddy1, buddy2, context );
 	NSString *name1 = [buddy1 valueForProperty:kABLastNameProperty];
 	NSString *name2 = [buddy2 valueForProperty:kABLastNameProperty];
+	if( ! [name1 length] ) name1 = [buddy1 valueForProperty:kABFirstNameProperty];
+	if( ! [name2 length] ) name2 = [buddy2 valueForProperty:kABFirstNameProperty];
+	if( ! [name1 length] ) return NSOrderedAscending;
+	if( ! [name2 length] ) return NSOrderedDescending;
 	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
 	return ( ret != NSOrderedSame ? ret : sortBuddiesByFirstName( buddy1, buddy2, context ) );
 }
@@ -234,8 +242,8 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	[table setAllowsMultipleSelection:NO];
 	[table setAllowsEmptySelection:NO];
 
-	_needsToAnimate = YES;
-	[self _sortBuddiesAnimatedIfNeeded:nil];
+	[buddies reloadData];
+	[self _setBuddiesNeedSortAnimated];
 }
 
 #pragma mark -
@@ -419,6 +427,25 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
 	NSURL *url = [NSURL URLWithString:displayNick];
 	[[JVChatController defaultManager] chatViewControllerForUser:[url user] withConnection:[[MVConnectionsController defaultManager] connectionForServerAddress:[url host]] ifExists:NO];
+}
+
+- (IBAction) sendFileToSelectedBuddy:(id) sender {
+	if( [buddies selectedRow] == -1 ) return;
+	ABPerson *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+	NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
+	NSURL *url = [NSURL URLWithString:displayNick];
+	NSOpenPanel *panel = [NSOpenPanel openPanel];
+	[panel setResolvesAliases:YES];
+	[panel setCanChooseFiles:YES];
+	[panel setCanChooseDirectories:NO];
+	[panel setAllowsMultipleSelection:YES];
+	if( [panel runModalForTypes:nil] == NSOKButton ) {
+		MVChatConnection *connection = [[MVConnectionsController defaultManager] connectionForServerAddress:[url host]];
+		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
+		NSString *path = nil;
+		while( ( path = [enumerator nextObject] ) )
+			[connection sendFileToUser:[url user] withFilePath:path];
+	}
 }
 
 #pragma mark -
@@ -683,6 +710,7 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	if( _showOfflineBuddies ) nicks = [[[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"allNicks"] allObjects];
 	else nicks = [[[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"onlineNicks"] allObjects];
 	[[_buddyInfo objectForKey:[buddy uniqueId]] setObject:[nicks objectAtIndex:[object unsignedIntValue]] forKey:@"displayNick"];
+	[buddies reloadData];
 }
 
 - (NSMenu *) tableView:(NSTableView *) tableView menuForTableColumn:(NSTableColumn *) tableColumn row:(int) row {
@@ -1055,15 +1083,16 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	while( ( identifier = [enumerator nextObject] ) ) {
 		ABRecord *person = [[ABAddressBook sharedAddressBook] recordForUniqueId:identifier];
 		if( [person isKindOfClass:[ABPerson class]] ) {
-			[self _addPersonToBuddyList:(ABPerson *)person];
-
 			NSMutableSet *allNicks = [NSMutableSet set];
-			[[_buddyInfo objectForKey:[person uniqueId]] setObject:allNicks forKey:@"allNicks"];
-
 			ABMultiValue *value = [person valueForProperty:@"IRCNickname"];
 			unsigned int i = 0, count = [value count];
 			for( i = 0; i < count; i++ )
 				[allNicks addObject:[NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( [value valueAtIndex:i] ), MVURLEncodeString( [value labelAtIndex:i] )]];
+
+			if( [allNicks count] ) {
+				[self _addPersonToBuddyList:(ABPerson *)person];
+				[[_buddyInfo objectForKey:[person uniqueId]] setObject:allNicks forKey:@"allNicks"];
+			}
 		}
 	}
 }

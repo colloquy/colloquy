@@ -68,6 +68,7 @@ typedef enum {
 - (IBAction) confirmNewBuddy:(id) sender;
 
 - (IBAction) messageSelectedBuddy:(id) sender;
+- (IBAction) sendFileToSelectedBuddy:(id) sender;
 
 - (void) setShowFullNames:(BOOL) flag;
 - (BOOL) showFullNames;
