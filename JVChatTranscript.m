@@ -104,6 +104,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 - (void) awakeFromNib {
 	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 
+	[display setUIDelegate:self];
+	[display setPolicyDelegate:self];
+
 	if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
 		xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
 		[self setChatStyle:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:styleProp]] withVariant:nil];
@@ -674,11 +677,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
-	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"about"]  ) {
+	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"about"] ) {
 		[listener use];
-	} else if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"self"]  ) {
-		NSString *command = [[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier];
-		[self performSelector:NSSelectorFromString( [command stringByAppendingString:@":"] ) withObject:nil];
+	} else if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"self"] ) {
+		NSString *resource = [[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier];
+		NSRange range = [resource rangeOfString:@"?"];
+		NSString *command = [resource substringToIndex:( range.location != NSNotFound ? range.location : [resource length] )];
+		if( [self respondsToSelector:NSSelectorFromString( [command stringByAppendingString:@":"] )] ) {
+			NSString *arg = [resource substringFromIndex:( range.location != NSNotFound ? range.location : 0 )];
+			[self performSelector:NSSelectorFromString( [command stringByAppendingString:@":"] ) withObject:( range.location != NSNotFound ? arg : nil )];
+		}
 		[listener ignore];
 	} else {
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSURL * ), @encode( id ), nil];

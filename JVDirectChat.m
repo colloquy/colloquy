@@ -446,7 +446,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( NSString * ), @encode( JVDirectChat * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	[invocation setSelector:@selector( userNamed:isNowKnowAs:inView: )];
+	[invocation setSelector:@selector( userNamed:isNowKnownAs:inView: )];
 	[invocation setArgument:&oldNick atIndex:2];
 	[invocation setArgument:&target atIndex:3];
 	[invocation setArgument:&self atIndex:4];
@@ -660,7 +660,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	}
 }
 
-- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
+- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user {
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		if( _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -686,7 +686,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		}
 	}
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableString * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( processMessage:asAction:inChat: )];
@@ -709,7 +709,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	[self addMessageToDisplay:[NSData dataWithBytes:msg length:strlen( msg )] fromUser:[[self connection] nickname] asAction:action];
 }
-
 
 - (unsigned int) newMessagesWaiting {
 	return _newMessageCount;
@@ -1174,23 +1173,23 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
 
-	if( ! [user isEqualToString:[[self connection] nickname]] ) {
+	if( ! [user isEqualToString:[[self connection] nickname]] )
 		_newMessageCount++;
-		[self processMessage:mutableMsg asAction:action fromUser:user];
-	}
-
-	if( ! [mutableMsg length] ) {
-		_newMessageCount--;
-		return;
-	}
-
-	_firstMessage = NO;
 
 	messageString = [[[NSMutableString alloc] initWithData:mutableMsg encoding:_encoding] autorelease];
 	if( ! messageString ) {
 		messageString = [NSMutableString stringWithCString:[mutableMsg bytes] length:[mutableMsg length]];
 		[messageString appendFormat:@" <span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
 	}
+
+	[self processMessage:messageString asAction:action fromUser:user];
+
+	if( ! [messageString length] ) {
+		_newMessageCount--;
+		return;
+	}
+
+	_firstMessage = NO;
 
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		NSEnumerator *enumerator = nil;
@@ -1898,16 +1897,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
-- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat {
-	NSString *messageString = [[[NSString alloc] initWithData:message encoding:[chat encoding]] autorelease];
-	if( ! messageString ) messageString = [NSString stringWithCString:[message bytes] length:[message length]];
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:messageString, @"----", [NSNumber numberWithBool:action], @"piM1", [chat target], @"piM2", chat, @"piM3", nil];
+- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:action], @"piM1", [chat target], @"piM2", chat, @"piM3", nil];
 	id result = [self callScriptHandler:'piMX' withArguments:args];
 	if( ! result ) [self doesNotRespondToSelector:_cmd];
-	else if( [result isKindOfClass:[NSString class]] ) {
-		NSData *resultData = [result dataUsingEncoding:[chat encoding] allowLossyConversion:YES];
-		if( resultData ) [message setData:resultData];
-	}
+	else if( [result isKindOfClass:[NSString class]] ) [message setString:result];
 }
 
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toChat:(JVDirectChat *) chat {
@@ -1918,7 +1912,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
 }
 
-- (void) userNamed:(NSString *) nickname isNowKnowAs:(NSString *) newNickname inView:(id <JVChatViewController>) view {
+- (void) userNamed:(NSString *) nickname isNowKnownAs:(NSString *) newNickname inView:(id <JVChatViewController>) view {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:nickname, @"----", newNickname, @"uNc1", view, @"uNc2", nil];
 	if( ! [self callScriptHandler:'uNcX' withArguments:args] )
 		[self doesNotRespondToSelector:_cmd];

@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+#import <WebKit/WebKit.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
@@ -291,7 +292,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	return [[results lastObject] boolValue];
 }
 
-- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
+- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user {
 	JVChatRoomMember *member = [self chatRoomMemberWithName:user];
 
 	if( ! [user isEqualToString:[[self connection] nickname]] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
@@ -307,7 +308,15 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[[JVNotificationController defaultManager] performNotification:@"JVChatRoomActivity" withContextInfo:context];
 	}
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( BOOL ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
+//  FIX: This will break if a shorter nickname is also part of a longer nickname..
+// TEMP: This will be turned into <span class="member">nickname</span> (or somthing like it) later and let styles do what they want. 
+	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+	NSString *name = nil;
+
+	while( ( name = [[enumerator nextObject] nickname] ) )
+		[message replaceOccurrencesOfString:name withString:[NSString stringWithFormat:@"<a href=\"member:%@\" class=\"member\">%@</a>", name, name] options:NSLiteralSearch range:NSMakeRange( 0, [message length] )];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableString * ), @encode( BOOL ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( processMessage:asAction:fromMember:inRoom: )];
@@ -323,7 +332,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
 	NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
 	NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
-	
+
 	[message setAttributedString:[[[NSAttributedString alloc] initWithString:messageString] autorelease]];
 
 	NSSet *plugins = [[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )];
@@ -930,13 +939,42 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( NSString * ), @encode( JVChatRoom * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-		[invocation setSelector:@selector( userNamed:isNowKnowAs:inView: )];
+		[invocation setSelector:@selector( userNamed:isNowKnownAs:inView: )];
 		[invocation setArgument:&member atIndex:2];
 		[invocation setArgument:&nick atIndex:3];
 		[invocation setArgument:&self atIndex:4];
 
 	
 		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	}
+}
+
+#pragma mark -
+#pragma mark WebKit supprt
+
+- (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
+	if( [[[element objectForKey:WebElementLinkURLKey] scheme] isEqualToString:@"member"] ) {
+		NSMutableArray *ret = [NSMutableArray array];
+		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[element objectForKey:WebElementLinkURLKey] resourceSpecifier]];
+		NSEnumerator *enumerator = [[[mbr menu] itemArray] objectEnumerator];
+		NSMenuItem *item = nil;
+
+		while( ( item = [enumerator nextObject] ) )
+			[ret addObject:[[item copy] autorelease]];
+
+		return ret;
+	}
+
+	return [super webView:sender contextMenuItemsForElement:element defaultMenuItems:defaultMenuItems];
+}
+
+- (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
+	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"member"] ) {
+		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier]];
+		[mbr startChat:nil];
+		[listener ignore];
+	} else {
+		[super webView:sender decidePolicyForNavigationAction:actionInformation request:request frame:frame decisionListener:listener];
 	}
 }
 
@@ -1294,16 +1332,11 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
-- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
-	NSString *messageString = [[[NSString alloc] initWithData:message encoding:[room encoding]] autorelease];
-	if( ! messageString ) messageString = [NSString stringWithCString:[message bytes] length:[message length]];
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:messageString, @"----", [NSNumber numberWithBool:action], @"piM1", [member nickname], @"piM2", room, @"piM3", nil];
+- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:action], @"piM1", [member nickname], @"piM2", room, @"piM3", nil];
 	id result = [self callScriptHandler:'piMX' withArguments:args];
 	if( ! result ) [self doesNotRespondToSelector:_cmd];
-	else if( [result isKindOfClass:[NSString class]] ) {
-		NSData *resultData = [result dataUsingEncoding:[room encoding] allowLossyConversion:YES];
-		if( resultData ) [message setData:resultData];
-	}
+	else if( [result isKindOfClass:[NSString class]] ) [message setString:result];
 }
 
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room {

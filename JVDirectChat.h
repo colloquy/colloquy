@@ -71,7 +71,7 @@
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
-- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user;
+- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user;
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action;
 
 - (unsigned int) newMessagesWaiting;
@@ -88,9 +88,8 @@
 @interface NSObject (MVChatPluginDirectChatSupport)
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toChat:(JVDirectChat *) chat;
 
-- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat;
+- (void) processMessage:(NSMutableString *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat;
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toChat:(JVDirectChat *) chat;
 
-- (void) userNamed:(NSString *) nickname isNowKnowAs:(NSString *) newNickname inView:(id <JVChatViewController>) view;
-
+- (void) userNamed:(NSString *) nickname isNowKnownAs:(NSString *) newNickname inView:(id <JVChatViewController>) view;
 @end
