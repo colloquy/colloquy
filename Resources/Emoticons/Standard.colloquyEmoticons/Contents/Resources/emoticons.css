@@ -78,6 +78,10 @@
 	content: url( "suprised.tif" );
 }
 
+.emoticon.cry samp {
+	display: inline;
+}
+
 .emoticon.confused:after {
 	content: url( "confused.tif" );
 }

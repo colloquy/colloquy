@@ -18,6 +18,10 @@
 	content: url( "laugh.tiff" );
 }
 
+.emoticon.stoic samp {
+	display: inline;
+}
+
 .emoticon.frown:after {
 	content: url( "frown.tiff" );
 }
@@ -38,8 +42,36 @@
 	content: url( "cool.tiff" );
 }
 
+.emoticon.headphones samp {
+	display: inline;
+}
+
+.emoticon.hat samp {
+	display: inline;
+}
+
 .emoticon.angel:after {
 	content: url( "innocent.tiff" );
+}
+
+.emoticon.evil samp {
+	display: inline;
+}
+
+.emoticon.anime:after {
+	content: url( "smile.tiff" );
+}
+
+.emoticon.frosty samp {
+	display: inline;
+}
+
+.emoticon.kirby samp {
+	display: inline;
+}
+
+.emoticon.pikachu samp {
+	display: inline;
 }
 
 .emoticon.suprised:after {
@@ -50,6 +82,22 @@
 	content: url( "cry.tiff" );
 }
 
-.emoticon.anime:after {
-	content: url( "smile.tiff" );
+.emoticon.confused samp {
+	display: inline;
+}
+
+.emoticon.sarcasm samp {
+	display: inline;
+}
+
+.emoticon.pumpkin samp {
+	display: inline;
+}
+
+.emoticon.flag samp {
+	display: inline;
+}
+
+.emoticon.rose samp {
+	display: inline;
 }
