@@ -26,7 +26,8 @@ NSMutableSet *JVChatStyleBundles = nil;
 NSMutableSet *JVChatEmoticonBundles = nil;
 
 static NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
-static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
+static NSString *JVToolbarEmoticonsItemIdentifier   = @"JVToolbarEmoticonsItem";
+static NSString *JVToolbarClearItemIdentifier		= @"JVToolbarClearItem";
 
 #pragma mark -
 
@@ -608,6 +609,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		[menuItem setSubmenu:_emoticonMenu];
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
+	} else if( [identifier isEqual:JVToolbarClearItemIdentifier] ) {
+		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear display toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Clear Display", "clear display toolbar customize palette name" )];
+		
+		[toolbarItem setToolTip:NSLocalizedString( @"Clear Display", "clear display tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"clear"]];
+		
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector( clearDisplay: )];
 	} else toolbarItem = nil;
 
 	return toolbarItem;
@@ -622,7 +632,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSArray *list = [NSArray arrayWithObjects: JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarToggleChatActivityItemIdentifier */, 
-		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarShowColorsItemIdentifier,
+		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, JVToolbarClearItemIdentifier, NSToolbarShowColorsItemIdentifier,
 		NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, 
 		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 
