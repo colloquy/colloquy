@@ -277,7 +277,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 				arguments = [subMsg attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], range.location - [scanner scanLocation] )];
 
-				NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:forConnection: )] objectEnumerator];
+				NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toConnection: )] objectEnumerator];
 				id item = nil;
 
 				while( ( item = [enumerator nextObject] ) ) {

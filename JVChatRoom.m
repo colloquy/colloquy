@@ -170,7 +170,7 @@
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
 	BOOL handled = NO;
 	id item = nil;
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toRoom:forConnection: )] objectEnumerator];
+	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toRoom: )] objectEnumerator];
 
 	while( ( item = [enumerator nextObject] ) ) {
 		handled = [item processUserCommand:command withArguments:arguments toRoom:self];
@@ -181,7 +181,7 @@
 }
 
 - (NSMutableAttributedString *) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processRoomMessage:toRoom:asAction:forConnection: )] objectEnumerator];
+	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processRoomMessage:asAction:toRoom: )] objectEnumerator];
 	id item = nil;
 
 	while( ( item = [enumerator nextObject] ) )

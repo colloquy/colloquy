@@ -816,7 +816,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
 	BOOL handled = NO;
 	id item = nil;
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toUser:forConnection: )] objectEnumerator];
+	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toChat: )] objectEnumerator];
 
 	while( ( item = [enumerator nextObject] ) ) {
 		handled = [item processUserCommand:command withArguments:arguments toChat:self];
@@ -828,7 +828,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (NSMutableAttributedString *) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
 	id item = nil;
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processPrivateMessage:toUser:asAction:forConnection: )] objectEnumerator];
+	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processPrivateMessage:asAction:toChat: )] objectEnumerator];
 
 	while( ( item = [enumerator nextObject] ) )
 		message = [item processMessage:message asAction:action toChat:self];

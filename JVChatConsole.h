@@ -26,5 +26,5 @@
 @end
 
 @interface NSObject (MVChatPluginCommandSupport)
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments forConnection:(MVChatConnection *) connection;
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection;
 @end
