@@ -203,6 +203,68 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1C3D55B905A4CBBE00F25F5E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSNumberAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3D55BA05A4CBBE00F25F5E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSNumberAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3D55BB05A4CBBE00F25F5E = {
+			fileRef = 1C3D55B905A4CBBE00F25F5E;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1C3D55BC05A4CBBE00F25F5E = {
+			fileRef = 1C3D55BA05A4CBBE00F25F5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3D55BF05A4DC1E00F25F5E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSMethodSignatureAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3D55C005A4DC1E00F25F5E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSMethodSignatureAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3D55C105A4DC1E00F25F5E = {
+			fileRef = 1C3D55BF05A4DC1E00F25F5E;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1C3D55C205A4DC1E00F25F5E = {
+			fileRef = 1C3D55C005A4DC1E00F25F5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C51B46E052DE0CB00BB459B = {
 			buildPhases = (
 				1C51B46F052DE0CB00BB459B,
@@ -257,6 +319,8 @@
 				1CD020B405759347000F93B4,
 				1CD020BE057593A9000F93B4,
 				1C1C5651059EA8C9002FBEFB,
+				1C3D55BB05A4CBBE00F25F5E,
+				1C3D55C105A4DC1E00F25F5E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -347,6 +411,8 @@
 				1CD020B505759347000F93B4,
 				1CD020C0057593F9000F93B4,
 				1C1C5652059EA8C9002FBEFB,
+				1C3D55BC05A4CBBE00F25F5E,
+				1C3D55C205A4DC1E00F25F5E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -641,8 +707,12 @@
 				F5E98623018B412B01EE70DE,
 				1CD020B305759347000F93B4,
 				1CD020B205759347000F93B4,
+				1C3D55BA05A4CBBE00F25F5E,
+				1C3D55B905A4CBBE00F25F5E,
 				1CD020BD057593A9000F93B4,
 				1CD020BC057593A9000F93B4,
+				1C3D55C005A4DC1E00F25F5E,
+				1C3D55BF05A4DC1E00F25F5E,
 			);
 			isa = PBXGroup;
 			name = "Other Sources & Additions";

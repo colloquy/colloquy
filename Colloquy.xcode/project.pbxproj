@@ -67,7 +67,6 @@
 			targets = (
 				1CB2CCF5052DDC560094AAA4,
 				1C51B4BB052DE14B00BB459B,
-				1C51B4F6052DE2B800BB459B,
 			);
 		};
 		089C166AFE841209C02AAC07 = {
@@ -666,113 +665,6 @@
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1C51B4F6052DE2B800BB459B = {
-			buildPhases = (
-				1C51B4F7052DE2B800BB459B,
-				1C51B4FB052DE2B800BB459B,
-				1C51B4FD052DE2B800BB459B,
-				1C51B4FF052DE2B800BB459B,
-				1C51B502052DE2B800BB459B,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				CC = "/usr/bin/gcc-3.3";
-				CPLUSPLUS = "/usr/bin/g++-3.3";
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = "Resources/Info-iTunes.plist";
-				OTHER_CFLAGS = "-fconstant-cfstrings";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = iTunes;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
-				WRAPPER_EXTENSION = plugin;
-			};
-			dependencies = (
-			);
-			isa = PBXNativeTarget;
-			name = "iTunes (Plug-In)";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "Standard Commands (Plug–In)";
-			productReference = 1C51B505052DE2B800BB459B;
-			productType = "com.apple.product-type.bundle";
-		};
-		1C51B4F7052DE2B800BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-				1C51B4F8052DE2B800BB459B,
-				1CCA2378059605560050EDE0,
-				1CCA2379059605570050EDE0,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B4F8052DE2B800BB459B = {
-			fileRef = F52D043101873FC401EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B4FB052DE2B800BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-				1C51B4FC052DE2B800BB459B,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B4FC052DE2B800BB459B = {
-			fileRef = 1CA56D18042A83CC00000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B4FD052DE2B800BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B4FF052DE2B800BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-				1C51B500052DE2B800BB459B,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B500052DE2B800BB459B = {
-			fileRef = 1058C7ADFEA557BF11CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B502052DE2B800BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B504052DE2B800BB459B = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = "Info-iTunes.plist";
-			path = "Resources/Info-iTunes.plist";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		1C51B505052DE2B800BB459B = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = iTunes.plugin;
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		1C51B89D052DF91E00BB459B = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1020,7 +912,6 @@
 			children = (
 				1CB2CD8C052DDC570094AAA4,
 				1C51B4CD052DE14B00BB459B,
-				1C51B505052DE2B800BB459B,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -2741,18 +2632,6 @@
 			settings = {
 			};
 		};
-		1CCA2378059605560050EDE0 = {
-			fileRef = 1CCB279D04FE93FE00A8FE6E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CCA2379059605570050EDE0 = {
-			fileRef = 1CE2BC49042F53AD00000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CCA510D0598108000F0A4CD = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3454,7 +3333,6 @@
 				1C51B89D052DF91E00BB459B,
 				1C51B48A052DE0CB00BB459B,
 				1C51B4CC052DE14B00BB459B,
-				1C51B504052DE2B800BB459B,
 				F5DD34730382E5E501000102,
 				1C5959010507803F000001C8,
 				F52BA284037C13C201A35792,
