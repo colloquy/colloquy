@@ -128,13 +128,13 @@
 		}
 	}
 
-	if( (BOOL) [disableLinkHighlighting state] )
+/*	if( (BOOL) [disableLinkHighlighting state] )
 		[msgString preformLinkHighlightingUsingColor:[linkColor color] withUnderline:YES];
 
 	if( (BOOL) [disableGraphicEmoticons state] ) {
 		id dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:@":)"], @"smile.tif", nil];
 		[msgString preformImageSubstitutionWithDictionary:dict];
-	}
+	}*/
 
 	[[exampleChat textStorage] appendAttributedString:msgString];
 	[exampleChat replaceCharactersInRange:NSMakeRange([[exampleChat textStorage] length], 0.) withString:@"\n"];
