@@ -1044,6 +1044,10 @@
 				1CBC62E405488C73009E59E1,
 				1CBC62E705488CBA009E59E1,
 				1CBC630B05489484009E59E1,
+				1CC6FC520549FCD70075807C,
+				1CC6FC560549FDD70075807C,
+				1CC6FC5A0549FDE20075807C,
+				1CC6FD64054B70BC0075807C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1287,6 +1291,14 @@
 				1C8BDD2205436A030035B84A,
 				1CBC63190548975E009E59E1,
 				1CBC634905489BEE009E59E1,
+				1CC6FC66054A003C0075807C,
+				1CC6FC67054A003C0075807C,
+				1CC6FC68054A003C0075807C,
+				1CC6FC70054A02F70075807C,
+				1CC6FCD3054A25050075807C,
+				1CC6FCD5054A2BF80075807C,
+				1CC6FD39054AF1940075807C,
+				1CC6FD59054B5B700075807C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1790,6 +1802,10 @@
 				1C8BDCF4054345160035B84A,
 				1CBC62E505488C73009E59E1,
 				1CBC630C05489484009E59E1,
+				1CC6FC530549FCD80075807C,
+				1CC6FC570549FDD70075807C,
+				1CC6FC5B0549FDE20075807C,
+				1CC6FD65054B70BC0075807C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2240,6 +2256,8 @@
 		};
 		1CBC62FC05488E6E009E59E1 = {
 			children = (
+				1CC6FC590549FDE20075807C,
+				1CC6FC580549FDE20075807C,
 			);
 			isa = PBXGroup;
 			name = "File Transfers";
@@ -2248,6 +2266,8 @@
 		};
 		1CBC62FF05488F89009E59E1 = {
 			children = (
+				1CC6FC550549FDD70075807C,
+				1CC6FC540549FDD70075807C,
 			);
 			isa = PBXGroup;
 			name = Advanced;
@@ -2256,6 +2276,8 @@
 		};
 		1CBC630205488F99009E59E1 = {
 			children = (
+				1CC6FC510549FCD70075807C,
+				1CC6FC500549FCD70075807C,
 			);
 			isa = PBXGroup;
 			name = Appearance;
@@ -2293,6 +2315,9 @@
 		1CBC6317054896CB009E59E1 = {
 			children = (
 				1CBC63180548975E009E59E1,
+				1CC6FCD4054A2BF80075807C,
+				1CC6FCD2054A25040075807C,
+				1CC6FC6F054A02F70075807C,
 			);
 			isa = PBXGroup;
 			name = Preferences;
@@ -2406,6 +2431,262 @@
 			name = "Standard Commands";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1CC6FC500549FCD70075807C = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVAppearancePreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FC510549FCD70075807C = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVAppearancePreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FC520549FCD70075807C = {
+			fileRef = 1CC6FC500549FCD70075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FC530549FCD80075807C = {
+			fileRef = 1CC6FC510549FCD70075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FC540549FDD70075807C = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVAdvancedPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FC550549FDD70075807C = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVAdvancedPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FC560549FDD70075807C = {
+			fileRef = 1CC6FC540549FDD70075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FC570549FDD70075807C = {
+			fileRef = 1CC6FC550549FDD70075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FC580549FDE20075807C = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVFileTransferPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FC590549FDE20075807C = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVFileTransferPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FC5A0549FDE20075807C = {
+			fileRef = 1CC6FC580549FDE20075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FC5B0549FDE20075807C = {
+			fileRef = 1CC6FC590549FDE20075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FC60054A003C0075807C = {
+			children = (
+				1CC6FC61054A003C0075807C,
+			);
+			isa = PBXVariantGroup;
+			name = JVAdvancedPreferences.nib;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CC6FC61054A003C0075807C = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/JVAdvancedPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FC62054A003C0075807C = {
+			children = (
+				1CC6FC63054A003C0075807C,
+			);
+			isa = PBXVariantGroup;
+			name = JVAppearancePreferences.nib;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CC6FC63054A003C0075807C = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/JVAppearancePreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FC64054A003C0075807C = {
+			children = (
+				1CC6FC65054A003C0075807C,
+			);
+			isa = PBXVariantGroup;
+			name = JVFileTransferPreferences.nib;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CC6FC65054A003C0075807C = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/JVFileTransferPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FC66054A003C0075807C = {
+			fileRef = 1CC6FC60054A003C0075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FC67054A003C0075807C = {
+			fileRef = 1CC6FC62054A003C0075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FC68054A003C0075807C = {
+			fileRef = 1CC6FC64054A003C0075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FC6F054A02F70075807C = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = AdvancedPreferences.tif;
+			path = "Resources/Preference Related/AdvancedPreferences.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CC6FC70054A02F70075807C = {
+			fileRef = 1CC6FC6F054A02F70075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FCD2054A25040075807C = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = FileTransferPreferences.tif;
+			path = "Resources/Preference Related/FileTransferPreferences.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CC6FCD3054A25050075807C = {
+			fileRef = 1CC6FCD2054A25040075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FCD4054A2BF80075807C = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = AppearancePreferences.tif;
+			path = "Resources/Preference Related/AppearancePreferences.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CC6FCD5054A2BF80075807C = {
+			fileRef = 1CC6FCD4054A2BF80075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FD38054AF1940075807C = {
+			expectedFileType = text.plist.xml;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = preview.colloquyTranscript;
+			path = Resources/preview.colloquyTranscript;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CC6FD39054AF1940075807C = {
+			fileRef = 1CC6FD38054AF1940075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FD58054B5B700075807C = {
+			expectedFileType = text;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = emoticonsHidden.css;
+			path = Resources/emoticonsHidden.css;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CC6FD59054B5B700075807C = {
+			fileRef = 1CC6FD58054B5B700075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FD62054B70BC0075807C = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVFontPreviewField.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FD63054B70BC0075807C = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVFontPreviewField.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CC6FD64054B70BC0075807C = {
+			fileRef = 1CC6FD62054B70BC0075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC6FD65054B70BC0075807C = {
+			fileRef = 1CC6FD63054B70BC0075807C;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1CC7CAAE03C48E8B001C0D62 = {
 			children = (
@@ -2771,6 +3052,8 @@
 				F599994A01890E4601EE70DE,
 				1CBB23DA04F03CA7000001C8,
 				1CBB23D904F03CA7000001C8,
+				1CC6FD63054B70BC0075807C,
+				1CC6FD62054B70BC0075807C,
 				F551EE490209FB3301EE70DE,
 				F551EE4A0209FB3301EE70DE,
 				1C18CD110528DBBA000001C8,
@@ -2806,7 +3089,9 @@
 				1CBECDCF0508C8AB000001C8,
 				1C3C116005029DE1000001C8,
 				1C746A95050CF86B000001C8,
+				1CC6FD58054B5B700075807C,
 				F5675B8601DB767601EE70DE,
+				1CC6FD38054AF1940075807C,
 				1C3C116205029E03000001C8,
 				1C258E55050B9656000001C8,
 				F520458E01B1D37701EBB4B5,
@@ -2848,6 +3133,9 @@
 				1CB4DCA9053627C00080D36F,
 				1C8BDD2005436A020035B84A,
 				1CBC634705489BEE009E59E1,
+				1CC6FC62054A003C0075807C,
+				1CC6FC64054A003C0075807C,
+				1CC6FC60054A003C0075807C,
 			);
 			isa = PBXGroup;
 			name = Interfaces;
