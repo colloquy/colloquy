@@ -310,6 +310,7 @@
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	while( ( emoticon = [enumerator nextObject] ) ) {
+		if( ! [[emoticon displayName] length] ) continue;
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[emoticon bundleIdentifier]];

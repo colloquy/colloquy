@@ -1902,6 +1902,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	NSArray *menuArray = [NSArray arrayWithContentsOfFile:[_chatEmoticons pathForResource:@"menu" ofType:@"plist"]];
 	enumerator = [menuArray objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
+		if( ! [[info objectForKey:@"name"] length] ) continue;
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[info objectForKey:@"name"] action:@selector( _insertEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		if( [(NSString *)[info objectForKey:@"image"] length] )
@@ -1943,6 +1944,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 		enumerator = [[[JVChatEmoticonBundles allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
 		while( ( emoticon = [enumerator nextObject] ) ) {
+			if( ! [[emoticon displayName] length] ) continue;
 			menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
 			[menuItem setTarget:self];
 			[menuItem setRepresentedObject:[emoticon bundleIdentifier]];
