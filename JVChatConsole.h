@@ -13,6 +13,8 @@
 	IBOutlet NSTextView *display;
 	IBOutlet MVTextView *send;
 	BOOL _nibLoaded;
+	BOOL _verbose;
+	BOOL _ignorePRIVMSG;
 	JVChatWindowController *_windowController;
 	MVChatConnection *_connection;
 }

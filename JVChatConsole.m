@@ -4,11 +4,17 @@
 #import "JVChatController.h"
 #import "MVTextView.h"
 
+static NSString *JVToolbarToggleVerboseItemIdentifier = @"JVToolbarToggleVerboseItem";
+static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
+
 @implementation JVChatConsole
 - (id) initWithConnection:(MVChatConnection *) connection {
 	if( ( self = [self init] ) ) {
 		_connection = [connection retain];
+		_verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatVerboseConsoleMessages"];
+		_ignorePRIVMSG = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatConsoleIgnoreUserChatMessages"];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRawMessage: ) name:MVChatConnectionGotRawMessageNotification object:connection];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( clearConsole: ) name:MVChatConnectionWillConnectNotification object:connection];
 	}
 	return self;
 }
@@ -37,6 +43,21 @@
 	_windowController = nil;
 
 	[super dealloc];
+}
+
+#pragma mark -
+
+- (IBAction) clearConsole:(id) sender {
+	[display setString:@""];
+}
+
+- (IBAction) toggleVerbose:(id) sender {
+	_verbose = ! _verbose;
+}
+
+- (IBAction) close:(id) sender {
+	[[JVChatController defaultManager] disposeViewController:self];
+	[_windowController removeChatViewController:self];
 }
 
 #pragma mark -
@@ -98,9 +119,9 @@
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-/*	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
-	[menu addItem:item];*/
+	[menu addItem:item];
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
@@ -120,6 +141,10 @@
 
 #pragma mark -
 
+- (NSString *) identifier {
+	return [NSString stringWithFormat:@"%@.console", [_connection server]];
+}
+
 - (MVChatConnection *) connection {
 	return _connection;
 }
@@ -130,24 +155,53 @@
 	NSAttributedString *msg = nil;
 	NSMutableString *strMsg = [[message mutableCopy] autorelease];
 	NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
-	BOOL verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatVerboseConsoleMessages"];
+	NSMutableParagraphStyle *para = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	unsigned int numeric = 0;
 
-	[attrs setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Monaco" traits:0 weight:5 size:9.] forKey:NSFontAttributeName];
-	[attrs setObject:( outbound ? [NSColor blueColor] : [NSColor blackColor] ) forKey:NSForegroundColorAttributeName];
+	if( ! [strMsg length] || ( _ignorePRIVMSG && [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound ) )
+		return;
 
-	if( ! verbose ) [strMsg replaceOccurrencesOfString:@" :" withString:@" " options:NSLiteralSearch range:NSMakeRange( 0, [strMsg length] )];
+	[para setParagraphSpacing:3.];
+	[para setMaximumLineHeight:9.];
+	if( ! outbound ) [para setMaximumLineHeight:9.];
+	else [para setMaximumLineHeight:11.];
 
-	if( ! outbound && ! verbose ) {
+	if( outbound ) [attrs setObject:[NSFont boldSystemFontOfSize:11.] forKey:NSFontAttributeName];
+	else [attrs setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Monaco" traits:0 weight:5 size:9.] forKey:NSFontAttributeName];
+//	[attrs setObject:( outbound ? [NSColor blueColor] : [NSColor blackColor] ) forKey:NSForegroundColorAttributeName];
+	[attrs setObject:para forKey:NSParagraphStyleAttributeName];
+
+	if( ! _verbose ) {
+		[strMsg replaceOccurrencesOfString:@":" withString:@"" options:NSAnchoredSearch range:NSMakeRange( 0, 1 )];
+		[strMsg replaceOccurrencesOfString:@" :" withString:@" " options:NSLiteralSearch range:NSMakeRange( 0, [strMsg length] )];
+	}
+
+	if( ! outbound && ! _verbose ) {
 		NSMutableArray *parts = [[[strMsg componentsSeparatedByString:@" "] mutableCopy] autorelease];
-		if( [[parts objectAtIndex:2] isEqualToString:[_connection nickname]] )
+		NSString *tempStr = nil;
+		unsigned i = 0, c = 0;
+
+		if( [parts count] >= 3 && [[parts objectAtIndex:2] isEqualToString:[_connection nickname]] )
 			[parts removeObjectAtIndex:2];
-		if( [[parts objectAtIndex:1] intValue] )
+
+		if( [parts count] >= 2 && ( numeric = [[parts objectAtIndex:1] intValue] ) )
 			[parts removeObjectAtIndex:1];
-		if( [[parts objectAtIndex:0] isEqualToString:[@":" stringByAppendingString:[_connection server]]] )
+
+		tempStr = [parts objectAtIndex:0];
+		if( tempStr && [tempStr rangeOfString:@"@"].location == NSNotFound && [tempStr rangeOfString:@"."].location != NSNotFound && [NSURL URLWithString:[@"irc://" stringByAppendingString:tempStr]] ) {
 			[parts removeObjectAtIndex:0];
-		else if( [[parts objectAtIndex:0] hasPrefix:[@":" stringByAppendingString:[_connection nickname]]] )
+		} else if( [tempStr hasPrefix:[NSString stringWithFormat:@"%@!", [_connection nickname]]] ) {
 			[parts removeObjectAtIndex:0];
+		}
+
+		for( i = 0, c = [parts count]; i < c; i++ ) {
+			tempStr = [@"irc://" stringByAppendingString:[parts objectAtIndex:i]];
+			if( ( tempStr = [[NSURL URLWithString:tempStr] user] ) && [tempStr rangeOfString:@"!"].location != NSNotFound )
+				[parts replaceObjectAtIndex:i withObject:[tempStr substringToIndex:[tempStr rangeOfString:@"!"].location]];
+		}
+
 		strMsg = (NSMutableString *) [parts componentsJoinedByString:@" "];
+		if( numeric) strMsg = [NSString stringWithFormat:@"%03u: %@", numeric, strMsg];
 	}
 
 	msg = [[[NSAttributedString alloc] initWithString:strMsg attributes:attrs] autorelease];
@@ -164,17 +218,35 @@
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
 	if( [identifier isEqual:JVToolbarToggleChatDrawerItemIdentifier] ) {
 		toolbarItem = [_windowController toggleChatDrawerToolbarItem];
+	} else if( [identifier isEqual:JVToolbarClearItemIdentifier] ) {
+		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear console toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Clear Console", "clear console toolbar customize palette name" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Clear Console", "clear console tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"clear"]];
+
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector( clearConsole: )];
+	} else if( [identifier isEqual:JVToolbarToggleVerboseItemIdentifier] ) {
+		[toolbarItem setLabel:NSLocalizedString( @"Verbose", "verbose toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Toggle Verbose", "toggle verbose toolbar customize palette name" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Verbose Output", "toggle verbose output tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
+
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector( toggleVerbose: )];
 	} else toolbarItem = nil;
-	return nil;
+	return toolbarItem;
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarClearItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarToggleVerboseItemIdentifier, JVToolbarClearItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 @end
