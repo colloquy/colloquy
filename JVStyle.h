@@ -34,6 +34,7 @@ extern NSString *JVStyleVariantChangedNotification;
 
 - (void) unlink;
 - (void) reload;
+- (BOOL) isCompliant;
 
 - (NSBundle *) bundle;
 - (NSString *) identifier;

@@ -53,10 +53,10 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 			if( [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
 				NSBundle *bundle = nil;
 				JVStyle *style = nil;
-				if( ( bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] ) )
+				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) )
 					style = [[JVStyle newWithBundle:bundle] autorelease];
-				if( style ) [styles addObject:style];
 				[style reload];
+				if( [style isCompliant] ) [styles addObject:style];
 			}
 		}
 	}
@@ -167,6 +167,16 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	[self _setStyleOptions:nil];
 	[self _setVariants:nil];
 	[self _setUserVariants:nil];
+}
+
+- (BOOL) isCompliant {
+	BOOL ret = YES;
+
+	if( ! [[self displayName] length] ) ret = NO;
+	if( ! [self mainStyleSheetLocation] ) ret = NO;
+	if( ! [[_bundle bundleIdentifier] length] ) ret = NO;
+
+	return ret;
 }
 
 #pragma mark -
