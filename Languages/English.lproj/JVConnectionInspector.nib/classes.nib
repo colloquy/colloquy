@@ -1,0 +1,30 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addRoom = id; 
+                changeProxy = id; 
+                editText = id; 
+                removeRoom = id; 
+                toggleAutoConnect = id; 
+            }; 
+            CLASS = JVConnectionInspector; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                editAddress = NSTextField; 
+                editAutomatic = NSButton; 
+                editNickname = NSTextField; 
+                editPassword = NSTextField; 
+                editPort = NSTextField; 
+                editProxy = NSPopUpButton; 
+                editRemoveRoom = NSButton; 
+                editRooms = NSTableView; 
+                editServerPassword = NSTextField; 
+                view = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
