@@ -6,6 +6,7 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
+#import <ChatCore/NSURLAdditions.h>
 
 #import "MVApplicationController.h"
 #import "JVChatController.h"
