@@ -462,6 +462,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (void) _setXSLStyle:(NSString *) path {
 	if( _XSLStyle ) xsltFreeStylesheet( _XSLStyle );
 	_XSLStyle = ( [path length] ? xsltParseStylesheetFile( (const xmlChar *)[path fileSystemRepresentation] ) : NULL );
+	if( _XSLStyle ) ((xsltStylesheetPtr) _XSLStyle) -> indent = 0; // this is done because our whitespace escaping causes problems otherwise
 }
 
 - (void) _setStyleOptions:(NSArray *) options {
