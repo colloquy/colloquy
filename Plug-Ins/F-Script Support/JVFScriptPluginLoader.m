@@ -13,8 +13,6 @@
 	if( self = [super init] ) {
 		_manager = manager;
 		_fscriptInstalled = ( NSClassFromString( @"FSInterpreter" ) ? YES : NO );
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( detachNotifications ) name:MVChatPluginManagerWillReloadPluginsNotification object:manager];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( reloadPlugins ) name:MVChatPluginManagerDidReloadPluginsNotification object:manager];
 	}
 
 	return self;
@@ -86,10 +84,6 @@
 	return NO;
 }
 
-- (void) detachNotifications {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:_manager];
-}
-
 - (void) reloadPlugins {
 	if( ! _manager ) return;
 
@@ -111,5 +105,9 @@
 			}
 		}
 	}
+}
+
+- (void) load {
+	[self reloadPlugins];
 }
 @end
