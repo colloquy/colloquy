@@ -10,7 +10,6 @@
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
 #import "NSMethodSignatureAdditions.h"
-//#import "KAConnectionHandler.h"
 
 #define MODULE_NAME "MVChatConnection"
 
@@ -700,10 +699,8 @@ static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const ch
 	NSNotification *note = nil;
 
 	if( ischannel( *target ) ) {
-		//[[KAConnectionHandler defaultHandler] connection:self willPostMessage:msgData toRoom:YES];
 		note = [NSNotification notificationWithName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:target], @"room", [NSString stringWithUTF8String:nick], @"from", msgData, @"message", nil]];
 	} else {
-		//[[KAConnectionHandler defaultHandler] connection:self willPostMessage:msgData toRoom:NO];
 		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"from", msgData, @"message", nil]];
 	}
 
@@ -1366,12 +1363,16 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) joinChatRooms:(NSArray *) rooms {
+	if( ! [rooms count] ) return;
+
 	NSMutableArray *roomList = [NSMutableArray arrayWithCapacity:[rooms count]];
 	NSEnumerator *enumerator = [rooms objectEnumerator];
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) )
 		if( [room length] ) [roomList addObject:[self _roomWithProperPrefix:room]];
+
+	if( ! [roomList count] ) return;
 
 	[self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
 }
