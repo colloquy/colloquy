@@ -1,8 +1,6 @@
 #import <Foundation/NSObject.h>
 
-@interface MVApplicationController : NSObject {
-	BOOL _terminating;
-}
+@interface MVApplicationController : NSObject {}
 - (IBAction) checkForUpdate:(id) sender;
 - (IBAction) connectToSupportRoom:(id) sender;
 - (IBAction) emailDeveloper:(id) sender;
@@ -13,5 +11,5 @@
 - (IBAction) showConnectionManager:(id) sender;
 - (IBAction) showBuddyList:(id) sender;
 
-- (BOOL) isTerminating;
++ (BOOL) isTerminating;
 @end

@@ -69,7 +69,7 @@ static MVBuddyListController *sharedInstance = nil;
 @implementation MVBuddyListController
 + (MVBuddyListController *) sharedBuddyList {
 	extern MVBuddyListController *sharedInstance;
-	if( [[[NSApplication sharedApplication] delegate] isTerminating] ) return nil;
+	if( [MVApplicationController isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 

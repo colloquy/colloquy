@@ -23,17 +23,12 @@
 
 #pragma mark -
 
+static BOOL applicationIsTerminating = NO;
+
 @implementation MVApplicationController
-- (void) dealloc {
-	[[MVBuddyListController sharedBuddyList] release];
-	[[MVFileTransferController defaultManager] release];
-	[[MVChatPluginManager defaultManager] release];
-	[[JVChatController defaultManager] release];
-	[[MVConnectionsController defaultManager] release];
-
-	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
-
-	[super dealloc];
++ (BOOL) isTerminating {
+	extern BOOL applicationIsTerminating;
+	return applicationIsTerminating;
 }
 
 #pragma mark -
@@ -84,12 +79,6 @@
 
 #pragma mark -
 
-- (BOOL) isTerminating {
-	return _terminating;
-}
-
-#pragma mark -
-
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
 	if( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame ) {
 		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
@@ -111,7 +100,6 @@
 #pragma mark -
 
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
-	_terminating = NO;
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 }
@@ -143,9 +131,18 @@
 }
 
 - (void) applicationWillTerminate:(NSNotification *) notification {
-	_terminating = YES;
+	extern BOOL applicationIsTerminating;
+	applicationIsTerminating = YES;
+
+	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
+
+	[[MVBuddyListController sharedBuddyList] release];
+	[[MVFileTransferController defaultManager] release];
+	[[MVChatPluginManager defaultManager] release];
+	[[JVChatController defaultManager] release];
+	[[MVConnectionsController defaultManager] release];
+
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
-	[self release];
 }
 @end

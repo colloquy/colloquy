@@ -23,7 +23,7 @@ static JVChatController *sharedInstance = nil;
 @implementation JVChatController
 + (JVChatController *) defaultManager {
 	extern JVChatController *sharedInstance;
-	if( [[[NSApplication sharedApplication] delegate] isTerminating] ) return nil;
+	if( [MVApplicationController isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
 }
 

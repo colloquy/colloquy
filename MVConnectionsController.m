@@ -40,7 +40,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 @implementation MVConnectionsController
 + (MVConnectionsController *) defaultManager {
 	extern MVConnectionsController *sharedInstance;
-	if( [[[NSApplication sharedApplication] delegate] isTerminating] ) return nil;
+	if( [MVApplicationController isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 
