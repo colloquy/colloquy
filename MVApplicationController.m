@@ -413,6 +413,7 @@ static BOOL applicationIsTerminating = NO;
 				NSNumber *indent = [item objectForKey:@"indent"];
 				NSNumber *alternate = [item objectForKey:@"alternate"];
 				NSString *iconPath = [item objectForKey:@"icon"];
+				id iconSize = [item objectForKey:@"iconsize"];
 				NSString *tooltip = [item objectForKey:@"tooltip"];
 				id context = [item objectForKey:@"context"];
 
@@ -423,8 +424,9 @@ static BOOL applicationIsTerminating = NO;
 				if( ! [indent isKindOfClass:[NSNumber class]] ) indent = nil;
 				if( ! [alternate isKindOfClass:[NSNumber class]] ) alternate = nil;
 				if( ! [iconPath isKindOfClass:[NSString class]] ) iconPath = nil;
+				if( ! [iconSize isKindOfClass:[NSArray class]] && ! [iconSize isKindOfClass:[NSNumber class]] ) iconSize = nil;
 				if( ! [sub isKindOfClass:[NSArray class]] && ! [sub isKindOfClass:[NSDictionary class]] ) sub = nil;
-
+				
 				NSMenuItem *mitem = [[[NSMenuItem alloc] initWithTitle:title action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""] autorelease];
 				if( context ) [mitem setRepresentedObject:context];
 				else [mitem setRepresentedObject:object];
@@ -457,6 +459,18 @@ static BOOL applicationIsTerminating = NO;
 
 						NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingFile:iconPath] autorelease];
 						if( icon ) [mitem setImage:icon];
+					}
+
+					NSSize size = NSZeroSize;
+					if( [iconSize isKindOfClass:[NSArray class]] && [(NSArray *)iconSize count] == 2 ) {
+						size = NSMakeSize( [[iconSize objectAtIndex:0] unsignedIntValue], [[iconSize objectAtIndex:1] unsignedIntValue] );
+					} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
+						size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
+					}
+
+					if( [mitem image] && ! NSEqualSizes( size, NSZeroSize ) && [[mitem image] isValid] ) {
+						[[mitem image] setScalesWhenResized:YES];
+						[[mitem image] setSize:size];
 					}
 				}
 
