@@ -87,8 +87,8 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	(NSStringEncoding) 0x80000422,		// Windows
 	/* Hebrew */
 	(NSStringEncoding) -1,				// Divider
-	(NSStringEncoding) 0x80000005,		// Mac
 	(NSStringEncoding) 0x80000208,		// ISO-8859-8
+	(NSStringEncoding) 0x80000005,		// Mac
 	(NSStringEncoding) 0x80000505,		// Windows
 	/* End */ 0 };
 

@@ -18,6 +18,15 @@
 	case 0x80000203:
 		return @"iso-8859-3";
 		break;
+	case 0x80000208:
+		return @"iso-8859-8";
+		break;
+	case 0x80000005:
+		return @"x-mac-hebrew";
+		break;
+	case 0x80000505:
+		return @"windows-1255";
+		break;
 	case 0x8000020F:
 		return @"iso-8859-9";
 		break;
