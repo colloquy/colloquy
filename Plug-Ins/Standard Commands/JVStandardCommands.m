@@ -37,12 +37,10 @@
 	} else if( [command isEqualToString:@"away"] ) {
 		[connection setAwayStatusWithMessage:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"join"] || [command isEqualToString:@"j"] ) {
+	} else if( [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
-	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
-		if( [arguments length] )
-			return [self handlePartWithArguments:[arguments string] forConnection:connection];
-		return NO;
+	} else if( [command isEqualToString:@"leave"] ) {
+		return [self handlePartWithArguments:[arguments string] forConnection:connection];
 	} else if( [command isEqualToString:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
 	} else if( [command isEqualToString:@"dcc"] ) {
@@ -98,9 +96,9 @@
 	} else if( [command isEqualToString:@"away"] ) {
 		[[room connection] setAwayStatusWithMessage:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"join"] || [command isEqualToString:@"j"] ) {
+	} else if( [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[room connection]];
-	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
+	} else if( [command isEqualToString:@"leave"] ) {
 		if( ! [arguments length] ) [self handlePartWithArguments:[room target] forConnection:[room connection]];
 		else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		return YES;
@@ -124,40 +122,6 @@
 		if( ! encoding ) encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 		[[room connection] setTopic:arguments withEncoding:encoding forRoom:[room target]];
 		return YES;
-/*	} else if( [command isEqualToString:@"mode"] ) {
-		NSRange vrange, orange, vsrange, osrange;
-		BOOL handled = NO;
-		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-		NSString *modes = nil, *who = nil;
-
-		if( ! [arguments length] ) return NO;
-
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&modes];
-		vrange = [modes rangeOfString:@"v"];
-		if( vrange.location != NSNotFound ) vsrange = [modes rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"-+"] options:NSBackwardsSearch range:NSMakeRange( 0, vrange.location )];
-		orange = [modes rangeOfString:@"o"];
-		if( orange.location != NSNotFound ) osrange = [modes rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"-+"] options:NSBackwardsSearch range:NSMakeRange( 0, orange.location )];
-
-		if( [arguments length] >= [scanner scanLocation] + 1 )
-			[scanner setScanLocation:[scanner scanLocation] + 1];
-		else return NO;
-
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&who];
-
-		if( ! who ) return NO;
-
-		if( vrange.location != NSNotFound && vsrange.location != NSNotFound ) {
-			if( [modes characterAtIndex:vsrange.location] == '+' ) [[room connection] voiceMember:who inRoom:[room target]];
-			else [[room connection] devoiceMember:who inRoom:[room target]];
-			handled = YES;
-		}
-
-		if( orange.location != NSNotFound && osrange.location != NSNotFound ) {
-			if( [modes characterAtIndex:osrange.location] == '+' ) [[room connection] promoteMember:who inRoom:[room target]];
-			else [[room connection] demoteMember:who inRoom:[room target]];
-			handled = YES;
-		}
-		return handled;*/
 	} else if( [command isEqualToString:@"umode"] ) {
 		[[room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [[room connection] nickname], [arguments string]]];
 		return YES;
@@ -227,12 +191,10 @@
 	} else if( [command isEqualToString:@"away"] ) {
 		[[chat connection] setAwayStatusWithMessage:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"join"] || [command isEqualToString:@"j"] ) {
+	} else if( [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[chat connection]];
-	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
-		if( [arguments length] )
-			return [self handlePartWithArguments:[arguments string] forConnection:[chat connection]];
-		return NO;
+	} else if( [command isEqualToString:@"leave"] ) {
+		return [self handlePartWithArguments:[arguments string] forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"server"] ) {
 		return [self handleServerConnectWithArguments:[arguments string]];
 	} else if( [command isEqualToString:@"raw"] || [command isEqualToString:@"quote"] ) {
@@ -351,27 +313,12 @@
 }
 
 - (BOOL) handleJoinWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
-	NSArray *rooms = [arguments componentsSeparatedByString:@" "];
-	NSEnumerator *enumerator = [rooms objectEnumerator];
-	id item = nil;
-	if( ! [rooms count] ) return NO;
-	while( ( item = [enumerator nextObject] ) )
-		[connection joinChatRoom:item];
+	[connection sendRawMessage:[NSString stringWithFormat:@"JOIN %@", arguments]];
 	return YES;
 }
 
 - (BOOL) handlePartWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
-	NSArray *rooms = [arguments componentsSeparatedByString:@" "];
-	NSEnumerator *enumerator = [rooms objectEnumerator];
-	id item = nil;
-	id view = nil;
-
-	if( ! [rooms count] ) return NO;
-	while( ( item = [enumerator nextObject] ) ) {
-		if( ! ( view = [[_manager chatController] chatViewControllerForRoom:item withConnection:connection ifExists:YES] ) )
-			continue;
-		[[_manager chatController] disposeViewController:view];
-	}
+	[connection sendRawMessage:[NSString stringWithFormat:@"PART %@", arguments]];
 	return YES;
 }
 
