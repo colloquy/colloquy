@@ -34,6 +34,7 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_connection = nil;
+		_uniqueIdentifier = nil;
 		_nickname = nil;
 		_realName = nil;
 		_username = nil;
@@ -59,6 +60,7 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[_uniqueIdentifier release];
 	[_nickname release];
 	[_realName release];
 	[_username release];
@@ -71,6 +73,7 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 	[_attributes release];
 
 	_connection = nil; // connection isn't retained, prevents circular retain
+	_uniqueIdentifier = nil;
 	_nickname = nil;
 	_realName = nil;
 	_username = nil;
@@ -177,11 +180,11 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 #pragma mark -
 
 - (NSDate *) dateConnected {
-	return _dateConnected;
+	return [[_dateConnected retain] autorelease];
 }
 
 - (NSDate *) dateDisconnected {
-	return _dateDisconnected;
+	return [[_dateDisconnected retain] autorelease];
 }
 
 #pragma mark -
@@ -203,43 +206,41 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 - (NSString *) nickname {
 	if( [self isLocalUser] )
 		return [[self connection] nickname];
-	return _nickname;
+	return [[_nickname retain] autorelease];
 }
 
 - (NSString *) realName {
 	if( [self isLocalUser] )
 		return [[self connection] realName];
-	return _realName;
+	return [[_realName retain] autorelease];
 }
 
 - (NSString *) username {
 	if( [self isLocalUser] )
 		return [[self connection] username];
-	return _username;
+	return [[_username retain] autorelease];
 }
 
 - (NSString *) address {
-	return _address;
+	return [[_address retain] autorelease];
 }
 
 - (NSString *) serverAddress {
-	return _serverAddress;
+	return [[_serverAddress retain] autorelease];
 }
 
 #pragma mark -
 
 - (id) uniqueIdentifier {
-// subclass this method, don't call super
-	[self doesNotRecognizeSelector:_cmd];
-	return nil;
+	return [[_uniqueIdentifier retain] autorelease];
 }
 
 - (NSData *) publicKey {
-	return _publicKey;
+	return [[_publicKey retain] autorelease];
 }
 
 - (NSString *) fingerprint {
-	return _fingerprint;
+	return [[_fingerprint retain] autorelease];
 }
 
 #pragma mark -
@@ -274,17 +275,26 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 #pragma mark -
 
 - (NSDictionary *) attributes {
-	return _attributes;
+	NSDictionary *ret = nil;
+	@synchronized( _attributes ) {
+		ret = [NSDictionary dictionaryWithDictionary:_attributes];
+	} return ret;
 }
 
 - (BOOL) hasAttributeForKey:(NSString *) key {
 	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
-	return ( [[self attributes] objectForKey:key] ? YES : NO );
+	BOOL ret = NO;
+	@synchronized( _attributes ) {
+		ret = ( [_attributes objectForKey:key] ? YES : NO );
+	} return ret;
 }
 
 - (id) attributeForKey:(NSString *) key {
 	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
-	return [[self attributes] objectForKey:key];
+	id ret = nil;
+	@synchronized( _attributes ) {
+		ret = [_attributes objectForKey:key];
+	} return [[ret retain] autorelease];
 }
 
 #pragma mark -
@@ -318,6 +328,11 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 #pragma mark -
 
 @implementation MVChatUser (MVChatUserPrivate)
+- (void) _setUniqueIdentifier:(id) identifier {
+	[_uniqueIdentifier autorelease];
+	_uniqueIdentifier = ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copyWithZone:[self zone]] : [identifier retain] );
+}
+
 - (void) _setNickname:(NSString *) name {
 	[_nickname autorelease];
 	_nickname = [name copyWithZone:[self zone]];
@@ -349,8 +364,8 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 }
 
 - (void) _setFingerprint:(NSString *) fingerprint {
-	[_serverAddress autorelease];
-	_serverAddress = [fingerprint copyWithZone:[self zone]];
+	[_fingerprint autorelease];
+	_fingerprint = [fingerprint copyWithZone:[self zone]];
 }
 
 - (void) _setServerOperator:(BOOL) operator {

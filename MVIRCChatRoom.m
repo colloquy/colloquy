@@ -20,6 +20,7 @@
 	if( ( self = [super init] ) ) {
 		_connection = connection; // prevent circular retain
 		_name = [name copyWithZone:[self zone]];
+		_uniqueIdentifier = [[name lowercaseString] retain];
 	}
 
 	return self;
@@ -79,10 +80,11 @@
 
 @implementation MVIRCChatRoom (MVIRCChatRoomPrivate)
 - (void) _updateMemberUser:(MVChatUser *) user fromOldNickname:(NSString *) oldNickname {
-	NSNumber *modes = [[_memberModes objectForKey:[oldNickname lowercaseString]] retain];
+	NSNumber *modes = [[[_memberModes objectForKey:[oldNickname lowercaseString]] retain] autorelease];
 	if( ! modes ) return;
-	[_memberModes removeObjectForKey:[oldNickname lowercaseString]];
-	[_memberModes setObject:modes forKey:[user uniqueIdentifier]];
-	[modes release];
+	@synchronized( _memberModes ) {
+		[_memberModes removeObjectForKey:[oldNickname lowercaseString]];
+		[_memberModes setObject:modes forKey:[user uniqueIdentifier]];
+	}
 }
 @end

@@ -43,6 +43,7 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 @interface MVChatRoom : NSObject {
 @protected
 	MVChatConnection *_connection;
+	id _uniqueIdentifier;
 	NSString *_name;
 	NSDate *_dateJoined;
 	NSDate *_dateParted;

@@ -27,16 +27,11 @@
 	if( ( self = [super init] ) ) {
 		_connection = connection; // prevent circular retain
 		_nickname = [nickname copyWithZone:[self zone]];
+		_uniqueIdentifier = [[nickname lowercaseString] retain];
 		_type = MVChatRemoteUserType;
 	}
 
 	return self;
-}
-
-#pragma mark -
-
-- (id) uniqueIdentifier {
-	return [[self nickname] lowercaseString];
 }
 
 #pragma mark -
