@@ -314,8 +314,34 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSString *name = nil;
 
 	while( ( name = [[enumerator nextObject] nickname] ) ) {
-		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"\\b%@\\b", name]];
-		[message setString:[regex replaceWithString:@"<span class=\"member\">$0</span>" inString:message]];
+		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"\\b(%@)\\b", name]];
+		NSRange searchRange = NSMakeRange(0, [message length]);
+		NSRange backSearchRange = NSMakeRange(0, [message length]);
+		AGRegexMatch *match = [regex findInString:message range:searchRange];
+		while ( match ) {
+			NSRange foundRange = [match rangeAtIndex:1];
+			// Search to see if we're in a link
+			backSearchRange.length = foundRange.location - backSearchRange.location;
+			NSRange openRange = [message rangeOfString:@"<a "
+											   options:(NSBackwardsSearch|NSLiteralSearch)
+												 range:backSearchRange];
+			NSRange closeRange = [message rangeOfString:@"</a>"
+												options:(NSBackwardsSearch|NSLiteralSearch)
+												  range:backSearchRange];
+			if( openRange.location == NSNotFound ||
+				(closeRange.location != NSNotFound && closeRange.location > openRange.location) ) {
+				[message replaceCharactersInRange:foundRange
+									   withString:
+					[NSString stringWithFormat:@"<span class=\"member\">%@</span>", name]];
+				searchRange.location = NSMaxRange(foundRange) + 28;
+				searchRange.length = [message length] - searchRange.location;
+				backSearchRange.location = searchRange.location;
+			} else {
+				searchRange.location = NSMaxRange(foundRange);
+				searchRange.length = [message length] - searchRange.location;
+			}
+			match = [regex findInString:message range:searchRange];
+		}
 	}
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableString * ), @encode( BOOL ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
