@@ -895,49 +895,28 @@ end:
 
 #pragma mark -
 
-- (BOOL) knownPropertyWithKey:(NSString *) key {
-	static NSSet *keys = nil;
-	if( ! keys ) keys = [[NSSet setWithObjects:@"chatViews", @"chatRooms", @"directChats", @"chatConsoles", @"chatTranscripts", nil] retain];
-	return [keys containsObject:key];
-}
-
-- (Class) classForPropertyWithKey:(NSString *) key {
-	Class class = NULL;
-	if( [key isEqualToString:@"chatViews"] ) class = [NSObject class];
-	else if( [key isEqualToString:@"chatRooms"] ) class = [JVChatRoomPanel class];
-	else if( [key isEqualToString:@"directChats"] ) class = [JVDirectChatPanel class];
-	else if( [key isEqualToString:@"chatConsoles"] ) class = [JVChatConsolePanel class];
-	else if( [key isEqualToString:@"chatTranscripts"] ) class = [JVChatTranscriptPanel class];
-	return class;
-}
-
-#pragma mark -
-
-- (id) valueForKey:(NSString *) key {
-	if( ! [self knownPropertyWithKey:key] )
-		return [super valueForKey:key];
-
+- (NSArray *) chatViews {
 	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return nil;
-
-	Class class = [self classForPropertyWithKey:key];
-
-	if( class == [NSObject class] ) // represents all chat views
-		return [[self windowController] allChatViewControllers];
-
-	return [[self windowController] chatViewControllersWithControllerClass:class];
+	return [(JVChatWindowController *)[self windowController] allChatViewControllers];
 }
 
-- (id) valueAtIndex:(unsigned) index inPropertyWithKey:(NSString *) key {
-	if( ! [self knownPropertyWithKey:key] )
-		return [super valueAtIndex:index inPropertyWithKey:key];
-	return [[self valueForKey:key] objectAtIndex:index];
+- (id <JVChatViewController>) valueInChatViewsAtIndex:(unsigned) index {
+	return [[self chatViews] objectAtIndex:index];
 }
 
-- (id) valueWithName:(NSString *) name inPropertyWithKey:(NSString *) key {
-	if( ! [self knownPropertyWithKey:key] )
-		return [super valueWithName:name inPropertyWithKey:key];
+- (id <JVChatViewController>) valueInChatViewsWithUniqueID:(id) identifier {
+	NSEnumerator *enumerator = [[self chatViews] objectEnumerator];
+	id <JVChatViewController, JVChatListItemScripting> view = nil;
 
-	NSEnumerator *enumerator = [[self valueForKey:key] objectEnumerator];
+	while( ( view = [enumerator nextObject] ) )
+		if( [[view uniqueIdentifier] isEqual:identifier] )
+			return view;
+
+	return nil;
+}
+
+- (id <JVChatViewController>) valueInChatViewsWithName:(NSString *) name {
+	NSEnumerator *enumerator = [[self chatViews] objectEnumerator];
 	id <JVChatViewController> view = nil;
 
 	while( ( view = [enumerator nextObject] ) )
@@ -947,95 +926,238 @@ end:
 	return nil;
 }
 
-- (id) valueWithUniqueID:(id) identifier inPropertyWithKey:(NSString *) key {
-	if( ! [self knownPropertyWithKey:key] )
-		return [super valueWithUniqueID:identifier inPropertyWithKey:key];
+- (void) addInChatViews:(id <JVChatViewController>) view {
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+	[[self windowController] addChatViewController:view];
+}
 
-	NSEnumerator *enumerator = [[self valueForKey:key] objectEnumerator];
-	id <JVChatViewController, JVChatListItemScripting> view = nil;
+- (void) insertInChatViews:(id <JVChatViewController>) view {
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+	[[self windowController] addChatViewController:view];
+}
+
+- (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(int) index {
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+	[[self windowController] insertChatViewController:view atIndex:index];
+}
+
+- (void) removeFromViewsAtIndex:(unsigned) index {
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+	[[self windowController] removeChatViewControllerAtIndex:index];
+}
+
+- (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+	[[self windowController] replaceChatViewControllerAtIndex:index withController:view];
+}
+
+#pragma mark -
+
+- (NSArray *) chatViewsWithClass:(Class) class {
+	NSMutableArray *ret = [NSMutableArray array];
+	NSEnumerator *enumerator = [[self chatViews] objectEnumerator];
+	id <JVChatViewController> item = nil;
+
+	while( ( item = [enumerator nextObject] ) )
+		if( [item isMemberOfClass:class] )
+			[ret addObject:item];
+
+	return ret;
+}
+
+- (id <JVChatViewController>) valueInChatViewsAtIndex:(unsigned) index withClass:(Class) class {
+	return [[self chatViewsWithClass:class] objectAtIndex:index];
+}
+
+- (id <JVChatViewController>) valueInChatViewsWithUniqueID:(id) identifier andClass:(Class) class {
+	return [self valueInChatViewsWithUniqueID:identifier];
+}
+
+- (id <JVChatViewController>) valueInChatViewsWithName:(NSString *) name andClass:(Class) class {
+	NSEnumerator *enumerator = [[self chatViewsWithClass:class] objectEnumerator];
+	id <JVChatViewController> view = nil;
 
 	while( ( view = [enumerator nextObject] ) )
-		if( [view conformsToProtocol:@protocol( JVChatListItemScripting )] &&
-			[[view uniqueIdentifier] isEqual:identifier] ) return view;
+		if( [[view title] isEqualToString:name] )
+			return view;
 
 	return nil;
 }
 
-- (void) replaceValueAtIndex:(unsigned) index inPropertyWithKey:(NSString *) key withValue:(id) value {
-	if( ! [self knownPropertyWithKey:key] ) {
-		[super replaceValueAtIndex:index inPropertyWithKey:key withValue:value];
-		return;
-	}
-
-	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
-
-	if( [key isEqualToString:@"chatViews"] ) {
-		[[self windowController] replaceChatViewControllerAtIndex:index withController:value];
-		return;
-	}
-
-	NSArray *values = [self valueForKey:key];
-	unsigned int idx = [[[self windowController] allChatViewControllers] indexOfObject:[values objectAtIndex:index]];
-	[[self windowController] replaceChatViewControllerAtIndex:idx withController:value];
+- (void) addInChatViews:(id <JVChatViewController>) view withClass:(Class) class {
+	unsigned int index = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] lastObject]];
+	[self insertInChatViews:view atIndex:( index + 1 )];
 }
 
-- (void) insertValue:(id) value inPropertyWithKey:(NSString *) key {
-	if( ! [self knownPropertyWithKey:key] ) {
-		[super insertValue:value inPropertyWithKey:key];
-		return;
-	}
-
-	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
-
-	if( [key isEqualToString:@"chatViews"] ) {
-		[[self windowController] addChatViewController:value];
-		return;
-	}
-
-	NSArray *values = [self valueForKey:key];
-	unsigned int index = [[[self windowController] allChatViewControllers] indexOfObject:[values lastObject]];
-	[[self windowController] insertChatViewController:value atIndex:( index + 1 )];
-}
-
-- (void) insertValue:(id) value atIndex:(unsigned) index inPropertyWithKey:(NSString *) key {
-	if( ! [self knownPropertyWithKey:key] ) {
-		[super insertValue:value atIndex:index inPropertyWithKey:key];
-		return;
-	}
-
-	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
-
-	if( [key isEqualToString:@"chatViews"] ) {
-		[[self windowController] insertChatViewController:value atIndex:index];
-		return;
-	}
-
-	NSArray *values = [self valueForKey:key];
-	if( index == [values count] ) {
-		unsigned int index = [[[self windowController] allChatViewControllers] indexOfObject:[values lastObject]];
-		[[self windowController] insertChatViewController:value atIndex:( index + 1 )];
+- (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index withClass:(Class) class {
+	if( index == [[self chatViewsWithClass:class] count] ) {
+		[self addInChatViews:view withClass:class];
 	} else {
-		unsigned int index = [[[self windowController] allChatViewControllers] indexOfObject:[values objectAtIndex:index]];
-		[[self windowController] insertChatViewController:value atIndex:index];
+		unsigned int indx = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
+		[self insertInChatViews:view atIndex:indx];
 	}
 }
 
-- (void) removeValueAtIndex:(unsigned) index fromPropertyWithKey:(NSString *) key {
-	if( ! [self knownPropertyWithKey:key] ) {
-		[super removeValueAtIndex:index fromPropertyWithKey:key];
-		return;
-	}
+- (void) removeFromChatViewsAtIndex:(unsigned) index withClass:(Class) class {
+	unsigned int indx = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
+	[self removeFromViewsAtIndex:indx];
+}
 
-	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+- (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index withClass:(Class) class {
+	unsigned int indx = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
+	[self replaceInChatViews:view atIndex:indx];
+}
 
-	if( [key isEqualToString:@"chatViews"] ) {
-		[[self windowController] removeChatViewControllerAtIndex:index];
-		return;
-	}
+#pragma mark -
 
-	NSArray *values = [self valueForKey:key];
-	unsigned int idx = [[[self windowController] allChatViewControllers] indexOfObject:[values objectAtIndex:index]];
-	[[self windowController] removeChatViewControllerAtIndex:idx];
+- (NSArray *) chatRooms {
+	return [self chatViewsWithClass:[JVChatRoomPanel class]];
+}
+
+- (id <JVChatViewController>) valueInChatRoomsAtIndex:(unsigned) index {
+	return [self valueInChatViewsAtIndex:index withClass:[JVChatRoomPanel class]];
+}
+
+- (id <JVChatViewController>) valueInChatRoomsWithUniqueID:(id) identifier {
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatRoomPanel class]];
+}
+
+- (id <JVChatViewController>) valueInChatRoomsWithName:(NSString *) name {
+	return [self valueInChatViewsWithName:name andClass:[JVChatRoomPanel class]];
+}
+
+- (void) addInChatRooms:(id <JVChatViewController>) view {
+	[self addInChatViews:view withClass:[JVChatRoomPanel class]];
+}
+
+- (void) insertInChatRooms:(id <JVChatViewController>) view {
+	[self addInChatViews:view withClass:[JVChatRoomPanel class]];
+}
+
+- (void) insertInChatRooms:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self insertInChatViews:view atIndex:index withClass:[JVChatRoomPanel class]];
+}
+
+- (void) removeFromChatRoomsAtIndex:(unsigned) index {
+	[self removeFromChatViewsAtIndex:index withClass:[JVChatRoomPanel class]];
+}
+
+- (void) replaceInChatRooms:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self replaceInChatViews:view atIndex:index withClass:[JVChatRoomPanel class]];
+}
+
+#pragma mark -
+
+- (NSArray *) directChats {
+	return [self chatViewsWithClass:[JVDirectChatPanel class]];
+}
+
+- (id <JVChatViewController>) valueInDirectChatsAtIndex:(unsigned) index {
+	return [self valueInChatViewsAtIndex:index withClass:[JVDirectChatPanel class]];
+}
+
+- (id <JVChatViewController>) valueInDirectChatsWithUniqueID:(id) identifier {
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVDirectChatPanel class]];
+}
+
+- (id <JVChatViewController>) valueInDirectChatsWithName:(NSString *) name {
+	return [self valueInChatViewsWithName:name andClass:[JVDirectChatPanel class]];
+}
+
+- (void) addInDirectChats:(id <JVChatViewController>) view {
+	[self addInChatViews:view withClass:[JVDirectChatPanel class]];
+}
+
+- (void) insertInDirectChats:(id <JVChatViewController>) view {
+	[self addInChatViews:view withClass:[JVDirectChatPanel class]];
+}
+
+- (void) insertInDirectChats:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self insertInChatViews:view atIndex:index withClass:[JVDirectChatPanel class]];
+}
+
+- (void) removeFromDirectChatsAtIndex:(unsigned) index {
+	[self removeFromChatViewsAtIndex:index withClass:[JVDirectChatPanel class]];
+}
+
+- (void) replaceInDirectChats:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self replaceInChatViews:view atIndex:index withClass:[JVDirectChatPanel class]];
+}
+
+#pragma mark -
+
+- (NSArray *) chatTranscripts {
+	return [self chatViewsWithClass:[JVChatTranscriptPanel class]];
+}
+
+- (id <JVChatViewController>) valueInChatTranscriptsAtIndex:(unsigned) index {
+	return [self valueInChatViewsAtIndex:index withClass:[JVChatTranscriptPanel class]];
+}
+
+- (id <JVChatViewController>) valueInChatTranscriptsWithUniqueID:(id) identifier {
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatTranscriptPanel class]];
+}
+
+- (id <JVChatViewController>) valueInChatTranscriptsWithName:(NSString *) name {
+	return [self valueInChatViewsWithName:name andClass:[JVChatTranscriptPanel class]];
+}
+
+- (void) addInChatTranscripts:(id <JVChatViewController>) view {
+	[self addInChatViews:view withClass:[JVChatTranscriptPanel class]];
+}
+
+- (void) insertInChatTranscripts:(id <JVChatViewController>) view {
+	[self addInChatViews:view withClass:[JVChatTranscriptPanel class]];
+}
+
+- (void) insertInChatTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self insertInChatViews:view atIndex:index withClass:[JVChatTranscriptPanel class]];
+}
+
+- (void) removeFromChatTranscriptsAtIndex:(unsigned) index {
+	[self removeFromChatViewsAtIndex:index withClass:[JVChatTranscriptPanel class]];
+}
+
+- (void) replaceInChatTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self replaceInChatViews:view atIndex:index withClass:[JVChatTranscriptPanel class]];
+}
+
+#pragma mark -
+
+- (NSArray *) chatConsoles {
+	return [self chatViewsWithClass:[JVChatConsolePanel class]];
+}
+
+- (id <JVChatViewController>) valueInChatConsolesAtIndex:(unsigned) index {
+	return [self valueInChatViewsAtIndex:index withClass:[JVChatConsolePanel class]];
+}
+
+- (id <JVChatViewController>) valueInChatConsolesWithUniqueID:(id) identifier {
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatConsolePanel class]];
+}
+
+- (id <JVChatViewController>) valueInChatConsolesWithName:(NSString *) name {
+	return [self valueInChatViewsWithName:name andClass:[JVChatConsolePanel class]];
+}
+
+- (void) addInChatConsoles:(id <JVChatViewController>) view {
+	[self addInChatViews:view withClass:[JVChatConsolePanel class]];
+}
+
+- (void) insertInChatConsoles:(id <JVChatViewController>) view {
+	[self addInChatViews:view withClass:[JVChatConsolePanel class]];
+}
+
+- (void) insertInChatConsoles:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self insertInChatViews:view atIndex:index withClass:[JVChatConsolePanel class]];
+}
+
+- (void) removeFromChatConsolesAtIndex:(unsigned) index {
+	[self removeFromChatViewsAtIndex:index withClass:[JVChatConsolePanel class]];
+}
+
+- (void) replaceInChatConsoles:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self replaceInChatViews:view atIndex:index withClass:[JVChatConsolePanel class]];
 }
 
 #pragma mark -
@@ -1048,7 +1170,7 @@ end:
 		NSScriptObjectSpecifier *endSpec = [specifier endSpecifier];
 		NSString *startKey = [startSpec key];
 		NSString *endKey = [endSpec key];
-		NSArray *chatViews = [self valueForKey:@"chatViews"];
+		NSArray *chatViews = [self chatViews];
 		
 		if( ! startSpec && ! endSpec ) return nil;
 		
@@ -1123,7 +1245,7 @@ end:
 	if( [key isEqualToString:@"chatViews"] || [key isEqualToString:@"chatRooms"] || [key isEqualToString:@"directChats"] || [key isEqualToString:@"chatConsoles"] || [key isEqualToString:@"chatTranscripts"] ) {
 		NSScriptObjectSpecifier *baseSpec = [specifier baseSpecifier];
 		NSString *baseKey = [baseSpec key];
-		NSArray *chatViews = [self valueForKey:@"chatViews"];
+		NSArray *chatViews = [self chatViews];
 		NSRelativePosition relPos = [specifier relativePosition];
 		
 		if( ! baseSpec ) return nil;
