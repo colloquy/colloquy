@@ -279,16 +279,14 @@ static WebView *fragmentWebView = nil;
 				if( [message length] > ( location + 1 ) ) {
 					unsigned int fcolor = 0;
 					[scanner setScanLocation:( location + 1 )];
-					[scanner scanInt:&fcolor];
-					fcolor %= 16;
+					if( [scanner scanInt:&fcolor] ) {
+						fcolor %= 16;
 
-					NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[fcolor][0] / 255. ) green:( (float) mIRCColors[fcolor][1] / 255. ) blue:( (float) mIRCColors[fcolor][2] / 255. ) alpha:1.];
-					if( foregroundColor ) [attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
+						NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[fcolor][0] / 255. ) green:( (float) mIRCColors[fcolor][1] / 255. ) blue:( (float) mIRCColors[fcolor][2] / 255. ) alpha:1.];
+						if( foregroundColor ) [attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
 
-					if( [scanner scanString:@"," intoString:NULL] ) {
 						unsigned int bcolor = 0;
-						[scanner scanInt:&bcolor];
-						if( bcolor != 99 ) {
+						if( [scanner scanString:@"," intoString:NULL] && [scanner scanInt:&bcolor] && bcolor != 99 ) {
 							bcolor %= 16;
 							NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[bcolor][0] / 255. ) green:( (float) mIRCColors[bcolor][1] / 255. ) blue:( (float) mIRCColors[bcolor][2] / 255. ) alpha:1.];
 							if( backgroundColor ) [attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
