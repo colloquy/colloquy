@@ -7,7 +7,7 @@ void silc_privmessage_resolve_callback( SilcClient client, SilcClientConnection 
 	MVChatConnection *self = [user connection];
 
 	if( ! clients_count ) {
-		goto out;
+		goto finish;
 	} else {
 		char *nickname = NULL;
 		SilcClientEntry target;
@@ -46,20 +46,28 @@ finish:
 
 @implementation MVSILCChatUser
 - (id) initLocalUserWithConnection:(MVSILCChatConnection *) connection {
-	if( ( self = [self initWithNickname:nil andConnection:connection andUniqueIdentifier:nil] ) ) {
+	if( ( self = [self initWithClientEntry:[connection _silcConn] -> local_entry andConnection:connection] ) ) {
 		_type = MVChatLocalUserType;
-		_uniqueIdentifier = [[[self nickname] lowercaseString] retain];
 	}
 
 	return self;
 }
 
-- (id) initWithNickname:(NSString *) nickname andConnection:(MVSILCChatConnection *) connection andUniqueIdentifier:(NSString *) identifier {
+- (id) initWithClientEntry:(SilcClientEntry) clientEntry andConnection:(MVSILCChatConnection *) connection {
 	if( ( self = [super init] ) ) {
-		_connection = connection; // prevent circular retain
-		_nickname = [nickname copyWithZone:[self zone]];
-		_uniqueIdentifier = [identifier copyWithZone:[self zone]];
 		_type = MVChatRemoteUserType;
+		_connection = connection; // prevent circular retain
+
+		_nickname = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> nickname];
+		_username = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> username];
+		_address = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> hostname];
+		_serverAddress = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> server];
+		_realName = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> realname];
+		_fingerprint = [[NSString allocWithZone:[self zone]] initWithBytes:clientEntry -> fingerprint length:clientEntry -> fingerprint_len encoding:NSASCIIStringEncoding];
+
+		unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
+		unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
+		_uniqueIdentifier = [[NSData allocWithZone:[self zone]] initWithBytes:identifier length:len];
 	}
 
 	return self;
