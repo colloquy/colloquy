@@ -647,7 +647,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	BOOL new = NO;
 	if( ! [sender tag] ) {
 		_encoding = (NSStringEncoding) [[self preferenceForKey:@"encoding"] intValue];
-		if( ! _encoding ) _encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
+		if( ! _encoding ) _encoding = [_connection encoding];
 	} else _encoding = (NSStringEncoding) [sender tag];
 
 	if( ! _encodingMenu ) {
@@ -680,7 +680,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	count = [_encodingMenu numberOfItems];
 	for( i = 1; i < count; i++ ) [_spillEncodingMenu addItem:[[(NSMenuItem *)[_encodingMenu itemAtIndex:i] copy] autorelease]];
 
-	if( _encoding != (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"] ) {
+	if( _encoding != [_connection encoding] ) {
 		[self setPreference:[NSNumber numberWithInt:_encoding] forKey:@"encoding"];
 	} else [self setPreference:nil forKey:@"encoding"];
 }
