@@ -348,17 +348,18 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 - (void) didUnselect {
-	_newMessage				= NO;
-	_newHighlightMessage	= NO;
-	_isActive				= NO;
+	_newMessage = NO;
+	_newHighlightMessage = NO;
+	_isActive = NO;
 	[super didUnselect];
 }
 
 - (void) didSelect {
-	_newMessage				= NO;
-	_newHighlightMessage	= NO;
-	_isActive				= YES;
+	_newMessage = NO;
+	_newHighlightMessage = NO;
+	_isActive = YES;
 	[super didSelect];
+	[[[self view] window] makeFirstResponder:send];
 	if( [_waitingAlerts count] )
 		[[NSApplication sharedApplication] beginSheet:[_waitingAlerts objectAtIndex:0] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
 }
