@@ -176,7 +176,7 @@
 #pragma mark -
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( JVChatRoom * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( JVChatRoom * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( processUserCommand:withArguments:toRoom: )];
@@ -190,7 +190,7 @@
 
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
 	JVChatRoomMember *member = [self chatRoomMemberWithName:user];
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( BOOL ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( BOOL ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( processMessage:asAction:fromMember:inRoom: )];

@@ -277,7 +277,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 				arguments = [subMsg attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], range.location - [scanner scanLocation] )];
 
-				NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), nil];
+				NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), nil];
 				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 				[invocation setSelector:@selector( processUserCommand:withArguments:toConnection: )];

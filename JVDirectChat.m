@@ -737,7 +737,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( processMessage:asAction:inChat: )];
@@ -863,7 +863,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( JVDirectChat * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( JVDirectChat * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( processUserCommand:withArguments:toChat: )];
