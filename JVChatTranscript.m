@@ -214,6 +214,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[super dealloc];
 }
 
+#pragma mark -
 #pragma mark Window Controller and Proxy Icon Support
 
 - (JVChatWindowController *) windowController {
