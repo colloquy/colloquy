@@ -557,13 +557,13 @@ void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const cha
 		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 		NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
 		NSString *reply = [NSString stringWithFormat:@"%@ %@ - %@ %@ - http://www.javelin.cc?colloquy", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"]];
-		firetalk_subcode_send_reply( c, from, "VERSION", [reply UTF8String] );
+		[self sendSubcodeReply:@"VERSION" toUser:[NSString stringWithUTF8String:from] withArguments:reply];
 		return;
 	} else 	if( ! strcasecmp( command, "USERINFO" ) ) {
-		firetalk_subcode_send_reply( c, from, "USERINFO", "..." );
+		[self sendSubcodeReply:@"USERINFO" toUser:[NSString stringWithUTF8String:from] withArguments:@"..."];
 		return;
 	} else 	if( ! strcasecmp( command, "URL" ) ) {
-		firetalk_subcode_send_reply( c, from, "URL", "..." );
+		[self sendSubcodeReply:@"URL" toUser:[NSString stringWithUTF8String:from] withArguments:@"..."];
 		return;
 	}
 
@@ -815,6 +815,24 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 		void *pointer = NULL;
 		sscanf( [identifier UTF8String], "%8lx", (unsigned long int *) &pointer );
 		firetalk_file_cancel( _chatConnection, pointer );
+	}
+}
+
+#pragma mark -
+
+- (void) sendSubcodeRequest:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments {
+	NSParameterAssert( command != nil );
+	NSParameterAssert( user != nil );
+	if( [self isConnected] ) {
+		firetalk_subcode_send_request( _chatConnection, [user UTF8String], [command UTF8String], [arguments UTF8String] );
+	}
+}
+
+- (void) sendSubcodeReply:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments {
+	NSParameterAssert( command != nil );
+	NSParameterAssert( user != nil );
+	if( [self isConnected] ) {
+		firetalk_subcode_send_reply( _chatConnection, [user UTF8String], [command UTF8String], [arguments UTF8String] );
 	}
 }
 

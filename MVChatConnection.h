@@ -109,6 +109,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) acceptFileTransfer:(NSString *) identifier saveToPath:(NSString *) path resume:(BOOL) resume;
 - (void) cancelFileTransfer:(NSString *) identifier;
 
+- (void) sendSubcodeRequest:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments;
+- (void) sendSubcodeReply:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments;
+	
 - (void) joinChatForRoom:(NSString *) room;
 - (void) partChatForRoom:(NSString *) room;
 
