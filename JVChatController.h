@@ -1,6 +1,8 @@
 #import "KAIgnoreRule.h"
 
 @class MVChatConnection;
+@class MVChatRoom;
+@class MVChatUser;
 @class JVChatWindowController;
 @class JVChatRoom;
 @class JVDirectChat;
@@ -26,9 +28,10 @@
 - (NSSet *) chatViewControllersWithConnection:(MVChatConnection *) connection;
 - (NSSet *) chatViewControllersOfClass:(Class) class;
 - (NSSet *) chatViewControllersKindOfClass:(Class) class;
-- (JVChatRoom *) chatViewControllerForRoom:(NSString *) room withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
-- (JVDirectChat *) chatViewControllerForUser:(NSString *) user withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
-- (JVDirectChat *) chatViewControllerForUser:(NSString *) user withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) requested;
+
+- (JVChatRoom *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists;
+- (JVDirectChat *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
+- (JVDirectChat *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;
 - (JVChatTranscript *) chatViewControllerForTranscript:(NSString *) filename;
 - (JVChatConsole *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 
@@ -37,7 +40,7 @@
 
 - (IBAction) detachView:(id) sender;
 
-- (JVIgnoreMatchResult) shouldIgnoreUser:(NSString *) name withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view;
+- (JVIgnoreMatchResult) shouldIgnoreUser:(MVChatUser *) user withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view;
 @end
 
 @interface NSObject (MVChatPluginCommandSupport)

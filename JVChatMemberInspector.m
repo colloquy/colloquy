@@ -16,13 +16,13 @@
 	if( ( self = [self init] ) ) {
 		_member = [member retain];
 		_localOnly = NO;
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserWhois: ) name:MVChatConnectionGotUserWhoisNotification object:[_member connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserServer: ) name:MVChatConnectionGotUserServerNotification object:[_member connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserChannels: ) name:MVChatConnectionGotUserChannelsNotification object:[_member connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserOperator: ) name:MVChatConnectionGotUserOperatorNotification object:[_member connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserIdle: ) name:MVChatConnectionGotUserIdleNotification object:[_member connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserWhoisComplete: ) name:MVChatConnectionGotUserWhoisCompleteNotification object:[_member connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotAwayStatus: ) name:MVChatConnectionUserAwayStatusNotification object:[_member connection]];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserWhois: ) name:MVChatConnectionGotUserWhoisNotification object:[_member connection]];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserServer: ) name:MVChatConnectionGotUserServerNotification object:[_member connection]];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserChannels: ) name:MVChatConnectionGotUserChannelsNotification object:[_member connection]];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserOperator: ) name:MVChatConnectionGotUserOperatorNotification object:[_member connection]];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserIdle: ) name:MVChatConnectionGotUserIdleNotification object:[_member connection]];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserWhoisComplete: ) name:MVChatConnectionGotUserWhoisCompleteNotification object:[_member connection]];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotAwayStatus: ) name:MVChatConnectionUserAwayStatusNotification object:[_member connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( errorOccurred : ) name:MVChatConnectionErrorNotification object:[_member connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotCTCPResponse: ) name:MVChatConnectionSubcodeReplyNotification object:[_member connection]];
 	}
@@ -64,7 +64,7 @@
 	_classSet = NO;
 	[nickname setObjectValue:[_member nickname]];
 	if( [[_member buddy] picture] ) [image setImage:[[_member buddy] picture]];
-	[[_member connection] fetchInformationForUser:[_member nickname] withPriority:NO fromLocalServer:_localOnly];
+//	[[_member connection] fetchInformationForUser:[_member nickname] withPriority:NO fromLocalServer:_localOnly];
 }
 
 #pragma mark -
@@ -179,14 +179,14 @@
 }
 
 - (IBAction) sendPing:(id) sender {
-	[[_member connection] sendSubcodeRequest:@"PING" toUser:[_member nickname] withArguments:nil];
+//	[[_member connection] sendSubcodeRequest:@"PING" toUser:[_member nickname] withArguments:nil];
 }
 
 - (IBAction) requestLocalTime:(id) sender {
-	[[_member connection] sendSubcodeRequest:@"TIME" toUser:[_member nickname] withArguments:nil];
+//	[[_member connection] sendSubcodeRequest:@"TIME" toUser:[_member nickname] withArguments:nil];
 }
 
 - (IBAction) requestClientInfo:(id) sender {
-	[[_member connection] sendSubcodeRequest:@"VERSION" toUser:[_member nickname] withArguments:nil];
+//	[[_member connection] sendSubcodeRequest:@"VERSION" toUser:[_member nickname] withArguments:nil];
 }
 @end

@@ -2,20 +2,12 @@
 
 @class JVChatRoom;
 @class MVChatConnection;
+@class MVChatUser;
 @class JVBuddy;
 
 @interface JVChatRoomMember : NSObject <JVChatListItem> {
 	JVChatRoom *_parent;
-	NSString *_nickname;
-	NSString *_address;
-	NSString *_username;
-	NSString *_realName;
-	JVBuddy *_buddy;
-	BOOL _operator;
-	BOOL _halfOperator;
-	BOOL _serverOperator;
-	BOOL _voice;
-	BOOL _localUser;
+	MVChatUser *_user;
 
 	// Custom ban ivars
 	BOOL _nibLoaded;
@@ -28,22 +20,26 @@
 	IBOutlet NSButton *cancelButton;
 	IBOutlet NSWindow *banWindow;
 }
-- (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name;
-- (id) initAsLocalUserWithRoom:(JVChatRoom *) room;
+- (id) initWithRoom:(JVChatRoom *) room andUser:(MVChatUser *) user;
+- (id) initLocalMemberWithRoom:(JVChatRoom *) room;
 
 - (NSComparisonResult) compare:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingBuddyStatus:(JVChatRoomMember *) member;
 
+- (JVChatRoom *) room;
 - (MVChatConnection *) connection;
+- (MVChatUser *) user;
+- (JVBuddy *) buddy;
+
 - (NSString *) nickname;
 - (NSString *) realName;
 - (NSString *) username;
 - (NSString *) address;
 - (NSString *) hostmask;
-- (JVBuddy *) buddy;
 
 - (BOOL) voice;
+- (BOOL) quieted;
 - (BOOL) operator;
 - (BOOL) halfOperator;
 - (BOOL) serverOperator;
@@ -54,7 +50,10 @@
 - (IBAction) addBuddy:(id) sender;
 
 - (IBAction) toggleOperatorStatus:(id) sender;
+- (IBAction) toggleHalfOperatorStatus:(id) sender;
 - (IBAction) toggleVoiceStatus:(id) sender;
+- (IBAction) toggleQuietedStatus:(id) sender;
+
 - (IBAction) kick:(id) sender;
 - (IBAction) ban:(id) sender;
 - (IBAction) customKick:(id) sender;

@@ -43,8 +43,8 @@
 @end
 
 @interface JVMutableChatMessage : JVChatMessage
-+ (id) messageWithText:(NSAttributedString *) body sender:(NSString *) sender andTranscript:(JVChatTranscript *) transcript;
-- (id) initWithText:(NSAttributedString *) body sender:(NSString *) sender andTranscript:(JVChatTranscript *) transcript;
++ (id) messageWithText:(NSTextStorage *) body sender:(NSString *) sender andTranscript:(JVChatTranscript *) transcript;
+- (id) initWithText:(NSTextStorage *) body sender:(NSString *) sender andTranscript:(JVChatTranscript *) transcript;
 
 - (void) setNode:(/* xmlNode */ void *) node;
 

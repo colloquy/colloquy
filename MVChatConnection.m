@@ -1,15 +1,14 @@
 #import "MVChatConnection.h"
+#import "MVChatRoom.h"
+#import "MVChatUser.h"
 #import "MVIRCChatConnection.h"
 #import "MVSILCChatConnection.h"
 #import "MVFileTransfer.h"
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
-#import "NSURLAdditions.h"
 #import "NSStringAdditions.h"
 #import "NSAttributedStringAdditions.h"
 #import "NSMethodSignatureAdditions.h"
-
-NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
@@ -20,47 +19,13 @@ NSString *MVChatConnectionErrorNotification = @"MVChatConnectionErrorNotificatio
 
 NSString *MVChatConnectionNeedNicknamePasswordNotification = @"MVChatConnectionNeedNicknamePasswordNotification";
 NSString *MVChatConnectionNeedCertificatePasswordNotification = @"MVChatConnectionNeedCertificatePasswordNotification";
+NSString *MVChatConnectionNeedPublicKeyVerificationNotification = @"MVChatConnectionNeedPublicKeyVerificationNotification";
 
+NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";
 NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotPrivateMessageNotification";
+NSString *MVChatConnectionChatRoomlistUpdatedNotification = @"MVChatConnectionChatRoomlistUpdatedNotification";
 
-NSString *MVChatConnectionBuddyIsOnlineNotification = @"MVChatConnectionBuddyIsOnlineNotification";
-NSString *MVChatConnectionBuddyIsOfflineNotification = @"MVChatConnectionBuddyIsOfflineNotification";
-NSString *MVChatConnectionBuddyIsAwayNotification = @"MVChatConnectionBuddyIsAwayNotification";
-NSString *MVChatConnectionBuddyIsUnawayNotification = @"MVChatConnectionBuddyIsUnawayNotification";
-NSString *MVChatConnectionBuddyIsIdleNotification = @"MVChatConnectionBuddyIsIdleNotification";
-
-NSString *MVChatConnectionSelfAwayStatusNotification = @"MVChatConnectionSelfAwayStatusNotification";
-
-NSString *MVChatConnectionGotUserWhoisNotification = @"MVChatConnectionGotUserWhoisNotification";
-NSString *MVChatConnectionGotUserServerNotification = @"MVChatConnectionGotUserServerNotification";
-NSString *MVChatConnectionGotUserChannelsNotification = @"MVChatConnectionGotUserChannelsNotification";
-NSString *MVChatConnectionGotUserOperatorNotification = @"MVChatConnectionGotUserOperatorNotification";
-NSString *MVChatConnectionGotUserIdleNotification = @"MVChatConnectionGotUserIdleNotification";
-NSString *MVChatConnectionGotUserWhoisCompleteNotification = @"MVChatConnectionGotUserWhoisCompleteNotification";
-
-NSString *MVChatConnectionGotRoomInfoNotification = @"MVChatConnectionGotRoomInfoNotification";
-
-NSString *MVChatConnectionGotJoinWhoListNotification = @"MVChatConnectionGotJoinWhoListNotification";
-NSString *MVChatConnectionRoomExistingMemberListNotification = @"MVChatConnectionRoomExistingMemberListNotification";
-NSString *MVChatConnectionJoinedRoomNotification = @"MVChatConnectionJoinedRoomNotification";
-NSString *MVChatConnectionLeftRoomNotification = @"MVChatConnectionLeftRoomNotification";
-NSString *MVChatConnectionUserJoinedRoomNotification = @"MVChatConnectionUserJoinedRoomNotification";
-NSString *MVChatConnectionUserLeftRoomNotification = @"MVChatConnectionUserLeftRoomNotification";
-NSString *MVChatConnectionUserQuitNotification = @"MVChatConnectionUserQuitNotification";
-NSString *MVChatConnectionUserNicknameChangedNotification = @"MVChatConnectionUserNicknameChangedNotification";
-NSString *MVChatConnectionUserKickedFromRoomNotification = @"MVChatConnectionUserKickedFromRoomNotification";
-NSString *MVChatConnectionUserAwayStatusNotification = @"MVChatConnectionUserAwayStatusNotification";
-NSString *MVChatConnectionGotMemberModeNotification = @"MVChatConnectionGotMemberModeNotification";
-NSString *MVChatConnectionGotRoomModeNotification = @"MVChatConnectionGotRoomModeNotification";
-NSString *MVChatConnectionGotRoomMessageNotification = @"MVChatConnectionGotRoomMessageNotification";
-NSString *MVChatConnectionGotRoomTopicNotification = @"MVChatConnectionGotRoomTopicNotification";
-
-NSString *MVChatConnectionNewBanNotification = @"MVChatConnectionNewBanNotification";
-NSString *MVChatConnectionRemovedBanNotification = @"MVChatConnectionRemovedBanNotification";
-NSString *MVChatConnectionBanlistReceivedNotification = @"MVChatConnectionBanlistReceivedNotification";
-
-NSString *MVChatConnectionKickedFromRoomNotification = @"MVChatConnectionKickedFromRoomNotification";
-NSString *MVChatConnectionInvitedToRoomNotification = @"MVChatConnectionInvitedToRoomNotification";
+NSString *MVChatConnectionSelfAwayStatusChangedNotification = @"MVChatConnectionSelfAwayStatusChangedNotification";
 
 NSString *MVChatConnectionNicknameAcceptedNotification = @"MVChatConnectionNicknameAcceptedNotification";
 NSString *MVChatConnectionNicknameRejectedNotification = @"MVChatConnectionNicknameRejectedNotification";
@@ -70,17 +35,32 @@ NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeRe
 
 BOOL MVChatApplicationQuitting = NO;
 
-@interface MVChatConnection (MVChatConnectionPrivate)
-- (void) _willConnect;
-- (void) _didConnect;
-- (void) _didNotConnect;
-- (void) _willDisconnect;
-- (void) _didDisconnect;
+static const NSStringEncoding supportedEncodings[] = {
+	NSUTF8StringEncoding,
+	NSNonLossyASCIIStringEncoding,
+	NSASCIIStringEncoding, 0
+};
+
+@interface MVChatRoom (MVChatRoomPrivate)
+- (void) _setDateParted:(NSDate *) date;
 @end
 
 #pragma mark -
 
 @implementation MVChatConnection
++ (BOOL) supportsURLScheme:(NSString *) scheme {
+	if( ! scheme ) return NO;
+	return ( [scheme isEqualToString:@"irc"] || [scheme isEqualToString:@"silc"] );
+}
+
++ (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type {
+	if( type == MVChatConnectionIRCType ) return [MVIRCChatConnection defaultServerPorts];
+	else if( type == MVChatConnectionSILCType ) return [MVSILCChatConnection defaultServerPorts];
+	return [NSArray array];
+}
+
+#pragma mark -
+
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_alternateNicks = nil;
@@ -93,7 +73,10 @@ BOOL MVChatApplicationQuitting = NO;
 
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
-		_roomsCache = [[NSMutableDictionary dictionary] retain];
+		_roomsCache = [[NSMutableDictionary dictionaryWithCapacity:250] retain];
+		_persistentInformation = [[NSMutableDictionary dictionaryWithCapacity:2] retain];
+		_joinedRooms = [[NSMutableSet setWithCapacity:5] retain];
+		_localUser = nil;
 
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemWillSleep: ) name:NSWorkspaceWillSleepNotification object:[NSWorkspace sharedWorkspace]];
@@ -118,6 +101,8 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (id) initWithURL:(NSURL *) url {
+	NSParameterAssert( [MVChatConnection supportsURLScheme:[url scheme]] );
+
 	int type = 0;
 	if( [[url scheme] isEqualToString:@"irc"] ) type = MVChatConnectionIRCType;
 	else if( [[url scheme] isEqualToString:@"silc"] ) type = MVChatConnectionSILCType;
@@ -126,9 +111,9 @@ BOOL MVChatApplicationQuitting = NO;
 		[self setNicknamePassword:[url password]];
 
 		if( [url fragment] && [[url fragment] length] > 0 ) {
-			[self joinChatRoom:[url fragment]];
-		} else if( [url path] && [[url path] length] >= 2 && ( [[[url path] substringFromIndex:1] hasPrefix:@"&"] || [[[url path] substringFromIndex:1] hasPrefix:@"+"] || [[[url path] substringFromIndex:1] hasPrefix:@"!"] ) ) {
-			[self joinChatRoom:[[url path] substringFromIndex:1]];
+			[self joinChatRoomNamed:[url fragment]];
+		} else if( [url path] && [[url path] length] > 1 ) {
+			[self joinChatRoomNamed:[[url path] substringFromIndex:1]];
 		}
 	}
 
@@ -152,14 +137,20 @@ BOOL MVChatApplicationQuitting = NO;
 	[_npassword release];
 	[_roomsCache release];
 	[_cachedDate release];
+	[_joinedRooms release];
+	[_localUser release];
 	[_lastConnectAttempt release];
 	[_awayMessage release];
+	[_persistentInformation release];
 
 	_npassword = nil;
 	_roomsCache = nil;
 	_cachedDate = nil;
+	_joinedRooms = nil;
+	_localUser = nil;
 	_lastConnectAttempt = nil;
 	_awayMessage = nil;
+	_persistentInformation = nil;
 
 	[super dealloc];
 }
@@ -171,6 +162,36 @@ BOOL MVChatApplicationQuitting = NO;
 	[self doesNotRecognizeSelector:_cmd];
 	return 0;
 }
+
+#pragma mark -
+
+- (NSSet *) supportedFeatures {
+// subclass this method, if needed
+	return nil;
+}
+
+- (BOOL) supportsFeature:(NSString *) key {
+	NSParameterAssert( key != nil );
+	return [[self supportedFeatures] containsObject:key];
+}
+
+#pragma mark -
+
+- (const NSStringEncoding *) supportedStringEncodings {
+	return supportedEncodings;
+}
+
+- (BOOL) supportsStringEncoding:(NSStringEncoding) encoding {
+	const NSStringEncoding *encodings = [self supportedStringEncodings];
+	unsigned i = 0;
+
+	for( i = 0; encodings[i]; i++ )
+		if( encodings[i] == encoding ) return YES;
+
+	return NO;
+}
+
+#pragma mark -
 
 - (void) connect {
 // subclass this method
@@ -211,6 +232,7 @@ BOOL MVChatApplicationQuitting = NO;
 #pragma mark -
 
 - (void) setEncoding:(NSStringEncoding) encoding {
+	NSParameterAssert( [self supportsStringEncoding:encoding] );
 	_encoding = encoding;
 }
 
@@ -259,19 +281,19 @@ BOOL MVChatApplicationQuitting = NO;
 
 - (void) setAlternateNicknames:(NSArray *) nicknames {
 	[_alternateNicks autorelease];
-	_alternateNicks = [nicknames retain];
+	_alternateNicks = [nicknames copyWithZone:[self zone]];
 	_nextAltNickIndex = 0;
 }
 
 - (NSArray *) alternateNicknames {
-	return _alternateNicks;
+	return [NSArray arrayWithArray:_alternateNicks];
 }
 
 - (NSString *) nextAlternateNickname {
-	if( [_alternateNicks count] && _nextAltNickIndex < [_alternateNicks count] ) {
-		NSString *nick = [_alternateNicks objectAtIndex:_nextAltNickIndex];
+	if( [[self alternateNicknames] count] && _nextAltNickIndex < [[self alternateNicknames] count] ) {
+		NSString *nick = [[self alternateNicknames] objectAtIndex:_nextAltNickIndex];
 		_nextAltNickIndex++;
-		return nick;
+		return [[nick retain] autorelease];
 	}
 
 	return nil;
@@ -281,7 +303,7 @@ BOOL MVChatApplicationQuitting = NO;
 
 - (void) setNicknamePassword:(NSString *) password {
 	[_npassword autorelease];
-	if( [password length] ) _npassword = [password copy];
+	if( [password length] ) _npassword = [password copyWithZone:[self zone]];
 	else _npassword = nil;
 }
 
@@ -421,6 +443,23 @@ BOOL MVChatApplicationQuitting = NO;
 
 #pragma mark -
 
+- (void) setPersistentInformation:(NSDictionary *) information {
+	if( [information count] ) [_persistentInformation setDictionary:information];
+	else [_persistentInformation removeAllObjects];
+}
+
+- (NSDictionary *) persistentInformation {
+	return [NSDictionary dictionaryWithDictionary:_persistentInformation];
+}
+
+#pragma mark -
+
+- (void) publicKeyVerified:(NSDictionary *) dictionary andAccepted:(BOOL) accepted andAlwaysAccept:(BOOL) alwaysAccept {
+// subclass this method, if needed
+}
+
+#pragma mark -
+
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action {
 // subclass this method, if used
 	[self doesNotRecognizeSelector:_cmd];
@@ -461,27 +500,7 @@ BOOL MVChatApplicationQuitting = NO;
 
 #pragma mark -
 
-- (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user {
-	return [self sendFile:path toUser:user passively:NO];
-}
-
-- (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user passively:(BOOL) passive {
-	return [MVUploadFileTransfer transferWithSourceFile:path toUser:user onConnection:self passively:passive];
-}
-
-#pragma mark -
-
-- (void) sendSubcodeRequest:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments {
-// subclass this method, if needed
-}
-
-- (void) sendSubcodeReply:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments {
-// subclass this method, if needed
-}
-
-#pragma mark -
-
-- (void) joinChatRooms:(NSArray *) rooms {
+- (void) joinChatRoomsNamed:(NSArray *) rooms {
 	NSParameterAssert( rooms != nil );
 
 	if( ! [rooms count] ) return;
@@ -490,124 +509,102 @@ BOOL MVChatApplicationQuitting = NO;
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) )
-		if( [room length] ) [self joinChatRoom:room];
+		if( [room length] ) [self joinChatRoomNamed:room withPassphrase:nil];
 }
 
-- (void) joinChatRoom:(NSString *) room {
+- (void) joinChatRoomNamed:(NSString *) room {
+	[self joinChatRoomNamed:room withPassphrase:nil];
+}
+
+- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 }
 
-- (void) partChatRoom:(NSString *) room {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+#pragma mark -
+
+- (NSSet *) joinedChatRooms {
+	NSSet *ret = nil;
+	@synchronized( _joinedRooms ) {
+		ret = [NSSet setWithSet:_joinedRooms];
+	} return ret;
+}
+
+- (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
+	MVChatRoom *room = nil;
+
+	@synchronized( _joinedRooms ) {
+		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
+		while( ( room = [enumerator nextObject] ) )
+			if( [name caseInsensitiveCompare:[room name]] == NSOrderedSame )
+				break;
+	}
+
+	return [[room retain] autorelease];
 }
 
 #pragma mark -
 
 - (NSCharacterSet *) chatRoomNamePrefixes {
+	return nil;
+}
+
+- (NSString *) properNameForChatRoomNamed:(NSString *) room {
+	return room;
+}
+
+#pragma mark -
+
+- (NSSet *) chatUsersWithNickname:(NSString *) nickname {
+// subclass this method
+	[self doesNotRecognizeSelector:_cmd];
+	return nil;
+}
+
+- (NSSet *) chatUsersWithFingerprint:(NSString *) fingerprint {
 // subclass this method, if needed
 	return nil;
 }
 
-- (NSString *) displayNameForChatRoom:(NSString *) room {
-// subclass this method, if needed
-	return room;
-}
-
-- (NSString *) properNameForChatRoom:(NSString *) room {
-// subclass this method, if needed
-	return room;
-}
-
-#pragma mark -
-
-- (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room {
+- (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
+	return nil;
+}
+
+- (MVChatUser *) localUser {
+	return [[_localUser retain] autorelease];
 }
 
 #pragma mark -
 
-- (void) promoteMember:(NSString *) member inRoom:(NSString *) room {
+- (void) addUserToNotificationList:(MVChatUser *) user {
 // subclass this method, if needed
 }
 
-- (void) demoteMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method, if needed
-}
-
-- (void) halfopMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method, if needed
-}
-
-- (void) dehalfopMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method, if needed
-}
-
-- (void) voiceMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method, if needed
-}
-
-- (void) devoiceMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method, if needed
-}
-
-- (void) kickMember:(NSString *) member inRoom:(NSString *) room forReason:(NSString *) reason {
-// subclass this method, if needed
-}
-
-- (void) banMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method, if needed
-}
-
-- (void) unbanMember:(NSString *) member inRoom:(NSString *) room {
+- (void) removeUserFromNotificationList:(MVChatUser *) user {
 // subclass this method, if needed
 }
 
 #pragma mark -
 
-- (void) addUserToNotificationList:(NSString *) user {
+- (void) fetchChatRoomList {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 }
 
-- (void) removeUserFromNotificationList:(NSString *) user {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-}
-
-#pragma mark -
-
-- (void) fetchInformationForUser:(NSString *) user withPriority:(BOOL) priority fromLocalServer:(BOOL) localOnly {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-}
-
-#pragma mark -
-
-- (void) fetchRoomList {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-}
-
-- (void) fetchRoomListWithRooms:(NSArray *) rooms {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-}
-
-- (void) stopFetchingRoomList {
+- (void) stopFetchingChatRoomList {
 // subclass this method, if needed
 }
 
-- (NSMutableDictionary *) roomListResults {
+- (NSMutableDictionary *) chatRoomListResults {
 	return [[_roomsCache retain] autorelease];
 }
 
 #pragma mark -
 
 - (NSAttributedString *) awayStatusMessage {
-	return _awayMessage;
+	return [[_awayMessage retain] autorelease];
 }
 
 - (void) setAwayStatusWithMessage:(NSAttributedString *) message {
@@ -673,7 +670,8 @@ BOOL MVChatApplicationQuitting = NO;
 - (void) _applicationWillTerminate:(NSNotification *) notification {
 	extern BOOL MVChatApplicationQuitting;
 	MVChatApplicationQuitting = YES;
-	[self disconnect];
+	if ( [self isConnected] )
+		[self disconnect];
 }
 
 #pragma mark -
@@ -722,6 +720,17 @@ BOOL MVChatApplicationQuitting = NO;
 		_status = MVChatConnectionDisconnectedStatus;
 	}
 
+	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
+	MVChatRoom *room = nil;
+
+	while( ( room = [enumerator nextObject] ) ) {
+		if( ! [room isJoined] ) continue;
+		[room _setDateParted:[NSDate date]];	
+	}
+
+	[_localUser release];
+	_localUser = nil;
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
 }
 
@@ -730,12 +739,26 @@ BOOL MVChatApplicationQuitting = NO;
 - (void) _addRoomToCache:(NSMutableDictionary *) info {
 	[_roomsCache setObject:info forKey:[info objectForKey:@"room"]];
 	[info removeObjectForKey:@"room"];
-	
-	NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionGotRoomInfoNotification object:self];
+
+	NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionChatRoomlistUpdatedNotification object:self];
 	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP];
 }
-@end
 
+#pragma mark -
+
+- (void) _addJoinedRoom:(MVChatRoom *) room {
+	@synchronized( _joinedRooms ) {
+		[_joinedRooms addObject:room];
+	}
+}
+
+- (void) _removeJoinedRoom:(MVChatRoom *) room {
+	@synchronized( _joinedRooms ) {
+		[_joinedRooms removeObject:room];
+	}
+}
+@end
+/*
 #pragma mark -
 
 @implementation MVChatConnection (MVChatConnectionScripting)
@@ -947,4 +970,4 @@ BOOL MVChatApplicationQuitting = NO;
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
 	[self callScriptHandler:'dFsX' withArguments:args forSelector:_cmd];
 }
-@end
+@end */

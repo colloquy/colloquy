@@ -436,7 +436,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( [buddies selectedRow] == -1 ) return;
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
 	NSURL *url = [buddy activeNickname];
-	[[JVChatController defaultManager] chatViewControllerForUser:[url user] withConnection:[[MVConnectionsController defaultManager] connectionForServerAddress:[url host]] ifExists:NO];
+//	[[JVChatController defaultManager] chatViewControllerForUser:[url user] withConnection:[[MVConnectionsController defaultManager] connectionForServerAddress:[url host]] ifExists:NO];
 }
 
 - (IBAction) sendFileToSelectedBuddy:(id) sender {
@@ -472,8 +472,8 @@ static MVBuddyListController *sharedInstance = nil;
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		passive = [passiveButton state];
 		NSString *path = nil;
-		while( ( path = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:path toUser:[url user] passively:passive]];
+//		while( ( path = [enumerator nextObject] ) )
+//			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:path toUser:[url user] passively:passive]];
 	}
 }
 
@@ -825,8 +825,8 @@ static MVBuddyListController *sharedInstance = nil;
 		NSEnumerator *enumerator = [files objectEnumerator];
 		id file = nil;
 
-		while( ( file = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:file toUser:[url user] passively:passive]];
+//		while( ( file = [enumerator nextObject] ) )
+//			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:file toUser:[url user] passively:passive]];
 
 		return YES;
 	}

@@ -69,6 +69,9 @@ extern NSString *MVChatUserAttributesUpdatedNotification;
 	BOOL _identified;
 	BOOL _serverOperator;
 }
++ (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host;
++ (id) wildcardUserWithFingerprint:(NSString *) fingerprint;
+
 - (MVChatConnection *) connection;
 
 - (MVChatUserType) type;

@@ -1,6 +1,8 @@
 #import "MVFileTransfer.h"
 #import "MVIRCFileTransfer.h"
+#import "MVSILCFileTransfer.h"
 #import "MVChatConnection.h"
+#import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
 
 #import "common.h"
@@ -12,14 +14,6 @@ NSString *MVFileTransferFinishedNotification = @"MVFileTransferFinishedNotificat
 NSString *MVFileTransferErrorOccurredNotification = @"MVFileTransferErrorOccurredNotification";
 
 NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
-
-@interface MVFileTransfer (MVFileTransferPrivate)
-- (void) _setConnection:(MVChatConnection *) connection;
-- (void) _setStatus:(MVFileTransferStatus) status;
-- (void) _postError:(NSError *) error;
-@end
-
-#pragma mark -
 
 @implementation MVFileTransfer
 + (void) setFileTransferPortRange:(NSRange) range {
@@ -63,18 +57,16 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 #pragma mark -
 
-- (id) initWithUser:(NSString *) user fromConnection:(MVChatConnection *) connection {
+- (id) initWithUser:(MVChatUser *) user {
 	if( ( self = [super init] ) ) {
-		_connection = nil;
-		[self _setConnection:connection];
 		_status = MVFileTransferHoldingStatus;
+		_port = 0;
+		_startOffset = 0;
 		_finalSize = 0;
 		_transfered = 0;
 		_startDate = nil;
 		_host = nil;
-		_user = [user copy];
-		_port = 0;
-		_startOffset = 0;
+		_user = [user retain];
 	}
 
 	return self;
@@ -84,10 +76,12 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 	[_startDate release];
 	[_host release];
 	[_user release];
+	[_lastError release];
 
 	_startDate = nil;
 	_host = nil;
 	_user = nil;
+	_lastError = nil;
 
 	[super dealloc];
 }
@@ -112,7 +106,7 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 }
 
 - (NSError *) lastError {
-	return _lastError;
+	return [[_lastError retain] autorelease];
 }
 
 #pragma mark -
@@ -128,7 +122,7 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 #pragma mark -
 
 - (NSDate *) startDate {
-	return _startDate;
+	return [[_startDate retain] autorelease];
 }
 
 - (unsigned long long) startOffset {
@@ -138,7 +132,7 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 #pragma mark -
 
 - (NSHost *) host {
-	return _host;
+	return [[_host retain] autorelease];
 }
 
 - (unsigned short) port {
@@ -147,12 +141,25 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 #pragma mark -
 
-- (MVChatConnection *) connection {
-	return _connection;
+- (void) setFinalSize:(unsigned long long) finalSize {
+	_finalSize = finalSize;
 }
 
-- (NSString *) user {
-	return _user;
+- (void) setTransfered:(unsigned long long) transfered {
+	_transfered = transfered;
+}
+
+- (void) setStartDate:(NSDate *) startDate {
+	if ( _startDate ) 
+		[_startDate release];
+	
+	_startDate = [startDate retain];
+}
+
+#pragma mark -
+
+- (MVChatUser *) user {
+	return [[_user retain] autorelease];
 }
 
 #pragma mark -
@@ -166,11 +173,6 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 #pragma mark -
 
 @implementation MVFileTransfer (MVFileTransferPrivate)
-- (void) _setConnection:(MVChatConnection *) connection {
-	[_connection autorelease];
-	_connection = [connection retain];
-}
-
 - (void) _setStatus:(MVFileTransferStatus) status {
 	_status = status;
 }
@@ -189,9 +191,11 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 #pragma mark -
 
 @implementation MVUploadFileTransfer
-+ (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection passively:(BOOL) passive {
-	if( [connection type] == MVChatConnectionIRCType ) {
-		return [MVIRCUploadFileTransfer transferWithSourceFile:path toUser:nickname onConnection:connection passively:passive];
++ (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
+	if( [[user connection] type] == MVChatConnectionIRCType ) {
+		return [MVIRCUploadFileTransfer transferWithSourceFile:path toUser:user passively:passive];
+	} else if ( [[user connection] type] == MVChatConnectionSILCType ) {
+		return [MVSILCUploadFileTransfer transferWithSourceFile:path toUser:user passively:passive];
 	}
 
 	return nil;
@@ -199,11 +203,11 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 #pragma mark -
 
-- (id) initWithUser:(NSString *) user fromConnection:(MVChatConnection *) connection {
-	if( ( self = [super initWithUser:user fromConnection:connection] ) ) {
+- (id) initWithUser:(MVChatUser *) user {
+	if( ( self = [super initWithUser:user] ) ) {
 		_source = nil;
 	}
-	
+
 	return self;
 }
 
@@ -216,7 +220,7 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 #pragma mark -
 
 - (NSString *) source {
-	return _source;
+	return [[_source retain] autorelease];
 }
 
 #pragma mark -
@@ -229,8 +233,8 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 #pragma mark -
 
 @implementation MVDownloadFileTransfer
-- (id) initWithUser:(NSString *) user fromConnection:(MVChatConnection *) connection {
-	if( ( self = [super initWithUser:user fromConnection:connection] ) ) {
+- (id) initWithUser:(MVChatUser *) user {
+	if( ( self = [super initWithUser:user] ) ) {
 		_destination = nil;
 		_originalFileName = nil;
 	}
@@ -257,13 +261,13 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 }
 
 - (NSString *) destination {
-	return _destination;
+	return [[_destination retain] autorelease];
 }
 
 #pragma mark -
 
 - (NSString *) originalFileName {
-	return _originalFileName;
+	return [[_originalFileName retain] autorelease];
 }
 
 #pragma mark -

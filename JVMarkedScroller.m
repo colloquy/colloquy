@@ -5,6 +5,11 @@
 	if( ( self = [super initWithFrame:frame] ) ) {
 		_marks = [[NSMutableSet set] retain];
 		_shades = [[NSMutableArray array] retain];
+
+		_lines = [[NSBezierPath bezierPath] retain];
+		[_lines setLineWidth:1.];
+
+		_shadedAreas = [[NSBezierPath bezierPath] retain];
 	}
 	return self;
 }
@@ -12,9 +17,13 @@
 - (void) dealloc {
 	[_marks release];
 	[_shades release];
+	[_lines release];
+	[_shadedAreas release];
 
 	_marks = nil;
 	_shades = nil;
+	_lines = nil;
+	_shadedAreas = nil;
 
 	[super dealloc];
 }
@@ -24,7 +33,6 @@
 	[super drawRect:rect];
 
 	NSAffineTransform *transform = [NSAffineTransform transform];
-	float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
 
 	NSRect clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 6. : 0. ), ( sFlags.isHoriz ? 0. : 6. ) );
 	float scale = NSHeight( clip ) / ( NSHeight( [self frame] ) / [self knobProportion] );
@@ -36,62 +44,28 @@
 	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 0. : 3. ), ( sFlags.isHoriz ? 3. : 0. ) );
 	NSRectClip( clip );
 
-	NSBezierPath *shades = [NSBezierPath bezierPath];
-	NSEnumerator *enumerator = [_shades objectEnumerator];
-	NSNumber *startNum = nil;
-	NSNumber *stopNum = nil;
-
-	while( ( startNum = [enumerator nextObject] ) && ( stopNum = [enumerator nextObject] ) ) {
-		unsigned long long start = [startNum unsignedLongLongValue];
-		unsigned long long stop = [stopNum unsignedLongLongValue];
-
-		NSRect rect = NSZeroRect;
-		if( sFlags.isHoriz ) rect = NSMakeRect( start, 0., ( stop - start ), width );
-		else rect = NSMakeRect( 0., start, width, ( stop - start ) );
-
-		rect.origin = [transform transformPoint:rect.origin];
-		rect.size = [transform transformSize:rect.size];
-
-		[shades appendBezierPathWithRect:rect];
-	}
-
+	NSBezierPath *shaded = _shadedAreas;
 	if( ( [_shades count] % 2 ) == 1 ) {
-		NSRect rect = NSZeroRect;
+		shaded = [[_shadedAreas copy] autorelease];
+
 		unsigned long long start = [[_shades lastObject] unsignedLongLongValue];
 		unsigned long long stop = ( NSHeight( [self frame] ) / [self knobProportion] );
+		float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
+		NSRect rect = NSZeroRect;
 
 		if( sFlags.isHoriz ) rect = NSMakeRect( start, 0., ( stop - start ), width );
 		else rect = NSMakeRect( 0., start, width, ( stop - start ) );
-
-		rect.origin = [transform transformPoint:rect.origin];
-		rect.size = [transform transformSize:rect.size];
-
-		[shades appendBezierPathWithRect:NSIntegralRect( rect )];
+		[shaded appendBezierPathWithRect:rect];
 	}
 
 	[[[NSColor knobColor] colorWithAlphaComponent:0.45] set];
-	[shades fill];
+	[[transform transformBezierPath:shaded] fill];
 
 	clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 4. : 3. ), ( sFlags.isHoriz ? 3. : 4. ) );
 	NSRectClip( clip );
 
-	NSBezierPath *lines = [NSBezierPath bezierPath];
-	enumerator = [_marks objectEnumerator];
-
-	while( ( startNum = [enumerator nextObject] ) ) {
-		NSPoint point = NSMakePoint( ( sFlags.isHoriz ? [startNum unsignedLongLongValue] : 0. ), ( sFlags.isHoriz ? 0. : [startNum unsignedLongLongValue] ) );
-		point = [transform transformPoint:point];
-		point.x = ( sFlags.isHoriz ? roundf( point.x ) + 0.5 : point.x );
-		point.y = ( sFlags.isHoriz ? point.y : roundf( point.y ) + 0.5 );
-
-		[lines moveToPoint:point];
-
-		point = NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) );
-		[lines relativeLineToPoint:point];
-	}
-
 	[[NSColor selectedKnobColor] set];
-	[lines stroke];
+	[[transform transformBezierPath:_lines] stroke];
 
 	[self drawKnob];
 }
@@ -149,38 +123,31 @@
 #pragma mark -
 
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement {
-	BOOL negative = ( displacement >= 0 ? NO : YES );
+	NSAffineTransform *transform = [NSAffineTransform transform];
+	[transform translateXBy:(float)( sFlags.isHoriz ? displacement : 0. ) yBy:(float)( sFlags.isHoriz ? 0. : displacement )];
+
 	NSMutableSet *shiftedMarks = [NSMutableSet set];
+	NSEnumerator *enumerator = [_marks objectEnumerator];
 	NSNumber *location = nil;
 
-	NSEnumerator *enumerator = [_marks objectEnumerator];
 	while( ( location = [enumerator nextObject] ) ) {
-		unsigned long long shifted = [location unsignedLongLongValue];
-		if( ! ( negative && shifted < ABS( displacement ) ) )
-			[shiftedMarks addObject:[NSNumber numberWithUnsignedLongLong:( shifted + displacement )]];
+		long long shifted = ( [location unsignedLongLongValue] + displacement );
+		if( shifted >= 0 ) [shiftedMarks addObject:[NSNumber numberWithUnsignedLongLong:shifted]];
 	}
 
+	[_lines transformUsingAffineTransform:transform];
 	[_marks setSet:shiftedMarks];
 
 	NSMutableArray *shiftedShades = [NSMutableArray array];
-	NSNumber *start = nil;
-	NSNumber *stop = nil;
-
 	enumerator = [_shades objectEnumerator];
-	while( ( start = [enumerator nextObject] ) && ( ( stop = [enumerator nextObject] ) || YES ) ) {
-		unsigned long long shiftedStart = [start unsignedLongLongValue];
+	location = nil;
 
-		if( stop ) {
-			unsigned long long shiftedStop = [stop unsignedLongLongValue];
-			if( ! ( negative && shiftedStart < ABS( displacement ) ) && ! ( negative && shiftedStop < ABS( displacement ) ) ) {
-				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + displacement )]];
-				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStop + displacement )]];
-			}
-		} else if( ! ( negative && shiftedStart < ABS( displacement ) ) ) {
-			[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + displacement )]];
-		}
+	while( ( location = [enumerator nextObject] ) ) {
+		long long shifted = ( [location unsignedLongLongValue] + displacement );
+		[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:MAX( shifted, 0 )]];
 	}
 
+	[_shadedAreas transformUsingAffineTransform:transform];
 	[_shades setArray:shiftedShades];
 
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
@@ -188,13 +155,33 @@
 
 #pragma mark -
 
+- (void) buildLineAtLocation:(unsigned long long) location {
+	float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
+	[_lines moveToPoint:NSMakePoint( ( sFlags.isHoriz ? location : 0. ), ( sFlags.isHoriz ? 0. : location ) )];
+	[_lines relativeLineToPoint:NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) )];
+}
+
+- (void) rebuildLines {
+	NSEnumerator *enumerator = [_marks objectEnumerator];
+	NSNumber *location = nil;
+
+	[_lines removeAllPoints];
+
+	while( ( location = [enumerator nextObject] ) )
+		[self buildLineAtLocation:[location unsignedLongLongValue]];
+}
+
+#pragma mark -
+
 - (void) addMarkAt:(unsigned long long) location {
 	[_marks addObject:[NSNumber numberWithUnsignedLongLong:location]];
+	[self buildLineAtLocation:location];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
 - (void) removeMarkAt:(unsigned long long) location {
 	[_marks removeObject:[NSNumber numberWithUnsignedLongLong:location]];
+	[self rebuildLines];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
@@ -206,6 +193,7 @@
 		if( [number unsignedIntValue] > location )
 			[_marks removeObject:number];
 
+	[self rebuildLines];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
@@ -217,6 +205,7 @@
 		if( [number unsignedIntValue] < location )
 			[_marks removeObject:number];
 
+	[self rebuildLines];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
@@ -228,11 +217,13 @@
 		if( NSLocationInRange( [number unsignedIntValue], range ) )
 			[_marks removeObject:number];
 
+	[self rebuildLines];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
 - (void) removeAllMarks {
 	[_marks removeAllObjects];
+	[_lines removeAllPoints];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
@@ -241,11 +232,32 @@
 - (void) setMarks:(NSSet *) marks {
 	[_marks autorelease];
 	_marks = [[NSMutableSet setWithSet:marks] retain];
-	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
+	[self rebuildLines];
 }
 
 - (NSSet *) marks {
 	return [[_marks retain] autorelease];
+}
+
+#pragma mark -
+
+- (void) buildShadedAreaBetween:(unsigned long long) start and:(unsigned long long) stop {
+	NSRect rect = NSZeroRect;
+	float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
+	if( sFlags.isHoriz ) rect = NSMakeRect( start, 0., ( stop - start ), width );
+	else rect = NSMakeRect( 0., start, width, ( stop - start ) );
+	[_shadedAreas appendBezierPathWithRect:rect];
+}
+
+- (void) rebuildShadedAreas {
+	NSEnumerator *enumerator = [_marks objectEnumerator];
+	NSNumber *start = nil;
+	NSNumber *stop = nil;
+
+	[_shadedAreas removeAllPoints];
+
+	while( ( start = [enumerator nextObject] ) && ( stop = [enumerator nextObject] ) )
+		[self buildShadedAreaBetween:[start unsignedLongLongValue] and:[stop unsignedLongLongValue]];
 }
 
 #pragma mark -
@@ -259,7 +271,9 @@
 
 - (void) stopShadedAreaAt:(unsigned long long) location {
 	if( [_shades count] && ( [_shades count] % 2 ) == 1 ) {
+		NSNumber *start = [_shades lastObject];
 		[_shades addObject:[NSNumber numberWithUnsignedLongLong:location]];
+		[self buildShadedAreaBetween:[start unsignedLongLongValue] and:location];
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 	}
 }
@@ -268,6 +282,7 @@
 
 - (void) removeAllShadedAreas {
 	[_shades removeAllObjects];
+	[_shadedAreas removeAllPoints];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 @end

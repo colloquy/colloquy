@@ -7,14 +7,13 @@
 	objects = {
 		014CEA420018CDE011CA2923 = {
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				OTHER_CFLAGS = "\U0001-DDEBUG";
 				PREBINDING = NO;
 				UNSTRIPPED_PRODUCT = YES;
-				ZERO_LINK = YES;
+				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
 			name = Development;
@@ -152,28 +151,6 @@
 //1C2
 //1C3
 //1C4
-		1C0D8864067D1E7100E851AC = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = NSURLAdditions.h;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		1C0D8865067D1E7100E851AC = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSURLAdditions.m;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		1C0D8867067D1E7100E851AC = {
-			fileRef = 1C0D8865067D1E7100E851AC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C1C564F059EA8C9002FBEFB = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -269,21 +246,27 @@
 			buildRules = (
 			);
 			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "Frameworks \"$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Versions/A/Frameworks\"";
+				DYLIB_COMPATIBILITY_VERSION = 2;
+				DYLIB_CURRENT_VERSION = 2;
+				FRAMEWORK_SEARCH_PATHS = Frameworks;
 				FRAMEWORK_VERSION = A;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ChatCore.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = DISABLE_TOC_PROTOCOL;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				HEADER_SEARCH_PATHS = "Core/irssi Core/irssi/glib Core/irssi/src Core/irssi/src/irc Core/irssi/src/irc/core Core/irssi/src/irc/dcc Core/irssi/src/irc/flood Core/irssi/src/irc/notifylist Core/irssi/src/core Core/irssi/src/fe-common/core Core/irssi/src/fe-common/irc Core/irssi/src/fe-common/irc/dcc Core/irssi/src/fe-common/irc/notifylist";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "Core/irssi/src/irc Core/irssi/src/irc/core Core/irssi/src/irc/dcc Core/irssi/src/irc/flood Core/irssi/src/irc/notifylist Core/irssi/src/core Core/irssi/glib/.libs Core/irssi/src/lib-config Core/irssi/src/lib-popt Core/irssi/src/fe-common/core Core/irssi/src/fe-common/irc Core/irssi/src/fe-common/irc/dcc Core/irssi/src/fe-common/irc/notifylist";
-				OTHER_CFLAGS = "-fconstant-cfstrings -fobjc-exceptions -DUOFF_T_LONG_LONG";
-				OTHER_LDFLAGS = "-seg1addr 0xd0000000 -lssl -lcrypto";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_CFLAGS = "-fconstant-cfstrings -DUOFF_T_LONG_LONG";
+				OTHER_LDFLAGS = "-seg1addr 0xa10000 -lssl -lcrypto";
 				OTHER_LIBTOOL_FLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRINCIPAL_CLASS = "";
@@ -314,10 +297,11 @@
 				1CF6528506EA2C880073DEA8,
 				1CF6528606EA2C890073DEA8,
 				1CF6528706EA2C8A0073DEA8,
-				1CF6528806EA2C8B0073DEA8,
 				1CF6528906EA2C8C0073DEA8,
 				1CF6528A06EA2C8C0073DEA8,
 				1CF6528B06EA2C8E0073DEA8,
+				1C91405E07051A9200CBA5F1,
+				1CDDD9AD0718BD2E00FE11C3,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,11 +329,17 @@
 				1C9CF5010615091700330D8D,
 				1C943AAC063C260800618CD9,
 				1C7B83CC0668D765004F1EFE,
-				1C0D8867067D1E7100E851AC,
 				1CF4E5120698E9E900986498,
 				1C5A1A2506F8F4A000A51F10,
-				1C5A230A06FA4F2800A51F10,
 				1C74433D06FE3AB3009AA696,
+				1C913FA30704FE7D00CBA5F1,
+				1C91405D07051A9100CBA5F1,
+				1C914B160705BFE100CBA5F1,
+				1C914D360706148800CBA5F1,
+				1CF6B82D07122670008ABEFA,
+				1CF6B82E07122672008ABEFA,
+				1CF6B82F07122673008ABEFA,
+				431261C3072EE37A00720AD1,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -446,12 +436,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C5A230A06FA4F2800A51F10 = {
-			fileRef = 1C5A230806FA4F2700A51F10;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C5A233D06FA4FEE00A51F10 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -479,6 +463,73 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		1C5CBF2D06FF92C90006C5B1 = {
+			children = (
+				1CB373EA060E47B300F6A81F,
+				1CB37361060E470600F6A81F,
+				1C9CF42B061507CE00330D8D,
+				1C5A1A2306F8F4A000A51F10,
+				1C5A1A2206F8F4A000A51F10,
+				1C914D340706148800CBA5F1,
+				1C914D330706148800CBA5F1,
+				1C914B140705BFE100CBA5F1,
+				1C914B130705BFE100CBA5F1,
+				1C74433B06FE3AB3009AA696,
+				1C74433A06FE3AB3009AA696,
+			);
+			isa = PBXGroup;
+			name = "IRC Support";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5CBF3006FF93550006C5B1 = {
+			children = (
+				1C5A230806FA4F2700A51F10,
+				1C5A230706FA4F2700A51F10,
+				1CF6B4970710894D008ABEFA,
+				1CF6B4960710894D008ABEFA,
+				1CF6B4990710894D008ABEFA,
+				1CF6B4980710894D008ABEFA,
+				431261C1072EE37A00720AD1,
+				431261C0072EE37A00720AD1,
+			);
+			isa = PBXGroup;
+			name = "SILC Support";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5CBF3306FF986E0006C5B1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVChatUser.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5CBF3406FF986E0006C5B1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVChatUser.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5CC07A06FFCB0B0006C5B1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVChatRoom.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C5CC07B06FFCB0B0006C5B1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVChatRoom.m;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		1C6C83A00632186900698F55 = {
 			fileRef = F52BA284037C13C201A35792;
@@ -530,6 +581,71 @@
 			settings = {
 			};
 		};
+		1C913FA30704FE7D00CBA5F1 = {
+			fileRef = 1C5CC07B06FFCB0B0006C5B1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C91405D07051A9100CBA5F1 = {
+			fileRef = 1C5CBF3406FF986E0006C5B1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C91405E07051A9200CBA5F1 = {
+			fileRef = 1C5CBF3306FF986E0006C5B1;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1C914B130705BFE100CBA5F1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVIRCChatUser.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C914B140705BFE100CBA5F1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVIRCChatUser.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C914B160705BFE100CBA5F1 = {
+			fileRef = 1C914B140705BFE100CBA5F1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C914D330706148800CBA5F1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVIRCChatRoom.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C914D340706148800CBA5F1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVIRCChatRoom.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C914D360706148800CBA5F1 = {
+			fileRef = 1C914D340706148800CBA5F1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C943AA9063C260800618CD9 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -568,6 +684,7 @@
 			);
 			isa = PBXGroup;
 			name = "Irssi Front End Common";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1558,6 +1675,7 @@
 			);
 			isa = PBXGroup;
 			name = "Irssi IRC Core";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -2042,6 +2160,7 @@
 			);
 			isa = PBXGroup;
 			name = "Irssi Core";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3195,6 +3314,15 @@
 			settings = {
 			};
 		};
+		1CDDD9AD0718BD2E00FE11C3 = {
+			fileRef = 1C5CC07A06FFCB0B0006C5B1;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
 		1CF4E50F0698E9E900986498 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3270,15 +3398,6 @@
 				);
 			};
 		};
-		1CF6528806EA2C8B0073DEA8 = {
-			fileRef = 1C0D8864067D1E7100E851AC;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
 		1CF6528906EA2C8C0073DEA8 = {
 			fileRef = 1CF4E50F0698E9E900986498;
 			isa = PBXBuildFile;
@@ -3306,11 +3425,93 @@
 				);
 			};
 		};
+		1CF6B4960710894D008ABEFA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVSILCChatRoom.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF6B4970710894D008ABEFA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVSILCChatRoom.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF6B4980710894D008ABEFA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVSILCChatUser.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF6B4990710894D008ABEFA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVSILCChatUser.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF6B82D07122670008ABEFA = {
+			fileRef = 1C5A230806FA4F2700A51F10;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF6B82E07122672008ABEFA = {
+			fileRef = 1CF6B4970710894D008ABEFA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF6B82F07122673008ABEFA = {
+			fileRef = 1CF6B4990710894D008ABEFA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //1C0
 //1C1
 //1C2
 //1C3
 //1C4
+//430
+//431
+//432
+//433
+//434
+		431261C0072EE37A00720AD1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVSILCFileTransfer.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		431261C1072EE37A00720AD1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVSILCFileTransfer.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		431261C3072EE37A00720AD1 = {
+			fileRef = 431261C1072EE37A00720AD1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//430
+//431
+//432
+//433
+//434
 //F50
 //F51
 //F52
@@ -3318,20 +3519,17 @@
 //F54
 		F50B0A9F0170C89301A84BDE = {
 			children = (
-				1CB373EA060E47B300F6A81F,
-				1CB37361060E470600F6A81F,
-				1C9CF42B061507CE00330D8D,
+				1C5CBF2D06FF92C90006C5B1,
+				1C5CBF3006FF93550006C5B1,
 				1CF6512A06EA22C40073DEA8,
 				F52D043001873FC401EE70DE,
 				F52D043101873FC401EE70DE,
-				1C5A1A2306F8F4A000A51F10,
-				1C5A1A2206F8F4A000A51F10,
-				1C5A230806FA4F2700A51F10,
-				1C5A230706FA4F2700A51F10,
+				1C5CC07B06FFCB0B0006C5B1,
+				1C5CC07A06FFCB0B0006C5B1,
+				1C5CBF3406FF986E0006C5B1,
+				1C5CBF3306FF986E0006C5B1,
 				1C943AAA063C260800618CD9,
 				1C943AA9063C260800618CD9,
-				1C74433B06FE3AB3009AA696,
-				1C74433A06FE3AB3009AA696,
 				1C2EF7EC0427A40B00000102,
 				1C2EF7EB0427A40B00000102,
 				1C1C5650059EA8C9002FBEFB,
@@ -3353,8 +3551,6 @@
 				1C3D55B905A4CBBE00F25F5E,
 				1CD020BD057593A9000F93B4,
 				1CD020BC057593A9000F93B4,
-				1C0D8865067D1E7100E851AC,
-				1C0D8864067D1E7100E851AC,
 				1CF4E5100698E9E900986498,
 				1CF4E50F0698E9E900986498,
 				1C3D55C005A4DC1E00F25F5E,
@@ -3392,13 +3588,13 @@
 		};
 		F52BA31C037C62E801A35792 = {
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
 				PREBINDING = YES;
-				UNSTRIPPED_PRODUCT = YES;
+				UNSTRIPPED_PRODUCT = NO;
 				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;

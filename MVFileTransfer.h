@@ -1,4 +1,5 @@
 @class MVChatConnection;
+@class MVChatUser;
 
 extern NSString *MVDownloadFileTransferOfferNotification;
 extern NSString *MVFileTransferStartedNotification;
@@ -20,7 +21,8 @@ typedef enum {
 	MVFileTransferFileCreationError = -2,
 	MVFileTransferFileOpenError = -3,
 	MVFileTransferAlreadyExistsError = -4,
-	MVFileTransferUnexpectedlyEndedError = -5
+	MVFileTransferUnexpectedlyEndedError = -5,
+	MVFileTransferKeyAgreementError = -6
 } MVFileTransferError;
 
 @interface MVFileTransfer : NSObject {
@@ -32,15 +34,14 @@ typedef enum {
 	BOOL _passive;
 	unsigned short _port;
 	unsigned long long _startOffset;
-	MVChatConnection *_connection;
-	NSString *_user;
+	MVChatUser *_user;
 	MVFileTransferStatus _status;
 	NSError *_lastError;
 }
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;
 
-- (id) initWithUser:(NSString *) user fromConnection:(MVChatConnection *) connection;
+- (id) initWithUser:(MVChatUser *) user;
 
 - (BOOL) isUpload;
 - (BOOL) isDownload;
@@ -57,8 +58,11 @@ typedef enum {
 - (NSHost *) host;
 - (unsigned short) port;
 
-- (MVChatConnection *) connection;
-- (NSString *) user;
+- (void) setFinalSize:(unsigned long long) finalSize;
+- (void) setTransfered:(unsigned long long) transfered;
+- (void) setStartDate:(NSDate *) startDate;
+
+- (MVChatUser *) user;
 
 - (void) cancel;
 @end
@@ -69,7 +73,7 @@ typedef enum {
 @protected
 	NSString *_source;
 }
-+ (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection passively:(BOOL) passive;
++ (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive;
 
 - (NSString *) source;
 @end

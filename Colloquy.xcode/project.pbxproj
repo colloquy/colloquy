@@ -53,6 +53,7 @@
 				zh_TW,
 				Norwegian,
 				Engligh,
+				Dutch,
 			);
 			mainGroup = 089C166AFE841209C02AAC07;
 			productRefGroup = 089C166AFE841209C02AAC07;
@@ -122,34 +123,11 @@
 //0A2
 //0A3
 //0A4
-		0A2614C10740C241003BF2D9 = {
-			children = (
-				0A2614C20740C241003BF2D9,
-			);
-			isa = PBXGroup;
-			name = WebSearch;
-			path = "Plug-Ins/WebSearch";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		0A2614C20740C241003BF2D9 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.scpt;
-			path = WebSearch.scpt;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		0A2614C40740C24D003BF2D9 = {
-			fileRef = 0A2614C20740C241003BF2D9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		0A3187FA067ECEB600271E42 = {
 			children = (
 				0A3187FB067ECEB600271E42,
-				1CC6F70E0747D58900B3E306,
+				1CD4B730078209CC0003620F,
+				1CD4B744078209E10003620F,
 			);
 			isa = PBXVariantGroup;
 			name = TSCustomBan.nib;
@@ -219,11 +197,11 @@
 				F5FB4CE60393C15601000102,
 				1C6C75450630AD5300698F55,
 				1C3B290706529E720066197C,
+				1CF8030C070C893500C9B54C,
+				1CF8030D070C893500C9B54C,
 				1C7055C80519E56300A8FE6E,
 				1C7055CA0519E56C00A8FE6E,
 				1C7055C40519E54C00A8FE6E,
-				1C5A249106FA6AAA00A51F10,
-				1C5A249206FA6AAA00A51F10,
 				1C16362607021F240020D94D,
 			);
 			isa = PBXGroup;
@@ -500,14 +478,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C18CD110528DBBA000001C8 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSColorAdditions.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C1ACE410533943900F71D4E = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -555,7 +525,8 @@
 		1C1AD009053487ED00F71D4E = {
 			children = (
 				1C1AD00A053487ED00F71D4E,
-				1CC6F7030747D58900B3E306,
+				1CD4B724078209BD0003620F,
+				1CD4B739078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVConnectionInspector.nib;
@@ -582,14 +553,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = MVChatScriptPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C1C569D059EAF4F002FBEFB = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVChatScriptPlugin.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -857,14 +820,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C2EF7EC0427A40B00000102 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVChatPluginManager.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C3B290706529E720066197C = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -937,27 +892,11 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C3D55A405A4CB2B00F25F5E = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSNumberAdditions.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C3D562105A4DCCD00F25F5E = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = NSMethodSignatureAdditions.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C3D562205A4DCCD00F25F5E = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSMethodSignatureAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1165,70 +1104,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C5A1A1206F8F42C00A51F10 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVChatConnection.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C5A232006FA4FC000A51F10 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = MVSILCChatConnection.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C5A232106FA4FC000A51F10 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVSILCChatConnection.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C5A249106FA6AAA00A51F10 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = libsilc.framework;
-			path = Frameworks/libsilc.framework;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		1C5A249206FA6AAA00A51F10 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = libsilcclient.framework;
-			path = Frameworks/libsilcclient.framework;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		1C5A249306FA6AAA00A51F10 = {
-			fileRef = 1C5A249106FA6AAA00A51F10;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C5A249406FA6AAA00A51F10 = {
-			fileRef = 1C5A249206FA6AAA00A51F10;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C5A249506FA6AB600A51F10 = {
-			fileRef = 1C5A249106FA6AAA00A51F10;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C5A249606FA6AB600A51F10 = {
-			fileRef = 1C5A249206FA6AAA00A51F10;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C6075E005138ED600A8FE6E = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -1282,7 +1157,8 @@
 		1C6EA23C05A735D6006A559F = {
 			children = (
 				1C6EA23D05A735D6006A559F,
-				1CC6F7020747D58900B3E306,
+				1CD4B723078209BD0003620F,
+				1CD4B738078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVChatRoomBrowser.nib;
@@ -1372,22 +1248,6 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
-		1C74459106FE5842009AA696 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = MVIRCFileTransfer.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C74459206FE5842009AA696 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVIRCFileTransfer.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C746A95050CF86B000001C8 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1402,14 +1262,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = NSNotificationAdditions.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C7B83C60668D732004F1EFE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSNotificationAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1554,7 +1406,8 @@
 		1C8BDD2005436A020035B84A = {
 			children = (
 				1C8BDD2105436A020035B84A,
-				1CC6F7010747D58900B3E306,
+				1CD4B722078209BD0003620F,
+				1CD4B737078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVChatMemberInspector.nib;
@@ -1598,14 +1451,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C8CF8E2066530D60080A2F5 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVFileTransfer.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		1C8D2E72065D0BB600AC28C5 = {
 			fileRef = F555208B01F0DE0601EE70DE;
 			isa = PBXBuildFile;
@@ -1613,7 +1458,7 @@
 			};
 		};
 		1C91DEAC06972EC0007C1638 = {
-			buildActionMask = 12;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -1621,7 +1466,7 @@
 			isa = PBXShellScriptBuildPhase;
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "find $BUILD_ROOT/$WRAPPER_NAME -name '.svn' -print0 | xargs -0 rm -rf\nfind $BUILD_ROOT/$WRAPPER_NAME -name 'Headers' -print0 | xargs -0 rm -rf\n";
 		};
@@ -1658,7 +1503,8 @@
 		1C96E93106AAD81B0013B0A9 = {
 			children = (
 				1C96E93206AAD81B0013B0A9,
-				1CC6F7080747D58900B3E306,
+				1CD4B729078209BD0003620F,
+				1CD4B73E078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVTranscriptPreferences.nib;
@@ -1755,7 +1601,8 @@
 		1C9982040603F097006C6417 = {
 			children = (
 				1C9982050603F097006C6417,
-				1CC6F7060747D58900B3E306,
+				1CD4B727078209BD0003620F,
+				1CD4B73C078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVNotificationPreferences.nib;
@@ -2034,12 +1881,11 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks build";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks build /Users/Timothy/Projects/Colloquy/Frameworks";
 				GCC_CW_ASM_SYNTAX = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_PASCAL_STRINGS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
@@ -2219,7 +2065,7 @@
 				1C7E023E06B42C470037F173,
 				1C46785006D77F0900071DC6,
 				1C46785106D77F0900071DC6,
-				1CF626E207558AE6005DFCFA,
+				1CF627CB07558F79005DFCFA,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2693,6 +2539,7 @@
 				1C96E93F06AADBBD0013B0A9,
 				1C6A112B06BC0C9E00A66340,
 				1C4671E606D7759100071DC6,
+				1CF803F1070C948000C9B54C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2824,10 +2671,10 @@
 				1C6C75460630AD5300698F55,
 				1C3B290806529E720066197C,
 				1C8D2E72065D0BB600AC28C5,
-				1C5A249306FA6AAA00A51F10,
-				1C5A249406FA6AAA00A51F10,
 				1C16362707021F240020D94D,
 				1CF8FC0F070A5BEF00C9B54C,
+				1CF8030E070C893500C9B54C,
+				1CF8030F070C893500C9B54C,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2874,12 +2721,12 @@
 			dstSubfolderSpec = 10;
 			files = (
 				1C3B293406529E900066197C,
+				1CF80310070C894100C9B54C,
+				1CF80311070C894100C9B54C,
 				1C6C75490630AD9500698F55,
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
 				1CB2CD86052DDC560094AAA4,
-				1C5A249506FA6AB600A51F10,
-				1C5A249606FA6AB600A51F10,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2908,7 +2755,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				CB9B52CA06351B060055AB73,
-				0A2614C40740C24D003BF2D9,
 				1C8CE1ED05A921AB0020D841,
 				1C51B8F2052DFAAA00BB459B,
 			);
@@ -2978,7 +2824,8 @@
 		1CB4DCA9053627C00080D36F = {
 			children = (
 				1CB4DCAA053627C00080D36F,
-				1CC6F7070747D58900B3E306,
+				1CD4B728078209BD0003620F,
+				1CD4B73D078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVRoomInspector.nib;
@@ -3226,7 +3073,8 @@
 		1CBC634705489BEE009E59E1 = {
 			children = (
 				1CBC634805489BEE009E59E1,
-				1CC6F7050747D58900B3E306,
+				1CD4B726078209BD0003620F,
+				1CD4B73B078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVGeneralPreferences.nib;
@@ -3304,7 +3152,6 @@
 				1CC478480427BB5500000102,
 				1CA56CCD042A713E00000102,
 				CB9B52AB06351A130055AB73,
-				0A2614C10740C241003BF2D9,
 			);
 			isa = PBXGroup;
 			name = "Plug–Ins";
@@ -3320,174 +3167,6 @@
 			);
 			isa = PBXGroup;
 			name = "Standard Commands";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F6CD0747D4DB00B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = German;
-			path = Languages/German.lproj/Localizable.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F6D00747D4ED00B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = German;
-			path = Languages/German.lproj/InfoPlist.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F6D30747D50500B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.rtf;
-			name = German;
-			path = Languages/German.lproj/Credits.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F6FC0747D57D00B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/Colloquy.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F6FE0747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVAppearancePreferences.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F6FF0747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVBehaviorPreferences.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F7000747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVBuddyInspector.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F7010747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVChatMemberInspector.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F7020747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVChatRoomBrowser.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F7030747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVConnectionInspector.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F7040747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVFileTransferPreferences.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F7050747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVGeneralPreferences.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F7060747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVNotificationPreferences.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F7070747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVRoomInspector.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F7080747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/JVTranscriptPreferences.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F7090747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/MVBuddyList.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F70A0747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/MVConnections.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F70B0747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/MVCrashCatcher.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F70C0747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/MVFileTransfer.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F70D0747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/MVSoftwareUpdate.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CC6F70E0747D58900B3E306 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = German;
-			path = Languages/German.lproj/TSCustomBan.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3538,7 +3217,8 @@
 		1CC6FC62054A003C0075807C = {
 			children = (
 				1CC6FC63054A003C0075807C,
-				1CC6F6FE0747D58900B3E306,
+				1CD4B71F078209BD0003620F,
+				1CD4B734078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVAppearancePreferences.nib;
@@ -3557,7 +3237,8 @@
 		1CC6FC64054A003C0075807C = {
 			children = (
 				1CC6FC65054A003C0075807C,
-				1CC6F7040747D58900B3E306,
+				1CD4B725078209BD0003620F,
+				1CD4B73A078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVFileTransferPreferences.nib;
@@ -3667,7 +3348,8 @@
 		1CC7CAAE03C48E8B001C0D62 = {
 			children = (
 				1CC7CAAF03C48E8B001C0D62,
-				1CC6F7090747D58900B3E306,
+				1CD4B72B078209CC0003620F,
+				1CD4B73F078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = MVBuddyList.nib;
@@ -3686,7 +3368,8 @@
 		1CC7CAB003C48E8B001C0D62 = {
 			children = (
 				1CC7CAB103C48E8B001C0D62,
-				1CC6F70C0747D58900B3E306,
+				1CD4B72E078209CC0003620F,
+				1CD4B742078209E10003620F,
 			);
 			isa = PBXVariantGroup;
 			name = MVFileTransfer.nib;
@@ -3836,6 +3519,342 @@
 			settings = {
 			};
 		};
+		1CD4B6CA078209450003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.rtf;
+			name = German;
+			path = Languages/German.lproj/Credits.rtf;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B703078209500003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.rtf;
+			name = Dutch;
+			path = Languages/Dutch.lproj/Credits.rtf;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B7050782095C0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Dutch;
+			path = Languages/Dutch.lproj/InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B7100782097D0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = German;
+			path = Languages/German.lproj/InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B719078209990003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = German;
+			path = Languages/German.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B71B078209A20003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Dutch;
+			path = Languages/Dutch.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B71D078209B10003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/Colloquy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B71F078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVAppearancePreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B720078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVBehaviorPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B721078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVBuddyInspector.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B722078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVChatMemberInspector.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B723078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVChatRoomBrowser.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B724078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVConnectionInspector.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B725078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVFileTransferPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B726078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVGeneralPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B727078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVNotificationPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B728078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVRoomInspector.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B729078209BD0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/JVTranscriptPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B72B078209CC0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/MVBuddyList.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B72C078209CC0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/MVConnections.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B72D078209CC0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/MVCrashCatcher.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B72E078209CC0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/MVFileTransfer.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B72F078209CC0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/MVSoftwareUpdate.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B730078209CC0003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Languages/Dutch.lproj/TSCustomBan.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B732078209D60003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/Colloquy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B734078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVAppearancePreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B735078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVBehaviorPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B736078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVBuddyInspector.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B737078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVChatMemberInspector.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B738078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVChatRoomBrowser.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B739078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVConnectionInspector.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B73A078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVFileTransferPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B73B078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVGeneralPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B73C078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVNotificationPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B73D078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVRoomInspector.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B73E078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/JVTranscriptPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B73F078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/MVBuddyList.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B740078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/MVConnections.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B741078209E00003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/MVCrashCatcher.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B742078209E10003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/MVFileTransfer.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B743078209E10003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/MVSoftwareUpdate.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4B744078209E10003620F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Languages/German.lproj/TSCustomBan.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		1CD4BD9305AA309A00F72EE6 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3926,6 +3945,22 @@
 			settings = {
 			};
 		};
+		1CDDCF830716208300FE11C3 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVChatRoom.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CDDCF840716208300FE11C3 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVChatUser.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		1CDEE25505823C13000B9075 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3973,7 +4008,8 @@
 		1CDEE48B0583E268000B9075 = {
 			children = (
 				1CDEE48C0583E268000B9075,
-				1CC6F7000747D58900B3E306,
+				1CD4B721078209BD0003620F,
+				1CD4B736078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVBuddyInspector.nib;
@@ -4098,7 +4134,8 @@
 		1CECE22F06A37A8300350564 = {
 			children = (
 				1CECE23006A37A8300350564,
-				1CC6F6FF0747D58900B3E306,
+				1CD4B720078209BD0003620F,
+				1CD4B735078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = JVBehaviorPreferences.nib;
@@ -4232,24 +4269,16 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1CF4E51E0698E9FB00986498 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSDataAdditions.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CF626E107558AE6005DFCFA = {
+		1CF627CA07558F79005DFCFA = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
 			name = fileSend.tif;
 			path = "Resources/Toolbar Icons/fileSend.tif";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
+			refType = 4;
+			sourceTree = "<group>";
 		};
-		1CF626E207558AE6005DFCFA = {
-			fileRef = 1CF626E107558AE6005DFCFA;
+		1CF627CB07558F79005DFCFA = {
+			fileRef = 1CF627CA07558F79005DFCFA;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4270,6 +4299,52 @@
 			path = "Plug-Ins/Standard Commands/Standard Commands.pch";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1CF8030C070C893500C9B54C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = libsilc.framework;
+			path = Frameworks/libsilc.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF8030D070C893500C9B54C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = libsilcclient.framework;
+			path = Frameworks/libsilcclient.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF8030E070C893500C9B54C = {
+			fileRef = 1CF8030C070C893500C9B54C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF8030F070C893500C9B54C = {
+			fileRef = 1CF8030D070C893500C9B54C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF80310070C894100C9B54C = {
+			fileRef = 1CF8030C070C893500C9B54C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF80311070C894100C9B54C = {
+			fileRef = 1CF8030D070C893500C9B54C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF803F1070C948000C9B54C = {
+			fileRef = 1CD4BD9405AA309A00F72EE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1CF8FC0E070A5BEF00C9B54C = {
 			isa = PBXFileReference;
@@ -4511,6 +4586,8 @@
 				1CC6FD62054B70BC0075807C,
 				1C6A112906BC0C9E00A66340,
 				1C6A112806BC0C9E00A66340,
+				1CD4BD9405AA309A00F72EE6,
+				1CD4BD9305AA309A00F72EE6,
 				1C0730E30677A63B008D8AD9,
 				1C0730E20677A63B008D8AD9,
 				1CABF8760656414100801C15,
@@ -4753,7 +4830,7 @@
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
 				PREBINDING = YES;
 				UNSTRIPPED_PRODUCT = YES;
@@ -4761,22 +4838,6 @@
 			};
 			isa = PBXBuildStyle;
 			name = Deployment;
-		};
-		F52D043001873FC401EE70DE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVIRCChatConnection.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52D043101873FC401EE70DE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = MVIRCChatConnection.h;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		F5394BB50378DBC301A35792 = {
 			isa = PBXFileReference;
@@ -4788,35 +4849,18 @@
 		};
 		F5394BBA0378DD7601A35792 = {
 			children = (
-				1C5A1A1206F8F42C00A51F10,
 				1C5A1A1106F8F42C00A51F10,
-				F52D043001873FC401EE70DE,
-				F52D043101873FC401EE70DE,
-				1C5A232106FA4FC000A51F10,
-				1C5A232006FA4FC000A51F10,
-				1C8CF8E2066530D60080A2F5,
+				1CDDCF830716208300FE11C3,
+				1CDDCF840716208300FE11C3,
 				1C8CF8E1066530D60080A2F5,
-				1C74459206FE5842009AA696,
-				1C74459106FE5842009AA696,
-				1C2EF7EC0427A40B00000102,
 				1C2EF7EB0427A40B00000102,
-				1C1C569D059EAF4F002FBEFB,
 				1C1C569C059EAF4F002FBEFB,
-				1C18CD110528DBBA000001C8,
 				1C18CD100528DBBA000001C8,
-				1CD4BD9405AA309A00F72EE6,
-				1CD4BD9305AA309A00F72EE6,
-				F5E98622018B412B01EE70DE,
 				F5E98623018B412B01EE70DE,
-				F56CD5430191182601EE70DE,
 				F56CD5440191182601EE70DE,
-				1CF4E51E0698E9FB00986498,
 				1CF4E51D0698E9FB00986498,
-				1C3D55A405A4CB2B00F25F5E,
 				1C3D55A305A4CB2B00F25F5E,
-				1C3D562205A4DCCD00F25F5E,
 				1C3D562105A4DCCD00F25F5E,
-				1C7B83C60668D732004F1EFE,
 				1C7B83C50668D732004F1EFE,
 			);
 			isa = PBXGroup;
@@ -4827,7 +4871,8 @@
 		F5394BEB0378E23701A35792 = {
 			children = (
 				F5394BEC0378E23701A35792,
-				1CC6F6FC0747D57D00B3E306,
+				1CD4B71D078209B10003620F,
+				1CD4B732078209D60003620F,
 			);
 			isa = PBXVariantGroup;
 			name = Colloquy.nib;
@@ -4846,7 +4891,8 @@
 		F5394BEF0378E23701A35792 = {
 			children = (
 				F5394BF00378E23701A35792,
-				1CC6F70B0747D58900B3E306,
+				1CD4B72D078209CC0003620F,
+				1CD4B741078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = MVCrashCatcher.nib;
@@ -4865,7 +4911,8 @@
 		F5394BF10378E23701A35792 = {
 			children = (
 				F5394BF20378E23701A35792,
-				1CC6F70D0747D58900B3E306,
+				1CD4B72F078209CC0003620F,
+				1CD4B743078209E10003620F,
 			);
 			isa = PBXVariantGroup;
 			name = MVSoftwareUpdate.nib;
@@ -4884,7 +4931,8 @@
 		F5394C070378E44D01A35792 = {
 			children = (
 				F5394C080378E44D01A35792,
-				1CC6F6D30747D50500B3E306,
+				1CD4B6CA078209450003620F,
+				1CD4B703078209500003620F,
 			);
 			isa = PBXVariantGroup;
 			name = Credits.rtf;
@@ -4903,7 +4951,8 @@
 		F5394C090378E44D01A35792 = {
 			children = (
 				F5394C0A0378E44D01A35792,
-				1CC6F6D00747D4ED00B3E306,
+				1CD4B7050782095C0003620F,
+				1CD4B7100782097D0003620F,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -4923,7 +4972,8 @@
 		F5394C0B0378E44D01A35792 = {
 			children = (
 				F5394C0C0378E44D01A35792,
-				1CC6F6CD0747D4DB00B3E306,
+				1CD4B719078209990003620F,
+				1CD4B71B078209A20003620F,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -5053,14 +5103,6 @@
 			lastKnownFileType = text.plist;
 			name = verbs.plist;
 			path = Resources/verbs.plist;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F56CD5430191182601EE70DE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSStringAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5333,7 +5375,8 @@
 		F5C4977B0385785401000102 = {
 			children = (
 				F5C4977C0385785401000102,
-				1CC6F70A0747D58900B3E306,
+				1CD4B72C078209CC0003620F,
+				1CD4B740078209E00003620F,
 			);
 			isa = PBXVariantGroup;
 			name = MVConnections.nib;
@@ -5485,14 +5528,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5E98622018B412B01EE70DE = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = NSAttributedStringAdditions.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F5E98623018B412B01EE70DE = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -5537,7 +5572,7 @@
 				F588A8F001922CDC01EE70DE,
 				F5D04C03019489B801A35792,
 				1CBECD660508C61B000001C8,
-				1CF626E107558AE6005DFCFA,
+				1CF627CA07558F79005DFCFA,
 			);
 			isa = PBXGroup;
 			name = "Toolbar Icons";

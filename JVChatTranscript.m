@@ -4,7 +4,6 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
-#import <ChatCore/NSURLAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 
 #import "MVApplicationController.h"
@@ -18,6 +17,7 @@
 #import "JVAppearancePreferences.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
+#import "NSURLAdditions.h"
 #import "unistd.h"
 
 #import <libxml/xinclude.h>
@@ -790,7 +790,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 
 		if( ! [[results lastObject] boolValue] ) {
-			if( [url isChatURL] ) {
+			if( [MVChatConnection supportsURLScheme:[url scheme]] ) {
 				[[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
 			} else if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
 				[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];

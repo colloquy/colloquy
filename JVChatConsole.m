@@ -246,7 +246,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 			for( i = 0, c = [parts count]; i < c; i++ ) {
 				tempStr = [@"irc://" stringByAppendingString:[parts objectAtIndex:i]];
-				if( ( tempStr = [[NSURL URLWithString:tempStr] user] ) && [tempStr rangeOfString:@"!"].location != NSNotFound && [tempStr rangeOfString:@"*"].location == NSNotFound )
+				if( ( tempStr = [[NSURL URLWithString:tempStr] user] ) && [tempStr rangeOfString:@"!"].location != NSNotFound )
 					[parts replaceObjectAtIndex:i withObject:[tempStr substringToIndex:[tempStr rangeOfString:@"!"].location]];
 			}
 

@@ -133,19 +133,13 @@
 
 - (NSString *) HTMLAttributeValue {
 	float red = 0., green = 0., blue = 0.;
-	NSColor *color = self;
-	if( ! [[self colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && ! [[self colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] )
-		color = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace]; // we need to convert to RGB space
-	[color getRed:&red green:&green blue:&blue alpha:NULL];
+	[[self colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getRed:&red green:&green blue:&blue alpha:NULL];
 	return [NSString stringWithFormat:@"#%02x%02x%02x", (int)(red * 255), (int)(green * 255), (int)(blue * 255)];
 }
 
 - (NSString *) CSSAttributeValue {
 	float red = 0., green = 0., blue = 0., alpha = 0.;
-	NSColor *color = self;
-	if( ! [[self colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && ! [[self colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] )
-		color = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace]; // we need to convert to RGB space
-	[color getRed:&red green:&green blue:&blue alpha:&alpha];
+	[[self colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getRed:&red green:&green blue:&blue alpha:&alpha];
 	if( alpha < 1. ) return [NSString stringWithFormat:@"rgba( %d, %d, %d, %.3f )", (int)(red * 255), (int)(green * 255), (int)(blue * 255), alpha];
 	return [NSString stringWithFormat:@"#%02x%02x%02x", (int)(red * 255), (int)(green * 255), (int)(blue * 255)];
 }

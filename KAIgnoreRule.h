@@ -1,3 +1,4 @@
+@class MVChatUser;
 @class JVChatController;
 @class AGRegex;
 
@@ -21,7 +22,7 @@ typedef enum _JVIgnoreMatchResult {
 + (id) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *)friendlyName;
 - (id) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *)friendlyName;
 
-- (JVIgnoreMatchResult) matchUser:(NSString *) user message:(NSString *) message inView:(id <JVChatViewController>) view;
+- (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inView:(id <JVChatViewController>) view;
 
 - (BOOL) isPermanent;
 - (void) setPermanent:(BOOL) permanent;

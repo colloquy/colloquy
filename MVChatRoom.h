@@ -16,8 +16,8 @@ typedef enum {
 	MVChatRoomMemberQuietedMode = 1 << 0,
 	MVChatRoomMemberVoicedMode = 1 << 1,
 	MVChatRoomMemberHalfOperatorMode = 1 << 2,
-	MVChatRoomMemberOperatorMode = 1 << 2,
-	MVChatRoomMemberFounderMode = 1 << 3
+	MVChatRoomMemberOperatorMode = 1 << 3,
+	MVChatRoomMemberFounderMode = 1 << 4
 } MVChatRoomMemberMode;
 
 extern NSString *MVChatRoomJoinedNotification;
@@ -109,6 +109,7 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 - (void) setModes:(unsigned long) modes;
 - (void) setMode:(MVChatRoomMode) mode;
 - (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute;
+- (void) removeMode:(MVChatRoomMode) mode;
 
 - (NSSet *) memberUsers;
 - (NSSet *) memberUsersWithModes:(unsigned long) modes;
@@ -116,6 +117,8 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 - (NSSet *) memberUsersWithFingerprint:(NSString *) fingerprint;
 - (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier;
 - (BOOL) hasUser:(MVChatUser *) user;
+
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason;
 
 - (NSSet *) bannedUsers;
 - (void) addBanForUser:(MVChatUser *) user;
@@ -127,4 +130,5 @@ extern NSString *MVChatRoomAttributesUpdatedNotification;
 
 - (void) setModes:(unsigned long) modes forMemberUser:(MVChatUser *) user;
 - (void) setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
+- (void) removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
 @end

@@ -4,6 +4,7 @@
         {
             ACTIONS = {
                 addRoom = id; 
+                changeNewConnectionProtocol = id; 
                 conenctNewConnection = id; 
                 hideConnectionManager = id; 
                 messageUser = id; 
@@ -14,6 +15,7 @@
                 sendPassword = id; 
                 showConnectionManager = id; 
                 toggleNewConnectionDetails = id; 
+                verifiedPublicKey = id; 
             }; 
             CLASS = MVConnectionsController; 
             LANGUAGE = ObjC; 
@@ -29,10 +31,10 @@
                 connections = NSTableView; 
                 detailsTabView = NSTabView; 
                 messageUser = NSPanel; 
-                newAddress = NSTextField; 
+                newAddress = NSComboBox; 
                 newJoinRooms = NSTableView; 
                 newNickname = NSTextField; 
-                newPort = NSTextField; 
+                newPort = NSComboBox; 
                 newProxy = NSPopUpButton; 
                 newRealName = NSTextField; 
                 newRemember = NSButton; 
@@ -42,6 +44,13 @@
                 newUsername = NSTextField; 
                 nicknameAuth = NSPanel; 
                 openConnection = NSPanel; 
+                publicKeyAlwaysAccept = NSButton; 
+                publicKeyBabbleprint = NSTextField; 
+                publicKeyDescription = NSTextField; 
+                publicKeyFingerprint = NSTextField; 
+                publicKeyName = NSTextField; 
+                publicKeyNameDescription = NSTextField; 
+                publicKeyVerification = NSPanel; 
                 showDetails = NSButton; 
                 sslConnection = NSButton; 
                 userToMessage = NSTextField; 

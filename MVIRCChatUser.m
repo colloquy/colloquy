@@ -7,24 +7,18 @@
 #import "irc.h"
 #import "servers.h"
 
-@interface MVChatConnection (MVChatConnectionPrivate)
-+ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc;
-- (SERVER_REC *) _irssiConnection;
-@end
-
-#pragma mark -
-
 @implementation MVIRCChatUser
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) connection {
 	if( ( self = [self initWithNickname:nil andConnection:connection] ) ) {
 		_type = MVChatLocalUserType;
+		_uniqueIdentifier = [[[self nickname] lowercaseString] retain];
 	}
 
 	return self;
 }
 
 - (id) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection {
-	if( ( self = [super init] ) ) {
+	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
 		_nickname = [nickname copyWithZone:[self zone]];
 		_uniqueIdentifier = [[nickname lowercaseString] retain];
@@ -32,6 +26,17 @@
 	}
 
 	return self;
+}
+
+#pragma mark -
+
+- (unsigned) hash {
+	// this hash assumes the MVIRCChatConnection will return the same instance for equal users
+	return ( [self type] ^ [[self connection] hash] ^ (unsigned int) self );
+}
+
+- (unsigned long) supportedModes {
+	return MVChatUserInvisibleMode;
 }
 
 #pragma mark -

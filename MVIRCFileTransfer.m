@@ -1,26 +1,18 @@
-#define HAVE_IPV6 1
-#define MODULE_NAME "MVFileTransfer"
-
-#import "MVIRCFileTransfer.h"
-#import "MVChatConnection.h"
-#import "NSNotificationAdditions.h"
-
 #import <pthread.h>
 
-#import "common.h"
-#import "core.h"
+#define HAVE_IPV6 1
+#define MODULE_NAME "MVIRCFileTransfer"
+
+#import "MVIRCFileTransfer.h"
+#import "MVIRCChatConnection.h"
+#import "MVChatUser.h"
+#import "NSNotificationAdditions.h"
+
 #import "signals.h"
 #import "settings.h"
-#import "servers.h"
-#import "irc.h"
 #import "config.h"
 #import "dcc.h"
-#import "dcc-file.h"
-#import "dcc-send.h"
-#import "dcc-get.h"
 #import "dcc-queue.h"
-
-extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 
 void dcc_send_resume( GET_DCC_REC *dcc );
 void dcc_queue_send_next( int queue );
@@ -28,42 +20,6 @@ void dcc_queue_send_next( int queue );
 typedef struct {
 	MVFileTransfer *transfer;
 } MVFileTransferModuleData;
-
-#pragma mark -
-
-@interface MVFileTransfer (MVFileTransferPrivate)
-- (void) _setConnection:(MVChatConnection *) connection;
-- (void) _setStatus:(MVFileTransferStatus) status;
-- (void) _postError:(NSError *) error;
-@end
-
-#pragma mark -
-
-@interface MVFileTransfer (MVIRCFileTransferPrivate)
-+ (id) _transferForDCCFileRecord:(FILE_DCC_REC *) record;
-@end
-
-#pragma mark -
-
-@interface MVIRCUploadFileTransfer (MVIRCUploadFileTransferPrivate)
-- (SEND_DCC_REC *) _DCCFileRecord;
-- (void) _setDCCFileRecord:(FILE_DCC_REC *) record;
-- (void) _destroying;
-@end
-
-#pragma mark -
-
-@interface MVIRCDownloadFileTransfer (MVIRCDownloadFileTransferPrivate)
-- (GET_DCC_REC *) _DCCFileRecord;
-- (void) _setDCCFileRecord:(FILE_DCC_REC *) record;
-- (void) _destroying;
-@end
-
-#pragma mark -
-
-@interface MVChatConnection (MVChatConnectionPrivate)
-- (SERVER_REC *) _irssiConnection;
-@end
 
 #pragma mark -
 
@@ -192,9 +148,7 @@ static BOOL fileTransferSignalsRegistered = NO;
 	}
 }
 
-+ (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection passively:(BOOL) passive {
-// don't call super, super calls us!!
-
++ (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
 	NSMutableData *result = [[[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopy] autorelease];
@@ -209,19 +163,19 @@ static BOOL fileTransferSignalsRegistered = NO;
 	[MVIRCChatConnectionThreadLock lock];
 
 	int queue = dcc_queue_new();
-	NSString *source = [[path stringByStandardizingPath] copy];
+	NSString *source = [[path stringByStandardizingPath] copyWithZone:[self zone]];
 
-	char *tag = [connection _irssiConnection] -> tag;
+	char *tag = [(MVIRCChatConnection *)[user connection] _irssiConnection] -> tag;
 
-	if( ! passive ) dcc_queue_add( queue, DCC_QUEUE_NORMAL, [nickname UTF8String], [source fileSystemRepresentation], tag, NULL );
-	else dcc_queue_add_passive( queue, DCC_QUEUE_NORMAL, [nickname UTF8String], [source fileSystemRepresentation], tag, NULL );
+	if( ! passive ) dcc_queue_add( queue, DCC_QUEUE_NORMAL, [[user connection] encodedBytesWithString:[user nickname]], [source fileSystemRepresentation], tag, NULL );
+	else dcc_queue_add_passive( queue, DCC_QUEUE_NORMAL, [[user connection] encodedBytesWithString:[user nickname]], [source fileSystemRepresentation], tag, NULL );
 
 	dcc_queue_send_next( queue );
 
-	DCC_REC *dcc = dcc_find_request( DCC_SEND_TYPE, [nickname UTF8String], [[source lastPathComponent] fileSystemRepresentation] );
+	DCC_REC *dcc = dcc_find_request( DCC_SEND_TYPE, [[user connection] encodedBytesWithString:[user nickname]], [[source lastPathComponent] fileSystemRepresentation] );
 
-	MVIRCUploadFileTransfer *ret = [[[MVIRCUploadFileTransfer alloc] initWithDCCFileRecord:dcc fromConnection:connection] autorelease];
-	ret -> _source = [[source stringByStandardizingPath] copy];
+	MVIRCUploadFileTransfer *ret = [[[MVIRCUploadFileTransfer alloc] initWithDCCFileRecord:dcc toUser:user] autorelease];
+	ret -> _source = [[source stringByStandardizingPath] copyWithZone:[self zone]];
 	ret -> _transferQueue = queue;
 
 	[MVIRCChatConnectionThreadLock unlock];
@@ -231,12 +185,8 @@ static BOOL fileTransferSignalsRegistered = NO;
 
 #pragma mark -
 
-- (id) initWithDCCFileRecord:(void *) record fromConnection:(MVChatConnection *) connection {
-	[MVIRCChatConnectionThreadLock lock];
-	NSString *user = [[connection stringWithEncodedBytes:((FILE_DCC_REC *)record) -> nick] retain];
-	[MVIRCChatConnectionThreadLock unlock];
-
-	if( ( self = [super initWithUser:user fromConnection:connection] ) ) {
+- (id) initWithDCCFileRecord:(void *) record toUser:(MVChatUser *) user {
+	if( ( self = [self initWithUser:user] ) ) {
 		[self _setDCCFileRecord:record];
 	}
 
@@ -253,7 +203,8 @@ static BOOL fileTransferSignalsRegistered = NO;
 - (BOOL) isPassive {
 	if( ! [self _DCCFileRecord] ) return _passive;
 	[MVIRCChatConnectionThreadLock lock];
-	_passive = dcc_is_passive( [self _DCCFileRecord] );
+	if( [self _DCCFileRecord] )
+		_passive = dcc_is_passive( [self _DCCFileRecord] );
 	[MVIRCChatConnectionThreadLock unlock];
 	return _passive;
 }
@@ -263,7 +214,8 @@ static BOOL fileTransferSignalsRegistered = NO;
 - (unsigned long long) finalSize {
 	if( ! [self _DCCFileRecord] ) return _finalSize;
 	[MVIRCChatConnectionThreadLock lock];
-	_finalSize = [self _DCCFileRecord] -> size;
+	if( [self _DCCFileRecord] )
+		_finalSize = [self _DCCFileRecord] -> size;
 	[MVIRCChatConnectionThreadLock unlock];
 	return _finalSize;
 }
@@ -271,7 +223,8 @@ static BOOL fileTransferSignalsRegistered = NO;
 - (unsigned long long) transfered {
 	if( ! [self _DCCFileRecord] ) return _transfered;
 	[MVIRCChatConnectionThreadLock lock];
-	_transfered = [self _DCCFileRecord] -> transfd;
+	if( [self _DCCFileRecord] )
+		_transfered = [self _DCCFileRecord] -> transfd;
 	[MVIRCChatConnectionThreadLock unlock];
 	return _transfered;
 }
@@ -279,18 +232,20 @@ static BOOL fileTransferSignalsRegistered = NO;
 #pragma mark -
 
 - (NSDate *) startDate {
-	if( _startDate || ! [self _DCCFileRecord] ) return _startDate;
+	if( _startDate || ! [self _DCCFileRecord] )
+		return [[_startDate retain] autorelease];
 	[MVIRCChatConnectionThreadLock lock];
-	if( [self _DCCFileRecord] -> starttime )
+	if( [self _DCCFileRecord] && [self _DCCFileRecord] -> starttime )
 		_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
 	[MVIRCChatConnectionThreadLock unlock];
-	return _startDate;
+	return [[_startDate retain] autorelease];
 }
 
 - (unsigned long long) startOffset {
 	if( ! [self _DCCFileRecord] ) return _startOffset;
 	[MVIRCChatConnectionThreadLock lock];
-	_startOffset = [self _DCCFileRecord] -> skipped;
+	if( [self _DCCFileRecord] )
+		_startOffset = [self _DCCFileRecord] -> skipped;
 	[MVIRCChatConnectionThreadLock unlock];
 	return _startOffset;
 }
@@ -298,9 +253,11 @@ static BOOL fileTransferSignalsRegistered = NO;
 #pragma mark -
 
 - (NSHost *) host {
-	if( _host || ! [self _DCCFileRecord] ) return _host;
+	if( _host || ! [self _DCCFileRecord] )
+		return [[_host retain] autorelease];
 	[MVIRCChatConnectionThreadLock lock];
-	_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
+	if( [self _DCCFileRecord] )
+		_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
 	[MVIRCChatConnectionThreadLock unlock];
 	return _host;
 }
@@ -308,7 +265,8 @@ static BOOL fileTransferSignalsRegistered = NO;
 - (unsigned short) port {
 	if( _port || ! [self _DCCFileRecord] ) return _port;
 	[MVIRCChatConnectionThreadLock lock];
-	_port = [self _DCCFileRecord] -> port;
+	if( [self _DCCFileRecord] )
+		_port = [self _DCCFileRecord] -> port;
 	[MVIRCChatConnectionThreadLock unlock];
 	return _port;
 }
@@ -318,7 +276,8 @@ static BOOL fileTransferSignalsRegistered = NO;
 - (void) cancel {
 	if( ! [self _DCCFileRecord] ) return;
 	[MVIRCChatConnectionThreadLock lock];
-	dcc_close( (DCC_REC *)[self _DCCFileRecord] );
+	if( [self _DCCFileRecord] )
+		dcc_close( (DCC_REC *)[self _DCCFileRecord] );
 	[MVIRCChatConnectionThreadLock unlock];
 	[self _setStatus:MVFileTransferStoppedStatus];
 }
@@ -403,12 +362,8 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 #pragma mark -
 
-- (id) initWithDCCFileRecord:(void *) record fromConnection:(MVChatConnection *) connection {
-	[MVIRCChatConnectionThreadLock lock];
-	NSString *user = [[connection stringWithEncodedBytes:((FILE_DCC_REC *)record) -> nick] retain];
-	[MVIRCChatConnectionThreadLock unlock];
-
-	if( ( self = [super initWithUser:user fromConnection:connection] ) ) {
+- (id) initWithDCCFileRecord:(void *) record fromUser:(MVChatUser *) user {
+	if( ( self = [self initWithUser:user] ) ) {
 		[self _setDCCFileRecord:record];
 	}
 
@@ -425,7 +380,8 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (BOOL) isPassive {
 	if( ! [self _DCCFileRecord] ) return _passive;
 	[MVIRCChatConnectionThreadLock lock];
-	_passive = dcc_is_passive( [self _DCCFileRecord] );
+	if( [self _DCCFileRecord] )
+		_passive = dcc_is_passive( [self _DCCFileRecord] );
 	[MVIRCChatConnectionThreadLock unlock];
 	return _passive;
 }
@@ -435,7 +391,8 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (unsigned long long) finalSize {
 	if( ! [self _DCCFileRecord] ) return _finalSize;
 	[MVIRCChatConnectionThreadLock lock];
-	_finalSize = [self _DCCFileRecord] -> size;
+	if( [self _DCCFileRecord] )
+		_finalSize = [self _DCCFileRecord] -> size;
 	[MVIRCChatConnectionThreadLock unlock];
 	return _finalSize;
 }
@@ -443,7 +400,8 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (unsigned long long) transfered {
 	if( ! [self _DCCFileRecord] ) return _transfered;
 	[MVIRCChatConnectionThreadLock lock];
-	_transfered = [self _DCCFileRecord] -> transfd;
+	if( [self _DCCFileRecord] )
+		_transfered = [self _DCCFileRecord] -> transfd;
 	[MVIRCChatConnectionThreadLock unlock];
 	return _transfered;
 }
@@ -451,9 +409,10 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (NSDate *) startDate {
-	if( _startDate || ! [self _DCCFileRecord] ) return _startDate;
+	if( _startDate || ! [self _DCCFileRecord] )
+		return [[_startDate retain] autorelease];
 	[MVIRCChatConnectionThreadLock lock];
-	if( [self _DCCFileRecord] -> starttime )
+	if( [self _DCCFileRecord] && [self _DCCFileRecord] -> starttime )
 		_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
 	[MVIRCChatConnectionThreadLock unlock];
 	return _startDate;
@@ -462,7 +421,8 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (unsigned long long) startOffset {
 	if( ! [self _DCCFileRecord] ) return _startOffset;
 	[MVIRCChatConnectionThreadLock lock];
-	_startOffset = [self _DCCFileRecord] -> skipped;
+	if( [self _DCCFileRecord] )
+		_startOffset = [self _DCCFileRecord] -> skipped;
 	[MVIRCChatConnectionThreadLock unlock];
 	return _startOffset;
 }
@@ -470,9 +430,11 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (NSHost *) host {
-	if( _host || ! [self _DCCFileRecord] ) return _host;
+	if( _host || ! [self _DCCFileRecord] )
+		return [[_host retain] autorelease];
 	[MVIRCChatConnectionThreadLock lock];
-	_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
+	if( [self _DCCFileRecord] )
+		_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
 	[MVIRCChatConnectionThreadLock unlock];
 	return _host;
 }
@@ -480,7 +442,8 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (unsigned short) port {
 	if( _port || ! [self _DCCFileRecord] ) return _port;
 	[MVIRCChatConnectionThreadLock lock];
-	_port = [self _DCCFileRecord] -> port;
+	if( [self _DCCFileRecord] )
+		_port = [self _DCCFileRecord] -> port;
 	[MVIRCChatConnectionThreadLock unlock];
 	return _port;
 }
@@ -488,9 +451,11 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (NSString *) originalFileName {
-	if( _originalFileName || ! [self _DCCFileRecord] ) return _originalFileName;
+	if( _originalFileName || ! [self _DCCFileRecord] )
+		return [[_originalFileName retain] autorelease];
 	[MVIRCChatConnectionThreadLock lock];
-	_originalFileName = [[[self connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg] retain];
+	if( [self _DCCFileRecord] )
+		_originalFileName = [[[[self user] connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg] retain];
 	[MVIRCChatConnectionThreadLock unlock];
 	return _originalFileName;
 }
@@ -499,11 +464,12 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
 	[_destination autorelease];
-	_destination = [[path stringByStandardizingPath] copy];
+	_destination = [[path stringByStandardizingPath] copyWithZone:[self zone]];
 
 	if( ! [self _DCCFileRecord] ) return;
 	[MVIRCChatConnectionThreadLock lock];
-	[self _DCCFileRecord] -> get_type = ( rename ? DCC_GET_RENAME : DCC_GET_OVERWRITE );
+	if( [self _DCCFileRecord] )
+		[self _DCCFileRecord] -> get_type = ( rename ? DCC_GET_RENAME : DCC_GET_OVERWRITE );
 	[MVIRCChatConnectionThreadLock unlock];
 }
 
@@ -512,14 +478,16 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (void) reject {
 	if( ! [self _DCCFileRecord] ) return;
 	[MVIRCChatConnectionThreadLock lock];
-	dcc_reject( (DCC_REC *)[self _DCCFileRecord], [self _DCCFileRecord] -> server );
+	if( [self _DCCFileRecord] )
+		dcc_reject( (DCC_REC *)[self _DCCFileRecord], [self _DCCFileRecord] -> server );
 	[MVIRCChatConnectionThreadLock unlock];
 }
 
 - (void) cancel {
 	if( ! [self _DCCFileRecord] ) return;
 	[MVIRCChatConnectionThreadLock lock];
-	dcc_close( (DCC_REC *)[self _DCCFileRecord] );
+	if( [self _DCCFileRecord] )
+		dcc_close( (DCC_REC *)[self _DCCFileRecord] );
 	[MVIRCChatConnectionThreadLock unlock];
 	[self _setStatus:MVFileTransferStoppedStatus];
 }
@@ -538,9 +506,11 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 	[MVIRCChatConnectionThreadLock lock];
 
-	if( resume ) dcc_send_resume( [self _DCCFileRecord] );
-	else if( dcc_is_passive( [self _DCCFileRecord] ) ) dcc_get_passive( [self _DCCFileRecord] );
-	else dcc_get_connect( [self _DCCFileRecord] );
+	if( [self _DCCFileRecord] ) {
+		if( resume ) dcc_send_resume( [self _DCCFileRecord] );
+		else if( dcc_is_passive( [self _DCCFileRecord] ) ) dcc_get_passive( [self _DCCFileRecord] );
+		else dcc_get_connect( [self _DCCFileRecord] );
+	}
 
 	[MVIRCChatConnectionThreadLock unlock];
 }

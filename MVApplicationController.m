@@ -3,8 +3,8 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/MVChatScriptPlugin.h>
-#import <ChatCore/NSURLAdditions.h>
 #import <ChatCore/NSColorAdditions.h>
+#import "NSURLAdditions.h"
 #import "MVColorPanel.h"
 #import "MVApplicationController.h"
 #import "JVChatWindowController.h"
@@ -192,7 +192,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) handleURLEvent:(NSAppleEventDescriptor *) event withReplyEvent:(NSAppleEventDescriptor *) replyEvent {
 	NSURL *url = [NSURL URLWithString:[[event descriptorAtIndex:1] stringValue]];
-	if( [url isChatURL] ) [[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
+	if( [MVChatConnection supportsURLScheme:[url scheme]] ) [[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
 	else [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
@@ -259,7 +259,7 @@ static BOOL applicationIsTerminating = NO;
 	NSDebugEnabled = YES;
 //	NSZombieEnabled = YES;
 //	NSDeallocateZombies = NO;
-	[NSAutoreleasePool enableFreedObjectCheck:YES];
+//	[NSAutoreleasePool enableFreedObjectCheck:YES];
 #endif
 }
 
@@ -297,7 +297,7 @@ static BOOL applicationIsTerminating = NO;
 	[MVConnectionsController defaultManager];
 	[JVChatController defaultManager];
 	[MVFileTransferController defaultManager];
-	[MVBuddyListController sharedBuddyList];
+//	[MVBuddyListController sharedBuddyList];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
 

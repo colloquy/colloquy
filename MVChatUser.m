@@ -31,6 +31,34 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdatedNotification";
 
 @implementation MVChatUser
++ (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host {
+	MVChatUser *ret = [[[self alloc] init] autorelease];
+	ret -> _type = MVChatWildcardUserType;
+
+	NSArray *parts = [nickname componentsSeparatedByString:@"@"];
+	if( [parts count] >= 1 )
+		ret -> _nickname = [[parts objectAtIndex:0] copyWithZone:[ret zone]];
+	if( [parts count] >= 2 )
+		ret -> _serverAddress = [[parts objectAtIndex:1] copyWithZone:[ret zone]];
+
+	parts = [host componentsSeparatedByString:@"@"];
+	if( [parts count] >= 1 )
+		ret -> _username = [[parts objectAtIndex:0] copyWithZone:[ret zone]];
+	if( [parts count] >= 2 )
+		ret -> _address = [[parts objectAtIndex:1] copyWithZone:[ret zone]];
+
+	return ret;
+}
+
++ (id) wildcardUserWithFingerprint:(NSString *) fingerprint {
+	MVChatUser *ret = [[[self alloc] init] autorelease];
+	ret -> _type = MVChatWildcardUserType;
+	ret -> _fingerprint = [fingerprint copyWithZone:[ret zone]];
+	return ret;
+}
+
+#pragma mark -
+
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_connection = nil;
@@ -135,14 +163,34 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser {
 	NSParameterAssert( anotherUser != nil );
 	if( anotherUser == self ) return YES;
+
+	if( [self type] != [anotherUser type] ) return NO;
+	if( [self type] == MVChatWildcardUserType ) {
+		if( ! [[self nickname] isEqualToString:[anotherUser nickname]] )
+			return NO;			
+		if( ! [[self username] isEqualToString:[anotherUser username]] )
+			return NO;			
+		if( ! [[self address] isEqualToString:[anotherUser address]] )
+			return NO;			
+		if( ! [[self serverAddress] isEqualToString:[anotherUser serverAddress]] )
+			return NO;			
+		if( ! [[self fingerprint] isEqualToString:[anotherUser fingerprint]] )
+			return NO;			
+		return YES;			
+	}
+
 	if( ! [[self connection] isEqual:[anotherUser connection]] )
 		return NO;
+
 	if( ! [[self uniqueIdentifier] isEqual:[anotherUser uniqueIdentifier]] )
 		return NO;
+
 	return YES;
 }
 
 - (unsigned) hash {
+	if( [self type] == MVChatWildcardUserType )
+		return ( [self type] ^ [[self nickname] hash] ^ [[self username] hash] ^ [[self address] hash] ^ [[self serverAddress] hash] ^ [[self fingerprint] hash] );
 	return ( [self type] ^ [[self connection] hash] );
 }
 
@@ -275,26 +323,23 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 #pragma mark -
 
 - (NSDictionary *) attributes {
-	NSDictionary *ret = nil;
 	@synchronized( _attributes ) {
-		ret = [NSDictionary dictionaryWithDictionary:_attributes];
-	} return ret;
+		return [NSDictionary dictionaryWithDictionary:_attributes];
+	} return nil;
 }
 
 - (BOOL) hasAttributeForKey:(NSString *) key {
 	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
-	BOOL ret = NO;
 	@synchronized( _attributes ) {
-		ret = ( [_attributes objectForKey:key] ? YES : NO );
-	} return ret;
+		return ( [_attributes objectForKey:key] ? YES : NO );
+	} return NO;
 }
 
 - (id) attributeForKey:(NSString *) key {
 	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
-	id ret = nil;
 	@synchronized( _attributes ) {
-		ret = [_attributes objectForKey:key];
-	} return [[ret retain] autorelease];
+		return [[[_attributes objectForKey:key] retain] autorelease];
+	} return nil;
 }
 
 #pragma mark -
@@ -321,6 +366,8 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 #pragma mark -
 
 - (NSString *) description {
+	if( [self type] == MVChatWildcardUserType )
+		return [NSString stringWithFormat:@"%@!%@@%@", ( [self nickname] ? [self nickname] : @"*" ), ( [self username] ? [self username] : @"*" ), ( [self address] ? [self address] : @"*" )];
 	return [self nickname];
 }
 @end

@@ -112,15 +112,17 @@
 	NSStringEncoding defaultEncoding = [_connection encoding];
 	if( ! encoding ) defaultEncoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 
-	for( i = 0; JVAllowedTextEncodings[i]; i++ ) {
-		if( JVAllowedTextEncodings[i] == (NSStringEncoding) -1 ) {
+	const NSStringEncoding *supportedEncodings = [_connection supportedStringEncodings];
+
+	for( i = 0; supportedEncodings[i]; i++ ) {
+/*		if( supportedEncodings[i] == (NSStringEncoding) -1 ) {
 			[menu addItem:[NSMenuItem separatorItem]];
 			continue;
-		}
+		} */
 
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
-		if( defaultEncoding == JVAllowedTextEncodings[i] ) [menuItem setState:NSOnState];
-		[menuItem setTag:JVAllowedTextEncodings[i]];
+		if( defaultEncoding == supportedEncodings[i] ) [menuItem setState:NSOnState];
+		[menuItem setTag:supportedEncodings[i]];
 		[menuItem setTarget:self];
 		[menu addItem:menuItem];
 	}

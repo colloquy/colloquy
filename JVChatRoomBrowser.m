@@ -153,7 +153,7 @@
 	[self close];
 
 	if( ! [_connection isConnected] ) [_connection connect];
-	[_connection joinChatRoom:[roomField stringValue]];
+	[_connection joinChatRoomNamed:[roomField stringValue]];
 }
 
 - (IBAction) filterResults:(id) sender {
@@ -262,10 +262,10 @@
 	if( _connection && ! _collapsed )
 		[self _startFetch];
 
-	if( _connection ) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _needToRefreshResults: ) name:MVChatConnectionGotRoomInfoNotification object:_connection];
+	if( _connection ) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _needToRefreshResults: ) name:MVChatConnectionChatRoomlistUpdatedNotification object:_connection];
 
 	[_roomResults autorelease];
-	_roomResults = [[_connection roomListResults] retain];
+	_roomResults = [[_connection chatRoomListResults] retain];
 
 	[_roomOrder autorelease];
 	_roomOrder = [[NSMutableArray array] retain];
@@ -564,11 +564,10 @@ refresh:
 - (void) _startFetch {
 	JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
 	[console pause];
-	[_connection fetchRoomList];
+	[_connection fetchChatRoomList];
 }
 
 - (void) _stopFetch {
-	[_connection stopFetchingRoomList];
 	JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
 	[console resume];
 }
