@@ -1323,7 +1323,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] && [name length] > 1 ) {
 				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
 			} else {
-				NSString *pattern = [NSString stringWithFormat:@"(?<=^|\\W)%@(?=\\W|$)", [name stringByEscapingCharactersInSet:escapeSet]];
+				NSString *pattern = [NSString stringWithFormat:@"\\b%@\\b", [name stringByEscapingCharactersInSet:escapeSet]];
 				regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 			}
 
@@ -1616,7 +1616,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message {
 	// catch IRC rooms like "#room" or "&help" but not HTML colors like "#ab12ef" or HTML entities like "&#135;" or "&amp;"
-	AGRegex *regex = [AGRegex regexWithPattern:@"(?:#(?![\\da-fA-F]{6}|\\d{0,3}(?:\\W|$))|&(?![\\d\\w#]{2,5};))[\\w-_+&#]{2,}(?=\\W|$)" options:AGRegexCaseInsensitive];
+	AGRegex *regex = [AGRegex regexWithPattern:@"\\b(?:#(?![\\da-fA-F]{6}|\\d{0,3}\\b)|&(?![\\d\\w#]{2,5};))[\\w-_+&#]{2,}\\b" options:AGRegexCaseInsensitive];
 	NSArray *matches = [regex findAllInString:[message string]];
 	NSEnumerator *enumerator = [matches objectEnumerator];
 	AGRegexMatch *match = nil;

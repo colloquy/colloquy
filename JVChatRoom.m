@@ -353,7 +353,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		NSMutableString *escapedName = [name mutableCopy];
 		[escapedName escapeCharactersInSet:escapeSet];
 
-		NSString *pattern = [[NSString alloc] initWithFormat:@"(?<=^|\\W)%@(?=\\W|$)", escapedName];
+		NSString *pattern = [[NSString alloc] initWithFormat:@"\\b%@\\b", escapedName];
 		AGRegex *regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 
 		[escapedName release];
