@@ -1064,10 +1064,34 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 		[self _setIrssiConnectSettings:settings];
 
+		id threadHelper = [NSConnection rootProxyForConnectionWithRegisteredName:@"irssiThread" host:nil];
+		_irssiThreadConnection = [[threadHelper vendChatConnection:self] retain];
+
+		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
+		_irssiThreadProxy = [[connection rootProxy] retain];
+		[(NSDistantObject *)_irssiThreadProxy setProtocolForProxy:@protocol( MVIRCChatConnectionIrssiThread )];
+
 		[MVIRCChatConnectionThreadLock unlock];
 	}
 
 	return self;
+}
+
+- (void) release {
+	if( ( [self retainCount] - 2 ) == 1 ) {
+		[MVIRCChatConnectionThreadLock lock];
+
+		[_irssiThreadProxy release];
+		_irssiThreadProxy = nil;
+
+		[_irssiThreadConnection invalidate];
+		[_irssiThreadConnection release];
+		_irssiThreadConnection = nil;
+
+		[MVIRCChatConnectionThreadLock unlock];
+	}
+
+	[super release];
 }
 
 - (void) dealloc {
@@ -1397,12 +1421,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
 	if( ! _chatConnection ) return;
-
-	[MVIRCChatConnectionThreadLock lock];
-
-	irc_send_cmd_full( (IRC_SERVER_REC *) _chatConnection, [self encodedBytesWithString:raw], now, now, FALSE);
-
-	[MVIRCChatConnectionThreadLock unlock];
+	[_irssiThreadProxy _sendRawMessage:raw immediately:now];
 }
 
 #pragma mark -
@@ -1637,6 +1656,12 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 + (void) _irssiRunLoop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
+	MVIRCConnectionThreadHelper *helper = [[[MVIRCConnectionThreadHelper alloc] init] autorelease];
+
+	NSConnection *server = [NSConnection defaultConnection];
+	[server registerName:@"irssiThread"];
+	[server setRootObject:helper];
+
 	extern GMainLoop *glibMainLoop;
 	glibMainLoop = g_main_new( TRUE );
 
@@ -1645,10 +1670,11 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	while( ! MVChatApplicationQuitting || connectionCount ) {
 		if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
 			g_main_iteration( TRUE ); // this will block if TRUE is passed
+			[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.001]];
 			[MVIRCChatConnectionThreadLock unlock];
 		}
 
-		usleep( 500 ); // give time for other theads to lock
+		usleep( 1000 ); // give time for other theads to lock
 	}
 
 	[MVIRCChatConnectionThreadLock lock];
@@ -1666,6 +1692,12 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[MVIRCChatConnectionThreadLock unlock];
 
 	[pool release];
+}
+
+#pragma mark -
+
+- (MVIRCChatConnection *) _irssiThreadProxy {
+	return _irssiThreadProxy;
 }
 
 #pragma mark -
@@ -1842,5 +1874,27 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		[_knownUsers setObject:user forKey:[user uniqueIdentifier]];
 		[user release];
 	}
+}
+
+#pragma mark -
+
+- (oneway void) _sendRawMessage:(NSString *) raw immediately:(BOOL) now {
+	irc_send_cmd_full( (IRC_SERVER_REC *) _chatConnection, [self encodedBytesWithString:raw], now, now, FALSE);
+}
+
+- (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action {
+	if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:target], msg, 0 );
+	else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:target], msg );
+}
+@end
+
+#pragma mark -
+
+@implementation MVIRCConnectionThreadHelper
+- (NSConnection *) vendChatConnection:(MVIRCChatConnection *) connection {
+	NSConnection *server = [[[NSConnection alloc] init] autorelease];
+	[server setRootObject:connection];
+	[server enableMultipleThreads];
+	return server;
 }
 @end

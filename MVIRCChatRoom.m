@@ -62,15 +62,8 @@
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
-
 	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding andChatFormat:[[self connection] outgoingChatFormat]];
-
-	[MVIRCChatConnectionThreadLock lock];
-
-	if( ! action ) [[self connection] _irssiConnection] -> send_message( [[self connection] _irssiConnection], [[self connection] encodedBytesWithString:[self name]], msg, 0 );
-	else irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [[self connection] encodedBytesWithString:[self name]], msg );
-
-	[MVIRCChatConnectionThreadLock unlock];
+	[[[self connection] _irssiThreadProxy] _sendMessage:msg toTarget:[self name] asAction:action];
 }
 
 #pragma mark -
