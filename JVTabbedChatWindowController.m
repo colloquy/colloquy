@@ -292,6 +292,8 @@
 }
 
 - (BOOL) customTabView:(AICustomTabsView *) tabsView didAcceptDragPasteboard:(NSPasteboard *) pasteboard onTabViewItem:(NSTabViewItem *) tabViewItem {
+	if( ! [[(JVChatTabItem *)tabViewItem chatViewController] respondsToSelector:@selector( acceptsDraggedFileOfType: )] ) return NO;
+
 	NSArray *files = [pasteboard propertyListForType:NSFilenamesPboardType];
 	NSEnumerator *enumerator = [files objectEnumerator];
 	BOOL accepted = NO;
