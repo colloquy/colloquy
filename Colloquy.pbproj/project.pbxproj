@@ -80,6 +80,7 @@
 			children = (
 				F5394BB50378DBC301A35792,
 				F5DD34720382B8AE01000102,
+				1C20B0A40424A2E400000102,
 				F50B0A9F0170C89301A84BDE,
 				F50B0AA00170C89301A84BDE,
 				F5185C82018626F701EE70DE,
@@ -234,6 +235,11 @@
 			name = French;
 			path = Languages/French.lproj/MVPreferences.strings;
 			refType = 4;
+		};
+		1C20B0A40424A2E400000102 = {
+			isa = PBXFileReference;
+			path = "Read Me.rtf";
+			refType = 2;
 		};
 		1C95D5B6041FA02C00000102 = {
 			isa = PBXFileReference;
