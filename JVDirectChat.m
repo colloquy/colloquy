@@ -301,6 +301,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[send setRichText:YES];
 	[send setImportsGraphics:NO];
 	[send setUsesFontPanel:YES];
+	[send setAllowsUndo:YES];
 	[send setUsesRuler:NO];
 	[send setDelegate:self];
 	[send setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatSpellChecking"]];
