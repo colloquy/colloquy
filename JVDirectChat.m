@@ -1978,6 +1978,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) sendMessageScriptCommand:(NSScriptCommand *) command {
 	NSString *message = [[command evaluatedArguments] objectForKey:@"message"];
 
+	if( ! [message isKindOfClass:[NSString class]] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Message must be a string, not a message object"];
+		return;
+	}
+
 	if( ! [message length] ) {
 		[NSException raise:NSInvalidArgumentException format:@"Message can't be blank"];
 		return;
