@@ -58,13 +58,13 @@ static MVBuddyListController *sharedInstance = nil;
 @implementation MVBuddyListController
 + (MVBuddyListController *) sharedBuddyList {
 	extern MVBuddyListController *sharedInstance;
-	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
+	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 
 #pragma mark -
 
-- (id) init {
-	if( ( self = [super init] ) ) {
+- (id) initWithWindowNibName:(NSString *) windowNibName {
+	if( ( self = [super initWithWindowNibName:@"MVBuddyList"] ) ) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _registerBuddies: ) name:MVChatConnectionDidConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _disconnected: ) name:MVChatConnectionDidDisconnectNotification object:nil];
 
@@ -110,7 +110,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[super dealloc];
 }
 
-- (void) awakeFromNib {
+- (void) windowDidLoad {
 	NSTableColumn *theColumn = nil;
 	id prototypeCell = nil;
 
@@ -124,7 +124,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[self setStatus:nil sendToServers:NO];
 
 	theColumn = [buddies tableColumnWithIdentifier:@"buddy"];
-	prototypeCell = [MVImageTextCell new];
+	prototypeCell = [[MVImageTextCell new] autorelease];
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
 	[theColumn setDataCell:prototypeCell];
 
@@ -145,8 +145,6 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 - (IBAction) showBuddyList:(id) sender {
-	static BOOL loaded = NO;
-	if( ! loaded ) loaded = [NSBundle loadNibNamed:@"MVBuddyList" owner:self];
 	[[self window] makeKeyAndOrderFront:nil];
 }
 
