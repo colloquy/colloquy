@@ -10,7 +10,6 @@
 #import "MVMenuButton.h"
 
 NSString *JVToolbarToggleChatDrawerItemIdentifier = @"JVToolbarToggleChatDrawerItem";
-NSString *JVToolbarToggleChatActivityItemIdentifier = @"JVToolbarToggleChatActivityItem";
 NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 @interface NSToolbar (NSToolbarPrivate)

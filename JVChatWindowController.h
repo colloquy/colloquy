@@ -8,7 +8,6 @@
 @protocol JVChatListItem;
 
 extern NSString *JVToolbarToggleChatDrawerItemIdentifier;
-extern NSString *JVToolbarToggleChatActivityItemIdentifier;
 extern NSString *JVChatViewPboardType;
 
 @interface JVChatWindowController : NSWindowController <JVInspectionDelegator> {

@@ -590,8 +590,6 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	if( [identifier isEqualToString:JVToolbarToggleChatDrawerItemIdentifier] ) {
 		toolbarItem = [_windowController toggleChatDrawerToolbarItem];
-	} else if( [identifier isEqualToString:JVToolbarToggleChatActivityItemIdentifier] ) {
-//		toolbarItem = [_windowController chatActivityToolbarItem];
 	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] && ! willBeInserted ) {
 		[toolbarItem setLabel:NSLocalizedString( @"Style", "choose style toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Style", "choose style toolbar item patlette label" )];
@@ -650,14 +648,14 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarToggleChatActivityItemIdentifier */, 
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, 
 		JVToolbarChooseStyleItemIdentifier, 
 		JVToolbarEmoticonsItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects: JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarToggleChatActivityItemIdentifier */, 
+	NSArray *list = [NSArray arrayWithObjects: JVToolbarToggleChatDrawerItemIdentifier, 
 		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarShowColorsItemIdentifier,
 		NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, 
 		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
