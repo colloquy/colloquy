@@ -11,6 +11,7 @@
 #import <libxml/xinclude.h>
 
 #import "JVChatController.h"
+#import "MVConnectionsController.h"
 #import "JVDirectChat.h"
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
@@ -304,6 +305,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[item setTarget:self];
 	[menu addItem:item];
 
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	[menu addItem:item];
+
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFileToSelectedUser: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
@@ -412,6 +417,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (void) unavailable {
 	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"Message undeliverable", "title of the user offline message sheet" ), NSLocalizedString( @"This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.", "error description for messaging a user that went offline or invalid" ), @"OK", nil, nil ) withName:@"unavailable"];
 	_cantSendMessages = YES;
+}
+
+- (IBAction) addToFavorites:(id) sender {
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
+	NSString *path = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath] retain];
+
+	[url writeToInternetLocationFile:path];
+	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
+
+	[MVConnectionsController refreshFavoritesMenu];
 }
 
 #pragma mark -

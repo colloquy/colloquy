@@ -6,6 +6,7 @@
 #import <ChatCore/NSMethodSignatureAdditions.h>
 
 #import "JVChatController.h"
+#import "MVConnectionsController.h"
 #import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
 #import "MVBuddyListController.h"
@@ -145,6 +146,10 @@
 	[item setTarget:_windowController];
 	[menu addItem:item];
 	
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	[menu addItem:item];
+	
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Room", "leave room contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
@@ -195,6 +200,16 @@
 - (void) unavailable {
 	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You're offline", "title of the you're offline message sheet" ), NSLocalizedString( @"You are no longer connected to the server where you were chatting. No messages can be sent at this time. Reconnecting might be in progress.", "chat window error description for loosing connection" ), @"OK", nil, nil ) withName:@"disconnected"];
 	_cantSendMessages = YES;
+}
+
+- (IBAction) addToFavorites:(id) sender {
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
+	NSString *path = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath] retain];
+
+	[url writeToInternetLocationFile:path];
+	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
+
+	[MVConnectionsController refreshFavoritesMenu];
 }
 
 #pragma mark -
