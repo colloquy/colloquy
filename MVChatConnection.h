@@ -3,6 +3,9 @@
 #import <IOKit/IOKitLib.h>
 #import <IOKit/IOTypes.h>
 
+#define MVURLEncodeString(t) ((NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)(t), NULL, CFSTR(",;:/?@&$="), kCFStringEncodingUTF8))
+#define MVURLDecodeString(t) ((NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)(t), NULL))
+
 typedef enum {
 	MVChatConnectionDisconnectedStatus = 0x0,
 	MVChatConnectionConnectingStatus = 0x1,
@@ -63,7 +66,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 @interface MVChatConnection : NSObject {
 @private
-	NSString *_nickname, *_password, *_server;
+	NSString *_nickname, *_npassword, *_password, *_server;
 	unsigned short _port;
 	MVChatConnectionStatus _status;
 	void *_chatConnection;
@@ -86,6 +89,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) setNickname:(NSString *) nickname;
 - (NSString *) nickname;
+
+- (void) setNicknamePassword:(NSString *) password;
+- (NSString *) nicknamePassword;
 
 - (void) setPassword:(NSString *) password;
 - (NSString *) password;

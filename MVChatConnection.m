@@ -132,7 +132,7 @@ void MVChatConnectionFailed( void *c, void *cs, const int error, const char * co
 				[self connect];
 			break;
 		case FE_BADUSERPASS:
-			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat password is invalid", chat invalid password dialog title ), NSLocalizedString( @"The password you specified is invalid and a connection could not be made without a proper password. Make sure you have access to the server.", chat invalid password dialog message ), nil, nil, nil );
+			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat password is invalid", chat invalid password dialog title ), NSLocalizedString( @"The password you specified is invalid or a connection could not be made without a proper password. Make sure you have access to the server.", chat invalid password dialog message ), nil, nil, nil );
 			break;
 		case FE_BADUSER:
 			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", chat invalid nickname dialog title ), [NSString stringWithFormat:NSLocalizedString( @"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.", chat invalid nicknames dialog message ), [self nickname]], nil, nil, nil );
@@ -191,7 +191,7 @@ void MVChatBackLog( void *c, void *cs, const double backlog ) {
 
 void MVChatNeedPassword( void *c, void *cs, char *password, const int size ) {
 	MVChatConnection *self = cs;
-	const char *pass = [[self password] UTF8String];
+	const char *pass = [[self nicknamePassword] UTF8String];
 	if( ! pass ) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedPasswordNotification object:self userInfo:nil];
 		return;
@@ -593,7 +593,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (id) initWithURL:(NSURL *) url {
 	if( ! [[url scheme] isEqualToString:@"irc"] ) return nil;
 	self = [self initWithServer:[url host] port:[[url port] unsignedShortValue] user:[url user]];
-	[self setPassword:[url password]];
+	[self setNicknamePassword:[url password]];
 	return self;
 }
 
@@ -644,6 +644,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	if( [self status] == MVChatConnectionConnectingStatus ) return;
 	if( [self isConnected] ) [self disconnect];
 	[self _willConnect];
+	firetalk_set_password( _chatConnection, NULL, [_password UTF8String] );
 	firetalk_signon( _chatConnection, [_server UTF8String], _port, [_nickname UTF8String] );
 }
 
@@ -655,6 +656,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	[self setServerPort:port];
 
 	[self _willConnect];
+	firetalk_set_password( _chatConnection, NULL, [_password UTF8String] );
 	firetalk_signon( _chatConnection, [server UTF8String], port, [nickname UTF8String] );
 }
 
@@ -670,9 +672,9 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (NSURL *) url {
 	NSString *url = nil;
 	if( ! _server ) return nil;
-	if( _nickname && _port ) url = [NSString stringWithFormat:@"irc://%@@%@:%hu", _nickname, _server, _port];
-	else if( _nickname && ! _port ) url = [NSString stringWithFormat:@"irc://%@@%@", _nickname, _server];
-	else url = [NSString stringWithFormat:@"irc://%@", _server];
+	if( _nickname && _port ) url = [NSString stringWithFormat:@"irc://%@@%@:%hu", MVURLEncodeString( _nickname ), MVURLEncodeString( _server ), _port];
+	else if( _nickname && ! _port ) url = [NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( _nickname ), MVURLEncodeString( _server )];
+	else url = [NSString stringWithFormat:@"irc://%@", MVURLEncodeString( _server )];
 	return [[[NSURL URLWithString:url] retain] autorelease];
 }
 
@@ -692,9 +694,24 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 #pragma mark -
 
+- (void) setNicknamePassword:(NSString *) password {
+	if( [self isConnected] && [password length] && ! [password isEqualToString:_npassword] ) {
+		firetalk_set_password( _chatConnection, NULL, [password UTF8String] );
+	}
+	[_npassword autorelease];
+	if( [password length] ) _npassword = [password copy];
+	else _npassword = nil;
+}
+
+- (NSString *) nicknamePassword {
+	return [[_npassword copy] autorelease];
+}
+
+#pragma mark -
+
 - (void) setPassword:(NSString *) password {
-	if( [self isConnected] && [password length] && ! [password isEqualToString:_password] ) {
-		firetalk_set_password( _chatConnection, [_password UTF8String], [password UTF8String] );
+	if( ! [self isConnected] && [password length] && ! [password isEqualToString:_password] ) {
+		firetalk_set_password( _chatConnection, NULL, [password UTF8String] );
 	}
 	[_password autorelease];
 	if( [password length] ) _password = [password copy];
