@@ -29,6 +29,7 @@
 #import "NSURLAdditions.h"
 #import "KAConnectionHandler.h"
 #import "JVMarkedScroller.h"
+#import "NSBundleAdditions.h"
 
 static NSArray *JVAutoActionVerbs = nil;
 
@@ -1784,7 +1785,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		enumerator = [[[JVChatEmoticonBundles allObjects] sortedArrayUsingFunction:sortBundlesByName context:self] objectEnumerator];
 		while( ( emoticon = [enumerator nextObject] ) ) {
-			menuItem = [[[NSMenuItem alloc] initWithTitle:[[self class] _nameForBundle:emoticon] action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
+			menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
 			[menuItem setTarget:self];
 			[menuItem setRepresentedObject:[emoticon bundleIdentifier]];
 			[subMenu addItem:menuItem];
