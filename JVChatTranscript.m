@@ -753,7 +753,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 }
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
-#ifdef DOMCSSStyleDeclaration
+#ifdef WebMenuItemTagGoBack
 	if( [display respondsToSelector:@selector( setDrawsBackground: )] ) {
 		DOMCSSStyleDeclaration *style = [sender computedStyleForElement:[(DOMHTMLDocument *)[[sender mainFrame] DOMDocument] body] pseudoElement:nil];
 		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
