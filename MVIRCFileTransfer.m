@@ -79,17 +79,15 @@ static void MVFileTransferDestroyed( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
+	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+	[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
+	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+
 	if( [self status] == MVFileTransferNormalStatus ) {
 		[self _setStatus:MVFileTransferDoneStatus];
 		NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:self];		
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
-
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-
-	[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
 }
 
 static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
