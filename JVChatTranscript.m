@@ -342,11 +342,6 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	JVStyle *style = [sender representedObject];
 	if( ! style ) style = [JVStyle defaultStyle];
 
-	if( ! [self _usingSpecificEmoticons] ) {
-		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style identifier]]]];
-		[self setChatEmoticons:emoticon performRefresh:NO];		
-	}
-
 	[self setChatStyle:style withVariant:[style defaultVariantName]];
 }
 
@@ -372,7 +367,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 	if( result == NSCancelButton ) return;
 
-	if( ! [_logLock tryLock] ) return;	
+	if( ! [_logLock tryLock] ) return;
 
 	if( ! [self _usingSpecificEmoticons] ) {
 		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]]];
@@ -416,11 +411,6 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
 
 	if( ! [style isEqualTo:_chatStyle] ) {
-		if( ! [self _usingSpecificEmoticons] ) {
-			NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style identifier]]]];
-			[self setChatEmoticons:emoticon performRefresh:NO];
-		}
-
 		[self setChatStyle:style withVariant:variant];
 	} else {
 		[self setChatStyleVariant:variant];
