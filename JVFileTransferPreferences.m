@@ -38,9 +38,9 @@
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskForTransferSaveLocation"] ) {
 		[saveDownloads selectItemAtIndex:[saveDownloads indexOfItemWithTag:1]];
 	} else {
-		[saveDownloads selectItemAtIndex:[saveDownloads indexOfItemWithTag:2]];
+		[saveDownloads selectItem:menuItem];
 	}
-	
+
 	[autoAccept selectItemAtIndex:[autoAccept indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"]]];
 	[removeTransfers selectItemAtIndex:[removeTransfers indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"]]];
 	[openSafe setState:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"]];
