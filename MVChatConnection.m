@@ -46,6 +46,7 @@ NSString *MVChatConnectionUserDeoppedInRoomNotification = @"MVChatConnectionUser
 NSString *MVChatConnectionUserVoicedInRoomNotification = @"MVChatConnectionUserVoicedInRoomNotification";
 NSString *MVChatConnectionUserDevoicedInRoomNotification = @"MVChatConnectionUserDevoicedInRoomNotification";
 NSString *MVChatConnectionUserKickedFromRoomNotification = @"MVChatConnectionUserKickedFromRoomNotification";
+NSString *MVChatConnectionUserAwayStatusNotification = @"MVChatConnectionUserAwayStatusNotification";
 NSString *MVChatConnectionGotRoomModeNotification = @"MVChatConnectionGotRoomModeNotification";
 NSString *MVChatConnectionGotRoomMessageNotification = @"MVChatConnectionGotRoomMessageNotification";
 NSString *MVChatConnectionGotRoomTopicNotification = @"MVChatConnectionGotRoomTopicNotification";
@@ -288,13 +289,12 @@ void MVChatListBuddy( void *c, void *cs, const char * const nickname, const int 
 
 #pragma mark -
 
-void MVChatGotInfo( void *c, void *cs, const char * const who, const char * const info, const int warning, const int idle, const int flags ) {
+void MVChatGotInfo( void *c, void *cs, const char * const who, const char * const username, const char * const hostname, const char * const server, const char * const realname, const int warning, const long idle, const long connected, const int flags ) {
 	MVChatConnection *self = cs;
 	NSDictionary *infoDic = nil;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
-	infoDic = [NSDictionary dictionaryWithObjectsAndKeys:( info ? [NSString stringWithUTF8String:info] : [NSNull null] ), @"info", [NSNumber numberWithUnsignedInt:warning], @"warning", [NSNumber numberWithUnsignedInt:idle], @"idle", [NSNumber numberWithUnsignedInt:flags], @"flags", nil];
-//	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:infoDic forConnection:self];
+	infoDic = [NSDictionary dictionaryWithObjectsAndKeys:( username ? [NSString stringWithUTF8String:username] : [NSNull null] ), @"username", ( hostname ? [NSString stringWithUTF8String:hostname] : [NSNull null] ), @"hostname", ( server ? [NSString stringWithUTF8String:server] : [NSNull null] ), @"server", ( realname ? [NSString stringWithUTF8String:realname] : [NSNull null] ), @"realName", [NSNumber numberWithUnsignedInt:idle], @"idle", [NSNumber numberWithUnsignedInt:connected], @"connected", [NSNumber numberWithUnsignedInt:flags], @"flags", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotUserInfoNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", infoDic, @"info", nil]];
 }
 
@@ -480,6 +480,16 @@ void MVChatUserKicked( void *c, void *cs, const char * const room, const char * 
 	{
 		NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserKickedFromRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", msgData, @"reason", nil]];
+	}
+}
+
+void MVChatUserAway( void *c, void *cs, const char * const who, const char * const message ) {
+	MVChatConnection *self = cs;
+	NSCParameterAssert( c != NULL );
+	NSCParameterAssert( who != NULL );
+	{
+		NSData *msgData = [NSData dataWithBytes:message length:(message ? strlen(message) : 0)];
+		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", msgData, @"message", nil]];
 	}
 }
 
@@ -1046,6 +1056,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	firetalk_register_callback( _chatConnection, FC_CHAT_USER_DEVOICED, (firetalk_callback) MVChatUserDevoiced );
 	firetalk_register_callback( _chatConnection, FC_CHAT_USER_KICKED, (firetalk_callback) MVChatUserKicked );
 	firetalk_register_callback( _chatConnection, FC_CHAT_USER_NICKCHANGED, (firetalk_callback) MVChatUserNicknameChanged );
+	firetalk_register_callback( _chatConnection, FC_CHAT_USER_AWAY, (firetalk_callback) MVChatUserAway );
 	firetalk_register_callback( _chatConnection, FC_FILE_OFFER, (firetalk_callback) MVChatFileTransferAccept );
 	firetalk_register_callback( _chatConnection, FC_FILE_START, (firetalk_callback) MVChatFileTransferStart );
 	firetalk_register_callback( _chatConnection, FC_FILE_FINISH, (firetalk_callback) MVChatFileTransferFinish );

@@ -233,7 +233,7 @@ void firetalk_callback_backlog(firetalk_t c);
 void firetalk_callback_connectfailed(client_t c, const int error, const char * const description);
 void firetalk_callback_connected(client_t c);
 void firetalk_callback_disconnect(client_t c, const int error);
-void firetalk_callback_gotinfo(client_t c, const char * const nickname, const char * const info, const int warning, const long idle, const int flags);
+void firetalk_callback_gotinfo(client_t c, const char * const nickname, const char * const username, const char * const hostname, const char * const server, const char * const realname, const int warning, const long idle, const long connected, const int flags);
 void firetalk_callback_idleinfo(client_t c, char const * const nickname, const long idletime);
 void firetalk_callback_doinit(client_t c, char const * const nickname);
 void firetalk_callback_setidle(client_t c, long * const idle);
@@ -262,6 +262,7 @@ void firetalk_callback_chat_deopped(client_t c, const char * const room, const c
 void firetalk_callback_chat_voiced(client_t c, const char * const room, const char * const by);
 void firetalk_callback_chat_devoiced(client_t c, const char * const room, const char * const by);
 void firetalk_callback_chat_user_kicked(client_t c, const char * const room, const char * const who, const char * const by, const char * const reason);
+void firetalk_callback_chat_user_away(client_t c, const char * const who, const char * const message);
 void firetalk_callback_subcode_request(client_t c, const char * const from, const char * const command, char *args);
 void firetalk_callback_subcode_reply(client_t c, const char * const from, const char * const command, const char * const args);
 void firetalk_callback_file_offer(client_t c, const char * const from, const char * const filename, const long size, const char * const ipstring, const char * const ip6string, const uint16_t port, const int type, const char *cookie);

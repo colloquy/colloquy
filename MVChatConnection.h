@@ -63,6 +63,7 @@ extern NSString *MVChatConnectionUserDeoppedInRoomNotification;
 extern NSString *MVChatConnectionUserVoicedInRoomNotification;
 extern NSString *MVChatConnectionUserDevoicedInRoomNotification;
 extern NSString *MVChatConnectionUserKickedFromRoomNotification;
+extern NSString *MVChatConnectionUserAwayStatusNotification;
 extern NSString *MVChatConnectionGotRoomModeNotification;
 extern NSString *MVChatConnectionGotRoomMessageNotification;
 extern NSString *MVChatConnectionGotRoomTopicNotification;

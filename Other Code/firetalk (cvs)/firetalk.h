@@ -75,7 +75,7 @@ enum firetalk_callback {
 	FC_IM_IDLEINFO,
 		/* void *connection, void *clientstruct, char *nickname, long idletime */
 	FC_IM_GOTINFO,
-		/* void *connection, void *clientstruct, char *nickname, char *info, int warning, int idle */
+		/* void *connection, void *clientstruct, char *nickname, char *username, char *hostname, char *server, char *realname, int warning, int idle, int connected, int flags */
 	FC_IM_USER_NICKCHANGED,
 		/* void *connection, void *clientstruct, char *oldnick, char *newnick */
 	FC_IM_GETMESSAGE,
@@ -132,6 +132,8 @@ enum firetalk_callback {
 		/* void *connection, void *clientstruct, char *room, char *who, char *by */
 	FC_CHAT_USER_KICKED,
 		/* void *connection, void *clientstruct, char *room, char *who, char *by, char *reason */
+	FC_CHAT_USER_AWAY,
+		/* void *connection, void *clientstruct, char *who, char *message */
 	FC_CHAT_USER_NICKCHANGED,
 		/* void *connection, void *clientstruct, char *room, char *oldnick, char *newnick */
 	FC_CHAT_LISTMEMBER,

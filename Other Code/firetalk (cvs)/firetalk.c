@@ -1020,13 +1020,13 @@ void firetalk_callback_disconnect(client_t c, const int error) {
 	return;
 }
 
-void firetalk_callback_gotinfo(client_t c, const char * const nickname, const char * const info, const int warning, const long idle, const int flags) {
+void firetalk_callback_gotinfo(client_t c, const char * const nickname, const char * const username, const char * const hostname, const char * const server, const char * const realname, const int warning, const long idle, const long connected, const int flags) {
 	struct s_firetalk_handle *conn;
 	conn = firetalk_find_handle(c);
 	if (conn == NULL)
 		return;
 	if (conn->callbacks[FC_IM_GOTINFO])
-		conn->callbacks[FC_IM_GOTINFO](conn,conn->clientstruct,nickname,info,warning,idle,flags);
+		conn->callbacks[FC_IM_GOTINFO](conn,conn->clientstruct,nickname,username,hostname,server,realname,warning,idle,connected,flags);
 	return;
 }
 
@@ -1481,6 +1481,26 @@ void firetalk_callback_chat_user_kicked(client_t c, const char * const room, con
 		return;
 	if (conn->callbacks[FC_CHAT_USER_KICKED])
 		conn->callbacks[FC_CHAT_USER_KICKED](conn,conn->clientstruct,room,who,by,reason);
+	return;
+}
+
+void firetalk_callback_chat_user_away(client_t c, const char * const who, const char * const message) {
+	struct s_firetalk_handle *conn;
+	struct s_firetalk_buddy *buddyiter;
+	conn = firetalk_find_handle(c);
+	if (conn == NULL)
+		return;
+	buddyiter = conn->buddy_head;
+	while (buddyiter) {
+		if (protocol_functions[conn->protocol].comparenicks(buddyiter->nickname,who) == FE_SUCCESS) {
+			buddyiter->tempint2 = 1;
+			firetalk_callback_im_buddyaway(c,who,1);
+			break;
+		}
+		buddyiter = buddyiter->next;
+	}
+	if (conn->callbacks[FC_CHAT_USER_AWAY])
+		conn->callbacks[FC_CHAT_USER_AWAY](conn,conn->clientstruct,who,message);
 	return;
 }
 

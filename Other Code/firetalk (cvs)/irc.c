@@ -36,10 +36,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 struct s_irc_whois {
 	struct s_irc_whois *next;
 	char *nickname;
-	char *info;
+	char *username;
+	char *hostname;
+	char *realname;
+	char *server;
 	char *away;
 	int flags;
 	long idle;
+	long connected;
 };
 
 struct s_irc_mode {
@@ -491,8 +495,14 @@ static int irc_internal_disconnect(client_t c, const int error) {
 		whois_iter2 = whois_iter->next;
 		if (whois_iter->nickname != NULL)
 			free(whois_iter->nickname);
-		if (whois_iter->info != NULL)
-			free(whois_iter->info);
+		if (whois_iter->username != NULL)
+			free(whois_iter->username);
+		if (whois_iter->hostname != NULL)
+			free(whois_iter->hostname);
+		if (whois_iter->realname != NULL)
+			free(whois_iter->realname);
+		if (whois_iter->server != NULL)
+			free(whois_iter->server);
 		free(whois_iter);
 		whois_iter = whois_iter2;
 	}
@@ -731,7 +741,6 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 	struct s_irc_whois *whoisiter, *whoisiter2 = NULL;
 	struct s_firetalk_handle *fchandle = NULL;
 	int tempint = 0,tempint2 = 0,tempint3 = 0,tempint4 = 0;
-	char tempbuf[512];
 
 	fchandle = firetalk_find_handle(c);
 
@@ -883,15 +892,7 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 			} else {
 				switch (tempint) {
 					case 301: /* RPL_AWAY */
-						buddyiter = fchandle->buddy_head;
-						while (buddyiter) {
-							if (irc_compare_nicks(args[3],buddyiter->nickname) == 0) {
-								buddyiter->tempint2 = 1;
-								firetalk_callback_im_buddyaway(c,args[3],1);
-								break;
-							}
-							buddyiter = buddyiter->next;
-						}
+						firetalk_callback_chat_user_away(c,irc_get_nickname(args[3]),irc_irc_to_html(args[4]));
 						break;
 					case 303: /* RPL_ISON */
 						tempchr = args[3];
@@ -945,10 +946,16 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 						while (whoisiter) {
 							if (irc_compare_nicks(args[3],whoisiter->nickname) == 0) {
 								/* manual whois */
-								firetalk_callback_gotinfo(c,whoisiter->nickname,irc_irc_to_html(whoisiter->info),0,whoisiter->idle,whoisiter->flags);
+								firetalk_callback_gotinfo(c,whoisiter->nickname,whoisiter->username,whoisiter->hostname,whoisiter->server,whoisiter->realname,0,whoisiter->idle,whoisiter->connected,whoisiter->flags);
 								free(whoisiter->nickname);
-								if (whoisiter->info)
-									free(whoisiter->info);
+								if (whoisiter->server)
+									free(whoisiter->server);
+								if (whoisiter->username)
+									free(whoisiter->username);
+								if (whoisiter->hostname)
+									free(whoisiter->hostname);
+								if (whoisiter->realname)
+									free(whoisiter->realname);
 								if (whoisiter2)
 									whoisiter2->next = whoisiter->next;
 								else
@@ -981,8 +988,14 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 						while (whoisiter) {
 							if (irc_compare_nicks(args[3],whoisiter->nickname) == 0) {
 								free(whoisiter->nickname);
-								if (whoisiter->info)
-									free(whoisiter->info);
+								if (whoisiter->server)
+									free(whoisiter->server);
+								if (whoisiter->username)
+									free(whoisiter->username);
+								if (whoisiter->hostname)
+									free(whoisiter->hostname);
+								if (whoisiter->realname)
+									free(whoisiter->realname);
 								if (whoisiter2)
 									whoisiter2->next = whoisiter->next;
 								else
@@ -1096,22 +1109,14 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 				}
 			} else {
 				switch (tempint) {
-					case 317: /* RPL_WHOISIDLE */
+					case 319: /* RPL_WHOISCHANNELS */
 						whoisiter = c->whois_head;
 						while (whoisiter) {
 							if (irc_compare_nicks(args[3],whoisiter->nickname) == 0) {
-								whoisiter->idle = atol(args[4])/60;
+								//whoisiter->flags |= FF_ADMIN;
 								break;
 							}
 							whoisiter = whoisiter->next;
-						}
-						buddyiter = fchandle->buddy_head;
-						while (buddyiter) {
-							if (irc_compare_nicks(args[3],buddyiter->nickname) == 0) {
-								firetalk_callback_idleinfo(c,args[3],atol(args[4]) / 60);
-								break;
-							}
-							buddyiter = buddyiter->next;
 						}
 						break;
 					case 331: /* RPL_NOTOPIC */
@@ -1129,6 +1134,37 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 		if ((args[1] != NULL) && (args[2] != NULL) && (args[3] != NULL) && (args[4] != NULL) && (args[5] != NULL)) {
 			tempint = atoi(args[1]);
 			switch (tempint) {
+				case 312: /* RPL_WHOISSERVER */
+					whoisiter = c->whois_head;
+					while (whoisiter) {
+						if (irc_compare_nicks(args[3],whoisiter->nickname) == 0) {
+							if (whoisiter->server)
+								free(whoisiter->server);
+							whoisiter->server = safe_strdup(args[4]);
+							break;
+						}
+						whoisiter = whoisiter->next;
+					}
+					break;
+				case 317: /* RPL_WHOISIDLE */
+					whoisiter = c->whois_head;
+					while (whoisiter) {
+						if (irc_compare_nicks(args[3],whoisiter->nickname) == 0) {
+							whoisiter->idle = atol(args[4]);
+							whoisiter->connected = atol(args[5]);
+							break;
+						}
+						whoisiter = whoisiter->next;
+					}
+					buddyiter = fchandle->buddy_head;
+					while (buddyiter) {
+						if (irc_compare_nicks(args[3],buddyiter->nickname) == 0) {
+							firetalk_callback_idleinfo(c,args[3],atol(args[4]));
+							break;
+						}
+						buddyiter = buddyiter->next;
+					}
+					break;
 				case 322: /* RPL_LIST */
 					firetalk_callback_gotroomlist(c,args[3],atoi(args[4]),irc_irc_to_html(args[5]));
 					break;
@@ -1216,10 +1252,15 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 					whoisiter = c->whois_head;
 					while (whoisiter) {
 						if (irc_compare_nicks(args[3],whoisiter->nickname) == 0) {
-							if (whoisiter->info)
-								free(whoisiter->info);
-							safe_snprintf(tempbuf,512,"%s@%s: %s",args[4],args[5],args[7]);
-							whoisiter->info = safe_strdup(tempbuf);
+							if (whoisiter->username)
+								free(whoisiter->username);
+							whoisiter->username = safe_strdup(args[4]);
+							if (whoisiter->hostname)
+								free(whoisiter->hostname);
+							whoisiter->hostname = safe_strdup(args[5]);
+							if (whoisiter->realname)
+								free(whoisiter->realname);
+							whoisiter->realname = safe_strdup(args[7]);
 							break;
 						}
 						whoisiter = whoisiter->next;
@@ -1467,7 +1508,10 @@ enum firetalk_error irc_get_info(client_t c, const char * const nickname, const 
 	c->whois_head->nickname = safe_strdup(nickname);
 	c->whois_head->flags = FF_NORMAL;
 	c->whois_head->idle = 0;
-	c->whois_head->info = NULL;
+	c->whois_head->server = NULL;
+	c->whois_head->username = NULL;
+	c->whois_head->hostname = NULL;
+	c->whois_head->realname = NULL;
 	c->whois_head->next = whoistemp;
 	return irc_send_printf(c,priority,"WHOIS %s",nickname);
 }
