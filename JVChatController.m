@@ -233,6 +233,7 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) _leftRoom:(NSNotification *) notification {
+	if( ! [[notification object] isConnected] ) return;
 	id view = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
 	if( ! view ) return;
 	[view parting];
@@ -334,7 +335,9 @@ static JVChatController *sharedInstance = nil;
 
 - (void) _roomTopicChanged:(NSNotification *) notification {
 	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
-	[controller changeTopic:[[notification userInfo] objectForKey:@"topic"] by:[[notification userInfo] objectForKey:@"author"] displayChange:( ! [[[notification userInfo] objectForKey:@"justJoined"] boolValue] )];
+	id author = [[notification userInfo] objectForKey:@"author"];
+	if( [author isMemberOfClass:[NSNull class]] ) author = nil;
+	[controller changeTopic:[[notification userInfo] objectForKey:@"topic"] by:author displayChange:( ! [[[notification userInfo] objectForKey:@"justJoined"] boolValue] )];
 }
 
 - (void) _addWindowController:(JVChatWindowController *) windowController {
