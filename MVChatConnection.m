@@ -538,45 +538,52 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 #pragma mark -
 
 - (id) init {
-	self = [super init];
+	if( ( self = [super init] ) ) {
+		_server = @"irc.javelin.cc";
+		_nickname = [NSUserName() copy];
+		_npassword = nil;
+		_password = nil;
+		_cachedDate = nil;
+		_floodIntervals = nil;
+		_backlogDelay = 0;
+		_port = 6667;
 
-	_server = @"irc.javelin.cc";
-	_nickname = [NSUserName() copy];
-	_npassword = nil;
-	_password = nil;
-	_cachedDate = nil;
-	_floodIntervals = nil;
-	_backlogDelay = 0;
-	_port = 6667;
+		_status = MVChatConnectionDisconnectedStatus;
+		_proxy = MVChatConnectionNoProxy;
+		_chatConnection = firetalk_create_handle( FP_IRC, (void *) self );
+		_joinList = [[NSMutableArray array] retain];
+		_roomsCache = [[NSMutableDictionary dictionary] retain];
 
-	_status = MVChatConnectionDisconnectedStatus;
-	_proxy = MVChatConnectionNoProxy;
-	_chatConnection = firetalk_create_handle( FP_IRC, (void *) self );
-	_joinList = [[NSMutableArray array] retain];
-	_roomsCache = [[NSMutableDictionary dictionary] retain];
+		[self setFloodControlIntervals:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:6.], @"messages", [NSNumber numberWithDouble:1.], @"delay", [NSNumber numberWithDouble:1.5], @"factor", [NSNumber numberWithDouble:3.], @"ceiling", nil]];
 
-	[self setFloodControlIntervals:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:6.], @"messages", [NSNumber numberWithDouble:1.], @"delay", [NSNumber numberWithDouble:1.5], @"factor", [NSNumber numberWithDouble:3.], @"ceiling", nil]];
+		[self _registerCallbacks];
+		[self _registerForSleepNotifications];
 
-	[self _registerCallbacks];
-	[self _registerForSleepNotifications];
-
-	_firetalkSelectTimer = [[NSTimer scheduledTimerWithTimeInterval:.100 target:self selector:@selector( _executeRunLoopCheck: ) userInfo:nil repeats:YES] retain];
-
+		_firetalkSelectTimer = [[NSTimer scheduledTimerWithTimeInterval:.100 target:self selector:@selector( _executeRunLoopCheck: ) userInfo:nil repeats:YES] retain];
+	}
 	return self;
 }
 
 - (id) initWithURL:(NSURL *) url {
-	if( ! [[url scheme] isEqualToString:@"irc"] ) return nil;
-	self = [self initWithServer:[url host] port:[[url port] unsignedShortValue] user:[url user]];
-	[self setNicknamePassword:[url password]];
+	if( ! [url isChatURL] ) return nil;
+	if( ( self = [self initWithServer:[url host] port:[[url port] unsignedShortValue] user:[url user]] ) ) {
+		[self setNicknamePassword:[url password]];
+
+		if( [url fragment] && [[url fragment] length] > 0 ) {
+			[self joinChatForRoom:[url fragment]];
+		} else if( [url path] && [[url path] length] >= 2 && ( [[[url path] substringFromIndex:1] hasPrefix:@"&"] || [[[url path] substringFromIndex:1] hasPrefix:@"+"] ) ) {
+			[self joinChatForRoom:[[url path] substringFromIndex:1]];
+		}
+	}
 	return self;
 }
 
 - (id) initWithServer:(NSString *) server port:(unsigned short) port user:(NSString *) nickname {
-	self = [self init];
-	[self setNickname:nickname];
-	[self setServer:server];
-	[self setServerPort:port];
+	if( ( self = [self init] ) ) {
+		if( [nickname length] ) [self setNickname:nickname];
+		if( [server length] ) [self setServer:server];
+		if( port ) [self setServerPort:port];
+	}
 	return self;
 }
 
