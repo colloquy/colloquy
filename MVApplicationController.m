@@ -288,8 +288,8 @@ static BOOL applicationIsTerminating = NO;
 	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultManager];
 	[JVChatController defaultManager];
-//	[MVFileTransferController defaultManager];
-//	[MVBuddyListController sharedBuddyList];
+	[MVFileTransferController defaultManager];
+	[MVBuddyListController sharedBuddyList];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
 
