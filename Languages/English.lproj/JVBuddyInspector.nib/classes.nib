@@ -1,0 +1,24 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {addNickname = id; changeServer = id; editCard = id; removeNickname = id; }; 
+            CLASS = JVBuddyInspector; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                addNickname = NSButton; 
+                email = NSTextField; 
+                firstName = NSTextField; 
+                lastName = NSTextField; 
+                nickname = NSTextField; 
+                nicknames = NSTableView; 
+                picture = NSImageView; 
+                removeNickname = NSButton; 
+                servers = NSPopUpButton; 
+                view = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
