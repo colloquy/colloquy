@@ -76,7 +76,7 @@
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
 		[connection disconnectWithReason:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"connect"] ) {
+	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"server"] ) {
 		[connection connect];
 		return YES;
 	} else if( [command isEqualToString:@"exit"] ) {
@@ -256,7 +256,7 @@
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
 		[[room connection] disconnectWithReason:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"connect"] ) {
+	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"server"] ) {
 		[[room connection] connect];
 		return YES;
 	} else if( [command isEqualToString:@"exit"] ) {
@@ -362,7 +362,7 @@
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
 		[[chat connection] disconnectWithReason:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"connect"] ) {
+	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"server"] ) {
 		[[chat connection] connect];
 		return YES;
 	} else if( [command isEqualToString:@"exit"] ) {
