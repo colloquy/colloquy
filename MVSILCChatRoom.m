@@ -39,8 +39,8 @@
 
 - (void) partWithReason:(NSAttributedString *) reason {
 	if( ! [self isJoined] ) return;
-	if( [reason length] ) [[self connection] sendRawMessageWithFormat:@"PART %@ %@", [self name], reason];
-	else [[self connection] sendRawMessageWithFormat:@"PART %@", [self name]];
+	if( [reason length] ) [[self connection] sendRawMessageWithFormat:@"LEAVE %@ %@", [self name], reason];
+	else [[self connection] sendRawMessageWithFormat:@"LEAVE %@", [self name]];
 }
 
 #pragma mark -
