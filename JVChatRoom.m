@@ -428,7 +428,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 				message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to operator by <span class=\"member\">%@</span>.", "user is now a chat room operator status message" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by )];
 			}
 
-			[self addEventMessageToDisplay:message withName:name andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"bynickname", member, @"who", ( mbr ? [mbr title] : member ), @"whonickname", nil]];
+			[self addEventMessageToDisplay:message withName:name andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"bynickname", ( mbr ? [mbr title] : member ), @"who", member, @"whonickname", nil]];
 
 			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
