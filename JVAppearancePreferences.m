@@ -131,8 +131,15 @@
 	if( style == _style ) {
 		[_style setDefaultVariantName:variant];
 
+		[_styleOptions autorelease];
+		_styleOptions = [[_style styleSheetOptions] mutableCopy];
+
 		[self updateChatStylesMenu];
+
+		if( _variantLocked ) [optionsTable deselectAll:nil];
+
 		[self updateVariant];
+		[self parseStyleOptions];
 	} else {
 		[_style autorelease];
 		_style = [style retain];
