@@ -1,4 +1,5 @@
 #import "JVPreferencesController.h"
+#import <Foundation/Foundation.h>
 
 @implementation JVPreferencesController
 - (id) init {
