@@ -10,23 +10,21 @@
 #import <AGRegex/AGRegex.h>
 
 @implementation KAIgnoreRule
-+ (id) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent {
-	return [[[KAIgnoreRule alloc] initForUser:user message:message inRooms:rooms isPermanent:permanent] autorelease];
++ (id) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
+	return [[[KAIgnoreRule alloc] initForUser:user message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName] autorelease];
 }
 
-- (id) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent {
+- (id) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
 	if( ( self = [super init] ) ) {
-		_ignoredUser = [user copy];
-		_ignoredMessage = [message copy];
-		_inRooms = [rooms copy];
 		_userRegex = nil;
 		_messageRegex = nil;
+		_ignoredUser = nil;
+		_ignoredMessage = nil;
+		[self setUser:user];
+		[self setMessage:message];
+		_inRooms = [rooms copy];
+		_friendlyName = [friendlyName copy];
 		_permanent = permanent;
-
-		if( user && ( [user length] > 2 ) && [user hasPrefix:@"/"] && [user hasSuffix:@"/"] ) 
-			_userRegex = [[AGRegex alloc] initWithPattern:[user substringWithRange:NSMakeRange( 1, [user length] - 2 )] options:AGRegexCaseInsensitive];
-		if( message && ( [message length] > 2 ) && [message hasPrefix:@"/"] && [message hasSuffix:@"/"] ) 
-			_messageRegex = [[AGRegex alloc] initWithPattern:[message substringWithRange:NSMakeRange( 1, [message length] - 2)] options:AGRegexCaseInsensitive];
 	}
 
 	return self;
@@ -34,7 +32,7 @@
 
 - (id) initWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] )
-		return [self initForUser:[coder decodeObjectForKey:@"KAIgnoreUser"] message:[coder decodeObjectForKey:@"KAIgnoreMessage"] inRooms:[coder decodeObjectForKey:@"KAIgnoreRooms"] isPermanent:[coder decodeBoolForKey:@"KAIgnorePermanent"]];
+		return [self initForUser:[coder decodeObjectForKey:@"KAIgnoreUser"] message:[coder decodeObjectForKey:@"KAIgnoreMessage"] inRooms:[coder decodeObjectForKey:@"KAIgnoreRooms"] isPermanent:[coder decodeBoolForKey:@"KAIgnorePermanent"] friendlyName:[coder decodeObjectForKey:@"KAIgnoreFriendlyName"]];
 	else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 	return nil;
 }
@@ -45,6 +43,7 @@
 		[coder encodeObject:_ignoredMessage forKey:@"KAIgnoreMessage"];
 		[coder encodeObject:_inRooms forKey:@"KAIgnoreRooms"];
 		[coder encodeBool:_permanent forKey:@"KAIgnorePermanent"];
+		[coder encodeObject:_friendlyName forKey:@"KAIgnoreFriendlyName"];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
@@ -54,11 +53,12 @@
 	[_inRooms release];
 	[_userRegex release];
 	[_messageRegex release];
+	[_friendlyName release];
 	[super dealloc];
 }
 
 - (JVIgnoreMatchResult) matchUser:(NSString *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
-	if( [view isKindOfClass:[JVDirectChat class]] && ( [_inRooms containsObject:[(JVDirectChat *)view targetURL]] || [_inRooms containsObject:[[view connection] url]] ) ) {
+	if( ! [_inRooms count] || ( [view isKindOfClass:[JVDirectChat class]] && [_inRooms containsObject:[(JVDirectChat *)view target]] ) ) {
 		BOOL userFound = NO, messageFound = NO;
 		BOOL userRequired = ( _userRegex || _ignoredUser ), messageRequired = ( _messageRegex || _ignoredMessage );
 
@@ -82,5 +82,66 @@
 
 - (BOOL) isPermanent {
 	return _permanent;
+}
+
+- (void) setIsPermanent:(BOOL) permanent {
+	_permanent = permanent;
+}
+
+- (NSString *) friendlyName {
+	if( ! _friendlyName ) {
+		if( _ignoredUser && _ignoredMessage ) return [NSString stringWithFormat:@"%@ - %@", _ignoredUser, _ignoredMessage];
+		else if( _ignoredUser ) return _ignoredUser;
+		else if( _ignoredMessage ) return _ignoredMessage;
+		else return @"Blank Ignore"; // should not happen
+	} else return _friendlyName;
+}
+
+- (void) setFriendlyName:(NSString *) friendlyName {
+    if( _friendlyName != friendlyName ) {
+        [_friendlyName release];
+        _friendlyName = [friendlyName copy];
+    }
+}
+
+- (NSArray *) inRooms {
+    return [[_inRooms retain] autorelease];
+}
+
+- (void) setInRooms:(NSArray *) newInRooms {
+    if( _inRooms != newInRooms ) {
+        [_inRooms release];
+        _inRooms = [newInRooms copy];
+    }
+}
+
+- (NSString *) message {
+    return [[_ignoredMessage retain] autorelease];
+}
+
+- (void) setMessage:(NSString *) message {
+    if( _ignoredMessage != message ) {
+        [_ignoredMessage release];
+        _ignoredMessage = [message copy];
+    }
+
+	[_messageRegex release];
+	if( message && ( [message length] > 2 ) && [message hasPrefix:@"/"] && [message hasSuffix:@"/"] )
+		_messageRegex = [[AGRegex alloc] initWithPattern:[message substringWithRange:NSMakeRange( 1, [message length] - 2)] options:AGRegexCaseInsensitive];
+}
+
+- (NSString *) user {
+    return [[_ignoredUser retain] autorelease];
+}
+
+- (void) setUser:(NSString *) user {
+    if( _ignoredUser != user ) {
+        [_ignoredUser release];
+        _ignoredUser = [user copy];
+    }
+
+	[_userRegex release];
+	if( user && ( [user length] > 2 ) && [user hasPrefix:@"/"] && [user hasSuffix:@"/"] )
+		_userRegex = [[AGRegex alloc] initWithPattern:[user substringWithRange:NSMakeRange( 1, [user length] - 2 )] options:AGRegexCaseInsensitive];
 }
 @end

@@ -43,6 +43,5 @@
 
 - (IBAction) detachView:(id) sender;
 
-- (void) addIgnoreForUser:(NSString *) user withMessage:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent;
 - (JVIgnoreMatchResult) shouldIgnoreUser:(NSString *) name withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view;
 @end

@@ -8,6 +8,7 @@
 @class NSButton;
 @class NSTableView;
 @class NSTextView;
+@class NSPanel;
 
 @interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
 - (id <JVInspector>) inspector;
@@ -30,9 +31,32 @@
 	IBOutlet NSButton *editRemoveRoom;
 	IBOutlet NSTextView *connectCommands;
 	IBOutlet NSButton *sslConnection;
+
+	IBOutlet NSTableView *editRules;
+	IBOutlet NSPanel *ruleSheet;
+	IBOutlet NSTextField *editRuleName;
+	IBOutlet NSButton *makeRulePermanent;
+	IBOutlet NSButton *ruleUsesSender;
+	IBOutlet NSButton *ruleUsesMessage;
+	IBOutlet NSButton *ruleUsesRooms;
+	IBOutlet NSPopUpButton *senderType;
+	IBOutlet NSPopUpButton *messageType;
+	IBOutlet NSTextField *editRuleSender;
+	IBOutlet NSTextField *editRuleMessage;
+	IBOutlet NSTableView *editRuleRooms;
+	IBOutlet NSButton *deleteRoomFromRule;
+	IBOutlet NSButton *addRoomToRule;
+	IBOutlet NSButton *addRule;
+	IBOutlet NSButton *deleteRule;
+	IBOutlet NSButton *editRule;
+
 	MVChatConnection *_connection;
 	BOOL _nibLoaded;
 	NSMutableArray *_editingRooms;
+	NSMutableArray *_editingRuleRooms;
+
+	BOOL _ignoreRuleIsNew;
+	NSMutableArray *_ignoreRules;
 }
 - (id) initWithConnection:(MVChatConnection *) connection;
 
@@ -47,4 +71,12 @@
 
 - (IBAction) addRoom:(id) sender;
 - (IBAction) removeRoom:(id) sender;
+
+- (IBAction) removeRule:(id) sender;
+- (IBAction) addRule:(id) sender;
+- (IBAction) removeRoomFromRule:(id) sender;
+- (IBAction) addRoomToRule:(id) sender;
+- (IBAction) configureRule:(id) sender;
+- (IBAction) saveRule:(id) sender;
+- (IBAction) discardChangesToRule:(id) sender;
 @end

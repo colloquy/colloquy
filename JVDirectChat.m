@@ -1378,6 +1378,15 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
 	}
 
+	if( ignoreTest != JVNotIgnored ) {
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:( ( ignoreTest == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
+		if( [self isMemberOfClass:[JVChatRoom class]] ) [context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", user, [self title]] forKey:@"description"];
+		else [context setObject:[NSString stringWithFormat:@"%@'s message was ignored.", user] forKey:@"description"];
+		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
+		[[JVNotificationController defaultManager] performNotification:( ( ignoreTest == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
+	}
+
 	[self _performEmoticonSubstitutionOnString:messageString];
 
 	[self processMessage:messageString asAction:action fromUser:user ignoreResult:ignoreTest];

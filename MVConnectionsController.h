@@ -78,10 +78,13 @@
 - (BOOL) autoConnectForConnection:(MVChatConnection *) connection;
 
 - (void) setJoinRooms:(NSArray *) rooms forConnection:(MVChatConnection *) connection;
-- (NSArray *) joinRoomsForConnection:(MVChatConnection *) connection;
+- (NSMutableArray *) joinRoomsForConnection:(MVChatConnection *) connection;
 
 - (void) setConnectCommands:(NSString *) commands forConnection:(MVChatConnection *) connection;
 - (NSString *) connectCommandsForConnection:(MVChatConnection *) connection;
+
+- (void) setIgnoreRules:(NSArray *) ignores forConnection:(MVChatConnection *) connection;
+- (NSMutableArray *) ignoreRulesForConnection:(MVChatConnection *) connection;
 
 - (void) addConnection:(MVChatConnection *) connection;
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep;

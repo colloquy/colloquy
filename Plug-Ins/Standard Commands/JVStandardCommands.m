@@ -556,7 +556,7 @@
 }
 
 - (BOOL) handleIgnoreWithArguments:(NSString *) args inView:(id <JVChatViewController>) view {
-	// USAGE: /ignore -[p|m|n] [nickname|/regex/] ["message"|/regex/|word] [#rooms ...|*]
+	// USAGE: /ignore -[p|m|n] [nickname|/regex/] ["message"|/regex/|word] [#rooms ...]
 	// p makes the ignore permanent (i.e. the ignore is saved to disk)
 	// m is to specify a message
 	// n is to specify a nickname
@@ -571,7 +571,7 @@
 	NSArray *argsArray = [args componentsSeparatedByString:@" "];
 	NSString *memberString = nil;
 	NSString *messageString = nil;
-	NSMutableArray *rooms = nil;
+	NSArray *rooms = nil;
 	BOOL permanent = NO;
 	BOOL member = YES;
 	BOOL message = NO;
@@ -590,7 +590,7 @@
 	}
 
 	// check for wrong number of arguments
-	if( [argsArray count] < ( 1 + ( message ? 1 : 0 ) + ( member ? 1 : 0 ) ) ) return NO;
+	if( [argsArray count] < ( offset + ( message ? 1 : 0 ) + ( member ? 1 : 0 ) ) ) return NO;
 
 	if( member ) {
 		memberString = [argsArray objectAtIndex:offset];
@@ -609,17 +609,12 @@
 		offset += [[messageString componentsSeparatedByString:@" "] count];
 	}
 
-	if( offset < [argsArray count] ) {
-		rooms = [NSMutableArray array];
+	if( offset < [argsArray count] )
+		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 
-		NSArray *typedRooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
-		NSEnumerator *rEnum = [typedRooms objectEnumerator];
-		NSString *room = nil;
-		while( ( room = [rEnum nextObject] ) )
-			[rooms addObject:[NSURL URLWithString:[[[[view connection] url] absoluteString] stringByAppendingPathComponent:[room stringByEncodingIllegalURLCharacters]]]];
-	} else rooms = [NSArray arrayWithObject:[[view connection] url]];
-
-	[[_manager chatController] addIgnoreForUser:memberString withMessage:messageString inRooms:rooms isPermanent:permanent];
+	KAIgnoreRule *rule = [NSClassFromString( @"KAIgnoreRule" ) ruleForUser:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];
+	NSMutableArray *rules = [[_manager connectionsController] ignoreRulesForConnection:[view connection]];
+	[rules addObject:rule];
 
 	return YES;
 }

@@ -16,13 +16,13 @@
 
 static MVConnectionsController *sharedInstance = nil;
 
-static NSString *MVToolbarConnectToggleItemIdentifier   = @"MVToolbarConnectToggleItem";
-static NSString *MVToolbarEditItemIdentifier			= @"MVToolbarEditItem";
-static NSString *MVToolbarInspectorItemIdentifier		= @"MVToolbarInspectorItem";
-static NSString *MVToolbarDeleteItemIdentifier			= @"MVToolbarDeleteItem";
-static NSString *MVToolbarConsoleItemIdentifier			= @"MVToolbarConsoleItem";
-static NSString *MVToolbarJoinRoomItemIdentifier		= @"MVToolbarJoinRoomItem";
-static NSString *MVToolbarQueryUserItemIdentifier		= @"MVToolbarQueryUserItem";
+static NSString *MVToolbarConnectToggleItemIdentifier = @"MVToolbarConnectToggleItem";
+static NSString *MVToolbarEditItemIdentifier = @"MVToolbarEditItem";
+static NSString *MVToolbarInspectorItemIdentifier = @"MVToolbarInspectorItem";
+static NSString *MVToolbarDeleteItemIdentifier = @"MVToolbarDeleteItem";
+static NSString *MVToolbarConsoleItemIdentifier = @"MVToolbarConsoleItem";
+static NSString *MVToolbarJoinRoomItemIdentifier = @"MVToolbarJoinRoomItem";
+static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteboard type";
 
@@ -637,20 +637,25 @@ static NSMenu *favoritesMenu = nil;
 
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"connection"] == connection ) {
-			if( rooms ) [info setObject:[[rooms mutableCopy] autorelease] forKey:@"rooms"];
+			if( [rooms count] ) [info setObject:[[rooms mutableCopy] autorelease] forKey:@"rooms"];
 			else [info removeObjectForKey:@"rooms"];
 			break;
 		}
 	}
 }
 
-- (NSArray *) joinRoomsForConnection:(MVChatConnection *) connection {
+- (NSMutableArray *) joinRoomsForConnection:(MVChatConnection *) connection {
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	NSMutableDictionary *info = nil;
 
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"connection"] == connection ) {
-			return [info objectForKey:@"rooms"];
+			NSMutableArray *ret = [info objectForKey:@"rooms"];
+			if( ! ret ) {
+				ret = [NSMutableArray array];
+				[info setObject:ret forKey:@"rooms"];
+			}
+			return ret;
 		}
 	}
 
@@ -679,6 +684,43 @@ static NSMenu *favoritesMenu = nil;
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			return [info objectForKey:@"commands"];
+		}
+	}
+
+	return nil;
+}
+
+#pragma mark -
+
+- (void) setIgnoreRules:(NSArray *) ignores forConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSMutableDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [info objectForKey:@"connection"] == connection ) {
+			if( [ignores count] ) {
+				NSMutableArray *copy = (id)ignores;
+				if( ! [ignores isKindOfClass:[NSMutableArray class]] )
+					copy = [[ignores mutableCopy] autorelease];
+				[info setObject:copy forKey:@"ignores"];
+			} else [info removeObjectForKey:@"ignores"];
+			break;
+		}
+	}
+}
+
+- (NSMutableArray *) ignoreRulesForConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSMutableDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [info objectForKey:@"connection"] == connection ) {
+			NSMutableArray *ret = [info objectForKey:@"ignores"];
+			if( ! ret ) {
+				ret = [NSMutableArray array];
+				[info setObject:ret forKey:@"ignores"];
+			}
+			return ret;
 		}
 	}
 
@@ -1192,13 +1234,24 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] server] forKey:@"server"];
 			[data setObject:[NSNumber numberWithUnsignedShort:[(MVChatConnection *)[info objectForKey:@"connection"] serverPort]] forKey:@"port"];
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] preferredNickname] forKey:@"nickname"];
-			if( [(MVChatConnection *)[info objectForKey:@"connection"] alternateNicknames] )
+			if( [[(MVChatConnection *)[info objectForKey:@"connection"] alternateNicknames] count] )
 				[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] alternateNicknames] forKey:@"alternateNicknames"];
-			if( [info objectForKey:@"rooms"] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
+			if( [[info objectForKey:@"rooms"] count] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 			if( [info objectForKey:@"commands"] ) [data setObject:[info objectForKey:@"commands"] forKey:@"commands"];
 			[data setObject:[info objectForKey:@"created"] forKey:@"created"];
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] realName] forKey:@"realName"];
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] username] forKey:@"username"];
+
+			NSMutableArray *permIgnores = [NSMutableArray array];
+			NSEnumerator *ie = [[info objectForKey:@"ignores"] objectEnumerator];
+			KAIgnoreRule *rule = nil;
+
+			while( ( rule = [ie nextObject] ) )
+				if( [rule isPermanent] )
+					[permIgnores addObject:[NSKeyedArchiver archivedDataWithRootObject:rule]];
+
+			if( [permIgnores count] ) [data setObject:permIgnores forKey:@"ignores"];
+
 			[saveList addObject:data];
 		}
 	}
@@ -1233,6 +1286,15 @@ static NSMenu *favoritesMenu = nil;
 		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
 		if( [info objectForKey:@"alternateNicknames"] )
 			[connection setAlternateNicknames:[info objectForKey:@"alternateNicknames"]];
+
+		NSMutableArray *permIgnores = [NSMutableArray array];
+		NSEnumerator *ie = [[info objectForKey:@"ignores"] objectEnumerator];
+		NSData *rule = nil;
+
+		while( ( rule = [ie nextObject] ) )
+			[permIgnores addObject:[NSKeyedUnarchiver unarchiveObjectWithData:rule]];
+
+		[info setObject:permIgnores forKey:@"ignores"];
 
 		[connection setSecure:[[info objectForKey:@"secure"] boolValue]];
 

@@ -5,6 +5,7 @@
 
 #import "JVChatController.h"
 #import "MVApplicationController.h"
+#import "MVConnectionsController.h"
 #import "JVChatWindowController.h"
 #import "JVTabbedChatWindowController.h"
 #import "JVNotificationController.h"
@@ -276,34 +277,13 @@ static JVChatController *sharedInstance = nil;
 #pragma mark -
 #pragma mark Ignores
 
-- (void) addIgnoreForUser:(NSString *) user withMessage:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent {
-	KAIgnoreRule *rule = [KAIgnoreRule ruleForUser:user message:message inRooms:rooms isPermanent:permanent];
-	[_ignoreRules addObject:rule];
-
-	if( permanent ) {
-		NSArray *permanentRules = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVIgnoreRules"];
-		if( ! permanentRules ) permanentRules = [NSArray array];
-		[[NSUserDefaults standardUserDefaults] setObject:[permanentRules arrayByAddingObject:[NSKeyedArchiver archivedDataWithRootObject:rule]] forKey:@"JVIgnoreRules"];
-	}
-}
-
 - (JVIgnoreMatchResult) shouldIgnoreUser:(NSString *) name withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view {
 	JVIgnoreMatchResult ignoreResult = JVNotIgnored;
-	NSEnumerator *renum = [_ignoreRules objectEnumerator];
+	NSEnumerator *renum = [[[MVConnectionsController defaultManager] ignoreRulesForConnection:[view connection]] objectEnumerator];
 	KAIgnoreRule *rule = nil;
 
 	while( ( ignoreResult == JVNotIgnored ) && ( ( rule = [renum nextObject] ) ) )
 		ignoreResult = [rule matchUser:name message:[message string] inView:view];
-
-	if( ignoreResult != JVNotIgnored ) {
-		// send an ignored Notificatoin
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:( ( ignoreResult == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
-		if( [view isMemberOfClass:[JVChatRoom class]] ) [context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", name, [view title]] forKey:@"description"];
-		else [context setObject:[NSString stringWithFormat:@"%@'s message was ignored.", name] forKey:@"description"];
-		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-		[[JVNotificationController defaultManager] performNotification:( ( ignoreResult == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
-	}
 
 	return ignoreResult;
 }
