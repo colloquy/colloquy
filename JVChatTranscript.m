@@ -694,12 +694,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 #pragma mark -
 #pragma mark WebView
 
-#warning Safari 1.3 or greater needs to be installed if the following is defined.
-#warning To compile without Safari 1.3 installed, comment out the line below.
-#define WEBKIT_VERSION_146 1
-
-// Work when not on WebKit/Safari 1.3
-#ifndef WEBKIT_VERSION_146
+// Allows some simple code to work when not built with WebKit/Safari 1.3
+#ifndef _WEB_SCRIPT_OBJECT_H_
 #define WebMenuItemTagGoBack 9
 #define WebMenuItemTagGoForward 10
 #define WebMenuItemTagStop 11
@@ -794,7 +790,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
 // Test for WebKit/Safari 1.3
-#ifdef WEBKIT_VERSION_146
+#ifdef _WEB_SCRIPT_OBJECT_H_
 	if( [display respondsToSelector:@selector( setDrawsBackground: )] ) {
 		DOMCSSStyleDeclaration *style = [sender computedStyleForElement:[(DOMHTMLDocument *)[[sender mainFrame] DOMDocument] body] pseudoElement:nil];
 		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
