@@ -672,7 +672,9 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 	[self _setSilcConn:conn];
 
 	if( status == SILC_CLIENT_CONN_SUCCESS || status == SILC_CLIENT_CONN_SUCCESS_RESUME ) {
-		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
+		[[self _silcClientLock] unlock];
+		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:YES];
+		[[self _silcClientLock] lock];
 
 		[[self _queuedCommandsLock] lock];
 
