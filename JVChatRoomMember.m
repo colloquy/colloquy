@@ -65,28 +65,20 @@
 
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member {
 	NSComparisonResult retVal;
+	int myStatus, yourStatus = 0;
 
-	if( _serverOperator && ! [member serverOperator] ) {
+	myStatus = (_serverOperator * 50) + (_operator * 10) + (_halfOperator * 5) + (_voice * 1);
+	yourStatus = ([member serverOperator] * 50) + ([member operator] * 10) + ([member halfOperator] * 5) + ([member voice] * 1);
+	
+	if ( myStatus > yourStatus ) {
 		retVal = NSOrderedAscending;
-	} else if( ! _serverOperator && [member serverOperator] ) {
-		retVal = NSOrderedDescending;
-	} else if( _operator && ! [member operator] && ! [member serverOperator] ) {
-		retVal = NSOrderedAscending;
-	} else if ( ! _operator && [member operator] ) {
-		retVal = NSOrderedDescending;
-	} else if( _halfOperator && ! [member halfOperator] && ! [member operator] && ! [member serverOperator] ) {
-		retVal = NSOrderedAscending;
-	} else if( ! _halfOperator && [member halfOperator] ) {
-		retVal = NSOrderedDescending;
-	} else if ( _voice && ! [member voice] && ! [member operator] && ! [member halfOperator] && ! [member serverOperator] ) {
-		retVal = NSOrderedAscending;
-	} else if ( ! _voice && [member voice] ) {
+	} else if ( yourStatus > myStatus ) {
 		retVal = NSOrderedDescending;
 	} else {
 		// retVal = [self compareUsingBuddyStatus:member];
 		retVal = [[self title] caseInsensitiveCompare:[member title]];
 	}
-
+	
 	return retVal;
 }
 
