@@ -2,6 +2,25 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {
+                changeAutoAccept = id; 
+                changeRemoveTransfers = id; 
+                changeSaveDownloads = id; 
+                toggleOpenSafeFiles = id; 
+            }; 
+            CLASS = JVFileTransferPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                autoAccept = NSPopUpButton; 
+                maxRate = NSTextField; 
+                minRate = NSTextField; 
+                openSafe = NSButton; 
+                removeTransfers = NSPopUpButton; 
+                saveDownloads = NSPopUpButton; 
+            }; 
+            SUPERCLASS = NSPreferencesModule; 
+        }, 
+        {
             CLASS = NSPreferencesModule; 
             LANGUAGE = ObjC; 
             OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
