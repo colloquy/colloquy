@@ -60,6 +60,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 - (void) initializeFromDefaults {
+	[preview setPolicyDelegate:self];
 	[self changePreferences:nil];
 }
 
@@ -267,5 +268,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[[preview preferences] setSerifFontFamily:[font familyName]];
 	[[preview preferences] setSansSerifFontFamily:[font familyName]];
 	[self updatePreview];
+}
+
+- (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
+	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"about"]  ) {
+		[listener use];
+	} else {
+		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
+		[[NSWorkspace sharedWorkspace] openURL:url];	
+		[listener ignore];
+	}
 }
 @end
