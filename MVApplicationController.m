@@ -16,8 +16,9 @@
 #import "MVChatPluginManager.h"
 #import "JVChatController.h"
 #import "MVChatConnection.h"
-
 #import "JVChatRoomBrowser.h"
+
+#import <Foundation/NSDebug.h>
 
 @interface WebCoreCache
 + (void) setDisabled:(BOOL) disabled;
@@ -127,6 +128,9 @@ static BOOL applicationIsTerminating = NO;
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
+//	NSZombieEnabled = YES;
+//	NSDeallocateZombies = NO;
+//	[NSAutoreleasePool enableFreedObjectCheck:YES];
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
