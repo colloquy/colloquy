@@ -1876,7 +1876,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSFont *baseFont = nil;
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputUsesStyleFont"] ) {
 		WebPreferences *preferences = [display preferences];
-		baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[preferences standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[preferences defaultFontSize]];
+		// in some versions of WebKit (v125.9 at least), this is a font name, not a font family, try both
+		NSString *fontFamily = [preferences standardFontFamily];
+		int fontSize = [preferences defaultFontSize];
+		baseFont = [NSFont fontWithName:fontFamily size:fontSize];
+		if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:fontFamily traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:fontSize];
 	}
 	[send setBaseFont:baseFont];
 }
