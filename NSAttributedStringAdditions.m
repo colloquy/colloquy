@@ -152,7 +152,7 @@ static WebView *fragmentWebView = nil;
 		NSString *htmlStart = [dict objectForKey:@"XHTMLStart"];
 		NSString *htmlEnd = [dict objectForKey:@"XHTMLEnd"];
 		NSSet *classes = [dict objectForKey:@"CSSClasses"];
-		BOOL bold = NO, italic = NO, underline = NO;
+		BOOL bold = NO, italic = NO, underline = NO, strikethrough = NO;
 
 		NSMutableString *spanString = [NSMutableString stringWithString:@"<span"];
 		NSMutableString *styleString = [NSMutableString string];
@@ -184,6 +184,7 @@ static WebView *fragmentWebView = nil;
 			if( traits & NSBoldFontMask ) bold = YES;
 			if( traits & NSItalicFontMask ) italic = YES;
 			if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
+			if( [[dict objectForKey:NSStrikethroughStyleAttributeName] intValue] ) strikethrough = YES;
 		}
 
 		if( [styleString length] ) [spanString appendFormat:@" style=\"%@\"", styleString];
@@ -194,6 +195,7 @@ static WebView *fragmentWebView = nil;
 		if( bold ) [ret appendString:@"<b>"];
 		if( italic ) [ret appendString:@"<i>"];
 		if( underline ) [ret appendString:@"<u>"];
+		if( strikethrough ) [ret appendString:@"<s>"];
 		if( [htmlStart length] ) [ret appendString:htmlStart];
 		if( link ) [ret appendFormat:@"<a href=\"%@\">", link];
 
@@ -201,6 +203,7 @@ static WebView *fragmentWebView = nil;
 
 		if( link ) [ret appendString:@"</a>"];
 		if( [htmlEnd length] ) [ret appendString:htmlEnd];
+		if( strikethrough ) [ret appendString:@"</s>"];
 		if( underline ) [ret appendString:@"</u>"];
 		if( italic ) [ret appendString:@"</i>"];
 		if( bold ) [ret appendString:@"</b>"];
@@ -246,7 +249,7 @@ static WebView *fragmentWebView = nil;
 	NSScanner *scanner = [NSScanner scannerWithString:message];
 	[scanner setCharactersToBeSkipped:nil]; // don't skip leading whitespace!
 
-	char boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0, inverseStack = 0;
+	char boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0;
 
 	while( ! [scanner isAtEnd] ) {
 		NSString *attribs = nil;
@@ -257,9 +260,10 @@ static WebView *fragmentWebView = nil;
 		for( i = 0; i < [attribs length]; i++, location++ ) {
 			switch( [attribs characterAtIndex:i] ) {
 			case '\017': // reset all
-				boldStack = italicStack = underlineStack = strikeStack = inverseStack = 0;
+				boldStack = italicStack = underlineStack = strikeStack = 0;
 				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:( NSBoldFontMask | NSItalicFontMask )];
 				if( font ) [attributes setObject:font forKey:NSFontAttributeName];
+				[attributes removeObjectForKey:NSStrikethroughStyleAttributeName];
 				[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
 				[attributes removeObjectForKey:NSForegroundColorAttributeName];
 				[attributes removeObjectForKey:NSBackgroundColorAttributeName];
@@ -318,7 +322,6 @@ static WebView *fragmentWebView = nil;
 				break;
 			case '\006': // ctcp 2 formatting (http://www.lag.net/~robey/ctcp/ctcp2.2.txt)
 				if( [message length] > ( location + 2 ) ) {
-					NSString *sign = nil;
 					BOOL off = NO;
 
 					[scanner setScanLocation:( location + 2 )];
@@ -326,11 +329,11 @@ static WebView *fragmentWebView = nil;
 					switch( [message characterAtIndex:( location + 1 )] ) {
 					case 'B': // bold
 						if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
-						if( [scanner scanString:@"-" intoString:&sign] ) {
-							if( boldStack > 1 ) boldStack--;
+						if( [scanner scanString:@"-" intoString:NULL] ) {
+							if( boldStack >= 1 ) boldStack--;
 							off = YES;
 						} else { // on is the default
-							[scanner scanString:@"+" intoString:&sign];
+							[scanner scanString:@"+" intoString:NULL];
 							boldStack++;
 						}
 
@@ -344,11 +347,11 @@ static WebView *fragmentWebView = nil;
 						break;
 					case 'I': // italic
 						if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
-						if( [scanner scanString:@"-" intoString:&sign] ) {
-							if( italicStack > 1 ) italicStack--;
+						if( [scanner scanString:@"-" intoString:NULL] ) {
+							if( italicStack >= 1 ) italicStack--;
 							off = YES;
 						} else { // on is the default
-							[scanner scanString:@"+" intoString:&sign];
+							[scanner scanString:@"+" intoString:NULL];
 							italicStack++;
 						}
 
@@ -362,11 +365,11 @@ static WebView *fragmentWebView = nil;
 						break;
 					case 'U': // underline
 						if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
-						if( [scanner scanString:@"-" intoString:&sign] ) {
-							if( boldStack > 1 ) underlineStack--;
+						if( [scanner scanString:@"-" intoString:NULL] ) {
+							if( underlineStack >= 1 ) underlineStack--;
 							off = YES;
 						} else { // on is the default
-							[scanner scanString:@"+" intoString:&sign];
+							[scanner scanString:@"+" intoString:NULL];
 							underlineStack++;
 						}
 
@@ -378,11 +381,11 @@ static WebView *fragmentWebView = nil;
 						break;
 					case 'S': // strikethrough
 						if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
-						if( [scanner scanString:@"-" intoString:&sign] ) {
-							if( strikeStack > 1 ) strikeStack--;
+						if( [scanner scanString:@"-" intoString:NULL] ) {
+							if( strikeStack >= 1 ) strikeStack--;
 							off = YES;
 						} else { // on is the default
-							[scanner scanString:@"+" intoString:&sign];
+							[scanner scanString:@"+" intoString:NULL];
 							strikeStack++;
 						}
 
@@ -392,31 +395,13 @@ static WebView *fragmentWebView = nil;
 							[attributes removeObjectForKey:NSStrikethroughStyleAttributeName];
 						}
 						break;
-					case 'V': // inverse
-						if( [[options objectForKey:@"IgnoreFontColors"] boolValue] ) break;
-						if( [scanner scanString:@"-" intoString:&sign] ) {
-							if( inverseStack > 1 ) inverseStack--;
-							off = YES;
-						} else { // on is the default
-							[scanner scanString:@"+" intoString:&sign];
-							inverseStack++;
-						}
-
-						if( inverseStack == 1 && ! off ) {
-							NSColor *foregroundColor = [[[attributes objectForKey:NSForegroundColorAttributeName] retain] autorelease];
-							NSColor *backgroundColor = [[[attributes objectForKey:NSBackgroundColorAttributeName] retain] autorelease];
-							if( ! foregroundColor ) foregroundColor = [NSColor colorWithCalibratedRed:0. green:0. blue:0. alpha:1.];
-							if( ! backgroundColor ) backgroundColor = [NSColor colorWithCalibratedRed:1. green:1. blue:1. alpha:1.];
-							[attributes setObject:backgroundColor forKey:NSForegroundColorAttributeName];
-							[attributes setObject:foregroundColor forKey:NSBackgroundColorAttributeName];
-						} else if( ! inverseStack ) {
-							NSColor *foregroundColor = [[[attributes objectForKey:NSForegroundColorAttributeName] retain] autorelease];
-							NSColor *backgroundColor = [[[attributes objectForKey:NSBackgroundColorAttributeName] retain] autorelease];
-							if( backgroundColor ) [attributes setObject:backgroundColor forKey:NSForegroundColorAttributeName];
-							if( foregroundColor ) [attributes setObject:foregroundColor forKey:NSBackgroundColorAttributeName];
-						}
 					case 'C': // color
 						if( [[options objectForKey:@"IgnoreFontColors"] boolValue] ) break;
+						if( [message characterAtIndex:[scanner scanLocation]] == '\006' ) { // reset colors
+							[attributes removeObjectForKey:NSForegroundColorAttributeName];
+							[attributes removeObjectForKey:NSBackgroundColorAttributeName];
+							break;
+						}
 						// scan for foreground color
 						if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
 							NSString *hexColor = nil;
@@ -424,12 +409,18 @@ static WebView *fragmentWebView = nil;
 								hexColor = [message substringWithRange:NSMakeRange( [scanner scanLocation], 6 )];
 								NSColor *foregroundColor = [NSColor colorWithHTMLAttributeValue:hexColor];
 								if( foregroundColor ) [attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
-								[scanner setScanLocation:( [scanner scanLocation] + 7 )];
+								[scanner setScanLocation:( [scanner scanLocation] + 6 )];
 							}
 						} else if( isxdigit( [message characterAtIndex:[scanner scanLocation]] ) ) { // indexed color
-							unsigned int index = [message characterAtIndex:[scanner scanLocation]];
+							unsigned int index = toupper( [message characterAtIndex:[scanner scanLocation]] );
+							if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
+							index -= '0';
+							if( index > 15 ) break;
 							NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
 							if( foregroundColor ) [attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
+							[scanner setScanLocation:( [scanner scanLocation] + 1 )];
+						} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the foreground color
+							[attributes removeObjectForKey:NSForegroundColorAttributeName];
 						} else [scanner scanString:@"-" intoString:NULL]; // skip the foreground color
 						// scan for background color
 						if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
@@ -438,12 +429,18 @@ static WebView *fragmentWebView = nil;
 								hexColor = [message substringWithRange:NSMakeRange( [scanner scanLocation], 6 )];
 								NSColor *backgroundColor = [NSColor colorWithHTMLAttributeValue:hexColor];
 								if( backgroundColor ) [attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
-								[scanner setScanLocation:( [scanner scanLocation] + 7 )];
+								[scanner setScanLocation:( [scanner scanLocation] + 6 )];
 							}
 						} else if( isxdigit( [message characterAtIndex:[scanner scanLocation]] ) ) { // indexed color
-							unsigned int index = [message characterAtIndex:[scanner scanLocation]];
+							unsigned int index = toupper( [message characterAtIndex:[scanner scanLocation]] );
+							if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
+							index -= '0';
+							if( index > 15 ) break;
 							NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
 							if( backgroundColor ) [attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
+							[scanner setScanLocation:( [scanner scanLocation] + 1 )];
+						} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the background color
+							[attributes removeObjectForKey:NSBackgroundColorAttributeName];
 						} else [scanner scanString:@"-" intoString:NULL]; // skip the background color
 					case 'F': // font size
 					case 'E': // encoding
@@ -451,10 +448,11 @@ static WebView *fragmentWebView = nil;
 						// not supported yet
 						break;
 					case 'N': // normal (reset)
-						boldStack = italicStack = underlineStack = strikeStack = inverseStack = 0;
+						boldStack = italicStack = underlineStack = strikeStack = 0;
 						NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:( NSBoldFontMask | NSItalicFontMask )];
 						if( font ) [attributes setObject:font forKey:NSFontAttributeName];
-							[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
+						[attributes removeObjectForKey:NSStrikethroughStyleAttributeName];
+						[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
 						[attributes removeObjectForKey:NSForegroundColorAttributeName];
 						[attributes removeObjectForKey:NSBackgroundColorAttributeName];
 					}
@@ -469,6 +467,7 @@ static WebView *fragmentWebView = nil;
  		[scanner scanUpToCharactersFromSet:formatCharacters intoString:&text];
 		if( [text length] ) {
 			NSAttributedString *new = [[NSAttributedString alloc] initWithString:text attributes:attributes];
+			NSLog( @"%@", new );
 			[ret appendAttributedString:new];
 			[new release];
 		}
