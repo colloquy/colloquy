@@ -1,13 +1,8 @@
-#import <Foundation/NSObject.h>
+#import "JVChatTranscript.h"
 #import <AppKit/NSNibDeclarations.h>
-#import "JVChatWindowController.h"
-//#import <libxml/tree.h>
-//#import <libxslt/xsltInternals.h>
 
 @class NSView;
-@class WebView;
 @class MVTextView;
-@class MVMenuButton;
 @class NSString;
 @class MVChatConnection;
 @class NSDate;
@@ -20,51 +15,28 @@
 @class NSAttributedString;
 @class NSMutableAttributedString;
 
-@interface JVDirectChat : NSObject <JVChatViewController> {
+@interface JVDirectChat : JVChatTranscript {
 	@protected
-	IBOutlet NSView *contents;
-	IBOutlet WebView *display;
 	IBOutlet MVTextView *send;
-	IBOutlet MVMenuButton *chooseStyle;
-	/* xmlDocPtr */ void *_xmlLog;
-	/* xsltStylesheetPtr */ void *_chatXSLStyle;
-	JVChatWindowController *_windowController;
 	NSString *_target;
 	MVChatConnection *_connection;
 	NSMutableArray *_sendHistory;
-	NSBundle *_chatStyle;
-	NSString *_chatStyleVariant;
-	NSBundle *_chatEmoticons;
-	NSDictionary *_emoticonMappings;
 	NSMutableArray *_waitingAlerts;
 	NSMutableDictionary *_waitingAlertNames;
-	NSStringEncoding _encoding;
 	unsigned int _messageId;
 	BOOL _firstMessage;
-	BOOL _nibLoaded;
 	BOOL _isActive;
 	BOOL _newMessage;
 	BOOL _newHighlightMessage;
 	BOOL _cantSendMessages;
 	int _historyIndex;
 }
+- (id) initWithTarget:(NSString *) target forConnection:(MVChatConnection *) connection;
+
 - (void) setTarget:(NSString *) target;
+- (NSString *) target;
 
 - (void) showAlert:(NSPanel *) alert withName:(NSString *) name;
-
-- (IBAction) changeChatStyle:(id) sender;
-- (void) setChatStyle:(NSBundle *) style withVariant:(NSString *) variant;
-- (NSBundle *) chatStyle;
-
-- (IBAction) changeChatStyleVariant:(id) sender;
-- (void) setChatStyleVariant:(NSString *) variant;
-- (NSString *) chatStyleVariant;
-
-- (IBAction) changeChatEmoticons:(id) sender;
-- (void) setChatEmoticons:(NSBundle *) emoticons;
-- (NSBundle *) chatEmoticons;
-
-- (IBAction) leaveChat:(id) sender;
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
