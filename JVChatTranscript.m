@@ -177,7 +177,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	}
 
 	[chooseStyle setMenu:nil];
+	[chooseStyle setDrawsArrow:YES];
+
 	[chooseEmoticon setMenu:nil];
+	[chooseEmoticon setDrawsArrow:YES];
+
 	[self _updateChatStylesMenu];
 	[self _updateChatEmoticonsMenu];
 
@@ -617,10 +621,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
 
-	if( [identifier isEqual:JVToolbarToggleChatDrawerItemIdentifier] ) {
+	if( [identifier isEqualToString:JVToolbarToggleChatDrawerItemIdentifier] ) {
 		toolbarItem = [_windowController toggleChatDrawerToolbarItem];
 		[_toolbarItems setObject:toolbarItem forKey:identifier];
-	} else if( [identifier isEqual:JVToolbarChooseStyleItemIdentifier] /* && willBeInserted */ ) {
+	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] /* && willBeInserted */ ) {
 		[_toolbarItems setObject:toolbarItem forKey:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Style", "choose style toolbar item label" )];
@@ -628,6 +632,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Change chat style", "choose style toolbar item tooltip" )];
 		[chooseStyle setToolbarItem:toolbarItem];
+		[toolbarItem setTarget:self];
 		[toolbarItem setView:chooseStyle];
 
 		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style", "choose style toolbar item menu representation title" ) action:NULL keyEquivalent:@""] autorelease];
@@ -638,7 +643,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		[menuItem setSubmenu:[chooseStyle menu]];
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
-	} else if( [identifier isEqual:JVToolbarEmoticonsItemIdentifier] /* && willBeInserted */ ) {
+	} else if( [identifier isEqualToString:JVToolbarEmoticonsItemIdentifier] /* && willBeInserted */ ) {
 		[_toolbarItems setObject:toolbarItem forKey:identifier];
 
 		[chooseEmoticon setSmallImage:[NSImage imageNamed:@"emoticonSmall"]];
@@ -648,6 +653,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Change Emoticons", "chooseemoticons toolbar item tooltip" )];
 		[chooseEmoticon setToolbarItem:toolbarItem];
+		[toolbarItem setTarget:self];
 		[toolbarItem setView:chooseEmoticon];
 
 		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item menu representation title" ) action:NULL keyEquivalent:@""] autorelease];
@@ -674,8 +680,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (BOOL) validateToolbarItem:(NSToolbarItem *) toolbarItem {
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"] && [[toolbarItem itemIdentifier] isEqual:NSToolbarShowColorsItemIdentifier] ) return NO;
-	else if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"] && [[toolbarItem itemIdentifier] isEqual:NSToolbarShowColorsItemIdentifier] ) return YES;
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"] && [[toolbarItem itemIdentifier] isEqualToString:NSToolbarShowColorsItemIdentifier] ) return NO;
+	else if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"] && [[toolbarItem itemIdentifier] isEqualToString:NSToolbarShowColorsItemIdentifier] ) return YES;
 	return YES;
 }
 
