@@ -27,6 +27,8 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 - (void) _delete:(id) sender;
 @end
 
+#pragma mark -
+
 @interface NSDisclosureButtonCell
 + (id) alloc;
 - (id) initWithCell:(NSCell *) cell;
@@ -56,8 +58,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedPasswordNotification object:nil];
 
-		[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( _handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
-
 		[self _loadBookmarkList];
 	}
 	return self;
@@ -75,7 +75,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[_passConnection autorelease];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
 
 	_bookmarks = nil;
 	_joinRooms = nil;
@@ -331,7 +330,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		if( ! handled && ! [url user] ) {
 			[newAddress setObjectValue:[url host]];
 			if( [url port] ) [newPort setObjectValue:[url port]];
-			[openConnection makeKeyAndOrderFront:nil];
+			[self newConnection:nil];
 			handled = YES;
 		} else if( ! handled && [url user] ) {
 			connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
@@ -999,10 +998,5 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 - (void) _openConsole:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
 	[[JVChatController defaultManager] chatConsoleForConnection:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] ifExists:NO];
-}
-
-- (void) _handleURLEvent:(NSAppleEventDescriptor *) event withReplyEvent:(NSAppleEventDescriptor *) replyEvent {
-	NSURL *url = [NSURL URLWithString:[[event descriptorAtIndex:1] stringValue]];
-	[self handleURL:url andConnectIfPossible:YES];
 }
 @end
