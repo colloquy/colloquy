@@ -207,51 +207,53 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSMutableParagraphStyle *para = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 	unsigned int numeric = 0;
 
-	if( ! [strMsg length] || ( _ignorePRIVMSG && [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location == NSNotFound ) )
-		return;
+	if( [[self connection] type] == MVChatConnectionIRCType ) {
+		if( ! [strMsg length] || ( _ignorePRIVMSG && [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location == NSNotFound ) )
+			return;
 
-	if( ! _verbose ) {
-		[strMsg replaceOccurrencesOfString:@":" withString:@"" options:NSAnchoredSearch range:NSMakeRange( 0, 1 )];
-		[strMsg replaceOccurrencesOfString:@" :" withString:@" " options:NSLiteralSearch range:NSMakeRange( 0, [strMsg length] )];
-	}
-
-	[strMsg replaceOccurrencesOfString:@"\r\n" withString:@"" options:NSAnchoredSearch | NSBackwardsSearch range:NSMakeRange( 0, [strMsg length] )];
-
-	if( ! outbound && ! _verbose ) {
-		NSMutableArray *parts = [[[strMsg componentsSeparatedByString:@" "] mutableCopy] autorelease];
-		NSString *tempStr = nil;
-		unsigned i = 0, c = 0;
-
-		if( [parts count] >= 3 && [[parts objectAtIndex:2] isEqualToString:[_connection nickname]] )
-			[parts removeObjectAtIndex:2];
-
-		if( [parts count] >= 2 && ( numeric = [[parts objectAtIndex:1] intValue] ) )
-			[parts removeObjectAtIndex:1];
-		else if( [parts count] >= 2 && ( [[parts objectAtIndex:1] isEqualToString:@"PRIVMSG"] && [strMsg rangeOfString:@"\001"].location != NSNotFound && [strMsg rangeOfString:@" ACTION"].location == NSNotFound ) )
-			[parts replaceObjectAtIndex:1 withObject:@"CTCP REQUEST"];
-		else if( [parts count] >= 2 && ( [[parts objectAtIndex:1] isEqualToString:@"NOTICE"] && [strMsg rangeOfString:@"\001"].location != NSNotFound ) )
-			[parts replaceObjectAtIndex:1 withObject:@"CTCP REPLY"];
-
-		tempStr = [parts objectAtIndex:0];
-		if( tempStr && [tempStr rangeOfString:@"@"].location == NSNotFound && [tempStr rangeOfString:@"."].location != NSNotFound && [NSURL URLWithString:[@"irc://" stringByAppendingString:tempStr]] ) {
-			[parts removeObjectAtIndex:0];
-		} else if( [tempStr hasPrefix:[NSString stringWithFormat:@"%@!", [_connection nickname]]] ) {
-			[parts removeObjectAtIndex:0];
+		if( ! _verbose ) {
+			[strMsg replaceOccurrencesOfString:@":" withString:@"" options:NSAnchoredSearch range:NSMakeRange( 0, 1 )];
+			[strMsg replaceOccurrencesOfString:@" :" withString:@" " options:NSLiteralSearch range:NSMakeRange( 0, [strMsg length] )];
 		}
 
-		for( i = 0, c = [parts count]; i < c; i++ ) {
-			tempStr = [@"irc://" stringByAppendingString:[parts objectAtIndex:i]];
-			if( ( tempStr = [[NSURL URLWithString:tempStr] user] ) && [tempStr rangeOfString:@"!"].location != NSNotFound )
-				[parts replaceObjectAtIndex:i withObject:[tempStr substringToIndex:[tempStr rangeOfString:@"!"].location]];
-		}
+		[strMsg replaceOccurrencesOfString:@"\r\n" withString:@"" options:NSAnchoredSearch | NSBackwardsSearch range:NSMakeRange( 0, [strMsg length] )];
 
-		strMsg = (NSMutableString *) [parts componentsJoinedByString:@" "];
-		if( numeric ) strMsg = [NSString stringWithFormat:@"%03u: %@", numeric, strMsg];
-	} else if( outbound && ! _verbose ) {
-		if( [strMsg rangeOfString:@"NOTICE"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound ) {
-			[strMsg replaceOccurrencesOfString:@"NOTICE" withString:@"CTCP REPLY" options:NSAnchoredSearch range:NSMakeRange( 0, 6 )];
-		} else if( [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound && [strMsg rangeOfString:@" ACTION"].location == NSNotFound ) {
-			[strMsg replaceOccurrencesOfString:@"PRIVMSG" withString:@"CTCP REQUEST" options:NSAnchoredSearch range:NSMakeRange( 0, 7 )];
+		if( ! outbound && ! _verbose ) {
+			NSMutableArray *parts = [[[strMsg componentsSeparatedByString:@" "] mutableCopy] autorelease];
+			NSString *tempStr = nil;
+			unsigned i = 0, c = 0;
+
+			if( [parts count] >= 3 && [[parts objectAtIndex:2] isEqualToString:[_connection nickname]] )
+				[parts removeObjectAtIndex:2];
+
+			if( [parts count] >= 2 && ( numeric = [[parts objectAtIndex:1] intValue] ) )
+				[parts removeObjectAtIndex:1];
+			else if( [parts count] >= 2 && ( [[parts objectAtIndex:1] isEqualToString:@"PRIVMSG"] && [strMsg rangeOfString:@"\001"].location != NSNotFound && [strMsg rangeOfString:@" ACTION"].location == NSNotFound ) )
+				[parts replaceObjectAtIndex:1 withObject:@"CTCP REQUEST"];
+			else if( [parts count] >= 2 && ( [[parts objectAtIndex:1] isEqualToString:@"NOTICE"] && [strMsg rangeOfString:@"\001"].location != NSNotFound ) )
+				[parts replaceObjectAtIndex:1 withObject:@"CTCP REPLY"];
+
+			tempStr = [parts objectAtIndex:0];
+			if( tempStr && [tempStr rangeOfString:@"@"].location == NSNotFound && [tempStr rangeOfString:@"."].location != NSNotFound && [NSURL URLWithString:[@"irc://" stringByAppendingString:tempStr]] ) {
+				[parts removeObjectAtIndex:0];
+			} else if( [tempStr hasPrefix:[NSString stringWithFormat:@"%@!", [_connection nickname]]] ) {
+				[parts removeObjectAtIndex:0];
+			}
+
+			for( i = 0, c = [parts count]; i < c; i++ ) {
+				tempStr = [@"irc://" stringByAppendingString:[parts objectAtIndex:i]];
+				if( ( tempStr = [[NSURL URLWithString:tempStr] user] ) && [tempStr rangeOfString:@"!"].location != NSNotFound )
+					[parts replaceObjectAtIndex:i withObject:[tempStr substringToIndex:[tempStr rangeOfString:@"!"].location]];
+			}
+
+			strMsg = (NSMutableString *) [parts componentsJoinedByString:@" "];
+			if( numeric ) strMsg = [NSString stringWithFormat:@"%03u: %@", numeric, strMsg];
+		} else if( outbound && ! _verbose ) {
+			if( [strMsg rangeOfString:@"NOTICE"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound ) {
+				[strMsg replaceOccurrencesOfString:@"NOTICE" withString:@"CTCP REPLY" options:NSAnchoredSearch range:NSMakeRange( 0, 6 )];
+			} else if( [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound && [strMsg rangeOfString:@" ACTION"].location == NSNotFound ) {
+				[strMsg replaceOccurrencesOfString:@"PRIVMSG" withString:@"CTCP REQUEST" options:NSAnchoredSearch range:NSMakeRange( 0, 7 )];
+			}
 		}
 	}
 
