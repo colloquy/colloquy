@@ -187,7 +187,8 @@
 }
 
 - (NSString *) toolTip {
-	return [self title];
+	//return [self title];
+	return @"";
 }
 
 - (int) numberOfChildren {
