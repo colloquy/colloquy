@@ -123,8 +123,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	if( ( self = [self init] ) ) {
 		xmlFreeDoc( _xmlLog );
 		if( ! ( _xmlLog = xmlParseFile( [filename fileSystemRepresentation] ) ) ) return nil;
+
 		_filePath = [filename copy];
 		_isArchive = YES;
+
+		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:filename]];
 	}
 	return self;
 }
@@ -378,6 +381,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[_chatStyle bundleIdentifier] UTF8String] );
 	xmlSaveFormatFile( [path fileSystemRepresentation], _xmlLog, (int) [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] );	
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
+	[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
 }
 
 #pragma mark -
