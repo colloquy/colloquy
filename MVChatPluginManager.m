@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
+#import "NSNumberAdditions.h"
+#import "NSMethodSignatureAdditions.h"
 
 static MVChatPluginManager *sharedInstance = nil;
 
@@ -84,7 +86,9 @@ static MVChatPluginManager *sharedInstance = nil;
 }
 
 - (NSSet *) pluginsThatRespondToSelector:(SEL) selector {
-	NSEnumerator *enumerator = [self pluginEnumerator];
+	NSParameterAssert( selector != NULL );
+
+	NSEnumerator *enumerator = [_plugins objectEnumerator];
 	NSMutableSet *qualified = [NSMutableSet set];
 	id plugin = nil;
 
@@ -92,10 +96,52 @@ static MVChatPluginManager *sharedInstance = nil;
 		if( [plugin respondsToSelector:selector] )
 			[qualified addObject:plugin];
 
-	return qualified;
+	return ( [qualified count] ? qualified : nil );
 }
 
 - (NSEnumerator *) pluginEnumerator {
 	return [_plugins objectEnumerator];
+}
+
+- (NSEnumerator *) enumeratorOfPluginsThatRespondToSelector:(SEL) selector {
+	return [[self pluginsThatRespondToSelector:selector] objectEnumerator];
+}
+
+#pragma mark -
+
+- (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
+	NSParameterAssert( invocation != nil );	
+	NSParameterAssert( [invocation selector] != NULL );	
+
+	NSEnumerator *enumerator = [self enumeratorOfPluginsThatRespondToSelector:[invocation selector]];
+	id plugin = nil;
+
+	if( ! enumerator ) return nil;
+
+	NSMutableArray *results = [NSMutableArray array];
+	NSMethodSignature *sig = [invocation methodSignature];
+
+	while( ( plugin = [enumerator nextObject] ) ) {
+		[invocation invokeWithTarget:plugin];
+
+		if( ! strcmp( [sig methodReturnType], @encode( id ) ) ) {
+			id ret = nil;
+			[invocation getReturnValue:&ret];
+			if( ret ) [results addObject:ret];
+			else [results addObject:[NSNull null]];
+			if( stop && ret ) return results;
+		} else {
+			void *ret = ( [sig methodReturnLength] ? malloc( [sig methodReturnLength] ) : NULL );
+			if( ret ) {
+				[invocation getReturnValue:ret];
+				id res = [NSNumber numberWithBytes:ret objCType:[sig methodReturnType]];
+				if( ! res ) res = [NSValue valueWithBytes:ret objCType:[sig methodReturnType]];
+				[results addObject:res];
+				if( [res isKindOfClass:[NSNumber class]] && stop && [res boolValue] ) return results;
+			} else if( [results count] ) [results addObject:[NSNull null]];
+		}
+	}
+
+	return results;
 }
 @end
