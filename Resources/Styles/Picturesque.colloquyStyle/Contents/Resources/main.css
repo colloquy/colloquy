@@ -59,3 +59,12 @@ img {
 .envelope .header.highlight {
 	background-image: url( "highlight.png" );
 }
+
+.itunes {
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
+.itunes > *:hover {
+	text-decoration: underline;
+}

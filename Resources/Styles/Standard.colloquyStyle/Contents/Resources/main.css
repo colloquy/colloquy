@@ -81,3 +81,12 @@ body {
 	font-size: 80%;
 	color: #aaa;
 }
+
+.itunes {
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
+.itunes > *:hover {
+	text-decoration: underline;
+}
