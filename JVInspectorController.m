@@ -21,6 +21,10 @@ static NSMutableSet *inspectors = nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithObject:nil lockedOn:NO] ) );
 }
 
++ (IBAction) showInspector:(id) sender {
+	[[self sharedInspector] show:sender];
+}
+
 + (JVInspectorController *) inspectorOfObject:(id <JVInspection>) object {
 	extern NSMutableSet *inspectors;
 	NSEnumerator *e = [inspectors objectEnumerator];
@@ -178,7 +182,8 @@ static NSMutableSet *inspectors = nil;
 			if( NSHeight( windowFrame ) < minSize.height ) newSize.height = minSize.height;
 			[self _resizeWindowForContentSize:newSize];
 		}
-		[[self window] setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ \"%@\" Info", "inspector title format order: object type, object title/name" ), [_inspector type], [_inspector title]]];
+//		[[self window] setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ \"%@\" Info", "inspector title format order: object type, object title/name" ), [_inspector type], [_inspector title]]];
+		[[self window] setTitle:[_inspector title]];
 		[[self window] setMinSize:[NSWindow frameRectForContentRect:NSMakeRect( 0., 0., minSize.width, minSize.height) styleMask:[[self window] styleMask]].size];
 		[[self window] setContentView:view];
 

@@ -39,6 +39,7 @@
 	id <JVInspector> _inspector;
 }
 + (JVInspectorController *) sharedInspector;
++ (IBAction) showInspector:(id) sender;
 + (JVInspectorController *) inspectorOfObject:(id <JVInspection>) object;
 
 - (id) initWithObject:(id <JVInspection>) object lockedOn:(BOOL) locked;
