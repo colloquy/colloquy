@@ -15,6 +15,8 @@
 #import "MVTextView.h"
 #import "MVMenuButton.h"
 
+static NSArray *JVAutoActionVerbs = nil;
+
 const NSStringEncoding JVAllowedTextEncodings[] = {
 	/* Universal */
 	NSUTF8StringEncoding,
@@ -189,6 +191,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) dealloc {
+	extern NSArray *JVAutoActionVerbs;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[encodingView release];
@@ -206,6 +209,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		NSReleaseAlertPanel( alert );
 
 	[_waitingAlerts release];
+
+	[JVAutoActionVerbs autorelease];
+	if( [JVAutoActionVerbs retainCount] == 1 )
+		JVAutoActionVerbs = nil;
 
 	encodingView = nil;
 	_target = nil;
@@ -776,22 +783,23 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				handled = [self processUserCommand:command withArguments:arguments];
 
 				if( ! handled ) {
-//					NSRunInformationalAlertPanel( NSLocalizedString( @"Command not recognised", "IRC command not recognised dialog title" ), NSLocalizedString( @"The command you specified is not recognised by Colloquy or it's plugins. No action can be performed.", "IRC command not recognised dialog message" ), nil, nil, nil );
 					[[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
-//					return;
 				}
 			} else {
-/*				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
-					extern NSArray *chatActionVerbs;
+				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
+					extern NSArray *JVAutoActionVerbs;
+					if( ! JVAutoActionVerbs ) JVAutoActionVerbs = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]] retain];
+					else [JVAutoActionVerbs retain];
 					NSString *tempString = [[subMsg string] stringByAppendingString:@" "];
-					enumerator = [chatActionVerbs objectEnumerator];
-					while( ( item = [enumerator nextObject] ) ) {
-						if( [tempString hasPrefix:[item stringByAppendingString:@" "]] ) {
+					NSEnumerator *enumerator = [JVAutoActionVerbs objectEnumerator];
+					NSString *verb = nil;
+					while( ( verb = [enumerator nextObject] ) ) {
+						if( [tempString hasPrefix:[verb stringByAppendingString:@" "]] ) {
 							action = YES;
 							break;
 						}
 					}
-				}*/
+				}
 
 				subMsg = [self sendAttributedMessage:subMsg asAction:action];
 				[self echoSentMessageToDisplay:subMsg asAction:action];
