@@ -32,6 +32,7 @@
 - (MVChatUser *) user;
 - (JVBuddy *) buddy;
 
+- (NSString *) displayName;
 - (NSString *) nickname;
 - (NSString *) realName;
 - (NSString *) username;

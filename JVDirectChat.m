@@ -20,6 +20,7 @@
 #import "JVTabbedChatWindowController.h"
 #import "JVStyle.h"
 #import "JVChatRoom.h"
+#import "JVChatRoomMember.h"
 #import "JVChatMessage.h"
 #import "JVNotificationController.h"
 #import "MVConnectionsController.h"
@@ -699,7 +700,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message {
-	if( [[message sender] isKindOfClass:[NSString class]] && ! [[message sender] isEqualToString:[[self connection] nickname]] ) {
+	if( [[message sender] respondsToSelector:@selector( isLocalUser )] && ! [[message sender] isLocalUser] ) {
 		if( [message ignoreStatus] == JVNotIgnored && _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];
@@ -816,7 +817,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 					}
 				}
 
-				JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] nickname] andTranscript:self];
+				JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] localUser] andTranscript:self];
 				[cmessage setAction:action];
 
 				[self sendMessage:cmessage];
@@ -1346,7 +1347,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	[self processIncomingMessage:cmessage];
 
-//	user = [[cmessage sender] description]; // if plugins changed the sending user for some reason, allow it
+	if( [[cmessage sender] isKindOfClass:[JVChatRoomMember class]] )
+		user = [(JVChatRoomMember *)[cmessage sender] user]; // if this is a chat room, JVChatRoom makes the sender a member object
+	else user = [cmessage sender]; // if plugins changed the sending user for some reason, allow it
 
 	if( ! [messageString length] && [cmessage ignoreStatus] == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
 		_newMessageCount--;
@@ -1902,7 +1905,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	NSArray *menuArray = [NSArray arrayWithContentsOfFile:[_chatEmoticons pathForResource:@"menu" ofType:@"plist"]];
 	enumerator = [menuArray objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
-		if( ! [[info objectForKey:@"name"] length] ) continue;
+		if( ! [(NSString *)[info objectForKey:@"name"] length] ) continue;
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[info objectForKey:@"name"] action:@selector( _insertEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		if( [(NSString *)[info objectForKey:@"image"] length] )
@@ -2111,7 +2114,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
 	BOOL localEcho = ( [[command evaluatedArguments] objectForKey:@"echo"] ? [[[command evaluatedArguments] objectForKey:@"echo"] boolValue] : YES );
 
-	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:attributeMsg sender:[[self connection] nickname] andTranscript:self];
+	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:attributeMsg sender:[[self connection] localUser] andTranscript:self];
 	[cmessage setAction:action];
 
 	[self sendMessage:cmessage];
@@ -2240,7 +2243,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 @implementation MVChatScriptPlugin (MVChatScriptPluginChatSupport)
 - (void) processIncomingMessage:(JVMutableChatMessage *) message {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"piM1", ( [[message sender] isKindOfClass:[JVChatRoomMember class]] ? [[message sender] nickname] : [message sender] ), @"piM2", [message transcript], @"piM3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"piM1", [message sender], @"piM2", [message transcript], @"piM3", nil];
 	[self callScriptHandler:'piMX' withArguments:args forSelector:_cmd];
 }
 

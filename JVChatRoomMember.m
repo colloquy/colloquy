@@ -118,6 +118,10 @@
 #pragma mark -
 #pragma mark User Info
 
+- (NSString *) displayName {
+	return [[self user] displayName];
+}
+
 - (NSString *) nickname {
 	return [[self user] nickname];
 }

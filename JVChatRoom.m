@@ -252,6 +252,9 @@
 #pragma mark Message Handling
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message {
+	JVChatRoomMember *member = [self chatRoomMemberForUser:[message sender]];
+	if( member ) [message setSender:member];
+
 	if( [message ignoreStatus] == JVNotIgnored && [[message sender] respondsToSelector:@selector( isLocalUser )] && ! [[message sender] isLocalUser] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]] forKey:@"title"];
