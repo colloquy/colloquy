@@ -1,4 +1,4 @@
-#import <Foundation/NSObject.h>
+#import <AppKit/NSWindowController.h>
 #import <AppKit/NSNibDeclarations.h>
 #import "JVInspectorController.h"
 
