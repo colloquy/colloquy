@@ -16,6 +16,7 @@
 }
 
 + (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title;
+- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title;
 - (void)moveFloaterToPoint:(NSPoint)inPoint;
 - (IBAction)close:(id)sender;
 - (void)endFloater;
