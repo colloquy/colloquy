@@ -1022,7 +1022,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSMutableArray *ret = [NSMutableArray array];
 	if( [search length] <= [_target length] && [search caseInsensitiveCompare:[_target substringToIndex:[search length]]] == NSOrderedSame )
 		[ret addObject:_target];
-	[ret addObjectsFromArray:words];
+	if( [self isMemberOfClass:[JVDirectChat class]] ) [ret addObjectsFromArray:words];
 	return ret;
 }
 
@@ -1318,24 +1318,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSEnumerator *objEnumerator = [_emoticonMappings objectEnumerator];
 	NSEnumerator *srcEnumerator = nil;
 	id key = nil, obj = nil;
-	BOOL moreReplacements = YES;
 
 	while( ( key = [keyEnumerator nextObject] ) && ( obj = [objEnumerator nextObject] ) ) {
 		srcEnumerator = [obj objectEnumerator];
 		while( ( str = [srcEnumerator nextObject] ) ) {
 			str = [[str mutableCopy] autorelease];
 			[str encodeXMLSpecialCharactersAsEntities];
-			moreReplacements = YES;
-			while( moreReplacements ) {
-				NSRange range = [string rangeOfString:str];
-				if( range.length ) {
-					if( (signed)( range.location - 1 ) >= 0 && [string characterAtIndex:( range.location - 1 )] != ' ' )
-						break;
-					if( (signed)( range.location + [str length] ) < [string length] && [string characterAtIndex:( range.location + [str length] )] != ' ' )
-						break;
-					[string replaceCharactersInRange:range withString:[NSString stringWithFormat:@"<span class=\"emoticon %@\"><samp>%@</samp></span>", key, str]];
-				} else moreReplacements = NO;
-			}
+
+			NSString *replacement = [NSString stringWithFormat:@"<span class=\"emoticon %@\"><samp>%@</samp></span>", key, str];
+
+			[string replaceOccurrencesOfString:[str stringByAppendingString:@" "] withString:[replacement stringByAppendingString:@" "] options:NSLiteralSearch | NSAnchoredSearch range:NSMakeRange( 0, [string length] )];
+			[string replaceOccurrencesOfString:[@" " stringByAppendingString:str] withString:[@" " stringByAppendingString:replacement] options:NSLiteralSearch | NSAnchoredSearch | NSBackwardsSearch range:NSMakeRange( 0, [string length] )];
+			[string replaceOccurrencesOfString:[NSString stringWithFormat:@" %@ ", str] withString:[NSString stringWithFormat:@" %@ ", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+			[string replaceOccurrencesOfString:[NSString stringWithFormat:@">%@<", str] withString:[NSString stringWithFormat:@">%@<", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+			[string replaceOccurrencesOfString:[NSString stringWithFormat:@">%@ ", str] withString:[NSString stringWithFormat:@">%@ ", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+			[string replaceOccurrencesOfString:[NSString stringWithFormat:@" %@<", str] withString:[NSString stringWithFormat:@" %@<", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
+			if( [string isEqualToString:str] ) [string setString:replacement];
 		}
 	}
 }
