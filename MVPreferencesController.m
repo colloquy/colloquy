@@ -147,7 +147,7 @@ static NSString *MVPreferencesWindowNotification = @"MVPreferencesWindowNotifica
 
 	[window setContentView:[[[NSView alloc] initWithFrame:[mainView frame]] autorelease]];
 
-	[window setTitle:[NSString stringWithFormat:NSLocalizedStringFromTable( @"%@ Preferences", @"MVPreferences", preferences window title ), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]]];
+	[window setTitle:[NSString stringWithFormat:NSLocalizedStringFromTable( @"%@ Preferences", @"MVPreferences", "preferences window title" ), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]]];
 	[self _resizeWindowForContentView:mainView];
 
 	[[loadedPanes objectForKey:currentPaneIdentifier] willUnselect];
@@ -176,7 +176,7 @@ static NSString *MVPreferencesWindowNotification = @"MVPreferencesWindowNotifica
 		[pendingPane autorelease];
 		pendingPane = nil;
 		[loadingImageView setImage:[self _imageForPaneBundle:bundle]];
-		[loadingTextFeld setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTable( @"Loading %@...", @"MVPreferences", loading message for the selected pane ), [self _labelForPaneBundle:bundle]]];
+		[loadingTextFeld setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTable( @"Loading %@...", @"MVPreferences", "loading message for the selected pane" ), [self _labelForPaneBundle:bundle]]];
 		[window setTitle:[self _labelForPaneBundle:bundle]];
 		[loadingView setFrameSize:NSMakeSize( NSWidth( [loadingView frame] ), [[window contentView] frame].size.height )];
 		[loadingView setFrameOrigin:NSMakePoint( 0., 0. )];
@@ -202,7 +202,7 @@ static NSString *MVPreferencesWindowNotification = @"MVPreferencesWindowNotifica
 
 			[window setInitialFirstResponder:[pane initialKeyView]];
 			[window makeFirstResponder:[pane initialKeyView]];
-		} else NSRunCriticalAlertPanel( NSLocalizedStringFromTable( @"Preferences Error", @"MVPreferences", preferences error title ), [NSString stringWithFormat:NSLocalizedStringFromTable( @"Could not load %@", @"MVPreferences", error when loading the selected pane ), [self _labelForPaneBundle:bundle]], nil, nil, nil );
+		} else NSRunCriticalAlertPanel( NSLocalizedStringFromTable( @"Preferences Error", @"MVPreferences", "preferences error title" ), [NSString stringWithFormat:NSLocalizedStringFromTable( @"Could not load %@", @"MVPreferences", "error when loading the selected pane" ), [self _labelForPaneBundle:bundle]], nil, nil, nil );
 	}
 }
 
@@ -229,7 +229,7 @@ static NSString *MVPreferencesWindowNotification = @"MVPreferencesWindowNotifica
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) itemIdentifier willBeInsertedIntoToolbar:(BOOL) flag {
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier] autorelease];
 	if( [itemIdentifier isEqualToString:MVToolbarShowAllItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedStringFromTable( @"Show All", @"MVPreferences", show all toolbar item name )];
+		[toolbarItem setLabel:NSLocalizedStringFromTable( @"Show All", @"MVPreferences", "show all toolbar item name" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"NSApplicationIcon"]];
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( showAll: )];
