@@ -494,6 +494,12 @@ static BOOL applicationIsTerminating = NO;
 	if( [ret count] ) return ret;
 	return nil;
 }
+
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
+	if( [menuItem image] && ! [[menuItem image] isValid] )
+		[menuItem setImage:nil];
+	return [menuItem isEnabled];
+}
 @end
 
 #pragma mark -
