@@ -450,6 +450,12 @@ NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *r
 
 	while( ( connection = [enumerator nextObject] ) ) {
 		item = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [connection server], [connection nickname]] action:NULL keyEquivalent:@""] autorelease];
+
+		NSImage *icon = nil;
+		if( [connection isConnected] ) icon = [NSImage imageNamed:@"connected"];
+		else icon = [[[NSImage alloc] initWithSize:NSMakeSize( 9., 16. )] autorelease];
+		[item setImage:icon];
+
 		[item setRepresentedObject:connection];
 		if( connection == _connection ) [item setState:NSOnState];
 		[menu addItem:item];
