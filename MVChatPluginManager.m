@@ -54,10 +54,8 @@ static MVChatPluginManager *sharedInstance = nil;
 	NSBundle *bundle = nil;
 	id item = nil;
 
-	enumerator = [[[_plugins copy] autorelease] objectEnumerator];
-	while( ( item = [enumerator nextObject] ) )
-		if( [item isKindOfClass:[MVChatScriptPlugin class]] )
-			[_plugins removeObjectForKey:[[item script] scriptIdentifier]];
+	// unload all plugins, this resets everything and purges plugins that moved since the last load
+	[_plugins removeAllObjects];
 
 	enumerator = [paths objectEnumerator];
 	while( ( path = [enumerator nextObject] ) ) {
