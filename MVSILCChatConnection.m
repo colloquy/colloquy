@@ -185,14 +185,9 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 
 			NSString *oldnick = [NSString stringWithUTF8String:oldclient -> nickname];
 			NSString *newnick = [NSString stringWithUTF8String:newclient -> nickname];
-			NSArray *channels = [self _getChannelsForUser:oldnick];
-			NSEnumerator *enumerator = [channels objectEnumerator];
-			NSDictionary *dict = nil;
 
-			while( ( dict = [enumerator nextObject] ) ) {
-				NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserNicknameChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[dict objectForKey:@"channel_name"], @"room", oldnick, @"oldNickname", newnick, @"newNickname", nil]];
-				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-			}
+			NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserNicknameChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldnick, @"oldNickname", newnick, @"newNickname", nil]];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 			[self _userChangedNick:oldnick to:newnick];
 		}	break;

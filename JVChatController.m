@@ -361,11 +361,18 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) _memberNicknameChanged:(NSNotification *) notification {
-	id controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
-	[(JVChatRoom *)controller changeChatMember:[[notification userInfo] objectForKey:@"oldNickname"] to:[[notification userInfo] objectForKey:@"newNickname"]];
+	MVChatConnection *connection = [notification object];
+	NSEnumerator *enumerator = [[self chatViewControllersOfClass:[JVChatRoom class]] objectEnumerator];
+	JVChatRoom *room = nil;
 
-	controller = [self chatViewControllerForUser:[[notification userInfo] objectForKey:@"oldNickname"] withConnection:[notification object] ifExists:YES];
-	[controller setTarget:[[notification userInfo] objectForKey:@"newNickname"]];
+	while( ( room = [enumerator nextObject] ) ) {
+		if( [room connection] == connection ) {
+			[room changeChatMember:[[notification userInfo] objectForKey:@"oldNickname"] to:[[notification userInfo] objectForKey:@"newNickname"]];
+		}
+	}
+
+	JVDirectChat *chat = [self chatViewControllerForUser:[[notification userInfo] objectForKey:@"oldNickname"] withConnection:[notification object] ifExists:YES];
+	[chat setTarget:[[notification userInfo] objectForKey:@"newNickname"]];
 }
 
 - (void) _memberModeChanged:(NSNotification *) notification {
