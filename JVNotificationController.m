@@ -31,7 +31,7 @@ static JVNotificationController *sharedInstance = nil;
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_bubbles = [[NSMutableDictionary dictionary] retain];
-		_growlInstalled = [GrowlAppBridge launchGrowlIfInstalledNotifyingTarget:self selector:@selector( _growlReady ) context:NULL];
+		_growlInstalled = [NSClassFromString( @"GrowlAppBridge" ) launchGrowlIfInstalledNotifyingTarget:self selector:@selector( _growlReady ) context:NULL];
 	}
 
 	return self;
@@ -103,7 +103,7 @@ static JVNotificationController *sharedInstance = nil;
 	if( _growlInstalled ) {
 		NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 		NSDictionary *notification = [NSDictionary dictionaryWithObjectsAndKeys:programName, GROWL_APP_NAME, identifier, GROWL_NOTIFICATION_NAME, title, GROWL_NOTIFICATION_TITLE, description, GROWL_NOTIFICATION_DESCRIPTION, [icon TIFFRepresentation], GROWL_NOTIFICATION_ICON, [eventPrefs objectForKey:@"keepBubbleOnScreen"], GROWL_NOTIFICATION_STICKY, nil];
-		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:GROWL_NOTIFICATION object:nil userInfo:notification];			
+		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:GROWL_NOTIFICATION object:nil userInfo:notification];
 	} else {
 		if( ( bubble = [_bubbles objectForKey:[context objectForKey:@"coalesceKey"]] ) ) {
 			[(id)bubble setTitle:title];
@@ -147,7 +147,7 @@ static JVNotificationController *sharedInstance = nil;
 
 	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSDictionary *registration = [NSDictionary dictionaryWithObjectsAndKeys:programName, GROWL_APP_NAME, notifications, GROWL_NOTIFICATIONS_ALL, notifications, GROWL_NOTIFICATIONS_DEFAULT, nil];
-	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:GROWL_APP_REGISTRATION object:nil userInfo:registration];	
+	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:GROWL_APP_REGISTRATION object:nil userInfo:registration];
 
 	_growlInstalled = YES;
 }
