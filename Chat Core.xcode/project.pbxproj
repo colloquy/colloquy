@@ -301,7 +301,6 @@
 				1CF6528906EA2C8C0073DEA8,
 				1CF6528A06EA2C8C0073DEA8,
 				1CF6528B06EA2C8E0073DEA8,
-				1C913FA40704FE7E00CBA5F1,
 				1C91405E07051A9200CBA5F1,
 			);
 			isa = PBXHeadersBuildPhase;
@@ -584,15 +583,6 @@
 			fileRef = 1C5CC07B06FFCB0B0006C5B1;
 			isa = PBXBuildFile;
 			settings = {
-			};
-		};
-		1C913FA40704FE7E00CBA5F1 = {
-			fileRef = 1C5CC07A06FFCB0B0006C5B1;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
 			};
 		};
 		1C91405D07051A9100CBA5F1 = {
