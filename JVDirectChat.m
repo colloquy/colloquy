@@ -1488,7 +1488,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSCharacterSet *legalAddressSet = nil;
 	NSCharacterSet *legalDomainSet = nil;
 	NSCharacterSet *ircChannels = [NSCharacterSet characterSetWithCharactersInString:@"#&"];
-	NSCharacterSet *trailingPuncuation = [NSCharacterSet characterSetWithCharactersInString:@".!?,"];
+	NSCharacterSet *trailingPuncuation = [NSCharacterSet characterSetWithCharactersInString:@".!?,])}\\"];
 	NSCharacterSet *seperaters = [NSCharacterSet characterSetWithCharactersInString:@"<> \t\n\r&"];
 	NSString *link = nil, *urlHandle = nil;
 	NSMutableString *mutableLink = nil;
