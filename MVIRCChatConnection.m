@@ -507,18 +507,29 @@ static void MVChatGetActionMessage( IRC_SERVER_REC *server, const char *data, co
 
 #pragma mark -
 
+static void MVChatSelfNicknameChanged( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
+	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
+	if( ! self ) return;
+
+	char *newNick = NULL;
+	char *params = event_get_params( data, 1, &newNick );
+
+	if( ! strcasecmp( ((SERVER_REC *)server) -> nick, newNick ) ) {
+		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:newNick], @"nickname", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	}
+	
+	g_free( params );
+}
+
 static void MVChatUserNicknameChanged( CHANNEL_REC *channel, NICK_REC *nick, const char *oldnick ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
 	if( ! self || ! channel || ! nick ) return;
 
-	NSNotification *note = nil;
-	if( ! strcmp( channel -> server -> nick, nick -> nick ) ) {
-		note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick -> nick], @"nickname", nil]];
-	} else {
-		note = [NSNotification notificationWithName:MVChatConnectionUserNicknameChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:oldnick], @"oldNickname", [self stringWithEncodedBytes:nick -> nick], @"newNickname", nil]];
+	if( strcasecmp( channel -> server -> nick, nick -> nick ) ) {
+		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserNicknameChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:oldnick], @"oldNickname", [self stringWithEncodedBytes:nick -> nick], @"newNickname", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
-
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 static void MVChatGotUserMode( CHANNEL_REC *channel, NICK_REC *nick, char *by, char *mode, char *type ) {
@@ -1485,6 +1496,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_add_last( "event quit", (SIGNAL_FUNC) MVChatUserQuit );
 	signal_add_last( "event kick", (SIGNAL_FUNC) MVChatUserKicked );
 	signal_add_last( "event invite", (SIGNAL_FUNC) MVChatInvited );
+	signal_add_last( "event nick", (SIGNAL_FUNC) MVChatSelfNicknameChanged );
 	signal_add_last( "event 301", (SIGNAL_FUNC) MVChatUserAway );
 
 	signal_add_last( "event privmsg", (SIGNAL_FUNC) MVChatGetMessage );
@@ -1548,6 +1560,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_remove( "event quit", (SIGNAL_FUNC) MVChatUserQuit );
 	signal_remove( "event kick", (SIGNAL_FUNC) MVChatUserKicked );
 	signal_remove( "event invite", (SIGNAL_FUNC) MVChatInvited );
+	signal_remove( "event nick", (SIGNAL_FUNC) MVChatSelfNicknameChanged );
 	signal_remove( "event 301", (SIGNAL_FUNC) MVChatUserAway );
 
 	signal_remove( "event privmsg", (SIGNAL_FUNC) MVChatGetMessage );
