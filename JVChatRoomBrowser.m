@@ -38,7 +38,6 @@
 		_collapsed = YES;
 		_needsRefresh = YES;
 
-		_encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 		_refreshTimer = [[NSTimer scheduledTimerWithTimeInterval:( 1. ) target:self selector:@selector( _refreshResults: ) userInfo:nil repeats:YES] retain];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _connectionChange: ) name:MVChatConnectionDidConnectNotification object:nil];
@@ -356,7 +355,7 @@
 
 		if( ! t ) {
 			NSData *topic = [info objectForKey:@"topic"];
-			NSString *topicString = [[[NSString alloc] initWithData:topic encoding:_encoding] autorelease];
+			NSString *topicString = [[[NSString alloc] initWithData:topic encoding:[_connection encoding]] autorelease];
 			if( ! topicString ) topicString = [NSString stringWithCString:[topic bytes] length:[topic length]];
 			topicString = [NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", topicString];
 			t = [NSAttributedString attributedStringWithHTMLFragment:topicString baseURL:nil];

@@ -25,7 +25,6 @@
 	BOOL _collapsed;
 	BOOL _ascending;
 	BOOL _needsRefresh;
-	NSStringEncoding _encoding;
 	NSString *_sortColumn;
 	MVChatConnection *_connection;
 	NSMutableDictionary *_roomResults;

@@ -513,7 +513,7 @@ static JVChatController *sharedInstance = nil;
 
 	if( [self chatViewControllerForUser:user withConnection:connection ifExists:YES] ) hideFromUser = NO;
 
-	NSString *curMsg = [[[NSString alloc] initWithData:message encoding:NSUTF8StringEncoding] autorelease];
+	NSString *curMsg = [[[NSString alloc] initWithData:message encoding:[connection encoding]] autorelease];
 	if( ! curMsg ) curMsg = [NSString stringWithCString:[message bytes] length:[message length]];
 
 	if( [user isEqualToString:@"NickServ"] ) {
@@ -550,7 +550,7 @@ static JVChatController *sharedInstance = nil;
 - (IBAction) _checkMemos:(id) sender {
 	MVChatConnection *connection = [sender representedObject];
 	NSAttributedString *message = [[[NSAttributedString alloc] initWithString:@"read all"] autorelease];
-	[connection sendMessage:message withEncoding:NSUTF8StringEncoding toUser:@"MemoServ" asAction:NO];
+	[connection sendMessage:message withEncoding:[connection encoding] toUser:@"MemoServ" asAction:NO];
 	[self chatViewControllerForUser:@"MemoServ" withConnection:connection ifExists:NO];
 }
 

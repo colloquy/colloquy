@@ -155,7 +155,7 @@
 - (void) gotAwayStatus:(NSNotification *) notification {
 	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
 	NSData *data = [[notification userInfo] objectForKey:@"message"];
-	NSString *strMsg = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+	NSString *strMsg = [[[NSString alloc] initWithData:data encoding:[[_member connection] encoding]] autorelease];
 	if( ! strMsg ) strMsg = [NSString stringWithCString:[data bytes] length:[data length]];
 	[away setObjectValue:strMsg];
 }

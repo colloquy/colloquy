@@ -144,7 +144,7 @@
 	} else if( [command isEqualToString:@"topic"] || [command isEqualToString:@"t"] ) {
 		if( ! [arguments length] ) return NO;
 		NSStringEncoding encoding = [room encoding];
-		if( ! encoding ) encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
+		if( ! encoding ) encoding = [[room connection] encoding];
 		[[room connection] setTopic:arguments withEncoding:encoding forRoom:[room target]];
 		return YES;
 	} else if( [command isEqualToString:@"umode"] ) {
@@ -483,7 +483,7 @@
 	if( ! to ) return NO;
 
 	NSStringEncoding encoding = [(JVDirectChat *)[[_manager chatController] chatViewControllerForUser:to withConnection:connection ifExists:YES] encoding];
-	if( ! encoding ) encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
+	if( ! encoding ) encoding = [connection encoding];
 
 	if( [message length] >= [scanner scanLocation] + 1 ) {
 		[scanner setScanLocation:[scanner scanLocation] + 1];
@@ -498,14 +498,18 @@
 }
 
 - (BOOL) handleMassMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection {
-	NSStringEncoding encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 	if( ! [message length] ) return NO;
+
+	NSStringEncoding encoding = [connection encoding];
 	NSEnumerator *enumerator = [[[_manager chatController] chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
 	id item = nil;
 	while( ( item = [enumerator nextObject] ) ) {
+		encoding = [item encoding];
+		if( ! encoding ) encoding = [connection encoding];
 		[connection sendMessage:message withEncoding:encoding toChatRoom:[item target] asAction:[command isEqualToString:@"ame"]];
 		[item echoSentMessageToDisplay:message asAction:[command isEqualToString:@"ame"]];
 	}
+
 	return YES;
 }
 
