@@ -24,6 +24,14 @@ enum firetalk_error dummy_set_nickname(client_t c, const char * const nickname) 
 	return FE_SUCCESS;
 }
 
+enum firetalk_error dummy_set_username(client_t c, const char * const username) {
+	return FE_SUCCESS;
+}
+
+enum firetalk_error dummy_set_real_name(client_t c, const char * const name) {
+	return FE_SUCCESS;
+}
+
 enum firetalk_error dummy_set_password(client_t c, const char * const oldpass, const char * const newpass) {
 	return FE_SUCCESS;
 }

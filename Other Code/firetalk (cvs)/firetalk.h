@@ -275,6 +275,8 @@ enum firetalk_error firetalk_set_info(firetalk_t conn, const char * const info);
 enum firetalk_error firetalk_set_away(firetalk_t c, const char * const message);
 const char * firetalk_chat_normalize(firetalk_t conn, const char * const room);
 enum firetalk_error firetalk_set_nickname(firetalk_t conn, const char * const nickname);
+enum firetalk_error firetalk_set_username(firetalk_t conn, const char * const username);
+enum firetalk_error firetalk_set_real_name(firetalk_t conn, const char * const name);
 enum firetalk_error firetalk_set_password(firetalk_t conn, const char * const oldpass, const char * const newpass);
 enum firetalk_error firetalk_select();
 enum firetalk_error firetalk_select_custom(int n, fd_set *fd_read, fd_set *fd_write, fd_set *fd_except, struct timeval *timeout);

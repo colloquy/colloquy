@@ -567,6 +567,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	if( ( self = [super init] ) ) {
 		_server = @"irc.javelin.cc";
 		_nickname = [NSUserName() copy];
+		_username = [NSUserName() copy];
+		_realName = [NSFullUserName() copy];
 		_npassword = nil;
 		_password = nil;
 		_cachedDate = nil;
@@ -665,6 +667,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 	[self _willConnect];
 
+	firetalk_set_username( _chatConnection, [_username UTF8String] );
+	firetalk_set_real_name( _chatConnection, [_realName UTF8String] );
 	firetalk_set_password( _chatConnection, NULL, [_password UTF8String] );
 
 	if( firetalk_signon( _chatConnection, [_server UTF8String], _port, [_nickname UTF8String] ) != FE_SUCCESS )
@@ -675,7 +679,6 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	if( [nickname length] ) [self setNickname:nickname];
 	if( [server length] ) [self setServer:server];
 	[self setServerPort:port];
-
 	[self connect];
 }
 
@@ -699,46 +702,65 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 #pragma mark -
 
+- (void) setRealName:(NSString *) name {
+	[_realName autorelease];
+	_realName = [name copy];
+}
+
+- (NSString *) realName {
+	return [[_realName retain] autorelease];
+}
+
+#pragma mark -
+
 - (void) setNickname:(NSString *) nickname {
 	if( [self isConnected] ) {
-		if( nickname && ! [nickname isEqualToString:_nickname] ) {
+		if( nickname && ! [nickname isEqualToString:_nickname] )
 			firetalk_set_nickname( _chatConnection, [nickname UTF8String] );
-		}
 	} else [self _confirmNewNickname:nickname];
 }
 
 - (NSString *) nickname {
-	return [[_nickname copy] autorelease];
+	return [[_nickname retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setNicknamePassword:(NSString *) password {
-	if( [self isConnected] && [password length] && ! [password isEqualToString:_npassword] ) {
+	if( [self isConnected] && [password length] && ! [password isEqualToString:_npassword] )
 		firetalk_set_password( _chatConnection, NULL, [password UTF8String] );
-	}
 	[_npassword autorelease];
 	if( [password length] ) _npassword = [password copy];
 	else _npassword = nil;
 }
 
 - (NSString *) nicknamePassword {
-	return [[_npassword copy] autorelease];
+	return [[_npassword retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setPassword:(NSString *) password {
-	if( ! [self isConnected] && [password length] && ! [password isEqualToString:_password] ) {
+	if( ! [self isConnected] && [password length] && ! [password isEqualToString:_password] )
 		firetalk_set_password( _chatConnection, NULL, [password UTF8String] );
-	}
 	[_password autorelease];
 	if( [password length] ) _password = [password copy];
 	else _password = nil;
 }
 
 - (NSString *) password {
-	return [[_password copy] autorelease];
+	return [[_password retain] autorelease];
+}
+
+#pragma mark -
+
+- (void) setUsername:(NSString *) username {
+	[_username autorelease];
+	_username = [username copy];
+}
+
+- (NSString *) username {
+	return [[_username retain] autorelease];
 }
 
 #pragma mark -
@@ -749,7 +771,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 }
 
 - (NSString *) server {
-	return [[_server copy] autorelease];
+	return [[_server retain] autorelease];
 }
 
 #pragma mark -

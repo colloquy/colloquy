@@ -141,6 +141,8 @@ static const struct s_firetalk_protocol_functions protocol_functions[FP_MAX] = {
 		toc_set_info,
 		toc_set_away,
 		toc_set_nickname,
+		dummy_set_username,
+		dummy_set_real_name,
 		toc_set_password,
 		toc_im_add_buddy,
 		toc_im_remove_buddy,
@@ -193,6 +195,8 @@ static const struct s_firetalk_protocol_functions protocol_functions[FP_MAX] = {
 		dummy_set_info,
 		irc_set_away,
 		irc_set_nickname,
+		irc_set_username,
+		irc_set_real_name,
 		irc_set_password,
 		irc_im_add_buddy,
 		dummy_im_remove_buddy,
@@ -2612,6 +2616,24 @@ enum firetalk_error firetalk_set_nickname(firetalk_t conn, const char * const ni
 #endif
 
 	return protocol_functions[conn->protocol].set_nickname(conn->handle,nickname);
+}
+
+enum firetalk_error firetalk_set_username(firetalk_t conn, const char * const username) {
+#ifdef DEBUG
+	if (firetalk_check_handle(conn) != FE_SUCCESS)
+		return FE_BADHANDLE;
+#endif
+
+	return protocol_functions[conn->protocol].set_username(conn->handle,username);
+}
+
+enum firetalk_error firetalk_set_real_name(firetalk_t conn, const char * const name) {
+#ifdef DEBUG
+	if (firetalk_check_handle(conn) != FE_SUCCESS)
+		return FE_BADHANDLE;
+#endif
+
+	return protocol_functions[conn->protocol].set_real_name(conn->handle,name);
 }
 
 enum firetalk_error firetalk_set_password(firetalk_t conn, const char * const oldpass, const char * const newpass) {

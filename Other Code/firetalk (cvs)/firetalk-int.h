@@ -183,6 +183,8 @@ struct s_firetalk_protocol_functions {
 	enum firetalk_error (*set_info)(client_t, const char * const);
 	enum firetalk_error (*set_away)(client_t, const char * const);
 	enum firetalk_error (*set_nickname)(client_t, const char * const);
+	enum firetalk_error (*set_username)(client_t, const char * const);
+	enum firetalk_error (*set_real_name)(client_t, const char * const);
 	enum firetalk_error (*set_password)(client_t, const char * const, const char * const);
 	enum firetalk_error (*im_add_buddy)(client_t, const char * const);
 	enum firetalk_error (*im_remove_buddy)(client_t, const char * const);

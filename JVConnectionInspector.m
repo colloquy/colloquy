@@ -36,7 +36,7 @@
 }
 
 - (NSSize) minSize {
-	return NSMakeSize( 265., 290. );
+	return NSMakeSize( 265., 344. );
 }
 
 - (NSString *) title {
@@ -55,6 +55,8 @@
 	[editNickname setObjectValue:[_connection nickname]];
 	[editPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[_connection server] securityDomain:[_connection server] account:[_connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 	[editServerPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[_connection server] securityDomain:[_connection server] account:nil path:nil port:[_connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+	[editRealName setObjectValue:[_connection realName]];
+	[editUsername setObjectValue:[_connection username]];
 
 	[_editingRooms autorelease];
 	_editingRooms = [[[MVConnectionsController defaultManager] joinRoomsForConnection:_connection] mutableCopy];
@@ -89,7 +91,11 @@
 		if( password ) [editPassword setObjectValue:password];
 		else [editPassword setObjectValue:@""];
 		[_connection setServer:[sender stringValue]];
-	} else if( sender == editPort ) {
+	} else if( sender == editRealName ) {
+		[_connection setRealName:[sender stringValue]];
+	} else if( sender == editUsername ) {
+		[_connection setUsername:[sender stringValue]];
+	} else if( sender == editUsername ) {
 		[_connection setServerPort:(unsigned short)[sender intValue]];
 	}
 }

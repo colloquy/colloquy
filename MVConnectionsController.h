@@ -19,7 +19,6 @@
 @private
 	IBOutlet NSTableView *connections;
 	IBOutlet NSPanel *openConnection;
-	IBOutlet NSPanel *joinRoom;
 	IBOutlet NSPanel *messageUser;
 	IBOutlet NSPanel *nicknameAuth;
 
@@ -37,6 +36,8 @@
 	IBOutlet NSButton *showDetails;
 	IBOutlet NSTabView *detailsTabView;
 	IBOutlet NSTextField *newServerPassword;
+	IBOutlet NSTextField *newUsername;
+	IBOutlet NSTextField *newRealName;
 	IBOutlet NSPopUpButton *newProxy;
 	IBOutlet NSTableView *newJoinRooms;
 	IBOutlet NSButton *newRemoveRoom;

@@ -176,6 +176,8 @@ static NSMenu *favoritesMenu = nil;
 	NSTableColumn *theColumn = nil;
 
 	[newNickname setObjectValue:NSUserName()];
+	[newUsername setObjectValue:NSUserName()];
+	[newRealName setObjectValue:NSFullUserName()];
 
 	[(NSPanel *)[self window] setFloatingPanel:NO];
 
@@ -268,6 +270,12 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
+	if( ! [[newUsername stringValue] length] ) {
+		[[self window] makeFirstResponder:newUsername];
+		NSRunCriticalAlertPanel( NSLocalizedString( @"Username is blank", "chat invalid username dialog title" ), NSLocalizedString( @"The username you specified is invalid because it was left blank.", "chat username blank dialog message" ), nil, nil, nil );
+		return;
+	}
+
 	if( ! [[newAddress stringValue] length] ) {
 		[[self window] makeFirstResponder:newAddress];
 		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server is blank", "chat invalid nickname dialog title" ), NSLocalizedString( @"The chat server you specified is invalid because it was left blank.", "chat server blank dialog message" ), nil, nil, nil );
@@ -304,6 +312,8 @@ static NSMenu *favoritesMenu = nil;
 	connection = [[[MVChatConnection alloc] init] autorelease];
 	[connection setProxyType:[[newProxy selectedItem] tag]];
 	[connection setPassword:[newServerPassword stringValue]];
+	[connection setUsername:[newUsername stringValue]];
+	[connection setRealName:[newRealName stringValue]];
 	[connection joinChatRooms:_joinRooms];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
@@ -1039,6 +1049,8 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[[(MVChatConnection *)[info objectForKey:@"connection"] url] description] forKey:@"url"];
 			if( [info objectForKey:@"rooms"] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 			[data setObject:[info objectForKey:@"created"] forKey:@"created"];
+			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] realName] forKey:@"realName"];
+			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] username] forKey:@"username"];
 			[saveList addObject:data];
 		}
 	}
@@ -1058,10 +1070,13 @@ static NSMenu *favoritesMenu = nil;
 		MVChatConnection *connection = nil;
 		connection = [[[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]] autorelease];
 
-		[connection setProxyType:(MVChatConnectionProxy)[info integerForKey:@"proxy"]];
+		[connection setProxyType:(MVChatConnectionProxy)[[info objectForKey:@"proxy"] unsignedIntValue]];
 
 		[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 		[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+
+		if( [info objectForKey:@"realName"] ) [connection setRealName:[info objectForKey:@"realName"]];
+		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
 
 		if( [[info objectForKey:@"automatic"] boolValue] ) {
 			NSEnumerator *renumerator = nil;

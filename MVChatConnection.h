@@ -139,6 +139,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSString *_npassword;
 	NSString *_password;
 	NSString *_server;
+	NSString *_username;
+	NSString *_realName;
 	unsigned short _port;
 	MVChatConnectionStatus _status;
 	MVChatConnectionProxy _proxy;
@@ -167,6 +169,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (NSURL *) url;
 
+- (void) setRealName:(NSString *) name;
+- (NSString *) realName;
+
 - (void) setNickname:(NSString *) nickname;
 - (NSString *) nickname;
 
@@ -175,6 +180,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) setPassword:(NSString *) password;
 - (NSString *) password;
+
+- (void) setUsername:(NSString *) username;
+- (NSString *) username;
 
 - (void) setServer:(NSString *) server;
 - (NSString *) server;

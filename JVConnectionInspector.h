@@ -16,6 +16,8 @@
 	IBOutlet NSView *view;
 	IBOutlet NSTextField *editNickname;
 	IBOutlet NSTextField *editPassword;
+	IBOutlet NSTextField *editRealName;
+	IBOutlet NSTextField *editUsername;
 	IBOutlet NSTextField *editServerPassword;
 	IBOutlet NSTextField *editAddress;
 	IBOutlet NSPopUpButton *editProxy;

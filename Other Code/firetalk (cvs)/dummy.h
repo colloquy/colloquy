@@ -44,8 +44,10 @@ enum firetalk_error dummy_stop_roomlist(client_t c);
 enum firetalk_error dummy_get_info(client_t c, const char * const nickname, const int priority);
 enum firetalk_error dummy_set_info(client_t c, const char * const info);
 enum firetalk_error dummy_set_nickname(client_t c, const char * const nickname);
+enum firetalk_error dummy_set_username(client_t c, const char * const username);
+enum firetalk_error dummy_set_real_name(client_t c, const char * const name);
 enum firetalk_error dummy_set_password(client_t c, const char * const oldpass, const char * const newpass);
-
+	
 enum firetalk_error dummy_chat_join(client_t c, const char * const room);
 enum firetalk_error dummy_chat_part(client_t c, const char * const room);
 enum firetalk_error dummy_chat_send_message(client_t c, const char * const room, const char * const message, const int auto_flag);

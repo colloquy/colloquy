@@ -55,6 +55,8 @@ struct s_irc_mode {
 
 struct s_irc_connection {
 	char *nickname;
+	char *username;
+	char *realname;
 	char *password;
 	char buffer[513];
 	int modecount;
@@ -486,6 +488,14 @@ static int irc_internal_disconnect(client_t c, const int error) {
 		free(c->nickname);
 		c->nickname = NULL;
 	}
+	if (c->username) {
+		free(c->username);
+		c->username = NULL;
+	}
+	if (c->realname) {
+		free(c->realname);
+		c->realname = NULL;
+	}
 	if (c->password) {
 		free(c->password);
 		c->password = NULL;
@@ -667,6 +677,18 @@ enum firetalk_error irc_set_nickname(client_t c, const char * const nickname) {
 	return irc_send_printf(c,1,"NICK %s",nickname);
 }
 
+enum firetalk_error irc_set_username(client_t c, const char * const username) {
+	if( c->username ) free( c->username );
+	c->username = safe_strdup( username );
+	return FE_SUCCESS;
+}
+
+enum firetalk_error irc_set_real_name(client_t c, const char * const name) {
+	if( c->realname ) free( c->realname );
+	c->realname = safe_strdup( name );
+	return FE_SUCCESS;
+}
+
 enum firetalk_error irc_set_password(client_t c, const char * const oldpass, const char * const newpass) {
 	if( c->identified && newpass ) {
 		c->passchange++;
@@ -700,6 +722,8 @@ client_t irc_create_handle() {
 	c->isons = 0;
 	c->whois_head = NULL;
 	c->nickname = NULL;
+	c->username = NULL;
+	c->realname = NULL;
 	c->password = NULL;
 	c->passchange = 0;
 	c->usesilence = 1;
@@ -716,7 +740,7 @@ enum firetalk_error irc_signon(client_t c, const char * const nickname) {
 	if (irc_send_printf(c,1,"NICK %s",nickname) != FE_SUCCESS)
 		return FE_PACKET;
 
-	if (irc_send_printf(c,1,"USER %s * * :%s",getlogin(),getlogin()) != FE_SUCCESS)
+	if (irc_send_printf(c,1,"USER %s * * :%s",( c->username ? c->username : getlogin() ),( c->realname ? c->realname : getlogin() )) != FE_SUCCESS)
 		return FE_PACKET;
 
 	c->nickname = safe_strdup(nickname);

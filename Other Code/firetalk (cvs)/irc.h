@@ -41,6 +41,8 @@ enum firetalk_error irc_stop_roomlist(client_t c);
 enum firetalk_error irc_get_info(client_t c, const char * const nickname, const int priority);
 enum firetalk_error irc_set_info(client_t c, const char * const info);
 enum firetalk_error irc_set_nickname(client_t c, const char * const nickname);
+enum firetalk_error irc_set_username(client_t c, const char * const username);
+enum firetalk_error irc_set_real_name(client_t c, const char * const name);
 enum firetalk_error irc_set_password(client_t c, const char * const oldpass, const char * const newpass);
 
 enum firetalk_error irc_chat_join(client_t c, const char * const room);
