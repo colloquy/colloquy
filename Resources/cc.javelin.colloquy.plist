@@ -8,6 +8,8 @@
 	<integer>1</integer>
 	<key>JVChatTranscriptSessionHandling</key>
 	<integer>1</integer>
+	<key>JVChatScrollbackLimit</key>
+	<integer>500</integer>
 	<key>JVAutoAcceptFilesFrom</key>
 	<integer>1</integer>
 	<key>JVChatConsolePreferredOpenMode</key>

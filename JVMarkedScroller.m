@@ -123,12 +123,14 @@
 
 #pragma mark -
 
-- (void) shiftMarksAndShadedAreasBy:(unsigned long) displacement {
+- (void) shiftMarksAndShadedAreasBy:(long long) displacement {
 	NSAffineTransform *transform = [NSAffineTransform transform];
-	[transform translateXBy:( sFlags.isHoriz ? displacement : 0. ) yBy:( sFlags.isHoriz ? 0. : displacement )];
+	[transform translateXBy:(float)( sFlags.isHoriz ? displacement : 0. ) yBy:(float)( sFlags.isHoriz ? 0. : displacement )];
 
 	[_lines transformUsingAffineTransform:transform];
 	[_shadedAreas transformUsingAffineTransform:transform];
+
+	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
 #pragma mark -

@@ -9,7 +9,7 @@
 	NSBezierPath *_lines;
 	NSBezierPath *_shadedAreas;
 }
-- (void) shiftMarksAndShadedAreasBy:(unsigned long) displacement;
+- (void) shiftMarksAndShadedAreasBy:(long long) displacement;
 
 - (void) addMarkAt:(unsigned long long) location;
 - (void) removeMarkAt:(unsigned long long) location;

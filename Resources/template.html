@@ -9,6 +9,7 @@
 	<script type="text/ecmascript" defer="defer">
 		var scrollToBottomIsNeeded = false;
 		var smoothScroll = false;
+		var scrollBackLimit = 500;
 
 		function appendMessage( html ) {
 			checkIfScrollToBottomIsNeeded();
@@ -18,6 +19,8 @@
 			range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
 			documentFragment = range.createContextualFragment( html );
 			document.body.appendChild( documentFragment );
+
+			enforceScrollBackLimit();
 
 			scrollToBottomIfNeeded();
 		}
@@ -36,6 +39,8 @@
 			documentFragment = range.createContextualFragment( html );
 			insert.parentNode.replaceChild( documentFragment, insert );
 
+			enforceScrollBackLimit();
+
 			scrollToBottomIfNeeded();
 		}
 
@@ -44,9 +49,31 @@
 			if( insert ) insert.parentNode.removeChild( insert );
 		}
 
+		function scrollBackMessageCount() {
+			var bodyNode = document.getElementsByTagName( 'body' ).item( 0 );
+			return bodyNode.children.length;
+		}
+
+		function firstMessageIdentifier() {
+			var bodyNode = document.getElementsByTagName( 'body' ).item( 0 );
+			return bodyNode.children[0].id;
+		}
+
+		function enforceScrollBackLimit() {
+			var bodyNode = document.getElementsByTagName( 'body' ).item( 0 );
+			if( scrollBackLimit > 0 && bodyNode.children.length > scrollBackLimit )
+				for( var i = 0; bodyNode.children.length > scrollBackLimit && i < ( bodyNode.children.length - scrollBackLimit ); i++ )
+					bodyNode.removeChild( bodyNode.children[0] );
+		}
+
 		function locationOfMessage( id ) {
 			element = document.getElementById( id );
 			return element.offsetTop;
+		}
+
+		function locationOfElementByIndex( index ) {
+			var bodyNode = document.getElementsByTagName( 'body' ).item( 0 );
+			return bodyNode.children[index].offsetTop;
 		}
 
 		function jumpToBottom() {

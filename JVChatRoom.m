@@ -246,6 +246,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	[url writeToInternetLocationFile:path];
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
+	[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
 
 	[MVConnectionsController refreshFavoritesMenu];
 }
