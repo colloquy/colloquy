@@ -853,6 +853,8 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) connect {
+	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
+
 	if( ! [self _isKeyPairLoaded] ) {
 		if( ! [self _loadKeyPair] ) {
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _connectKeyPairLoaded: ) name:MVSILCChatConnectionLoadedCertificate object:nil];
@@ -860,8 +862,15 @@ static SilcClientOperations silcClientOps = {
 		}
 	}
 
-	[super connect];
+	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 15. ) {
+		[self _cancelReconnectAttempts];
+		[self performSelector:_cmd withObject:nil afterDelay:( 15. - ABS( [_lastConnectAttempt timeIntervalSinceNow] ) )];
+		return;
+	}
 
+	[_lastConnectAttempt autorelease];
+	_lastConnectAttempt = [[NSDate date] retain];
+	
 	[self _willConnect]; // call early so other code has a chance to change our info
 
 	_sentQuitCommand = NO;
@@ -889,6 +898,8 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
+	if( [self status] != MVChatConnectionConnectedStatus ) return;
+
 	_sentQuitCommand = YES;
 	
 	if( [[reason string] length] ) {

@@ -175,25 +175,8 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (void) connect {
-	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
-
-	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 15. ) {
-		// come back after when the remaining wait time is up (0-15 seconds)
-		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
-		[self performSelector:_cmd withObject:nil afterDelay:( 15. - ABS( [_lastConnectAttempt timeIntervalSinceNow] ) )];
-		return;
-	}
-
-	[_lastConnectAttempt autorelease];
-	_lastConnectAttempt = [[NSDate date] retain];
-
-	_reconnectAttempt++;
-	if( _reconnectAttempt > 6 ) { // stop attempting after 6 tries
-		[self _cancelReconnectAttempts];
-		return;
-	}
-
-// subclass this method, call super
+// subclass this method
+	[self doesNotRecognizeSelector:_cmd];
 }
 
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname {
@@ -209,8 +192,8 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
-	if( [self status] != MVChatConnectionConnectedStatus ) return;
-// subclass this method, call super
+// subclass this method
+	[self doesNotRecognizeSelector:_cmd];
 }
 
 #pragma mark -
@@ -737,10 +720,10 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (void) _cancelReconnectAttempts {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( connect ) object:nil];
 	[_reconnectTimer invalidate];
 	[_reconnectTimer release];
 	_reconnectTimer = nil;
-	_reconnectAttempt = 0;
 }
 
 #pragma mark -

@@ -195,6 +195,9 @@ static void MVChatRawOutgoingMessage( SERVER_REC *server, char *data ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
 	if( ! self ) return;
 
+	NSLog( @"self = %x, %s", self, data );
+	NSLog( @"%@", self );
+
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:data], @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
@@ -924,9 +927,17 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 - (void) connect {
+	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
 	if( ! _chatConnectionSettings ) return;
 
-	[super connect];
+	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 15. ) {
+		[self _cancelReconnectAttempts];
+		[self performSelector:_cmd withObject:nil afterDelay:( 15. - ABS( [_lastConnectAttempt timeIntervalSinceNow] ) )];
+		return;
+	}
+
+	[_lastConnectAttempt autorelease];
+	_lastConnectAttempt = [[NSDate date] retain];
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
@@ -972,8 +983,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		[self _forceDisconnect];
 		return;
 	}
-
-	[super disconnectWithReason:reason];
 
 	if( [[reason string] length] ) {
 		const char *msg = [[self class] _flattenedIRCStringForMessage:reason withEncoding:[self encoding]];
@@ -1620,11 +1629,13 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) _setIrssiConnection:(SERVER_REC *) server {
 	[MVIRCChatConnectionThreadLock lock];
 
+	NSLog( @"_setIrssiConnection %@ %x", self, server );
+
 	SERVER_REC *old = _chatConnection;
 
 	if( old ) {
 		MVChatConnectionModuleData *data = MODULE_DATA( old );
-		if( data ) data -> connection = nil;
+		if( data ) memset( &data, 0, sizeof( MVChatConnectionModuleData ) );
 		g_free_not_null( data );
 	}
 
