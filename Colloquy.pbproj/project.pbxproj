@@ -60,6 +60,8 @@
 				F5E3BCCF038361EF01000102,
 				F5E3BCE50383640D01000102,
 				F5E3BCFA038366F001000102,
+				1CC478430427BAA600000102,
+				1CA56CB2042A4E5200000102,
 			);
 		};
 		089C166AFE841209C02AAC07 = {
@@ -72,12 +74,15 @@
 				F5185C82018626F701EE70DE,
 				F50B0AA10170C89301A84BDE,
 				089C1671FE841209C02AAC07,
+				1CC478470427BB2C00000102,
 				F540610201A22DBF01A35792,
 				F50B0AAA0170CB7101A84BDE,
 				F5DD3499038301FF01000102,
 				F5E3BCDA038361EF01000102,
 				F5E3BCF00383640D01000102,
 				F5E3BD05038366F001000102,
+				1CC478440427BAA600000102,
+				1CA56CBF042A4E5200000102,
 			);
 			isa = PBXGroup;
 			name = "Massinova Menu Extra";
@@ -227,6 +232,96 @@
 			path = "Read Me.rtf";
 			refType = 2;
 		};
+		1C2EF7EB0427A40B00000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVChatPluginManager.h;
+			refType = 4;
+		};
+		1C2EF7EC0427A40B00000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVChatPluginManager.m;
+			refType = 4;
+		};
+		1C2EF7ED0427A40B00000102 = {
+			fileRef = 1C2EF7EB0427A40B00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C2EF7EE0427A40B00000102 = {
+			fileRef = 1C2EF7EC0427A40B00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3B4D510427BBBB00000102 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1C3B4D550427BBDC00000102,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C3B4D550427BBDC00000102 = {
+			fileRef = 1CC478440427BAA600000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3B4D560427BD5200000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = JVStandardCommands.h;
+			path = "Plug-Ins/Standard Commands/JVStandardCommands.h";
+			refType = 4;
+		};
+		1C3B4D570427BD5200000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = JVStandardCommands.m;
+			path = "Plug-Ins/Standard Commands/JVStandardCommands.m";
+			refType = 4;
+		};
+		1C3B4D580427BD5200000102 = {
+			fileRef = 1C3B4D560427BD5200000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3B4D590427BD5200000102 = {
+			fileRef = 1C3B4D570427BD5200000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3B4D6A0427BE4C00000102 = {
+			fileRef = F52D043101873FC401EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3B4DA40428C36400000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = MVChatPlugin.h;
+			refType = 4;
+		};
+		1C3B4DA50428C36400000102 = {
+			fileRef = 1C3B4DA40428C36400000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3B4DA60428C36400000102 = {
+			fileRef = 1C3B4DA40428C36400000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C95D5B6041FA02C00000102 = {
 			isa = PBXFileReference;
 			name = emoticonSmall.tif;
@@ -331,6 +426,301 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		1CA56CAC04298D5E00000102 = {
+			fileRef = F5F5A55B0188928D01EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CA56CAD04298D6500000102 = {
+			fileRef = F5C497740385713801000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CA56CAE042A21A900000102 = {
+			fileRef = 1058C7ADFEA557BF11CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CA56CB1042A4E3800000102 = {
+			children = (
+				1CA56CC1042A4F1A00000102,
+				1CA56CC0042A4F1A00000102,
+			);
+			isa = PBXGroup;
+			name = "Auto Emotion Display";
+			refType = 4;
+		};
+		1CA56CB2042A4E5200000102 = {
+			buildPhases = (
+				1CA56CB3042A4E5200000102,
+				1CA56CB9042A4E5200000102,
+				1CA56CBA042A4E5200000102,
+				1CA56CBC042A4E5200000102,
+				1CA56CBE042A4E5200000102,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Auto Emotion Display";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = plugin;
+			};
+			dependencies = (
+			);
+			isa = PBXBundleTarget;
+			name = "Auto Emotion Display (Plug–In)";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Standard Commands (Plug–In)";
+			productReference = 1CA56CBF042A4E5200000102;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Auto Emotion Display</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>cc.javelin.colloquy.auto-emotion-display</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Auto Emotion Display</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+</dict>
+</plist>
+";
+		};
+		1CA56CB3042A4E5200000102 = {
+			buildActionMask = 2147483647;
+			files = (
+				1CA56CB5042A4E5200000102,
+				1CA56CB6042A4E5200000102,
+				1CA56CC2042A4F1A00000102,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CA56CB5042A4E5200000102 = {
+			fileRef = F52D043101873FC401EE70DE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CA56CB6042A4E5200000102 = {
+			fileRef = 1C3B4DA40428C36400000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CA56CB9042A4E5200000102 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CA56CBA042A4E5200000102 = {
+			buildActionMask = 2147483647;
+			files = (
+				1CA56CC3042A4F1A00000102,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CA56CBC042A4E5200000102 = {
+			buildActionMask = 2147483647;
+			files = (
+				1CA56CBD042A4E5200000102,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CA56CBD042A4E5200000102 = {
+			fileRef = 1058C7ADFEA557BF11CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CA56CBE042A4E5200000102 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CA56CBF042A4E5200000102 = {
+			isa = PBXBundleReference;
+			path = "Auto Emotion Display.plugin";
+			refType = 3;
+		};
+		1CA56CC0042A4F1A00000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = JVAutoEmotionDisplay.h;
+			path = "Plug-Ins/Auto Emotion Display/JVAutoEmotionDisplay.h";
+			refType = 4;
+		};
+		1CA56CC1042A4F1A00000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = JVAutoEmotionDisplay.m;
+			path = "Plug-Ins/Auto Emotion Display/JVAutoEmotionDisplay.m";
+			refType = 4;
+		};
+		1CA56CC2042A4F1A00000102 = {
+			fileRef = 1CA56CC0042A4F1A00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CA56CC3042A4F1A00000102 = {
+			fileRef = 1CA56CC1042A4F1A00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CC4783E0427BAA600000102 = {
+			buildActionMask = 2147483647;
+			files = (
+				1C3B4D580427BD5200000102,
+				1C3B4D6A0427BE4C00000102,
+				1C3B4DA50428C36400000102,
+				1CA56CAC04298D5E00000102,
+				1CA56CAD04298D6500000102,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CC4783F0427BAA600000102 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CC478400427BAA600000102 = {
+			buildActionMask = 2147483647;
+			files = (
+				1C3B4D590427BD5200000102,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CC478410427BAA600000102 = {
+			buildActionMask = 2147483647;
+			files = (
+				1CA56CAE042A21A900000102,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CC478420427BAA600000102 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CC478430427BAA600000102 = {
+			buildPhases = (
+				1CC4783E0427BAA600000102,
+				1CC4783F0427BAA600000102,
+				1CC478400427BAA600000102,
+				1CC478410427BAA600000102,
+				1CC478420427BAA600000102,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Standard Commands";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = plugin;
+			};
+			dependencies = (
+			);
+			isa = PBXBundleTarget;
+			name = "Standard Commands (Plug–In)";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Standard Commands (Plug–In)";
+			productReference = 1CC478440427BAA600000102;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Standard Commands</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>cc.javelin.colloquy.standard-commands</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Standard Commands</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+</dict>
+</plist>
+";
+		};
+		1CC478440427BAA600000102 = {
+			isa = PBXBundleReference;
+			path = "Standard Commands.plugin";
+			refType = 3;
+		};
+		1CC478450427BAA600000102 = {
+			isa = PBXTargetDependency;
+			target = 1CC478430427BAA600000102;
+		};
+		1CC478470427BB2C00000102 = {
+			children = (
+				1C3B4DA40428C36400000102,
+				1CC478480427BB5500000102,
+				1CA56CB1042A4E3800000102,
+			);
+			isa = PBXGroup;
+			name = "Plug–Ins";
+			path = "";
+			refType = 4;
+		};
+		1CC478480427BB5500000102 = {
+			children = (
+				1C3B4D570427BD5200000102,
+				1C3B4D560427BD5200000102,
+			);
+			isa = PBXGroup;
+			name = "Standard Commands";
+			refType = 4;
 		};
 		1CC7CAAE03C48E8B001C0D62 = {
 			children = (
@@ -626,6 +1016,7 @@
 				F50B0AAE0170CB7101A84BDE,
 				F50B0AAF0170CB7101A84BDE,
 				F5CED8C501A35B0C01A35792,
+				1C3B4D510427BBBB00000102,
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
@@ -645,6 +1036,7 @@
 				F5E3BCDB0383624501000102,
 				F5E3BCF10383645901000102,
 				F5E3BD06038366FA01000102,
+				1CC478450427BAA600000102,
 			);
 			isa = PBXApplicationTarget;
 			name = "Colloquy (Application)";
@@ -727,6 +1119,8 @@ Copyright © 2003, Timothy Hatcher</string>
 				F5C1375C039966F601000102,
 				F5C1375E039966F701000102,
 				F5C13760039966F801000102,
+				1C2EF7ED0427A40B00000102,
+				1C3B4DA60428C36400000102,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -870,6 +1264,7 @@ Copyright © 2003, Timothy Hatcher</string>
 				F5C1375A039966F501000102,
 				F5C1375D039966F701000102,
 				F5C1375F039966F801000102,
+				1C2EF7EE0427A40B00000102,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1282,6 +1677,8 @@ Copyright © 2003, Timothy Hatcher</string>
 				F5F5A55B0188928D01EE70DE,
 				F52D043001873FC401EE70DE,
 				F52D043101873FC401EE70DE,
+				1C2EF7EC0427A40B00000102,
+				1C2EF7EB0427A40B00000102,
 				F52BA273037C13C201A35792,
 			);
 			isa = PBXGroup;
