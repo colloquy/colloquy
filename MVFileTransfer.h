@@ -8,6 +8,7 @@
 
 extern NSString *MVDownloadFileTransferOfferNotification;
 extern NSString *MVFileTransferStartedNotification;
+extern NSString *MVFileTransferFinishedNotification;
 
 typedef enum {
 	MVFileTransferDoneStatus = 'trDn',

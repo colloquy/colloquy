@@ -146,9 +146,6 @@ static NSMenu *favoritesMenu = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
 
-//		NSRange range = NSRangeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVFileTransferPortRange"] );
-//		[MVChatConnection setFileTransferPortRange:range];
-
 		[self _loadBookmarkList];
 	}
 	return self;

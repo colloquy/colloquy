@@ -18,6 +18,7 @@
 
 NSString *MVDownloadFileTransferOfferNotification = @"MVDownloadFileTransferOfferNotification";
 NSString *MVFileTransferStartedNotification = @"MVFileTransferStartedNotification";
+NSString *MVFileTransferFinishedNotification = @"MVFileTransferFinishedNotification";
 
 void dcc_send_resume( GET_DCC_REC *dcc );
 
@@ -52,8 +53,11 @@ static void MVFileTransferDestroyed( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:(FILE_DCC_REC *)dcc];
 	if( ! self ) return;
 
-	if( [self status] == MVFileTransferNormalStatus )
+	if( [self status] == MVFileTransferNormalStatus ) {
 		[self _setStatus:MVFileTransferDoneStatus];
+		NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:self];		
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	}
 
 	[self _destroying];
 }
@@ -62,8 +66,13 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:(FILE_DCC_REC *)dcc];
 	if( ! self ) return;
 
-	if( dcc -> size != dcc -> transfd ) [self _setStatus:MVFileTransferErrorStatus];
-	else [self _setStatus:MVFileTransferDoneStatus];
+	if( dcc -> size != dcc -> transfd ) {
+		[self _setStatus:MVFileTransferErrorStatus];
+	} else {
+		[self _setStatus:MVFileTransferDoneStatus];
+		NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:self];		
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	}
 }
 
 #pragma mark -
@@ -134,6 +143,8 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 }
 
 - (void) dealloc {
+	[self _setDCCFileRecord:NULL];
+
 	[_startDate release];
 	[_host release];
 
@@ -317,6 +328,8 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 }
 
 - (void) dealloc {
+	[self reject];
+
 	[_destination release];
 	[_fromNickname release];
 	[_originalFileName release];

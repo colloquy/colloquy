@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+#import <ChatCore/MVFileTransfer.h>
 #import "MVColorPanel.h"
 #import "MVApplicationController.h"
 #import "MVCrashCatcher.h"
@@ -233,6 +234,9 @@ static BOOL applicationIsTerminating = NO;
 	[MVBuddyListController sharedBuddyList];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
+
+	NSRange range = NSRangeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVFileTransferPortRange"] );
+	[MVFileTransfer setFileTransferPortRange:range];
 }
 
 - (void) applicationWillBecomeActive:(NSNotification *) notification {
