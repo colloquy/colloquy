@@ -49,7 +49,7 @@
 - (IBAction) sendCrashLog:(id) sender {
 	NSDate *modDate = [[[NSFileManager defaultManager] fileAttributesAtPath:logPath traverseLink:NO] objectForKey:NSFileModificationDate];
 	NSString *body = [NSString stringWithFormat:@"Comments:   %@\r\r%@", [[comments textStorage] string], [[log textStorage] string]];
-	if( [NSMailDelivery deliverMessage:body subject:[NSString stringWithFormat:@"Crash Report for %@", programName] to:@"timothy@javelin.cc"] ) {
+	if( [NSMailDelivery deliverMessage:body subject:[NSString stringWithFormat:@"Crash Report for %@", programName] to:@"timothy@colloquy.info"] ) {
 		[[NSFileManager defaultManager] removeFileAtPath:logPath handler:nil];
 	}
 	[[NSUserDefaults standardUserDefaults] setObject:modDate forKey:@"MVCrashCatcherLastDate"];
