@@ -301,7 +301,8 @@ static MVBuddyListController *sharedInstance = nil;
 		[firstName setObjectValue:[person valueForProperty:kABFirstNameProperty]];
 		[lastName setObjectValue:[person valueForProperty:kABLastNameProperty]];
 		ABMultiValue *value = [person valueForProperty:kABEmailProperty];
-		[email setObjectValue:[value valueAtIndex:[value indexForIdentifier:[value primaryIdentifier]]]];
+		unsigned index = [value indexForIdentifier:[value primaryIdentifier]];
+		if( index != NSNotFound ) [email setObjectValue:[value valueAtIndex:index]];
 		[image setImage:[[[NSImage alloc] initWithData:[person imageData]] autorelease]];
 	}
 
@@ -332,16 +333,18 @@ static MVBuddyListController *sharedInstance = nil;
 		NSMutableDictionary *info = [NSMutableDictionary dictionary];
 		NSMutableDictionary *sub = nil;
 
-		if( [(NSString *)[firstName objectValue] length] || [(NSString *)[lastName objectValue] length] || [(NSString *)[email objectValue] length] )
-			[info setObject:[firstName objectValue] forKey:@"First"];
-		else [info setObject:[nickname objectValue] forKey:@"First"];
-		if( [(NSString *)[lastName objectValue] length] ) [info setObject:[lastName objectValue] forKey:@"Last"];
+		if( [(NSString *)[firstName objectValue] length] || [(NSString *)[lastName objectValue] length] || [(NSString *)[email objectValue] length] ) {
+			[info setObject:[firstName objectValue] forKey:kABFirstNameProperty];
+		} else [info setObject:[nickname objectValue] forKey:kABFirstNameProperty];
+
+		if( [(NSString *)[lastName objectValue] length] )
+			[info setObject:[lastName objectValue] forKey:kABLastNameProperty];
 
 		if( [(NSString *)[email objectValue] length] ) {
 			sub = [NSMutableDictionary dictionary];
 			[sub setObject:[NSArray arrayWithObject:kABOtherLabel] forKey:@"labels"];
 			[sub setObject:[NSArray arrayWithObject:[email objectValue]] forKey:@"values"];
-			[info setObject:sub forKey:@"Email"];
+			[info setObject:sub forKey:kABEmailProperty];
 		}
 
 		sub = [NSMutableDictionary dictionary];
@@ -349,7 +352,7 @@ static MVBuddyListController *sharedInstance = nil;
 		[sub setObject:[NSArray arrayWithObject:[nickname objectValue]] forKey:@"values"];
 		[info setObject:sub forKey:@"IRCNickname"];
 
-		[info setObject:[NSString stringWithFormat:NSLocalizedString( @"IRC Nickname: %@ (%@)", "new buddy card note" ), [nickname objectValue], [server titleOfSelectedItem]] forKey:@"Note"];
+		[info setObject:[NSString stringWithFormat:NSLocalizedString( @"IRC Nickname: %@ (%@)", "new buddy card note" ), [nickname objectValue], [server titleOfSelectedItem]] forKey:kABNoteProperty];
 
 		person = [ABPerson personFromDictionary:info];
 
@@ -362,17 +365,20 @@ static MVBuddyListController *sharedInstance = nil;
 		[value addValue:[nickname objectValue] withLabel:[server titleOfSelectedItem]];
 		[person setValue:value forProperty:@"IRCNickname"];
 
-		if( [(NSString *)[firstName objectValue] length] || [(NSString *)[lastName objectValue] length] || [(NSString *)[email objectValue] length] )
+		if( [(NSString *)[firstName objectValue] length] || [(NSString *)[lastName objectValue] length] || [(NSString *)[email objectValue] length] ) {
 			[person setValue:[firstName objectValue] forProperty:kABFirstNameProperty];
-		else [person setValue:[nickname objectValue] forProperty:kABFirstNameProperty];
+		} else [person setValue:[nickname objectValue] forProperty:kABFirstNameProperty];
 		[person setValue:[lastName objectValue] forProperty:kABLastNameProperty];
+
 		ABMutableMultiValue *emailValue = [[[person valueForProperty:kABEmailProperty] mutableCopy] autorelease];
-		if( emailValue ) {
-			[emailValue replaceValueAtIndex:[emailValue indexForIdentifier:[emailValue primaryIdentifier]] withValue:[email objectValue]];
+		unsigned index = [emailValue indexForIdentifier:[emailValue primaryIdentifier]];
+		if( emailValue && index != NSNotFound ) {
+			[emailValue replaceValueAtIndex:index withValue:[email objectValue]];
 		} else {
 			emailValue = [[[ABMutableMultiValue alloc] init] autorelease];
 			[emailValue addValue:[email objectValue] withLabel:kABOtherLabel];
 		}
+
 		[person setValue:emailValue forProperty:kABEmailProperty];
 
 		[person setImageData:[[image image] TIFFRepresentation]];
