@@ -179,7 +179,7 @@ struct s_firetalk_protocol_functions {
 	enum firetalk_error (*save_config)(client_t);
 	enum firetalk_error (*get_roomlist)(client_t, const char * const);
 	enum firetalk_error (*stop_roomlist)(client_t);
-	enum firetalk_error (*get_info)(client_t, const char * const, const int);
+	enum firetalk_error (*get_info)(client_t, const char * const, const int, const int);
 	enum firetalk_error (*set_info)(client_t, const char * const);
 	enum firetalk_error (*set_away)(client_t, const char * const);
 	enum firetalk_error (*set_nickname)(client_t, const char * const);

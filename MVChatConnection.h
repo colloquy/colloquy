@@ -223,7 +223,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) addUserToNotificationList:(NSString *) user;
 - (void) removeUserFromNotificationList:(NSString *) user;
 
-- (void) fetchInformationForUser:(NSString *) user withPriority:(BOOL) priority;
+- (void) fetchInformationForUser:(NSString *) user withPriority:(BOOL) priority fromLocalServer:(BOOL) localOnly;
 
 - (void) fetchRoomList;
 - (void) fetchRoomListWithRooms:(NSArray *) rooms;

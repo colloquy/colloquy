@@ -749,7 +749,7 @@ enum firetalk_error irc_signon(client_t c, const char * const nickname) {
 }
 
 enum firetalk_error irc_send_raw(client_t c, const char * const text) {
-    return irc_send_printf(c,1,text);
+	return irc_send_printf(c,1,text);
 }
 
 enum firetalk_error irc_preselect(client_t c, fd_set *read, fd_set *write, fd_set *except, int *n) {
@@ -865,7 +865,7 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 					}
 					memmove(tempchr,&tempchr2[1],safe_strlen(&tempchr2[1]) + 1);
 				}
-				if (!strcasecmp(irc_get_nickname(args[0]),"NickServ")) {
+				if (!safe_strncasecmp(irc_get_nickname(args[0]),"NickServ",8)) {
 					if ((strstr(args[3],"/msg") != NULL) && (strstr(args[3],"NickServ") != NULL) && (strstr(args[3],"IDENTIFY") != NULL)) {
 						c->identified = 0;
 						/* nickserv seems to be asking us to identify ourselves, and we have a password */
@@ -1291,21 +1291,34 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 			switch (tempint) {
 				case 311: /* RPL_WHOISUSER */
 					whoisiter = c->whois_head;
+
 					while (whoisiter) {
-						if (irc_compare_nicks(args[3],whoisiter->nickname) == 0) {
-							if (whoisiter->username)
-								free(whoisiter->username);
-							whoisiter->username = safe_strdup(args[4]);
-							if (whoisiter->hostname)
-								free(whoisiter->hostname);
-							whoisiter->hostname = safe_strdup(args[5]);
-							if (whoisiter->realname)
-								free(whoisiter->realname);
-							whoisiter->realname = safe_strdup(args[7]);
+						if (irc_compare_nicks(args[3],whoisiter->nickname) == 0)
 							break;
-						}
 						whoisiter = whoisiter->next;
 					}
+
+					if( ! whoisiter ) {
+						whoisiter = c->whois_head;
+						c->whois_head = safe_malloc(sizeof(struct s_irc_whois));
+						c->whois_head->flags = FF_NORMAL;
+						c->whois_head->next = whoisiter;
+						whoisiter = c->whois_head;
+					}
+
+					if (whoisiter->nickname)
+						free(whoisiter->nickname);
+					if (whoisiter->username)
+						free(whoisiter->username);
+					if (whoisiter->hostname)
+						free(whoisiter->hostname);
+					if (whoisiter->realname)
+						free(whoisiter->realname);
+
+					whoisiter->nickname = safe_strdup(args[3]);
+					whoisiter->username = safe_strdup(args[4]);
+					whoisiter->hostname = safe_strdup(args[5]);
+					whoisiter->realname = safe_strdup(args[7]);
 				break;
 			}
 		}
@@ -1542,20 +1555,9 @@ enum firetalk_error irc_stop_roomlist(client_t c) {
 	return irc_send_printf(c,1,"LIST STOP");
 }
 
-enum firetalk_error irc_get_info(client_t c, const char * const nickname, const int priority) {
-	struct s_irc_whois *whoistemp;
-
-	whoistemp = c->whois_head;
-	c->whois_head = safe_malloc(sizeof(struct s_irc_whois));
-	c->whois_head->nickname = safe_strdup(nickname);
-	c->whois_head->flags = FF_NORMAL;
-	c->whois_head->idle = 0;
-	c->whois_head->server = NULL;
-	c->whois_head->username = NULL;
-	c->whois_head->hostname = NULL;
-	c->whois_head->realname = NULL;
-	c->whois_head->next = whoistemp;
-	return irc_send_printf(c,priority,"WHOIS %s",nickname);
+enum firetalk_error irc_get_info(client_t c, const char * const nickname, const int priority, const int localOnly) {
+	if( localOnly ) return irc_send_printf(c,priority,"WHOIS %s",nickname);
+	return irc_send_printf(c,priority,"WHOIS %s %s",nickname,nickname);
 }
 
 enum firetalk_error irc_set_away(client_t c, const char * const message) {

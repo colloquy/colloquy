@@ -958,9 +958,9 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 #pragma mark -
 
-- (void) fetchInformationForUser:(NSString *) user withPriority:(BOOL) priority {
+- (void) fetchInformationForUser:(NSString *) user withPriority:(BOOL) priority fromLocalServer:(BOOL) localOnly {
 	NSParameterAssert( user != nil );
-	if( [self isConnected] ) firetalk_im_get_info( _chatConnection, [user UTF8String], priority );
+	if( [self isConnected] ) firetalk_im_get_info( _chatConnection, [user UTF8String], priority, localOnly );
 }
 
 #pragma mark -
