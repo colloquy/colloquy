@@ -273,7 +273,7 @@
 		[connection sendRawMessage:[NSString stringWithFormat:@"INVITE %@ %@", nick, roomName]];
         return YES;
 	} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
-		if( [[arguments string] isEqualToString:@"plugins"] ) {
+		if( [[arguments string] isEqualToString:@"plugins"] || [[arguments string] isEqualToString:@"scripts"] ) {
 			[_manager findAndLoadPlugins];
 			return YES;
 		} else if( [[arguments string] isEqualToString:@"styles"] ) {
