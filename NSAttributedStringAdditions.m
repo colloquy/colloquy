@@ -1,6 +1,7 @@
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
 #import "NSStringAdditions.h"
+#import "NSScannerAdditions.h"
 
 static const int mIRCColors[][3] = {
 	{ 0xff, 0xff, 0xff },  /* 00) white */
@@ -55,30 +56,13 @@ static int colorRGBToMIRCColor( unsigned int red, unsigned int green, unsigned i
 }
 
 static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
-	unsigned int location = [scanner scanLocation];
-	if( [scanner isAtEnd] || ! ( [[scanner string] length] > location ) ) return NO;
+	NSCharacterSet *characterSet = [NSCharacterSet decimalDigitCharacterSet];
+	NSString *chars;
+	
+	if( ! [scanner scanCharactersFromSet:characterSet maxLength:2 intoString:&chars] )
+		return NO;
 
-	char a = [[scanner string] characterAtIndex:location];
-	char b = 0;
-
-	if( [[scanner string] length] > ( location + 1 ) )
-		b = [[scanner string] characterAtIndex:( location + 1 )];
-
-	*number = 0;
-
-	if( a >= '0' && a <= '9' ) {
-		a -= '0';
-		*number = a;
-		location++;
-	} else return NO;
-
-	if( b >= '0' && b <= '9' ) {
-		b -= '0';
-		*number = *number * 10 + b;
-		location++;
-	}
-
-	[scanner setScanLocation:location];
+	*number = [chars intValue];
 	return YES;
 }
 
@@ -229,13 +213,10 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 	char boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0;
 
 	while( ! [scanner isAtEnd] ) {
-		NSString *attribs = nil;
-		unsigned int location = [scanner scanLocation];
- 		[scanner scanCharactersFromSet:formatCharacters intoString:&attribs];
-
-		unsigned int i = 0;
-		for( i = 0; i < [attribs length]; i++, location++ ) {
-			switch( [attribs characterAtIndex:i] ) {
+		NSString *cStr;
+		if( [scanner scanCharactersFromSet:formatCharacters maxLength:1 intoString:&cStr] ) {
+			unichar c = [cStr characterAtIndex:0];
+			switch( c ) {
 			case '\017': // reset all
 				boldStack = italicStack = underlineStack = strikeStack = 0;
 				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:( NSBoldFontMask | NSItalicFontMask )];
@@ -271,37 +252,36 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 				else [attributes removeObjectForKey:NSUnderlineStyleAttributeName];
 				break;
 			case '\003': // color
-				if( [message length] > ( location + 1 ) ) {
-					[scanner setScanLocation:( location + 1 )];
+			{
+				unsigned int fcolor = 0;
+				if( scanOneOrTwoDigits( scanner, &fcolor ) ) {
+					fcolor %= 16;
 
-					unsigned int fcolor = 0;
-					if( scanOneOrTwoDigits( scanner, &fcolor ) ) {
-						fcolor %= 16;
+					NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[fcolor][0] / 255. ) green:( (float) mIRCColors[fcolor][1] / 255. ) blue:( (float) mIRCColors[fcolor][2] / 255. ) alpha:1.];
+					if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
+						[attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
 
-						NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[fcolor][0] / 255. ) green:( (float) mIRCColors[fcolor][1] / 255. ) blue:( (float) mIRCColors[fcolor][2] / 255. ) alpha:1.];
-						if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
-							[attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
-
-						unsigned int bcolor = 0;
-						if( [scanner scanString:@"," intoString:NULL] && scanOneOrTwoDigits( scanner, &bcolor ) && bcolor != 99 ) {
-							bcolor %= 16;
-							NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[bcolor][0] / 255. ) green:( (float) mIRCColors[bcolor][1] / 255. ) blue:( (float) mIRCColors[bcolor][2] / 255. ) alpha:1.];
-							if( backgroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
-								[attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
-						}
-					} else { // no color, reset both colors
-						[attributes removeObjectForKey:NSForegroundColorAttributeName];
-						[attributes removeObjectForKey:NSBackgroundColorAttributeName];
+					unsigned int bcolor = 0;
+					if( [scanner scanString:@"," intoString:NULL] && scanOneOrTwoDigits( scanner, &bcolor ) && bcolor != 99 ) {
+						bcolor %= 16;
+						NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[bcolor][0] / 255. ) green:( (float) mIRCColors[bcolor][1] / 255. ) blue:( (float) mIRCColors[bcolor][2] / 255. ) alpha:1.];
+						if( backgroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
+							[attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
 					}
+				} else { // no color, reset both colors
+					[attributes removeObjectForKey:NSForegroundColorAttributeName];
+					[attributes removeObjectForKey:NSBackgroundColorAttributeName];
 				}
 				break;
+			}
 			case '\006': // ctcp 2 formatting (http://www.lag.net/~robey/ctcp/ctcp2.2.txt)
-				if( [message length] > ( location + 2 ) ) {
+				if( ! [scanner isAtEnd] ) {
 					BOOL off = NO;
 
-					[scanner setScanLocation:( location + 2 )];
+					unichar formatChar = [message characterAtIndex:[scanner scanLocation]];
+					[scanner setScanLocation:[scanner scanLocation]+1];
 
-					switch( [message characterAtIndex:( location + 1 )] ) {
+					switch( formatChar ) {
 					case 'B': // bold
 						if( [scanner scanString:@"-" intoString:NULL] ) {
 							if( boldStack >= 1 ) boldStack--;
@@ -373,51 +353,58 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 							break;
 						}
 						// scan for foreground color
+						NSCharacterSet *hexSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCDEF"];
+						NSString *colorStr = nil;
+						BOOL foundForeground = YES;
 						if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
-							NSString *hexColor = nil;
-							if( [message length] > [scanner scanLocation] + 6 ) {
-								hexColor = [message substringWithRange:NSMakeRange( [scanner scanLocation], 6 )];
-								NSColor *foregroundColor = [NSColor colorWithHTMLAttributeValue:hexColor];
+							if( [scanner scanCharactersFromSet:hexSet maxLength:6 intoString:&colorStr] ) {
+								NSColor *foregroundColor = [NSColor colorWithHTMLAttributeValue:colorStr];
 								if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
 									[attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
-								[scanner setScanLocation:( [scanner scanLocation] + 6 )];
 							}
-						} else if( isxdigit( [message characterAtIndex:[scanner scanLocation]] ) ) { // indexed color
-							unsigned int index = toupper( [message characterAtIndex:[scanner scanLocation]] );
+						} else if( [scanner scanCharactersFromSet:hexSet maxLength:1 intoString:&colorStr] ) { // indexed color
+							unsigned int index = [colorStr characterAtIndex:0];
 							if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
 							index -= '0';
-							if( index > 15 ) break;
 							NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
 							if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
 								[attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
-							[scanner setScanLocation:( [scanner scanLocation] + 1 )];
 						} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the foreground color
 							[attributes removeObjectForKey:NSForegroundColorAttributeName];
-						} else [scanner scanString:@"-" intoString:NULL]; // skip the foreground color
-						// scan for background color
-						if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
-							NSString *hexColor = nil;
-							if( [message length] > [scanner scanLocation] + 6 ) {
-								hexColor = [message substringWithRange:NSMakeRange( [scanner scanLocation], 6 )];
-								NSColor *backgroundColor = [NSColor colorWithHTMLAttributeValue:hexColor];
+						} else if( [scanner scanString:@"-" intoString:NULL] ) { // skip the foreground color
+							// Do nothing - we're skipping
+							// This is so we can have an else clause that doesn't fire for @"-"
+						} else {
+							// Ok, no foreground color
+							foundForeground = NO;
+						}
+						
+						if( foundForeground ) {
+							// scan for background color
+							if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
+								if( [scanner scanCharactersFromSet:hexSet maxLength:6 intoString:&colorStr] ) {
+									NSColor *backgroundColor = [NSColor colorWithHTMLAttributeValue:colorStr];
+									if( backgroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
+										[attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
+								}
+							} else if( [scanner scanCharactersFromSet:hexSet maxLength:1 intoString:&colorStr] ) { // indexed color
+								unsigned int index = [colorStr characterAtIndex:0];
+								if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
+								index -= '0';
+								NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
 								if( backgroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
 									[attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
-								[scanner setScanLocation:( [scanner scanLocation] + 6 )];
-							}
-						} else if( isxdigit( [message characterAtIndex:[scanner scanLocation]] ) ) { // indexed color
-							unsigned int index = toupper( [message characterAtIndex:[scanner scanLocation]] );
-							if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
-							index -= '0';
-							if( index > 15 ) break;
-							NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
-							if( backgroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
-								[attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
-							[scanner setScanLocation:( [scanner scanLocation] + 1 )];
-						} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the background color
+							} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the background color
+								[attributes removeObjectForKey:NSBackgroundColorAttributeName];
+							} else [scanner scanString:@"-" intoString:NULL]; // skip the background color
+						} else {
+							// No colors - treat it like ..
+							[attributes removeObjectForKey:NSForegroundColorAttributeName];
 							[attributes removeObjectForKey:NSBackgroundColorAttributeName];
-						} else [scanner scanString:@"-" intoString:NULL]; // skip the background color
+						}
 					case 'F': // font size
 					case 'E': // encoding
+					case 'K': // blinking
 					case 'P': // spacing
 						// not supported yet
 						break;
