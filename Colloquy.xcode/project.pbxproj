@@ -1278,6 +1278,8 @@
 				1C2462A405F9205900505752,
 				1C9982020603EFD6006C6417,
 				1C9982BA0604D94D006C6417,
+				1CB37171060CC7E200F6A81F,
+				1CB37179060CC81C00F6A81F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1989,6 +1991,8 @@
 				1C2462A505F9205900505752,
 				1C9982030603EFD6006C6417,
 				1C9982B90604D94C006C6417,
+				1CB37172060CC7E200F6A81F,
+				1CB3717A060CC81C00F6A81F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2239,6 +2243,62 @@
 			path = "Resources/Read Me.rtf";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
+		};
+		1CB3716F060CC7E200F6A81F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = KABubbleWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CB37170060CC7E200F6A81F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = KABubbleWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CB37171060CC7E200F6A81F = {
+			fileRef = 1CB3716F060CC7E200F6A81F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB37172060CC7E200F6A81F = {
+			fileRef = 1CB37170060CC7E200F6A81F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB37177060CC81C00F6A81F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = KABubbleWindowView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CB37178060CC81C00F6A81F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = KABubbleWindowView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CB37179060CC81C00F6A81F = {
+			fileRef = 1CB37177060CC81C00F6A81F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB3717A060CC81C00F6A81F = {
+			fileRef = 1CB37178060CC81C00F6A81F;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1CB4DCA9053627C00080D36F = {
 			children = (
@@ -3573,6 +3633,8 @@
 				F5F9AF420170EE4A01A84BDE,
 				1CA7D0F106015DBA00887614,
 				1CA7D0F006015DBA00887614,
+				1CB37170060CC7E200F6A81F,
+				1CB3716F060CC7E200F6A81F,
 				1CE2BC54042F75FB00000102,
 				1CE2BC53042F75FB00000102,
 				1CE2BC1E042F4AD300000102,
@@ -3642,6 +3704,8 @@
 		F50B0AA00170C89301A84BDE = {
 			children = (
 				F50B0AA20170CAD701A84BDE,
+				1CB37178060CC81C00F6A81F,
+				1CB37177060CC81C00F6A81F,
 				F555208701F0DC2B01EE70DE,
 				F555208801F0DC2B01EE70DE,
 				F5BEC21401F2256301EE70DE,
