@@ -1,11 +1,18 @@
 #import <Cocoa/Cocoa.h>
+#import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/MVChatPlugin.h>
+
 #import "JVChatController.h"
 #import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
-#import "MVChatConnection.h"
-#import "MVChatPluginManager.h"
 #import "MVTextView.h"
-#import "NSAttributedStringAdditions.h"
+
+@interface JVDirectChat (JVDirectChatPrivate)
+- (void) _didConnect:(NSNotification *) notification;
+@end
+
+#pragma mark -
 
 @implementation JVChatRoom
 - (id) init {
