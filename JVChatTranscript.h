@@ -22,7 +22,6 @@
 	NSString *_chatStyleVariant;
 	NSBundle *_chatEmoticons;
 	NSDictionary *_emoticonMappings;
-	NSStringEncoding _encoding;
 	BOOL _isArchive;
 	BOOL _nibLoaded;
 }

@@ -98,8 +98,6 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		_xmlLog = xmlNewDoc( "1.0" );
 		xmlDocSetRootElement( _xmlLog, xmlNewNode( NULL, "log" ) );
 		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "began", [[[NSDate date] description] UTF8String] );
-
-		_encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"];
 	}
 	return self;
 }
@@ -128,7 +126,6 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[self setChatStyle:style withVariant:[[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ variant", [style bundleIdentifier]]]];
 	}
 
-//	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 	[[[[[display mainFrame] frameView] documentView] enclosingScrollView] setAllowsHorizontalScrolling:NO];
 
 	toolbarItemContainerView = [chooseStyle superview];

@@ -18,11 +18,14 @@
 @interface JVDirectChat : JVChatTranscript {
 	@protected
 	IBOutlet MVTextView *send;
+	IBOutlet NSPopUpButton *encodingView;
 	NSString *_target;
+	NSStringEncoding _encoding;
 	MVChatConnection *_connection;
 	NSMutableArray *_sendHistory;
 	NSMutableArray *_waitingAlerts;
 	NSMutableDictionary *_waitingAlertNames;
+	NSMenu *_spillEncodingMenu;
 	unsigned int _messageId;
 	BOOL _firstMessage;
 	BOOL _isActive;
@@ -37,6 +40,9 @@
 - (NSString *) target;
 
 - (void) showAlert:(NSPanel *) alert withName:(NSString *) name;
+
+- (NSStringEncoding) encoding;
+- (IBAction) changeEncoding:(id) sender;	
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;

@@ -3,6 +3,7 @@
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/MVChatPlugin.h>
 #import <libxml/xinclude.h>
 
 #import "JVChatController.h"
@@ -12,8 +13,58 @@
 #import "NSAttributedStringAdditions.h"
 #import "NSStringAdditions.h"
 
+static const NSStringEncoding JVAllowedTextEncodings[] = {
+	/* Universal */
+	NSUTF8StringEncoding,
+	NSNonLossyASCIIStringEncoding,
+	/* Western */	(NSStringEncoding) -1, // Divider
+	NSASCIIStringEncoding,
+	NSISOLatin1StringEncoding, // ISO Latin 1
+	(NSStringEncoding) 0x80000203, // ISO Latin 3
+	(NSStringEncoding) 0x8000020F, // ISO Latin 9
+	NSMacOSRomanStringEncoding, // Mac
+	NSWindowsCP1252StringEncoding, // Windows
+	/* European */	(NSStringEncoding) -1,
+	NSISOLatin2StringEncoding, // ISO Latin 2
+	(NSStringEncoding) 0x80000204, // ISO Latin 4
+	(NSStringEncoding) 0x8000001D, // Mac
+	NSWindowsCP1250StringEncoding, // Windows
+	/* Cyrillic */	(NSStringEncoding) -1,
+	(NSStringEncoding) 0x80000A02, // KOI8-R
+	(NSStringEncoding) 0x80000205, // ISO Latin 5
+	(NSStringEncoding) 0x80000007, // Mac
+	NSWindowsCP1251StringEncoding, // Windows
+	/* Japanese */	(NSStringEncoding) -1, // Divider
+	(NSStringEncoding) 0x80000A01, // ShiftJIS
+//	NSISO2022JPStringEncoding, // ISO-2022-JP
+	NSJapaneseEUCStringEncoding, // EUC
+	(NSStringEncoding) 0x80000001, // Mac
+	NSShiftJISStringEncoding, // Windows
+	/* Simplified Chinese */	(NSStringEncoding) -1, // Divider
+	(NSStringEncoding) 0x80000632, // GB 18030
+	(NSStringEncoding) 0x80000631, // GBK
+	(NSStringEncoding) 0x80000930, // EUC
+	(NSStringEncoding) 0x80000019, // Mac
+	(NSStringEncoding) 0x80000421, // Windows
+	/* Traditional Chinese */	(NSStringEncoding) -1, // Divider
+	(NSStringEncoding) 0x80000A03, // Big5
+	(NSStringEncoding) 0x80000A06, // Big5 HKSCS
+	(NSStringEncoding) 0x80000931, // EUC
+	(NSStringEncoding) 0x80000002, // Mac
+	(NSStringEncoding) 0x80000423, // Windows
+	/* Korean */	(NSStringEncoding) -1,
+	(NSStringEncoding) 0x80000940, // EUC
+	(NSStringEncoding) 0x80000003, // Mac
+	(NSStringEncoding) 0x80000422, // Windows
+	/* End */ 0 };
+
 extern char *irc_html_to_irc(const char * const string);
 extern char *irc_irc_to_html(const char * const string);
+
+static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
+static NSString *JVToolbarBoldFontItemIdentifier = @"JVToolbarBoldFontItem";
+static NSString *JVToolbarItalicFontItemIdentifier = @"JVToolbarItalicFontItem";
+static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFontItem";
 
 #pragma mark -
 
@@ -52,6 +103,8 @@ extern char *irc_irc_to_html(const char * const string);
 
 		_waitingAlerts = [[NSMutableArray array] retain];
 		_waitingAlertNames = [[NSMutableDictionary dictionary] retain];
+
+		_encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"];
 	}
 	return self;
 }
@@ -71,6 +124,7 @@ extern char *irc_irc_to_html(const char * const string);
 }
 
 - (void) awakeFromNib {
+	NSView *toolbarItemContainerView = nil;
 	NSString *prefStyle = [NSString stringWithFormat:@"chat.style.%@.%@", [[self connection] server], _target];
 	NSBundle *style = nil;
 	NSString *variant = nil;
@@ -94,7 +148,19 @@ extern char *irc_irc_to_html(const char * const string);
 	[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
 	[self setChatStyle:style withVariant:variant];
 
+	toolbarItemContainerView = [chooseStyle superview];
+
+	[chooseStyle retain];
+	[chooseStyle removeFromSuperview];
+
+	[encodingView retain];
+	[encodingView removeFromSuperview];
+
+	[toolbarItemContainerView autorelease];
+
 	[super awakeFromNib];
+
+	[[[encodingView menu] itemAtIndex:0] setImage:[NSImage imageNamed:@"encoding"]];	
 
 	[send setHorizontallyResizable:YES];
 	[send setVerticallyResizable:YES];
@@ -326,6 +392,52 @@ extern char *irc_irc_to_html(const char * const string);
 
 #pragma mark -
 
+- (NSStringEncoding) encoding {
+	return _encoding;
+}
+
+- (IBAction) changeEncoding:(id) sender {
+	NSMenuItem *menuItem = nil;
+	unsigned i = 0, count = 0;
+	BOOL new = YES;
+	if( ! [sender tag] ) {
+		_encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:[NSString stringWithFormat:@"chat.%@.%@.encoding", [[self connection] server], [self target]]];
+		if( ! _encoding ) _encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"];
+	} else _encoding = (NSStringEncoding) [sender tag];
+
+	if( [[encodingView menu] numberOfItems] > 1 ) new = NO;
+
+	for( i = 0; JVAllowedTextEncodings[i]; i++ ) {
+		if( JVAllowedTextEncodings[i] == (NSStringEncoding) -1 ) {
+			if( new ) [[encodingView menu] addItem:[NSMenuItem separatorItem]];
+			continue;
+		}
+		if( new ) menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
+		else menuItem = [[encodingView menu] itemAtIndex:i + 1];
+		if( _encoding == JVAllowedTextEncodings[i] ) {
+			[menuItem setState:NSOnState];
+		} else [menuItem setState:NSOffState];
+		if( new ) {
+			[menuItem setTag:JVAllowedTextEncodings[i]];
+			[[encodingView menu] addItem:menuItem];
+		}
+	}
+
+	if( ! _spillEncodingMenu ) _spillEncodingMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding menu toolbar item" )];
+	count = [_spillEncodingMenu numberOfItems];
+	for( i = 0; i < count; i++ ) [_spillEncodingMenu removeItemAtIndex:0];
+	count = [[encodingView menu] numberOfItems];
+	for( i = 1; i < count; i++ ) [_spillEncodingMenu addItem:[[(NSMenuItem *)[[encodingView menu] itemAtIndex:i] copy] autorelease]];
+
+	if( _encoding != (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"] ) {
+		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithUnsignedInt:_encoding] forKey:[NSString stringWithFormat:@"chat.%@.%@.encoding", [[self connection] server], [self target]]];
+	} else {
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"chat.%@.%@.encoding", [[self connection] server], [self target]]];
+	}
+}
+
+#pragma mark -
+
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
 	NSEnumerator *enumerator = nil, *kenumerator = nil;
 	NSString *key = nil, *value = nil;
@@ -370,8 +482,6 @@ extern char *irc_irc_to_html(const char * const string);
 
 	xmlFreeDoc( doc );
 }
-
-#pragma mark -
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
 	BOOL highlight = NO;
@@ -663,8 +773,63 @@ extern char *irc_irc_to_html(const char * const string);
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	NSToolbarItem *toolbarItem = nil;
-	if( toolbarItem ) return toolbarItem;
-	else return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
+	if( [identifier isEqual:JVToolbarTextEncodingItemIdentifier] ) {
+		NSMenuItem *menuItem = nil;
+		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+
+		[toolbarItem setLabel:NSLocalizedString( @"Encoding", "encoding menu toolbar item" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Text Encoding", "encoding menu toolbar customize palette name" )];
+
+		[toolbarItem setTarget:nil];
+		[toolbarItem setAction:NULL];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Text Encoding Options", "encoding menu toolbar item tooltip" )];
+		[toolbarItem setView:encodingView];
+		[toolbarItem setMinSize:NSMakeSize( 60., 24. )];
+		[toolbarItem setMaxSize:NSMakeSize( 60., 32. )];
+
+		[self changeEncoding:nil];
+
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding menu toolbar item" ) action:NULL keyEquivalent:@""] autorelease];
+		[menuItem setImage:[NSImage imageNamed:@"encoding"]];
+		[menuItem setSubmenu:_spillEncodingMenu];
+
+		[toolbarItem setMenuFormRepresentation:menuItem];
+	} else if( [identifier isEqual:JVToolbarBoldFontItemIdentifier] ) {
+		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+
+		[toolbarItem setLabel:NSLocalizedString( @"Bold", "bold font toolbar item" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Bold", "bold font toolbar item" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Bold Style", "bold font tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"bold"]];
+
+		[toolbarItem setTarget:send];
+		[toolbarItem setAction:@selector( bold: )];
+	} else if( [identifier isEqual:JVToolbarItalicFontItemIdentifier] ) {
+		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		
+		[toolbarItem setLabel:NSLocalizedString( @"Italic", "italic font style toolbar item" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Italic", "italic font style toolbar item" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Italic Style", "italic style tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"italic"]];
+
+		[toolbarItem setTarget:send];
+		[toolbarItem setAction:@selector( italic: )];
+	} else if( [identifier isEqual:JVToolbarUnderlineFontItemIdentifier] ) {
+		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		
+		[toolbarItem setLabel:NSLocalizedString( @"Underline", "underline font style toolbar item" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Underline", "underline font style toolbar item" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Underline Style", "underline style tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"underline"]];
+
+		[toolbarItem setTarget:send];
+		[toolbarItem setAction:@selector( underline: )];
+	} else return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
+	return toolbarItem;
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
@@ -674,6 +839,10 @@ extern char *irc_irc_to_html(const char * const string);
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
+	[list addObject:JVToolbarTextEncodingItemIdentifier];
+	[list addObject:JVToolbarBoldFontItemIdentifier];
+	[list addObject:JVToolbarItalicFontItemIdentifier];
+	[list addObject:JVToolbarUnderlineFontItemIdentifier];
 	return list;
 }
 
