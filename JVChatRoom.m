@@ -52,6 +52,8 @@
 	[[topicLine enclosingScrollView] setDrawsBackground:NO];
 	[super awakeFromNib];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatConnectionGotRoomModeNotification object:[self connection]];
+
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
 
 	[_filePath autorelease];
@@ -882,6 +884,149 @@
 	if( [member operator] ) return "operator";
 	else if( [member voice] ) return "voice";
 	return "normal";
+}
+
+- (void) _roomModeChanged:(NSNotification *) notification {
+	if( notification && [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:_target] != NSOrderedSame ) return;
+	if( [[[notification userInfo] objectForKey:@"by"] isMemberOfClass:[NSNull class]] ) return;
+
+	NSString *member = [[notification userInfo] objectForKey:@"by"];
+	JVChatRoomMember *mbr = [self chatRoomMemberWithName:member];
+	NSString *message = nil;
+	NSString *mode = nil;
+
+	switch( [[[notification userInfo] objectForKey:@"mode"] unsignedIntValue] ) {
+		case MVChatRoomPrivateMode:
+			mode = @"chatRoomPrivateMode";
+			if( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ) {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You made this room private.", "private room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room private.", "someone else private room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			} else {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You made this room public.", "public room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room public.", "someone else public room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			}
+			break;
+		case MVChatRoomSecretMode:
+			mode = @"chatRoomSecretMode";
+			if( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ) {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You made this room secret.", "secret room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room secret.", "someone else secret room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			} else {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You made this room no longer a secret.", "no longer secret room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room no longer a secret.", "someone else no longer secret room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			}
+			break;
+		case MVChatRoomInviteOnlyMode:
+			mode = @"chatRoomInviteOnlyMode";
+			if( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ) {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You made this room invite only.", "invite only room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room invite only.", "someone else invite only room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			} else {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You made this room no longer invite only.", "no longer invite only room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room no longer invite only.", "someone else no longer invite only room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			}
+			break;
+		case MVChatRoomModeratedMode:
+			mode = @"chatRoomModeratedMode";
+			if( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ) {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You made this room moderated.", "moderated room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room moderated.", "someone else moderated room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			} else {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You made this room no longer moderated.", "no longer moderated room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room no longer moderated.", "someone else no longer moderated room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			}
+			break;
+		case MVChatRoomSetTopicOperatorOnlyMode:
+			mode = @"chatRoomSetTopicOperatorOnlyMode";
+			if( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ) {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You changed this room to require opperator status to change the topic.", "require op to set topic room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to require opperator status to change the topic.", "someone else required op to set topic room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			} else {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You changed this room to allow anyone to change the topic.", "don't require op to set topic room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to allow anyone to change the topic.", "someone else don't required op to set topic room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			}
+			break;
+		case MVChatRoomNoOutsideMessagesMode:
+			mode = @"chatRoomNoOutsideMessagesMode";
+			if( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ) {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You changed this room to prohibit outside messages.", "prohibit outside messages room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to prohibit outside messages.", "someone else prohibit outside messages room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			} else {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You changed this room to permit outside messages.", "permit outside messages room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to permit outside messages.", "someone else permit outside messages room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			}
+			break;
+		case MVChatRoomPasswordRequiredMode:
+			mode = @"chatRoomPasswordRequiredMode";
+			if( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ) {
+				if( [mbr isLocalUser] ) {
+					message = [NSString stringWithFormat:NSLocalizedString( @"You changed this room to require a password of \"%@\".", "password required room status message" ), [[notification userInfo] objectForKey:@"param"]];
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to require a password of \"%@\".", "someone else password required room status message" ), ( mbr ? [mbr title] : member ), [[notification userInfo] objectForKey:@"param"]];
+				}
+			} else {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You changed this room to no longer require a password.", "no longer passworded room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to no longer require a password.", "someone else no longer passworded room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			}
+			break;
+		case MVChatRoomMemberLimitMode:
+			mode = @"chatRoomMemberLimitMode";
+			if( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ) {
+				if( [mbr isLocalUser] ) {
+					message = [NSString stringWithFormat:NSLocalizedString( @"You set a limit on the number of room members to %@.", "member limit room status message" ), [[notification userInfo] objectForKey:@"param"]];
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ set a limit on the number of room members to %@.", "someone else member limit room status message" ), ( mbr ? [mbr title] : member ), [[notification userInfo] objectForKey:@"param"]];
+				}
+			} else {
+				if( [mbr isLocalUser] ) {
+					message = NSLocalizedString( @"You removed the room member limit.", "no member limit room status message" );
+				} else {
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ removed the room member limit", "someone else no member limit room status message" ), ( mbr ? [mbr title] : member )];
+				}
+			}
+			break;
+	}
+
+	[self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : member ), @"by", member, @"byNickname", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", [[notification userInfo] objectForKey:@"param"], @"parameter", nil]];
 }
 @end
 
