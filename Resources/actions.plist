@@ -1,0 +1,42 @@
+(
+    {
+        MVChatActionIdentifier = MVChatMemberJoinedRoomAction; 
+        MVChatActionTitle = "Member joined chat room"; 
+    }, {
+        MVChatActionIdentifier = MVChatMemberLeftRoomAction; 
+        MVChatActionTitle = "Member left chat room"; 
+    }, {
+        MVChatActionIdentifier = MVChatMemberKickedAction; 
+        MVChatActionTitle = "Member kicked from room"; 
+    }, {
+        MVChatActionIdentifier = MVChatMemberPromotedAction; 
+        MVChatActionTitle = "Member promoted in room"; 
+    }, {
+        MVChatActionIdentifier = MVChatMemberDemotedAction; 
+        MVChatActionTitle = "Member demoted in room"; 
+    }, {
+        MVChatActionIdentifier = MVChatMemberVoicedAction; 
+        MVChatActionTitle = "Member voiced in room"; 
+    }, {
+        MVChatActionIdentifier = MVChatMemberDevoicedAction; 
+        MVChatActionTitle = "Member devoiced in room"; 
+    }, {
+        MVChatActionIdentifier = MVChatFisrtMessageAction; 
+        MVChatActionTitle = "First private message"; 
+    }, {
+        MVChatActionIdentifier = MVChatAdditionalMessagesAction; 
+        MVChatActionTitle = "Additional private messages"; 
+    }, {
+        MVChatActionIdentifier = MVChatMentionedAction; 
+        MVChatActionTitle = "Someone mentioned you"; 
+    }, {
+        MVChatActionIdentifier = MVChatInlineMessageBeepAction; 
+        MVChatActionTitle = "Message beeps"; 
+    }, {
+        MVChatActionIdentifier = MVChatFriendOnlineAction; 
+        MVChatActionTitle = "Friend came online"; 
+    }, {
+        MVChatActionIdentifier = MVChatFriendOfflineAction; 
+        MVChatActionTitle = "Friend went offline"; 
+    }
+)

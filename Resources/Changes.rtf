@@ -1,0 +1,196 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Arial-Black;\f1\fswiss\fcharset77 Arial-BoldMT;\f2\fswiss\fcharset77 Helvetica-Bold;
+\f3\fswiss\fcharset77 Helvetica;\f4\ftech\fcharset2 Symbol;}
+{\colortbl;\red255\green255\blue255;\red255\green128\blue0;\red99\green99\blue99;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\b\fs48 \cf0 colloquy\cf2 .\cf3 app
+\f1 \cf0  
+\fs28 changes\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f2\fs20 \cf0 Build 1B3 
+\f3\b0 (Tuesday January 2, 2002) \'d1
+\f1\b\fs28 \
+
+\f3\b0\fs20  
+\f4 \'b7
+\f3  New buddy list! Add buddies to a global list and see who is online without joining any rooms. Buddies can be taged to the system Address Book and grouped with all the nicknames and servers that buddy uses. (GUI needed still, disabled currently.)\
+ 
+\f4 \'b7
+\f3  NickServ password authorization enabled with password prompts and saving passwords in your keychain.\
+
+\f4  \'b7
+\f3  Connections are stored different now, old bookmarks will not load and may show up as blank lines in the connection manager.\
+ 
+\f4 \'b7
+\f3  Audit of all code and fixed some major memory leaks dealing with my NIB file loading.\
+ 
+\f4 \'b7
+\f3  Most things are lazy loaded now. This makes application launch instantly (one bounce) and have a smaller footprint until features are needed.\
+ 
+\f4 \'b7
+\f3  Preferences controller had a major leak\'d1now resolved. (Should send these changes to the Chimera group, and Fire developers.)\
+ 
+\f4 \'b7
+\f3  Firetalk DNS timout crash when connecting under high network load (or a slow dialup connection)\'d1now resolved. This allows IPv6 to work.\
+ 
+\f4 \'b7
+\f3  Firetalk CTCP infinate loop fixed along with other CTCP cleanup.\
+ 
+\f4 \'b7
+\f3  Software update timeout "hack". The software update feature will now timeout in 5 seconds if there is no connection. (This is an Apple bug workaround.)\
+
+\f2\b \
+Build 1A26 
+\f3\b0 (Tuesday November 26, 2002) \'d1
+\f1\b\fs28 \
+
+\f3\b0\fs20  
+\f4 \'b7
+\f3  New Appearance preference pane with extra options and a preview area.\
+ 
+\f4 \'b7
+\f3  New 'Join Room' and 'Message User' icons for the connection manager.\
+ 
+\f4 \'b7
+\f3  Rooms on the server show up in the join room and auotcomplete as you type.\
+ 
+\f4 \'b7
+\f3  Preliminary contextual menus on the chat room member list. Includes admin op, kick and voice.\
+ 
+\f4 \'b7
+\f3  IPv6 support disabled due to system level bugs.\
+ 
+\f4 \'b7
+\f3  Revisited internal message conversion between encodings. Removed a lot of redundant code.\
+ 
+\f4 \'b7
+\f3  Bold and Italic toggling now behaves exactly like Apple methods.\
+ 
+\f4 \'b7
+\f3  Added checks for the new formatting and link highlighting preferences when displaying a message.\
+ 
+\f4 \'b7
+\f3  Link highlighting engine now excludes a trailing '.' or '?' for URLs that appear at the end of proper sentences.\
+ 
+\f4 \'b7
+\f3  Can now disconnect a connection before it is finished connecting.\
+ 
+\f4 \'b7
+\f3  The 'Edit' connection toolbar item now changes to 'New' when no connection is selected.\
+ 
+\f4 \'b7
+\f3  Background colors are now viewable in received messages.\
+ 
+\f4 \'b7
+\f3  More tweaks to match mIRC's color support to the letter.\
+ 
+\f4 \'b7
+\f3  Internal HTML cleanup. Replaced some of my methods with Apple's private HTML framework.\
+ 
+\f4 \'b7
+\f3  Enabled ISO-2022-JP by fixing a HTML\'d0IRC conversion issue with '<', '>', '&'.\
+ 
+\f4 \'b7
+\f3  Dividers in the encoding menu along with Cryillic, Chinese and Korean encodings.\
+ 
+\f4 \'b7
+\f3  Memory leak in chat rooms removed.\
+
+\f2\b \
+Build 1A21 
+\f3\b0 (Thursday November 21, 2002) \'d1
+\f1\b\fs28 \
+
+\f3\b0\fs20  
+\f4 \'b7
+\f3  New connections manager for managing URLs, multiple connections, automatic connections, automatic joins, user notify list, joining rooms and initiating user messages.\
+ 
+\f4 \'b7
+\f3  Enabled the revisited transfer manager.\
+ 
+\f4 \'b7
+\f3  File transfer resume support.\
+ 
+\f4 \'b7
+\f3  IRC URLs are now handled from the system and internally in chat dialog (was only rooms before, now allows new server connections). Here is an example URL that will connect to 'javelin.cc' as user 'test' on port '6669' and will join the room 'colloquy' when connected: \ul irc://test@javelin.cc:6669/#colloquy\ulnone . Note that only the scheme and host part of the URL need to be present. Valid room paths a begin with '#', '&' or '+'; if the path of the URL is not a valid room then a new message to that user is made. Mozilla's Chatzilla handles IRC URLs in this manner also.\
+
+\f4  \'b7
+\f3  Nickname changes were not being reported due to a Firetalk API change \'d1 now fixed.\
+ 
+\f4 \'b7
+\f3  Version checking happens at launch time and prompts the user if they want to see the changes. (The 'Never' option does nothing currently.)\
+ 
+\f4 \'b7
+\f3  Removed the floating palette.\
+ 
+\f4 \'b7
+\f3  Added more menu items.\
+ 
+\f4 \'b7
+\f3  Removed the send button and made Private Messages resize it's text views to fit where the topic was.\
+ 
+\f4 \'b7
+\f3  Empty chat topics are now indicated.\
+ 
+\f4 \'b7
+\f3  Enhanced the default color panel to have an option to set foreground and background colors. Note that background colors only send currently and will not be displayed until a later build.\
+ 
+\f4 \'b7
+\f3  Started the work for pulg-in support by adding tons of notifications about chat connections.\
+ 
+\f4 \'b7
+\f3  Added a queue limit to Firetalk to prevent disconnections due to flooding the server with automatic requests \'d1 milliseconds apart. 
+\f2\b \
+\
+Build 1A8 
+\f3\b0 (Wednesday November 13, 2002) \'d1
+\f1\b\fs28 \
+
+\f3\b0\fs20  
+\f4 \'b7
+\f3  Enabled the Software Update check.\
+ 
+\f4 \'b7
+\f3  Fixed some buffer overflows in the IRC\'d0HTML translation engine.\
+ 
+\f4 \'b7
+\f3  Added reset codes to the HTML\'d0IRC translation engine for better compatibility with some IRC clients (Snak).\
+ 
+\f4 \'b7
+\f3  Text sent by the Colloquy user now gets parsed-for-display through the same translation engines (to render colors accurately in the fixed 16 color IRC palette).\
+ 
+\f4 \'b7
+\f3  Added IRC voice support to Firetalk.\
+ 
+\f4 \'b7
+\f3  Enabled IPv6 support on the Firetalk side (changes were needed to build on Mac OS X).\
+ 
+\f4 \'b7
+\f3  Muli-server support has been added. (Need a new server management/connection interface to use this.)\
+ 
+\f4 \'b7
+\f3  New icon that is a cleaner version of the first idea.\
+ 
+\f4 \'b7
+\f3  Preference pans are now individualized.\
+
+\f2\b \
+Build 1A1 
+\f3\b0 (Monday November 10, 2002) \'d1
+\f1\b\fs28 \
+
+\f3\b0\fs20  
+\f4 \'b7
+\f3  Initial build \'d1 much removed from the Massinova code.\
+ 
+\f4 \'b7
+\f3  Preliminary icon being used \'d1 feedback welcomed.\
+ 
+\f4 \'b7
+\f3  Replaced the Firetalk library with version 0.1p21 (made some modifications to work on Mac OS X and added some missing IRC features).\
+ 
+\f4 \'b7
+\f3  Object and general code clean-up using new techniques for simpler and readable code.\
+}

@@ -1,0 +1,27 @@
+FireTalk Library
+----------------
+(c) 2000 Ian Gulliver under the GNU Public License, Version 2.
+See GPL for more details.
+
+This is fairly weak documentation so far.  To build the shared
+library, do:
+
+	make
+
+If that doesn't work, try:
+
+	make compat
+
+To build with debugging and the debugging programs, run:
+
+	make debug
+
+which uses bounds checking, or to use gdb:
+
+	make gdb
+
+Thats it.  If it doesn't work, I'm sorry.  Let me know; you
+can reach me at ian@penguinhosting.net.
+
+To use it, take a look at gui.c and firetalk.h.  Together,
+these provide a pretty good idea of how to use the library.  

@@ -1,0 +1,41 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {bold = id; italic = id; newConnection = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                checkForUpdate = id; 
+                connectToSupportRoom = id; 
+                emailDeveloper = id; 
+                productWebsite = id; 
+                showBuddyList = id; 
+                showConnectionManager = id; 
+                showPreferences = id; 
+                showTransferManager = id; 
+            }; 
+            CLASS = MVApplicationController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = MVBorderlessPanel; LANGUAGE = ObjC; SUPERCLASS = NSPanel; }, 
+        {
+            CLASS = MVMenuButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {menu = id; }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
+            ACTIONS = {stopUpdate = id; update = id; }; 
+            CLASS = MVStatusView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {currentMessage = id; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }
+    ); 
+    IBVersion = 1; 
+}

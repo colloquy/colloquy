@@ -1,0 +1,88 @@
+This is a modification of the original ECT spec written by Dan Reed
+<n@ml.org>.  It has been updated for simplicity in implemtation,
+pseudo-compatibility with current AIM clients and compatibility with
+IRC CTCPs.
+
+ECT's were originally designed primarily for actions and file transfers
+on AIM; these two items are now superceded by the /me convention
+(present in gAIM and FireTalk, not present in WinAIM) and the in-band
+file-transfer support that has been added to both OSCAR and TOC since
+ECT 1.
+
+However, an extensible subcode channel is still very useful in any
+protocol for client-specific extensions.  This is our goal here.
+
+
+Specification
+-------------
+
+As with CTCPs, ECTs requests are sent travel over the standard message
+channel of the protocol, and ECT replies are sent as "automatic"
+messages (normally used for away messages in AIM).  Multiple ECTs
+are allowed in one message; ECTs combined with normal messages are
+also allowed.  The sender doesn't have to know that the receiver of
+the ECT supports them; sending an ECT to a non-compliant client will,
+at worst, result in the user at the other end seeing a blank message.
+
+ECT format:
+
+<!--ECT COMMAND ARGS-->
+
+The string "ECT" is literal.  The strings "COMMAND" and "ARGS" are
+replaced with the ECT command and arguments.  These are seperated by
+spaces.  The COMMAND is not allowed to contain any spaces.  ARGS may
+contain spaces.  Any character in the set "<>&" should be escaped as
+per standard HTML.  The string "ECT" is case-sensitive.  The COMMAND
+strings is case-insensitive.  The case-sensitivity of ARGS is dependent
+on COMMAND.
+
+ECT-aware clients should not display messages that are blank after
+all the ECTs have been parsed.
+
+ECTs are allowed in profiles.  ECTs found in profiles should be
+interpreted as replies, not requests.
+
+Clients should be prepared to receive unsolicited ECT replies when the
+other end decides to offer subcode information.
+
+
+
+Standard Commands
+-----------------
+
+Minimum command set that should be supported by clients:
+
+Command: VERSION
+Args: No arguments
+Reply: Name and version number of client
+
+Command: SOURCE
+Args: No arguments
+Reply: URI where client can be downloaded, or at least client information
+       found.
+
+Command: CLIENTINFO
+Args: No arguments
+Reply: Space-seperated list of supported ECTs
+
+Command: PING
+Args: Timestamp in sender determined format
+Reply: Exact same timestamp (for determining round-trip latency)
+
+Command: TIME
+Args: No arguments
+Reply: Human-readable date and time from replying machine
+
+Command: ACTION
+Args: Action string
+Reply: No reply
+Notes: /me should currently be used for sending actions.  However,
+       ECT-aware clients should be prepared to receive actions in this
+       format as well.
+
+Command: AWAY
+Args: None
+Reply: <minutes away> [:]<away message>
+Notes: The colon is optional.  <away message> may contain spaces.  This
+       reply may commonly be seen in absense of a request, such as in
+       profiles.

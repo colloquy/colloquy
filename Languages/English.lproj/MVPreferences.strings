@@ -1,0 +1,15 @@
+/* loading message for the selected pane  */
+"Loading %@..." = "Loading %@...";
+
+/* error when loading the selected pane  */
+"Could not load %@" = "Could not load %@";
+
+/* show all toolbar item name  */
+"Show All" = "Show All";
+
+/* preferences window title  */
+"%@ Preferences" = "%@ Preferences";
+
+/* preferences error title  */
+"Preferences Error" = "Preferences Error";
+

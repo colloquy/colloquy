@@ -1,0 +1,46 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addEmoticon = id; 
+                changeEncoding = id; 
+                hideWindow = id; 
+                partChat = id; 
+                promoteSelectedUser = id; 
+                send = id; 
+                showWindow = id; 
+                showWindowAndMakeKey = id; 
+                startChatWithSelectedUser = id; 
+                toggleMemberDrawer = id; 
+                voiceSelectedUser = id; 
+            }; 
+            CLASS = MVChatWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                displayText = MVTextView; 
+                emoticonView = MVMenuButton; 
+                encodingView = NSPopUpButton; 
+                infoButton = NSButton; 
+                memberDrawer = NSDrawer; 
+                memberListTable = MVTableView; 
+                msgButton = NSButton; 
+                sendText = MVTextView; 
+                sendTextScrollView = NSScrollView; 
+                topicArea = NSTextField; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = MVMenuButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {menu = id; }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
+        {CLASS = MVTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

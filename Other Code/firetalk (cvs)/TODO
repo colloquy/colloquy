@@ -1,0 +1,29 @@
+v0.1.x:
+	* Non-blocking DNS
+	* IPv6
+	* IRC color <-> <font> support
+	* Queued rate limiting
+	* Extended user info passing
+	* Ban support
+	* Friends/shit list handling
+
+v0.2.x:
+	* Stable series -- bugfixes only
+
+v0.3.x:
+	* AIM/OSCAR
+	* ICQ/OSCAR
+	* SILC?
+	* Avatar support
+
+v0.4.x:
+	* Stable series -- bugfixes only
+
+v0.5.x:
+	* MSN IM
+	* Yahoo IM
+	* SILC?
+	* LILY
+
+v0.6.x:
+	* Stable series -- bugfixes only

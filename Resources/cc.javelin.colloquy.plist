@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+	<key>MVChatHighlightNames</key>
+	<array></array>
+	<key>MVChatSendOnReturn</key>
+	<true/>
+	<key>MVChatSendOnEnter</key>
+	<false/>
+	<key>MVChatActionOnReturn</key>
+	<false/>
+	<key>MVChatActionOnEnter</key>
+	<true/>
+	<key>MVChatBounceIconOnMessage</key>
+	<true/>
+	<key>MVChatHideOnWindowClose</key>
+	<false/>
+	<key>MVChatSpellChecking</key>
+	<true/>
+	<key>MVChatEncoding</key>
+	<integer>5</integer>
+	<key>MVChatIdleLimit</key>
+	<integer>5</integer>
+	<key>MVChatMaximumHistory</key>
+	<integer>15</integer>
+	<key>MVChatActionSounds</key>
+	<dict>
+		<key>MVChatAdditionalMessagesAction</key>
+		<string>/System/Library/Sounds/Funk.aiff</string>
+		<key>MVChatFisrtMessageAction</key>
+		<string>Stoof.aiff</string>
+		<key>MVChatFriendOfflineAction</key>
+		<string>Whip.aiff</string>
+		<key>MVChatFriendOnlineAction</key>
+		<string>Cymbal.aiff</string>
+		<key>MVChatInlineMessageBeepAction</key>
+		<string>/System/Library/Sounds/Tink.aiff</string>
+		<key>MVChatMemberDemotedAction</key>
+		<string>Electronic Signal.aiff</string>
+		<key>MVChatMemberDevoicedAction</key>
+		<string>Rattle.aiff</string>
+		<key>MVChatMemberJoinedRoomAction</key>
+		<string>/System/Library/Sounds/Pop.aiff</string>
+		<key>MVChatMemberKickedAction</key>
+		<string>Explosion.aiff</string>
+		<key>MVChatMemberLeftRoomAction</key>
+		<string>Clap.aiff</string>
+		<key>MVChatMemberPromotedAction</key>
+		<string>DJ Scratch.aiff</string>
+		<key>MVChatMemberVoicedAction</key>
+		<string>Pop.aiff</string>
+		<key>MVChatMentionedAction</key>
+		<string>Beep 2.aiff</string>
+	</dict>
+	<key>MVChatActionColor</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMDhAJm
+	ZoM+qqqrAYY=
+	</data>
+	<key>MVChatAlertColor</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
+	ZmZmAYM9zMzNAAGG
+	</data>
+	<key>MVChatHighlightColor</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
+	ZmZmgz9v7/CDP2/v8IM/Ts7OAYY=
+	</data>
+	<key>MVChatOthersColor</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
+	ZmZmgz7KysqDPubm54M/N75GAYY=
+	</data>
+	<key>MVChatSelfColor</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
+	ZmZmAYM+5mZmAAGG
+	</data>
+	<key>MVChatTextColor</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMDhAJm
+	ZgABhg==
+	</data>
+	<key>MVChatLinkColor</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
+	ZmZmgzxAwMGDPji4uQEBhg==
+	</data>
+	<key>MVChatBackgroundColor</key>
+	<data>
+	BAt0eXBlZHN0cmVhbYED6IQBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMDhAJm
+	ZgEBhg==
+	</data>
+	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
+	<dict>
+		<key>TB Is Shown</key>
+		<integer>0</integer>
+	</dict>
+	<key>NSColorPickerListDefaults</key>
+	<string>1Chat</string>
+</dict>
+</plist>
