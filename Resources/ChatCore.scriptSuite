@@ -467,7 +467,7 @@
 			<key>CommandClass</key>
 			<string>MVReloadPluginsScriptCommand</string>
 		</dict>
-		<key>SendChatMessage</key>
+		<key>SendMessage</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>ccoR</string>
@@ -479,6 +479,15 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>sCm3</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>echo</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sCm4</string>
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
@@ -497,6 +506,8 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>sCm1</string>
+					<key>Optional</key>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSObject</string>
 				</dict>

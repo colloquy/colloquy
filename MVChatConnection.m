@@ -8,6 +8,7 @@
 #import "NSStringAdditions.h"
 #import "NSAttributedStringAdditions.h"
 #import "NSMethodSignatureAdditions.h"
+#import "NSScriptCommandAdditions.h"
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
@@ -931,10 +932,17 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 
 @implementation MVSendMessageScriptCommand
 - (id) performDefaultImplementation {
+	// check if the subject object responds to the command directly, if so jump to that implementation
+	if( [[[self subjectSpecifier] keyClassDescription] supportsCommand:[self commandDescription]] ) {
+		SEL selector = [[[self subjectSpecifier] keyClassDescription] selectorForCommand:[self commandDescription]];
+		return [[self subjectParameter] performSelector:selector withObject:self];
+	}
+
 	NSDictionary *args = [self evaluatedArguments];
-	id message = [self directParameter];
+	id message = [self evaluatedDirectParameter];
 	id target = [args objectForKey:@"target"];
 	id action = [args objectForKey:@"action"];
+	id localEcho = [args objectForKey:@"echo"];
 	id encoding = [args objectForKey:@"encoding"];
 
 	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
@@ -943,24 +951,37 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 		return nil;
 	}
 
+	if( ! [message length] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The message can't be blank."];
+		return nil;
+	}
+
+	if( ! target ) target = [self subjectParameter];
 	if( ! target || ( ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[MVChatRoom class]] ) ) {
 		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"to\" parameter was missing or not a chat user or chat room object."];
+		[self setScriptErrorString:@"The \"to\" parameter was missing, not a chat user nor a chat room object."];
 		return nil;
 	}
 
 	if( [target isKindOfClass:[MVChatUser class]] && [(MVChatUser *)target type] == MVChatWildcardUserType ) {
 		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"to\" target cannot be a wildcard user."];
+		[self setScriptErrorString:@"The \"to\" parameter cannot be a wildcard user."];
 		return nil;
 	}
 
 	if( action && ! [action isKindOfClass:[NSNumber class]] ) {
 		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"action tense\" was not a boolean value."];
+		[self setScriptErrorString:@"The \"action tense\" parameter was not a boolean value."];
 		return nil;
 	}
-
+	
+	if( localEcho && ! [localEcho isKindOfClass:[NSNumber class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The \"local echo\" parameter was not a boolean value."];
+		return nil;
+	}
+	
 	if( encoding && ! [encoding isKindOfClass:[NSNumber class]] ) {
 		[self setScriptErrorNumber:1000];
 		[self setScriptErrorString:@"The \"encoding\" was an invalid type."];
@@ -970,6 +991,7 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
 	NSStringEncoding realEncoding = NSUTF8StringEncoding;
 	BOOL realAction = ( action ? [action boolValue] : NO );
+	BOOL realLocalEcho = ( localEcho ? [localEcho boolValue] : YES );
 
 	if( encoding ) {
 		realEncoding = stringEncodingForScriptValue( [encoding unsignedIntValue] );
@@ -981,6 +1003,34 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 
 	[target sendMessage:realMessage withEncoding:realEncoding asAction:realAction];
 
+	if( realLocalEcho ) {
+		NSString *cformat = nil;
+
+		switch( [(MVChatConnection *)[target connection] outgoingChatFormat] ) {
+			case MVChatConnectionDefaultMessageFormat:
+			case MVChatWindowsIRCMessageFormat:
+				cformat = NSChatWindowsIRCFormatType;
+				break;
+			case MVChatCTCPTwoMessageFormat:
+				cformat = NSChatCTCPTwoFormatType;
+				break;
+			default:
+			case MVChatNoMessageFormat:
+				cformat = nil;
+		}
+
+		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
+		NSData *msgData = [realMessage chatFormatWithOptions:options];
+
+		if( [target isKindOfClass:[MVChatRoom class]] ) {
+			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[(MVChatConnection *)[target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
+			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
+		} else if( [target isKindOfClass:[MVChatUser class]] ) {
+			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", nil];
+			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
+		}
+	}
+	
 	return nil;
 }
 @end

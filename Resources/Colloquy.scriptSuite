@@ -401,10 +401,12 @@
 			<string>Colloquy.JVChatTranscriptPanel</string>
 			<key>SupportedCommands</key>
 			<dict>
-				<key>Colloquy.addEventMessage</key>
-				<string>addEventMessageScriptCommand</string>
-				<key>Colloquy.sendMessage</key>
+				<key>ChatCore.SendMessage</key>
 				<string>sendMessageScriptCommand:</string>
+				<key>Colloquy.AddEvent</key>
+				<string>addEventMessageScriptCommand</string>
+				<key>Colloquy.Send</key>
+				<string>legacySendMessageScriptCommand:</string>
 			</dict>
 		</dict>
 		<key>ListItem</key>
@@ -874,6 +876,46 @@
 	</dict>
 	<key>Commands</key>
 	<dict>
+		<key>AddEvent</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>aEvX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>attributes</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>aEv3</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSDictionary</string>
+				</dict>
+				<key>message</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>aEv1</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>aEv2</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSObject</string>
+			</dict>
+		</dict>
 		<key>DisplayChatRoomBrowser</key>
 		<dict>
 			<key>AppleEventClassCode</key>
@@ -945,56 +987,7 @@
 			<key>Type</key>
 			<string>Colloquy.JVDirectChatPanel</string>
 		</dict>
-		<key>addEventMessage</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>coRC</string>
-			<key>AppleEventCode</key>
-			<string>aEvX</string>
-			<key>Arguments</key>
-			<dict>
-				<key>attributes</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>aEv3</string>
-					<key>Optional</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSDictionary</string>
-				</dict>
-				<key>message</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>aEv1</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-				<key>name</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>aEv2</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-			</dict>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Type</key>
-				<string>NSObject</string>
-			</dict>
-		</dict>
-		<key>newConnection</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>coRC</string>
-			<key>AppleEventCode</key>
-			<string>nwcX</string>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-		</dict>
-		<key>sendMessage</key>
+		<key>Send</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>coRC</string>
@@ -1035,6 +1028,15 @@
 				<key>Type</key>
 				<string>NSObject</string>
 			</dict>
+		</dict>
+		<key>newConnection</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>nwcX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
 		</dict>
 	</dict>
 	<key>Enumerations</key>

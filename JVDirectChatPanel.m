@@ -9,6 +9,7 @@
 #import <ChatCore/NSDataAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSColorAdditions.h>
+#import <ChatCore/NSScriptCommandAdditions.h>
 
 #import "JVChatController.h"
 #import "KAIgnoreRule.h"
@@ -1654,44 +1655,107 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 #pragma mark -
 
 @implementation JVDirectChatPanel (JVDirectChatScripting)
-- (void) sendMessageScriptCommand:(NSScriptCommand *) command {
-	NSString *message = [[command evaluatedArguments] objectForKey:@"message"];
+- (id) sendMessageScriptCommand:(NSScriptCommand *) command {
+	NSDictionary *args = [command evaluatedArguments];
+	id message = [command evaluatedDirectParameter];
+	id action = [args objectForKey:@"action"];
+	id localEcho = [args objectForKey:@"echo"];
 
-	if( ! [message isKindOfClass:[NSString class]] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Message must be a string, not a message object"];
+	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The message was missing or not a string value."];
+		return nil;
+	}
+
+	if( ! [message length] ) {
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The message can't be blank."];
+		return nil;
+	}
+
+	if( action && ! [action isKindOfClass:[NSNumber class]] ) {
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The \"action tense\" parameter was not a boolean value."];
+		return nil;
+	}
+
+	if( localEcho && ! [localEcho isKindOfClass:[NSNumber class]] ) {
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The \"local echo\" parameter was not a boolean value."];
+		return nil;
+	}
+
+	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
+	BOOL realAction = ( action ? [action boolValue] : NO );
+	BOOL realLocalEcho = ( localEcho ? [localEcho boolValue] : YES );
+
+	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:realMessage sender:[[self connection] localUser]];
+	[cmessage setAction:realAction];
+	
+	[self sendMessage:cmessage];
+	if( realLocalEcho ) [self echoSentMessageToDisplay:cmessage];
+
+	[cmessage release];
+}
+
+- (void) legacySendMessageScriptCommand:(NSScriptCommand *) command {
+	NSDictionary *args = [command evaluatedArguments];
+	id message = [args objectForKey:@"message"];
+	id action = [args objectForKey:@"action"];
+	id localEcho = [args objectForKey:@"echo"];
+
+	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The message was missing or not a string value."];
 		return;
 	}
 
 	if( ! [message length] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Message can't be blank"];
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The message can't be blank."];
 		return;
 	}
 
-	NSTextStorage *attributeMsg = [NSTextStorage attributedStringWithHTMLFragment:message baseURL:nil];
-	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
-	BOOL localEcho = ( [[command evaluatedArguments] objectForKey:@"echo"] ? [[[command evaluatedArguments] objectForKey:@"echo"] boolValue] : YES );
+	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
+	BOOL realAction = ( action ? [action boolValue] : NO );
+	BOOL realLocalEcho = ( localEcho ? [localEcho boolValue] : YES );
 
-	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:attributeMsg sender:[[self connection] localUser]];
-	[cmessage setAction:action];
+	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:realMessage sender:[[self connection] localUser]];
+	[cmessage setAction:realAction];
 
 	[self sendMessage:cmessage];
-	if( localEcho ) [self echoSentMessageToDisplay:cmessage];
+	if( realLocalEcho ) [self echoSentMessageToDisplay:cmessage];
 
 	[cmessage release];
 }
 
 - (void) addEventMessageScriptCommand:(NSScriptCommand *) command {
-	NSString *message = [[command evaluatedArguments] objectForKey:@"message"];
-	NSString *name = [[command evaluatedArguments] objectForKey:@"name"];
-	id attributes = [[command evaluatedArguments] objectForKey:@"attributes"];
+	NSDictionary *args = [command evaluatedArguments];
+	id message = [args objectForKey:@"message"];
+	id name = [args objectForKey:@"name"];
+	id attributes = [args objectForKey:@"attributes"];
+
+	if( ! name || ! [name isKindOfClass:[NSString class]] ) {
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The event name was missing or not a string value."];
+		return;
+	}
 
 	if( ! [name length] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Event name can't be blank."];
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The event name can't be blank."];
+		return;
+	}
+
+	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The event message was missing or not a string value."];
 		return;
 	}
 
 	if( ! [message length] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Event message can't be blank."];
+		[command setScriptErrorNumber:1000];
+		[command setScriptErrorString:@"The event message can't be blank."];
 		return;
 	}
 

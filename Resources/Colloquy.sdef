@@ -47,6 +47,7 @@
 					<responds-to name="set">
 						<cocoa method=""/>
 					</responds-to>
+					<responds-to name="send message"/>
 				</responds-to-commands>
 			</class>
 			<class name="color" code="colr" description="A color.">
@@ -395,10 +396,13 @@
 				</properties>
 				<responds-to-commands>
 					<responds-to name="send">
-						<cocoa method="sendMessageScriptCommand:"/>
+						<cocoa method="legacySendMessageScriptCommand:"/>
 					</responds-to>
 					<responds-to name="add event">
 						<cocoa method="addEventMessageScriptCommand"/>
+					</responds-to>
+					<responds-to name="send message">
+						<cocoa method="sendMessageScriptCommand:"/>
 					</responds-to>
 				</responds-to-commands>
 			</class>
@@ -519,8 +523,7 @@
 			</class>
 		</classes>
 		<commands>
-			<command name="send" code="coRCsNdX" description="Send message to chat room or user that is represented by a panel.">
-				<cocoa name="sendMessage"/>
+			<command name="send" code="coRCsNdX" hidden="hidden" description="Send message to chat room or user that is represented by a panel. This command is deprecated, use send chat message.">
 				<direct-parameter type="chat room panel | direct chat panel" description="Chat room panel or direct chat panel to send through."/>
 				<parameter name="message" code="sNd1" description="Message to send. Can include HTML formatting." type="string">
 					<cocoa key="message"/>
@@ -532,8 +535,7 @@
 					<cocoa key="echo"/>
 				</parameter>
 			</command>
-			<command name="add event" code="coRCaEvX" description="Add an event message to a chat room panel or direct chat panel.">
-				<cocoa name="addEventMessage"/>
+			<command name="add event" code="coRCaEvX" hidden="hidden" description="Add an event message to a chat room panel or direct chat panel. This command is deprecated.">
 				<direct-parameter type="chat room panel | direct chat panel" description="Chat room panel or direct chat panel to affect."/>
 				<parameter name="message" code="aEv1" description="Message to add. Can include HTML formatting." type="string">
 					<cocoa key="message"/>
@@ -789,10 +791,10 @@
 			<command name="disconnect" code="ccoRdscX" description="Disconnect from the server.">
 				<direct-parameter type="connection" description="The conenction to disconnect."/>
 			</command>
-			<command name="send chat message" code="ccoRsCmX" description="Send a chat message to a room or user.">
+			<command name="send message" code="ccoRsCmX" description="Send a message to a room or user.">
 				<cocoa class="MVSendMessageScriptCommand"/>
 				<direct-parameter type="string" description="The message to send. (Plain text with HTML formatting. Must entity encode HTML special characters.)"/>
-				<parameter name="to" code="sCm1" description="The chat user or chat room to send to." type="chat user | chat room">
+				<parameter name="to" code="sCm1" description="The chat user or chat room to send to. Optional if the nearest enclosing tell block accepts this command." type="chat user | chat room" optional="optional">
 					<cocoa key="target"/>
 				</parameter>
 				<parameter name="encoded as" code="sCm2" description="The encoding to send the message as (will default to the room or connection encoding if omitted)." type="encoding" optional="optional">
@@ -800,6 +802,9 @@
 				</parameter>
 				<parameter name="action tense" code="sCm3" description="Send as an action?" type="boolean" optional="optional">
 					<cocoa key="action"/>
+				</parameter>
+				<parameter name="local echo" code="sCm4" description="Show the message locally on screen? (Defaults on.)" type="boolean" optional="optional">
+					<cocoa key="echo"/>
 				</parameter>
 			</command>
 			<command name="send raw command" code="ccoRsRmX" description="Send raw server command (message) to server.">
@@ -888,8 +893,8 @@
 				</parameter>
 			</command>
 			<command name="build contextual menu for item" code="cplGcMiX" description="Called for every object that the user can access a contextual/action menu. This handler is called when the selection changes in a table or right before the menu is shown, allowing you to provide a list of titles to show.">
-<!-- The documentation element isn't supported in the 10.3 version of sdp. -->
-<!--			<documentation>The title &quot;-&quot; will insert a menu separator. Sub-menus can be added by inserting into your list a record looking like: {title:&quot;Parent Item&quot;, submenu:{&quot;Item 1&quot;, &quot;Item 2&quot;}}. The depth of the sub-menu is virtually unlimited.</documentation> -->
+				<!-- The documentation element isn&apos;t supported in the 10.3 version of sdp. -->
+				<!--			&lt;documentation&gt;The title &quot;-&quot; will insert a menu separator. Sub-menus can be added by inserting into your list a record looking like: {title:&quot;Parent Item&quot;, submenu:{&quot;Item 1&quot;, &quot;Item 2&quot;}}. The depth of the sub-menu is virtually unlimited.&lt;/documentation&gt; -->
 				<direct-parameter type="any" description="Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, chat connection, etc."/>
 				<parameter name="in" code="cMi1" description="The chat room or direct chat this context menu is assocated with, if any." type="panel" optional="optional">
 					<cocoa key="view"/>

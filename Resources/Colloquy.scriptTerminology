@@ -641,84 +641,12 @@
 			<key>Name</key>
 			<string>display direct chat panel</string>
 		</dict>
-		<key>addEventMessage</key>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>attributes</key>
-				<dict>
-					<key>Description</key>
-					<string>Custom information to be stored with this event message. Can be used by chat styles.</string>
-					<key>Name</key>
-					<string>and attributes</string>
-				</dict>
-				<key>message</key>
-				<dict>
-					<key>Description</key>
-					<string>Message to add. Can include HTML formatting.</string>
-					<key>Name</key>
-					<string>message</string>
-				</dict>
-				<key>name</key>
-				<dict>
-					<key>Description</key>
-					<string>A name for this type of event message.</string>
-					<key>Name</key>
-					<string>with name</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Add an event message to a chat room panel or direct chat panel.</string>
-			<key>Name</key>
-			<string>add event</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Chat room panel or direct chat panel to affect.</string>
-			</dict>
-		</dict>
 		<key>newConnection</key>
 		<dict>
 			<key>Description</key>
 			<string>Prompts to make a new connection.</string>
 			<key>Name</key>
 			<string>display new connection dialog</string>
-		</dict>
-		<key>sendMessage</key>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>action</key>
-				<dict>
-					<key>Description</key>
-					<string>Send as an action?</string>
-					<key>Name</key>
-					<string>action tense</string>
-				</dict>
-				<key>echo</key>
-				<dict>
-					<key>Description</key>
-					<string>Show message in conversation? (Defaults on.)</string>
-					<key>Name</key>
-					<string>local echo</string>
-				</dict>
-				<key>message</key>
-				<dict>
-					<key>Description</key>
-					<string>Message to send. Can include HTML formatting.</string>
-					<key>Name</key>
-					<string>message</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Send message to chat room or user that is represented by a panel.</string>
-			<key>Name</key>
-			<string>send</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Chat room panel or direct chat panel to send through.</string>
-			</dict>
 		</dict>
 	</dict>
 	<key>Description</key>

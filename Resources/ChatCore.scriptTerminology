@@ -360,7 +360,7 @@
 			<key>Name</key>
 			<string>reload plugins</string>
 		</dict>
-		<key>SendChatMessage</key>
+		<key>SendMessage</key>
 		<dict>
 			<key>Arguments</key>
 			<dict>
@@ -370,6 +370,13 @@
 					<string>Send as an action?</string>
 					<key>Name</key>
 					<string>action tense</string>
+				</dict>
+				<key>echo</key>
+				<dict>
+					<key>Description</key>
+					<string>Show the message locally on screen? (Defaults on.)</string>
+					<key>Name</key>
+					<string>local echo</string>
 				</dict>
 				<key>encoding</key>
 				<dict>
@@ -381,15 +388,15 @@
 				<key>target</key>
 				<dict>
 					<key>Description</key>
-					<string>The chat user or chat room to send to.</string>
+					<string>The chat user or chat room to send to. Optional if the nearest enclosing tell block accepts this command.</string>
 					<key>Name</key>
 					<string>to</string>
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Send a chat message to a room or user.</string>
+			<string>Send a message to a room or user.</string>
 			<key>Name</key>
-			<string>send chat message</string>
+			<string>send message</string>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>

@@ -1546,16 +1546,11 @@
 		1C7C770C07DBA1F700FB5F83 = {
 			buildActionMask = 2147483647;
 			files = (
-				1C7C770E07DBA20200FB5F83,
+				1C7C77E307DBD4C300FB5F83,
+				1C7C77E507DBD4E600FB5F83,
 			);
 			isa = PBXRezBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C7C770E07DBA20200FB5F83 = {
-			fileRef = 1C7C76ED07DBA1D000FB5F83;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1C7C773B07DBAAB800FB5F83 = {
 			fileRef = 1CD4C098078249C10003620F;
@@ -1583,6 +1578,27 @@
 		};
 		1C7C773F07DBAAE900FB5F83 = {
 			fileRef = 1C51B4CD052DE14B00BB459B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C77DF07DBD49F00FB5F83 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.rez;
+			name = Colloquy.r;
+			path = Resources/Colloquy.r;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7C77E307DBD4C300FB5F83 = {
+			fileRef = 1C7C77DF07DBD49F00FB5F83;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C77E507DBD4E600FB5F83 = {
+			fileRef = 1C7C76ED07DBA1D000FB5F83;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5048,6 +5064,7 @@
 				1CA75A260652537A000141D5,
 				1CC6FD38054AF1940075807C,
 				1CD9DF6507D934F70006BB99,
+				1C7C77DF07DBD49F00FB5F83,
 				1C7C76ED07DBA1D000FB5F83,
 				1C7C76E507DBA1C100FB5F83,
 				1C7C76E607DBA1C100FB5F83,

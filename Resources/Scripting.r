@@ -22,6 +22,51 @@ resource 'aete' (0, "Colloquy Terminology") {
 		{
 			/* Events */
 
+			"send",
+			"Send message to chat room or user that is represented by a panel. This command is deprecated, use send chat message.",
+			'coRC', 'sNdX',
+			reply_none__,
+			't001',
+			"Chat room panel or direct chat panel to send through.",
+			directParamRequired,
+			singleItem, notEnumerated, Reserved13,
+			{
+				"message", 'sNd1', 'TEXT',
+				"Message to send. Can include HTML formatting.",
+				required,
+				singleItem, notEnumerated, Reserved13,
+				"action tense", 'sNd2', 'bool',
+				"Send as an action?",
+				optional,
+				singleItem, notEnumerated, Reserved13,
+				"local echo", 'sNd3', 'bool',
+				"Show message in conversation? (Defaults on.)",
+				optional,
+				singleItem, notEnumerated, Reserved13
+			},
+
+			"add event",
+			"Add an event message to a chat room panel or direct chat panel. This command is deprecated.",
+			'coRC', 'aEvX',
+			reply_none__,
+			't001',
+			"Chat room panel or direct chat panel to affect.",
+			directParamRequired,
+			singleItem, notEnumerated, Reserved13,
+			{
+				"message", 'aEv1', 'TEXT',
+				"Message to add. Can include HTML formatting.",
+				required,
+				singleItem, notEnumerated, Reserved13,
+				"with name", 'aEv2', 'TEXT',
+				"A name for this type of event message.",
+				required,
+				singleItem, notEnumerated, Reserved13,
+				"and attributes", 'aEv3', 'reco',
+				"Custom information to be stored with this event message. Can be used by chat styles.",
+				optional,
+				singleItem, notEnumerated, Reserved13
+			}
 		},
 		{
 			/* Classes */
@@ -301,52 +346,6 @@ resource 'aete' (0, "Colloquy Terminology") {
 		1,
 		{
 			/* Events */
-
-			"send",
-			"Send message to chat room or user that is represented by a panel.",
-			'coRC', 'sNdX',
-			reply_none__,
-			't001',
-			"Chat room panel or direct chat panel to send through.",
-			directParamRequired,
-			singleItem, notEnumerated, Reserved13,
-			{
-				"message", 'sNd1', 'TEXT',
-				"Message to send. Can include HTML formatting.",
-				required,
-				singleItem, notEnumerated, Reserved13,
-				"action tense", 'sNd2', 'bool',
-				"Send as an action?",
-				optional,
-				singleItem, notEnumerated, Reserved13,
-				"local echo", 'sNd3', 'bool',
-				"Show message in conversation? (Defaults on.)",
-				optional,
-				singleItem, notEnumerated, Reserved13
-			},
-
-			"add event",
-			"Add an event message to a chat room panel or direct chat panel.",
-			'coRC', 'aEvX',
-			reply_none__,
-			't001',
-			"Chat room panel or direct chat panel to affect.",
-			directParamRequired,
-			singleItem, notEnumerated, Reserved13,
-			{
-				"message", 'aEv1', 'TEXT',
-				"Message to add. Can include HTML formatting.",
-				required,
-				singleItem, notEnumerated, Reserved13,
-				"with name", 'aEv2', 'TEXT',
-				"A name for this type of event message.",
-				required,
-				singleItem, notEnumerated, Reserved13,
-				"and attributes", 'aEv3', 'reco',
-				"Custom information to be stored with this event message. Can be used by chat styles.",
-				optional,
-				singleItem, notEnumerated, Reserved13
-			},
 
 			"display new connection dialog",
 			"Prompts to make a new connection.",
@@ -827,8 +826,8 @@ resource 'aete' (0, "Colloquy Terminology") {
 
 			},
 
-			"send chat message",
-			"Send a chat message to a room or user.",
+			"send message",
+			"Send a message to a room or user.",
 			'ccoR', 'sCmX',
 			reply_none__,
 			'TEXT',
@@ -837,8 +836,8 @@ resource 'aete' (0, "Colloquy Terminology") {
 			singleItem, notEnumerated, Reserved13,
 			{
 				"to", 'sCm1', 't000',
-				"The chat user or chat room to send to.",
-				required,
+				"The chat user or chat room to send to. Optional if the nearest enclosing tell block accepts this command.",
+				optional,
 				singleItem, notEnumerated, Reserved13,
 				"encoded as", 'sCm2', 'encE',
 				"The encoding to send the message as (will default to the room or connection encoding if omitted).",
@@ -846,6 +845,10 @@ resource 'aete' (0, "Colloquy Terminology") {
 				singleItem, enumerated, Reserved13,
 				"action tense", 'sCm3', 'bool',
 				"Send as an action?",
+				optional,
+				singleItem, notEnumerated, Reserved13,
+				"local echo", 'sCm4', 'bool',
+				"Show the message locally on screen? (Defaults on.)",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			},

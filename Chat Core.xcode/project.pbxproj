@@ -271,6 +271,7 @@
 				1C668DC107BF9C6A008400F7,
 				1C668DC207BF9C6A008400F7,
 				1C668DC307BF9C6B008400F7,
+				1C7C776907DBBA4500FB5F83,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -309,6 +310,7 @@
 				1CF6B82F07122673008ABEFA,
 				431261C3072EE37A00720AD1,
 				1C668DBA07BF9C4C008400F7,
+				1C7C776A07DBBA4500FB5F83,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -640,6 +642,37 @@
 		};
 		1C7B83CC0668D765004F1EFE = {
 			fileRef = 1C7B83CA0668D765004F1EFE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7C776707DBBA4500FB5F83 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSScriptCommandAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7C776807DBBA4500FB5F83 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSScriptCommandAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7C776907DBBA4500FB5F83 = {
+			fileRef = 1C7C776707DBBA4500FB5F83;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1C7C776A07DBBA4500FB5F83 = {
+			fileRef = 1C7C776807DBBA4500FB5F83;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3551,6 +3584,8 @@
 				1C3D55BF05A4DC1E00F25F5E,
 				1C7B83CA0668D765004F1EFE,
 				1C7B83C90668D765004F1EFE,
+				1C7C776807DBBA4500FB5F83,
+				1C7C776707DBBA4500FB5F83,
 			);
 			isa = PBXGroup;
 			name = "Other Sources & Additions";
