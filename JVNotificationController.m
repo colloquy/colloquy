@@ -31,7 +31,11 @@ static JVNotificationController *sharedInstance = nil;
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_bubbles = [[NSMutableDictionary dictionary] retain];
-		_growlInstalled = [NSClassFromString( @"GrowlAppBridge" ) launchGrowlIfInstalledNotifyingTarget:self selector:@selector( _growlReady ) context:NULL];
+		if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue]) {
+			_growlInstalled = NO;
+		} else {
+			_growlInstalled = [NSClassFromString( @"GrowlAppBridge" ) launchGrowlIfInstalledNotifyingTarget:self selector:@selector( _growlReady ) context:NULL];
+		}
 	}
 
 	return self;
