@@ -32,6 +32,8 @@
 	<array></array>
 	<key>MVChatBookmarks</key>
 	<array></array>
+	<key>JVChatInputAutoResizes</key>
+	<true/>
 	<key>JVEnableAutomaticSoftwareUpdateCheck</key>
 	<true/>
 	<key>JVChatSpellChecking</key>

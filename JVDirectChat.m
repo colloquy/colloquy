@@ -308,8 +308,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[send setUsesSystemCompleteOnTab:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
 	[send reset:nil];
 
-	[self textDidChange:nil];
-
 	[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
 }
 
@@ -480,6 +478,12 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	_newHighlightMessageCount = 0;
 	_isActive = NO;
 	[super didUnselect];
+}
+
+- (void) willSelect {
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] ) {
+		[(NSSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
+	} else [self textDidChange:nil];
 }
 
 - (void) didSelect {
@@ -999,6 +1003,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (void) textDidChange:(NSNotification *) notification {
 	_historyIndex = 0;
 
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
+		return;
+
 	// We need to resize the textview to fit the content.
 	// The scroll views are two superviews up: NSTextView(WebView) -> NSClipView -> NSScrollView
 	NSSplitView *splitView = (NSSplitView *)[[[send superview] superview] superview];
@@ -1006,7 +1013,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	NSSize contentSize = [send minimumSizeForContent];
 	NSRect sendFrame = [[[send superview] superview] frame];
 	float dividerThickness = [splitView dividerThickness];
-	float maxContentHeight = ( NSHeight( splitViewFrame ) - dividerThickness - 30. );
+	float maxContentHeight = ( NSHeight( splitViewFrame ) - dividerThickness - 75. );
 	float newContentHeight =  MIN( maxContentHeight, MAX( 25., contentSize.height + 8. ) );
 
 	if( newContentHeight == NSHeight( sendFrame ) ) return;
@@ -1037,6 +1044,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[scrollView reflectScrolledClipView:[scrollView contentView]];
 	}
 
+	NSLog( @" >>> %f", NSHeight( sendFrame ) );
+
 	[splitView displayIfNeeded]; // makes the WebView draw correctly
 	[splitView setNeedsDisplay:YES]; // makes thr divider redraw correctly later
 	[[display window] enableFlushWindow]; // flush everything we have drawn
@@ -1045,13 +1054,11 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 #pragma mark -
 #pragma mark SplitView Support
 
-/*- (float) splitView:(NSSplitView *) splitView constrainSplitPosition:(float) proposedPosition ofSubviewAt:(int) index {
-//	float position = ( NSHeight( [splitView frame] ) - proposedPosition - [splitView dividerThickness] );
-//	int lines = (int) floorf( position / 15. );
-//	NSLog( @"%.2f %.2f / 15. = %.2f (%d)", proposedPosition, position, position / 15., lines );
-//	return ( roundf( proposedPosition / 15. ) * 15. ) + [splitView dividerThickness] + 2.;
+- (float) splitView:(NSSplitView *) splitView constrainSplitPosition:(float) proposedPosition ofSubviewAt:(int) index {
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
+		return ( NSHeight( [[[splitView subviews] objectAtIndex:index] frame] ) ); // prevents manual resize
 	return proposedPosition;
-}*/
+}
 
 - (void) splitViewDidResizeSubviews:(NSNotification *) notification {
 	// Cache the height of the send box so we can keep it constant during window resizes.
@@ -1064,6 +1071,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[scrollView reflectScrolledClipView:[scrollView contentView]];
 	}
 
+	if( ! _forceSplitViewPosition && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
+		[[notification object] savePositionUsingName:@"JVChatSplitViewPosition"];
+
 	_forceSplitViewPosition = NO;
 }
 
@@ -1074,11 +1084,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) splitView:(NSSplitView *) sender resizeSubviewsWithOldSize:(NSSize) oldSize {
-	if( _forceSplitViewPosition ) {
-		[sender adjustSubviews];
-		return;
-	}
-
 	float dividerThickness = [sender dividerThickness];
 	NSRect newFrame = [sender frame];
 
