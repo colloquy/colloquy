@@ -27,6 +27,7 @@
 - (NSSet *) allChatViewControllers;
 - (NSSet *) chatViewControllersWithConnection:(MVChatConnection *) connection;
 - (NSSet *) chatViewControllersOfClass:(Class) class;
+- (NSSet *) chatViewControllersKindOfClass:(Class) class;
 - (JVChatRoom *) chatViewControllerForRoom:(NSString *) room withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 - (JVDirectChat *) chatViewControllerForUser:(NSString *) user withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 - (JVChatTranscript *) chatViewControllerForTranscript:(NSString *) filename;
