@@ -330,7 +330,7 @@
 			<key>Name</key>
 			<string>chat manager</string>
 		</dict>
-		<key>JVChatRoom</key>
+		<key>JVChatRoomPanel</key>
 		<dict>
 			<key>Description</key>
 			<string>Chat room.</string>
@@ -441,7 +441,7 @@
 				</dict>
 			</dict>
 		</dict>
-		<key>JVChatConsole</key>
+		<key>JVChatConsolePanel</key>
 		<dict>
 			<key>Description</key>
 			<string>Chat console for advanced users.</string>
@@ -450,7 +450,7 @@
 			<key>PluralName</key>
 			<string>chat consoles</string>
 		</dict>
-		<key>JVChatTranscript</key>
+		<key>JVChatTranscriptPanel</key>
 		<dict>
 			<key>Description</key>
 			<string>A log of some previous conversation.</string>
@@ -567,7 +567,7 @@
 			<key>Name</key>
 			<string>buddy list</string>
 		</dict>
-		<key>JVDirectChat</key>
+		<key>JVDirectChatPanel</key>
 		<dict>
 			<key>ToOneRelationships</key>
 			<dict>

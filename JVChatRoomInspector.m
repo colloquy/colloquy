@@ -1,19 +1,19 @@
 #import "JVChatRoomInspector.h"
 #import "JVChatRoomMember.h"
-#import "JVDirectChat.h"
-#import "JVChatTranscript.h"
+#import "JVDirectChatPanel.h"
+#import "JVChatTranscriptPanel.h"
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 
-@interface JVChatTranscript (JVChatTranscriptPrivate)
+@interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
 - (NSMenu *) _stylesMenu;
 - (NSMenu *) _emoticonsMenu;
 @end
 
 #pragma mark -
 
-@interface JVDirectChat (JVDirectChatPrivate)
+@interface JVDirectChatPanel (JVDirectChatPrivate)
 - (NSMenu *) _encodingMenu;
 @end
 
@@ -27,7 +27,7 @@
 
 #pragma mark -
 
-@implementation JVChatRoom (JVChatRoomInspection)
+@implementation JVChatRoomPanel (JVChatRoomInspection)
 - (id <JVInspector>) inspector {
 	return [[[JVChatRoomInspector alloc] initWithRoom:self] autorelease];
 }
@@ -36,7 +36,7 @@
 #pragma mark -
 
 @implementation JVChatRoomInspector
-- (id) initWithRoom:(JVChatRoom *) room {
+- (id) initWithRoom:(JVChatRoomPanel *) room {
 	if( ( self = [self init] ) )
 		_room = [room retain];
 	return self;

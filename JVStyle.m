@@ -3,6 +3,8 @@
 #import <libxslt/xsltutils.h>
 
 #import "JVStyle.h"
+#import "JVEmoticonSet.h"
+#import "JVChatMessage.h"
 #import "NSBundleAdditions.h"
 
 @interface JVStyle (JVStylePrivate)
@@ -122,7 +124,10 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 - (id) initWithBundle:(NSBundle *) bundle {
-	if( ! bundle ) return nil;
+	if( ! bundle ) {
+		[self release];
+		return nil;
+	}
 
 	if( ( self = [self init] ) ) {
 		extern NSMutableSet *allStyles;
@@ -130,7 +135,6 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _clearVariantCache ) name:JVNewStyleVariantAddedNotification object:self];
 
-		_releasing = NO;
 		_bundle = nil;
 		_XSLStyle = NULL;
 		_parameters = nil;
@@ -190,6 +194,52 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
+- (NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary *) parameters {
+	@synchronized( transcript ) {
+		return [self transformXMLDocument:[transcript document] withParameters:parameters];
+	}
+}
+
+- (NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters {
+	@synchronized( ( [element transcript] ? (id) [element transcript] : (id) element ) ) {
+		xmlDoc *doc = xmlNewDoc( "1.0" );
+		xmlNode *root = xmlDocCopyNode( (xmlNode *) [element node], doc, 1 );
+		xmlDocSetRootElement( doc, root );
+
+		NSString *result = [self transformXMLDocument:doc withParameters:parameters];
+
+		xmlFreeDoc( doc );
+
+		return result;
+	}	
+}
+
+- (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {
+	JVChatTranscript *transcript = [[JVChatTranscript allocWithZone:[self zone]] initWithElements:elements];
+	NSString *ret = [self transformChatTranscript:transcript withParameters:parameters];
+	[transcript release];
+	return ret;
+}
+
+- (NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters {
+	@synchronized( ( [message transcript] ? (id) [message transcript] : (id) message ) ) {
+		// Styles depend on being passed all the messages in the same envelope.
+		// This lets them know it is a consecutive message.
+
+		xmlDoc *doc = xmlNewDoc( "1.0" );
+		xmlNode *envelope = xmlDocCopyNode( ((xmlNode *) [message node]) -> parent, doc, 1 );
+		xmlDocSetRootElement( doc, envelope );
+
+		NSString *result = [self transformXMLDocument:doc withParameters:parameters];
+
+		xmlFreeDoc( doc );
+
+		return result;
+	}
+}
+
+#pragma mark -
+
 - (NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters {
 	NSParameterAssert( xml != nil );
 	if( ! [xml length] ) return @"";
@@ -207,35 +257,37 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (NSString *) transformXMLDocument:(void *) document withParameters:(NSDictionary *) parameters {
 	NSParameterAssert( document != NULL );
 
-	if( ! _XSLStyle ) [self _setXSLStyle:[self XMLStyleSheetFilePath]];
-	NSAssert( _XSLStyle, @"XSL not allocated." );
+	@synchronized( self ) {
+		if( ! _XSLStyle ) [self _setXSLStyle:[self XMLStyleSheetFilePath]];
+		NSAssert( _XSLStyle, @"XSL not allocated." );
 
-	NSMutableDictionary *pms = (NSMutableDictionary *)[self mainParameters];
-	if( parameters ) {
-		pms = [NSMutableDictionary dictionaryWithDictionary:[self mainParameters]];
-		[pms addEntriesFromDictionary:parameters];
+		NSMutableDictionary *pms = (NSMutableDictionary *)[self mainParameters];
+		if( parameters ) {
+			pms = [NSMutableDictionary dictionaryWithDictionary:[self mainParameters]];
+			[pms addEntriesFromDictionary:parameters];
+		}
+
+		xmlDoc *doc = document;
+		const char **params = [[self class] _xsltParamArrayWithDictionary:pms];
+		xmlDoc *res = NULL;
+		xmlChar *result = NULL;
+		NSString *ret = nil;
+		int len = 0;
+
+		if( ( res = xsltApplyStylesheet( _XSLStyle, doc, params ) ) ) {
+			xsltSaveResultToString( &result, &len, res, _XSLStyle );
+			xmlFreeDoc( res );
+		}
+
+		if( result ) {
+			ret = [NSString stringWithUTF8String:result];
+			free( result );
+		}
+
+		[[self class] _freeXsltParamArray:params];
+
+		return ret;
 	}
-
-	xmlDoc *doc = document;
-	const char **params = [[self class] _xsltParamArrayWithDictionary:pms];
-	xmlDoc *res = NULL;
-	xmlChar *result = NULL;
-	NSString *ret = nil;
-	int len = 0;
-
-	if( ( res = xsltApplyStylesheet( _XSLStyle, doc, params ) ) ) {
-		xsltSaveResultToString( &result, &len, res, _XSLStyle );
-		xmlFreeDoc( res );
-	}
-
-	if( result ) {
-		ret = [NSString stringWithUTF8String:result];
-		free( result );
-	}
-
-	[[self class] _freeXsltParamArray:params];
-
-	return [[ret retain] autorelease];
 }
 
 #pragma mark -
@@ -315,6 +367,27 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[self defaultVariantName], @"variant", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVDefaultStyleVariantChangedNotification object:self userInfo:info];
+}
+
+#pragma mark -
+
+- (JVEmoticonSet *) defaultEmoticonSet {
+	NSString *defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
+	JVEmoticonSet *emoticon = [JVEmoticonSet emoticonSetWithIdentifier:defaultEmoticons];
+
+	if( ! emoticon ) {
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
+		defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
+		emoticon = [JVEmoticonSet emoticonSetWithIdentifier:defaultEmoticons];
+		if( ! emoticon ) emoticon = [JVEmoticonSet textOnlyEmoticonSet];
+	}
+
+	return emoticon;
+}
+
+- (void) setDefaultEmoticonSet:(JVEmoticonSet *) emoticons {
+	if( emoticons ) [[NSUserDefaults standardUserDefaults] setObject:[emoticons identifier] forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
+	else [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
 }
 
 #pragma mark -
@@ -459,9 +532,11 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (void) _setXSLStyle:(NSString *) path {
-	if( _XSLStyle ) xsltFreeStylesheet( _XSLStyle );
-	_XSLStyle = ( [path length] ? xsltParseStylesheetFile( (const xmlChar *)[path fileSystemRepresentation] ) : NULL );
-	if( _XSLStyle ) ((xsltStylesheetPtr) _XSLStyle) -> indent = 0; // this is done because our whitespace escaping causes problems otherwise
+	@synchronized( self ) {
+		if( _XSLStyle ) xsltFreeStylesheet( _XSLStyle );
+		_XSLStyle = ( [path length] ? xsltParseStylesheetFile( (const xmlChar *)[path fileSystemRepresentation] ) : NULL );
+		if( _XSLStyle ) ((xsltStylesheetPtr) _XSLStyle) -> indent = 0; // this is done because our whitespace escaping causes problems otherwise
+	}
 }
 
 - (void) _setStyleOptions:(NSArray *) options {

@@ -8,8 +8,8 @@
 #import "JVChatController.h"
 #import "JVChatRoomBrowser.h"
 #import "MVKeyChain.h"
-#import "JVChatRoom.h"
-#import "JVDirectChat.h"
+#import "JVChatRoomPanel.h"
+#import "JVDirectChatPanel.h"
 #import "NSURLAdditions.h"
 
 static MVConnectionsController *sharedInstance = nil;
@@ -1309,9 +1309,9 @@ static NSMenu *favoritesMenu = nil;
 		switch( error ) {
 			case MVChatBadTargetError:
 				if( [target hasPrefix:@"#"] || [target hasPrefix:@"&"] || [target hasPrefix:@"+"] || [target hasPrefix:@"!"] ) {
-					[(JVChatRoom *)[[JVChatController defaultManager] chatViewControllerForRoom:target withConnection:connection ifExists:YES] unavailable];
+					[(JVChatRoomPanel *)[[JVChatController defaultManager] chatViewControllerForRoom:target withConnection:connection ifExists:YES] unavailable];
 				} else if( target ) {
-					[(JVDirectChat *)[[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:YES] unavailable];
+					[(JVDirectChatPanel *)[[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:YES] unavailable];
 				} else {
 					NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname you specified is in use or invalid on this server.", "chat invalid nickname dialog message" ), nil, nil, nil );
 				}
@@ -1614,7 +1614,7 @@ static NSMenu *favoritesMenu = nil;
 
 	if( ! connection ) return;
 
-	if( [(NSArray *)[info objectForKey:@"rooms"] count] )
+	if( [(NSArray *)[info objectForKey:@"rooms"] count] && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVPreventAutoJoinRooms"] )
 		[connection joinChatRoomsNamed:[info objectForKey:@"rooms"]];
 
 	NSEnumerator *commands = [[[info objectForKey:@"commands"] componentsSeparatedByString:@"\n"] objectEnumerator];

@@ -3,9 +3,9 @@
 #import "JVChatWindowController.h"
 #import "MVConnectionsController.h"
 #import "JVChatController.h"
-#import "JVChatRoom.h"
+#import "JVChatRoomPanel.h"
 #import "JVChatRoomBrowser.h"
-#import "JVDirectChat.h"
+#import "JVDirectChatPanel.h"
 #import "JVDetailCell.h"
 #import "MVMenuButton.h"
 
@@ -449,7 +449,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( _activeViewController == item )
 		[self _refreshWindowTitle];
 
-	if( [self isMemberOfClass:[JVChatWindowController class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVKeepActiveDrawerPanelsVisible"] && [item isKindOfClass:[JVDirectChat class]] && [(id)item newMessagesWaiting] ) {
+	if( [self isMemberOfClass:[JVChatWindowController class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVKeepActiveDrawerPanelsVisible"] && [item isKindOfClass:[JVDirectChatPanel class]] && [(id)item newMessagesWaiting] ) {
 		NSRange visibleRows = [chatViewsOutlineView rowsInRect:[chatViewsOutlineView visibleRect]];
 		int row = [chatViewsOutlineView rowForItem:item];
 
@@ -996,153 +996,153 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (NSArray *) chatRooms {
-	return [self chatViewsWithClass:[JVChatRoom class]];
+	return [self chatViewsWithClass:[JVChatRoomPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatRoomsAtIndex:(unsigned) index {
-	return [self valueInChatViewsAtIndex:index withClass:[JVChatRoom class]];
+	return [self valueInChatViewsAtIndex:index withClass:[JVChatRoomPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatRoomsWithUniqueID:(id) identifier {
-	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatRoom class]];
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatRoomPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatRoomsWithName:(NSString *) name {
-	return [self valueInChatViewsWithName:name andClass:[JVChatRoom class]];
+	return [self valueInChatViewsWithName:name andClass:[JVChatRoomPanel class]];
 }
 
 - (void) addInChatRooms:(id <JVChatViewController>) view {
-	[self addInChatViews:view withClass:[JVChatRoom class]];
+	[self addInChatViews:view withClass:[JVChatRoomPanel class]];
 }
 
 - (void) insertInChatRooms:(id <JVChatViewController>) view {
-	[self addInChatViews:view withClass:[JVChatRoom class]];
+	[self addInChatViews:view withClass:[JVChatRoomPanel class]];
 }
 
 - (void) insertInChatRooms:(id <JVChatViewController>) view atIndex:(unsigned) index {
-	[self insertInChatViews:view atIndex:index withClass:[JVChatRoom class]];
+	[self insertInChatViews:view atIndex:index withClass:[JVChatRoomPanel class]];
 }
 
 - (void) removeFromChatRoomsAtIndex:(unsigned) index {
-	[self removeFromChatViewsAtIndex:index withClass:[JVChatRoom class]];
+	[self removeFromChatViewsAtIndex:index withClass:[JVChatRoomPanel class]];
 }
 
 - (void) replaceInChatRooms:(id <JVChatViewController>) view atIndex:(unsigned) index {
-	[self replaceInChatViews:view atIndex:index withClass:[JVChatRoom class]];
+	[self replaceInChatViews:view atIndex:index withClass:[JVChatRoomPanel class]];
 }
 
 #pragma mark -
 
 - (NSArray *) directChats {
-	return [self chatViewsWithClass:[JVDirectChat class]];
+	return [self chatViewsWithClass:[JVDirectChatPanel class]];
 }
 
 - (id <JVChatViewController>) valueInDirectChatsAtIndex:(unsigned) index {
-	return [self valueInChatViewsAtIndex:index withClass:[JVDirectChat class]];
+	return [self valueInChatViewsAtIndex:index withClass:[JVDirectChatPanel class]];
 }
 
 - (id <JVChatViewController>) valueInDirectChatsWithUniqueID:(id) identifier {
-	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVDirectChat class]];
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVDirectChatPanel class]];
 }
 
 - (id <JVChatViewController>) valueInDirectChatsWithName:(NSString *) name {
-	return [self valueInChatViewsWithName:name andClass:[JVDirectChat class]];
+	return [self valueInChatViewsWithName:name andClass:[JVDirectChatPanel class]];
 }
 
 - (void) addInDirectChats:(id <JVChatViewController>) view {
-	[self addInChatViews:view withClass:[JVDirectChat class]];
+	[self addInChatViews:view withClass:[JVDirectChatPanel class]];
 }
 
 - (void) insertInDirectChats:(id <JVChatViewController>) view {
-	[self addInChatViews:view withClass:[JVDirectChat class]];
+	[self addInChatViews:view withClass:[JVDirectChatPanel class]];
 }
 
 - (void) insertInDirectChats:(id <JVChatViewController>) view atIndex:(unsigned) index {
-	[self insertInChatViews:view atIndex:index withClass:[JVDirectChat class]];
+	[self insertInChatViews:view atIndex:index withClass:[JVDirectChatPanel class]];
 }
 
 - (void) removeFromDirectChatsAtIndex:(unsigned) index {
-	[self removeFromChatViewsAtIndex:index withClass:[JVDirectChat class]];
+	[self removeFromChatViewsAtIndex:index withClass:[JVDirectChatPanel class]];
 }
 
 - (void) replaceInDirectChats:(id <JVChatViewController>) view atIndex:(unsigned) index {
-	[self replaceInChatViews:view atIndex:index withClass:[JVDirectChat class]];
+	[self replaceInChatViews:view atIndex:index withClass:[JVDirectChatPanel class]];
 }
 
 #pragma mark -
 
 - (NSArray *) chatTranscripts {
-	return [self chatViewsWithClass:[JVChatTranscript class]];
+	return [self chatViewsWithClass:[JVChatTranscriptPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatTranscriptsAtIndex:(unsigned) index {
-	return [self valueInChatViewsAtIndex:index withClass:[JVChatTranscript class]];
+	return [self valueInChatViewsAtIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatTranscriptsWithUniqueID:(id) identifier {
-	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatTranscript class]];
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatTranscriptPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatTranscriptsWithName:(NSString *) name {
-	return [self valueInChatViewsWithName:name andClass:[JVChatTranscript class]];
+	return [self valueInChatViewsWithName:name andClass:[JVChatTranscriptPanel class]];
 }
 
 - (void) addInChatTranscripts:(id <JVChatViewController>) view {
-	[self addInChatViews:view withClass:[JVChatTranscript class]];
+	[self addInChatViews:view withClass:[JVChatTranscriptPanel class]];
 }
 
 - (void) insertInChatTranscripts:(id <JVChatViewController>) view {
-	[self addInChatViews:view withClass:[JVChatTranscript class]];
+	[self addInChatViews:view withClass:[JVChatTranscriptPanel class]];
 }
 
 - (void) insertInChatTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
-	[self insertInChatViews:view atIndex:index withClass:[JVChatTranscript class]];
+	[self insertInChatViews:view atIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
 - (void) removeFromChatTranscriptsAtIndex:(unsigned) index {
-	[self removeFromChatViewsAtIndex:index withClass:[JVChatTranscript class]];
+	[self removeFromChatViewsAtIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
 - (void) replaceInChatTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
-	[self replaceInChatViews:view atIndex:index withClass:[JVChatTranscript class]];
+	[self replaceInChatViews:view atIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
 #pragma mark -
 
 - (NSArray *) chatConsoles {
-	return [self chatViewsWithClass:[JVChatConsole class]];
+	return [self chatViewsWithClass:[JVChatConsolePanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatConsolesAtIndex:(unsigned) index {
-	return [self valueInChatViewsAtIndex:index withClass:[JVChatConsole class]];
+	return [self valueInChatViewsAtIndex:index withClass:[JVChatConsolePanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatConsolesWithUniqueID:(id) identifier {
-	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatConsole class]];
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatConsolePanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatConsolesWithName:(NSString *) name {
-	return [self valueInChatViewsWithName:name andClass:[JVChatConsole class]];
+	return [self valueInChatViewsWithName:name andClass:[JVChatConsolePanel class]];
 }
 
 - (void) addInChatConsoles:(id <JVChatViewController>) view {
-	[self addInChatViews:view withClass:[JVChatConsole class]];
+	[self addInChatViews:view withClass:[JVChatConsolePanel class]];
 }
 
 - (void) insertInChatConsoles:(id <JVChatViewController>) view {
-	[self addInChatViews:view withClass:[JVChatConsole class]];
+	[self addInChatViews:view withClass:[JVChatConsolePanel class]];
 }
 
 - (void) insertInChatConsoles:(id <JVChatViewController>) view atIndex:(unsigned) index {
-	[self insertInChatViews:view atIndex:index withClass:[JVChatConsole class]];
+	[self insertInChatViews:view atIndex:index withClass:[JVChatConsolePanel class]];
 }
 
 - (void) removeFromChatConsolesAtIndex:(unsigned) index {
-	[self removeFromChatViewsAtIndex:index withClass:[JVChatConsole class]];
+	[self removeFromChatViewsAtIndex:index withClass:[JVChatConsolePanel class]];
 }
 
 - (void) replaceInChatConsoles:(id <JVChatViewController>) view atIndex:(unsigned) index {
-	[self replaceInChatViews:view atIndex:index withClass:[JVChatConsole class]];
+	[self replaceInChatViews:view atIndex:index withClass:[JVChatConsolePanel class]];
 }
 
 #pragma mark -

@@ -1,4 +1,4 @@
-@class JVChatTranscript;
+@class JVChatTranscriptPanel;
 @class JVChatMessage;
 
 @interface JVTranscriptFindWindowController : NSWindowController {
@@ -18,7 +18,7 @@
 }
 + (JVTranscriptFindWindowController *) sharedController;
 
-- (JVChatTranscript *) focusedChatTranscript;
+- (JVChatTranscriptPanel *) focusedChatTranscriptPanel;
 
 - (IBAction) addRow:(id) sender;
 - (IBAction) removeRow:(id) sender;

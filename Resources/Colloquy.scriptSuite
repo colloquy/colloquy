@@ -448,7 +448,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>JVChatRoom</string>
+					<string>JVChatRoomPanel</string>
 				</dict>
 				<key>directChats</key>
 				<dict>
@@ -457,7 +457,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>JVDirectChat</string>
+					<string>JVDirectChatPanel</string>
 				</dict>
 				<key>chatTranscripts</key>
 				<dict>
@@ -466,7 +466,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>JVChatTranscript</string>
+					<string>JVChatTranscriptPanel</string>
 				</dict>
 				<key>chatConsoles</key>
 				<dict>
@@ -475,7 +475,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>JVChatConsole</string>
+					<string>JVChatConsolePanel</string>
 				</dict>
 				<key>chatWindows</key>
 				<dict>
@@ -495,12 +495,12 @@
 				<string>startChatScriptCommand:</string>
 			</dict>
 		</dict>
-		<key>JVChatRoom</key>
+		<key>JVChatRoomPanel</key>
 		<dict>
 			<key>AppleEventCode</key>
 			<string>crmM</string>
 			<key>Superclass</key>
-			<string>JVDirectChat</string>
+			<string>JVDirectChatPanel</string>
 			<key>DefaultSubcontainerAttribute</key>
 			<string>chatMembers</string>
 			<key>ToManyRelationships</key>
@@ -568,7 +568,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>JVChatRoom</string>
+					<string>JVChatRoomPanel</string>
 				</dict>
 			</dict>
 			<key>Attributes</key>
@@ -662,14 +662,14 @@
 				<string>startChat:</string>
 			</dict>
 		</dict>
-		<key>JVChatConsole</key>
+		<key>JVChatConsolePanel</key>
 		<dict>
 			<key>AppleEventCode</key>
 			<string>ccoM</string>
 			<key>Superclass</key>
 			<string>AbstractChatViewController</string>
 		</dict>
-		<key>JVChatTranscript</key>
+		<key>JVChatTranscriptPanel</key>
 		<dict>
 			<key>AppleEventCode</key>
 			<string>ctrM</string>
@@ -784,7 +784,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>JVChatRoom</string>
+					<string>JVChatRoomPanel</string>
 				</dict>
 				<key>directChats</key>
 				<dict>
@@ -793,7 +793,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>JVDirectChat</string>
+					<string>JVDirectChatPanel</string>
 				</dict>
 				<key>chatTranscripts</key>
 				<dict>
@@ -802,7 +802,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>JVChatTranscript</string>
+					<string>JVChatTranscriptPanel</string>
 				</dict>
 				<key>chatConsoles</key>
 				<dict>
@@ -811,11 +811,11 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>JVChatConsole</string>
+					<string>JVChatConsolePanel</string>
 				</dict>
 			</dict>
 		</dict>
-		<key>JVDirectChat</key>
+		<key>JVDirectChatPanel</key>
 		<dict>
 			<key>AppleEventCode</key>
 			<string>dchM</string>
@@ -905,7 +905,7 @@
 				<string>addEventMessageScriptCommand:</string>
 			</dict>
 			<key>Superclass</key>
-			<string>JVChatTranscript</string>
+			<string>JVChatTranscriptPanel</string>
 		</dict>
 		<key>MVConnectionsController</key>
 		<dict>

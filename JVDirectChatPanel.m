@@ -11,21 +11,19 @@
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSColorAdditions.h>
 
-#import <libxml/xinclude.h>
-#import <libxml/debugXML.h>
-#import <libxslt/transform.h>
-#import <libxslt/xsltutils.h>
-
 #import "JVChatController.h"
 #import "KAIgnoreRule.h"
 #import "JVTabbedChatWindowController.h"
 #import "JVStyle.h"
-#import "JVChatRoom.h"
+#import "JVEmoticonSet.h"
+#import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
+#import "JVChatTranscript.h"
 #import "JVChatMessage.h"
+#import "JVChatEvent.h"
 #import "JVNotificationController.h"
 #import "MVConnectionsController.h"
-#import "JVDirectChat.h"
+#import "JVDirectChatPanel.h"
 #import "MVBuddyListController.h"
 #import "MVFileTransferController.h"
 #import "JVBuddy.h"
@@ -33,6 +31,7 @@
 #import "MVMenuButton.h"
 #import "JVMarkedScroller.h"
 #import "JVSplitView.h"
+#import "JVStyleView.h"
 #import "NSBundleAdditions.h"
 #import "NSURLAdditions.h"
 #import "NSAttributedStringMoreAdditions.h"
@@ -100,20 +99,11 @@ static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingIt
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
-@interface JVDirectChat (JVDirectChatPrivate) <ABImageClient>
-- (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
-- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier;
-- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier asNotice:(BOOL) notice;
-- (void) scrollToBottom;
-- (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent;
-- (void) processQueue;
-- (void) displayQueue;
-- (void) writeToLog:(void *) root withDoc:(void *) doc initializing:(BOOL) init continuation:(BOOL) cont;
+@interface JVDirectChatPanel (JVDirectChatPrivate) <ABImageClient>
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
 - (void) _breakLongLinesInString:(NSMutableAttributedString *) message;
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message;
-- (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
 - (void) _saveSelfIcon;
@@ -123,19 +113,13 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 #pragma mark -
 
-@interface JVChatTranscript (JVChatTranscriptPrivate)
-- (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
-- (JVMarkedScroller *) _verticalMarkedScroller;
-- (void) _changeChatEmoticonsMenuSelection;
-- (void) _switchingStyleEnded:(in NSString *) html;
-- (unsigned long) visibleMessageCount;
-- (long) locationOfMessage:(JVChatMessage *) message;
-- (long) locationOfElementByIndex:(unsigned long) index;
+@interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
+- (void) _changeEmoticonsMenuSelection;
 @end
 
 #pragma mark -
 
-@implementation JVDirectChat
+@implementation JVDirectChatPanel
 - (id) init {
 	if( ( self = [super init] ) ) {
 		send = nil;
@@ -143,7 +127,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		_firstMessage = YES;
 		_newMessageCount = 0;
 		_newHighlightMessageCount = 0;
-		_requiresFullMessage = NO;
 		_cantSendMessages = NO;
 		_isActive = NO;
 		_forceSplitViewPosition = YES;
@@ -159,8 +142,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 		_waitingAlerts = [[NSMutableArray array] retain];
 		_waitingAlertNames = [[NSMutableDictionary dictionary] retain];
-
-		_messageQueue = [[NSMutableArray array] retain];
 	}
 	return self;
 }
@@ -170,17 +151,15 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		_target = [target retain];
 
 		NSString *source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], [self target]];
-		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
 
-		if( ( [self isMemberOfClass:[JVDirectChat class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"] ) ||
-			( [self isMemberOfClass:[JVChatRoom class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"] ) ) {
-			// Set up log directories
+		if( ( [self isMemberOfClass:[JVDirectChatPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"] ) ||
+			( [self isMemberOfClass:[JVChatRoomPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"] ) ) {
 			NSString *logs = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
 			NSFileManager *fileManager = [NSFileManager defaultManager];
+
 			if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 
 			int org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
-
 			if( org == 1 ) {
 				logs = [logs stringByAppendingPathComponent:[[self connection] server]];
 				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
@@ -222,32 +201,13 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 			}
 
 			logs = [logs stringByAppendingPathComponent:logName];
-			if( ! [fileManager fileExistsAtPath:logs] ) {
-				[fileManager createFileAtPath:logs contents:[NSData data] attributes:nil];
-				[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:logs];
 
-				_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:logs] retain];
+			if( [fileManager fileExistsAtPath:logs] )
+				[[self transcript] startNewSession];
 
-				// Write the <log> element to the logfile
-				[self writeToLog:xmlDocGetRootElement( _xmlLog ) withDoc:_xmlLog initializing:YES continuation:NO];
-			} else { // Use existing file.
-				_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:logs] retain];
-
-				xmlNodePtr sessionNode = xmlNewNode( NULL, "session" );
-				xmlSetProp( sessionNode, "started", [[[NSDate date] description] UTF8String] );
-				xmlAddChild( xmlDocGetRootElement( _xmlLog ), sessionNode );
-
-				[self writeToLog:sessionNode withDoc:_xmlLog initializing:NO continuation:NO];
-			}
-
-			[_filePath autorelease];
-			_filePath = [logs retain];
-
-			if( ! [[NSFileManager defaultManager] fileExistsAtPath:_filePath] ) {
-				[_filePath autorelease];
-				_filePath = nil;
-			}
-		} else _logFile = nil;
+			[[self transcript] setFilePath:logs];
+			[[self transcript] setAutomaticallyWritesChangesToFile:YES];
+		}
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
@@ -261,31 +221,27 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (void) awakeFromNib {
 	JVStyle *style = nil;
 	NSString *variant = nil;
-	NSBundle *emoticon = nil;
+	JVEmoticonSet *emoticon = nil;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
 
-	[display setUIDelegate:self];
-	[display setPolicyDelegate:self];
-	[display setFrameLoadDelegate:self];
-
-	if( [(NSString *)[self preferenceForKey:@"emoticon"] length] ) {
-		emoticon = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"emoticon"]];
-		if( emoticon ) [self setChatEmoticons:emoticon performRefresh:NO];
-	}
-
 	if( [self preferenceForKey:@"style"] ) {
 		style = [JVStyle styleWithIdentifier:[self preferenceForKey:@"style"]];
 		variant = [self preferenceForKey:@"style variant"];
-		if( style ) [self setChatStyle:style withVariant:variant];
+		if( style ) [self setStyle:style withVariant:variant];
+	}
+
+	if( [(NSString *)[self preferenceForKey:@"emoticon"] length] ) {
+		emoticon = [JVEmoticonSet emoticonSetWithIdentifier:[self preferenceForKey:@"emoticon"]];
+		if( emoticon ) [self setEmoticons:emoticon];
 	}
 
 	[super awakeFromNib];
 
 	[self changeEncoding:nil];
 
-	if( [self isMemberOfClass:[JVDirectChat class]] ) {
+	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) {
 		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [self target]]];
 
 		NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", [self target], [[self connection] server]] stringByExpandingTildeInPath];
@@ -311,8 +267,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
 		[(JVSplitView *)[[[send superview] superview] superview] setIsPaneSplitter:YES];
-
-	[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
 }
 
 - (void) dealloc {
@@ -325,14 +279,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[_settings release];
 	[_encodingMenu release];
 	[_spillEncodingMenu release];
-	[_messageQueue release];
-
-	if( ! xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) ) // Log is empty, remove the file.
-		[[NSFileManager defaultManager] removeFileAtPath:_filePath handler:nil];
-
-	// TODO: Read in the logfile and write it back out again after adding the 'ended' attribute to the log node.
-	[_logFile synchronizeFile];
-	[_logFile release];
 
 	NSEnumerator *enumerator = [_waitingAlerts objectEnumerator];
 	id alert = nil;
@@ -352,8 +298,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	_settings = nil;
 	_encodingMenu = nil;
 	_spillEncodingMenu = nil;
-	_messageQueue = nil;
-	_logFile = nil;
 
 	[super dealloc];
 }
@@ -515,14 +459,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 #pragma mark -
 
-- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	if( returnCode == NSOKButton ) xmlSetProp( xmlDocGetRootElement( _xmlLog ), "ended", [[[NSDate date] description] UTF8String] );
-	[(id) super savePanelDidEnd:sheet returnCode:returnCode contextInfo:contextInfo];
-	if( returnCode == NSOKButton ) xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "ended" );
-}
-
-#pragma mark -
-
 - (IBAction) addToFavorites:(id) sender {
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [self target]]];
 	NSString *path = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", [self target], [[self connection] server]] stringByExpandingTildeInPath] retain];
@@ -555,6 +491,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 			if( alert ) [_waitingAlerts addObject:alert];
 		}
 	}
+
 	[_windowController reloadListItem:self andChildren:NO];
 }
 
@@ -576,49 +513,49 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (id) preferenceForKey:(NSString *) key {
 	NSParameterAssert( key != nil );
 	NSParameterAssert( [key length] );
-
 	return [[[_settings objectForKey:key] retain] autorelease];
 }
 
 #pragma mark -
 #pragma mark Styles
 
-- (IBAction) changeChatStyle:(id) sender {
+- (IBAction) changeStyle:(id) sender {
 	JVStyle *style = [sender representedObject];
-	
+
 	[self setPreference:[style identifier] forKey:@"style"];
 	[self setPreference:nil forKey:@"style variant"];
-	
-	[super changeChatStyle:sender];
+
+	[super changeStyle:sender];
 }
 
-- (IBAction) changeChatStyleVariant:(id) sender {
+- (IBAction) changeStyleVariant:(id) sender {
 	JVStyle *style = [[sender representedObject] objectForKey:@"style"];
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
-	
+
 	[self setPreference:[style identifier] forKey:@"style"];
 	[self setPreference:variant forKey:@"style variant"];
-	
-	[super changeChatStyleVariant:sender];
+
+	NSFont *baseFont = nil;
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputUsesStyleFont"] ) {
+		WebPreferences *preferences = [display preferences];
+		// in some versions of WebKit (v125.9 at least), this is a font name, not a font family, try both
+		NSString *fontFamily = [preferences standardFontFamily];
+		int fontSize = [preferences defaultFontSize];
+		baseFont = [NSFont fontWithName:fontFamily size:fontSize];
+		if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:fontFamily traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:fontSize];
+	}
+
+	[send setBaseFont:baseFont];
+
+	[super changeStyleVariant:sender];
 }
 
-- (IBAction) changeChatEmoticons:(id) sender {
-	if( [sender representedObject] && ! [(NSString *)[sender representedObject] length] ) {
-		[self setPreference:@"" forKey:@"emoticon"];
-		[self setChatEmoticons:nil];
-		return;
-	}
+- (IBAction) changeEmoticons:(id) sender {
+	JVEmoticonSet *emoticon = [sender representedObject];
 
-	NSBundle *emoticon = [NSBundle bundleWithIdentifier:[sender representedObject]];
+	[self setPreference:[emoticon identifier] forKey:@"emoticon"];
 
-	if( emoticon ) {
-		[self setPreference:[emoticon bundleIdentifier] forKey:@"emoticon"];
-		[self setChatEmoticons:emoticon];
-	} else {
-		emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle identifier]]]];
-		[self setPreference:nil forKey:@"emoticon"];
-		[self setChatEmoticons:emoticon];
-	}
+	[super changeEmoticons:sender];
 }
 
 #pragma mark -
@@ -676,39 +613,148 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 #pragma mark Messages & Events
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
-	[self addEventMessageToDisplay:message withName:name andAttributes:attributes entityEncodeAttributes:YES];
-}
-
-- (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode {
 	if( ! _nibLoaded ) [self view];
-	if( [_logLock tryLock] ) {
-		[self displayQueue];
-		[self addEventMessageToLogAndDisplay:message withName:name andAttributes:attributes entityEncodeAttributes:encode];
-		[_logLock unlock];
-	} else { // Queue the message
-		NSDictionary *queueEntry = [NSDictionary dictionaryWithObjectsAndKeys:@"event", @"type", message, @"message", name, @"name", attributes, @"attributes", [NSNumber numberWithBool:encode], @"encode", nil];
-		[_messageQueue addObject:queueEntry];
-		if( [_messageQueue count] == 1 ) // We just added to an empty queue, so we need to attempt to process it soon
-			[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
-	}
+
+	NSParameterAssert( name != nil );
+	NSParameterAssert( [name length] );
+
+	JVMutableChatEvent *event = [JVMutableChatEvent chatEventWithName:name andMessage:message];
+	[event setAttributes:attributes];
+
+	JVChatEvent *newEvent = [[self transcript] appendEvent:event];
+	[display appendChatTranscriptElement:newEvent];		
 }
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
-	[self addMessageToDisplay:message fromUser:user asAction:action withIdentifier:identifier asNotice:NO];
-}
-
-- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier asNotice:(BOOL) notice {
 	if( ! _nibLoaded ) [self view];
-	if( [_logLock tryLock] ) {
-		[self displayQueue];
-		[self addMessageToLogAndDisplay:message fromUser:user asAction:action withIdentifier:identifier asNotice:notice];
-		[_logLock unlock];
-	} else { // Queue the message
-		NSDictionary *queueEntry = [NSDictionary dictionaryWithObjectsAndKeys:@"message", @"type", message, @"message", user, @"user", identifier, @"identifier", [NSNumber numberWithBool:action], @"action", [NSNumber numberWithBool:notice], @"notice", nil];
-		[_messageQueue addObject:queueEntry];
-		if( [_messageQueue count] == 1 ) // We just added to an empty queue, so we need to attempt to process it soon
-			[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
+
+	NSParameterAssert( message != nil );
+	NSParameterAssert( user != nil );
+
+	NSFont *baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
+	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
+
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSTextStorage *messageString = [NSTextStorage attributedStringWithIRCFormat:message options:options];
+
+	if( ! messageString ) {
+		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
+		messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
+
+		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, nil];
+		NSMutableAttributedString *error = [[[NSMutableAttributedString alloc] initWithString:[@" " stringByAppendingString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )] attributes:attributes] autorelease];
+		[error addAttribute:@"CSSClasses" value:[NSSet setWithObjects:@"error", @"encoding", nil] range:NSMakeRange( 1, ( [error length] - 1 ) )];
+		[messageString appendAttributedString:error];
 	}
+
+	if( ! [messageString length] ) {
+		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
+		messageString = [[[NSTextStorage alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes] autorelease];
+	}
+
+	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:user];
+	[cmessage setMessageIdentifier:identifier];
+	[cmessage setAction:action];
+
+	messageString = [cmessage body]; // just incase
+
+	[self _setCurrentMessage:cmessage];
+
+	if( ! [user isLocalUser] )
+		[cmessage setIgnoreStatus:[[JVChatController defaultManager] shouldIgnoreUser:user withMessage:messageString inView:self]];
+
+	if( ! [user isLocalUser] && [cmessage ignoreStatus] == JVNotIgnored )
+		_newMessageCount++;
+
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] ) {
+		[messageString makeLinkAttributesAutomatically];
+		[self _hyperlinkRoomNames:messageString];
+	}
+
+	[[self emoticons] performEmoticonSubstitution:messageString];
+
+	if( ! [user isLocalUser] ) {
+		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+		NSMutableArray *names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
+		[names addObject:[[self connection] nickname]];
+
+		NSEnumerator *enumerator = [names objectEnumerator];
+		AGRegex *regex = nil;
+		NSString *name = nil;
+
+		while( ( name = [enumerator nextObject] ) ) {
+			if( ! [name length] ) continue;
+
+			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] && [name length] > 1 ) {
+				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
+			} else {
+				NSString *pattern = [NSString stringWithFormat:@"\\b%@\\b", [name stringByEscapingCharactersInSet:escapeSet]];
+				regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
+			}
+
+			NSArray *matches = [regex findAllInString:[messageString string]];
+			NSEnumerator *enumerator = [matches objectEnumerator];
+			AGRegexMatch *match = nil;
+
+			while( ( match = [enumerator nextObject] ) ) {
+				NSRange foundRange = [match range];
+				NSMutableSet *classes = [messageString attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL];
+				if( ! classes ) classes = [NSMutableSet setWithObject:@"highlight"];
+				else [classes addObject:@"highlight"];
+				[messageString addAttribute:@"CSSClasses" value:classes range:foundRange];
+				[cmessage setHighlighted:YES];
+			}
+		}
+	}
+
+	[self processIncomingMessage:cmessage];
+
+	if( [[cmessage sender] isKindOfClass:[JVChatRoomMember class]] )
+		user = [(JVChatRoomMember *)[cmessage sender] user]; // if this is a chat room, JVChatRoomPanel makes the sender a member object
+	else user = [cmessage sender]; // if plugins changed the sending user for some reason, allow it
+
+	if( ! [messageString length] && [cmessage ignoreStatus] == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
+		_newMessageCount--;
+		return;
+	}
+
+	[self _breakLongLinesInString:messageString];
+
+	if( [cmessage isHighlighted] && [cmessage ignoreStatus] == JVNotIgnored ) {
+		_newHighlightMessageCount++;
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"description"];
+		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
+		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatMentioned"] forKey:@"coalesceKey"];
+		[context setObject:self forKey:@"target"];
+		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+		[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
+	}
+
+	if( [cmessage ignoreStatus] != JVNotIgnored ) {
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
+		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) [context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", user, [self title]] forKey:@"description"];
+		else [context setObject:[NSString stringWithFormat:@"%@'s message was ignored.", user] forKey:@"description"];
+		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
+		[[JVNotificationController defaultManager] performNotification:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
+	}
+
+	JVChatMessage *newMessage = [[self transcript] appendMessage:cmessage];
+
+	if( [display appendChatMessage:newMessage] ) {
+		_firstMessage = NO; // not the first message anymore
+	} else if( [cmessage ignoreStatus] == JVNotIgnored ) {
+		// the style decided to excluded this message, decrease the new message counts
+		if( [cmessage isHighlighted] ) _newHighlightMessageCount--;
+		_newMessageCount--;		
+	}
+
+	[self _setCurrentMessage:nil];
+	[cmessage release];
+
+	[_windowController reloadListItem:self andChildren:NO];
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message {
@@ -827,7 +873,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 				}
 
 				if( [[subMsg string] length] ) {
-					JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] localUser] andTranscript:self];
+					JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] localUser]];
 					[cmessage setAction:action];
 
 					[self echoSentMessageToDisplay:cmessage];
@@ -844,7 +890,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	[send reset:nil];
 	[self textDidChange:nil];
-	[self scrollToBottom];
+	[display scrollToBottom];
 }
 
 - (void) sendMessage:(JVMutableChatMessage *) message {
@@ -886,10 +932,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (IBAction) clearDisplay:(id) sender {
-	_requiresFullMessage = YES;
-	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
-	[[self _verticalMarkedScroller] removeAllMarks];
-	[[self _verticalMarkedScroller] removeAllShadedAreas];
+	[display clear];
 }
 
 #pragma mark -
@@ -1004,7 +1047,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	NSMutableArray *ret = [NSMutableArray array];
 	if( [search length] <= [[self title] length] && [search caseInsensitiveCompare:[[[self target] description] substringToIndex:[search length]]] == NSOrderedSame )
 		[ret addObject:[self title]];
-	if( [self isMemberOfClass:[JVDirectChat class]] ) [ret addObjectsFromArray:words];
+	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) [ret addObjectsFromArray:words];
 	return ret;
 }
 
@@ -1038,7 +1081,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
 
-	JVMarkedScroller *scroller = [self _verticalMarkedScroller];
+	JVMarkedScroller *scroller = [display verticalMarkedScroller];
 	if( ! scroller || [scroller floatValue] == 1. ) _scrollerIsAtBottom = YES;
 	else _scrollerIsAtBottom = NO;
 
@@ -1084,7 +1127,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) splitViewWillResizeSubviews:(NSNotification *) notification {
-	JVMarkedScroller *scroller = [self _verticalMarkedScroller];
+	JVMarkedScroller *scroller = [display verticalMarkedScroller];
 	if( ! scroller || [scroller floatValue] == 1. ) _scrollerIsAtBottom = YES;
 	else _scrollerIsAtBottom = NO;
 }
@@ -1179,7 +1222,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
-	if( [self isMemberOfClass:[JVDirectChat class]] ) [list addObject:JVToolbarSendFileItemIdentifier];
+	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) [list addObject:JVToolbarSendFileItemIdentifier];
 	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	return list;
@@ -1187,7 +1230,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
-	if( [self isMemberOfClass:[JVDirectChat class]] ) [list addObject:JVToolbarSendFileItemIdentifier];
+	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) [list addObject:JVToolbarSendFileItemIdentifier];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	[list addObject:JVToolbarClearItemIdentifier];
 	return list;
@@ -1237,464 +1280,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 #pragma mark -
 
-@implementation JVDirectChat (JVDirectChatPrivate)
-- (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode {
-	// DO *NOT* call this method without first acquiring _logLock!
-	NSParameterAssert( name != nil );
-	NSParameterAssert( [name length] );
-
-	xmlDocPtr doc = xmlNewDoc( "1.0" );
-	xmlNodePtr root = xmlNewNode( NULL, "event" );
-	xmlSetProp( root, "id", [[NSString locallyUniqueString] UTF8String] );
-	xmlSetProp( root, "name", [name UTF8String] );
-	xmlSetProp( root, "occurred", [[[NSDate date] description] UTF8String] );
-	xmlDocSetRootElement( doc, root );
-
-	xmlDocPtr msgDoc = NULL;
-	xmlNodePtr child = NULL;
-	const char *msgStr = NULL;
-
-	if( message ) {
-		message = [message stringByStrippingIllegalXMLCharacters];
-		msgStr = [[NSString stringWithFormat:@"<message>%@</message>", message] UTF8String];
-		if( msgStr ) {
-			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
-			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
-			xmlAddChild( root, child );
-			xmlFreeDoc( msgDoc );
-		}
-	}
-
-	NSEnumerator *kenumerator = [attributes keyEnumerator];
-	NSEnumerator *enumerator = [attributes objectEnumerator];
-	NSString *key = nil;
-	id value = nil;
-
-	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
-		msgStr = NULL;
-
-		if( [value respondsToSelector:@selector( xmlDescriptionWithTagName: )] ) {
-			msgStr = [(NSString *)[value performSelector:@selector( xmlDescriptionWithTagName: ) withObject:key] UTF8String];
-		} else if( [value isKindOfClass:[NSAttributedString class]] ) {
-			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-			value = [value HTMLFormatWithOptions:options];
-			value = [value stringByStrippingIllegalXMLCharacters];
-			if( [(NSString *)value length] )
-				msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
-		} else if( [value isKindOfClass:[NSString class]] ) {
-			if( encode ) value = [value stringByEncodingXMLSpecialCharactersAsEntities];
-			value = [value stringByStrippingIllegalXMLCharacters];
-			if( [(NSString *)value length] )
-				msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
-		} else if( [value isKindOfClass:[NSData class]] ) {
-			value = [value base64EncodingWithLineLength:0];
-			if( [(NSString *)value length] )
-				msgStr = [[NSString stringWithFormat:@"<%@ encoding=\"base64\">%@</%@>", key, value, key] UTF8String];
-		}
-
-		if( ! msgStr ) msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
-
-		msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
-		child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
-		xmlAddChild( root, child );
-		xmlFreeDoc( msgDoc );
-	}
-
-	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
-	[self writeToLog:root withDoc:doc initializing:NO continuation:NO];
-
-	NSString *messageString = nil;
-
-	@try {
-		messageString = [_chatStyle transformXMLDocument:doc withParameters:_styleParams];
-	} @catch ( NSException *exception ) {
-		messageString = nil;
-		[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
-	}
-
-	if( [messageString length] ) [self appendMessage:messageString subsequent:NO];
-
-	xmlFreeDoc( doc );
-
-	_requiresFullMessage = YES;
-}
-
-- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
-	[self addMessageToLogAndDisplay:message fromUser:user asAction:action withIdentifier:identifier asNotice:NO];
-}
-
-- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier asNotice:(BOOL) notice {
-	// DO *NOT* call this method without first acquiring _logLock!
-	NSParameterAssert( message != nil );
-	NSParameterAssert( user != nil );
-
-	NSFont *baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
-	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
-
-	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
-	NSTextStorage *messageString = [NSTextStorage attributedStringWithIRCFormat:message options:options];
-
-	if( ! messageString ) {
-		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
-		messageString = [NSMutableAttributedString attributedStringWithIRCFormat:message options:options];
-
-		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, nil];
-		NSMutableAttributedString *error = [[[NSMutableAttributedString alloc] initWithString:[@" " stringByAppendingString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )] attributes:attributes] autorelease];
-		[error addAttribute:@"CSSClasses" value:[NSSet setWithObjects:@"error", @"encoding", nil] range:NSMakeRange( 1, ( [error length] - 1 ) )];
-		[messageString appendAttributedString:error];
-	}
-
-	if( ! [messageString length] ) {
-		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
-		messageString = [[[NSTextStorage alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes] autorelease];
-	}
-
-	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:user andTranscript:self];
-	[cmessage setMessageIdentifier:identifier];
-	[cmessage setAction:action];
-
-	messageString = [cmessage body]; // just incase
-
-	[self _setCurrentMessage:cmessage];
-
-	if( ! [user isLocalUser] )
-		[cmessage setIgnoreStatus:[[JVChatController defaultManager] shouldIgnoreUser:user withMessage:messageString inView:self]];
-
-	if( ! [user isLocalUser] && [cmessage ignoreStatus] == JVNotIgnored )
-		_newMessageCount++;
-
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] ) {
-		[messageString makeLinkAttributesAutomatically];
-		[self _hyperlinkRoomNames:messageString];
-	}
-
-	[self _performEmoticonSubstitutionOnString:messageString];
-
-	if( ! [user isLocalUser] ) {
-		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-		NSMutableArray *names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
-		[names addObject:[[self connection] nickname]];
-
-		NSEnumerator *enumerator = [names objectEnumerator];
-		AGRegex *regex = nil;
-		NSString *name = nil;
-
-		while( ( name = [enumerator nextObject] ) ) {
-			if( ! [name length] ) continue;
-
-			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] && [name length] > 1 ) {
-				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
-			} else {
-				NSString *pattern = [NSString stringWithFormat:@"\\b%@\\b", [name stringByEscapingCharactersInSet:escapeSet]];
-				regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
-			}
-
-			NSArray *matches = [regex findAllInString:[messageString string]];
-			NSEnumerator *enumerator = [matches objectEnumerator];
-			AGRegexMatch *match = nil;
-
-			while( ( match = [enumerator nextObject] ) ) {
-				NSRange foundRange = [match range];
-				NSMutableSet *classes = [messageString attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL];
-				if( ! classes ) classes = [NSMutableSet setWithObject:@"highlight"];
-				else [classes addObject:@"highlight"];
-				[messageString addAttribute:@"CSSClasses" value:classes range:foundRange];
-				[cmessage setHighlighted:YES];
-			}
-		}
-	}
-
-	[self processIncomingMessage:cmessage];
-
-	if( [[cmessage sender] isKindOfClass:[JVChatRoomMember class]] )
-		user = [(JVChatRoomMember *)[cmessage sender] user]; // if this is a chat room, JVChatRoom makes the sender a member object
-	else user = [cmessage sender]; // if plugins changed the sending user for some reason, allow it
-
-	if( ! [messageString length] && [cmessage ignoreStatus] == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
-		_newMessageCount--;
-		return;
-	}
-
-	[self _breakLongLinesInString:messageString];
-
-	if( [cmessage isHighlighted] && [cmessage ignoreStatus] == JVNotIgnored ) {
-		_newHighlightMessageCount++;
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"description"];
-		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatMentioned"] forKey:@"coalesceKey"];
-		[context setObject:self forKey:@"target"];
-		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-		[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
-	}
-
-	if( [cmessage ignoreStatus] != JVNotIgnored ) {
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
-		if( [self isMemberOfClass:[JVChatRoom class]] ) [context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", user, [self title]] forKey:@"description"];
-		else [context setObject:[NSString stringWithFormat:@"%@'s message was ignored.", user] forKey:@"description"];
-		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-		[[JVNotificationController defaultManager] performNotification:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
-	}
-
-	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
-	if( ! ctx ) return;
-
-	xmlXPathObjectPtr result = xmlXPathEval( [[NSString stringWithFormat:@"/log/child::*[name() = 'envelope' and position() = last() and (sender = '%@' or sender/@nickname = '%@')]", user, user] UTF8String], ctx );
-	xmlDocPtr doc = xmlNewDoc( "1.0" ), msgDoc = NULL;
-	xmlNodePtr root = NULL, child = NULL, parent = NULL;
-
-	if( ! _requiresFullMessage && result && ! xmlXPathNodeSetIsEmpty( result -> nodesetval ) ) {
-		parent = xmlXPathNodeSetItem( result -> nodesetval, 0 );
-		root = xmlDocCopyNode( parent, doc, 1 );
-		xmlDocSetRootElement( doc, root );
-	} else {
-		root = xmlNewNode( NULL, "envelope" );
-		xmlDocSetRootElement( doc, root );
-
-		/* if( [user isEqualToString:[self target]] && _buddy ) {
-			NSString *theirName = user;
-			if( [_buddy preferredNameWillReturn] != JVBuddyActiveNickname ) theirName = [_buddy preferredName];
-			child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
-			if( ! [theirName isEqualToString:user] )
-				xmlSetProp( child, "nickname", [user UTF8String] );
-			xmlSetProp( child, "card", [[_buddy uniqueIdentifier] UTF8String] );
-			[self _saveBuddyIcon:_buddy];
-		} else if( [user isLocalUser]] ) {
-			NSString *selfName = user;
-			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
-				selfName = [self _selfCompositeName];
-			else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyGivenNickname )
-				selfName = [self _selfStoredNickname];
-			child = xmlNewTextChild( root, NULL, "sender", [selfName UTF8String] );
-			if( ! [selfName isEqualToString:user] )
-				xmlSetProp( child, "nickname", [user UTF8String] );
-			xmlSetProp( child, "self", "yes" );
-			xmlSetProp( child, "card", [[[[ABAddressBook sharedAddressBook] me] uniqueId] UTF8String] );
-			[self _saveSelfIcon];
-		} else {
-			NSString *theirName = user;
-			JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:user onServer:[[self connection] server]];
-			if( buddy && [buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-				theirName = [buddy preferredName];
-			child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
-			if( ! [theirName isEqualToString:user] )
-				xmlSetProp( child, "nickname", [user UTF8String] );		
-			if( buddy ) {
-				xmlSetProp( child, "card", [[buddy uniqueIdentifier] UTF8String] );
-				[self _saveBuddyIcon:buddy];
-			}
-		} */
-
-		const char *sendDesc = [(NSString *)[[cmessage sender] performSelector:@selector( xmlDescriptionWithTagName: ) withObject:@"sender"] UTF8String];
-
-		if( sendDesc ) {
-			xmlDocPtr tempDoc = xmlParseMemory( sendDesc, strlen( sendDesc ) );
-			child = xmlDocCopyNode( xmlDocGetRootElement( tempDoc ), doc, 1 );
-			xmlAddChild( root, child );
-			xmlFreeDoc( tempDoc );
-		}
-	}
-
-	xmlXPathFreeObject( result );
-	xmlXPathFreeContext( ctx );
-
-	[[messageString mutableString] stripIllegalXMLCharacters];
-
-	options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-	NSString *htmlMessage = [messageString HTMLFormatWithOptions:options];
-	const char *msgStr = [[NSString stringWithFormat:@"<message>%@</message>", htmlMessage] UTF8String];
-	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
-
-	child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
-	xmlSetProp( child, "id", [[cmessage messageIdentifier] UTF8String] );
-	xmlSetProp( child, "received", [[[cmessage date] description] UTF8String] );
-	if( [cmessage isAction] ) xmlSetProp( child, "action", "yes" );
-	if( [cmessage isHighlighted] ) xmlSetProp( child, "highlight", "yes" );
-	if( [cmessage ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, "ignored", "yes" );
-	else if( [cmessage ignoreStatus] == JVUserIgnored ) xmlSetProp( root, "ignored", "yes" );
-	if( notice ) xmlSetProp( child, "notice", "yes" );
-	xmlAddChild( root, child );
-
-	[self writeToLog:root withDoc:doc initializing:NO continuation:( parent ? YES : NO )];
-
-	xmlFreeDoc( msgDoc );
-
-	if( parent ) xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
-	else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
-
-	NSString *transformedMessage = nil;
-	NSMutableDictionary *params = _styleParams;
-	if( parent ) {
-		// compatibility parameter for pre-2C9 styles, styles can test for consecutive messages alone now
-		// we now for a <?message type="subsequent"?> processing instruction to determ the proper handeling
-		params = [[_styleParams mutableCopy] autorelease];
-		[params setObject:@"'yes'" forKey:@"subsequent"];
-	}
-
-	@try {
-		transformedMessage = [_chatStyle transformXMLDocument:doc withParameters:params];
-	} @catch ( NSException *exception ) {
-		transformedMessage = nil;
-		[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
-	}
-
-	if( [transformedMessage length] ) {
-		BOOL subsequent = ( [transformedMessage rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
-		[self appendMessage:transformedMessage subsequent:subsequent];
-
-		if( [cmessage isHighlighted] ) {
-			long loc = [self locationOfMessage:cmessage];
-			if( loc ) [[self _verticalMarkedScroller] addMarkAt:loc];
-		}
-
-		_firstMessage = NO; // not the first message anymore
-		_requiresFullMessage = NO; // next message will not require a new envelope if it is consecutive
-	} else if( [cmessage ignoreStatus] == JVNotIgnored ) {
-		// the style decided to excluded this message, decrease the new message counts
-		if( [cmessage isHighlighted] ) _newHighlightMessageCount--;
-		_newMessageCount--;		
-	}
-
-	xmlFreeDoc( doc );
-
-	[self _setCurrentMessage:nil];
-	[cmessage release];
-
-	[_windowController reloadListItem:self andChildren:NO];
-}
-
-- (void) scrollToBottom {
-	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
-	[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint( 0, [[scrollView documentView] bounds].size.height )]];
-	[scrollView reflectScrolledClipView:[scrollView contentView]];
-}
-
-- (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent {
-	unsigned int messageCount = [self visibleMessageCount];
-	unsigned int scrollbackLimit = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"];
-
-	if( ! subsequent && ( messageCount + 1 ) > scrollbackLimit ) {
-		long loc = [self locationOfElementByIndex:( ( messageCount + 1 ) - scrollbackLimit )];
-		if( loc > 0 ) [[self _verticalMarkedScroller] shiftMarksAndShadedAreasBy:( loc * -1 )];
-	}
-
-#ifdef WebKitVersion146
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-		DOMHTMLElement *element = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] createElement:@"span"];
-		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] getElementById:@"consecutiveInsert"];
-		if( ! replaceElement ) subsequent = NO;
-
-		NSMutableString *transformedMessage = [html mutableCopy];
-		[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-		[transformedMessage replaceOccurrencesOfString:@"<?message type=\"subsequent\"?>" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-
-		// parses the message so we can get the DOM tree
-		[element setInnerHTML:transformedMessage];
-
-		[transformedMessage release];
-		transformedMessage = nil;
-
-		// check if we are near the bottom of the chat area, and if we should scroll down later
-		NSNumber *scrollNeeded = [[[display mainFrame] DOMDocument] evaluateWebScript:@"( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.1 ) ) )"];
-		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
-
-		unsigned int i = 0;
-		if( ! subsequent ) { // append message normally
-			[[replaceElement parentNode] removeChild:replaceElement];
-			while( [[element children] length] ) // append all children
-				[body appendChild:[element firstChild]];
-		} else if( [[element children] length] >= 1 ) { // append as a subsequent message
-			DOMNode *parent = [replaceElement parentNode];
-			DOMNode *nextSib = [replaceElement nextSibling];
-			[parent replaceChild:[element firstChild] :replaceElement]; // replaces the consecutiveInsert node
-			while( [[element children] length] ) { // append all remaining children (in reverse order)
-				if( nextSib ) [parent insertBefore:[element firstChild] :nextSib];
-				else [parent appendChild:[element firstChild]];
-			}
-		}
-
-		// enforce the scrollback limit
-		if( scrollbackLimit > 0 && [[body children] length] > scrollbackLimit )
-			for( i = 0; [[body children] length] > scrollbackLimit && i < ( [[body children] length] - scrollbackLimit ); i++ )
-				[body removeChild:[[body children] item:0]];		
-
-		// scroll down if we need to
-		if( [scrollNeeded boolValue] ) [self scrollToBottom];
-	} else
-#endif	
-	{ // old JavaScript method
-		NSMutableString *transformedMessage = [html mutableCopy];
-		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
-		[transformedMessage replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-		[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-		[transformedMessage replaceOccurrencesOfString:@"<?message type=\"subsequent\"?>" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-		if( subsequent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
-		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
-		[transformedMessage release];
-	}
-}
-
-- (void) processQueue {
-	if( [_logLock tryLock] ) {
-		[self displayQueue];
-		[_logLock unlock];
-	} else [self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
-}
-
-- (void) displayQueue {
-	// DO *NOT* call this without first acquiring _logLock
-	while( [_messageQueue count] > 0 ) {
-		NSDictionary *msg = [[[_messageQueue objectAtIndex:0] retain] autorelease];
-		[_messageQueue removeObjectAtIndex:0];
-		if( [[msg objectForKey:@"type"] isEqualToString:@"message"] ) {
-			[self addMessageToLogAndDisplay:[msg objectForKey:@"message"] fromUser:[msg objectForKey:@"user"] asAction:[[msg objectForKey:@"action"] boolValue] withIdentifier:[msg objectForKey:@"identifier"] asNotice:[[msg objectForKey:@"notice"] boolValue]];
-		} else if( [[msg objectForKey:@"type"] isEqualToString:@"event"] ) {
-			if( [[msg objectForKey:@"message"] isEqual:[NSNull null]] ) {
-				[self addEventMessageToLogAndDisplay:nil withName:[msg objectForKey:@"name"] andAttributes:[msg objectForKey:@"attributes"] entityEncodeAttributes:[[msg objectForKey:@"encode"] boolValue]];
-			} else {
-				[self addEventMessageToLogAndDisplay:[msg objectForKey:@"message"] withName:[msg objectForKey:@"name"] andAttributes:[msg objectForKey:@"attributes"] entityEncodeAttributes:[[msg objectForKey:@"encode"] boolValue]];
-			}
-		}
-	}
-}
-
-- (void) writeToLog:(void *) root withDoc:(void *) doc initializing:(BOOL) init continuation:(BOOL) cont {
-	if( ! _logFile ) return;
-
-	// Append a node to the logfile for this chat
-	xmlBufferPtr buf = xmlBufferCreate();
-	xmlNodeDump( buf, doc, root, 0, (int) [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] );
-
-	// To keep the XML valid at all times, we need to preserve a </log> close tag at the end of
-	// the file at all times. So, we seek to the end of the file minus 6 characters.
-	[_logFile seekToEndOfFile];
-	if( cont ) [_logFile seekToFileOffset:_previousLogOffset];
-	else if( ! init ) {
-		[_logFile seekToFileOffset:[_logFile offsetInFile] - 6];
-		_previousLogOffset = [_logFile offsetInFile];
-	}
-
-	_previousLogOffset = [_logFile offsetInFile];
-	[_logFile writeData:[NSData dataWithBytesNoCopy:buf -> content length:buf -> use freeWhenDone:NO]];
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] )
-		[_logFile writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
-	if( ! init ) [_logFile writeData:[@"</log>" dataUsingEncoding:NSUTF8StringEncoding]];
-	xmlBufferFree( buf );
-
-	// If we are initializing, we wrote a singleton <log/> tag and we need to back up over the />
-	// and write ></log> instead.
-	if( init ) {
-		[_logFile seekToEndOfFile];
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] )
-			[_logFile seekToFileOffset:[_logFile offsetInFile] - 3];
-		else [_logFile seekToFileOffset:[_logFile offsetInFile] - 2];
-		_previousLogOffset = [_logFile offsetInFile];
-		[_logFile writeData:[@">\n</log>" dataUsingEncoding:NSUTF8StringEncoding]];
-	}
-}
-
+@implementation JVDirectChatPanel (JVDirectChatPrivate)
 - (NSString *) _selfCompositeName {
 	ABPerson *_person = [[ABAddressBook sharedAddressBook] me];
 	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
@@ -1727,7 +1313,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	NSScanner *scanner = [NSScanner scannerWithString:[message string]];
 	NSCharacterSet *stopSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 	unsigned int lastLoc = 0;
-	unichar zeroWidthSpaceChar = 0x200b;	
+	unichar zeroWidthSpaceChar = 0x200b;
 	NSString *zero = [NSString stringWithCharacters:&zeroWidthSpaceChar length:1];
 
 	while( ! [scanner isAtEnd] ) {
@@ -1757,44 +1343,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}	
 }
 
-- (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string {
-	if( ! string || ! [string string] ) return;
-
-	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-	NSEnumerator *keyEnumerator = [_emoticonMappings keyEnumerator];
-	NSEnumerator *objEnumerator = [_emoticonMappings objectEnumerator];
-	NSEnumerator *srcEnumerator = nil;
-	NSString *str = nil;
-	NSString *key = nil;
-	NSArray *obj = nil;
-
-	while( ( key = [keyEnumerator nextObject] ) && ( obj = [objEnumerator nextObject] ) ) {
-		srcEnumerator = [obj objectEnumerator];
-		while( ( str = [srcEnumerator nextObject] ) ) {
-			NSMutableString *search = [str mutableCopy];
-			[search escapeCharactersInSet:escapeSet];
-
-			AGRegex *regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", search]];
-			NSArray *matches = [regex findAllInString:[string string]];
-			NSEnumerator *enumerator = [matches objectEnumerator];
-			AGRegexMatch *match = nil;
-
-			while( ( match = [enumerator nextObject] ) ) {
-				NSRange foundRange = [match range];
-				NSString *startHTML = [string attribute:@"XHTMLStart" atIndex:foundRange.location effectiveRange:NULL];
-				NSString *endHTML = [string attribute:@"XHTMLEnd" atIndex:foundRange.location effectiveRange:NULL];
-				if( ! startHTML ) startHTML = @"";
-				if( ! endHTML ) endHTML = @"";
-				[string addAttribute:@"XHTMLStart" value:[startHTML stringByAppendingFormat:@"<span class=\"emoticon %@\"><samp>", key] range:foundRange];
-				[string addAttribute:@"XHTMLEnd" value:[@"</samp></span>" stringByAppendingString:endHTML] range:foundRange];
-			}
-
-			[search release];
-			[regex release];
-		}
-	}
-}
-
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message {
 	return [self _convertRawMessage:message withBaseFont:nil];
 }
@@ -1818,7 +1366,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[self _hyperlinkRoomNames:messageString];
 	}
 
-	[self _performEmoticonSubstitutionOnString:messageString];
+	[[self emoticons] performEmoticonSubstitution:messageString];
 
 	return messageString;
 }
@@ -1862,27 +1410,26 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 			[messageString makeLinkAttributesAutomatically];
 
-		[self _performEmoticonSubstitutionOnString:messageString];
+		[[self emoticons] performEmoticonSubstitution:messageString];
 
 		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
 		NSString *msgString = [messageString HTMLFormatWithOptions:options];
 
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:messageString, @"away-message", nil]];
 
-		unsigned long messageCount = [self visibleMessageCount];
+/*		unsigned long messageCount = [self visibleMessageCount];
 		long loc = [self locationOfElementByIndex:( messageCount - 1 )];
-		[[self _verticalMarkedScroller] startShadedAreaAt:loc];
+		[[self verticalMarkedScroller] startShadedAreaAt:loc]; */
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
 
-		unsigned long messageCount = [self visibleMessageCount];
+/*		unsigned long messageCount = [self visibleMessageCount];
 		long loc = [self locationOfElementByIndex:( messageCount - 1 )];
-		[[self _verticalMarkedScroller] stopShadedAreaAt:loc];
+		[[display verticalMarkedScroller] stopShadedAreaAt:loc]; */
 	}
 }
 
-- (void) _updateChatEmoticonsMenu {
-	extern NSMutableSet *JVChatEmoticonBundles;
+- (void) _updateEmoticonsMenu {
 	NSEnumerator *enumerator = nil;
 	NSMenu *menu = nil, *subMenu = nil;
 	NSMenuItem *menuItem = nil;
@@ -1892,8 +1439,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		menu = [[NSMenu alloc] initWithTitle:@""];
 		_emoticonMenu = menu;
 	} else {
-		NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
 		new = NO;
+		enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
 		if( ! [menu indexOfItemWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )] )
 			[enumerator nextObject];
 		while( ( menuItem = [enumerator nextObject] ) )
@@ -1907,26 +1454,22 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	if( ! [menu indexOfItemWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )] )
 		count++;
 
-	NSArray *menuArray = [NSArray arrayWithContentsOfFile:[_chatEmoticons pathForResource:@"menu" ofType:@"plist"]];
-	enumerator = [menuArray objectEnumerator];
-	while( ( info = [enumerator nextObject] ) ) {
-		if( ! [(NSString *)[info objectForKey:@"name"] length] ) continue;
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[info objectForKey:@"name"] action:@selector( _insertEmoticon: ) keyEquivalent:@""] autorelease];
+	NSArray *menuItems = [[self emoticons] emoticonMenuItems];
+	enumerator = [menuItems objectEnumerator];
+	while( ( menuItem = [enumerator nextObject] ) ) {
+		[menuItem setAction:@selector( _insertEmoticon: )];
 		[menuItem setTarget:self];
-		if( [(NSString *)[info objectForKey:@"image"] length] )
-			[menuItem setImage:[[[NSImage alloc] initWithContentsOfFile:[_chatEmoticons pathForResource:[info objectForKey:@"image"] ofType:nil]] autorelease]];
-		[menuItem setRepresentedObject:[info objectForKey:@"insert"]];
 		[menu insertItem:menuItem atIndex:count++];
 	}
 
-	if( ! [menuArray count] ) {
+	if( ! [menuItems count] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Selectable Emoticons", "no selectable emoticons menu item title" ) action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setEnabled:NO];
 		[menu insertItem:menuItem atIndex:count++];
 	}
 
 	if( new ) {
-		NSBundle *emoticon = nil;
+		JVEmoticonSet *emoticon = nil;
 
 		[menu addItem:[NSMenuItem separatorItem]];
 
@@ -1936,26 +1479,25 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[menuItem setTag:20];
 		[menu addItem:menuItem];
 
-		emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle identifier]]]];
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style Default", "default style emoticons menu item title" ) action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style Default", "default style emoticons menu item title" ) action:@selector( changeEmoticons: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[subMenu addItem:menuItem];
 
 		[subMenu addItem:[NSMenuItem separatorItem]];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Text Only", "text only emoticons menu item title" ) action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[[JVEmoticonSet textOnlyEmoticonSet] displayName] action:@selector( changeEmoticons: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:@""];
+		[menuItem setRepresentedObject:[JVEmoticonSet textOnlyEmoticonSet]];
 		[subMenu addItem:menuItem];
 
 		[subMenu addItem:[NSMenuItem separatorItem]];
 
-		enumerator = [[[JVChatEmoticonBundles allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
+		enumerator = [[[[JVEmoticonSet emoticonSets] allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
 		while( ( emoticon = [enumerator nextObject] ) ) {
 			if( ! [[emoticon displayName] length] ) continue;
-			menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
+			menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeEmoticons: ) keyEquivalent:@""] autorelease];
 			[menuItem setTarget:self];
-			[menuItem setRepresentedObject:[emoticon bundleIdentifier]];
+			[menuItem setRepresentedObject:emoticon];
 			[subMenu addItem:menuItem];
 		}
 
@@ -1967,27 +1509,13 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[subMenu addItem:menuItem];
 	}
 
-	[self _changeChatEmoticonsMenuSelection];
+	[self _changeEmoticonsMenuSelection];
 }
 
 - (IBAction) _insertEmoticon:(id) sender {
 	if( [[send textStorage] length] )
 		[send replaceCharactersInRange:NSMakeRange( [[send textStorage] length], 0 ) withString:@" "];
 	[send replaceCharactersInRange:NSMakeRange( [[send textStorage] length], 0 ) withString:[NSString stringWithFormat:@"%@ ", [sender representedObject]]];
-}
-
-- (void) _switchingStyleEnded:(NSString *) html {
-	[super _switchingStyleEnded:html];
-	NSFont *baseFont = nil;
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputUsesStyleFont"] ) {
-		WebPreferences *preferences = [display preferences];
-		// in some versions of WebKit (v125.9 at least), this is a font name, not a font family, try both
-		NSString *fontFamily = [preferences standardFontFamily];
-		int fontSize = [preferences defaultFontSize];
-		baseFont = [NSFont fontWithName:fontFamily size:fontSize];
-		if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:fontFamily traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:fontSize];
-	}
-	[send setBaseFont:baseFont];
 }
 
 - (BOOL) _usingSpecificStyle {
@@ -2018,7 +1546,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}
 
 	while( ! _personImageData && _loadingPersonImage ) // asynchronously load the image incase it is on the network
-		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 
 	if( ! [_personImageData length] ) {
 		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [me uniqueId]] handler:nil];
@@ -2040,10 +1568,6 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}
 
 	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] atomically:NO];
-}
-
-- (void) _styleError:(NSException *) exception {
-	[self showAlert:NSGetCriticalAlertPanel( NSLocalizedString( @"An internal Style error occurred.", "the stylesheet parse failed" ), NSLocalizedString( @"The %@ Style has been damaged or has an internal error preventing new messages from displaying. Please contact the %@ author about this.", "the style contains and error" ), @"OK", nil, nil, [_chatStyle displayName], [_chatStyle displayName] ) withName:@"styleError"];
 }
 
 - (void) _refreshIcon:(NSNotification *) notification {
@@ -2097,7 +1621,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 #pragma mark -
 
-@implementation JVDirectChat (JVDirectChatScripting)
+@implementation JVDirectChatPanel (JVDirectChatScripting)
 - (void) sendMessageScriptCommand:(NSScriptCommand *) command {
 	NSString *message = [[command evaluatedArguments] objectForKey:@"message"];
 
@@ -2115,7 +1639,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
 	BOOL localEcho = ( [[command evaluatedArguments] objectForKey:@"echo"] ? [[[command evaluatedArguments] objectForKey:@"echo"] boolValue] : YES );
 
-	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:attributeMsg sender:[[self connection] localUser] andTranscript:self];
+	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:attributeMsg sender:[[self connection] localUser]];
 	[cmessage setAction:action];
 
 	[self sendMessage:cmessage];
@@ -2139,7 +1663,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		return;
 	}
 
-	[self addEventMessageToDisplay:message withName:name andAttributes:( [attributes isKindOfClass:[NSDictionary class]] ? attributes : nil ) entityEncodeAttributes:NO];
+	[self addEventMessageToDisplay:message withName:name andAttributes:( [attributes isKindOfClass:[NSDictionary class]] ? attributes : nil )];
 }
 
 - (unsigned long) scriptTypedEncoding {

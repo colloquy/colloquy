@@ -1,7 +1,8 @@
-// Concept by Joar Wingfors.
+// Rule Table View Concept by Joar Wingfors.
 // Created by Timothy Hatcher for Colloquy.
 // Copyright Joar Wingfors and Timothy Hatcher. All rights reserved.
 
+#import "JVChatTranscriptPanel.h"
 #import "JVChatTranscript.h"
 #import "JVChatMessage.h"
 #import "JVTranscriptFindWindowController.h"
@@ -100,11 +101,11 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 #pragma mark -
 
-- (JVChatTranscript *) focusedChatTranscript {
+- (JVChatTranscriptPanel *) focusedChatTranscriptPanel {
 	NSWindow *window = [[NSApplication sharedApplication] mainWindow];
 	if( [[window delegate] isKindOfClass:[JVChatWindowController class]] ) {
-		if( [[[window delegate] activeChatViewController] isKindOfClass:[JVChatTranscript class]] ) {
-			return (JVChatTranscript *)[[window delegate] activeChatViewController];
+		if( [[[window delegate] activeChatViewController] isKindOfClass:[JVChatTranscriptPanel class]] ) {
+			return (JVChatTranscriptPanel *)[[window delegate] activeChatViewController];
 		}
 	} return nil;
 }
@@ -182,7 +183,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 }
 
 - (IBAction) findNext:(id) sender {
-	JVChatTranscript *transcript = [self focusedChatTranscript];
+	JVChatTranscript *transcript = [[self focusedChatTranscriptPanel] transcript];
 	if( ! transcript ) return;
 
 	JVChatMessage *foundMessage = nil;
@@ -235,7 +236,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
 
 	while( ( message = [messages nextObject] ) ) {
-		BOOL scrollback = [transcript messageIsInScrollback:message];
+		BOOL scrollback = YES; // [transcript messageIsInScrollback:message];
 		if( ! scrollback && [scrollbackOnly state] == NSOnState ) continue;
 
 		BOOL match = ( andOperation ? YES : NO );
@@ -270,7 +271,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 end:
 
-	if( foundMessage ) [transcript jumpToMessage:foundMessage];
+	if( foundMessage ) [[self focusedChatTranscriptPanel] jumpToMessage:foundMessage];
 	else NSBeep();
 
 	NSLog( @"%@ %u %@", NSStringFromRange( range ), _lastMessageIndex, foundMessage );	
@@ -281,7 +282,7 @@ end:
 }
 
 - (IBAction) findPrevious:(id) sender {
-	JVChatTranscript *transcript = [self focusedChatTranscript];
+	JVChatTranscript *transcript = [[self focusedChatTranscriptPanel] transcript];
 	if( ! transcript ) return;
 
 	JVChatMessage *foundMessage = nil;
@@ -334,7 +335,7 @@ end:
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
 
 	while( ( message = [messages nextObject] ) ) {
-		BOOL scrollback = [transcript messageIsInScrollback:message];
+		BOOL scrollback = YES; // [transcript messageIsInScrollback:message];
 		if( ! scrollback && [scrollbackOnly state] == NSOnState ) continue;
 
 		BOOL match = ( andOperation ? YES : NO );
@@ -368,7 +369,7 @@ end:
 
 end:
 
-	if( foundMessage ) [transcript jumpToMessage:foundMessage];
+	if( foundMessage ) [[self focusedChatTranscriptPanel] jumpToMessage:foundMessage];
 	else NSBeep();
 
 	NSLog( @"{0, *} %u %@", _lastMessageIndex, foundMessage );
@@ -379,7 +380,7 @@ end:
 }
 
 - (IBAction) findAll:(id) sender {
-	JVChatTranscript *transcript = [self focusedChatTranscript];
+	JVChatTranscript *transcript = [[self focusedChatTranscriptPanel] transcript];
 	if( ! transcript ) return;
 
 	_findPasteboardNeedsUpdated = YES;

@@ -6,7 +6,7 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>
 #import "JVChatWindowController.h"
-#import "JVDirectChat.h"
+#import "JVDirectChatPanel.h"
 
 @implementation KAIgnoreRule
 + (id) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
@@ -61,7 +61,7 @@
 #pragma mark -
 
 - (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
-	if( ! [_rooms count] || ( [view isKindOfClass:[JVDirectChat class]] && [_rooms containsObject:[(JVDirectChat *)view target]] ) ) {
+	if( ! [_rooms count] || ( [view isKindOfClass:[JVDirectChatPanel class]] && [_rooms containsObject:[(JVDirectChatPanel *)view target]] ) ) {
 		BOOL userFound = NO;
 		BOOL messageFound = NO;
 		BOOL userRequired = ( _userRegex || [_ignoredUser length] );

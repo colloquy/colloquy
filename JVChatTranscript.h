@@ -1,79 +1,87 @@
-#import "JVChatWindowController.h"
-
-@class WebView;
-@class MVMenuButton;
-@class JVStyle;
+@class JVChatTranscript;
 @class JVChatMessage;
+@class JVChatEvent;
+@class JVChatSession;
 
-extern NSMutableSet *JVChatStyleBundles;
-extern NSMutableSet *JVChatEmoticonBundles;
+@protocol JVChatTranscriptElement
+- (/* xmlNode */ void *) node;
+- (JVChatTranscript *) transcript;
+@end
 
-extern NSString *JVChatStylesScannedNotification;
-extern NSString *JVChatEmoticonsScannedNotification;
-
-@interface JVChatTranscript : NSObject <JVChatViewController> {
-	@protected
-	IBOutlet NSView *contents;
-	IBOutlet WebView *display;
-	BOOL _nibLoaded;
-
-	JVChatWindowController *_windowController;
-
-	NSString *_filePath;
-	BOOL _isArchive;
-
-	NSLock *_logLock;
-	void *_xmlLog; /* xmlDocPtr */
+@interface JVChatTranscript : NSObject {
+	void *_xmlLog; /* xmlDoc * */
 	NSMutableArray *_messages;
-
-	NSMenu *_styleMenu;
-	JVStyle *_chatStyle;
-	NSString *_chatStyleVariant;
-	NSMutableDictionary *_styleParams;
-
-	NSMenu *_emoticonMenu;
-	NSBundle *_chatEmoticons;
-	NSDictionary *_emoticonMappings;
-
-	BOOL _switchingStyles;
+	NSString *_filePath;
+	NSFileHandle *_logFile;
+	BOOL _autoWriteChanges;
+	BOOL _requiresNewEnvelope;
+	unsigned long long _previousLogOffset;
 }
-- (id) initWithTranscript:(NSString *) filename;
++ (id) chatTranscript;
++ (id) chatTranscriptWithChatTranscript:(JVChatTranscript *) transcript;
++ (id) chatTranscriptWithElements:(NSArray *) elements;
++ (id) chatTranscriptWithContentsOfFile:(NSString *) path;
++ (id) chatTranscriptWithContentsOfURL:(NSURL *) url;
 
-- (void) saveTranscriptTo:(NSString *) path;
+- (id) init;
+- (id) initWithChatTranscript:(JVChatTranscript *) transcript;
+- (id) initWithElements:(NSArray *) elements;
+- (id) initWithContentsOfFile:(NSString *) path;
+- (id) initWithContentsOfURL:(NSURL *) url;
 
-- (IBAction) changeChatStyle:(id) sender;
-- (void) setChatStyle:(JVStyle *) style withVariant:(NSString *) variant;
-- (JVStyle *) chatStyle;
+- (/* xmlDoc */ void *) document;
 
-- (IBAction) changeChatStyleVariant:(id) sender;
-- (void) setChatStyleVariant:(NSString *) variant;
-- (NSString *) chatStyleVariant;
+- (BOOL) isEmpty;
+- (unsigned long) elementCount;
+- (unsigned long) sessionCount;
+- (unsigned long) messageCount;
+- (unsigned long) eventCount;
 
-- (IBAction) changeChatEmoticons:(id) sender;
-- (void) setChatEmoticons:(NSBundle *) emoticons;
-- (void) setChatEmoticons:(NSBundle *) emoticons performRefresh:(BOOL) refresh;
-- (NSBundle *) chatEmoticons;
+- (NSArray *) elements;
+- (NSArray *) elementsInRange:(NSRange) range;
+- (id) elementAtIndex:(unsigned long) index;
+- (id) lastElement;
 
-- (unsigned long) numberOfMessages;
+- (NSArray *) appendElements:(NSArray *) elements;
+- (void) appendChatTranscript:(JVChatTranscript *) transcript;
+
 - (NSArray *) messages;
-- (JVChatMessage *) messageAtIndex:(unsigned long) index;
 - (NSArray *) messagesInRange:(NSRange) range;
-- (BOOL) messageIsInScrollback:(JVChatMessage *) message;
+- (JVChatMessage *) messageAtIndex:(unsigned long) index;
+- (JVChatMessage *) messageWithIdentifier:(NSString *) identifier;
+- (NSArray *) messagesInEnvelopeWithMessage:(JVChatMessage *) message;
+- (JVChatMessage *) lastMessage;
 
-- (void) jumpToMessage:(JVChatMessage *) message;
+- (BOOL) containsMessageWithIdentifier:(NSString *) identifier;
 
-- (IBAction) close:(id) sender;
-- (IBAction) activate:(id) sender;
-@end
+- (JVChatMessage *) appendMessage:(JVChatMessage *) message;
+- (JVChatMessage *) appendMessage:(JVChatMessage *) message forceNewEnvelope:(BOOL) forceEnvelope;
+- (NSArray *) appendMessages:(NSArray *) messages;
+- (NSArray *) appendMessages:(NSArray *) messages forceNewEnvelope:(BOOL) forceEnvelope;
 
-#pragma mark -
+- (NSArray *) sessions;
+- (NSArray *) sessionsInRange:(NSRange) range;
+- (JVChatSession *) sessionAtIndex:(unsigned long) index;
+- (JVChatSession *) lastSession;
 
-@interface JVChatTranscript (JVChatTranscriptScripting) <JVChatListItemScripting>
-- (NSNumber *) uniqueIdentifier;
-@end
+- (JVChatSession *) startNewSession;
+- (JVChatSession *) appendSessionWithStartDate:(NSDate *) startDate;
 
-#pragma mark -
+- (NSArray *) events;
+- (NSArray *) eventsInRange:(NSRange) range;
+- (JVChatEvent *) eventAtIndex:(unsigned long) index;
+- (JVChatEvent *) lastEvent;
 
-@interface NSObject (MVChatPluginLinkClickSupport)
-- (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view;
+- (BOOL) containsEventWithIdentifier:(NSString *) identifier;
+
+- (JVChatEvent *) appendEvent:(JVChatEvent *) event;
+
+- (NSString *) filePath;
+- (void) setFilePath:(NSString *) filePath;
+
+- (BOOL) automaticallyWritesChangesToFile;
+- (BOOL) setAutomaticallyWritesChangesToFile:(BOOL) option;
+
+- (BOOL) writeToFile:(NSString *) path atomically:(BOOL) useAuxiliaryFile;
+- (BOOL) writeToURL:(NSURL *) url atomically:(BOOL) atomically;
 @end

@@ -1,12 +1,12 @@
 #import "JVChatWindowController.h"
 
-@class JVChatRoom;
+@class JVChatRoomPanel;
 @class MVChatConnection;
 @class MVChatUser;
 @class JVBuddy;
 
 @interface JVChatRoomMember : NSObject <JVChatListItem> {
-	JVChatRoom *_parent;
+	JVChatRoomPanel *_parent;
 	MVChatUser *_user;
 
 	// Custom ban ivars
@@ -20,14 +20,14 @@
 	IBOutlet NSButton *cancelButton;
 	IBOutlet NSWindow *banWindow;
 }
-- (id) initWithRoom:(JVChatRoom *) room andUser:(MVChatUser *) user;
-- (id) initLocalMemberWithRoom:(JVChatRoom *) room;
+- (id) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user;
+- (id) initLocalMemberWithRoom:(JVChatRoomPanel *) room;
 
 - (NSComparisonResult) compare:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingBuddyStatus:(JVChatRoomMember *) member;
 
-- (JVChatRoom *) room;
+- (JVChatRoomPanel *) room;
 - (MVChatConnection *) connection;
 - (MVChatUser *) user;
 - (JVBuddy *) buddy;

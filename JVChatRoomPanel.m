@@ -10,7 +10,7 @@
 #import "JVChatController.h"
 #import "JVTabbedChatWindowController.h"
 #import "MVConnectionsController.h"
-#import "JVChatRoom.h"
+#import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "JVNotificationController.h"
 #import "MVBuddyListController.h"
@@ -20,13 +20,13 @@
 #import "NSURLAdditions.h"
 #import "NSAttributedStringMoreAdditions.h"
 
-@interface JVChatRoom (JVChatRoomPrivate)
+@interface JVChatRoomPanel (JVChatRoomPrivate)
 - (void) _topicChanged:(id) sender;
 @end
 
 #pragma mark -
 
-@interface JVDirectChat (JVDirectChatPrivate)
+@interface JVDirectChatPanel (JVDirectChatPrivate)
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
@@ -44,7 +44,7 @@
 
 #pragma mark -
 
-@implementation JVChatRoom
+@implementation JVChatRoomPanel
 - (id) initWithTarget:(id) target {
 	if( ( self = [super initWithTarget:target] ) ) {
 		topicLine = nil;
@@ -349,7 +349,7 @@
 
 	[_windowController reloadListItem:self andChildren:YES];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomPanel * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( joinedRoom: )];
@@ -368,7 +368,7 @@
 	if( [[self target] isJoined] ) {
 		_cantSendMessages = YES;
 
-		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), nil];
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomPanel * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 		[invocation setSelector:@selector( partingFromRoom: )];
@@ -631,7 +631,7 @@
 
 #pragma mark -
 
-@implementation JVChatRoom (JVChatRoomPrivate)
+@implementation JVChatRoomPanel (JVChatRoomPrivate)
 - (void) _didConnect:(NSNotification *) notification {
 	[[self target] join];
 	_cantSendMessages = YES;
@@ -837,7 +837,7 @@
 }
 
 - (void) _gotMessage:(NSNotification *) notification {
-	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"user"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] asNotice:[[[notification userInfo] objectForKey:@"auto"] boolValue]];
+	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"user"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"]];
 }
 
 - (void) _memberJoined:(NSNotification *) notification {
@@ -851,7 +851,7 @@
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> joined the chat room.", "a user has join a chat room status message" ), name];
 	[self addEventMessageToDisplay:message withName:@"memberJoined" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:listItem, @"who", nil]];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoomPanel * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( memberJoined:inRoom: )];
@@ -875,7 +875,7 @@
 
 	NSMutableAttributedString *rstring = [self _convertRawMessage:[[notification userInfo] objectForKey:@"reason"]];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( NSAttributedString * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoomPanel * ), @encode( NSAttributedString * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( memberParted:fromRoom:forReason: )];
@@ -912,7 +912,7 @@
 
 	[self addEventMessageToDisplay:message withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? (id) byMbr : (id) byUser ), @"by", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), @encode( NSAttributedString * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomPanel * ), @encode( JVChatRoomMember * ), @encode( NSAttributedString * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( kickedFromRoom:by:forReason: )];
@@ -951,7 +951,7 @@
 	JVChatRoomMember *byMbr = [self chatRoomMemberForUser:byUser];
 	NSMutableAttributedString *rstring = [self _convertRawMessage:[[notification userInfo] objectForKey:@"reason"]];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), @encode( NSAttributedString * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoomPanel * ), @encode( JVChatRoomMember * ), @encode( NSAttributedString * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( memberKicked:fromRoom:by:forReason: )];
@@ -1237,7 +1237,7 @@
 			[[topicLine enclosingScrollView] setToolTip:toolTip];
 		} else [[topicLine enclosingScrollView] setToolTip:[topic string]];
 
-		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSAttributedString * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), nil];
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSAttributedString * ), @encode( JVChatRoomPanel * ), @encode( JVChatRoomMember * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 		[invocation setSelector:@selector( topicChangedTo:inRoom:by: )];
@@ -1269,7 +1269,7 @@
 
 #pragma mark -
 
-@implementation JVChatRoom (JVChatRoomScripting)
+@implementation JVChatRoomPanel (JVChatRoomScripting)
 - (NSArray *) chatMembers {
 	return [[_sortedMembers retain] autorelease];
 }
@@ -1303,57 +1303,57 @@
 #pragma mark -
 
 @implementation MVChatScriptPlugin (MVChatScriptPluginRoomSupport)
-- (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room {
+- (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mJr1", nil];
 	[self callScriptHandler:'mJrX' withArguments:args forSelector:_cmd];
 }
 
-- (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoom *) room forReason:(NSAttributedString *) reason {
+- (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room forReason:(NSAttributedString *) reason {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mPr1", [reason string], @"mPr2", nil];
 	[self callScriptHandler:'mPrX' withArguments:args forSelector:_cmd];
 }
 
-- (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
+- (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mKr1", by, @"mKr2", [reason string], @"mKr3", nil];
 	[self callScriptHandler:'mKrX' withArguments:args forSelector:_cmd];
 }
 
-- (void) memberPromoted:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by {
+- (void) memberPromoted:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"cOpr" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
-- (void) memberDemoted:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by {
+- (void) memberDemoted:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member voice] ? "VoIc" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
-- (void) memberVoiced:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by {
+- (void) memberVoiced:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"VoIc" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
-- (void) memberDevoiced:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by {
+- (void) memberDevoiced:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member operator] ? "cOpr" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
-- (void) joinedRoom:(JVChatRoom *) room; {
+- (void) joinedRoom:(JVChatRoomPanel *) room; {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
 	[self callScriptHandler:'jRmX' withArguments:args forSelector:_cmd];
 }
 
-- (void) partingFromRoom:(JVChatRoom *) room; {
+- (void) partingFromRoom:(JVChatRoomPanel *) room; {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
 	[self callScriptHandler:'pRmX' withArguments:args forSelector:_cmd];
 }
 
-- (void) kickedFromRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
+- (void) kickedFromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", by, @"kRm1", [reason string], @"kRm2", nil];
 	[self callScriptHandler:'kRmX' withArguments:args forSelector:_cmd];
 }
 
-- (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) member {
+- (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[topic string], @"rTc1", member, @"rTc2", room, @"rTc3", nil];
 	[self callScriptHandler:'rTcX' withArguments:args forSelector:_cmd];
 }

@@ -40,7 +40,7 @@
         }, 
         {CLASS = JVSplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
         {
-            CLASS = JVWebView; 
+            CLASS = JVStyleView; 
             LANGUAGE = ObjC; 
             OUTLETS = {nextTextView = NSTextView; }; 
             SUPERCLASS = WebView; 

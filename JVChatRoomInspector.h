@@ -1,8 +1,8 @@
-#import "JVChatRoom.h"
+#import "JVChatRoomPanel.h"
 #import "JVInspectorController.h"
 
 
-@interface JVChatRoom (JVChatRoomInspection) <JVInspection>
+@interface JVChatRoomPanel (JVChatRoomInspection) <JVInspection>
 - (id <JVInspector>) inspector;
 @end
 
@@ -22,9 +22,9 @@
 	IBOutlet NSButton *requiresPassword;
 	IBOutlet NSTextField *password;
 	IBOutlet NSTextView *topic;
-	JVChatRoom *_room;
+	JVChatRoomPanel *_room;
 	BOOL _nibLoaded;
 }
-- (id) initWithRoom:(JVChatRoom *) room;
+- (id) initWithRoom:(JVChatRoomPanel *) room;
 - (IBAction) changeChatOption:(id) sender;
 @end

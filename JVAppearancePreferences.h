@@ -20,7 +20,6 @@
 	BOOL _variantLocked;
 	BOOL _alertDisplayed;
 	JVStyle *_style;
-	NSSet *_emoticonBundles;
 	NSMutableArray *_styleOptions;
 	NSString *_userStyle;
 }
@@ -35,8 +34,6 @@
 - (IBAction) changeMinimumFontSize:(id) sender;
 
 - (IBAction) changeDefaultChatStyle:(id) sender;
-
-- (IBAction) noGraphicEmoticons:(id) sender;
 - (IBAction) changeDefaultEmoticons:(id) sender;
 
 - (IBAction) changeUseStyleFont:(id) sender;

@@ -6,8 +6,8 @@
 #import "NSStringAdditions.h"
 #import "MVChatRoom.h"
 #import "MVChatUser.h"
-#import "JVDirectChat.h"
-#import "JVChatRoom.h"
+#import "JVDirectChatPanel.h"
+#import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "JVChatMessage.h"
 #import "JVInspectorController.h"
@@ -21,7 +21,7 @@
 
 #pragma mark -
 
-@interface JVChatTranscript (JVChatTranscriptPrivate)
+@interface JVChatTranscriptPanel (JVChatTranscriptPanelPrivate)
 - (void) _reloadCurrentStyle:(id) sender;
 @end
 
@@ -35,16 +35,16 @@
 #pragma mark -
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
-	BOOL isChatRoom = [view isKindOfClass:[JVChatRoom class]];
-	BOOL isDirectChat = [view isKindOfClass:[JVDirectChat class]];
+	BOOL isChatRoom = [view isKindOfClass:[JVChatRoomPanel class]];
+	BOOL isDirectChat = [view isKindOfClass:[JVDirectChatPanel class]];
 
-	JVDirectChat *chat = view;
-	JVChatRoom *room = view;
+	JVDirectChatPanel *chat = view;
+	JVChatRoomPanel *room = view;
 
 	if( isChatRoom || isDirectChat ) {
 		if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] || ! [command caseInsensitiveCompare:@"say"] ) {
 			if( [arguments length] ) {
-				JVMutableChatMessage *message = [JVMutableChatMessage messageWithText:arguments sender:[[chat connection] localUser] andTranscript:chat];
+				JVMutableChatMessage *message = [JVMutableChatMessage messageWithText:arguments sender:[[chat connection] localUser]];
 				if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] ) {
 					// This is so plugins can process /me actions as well
 					// We're avoiding /say for now, as that really should just output exactly what
@@ -473,7 +473,7 @@
 	show = ( always ? YES : show );
 
 	NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
-	JVDirectChat *chatView = nil;
+	JVDirectChatPanel *chatView = nil;
 
 	if( ! [command caseInsensitiveCompare:@"msg"] && ( ! chanSet || [chanSet characterIsMember:[to characterAtIndex:0]] ) ) {
 		MVChatRoom *room = [connection joinedChatRoomWithName:to];
@@ -486,7 +486,7 @@
 	}
 
 	if( chatView && [msg length] ) {
-		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:msg sender:[connection localUser] andTranscript:chatView];
+		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:msg sender:[connection localUser]];
 		[chatView echoSentMessageToDisplay:cmessage];
 		[chatView sendMessage:cmessage];
 		return YES;
@@ -500,11 +500,11 @@
 
 	BOOL action = ( ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"bract"] );
 
-	NSEnumerator *enumerator = [[[JVChatController defaultManager] chatViewControllersOfClass:[JVChatRoom class]] objectEnumerator];
-	JVChatRoom *room = nil;
+	NSEnumerator *enumerator = [[[JVChatController defaultManager] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
+	JVChatRoomPanel *room = nil;
 
 	while( ( room = [enumerator nextObject] ) ) {
-		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:message sender:[connection localUser] andTranscript:room];
+		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:message sender:[connection localUser]];
 		[cmessage setAction:action];
 		[room echoSentMessageToDisplay:cmessage];
 		[room sendMessage:cmessage];

@@ -1,14 +1,20 @@
+#import "JVChatTranscript.h"
 #import "KAIgnoreRule.h"
 
-@class JVChatTranscript;
-
-@interface JVChatMessage : NSObject <NSMutableCopying> {
+@interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement> {
 	@protected
 	/* xmlNode */ void *_node;
 	NSString *_messageIdentifier;
 	NSScriptObjectSpecifier *_objectSpecifier;
 	JVChatTranscript *_transcript;
-	id _sender;
+
+	id _senderIdentifier;
+	NSString *_senderName;
+	NSString *_senderNickname;
+	NSString *_senderHostmask;
+	NSString *_senderClass;
+	NSString *_senderBuddyIdentifier;
+
 	NSString *_htmlMessage;
 	NSTextStorage *_attributedMessage;
 	NSDate *_date;
@@ -17,14 +23,19 @@
 	BOOL _action;
 	BOOL _highlighted;
 	BOOL _loaded;
+	BOOL _bodyLoaded;
+	BOOL _senderLoaded;
 }
-+ (id) messageWithNode:(/* xmlNode */ void *) node andTranscript:(JVChatTranscript *) transcript;
-- (id) initWithNode:(/* xmlNode */ void *) node andTranscript:(JVChatTranscript *) transcript;
-
 - (/* xmlNode */ void *) node;
 
 - (NSDate *) date;
-- (id) sender;
+
+- (NSString *) senderName;
+- (NSString *) senderIdentifier;
+- (NSString *) senderNickname;
+- (NSString *) senderHostmask;
+- (NSString *) senderClass;
+- (NSString *) senderBuddyIdentifier;
 - (BOOL) senderIsLocalUser;
 
 - (NSTextStorage *) body;
@@ -42,13 +53,17 @@
 - (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier;
 @end
 
-@interface JVMutableChatMessage : JVChatMessage
-+ (id) messageWithText:(id) body sender:(id) sender andTranscript:(JVChatTranscript *) transcript;
-- (id) initWithText:(id) body sender:(id) sender andTranscript:(JVChatTranscript *) transcript;
-
-- (void) setNode:(/* xmlNode */ void *) node;
+@interface JVMutableChatMessage : JVChatMessage {
+	@protected
+	id _sender;
+	/* xmlDoc */ void *_doc;
+}
++ (id) messageWithText:(id) body sender:(id) sender;
+- (id) initWithText:(id) body sender:(id) sender;
 
 - (void) setDate:(NSDate *) date;
+
+- (id) sender;
 - (void) setSender:(id) sender;
 
 - (void) setBody:(id) message;
@@ -59,6 +74,5 @@
 - (void) setHighlighted:(BOOL) highlighted;
 - (void) setIgnoreStatus:(JVIgnoreMatchResult) ignoreStatus;
 
-- (void) setTranscript:(JVChatTranscript *) transcript;
 - (void) setMessageIdentifier:(NSString *) identifier;
 @end

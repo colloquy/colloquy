@@ -2,4 +2,6 @@
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 #import <AGRegex/AGRegex.h>
+
+#define WebKitVersion146 0
 #endif

@@ -118,7 +118,7 @@
 	_changed = NO;
 	if( [self format] == JVTranscriptTextCriterionFormat ) {
 		NSString *value = nil;
-		if( [self kind] == JVTranscriptSenderNameCriterionKind ) value = [[message sender] description];
+		if( [self kind] == JVTranscriptSenderNameCriterionKind ) value = [message senderName];
 		else if( [self kind] == JVTranscriptMessageBodyCriterionKind ) value = [message bodyAsPlainText];
 
 		BOOL match = NO;

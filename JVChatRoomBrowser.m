@@ -3,7 +3,7 @@
 
 #import "JVChatRoomBrowser.h"
 #import "JVChatController.h"
-#import "JVChatConsole.h"
+#import "JVChatConsolePanel.h"
 #import "MVConnectionsController.h"
 #import "MVTableView.h"
 
@@ -562,14 +562,14 @@ refresh:
 }
 
 - (void) _startFetch {
-	JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
+	JVChatConsolePanel *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
 	[console pause];
 	[_connection fetchChatRoomList];
 }
 
 - (void) _stopFetch {
 	[_connection stopFetchingChatRoomList];
-	JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
+	JVChatConsolePanel *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
 	[console resume];
 }
 @end

@@ -9,10 +9,10 @@
 #import "JVChatWindowController.h"
 #import "JVTabbedChatWindowController.h"
 #import "JVNotificationController.h"
-#import "JVChatTranscript.h"
-#import "JVDirectChat.h"
-#import "JVChatRoom.h"
-#import "JVChatConsole.h"
+#import "JVChatTranscriptPanel.h"
+#import "JVDirectChatPanel.h"
+#import "JVChatRoomPanel.h"
+#import "JVChatConsolePanel.h"
 #import "KAIgnoreRule.h"
 
 #import <libxml/parser.h>
@@ -147,18 +147,18 @@ static JVChatController *sharedInstance = nil;
 
 #pragma mark -
 
-- (JVChatRoom *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists {
+- (JVChatRoomPanel *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists {
 	NSParameterAssert( room != nil );
 
 	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
 	id ret = nil;
 
 	while( ( ret = [enumerator nextObject] ) )
-		if( [ret isMemberOfClass:[JVChatRoom class]] && [[ret target] isEqual:room] )
+		if( [ret isMemberOfClass:[JVChatRoomPanel class]] && [[ret target] isEqual:room] )
 			break;
 
 	if( ! ret && ! exists ) {
-		if( ( ret = [[[JVChatRoom alloc] initWithTarget:room] autorelease] ) ) {
+		if( ( ret = [[[JVChatRoomPanel alloc] initWithTarget:room] autorelease] ) ) {
 			[_chatControllers addObject:ret];
 			[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
 		}
@@ -167,22 +167,22 @@ static JVChatController *sharedInstance = nil;
 	return [[ret retain] autorelease];
 }
 
-- (JVDirectChat *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists {
+- (JVDirectChatPanel *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists {
 	return [self chatViewControllerForUser:user ifExists:exists userInitiated:YES];
 }
 
-- (JVDirectChat *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
+- (JVDirectChatPanel *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
 	NSParameterAssert( user != nil );
 
 	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
 	id ret = nil;
 
 	while( ( ret = [enumerator nextObject] ) )
-		if( [ret isMemberOfClass:[JVDirectChat class]] && [[ret target] isEqual:user] )
+		if( [ret isMemberOfClass:[JVDirectChatPanel class]] && [[ret target] isEqual:user] )
 			break;
 
 	if( ! ret && ! exists ) {
-		if( ( ret = [[[JVDirectChat alloc] initWithTarget:user] autorelease] ) ) {
+		if( ( ret = [[[JVDirectChatPanel alloc] initWithTarget:user] autorelease] ) ) {
 			[_chatControllers addObject:ret];
 			[self _addViewControllerToPreferedWindowController:ret andFocus:initiated];
 		}
@@ -191,9 +191,9 @@ static JVChatController *sharedInstance = nil;
 	return [[ret retain] autorelease];
 }
 
-- (JVChatTranscript *) chatViewControllerForTranscript:(NSString *) filename {
+- (JVChatTranscriptPanel *) chatViewControllerForTranscript:(NSString *) filename {
 	id ret = nil;
-	if( ( ret = [[[JVChatTranscript alloc] initWithTranscript:filename] autorelease] ) ) {
+	if( ( ret = [[[JVChatTranscriptPanel alloc] initWithTranscript:filename] autorelease] ) ) {
 		[_chatControllers addObject:ret];
 		[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
 	}
@@ -202,18 +202,18 @@ static JVChatController *sharedInstance = nil;
 
 #pragma mark -
 
-- (JVChatConsole *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
+- (JVChatConsolePanel *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
 	NSParameterAssert( connection != nil );
 
 	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
 	id <JVChatViewController> ret = nil;
 
 	while( ( ret = [enumerator nextObject] ) )
-		if( [ret isMemberOfClass:[JVChatConsole class]] && [ret connection] == connection )
+		if( [ret isMemberOfClass:[JVChatConsolePanel class]] && [ret connection] == connection )
 			break;
 
 	if( ! ret && ! exists ) {
-		if( ( ret = [[[JVChatConsole alloc] initWithConnection:connection] autorelease] ) ) {
+		if( ( ret = [[[JVChatConsolePanel alloc] initWithConnection:connection] autorelease] ) ) {
 			[_chatControllers addObject:ret];
 			[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
 		}
@@ -278,7 +278,7 @@ static JVChatController *sharedInstance = nil;
 
 @implementation JVChatController (JVChatControllerPrivate)
 - (void) _joinedRoom:(NSNotification *) notification {
-	JVChatRoom *room = [self chatViewControllerForRoom:[notification object] ifExists:NO];
+	JVChatRoomPanel *room = [self chatViewControllerForRoom:[notification object] ifExists:NO];
 	[room joined];
 }
 
@@ -345,8 +345,8 @@ static JVChatController *sharedInstance = nil;
 	}
 
 	if( ! hideFromUser && ( [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored ) ) {
-		JVDirectChat *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
-		[controller addMessageToDisplay:message fromUser:user asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] asNotice:[[[notification userInfo] objectForKey:@"auto"] boolValue]];
+		JVDirectChatPanel *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
+		[controller addMessageToDisplay:message fromUser:user asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"]];
 	}
 }
 
@@ -380,19 +380,19 @@ static JVChatController *sharedInstance = nil;
 		if( ! windowController ) windowController = [_chatWindows lastObject];
 		break;
 	case 2:
-		modeClass = [JVChatRoom class];
+		modeClass = [JVChatRoomPanel class];
 		goto groupByClass;
 	case 3:
-		modeClass = [JVDirectChat class];
+		modeClass = [JVDirectChatPanel class];
 		goto groupByClass;
 	case 4:
-		modeClass = [JVChatTranscript class];
+		modeClass = [JVChatTranscriptPanel class];
 		goto groupByClass;
 	case 5:
-		modeClass = [JVChatConsole class];
+		modeClass = [JVChatConsolePanel class];
 		goto groupByClass;
 	case 6:
-		modeClass = [JVDirectChat class];
+		modeClass = [JVDirectChatPanel class];
 		kindOfClass = YES;
 		goto groupByClass;
 	groupByClass:
@@ -465,7 +465,7 @@ static JVChatController *sharedInstance = nil;
 
 #pragma mark -
 
-@implementation JVChatTranscript (JVChatTranscriptObjectSpecifier)
+@implementation JVChatTranscriptPanel (JVChatTranscriptObjectSpecifier)
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatController class]];
 	NSScriptObjectSpecifier *container = [[JVChatController defaultManager] objectSpecifier];
@@ -475,7 +475,7 @@ static JVChatController *sharedInstance = nil;
 
 #pragma mark -
 
-@implementation JVChatConsole (JVChatConsoleObjectSpecifier)
+@implementation JVChatConsolePanel (JVChatConsolePanelObjectSpecifier)
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatController class]];
 	NSScriptObjectSpecifier *container = [[JVChatController defaultManager] objectSpecifier];
@@ -652,19 +652,19 @@ static JVChatController *sharedInstance = nil;
 #pragma mark -
 
 - (NSArray *) chatRooms {
-	return [self chatViewsWithClass:[JVChatRoom class]];
+	return [self chatViewsWithClass:[JVChatRoomPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatRoomsAtIndex:(unsigned) index {
-	return [self valueInChatViewsAtIndex:index withClass:[JVChatRoom class]];
+	return [self valueInChatViewsAtIndex:index withClass:[JVChatRoomPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatRoomsWithUniqueID:(id) identifier {
-	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatRoom class]];
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatRoomPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatRoomsWithName:(NSString *) name {
-	return [self valueInChatViewsWithName:name andClass:[JVChatRoom class]];
+	return [self valueInChatViewsWithName:name andClass:[JVChatRoomPanel class]];
 }
 
 - (void) addInChatRooms:(id <JVChatViewController>) view {
@@ -680,7 +680,7 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) removeFromChatRoomsAtIndex:(unsigned) index {
-	[self removeFromChatViewsAtIndex:index withClass:[JVChatRoom class]];
+	[self removeFromChatViewsAtIndex:index withClass:[JVChatRoomPanel class]];
 }
 
 - (void) replaceInChatRooms:(id <JVChatViewController>) view atIndex:(unsigned) index {
@@ -690,19 +690,19 @@ static JVChatController *sharedInstance = nil;
 #pragma mark -
 
 - (NSArray *) directChats {
-	return [self chatViewsWithClass:[JVDirectChat class]];
+	return [self chatViewsWithClass:[JVDirectChatPanel class]];
 }
 
 - (id <JVChatViewController>) valueInDirectChatsAtIndex:(unsigned) index {
-	return [self valueInChatViewsAtIndex:index withClass:[JVDirectChat class]];
+	return [self valueInChatViewsAtIndex:index withClass:[JVDirectChatPanel class]];
 }
 
 - (id <JVChatViewController>) valueInDirectChatsWithUniqueID:(id) identifier {
-	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVDirectChat class]];
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVDirectChatPanel class]];
 }
 
 - (id <JVChatViewController>) valueInDirectChatsWithName:(NSString *) name {
-	return [self valueInChatViewsWithName:name andClass:[JVDirectChat class]];
+	return [self valueInChatViewsWithName:name andClass:[JVDirectChatPanel class]];
 }
 
 - (void) addInDirectChats:(id <JVChatViewController>) view {
@@ -718,7 +718,7 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) removeFromDirectChatsAtIndex:(unsigned) index {
-	[self removeFromChatViewsAtIndex:index withClass:[JVDirectChat class]];
+	[self removeFromChatViewsAtIndex:index withClass:[JVDirectChatPanel class]];
 }
 
 - (void) replaceInDirectChats:(id <JVChatViewController>) view atIndex:(unsigned) index {
@@ -728,19 +728,19 @@ static JVChatController *sharedInstance = nil;
 #pragma mark -
 
 - (NSArray *) chatTranscripts {
-	return [self chatViewsWithClass:[JVChatTranscript class]];
+	return [self chatViewsWithClass:[JVChatTranscriptPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatTranscriptsAtIndex:(unsigned) index {
-	return [self valueInChatViewsAtIndex:index withClass:[JVChatTranscript class]];
+	return [self valueInChatViewsAtIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatTranscriptsWithUniqueID:(id) identifier {
-	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatTranscript class]];
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatTranscriptPanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatTranscriptsWithName:(NSString *) name {
-	return [self valueInChatViewsWithName:name andClass:[JVChatTranscript class]];
+	return [self valueInChatViewsWithName:name andClass:[JVChatTranscriptPanel class]];
 }
 
 - (void) addInChatTranscripts:(id <JVChatViewController>) view {
@@ -756,7 +756,7 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) removeFromChatTranscriptsAtIndex:(unsigned) index {
-	[self removeFromChatViewsAtIndex:index withClass:[JVChatTranscript class]];
+	[self removeFromChatViewsAtIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
 - (void) replaceInChatTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
@@ -766,19 +766,19 @@ static JVChatController *sharedInstance = nil;
 #pragma mark -
 
 - (NSArray *) chatConsoles {
-	return [self chatViewsWithClass:[JVChatConsole class]];
+	return [self chatViewsWithClass:[JVChatConsolePanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatConsolesAtIndex:(unsigned) index {
-	return [self valueInChatViewsAtIndex:index withClass:[JVChatConsole class]];
+	return [self valueInChatViewsAtIndex:index withClass:[JVChatConsolePanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatConsolesWithUniqueID:(id) identifier {
-	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatConsole class]];
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVChatConsolePanel class]];
 }
 
 - (id <JVChatViewController>) valueInChatConsolesWithName:(NSString *) name {
-	return [self valueInChatViewsWithName:name andClass:[JVChatConsole class]];
+	return [self valueInChatViewsWithName:name andClass:[JVChatConsolePanel class]];
 }
 
 - (void) addInChatConsoles:(id <JVChatViewController>) view {
@@ -794,7 +794,7 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) removeFromChatConsolesAtIndex:(unsigned) index {
-	[self removeFromChatViewsAtIndex:index withClass:[JVChatConsole class]];
+	[self removeFromChatViewsAtIndex:index withClass:[JVChatConsolePanel class]];
 }
 
 - (void) replaceInChatConsoles:(id <JVChatViewController>) view atIndex:(unsigned) index {

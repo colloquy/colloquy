@@ -1,4 +1,7 @@
+#import "JVChatTranscript.h"
 
+@class JVChatMessage;
+@class JVEmoticonSet;
 
 extern NSString *JVStylesScannedNotification;
 extern NSString *JVDefaultStyleChangedNotification;
@@ -13,7 +16,6 @@ extern NSString *JVStyleVariantChangedNotification;
 	NSArray *_variants;
 	NSArray *_userVariants;
 	void *_XSLStyle; /* xsltStylesheet */
-	BOOL _releasing;
 }
 + (void) scanForStyles;
 + (NSSet *) styles;
@@ -32,6 +34,10 @@ extern NSString *JVStyleVariantChangedNotification;
 - (NSBundle *) bundle;
 - (NSString *) identifier;
 
+- (NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary *) parameters;
+- (NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters;
+- (NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters;
+- (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters;
 - (NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters;
 - (NSString *) transformXMLDocument:(/* xmlDoc */ void *) document withParameters:(NSDictionary *) parameters;
 
@@ -44,6 +50,9 @@ extern NSString *JVStyleVariantChangedNotification;
 - (BOOL) isUserVariantName:(NSString *) name;
 - (NSString *) defaultVariantName;
 - (void) setDefaultVariantName:(NSString *) name;
+
+- (JVEmoticonSet *) defaultEmoticonSet;
+- (void) setDefaultEmoticonSet:(JVEmoticonSet *) emoticons;
 
 - (NSArray *) styleSheetOptions;
 

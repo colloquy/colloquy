@@ -3,7 +3,7 @@
 
 #import "JVAppearancePreferences.h"
 #import "JVStyle.h"
-#import "JVChatTranscript.h"
+#import "JVEmoticonSet.h"
 #import "JVFontPreviewField.h"
 #import "JVColorWellCell.h"
 #import "JVDetailCell.h"
@@ -26,26 +26,17 @@
 
 #pragma mark -
 
-@interface JVChatTranscript (JVChatTranscriptPrivate)
-+ (void) _scanForEmoticons;
-@end
-
-#pragma mark -
-
 @implementation JVAppearancePreferences
 - (id) init {
 	if( ( self = [super init] ) ) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( colorWellDidChangeColor: ) name:JVColorWellCellColorDidChangeNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVStylesScannedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVChatEmoticonsScannedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVEmoticonSetsScannedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( reloadStyles: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
-
-		[JVChatTranscript _scanForEmoticons];
 
 		_style = nil;
 		_styleOptions = nil;
 		_userStyle = nil;
-		_emoticonBundles = [JVChatEmoticonBundles retain];
 	}
 	return self;
 }
@@ -53,10 +44,7 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_emoticonBundles release];
 	[_style release];
-
-	_emoticonBundles = nil;
 	_style = nil;
 
 	[super dealloc];
@@ -90,7 +78,7 @@
 }
 
 - (void) selectEmoticonsWithIdentifier:(NSString *) identifier {
-	[[NSUserDefaults standardUserDefaults] setObject:identifier forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_style identifier]]];
+	[_style setDefaultEmoticonSet:[JVEmoticonSet emoticonSetWithIdentifier:identifier]];
 	[self updateEmoticonsMenu];
 	[self updatePreview];
 }
@@ -207,10 +195,6 @@
 	[[preview window] enableFlushWindow];
 }
 
-- (IBAction) noGraphicEmoticons:(id) sender {
-	[self selectEmoticonsWithIdentifier:@""];
-}
-
 - (IBAction) changeDefaultEmoticons:(id) sender {
 	[self selectEmoticonsWithIdentifier:[sender representedObject]];
 }
@@ -287,23 +271,19 @@
 }
 
 - (void) updateEmoticonsMenu {
-	NSEnumerator *enumerator = [[[_emoticonBundles allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
+	NSEnumerator *enumerator = [[[[JVEmoticonSet emoticonSets] allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
 	NSMenu *menu = nil;
 	NSMenuItem *menuItem = nil;
-	NSString *style = [_style identifier];
-	NSString *defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
-	NSBundle *emoticon = [NSBundle bundleWithIdentifier:defaultEmoticons];
-
-	if( ! emoticon && [defaultEmoticons length] ) {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
-		defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
-	}
+	JVEmoticonSet *defaultEmoticon = [_style defaultEmoticonSet];
+	JVEmoticonSet *emoticon = nil;
 
 	menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Text Only", "text only emoticons menu item title" ) action:@selector( noGraphicEmoticons: ) keyEquivalent:@""] autorelease];
+	emoticon = [JVEmoticonSet textOnlyEmoticonSet];
+	menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""] autorelease];
 	[menuItem setTarget:self];
-	if( ! [defaultEmoticons length] ) [menuItem setState:NSOnState];
+	[menuItem setRepresentedObject:[emoticon identifier]];
+	if( [defaultEmoticon isEqual:emoticon] ) [menuItem setState:NSOnState];
 	[menu addItem:menuItem];
 
 	[menu addItem:[NSMenuItem separatorItem]];
@@ -312,9 +292,8 @@
 		if( ! [[emoticon displayName] length] ) continue;
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:[emoticon bundleIdentifier]];
-		if( [defaultEmoticons isEqualToString:[emoticon bundleIdentifier]] )
-			[menuItem setState:NSOnState];
+		[menuItem setRepresentedObject:[emoticon identifier]];
+		if( [defaultEmoticon isEqual:emoticon] ) [menuItem setState:NSOnState];
 		[menu addItem:menuItem];
 	}
 
@@ -322,17 +301,11 @@
 }
 
 - (void) updatePreview {
-	NSBundle *emoticon = nil;
-	NSString *emoticonStyle = @"";
-	NSString *emoticonSetting = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_style identifier]]];
-	if( [emoticonSetting length] ) {
-		emoticon = [NSBundle bundleWithIdentifier:emoticonSetting];
-		emoticonStyle = ( emoticon ? [[NSURL fileURLWithPath:[emoticon pathForResource:@"emoticons" ofType:@"css"]] absoluteString] : @"" );
-	}
+	JVEmoticonSet *emoticon = [_style defaultEmoticonSet];
 
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	NSString *html = [_style transformXML:[NSString stringWithContentsOfFile:[_style previewTranscriptFilePath]] withParameters:nil];
-	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, [[_style mainStyleSheetLocation] absoluteString], [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString], [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
+	html = [NSString stringWithFormat:shell, @"Preview", [[emoticon styleSheetLocation] absoluteString], [[_style mainStyleSheetLocation] absoluteString], [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString], [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
 
 	[WebCoreCache empty];
 

@@ -1,4 +1,4 @@
-#import "JVChatTranscript.h"
+#import "JVChatTranscriptPanel.h"
 #import "KAIgnoreRule.h"
 
 @class MVTextView;
@@ -6,7 +6,7 @@
 @class JVMutableChatMessage;
 @class JVBuddy;
 
-@interface JVDirectChat : JVChatTranscript {
+@interface JVDirectChatPanel : JVChatTranscriptPanel {
 	@protected
 	IBOutlet MVTextView *send;
 
@@ -18,12 +18,9 @@
 	NSMutableDictionary *_waitingAlertNames;
 	NSMutableDictionary *_settings;
 	NSMenu *_spillEncodingMenu;
-	NSFileHandle *_logFile;
-	NSMutableArray *_messageQueue;
 	JVMutableChatMessage *_currentMessage;
 
 	BOOL _firstMessage;
-	BOOL _requiresFullMessage;
 	BOOL _isActive;
 	unsigned int _newMessageCount;
 	unsigned int _newHighlightMessageCount;
@@ -32,7 +29,6 @@
 	int _historyIndex;	
 	float _sendHeight;
 	BOOL _scrollerIsAtBottom;
-	long _previousLogOffset;
 	BOOL _forceSplitViewPosition;
 
 	BOOL _loadingPersonImage;
@@ -52,9 +48,7 @@
 - (IBAction) changeEncoding:(id) sender;	
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
-- (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier;
-- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier asNotice:(BOOL) notice;
 - (void) processIncomingMessage:(JVMutableChatMessage *) message;
 - (void) echoSentMessageToDisplay:(JVMutableChatMessage *) message;
 - (JVMutableChatMessage *) currentMessage;

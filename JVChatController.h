@@ -4,10 +4,10 @@
 @class MVChatRoom;
 @class MVChatUser;
 @class JVChatWindowController;
-@class JVChatRoom;
-@class JVDirectChat;
-@class JVChatTranscript;
-@class JVChatConsole;
+@class JVChatRoomPanel;
+@class JVDirectChatPanel;
+@class JVChatTranscriptPanel;
+@class JVChatConsolePanel;
 @class KAInternalIgnoreRule;
 
 @protocol JVChatViewController;
@@ -29,11 +29,11 @@
 - (NSSet *) chatViewControllersOfClass:(Class) class;
 - (NSSet *) chatViewControllersKindOfClass:(Class) class;
 
-- (JVChatRoom *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists;
-- (JVDirectChat *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
-- (JVDirectChat *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;
-- (JVChatTranscript *) chatViewControllerForTranscript:(NSString *) filename;
-- (JVChatConsole *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
+- (JVChatRoomPanel *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists;
+- (JVDirectChatPanel *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
+- (JVDirectChatPanel *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;
+- (JVChatTranscriptPanel *) chatViewControllerForTranscript:(NSString *) filename;
+- (JVChatConsolePanel *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 
 - (void) disposeViewController:(id <JVChatViewController>) controller;
 - (void) detachViewController:(id <JVChatViewController>) controller;

@@ -1,6 +1,6 @@
 #import "JVBehaviorPreferences.h"
 #import "JVChatController.h"
-#import "JVChatRoom.h"
+#import "JVChatRoomPanel.h"
 
 @implementation JVBehaviorPreferences
 - (NSString *) preferencesNibName {
@@ -25,22 +25,22 @@
 	[[newTranscripts menu] setAutoenablesItems:NO];
 	[[newConsoles menu] setAutoenablesItems:NO];
 
-	int value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatRoomPreferredOpenMode"] & ~32;
+	int value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatRoomPanelPreferredOpenMode"] & ~32;
 	int index = [newRooms indexOfItemWithTag:value];
 	if( index >= 0 ) [newRooms selectItemAtIndex:index];
 	[self changePreferredWindow:newRooms];
 
-	value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVDirectChatPreferredOpenMode"] & ~32;
+	value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVDirectChatPanelPreferredOpenMode"] & ~32;
 	index = [newChats indexOfItemWithTag:value];
 	if( index >= 0 ) [newChats selectItemAtIndex:index];
 	[self changePreferredWindow:newChats];
 
-	value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptPreferredOpenMode"] & ~32;
+	value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptPanelPreferredOpenMode"] & ~32;
 	index = [newTranscripts indexOfItemWithTag:value];
 	if( index >= 0 ) [newTranscripts selectItemAtIndex:index];
 	[self changePreferredWindow:newTranscripts];
 
-	value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatConsolePreferredOpenMode"] & ~32;
+	value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatConsolePanelPreferredOpenMode"] & ~32;
 	index = [newConsoles indexOfItemWithTag:value];
 	if( index >= 0 ) [newConsoles selectItemAtIndex:index];
 	[self changePreferredWindow:newConsoles];
@@ -77,14 +77,13 @@
 	}
 }
 
-
 #pragma mark -
 
 - (IBAction) changeSortByStatus:(id) sender {
 	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVSortRoomMembersByStatus"];
 	
-	NSEnumerator *enumerator = [[[JVChatController defaultManager] chatViewControllersOfClass:[JVChatRoom class]] objectEnumerator];
-	JVChatRoom *room = nil;
+	NSEnumerator *enumerator = [[[JVChatController defaultManager] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
+	JVChatRoomPanel *room = nil;
 	while( ( room = [enumerator nextObject] ) )
 		[room resortMembers];
 }
@@ -96,16 +95,16 @@
 
 - (IBAction) changePreferredWindow:(id) sender {
 	NSString *key = nil;
-	
-	if( sender == newRooms ) key = @"JVChatRoomPreferredOpenMode";
-	else if( sender == newChats ) key = @"JVDirectChatPreferredOpenMode";
-	else if( sender == newTranscripts ) key = @"JVChatTranscriptPreferredOpenMode";
-	else if( sender == newConsoles ) key = @"JVChatConsolePreferredOpenMode";
+
+	if( sender == newRooms ) key = @"JVChatRoomPanelPreferredOpenMode";
+	else if( sender == newChats ) key = @"JVDirectChatPanelPreferredOpenMode";
+	else if( sender == newTranscripts ) key = @"JVChatTranscriptPanelPreferredOpenMode";
+	else if( sender == newConsoles ) key = @"JVChatConsolePanelPreferredOpenMode";
 	else return;
-	
+
 	int new = [[sender selectedItem] tag];
 	BOOL groupByServer = (BOOL) [[NSUserDefaults standardUserDefaults] integerForKey:key] & 32;
-	
+
 	if( [[sender selectedItem] tag] == 32 ) {
 		NSMenuItem *item = [sender selectedItem];
 		new = [[NSUserDefaults standardUserDefaults] integerForKey:key] & ~32;
@@ -122,9 +121,9 @@
 		[item setState:( groupByServer ? NSOnState : NSOffState )];
 		[item setEnabled:YES];
 	}
-	
+
 	if( groupByServer ) new |= 32;
-	
+
 	[[NSUserDefaults standardUserDefaults] setInteger:new forKey:key];
 }
 

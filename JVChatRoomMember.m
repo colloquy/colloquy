@@ -5,7 +5,7 @@
 #import <ChatCore/NSDataAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 
-#import "JVChatRoom.h"
+#import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "JVChatController.h"
 #import "MVBuddyListController.h"
@@ -31,7 +31,7 @@
 	return self;
 }
 
-- (id) initWithRoom:(JVChatRoom *) room andUser:(MVChatUser *) user {
+- (id) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user {
 	if( ( self = [self init] ) ) {
 		_parent = room;
 		_user = [user retain];
@@ -39,7 +39,7 @@
 	return self;
 }
 
-- (id) initLocalMemberWithRoom:(JVChatRoom *) room {
+- (id) initLocalMemberWithRoom:(JVChatRoomPanel *) room {
 	return ( self = [self initWithRoom:room andUser:[[room connection] localUser]] );
 }
 
@@ -101,8 +101,8 @@
 #pragma mark -
 #pragma mark Associations
 
-- (JVChatRoom *) room {
-	return (JVChatRoom *)[self parent];
+- (JVChatRoomPanel *) room {
+	return (JVChatRoomPanel *)[self parent];
 }
 
 - (MVChatConnection *) connection {
@@ -685,7 +685,7 @@
 
 @implementation JVChatRoomMember (JVChatRoomMemberScripting)
 - (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoom class]];
+	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoomPanel class]];
 	NSScriptObjectSpecifier *container = [[self room] objectSpecifier];
 	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]] autorelease];
 }

@@ -11,7 +11,7 @@
 
 #pragma mark -
 
-@implementation JVChatConsole (JVChatConsoleInspection)
+@implementation JVChatConsolePanel (JVChatConsolePanelInspection)
 - (id <JVInspector>) inspector {
 	return [[[JVConnectionInspector alloc] initWithConnection:[self connection]] autorelease];
 }

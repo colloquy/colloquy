@@ -375,7 +375,7 @@
 				<key>Optional</key>
 				<string>NO</string>
 				<key>Type</key>
-				<string>Colloquy.JVChatRoom</string>
+				<string>Colloquy.JVChatRoomPanel</string>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
@@ -391,7 +391,7 @@
 				<key>Optional</key>
 				<string>NO</string>
 				<key>Type</key>
-				<string>Colloquy.JVChatRoom</string>
+				<string>Colloquy.JVChatRoomPanel</string>
 			</dict>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
@@ -407,7 +407,7 @@
 				<key>Optional</key>
 				<string>NO</string>
 				<key>Type</key>
-				<string>Colloquy.JVChatRoom</string>
+				<string>Colloquy.JVChatRoomPanel</string>
 			</dict>
 			<key>Arguments</key>
 			<dict>
@@ -487,7 +487,7 @@
 					<key>Optional</key>
 					<string>NO</string>
 					<key>Type</key>
-					<string>Colloquy.JVChatRoom</string>
+					<string>Colloquy.JVChatRoomPanel</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
@@ -515,7 +515,7 @@
 					<key>Optional</key>
 					<string>NO</string>
 					<key>Type</key>
-					<string>Colloquy.JVChatRoom</string>
+					<string>Colloquy.JVChatRoomPanel</string>
 				</dict>
 				<key>reason</key>
 				<dict>
@@ -552,7 +552,7 @@
 					<key>Optional</key>
 					<string>NO</string>
 					<key>Type</key>
-					<string>Colloquy.JVChatRoom</string>
+					<string>Colloquy.JVChatRoomPanel</string>
 				</dict>
 				<key>by</key>
 				<dict>
@@ -616,7 +616,7 @@
 					<key>Optional</key>
 					<string>NO</string>
 					<key>Type</key>
-					<string>Colloquy.JVChatRoom</string>
+					<string>Colloquy.JVChatRoomPanel</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
@@ -655,7 +655,7 @@
 					<key>Optional</key>
 					<string>NO</string>
 					<key>Type</key>
-					<string>Colloquy.JVChatRoom</string>
+					<string>Colloquy.JVChatRoomPanel</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>

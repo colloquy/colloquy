@@ -1,0 +1,379 @@
+#import "JVChatEvent.h"
+#import "NSAttributedStringMoreAdditions.h"
+
+#import <ChatCore/NSAttributedStringAdditions.h>
+#import <ChatCore/NSStringAdditions.h>
+#import <ChatCore/NSDataAdditions.h>
+#import <libxml/xinclude.h>
+
+@implementation JVChatEvent
+- (id) init {
+	if( ( self = [super init] ) ) {
+		_loadedMessage = NO;
+		_loadedAttributes = NO;
+		_loadedSmall = NO;
+		_objectSpecifier = nil;
+		_transcript = nil;
+		_eventIdentifier = nil;
+		_message = nil;
+		_date = nil;
+		_name = nil;
+		_attributes = nil;
+	}
+
+	return self;
+}
+
+- (id) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
+	if( ( self = [self init] ) ) {
+		_node = node;
+		_transcript = transcript; // weak reference
+
+		if( ! _node || node -> type != XML_ELEMENT_NODE ) {
+			[self release];
+			return nil;
+		}
+
+		@synchronized( [self transcript] ) {
+			xmlChar *prop = xmlGetProp( (xmlNode *) _node, "id" );
+			_eventIdentifier = ( prop ? [[NSString allocWithZone:[self zone]] initWithUTF8String:prop] : nil );
+			xmlFree( prop );
+		}
+	}
+
+	return self;
+}
+
++ (id) eventWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
+	return [[[self alloc] initWithNode:node andTranscript:transcript] autorelease];
+}
+
+- (void) dealloc {
+	[_eventIdentifier release];
+	[_date release];
+	[_name release];
+	[_message release];
+	[_attributes release];
+
+	_eventIdentifier = nil;
+	_date = nil;
+	_name = nil;
+	_message = nil;
+	_attributes = nil;
+
+	_transcript = nil; // weak reference
+	_node = NULL;
+
+	[super dealloc];
+}
+
+#pragma mark -
+
+- (void) loadSmall {
+	if( _loadedSmall || ! _node ) return;
+
+	@synchronized( [self transcript] ) {
+		xmlChar *prop = xmlGetProp( (xmlNode *) _node, "name" );
+		_name = ( prop ? [[NSString allocWithZone:[self zone]] initWithUTF8String:prop] : nil );
+		xmlFree( prop );
+
+		prop = xmlGetProp( (xmlNode *) _node, "occurred" );
+		_date = ( prop ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:prop]] : nil );
+		xmlFree( prop );
+	}
+
+	_loadedSmall = YES;
+}
+
+- (void) loadMessage {
+	if( _loadedMessage || ! _node ) return;
+
+	@synchronized( [self transcript] ) {
+		xmlNode *subNode = ((xmlNode *) _node) -> children;
+
+		do {
+			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", subNode -> name, 6 ) ) {
+				_message = [[NSTextStorage allocWithZone:[self zone]] initWithXHTMLTree:subNode baseURL:nil defaultAttributes:nil];
+				break;
+			}
+		} while( ( subNode = subNode -> next ) );
+	}
+
+	_loadedMessage = YES;
+}
+
+- (void) loadAttributes {
+	if( _loadedAttributes || ! _node ) return;
+
+	@synchronized( [self transcript] ) {
+		xmlNode *subNode = ((xmlNode *) _node) -> children;
+		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+
+		do {
+			if( subNode -> type == XML_ELEMENT_NODE && strncmp( "message", subNode -> name, 6 ) ) { // everything but "message"
+				NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+				xmlAttrPtr prop = NULL;
+				for( prop = subNode -> properties; prop; prop = prop -> next ) {
+					xmlChar *value = xmlGetProp( subNode, prop -> name );
+					if( value ) {
+						[properties setObject:[NSString stringWithUTF8String:value] forKey:[NSString stringWithUTF8String:prop -> name]];
+						xmlFree( value );
+					}
+				}
+
+				xmlNode *cnode = subNode -> children;
+				unsigned count = 0;
+
+				do {
+					if( cnode && cnode -> type == XML_ELEMENT_NODE ) count++;
+				} while( cnode && ( cnode = cnode -> next ) );
+
+				id value = nil;
+				if( count > 0 ) {
+					value = [NSTextStorage attributedStringWithXHTMLTree:subNode baseURL:nil defaultAttributes:nil];
+				} else {
+					xmlChar *content = xmlNodeGetContent( subNode );
+					value = [NSString stringWithUTF8String:content];
+					xmlFree( content );
+				}
+
+				if( [properties count] ) {
+					[properties setObject:value forKey:@"value"];
+					[attributes setObject:properties forKey:[NSString stringWithUTF8String:subNode -> name]];
+				} else {
+					[attributes setObject:value forKey:[NSString stringWithUTF8String:subNode -> name]];
+				}
+			}
+		} while( ( subNode = subNode -> next ) );
+	}
+
+	_loadedAttributes = YES;
+}
+
+#pragma mark -
+
+- (void *) node {
+	return _node;
+}
+
+- (void) setNode:(xmlNode *) node {
+	_node = node;
+}
+
+#pragma mark -
+
+- (JVChatTranscript *) transcript {
+	return _transcript;
+}
+
+- (NSString *) eventIdentifier {
+	return _eventIdentifier;
+}
+
+#pragma mark -
+
+- (NSDate *) date {
+	[self loadSmall];
+	return _date;
+}
+
+#pragma mark -
+
+- (NSString *) name {
+	[self loadSmall];
+	return _name;
+}
+
+#pragma mark -
+
+- (NSTextStorage *) message {
+	[self loadMessage];
+	return _message;
+}
+
+- (NSString *) messageAsPlainText {
+	return [[self message] string];
+}
+
+- (NSString *) messageAsHTML {
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	return [[self message] HTMLFormatWithOptions:options];
+}
+
+#pragma mark -
+
+- (NSDictionary *) attributes {
+	[self loadAttributes];
+	return _attributes;
+}
+@end
+
+#pragma mark -
+
+@implementation JVMutableChatEvent
++ (id) chatEventWithName:(NSString *) name andMessage:(id) message {
+	return [[[self alloc] initWithName:name andMessage:message] autorelease];
+}
+
+#pragma mark -
+
+- (id) init {
+	if( ( self = [super init] ) ) _doc = NULL;
+	return self;
+}
+
+- (id) initWithName:(NSString *) name andMessage:(id) message {
+	if( ( self = [self init] ) ) {
+		_loadedMessage = YES;
+		_loadedAttributes = YES;
+		_loadedSmall = YES;
+		[self setDate:[NSDate date]];
+		[self setName:name];
+		[self setMessage:message];
+		[self setEventIdentifier:[NSString locallyUniqueString]];
+	}
+
+	return self;
+}
+
+- (void) dealloc {
+	if( _doc ) xmlFreeDoc( _doc );
+	_doc = NULL;
+
+	[super dealloc];
+}
+
+#pragma mark -
+
+- (void *) node {
+	if( ! _node ) {
+		if( _doc ) xmlFreeDoc( _doc );
+		_doc = xmlNewDoc( "1.0" );
+
+		xmlNodePtr root = xmlNewNode( NULL, "event" );
+		xmlSetProp( root, "id", [[self eventIdentifier] UTF8String] );
+		xmlSetProp( root, "name", [[self name] UTF8String] );
+		xmlSetProp( root, "occurred", [[[self date] description] UTF8String] );
+		xmlDocSetRootElement( _doc, root );
+
+		xmlDocPtr msgDoc = NULL;
+		xmlNodePtr child = NULL;
+		const char *msgStr = NULL;
+
+		if( [self message] ) {
+			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+			NSString *msgValue = [[self message] HTMLFormatWithOptions:options];
+			msgValue = [msgValue stringByStrippingIllegalXMLCharacters];
+
+			msgStr = [[NSString stringWithFormat:@"<message>%@</message>", msgValue] UTF8String];
+
+			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
+			xmlAddChild( root, child );
+			xmlFreeDoc( msgDoc );
+		}
+
+		NSEnumerator *kenumerator = [[self attributes] keyEnumerator];
+		NSEnumerator *enumerator = [[self attributes] objectEnumerator];
+		NSString *key = nil;
+		id value = nil;
+
+		while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
+			msgStr = NULL;
+
+			if( [value respondsToSelector:@selector( xmlDescriptionWithTagName: )] ) {
+				msgStr = [(NSString *)[value performSelector:@selector( xmlDescriptionWithTagName: ) withObject:key] UTF8String];
+			} else if( [value isKindOfClass:[NSAttributedString class]] ) {
+				NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+				value = [value HTMLFormatWithOptions:options];
+				value = [value stringByStrippingIllegalXMLCharacters];
+				if( [(NSString *)value length] )
+					msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+			} else if( [value isKindOfClass:[NSString class]] ) {
+				value = [value stringByEncodingXMLSpecialCharactersAsEntities];
+				value = [value stringByStrippingIllegalXMLCharacters];
+				if( [(NSString *)value length] )
+					msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+			} else if( [value isKindOfClass:[NSData class]] ) {
+				value = [value base64EncodingWithLineLength:0];
+				if( [(NSString *)value length] )
+					msgStr = [[NSString stringWithFormat:@"<%@ encoding=\"base64\">%@</%@>", key, value, key] UTF8String];
+			}
+
+			if( ! msgStr ) msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
+
+			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
+			xmlAddChild( root, child );
+			xmlFreeDoc( msgDoc );
+		}
+
+		_node = root;
+	}
+
+	return _node;
+}
+
+- (void) setNode:(xmlNode *) node {
+	if( _doc ) {
+		xmlFreeDoc( _doc );
+		_doc = NULL;
+	}
+
+	_node = node;
+}
+
+#pragma mark -
+
+- (void) setDate:(NSDate *) date {
+	[self setNode:NULL];
+	[_date autorelease];
+	_date = [date copyWithZone:[self zone]];
+}
+
+- (void) setName:(NSString *) name {
+	[self setNode:NULL];
+	[_name autorelease];
+	_name = [name copyWithZone:[self zone]];
+}
+
+#pragma mark -
+
+- (void) setMessage:(id) message {
+	[self setNode:NULL];
+	if( ! _message ) {
+		if( [message isKindOfClass:[NSTextStorage class]] ) _message = [message retain];
+		else if( [message isKindOfClass:[NSAttributedString class]] ) _message = [[NSTextStorage alloc] initWithAttributedString:message];
+		else if( [message isKindOfClass:[NSString class]] ) _message = [[NSTextStorage alloc] initWithXHTMLFragment:(NSString *)message baseURL:nil defaultAttributes:nil];
+	} else if( _message && [message isKindOfClass:[NSAttributedString class]] ) {
+		[_message setAttributedString:message];
+	} else if( _message && [message isKindOfClass:[NSString class]] ) {
+		id string = [NSAttributedString attributedStringWithXHTMLFragment:(NSString *)message baseURL:nil defaultAttributes:nil];
+		[_message setAttributedString:string];
+	}
+}
+
+- (void) setMessageAsPlainText:(NSString *) message {
+	[self setMessage:[[[NSAttributedString alloc] initWithString:message] autorelease]];
+}
+
+- (void) setMessageAsHTML:(NSString *) message {
+	[self setMessage:message];
+}
+
+#pragma mark -
+
+- (void) setAttributes:(NSDictionary *) attributes {
+	[self setNode:NULL];
+	[_attributes autorelease];
+	_attributes = [attributes copyWithZone:[self zone]];
+}
+
+#pragma mark -
+
+- (void) setEventIdentifier:(NSString *) identifier {
+	[self setNode:NULL];
+	[_eventIdentifier autorelease];
+	_eventIdentifier = [identifier copyWithZone:[self zone]];
+}
+@end
