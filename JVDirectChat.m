@@ -1479,6 +1479,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSCharacterSet *legalAddressSet = nil;
 	NSCharacterSet *legalDomainSet = nil;
 	NSCharacterSet *ircChannels = [NSCharacterSet characterSetWithCharactersInString:@"#&"];
+	NSCharacterSet *trailingPuncuation = [NSCharacterSet characterSetWithCharactersInString:@".!?,"];
 	NSCharacterSet *seperaters = [NSCharacterSet characterSetWithCharactersInString:@"<> \t\n\r&"];
 	NSString *link = nil, *urlHandle = nil;
 	NSMutableString *mutableLink = nil;
@@ -1525,8 +1526,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		if( range.location != NSNotFound ) [urlScanner setScanLocation:range.location];
 		[urlScanner scanUpToCharactersFromSet:legalSchemeSet intoString:NULL];
 		if( [urlScanner scanUpToString:@"://" intoString:&urlHandle] && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
-			if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' || [link characterAtIndex:([link length] - 1)] == '!' || [link characterAtIndex:([link length] - 1)] == ',' )
-				link = [link substringToIndex:( [link length] - 1 )];
+			link = [link stringByTrimmingCharactersInSet:trailingPuncuation];
 			if( [link length] >= 4 )
 				link = [urlHandle stringByAppendingString:link];
 			if( [link length] >= 7 ) {
@@ -1544,21 +1544,18 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		urlScanner = [NSScanner scannerWithString:part];
 		[urlScanner scanUpToString:@"www." intoString:NULL];
 		// Skip them if they come immediately after an alphanumeric character
-		if( [urlScanner scanLocation] == 0 || ! [[NSCharacterSet alphanumericCharacterSet] characterIsMember:[part characterAtIndex:[urlScanner scanLocation] - 1]]) {
-			NSString *domain, *path;
+		if( [urlScanner scanLocation] == 0 || ! [legalSchemeSet characterIsMember:[part characterAtIndex:[urlScanner scanLocation] - 1]] ) {
+			NSString *domain = nil, *path = nil;
 			if( [urlScanner scanCharactersFromSet:legalDomainSet intoString:&domain] ) {
 				NSRange dotRange = [domain rangeOfString:@".."];
 				if( dotRange.location != NSNotFound )
-					domain = [domain substringWithRange:NSMakeRange(0, dotRange.location)];
+					domain = [domain substringWithRange:NSMakeRange( 0, dotRange.location )];
 				if( [[domain componentsSeparatedByString:@"."] count] >= 3 ) {
 					if( [urlScanner scanString:@"/" intoString:nil] ) {
 						[urlScanner scanCharactersFromSet:legalAddressSet intoString:&path];
 						link = [NSString stringWithFormat:@"%@/%@", domain, path];
-					} else {
-						link = domain;
-					}
-					if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' || [link characterAtIndex:([link length] - 1)] == '!' || [link characterAtIndex:([link length] - 1)] == ',' )
-						 link = [link substringToIndex:( [link length] - 1 )];
+					} else link = domain;
+					link = [link stringByTrimmingCharactersInSet:trailingPuncuation];
 					mutableLink = [[link mutableCopy] autorelease];
 					[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
 					[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
@@ -1579,8 +1576,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		if( range.location != NSNotFound ) [urlScanner setScanLocation:range.location];
 		[urlScanner scanUpToCharactersFromSet:legalSchemeSet intoString:NULL];
 		if( [urlScanner scanUpToString:@"@" intoString:&urlHandle] && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
-			if( [link characterAtIndex:([link length] - 1)] == '.' )
-				link = [link substringToIndex:( [link length] - 1 )];
+			link = [link stringByTrimmingCharactersInSet:trailingPuncuation];
 			NSRange hasPeriod = [link rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
 			if( [urlHandle length] && [link length] && hasPeriod.location < ([link length] - 1) && hasPeriod.location != NSNotFound ) {
 				link = [urlHandle stringByAppendingString:link];
@@ -1598,8 +1594,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		urlScanner = [NSScanner scannerWithString:part];
 		if( ( ( [urlScanner scanUpToCharactersFromSet:ircChannels intoString:NULL] && [urlScanner scanLocation] < [part length] && ! [[NSCharacterSet alphanumericCharacterSet] characterIsMember:[part characterAtIndex:( [urlScanner scanLocation] - 1 )]] ) || [part rangeOfCharacterFromSet:ircChannels].location == 0 ) && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&urlHandle] ) {
 			if( [urlHandle length] >= 2 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet letterCharacterSet] options:NSLiteralSearch range:NSMakeRange( 1, [urlHandle length] - 1 )].location != NSNotFound && ! ( [urlHandle length] == 7 && [NSColor colorWithHTMLAttributeValue:urlHandle] ) && ! ( [urlHandle characterAtIndex:0] == '&' && [urlHandle characterAtIndex:([urlHandle length] - 1)] == ';' ) ) {
-				if( [urlHandle characterAtIndex:([urlHandle length] - 1)] == '.' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '?' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '!' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == ',' )
-					urlHandle = [urlHandle substringToIndex:( [urlHandle length] - 1 )];
+				urlHandle = [urlHandle stringByTrimmingCharactersInSet:trailingPuncuation];
 				link = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];
 				mutableLink = [NSMutableString stringWithFormat:@"<a href=\"%@\">%@</a>", link, urlHandle];
 				[mutableLink replaceOccurrencesOfString:@"&" withString:@"~amp;amp;" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
