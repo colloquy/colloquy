@@ -736,7 +736,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[names addObject:[[self connection] nickname]];
 		enumerator = [names objectEnumerator];
 		while( ( item = [enumerator nextObject] ) ) {
-			if( [[messageString rangeOfString:item options:NSCaseInsensitiveSearch].length ) {
+			if( [messageString rangeOfString:item options:NSCaseInsensitiveSearch].length ) {
 				NSMutableDictionary *context = [NSMutableDictionary dictionary];
 				[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"bubbleTitle"];
 				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"bubbleText"];
