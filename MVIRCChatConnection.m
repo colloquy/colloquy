@@ -1721,6 +1721,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	server_disconnect( _chatConnection );
 
+	[super _didDisconnect];
+
+	[self _setIrssiConnection:NULL];
+
 	[MVIRCChatConnectionThreadLock unlock];
 }
 @end
