@@ -57,6 +57,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		_topicAttributed = nil;
 		_members = [[NSMutableDictionary dictionary] retain];
 		_sortedMembers = [[NSMutableArray array] retain];
+		_nextMessageAlertMembers = [[NSMutableSet set] retain];
 		_kickedFromRoom = NO;
 		_keepAfterPart = NO;
 		_initialBanlistReceived = NO;
@@ -86,6 +87,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	[_members release];
 	[_sortedMembers release];
+	[_nextMessageAlertMembers release];
 	[_key release];
 	[_topic release];
 	[_topicAuth release];
@@ -93,6 +95,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	_members = nil;
 	_sortedMembers = nil;
+	_nextMessageAlertMembers = nil;
 	_key = nil;
 	_topic = nil;
 	_topicAuth = nil;
@@ -313,6 +316,21 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[[JVNotificationController defaultManager] performNotification:@"JVChatRoomActivity" withContextInfo:context];
 	}
 
+	if( [_nextMessageAlertMembers containsObject:member] ) {
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Replied", "member replied bubble title" ), [member title]] forKey:@"title"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has possibly replied to your message.", "new room messages bubble text" ), [member title]] forKey:@"description"];
+		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
+		[context setObject:_target forKey:@"performedOn"];
+		[context setObject:user forKey:@"performedBy"];
+		[context setObject:_target forKey:@"performedInRoom"];
+		[context setObject:self forKey:@"target"];
+		[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
+		[[JVNotificationController defaultManager] performNotification:@"JVChatReplyAfterAddressing" withContextInfo:context];
+
+		[_nextMessageAlertMembers removeObject:member];
+	}
+
 	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	AGRegex *regex = nil;
 	NSString *name = nil;
@@ -400,6 +418,13 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	if( [[message string] length] )
 		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
+
+	AGRegex *regex = [AGRegex regexWithPattern:@"^(.*?):" options:AGRegexCaseInsensitive];
+	AGRegexMatch *match = [regex findInString:[message string]];
+	if( [match count] ) {
+		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[match groupAtIndex:1]];
+		if( mbr ) [_nextMessageAlertMembers addObject:mbr];
+	}
 }
 
 #pragma mark -

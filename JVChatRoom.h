@@ -17,6 +17,7 @@ extern NSString *MVChatRoomModeChangedNotification;
 
 	NSMutableDictionary *_members;
 	NSMutableArray *_sortedMembers;
+	NSMutableSet *_nextMessageAlertMembers;
 	NSAttributedString *_topicAttributed;
 	NSData *_topic;
 	NSString *_topicAuth;
