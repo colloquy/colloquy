@@ -19,7 +19,13 @@
 
 #pragma mark -
 
-@implementation NSString (NSAppleEventDescriptor)
+@interface NSString (NSStringFourCharCode)
+- (unsigned long) fourCharCode;
+@end
+
+#pragma mark -
+
+@implementation NSString (NSStringFourCharCode)
 - (unsigned long) fourCharCode {
 	unsigned long ret = 0, length = [self length];
 
