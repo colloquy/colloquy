@@ -23,7 +23,26 @@ static const int mIRCColors[][3] = {
 	{ 0xd6, 0xd6, 0xd6 }   /* 15) light grey */
 };
 
-static int colorRGBToIRC( unsigned int red, unsigned int green, unsigned int blue ) {
+static const int CTCPColors[][3] = {
+	{ 0x00, 0x00, 0x00 },  /* 0) black */
+	{ 0x00, 0x00, 0x7f },  /* 1) blue */
+	{ 0x00, 0x7f, 0x00 },  /* 2) green */
+	{ 0x00, 0x7f, 0x7f },  /* 3) cyan */
+	{ 0x7f, 0x00, 0x00 },  /* 4) red */
+	{ 0x7f, 0x00, 0x7f },  /* 5) purple */
+	{ 0x7f, 0x7f, 0x00 },  /* 6) brown */
+	{ 0xc0, 0xc0, 0xc0 },  /* 7) light gray */
+	{ 0x7f, 0x7f, 0x7f },  /* 8) gray */
+	{ 0x00, 0x00, 0xff },  /* 9) bright blue */
+	{ 0x00, 0xff, 0x00 },  /* A) bright green */
+	{ 0x00, 0xff, 0xff },  /* B) bright cyan */
+	{ 0xff, 0x00, 0x00 },  /* C) bright red */
+	{ 0xff, 0x00, 0xff },  /* D) bright magenta */
+	{ 0xff, 0xff, 0x00 },  /* E) yellow */
+	{ 0xff, 0xff, 0xff }   /* F) white */
+};
+
+static int colorRGBToMIRCColor( unsigned int red, unsigned int green, unsigned int blue ) {
 	int distance = 1000, color = 1, i = 0, o = 0;
 	for( i = 0; i < 16; i++ ) {
 		o = abs( red - mIRCColors[i][0] ) +
@@ -227,7 +246,7 @@ static WebView *fragmentWebView = nil;
 	NSScanner *scanner = [NSScanner scannerWithString:message];
 	[scanner setCharactersToBeSkipped:nil]; // don't skip leading whitespace!
 
-	char boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0, reverseStack = 0, urlStack = 0, blinkStack = 0;
+	char boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0, inverseStack = 0;
 
 	while( ! [scanner isAtEnd] ) {
 		NSString *attribs = nil;
@@ -238,7 +257,7 @@ static WebView *fragmentWebView = nil;
 		for( i = 0; i < [attribs length]; i++, location++ ) {
 			switch( [attribs characterAtIndex:i] ) {
 			case '\017': // reset all
-				boldStack = italicStack = underlineStack = strikeStack = reverseStack = urlStack = blinkStack = 0;
+				boldStack = italicStack = underlineStack = strikeStack = inverseStack = 0;
 				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:( NSBoldFontMask | NSItalicFontMask )];
 				if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 				[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
@@ -304,7 +323,7 @@ static WebView *fragmentWebView = nil;
 
 					[scanner setScanLocation:( location + 2 )];
 
-					switch( [attribs characterAtIndex:( location + 1 )] ) {
+					switch( [message characterAtIndex:( location + 1 )] ) {
 					case 'B': // bold
 						if( [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) break;
 						if( [scanner scanString:@"-" intoString:&sign] ) {
@@ -374,16 +393,65 @@ static WebView *fragmentWebView = nil;
 						}
 						break;
 					case 'V': // inverse
-					case 'K': // blink
-					case 'L': // url
+						if( [[options objectForKey:@"IgnoreFontColors"] boolValue] ) break;
+						if( [scanner scanString:@"-" intoString:&sign] ) {
+							if( inverseStack > 1 ) inverseStack--;
+							off = YES;
+						} else { // on is the default
+							[scanner scanString:@"+" intoString:&sign];
+							inverseStack++;
+						}
+
+						if( inverseStack == 1 && ! off ) {
+							NSColor *foregroundColor = [[[attributes objectForKey:NSForegroundColorAttributeName] retain] autorelease];
+							NSColor *backgroundColor = [[[attributes objectForKey:NSBackgroundColorAttributeName] retain] autorelease];
+							if( ! foregroundColor ) foregroundColor = [NSColor colorWithCalibratedRed:0. green:0. blue:0. alpha:1.];
+							if( ! backgroundColor ) backgroundColor = [NSColor colorWithCalibratedRed:1. green:1. blue:1. alpha:1.];
+							[attributes setObject:backgroundColor forKey:NSForegroundColorAttributeName];
+							[attributes setObject:foregroundColor forKey:NSBackgroundColorAttributeName];
+						} else if( ! inverseStack ) {
+							NSColor *foregroundColor = [[[attributes objectForKey:NSForegroundColorAttributeName] retain] autorelease];
+							NSColor *backgroundColor = [[[attributes objectForKey:NSBackgroundColorAttributeName] retain] autorelease];
+							if( backgroundColor ) [attributes setObject:backgroundColor forKey:NSForegroundColorAttributeName];
+							if( foregroundColor ) [attributes setObject:foregroundColor forKey:NSBackgroundColorAttributeName];
+						}
 					case 'C': // color
+						if( [[options objectForKey:@"IgnoreFontColors"] boolValue] ) break;
+						// scan for foreground color
+						if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
+							NSString *hexColor = nil;
+							if( [message length] > [scanner scanLocation] + 6 ) {
+								hexColor = [message substringWithRange:NSMakeRange( [scanner scanLocation], 6 )];
+								NSColor *foregroundColor = [NSColor colorWithHTMLAttributeValue:hexColor];
+								if( foregroundColor ) [attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
+								[scanner setScanLocation:( [scanner scanLocation] + 7 )];
+							}
+						} else if( isxdigit( [message characterAtIndex:[scanner scanLocation]] ) ) { // indexed color
+							unsigned int index = [message characterAtIndex:[scanner scanLocation]];
+							NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
+							if( foregroundColor ) [attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
+						} else [scanner scanString:@"-" intoString:NULL]; // skip the foreground color
+						// scan for background color
+						if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
+							NSString *hexColor = nil;
+							if( [message length] > [scanner scanLocation] + 6 ) {
+								hexColor = [message substringWithRange:NSMakeRange( [scanner scanLocation], 6 )];
+								NSColor *backgroundColor = [NSColor colorWithHTMLAttributeValue:hexColor];
+								if( backgroundColor ) [attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
+								[scanner setScanLocation:( [scanner scanLocation] + 7 )];
+							}
+						} else if( isxdigit( [message characterAtIndex:[scanner scanLocation]] ) ) { // indexed color
+							unsigned int index = [message characterAtIndex:[scanner scanLocation]];
+							NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
+							if( backgroundColor ) [attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
+						} else [scanner scanString:@"-" intoString:NULL]; // skip the background color
 					case 'F': // font size
 					case 'E': // encoding
 					case 'P': // spacing
 						// not supported yet
 						break;
 					case 'N': // normal (reset)
-						boldStack = italicStack = underlineStack = strikeStack = reverseStack = urlStack = blinkStack = 0;
+						boldStack = italicStack = underlineStack = strikeStack = inverseStack = 0;
 						NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:( NSBoldFontMask | NSItalicFontMask )];
 						if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 							[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
@@ -440,14 +508,14 @@ static WebView *fragmentWebView = nil;
 			float red = 0., green = 0., blue = 0.;
 			[foregroundColor getRed:&red green:&green blue:&blue alpha:NULL];
 
-			int ircColor = colorRGBToIRC( red * 255, green * 255, blue * 255 );
+			int ircColor = colorRGBToMIRCColor( red * 255, green * 255, blue * 255 );
 
 			sprintf( buffer, "\003%02d", ircColor );
 			[ret appendBytes:buffer length:strlen( buffer )];
 
 			if( backgroundColor ) {
 				[backgroundColor getRed:&red green:&green blue:&blue alpha:NULL];
-				ircColor = colorRGBToIRC( red * 255, green * 255, blue * 255 );
+				ircColor = colorRGBToMIRCColor( red * 255, green * 255, blue * 255 );
 
 				sprintf( buffer, ",%02d", ircColor );
 				[ret appendBytes:buffer length:strlen( buffer )];
