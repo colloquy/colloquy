@@ -5,9 +5,9 @@
 	NSSize lastPostedSize;
 	NSSize _desiredSizeCached;
 	BOOL _usesSystemCompleteOnTab;
-	BOOL _sendNextRet;
-	BOOL _sendNextEnt;
 }
+- (BOOL) checkKeyEvent:(NSEvent *) event;
+
 - (void) setBaseFont:(NSFont *) font;
 
 - (void) reset:(id) sender;

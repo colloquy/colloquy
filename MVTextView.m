@@ -1,31 +1,82 @@
 #import <Cocoa/Cocoa.h>
 #import "MVTextView.h"
 
+@interface MVTextView (MVTextViewPrivate)
+- (BOOL) checkKeyEvent:(NSEvent *) event;
+- (BOOL) triggerKeyEvent:(NSEvent *) event;
+@end 
+
+#pragma mark -
+
 @implementation MVTextView
-- (void) insertText:(id) insertString {
-	if( [insertString characterAtIndex:0] == NSNewlineCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] )
-		if( [[self delegate] textView:self returnKeyPressed:[[NSApplication sharedApplication] currentEvent]] ) return;
-	[super insertText:insertString];
-}
+- (void) interpretKeyEvents:(NSArray *) eventArray {
+	NSMutableArray *newArray = [NSMutableArray array];
+	NSEnumerator *e = [eventArray objectEnumerator];
+	NSEvent *anEvent = nil;
 
-- (void) doCommandBySelector:(SEL) selector {
-	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
-	unichar key = [[event charactersIgnoringModifiers] characterAtIndex:0];
-
-	if( ( key == NSCarriageReturnCharacter || key == NSNewlineCharacter ) && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
-		if( [[self delegate] textView:self returnKeyPressed:event] ) return;
-	} else if( key == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
-		if( [[self delegate] textView:self enterKeyPressed:event] ) return;
-	} else if( key == NSTabCharacter ) {
-		[self autocomplete];
+	if( ! [self isEditable] ) {
+		[super interpretKeyEvents:eventArray];
 		return;
-	} else if( key == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
-		if( [[self delegate] textView:self escapeKeyPressed:event] ) return;
-	} else if( key >= 0xF700 && key <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
-		if( [[self delegate] textView:self functionKeyPressed:event] ) return;
 	}
 
-	[super doCommandBySelector:selector];
+	while( anEvent = [e nextObject] ) {
+		if( [self checkKeyEvent:anEvent] ) {
+			if( [newArray count] > 0 ) {
+				[super interpretKeyEvents:newArray];
+				[newArray removeAllObjects];
+			}
+			if( ! [self triggerKeyEvent:anEvent] )
+				[newArray addObject:anEvent];
+		} else {
+			[newArray addObject:anEvent];
+		}
+	}
+
+	if( [newArray count] > 0 )
+		[super interpretKeyEvents:newArray];
+
+	if( ! [[self textStorage] length] )
+		[self reset:nil];
+}
+
+- (BOOL) checkKeyEvent:(NSEvent *) event {
+	unichar chr = 0;
+	if( [[event charactersIgnoringModifiers] length] )
+		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
+
+	if( chr == NSCarriageReturnCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
+		return YES;
+	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
+		return YES;
+	} else if( chr == NSTabCharacter ) {
+		return YES;
+	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
+		return YES;
+	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
+		return YES;
+	}
+	
+	return NO;
+}
+
+- (BOOL) triggerKeyEvent:(NSEvent *) event {
+	unichar chr = 0;
+	if( [[event charactersIgnoringModifiers] length] )
+		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
+
+	if( chr == NSCarriageReturnCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
+		if( [[self delegate] textView:self returnKeyPressed:event] ) return YES;
+	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
+		if( [[self delegate] textView:self enterKeyPressed:event] ) return YES;
+	} else if( chr == NSTabCharacter ) {
+		return [self autocomplete];
+	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
+		if( [[self delegate] textView:self escapeKeyPressed:event] ) return YES;
+	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
+		if( [[self delegate] textView:self functionKeyPressed:event] ) return YES;
+	}
+
+	return NO;
 }
 
 #pragma mark -
@@ -232,6 +283,7 @@
 	}
 
 	return YES;
+
 }
 
 #pragma mark -
@@ -244,4 +296,5 @@
 	}
 	return [super validateMenuItem:menuItem];
 }
+
 @end
