@@ -275,10 +275,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[_views insertObject:controller atIndex:index];
 	[controller setWindowController:self];
 
-	if( [self isMemberOfClass:[JVChatWindowController class]] && [_views count] >= 2 ) [viewsDrawer open];
-
 	[self _refreshList];
 	[self _refreshWindow];
+
+	if( [self isMemberOfClass:[JVChatWindowController class]] && [_views count] >= 2 ) {
+		[chatViewsOutlineView scrollRowToVisible:[chatViewsOutlineView rowForItem:controller]];
+		[viewsDrawer open];
+	}
 }
 
 #pragma mark -
