@@ -74,8 +74,6 @@
 	<string>Colloquy</string>
 	<key>CFBundleIdentifier</key>
 	<string>cc.javelin.colloquy</string>
-	<key>NSAppleScriptEnabled</key>
-	<true />
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -98,12 +96,14 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2B91</string>
+	<string>2B93</string>
+	<key>MVChatCoreCTCPVersionReplyInfo</key>
+	<string>http://www.javelin.cc?colloquy</string>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
 	<key>NSMainNibFile</key>
 	<string>Colloquy</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>MVChatCoreCTCPVersionReplyInfo</key>
-	<string>http://www.javelin.cc?colloquy</string>
 </dict>
 </plist>
