@@ -706,7 +706,7 @@ enum firetalk_error irc_signon(client_t c, const char * const nickname) {
 	if (irc_send_printf(c,1,"NICK %s",nickname) != FE_SUCCESS)
 		return FE_PACKET;
 
-	if (irc_send_printf(c,1,"USER %s 0 * :%s",nickname,nickname) != FE_SUCCESS)
+	if (irc_send_printf(c,1,"USER %s * * :%s",getlogin(),getlogin()) != FE_SUCCESS)
 		return FE_PACKET;
 
 	c->nickname = safe_strdup(nickname);
