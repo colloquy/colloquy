@@ -2,11 +2,12 @@
 //  Colloquy
 //  Created by Karl Adam on Thu Apr 15 2004.
 
+#import <ChatCore/MVChatConnection.h>
+
 #import "KAConnectionHandler.h"
 #import "MVApplicationController.h"
 #import "JVChatController.h"
 #import "JVNotificationController.h"
-#import "MVChatConnection.h"
 
 static KAConnectionHandler *sharedHandler = nil;
 
@@ -20,38 +21,38 @@ static KAConnectionHandler *sharedHandler = nil;
 # pragma mark -
 
 - (BOOL) connection:(MVChatConnection *) connection willPostMessage:(NSData *) message from:(NSString *) user toRoom:(BOOL) flag {
-	BOOL retVal = YES;
+	BOOL hideFromUser = YES;
 
-	if( [[JVChatController defaultManager] chatViewControllerForUser:user withConnection:connection ifExists:YES] ) {
-		retVal = NO;
-	} else {
-		NSString *curMsg = [NSString stringWithCString:[message bytes] length:[message length]];
-		NSAttributedString *curAMsg = [[[NSAttributedString alloc] initWithHTML:message documentAttributes:NULL] autorelease]; 
-		if( [user isEqualToString:@"NickServ"] ) {
-			if( [curMsg rangeOfString:@"password accepted" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
-				NSMutableDictionary *context = [NSMutableDictionary dictionary];
-				[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
-				[context setObject:[NSString stringWithFormat:@"%@ on %@", curMsg, [connection server]] forKey:@"description"];
-				[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
-				[context setObject:[connection nickname] forKey:@"performedOn"];
-				[context setObject:user forKey:@"performedBy"];
-				[[JVNotificationController defaultManager] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
-			}
-		}
+	if( [[JVChatController defaultManager] chatViewControllerForUser:user withConnection:connection ifExists:YES] )
+		hideFromUser = NO;
 
-		if( [user isEqualToString:@"MemoServ"] ) {
-			if ( [curMsg rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
-				NSMutableDictionary *context = [NSMutableDictionary dictionary];
-				[context setObject:NSLocalizedString( @"You Have New Memos", "new memos bubble title" ) forKey:@"title"];
-				[context setObject:curAMsg forKey:@"description"];
-				[context setObject:[NSImage imageNamed:@"Stickies"] forKey:@"image"];
-				[context setObject:[connection nickname] forKey:@"performedOn"];
-				[context setObject:user forKey:@"performedBy"];
-				[[JVNotificationController defaultManager] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
-			}	
+	NSString *curMsg = [[[NSString alloc] initWithData:message encoding:NSUTF8StringEncoding] autorelease];
+	if( ! curMsg ) curMsg = [NSString stringWithCString:[message bytes] length:[message length]];
+
+	if( [user isEqualToString:@"NickServ"] ) {
+		if( [curMsg rangeOfString:@"password accepted" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
+			[context setObject:[NSString stringWithFormat:@"%@ on %@", curMsg, [connection server]] forKey:@"description"];
+			[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+			[context setObject:[connection nickname] forKey:@"performedOn"];
+			[context setObject:user forKey:@"performedBy"];
+			[[JVNotificationController defaultManager] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
 		}
 	}
 
-	return retVal;
+	if( [user isEqualToString:@"MemoServ"] ) {
+		if( [curMsg rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [curMsg rangeOfString:@"no" options:NSCaseInsensitiveSearch].location == NSNotFound ) {
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"You Have New Memos", "new memos bubble title" ) forKey:@"title"];
+			[context setObject:curMsg forKey:@"description"];
+			[context setObject:[NSImage imageNamed:@"Stickies"] forKey:@"image"];
+			[context setObject:[connection nickname] forKey:@"performedOn"];
+			[context setObject:user forKey:@"performedBy"];
+			[[JVNotificationController defaultManager] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
+		}	
+	}
+
+	return hideFromUser;
 }
 @end

@@ -40,7 +40,7 @@
 		<key>identifier</key>
 		<string>JVNewMemosFromServer</string>
 		<key>title</key>
-		<string>New Memos On Server</string>
+		<string>New Memo Available</string>
 	</dict>
 	<dict>
 		<key>seperator</key>
