@@ -9,6 +9,7 @@
 #import "MVConnectionsController.h"
 #import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
+#import "JVNotificationController.h"
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
 #import "MVTextView.h"
@@ -332,7 +333,6 @@
 		if( ! previous ) {
 			NSString *name = [listItem title];
 			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room.", "a user has join a chat room status message" ), name] withName:@"memberJoined" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"nickname", name, @"who", nil]];
-//			MVChatPlaySoundForAction( @"MVChatMemberJoinedRoomAction" );
 
 			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -342,6 +342,8 @@
 			[invocation setArgument:&self atIndex:3];
 
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:nil];
 		}
 	}
 }
@@ -377,7 +379,8 @@
 
 		NSString *name = [mbr title];
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room.", "a user has left the chat room status message" ), name] withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"who", member, @"nickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
-//		MVChatPlaySoundForAction( @"MVChatMemberLeftRoomAction" );
+
+		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:nil];
 	}
 }
 
@@ -441,7 +444,6 @@
 			}
 
 			[self addEventMessageToDisplay:message withName:name andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"byNickname", member, @"who", ( mbr ? [mbr title] : member ), @"whoNickname", nil]];
-//			MVChatPlaySoundForAction( @"MVChatMemberPromotedAction" );
 
 			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -450,8 +452,10 @@
 			[invocation setArgument:&mbr atIndex:2];
 			[invocation setArgument:&self atIndex:3];
 			[invocation setArgument:&byMbr atIndex:4];
-			
+
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberPromoted" withContextInfo:nil];
 		}
 	}
 
@@ -486,7 +490,6 @@
 			}
 
 			[self addEventMessageToDisplay:message withName:name andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"byNickname", ( mbr ? [mbr title] : member ), @"who", member, @"whoNickname", nil]];
-//			MVChatPlaySoundForAction( @"MVChatMemberDemotedAction" );
 
 			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -497,6 +500,8 @@
 			[invocation setArgument:&byMbr atIndex:4];
 		
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDemoted" withContextInfo:nil];
 		}
 	}
 
@@ -531,7 +536,6 @@
 			}
 
 			[self addEventMessageToDisplay:message withName:name andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"byNickname", ( mbr ? [mbr title] : member ), @"who", member, @"whoNickname", nil]];
-//			MVChatPlaySoundForAction( @"MVChatMemberVoicedAction" );
 
 			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -542,6 +546,8 @@
 			[invocation setArgument:&byMbr atIndex:4];
 		
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberVoiced" withContextInfo:nil];
 		}
 	}
 
@@ -576,7 +582,6 @@
 			}
 
 			[self addEventMessageToDisplay:message withName:name andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"byNickname", ( mbr ? [mbr title] : member ), @"who", member, @"whoNickname", nil]];
-//			MVChatPlaySoundForAction( @"MVChatMemberDevoicedAction" );
 
 			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -587,6 +592,8 @@
 			[invocation setArgument:&byMbr atIndex:4];
 
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDevoiced" withContextInfo:nil];
 		}
 	}
 
@@ -634,7 +641,7 @@
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from the chat room by %@.", "user has been removed by force from a chat room status message" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by )] withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"byNickname", ( mbr ? [mbr title] : member ), @"who", member, @"whoNickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 	}
 
-//	MVChatPlaySoundForAction( @"MVChatMemberKickedAction" );
+	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:nil];
 }
 
 - (void) kickedFromChatBy:(NSString *) by forReason:(NSData *) reason {
@@ -672,7 +679,7 @@
 	_kickedFromRoom = YES;
 	_cantSendMessages = YES;
 
-//	MVChatPlaySoundForAction( @"MVChatMemberKickedAction" );
+	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:nil];
 
 	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You were kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You were kicked from the chat room by %@. You are no longer part of this chat and can't send anymore messages.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, ( byMbr ? [byMbr title] : by ) ) withName:nil];
 }
