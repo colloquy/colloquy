@@ -132,8 +132,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	if( ! [_sortedMembers count] )
 		return NSLocalizedString( @"joining...", "joining status info line in drawer" );
 	if( [[self connection] isConnected] )
-		//return [NSString stringWithFormat:NSLocalizedString( @"%d members", "member count status info line in drawer" ), [_sortedMembers count]];
-		return [NSString stringWithFormat:@"(%@)", [_connection server]];
+		return [NSString stringWithFormat:@"%@", [_connection server]];
 	return NSLocalizedString( @"disconnected", "disconnected status info line in drawer" );
 }
 
@@ -147,12 +146,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData {
-	return [NSString stringWithFormat:NSLocalizedString( @"%d members", "member count status info line in drawer" ), [_sortedMembers count]];
-}
-
-- (NSString *)description {
-	NSLog( @"description called" );
-	return [NSString stringWithFormat:NSLocalizedString( @"%d members", "member count status info line in drawer" ), [_sortedMembers count]];
+	return [NSString stringWithFormat:NSLocalizedString( @"%@ \n %@ \n %d members", "room status info tooltip in drawer" ), [self title], [_connection server], [_sortedMembers count]];
 }
 
 #pragma mark -
@@ -1046,7 +1040,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
+	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
 	return list;
 }
 

@@ -68,6 +68,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	prototypeCell = [[JVDetailCell new] autorelease];
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
 	[column setDataCell:prototypeCell];
+	
 
 	[chatViewsOutlineView setDoubleAction:@selector( _doubleClickedListItem: )];
 	[chatViewsOutlineView setAutoresizesOutlineColumn:YES];
@@ -490,12 +491,16 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[(JVDetailCell *) cell setMainText:[item title]];
 	[(JVDetailCell *) cell setInformationText:[item information]];
 	[(JVDetailCell *) cell setStatusImage:[item statusImage]];
-
+		
 	if( [item respondsToSelector:@selector( isEnabled )] ) {
 		[cell setEnabled:[item isEnabled]];
 	} else [cell setEnabled:YES];
 
 	[chatViewsOutlineView sizeLastColumnToFit];
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+	[outlineView addToolTipRect:[outlineView frameOfCellAtColumn:0 row:[outlineView rowForItem:item]] owner:item userData:nil];
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
