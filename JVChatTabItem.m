@@ -25,12 +25,15 @@
 }
 
 - (NSImage *) icon {
-	NSImage *ret = [[[_controller icon] copy] autorelease];
+	NSImage *active = [_controller icon];
+
+	if( [_controller respondsToSelector:@selector( statusImage )] && [(id)_controller statusImage] )
+		active = [(id)_controller statusImage];
+
+	NSImage *ret = [[active copy] autorelease];
 	[ret setScalesWhenResized:YES];
 	[ret setSize:NSMakeSize( 16., 16. )];
 
-	if( [_controller respondsToSelector:@selector( statusImage )] && [(id)_controller statusImage] )
-		return [(id)_controller statusImage];
 	return ret;
 }
 

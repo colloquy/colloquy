@@ -19,6 +19,7 @@
 #import <AGRegex/AGRegex.h>
 
 #import "JVChatController.h"
+#import "JVTabbedChatWindowController.h"
 #import "JVStyle.h"
 #import "JVChatRoom.h"
 #import "JVNotificationController.h"
@@ -432,6 +433,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSImage *) icon {
+	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
+		return [NSImage imageNamed:@"privateChatTab"];
 	return [NSImage imageNamed:@"messageUser"];
 }
 
@@ -441,6 +444,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		_newHighlightMessageCount = 0;
 		return nil;
 	}
+
+	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
+		return ( [_waitingAlerts count] ? [NSImage imageNamed:@"AlertCautionIcon"] : ( _newMessageCount ? ( _newHighlightMessageCount ? [NSImage imageNamed:@"privateChatTabNewMessage"] : [NSImage imageNamed:@"privateChatTabNewMessage"] ) : nil ) );
 
 	return ( [_waitingAlerts count] ? [NSImage imageNamed:@"viewAlert"] : ( _newMessageCount ? ( _newHighlightMessageCount ? [NSImage imageNamed:@"newHighlightMessage"] : [NSImage imageNamed:@"newMessage"] ) : nil ) );
 }

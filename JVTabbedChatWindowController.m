@@ -99,12 +99,12 @@
 
 	[icon setImage:nil];
 
+	[super insertChatViewController:controller atIndex:index];
+
 	JVChatTabItem *newTab = [[[JVChatTabItem alloc] initWithChatViewController:controller] autorelease];
 
 	[_tabItems insertObject:newTab atIndex:index];
 	[tabView insertTabViewItem:newTab atIndex:index];
-
-	[super insertChatViewController:controller atIndex:index];
 }
 
 #pragma mark -

@@ -10,6 +10,7 @@
 #import <AGRegex/AGRegex.h>
 
 #import "JVChatController.h"
+#import "JVTabbedChatWindowController.h"
 #import "MVApplicationController.h"
 #import "MVConnectionsController.h"
 #import "JVChatRoom.h"
@@ -160,7 +161,23 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 #pragma mark Drawer/Outline View Support
 
 - (NSImage *) icon {
+	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
+		return [NSImage imageNamed:@"roomTab"];
 	return [NSImage imageNamed:@"room"];
+}
+
+- (NSImage *) statusImage {
+	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] ) {
+		if( _isActive && [[[self view] window] isKeyWindow] ) {
+			_newMessageCount = 0;
+			_newHighlightMessageCount = 0;
+			return nil;
+		}
+
+		return ( [_waitingAlerts count] ? [NSImage imageNamed:@"AlertCautionIcon"] : ( _newMessageCount ? ( _newHighlightMessageCount ? [NSImage imageNamed:@"roomTabNewHighlightMessage"] : [NSImage imageNamed:@"roomTabNewMessage"] ) : nil ) );
+	}
+
+	return [super statusImage];
 }
 
 - (BOOL) isEnabled {

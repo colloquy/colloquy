@@ -682,6 +682,11 @@
 				1C23927206795020000E89A7,
 				1C2391BA0677E8F1000E89A7,
 				1C2391BB0677E8F1000E89A7,
+				1C7EF53D06B341890037F173,
+				1C7EF53E06B341890037F173,
+				1C7EF53F06B341890037F173,
+				1C7EF5C006B346E50037F173,
+				1C7EF5C106B346E50037F173,
 			);
 			isa = PBXGroup;
 			name = Tabs;
@@ -1336,6 +1341,76 @@
 			path = NSNotificationAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1C7EF53D06B341890037F173 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = roomTab.png;
+			path = Resources/roomTab.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7EF53E06B341890037F173 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = roomTabNewHighlightMessage.png;
+			path = Resources/roomTabNewHighlightMessage.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7EF53F06B341890037F173 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = roomTabNewMessage.png;
+			path = Resources/roomTabNewMessage.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7EF54006B341890037F173 = {
+			fileRef = 1C7EF53D06B341890037F173;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7EF54106B341890037F173 = {
+			fileRef = 1C7EF53E06B341890037F173;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7EF54206B341890037F173 = {
+			fileRef = 1C7EF53F06B341890037F173;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7EF5C006B346E50037F173 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = privateChatTab.png;
+			path = Resources/privateChatTab.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7EF5C106B346E50037F173 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = privateChatTabNewMessage.png;
+			path = Resources/privateChatTabNewMessage.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7EF5C206B346E50037F173 = {
+			fileRef = 1C7EF5C006B346E50037F173;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7EF5C306B346E50037F173 = {
+			fileRef = 1C7EF5C106B346E50037F173;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C889DEA0677AC7F00D98F3C = {
 			fileEncoding = 4;
@@ -2262,6 +2337,11 @@
 				1CECE26006A37BEC00350564,
 				1C96E93306AAD81B0013B0A9,
 				1C96E95906AAEC280013B0A9,
+				1C7EF54006B341890037F173,
+				1C7EF54106B341890037F173,
+				1C7EF54206B341890037F173,
+				1C7EF5C206B346E50037F173,
+				1C7EF5C306B346E50037F173,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
