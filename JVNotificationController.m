@@ -7,6 +7,10 @@
 #import "KABubbleWindowController.h"
 #import "KABubbleWindowView.h"
 
+#ifndef GROWL_IS_READY
+#error STOP: You need Growl installed to build Colloquy. Growl can be found at: http://www.growl.info
+#endif
+
 static JVNotificationController *sharedInstance = nil;
 
 @interface JVNotificationController (JVNotificationControllerPrivate)
