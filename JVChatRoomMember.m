@@ -120,6 +120,10 @@
 	return [[_memberName retain] autorelease];
 }
 
+- (JVBuddy *) buddy {
+	return [[_buddy retain] autorelease];
+}
+
 - (void) setVoice:(BOOL) voice {
 	_voice = voice;
 }

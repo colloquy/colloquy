@@ -39,4 +39,6 @@
 
 - (BOOL) doesMemberHaveOperatorStatus:(NSString *) member;
 - (BOOL) doesMemberHaveVoiceStatus:(NSString *) member;
+
+- (NSString *) preferredNameForMember:(NSString *) member;
 @end

@@ -44,6 +44,7 @@
 
 - (void) setTarget:(NSString *) target;
 - (NSString *) target;
+- (JVBuddy *) buddy;
 
 - (void) showAlert:(NSPanel *) alert withName:(NSString *) name;
 

@@ -349,6 +349,10 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_target onServer:[[self connection] server]] retain];
 }
 
+- (JVBuddy *) buddy {
+	return [[_buddy retain] autorelease];
+}
+
 #pragma mark -
 
 - (void) showAlert:(NSPanel *) alert withName:(NSString *) name {
@@ -613,7 +617,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	xmlDocSetRootElement( doc, root );
 
 	if( [user isEqualToString:_target] && _buddy ) {
-		NSSring *theirName = user;
+		NSString *theirName = user;
 		if( [_buddy preferredNameWillReturn] != JVBuddyActiveNickname ) theirName = [_buddy preferredName];
 		child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
 	} else if( [user isEqualToString:[[self connection] nickname]] ) {

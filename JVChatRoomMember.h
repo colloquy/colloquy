@@ -19,6 +19,7 @@
 
 - (void) setMemberName:(NSString *) name;
 - (NSString *) memberName;
+- (JVBuddy *) buddy;
 
 - (void) setVoice:(BOOL) voice;
 - (void) setOperator:(BOOL) operator;	
