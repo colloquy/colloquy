@@ -539,6 +539,35 @@
 	</dict>
 	<key>Commands</key>
 	<dict>
+		<key>DisplayChatRoomBrowser</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>connection</key>
+				<dict>
+					<key>Description</key>
+					<string>The connection to select. No selection by default.</string>
+					<key>Name</key>
+					<string>for</string>
+				</dict>
+				<key>expanded</key>
+				<dict>
+					<key>Description</key>
+					<string>Should the browser be expanded? Default is no.</string>
+					<key>Name</key>
+					<string>expanded</string>
+				</dict>
+				<key>filter</key>
+				<dict>
+					<key>Description</key>
+					<string>A search filter to use. No filter by default.</string>
+					<key>Name</key>
+					<string>with filter</string>
+				</dict>
+			</dict>
+			<key>Name</key>
+			<string>display chat room browser</string>
+		</dict>
 		<key>DisplayDirectChatPanel</key>
 		<dict>
 			<key>Arguments</key>

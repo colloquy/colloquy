@@ -357,6 +357,18 @@
 					<cocoa key="connection"/>
 				</parameter>
 			</command>
+			<command name="display chat room browser" code="coRCdRbX">
+				<cocoa class="JVOpenRoomBrowserScriptCommand"/>
+				<parameter name="for" code="dRb1" description="The connection to select. No selection by default." type="connection" optional="optional">
+					<cocoa key="connection"/>
+				</parameter>
+				<parameter name="with filter" code="dRb2" description="A search filter to use. No filter by default." type="string" optional="optional">
+					<cocoa key="filter"/>
+				</parameter>
+				<parameter name="expanded" code="dRb3" description="Should the browser be expanded? Default is no." type="boolean" optional="optional">
+					<cocoa key="expanded"/>
+				</parameter>
+			</command>
 		</commands>
 	</suite>
 	<suite name="Chat Core Suite" code="ccoR" description="Classes and commands for Chat Core scripting. Chat Core is the lowest level of Colloquy.">

@@ -573,3 +573,33 @@ refresh:
 	[console resume];
 }
 @end
+
+#pragma mark -
+
+@interface JVOpenRoomBrowserScriptCommand : NSScriptCommand {}
+@end
+
+#pragma mark -
+
+@implementation JVOpenRoomBrowserScriptCommand
+- (id) performDefaultImplementation {
+	NSDictionary *args = [self evaluatedArguments];
+	id connection = [args objectForKey:@"connection"];
+	id filter = [args objectForKey:@"filter"];
+	id expanded = [args objectForKey:@"expanded"];
+	BOOL realExpanded = NO;
+
+	if( [expanded isKindOfClass:[NSNumber class]] )
+		realExpanded = [expanded boolValue];
+
+	JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:connection];
+	[browser showWindow:nil];
+	if( filter ) [browser setFilter:[filter description]];
+	if( realExpanded ) {
+		[browser _startFetch];
+		[browser showRoomBrowser:nil];
+	}
+
+	return nil;
+}
+@end
