@@ -485,6 +485,10 @@
 			children = (
 				1C5A230806FA4F2700A51F10,
 				1C5A230706FA4F2700A51F10,
+				1CF6B4970710894D008ABEFA,
+				1CF6B4960710894D008ABEFA,
+				1CF6B4990710894D008ABEFA,
+				1CF6B4980710894D008ABEFA,
 			);
 			isa = PBXGroup;
 			name = "SILC Support";
@@ -3430,6 +3434,38 @@
 					Public,
 				);
 			};
+		};
+		1CF6B4960710894D008ABEFA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVSILCChatRoom.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF6B4970710894D008ABEFA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVSILCChatRoom.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF6B4980710894D008ABEFA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVSILCChatUser.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF6B4990710894D008ABEFA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVSILCChatUser.m;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 //1C0
 //1C1
