@@ -53,7 +53,7 @@
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message asAction:(BOOL) action {
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
 
 	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message];

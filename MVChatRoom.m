@@ -182,6 +182,10 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 #pragma mark -
 
 - (void) sendMessage:(NSAttributedString *) message asAction:(BOOL) action {
+	[self sendMessage:message withEncoding:[self encoding] asAction:action];
+}
+
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 // subclass this method, don't call super
 	[self doesNotRecognizeSelector:_cmd];
 }

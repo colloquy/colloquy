@@ -59,10 +59,10 @@
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message asAction:(BOOL) action {
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
 
-	const char *msg = [[[self connection] class] _flattenedIRCStringForMessage:message withEncoding:[self encoding]];
+	const char *msg = [[[self connection] class] _flattenedIRCStringForMessage:message withEncoding:encoding];
 
 	[MVIRCChatConnectionThreadLock lock];
 
