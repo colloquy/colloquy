@@ -1375,14 +1375,14 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 		// catch well-formed urls like "http://www.apple.com" or "irc://irc.javelin.cc"
 		legalSchemeSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"];
-		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;#.\\/?!&%$-+=_~@*'"];
+		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;#.,\\/?!&%$-+=_~@*'"];
 		urlScanner = [NSScanner scannerWithString:part];
 		srange = [part rangeOfString:@"://"];
 		range = [part rangeOfCharacterFromSet:[legalSchemeSet invertedSet] options:( NSLiteralSearch | NSBackwardsSearch ) range:NSMakeRange( 0, ( srange.location != NSNotFound ? srange.location : 0 ) )];
 		if( range.location != NSNotFound ) [urlScanner setScanLocation:range.location];
 		[urlScanner scanUpToCharactersFromSet:legalSchemeSet intoString:NULL];
 		if( [urlScanner scanUpToString:@"://" intoString:&urlHandle] && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
-			if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' || [link characterAtIndex:([link length] - 1)] == '!' )
+			if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' || [link characterAtIndex:([link length] - 1)] == '!' || [link characterAtIndex:([link length] - 1)] == ',' )
 				link = [link substringToIndex:( [link length] - 1 )];
 			if( [link length] >= 4 )
 				link = [urlHandle stringByAppendingString:link];
@@ -1401,7 +1401,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		urlScanner = [NSScanner scannerWithString:part];
 		[urlScanner scanUpToString:@"www." intoString:NULL];
 		if( [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
-			if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' || [link characterAtIndex:([link length] - 1)] == '!' )
+			if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' || [link characterAtIndex:([link length] - 1)] == '!' || [link characterAtIndex:([link length] - 1)] == ',' )
 				 link = [link substringToIndex:( [link length] - 1 )];
 			if( [link length] >= 8 ) {
 				mutableLink = [[link mutableCopy] autorelease];
@@ -1438,11 +1438,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[part replaceOccurrencesOfString:@"~amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
 
 		// catch well-formed IRC channel names like "#php" or "&admins"
-		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;.?!%^$@#&*~`\\|+/-_"];
+		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;.,?!%^$@#&*~`\\|+/-_"];
 		urlScanner = [NSScanner scannerWithString:part];
 		if( ( ( [urlScanner scanUpToCharactersFromSet:ircChannels intoString:NULL] && [urlScanner scanLocation] < [part length] && ! [[NSCharacterSet alphanumericCharacterSet] characterIsMember:[part characterAtIndex:( [urlScanner scanLocation] - 1 )]] ) || [part rangeOfCharacterFromSet:ircChannels].location == 0 ) && [urlScanner scanCharactersFromSet:legalAddressSet intoString:&urlHandle] ) {
 			if( [urlHandle length] >= 3 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != 1 ) {
-				if( [urlHandle characterAtIndex:([urlHandle length] - 1)] == '.' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '?' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '!' )
+				if( [urlHandle characterAtIndex:([urlHandle length] - 1)] == '.' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '?' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '!' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == ',' )
 					urlHandle = [urlHandle substringToIndex:( [urlHandle length] - 1 )];
 				link = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];
 				mutableLink = [NSMutableString stringWithFormat:@"<a href=\"%@\">%@</a>", link, urlHandle];
