@@ -260,7 +260,6 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			if( ! [info objectForKey:@"started"] ) [info setObject:[NSDate date] forKey:@"started"];
 			[info setObject:[NSNumber numberWithUnsignedInt:status] forKey:@"status"];
 			if( status == MVTransferDone ) {
-				NSLog( @"done %@ %d %d %d", [[info objectForKey:@"path"] pathExtension], [_safeFileExtentions count], [[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"], [_safeFileExtentions containsObject:[[[info objectForKey:@"path"] pathExtension] lowercaseString]] );
 				[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[info objectForKey:@"path"]];				
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"] && [_safeFileExtentions containsObject:[[[info objectForKey:@"path"] pathExtension] lowercaseString]] )
 					[[NSWorkspace sharedWorkspace] openFile:[info objectForKey:@"path"] withApplication:nil andDeactivate:NO];
