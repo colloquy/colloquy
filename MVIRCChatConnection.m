@@ -1437,7 +1437,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (void) fetchChatRoomList {
-	if( ! _cachedDate || [_cachedDate timeIntervalSinceNow] < -900. ) {
+	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 900. ) {
 		[self sendRawMessage:@"LIST"];
 		[_cachedDate autorelease];
 		_cachedDate = [[NSDate date] retain];
