@@ -96,7 +96,6 @@ static GMainLoop *glibMainLoop = NULL;
 - (void) _registerForSleepNotifications;
 - (void) _deregisterForSleepNotifications;
 - (void) _postNotification:(NSNotification *) notification;
-- (void) _confirmNewNickname:(NSString *) nickname;
 - (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic;
 - (NSString *) _roomWithProperPrefix:(NSString *) room;
 - (void) _setStatus:(MVChatConnectionStatus) status;
@@ -801,7 +800,6 @@ static void MVChatUserNicknameChanged( CHANNEL_REC *channel, NICK_REC *nick, con
 	NSNotification *note = nil;
 
 	if( [[self nickname] isEqualToString:[NSString stringWithUTF8String:oldnick]] ) {
-		[self _confirmNewNickname:[NSString stringWithUTF8String:nick -> nick]];
 		note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick -> nick], @"nickname", nil]];
 	} else {
 		note = [NSNotification notificationWithName:MVChatConnectionUserNicknameChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> name], @"room", [NSString stringWithUTF8String:oldnick], @"oldNickname", [NSString stringWithUTF8String:nick -> nick], @"newNickname", nil]];
@@ -956,20 +954,13 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_server = @"irc.javelin.cc";
-		_nickname = [NSUserName() copy];
-		_username = [NSUserName() copy];
-		_realName = [NSFullUserName() copy];
 		_npassword = nil;
-		_password = nil;
 		_cachedDate = nil;
 		_awayMessage = nil;
-		_port = 6667;
 		_nickIdentified = NO;
 
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
-		_chatConnection = NULL;
 		_roomsCache = [[NSMutableDictionary dictionary] retain];
 
 		[self _registerForSleepNotifications];
@@ -997,6 +988,23 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 			firstConnection = NO;
 		}
+
+		CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
+		SERVER_CONNECT_REC *conn = server_create_conn( proto -> id, "irc.javelin.cc", 6667, [[NSString stringWithFormat:@"%x", self] UTF8String], NULL, [NSUserName() UTF8String] );
+		server_connect_ref( conn );
+
+	// Proxy Settings, pull code from proxy.m
+	/*	if( 0 ) {
+			conn -> proxy = g_strdup( "" );
+			conn -> proxy_port = 0;
+			conn -> proxy_string = g_strdup( "" );
+			conn -> proxy_string_after = g_strdup( "" );
+			conn -> proxy_password = g_strdup( "" );
+		} */
+
+		_chatConnection = proto -> server_init_connect( conn );
+		server_ref( [self _irssiConnection] );
+		server_connect_unref( conn );
 	}
 	return self;
 }
@@ -1030,20 +1038,19 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_nickname release];
 	[_npassword release];
-	[_password release];
-	[_server release];
 	[_roomsCache release];
 	[_cachedDate release];
 	[_awayMessage release];
-	if( _chatConnection ) server_unref( _chatConnection );
+
+	if( _chatConnection ) {
+		g_free_not_null( [self _irssiConnection] -> tag );
+		[self _irssiConnection] -> tag = NULL;
+		server_unref( _chatConnection );
+	}
 
 	_chatConnection = NULL;
-	_nickname = nil;
 	_npassword = nil;
-	_password = nil;
-	_server = nil;
 	_roomsCache = nil;
 	_cachedDate = nil;
 	_awayMessage = nil;
@@ -1055,40 +1062,10 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) connect {
 	if( [self status] == MVChatConnectionConnectingStatus ) return;
-
-	if( ! [_server length] || ! [_nickname length] ) {
-		[self _didNotConnect];
-		return;
-	}
-
 	[self _willConnect];
 
 	CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
-	SERVER_CONNECT_REC *conn = server_create_conn( proto -> id, [_server UTF8String], _port, "IRC", [_password UTF8String], [_nickname UTF8String] );
-	server_connect_ref( conn );
-
-	conn -> username = g_strdup( [_username UTF8String] );
-	conn -> realname = g_strdup( [_realName UTF8String] );
-
-// Proxy Settings, pull code from proxy.m
-/*	if( 0 ) {
-		conn -> proxy = g_strdup( "" );
-		conn -> proxy_port = 0;
-		conn -> proxy_string = g_strdup( "" );
-		conn -> proxy_string_after = g_strdup( "" );
-		conn -> proxy_password = g_strdup( "" );
-	} */
-
-	if( [self _irssiConnection] ) server_unref( [self _irssiConnection] );
-	_chatConnection = proto -> server_init_connect( conn );
-
-	server_connect_unref( conn );
-
-	g_free_not_null( [self _irssiConnection] -> tag );
-	[self _irssiConnection] -> tag = g_strdup( [[NSString stringWithFormat:@"%x", self] UTF8String] );
-
 	proto -> server_connect( [self _irssiConnection] );
-	server_ref( [self _irssiConnection] );
 }
 
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname {
@@ -1109,37 +1086,44 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (NSURL *) url {
-	NSString *url = nil;
-	if( ! _server ) return nil;
-	if( _nickname && _port ) url = [NSString stringWithFormat:@"irc://%@@%@:%hu", MVURLEncodeString( _nickname ), MVURLEncodeString( _server ), _port];
-	else if( _nickname && ! _port ) url = [NSString stringWithFormat:@"irc://%@@%@", MVURLEncodeString( _nickname ), MVURLEncodeString( _server )];
-	else url = [NSString stringWithFormat:@"irc://%@", MVURLEncodeString( _server )];
-	return [[[NSURL URLWithString:url] retain] autorelease];
+	NSString *url = [NSString stringWithFormat:@"irc://%@@%@:%hu", MVURLEncodeString( [self nickname] ), MVURLEncodeString( [self server] ), [self serverPort]];
+	if( url ) return [NSURL URLWithString:url];
+	return nil;
 }
 
 #pragma mark -
 
 - (void) setRealName:(NSString *) name {
-	[_realName autorelease];
-	_realName = [name copy];
+	NSParameterAssert( name != nil );
+
+	g_free_not_null( [self _irssiConnection] -> connrec -> realname );
+	[self _irssiConnection] -> connrec -> realname = g_strdup( [name UTF8String] );		
 }
 
 - (NSString *) realName {
-	return [[_realName retain] autorelease];
+	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> realname];
 }
 
 #pragma mark -
 
 - (void) setNickname:(NSString *) nickname {
+	NSParameterAssert( nickname != nil );
+
 	if( [self isConnected] ) {
-		if( nickname && ! [nickname isEqualToString:_nickname] )
+		if( ! [nickname isEqualToString:[self nickname]] ) {
+			_nickIdentified = NO;
 			[self sendRawMessageWithFormat:@"NICK %@", nickname];
-	} else [self _confirmNewNickname:nickname];
+		}
+	} else {
+		g_free_not_null( [self _irssiConnection] -> connrec -> nick );
+		[self _irssiConnection] -> connrec -> nick = g_strdup( [nickname UTF8String] );		
+	}
 }
 
 - (NSString *) nickname {
-	if( [self isConnected] ) return [NSString stringWithUTF8String:[self _irssiConnection] -> nick];
-	return [[_nickname retain] autorelease];
+	if( [self isConnected] )
+		return [NSString stringWithUTF8String:[self _irssiConnection] -> nick];
+	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> nick];
 }
 
 #pragma mark -
@@ -1160,45 +1144,51 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) setPassword:(NSString *) password {
-	[_password autorelease];
-	if( [password length] ) _password = [password copy];
-	else _password = nil;
+	g_free_not_null( [self _irssiConnection] -> connrec -> password );
+	if( [password length] ) [self _irssiConnection] -> connrec -> password = g_strdup( [password UTF8String] );		
+	else [self _irssiConnection] -> connrec -> password = NULL;		
 }
 
 - (NSString *) password {
-	return [[_password retain] autorelease];
+	char *pass = [self _irssiConnection] -> connrec -> password;
+	if( pass ) return [NSString stringWithUTF8String:pass];
+	return nil;
 }
 
 #pragma mark -
 
 - (void) setUsername:(NSString *) username {
-	[_username autorelease];
-	_username = [username copy];
+	NSParameterAssert( username != nil );
+	
+	g_free_not_null( [self _irssiConnection] -> connrec -> username );
+	[self _irssiConnection] -> connrec -> username = g_strdup( [username UTF8String] );		
 }
 
 - (NSString *) username {
-	return [[_username retain] autorelease];
+	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> username];
 }
 
 #pragma mark -
 
 - (void) setServer:(NSString *) server {
-	[_server autorelease];
-	_server = [server copy];
+	NSParameterAssert( server != nil );
+
+	g_free_not_null( [self _irssiConnection] -> connrec -> address );
+	[self _irssiConnection] -> connrec -> address = g_strdup( [server UTF8String] );		
 }
 
 - (NSString *) server {
-	return [[_server retain] autorelease];
+	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> address];
 }
 
 #pragma mark -
 
 - (void) setServerPort:(unsigned short) port {
-	_port = ( port ? port : 6667 );
+	[self _irssiConnection] -> connrec -> port = ( port ? port : 6667 );
 }
 
 - (unsigned short) serverPort {
-	return _port;
+	return [self _irssiConnection] -> connrec -> port;
 }
 
 #pragma mark -
@@ -1248,7 +1238,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) sendFile:(NSString *) path toUser:(NSString *) user {
-	if( [user isEqualToString:_nickname] ) return;
+	if( [user isEqualToString:[self nickname]] ) return;
 	if( ! [[NSFileManager defaultManager] isReadableFileAtPath:path] ) return;
 
 	NSNumber *size = [[[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES] objectForKey:@"NSFileSize"];
@@ -1582,12 +1572,6 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 #pragma mark -
 
-- (void) _confirmNewNickname:(NSString *) nickname {
-	_nickIdentified = NO;
-	[_nickname autorelease];
-	_nickname = [nickname copy];
-}
-
 - (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic {
 	if( room ) {
 		NSDictionary *info = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:users], @"users", topic, @"topic", [NSDate date], @"cached", nil];
@@ -1649,15 +1633,6 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) _didDisconnect {
-	extern BOOL applicationQuitting;
-	if( applicationQuitting ) {
-		g_free_not_null( [self _irssiConnection] -> tag );
-		[self _irssiConnection] -> tag = NULL;
-	}
-
-	if( [self _irssiConnection] ) server_unref( [self _irssiConnection] );
-	_chatConnection = NULL;
-
 	_status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
 }
