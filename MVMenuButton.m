@@ -114,8 +114,9 @@
 
 - (void) setControlSize:(NSControlSize) controlSize {
 	if( ! orgImage ) orgImage = [[self image] copy];
-	if( controlSize == NSRegularControlSize ) [self setImage:orgImage];
-	else if( controlSize == NSSmallControlSize ) {
+	if( controlSize == NSRegularControlSize ) {
+		[self setImage:orgImage];
+	} else if( controlSize == NSSmallControlSize ) {
 		if( ! smallImage ) {
 			smallImage = [orgImage copy];
 			[smallImage setScalesWhenResized:YES];

@@ -18,4 +18,7 @@
 
 - (NSControlSize) controlSize;
 - (void) setControlSize:(NSControlSize) controlSize;
+
+- (NSImage *) smallImage;
+- (void) setSmallImage:(NSImage *) smimg;
 @end
