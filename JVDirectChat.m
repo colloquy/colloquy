@@ -1178,23 +1178,21 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 @implementation JVDirectChat (JVDirectChatPrivate)
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode {
-	NSEnumerator *enumerator = nil, *kenumerator = nil;
-	NSString *key = nil, *value = nil;
-	NSMutableString *messageString = nil;
-	xmlDocPtr doc = NULL, msgDoc = NULL;
-	xmlNodePtr root = NULL, child = NULL;
-	const char *msgStr = NULL;
-
 	NSParameterAssert( name != nil );
 	NSParameterAssert( [name length] );
 
-	doc = xmlNewDoc( "1.0" );
-	root = xmlNewNode( NULL, "event" );
+	xmlDocPtr doc = xmlNewDoc( "1.0" );
+	xmlNodePtr root = xmlNewNode( NULL, "event" );
 	xmlSetProp( root, "name", [name UTF8String] );
 	xmlSetProp( root, "occurred", [[[NSDate date] description] UTF8String] );
 	xmlDocSetRootElement( doc, root );
 
+	xmlDocPtr msgDoc = NULL;
+	xmlNodePtr child = NULL;
+	const char *msgStr = NULL;
+
 	if( message ) {
+		message = [message stringByStrippingIllegalXMLCharacters];
 		msgStr = [[NSString stringWithFormat:@"<message>%@</message>", message] UTF8String];
 		if( msgStr ) {
 			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
@@ -1204,19 +1202,24 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 	}
 
-	kenumerator = [attributes keyEnumerator];
-	enumerator = [attributes objectEnumerator];
+	NSEnumerator *kenumerator = [attributes keyEnumerator];
+	NSEnumerator *enumerator = [attributes objectEnumerator];
+	NSString *key = nil;
+	id value = nil;
+
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
-		msgStr = nil;
+		msgStr = NULL;
 
 		if( [value isMemberOfClass:[NSNull class]] ) {
 			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
 		} else if( [value isKindOfClass:[NSAttributedString class]] ) {
 			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-			value = [(NSAttributedString *)value HTMLFormatWithOptions:options];
+			value = [value HTMLFormatWithOptions:options];
+			value = [value stringByStrippingIllegalXMLCharacters];
 			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
-		} else {
+		} else if( [value isKindOfClass:[NSString class]] ) {
 			if( encode ) value = [value stringByEncodingXMLSpecialCharactersAsEntities];
+			value = [value stringByStrippingIllegalXMLCharacters];
 			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
 		}
 
@@ -1230,6 +1233,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 	[self writeToLog:root withDoc:doc initializing:NO continuation:NO];
+
+	NSMutableString *messageString = nil;
 
 	@try {
 		messageString = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
@@ -1300,7 +1305,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[messageString makeLinkAttributesAutomatically];
 
 	[self _hyperlinkRoomNames:messageString];
-
 	[self _performEmoticonSubstitutionOnString:messageString];
 
 	BOOL highlight = NO;
@@ -1423,6 +1427,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	xmlXPathFreeObject( result );
 	xmlXPathFreeContext( ctx );
+
+	[[messageString mutableString] stripIllegalXMLCharacters];
 
 	options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
 	NSString *htmlMessage = [messageString HTMLFormatWithOptions:options];
