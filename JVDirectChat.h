@@ -65,6 +65,9 @@
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user;
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action;
 
+- (BOOL) newMessageWaiting;
+- (BOOL) newHighlightMessageWaiting;
+
 - (IBAction) send:(id) sender;
 - (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action;
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments;
