@@ -299,10 +299,9 @@
 			NSRange foundRange = [match range];
 			// don't highlight nicks in the middle of a link
 			if( ! [[message body] attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL] ) {
-				NSMutableSet *classes = [[message body] attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL];
-				if( ! classes ) classes = [NSMutableSet setWithObject:@"member"];
-				else [classes addObject:@"member"];
-				[[message body] addAttribute:@"CSSClasses" value:classes range:foundRange];
+				NSMutableSet *classes = [NSMutableSet setWithSet:[[message body] attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL]];
+				[classes addObject:@"member"];
+				[[message body] addAttribute:@"CSSClasses" value:[NSSet setWithSet:classes] range:foundRange];
 			}
 		}
 	}

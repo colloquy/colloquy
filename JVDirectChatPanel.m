@@ -694,10 +694,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 			while( ( match = [enumerator nextObject] ) ) {
 				NSRange foundRange = [match range];
-				NSMutableSet *classes = [messageString attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL];
-				if( ! classes ) classes = [NSMutableSet setWithObject:@"highlight"];
-				else [classes addObject:@"highlight"];
-				[messageString addAttribute:@"CSSClasses" value:classes range:foundRange];
+				NSMutableSet *classes = [NSMutableSet setWithSet:[messageString attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL]];
+				[classes addObject:@"highlight"];
+				[messageString addAttribute:@"CSSClasses" value:[NSSet setWithSet:classes] range:foundRange];
 				[cmessage setHighlighted:YES];
 			}
 		}

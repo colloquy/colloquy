@@ -65,7 +65,7 @@
 
 - (void) setStyleClasses:(NSArray *) classes {
 	if( ! [classes isKindOfClass:[NSArray class]] || ! [classes count] ) [self removeAttribute:@"CSSClasses" range:NSMakeRange( 0, [self length] )];
-	else [self addAttribute:@"CSSClasses" value:[NSMutableSet setWithArray:classes] range:NSMakeRange( 0, [self length] )];
+	else [self addAttribute:@"CSSClasses" value:[NSSet setWithArray:classes] range:NSMakeRange( 0, [self length] )];
 }
 
 - (NSArray *) XHTMLStart {
