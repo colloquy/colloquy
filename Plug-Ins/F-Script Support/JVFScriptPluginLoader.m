@@ -43,20 +43,14 @@
 			return NO;
 		}
 
-		BOOL load = NO;
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&subcmd];
-		if( ! [subcmd caseInsensitiveCompare:@"load"] || ! [subcmd caseInsensitiveCompare:@"reload"] ) load = YES;
-		else if( ! [subcmd caseInsensitiveCompare:@"unload"] ) load = NO;
-		else return NO;
-
 		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:nil];
 
 		NSString *path = nil;
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] intoString:&path];
 		if( ! [path length] ) return YES;
-		if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) return YES;
 
 		path = [path stringByStandardizingPath];
 
@@ -64,13 +58,19 @@
 		JVFScriptChatPlugin *plugin = nil;
 
 		while( ( plugin = [enumerator nextObject] ) )
-			if( [[plugin scriptFilePath] isEqualToString:path] )
+			if( [[plugin scriptFilePath] isEqualToString:path] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
 				break;
 
-		if( plugin ) [_manager removePlugin:plugin];
-		if( load ) {
+		if( ! [subcmd caseInsensitiveCompare:@"load"] || ! [subcmd caseInsensitiveCompare:@"reload"] ) {
+			if( plugin ) [_manager removePlugin:plugin];
 			plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager] autorelease];
 			if( plugin ) [_manager addPlugin:plugin];
+		} else if( ! [subcmd caseInsensitiveCompare:@"unload"] && plugin ) {
+			[_manager removePlugin:plugin];
+		} else if( ! [subcmd caseInsensitiveCompare:@"console"] && plugin && view ) {
+			JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] initWithFScriptChatPlugin:plugin] autorelease];
+			[[view windowController] addChatViewController:console];
+			[[view windowController] showChatViewController:console];
 		}
 
 		return YES;

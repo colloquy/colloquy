@@ -1,19 +1,44 @@
 #import "JVFScriptConsolePanel.h"
+#import "JVFScriptChatPlugin.h"
 #import "JVChatController.h"
 
 @implementation JVFScriptConsolePanel
+- (id) init {
+	if( ( self = [super init] ) ) {
+		_plugin = nil;
+		_icon = nil;
+		_windowController = nil;
+	}
+
+	return self;
+}
+
+- (id) initWithFScriptChatPlugin:(JVFScriptChatPlugin *) plugin {
+	if( ( self = [self init] ) )
+		_plugin = [plugin retain];
+	return self;
+}
+
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[contents release];
+	[_plugin release];
 	[_icon release];
 
 	contents = nil;
+	_plugin = nil;
 	_icon = nil;
 	_windowController = nil;
 
 	[super dealloc];
 }
+
+- (void) awakeFromNib {
+	if( [self plugin] ) [(id)[self interpreterView] setInterpreter:[[self plugin] scriptInterpreter]];
+}
+
+#pragma mark -
 
 - (IBAction) close:(id) sender {
 	[[JVChatController defaultManager] disposeViewController:self];
@@ -51,6 +76,8 @@
 }
 
 - (NSString *) title {
+	if( [self plugin] )
+		return [NSString stringWithFormat:NSLocalizedString( @"%@ Console", "plugin named console panel title" ), [[[[self plugin] scriptFilePath] lastPathComponent] stringByDeletingPathExtension]];
 	return NSLocalizedString( @"F-Script Console", "F-Script console panel title" );
 }
 
@@ -80,6 +107,14 @@
 
 - (MVChatConnection *) connection {
 	return nil;
+}
+
+- (JVFScriptChatPlugin *) plugin {
+	return _plugin;
+}
+
+- (FSInterpreterView *) interpreterView {
+	return console;
 }
 
 #pragma mark -
