@@ -22,8 +22,8 @@
 	JVDetailCell *cell = (JVDetailCell *)[super copyWithZone:zone];
 	cell -> _statusImage = [_statusImage retain];
 	cell -> _altImage = [_altImage retain];
-	cell -> _mainText = [_mainText copy];
-	cell -> _infoText = [_infoText copy];
+	cell -> _mainText = [_mainText copyWithZone:zone];
+	cell -> _infoText = [_infoText copyWithZone:zone];
 	cell -> _lineBreakMode = _lineBreakMode;
 	return cell;
 }
