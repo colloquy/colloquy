@@ -13,6 +13,10 @@
 @class NSMutableDictionary;
 @class JVChatMessage;
 @class NSLock;
+@class NSPanel;
+@class NSTextField;
+@class NSMatrix;
+@class NSPopUpButton;
 
 extern NSMutableSet *JVChatStyleBundles;
 extern NSMutableSet *JVChatEmoticonBundles;
@@ -45,10 +49,22 @@ extern NSString *JVChatEmoticonsScannedNotification;
 	NSDictionary *_emoticonMappings;
 
 	BOOL _previousStyleSwitch;
+
+	// Select sheet NIB outlets, JVChatTranscript only.
+	IBOutlet NSPanel *selectSheet;
+	IBOutlet NSTextField *transcriptDescription;
+	IBOutlet NSMatrix *selectOptions;
+	IBOutlet NSPopUpButton *transcriptMembers;
+	IBOutlet NSPopUpButton *transcriptSessions;
+	IBOutlet NSTextField *transcriptFilter;
 }
 - (id) initWithTranscript:(NSString *) filename;
 
 - (void) saveTranscriptTo:(NSString *) path;
+
+- (IBAction) specifyTranscriptSectionSheet:(id) sender;
+- (IBAction) cancelTranscriptSectionSheet:(id) sender;
+- (IBAction) confirmTranscriptSectionSheet:(id) sender;
 
 - (IBAction) changeChatStyle:(id) sender;
 - (void) setChatStyle:(JVStyle *) style withVariant:(NSString *) variant;
@@ -67,7 +83,7 @@ extern NSString *JVChatEmoticonsScannedNotification;
 - (JVChatMessage *) messageAtIndex:(unsigned long) index;
 - (NSArray *) messagesInRange:(NSRange) range;
 
-- (IBAction) leaveChat:(id) sender;
+- (IBAction) close:(id) sender;
 @end
 
 #pragma mark -
