@@ -114,6 +114,8 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
 	[[self window] setToolbar:toolbar];
+
+	[self setWindowFrameAutosaveName:@"connections"];
 }
 
 #pragma mark -

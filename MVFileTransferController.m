@@ -134,6 +134,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	[progressBar setMinValue:0.];
 	[progressBar setUsesThreadedAnimation:YES];
 	[self _updateProgress];
+
+	[self setWindowFrameAutosaveName:@"transfer"];
 }
 
 #pragma mark -
