@@ -2,15 +2,23 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {
+                changeChatEmoticons = id; 
+                changeChatStyle = id; 
+                changeChatStyleVariant = id; 
+                leaveChat = id; 
+            }; 
+            CLASS = JVChatTranscript; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {chooseStyle = MVMenuButton; contents = NSView; display = WebView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {clear = id; clearDisplay = id; send = id; }; 
             CLASS = JVDirectChat; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                chooseStyle = MVMenuButton; 
-                contents = NSView; 
-                display = WebView; 
-                send = MVTextView; 
-            }; 
-            SUPERCLASS = NSObject; 
+            OUTLETS = {encodingView = NSPopUpButton; send = MVTextView; }; 
+            SUPERCLASS = JVChatTranscript; 
         }, 
         {
             ACTIONS = {displayMenu = id; }; 
