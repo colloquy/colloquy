@@ -1667,8 +1667,10 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 @implementation NSApplication (NSApplicationActivePanelScripting)
 - (id) sendMessageScriptCommand:(NSScriptCommand *) command {
 	// if there is a subject or target parameter, perform the default implementation
-	if( [command subjectSpecifier] || [[command evaluatedArguments] objectForKey:@"target"] )
-		return [command performDefaultImplementation];
+	if( [command subjectSpecifier] || [[command evaluatedArguments] objectForKey:@"target"] ) {
+		[command performDefaultImplementation];
+		return nil;
+	}
 
 	// if nothing responds to this command make it perform on the active panel of the front window
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
@@ -1686,7 +1688,10 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (id) addEventMessageScriptCommand:(NSScriptCommand *) command {
 	// if there is a subject, perform the default implementation
-	if( [command subjectSpecifier] ) return [command performDefaultImplementation];
+	if( [command subjectSpecifier] ) {
+		[command performDefaultImplementation];
+		return nil;
+	}
 
 	// if nothing responds to this command make it perform on the active panel of the front window
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
