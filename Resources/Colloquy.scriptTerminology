@@ -136,6 +136,13 @@
 					<key>Name</key>
 					<string>timestamp</string>
 				</dict>
+				<key>ignoreStatus</key>
+				<dict>
+					<key>Description</key>
+					<string>If the message was ignored with one of the ignore rules.</string>
+					<key>Name</key>
+					<string>ignore status</string>
+				</dict>
 				<key>messageNumber</key>
 				<dict>
 					<key>Description</key>
@@ -404,6 +411,34 @@
 					<key>Name</key>
 					<string>operator</string>
 				</dict>
+				<key>realName</key>
+				<dict>
+					<key>Description</key>
+					<string>The user's supplied real name, sometimes not a name at all.</string>
+					<key>Name</key>
+					<string>real name</string>
+				</dict>
+				<key>username</key>
+				<dict>
+					<key>Description</key>
+					<string>The user's supplied username.</string>
+					<key>Name</key>
+					<string>username</string>
+				</dict>
+				<key>address</key>
+				<dict>
+					<key>Description</key>
+					<string>The user's supplied hostname given to the server when they connected. Sometimes this is cloaked with a fake host.</string>
+					<key>Name</key>
+					<string>address</string>
+				</dict>
+				<key>hostmask</key>
+				<dict>
+					<key>Description</key>
+					<string>The user's hostmask. The combination of the username and address in an email address format.</string>
+					<key>Name</key>
+					<string>hostmask</string>
+				</dict>
 			</dict>
 		</dict>
 		<key>JVChatConsole</key>
@@ -542,13 +577,6 @@
 					<string>Buddy (if any) this chat is with.</string>
 					<key>Name</key>
 					<string>buddy</string>
-				</dict>
-				<key>connection</key>
-				<dict>
-					<key>Description</key>
-					<string>Connection this chat is on.</string>
-					<key>Name</key>
-					<string>connection</string>
 				</dict>
 			</dict>
 			<key>Attributes</key>
@@ -1001,6 +1029,24 @@
 			<dict>
 				<key>Name</key>
 				<string>offline</string>
+			</dict>
+		</dict>
+		<key>IgnoreStatus</key>
+		<dict>
+			<key>NotIgnored</key>
+			<dict>
+				<key>Name</key>
+				<string>not ignored</string>
+			</dict>
+			<key>MessageIgnored</key>
+			<dict>
+				<key>Name</key>
+				<string>message ignored</string>
+			</dict>
+			<key>UserIgnored</key>
+			<dict>
+				<key>Name</key>
+				<string>user ignored</string>
 			</dict>
 		</dict>
 	</dict>

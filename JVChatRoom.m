@@ -39,7 +39,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (NSString *) _selfCompositeName;
 
 - (void) _setNickname:(NSString *) name;
-- (void) _setAddress:(NSString *) address;
+- (void) _setUsernameAndAddress:(NSString *) address;
 - (void) _setRealName:(NSString *) name;
 - (void) _setVoice:(BOOL) voice;
 - (void) _setOperator:(BOOL) operator;
@@ -638,7 +638,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		message = [NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from the chat room by <span class=\"member\">%@</span>.", "user has been removed by force from a chat room status message" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by )];
 	}
 
-	[self addEventMessageToDisplay:message withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( [byMbr title] ? [byMbr title] : by ), @"by", by, @"by-nickname", ( [mbr title] ? [mbr title] : member ), @"who", member, @"who-nickname", ( [mbr address] ? (id) [mbr address] : (id) [NSNull null] ), @"mask", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+	[self addEventMessageToDisplay:message withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( [byMbr title] ? [byMbr title] : by ), @"by", by, @"by-nickname", ( [mbr title] ? [mbr title] : member ), @"who", member, @"who-nickname", ( [mbr hostmask] ? (id) [mbr hostmask] : (id) [NSNull null] ), @"mask", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 	//create notification
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -891,7 +891,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	while( ( info = [enumerator nextObject] ) ) {
 		JVChatRoomMember *listItem = [self chatRoomMemberWithName:[info objectForKey:@"nickname"]];
-		[listItem _setAddress:[info objectForKey:@"address"]];
+		[listItem _setUsernameAndAddress:[info objectForKey:@"address"]];
 		[listItem _setRealName:[info objectForKey:@"realName"]];
 	}		
 }
@@ -908,7 +908,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		member = [info objectForKey:@"nickname"];
 
 		JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] initWithRoom:self andNickname:member] autorelease];
-		[listItem _setAddress:[info objectForKey:@"address"]];
+		[listItem _setUsernameAndAddress:[info objectForKey:@"address"]];
 		[listItem _setRealName:[info objectForKey:@"realName"]];
 		[listItem _setOperator:[[info objectForKey:@"operator"] boolValue]];
 		[listItem _setHalfOperator:[[info objectForKey:@"halfOperator"] boolValue]];
@@ -927,7 +927,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	if( ! [self chatRoomMemberWithName:member] ) {
 		JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] initWithRoom:self andNickname:member] autorelease];
-		[listItem _setAddress:[info objectForKey:@"address"]];
+		[listItem _setUsernameAndAddress:[info objectForKey:@"address"]];
 		[listItem _setOperator:[[info objectForKey:@"operator"] boolValue]];
 		[listItem _setHalfOperator:[[info objectForKey:@"halfOperator"] boolValue]];
 		[listItem _setServerOperator:[[info objectForKey:@"serverOperator"] boolValue]];
@@ -940,7 +940,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 		NSString *name = [listItem title];
 		NSString *message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> joined the chat room.", "a user has join a chat room status message" ), name];
-		[self addEventMessageToDisplay:message withName:@"memberJoined" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"nickname", name, @"who", ( [listItem address] ? [listItem address] : @"" ), @"mask", nil]];
+		[self addEventMessageToDisplay:message withName:@"memberJoined" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"nickname", name, @"who", ( [listItem hostmask] ? (id) [listItem hostmask] : (id) [NSNull null] ), @"mask", nil]];
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -991,7 +991,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		NSString *name = [mbr title];
 		NSString *message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> left the chat room.", "a user has left the chat room status message" ), name];
 
-		[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( name ? name : member ), @"who", member, @"nickname", ( [mbr address] ? (id) [mbr address] : (id) [NSNull null] ), @"mask", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+		[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( name ? name : member ), @"who", member, @"nickname", ( [mbr hostmask] ? (id) [mbr hostmask] : (id) [NSNull null] ), @"mask", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 		//create notification
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];

@@ -6,9 +6,9 @@
 @protocol JVChatViewController;
 
 typedef enum _JVIgnoreMatchResult {
-	JVUserIgnored,
-	JVMessageIgnored,
-	JVNotIgnored
+	JVUserIgnored = 'usIg',
+	JVMessageIgnored = 'msIg',
+	JVNotIgnored = 'noIg'
 } JVIgnoreMatchResult;
 
 @interface KAIgnoreRule : NSObject {

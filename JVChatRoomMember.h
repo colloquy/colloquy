@@ -10,6 +10,7 @@
 	JVChatRoom *_parent;
 	NSString *_nickname;
 	NSString *_address;
+	NSString *_username;
 	NSString *_realName;
 	JVBuddy *_buddy;
 	BOOL _operator;
@@ -37,7 +38,9 @@
 - (MVChatConnection *) connection;
 - (NSString *) nickname;
 - (NSString *) realName;
+- (NSString *) username;
 - (NSString *) address;
+- (NSString *) hostmask;
 - (JVBuddy *) buddy;
 
 - (BOOL) voice;

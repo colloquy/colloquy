@@ -118,8 +118,6 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>maPA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
 					<key>Type</key>
 					<string>NSTextSuite.NSTextStorage</string>
 				</dict>
@@ -135,8 +133,6 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>isAc</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
@@ -144,8 +140,6 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>iHlt</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
@@ -153,8 +147,6 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>maHA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
@@ -162,8 +154,6 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>sNdA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
 					<key>Type</key>
 					<string>NSCoreSuite.AbstractObject</string>
 				</dict>
@@ -171,17 +161,20 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>dteA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
 					<key>Type</key>
 					<string>NSDate</string>
+				</dict>
+				<key>ignoreStatus</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>iGsA</string>
+					<key>Type</key>
+					<string>NSNumber&lt;IgnoreStatus&gt;</string>
 				</dict>
 				<key>messageNumber</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>ID  </string>
-					<key>ReadOnly</key>
-					<string>YES</string>
 					<key>Type</key>
 					<string>NSNumber&lt;UnsignedLong&gt;</string>
 				</dict>
@@ -616,6 +609,42 @@
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
+				<key>realName</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>rNaA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>username</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>uNaA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>address</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>adYA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>hostmask</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>hOsA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
 			</dict>
 			<key>SupportedCommands</key>
 			<dict>
@@ -800,15 +829,6 @@
 					<string>YES</string>
 					<key>Type</key>
 					<string>JVBuddy</string>
-				</dict>
-				<key>connection</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>conM</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>ChatCore.MVChatConnection</string>
 				</dict>
 			</dict>
 			<key>Attributes</key>
@@ -1396,6 +1416,20 @@
 				<string>idlE</string>
 				<key>Offline</key>
 				<string>oflN</string>
+			</dict>
+		</dict>
+		<key>IgnoreStatus</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>igsE</string>
+			<key>Enumerators</key>
+			<dict>
+				<key>NotIgnored</key>
+				<string>noIg</string>
+				<key>MessageIgnored</key>
+				<string>msIg</string>
+				<key>UserIgnored</key>
+				<string>usIg</string>
 			</dict>
 		</dict>
 	</dict>

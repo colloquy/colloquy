@@ -118,8 +118,17 @@
 	return [[_realName retain] autorelease];
 }
 
+- (NSString *) username {
+	return [[_username retain] autorelease];
+}
+
 - (NSString *) address {
 	return [[_address retain] autorelease];
+}
+
+- (NSString *) hostmask {
+	if( ! _username || ! _address ) return nil;
+	return [NSString stringWithFormat:@"%@@%@", _username, _address];
 }
 
 - (NSImage *) icon {
@@ -195,7 +204,7 @@
 
 - (NSString *) toolTip {
 	if( ! [self address] ) return nil;
-	return [NSString stringWithFormat:@"%@\n%@", [self title], [self address]];
+	return [NSString stringWithFormat:@"%@\n%@@%@", [self title], [self username], [self address]];
 }
 
 - (id <JVChatListItem>) parent {
@@ -575,9 +584,15 @@
 	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_nickname onServer:[[self connection] server]] retain];
 }
 
-- (void) _setAddress:(NSString *) address {
+- (void) _setUsernameAndAddress:(NSString *) hostmask {
+	NSArray *parts = [hostmask componentsSeparatedByString:@"@"];
+	if( [parts count] < 2 ) return;
+
+	[_username autorelease];
+	_username = [[parts objectAtIndex:0] retain];
+
 	[_address autorelease];
-	_address = [address copy];
+	_address = [[parts objectAtIndex:1] copy];
 }
 
 - (void) _setRealName:(NSString *) name {
