@@ -314,6 +314,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[context setObject:user forKey:@"performedBy"];
 		[context setObject:_target forKey:@"performedInRoom"];
 		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatRoomActivity"] forKey:@"coalesceKey"];
+		[context setObject:self forKey:@"target"];
+		[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatRoomActivity" withContextInfo:context];
 	}
 
@@ -450,6 +452,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			[context setObject:member forKey:@"performedOn"];
 			[context setObject:by forKey:@"performedBy"];
 			[context setObject:_target forKey:@"performedInRoom"];
+			[context setObject:self forKey:@"target"];
+			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberPromoted" withContextInfo:context];
 		}
 	}
@@ -503,6 +507,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			[context setObject:member forKey:@"performedOn"];
 			[context setObject:by forKey:@"performedBy"];
 			[context setObject:_target forKey:@"performedInRoom"];
+			[context setObject:self forKey:@"target"];
+			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDemoted" withContextInfo:context];
 		}
 	}
@@ -556,6 +562,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			[context setObject:member forKey:@"performedOn"];
 			[context setObject:by forKey:@"performedBy"];
 			[context setObject:_target forKey:@"performedInRoom"];
+			[context setObject:self forKey:@"target"];
+			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberVoiced" withContextInfo:context];
 		}
 	}
@@ -609,6 +617,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			[context setObject:member forKey:@"performedOn"];
 			[context setObject:by forKey:@"performedBy"];
 			[context setObject:_target forKey:@"performedInRoom"];
+			[context setObject:self forKey:@"target"];
+			[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDevoiced" withContextInfo:context];
 		}
 	}
@@ -671,6 +681,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	[context setObject:member forKey:@"performedOn"];
 	[context setObject:( byMbr ? [byMbr title] : by ) forKey:@"performedBy"];
 	[context setObject:_target forKey:@"performedInRoom"];
+	[context setObject:self forKey:@"target"];
+	[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 }
 
@@ -720,6 +732,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	[context setObject:[[self connection] nickname] forKey:@"performedOn"];
 	[context setObject:( byMbr ? [byMbr title] : by ) forKey:@"performedBy"];
 	[context setObject:_target forKey:@"performedInRoom"];
+	[context setObject:self forKey:@"target"];
+	[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 
 	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You were kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You were kicked from the chat room by %@. You are no longer part of this chat and can't send anymore messages.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, ( byMbr ? [byMbr title] : by ) ) withName:nil];
@@ -988,6 +1002,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room %@.", "bubble message member joined string" ), name, _target] forKey:@"description"];
 		[context setObject:member forKey:@"performedOn"];
 		[context setObject:_target forKey:@"performedInRoom"];
+		[context setObject:self forKey:@"target"];
+		[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
 	}
 }
@@ -1036,6 +1052,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room %@.", "bubble message member left string" ), name, _target] forKey:@"description"];
 		[context setObject:member forKey:@"performedOn"];
 		[context setObject:_target forKey:@"performedInRoom"];
+		[context setObject:self forKey:@"target"];
+		[context setObject:NSStringFromSelector( @selector( _activate: ) ) forKey:@"action"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
 	}
 }
