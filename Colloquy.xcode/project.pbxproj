@@ -132,6 +132,7 @@
 				F555208B01F0DE0601EE70DE,
 				1C3C112E050265AE000001C8,
 				F5FB4CE60393C15601000102,
+				1C6C75450630AD5300698F55,
 				1C7055C80519E56300A8FE6E,
 				1C7055CA0519E56C00A8FE6E,
 				1C7055C40519E54C00A8FE6E,
@@ -701,6 +702,26 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
+		1C6C75450630AD5300698F55 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AGRegex.framework;
+			path = Frameworks/AGRegex.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C6C75460630AD5300698F55 = {
+			fileRef = 1C6C75450630AD5300698F55;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C6C75490630AD9500698F55 = {
+			fileRef = 1C6C75450630AD5300698F55;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C6EA23C05A735D6006A559F = {
 			children = (
 				1C6EA23D05A735D6006A559F,
@@ -1158,7 +1179,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
@@ -2067,6 +2088,7 @@
 				1CB2CD80052DDC560094AAA4,
 				1CD0201F05758F26000F93B4,
 				1CF03CAC063092D7009774D8,
+				1C6C75460630AD5300698F55,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2125,6 +2147,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				1CF03CB6063092E4009774D8,
+				1C6C75490630AD9500698F55,
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
 				1CB2CD86052DDC560094AAA4,
