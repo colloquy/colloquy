@@ -948,6 +948,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
+	if( ! [self _irssiConnection] ) return;
 	if( [self status] == MVChatConnectionConnectingStatus ) {
 		[self _forceDisconnect];
 		return;
@@ -1591,7 +1592,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
 	while( ! MVChatApplicationQuitting || connectionCount ) {
-		usleep( 50 ); // give time for other theads to lock
+		usleep( 100 ); // give time for other theads to lock
 		if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
 			g_main_iteration( TRUE );
 			[MVIRCChatConnectionThreadLock unlock];

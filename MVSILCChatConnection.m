@@ -36,6 +36,16 @@ NSLock *silcChatConnectionsLock;
 
 #pragma mark -
 
+@interface MVChatConnection (MVChatConnectionPrivate)
+- (void) _willConnect;
+- (void) _didConnect;
+- (void) _didNotConnect;
+- (void) _willDisconnect;
+- (void) _didDisconnect;
+@end
+
+#pragma mark -
+
 void silc_privmessage_resolve_callback( SilcClient client, SilcClientConnection conn, SilcClientEntry *clients, SilcUInt32 clients_count, void *context ) {
 	NSMutableDictionary *dict = context;
 	MVSILCChatConnection *self = [dict objectForKey:@"connection"];
@@ -721,10 +731,8 @@ static SilcClientOperations silcClientOps = {
 	[_lastConnectAttempt autorelease];
 	_lastConnectAttempt = [[NSDate date] retain];
 
-	[self performSelectorOnMainThread:@selector( _willConnect ) withObject:nil waitUntilDone:NO];
-
-	if( errorOnConnect)
-		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
+	[self _willConnect];
+	if( errorOnConnect) [self _didNotConnect];
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
@@ -1178,19 +1186,30 @@ static SilcClientOperations silcClientOps = {
 
 	while( ! MVChatApplicationQuitting ) {
 		[silcChatConnectionsLock lock];
+		if( ! [silcChatConnections count] ) {
+			usleep( 500000 ); // run really still (every 1/2 second) since we have no connections
+			[silcChatConnectionsLock unlock];
+			continue;
+		}
+
 		NSEnumerator *enumerator = [silcChatConnections objectEnumerator];
 		MVSILCChatConnection *connection = nil;
+		unsigned connectionsActive = 0;
 
 		while( ( connection = [enumerator nextObject] ) ) {
-			[[connection _silcClientLock] lock];
-			if( [connection _silcClient] && [connection _silcClient] -> schedule) 
-				silc_client_run_one( [connection _silcClient] );
-			[[connection _silcClientLock] unlock];
+			if( [connection isConnected] || [connection status] == MVChatConnectionConnectingStatus ) {
+				connectionsActive++;
+				[[connection _silcClientLock] lock];
+				if( [connection _silcClient] && [connection _silcClient] -> schedule ) 
+					silc_client_run_one( [connection _silcClient] );
+				[[connection _silcClientLock] unlock];
+			}
 		}
 
 		[silcChatConnectionsLock unlock];
 
-		usleep( 50 ); // give time to other threads
+		if( connectionsActive ) usleep( 5000 ); // give time to other threads
+		else usleep( 500000 ); // run really still (every 1/2 second) since we have no active connections
 	}
 
 	[pool release];
