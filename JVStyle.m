@@ -51,8 +51,9 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 			if( [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
 				NSBundle *bundle = nil;
 				JVStyle *style = nil;
-				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) )
-					style = [[JVStyle newWithBundle:bundle] autorelease];
+				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) ) {
+					if( ( style = [[JVStyle newWithBundle:bundle] autorelease] ) ) [styles addObject:style];
+				}
 			}
 		}
 	}
