@@ -293,7 +293,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 @implementation NSMutableAttributedString (NSMutableAttributedStringHTMLAdditions)
 - (void) makeLinkAttributesAutomatically {
 	// catch well-formed urls like "http://www.apple.com" or "irc://irc.javelin.cc"
-	AGRegex *regex = [AGRegex regexWithPattern:@"[\\w-]+://(?:[\\w-:]+@)?(?:[\\w-]+\\.)+[\\w-]+(?:\\:\\d+)?(?:/[\\w$-_.+!*'(),=&;#?]*)?(?=[.?!),;\]])" options:AGRegexCaseInsensitive];
+	AGRegex *regex = [AGRegex regexWithPattern:@"[\\w-]+://(?:[\\w-:]+@)?(?:[\\w-]+\\.)+[\\w{2,4}]+(?:\\:\\d+)?(?:/[\\w$\\-_.+!*',=\\\\()&;#?~]*)*" options:AGRegexCaseInsensitive];
 	NSArray *matches = [regex findAllInString:[self string]];
 	NSEnumerator *enumerator = [matches objectEnumerator];
 	AGRegexMatch *match = nil;
@@ -305,7 +305,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	}
 
 	// catch www urls like "www.apple.com"
-	regex = [AGRegex regexWithPattern:@"www.(?:[\\w-]+\\.)+[\\w-]+(?:/[\\w$-_.+!*'(),=&;#?]*)?(?=[.?!),;\]])" options:AGRegexCaseInsensitive];
+	regex = [AGRegex regexWithPattern:@"www.(?:[\\w-:]+@)?(?:[\\w-]+\\.)+[\\w{2,4}]+(?:\\:\\d+)?(?:/[\\w$\\-_.+!*',=\\\\()&;#?~]*)*" options:AGRegexCaseInsensitive];
 	matches = [regex findAllInString:[self string]];
 	enumerator = [matches objectEnumerator];
 	match = nil;
