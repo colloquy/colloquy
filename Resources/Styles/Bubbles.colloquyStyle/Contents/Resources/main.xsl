@@ -1,5 +1,5 @@
 <xsl:transform xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-	<xsl:output omit-xml-declaration="yes" indent="yes" />
+	<xsl:output omit-xml-declaration="yes" indent="no" />
 	<xsl:param name="subsequent" />
 	<xsl:param name="buddyIconDirectory" />
 	<xsl:param name="buddyIconExtension" />
