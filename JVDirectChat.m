@@ -8,6 +8,7 @@
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <libxml/xinclude.h>
 
+#import "MVChatPluginSupport.h"
 #import "JVChatController.h"
 #import "JVDirectChat.h"
 #import "MVBuddyListController.h"

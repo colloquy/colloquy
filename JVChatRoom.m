@@ -4,6 +4,7 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatPlugin.h>
 
+#import "MVChatPluginSupport.h"
 #import "JVChatController.h"
 #import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
