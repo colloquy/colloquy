@@ -1251,7 +1251,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		connectionCount++;
 
 		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
-		SERVER_CONNECT_REC *settings = server_create_conn( proto -> id, "irc.javelin.cc", 6667, [[NSString stringWithFormat:@"%8x", self] UTF8String], NULL, [self encodedBytesWithString:NSUserName()] );
+		SERVER_CONNECT_REC *settings = server_create_conn( proto -> id, "irc.javelin.cc", 6667, NULL, NULL, [self encodedBytesWithString:NSUserName()] );
 
 		[self _setIrssiConnectSettings:settings];
 	}
@@ -2008,12 +2008,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		((SERVER_REC *) _chatConnection) -> no_reconnect = 0;
 
 		const char *tag = [[NSString stringWithFormat:@"%8x", self] UTF8String];
-
 		g_free_not_null( ((SERVER_REC *) _chatConnection) -> tag );
 		((SERVER_REC *) _chatConnection) -> tag = g_strdup( tag );
-
-		g_free_not_null( ((SERVER_REC *) _chatConnection) -> connrec -> tag );
-		((SERVER_REC *) _chatConnection) -> connrec -> tag = g_strdup( tag );
 	}
 
 	if( old ) {
@@ -2031,7 +2027,15 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings {
 	SERVER_CONNECT_REC *old = _chatConnectionSettings;
 	_chatConnectionSettings = settings;
-	if( _chatConnectionSettings ) server_connect_ref( (SERVER_CONNECT_REC *)_chatConnectionSettings );
+
+	if( _chatConnectionSettings ) {
+		server_connect_ref( (SERVER_CONNECT_REC *) _chatConnectionSettings );
+
+		const char *tag = [[NSString stringWithFormat:@"%8x", self] UTF8String];
+		g_free_not_null( ((SERVER_CONNECT_REC *) _chatConnectionSettings) -> tag );
+		((SERVER_CONNECT_REC *) _chatConnectionSettings) -> tag = g_strdup( tag );
+	}
+
 	if( old ) server_connect_unref( old );
 }
 
