@@ -210,6 +210,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 			[[self transcript] setAutomaticallyWritesChangesToFile:YES];
 		}
 
+		[[self transcript] setElementLimit:0]; // start with zero limit
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusChangedNotification object:[self connection]];
@@ -612,7 +614,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[event setAttributes:attributes];
 
 	[display setScrollbackLimit:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
-	[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
+	if( [[self transcript] automaticallyWritesChangesToFile] )
+		[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
 
 	JVChatEvent *newEvent = [[self transcript] appendEvent:event];
 	[display appendChatTranscriptElement:newEvent];
@@ -739,7 +742,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}
 
 	[display setScrollbackLimit:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
-	[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
+	if( [[self transcript] automaticallyWritesChangesToFile] )
+		[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
 
 	JVChatMessage *newMessage = [[self transcript] appendMessage:cmessage];
 
