@@ -536,6 +536,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[url writeToInternetLocationFile:path];
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
+	[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
 
 	[MVConnectionsController refreshFavoritesMenu];
 }
@@ -1234,9 +1235,23 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 
 	if( [messageString length] ) {
+		[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
+
+		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+		unsigned int scrollbackLimit = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"];
+		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+
+		if( ( messageCount + 1 ) > scrollbackLimit ) {
+			float loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( ( messageCount + 1 ) - scrollbackLimit )]] floatValue];
+			if( loc && [scroller isKindOfClass:[JVMarkedScroller class]] )
+				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1 )];
+		}
+
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 		[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
+
+		[[display window] enableFlushWindow];
 	}
 
 	xmlFreeDoc( doc );
@@ -1444,15 +1459,29 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 
 	if( [messageString length] ) {
+		[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
+
+		unsigned int messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+		unsigned int scrollbackLimit = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"];
+		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+
+		if( ( messageCount + 1 ) > scrollbackLimit ) {
+			float loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( ( messageCount + 1 ) - scrollbackLimit )]] floatValue];
+			if( loc && [scroller isKindOfClass:[JVMarkedScroller class]] )
+				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1. )];
+		}
+
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		if( parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendConsecutiveMessage( \"%@\" );", messageString]];
-		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
+		if( parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, messageString]];
+		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, messageString]];
 
-		if( highlight ) {
+		if( highlight && [scroller isKindOfClass:[JVMarkedScroller class]] ) {
 			unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", ( _messageId - 1 )]] intValue];
-			if( loc ) [(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] addMarkAt:loc];
+			if( loc ) [(JVMarkedScroller *)scroller addMarkAt:loc];
 		}
+
+		[[display window] enableFlushWindow];
 	}
 
 	xmlFreeDoc( doc );
