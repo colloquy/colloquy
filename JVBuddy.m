@@ -150,6 +150,50 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 #pragma mark -
 
+- (void) addNickname:(NSURL *) nickname {
+	if( [_nicknames containsObject:nickname] ) return;
+
+	ABMutableMultiValue *value = [[[_person valueForProperty:@"IRCNickname"] mutableCopy] autorelease];
+	[value addValue:[nickname user] withLabel:[nickname host]];
+	[_person setValue:value forProperty:@"IRCNickname"];
+
+	if( ! [_nicknames count] || ! [self activeNickname] )
+		[self setActiveNickname:nickname];
+
+	[_nicknames addObject:nickname];
+
+	[[ABAddressBook sharedAddressBook] save];
+
+	[self registerWithApplicableConnections];
+}
+
+- (void) removeNickname:(NSURL *) nickname {
+	if( ! [_nicknames containsObject:nickname] ) return;
+
+	ABMutableMultiValue *value = [[[_person valueForProperty:@"IRCNickname"] mutableCopy] autorelease];
+	unsigned int i = 0, count = [value count];
+
+	for( i = 0; i < count; i++ )
+		if( [[nickname user] caseInsensitiveCompare:[value valueAtIndex:i]] == NSOrderedSame && [[nickname host] caseInsensitiveCompare:[value labelAtIndex:i]] == NSOrderedSame )
+			[value removeValueAndLabelAtIndex:i];
+
+	[_nicknames removeObject:nickname];
+	[_onlineNicknames removeObject:nickname];
+	[_person setValue:value forProperty:@"IRCNickname"];
+
+	if( [[self activeNickname] isEqual:nickname] )
+		[self setActiveNickname:( [_onlineNicknames count] ? [_onlineNicknames anyObject] : [_nicknames anyObject] )];
+
+	[[ABAddressBook sharedAddressBook] save];
+}
+
+- (void) replaceNickname:(NSURL *) old withNickname:(NSURL *) new {
+	[self removeNickname:old];
+	[self addNickname:new];
+}
+
+#pragma mark -
+
 - (NSImage *) picture {
 	return [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
 }
@@ -217,6 +261,11 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (NSString *) lastName {
 	return [_person valueForProperty:kABLastNameProperty];
+}
+
+- (NSString *) primaryEmail {
+	ABMultiValue *value = [_person valueForProperty:kABEmailProperty];
+	return [value valueAtIndex:[value indexForIdentifier:[value primaryIdentifier]]];
 }
 
 #pragma mark -

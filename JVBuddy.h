@@ -59,6 +59,10 @@ typedef enum {
 - (NSSet *) nicknames;
 - (NSSet *) onlineNicknames;
 
+- (void) addNickname:(NSURL *) nickname;
+- (void) removeNickname:(NSURL *) nickname;
+- (void) replaceNickname:(NSURL *) old withNickname:(NSURL *) new;
+
 - (NSImage *) picture;
 
 - (NSString *) preferredName;
@@ -68,6 +72,7 @@ typedef enum {
 - (NSString *) compositeName;
 - (NSString *) firstName;
 - (NSString *) lastName;
+- (NSString *) primaryEmail;
 
 - (NSString *) uniqueIdentifier;
 
