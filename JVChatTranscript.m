@@ -14,7 +14,7 @@
 #import "MVMenuButton.h"
 #import "NSPreferences.h"
 #import "JVAppearancePreferences.h"
-#import "JVChatTranscriptExtensions.h"
+#import "JVChatTranscriptPrivates.h"
 
 #import <libxml/xinclude.h>
 #import <libxml/debugXML.h>
@@ -40,20 +40,6 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 @end
 
 #pragma mark C Functions
-
-void MVChatPlaySoundForAction( NSString *action ) {
-	NSSound *sound = nil;
-	NSCParameterAssert( action != nil );
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatPlayActionSounds"] ) return;
-	if( ! ( sound = [NSSound soundNamed:action] ) ) {
-		NSString *path = [[[NSUserDefaults standardUserDefaults] objectForKey:@"MVChatActionSounds"] objectForKey:action];
-		if( ! [path isAbsolutePath] )
-			path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
-		sound = [[NSSound alloc] initWithContentsOfFile:path byReference:NO];
-		[sound setName:action];
-	}
-	[sound play];
-}
 
 NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSString *styleName1 = [JVChatTranscript _nameForBundle:style1];

@@ -15,7 +15,7 @@
 #import <libxslt/xsltutils.h>
 
 #import "JVChatController.h"
-#import "JVChatTranscriptExtensions.h"
+#import "JVChatTranscriptPrivates.h"
 #import "JVNotificationController.h"
 #import "MVConnectionsController.h"
 #import "JVDirectChat.h"
