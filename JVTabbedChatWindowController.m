@@ -28,6 +28,33 @@
 #pragma mark -
 
 @implementation JVTabbedChatWindowController
++ (void) initialize {
+	unichar left = NSLeftArrowFunctionKey;
+	unichar right = NSRightArrowFunctionKey;
+
+	NSMenu *windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	int index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousPanel: )];
+	id item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&left length:1]];
+
+	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousActivePanel: )];
+	item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&left length:1]];
+
+	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextPanel: )];
+	item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&right length:1]];
+	
+	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
+	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextActivePanel: )];
+	item = [windowMenu itemAtIndex:index];
+	[item setKeyEquivalent:[NSString stringWithCharacters:&right length:1]];
+	
+	[super initialize];	
+}
+
 - (id) init {
 	return ( self = [self initWithWindowNibName:@"JVTabbedChatWindow"] );
 }
@@ -313,8 +340,8 @@
 
 @implementation JVTabbedChatWindowController (JVTabbedChatWindowControllerPrivate)
 - (void) _supressTabBarHiding:(BOOL) supress {
-    _supressHiding = supress; // temporarily suppress bar hiding
-    [self updateTabBarVisibilityAndAnimate:YES];
+	_supressHiding = supress; // temporarily suppress bar hiding
+	[self updateTabBarVisibilityAndAnimate:YES];
 }
 
 // Smoothly resize the tab bar (calls itself with a timer until the tabbar is correctly positioned)
