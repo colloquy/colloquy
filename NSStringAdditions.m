@@ -2,37 +2,59 @@
 #import "NSStringAdditions.h"
 #import <Cocoa/Cocoa.h>
 
-@implementation NSMutableString (NSMutableStringReplaceAdditions)
-- (void) replaceString:(NSString *) search withString:(NSString *) replace maxTimes:(unsigned) max {
-	NSScanner *scanner = [NSScanner scannerWithString:self];
-	NSRange range;
-	unsigned i = 0;
-	while( ! [scanner isAtEnd] ) {
-		[scanner scanUpToString:search intoString:nil];
-		range = [[self substringFromIndex:[scanner scanLocation]] rangeOfString:search];
-		if( range.length && ( ( i < max && max ) || ! max ) ) {
-			i++;
-			[self replaceCharactersInRange:NSMakeRange( range.location + [scanner scanLocation], range.length ) withString:replace];
-			scanner = [NSScanner scannerWithString:self];
-			[scanner setScanLocation:[scanner scanLocation] + range.location + [replace length]];
-		} else if( i >= max && max ) break;
+@implementation NSString (NSStringAdditions)
++ (NSString *) mimeCharsetTagFromStringEncoding:(NSStringEncoding) encoding {
+	switch( encoding ) {
+	default:
+	case NSASCIIStringEncoding:
+	case NSNonLossyASCIIStringEncoding:
+		return @"us-ascii";
+		break;
+	case NSUTF8StringEncoding:
+		return @"utf-8";
+		break;
+	case NSISOLatin1StringEncoding:
+		return @"iso-8859-1";
+		break;
+	case 0x80000203:
+		return @"iso-8859-3";
+		break;
+	case 0x8000020F:
+		return @"iso-8859-9";
+		break;
+	case NSWindowsCP1252StringEncoding:
+		return @"windows-1252";
+		break;
+	case NSISOLatin2StringEncoding:
+		return @"iso-8859-2";
+		break;
+	case 0x80000204:
+		return @"iso-8859-4";
+		break;
+	case NSWindowsCP1250StringEncoding:
+		return @"windows-1250";
+		break;
+	case 0x80000A02:
+		return @"KOI8-R";
+		break;
+	case 0x80000205:
+		return @"iso-8859-5";
+		break;
+	case NSWindowsCP1251StringEncoding:
+		return @"windows-1251";
+		break;
+	case 0x80000A01:
+		return @"Shift_JIS";
+		break;
+	case NSISO2022JPStringEncoding:
+		return @"iso-2022-jp";
+		break;
+	case NSJapaneseEUCStringEncoding:
+		return @"EUC-JP";
+		break;
 	}
 }
-@end
 
-@implementation NSString (NSStringHTMLAdditions)
-+ (NSString *) stringWithHTMLStripedFromString:(NSString *) aString {
-	return [NSString stringWithHTMLStripedFromString:aString encoding:NSUTF8StringEncoding];
-}
-
-+ (NSString *) stringWithHTMLStripedFromString:(NSString *) aString encoding:(NSStringEncoding) encoding {
-	NSData *data = [aString dataUsingEncoding:encoding allowLossyConversion:YES];
-	NSAttributedString *attr = [NSAttributedString attributedStringWithHTML:data usingEncoding:encoding documentAttributes:NULL];
-	return [[[attr string] retain] autorelease];
-}
-@end
-
-@implementation NSString (NSStringLengthAdditions)
 - (unsigned long) UTF8StringByteLength {
 	return ( [self UTF8String] ? strlen( [self UTF8String] ) : 0 );
 }
