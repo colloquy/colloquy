@@ -1,5 +1,8 @@
 #import <unistd.h>
 
+#define HAVE_IPV6 1
+#define MODULE_NAME "MVIRCChatConnection"
+
 #import "MVIRCChatConnection.h"
 #import "MVIRCChatRoom.h"
 #import "MVIRCChatUser.h"
@@ -13,8 +16,6 @@
 #import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "NSDataAdditions.h"
-
-#define MODULE_NAME "MVIRCChatConnection"
 
 #import "core.h"
 #import "irc.h"

@@ -1,9 +1,10 @@
+#define HAVE_IPV6 1
+#define MODULE_NAME "MVIRCFileTransfer"
+
 #import "MVIRCFileTransfer.h"
 #import "MVIRCChatConnection.h"
 #import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
-
-#define MODULE_NAME "MVFileTransfer"
 
 #import "signals.h"
 #import "settings.h"
@@ -40,11 +41,7 @@ static void MVFileTransferDestroyed( FILE_DCC_REC *dcc ) {
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
 
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-
-	[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	[(id)self _destroying];
 }
 
 static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
@@ -133,8 +130,6 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 }
 
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
-// don't call super, super calls us!!
-
 	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
 	NSMutableData *result = [[[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopy] autorelease];
@@ -235,7 +230,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	[MVIRCChatConnectionThreadLock lock];
 	_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
 	[MVIRCChatConnectionThreadLock unlock];
-	return [[_host retain] autorelease];
+	return _host;
 }
 
 - (unsigned short) port {
@@ -370,7 +365,8 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (NSDate *) startDate {
-	if( _startDate || ! [self _DCCFileRecord] ) return _startDate;
+	if( _startDate || ! [self _DCCFileRecord] )
+		return [[_startDate retain] autorelease];
 	[MVIRCChatConnectionThreadLock lock];
 	if( [self _DCCFileRecord] -> starttime )
 		_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
@@ -389,7 +385,8 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (NSHost *) host {
-	if( _host || ! [self _DCCFileRecord] ) return _host;
+	if( _host || ! [self _DCCFileRecord] )
+		return [[_host retain] autorelease];
 	[MVIRCChatConnectionThreadLock lock];
 	_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
 	[MVIRCChatConnectionThreadLock unlock];
@@ -407,7 +404,8 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (NSString *) originalFileName {
-	if( _originalFileName || ! [self _DCCFileRecord] ) return _originalFileName;
+	if( _originalFileName || ! [self _DCCFileRecord] )
+		return [[_originalFileName retain] autorelease];
 	[MVIRCChatConnectionThreadLock lock];
 	_originalFileName = [[[[self user] connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg] retain];
 	[MVIRCChatConnectionThreadLock unlock];
