@@ -250,18 +250,22 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) _memberInvitedToRoom:(NSNotification *) notification {
+	int result = NSOKButton;
 	NSString *room = [[notification userInfo] objectForKey:@"room"];
 	NSString *by   = [[notification userInfo] objectForKey:@"from"];
 	MVChatConnection *connection = [notification object];
-	
-	JVChatRoom *controller = [[self chatViewControllersWithConnection:connection] anyObject];
 	
 	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", 
 																		"you were invited to join a chat room status message" ), room, by];
 	
-	[controller showAlert:NSGetInformationalAlertPanel( title, message, @"Join", @"Decline", nil ) withName:@"invitePanel"]; 
+	result = NSGetInformationalAlertPanel( title, message, @"Join", @"Decline", nil ) withName:@"invitePanel"]; 
 	
+	if ( result == NSOKButton ) {
+		JVChatRoom *room = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:NO];
+		[room joined];
+	}
+
 	//create notification
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:title forKey:@"title"];
