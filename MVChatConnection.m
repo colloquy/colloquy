@@ -14,6 +14,7 @@
 #import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "NSURLAdditions.h"
+#import "NSDataAdditions.h"
 
 #define MODULE_NAME "MVChatConnection"
 
@@ -1382,6 +1383,21 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		return;
 	}
 
+// Setup the proxy header with the most current connection address and port.
+	if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
+		NSString *userCombo = [NSString stringWithFormat:@"%@:%@", _proxyUsername, _proxyPassword];
+		NSData *combo = [userCombo dataUsingEncoding:NSASCIIStringEncoding];
+
+		g_free_not_null( [self _irssiConnectSettings] -> proxy_string );
+		if( [combo length] > 1 ) {
+			NSString *userCombo = [combo base64EncodingWithLineLength:0];
+			[self _irssiConnectSettings] -> proxy_string = g_strdup_printf( "CONNECT %s:%d HTTP/1.0\r\nProxy-Authorization: Basic %s\r\n\r\n", [self _irssiConnectSettings] -> address, [self _irssiConnectSettings] -> port, [userCombo UTF8String] );
+		} else [self _irssiConnectSettings] -> proxy_string = g_strdup_printf( "CONNECT %s:%d HTTP/1.0\r\n\r\n", [self _irssiConnectSettings] -> address, [self _irssiConnectSettings] -> port );
+
+		g_free_not_null( [self _irssiConnectSettings] -> proxy_string_after );
+		[self _irssiConnectSettings] -> proxy_string_after = NULL;
+	}
+
 	SERVER_REC *newConnection = proto -> server_init_connect( [self _irssiConnectSettings] );
 	[self _setIrssiConnection:newConnection];
 	if( ! newConnection ) {
@@ -1615,29 +1631,58 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (void) setProxyType:(MVChatConnectionProxy) type {
-	if( ! [self _irssiConnectSettings] ) return;
-
 	_proxy = type;
-
-	if( _proxy == MVChatConnectionHTTPSProxy ) {
-		g_free_not_null( [self _irssiConnectSettings] -> proxy );
-		[self _irssiConnectSettings] -> proxy = g_strdup( "127.0.0.1" );
-
-		[self _irssiConnectSettings] -> proxy_port = 8000;
-
-		g_free_not_null( [self _irssiConnectSettings] -> proxy_string );
-		[self _irssiConnectSettings] -> proxy_string = g_strdup( "CONNECT %s:%d\nProxy-Authorization: %%BASE64(user:pass)%%\n\n" );
-
-		g_free_not_null( [self _irssiConnectSettings] -> proxy_string_after );
-		[self _irssiConnectSettings] -> proxy_string_after = NULL;
-
-		g_free_not_null( [self _irssiConnectSettings] -> proxy_password );
-		[self _irssiConnectSettings] -> proxy_password = NULL;
-	}
 }
 
 - (MVChatConnectionProxy) proxyType {
 	return _proxy;
+}
+
+#pragma mark -
+
+- (void) setProxyServer:(NSString *) address {
+	if( ! [self _irssiConnectSettings] ) return;
+	g_free_not_null( [self _irssiConnectSettings] -> proxy );
+	[self _irssiConnectSettings] -> proxy = g_strdup( [self encodedBytesWithString:address] );
+}
+
+- (NSString *) proxyServer {
+	if( ! [self _irssiConnectSettings] ) return nil;
+	return [self stringWithEncodedBytes:[self _irssiConnectSettings] -> proxy];
+}
+
+#pragma mark -
+
+- (void) setProxyServerPort:(unsigned short) port {
+	if( ! [self _irssiConnectSettings] ) return;
+	[self _irssiConnectSettings] -> proxy_port = port;
+}
+
+- (unsigned short) proxyServerPort {
+	if( ! [self _irssiConnectSettings] ) return 0;
+	return [self _irssiConnectSettings] -> proxy_port;
+}
+
+#pragma mark -
+
+- (void) setProxyUsername:(NSString *) username {
+	[_proxyUsername autorelease];
+	_proxyUsername = [username copy];
+}
+
+- (NSString *) proxyUsername {
+	return _proxyUsername;
+}
+
+#pragma mark -
+
+- (void) setProxyPassword:(NSString *) password {
+	[_proxyPassword autorelease];
+	_proxyPassword = [password copy];
+}
+
+- (NSString *) proxyPassword {
+	return _proxyPassword;
 }
 
 #pragma mark -
