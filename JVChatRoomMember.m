@@ -440,14 +440,8 @@
 }
 
 - (IBAction) ban:(id) sender {
-/*	if( [self address] ) {
-		// Address is in the form of user@hostmask, lets get rid of the user bit
-		NSArray *parts = [[self address] componentsSeparatedByString:@"@"];
-		if( [parts count] == 2 ) {
-			NSString *hostmask = [parts objectAtIndex:1];
-			[[self connection] banMember:[NSString stringWithFormat:@"*!*@%@", hostmask] inRoom:[[self room] target]];
-		}
-	} */
+	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nil andHostMask:[NSString stringWithFormat:@"*@%@", [self address]]];
+	[[[self room] target] addBanForUser:user];
 }
 
 - (IBAction) customKick:(id) sender {

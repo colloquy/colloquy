@@ -721,7 +721,7 @@ static void MVChatBanNew( CHANNEL_REC *channel, BAN_REC *ban ) {
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
-static void MVChatBanRemove( CHANNEL_REC *channel, BAN_REC *ban ) {
+static void MVChatBanRemove( CHANNEL_REC *channel, BAN_REC *ban, const char *who ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
 	if( ! self || ! ban || ! ban -> ban ) return;
 
@@ -732,10 +732,11 @@ static void MVChatBanRemove( CHANNEL_REC *channel, BAN_REC *ban ) {
 	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
 
 	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
+	MVChatUser *byMember = ( who ? [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:who]] : nil );
 
 	[room _removeBanForUser:user];
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", byMember, @"byUser", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 

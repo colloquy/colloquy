@@ -52,6 +52,7 @@
 		_nextMessageAlertMembers = [[NSMutableSet set] retain];
 		_kickedFromRoom = NO;
 		_keepAfterPart = NO;
+		_recentlyJoined = NO;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _partedRoom: ) name:MVChatRoomPartedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _kicked: ) name:MVChatRoomKickedNotification object:target];
@@ -323,6 +324,7 @@
 #pragma mark Join & Part Handling
 
 - (void) joined {
+	_recentlyJoined = YES;
 	[_sortedMembers removeAllObjects];
 
 	NSEnumerator *enumerator = [[[self target] memberUsers] objectEnumerator];
@@ -352,10 +354,15 @@
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _selfNicknameChanged: ) name:MVChatConnectionNicknameAcceptedNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatRoomTopicChangedNotification object:[self target]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanned: ) name:MVChatRoomUserBannedNotification object:[self target]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanRemoved: ) name:MVChatRoomUserBanRemovedNotification object:[self target]];
+
+	[self performSelector:@selector( _resetRecentlyJoinedStatus ) withObject:nil afterDelay:1.];
 }	
 
 - (void) parting {
 	if( [[self target] isJoined] ) {
+		_recentlyJoined = NO;
 		_cantSendMessages = YES;
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), nil];
@@ -368,6 +375,8 @@
 
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:[self connection]];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:[self target]];
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomUserBannedNotification object:[self target]];
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomUserBanRemovedNotification object:[self target]];
 	}
 }
 
@@ -943,6 +952,40 @@
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 }
 
+- (void) _memberBanned:(NSNotification *) notification {
+	if( _recentlyJoined ) return;
+
+	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
+	JVChatRoomMember *byMbr = [self chatRoomMemberForUser:byUser];
+
+	MVChatUser *ban = [[notification userInfo] objectForKey:@"user"];
+
+	NSString *message = nil;
+	if( [byMbr isLocalUser] ) {
+		message = [NSString stringWithFormat:NSLocalizedString( @"You set a ban on %@.", "you set a ban chat room status message" ), ban];
+	} else {
+		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> set a ban on %@.", "user set a ban chat room status message" ), ( byMbr ? [byMbr title] : [byUser nickname] ), [ban description]];
+	}
+
+	[self addEventMessageToDisplay:message withName:@"memberBanned" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : [byUser nickname] ), @"by", [byUser nickname], @"by-nickname", ban, @"ban", nil]];
+}
+
+- (void) _memberBanRemoved:(NSNotification *) notification {
+	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
+	JVChatRoomMember *byMbr = [self chatRoomMemberForUser:byUser];
+
+	MVChatUser *ban = [[notification userInfo] objectForKey:@"user"];
+
+	NSString *message = nil;
+	if( [byMbr isLocalUser] ) {
+		message = [NSString stringWithFormat:NSLocalizedString( @"You removed the ban on %@.", "you removed a ban chat room status message" ), [ban description]];
+	} else {
+		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> removed the ban on %@.", "user removed a ban chat room status message" ), ( byMbr ? [byMbr title] : [byUser nickname] ), [ban description]];
+	}
+
+	[self addEventMessageToDisplay:message withName:@"banRemoved" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : [byUser nickname] ), @"by", [byUser nickname], @"by-nickname", [ban description], @"ban", nil]];
+}
+
 - (void) _memberModeChanged:(NSNotification *) notification {
 	// sort again if needed
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] )
@@ -1180,6 +1223,10 @@
 
 - (void) _startChatWithNonMember:(id) sender {
 	[[JVChatController defaultManager] chatViewControllerForUser:[sender representedObject] ifExists:NO];
+}
+
+- (void) _resetRecentlyJoinedStatus {
+	_recentlyJoined = NO;
 }
 @end
 

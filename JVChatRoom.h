@@ -13,6 +13,7 @@
 	BOOL _kickedFromRoom;
 	BOOL _inRoom;
 	BOOL _keepAfterPart;
+	BOOL _recentlyJoined;
 }
 - (void) joined;
 - (void) parting;
