@@ -3,6 +3,7 @@
 @implementation JVWebView
 - (id) initWithCoder:(NSCoder *) coder {
 	self = [super initWithCoder:coder];
+	forwarding = NO;
 	[self setNextTextView:nil];
 	return self;
 }
@@ -20,15 +21,24 @@
 }
 
 - (void) keyDown:(NSEvent *) event {
+	if( forwarding ) return;
+	forwarding = YES;
 	[self forwardSelector:@selector( keyDown: ) withObject:event];
+	forwarding = NO;
 }
 
 - (void) pasteAsPlainText:(id) sender {
+	if( forwarding ) return;
+	forwarding = YES;
 	[self forwardSelector:@selector( pasteAsPlainText: ) withObject:sender];
+	forwarding = NO;
 }
 
 - (void) pasteAsRichText:(id) sender {
+	if( forwarding ) return;
+	forwarding = YES;
 	[self forwardSelector:@selector( pasteAsRichText: ) withObject:sender];
+	forwarding = NO;
 }
 
 - (NSTextView *) nextTextView {
