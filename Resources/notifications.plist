@@ -21,6 +21,11 @@
 		<string>Member Kicked From Room</string>
 	</dict>
 	<dict>
+		<key>identifier</key>
+		<string>JVChatRoomInvite</string>
+		<key>title</key>
+		<string>Member Invited To Room</string>
+	</dict>	<dict>
 		<key>seperator</key>
 		<true />
 	</dict>

@@ -7,28 +7,28 @@
 #define MVURLDecodeString(t) ((NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)(t), NULL))
 
 typedef enum {
-	MVChatConnectionDisconnectedStatus = 'disC',
-	MVChatConnectionConnectingStatus = 'conG',
-	MVChatConnectionConnectedStatus = 'conD',
-	MVChatConnectionSuspendedStatus = 'susP'
+	MVChatConnectionDisconnectedStatus  = 'disC',
+	MVChatConnectionConnectingStatus	= 'conG',
+	MVChatConnectionConnectedStatus		= 'conD',
+	MVChatConnectionSuspendedStatus		= 'susP'
 } MVChatConnectionStatus;
 
 typedef enum {
-	MVChatConnectionNoProxy = 'nonE',
-	MVChatConnectionHTTPSProxy = 'htpS',
-	MVChatConnectionSOCKSProxy = 'sokS'
+	MVChatConnectionNoProxy				= 'nonE',
+	MVChatConnectionHTTPSProxy			= 'htpS',
+	MVChatConnectionSOCKSProxy			= 'sokS'
 } MVChatConnectionProxy;
 
 typedef enum {
-	MVChatRoomNoModes = 0x0,
-	MVChatRoomPrivateMode = 0x1,
-	MVChatRoomSecretMode = 0x2,
-	MVChatRoomInviteOnlyMode = 0x4,
-	MVChatRoomModeratedMode = 0x8,
-	MVChatRoomSetTopicOperatorOnlyMode = 0x10,
-	MVChatRoomNoOutsideMessagesMode = 0x20,
-	MVChatRoomPasswordRequiredMode = 0x40,
-	MVChatRoomMemberLimitMode = 0x80
+	MVChatRoomNoModes					= 0x0,
+	MVChatRoomPrivateMode				= 0x1,
+	MVChatRoomSecretMode				= 0x2,
+	MVChatRoomInviteOnlyMode			= 0x4,
+	MVChatRoomModeratedMode				= 0x8,
+	MVChatRoomSetTopicOperatorOnlyMode  = 0x10,
+	MVChatRoomNoOutsideMessagesMode		= 0x20,
+	MVChatRoomPasswordRequiredMode		= 0x40,
+	MVChatRoomMemberLimitMode			= 0x80
 } MVChatRoomMode;
 
 typedef enum {
@@ -135,26 +135,30 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 @interface MVChatConnection : NSObject {
 @private
-	NSString *_nickname;
-	NSString *_npassword;
-	NSString *_password;
-	NSString *_server;
-	NSString *_username;
-	NSString *_realName;
-	unsigned short _port;
-	MVChatConnectionStatus _status;
-	MVChatConnectionProxy _proxy;
-	void *_chatConnection;
-	NSTimer *_firetalkSelectTimer;
-	NSTimer *_pingTimer;
-	NSMutableArray *_joinList;
-	NSMutableDictionary *_roomsCache;
-	NSDate *_cachedDate;
-	NSTimeInterval _backlogDelay;
-	NSDictionary *_floodIntervals;
-	NSAttributedString *_awayMessage;
-	unsigned int /* io_object_t */ _sleepNotifier;
-	unsigned int /* io_connect_t */ _powerConnection;
+	NSString				*_nickname;
+	NSString				*_npassword;
+	NSString				*_password;
+	NSString				*_server;
+	NSString				*_username;
+	NSString				*_realName;
+	
+	unsigned short			_port;
+	
+	MVChatConnectionStatus  _status;
+	MVChatConnectionProxy   _proxy;
+	
+	void					*_chatConnection;
+	NSTimer					*_firetalkSelectTimer;
+	NSTimer					*_pingTimer;
+	NSMutableArray			*_joinList;
+	NSMutableDictionary		*_roomsCache;
+	NSDate					*_cachedDate;
+	NSTimeInterval			_backlogDelay;
+	NSDictionary			*_floodIntervals;
+	NSAttributedString		*_awayMessage;
+	
+	unsigned int			_sleepNotifier;		/* io_object_t */
+	unsigned int			_powerConnection;   /* io_connect_t */
 }
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;

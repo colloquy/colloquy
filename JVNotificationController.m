@@ -51,7 +51,7 @@ static JVNotificationController *sharedInstance = nil;
 
 	if( [[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] && ! [[NSApplication sharedApplication] isActive] )
 		[self _showBubbleWithContext:context andPrefs:eventPrefs];
-	else if( [[eventPrefs objectForKey:@"showBubble"] boolValue] )
+	else if( [[eventPrefs objectForKey:@"showBubble"] boolValue] && ![[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] )
 		[self _showBubbleWithContext:context andPrefs:eventPrefs];
 }
 @end

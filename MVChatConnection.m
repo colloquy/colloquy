@@ -17,57 +17,57 @@ typedef void (*firetalk_subcode_callback)(firetalk_t, void *, const char * const
 
 #pragma mark -
 
-NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";
+NSString *MVChatConnectionGotRawMessageNotification			= @"MVChatConnectionGotRawMessageNotification";
 
-NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
-NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
-NSString *MVChatConnectionDidNotConnectNotification = @"MVChatConnectionDidNotConnectNotification";
-NSString *MVChatConnectionWillDisconnectNotification = @"MVChatConnectionWillDisconnectNotification";
-NSString *MVChatConnectionDidDisconnectNotification = @"MVChatConnectionDidDisconnectNotification";
-NSString *MVChatConnectionErrorNotification = @"MVChatConnectionErrorNotification";
+NSString *MVChatConnectionWillConnectNotification			= @"MVChatConnectionWillConnectNotification";
+NSString *MVChatConnectionDidConnectNotification			= @"MVChatConnectionDidConnectNotification";
+NSString *MVChatConnectionDidNotConnectNotification			= @"MVChatConnectionDidNotConnectNotification";
+NSString *MVChatConnectionWillDisconnectNotification		= @"MVChatConnectionWillDisconnectNotification";
+NSString *MVChatConnectionDidDisconnectNotification			= @"MVChatConnectionDidDisconnectNotification";
+NSString *MVChatConnectionErrorNotification					= @"MVChatConnectionErrorNotification";
 
-NSString *MVChatConnectionNeedPasswordNotification = @"MVChatConnectionNeedPasswordNotification";
-NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotPrivateMessageNotification";
+NSString *MVChatConnectionNeedPasswordNotification			= @"MVChatConnectionNeedPasswordNotification";
+NSString *MVChatConnectionGotPrivateMessageNotification		= @"MVChatConnectionGotPrivateMessageNotification";
 
-NSString *MVChatConnectionBuddyIsOnlineNotification = @"MVChatConnectionBuddyIsOnlineNotification";
-NSString *MVChatConnectionBuddyIsOfflineNotification = @"MVChatConnectionBuddyIsOfflineNotification";
-NSString *MVChatConnectionBuddyIsAwayNotification = @"MVChatConnectionBuddyIsAwayNotification";
-NSString *MVChatConnectionBuddyIsUnawayNotification = @"MVChatConnectionBuddyIsUnawayNotification";
-NSString *MVChatConnectionBuddyIsIdleNotification = @"MVChatConnectionBuddyIsIdleNotification";
+NSString *MVChatConnectionBuddyIsOnlineNotification			= @"MVChatConnectionBuddyIsOnlineNotification";
+NSString *MVChatConnectionBuddyIsOfflineNotification		= @"MVChatConnectionBuddyIsOfflineNotification";
+NSString *MVChatConnectionBuddyIsAwayNotification			= @"MVChatConnectionBuddyIsAwayNotification";
+NSString *MVChatConnectionBuddyIsUnawayNotification			= @"MVChatConnectionBuddyIsUnawayNotification";
+NSString *MVChatConnectionBuddyIsIdleNotification			= @"MVChatConnectionBuddyIsIdleNotification";
 
-NSString *MVChatConnectionGotUserInfoNotification = @"MVChatConnectionGotUserInfoNotification";
-NSString *MVChatConnectionGotRoomInfoNotification = @"MVChatConnectionGotRoomInfoNotification";
+NSString *MVChatConnectionGotUserInfoNotification			= @"MVChatConnectionGotUserInfoNotification";
+NSString *MVChatConnectionGotRoomInfoNotification			= @"MVChatConnectionGotRoomInfoNotification";
 
-NSString *MVChatConnectionJoinedRoomNotification = @"MVChatConnectionJoinedRoomNotification";
-NSString *MVChatConnectionLeftRoomNotification = @"MVChatConnectionLeftRoomNotification";
-NSString *MVChatConnectionUserJoinedRoomNotification = @"MVChatConnectionUserJoinedRoomNotification";
-NSString *MVChatConnectionUserLeftRoomNotification = @"MVChatConnectionUserLeftRoomNotification";
-NSString *MVChatConnectionUserNicknameChangedNotification = @"MVChatConnectionUserNicknameChangedNotification";
-NSString *MVChatConnectionUserOppedInRoomNotification = @"MVChatConnectionUserOppedInRoomNotification";
-NSString *MVChatConnectionUserDeoppedInRoomNotification = @"MVChatConnectionUserDeoppedInRoomNotification";
-NSString *MVChatConnectionUserVoicedInRoomNotification = @"MVChatConnectionUserVoicedInRoomNotification";
-NSString *MVChatConnectionUserDevoicedInRoomNotification = @"MVChatConnectionUserDevoicedInRoomNotification";
-NSString *MVChatConnectionUserKickedFromRoomNotification = @"MVChatConnectionUserKickedFromRoomNotification";
-NSString *MVChatConnectionUserAwayStatusNotification = @"MVChatConnectionUserAwayStatusNotification";
-NSString *MVChatConnectionGotRoomModeNotification = @"MVChatConnectionGotRoomModeNotification";
-NSString *MVChatConnectionGotRoomMessageNotification = @"MVChatConnectionGotRoomMessageNotification";
-NSString *MVChatConnectionGotRoomTopicNotification = @"MVChatConnectionGotRoomTopicNotification";
+NSString *MVChatConnectionJoinedRoomNotification			= @"MVChatConnectionJoinedRoomNotification";
+NSString *MVChatConnectionLeftRoomNotification				= @"MVChatConnectionLeftRoomNotification";
+NSString *MVChatConnectionUserJoinedRoomNotification		= @"MVChatConnectionUserJoinedRoomNotification";
+NSString *MVChatConnectionUserLeftRoomNotification			= @"MVChatConnectionUserLeftRoomNotification";
+NSString *MVChatConnectionUserNicknameChangedNotification   = @"MVChatConnectionUserNicknameChangedNotification";
+NSString *MVChatConnectionUserOppedInRoomNotification		= @"MVChatConnectionUserOppedInRoomNotification";
+NSString *MVChatConnectionUserDeoppedInRoomNotification		= @"MVChatConnectionUserDeoppedInRoomNotification";
+NSString *MVChatConnectionUserVoicedInRoomNotification		= @"MVChatConnectionUserVoicedInRoomNotification";
+NSString *MVChatConnectionUserDevoicedInRoomNotification	= @"MVChatConnectionUserDevoicedInRoomNotification";
+NSString *MVChatConnectionUserKickedFromRoomNotification	= @"MVChatConnectionUserKickedFromRoomNotification";
+NSString *MVChatConnectionUserAwayStatusNotification		= @"MVChatConnectionUserAwayStatusNotification";
+NSString *MVChatConnectionGotRoomModeNotification			= @"MVChatConnectionGotRoomModeNotification";
+NSString *MVChatConnectionGotRoomMessageNotification		= @"MVChatConnectionGotRoomMessageNotification";
+NSString *MVChatConnectionGotRoomTopicNotification			= @"MVChatConnectionGotRoomTopicNotification";
 
-NSString *MVChatConnectionKickedFromRoomNotification = @"MVChatConnectionKickedFromRoomNotification";
-NSString *MVChatConnectionInvitedToRoomNotification = @"MVChatConnectionInvitedToRoomNotification";
+NSString *MVChatConnectionKickedFromRoomNotification		= @"MVChatConnectionKickedFromRoomNotification";
+NSString *MVChatConnectionInvitedToRoomNotification			= @"MVChatConnectionInvitedToRoomNotification";
 
-NSString *MVChatConnectionNicknameAcceptedNotification = @"MVChatConnectionNicknameAcceptedNotification";
-NSString *MVChatConnectionNicknameRejectedNotification = @"MVChatConnectionNicknameRejectedNotification";
+NSString *MVChatConnectionNicknameAcceptedNotification		= @"MVChatConnectionNicknameAcceptedNotification";
+NSString *MVChatConnectionNicknameRejectedNotification		= @"MVChatConnectionNicknameRejectedNotification";
 
 NSString *MVChatConnectionFileTransferAvailableNotification = @"MVChatConnectionFileTransferAvailableNotification";
-NSString *MVChatConnectionFileTransferOfferedNotification = @"MVChatConnectionFileTransferOfferedNotification";
-NSString *MVChatConnectionFileTransferStartedNotification = @"MVChatConnectionFileTransferStartedNotification";
-NSString *MVChatConnectionFileTransferFinishedNotification = @"MVChatConnectionFileTransferFinishedNotification";
-NSString *MVChatConnectionFileTransferErrorNotification = @"MVChatConnectionFileTransferErrorNotification";
-NSString *MVChatConnectionFileTransferStatusNotification = @"MVChatConnectionFileTransferStatusNotification";
+NSString *MVChatConnectionFileTransferOfferedNotification   = @"MVChatConnectionFileTransferOfferedNotification";
+NSString *MVChatConnectionFileTransferStartedNotification   = @"MVChatConnectionFileTransferStartedNotification";
+NSString *MVChatConnectionFileTransferFinishedNotification  = @"MVChatConnectionFileTransferFinishedNotification";
+NSString *MVChatConnectionFileTransferErrorNotification		= @"MVChatConnectionFileTransferErrorNotification";
+NSString *MVChatConnectionFileTransferStatusNotification	= @"MVChatConnectionFileTransferStatusNotification";
 
-NSString *MVChatConnectionSubcodeRequestNotification = @"MVChatConnectionSubcodeRequestNotification";
-NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeReplyNotification";
+NSString *MVChatConnectionSubcodeRequestNotification		= @"MVChatConnectionSubcodeRequestNotification";
+NSString *MVChatConnectionSubcodeReplyNotification			= @"MVChatConnectionSubcodeReplyNotification";
 
 @interface MVChatConnection (MVChatConnectionPrivate)
 + (NSData *) _flattenedHTMLDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc;

@@ -4,6 +4,7 @@
 #import "JVChatController.h"
 #import "MVApplicationController.h"
 #import "JVChatWindowController.h"
+#import "JVNotificationController.h"
 #import "JVChatTranscript.h"
 #import "JVDirectChat.h"
 #import "JVChatRoom.h"
@@ -38,8 +39,9 @@ static JVChatController *sharedInstance = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _leftRoom: ) name:MVChatConnectionLeftRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberJoinedRoom: ) name:MVChatConnectionUserJoinedRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberLeftRoom: ) name:MVChatConnectionUserLeftRoomNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberInvitedToRoom: ) name:MVChatConnectionInvitedToRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberNicknameChanged: ) name:MVChatConnectionUserNicknameChangedNotification object:nil];
-
+		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberOpped: ) name:MVChatConnectionUserOppedInRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberDeopped: ) name:MVChatConnectionUserDeoppedInRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberVoiced: ) name:MVChatConnectionUserVoicedInRoomNotification object:nil];
@@ -247,6 +249,30 @@ static JVChatController *sharedInstance = nil;
 	[controller removeChatMember:[[notification userInfo] objectForKey:@"who"] withReason:[[notification userInfo] objectForKey:@"reason"]];
 }
 
+- (void) _memberInvitedToRoom:(NSNotification *) notification {
+	NSString *room = [[notification userInfo] objectForKey:@"room"];
+	NSString *by   = [[notification userInfo] objectForKey:@"from"];
+	MVChatConnection *connection = [notification object];
+	
+	JVChatRoom *controller = [[self chatViewControllersWithConnection:connection] anyObject];
+	
+	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
+	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", 
+																		"you were invited to join a chat room status message" ), room, by];
+	
+	[controller showAlert:NSGetInformationalAlertPanel( title, message, @"Join", @"Decline", nil ) withName:@"invitePanel"]; 
+	
+	//create notification
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:title forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message member invited to room string" ), room, by] forKey:@"description"];
+	[context setObject:[connection nickname] forKey:@"performedOn"];
+	[context setObject:by forKey:@"performedBy"];
+	//this is not a room specific notification
+	[[JVNotificationController defaultManager] performNotification:@"JVChatRoomInvite" withContextInfo:context];
+	
+}
+
 - (void) _memberNicknameChanged:(NSNotification *) notification {
 	id controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
 	[(JVChatRoom *)controller changeChatMember:[[notification userInfo] objectForKey:@"oldNickname"] to:[[notification userInfo] objectForKey:@"newNickname"]];
@@ -350,7 +376,7 @@ static JVChatController *sharedInstance = nil;
 				}
 			}
 		} else {
-		    if( [[self chatViewControllersOfClass:modeClass] count ] > 1 ) {
+		    if( [[self chatViewControllersOfClass:modeClass] count ] > 0 ) {
 				NSMutableSet *tempSet = [[[self chatViewControllersOfClass:modeClass] mutableCopy] autorelease];
 				[tempSet removeObject:controller];
 				windowController = [[tempSet anyObject] windowController];
