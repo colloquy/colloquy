@@ -926,7 +926,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 - (void) connect {
 	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
-	if( _chatConnection || ! _chatConnectionSettings ) return;
+	if( ! _chatConnectionSettings ) return;
 
 	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 5. ) {
 		// prevents conencting too quick
