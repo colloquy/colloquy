@@ -33,16 +33,16 @@
 	
 	floaterTabImage = [[self dragTabImageForTabCell:inTabCell inCustomTabsView:inTabView] retain];
 	floaterWindowImage = [[self dragWindowImageForWindow:[inTabView window] customTabsView:inTabView tabCell:inTabCell] retain];
-	useFancyAnimations = (NSAppKitVersionNumber >= 700. && floaterWindowImage);
+	useFancyAnimations = ( floaterWindowImage ? YES : NO );
 	
 	if(useFancyAnimations){
 		//Create a floating window for our tab
 		dragTabFloater = [ESFloater floaterWithImage:floaterTabImage styleMask:NSBorderlessWindowMask title:nil];
-		[dragTabFloater setMaxOpacity:( transparent ? 0.75 : 1. )];
+		[dragTabFloater setMaxOpacity:1.0];
 		
 		//Create a floating window for the stand-alone window our tab would produce
-		dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:[[inTabView window] styleMask] title:[[inTabView window] title]];
-		[dragWindowFloater setMaxOpacity:( transparent ? 0.75 : 1. )];
+		dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:NSTitledWindowMask title:[[inTabView window] title]];
+		[dragWindowFloater setMaxOpacity:(transparent ? 0.75 : 1.00)];
 	}
 		
 	return(self);

@@ -21,13 +21,13 @@
 @implementation ESFloater
 
 //
-+ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask
++ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title
 {
-    return([[self alloc] initWithImage:inImage styleMask:styleMask]);
+    return([[self alloc] initWithImage:inImage styleMask:styleMask title:title]);
 }
 
 //
-- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask
+- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title
 {
     NSRect  frame;
     
@@ -43,11 +43,12 @@
                                        styleMask:styleMask
                                          backing:NSBackingStoreBuffered
                                            defer:NO];
+	if( title) [panel setTitle:title];
     [panel setHidesOnDeactivate:NO];
     [panel setIgnoresMouseEvents:YES];
     [panel setLevel:NSStatusWindowLevel];
     [self _setWindowOpacity:WINDOW_FADE_MIN];
-    
+
     //Setup the static view
     staticView = [[NSImageView alloc] initWithFrame:frame];
 	[staticView setImage:inImage];
