@@ -569,61 +569,97 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 		}
 	}
 
+	BOOL wasBold = NO, wasItalic = NO, wasUnderline = NO, wasStrikethrough = NO;
+	NSColor *oldForeground = nil, *oldBackground = nil;
+	id oldLink = nil;
 	limitRange = NSMakeRange( 0, [self length] );
 	while( limitRange.length > 0 ) {
 		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 
 		id link = [dict objectForKey:NSLinkAttributeName];
-		NSFont *currentFont = [dict objectForKey:NSFontAttributeName];
-		NSColor *foregroundColor = [dict objectForKey:NSForegroundColorAttributeName];
-		NSColor *backgroundColor = [dict objectForKey:NSBackgroundColorAttributeName];
-		BOOL bold = NO, italic = NO, underline = NO, strikethrough = NO;
+		
+		if( ! ( link && oldLink && [link isEqual:oldLink] ) ) {
+			
+			NSColor *foregroundColor = nil, *backgroundColor = nil;
+			if( ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
+				foregroundColor = [dict objectForKey:NSForegroundColorAttributeName];
+				backgroundColor = [dict objectForKey:NSBackgroundColorAttributeName];
+			}
 
-		if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
-			int traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
-			if( traits & NSBoldFontMask ) bold = YES;
-			if( traits & NSItalicFontMask ) italic = YES;
-			if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
-			if( [[dict objectForKey:NSStrikethroughStyleAttributeName] intValue] ) strikethrough = YES;
-		}
+			BOOL bold = NO, italic = NO, underline = NO, strikethrough = NO;
+			if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
+				NSFont *currentFont = [dict objectForKey:NSFontAttributeName];
+				int traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
+				if( traits & NSBoldFontMask ) bold = YES;
+				if( traits & NSItalicFontMask ) italic = YES;
+				if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
+				if( [[dict objectForKey:NSStrikethroughStyleAttributeName] intValue] ) strikethrough = YES;
+			}
 
-		if( ( foregroundColor || backgroundColor ) && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
-			NSString *hexColor = nil;
+			NSString *foreColorString = nil, *backColorString = nil;
+			// Check if both old and new colors exist, and if so, compare
+			// Otherwise, compare the color pointers - at least one will be nil
+			if( ( foregroundColor && oldForeground && ![foregroundColor isEqual:oldForeground] ) ||
+				( foregroundColor != oldForeground ) ) {
+				if( foregroundColor ) {
+					foreColorString = [foregroundColor HTMLAttributeValue];
+				} else {
+					foreColorString = @".";
+				}
+			}
+			if( ( backgroundColor && oldBackground && ![backgroundColor isEqual:oldBackground] ) ||
+				( backgroundColor != oldBackground ) ) {
+				if( backgroundColor ) {
+					backColorString = [backgroundColor HTMLAttributeValue];
+				} else {
+					backColorString = @".";
+				}
+			}
+			if( foreColorString || backColorString ) {
+				[ret appendBytes:"\006C" length:2];
 
-			[ret appendBytes:"\006C" length:2];
+				if( foreColorString ) {
+					[ret appendBytes:[foreColorString UTF8String]
+							  length:strlen( [foreColorString UTF8String] )];
+				} else {
+					[ret appendBytes:"-" length:1];
+				}
 
-			if( foregroundColor ) {
-				hexColor = [foregroundColor HTMLAttributeValue];				
-				[ret appendBytes:[hexColor UTF8String] length:strlen( [hexColor UTF8String] )];
-			} else [ret appendBytes:"." length:1];
+				if( backColorString ) {
+					[ret appendBytes:[backColorString UTF8String]
+							  length:strlen( [backColorString UTF8String] )];
+				} else {
+					[ret appendBytes:"-" length:1];
+				}
 
-			if( backgroundColor ) {
-				hexColor = [backgroundColor HTMLAttributeValue];				
-				[ret appendBytes:[hexColor UTF8String] length:strlen( [hexColor UTF8String] )];
-			} else [ret appendBytes:"." length:1];
+				[ret appendBytes:"\006" length:1];
+			}
 
-			[ret appendBytes:"\006" length:1];
-		}
+			if( bold != wasBold )
+				[ret appendBytes:( bold ? "\006B\006" : "\006B-\006" ) length:( bold ? 3 : 4 )];
+			if( italic != wasItalic )
+				[ret appendBytes:( italic ? "\006I\006" : "\006I-\006" ) length:( italic ? 3 : 4 )];
+			if( underline != wasUnderline )
+				[ret appendBytes:( underline ? "\006U\006" : "\006U-\006" ) length:( underline ? 3 : 4 )];
+			if( strikethrough != wasStrikethrough )
+				[ret appendBytes:( strikethrough ? "\006S\006" : "\006S-\006" ) length:( strikethrough ? 3 : 4 )];
 
-		if( bold ) [ret appendBytes:"\006B\006" length:3];
-		if( italic ) [ret appendBytes:"\006I\006" length:3];
-		if( underline ) [ret appendBytes:"\006U\006" length:3];
-		if( strikethrough ) [ret appendBytes:"\006S\006" length:3];
-
-		NSData *data = nil;
-		if( [link isKindOfClass:[NSURL class]] || [link isKindOfClass:[NSString class]] ) {
-			data = [[link description] dataUsingEncoding:encoding allowLossyConversion:YES];
-			[ret appendBytes:"\006L\006" length:3];
-			[ret appendData:data];
-			[ret appendBytes:"\006L-\006" length:4];
-		} else {
-			NSString *text = [[self attributedSubstringFromRange:effectiveRange] string];
-			data = [text dataUsingEncoding:encoding allowLossyConversion:YES];
-			[ret appendData:data];
-		}
-
-		if( foregroundColor || backgroundColor || bold || italic || underline || strikethrough )
-			[ret appendBytes:"\006N\006" length:3]; // reset the formatting only if we had formatting
+			NSData *data = nil;
+			if( [link isKindOfClass:[NSURL class]] || [link isKindOfClass:[NSString class]] ) {
+				data = [[link description] dataUsingEncoding:encoding allowLossyConversion:YES];
+				[ret appendBytes:"\006L\006" length:3];
+				[ret appendData:data];
+				[ret appendBytes:"\006L-\006" length:4];
+			} else {
+				NSString *text = [[self attributedSubstringFromRange:effectiveRange] string];
+				data = [text dataUsingEncoding:encoding allowLossyConversion:YES];
+				[ret appendData:data];
+			}
+			
+			wasBold = bold; wasItalic = italic; wasUnderline = underline; wasStrikethrough = strikethrough;
+			oldForeground = foregroundColor; oldBackground = backgroundColor; oldLink = link;
+			
+		} // ![link isEqual:oldLink]
 
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
@@ -631,7 +667,7 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 	if( [[options objectForKey:@"NullTerminatedReturn"] boolValue] )
 		[ret appendBytes:"\0" length:1];
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 - (NSData *) IRCFormatWithOptions:(NSDictionary *) options {
