@@ -41,7 +41,7 @@
 		[dragTabFloater setMaxOpacity:1.0];
 		
 		//Create a floating window for the stand-alone window our tab would produce
-		dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:NSTitledWindowMask title:[[inTabView window] title]];
+		dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:[[inTabView window] styleMask] title:[[inTabView window] title]];
 		[dragWindowFloater setMaxOpacity:0.75];
 	}
 		
