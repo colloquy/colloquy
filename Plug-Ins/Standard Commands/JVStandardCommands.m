@@ -75,6 +75,9 @@
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
 		[connection disconnectWithReason:arguments];
 		return YES;
+	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"connect"] ) {
+		[connection connect];
+		return YES;
 	} else if( [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
@@ -252,6 +255,9 @@
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
 		[[room connection] disconnectWithReason:arguments];
 		return YES;
+	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"connect"] ) {
+		[[room connection] connect];
+		return YES;
 	} else if( [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
@@ -354,6 +360,9 @@
 		[chat clearDisplay:nil];
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"disconnect"] ) {
 		[[chat connection] disconnectWithReason:arguments];
+		return YES;
+	} else if( [command isEqualToString:@"reconnect"] || [command isEqualToString:@"connect"] ) {
+		[[chat connection] connect];
 		return YES;
 	} else if( [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
@@ -522,11 +531,14 @@
 }
 
 - (BOOL) handleIgnoreWithArguments:(NSString *) args inView:(id <JVChatViewController>) view {
+	// /ignore crashes too much, disabled until fixed.
+	return NO;
+
 	// USAGE: /ignore -[e|m|n] nickname message #rooms...
 	// e activates regex matching, m is primarily for when there is no nickname to affix this to
 	// m is to specify a message
 	// n is to specify a nickname
-	
+
 	// EXAMPLES: 
 	// /ignore Loser23094 - ignore Loser23094 in the current room
 	// /ignore -em "is listening *" - ignore the message expression "is listening *" from everyone
