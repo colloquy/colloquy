@@ -849,6 +849,42 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1C8997E5058806DA00F49617 = {
+			children = (
+				1C8997E6058806DA00F49617,
+			);
+			isa = PBXVariantGroup;
+			name = JVInterfacePreferences.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C8997E6058806DA00F49617 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/JVInterfacePreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C8997E7058806DA00F49617 = {
+			fileRef = 1C8997E5058806DA00F49617;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C8997E8058807C400F49617 = {
+			fileRef = 1CDEE8210586C289000B9075;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C8997E9058807C500F49617 = {
+			fileRef = 1CDEE8200586C289000B9075;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C8BDCF1054345160035B84A = {
 			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
@@ -1048,6 +1084,7 @@
 				1CEE3F05057AEC0200AD6DE2,
 				1CDEE25D05823C25000B9075,
 				1CDEE4790583DC58000B9075,
+				1C8997E9058807C500F49617,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1288,7 +1325,8 @@
 				1CEE3B030578421400AD6DE2,
 				1CEE3B170578491B00AD6DE2,
 				1CDEE48D0583E268000B9075,
-				1CDEE8270586C723000B9075,
+				1CDEE8C505878D30000B9075,
+				1C8997E7058806DA00F49617,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1754,6 +1792,7 @@
 				1CEE3F06057AEC0200AD6DE2,
 				1CDEE25E05823C26000B9075,
 				1CDEE47A0583DC58000B9075,
+				1C8997E8058807C400F49617,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2873,7 +2912,7 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1CDEE8270586C723000B9075 = {
+		1CDEE8C505878D30000B9075 = {
 			fileRef = 1CDEE8260586C723000B9075;
 			isa = PBXBuildFile;
 			settings = {
@@ -3323,6 +3362,7 @@
 				1C8BDD2005436A020035B84A,
 				1CDEE48B0583E268000B9075,
 				1CBC634705489BEE009E59E1,
+				1C8997E5058806DA00F49617,
 				1CC6FC62054A003C0075807C,
 				1CC6FC64054A003C0075807C,
 				1CC6FC60054A003C0075807C,
