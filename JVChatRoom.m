@@ -308,16 +308,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (void) sendMessage:(JVMutableChatMessage *) message {
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVMutableChatMessage * ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-
-	[invocation setSelector:@selector( processOutgoingMessage: )];
-	[invocation setArgument:&message atIndex:2];
-
-	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
-
-	if( [[message body] length] )
-		[[self target] sendMessage:[message body] asAction:[message isAction]];
+	[super sendMessage:message];
 
 	AGRegex *regex = [AGRegex regexWithPattern:@"^(.*?)[:;,-]" options:AGRegexCaseInsensitive];
 	AGRegexMatch *match = [regex findInString:[message bodyAsPlainText]];
