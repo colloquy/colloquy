@@ -10,7 +10,13 @@
             }; 
             CLASS = JVChatTranscript; 
             LANGUAGE = ObjC; 
-            OUTLETS = {chooseStyle = MVMenuButton; contents = NSView; display = WebView; }; 
+            OUTLETS = {
+                chooseEmoticon = MVMenuButton; 
+                chooseStyle = MVMenuButton; 
+                contents = NSView; 
+                display = WebView; 
+                toolbarItems = NSView; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
         {
