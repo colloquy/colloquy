@@ -28,6 +28,8 @@
 //084
 		089C1669FE841209C02AAC07 = {
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				SDKROOT = /Developer/SDKs/MacOSX10.3.9.sdk;
 			};
 			buildStyles = (
 				F52BA31C037C62E801A35792,
@@ -2120,8 +2122,9 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\" \"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks build /Users/Timothy/Projects/Colloquy/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/Frameworks $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks Frameworks build";
 				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
 				GCC_CW_ASM_SYNTAX = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
@@ -2132,7 +2135,6 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
-				OTHER_LDFLAGS = "-weak_framework GrowlAppBridge";
 				PRODUCT_NAME = Colloquy;
 				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;

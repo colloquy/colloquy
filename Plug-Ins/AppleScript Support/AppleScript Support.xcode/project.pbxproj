@@ -38,6 +38,8 @@
 //084
 		089C1669FE841209C02AAC07 = {
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				SDKROOT = /Developer/SDKs/MacOSX10.3.9.sdk;
 			};
 			buildStyles = (
 				014CEA420018CDE011CA2923,
@@ -309,7 +311,12 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\" /Library/Frameworks \"$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Versions/A/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/Frameworks /Library/Frameworks";
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppleScript Support.pch";
@@ -318,6 +325,7 @@
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OBJROOT = ../../build;
+				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
 				OTHER_LDFLAGS = "-undefined dynamic_lookup";
 				PRODUCT_NAME = "AppleScript Support";
 				SYMROOT = ../../build;
