@@ -1,5 +1,7 @@
 #import <ExceptionHandling/NSExceptionHandler.h>
 #import <ChatCore/MVFileTransfer.h>
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSURLAdditions.h>
 #import "MVColorPanel.h"
 #import "MVApplicationController.h"
@@ -17,7 +19,6 @@
 #import "MVFileTransferController.h"
 #import "JVTranscriptPreferences.h"
 #import "MVBuddyListController.h"
-#import "MVChatPluginManager.h"
 #import "JVChatController.h"
 #import "MVChatConnection.h"
 #import "JVChatRoomBrowser.h"
@@ -336,6 +337,46 @@ static BOOL applicationIsTerminating = NO;
 		else return NO;
 	}
 	return YES;
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatScriptPlugin (MVChatPluginContextualMenuSupport)
+- (IBAction) performContextualMenuItemAction:(id) sender {
+	id object = [sender representedObject];
+	NSString *title = [sender title];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:title, @"----", object, @"pcM1", nil];
+	[self callScriptHandler:'pcMX' withArguments:args forSelector:_cmd];
+}
+
+- (NSArray *) contextualMenuItemsForObject:(id) object {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:object, @"----", nil];
+	id result = [self callScriptHandler:'cMiX' withArguments:args forSelector:_cmd];
+
+	if( [result isKindOfClass:[NSArray class]] ) {
+		NSMutableArray *ret = [NSMutableArray array];
+		NSEnumerator *enumerator = [result objectEnumerator];
+		id item = nil;
+
+		while( ( item = [enumerator nextObject] ) ) {
+			if( [item isKindOfClass:[NSString class]] ) {
+				if( [item isEqualToString:@"-"] ) {
+					[ret addObject:[NSMenuItem separatorItem]];
+				} else {
+					NSMenuItem *mitem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""] autorelease];
+					[mitem setTarget:self];
+					[mitem setRepresentedObject:object];
+					[ret addObject:mitem];
+				}
+			}
+		}
+
+		if( [ret count] )
+			return ret;
+	}
+
+	return nil;
 }
 @end
 

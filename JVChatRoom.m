@@ -1042,6 +1042,29 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		if( mbr ) {
 			NSEnumerator *enumerator = [[[mbr menu] itemArray] objectEnumerator];
 			while( ( item = [enumerator nextObject] ) ) [ret addObject:[[item copy] autorelease]];
+
+			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
+			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+			[invocation setSelector:@selector( contextualMenuItemsForObject: )];
+			[invocation setArgument:&mbr atIndex:2];
+
+			NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+			if( [results count] ) {
+				[ret addObject:[NSMenuItem separatorItem]];
+
+				NSArray *items = nil;
+				enumerator = [results objectEnumerator];
+				while( ( items = [enumerator nextObject] ) ) {
+					if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+					NSEnumerator *ienumerator = [items objectEnumerator];
+					while( ( item = [ienumerator nextObject] ) )
+						if( [item isKindOfClass:[NSMenuItem class]] ) [ret addObject:item];
+				}
+
+				if( [[ret lastObject] isSeparatorItem] )
+					[ret removeObjectIdenticalTo:[ret lastObject]];
+			}
 		} else {
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:NULL keyEquivalent:@""] autorelease];
 			[item setRepresentedObject:user];

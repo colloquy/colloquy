@@ -6,6 +6,50 @@
 	<string>cplG</string>
 	<key>Commands</key>
 	<dict>
+		<key>buildContextualMenu</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>cMiX</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>NSObject</string>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+		</dict>
+		<key>performContextualMenuItemAction</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>pcMX</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>NSString</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>object</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>pcM1</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSObject</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+		</dict>
 		<key>performNotification</key>
 		<dict>
 			<key>AppleEventClassCode</key>

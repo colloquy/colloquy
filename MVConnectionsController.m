@@ -1,4 +1,5 @@
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSURLAdditions.h>
 
@@ -6,7 +7,6 @@
 #import "JVConnectionInspector.h"
 #import "MVApplicationController.h"
 #import "JVNotificationController.h"
-#import "MVChatPluginManager.h"
 #import "JVChatController.h"
 #import "JVChatRoomBrowser.h"
 #import "MVKeyChain.h"
@@ -861,9 +861,10 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSMenu *) tableView:(NSTableView *) view menuForTableColumn:(NSTableColumn *) column row:(int) row {
 	if( view == connections ) {
+		MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
+		BOOL connected = [connection isConnected];
 		NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 		NSMenuItem *item = nil;
-		BOOL connected = [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected];
 
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
@@ -896,6 +897,29 @@ static NSMenu *favoritesMenu = nil;
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete item title" ) action:@selector( _delete: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
+
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+		[invocation setSelector:@selector( contextualMenuItemsForObject: )];
+		[invocation setArgument:&connection atIndex:2];
+
+		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+		if( [results count] ) {
+			[menu addItem:[NSMenuItem separatorItem]];
+			
+			NSArray *items = nil;
+			NSEnumerator *enumerator = [results objectEnumerator];
+			while( ( items = [enumerator nextObject] ) ) {
+				if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+				NSEnumerator *ienumerator = [items objectEnumerator];
+				while( ( item = [ienumerator nextObject] ) )
+					if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
+			}
+		}
+
+		if( [[[menu itemArray] lastObject] isSeparatorItem] )
+			[menu removeItem:[[menu itemArray] lastObject]];
 
 		return [[menu retain] autorelease];
 	}

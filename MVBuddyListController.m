@@ -1,6 +1,8 @@
 #import <AddressBook/AddressBook.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/NSStringAdditions.h>
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
 
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
@@ -741,7 +743,34 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (NSMenu *) tableView:(MVTableView *) tableView menuForTableColumn:(NSTableColumn *) tableColumn row:(int) row {
-	return actionMenu;
+	NSMenu *menu = [[actionMenu copyWithZone:[self zone]] autorelease];
+	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( contextualMenuItemsForObject: )];
+	[invocation setArgument:&buddy atIndex:2];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	if( [results count] ) {
+		[menu addItem:[NSMenuItem separatorItem]];
+		
+		NSArray *items = nil;
+		NSMenuItem *item = nil;
+		NSEnumerator *enumerator = [results objectEnumerator];
+		while( ( items = [enumerator nextObject] ) ) {
+			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+			NSEnumerator *ienumerator = [items objectEnumerator];
+			while( ( item = [ienumerator nextObject] ) )
+				if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
+		}
+
+		if( [[[menu itemArray] lastObject] isSeparatorItem] )
+			[menu removeItem:[[menu itemArray] lastObject]];
+	}
+
+	return menu;
 }
 
 - (NSString *) tableView:(MVTableView *) tableView toolTipForTableColumn:(NSTableColumn *) column row:(int) row {

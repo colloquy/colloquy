@@ -1,3 +1,5 @@
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
 #import "JVChatWindowController.h"
 #import "MVConnectionsController.h"
 #import "JVChatController.h"
@@ -756,6 +758,29 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[newMenu removeItem:menuItem];
 		[menu addItem:menuItem];
 	}
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( contextualMenuItemsForObject: )];
+	[invocation setArgument:&item atIndex:2];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	if( [results count] ) {
+		[menu addItem:[NSMenuItem separatorItem]];
+		
+		NSArray *items = nil;
+		enumerator = [results objectEnumerator];
+		while( ( items = [enumerator nextObject] ) ) {
+			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+			NSEnumerator *ienumerator = [items objectEnumerator];
+			while( ( menuItem = [ienumerator nextObject] ) )
+				if( [menuItem isKindOfClass:[NSMenuItem class]] ) [menu addItem:menuItem];
+		}
+
+		if( [[[menu itemArray] lastObject] isSeparatorItem] )
+			[menu removeItem:[[menu itemArray] lastObject]];
+	}	
 
 	if( [menu numberOfItems] ) {
 		[viewActionButton setEnabled:YES];

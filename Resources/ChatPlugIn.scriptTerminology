@@ -4,6 +4,40 @@
 <dict>
 	<key>Commands</key>
 	<dict>
+		<key>buildContextualMenu</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, chat connection, etc.</string>
+			</dict>
+			<key>Description</key>
+			<string>Called for every object that the user can access a contextual/action menu. This handler is called when the selection changes in a table or right before the menu is shown, allowing you to provide a list of titles to show. The title "-" will insert a menu separator. When the user selects on of the titles you provided the "handle clicked contextual menu item" handler is called with the same title and object passed as arguments.</string>
+			<key>Name</key>
+			<string>build contextual menu for item</string>
+		</dict>
+		<key>performContextualMenuItemAction</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Menu item title you returned from the "build contextual menu for item" handler.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>object</key>
+				<dict>
+					<key>Description</key>
+					<string>Item the menu item was built for, can be a member, chat room, direct chat, transcript, chat connection, etc.</string>
+					<key>Name</key>
+					<string>for</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when the user clicks on one of the supplied menu item titles you returned from the "build contextual menu for item" handler.</string>
+			<key>Name</key>
+			<string>handle clicked contextual menu item</string>
+		</dict>
 		<key>performNotification</key>
 		<dict>
 			<key>UnnamedArgument</key>

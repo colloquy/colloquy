@@ -1,3 +1,5 @@
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
 #import "JVChatController.h"
 #import "JVTabbedChatWindowController.h"
 #import "AICustomTabsView.h"
@@ -245,7 +247,34 @@
 - (NSMenu *) customTabView:(AICustomTabsView *) view menuForTabViewItem:(NSTabViewItem *) tabViewItem {
 	if( [[(JVChatTabItem *)tabViewItem chatViewController] respondsToSelector:@selector( menu )] ) {
 		[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
-		return [[(JVChatTabItem *)tabViewItem chatViewController] menu];
+		id object = [(JVChatTabItem *)tabViewItem chatViewController];
+		NSMenu *menu = [object menu];
+
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+		[invocation setSelector:@selector( contextualMenuItemsForObject: )];
+		[invocation setArgument:&object atIndex:2];
+
+		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+		if( [results count] ) {
+			[menu addItem:[NSMenuItem separatorItem]];
+
+			NSArray *items = nil;
+			NSMenuItem *item = nil;
+			NSEnumerator *enumerator = [results objectEnumerator];
+			while( ( items = [enumerator nextObject] ) ) {
+				if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+				NSEnumerator *ienumerator = [items objectEnumerator];
+				while( ( item = [ienumerator nextObject] ) )
+					if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
+			}
+
+			if( [[[menu itemArray] lastObject] isSeparatorItem] )
+				[menu removeItem:[[menu itemArray] lastObject]];
+		}
+
+		return menu;
 	}
 
 	return nil;

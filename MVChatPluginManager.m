@@ -68,7 +68,7 @@ static MVChatPluginManager *sharedInstance = nil;
 			} else if( [[file pathExtension] isEqualToString:@"scpt"] || [[file pathExtension] isEqualToString:@"applescript"] ) {
 				NSAppleScript *script = [[[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] error:NULL] autorelease];
 				if( ! [script compileAndReturnError:nil] ) continue;
-				MVChatScriptPlugin *plugin = [[[MVChatScriptPlugin alloc] initWithScript:script andManager:self] autorelease];
+				MVChatScriptPlugin *plugin = [[[MVChatScriptPlugin alloc] initWithScript:script atPath:[NSString stringWithFormat:@"%@/%@", path, file] withManager:self] autorelease];
 				if( plugin ) [_plugins setObject:plugin forKey:[script scriptIdentifier]];
 			}
 		}
@@ -164,7 +164,9 @@ static MVChatPluginManager *sharedInstance = nil;
 			[invocation invokeWithTarget:plugin];
 		} @catch ( NSException *exception ) {
 			NSString *pluginName = [[NSBundle bundleForClass:[plugin class]] objectForInfoDictionaryKey:@"CFBundleName"];
-			NSLog( @"An error occured when calling %@ of plugin %@. %@.", NSStringFromSelector( [invocation selector] ), pluginName, [exception reason] );
+			NSString *reason = [NSString stringWithFormat:@"An error occured when calling %@ of plugin %@. %@.", NSStringFromSelector( [invocation selector] ), pluginName, [exception reason]];
+			NSException *new = [NSException exceptionWithName:@"MVChatPluginError" reason:reason userInfo:[exception userInfo]];
+			@throw new;
 			continue;
 		}
 
