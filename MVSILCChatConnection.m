@@ -1482,7 +1482,9 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 }
 
 - (void) _didDisconnect {
-	if( ! _sentQuitCommand || ! [[self persistentInformation] objectForKey:@"detachData"] ) {
+	// xenon: why did you add the check for detachData here? thats the cause of the reconnect
+	//        on manually disconnect
+	if( ! _sentQuitCommand /* || ! [[self persistentInformation] objectForKey:@"detachData"] */ ) {
 		if( _status != MVChatConnectionSuspendedStatus )
 			_status = MVChatConnectionServerDisconnectedStatus;
 		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
