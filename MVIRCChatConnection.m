@@ -10,8 +10,6 @@
 #import "MVIRCFileTransfer.h"
 
 #import "MVChatPluginManager.h"
-#import "MVChatScriptPlugin.h"
-
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
 #import "NSMethodSignatureAdditions.h"

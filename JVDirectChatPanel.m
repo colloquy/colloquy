@@ -4,7 +4,6 @@
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSDataAdditions.h>
@@ -1791,23 +1790,4 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[self setPreference:[NSNumber numberWithInt:encoding] forKey:@"encoding"];
 	[self changeEncoding:nil];
 }
-@end
-
-#pragma mark -
-
-@implementation MVChatScriptPlugin (MVChatScriptPluginChatSupport)
-- (void) processIncomingMessage:(JVMutableChatMessage *) message {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"piM1", [message sender], @"piM2", [message transcript], @"piM3", nil];
-	[self callScriptHandler:'piMX' withArguments:args forSelector:_cmd];
-}
-
-- (void) processOutgoingMessage:(JVMutableChatMessage *) message {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"poM1", [message transcript], @"poM2", nil];
-	[self callScriptHandler:'poMX' withArguments:args forSelector:_cmd];
-}
-
-/*- (void) userNamed:(NSString *) nickname isNowKnownAs:(NSString *) newNickname inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:nickname, @"----", newNickname, @"uNc1", view, @"uNc2", nil];
-	[self callScriptHandler:'uNcX' withArguments:args forSelector:_cmd];
-}*/
 @end

@@ -2,7 +2,6 @@
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
@@ -1300,64 +1299,5 @@
 - (void) setScriptTypedTopic:(NSString *) topic {
 	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:topic baseURL:nil];
 	[[self target] setTopic:attributeMsg];
-}
-@end
-
-#pragma mark -
-
-@implementation MVChatScriptPlugin (MVChatScriptPluginRoomSupport)
-- (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mJr1", nil];
-	[self callScriptHandler:'mJrX' withArguments:args forSelector:_cmd];
-}
-
-- (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room forReason:(NSAttributedString *) reason {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mPr1", [reason string], @"mPr2", nil];
-	[self callScriptHandler:'mPrX' withArguments:args forSelector:_cmd];
-}
-
-- (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mKr1", by, @"mKr2", [reason string], @"mKr3", nil];
-	[self callScriptHandler:'mKrX' withArguments:args forSelector:_cmd];
-}
-
-- (void) memberPromoted:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"cOpr" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
-	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
-}
-
-- (void) memberDemoted:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member voice] ? "VoIc" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
-	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
-}
-
-- (void) memberVoiced:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"VoIc" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
-	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
-}
-
-- (void) memberDevoiced:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member operator] ? "cOpr" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
-	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
-}
-
-- (void) joinedRoom:(JVChatRoomPanel *) room; {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
-	[self callScriptHandler:'jRmX' withArguments:args forSelector:_cmd];
-}
-
-- (void) partingFromRoom:(JVChatRoomPanel *) room; {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
-	[self callScriptHandler:'pRmX' withArguments:args forSelector:_cmd];
-}
-
-- (void) kickedFromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", by, @"kRm1", [reason string], @"kRm2", nil];
-	[self callScriptHandler:'kRmX' withArguments:args forSelector:_cmd];
-}
-
-- (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[topic string], @"rTc1", member, @"rTc2", room, @"rTc3", nil];
-	[self callScriptHandler:'rTcX' withArguments:args forSelector:_cmd];
 }
 @end

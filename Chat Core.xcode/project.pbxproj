@@ -147,31 +147,6 @@
 //1C2
 //1C3
 //1C4
-		1C1C564F059EA8C9002FBEFB = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = MVChatScriptPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C1C5650059EA8C9002FBEFB = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVChatScriptPlugin.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C1C5651059EA8C9002FBEFB = {
-			fileRef = 1C1C564F059EA8C9002FBEFB;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
 		1C2EF7EB0427A40B00000102 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -282,7 +257,6 @@
 		1C51B46F052DE0CB00BB459B = {
 			buildActionMask = 2147483647;
 			files = (
-				1C1C5651059EA8C9002FBEFB,
 				1C9CF4FE0615091400330D8D,
 				1C943AAB063C260800618CD9,
 				1CF6513006EA23300073DEA8,
@@ -318,7 +292,6 @@
 				1CD020C0057593F9000F93B4,
 				1C3D55BC05A4CBBE00F25F5E,
 				1C3D55C205A4DC1E00F25F5E,
-				1C9CF4FD0615091400330D8D,
 				1C9CF4FF0615091500330D8D,
 				1C9CF5010615091700330D8D,
 				1C943AAC063C260800618CD9,
@@ -1522,12 +1495,6 @@
 			path = "Core/irssi/src/fe-common/irc/fe-common-irc.c";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		1C9CF4FD0615091400330D8D = {
-			fileRef = 1C1C5650059EA8C9002FBEFB;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1C9CF4FE0615091400330D8D = {
 			fileRef = 1C2EF7EB0427A40B00000102;
@@ -3558,8 +3525,6 @@
 				1C943AA9063C260800618CD9,
 				1C2EF7EC0427A40B00000102,
 				1C2EF7EB0427A40B00000102,
-				1C1C5650059EA8C9002FBEFB,
-				1C1C564F059EA8C9002FBEFB,
 			);
 			isa = PBXGroup;
 			name = "Sources & Headers";

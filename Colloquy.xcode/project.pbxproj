@@ -57,6 +57,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 1C04394707CAFC7D00304949;
+					ProjectRef = 1C04394607CAFC7D00304949;
+				},
+				{
 					ProductGroup = 0A60C1600630D96D00DC6280;
 					ProjectRef = 0A60C15F0630D96D00DC6280;
 				},
@@ -238,6 +242,72 @@
 //1C2
 //1C3
 //1C4
+		1C04393E07CAFC5800304949 = {
+			children = (
+				1C04394607CAFC7D00304949,
+			);
+			isa = PBXGroup;
+			name = "AppleScript Support";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C04394607CAFC7D00304949 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "wrapper.pb-project";
+			name = "AppleScript Support.xcode";
+			path = "Plug-Ins/AppleScript Support/AppleScript Support.xcode";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C04394707CAFC7D00304949 = {
+			children = (
+				1C04394807CAFC7D00304949,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C04394807CAFC7D00304949 = {
+			fileType = wrapper.cfbundle;
+			isa = PBXReferenceProxy;
+			path = "AppleScript Support.plugin";
+			refType = 3;
+			remoteRef = 1C04394D07CAFCAF00304949;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C04394907CAFC9600304949 = {
+			fileRef = 1C04394807CAFC7D00304949;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C04394A07CAFCA000304949 = {
+			fileRef = 1C04394807CAFC7D00304949;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C04394B07CAFCA500304949 = {
+			containerPortal = 1C04394607CAFC7D00304949;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
+			remoteInfo = "AppleScript Support Plugin";
+		};
+		1C04394C07CAFCA500304949 = {
+			isa = PBXTargetDependency;
+			name = "AppleScript Support Plugin (from AppleScript Support.xcode)";
+			targetProxy = 1C04394B07CAFCA500304949;
+		};
+		1C04394D07CAFCAF00304949 = {
+			containerPortal = 1C04394607CAFC7D00304949;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
+			remoteInfo = "AppleScript Support Plugin";
+		};
 		1C06052306471FFB002438AF = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -684,14 +754,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		1C1C569C059EAF4F002FBEFB = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = MVChatScriptPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		1C1D19F105992D80000BB31A = {
 			fileEncoding = 4;
@@ -2122,6 +2184,7 @@
 			dependencies = (
 				0A60C2B80630DA2C00DC6280,
 				1C09DFF7052DFF6600D748CF,
+				1C04394C07CAFCA500304949,
 				1CE3F9C307C7C2B30049A366,
 			);
 			isa = PBXNativeTarget;
@@ -2285,6 +2348,7 @@
 				1CD4C099078249C10003620F,
 				1C0A4C9C0799BDB00093B702,
 				1C0A4C9D0799BDB00093B702,
+				1C04394A07CAFCA000304949,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2982,6 +3046,7 @@
 			files = (
 				1CD4C09A07824A010003620F,
 				1C8CE1ED05A921AB0020D841,
+				1C04394907CAFC9600304949,
 				1CE3F9BF07C7C2A70049A366,
 				1C51B8F2052DFAAA00BB459B,
 			);
@@ -3410,6 +3475,7 @@
 		1CC478470427BB2C00000102 = {
 			children = (
 				1CC478480427BB5500000102,
+				1C04393E07CAFC5800304949,
 				1CE3F7BC07C7B60A0049A366,
 				1CA56CCD042A713E00000102,
 				1CD4C093078249A50003620F,
@@ -5164,7 +5230,6 @@
 				1CDDCF840716208300FE11C3,
 				1C8CF8E1066530D60080A2F5,
 				1C2EF7EB0427A40B00000102,
-				1C1C569C059EAF4F002FBEFB,
 				1C18CD100528DBBA000001C8,
 				F5E98623018B412B01EE70DE,
 				F56CD5440191182601EE70DE,

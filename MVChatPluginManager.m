@@ -1,5 +1,4 @@
 #import "MVChatPluginManager.h"
-#import "MVChatScriptPlugin.h"
 #import "NSNumberAdditions.h"
 #import "NSMethodSignatureAdditions.h"
 
@@ -69,11 +68,6 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 					id plugin = [[[[bundle principalClass] alloc] initWithManager:self] autorelease];
 					if( plugin ) [_plugins addObject:plugin];
 				}
-			} else if( [[file pathExtension] isEqualToString:@"scpt"] || [[file pathExtension] isEqualToString:@"scptd"] || [[file pathExtension] isEqualToString:@"applescript"] ) {
-				NSAppleScript *script = [[[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] error:NULL] autorelease];
-				if( ! [script compileAndReturnError:nil] ) continue;
-				MVChatScriptPlugin *plugin = [[[MVChatScriptPlugin alloc] initWithScript:script atPath:[NSString stringWithFormat:@"%@/%@", path, file] withManager:self] autorelease];
-				if( plugin ) [_plugins addObject:plugin];
 			}
 		}
 	}

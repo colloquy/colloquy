@@ -1,6 +1,7 @@
-#import <ChatCore/MVChatPluginManager.h>
+#import "MVChatPluginManager.h"
 
-@interface MVChatScriptPlugin : NSObject <MVChatPlugin> {
+@interface JVAppleScriptChatPlugin : NSObject <MVChatPlugin> {
+	MVChatPluginManager *_manager;
 	NSAppleScript *_script;
 	NSString *_path;
 	NSMutableSet *_doseNotRespond;
@@ -9,6 +10,7 @@
 - (id) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
 - (NSAppleScript *) script;
+- (MVChatPluginManager *) pluginManager;
 - (NSString *) scriptFilePath;
 - (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector;
 

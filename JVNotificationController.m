@@ -1,4 +1,4 @@
-#import <ChatCore/MVChatScriptPlugin.h>
+#import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <GrowlAppBridge/GrowlApplicationBridge.h>
 #import <GrowlAppBridge/GrowlDefines.h>
@@ -178,14 +178,5 @@ static JVNotificationController *sharedInstance = nil;
 
 - (void) sound:(NSSound *) sound didFinishPlaying:(BOOL) finish {
 	[sound autorelease];
-}
-@end
-
-#pragma mark -
-
-@implementation MVChatScriptPlugin (MVChatScriptPluginNotificationSupport)
-- (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context andPreferences:(NSDictionary *) preferences {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:identifier, @"----", context, @"nOt1", preferences, @"nOt2", nil];
-	[self callScriptHandler:'nOtX' withArguments:args forSelector:_cmd];
 }
 @end

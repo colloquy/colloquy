@@ -2,7 +2,6 @@
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 
@@ -800,15 +799,5 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 	}
 
 	[[self transcript] writeToFile:path atomically:YES];
-}
-@end
-
-#pragma mark -
-
-@implementation MVChatScriptPlugin (MVChatScriptPluginLinkClickSupport)
-- (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[url absoluteString], @"----", view, @"hCl1", nil];
-	id result = [self callScriptHandler:'hClX' withArguments:args forSelector:_cmd];
-	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 @end
