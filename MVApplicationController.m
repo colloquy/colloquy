@@ -198,6 +198,10 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (BOOL) exceptionHandler:(NSExceptionHandler *) sender shouldHandleException:(NSException *) exception mask:(unsigned int) mask {
+	static BOOL _exceptionHandlerLoop = NO;
+	if( _exceptionHandlerLoop ) return NO;
+	_exceptionHandlerLoop = YES;
+
 	NSTask *ls = [[NSTask alloc] init];
 	NSString *pid = [[NSNumber numberWithInt:[[NSProcessInfo processInfo] processIdentifier]] stringValue];
 	NSMutableArray *args = [NSMutableArray arrayWithCapacity:20];
@@ -239,6 +243,7 @@ static BOOL applicationIsTerminating = NO;
 
 	[ls release];
 
+	_exceptionHandlerLoop = NO;
 	return YES;
 }
 
