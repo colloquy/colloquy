@@ -675,7 +675,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 #pragma mark WebView
 
 // Allows some simple code to work when not built with WebKit/Safari 1.3
-#ifndef _WEB_SCRIPT_OBJECT_H_
+#ifndef WebKitVersion146
 #define WebMenuItemTagGoBack 9
 #define WebMenuItemTagGoForward 10
 #define WebMenuItemTagStop 11
@@ -809,7 +809,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
 // Test for WebKit/Safari 1.3
-#ifdef _WEB_SCRIPT_OBJECT_H_
+#ifdef WebKitVersion146
 	if( [display respondsToSelector:@selector( setDrawsBackground: )] ) {
 		DOMCSSStyleDeclaration *style = [sender computedStyleForElement:[(DOMHTMLDocument *)[[sender mainFrame] DOMDocument] body] pseudoElement:nil];
 		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
@@ -953,8 +953,8 @@ finish:
 }
 
 - (void) _prependMessages:(NSString *) messages {
+#ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-#ifdef _WEB_SCRIPT_OBJECT_H_
 		NSMutableString *result = [messages mutableCopy];
 		[result replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
 
@@ -978,8 +978,9 @@ finish:
 
 		// scroll down if we need to
 		if( [scrollNeeded boolValue] ) [body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
+	} else
 #endif
-	} else {
+	{ // old JavaScript method
 		NSMutableString *result = [messages mutableCopy];
 		[result escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[result replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];

@@ -100,6 +100,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 @interface JVDirectChat (JVDirectChatPrivate) <ABImageClient>
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
+- (int) visibleMessageCount;
 - (int) locationOfMessage:(unsigned int) identifier;
 - (int) locationOfElementByIndex:(unsigned int) index;
 - (void) scrollToBottom;
@@ -1547,43 +1548,53 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (int) locationOfMessage:(unsigned int) identifier {
+#ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[NSString stringWithFormat:@"%d", identifier]];
 		return [[element valueForKey:@"offsetTop"] intValue];
-	} else { // old JavaScript method
-		return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", identifier]] intValue];
-	}
+	} else
+#endif
+	// old JavaScript method
+	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", identifier]] intValue];
 }
 
 - (int) locationOfElementByIndex:(unsigned int) index {
+#ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
 		if( index < [[body children] length] ) return [[[[body children] item:index] valueForKey:@"offsetTop"] intValue];
 		else return 0;
-	} else { // old JavaScript method
-		return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", index]] intValue];
-	}
+	} else
+#endif
+	// old JavaScript method
+	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", index]] intValue];
+}
+
+- (int) visibleMessageCount {
+#ifdef WebKitVersion146
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+		return [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
+	} else
+#endif
+	// old JavaScript method
+	return [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
 }
 
 - (void) scrollToBottom {
+#ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
 		[body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
-	} else { // old JavaScript method
-		[display stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
-	}
+	} else
+#endif
+	// old JavaScript method
+	[display stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
 }
 
 - (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent {
-	unsigned int messageCount = 0;
+	unsigned int messageCount = [self visibleMessageCount];
 	unsigned int scrollbackLimit = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"];
 	NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
-
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-		messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
-	} else { // old JavaScript method
-		messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
-	}
 
 	if( ! subsequent && ( messageCount + 1 ) > scrollbackLimit ) {
 		int loc = [self locationOfElementByIndex:( ( messageCount + 1 ) - scrollbackLimit )];
@@ -1591,6 +1602,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 			[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1 )];
 	}
 
+#ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *element = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] createElement:@"span"];
 		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] getElementById:@"consecutiveInsert"];
@@ -1632,7 +1644,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 		// scroll down if we need to
 		if( [scrollNeeded boolValue] ) [self scrollToBottom];
-	} else { // old JavaScript method
+	} else
+#endif	
+	{ // old JavaScript method
 		NSMutableString *transformedMessage = [html mutableCopy];
 		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[transformedMessage replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
@@ -1878,32 +1892,16 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:messageString, @"away-message", nil]];
 
-		unsigned int messageCount = 0;
-		unsigned long loc = 0;
-
-		if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-			messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
-			loc = [self locationOfElementByIndex:( messageCount - 1 )];
-		} else { // old JavaScript method
-			messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
-			loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
-		}
+		unsigned int messageCount = [self visibleMessageCount];
+		unsigned long loc = [self locationOfElementByIndex:( messageCount - 1 )];
 
 		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 		if( [scroller isKindOfClass:[JVMarkedScroller class]] ) [(JVMarkedScroller *)scroller startShadedAreaAt:loc];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
 
-		unsigned int messageCount = 0;
-		unsigned long loc = 0;
-
-		if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-			messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
-			loc = [self locationOfElementByIndex:( messageCount - 1 )];
-		} else { // old JavaScript method
-			messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
-			loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
-		}
+		unsigned int messageCount = [self visibleMessageCount];
+		unsigned long loc = [self locationOfElementByIndex:( messageCount - 1 )];
 
 		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 		if( [scroller isKindOfClass:[JVMarkedScroller class]] ) [(JVMarkedScroller *)scroller stopShadedAreaAt:loc];
