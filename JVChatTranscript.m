@@ -555,7 +555,10 @@
 						NSString *nickname = [message senderNickname];
 						NSString *name = [message senderName];
 
-						NSString *senderName = [NSString stringWithUTF8String:xmlNodeGetContent( subNode )];
+						xmlChar *senderNameStr = xmlNodeGetContent( subNode );
+						NSString *senderName = [NSString stringWithUTF8String:senderNameStr];
+						xmlFree( senderNameStr );
+
 						NSString *senderNickname = nil;
 						NSString *senderIdentifier = nil;
 
