@@ -28,6 +28,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 
 @interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
+- (void) _refreshWindowFileProxy;
+
 - (void) _changeStyleMenuSelection;
 - (void) _updateStylesMenu;
 
@@ -113,10 +115,9 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 }
 
 - (void) setWindowController:(JVChatWindowController *) controller {
-	if( [[[_windowController window] representedFilename] isEqualToString:[[self transcript] filePath]] || ! [[[self transcript] filePath] length] )
+	if( [[[_windowController window] representedFilename] isEqualToString:[[self transcript] filePath]] )
 		[[_windowController window] setRepresentedFilename:@""];
-	else if( ! [[[_windowController window] representedFilename] length] )
-		[[_windowController window] setRepresentedFilename:[[self transcript] filePath]];
+
 	_windowController = controller;
 	[display setHostWindow:[_windowController window]];
 }
@@ -126,7 +127,7 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 }
 
 - (void) didSelect {
-	[[_windowController window] setRepresentedFilename:( [[[self transcript] filePath] length] ? [[self transcript] filePath] : @"" )];
+	[self _refreshWindowFileProxy];
 }
 
 #pragma mark -
@@ -569,6 +570,16 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 #pragma mark Style Support
 
 @implementation JVChatTranscriptPanel (JVChatTranscriptPrivate)
+- (void) _refreshWindowFileProxy {
+	if( ! [[NSFileManager defaultManager] fileExistsAtPath:[[self transcript] filePath]] ) {
+		[[_windowController window] setRepresentedFilename:@""];
+	} else {
+		[[_windowController window] setRepresentedFilename:[[self transcript] filePath]];
+	}
+}
+
+#pragma mark -
+
 - (void) _reloadCurrentStyle:(id) sender {
 	[display reloadCurrentStyle];
 }
