@@ -65,6 +65,9 @@
 
 - (IBAction) sendPassword:(id) sender;
 
+- (NSSet *) connections;
+- (NSSet *) connectedConnections;
+
 - (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection;
 - (BOOL) autoConnectForConnection:(MVChatConnection *) connection;
 

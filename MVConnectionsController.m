@@ -278,6 +278,31 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 #pragma mark -
 
+- (NSSet *) connections {
+	NSMutableSet *ret = [NSMutableSet setWithCapacity:[_bookmarks count]];
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	id info = nil;
+
+	while( ( info = [enumerator nextObject] ) )
+		[ret addObject:[info objectForKey:@"connection"]];
+
+	return [[ret retain] autorelease];
+}
+
+- (NSSet *) connectedConnections {
+	NSMutableSet *ret = [NSMutableSet setWithCapacity:[_bookmarks count]];
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	id info = nil;
+
+	while( ( info = [enumerator nextObject] ) )
+		if( [[info objectForKey:@"connection"] connected] )
+			[ret addObject:[info objectForKey:@"connection"]];
+
+	return [[ret retain] autorelease];
+}
+
+#pragma mark -
+
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep {
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 
