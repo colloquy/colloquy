@@ -588,8 +588,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 		[self _registerCallbacks];
 		[self _registerForSleepNotifications];
 
-		_firetalkSelectTimer = [[NSTimer scheduledTimerWithTimeInterval:.100 target:self selector:@selector( _executeRunLoopCheck: ) userInfo:nil repeats:YES] retain];
-		_pingTimer = [[NSTimer scheduledTimerWithTimeInterval:300 target:self selector:@selector( _pingServer: ) userInfo:nil repeats:YES] retain];
+		_firetalkSelectTimer = [[NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector( _executeRunLoopCheck: ) userInfo:nil repeats:YES] retain];
+		_pingTimer = [[NSTimer scheduledTimerWithTimeInterval:300. target:self selector:@selector( _pingServer: ) userInfo:nil repeats:YES] retain];
 	}
 	return self;
 }
@@ -1059,10 +1059,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 }
 
 - (void) _executeRunLoopCheck:(NSTimer *) timer {
-	struct timeval timeout = { 0, 050 };
-	if( firetalk_select_custom( 0, NULL, NULL, NULL, &timeout ) < 0 ) {
-		NSLog( @"firetalk_select: %s", firetalk_strerror( firetalkerror ) );
-	}
+	struct timeval timeout = { 0, 100 };
+	firetalk_select_custom( 0, NULL, NULL, NULL, &timeout );
 }
 
 - (void) _registerCallbacks {
