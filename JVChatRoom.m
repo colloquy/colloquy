@@ -729,7 +729,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	// only show this if we've received the initial banlist already
 	if( _initialBanlistReceived ) {
 		// by is a full hostmask. Lets fix that
-		by = (NSString *)[[by componentsSeparatedByString:@"!"] objectAtIndex:0];
+		by = [[by componentsSeparatedByString:@"!"] objectAtIndex:0];
 		JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
 		NSString *message;
 		if( [byMbr isLocalUser] ) {
@@ -744,7 +744,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 - (void) removedBan:(NSString *) ban by:(NSString *) by {
 	// by is a full hostmask. Lets fix that
-	by = (NSString *)[[by componentsSeparatedByString:@"!"] objectAtIndex:0];
+	by = [[by componentsSeparatedByString:@"!"] objectAtIndex:0];
 	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
 	NSString *message;
 	if( [byMbr isLocalUser] ) {
@@ -768,6 +768,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[self _makeHyperlinksInString:topicString];
 
 	if( showChange && author ) {
+		author = [[author componentsSeparatedByString:@"!"] objectAtIndex:0];
 		JVChatRoomMember *mbr = [self chatRoomMemberWithName:author];
 		if( [mbr isLocalUser] ) {
 			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You changed the topic to \"%@\".", "you changed the topic chat room status message" ), topicString] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : author ), @"by", author, @"bynickname", topicString, @"topic", nil]];
