@@ -1,45 +1,20 @@
 #import <Foundation/Foundation.h>
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
-#import "NSNumberAdditions.h"
 
-static unsigned long MVChatScriptPluginClass = 'cplG';
-
-@interface NSScriptObjectSpecifier (NSPrivate)
+@interface NSScriptObjectSpecifier (NSScriptObjectSpecifierPrivate) // Private Foundation Methods
 + (id) _objectSpecifierFromDescriptor:(NSAppleEventDescriptor *) descriptor inCommandConstructionContext:(id) context;
 - (NSAppleEventDescriptor *) _asDescriptor;
 @end
 
 #pragma mark -
 
-@interface NSArray (NSAppleEventDescriptor)
-+ (id) arrayWithAppleEventDescriptor:(NSAppleEventDescriptor *) descriptor;
-@end
-
-#pragma mark -
-
-@interface NSDictionary (NSAppleEventDescriptor)
-+ (id) dictionaryWithAppleEventDescriptor:(NSAppleEventDescriptor *) descriptor;
-@end
-
-#pragma mark -
-
-@interface NSAppleEventDescriptor (NSAppleEventDescriptorObjectValue)
-- (id) objectValue;
-@end
-
-#pragma mark -
-
-@implementation NSAppleScript (NSAppleScriptIdentifier)
-- (NSNumber *) scriptIdentifier {
-	return [NSNumber numberWithUnsignedLong:_compiledScriptID];
-}
-@end
-
-#pragma mark -
-
-@interface NSString (NSAppleEventDescriptor)
-- (unsigned long) fourCharCode;
+@interface NSAEDescriptorTranslator : NSObject // Private Foundation Class
++ (id) sharedAEDescriptorTranslator;
+- (NSAppleEventDescriptor *) descriptorByTranslatingObject:(id) object ofType:(id) type inSuite:(id) suite;
+- (id) objectByTranslatingDescriptor:(NSAppleEventDescriptor *) descriptor toType:(id) type inSuite:(id) suite;
+- (void) registerTranslator:(id) translator selector:(SEL) selector toTranslateFromClass:(Class) class;
+- (void) registerTranslator:(id) translator selector:(SEL) selector toTranslateFromDescriptorType:(unsigned int) type;
 @end
 
 #pragma mark -
@@ -59,159 +34,13 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 
 	return ret;
 }
-
-- (NSAppleEventDescriptor *) appleEventDescriptor {
-	return [NSAppleEventDescriptor descriptorWithString:self];
-}
 @end
 
 #pragma mark -
 
-@implementation NSValue (NSAppleEventDescriptor)
-- (NSAppleEventDescriptor *) appleEventDescriptor {
-	void *data[32];
-	const char *valueType = [self objCType];
-	unsigned long valueKeywordType = 0;
-	unsigned long valueSize = 0;
-	if( strcmp( valueType, @encode( BOOL ) ) == 0 ) {
-		valueSize = sizeof( BOOL );
-		valueKeywordType = typeBoolean;
-	} else if( strcmp( valueType, @encode( short ) ) == 0 ) {
-		valueSize = sizeof( short );
-		valueKeywordType = typeShortInteger;
-	} else if( strcmp( valueType, @encode( int ) ) == 0 ) {
-		valueSize = sizeof( int );
-		switch( valueSize ) {
-			case 2: valueKeywordType = typeShortInteger; break;
-			case 4: valueKeywordType = typeLongInteger; break;
-		}
-	} else if( strcmp( valueType, @encode( long ) ) == 0 ) {
-		valueSize = sizeof( long );
-		valueKeywordType = typeLongInteger;
-	} else if( strcmp( valueType, @encode( unsigned long ) ) == 0 ) {
-		valueSize = sizeof( unsigned long );
-		valueKeywordType = typeMagnitude;
-	} else if( strcmp( valueType, @encode( float ) ) == 0 ) {
-		valueSize = sizeof( float );
-		valueKeywordType = typeShortFloat;
-	} else if( strcmp( valueType, @encode( double ) ) == 0 ) {
-		valueSize = sizeof( double );
-		valueKeywordType = typeLongFloat;
-	} else if( strcmp( valueType, @encode( char * ) ) == 0 ) {
-		valueSize = 4;
-		valueKeywordType = typeEnumerated;
-	}
-
-	[self getValue:&data];
-	return [NSAppleEventDescriptor descriptorWithDescriptorType:valueKeywordType bytes:data length:valueSize];
-}
-@end
-
-#pragma mark -
-
-@implementation NSArray (NSAppleEventDescriptor)
-+ (id) arrayWithAppleEventDescriptor:(NSAppleEventDescriptor *) descriptor {
-	unsigned int c = [descriptor numberOfItems];
-	id ret = [NSMutableArray arrayWithCapacity:c];
-	unsigned int i = 1;
-
-	for( i = 1, c = [descriptor numberOfItems]; i <= c; i++ ) {
-		id value = [[descriptor descriptorAtIndex:i] objectValue];
-		if( value ) [ret addObject:value];
-	}
-
-	return ret;
-}
-
-- (NSAppleEventDescriptor *) appleEventDescriptor {
-	NSAppleEventDescriptor *list = [NSAppleEventDescriptor listDescriptor];
-	NSAppleEventDescriptor *descriptor = nil;
-	NSEnumerator *enumerator = [self objectEnumerator];
-	unsigned int count = 1;
-	id value = nil;
-
-	while( ( value = [enumerator nextObject] ) ) {
-		if( [value isKindOfClass:[NSValue class]] || [value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]] ) {
-			descriptor = [value appleEventDescriptor];
-		} else if( [value isKindOfClass:[NSNull class]] ) {
-			descriptor = [NSAppleEventDescriptor nullDescriptor];
-		} else descriptor = [[value objectSpecifier] _asDescriptor];
-
-		if( ! descriptor ) descriptor = [NSAppleEventDescriptor nullDescriptor];
-		[list insertDescriptor:descriptor atIndex:count];
-		count++;
-	}
-
-	return list;
-}
-@end
-
-#pragma mark -
-
-@implementation NSDictionary (NSAppleEventDescriptor)
-+ (id) dictionaryWithAppleEventDescriptor:(NSAppleEventDescriptor *) descriptor {
-	if( ! [descriptor numberOfItems] ) return nil;
-
-	descriptor = [descriptor descriptorAtIndex:1];
-	unsigned int c = [descriptor numberOfItems];
-	id ret = [NSMutableDictionary dictionaryWithCapacity:c];
-	unsigned int i = 1;
-
-	for( i = 1, c = [descriptor numberOfItems]; i <= c; i += 2 ) {
-		NSString *key = [[descriptor descriptorAtIndex:i] stringValue];
-		id value = [[descriptor descriptorAtIndex:(i + 1)] objectValue];
-		if( key && value ) [ret setObject:value forKey:key];
-	}
-
-	return ret;
-}
-
-- (NSAppleEventDescriptor *) appleEventDescriptor {
-	NSAppleEventDescriptor *record = [NSAppleEventDescriptor recordDescriptor];
-	NSAppleEventDescriptor *descriptor = nil;
-	NSEnumerator *enumerator = [self objectEnumerator];
-	NSEnumerator *kenumerator = [self keyEnumerator];
-	NSString *key = nil;
-	id value = nil;
-
-	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
-		if( [value isKindOfClass:[NSValue class]] || [value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]] ) {
-			descriptor = [value appleEventDescriptor];
-		} else if( [value isKindOfClass:[NSNull class]] ) {
-			descriptor = [NSAppleEventDescriptor nullDescriptor];
-		} else descriptor = [[value objectSpecifier] _asDescriptor];
-
-		if( ! descriptor ) descriptor = [NSAppleEventDescriptor nullDescriptor];
-		[record setDescriptor:descriptor forKeyword:[key fourCharCode]];
-	}
-
-	return record;
-}
-@end
-
-#pragma mark -
-
-@implementation NSAppleEventDescriptor (NSAppleEventDescriptorObjectValue)
-- (id) objectValue {
-	switch( [self descriptorType] ) {
-		case typeChar:
-		case typeUnicodeText: return [self stringValue];
-		case typeBoolean: return [NSNumber numberWithBool:(BOOL)[self booleanValue]];
-		case typeTrue: return [NSNumber numberWithBool:YES];
-		case typeFalse: return [NSNumber numberWithBool:NO];
-		case typeShortInteger: return [NSNumber numberWithInt:(int)[self int32Value]];
-		case typeLongInteger: return [NSNumber numberWithLong:(long)[self int32Value]];
-		case typeType: return [NSNumber numberWithUnsignedLong:(unsigned long)[self typeCodeValue]];
-		case typeEnumerated: return [NSNumber numberWithUnsignedLong:(unsigned long)[self enumCodeValue]];
-		case typeMagnitude: return [NSNumber numberWithUnsignedLong:(unsigned long)[self int32Value]];
-		case typeShortFloat: return [NSNumber numberWithBytes:[[self data] bytes] objCType:@encode( float )];
-		case typeLongFloat: return [NSNumber numberWithBytes:[[self data] bytes] objCType:@encode( double )];
-		case typeAERecord: return [NSDictionary dictionaryWithAppleEventDescriptor:self];
-		case typeAEList: return [NSArray arrayWithAppleEventDescriptor:self];
-		case typeNull: return [NSNull null];
-	}
-
-	return [self data];
+@implementation NSAppleScript (NSAppleScriptIdentifier)
+- (NSNumber *) scriptIdentifier {
+	return [NSNumber numberWithUnsignedLong:_compiledScriptID];
 }
 @end
 
@@ -251,7 +80,7 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 - (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
 	int pid = [[NSProcessInfo processInfo] processIdentifier];
 	NSAppleEventDescriptor *targetAddress = [NSAppleEventDescriptor descriptorWithDescriptorType:typeKernelProcessID bytes:&pid length:sizeof( pid )];
-	NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:MVChatScriptPluginClass eventID:handler targetDescriptor:targetAddress returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
+	NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:'cplG' eventID:handler targetDescriptor:targetAddress returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
 	NSEnumerator *enumerator = [arguments objectEnumerator];
 	NSEnumerator *kenumerator = [arguments keyEnumerator];
 	NSAppleEventDescriptor *descriptor = nil;
@@ -261,11 +90,9 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 	if( ! _script ) return nil;
 
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
-		if( [value isKindOfClass:[NSValue class]] || [value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]] ) {
-			descriptor = [value appleEventDescriptor];
-		} else if( [value isKindOfClass:[NSNull class]] ) {
-			descriptor = [NSAppleEventDescriptor nullDescriptor];
-		} else descriptor = [[value objectSpecifier] _asDescriptor];
+		NSScriptObjectSpecifier *specifier = [value objectSpecifier];
+		if( specifier ) descriptor = [[value objectSpecifier] _asDescriptor]; // custom object, use it's object specitier
+		else descriptor = [[NSAEDescriptorTranslator sharedAEDescriptorTranslator] descriptorByTranslatingObject:value ofType:nil inSuite:nil];
 
 		if( ! descriptor ) descriptor = [NSAppleEventDescriptor nullDescriptor];
 		[event setDescriptor:descriptor forKeyword:[key fourCharCode]];
@@ -273,14 +100,20 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 
 	NSDictionary *error = nil;
 	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:&error];
-	if( error && ! result ) {
+	if( error && ! result ) { // an error
 		int code = [[error objectForKey:NSAppleScriptErrorNumber] intValue];
 		if( code == errAEEventNotHandled || code == errAEHandlerNotFound )
 			[self doesNotRespondToSelector:selector]; // disable for future calls
 		return [NSError errorWithDomain:NSOSStatusErrorDomain code:code userInfo:error];
 	}
 
-	return [result objectValue];
+	if( [result descriptorType] == 'obj ' ) { // an object specifier result, evaluate it to the object
+		NSScriptObjectSpecifier *specifier = [NSScriptObjectSpecifier _objectSpecifierFromDescriptor:result inCommandConstructionContext:nil];
+		return [specifier objectsByEvaluatingSpecifier];
+	}
+
+	// a static result evaluate it to the proper object
+	return [[NSAEDescriptorTranslator sharedAEDescriptorTranslator] objectByTranslatingDescriptor:result toType:nil inSuite:nil];
 }
 
 #pragma mark -
