@@ -97,6 +97,7 @@
 	[self setString:@""];
 	[self setTypingAttributes:defaultTypingAttributes];
 	[self resetCursorRects];
+	[[self undoManager] removeAllActions];
 }
 
 - (void) resetCursorRects {
