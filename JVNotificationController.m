@@ -44,15 +44,18 @@ static JVNotificationController *sharedInstance = nil;
 	if( [[eventPrefs objectForKey:@"playSound"] boolValue] )
 		[self _playSound:[eventPrefs objectForKey:@"soundPath"]];
 
-	if( [[eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue] )
-		[self _bounceIconContinuously];
-	else if( [[eventPrefs objectForKey:@"bounceIcon"] boolValue] )
-		[self _bounceIconOnce];
+		if( [[eventPrefs objectForKey:@"bounceIcon"] boolValue] ) {
+			if( [[eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue] )
+				[self _bounceIconContinuously];
+			else [self _bounceIconOnce];
+		}
 
-	if( [[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] && ! [[NSApplication sharedApplication] isActive] )
-		[self _showBubbleWithContext:context andPrefs:eventPrefs];
-	else if( [[eventPrefs objectForKey:@"showBubble"] boolValue] && ![[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] )
-		[self _showBubbleWithContext:context andPrefs:eventPrefs];
+		if( [[eventPrefs objectForKey:@"showBubble"] boolValue] ) {
+			if( [[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] && ! [[NSApplication sharedApplication] isActive] )
+				[self _showBubbleWithContext:context andPrefs:eventPrefs];
+			else if( ! [[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] )
+				[self _showBubbleWithContext:context andPrefs:eventPrefs];
+		}
 }
 @end
 
