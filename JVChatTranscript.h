@@ -51,7 +51,7 @@
 
 - (IBAction) changeChatEmoticons:(id) sender;
 - (void) setChatEmoticons:(NSBundle *) emoticons;
-- (void) setChatEmoticons:(NSBundle *) emoticons preformRefresh:(BOOL) refresh;
+- (void) setChatEmoticons:(NSBundle *) emoticons performRefresh:(BOOL) refresh;
 - (NSBundle *) chatEmoticons;
 
 - (unsigned long) numberOfMessages;

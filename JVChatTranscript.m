@@ -433,7 +433,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 	if( ! [self _usingSpecificEmoticons] ) {
 		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]]];
-		[self setChatEmoticons:emoticon preformRefresh:NO];
+		[self setChatEmoticons:emoticon performRefresh:NO];
 	}
 
 	_previousStyleSwitch = YES;
@@ -512,10 +512,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (void) setChatEmoticons:(NSBundle *) emoticons {
-	[self setChatEmoticons:emoticons preformRefresh:YES];
+	[self setChatEmoticons:emoticons performRefresh:YES];
 }
 
-- (void) setChatEmoticons:(NSBundle *) emoticons preformRefresh:(BOOL) refresh {
+- (void) setChatEmoticons:(NSBundle *) emoticons performRefresh:(BOOL) refresh {
 	[_emoticonMappings autorelease];
 	_emoticonMappings = [[NSDictionary dictionaryWithContentsOfFile:[self _chatEmoticonsMappingFilePath]] retain];
 	
