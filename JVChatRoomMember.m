@@ -327,6 +327,9 @@
 
 - (IBAction) addBuddy:(id) sender {
 	[[MVBuddyListController sharedBuddyList] showBuddyPickerSheet:self];
+	[[MVBuddyListController sharedBuddyList] setNewBuddyNickname:[self nickname]];
+	[[MVBuddyListController sharedBuddyList] setNewBuddyFullname:[self realName]];
+	[[MVBuddyListController sharedBuddyList] setNewBuddyServer:[self connection]];
 }
 
 #pragma mark -

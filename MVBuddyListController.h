@@ -81,6 +81,10 @@ typedef enum {
 - (IBAction) cancelNewBuddy:(id) sender;
 - (IBAction) confirmNewBuddy:(id) sender;
 
+- (void) setNewBuddyNickname:(NSString *) nick;
+- (void) setNewBuddyFullname:(NSString *) name;
+- (void) setNewBuddyServer:(MVChatConnection *) connection;
+
 - (IBAction) messageSelectedBuddy:(id) sender;
 - (IBAction) sendFileToSelectedBuddy:(id) sender;
 

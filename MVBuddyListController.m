@@ -242,6 +242,23 @@ static MVBuddyListController *sharedInstance = nil;
 	[_addPerson autorelease];
 	_addPerson = nil;
 
+	NSEnumerator *enumerator = [[[MVConnectionsController defaultManager] connections] objectEnumerator];
+	MVChatConnection *connection = nil;
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenuItem *item = nil;
+
+	while( ( connection = [enumerator nextObject] ) ) {
+		item = [[[NSMenuItem alloc] initWithTitle:[connection server] action:NULL keyEquivalent:@""] autorelease];
+		[menu addItem:item];
+	}
+
+	[server setMenu:menu];
+
+	[firstName setObjectValue:@""];
+	[lastName setObjectValue:@""];
+	[email setObjectValue:@""];
+	[image setImage:nil];	
+
 	[[NSApplication sharedApplication] beginSheet:pickerWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
@@ -279,20 +296,6 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	[nickname setObjectValue:@""];
-
-	NSEnumerator *enumerator = [[[MVConnectionsController defaultManager] connections] objectEnumerator];
-	MVChatConnection *connection = nil;
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-	NSMenuItem *item = nil;
-
-	while( ( connection = [enumerator nextObject] ) ) {
-		item = [[[NSMenuItem alloc] initWithTitle:[connection server] action:NULL keyEquivalent:@""] autorelease];
-		[menu addItem:item];
-	}
-
-	[server setMenu:menu];
-
 	ABPerson *person = nil;
 	if( _addPerson ) person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:_addPerson];
 	if( person ) {
@@ -301,11 +304,6 @@ static MVBuddyListController *sharedInstance = nil;
 		ABMultiValue *value = [person valueForProperty:kABEmailProperty];
 		[email setObjectValue:[value valueAtIndex:[value indexForIdentifier:[value primaryIdentifier]]]];
 		[image setImage:[[[NSImage alloc] initWithData:[person imageData]] autorelease]];
-	} else {
-		[firstName setObjectValue:@""];
-		[lastName setObjectValue:@""];
-		[email setObjectValue:@""];
-		[image setImage:nil];
 	}
 
 	[[NSApplication sharedApplication] beginSheet:newPersonWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
@@ -396,6 +394,29 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) controlTextDidChange:(NSNotification *) notification {
 	if( [(NSString *)[nickname objectValue] length] >= 1 ) [addButton setEnabled:YES];
 	else [addButton setEnabled:NO];
+}
+
+#pragma mark -
+
+- (void) setNewBuddyNickname:(NSString *) nick {
+	[nickname setObjectValue:nick];
+}
+
+- (void) setNewBuddyFullname:(NSString *) name {
+	NSRange range = [name rangeOfString:@" "];
+	if( range.location != NSNotFound ) {
+		[firstName setObjectValue:[name substringToIndex:range.location]];
+		if( ( range.location + 1 ) < [name length] ) {
+			[lastName setObjectValue:[name substringFromIndex:( range.location + 1 )]];
+		} else [lastName setObjectValue:@""];
+	} else {
+		[firstName setObjectValue:@""];
+		[lastName setObjectValue:@""];
+	}
+}
+
+- (void) setNewBuddyServer:(MVChatConnection *) connection {
+	[server selectItemWithTitle:[connection server]];
 }
 
 #pragma mark -
