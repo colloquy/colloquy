@@ -204,6 +204,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action;
 
 - (void) sendRawMessage:(NSString *) raw;
+- (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now;
 - (void) sendRawMessageWithFormat:(NSString *) format, ...;
 
 - (void) sendFile:(NSString *) path toUser:(NSString *) user;

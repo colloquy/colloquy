@@ -781,12 +781,6 @@
 			settings = {
 			};
 		};
-		1C6C7EC20631644E00698F55 = {
-			fileRef = 1C6C7E78063163BD00698F55;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C6EA23C05A735D6006A559F = {
 			children = (
 				1C6EA23D05A735D6006A559F,
@@ -2208,7 +2202,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1C6C7EC20631644E00698F55,
+				1CDC9CA6063622CE00F5DBAF,
 				1C6C75490630AD9500698F55,
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
@@ -3246,6 +3240,12 @@
 		};
 		1CD733CC05A0E2470080F952 = {
 			fileRef = 1CD733CA05A0E2470080F952;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CDC9CA6063622CE00F5DBAF = {
+			fileRef = 1C6C7E78063163BD00698F55;
 			isa = PBXBuildFile;
 			settings = {
 			};
