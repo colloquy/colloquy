@@ -1,15 +1,15 @@
 @interface MVChatPluginManager : NSObject {
 	@private
-	NSMutableDictionary *_plugins;
+	NSMutableArray *_plugins;
 }
 + (MVChatPluginManager *) defaultManager;
++ (NSArray *) pluginSearchPaths;
 
-- (NSArray *) pluginSearchPaths;
 - (void) findAndLoadPlugins;
 
-- (NSSet *) plugins;
-- (NSSet *) pluginsThatRespondToSelector:(SEL) selector;
-- (NSSet *) pluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector;
+- (NSArray *) plugins;
+- (NSArray *) pluginsThatRespondToSelector:(SEL) selector;
+- (NSArray *) pluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector;
 
 - (NSEnumerator *) pluginEnumerator;
 - (NSEnumerator *) enumeratorOfPluginsThatRespondToSelector:(SEL) selector;
