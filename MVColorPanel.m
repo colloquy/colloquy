@@ -5,15 +5,26 @@
 - (void) _sendActionAndNotification;
 @end
 
+#pragma mark -
+
 @interface MVColorPanel (MVColorPanelPrivate)
 - (NSView *) _makeAccessoryView;
 @end
 
+#pragma mark -
+
 @implementation MVColorPanel
 - (id) init {
-	self = [super init];
-	[self setAccessoryView:[self _makeAccessoryView]];
+	if( ( self = [super init] ) );
+		[self setAccessoryView:[self _makeAccessoryView]];
 	return self;
+}
+
+- (void) dealloc {
+	[destination release];
+	destination = nil;
+
+	[super dealloc];
 }
 
 - (void) _forceSendAction:(BOOL) action notification:(BOOL) notification firstResponder:(BOOL) firstResponder {
@@ -33,6 +44,8 @@
 	}
 }
 @end
+
+#pragma mark -
 
 @implementation MVColorPanel (MVColorPanelPrivate)
 - (NSView *) _makeAccessoryView {
@@ -61,6 +74,7 @@
 	[view setAutoresizingMask:(NSViewWidthSizable | NSViewMaxXMargin)];
 	[view addSubview:destination];
 	[destination setBoundsOrigin:NSZeroPoint];
+
 	return view;
 }
 @end

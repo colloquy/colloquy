@@ -3,7 +3,6 @@
 @interface MVColorPanel : NSColorPanel {
 	NSMatrix *destination;
 }
-
 @end
 
 @interface NSObject (MVColorPanelResponderMethod)
