@@ -150,6 +150,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSString *_npassword;
 	MVChatConnectionStatus _status;
 	MVChatConnectionProxy _proxy;
+	NSStringEncoding _encoding;
 
 	void *_chatConnection;
 	NSMutableDictionary *_roomsCache;
@@ -170,6 +171,13 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 #pragma mark -
 
 - (NSURL *) url;
+
+#pragma mark -
+
+- (void) setEncoding:(NSStringEncoding) encoding;
+- (NSStringEncoding) encoding;
+- (NSString *) stringWithEncodedBytes:(const char *) bytes;
+- (const char *) encodedBytesWithString:(NSString *) string;
 
 #pragma mark -
 
