@@ -400,7 +400,7 @@ static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const ch
 	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) {
 		note = [NSNotification notificationWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:byMember, @"byUser", ( msgData ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];		
 	} else {
-		note = [NSNotification notificationWithName:MVChatRoomUserKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"user", byMember, @"byUser", ( msgData ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
+		note = [NSNotification notificationWithName:MVChatRoomUserKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", byMember, @"byUser", ( msgData ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -466,7 +466,6 @@ static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const ch
 	if( ischannel( *target ) ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		if( ! user ) user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", nil]];
 	} else {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
