@@ -5,7 +5,7 @@
 @class MVChatUser;
 @class JVBuddy;
 
-@interface JVChatRoomMember : NSObject <JVChatListItem> {
+@interface JVChatRoomMember : NSObject <JVChatListItem, JVChatListItemScripting> {
 	JVChatRoomPanel *_parent;
 	MVChatUser *_user;
 
@@ -70,10 +70,4 @@
 - (IBAction) closeBanSheet:(id) sender;
 - (IBAction) closeKickbanSheet:(id) sender;
 - (IBAction) cancelSheet:(id) sender;
-@end
-
-#pragma mark -
-
-@interface JVChatRoomMember (JVChatRoomMemberScripting) <JVChatListItemScripting>
-- (NSNumber *) uniqueIdentifier;
 @end

@@ -414,6 +414,17 @@
 }
 
 #pragma mark -
+#pragma mark Scripting Support
+
+- (NSNumber *) uniqueIdentifier {
+	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+}
+
+- (NSArray *) children {
+	return nil;
+}
+
+#pragma mark -
 #pragma mark GUI Actions
 
 - (IBAction) doubleClicked:(id) sender {
@@ -679,36 +690,4 @@
 	if( nickname ) return nickname;
 	return [[self connection] nickname];
 }
-@end
-
-#pragma mark -
-
-@implementation JVChatRoomMember (JVChatRoomMemberScripting)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoomPanel class]];
-	NSScriptObjectSpecifier *container = [[self room] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]] autorelease];
-}
-
-- (NSNumber *) uniqueIdentifier {
-	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
-}
-
-/*#pragma mark -
-
-- (void) voiceScriptCommand:(NSScriptCommand *) command {
-	if( ! [self voice] ) [self toggleVoiceStatus:nil];
-}
-
-- (void) devoiceScriptCommand:(NSScriptCommand *) command {
-	if( [self voice] ) [self toggleVoiceStatus:nil];
-}
-
-- (void) promoteScriptCommand:(NSScriptCommand *) command {
-	if( ! [self operator] ) [self toggleOperatorStatus:nil];
-}
-
-- (void) demoteScriptCommand:(NSScriptCommand *) command {
-	if( [self operator] ) [self toggleOperatorStatus:nil];
-} */
 @end

@@ -92,11 +92,19 @@ extern NSString *JVChatViewPboardType;
 
 @protocol JVChatListItemScripting
 - (NSNumber *) uniqueIdentifier;
+- (NSArray *) children;
+- (NSString *) information;
+- (NSString *) toolTip;
+- (BOOL) isEnabled;
+@end
+
+@protocol JVChatViewControllerScripting <JVChatListItemScripting>
+- (NSWindow *) window;
+- (IBAction) close:(id) sender;
 @end
 
 @protocol JVChatListItem <NSObject>
 - (id <JVChatListItem>) parent;
-
 - (NSImage *) icon;
 - (NSString *) title;
 @end

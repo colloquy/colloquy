@@ -3,7 +3,7 @@
 @class MVTextView;
 @class MVChatConnection;
 
-@interface JVChatConsolePanel : NSObject <JVChatViewController> {
+@interface JVChatConsolePanel : NSObject <JVChatViewController, JVChatViewControllerScripting> {
 	@protected
 	IBOutlet NSView *contents;
 	IBOutlet NSTextView *display;
@@ -28,8 +28,4 @@
 
 - (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound;
 - (IBAction) send:(id) sender;
-@end
-
-@interface JVChatConsolePanel (JVChatConsolePanelScripting) <JVChatListItemScripting>
-- (NSNumber *) uniqueIdentifier;
 @end

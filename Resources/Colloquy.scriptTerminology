@@ -235,7 +235,7 @@
 					<key>Description</key>
 					<string>Save any changes to disk as they occur? Always false when there is no file association.</string>
 					<key>Name</key>
-					<string>auto save changes</string>
+					<string>auto save</string>
 				</dict>
 				<key>filePath</key>
 				<dict>
@@ -357,19 +357,12 @@
 					<key>Name</key>
 					<string>enabled</string>
 				</dict>
-				<key>numberOfChildren</key>
-				<dict>
-					<key>Description</key>
-					<string>The number of children this item has under it.</string>
-					<key>Name</key>
-					<string>child count</string>
-				</dict>
 				<key>parent</key>
 				<dict>
 					<key>Description</key>
-					<string>This list item's parent (if any).</string>
+					<string>This list item's container (if any).</string>
 					<key>Name</key>
-					<string>parent</string>
+					<string>container</string>
 				</dict>
 				<key>title</key>
 				<dict>
@@ -553,7 +546,7 @@
 				<key>expanded</key>
 				<dict>
 					<key>Description</key>
-					<string>Should the browser be expanded? Default is no.</string>
+					<string>Should the browser be expanded? Default is no. The room list will be refreshed if the browser is expanded.</string>
 					<key>Name</key>
 					<string>expanded</string>
 				</dict>
@@ -565,6 +558,8 @@
 					<string>with filter</string>
 				</dict>
 			</dict>
+			<key>Description</key>
+			<string>Displays a new chat room browser window. Users can select a room from an expanded browser, or type a room in manually.</string>
 			<key>Name</key>
 			<string>display chat room browser</string>
 		</dict>

@@ -194,6 +194,10 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 	return nil;
 }
 
+- (NSArray *) children {
+	return nil;
+}
+
 - (NSMenu *) menu {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
@@ -214,6 +218,21 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 	NSImage *ret = [NSImage imageNamed:@"Generic"];
 	[ret setSize:NSMakeSize( 32., 32. )];
 	return [[ret retain] autorelease];
+}
+
+#pragma mark -
+#pragma mark Scripting Support
+
+- (NSNumber *) uniqueIdentifier {
+	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+}
+
+- (BOOL) isEnabled {
+	return YES;
+}
+
+- (NSWindow *) window {
+	return [[self windowController] window];
 }
 
 #pragma mark -
@@ -781,17 +800,5 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 
 - (BOOL) _usingSpecificEmoticons {
 	return NO;
-}
-@end
-
-#pragma mark -
-
-@implementation JVChatTranscriptPanel (JVChatTranscriptScripting)
-- (NSNumber *) uniqueIdentifier {
-	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
-}
-
-- (NSWindow *) window {
-	return [[self windowController] window];
 }
 @end

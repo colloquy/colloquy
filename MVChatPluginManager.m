@@ -218,3 +218,17 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 	return results;
 }
 @end
+
+#pragma mark -
+
+@interface MVReloadPluginsScriptCommand : NSScriptCommand {}
+@end
+
+#pragma mark -
+
+@implementation MVReloadPluginsScriptCommand
+- (id) performDefaultImplementation {
+	[[MVChatPluginManager defaultManager] reloadPlugins];
+	return nil;
+}
+@end

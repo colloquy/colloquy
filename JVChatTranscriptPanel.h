@@ -7,7 +7,7 @@
 @class JVChatMessage;
 @class JVChatTranscript;
 
-@interface JVChatTranscriptPanel : NSObject <JVChatViewController> {
+@interface JVChatTranscriptPanel : NSObject <JVChatViewController, JVChatViewControllerScripting> {
 	@protected
 	IBOutlet NSView *contents;
 	IBOutlet JVStyleView *display;
@@ -39,12 +39,6 @@
 
 - (IBAction) close:(id) sender;
 - (IBAction) activate:(id) sender;
-@end
-
-#pragma mark -
-
-@interface JVChatTranscriptPanel (JVChatTranscriptScripting) <JVChatListItemScripting>
-- (NSNumber *) uniqueIdentifier;
 @end
 
 #pragma mark -

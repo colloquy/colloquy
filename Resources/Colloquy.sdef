@@ -120,6 +120,11 @@
 				<cocoa class="NSTextStorage"/>
 			</class>
 			<class name="list item" code="cliM" description="Generic chat list item that all drawer items inherit from (e.g. members, etc.).">
+				<elements>
+					<element type="list item" access="r">
+						<cocoa method="children"/>
+					</element>
+				</elements>
 				<properties>
 					<property name="name" code="pnam" description="Title to show in the list." type="string" access="r">
 						<cocoa method="title"/>
@@ -133,11 +138,8 @@
 					<property name="tooltip" code="toLA" description="The tooltip for the listem item." type="string" access="r">
 						<cocoa method="toolTip"/>
 					</property>
-					<property name="parent" code="pArA" description="This list item&apos;s parent (if any)." type="list item" access="r">
+					<property name="container" code="pArA" description="This list item&apos;s container (if any)." type="list item" access="r">
 						<cocoa method="parent"/>
-					</property>
-					<property name="child count" code="cDcA" description="The number of children this item has under it." type="number" access="r">
-						<cocoa method="numberOfChildren"/>
 					</property>
 				</properties>
 			</class>
@@ -276,7 +278,7 @@
 					<property name="file" code="kfil" description="The file (if any) this transcript represents." type="file">
 						<cocoa method="filePath"/>
 					</property>
-					<property name="auto save changes" code="atSA" description="Save any changes to disk as they occur? Always false when there is no file association." type="boolean">
+					<property name="auto save" code="atSA" description="Save any changes to disk as they occur? Always false when there is no file association." type="boolean">
 						<cocoa method="automaticallyWritesChangesToFile"/>
 					</property>
 				</properties>
@@ -357,7 +359,7 @@
 					<cocoa key="connection"/>
 				</parameter>
 			</command>
-			<command name="display chat room browser" code="coRCdRbX">
+			<command name="display chat room browser" code="coRCdRbX" description="Displays a new chat room browser window. Users can select a room from an expanded browser, or type a room in manually.">
 				<cocoa class="JVOpenRoomBrowserScriptCommand"/>
 				<parameter name="for" code="dRb1" description="The connection to select. No selection by default." type="connection" optional="optional">
 					<cocoa key="connection"/>
@@ -365,7 +367,7 @@
 				<parameter name="with filter" code="dRb2" description="A search filter to use. No filter by default." type="string" optional="optional">
 					<cocoa key="filter"/>
 				</parameter>
-				<parameter name="expanded" code="dRb3" description="Should the browser be expanded? Default is no." type="boolean" optional="optional">
+				<parameter name="expanded" code="dRb3" description="Should the browser be expanded? Default is no. The room list will be refreshed if the browser is expanded." type="boolean" optional="optional">
 					<cocoa key="expanded"/>
 				</parameter>
 			</command>
@@ -620,6 +622,9 @@
 			</command>
 			<command name="refresh information" code="ccoRrfsX" description="Refresh various properties of a chat user.">
 				<direct-parameter type="chat user" description="The chat user."/>
+			</command>
+			<command name="reload plugins" code="ccoRrLdX" description="Reloads all plugins that are in the search paths. Plugins that have been deleted or moved will be unloaded.">
+				<cocoa class="MVReloadPluginsScriptCommand"/>
 			</command>
 		</commands>
 	</suite>

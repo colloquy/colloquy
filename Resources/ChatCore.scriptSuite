@@ -458,6 +458,15 @@
 				<string>ChatCore.MVChatUser</string>
 			</dict>
 		</dict>
+		<key>ReloadPlugins</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>ccoR</string>
+			<key>AppleEventCode</key>
+			<string>rLdX</string>
+			<key>CommandClass</key>
+			<string>MVReloadPluginsScriptCommand</string>
+		</dict>
 		<key>SendChatMessage</key>
 		<dict>
 			<key>AppleEventClassCode</key>

@@ -353,6 +353,13 @@
 				<string>The chat user.</string>
 			</dict>
 		</dict>
+		<key>ReloadPlugins</key>
+		<dict>
+			<key>Description</key>
+			<string>Reloads all plugins that are in the search paths. Plugins that have been deleted or moved will be unloaded.</string>
+			<key>Name</key>
+			<string>reload plugins</string>
+		</dict>
 		<key>SendChatMessage</key>
 		<dict>
 			<key>Arguments</key>

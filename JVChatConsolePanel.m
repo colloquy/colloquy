@@ -149,6 +149,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return nil;
 }
 
+- (NSArray *) children {
+	return nil;
+}
+
 #pragma mark -
 
 - (NSMenu *) menu {
@@ -466,6 +470,17 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 #pragma mark -
+#pragma mark Scripting Support
+
+- (NSNumber *) uniqueIdentifier {
+	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+}
+
+- (NSWindow *) window {
+	return [[self windowController] window];
+}
+
+#pragma mark -
 #pragma mark Toolbar Support
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
@@ -579,17 +594,5 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) _refreshIcon:(NSNotification *) notification {
 	[_windowController reloadListItem:self andChildren:NO];
-}
-@end
-
-#pragma mark -
-
-@implementation JVChatConsolePanel (JVChatConsolePanelScripting)
-- (NSNumber *) uniqueIdentifier {
-	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
-}
-
-- (NSWindow *) window {
-	return [[self windowController] window];
 }
 @end

@@ -431,15 +431,6 @@
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
-				<key>numberOfChildren</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>cDcA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber</string>
-				</dict>
 				<key>parent</key>
 				<dict>
 					<key>AppleEventCode</key>
@@ -470,6 +461,20 @@
 			</dict>
 			<key>Superclass</key>
 			<string>NSCoreSuite.AbstractObject</string>
+			<key>ToManyRelationships</key>
+			<dict>
+				<key>children</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>cliM</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.ListItem</string>
+				</dict>
+			</dict>
 		</dict>
 		<key>NSApplication</key>
 		<dict>

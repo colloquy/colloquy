@@ -182,6 +182,10 @@
 	return [_sortedMembers objectAtIndex:index];
 }
 
+- (NSArray *) children {
+	return _sortedMembers;
+}
+
 #pragma mark -
 
 - (NSMenu *) menu {
@@ -1300,5 +1304,15 @@
 - (void) setScriptTypedTopic:(NSString *) topic {
 	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:topic baseURL:nil];
 	[[self target] setTopic:attributeMsg];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatRoomMember (JVChatRoomMemberObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoomPanel class]];
+	NSScriptObjectSpecifier *container = [[self room] objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]] autorelease];
 }
 @end
