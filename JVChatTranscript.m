@@ -613,7 +613,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (NSMenu *) _stylesMenu {
-	if( ! chooseStyle ) [self view];
+	if( ! _nibLoaded ) [self view];
 	return [[[chooseStyle menu] retain] autorelease];
 }
 
