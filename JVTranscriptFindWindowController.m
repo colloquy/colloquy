@@ -23,7 +23,8 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"JVFind"] ) ) {
 		_rules = nil;
-		_lastFoundMessage = nil;
+		_results = nil;
+		_lastMessageIndex = 0;
 		_findPasteboardNeedsUpdated = NO;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationDidActivate: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
@@ -40,9 +41,10 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	if( self == sharedInstance ) sharedInstance = nil;
 
 	[_rules release];
-	[_lastFoundMessage release];
+	[_results release];
+
 	_rules = nil;
-	_lastFoundMessage = nil;
+	_results = nil;
 
 	[super dealloc];
 }
@@ -71,6 +73,13 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 - (void) hideProgress {
 	[resultProgress setHidden:YES];
+}
+
+#pragma mark -
+
+- (NSMutableArray *) results {
+	if( ! _results ) _results = [[NSMutableArray alloc] init];
+	return _results;
 }
 
 #pragma mark -
@@ -121,8 +130,8 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 		[[self window] setMaxSize:frame.size];
 	}
 
-	[_lastFoundMessage release];
-	_lastFoundMessage = nil;
+	[[self results] removeAllObjects];
+	_lastMessageIndex = 0;
 }
 
 - (IBAction) removeRow:(id) sender {
@@ -141,8 +150,8 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 		[[self window] setMaxSize:frame.size];
 	}
 
-	[_lastFoundMessage release];
-	_lastFoundMessage = nil;
+	[[self results] removeAllObjects];
+	_lastMessageIndex = 0;
 }
 
 #pragma mark -
@@ -159,6 +168,14 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	JVChatTranscript *transcript = [self focusedChatTranscript];
 	if( ! transcript ) return;
 
+	JVChatMessage *foundMessage = nil;
+
+	if( _lastMessageIndex < ( [[self results] count] - 1 ) && ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
+		_lastMessageIndex++;
+		foundMessage = [[self results] objectAtIndex:_lastMessageIndex];
+		goto end;
+	}
+
 	[resultCount setObjectValue:@""];
 	[resultProgress setHidden:NO];
 	[resultProgress setIndeterminate:YES];
@@ -168,27 +185,18 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	NSArray *allMessages = [transcript messages];
 	NSRange range;
 
-	if( ! [self rulesChangedSinceLastFind] && _lastFoundMessage && [[_lastFoundMessage transcript] isEqual:transcript] ) {
-		unsigned int index = [allMessages indexOfObjectIdenticalTo:_lastFoundMessage];
+	if( ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
+		unsigned int index = [allMessages indexOfObjectIdenticalTo:[[self results] lastObject]];
 		if( index != NSNotFound ) {
 			range = NSMakeRange( index + 1, [allMessages count] - ( index + 1 ) );
-		} else {
-			[resultProgress stopAnimation:nil];
-			[resultProgress setHidden:YES];
-			return;
-		}
+		} else goto end;
 	} else {
 		range = NSMakeRange( 0, [allMessages count] );
-		[_lastFoundMessage release];
-		_lastFoundMessage = nil;
+		[[self results] removeAllObjects];
+		_lastMessageIndex = 0;
 	}
 
-	if( ! range.length ) {
-		[resultProgress stopAnimation:nil];
-		[resultProgress setHidden:YES];
-		return;
-	}
-
+	if( ! range.length ) goto end;
 	if( ! range.location || [scrollbackOnly state] == NSOnState )
 		[hiddenResults setHidden:YES];
 
@@ -208,6 +216,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	unsigned int totalMsgs = [rangeMsgs count];
 	BOOL andOperation = ( [operation selectedTag] == 2 );
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
+
 	while( ( message = [messages nextObject] ) ) {
 		BOOL scrollback = [transcript messageIsInScrollback:message];
 		if( ! scrollback && [scrollbackOnly state] == NSOnState ) continue;
@@ -222,16 +231,11 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 			else if( localMatch && ! andOperation ) break; // passes one, this is enough to match under "any rules"
 		}
 
-		if( ! ( i++ % 25 ) ) {
-			[resultProgress setDoubleValue:( ( (double) i / (double) totalMsgs ) * 100. )];
-			[resultProgress displayIfNeeded];
-		}
-
 		if( match ) {
 			if( scrollback ) {
-				[_lastFoundMessage release];
-				_lastFoundMessage = [message retain];
-				[transcript jumpToMessage:_lastFoundMessage];
+				foundMessage = message;
+				[[self results] addObject:message];
+				_lastMessageIndex++;
 				break;
 			} else if( ! range.location && ! scrollback ) {
 				hiddenMsgs++;
@@ -240,9 +244,19 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 				[hiddenResults displayIfNeeded];
 			}
 		}
+
+		if( ! ( i++ % 25 ) ) {
+			[resultProgress setDoubleValue:( ( (double) i / (double) totalMsgs ) * 100. )];
+			[resultProgress displayIfNeeded];
+		}
 	}
 
-	NSLog( @"%@ %@", NSStringFromRange( range ), _lastFoundMessage );
+end:
+
+	if( foundMessage ) [transcript jumpToMessage:foundMessage];
+	else NSBeep();
+
+	NSLog( @"%@ %u %@", NSStringFromRange( range ), _lastMessageIndex, foundMessage );	
 
 	[resultProgress setDoubleValue:[resultProgress maxValue]];
 	[resultProgress displayIfNeeded];
@@ -253,6 +267,14 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	JVChatTranscript *transcript = [self focusedChatTranscript];
 	if( ! transcript ) return;
 
+	JVChatMessage *foundMessage = nil;
+
+	if( [[self results] count] && _lastMessageIndex > 0 && ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
+		_lastMessageIndex--;
+		foundMessage = [[self results] objectAtIndex:_lastMessageIndex];
+		goto end;
+	}
+
 	[resultCount setObjectValue:@""];
 	[resultProgress setHidden:NO];
 	[resultProgress setIndeterminate:YES];
@@ -262,28 +284,19 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	NSArray *allMessages = [transcript messages];
 	NSRange range;
 
-	if( ! [self rulesChangedSinceLastFind] && _lastFoundMessage && [[_lastFoundMessage transcript] isEqual:transcript] ) {
-		unsigned int index = [allMessages indexOfObjectIdenticalTo:_lastFoundMessage];
+	if( ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] && [[self results] count] ) {
+		unsigned int index = [allMessages indexOfObjectIdenticalTo:[[self results] objectAtIndex:0]];
 		if( index != NSNotFound && index > 1 ) {
 			range = NSMakeRange( 0, index );
-		} else {
-			[resultProgress stopAnimation:nil];
-			[resultProgress setHidden:YES];
-			return;
-		}
+		} else goto end;
 	} else {
 		range = NSMakeRange( 0, [allMessages count] );
-		[_lastFoundMessage release];
-		_lastFoundMessage = nil;
-	}	
-
-	if( ! range.length ) {
-		[resultProgress stopAnimation:nil];
-		[resultProgress setHidden:YES];
-		return;
+		[[self results] removeAllObjects];
+		_lastMessageIndex = 0;
 	}
 
-	if( ! range.location || [scrollbackOnly state] == NSOnState )
+	if( ! range.length ) goto end;
+	if( [scrollbackOnly state] == NSOnState )
 		[hiddenResults setHidden:YES];
 
 	_findPasteboardNeedsUpdated = YES;
@@ -302,6 +315,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	unsigned int totalMsgs = [rangeMsgs count];
 	BOOL andOperation = ( [operation selectedTag] == 2 );
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
+
 	while( ( message = [messages nextObject] ) ) {
 		BOOL scrollback = [transcript messageIsInScrollback:message];
 		if( ! scrollback && [scrollbackOnly state] == NSOnState ) continue;
@@ -316,16 +330,10 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 			else if( localMatch && ! andOperation ) break; // passes one, this is enough to match under "any rules"
 		}
 
-		if( ! ( i++ % 25 ) ) {
-			[resultProgress setDoubleValue:( ( (double) i / (double) totalMsgs ) * 100. )];
-			[resultProgress displayIfNeeded];
-		}
-
 		if( match ) {
 			if( scrollback ) {
-				[_lastFoundMessage release];
-				_lastFoundMessage = [message retain];
-				[transcript jumpToMessage:_lastFoundMessage];
+				foundMessage = message;
+				[[self results] insertObject:message atIndex:0];
 				break;
 			} else if( ! range.location && ! scrollback ) {
 				hiddenMsgs++;
@@ -334,9 +342,19 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 				[hiddenResults displayIfNeeded];
 			}
 		}
+
+		if( ! ( i++ % 25 ) ) {
+			[resultProgress setDoubleValue:( ( (double) i / (double) totalMsgs ) * 100. )];
+			[resultProgress displayIfNeeded];
+		}
 	}
 
-	NSLog( @"%@ %@", NSStringFromRange( range ), _lastFoundMessage );
+end:
+
+	if( foundMessage ) [transcript jumpToMessage:foundMessage];
+	else NSBeep();
+
+	NSLog( @"{0, *} %u %@", _lastMessageIndex, foundMessage );
 
 	[resultProgress setDoubleValue:[resultProgress maxValue]];
 	[resultProgress displayIfNeeded];
@@ -352,7 +370,6 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	NSEnumerator *messages = [[transcript messages] objectEnumerator];
 	JVChatMessage *message = nil;
 
-	NSMutableArray *results = [NSMutableArray arrayWithCapacity:( [[transcript messages] count] / 4 )];
 	BOOL andOperation = ( [operation selectedTag] == 2 );
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
 	while( ( message = [messages nextObject] ) ) {
@@ -364,7 +381,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 			match = ( andOperation ? ( match & localMatch ) : ( match | localMatch ) );
 			if( ! localMatch && andOperation ) break; // fails, this wont match with all rules
 			else if( localMatch && ! andOperation ) break; // passes one, this is enough to match under any rules
-		} if( match ) [results addObject:message];
+		} if( match ) [[self results] addObject:message];
 	}
 }
 

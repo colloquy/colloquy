@@ -12,7 +12,8 @@
 	IBOutlet NSView *hiddenResults;
 	IBOutlet NSTextField *hiddenResultsCount;
 	NSMutableArray *_rules;
-	JVChatMessage *_lastFoundMessage;
+	NSMutableArray *_results;
+	unsigned int _lastMessageIndex;
 	BOOL _findPasteboardNeedsUpdated;
 }
 + (JVTranscriptFindWindowController *) sharedController;
