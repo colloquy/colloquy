@@ -330,16 +330,25 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		while ( match ) {
 			NSRange foundRange = [match rangeAtIndex:1];
 			backSearchRange.length = foundRange.location - backSearchRange.location;
+			
+			// Search to see if we're in a tag
+			NSRange leftRange = [message rangeOfString:@"<" options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
+			NSRange rightRange = [message rangeOfString:@">" options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
+			
+			if( leftRange.location == NSNotFound || ( rightRange.location != NSNotFound && rightRange.location > leftRange.location ) ) {
+				// Search to see if we're in a link
+				NSRange openRange = [message rangeOfString:@"<a " options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
+				NSRange closeRange = [message rangeOfString:@"</a>" options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
 
-			// Search to see if we're in a link
-			NSRange openRange = [message rangeOfString:@"<a " options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
-			NSRange closeRange = [message rangeOfString:@"</a>" options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
-
-			if( openRange.location == NSNotFound || ( closeRange.location != NSNotFound && closeRange.location > openRange.location ) ) {
-				[message replaceCharactersInRange:foundRange withString:[NSString stringWithFormat:@"<span class=\"member\">%@</span>", name]];
-				searchRange.location = NSMaxRange( foundRange ) + 28;
-				searchRange.length = [message length] - searchRange.location;
-				backSearchRange.location = searchRange.location;
+				if( openRange.location == NSNotFound || ( closeRange.location != NSNotFound && closeRange.location > openRange.location ) ) {
+					[message replaceCharactersInRange:foundRange withString:[NSString stringWithFormat:@"<span class=\"member\">%@</span>", name]];
+					searchRange.location = NSMaxRange( foundRange ) + 28;
+					searchRange.length = [message length] - searchRange.location;
+					backSearchRange.location = searchRange.location;
+				} else {
+					searchRange.location = NSMaxRange( foundRange );
+					searchRange.length = [message length] - searchRange.location;
+				}
 			} else {
 				searchRange.location = NSMaxRange( foundRange );
 				searchRange.length = [message length] - searchRange.location;
