@@ -11,7 +11,7 @@
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(NSString *) room forConnection:(MVChatConnection *) connection {
 //	Class chatWindowControllerClass = NSClassFromString( @"MVChatWindowController" );
-	MVConnectionsController *connectionsController = [NSClassFromString( @"MVConnectionsController" ) defaultManager];
+	MVConnectionsController *connectionsController = (MVConnectionsController *)[NSClassFromString( @"MVConnectionsController" ) defaultManager];
 	NSStringEncoding encoding = NSUTF8StringEncoding; //[[chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES] encoding];
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
 		if( [arguments length] )
@@ -199,7 +199,7 @@
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toUser:(NSString *) user forConnection:(MVChatConnection *) connection {
 //	Class chatWindowControllerClass = NSClassFromString( @"MVChatWindowController" );
 //	Class connectionsControllerClass = NSClassFromString( @"MVConnectionsController" );
-	MVConnectionsController *connectionsController = [NSClassFromString( @"MVConnectionsController" ) defaultManager];
+	MVConnectionsController *connectionsController = (MVConnectionsController *)[NSClassFromString( @"MVConnectionsController" ) defaultManager];
 	NSStringEncoding encoding = NSUTF8StringEncoding;//[[chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES] encoding];
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
 		if( [arguments length] )
