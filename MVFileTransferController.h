@@ -27,7 +27,6 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 
 @interface MVFileTransferController : NSWindowController {
 @private
-	IBOutlet NSPanel *panel;
 	IBOutlet NSProgressIndicator *progressBar;
 	IBOutlet NSTextField *transferStatus;
 	IBOutlet NSTableView *currentFiles;

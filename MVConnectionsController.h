@@ -9,7 +9,6 @@
 
 @interface MVConnectionsController : NSWindowController {
 @private
-	IBOutlet NSPanel *panel;
 	IBOutlet NSTableView *connections;
 	IBOutlet NSWindow *editConnection;
 	IBOutlet NSPanel *openConnection;

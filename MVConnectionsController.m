@@ -59,8 +59,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	extern MVConnectionsController *sharedInstance;
 	[self _saveBookmarkList];
 
-	[panel close];
-	panel = nil;
+	[[self window] close];
 
 	[editConnection autorelease];
 	[openConnection autorelease];
@@ -96,7 +95,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 	[newNickname setObjectValue:NSUserName()];
 
-	[panel setFloatingPanel:NO];
+	[[self window] setFloatingPanel:NO];
 
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];
@@ -114,13 +113,13 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
-	[panel setToolbar:toolbar];
+	[[self window] setToolbar:toolbar];
 }
 
 #pragma mark -
 
 - (IBAction) showConnectionManager:(id) sender {
-	[panel orderFront:nil];
+	[[self window] orderFront:nil];
 }
 
 #pragma mark -
@@ -134,19 +133,19 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	MVChatConnection *connection = nil;
 
 	if( ! [[newNickname stringValue] length] ) {
-		[panel makeFirstResponder:newNickname];
+		[[self window] makeFirstResponder:newNickname];
 		NSRunCriticalAlertPanel( NSLocalizedString( @"Nickname is blank", chat invalid nickname dialog title ), NSLocalizedString( @"The nickname you specified is invalid because it was left blank.", chat nickname blank dialog message ), nil, nil, nil );
 		return;
 	}
 
 	if( ! [[newAddress stringValue] length] ) {
-		[panel makeFirstResponder:newAddress];
+		[[self window] makeFirstResponder:newAddress];
 		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server is blank", chat invalid nickname dialog title ), NSLocalizedString( @"The chat server you specified is invalid because it was left blank.", chat server blank dialog message ), nil, nil, nil );
 		return;
 	}
 
 	if( [newPort intValue] < 0 || [newPort intValue] > 65535 ) {
-		[panel makeFirstResponder:newPort];
+		[[self window] makeFirstResponder:newPort];
 		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server Port is invalid", chat invalid nickname dialog title ), NSLocalizedString( @"The chat server port you specified is invalid because it can't be negative or greater than 65535.", chat server port invalid dialog message ), nil, nil, nil );
 		return;
 	}
@@ -165,7 +164,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 					[openConnection orderOut:nil];
 				}
 				[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
-				[panel makeFirstResponder:newNickname];
+				[[self window] makeFirstResponder:newNickname];
 				return;
 			}
 		}
@@ -178,7 +177,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 	[self addConnection:connection keepBookmark:(BOOL)[newRemember state]];
 
-	[panel makeKeyAndOrderFront:nil];
+	[[self window] makeKeyAndOrderFront:nil];
 
 	if( _target && _targetRoom ) [connection joinChatForRoom:_target];
 	else if( _target && ! _targetRoom ) [MVChatWindowController chatWindowWithUser:_target withConnection:connection ifExists:NO];
@@ -326,7 +325,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 				if( target && isRoom ) [connection joinChatForRoom:target];
 				else if( target && ! isRoom ) [MVChatWindowController chatWindowWithUser:target withConnection:connection ifExists:NO];
 				[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
-				[panel makeKeyAndOrderFront:nil];
+				[[self window] makeKeyAndOrderFront:nil];
 				handled = YES;
 				break;
 			}
@@ -345,7 +344,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 			[self addConnection:connection keepBookmark:NO];
 
-			[panel makeKeyAndOrderFront:nil];
+			[[self window] makeKeyAndOrderFront:nil];
 
 			if( target && isRoom ) [connection joinChatForRoom:target];
 			else if( target && ! isRoom ) [MVChatWindowController chatWindowWithUser:target withConnection:connection ifExists:NO];
@@ -708,12 +707,12 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 	[connections noteNumberOfRowsChanged];
 
-	if( autoConnect ) [panel makeKeyAndOrderFront:nil];
+	if( autoConnect ) [[self window] makeKeyAndOrderFront:nil];
 	else [openConnection makeKeyAndOrderFront:nil];
 }
 
 - (void) _validateToolbar {
-	NSEnumerator *enumerator = [[[panel toolbar] visibleItems] objectEnumerator];
+	NSEnumerator *enumerator = [[[[self window] toolbar] visibleItems] objectEnumerator];
 	id item = nil;
 	BOOL noneSelected = YES, connected = NO;
 
@@ -818,14 +817,14 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 - (void) _messageUser:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
-	[[NSApplication sharedApplication] beginSheet:messageUser modalForWindow:panel modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[[NSApplication sharedApplication] beginSheet:messageUser modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
 - (void) _joinRoom:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshRooms: ) name:MVChatConnectionGotRoomInfoNotification object:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"]];
 	[(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] fetchRoomList];
-	[[NSApplication sharedApplication] beginSheet:joinRoom modalForWindow:panel modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[[NSApplication sharedApplication] beginSheet:joinRoom modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
 - (void) _editConnection:(id) sender {

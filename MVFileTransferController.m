@@ -89,8 +89,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) dealloc {
 	extern MVFileTransferController *sharedInstance;
 
-	[panel close];
-	panel = nil;
+	[[self window] close];
 
 	[_transferStorage autorelease];
 	[_calculationItems autorelease];
@@ -109,7 +108,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	NSTableColumn *theColumn = nil;
 	id prototypeCell = nil;
 
-	[panel setFloatingPanel:NO];
+	[[self window] setFloatingPanel:NO];
 
 	[currentFiles setVerticalMotionCanBeginDrag:NO];
 	[currentFiles setDoubleAction:@selector( _openFile: )];
@@ -130,7 +129,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
-	[panel setToolbar:toolbar];
+	[[self window] setToolbar:toolbar];
 
 	[progressBar setMinValue:0.];
 	[progressBar setUsesThreadedAnimation:YES];
@@ -142,7 +141,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (IBAction) showTransferManager:(id) sender {
 	static BOOL loaded = NO;
 	if( ! loaded ) loaded = [NSBundle loadNibNamed:@"MVFileTransfer" owner:self];
-	[panel orderFront:nil];
+	[[self window] orderFront:nil];
 }
 
 #pragma mark -
@@ -339,7 +338,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	id item = nil;
 	BOOL noneSelected = YES;
 
-	enumerator = [[[panel toolbar] visibleItems] objectEnumerator];
+	enumerator = [[[[self window] toolbar] visibleItems] objectEnumerator];
 	if( [currentFiles selectedRow] != -1 ) noneSelected = NO;
 	while( ( item = [enumerator nextObject] ) ) {
 		if( [[item itemIdentifier] isEqual:MVToolbarStopItemIdentifier] ) {

@@ -8,7 +8,6 @@
 
 @interface MVBuddyListController : NSWindowController {
 @private
-	IBOutlet NSWindow *window;
 	IBOutlet NSTableView *buddies;
 	IBOutlet NSTextField *myName;
 	IBOutlet NSTextField *myStatus;

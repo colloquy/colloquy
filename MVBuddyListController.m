@@ -92,8 +92,7 @@ static MVBuddyListController *sharedInstance = nil;
 	extern MVBuddyListController *sharedInstance;
 	[self _saveBuddyList];
 
-	[window close];
-	window = nil;
+	[[self window] close];
 
 	[_me autorelease];
 	[_onlineBuddies autorelease];
@@ -148,8 +147,7 @@ static MVBuddyListController *sharedInstance = nil;
 - (IBAction) showBuddyList:(id) sender {
 	static BOOL loaded = NO;
 	if( ! loaded ) loaded = [NSBundle loadNibNamed:@"MVBuddyList" owner:self];
-	NSLog( @"showBuddyList %d", loaded );
-	[window makeKeyAndOrderFront:nil];
+	[[self window] makeKeyAndOrderFront:nil];
 }
 
 #pragma mark -
@@ -189,7 +187,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( ! [myStatus isEditable] ) return;
 	[editStatusButton setFrame:NSZeroRect];
 	[myStatus setObjectValue:_statusMessage];
-	[window makeFirstResponder:myStatus];
+	[[self window] makeFirstResponder:myStatus];
 }
 @end
 
