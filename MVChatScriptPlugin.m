@@ -1,5 +1,6 @@
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
+#import <OpenScripting/OpenScripting.h>
 
 @interface NSScriptObjectSpecifier (NSScriptObjectSpecifierPrivate) // Private Foundation Methods
 + (id) _objectSpecifierFromDescriptor:(NSAppleEventDescriptor *) descriptor inCommandConstructionContext:(id) context;
@@ -43,9 +44,34 @@
 
 #pragma mark -
 
-@implementation NSAppleScript (NSAppleScriptIdentifier)
+@interface NSAppleScript (NSAppleScriptPrivate)
++ (struct ComponentInstanceRecord *) _defaultScriptingComponent;
+@end
+
+#pragma mark -
+
+@implementation NSAppleScript (NSAppleScriptAdditions)
 - (NSNumber *) scriptIdentifier {
 	return [NSNumber numberWithUnsignedLong:_compiledScriptID];
+}
+
+- (BOOL) saveToFile:(NSString *) path {
+	FSRef ref;
+	FSPathMakeRef( [path UTF8String], &ref, NULL );
+	OSAError result = OSAStoreFile( [NSAppleScript _defaultScriptingComponent], _compiledScriptID, typeOSAGenericStorage, kOSAModeNull, &ref );
+	return ( result == noErr );
+}
+
+- (unsigned long) numberOfProperties {
+	AEDescList properties;
+	OSAError result = OSAGetPropertyNames( [NSAppleScript _defaultScriptingComponent], kOSAModeNull, _compiledScriptID, &properties );
+	if( result != noErr ) return 0;
+
+	long number = -1;
+	AECountItems( &properties, &number );
+	if( number == -1 ) return 0;
+
+	return number;
 }
 @end
 
@@ -56,21 +82,26 @@
 	if( ( self = [self init] ) ) {
 		_doseNotRespond = [[NSMutableSet set] retain];
 		_script = nil;
+		_path = nil;
 	}
 	return self;
 }
 
-- (id) initWithScript:(NSAppleScript *) script andManager:(MVChatPluginManager *) manager {
-	if( ( self = [self initWithManager:manager] ) )
+- (id) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
+	if( ( self = [self initWithManager:manager] ) ) {
 		_script = [script retain];
+		_path = [path copyWithZone:[self zone]];
+	}
 	return self;
 }
 
 - (void) dealloc {
 	[_script release];
+	[_path release];
 	[_doseNotRespond release];
 
 	_script = nil;
+	_path = nil;
 	_doseNotRespond = nil;
 
 	[super dealloc];
@@ -80,6 +111,10 @@
 
 - (NSAppleScript *) script {
 	return _script;
+}
+
+- (NSString *) scriptFilePath {
+	return _path;
 }
 
 - (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
