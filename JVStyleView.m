@@ -424,22 +424,22 @@ quickEnd:
 		unsigned int i = 0;
 		if( ! subsequent ) { // append message normally
 			[[replaceElement parentNode] removeChild:replaceElement];
-			while( [[element children] length] ) // append all children
+			while( [[element childNodes] length] ) // append all children
 				[body appendChild:[element firstChild]];
-		} else if( [[element children] length] >= 1 ) { // append as a subsequent message
+		} else if( [[element childNodes] length] >= 1 ) { // append as a subsequent message
 			DOMNode *parent = [replaceElement parentNode];
 			DOMNode *nextSib = [replaceElement nextSibling];
 			[parent replaceChild:[element firstChild] :replaceElement]; // replaces the consecutiveInsert node
-			while( [[element children] length] ) { // append all remaining children (in reverse order)
+			while( [[element childNodes] length] ) { // append all remaining children (in reverse order)
 				if( nextSib ) [parent insertBefore:[element firstChild] :nextSib];
 				else [parent appendChild:[element firstChild]];
 			}
 		}
 
 		// enforce the scrollback limit
-		if( scrollbackLimit > 0 && [[body children] length] > scrollbackLimit )
-			for( i = 0; [[body children] length] > scrollbackLimit && i < ( [[body children] length] - scrollbackLimit ); i++ )
-				[body removeChild:[[body children] item:0]];		
+		if( scrollbackLimit > 0 && [[body childNodes] length] > scrollbackLimit )
+			for( i = 0; [[body childNodes] length] > scrollbackLimit && i < ( [[body childNodes] length] - scrollbackLimit ); i++ )
+				[body removeChild:[[body childNodes] item:0]];		
 
 		if( [scrollNeeded boolValue] ) [self scrollToBottom];
 	} else
@@ -475,7 +475,7 @@ quickEnd:
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
 		DOMNode *firstMessage = [body firstChild];
 
-		while( [[element children] length] ) { // append all children
+		while( [[element childNodes] length] ) { // append all children
 			if( firstMessage ) [body insertBefore:[element firstChild] :firstMessage];
 			else [body appendChild:[element firstChild]];
 		}
@@ -532,7 +532,7 @@ quickEnd:
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
-		if( index < [[body children] length] ) return [[[[body children] item:index] valueForKey:@"offsetTop"] intValue];
+		if( index < [[body childNodes] length] ) return [[[[body childNodes] item:index] valueForKey:@"offsetTop"] intValue];
 		else return 0;
 	} else
 #endif
@@ -543,7 +543,7 @@ quickEnd:
 - (unsigned long) _visibleMessageCount {
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-		return [[[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] children] length];
+		return [[[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] childNodes] length];
 	} else
 #endif
 	// old JavaScript method
