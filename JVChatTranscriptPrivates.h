@@ -1,6 +1,8 @@
 #import <libxml/xinclude.h>
 #import "JVChattranscript.h"
 
+NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
+
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 + (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
 + (void) _freeXsltParamArray:(const char **) params;
