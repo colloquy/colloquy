@@ -5,31 +5,41 @@
 @class NSWindow;
 @class NSTableView;
 @class MVChatConnection;
+@class ABPeoplePickerController;
 
 @interface MVBuddyListController : NSWindowController {
 @private
 	IBOutlet NSTableView *buddies;
-	IBOutlet NSTextField *myName;
-	IBOutlet NSTextField *myStatus;
-	IBOutlet NSButton *editStatusButton;
-	IBOutlet NSImageView *myIcon;
 
 	IBOutlet NSWindow *pickerWindow;
 	IBOutlet NSView *pickerView;
 
-	ABPerson *_me;
-	NSMutableDictionary *_buddyList;
-	NSMutableDictionary *_onlineBuddies;
-	NSMutableDictionary *_buddiesStatus;
-	NSString *_serverFilter;
-	NSString *_statusMessage;
-	NSMutableArray *_connections;
-	unsigned int _online;
+	IBOutlet NSWindow *newPersonWindow;
+	IBOutlet NSTextField *nickname;
+	IBOutlet NSPopUpButton *server;
+	IBOutlet NSTextField *firstName;
+	IBOutlet NSTextField *lastName;
+	IBOutlet NSTextField *email;
+	IBOutlet NSImageView *image;
+	IBOutlet NSButton *addButton;
+
+	NSMutableSet *_buddyList;
+	NSMutableSet *_onlineBuddies;
+	NSMutableDictionary *_buddyInfo;
+	ABPeoplePickerController* _picker;
+	NSString *_addPerson;
 }
 + (MVBuddyListController *) sharedBuddyList;
 
 - (IBAction) showBuddyList:(id) sender;
 
-- (void) setStatus:(NSString *) status sendToServers:(BOOL) send;
-- (void) editStatus:(id) sender;
+- (IBAction) showBuddyPickerSheet:(id) sender;
+- (IBAction) cancelBuddySelection:(id) sender;
+- (IBAction) confirmBuddySelection:(id) sender;
+
+- (IBAction) showNewPersonSheet:(id) sender;
+- (IBAction) cancelNewBuddy:(id) sender;
+- (IBAction) confirmNewBuddy:(id) sender;
+
+- (IBAction) messageSelectedBuddy:(id) sender;
 @end

@@ -1,4 +1,3 @@
-#import "NSAttributedStringAdditions.h"
 #import "NSStringAdditions.h"
 #import <Cocoa/Cocoa.h>
 

@@ -7,13 +7,13 @@
 #import "JVPreferencesController.h"
 #import "JVGeneralPreferences.h"
 #import "JVAppearancePreferences.h"
-#import "JVFileTransferPreferences.h"
+//#import "JVFileTransferPreferences.h"
 #import "JVAdvancedPreferences.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
-//#import "MVBuddyListController.h"
+#import "MVBuddyListController.h"
 #import "MVChatPluginManager.h"
-//#import <AddressBook/AddressBook.h>
+#import <AddressBook/AddressBook.h>
 #import "JVChatController.h"
 
 @interface WebCoreCache : NSObject {}
@@ -27,7 +27,7 @@
 	[[JVChatController defaultManager] autorelease];
 	[[MVConnectionsController defaultManager] autorelease];
 	[[MVFileTransferController defaultManager] autorelease];
-//	[[MVBuddyListController sharedBuddyList] autorelease];
+	[[MVBuddyListController sharedBuddyList] autorelease];
 	[[MVChatPluginManager defaultManager] autorelease];
 
 	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
@@ -72,7 +72,7 @@
 }
 
 - (IBAction) showBuddyList:(id) sender {
-//	[[MVBuddyListController sharedBuddyList] showBuddyList:nil];
+	[[MVBuddyListController sharedBuddyList] showBuddyList:nil];
 }
 
 #pragma mark -
@@ -121,11 +121,13 @@
 		ABPerson *buddy = [[ABAddressBook sharedAddressBook] me];
 		ABMutableMultiValue *value = [[[ABMutableMultiValue alloc] init] autorelease];
 
-		[value addValue:@"irc://pf5268@irc.freenode.net" withLabel:@"Other"];
-		[value addValue:@"irc://timothy@irc.javelin.cc" withLabel:@"Other"];
-		[value addValue:@"irc://nonex@irc.massinova.com" withLabel:@"Other"];
+		[value addValue:@"xer" withLabel:@"irc.freenode.net"];
+		[value addValue:@"timothy" withLabel:@"irc.javelin.cc"];
+		[value addValue:@"xenon" withLabel:@"irc.massinova.com"];
 
-		[buddy setValue:value forProperty:@"ColloquyIRC"];
+		[ABPerson addPropertiesAndTypes:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:kABMultiStringProperty] forKey:@"IRCNickname"]];
+
+		[buddy setValue:value forProperty:@"IRCNickname"];
 		[[ABAddressBook sharedAddressBook] save];
 	} */
 
@@ -136,11 +138,11 @@
 	[NSPreferences setDefaultPreferencesClass:[JVPreferencesController class]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"General", "general preference pane name" ) owner:[JVGeneralPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Appearance", "appearance preference pane name" ) owner:[JVAppearancePreferences sharedInstance]];
-	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
+//	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Advanced", "advanced preference pane name" ) owner:[JVAdvancedPreferences sharedInstance]];
 
 	[JVChatController defaultManager];
-//	[MVBuddyListController sharedBuddyList];
+	[MVBuddyListController sharedBuddyList];
 	[MVConnectionsController defaultManager];
 	[MVFileTransferController defaultManager];
 }

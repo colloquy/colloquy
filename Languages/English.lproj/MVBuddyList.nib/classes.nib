@@ -1,18 +1,32 @@
 {
     IBClasses = (
+        {CLASS = ASExtendedOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {editStatus = id; showBuddyList = id; }; 
+            ACTIONS = {
+                cancelBuddySelection = id; 
+                cancelNewBuddy = id; 
+                confirmBuddySelection = id; 
+                confirmNewBuddy = id; 
+                messageSelectedBuddy = id; 
+                showBuddyList = id; 
+                showBuddyPickerSheet = id; 
+                showNewPersonSheet = id; 
+            }; 
             CLASS = MVBuddyListController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                addButton = NSButton; 
                 buddies = NSTableView; 
-                editStatusButton = NSButton; 
-                myIcon = NSImageView; 
-                myName = NSTextField; 
-                myStatus = NSTextField; 
+                email = NSTextField; 
+                firstName = NSTextField; 
+                image = NSImageView; 
+                lastName = NSTextField; 
+                newPersonWindow = NSWindow; 
+                nickname = NSTextField; 
                 pickerView = NSView; 
                 pickerWindow = NSWindow; 
+                server = NSPopUpButton; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 

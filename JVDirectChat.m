@@ -4,14 +4,13 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatPlugin.h>
+#import <ChatCore/NSAttributedStringAdditions.h>
 #import <libxml/xinclude.h>
 
 #import "JVChatController.h"
 #import "JVDirectChat.h"
 #import "MVTextView.h"
 #import "MVMenuButton.h"
-#import "NSAttributedStringAdditions.h"
-#import "NSStringAdditions.h"
 
 const NSStringEncoding JVAllowedTextEncodings[] = {
 	/* Universal */
