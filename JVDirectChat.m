@@ -1044,10 +1044,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[scrollView reflectScrolledClipView:[scrollView contentView]];
 	}
 
-	NSLog( @" >>> %f", NSHeight( sendFrame ) );
-
-	[splitView displayIfNeeded]; // makes the WebView draw correctly
-	[splitView setNeedsDisplay:YES]; // makes thr divider redraw correctly later
+	[display displayIfNeeded]; // makes the WebView draw correctly
+	[splitView setNeedsDisplay:YES]; // makes the divider redraw correctly later
 	[[display window] enableFlushWindow]; // flush everything we have drawn
 }
 

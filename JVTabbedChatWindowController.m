@@ -117,15 +117,10 @@
 - (void) showChatViewController:(id <JVChatViewController>) controller {
 	NSAssert1( [_views containsObject:controller], @"%@ is not a member of this window controller.", controller );
 
-	[[self window] disableFlushWindow];
-
 	unsigned int index = [_views indexOfObjectIdenticalTo:controller];
 	[tabView selectTabViewItemAtIndex:index];
 
-	// the _windowRefresh is called in the customTabView:didSelectTabViewItem:
-
-	[[self window] displayIfNeeded];
-	[[self window] enableFlushWindow];
+	// [self _refreshWindow] is called in the customTabView:didSelectTabViewItem:
 }
 
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {

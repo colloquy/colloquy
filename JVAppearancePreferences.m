@@ -204,8 +204,7 @@
 	[self parseStyleOptions];
 
 	[preview displayIfNeeded];
-	if( [[preview window] isFlushWindowDisabled] )
-		[[preview window] enableFlushWindow];
+	[[preview window] enableFlushWindow];
 }
 
 - (IBAction) noGraphicEmoticons:(id) sender {
