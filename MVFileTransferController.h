@@ -1,6 +1,8 @@
 NSString *MVPrettyFileSize( unsigned long long size );
 NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 
+@class MVFileTransfer;
+
 @interface MVFileTransferController : NSWindowController {
 @private
 	IBOutlet NSProgressIndicator *progressBar;
@@ -20,7 +22,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 - (IBAction) hideTransferManager:(id) sender;
 
 - (void) downloadFileAtURL:(NSURL *) url toLocalFile:(NSString *) path;
-- (void) addFileTransfer:(id) trtansfer;
+- (void) addFileTransfer:(id) transfer;
 
 - (IBAction) stopSelectedTransfer:(id) sender;
 - (IBAction) clearFinishedTransfers:(id) sender;

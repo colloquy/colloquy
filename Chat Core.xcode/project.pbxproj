@@ -349,6 +349,7 @@
 				1CF4E5120698E9E900986498,
 				1C5A1A2506F8F4A000A51F10,
 				1C5A230A06FA4F2800A51F10,
+				1C74433D06FE3AB3009AA696,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -482,6 +483,28 @@
 		};
 		1C6C83A00632186900698F55 = {
 			fileRef = F52BA284037C13C201A35792;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C74433A06FE3AB3009AA696 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVIRCFileTransfer.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C74433B06FE3AB3009AA696 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVIRCFileTransfer.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C74433D06FE3AB3009AA696 = {
+			fileRef = 1C74433B06FE3AB3009AA696;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3322,6 +3345,8 @@
 				1C5A230706FA4F2700A51F10,
 				1C943AAA063C260800618CD9,
 				1C943AA9063C260800618CD9,
+				1C74433B06FE3AB3009AA696,
+				1C74433A06FE3AB3009AA696,
 				1C2EF7EC0427A40B00000102,
 				1C2EF7EB0427A40B00000102,
 				1C1C5650059EA8C9002FBEFB,

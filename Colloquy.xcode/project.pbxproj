@@ -1328,6 +1328,22 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
+		1C74459106FE5842009AA696 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVIRCFileTransfer.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C74459206FE5842009AA696 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVIRCFileTransfer.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		1C746A95050CF86B000001C8 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -4515,6 +4531,8 @@
 				1C5A232006FA4FC000A51F10,
 				1C8CF8E2066530D60080A2F5,
 				1C8CF8E1066530D60080A2F5,
+				1C74459206FE5842009AA696,
+				1C74459106FE5842009AA696,
 				1C2EF7EC0427A40B00000102,
 				1C2EF7EB0427A40B00000102,
 				1C1C569D059EAF4F002FBEFB,

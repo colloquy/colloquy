@@ -24,7 +24,7 @@ typedef enum {
 } MVFileTransferError;
 
 @interface MVFileTransfer : NSObject {
-	void *_dcc; /* FILE_DCC_REC */
+@protected
 	unsigned long long _finalSize;
 	unsigned long long _transfered;
 	NSDate *_startDate;
@@ -40,9 +40,7 @@ typedef enum {
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;
 
-+ (void) updateExternalIPAddress;
-
-- (id) initWithDCCFileRecord:(void *) record fromConnection:(MVChatConnection *) connection;
+- (id) initWithUser:(NSString *) user fromConnection:(MVChatConnection *) connection;
 
 - (BOOL) isUpload;
 - (BOOL) isDownload;
@@ -68,7 +66,7 @@ typedef enum {
 #pragma mark -
 
 @interface MVUploadFileTransfer : MVFileTransfer {
-	int _transferQueue;
+@protected
 	NSString *_source;
 }
 + (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection passively:(BOOL) passive;
@@ -79,6 +77,7 @@ typedef enum {
 #pragma mark -
 
 @interface MVDownloadFileTransfer : MVFileTransfer {
+@protected
 	NSString *_destination;
 	NSString *_originalFileName;
 }

@@ -2,7 +2,7 @@
 
 #import "MVChatConnection.h"
 #import "MVIRCChatConnection.h"
-#import "MVFileTransfer.h"
+#import "MVIRCFileTransfer.h"
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
 #import "NSAttributedStringAdditions.h"
@@ -817,7 +817,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)dcc -> server];
 	if( ! self ) return;
 	if( IS_DCC_GET( dcc ) ) {
-		MVDownloadFileTransfer *transfer = [[[MVDownloadFileTransfer alloc] initWithDCCFileRecord:dcc fromConnection:self] autorelease];
+		MVIRCDownloadFileTransfer *transfer = [[[MVIRCDownloadFileTransfer alloc] initWithDCCFileRecord:dcc fromConnection:self] autorelease];
 		NSNotification *note = [NSNotification notificationWithName:MVDownloadFileTransferOfferNotification object:transfer];		
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
