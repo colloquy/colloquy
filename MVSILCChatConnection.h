@@ -20,7 +20,9 @@
 	NSString *_silcPassword;
 	
 	NSString *_certificatePassword;
-	
 	BOOL _waitForCertificatePassword;
+	
+	NSMutableDictionary *_sentCommands;
+	NSLock *_sentCommandsLock;
 }
 @end
