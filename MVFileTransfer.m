@@ -14,13 +14,6 @@ NSString *MVFileTransferErrorOccurredNotification = @"MVFileTransferErrorOccurre
 
 NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
-@interface MVFileTransfer (MVFileTransferPrivate)
-- (void) _setStatus:(MVFileTransferStatus) status;
-- (void) _postError:(NSError *) error;
-@end
-
-#pragma mark -
-
 @implementation MVFileTransfer
 + (void) setFileTransferPortRange:(NSRange) range {
 	extern NSRecursiveLock *MVIRCChatConnectionThreadLock;

@@ -191,8 +191,7 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 - (unsigned) hash {
 	if( [self type] == MVChatWildcardUserType )
 		return ( [self type] ^ [[self nickname] hash] ^ [[self username] hash] ^ [[self address] hash] ^ [[self serverAddress] hash] ^ [[self fingerprint] hash] );
-	// this hash assumes the MVChatConnection will return the same instance for equal users
-	return ( [self type] ^ [[self connection] hash] ^ (unsigned long) self );
+	return ( [self type] ^ [[self connection] hash] );
 }
 
 #pragma mark -

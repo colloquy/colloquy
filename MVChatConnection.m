@@ -34,16 +34,6 @@ NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeRe
 
 BOOL MVChatApplicationQuitting = NO;
 
-@interface MVChatConnection (MVChatConnectionPrivate)
-- (void) _willConnect;
-- (void) _didConnect;
-- (void) _didNotConnect;
-- (void) _willDisconnect;
-- (void) _didDisconnect;
-@end
-
-#pragma mark -
-
 @implementation MVChatConnection
 + (BOOL) supportsURLScheme:(NSString *) scheme {
 	if( ! scheme ) return NO;
