@@ -761,11 +761,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[menu addItem:menuItem];
 	}
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	id view = [item parent];
+	if( ! view ) view = item;
 
-	[invocation setSelector:@selector( contextualMenuItemsForObject: )];
+	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
 	[invocation setArgument:&item atIndex:2];
+	[invocation setArgument:&view atIndex:3];
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {

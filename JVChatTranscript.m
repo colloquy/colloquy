@@ -688,6 +688,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 	NSMutableArray *ret = [[defaultMenuItems mutableCopy] autorelease];
 	NSMenuItem *item = nil;
 	unsigned i = 0;
+	BOOL found = NO;
 
 	for( i = 0; i < [ret count]; i++ ) {
 		item = [ret objectAtIndex:i];
@@ -702,14 +703,18 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 			[ret removeObjectAtIndex:i];
 			i--;
 			break;
+		case WebMenuItemTagCopy:
+			found = YES;
+			break;
 		case WebMenuItemTagDownloadLinkToDisk:
 		case WebMenuItemTagDownloadImageToDisk:
 			[item setTarget:[sender UIDelegate]];
+			found = YES;
 			break;
 		}
 	}
 
-	if( ! [defaultMenuItems count] && ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
+	if( ! found && ! [ret count] && ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style", "choose style contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
 		[item setSubmenu:_styleMenu];
 		[ret addObject:item];
@@ -720,7 +725,37 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 		[ret addObject:item];
 	}
 
+/*	if( [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+		[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
+		[invocation setArgument:&element atIndex:2];
+		[invocation setArgument:&self atIndex:3];
+
+		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+		if( [results count] ) {
+			if( [ret count] ) [ret addObject:[NSMenuItem separatorItem]];
+
+			NSArray *items = nil;
+			NSEnumerator *enumerator = [results objectEnumerator];
+			while( ( items = [enumerator nextObject] ) ) {
+				if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+				NSEnumerator *ienumerator = [items objectEnumerator];
+				while( ( item = [ienumerator nextObject] ) )
+					if( [item isKindOfClass:[NSMenuItem class]] ) [ret addObject:item];
+			}
+
+			if( [[ret lastObject] isSeparatorItem] )
+				[ret removeObjectIdenticalTo:[ret lastObject]];
+		}
+	} */
+
 	return ret;
+}
+
+- (unsigned) webView:(WebView *) webView dragSourceActionMaskForPoint:(NSPoint) point {
+	return UINT_MAX; // WebDragSourceActionAny
 }
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_2

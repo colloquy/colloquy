@@ -1173,18 +1173,35 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark WebKit Support
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
-	NSMutableArray *ret = (NSMutableArray *)[super webView:sender contextMenuItemsForElement:element defaultMenuItems:defaultMenuItems];
+	NSMutableArray *ret = [NSMutableArray array];
 
-	if( ! [defaultMenuItems count] && ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
-		NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
-		[item setSubmenu:_spillEncodingMenu];
-		[ret addObject:item];
+	NSMenuItem *item = nil;
+	unsigned i = 0;
+	BOOL found = NO;
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Display", "clear display contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
+	for( i = 0; i < [defaultMenuItems count]; i++ ) {
+		item = [defaultMenuItems objectAtIndex:i];
+		switch( [item tag] ) {
+			case WebMenuItemTagCopy:
+			case WebMenuItemTagDownloadLinkToDisk:
+			case WebMenuItemTagDownloadImageToDisk:
+				found = YES;
+				break;
+		}
+	}
+
+	if( ! found && ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
+		NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Display", "clear display contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[item setAction:@selector( clearDisplay: )];
 		[ret addObject:item];
+
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
+		[item setSubmenu:_spillEncodingMenu];
+		[ret addObject:item];
 	}
+
+	[ret addObjectsFromArray:[super webView:sender contextMenuItemsForElement:element defaultMenuItems:defaultMenuItems]];
 
 	return ret;
 }

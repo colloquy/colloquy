@@ -15,6 +15,8 @@ extern NSString *JVChatEmoticonSetInstalledNotification;
 + (BOOL) isTerminating;
 @end
 
+@protocol JVChatViewController;
+
 @interface NSObject (MVChatPluginContextualMenuSupport)
-- (NSArray *) contextualMenuItemsForObject:(id) object;
+- (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view;
 @end

@@ -898,11 +898,13 @@ static NSMenu *favoritesMenu = nil;
 		[item setTarget:self];
 		[menu addItem:item];
 
-		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+		id view = nil;
 
-		[invocation setSelector:@selector( contextualMenuItemsForObject: )];
+		[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
 		[invocation setArgument:&connection atIndex:2];
+		[invocation setArgument:&view atIndex:3];
 
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		if( [results count] ) {

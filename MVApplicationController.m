@@ -430,8 +430,8 @@ static BOOL applicationIsTerminating = NO;
 	}
 }
 
-- (NSArray *) contextualMenuItemsForObject:(id) object {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:object, @"----", nil];
+- (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:object, @"----", view, @"cMi1", nil];
 	id result = [self callScriptHandler:'cMiX' withArguments:args forSelector:_cmd];
 	NSMutableArray *ret = [NSMutableArray array];
 

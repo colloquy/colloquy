@@ -746,11 +746,13 @@ static MVBuddyListController *sharedInstance = nil;
 	NSMenu *menu = [[actionMenu copyWithZone:[self zone]] autorelease];
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	id view = nil;
 
-	[invocation setSelector:@selector( contextualMenuItemsForObject: )];
+	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
 	[invocation setArgument:&buddy atIndex:2];
+	[invocation setArgument:&view atIndex:3];
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {

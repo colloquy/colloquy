@@ -1043,11 +1043,12 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			NSEnumerator *enumerator = [[[mbr menu] itemArray] objectEnumerator];
 			while( ( item = [enumerator nextObject] ) ) [ret addObject:[[item copy] autorelease]];
 
-			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
+			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-			[invocation setSelector:@selector( contextualMenuItemsForObject: )];
+			[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
 			[invocation setArgument:&mbr atIndex:2];
+			[invocation setArgument:&self atIndex:3];
 
 			NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 			if( [results count] ) {
