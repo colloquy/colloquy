@@ -1733,6 +1733,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string {
+	if( ! string || ! [string string] ) return;
+
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 	NSEnumerator *keyEnumerator = [_emoticonMappings keyEnumerator];
 	NSEnumerator *objEnumerator = [_emoticonMappings objectEnumerator];
