@@ -1184,12 +1184,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	}
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
-		AGRegex *regex = [AGRegex regexWithPattern:@"</*font.*?>" options:AGRegexCaseInsensitive];
+		AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
 		[messageString setString:[regex replaceWithString:@"" inString:messageString]];
 	}
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"] ) {
-		AGRegex *regex = [AGRegex regexWithPattern:@"</*[b|i|u]>" options:AGRegexCaseInsensitive];
+		AGRegex *regex = [AGRegex regexWithPattern:@"</?[b|i|u]>" options:AGRegexCaseInsensitive];
 		[messageString setString:[regex replaceWithString:@"" inString:messageString]];
 	}
 
@@ -1203,6 +1203,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		NSString *name = nil;
 
 		while( ( name = [enumerator nextObject] ) ) {
+			if( ! [name length] ) continue;
+
 			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] ) {
 				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
 			} else {
