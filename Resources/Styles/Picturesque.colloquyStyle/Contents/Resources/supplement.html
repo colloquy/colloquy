@@ -1,8 +1,8 @@
 <script type="text/javascript">
 	function resizeImagesIfNeeded() {
 		for( i = 0; i < document.images.length; i++ ) {
-			if( document.images[i].realWidth > ( window.innerWidth - 35 ) )
-				document.images[i].width = ( window.innerWidth - 35 );
+			if( document.images[i].realWidth > ( window.innerWidth - 65 ) )
+				document.images[i].width = ( window.innerWidth - 65 );
 			else document.images[i].width = document.images[i].realWidth;
 		}
 	}
@@ -11,8 +11,8 @@
 
 	function resizeIfNeeded( image ) {
 		image.realWidth = image.width;
-		if( image.width > ( window.innerWidth - 35 ) )
-			image.width = ( window.innerWidth - 35 );
+		if( image.width > ( window.innerWidth - 65 ) )
+			image.width = ( window.innerWidth - 65 );
 		scrollToBottomIfNeeded();
 	}
 </script>
