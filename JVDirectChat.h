@@ -56,6 +56,7 @@
 
 - (void) setTarget:(NSString *) target;
 - (NSString *) target;
+- (NSURL *) targetURL;
 - (JVBuddy *) buddy;
 
 - (void) unavailable;

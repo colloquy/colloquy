@@ -357,6 +357,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return [[_target retain] autorelease];
 }
 
+- (NSURL *) targetURL {
+	NSString *server = [[_connection url] absoluteString];
+	return [NSURL URLWithString:[server stringByAppendingPathComponent:[_target stringByEncodingIllegalURLCharacters]]];
+}
+
 - (MVChatConnection *) connection {
 	return [[_connection retain] autorelease];
 }

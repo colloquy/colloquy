@@ -571,7 +571,7 @@
 	NSArray *argsArray = [args componentsSeparatedByString:@" "];
 	NSString *memberString = nil;
 	NSString *messageString = nil;
-	NSArray *rooms = nil;
+	NSMutableArray *rooms = nil;
 	BOOL regex = NO;
 	BOOL permanent = NO;
 	BOOL member = YES;
@@ -603,9 +603,9 @@
 	}
 
 	if( message ) {
-		if( [args rangeOfString:@"\""].location ) {
+		if( [args rangeOfString:@"\""].location != NSNotFound ) {
 			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location + 1, [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ( [args rangeOfString:@"\""].location + 1 ) )];
-		} else if( [args rangeOfString:@"/"].location ) {
+		} else if( [args rangeOfString:@"/"].location != NSNotFound) {
 			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"/"].location + 1, [args rangeOfString:@"/" options:NSBackwardsSearch].location - ( [args rangeOfString:@"/"].location + 1 ) )];
 			regex = YES;
 		} else messageString = [argsArray objectAtIndex:offset];
@@ -613,12 +613,19 @@
 		offset += [[messageString componentsSeparatedByString:@" "] count];
 	}
 
-	if( offset < [argsArray count] )
-		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
-
-	if( ! rooms && [view isMemberOfClass:NSClassFromString( @"JVChatRoom" )] ) rooms = [NSArray arrayWithObject:[(JVChatRoom *)view target]];
-
-	if( [rooms containsObject:@"*"] ) rooms = nil; // We want all rooms.
+	if( offset < [argsArray count] ) {
+		NSArray *typedRooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
+		if( [typedRooms containsObject:@"*"] ) rooms = nil; // We want all rooms.
+		else {
+			rooms = [NSMutableArray array];
+			NSEnumerator *rEnum = [typedRooms objectEnumerator];
+			NSString *room = nil;
+			while( ( room = [rEnum nextObject] ) ) {
+				[rooms addObject:[NSURL URLWithString:[[[[view connection] url] absoluteString] stringByAppendingPathComponent:[room stringByEncodingIllegalURLCharacters]]]];
+			}
+		}
+	} else if( [view isKindOfClass:NSClassFromString( @"JVDirectChat" )] )
+		rooms = [NSArray arrayWithObject:[(JVDirectChat *)view targetURL]];
 
 	[[_manager chatController] addIgnoreForUser:memberString withMessage:messageString inRooms:rooms usesRegex:regex isPermanent:permanent];
 

@@ -5,7 +5,7 @@
 #import <Cocoa/Cocoa.h>
 #import "KAIgnoreRule.h"
 #import "JVChatWindowController.h"
-#import "JVChatRoom.h"
+#import "JVDirectChat.h"
 #import <AGRegex/AGRegex.h>
 
 @implementation KAIgnoreRule
@@ -58,7 +58,7 @@
 }
 
 - (JVIgnoreMatchResult) matchUser:(NSString *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
-	if( ! _inRooms || ( [view isMemberOfClass:[JVChatRoom class]] && [_inRooms containsObject:[(JVChatRoom *)view target]] ) ) {
+	if( ! _inRooms || ( [view isKindOfClass:[JVDirectChat class]] && [_inRooms containsObject:[(JVDirectChat *)view targetURL]] ) ) {
 		BOOL userFound = NO, messageFound = NO;
 		BOOL userRequired = ( _userRegex || _ignoredUser ), messageRequired = ( _messageRegex || _ignoredMessage );
 
