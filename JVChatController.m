@@ -387,12 +387,6 @@ static JVChatController *sharedInstance = nil;
 #pragma mark -
 
 @implementation JVChatController (JVChatControllerScripting)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
-	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatController"] autorelease];
-}
-
 - (JVChatWindowController *) newChatWindowScriptCommand:(NSScriptCommand *) command {
 	return [self newChatWindowController];
 }

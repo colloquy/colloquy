@@ -310,18 +310,18 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 }
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address {
+	MVChatConnection *ret = nil;
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
 
-	while( ( info = [enumerator nextObject] ) )
-		if( [[info objectForKey:@"connection"] isConnected] && [[(MVChatConnection *)[info objectForKey:@"connection"] server] caseInsensitiveCompare:address] == NSOrderedSame )
-			return [info objectForKey:@"connection"];
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] caseInsensitiveCompare:address] == NSOrderedSame ) {
+			ret = [info objectForKey:@"connection"];
+			if( [ret isConnected] ) return ret;
+		}
+	}
 
-	while( ( info = [enumerator nextObject] ) )
-		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] caseInsensitiveCompare:address] == NSOrderedSame )
-			return [info objectForKey:@"connection"];
-
-	return nil;
+	return ret;
 }
 
 - (NSSet *) connectionsForServerAddress:(NSString *) address {
@@ -1140,12 +1140,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 #pragma mark -
 
 @implementation MVConnectionsController (MVConnectionsControllerScripting)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
-	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"connectionsController"] autorelease];
-}
-
 - (NSArray *) connectionsArray {
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];

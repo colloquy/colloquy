@@ -939,12 +939,6 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 @implementation MVBuddyListController (MVBuddyListControllerScripting)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
-	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"buddyList"] autorelease];
-}
-
 - (void) removeFromBuddiesAtIndex:(unsigned) index {
 	JVBuddy *buddy = [[[_buddyOrder objectAtIndex:index] retain] autorelease];
 	[_buddyList removeObject:buddy];
