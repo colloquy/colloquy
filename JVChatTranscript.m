@@ -2,6 +2,8 @@
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/MVChatPlugin.h>
 
 #import "JVChatController.h"
 #import "MVFileTransferController.h"
@@ -39,14 +41,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 #pragma mark -
 
-@protocol JVChatTranscriptProxy
-- (void) _switchingStyleEnded:(in NSString *) html;
-@end
-
-#pragma mark -
-
 @interface JVChatTranscript (JVChatTranscriptPrivate)
-- (void) _invalidateConnection:(id) sender;
 - (void) _switchingStyleEnded:(in NSString *) html;
 - (oneway void) _switchStyle:(id) sender;
 + (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
@@ -97,10 +92,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		_windowController = nil;
 		_filePath = nil;
 		_chatXSLStyle = NULL;
-
-		_mainThreadConnection = [[NSConnection connectionWithReceivePort:[NSPort port] sendPort:[NSPort port]] retain];
-		[_mainThreadConnection setRootObject:self];
-		[_mainThreadConnection enableMultipleThreads];		
 
 		[[self class] _scanForChatStyles];
 		[[self class] _scanForEmoticons];
@@ -155,12 +146,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	}
 }
 
-- (void) release {
-	if( ( [self retainCount] - 1 ) == 1 && [_mainThreadConnection rootObject] )
-		[NSTimer scheduledTimerWithTimeInterval:0. target:self selector:@selector( _invalidateConnection: ) userInfo:NULL repeats:NO];
-	[super release];
-}
-
 - (void) dealloc {
 	extern NSMutableSet *JVChatStyleBundles;
 	extern NSMutableSet *JVChatEmoticonBundles;
@@ -171,7 +156,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[_chatStyleVariant autorelease];
 	[_chatEmoticons autorelease];
 	[_emoticonMappings autorelease];
-	[_mainThreadConnection autorelease];
 	[_logLock autorelease];
 
 	[JVChatStyleBundles autorelease];
@@ -195,7 +179,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	_chatStyleVariant = nil;
 	_chatEmoticons = nil;
 	_emoticonMappings = nil;
-	_mainThreadConnection = nil;
 	_logLock = nil;
 	_windowController = nil;
 
@@ -538,11 +521,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptPrivate)
-- (void) _invalidateConnection:(id) sender {
-	[_mainThreadConnection setRootObject:nil];
-	[_mainThreadConnection invalidate];
-}
-
 - (void) _finishStyleSwitch:(NSTimer *) sender {
 	[display setPreferencesIdentifier:[_chatStyle bundleIdentifier]];
 	// we shouldn't have to post this notification manually, but this seems to make webkit refresh with new prefs
@@ -567,14 +545,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 - (oneway void) _switchStyle:(id) sender {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *result = nil;
-	NSConnection *mainThread = [NSConnection connectionWithReceivePort:[_mainThreadConnection sendPort] sendPort:[_mainThreadConnection receivePort]];
-	id proxy = [mainThread rootProxy];
-	[proxy setProtocolForProxy:@protocol( JVChatTranscriptProxy )];
-
-	result = [self _applyStyleOnXMLDocument:_xmlLog];
-	[proxy _switchingStyleEnded:result];
-
+	NSString *result = [self _applyStyleOnXMLDocument:_xmlLog];
+	[self performSelectorOnMainThread:@selector( _switchingStyleEnded: ) withObject:result waitUntilDone:YES];
 	[pool release];
 }
 
