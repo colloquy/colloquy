@@ -37,8 +37,8 @@ extern NSString *MVChatRoomUserModeChangedNotification;
 
 extern NSString *MVChatRoomGotMessageNotification;
 extern NSString *MVChatRoomTopicChangedNotification;
-extern NSString *MVChatRoomModeChangedNotification;
-extern NSString *MVChatRoomAttributesUpdatedNotification;
+extern NSString *MVChatRoomModesChangedNotification;
+extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 @class MVChatConnection;
 @class MVChatUser;

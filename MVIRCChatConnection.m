@@ -347,15 +347,16 @@ static void MVChatRoomTopicChanged( CHANNEL_REC *channel ) {
 	if( ! channel -> topic ) return;
 
 	NSData *msgData = [NSData dataWithBytes:channel -> topic length:strlen( channel -> topic )];
+
 	NSString *author = ( channel -> topic_by ? [self stringWithEncodedBytes:channel -> topic_by] : nil );
+	NSArray *parts = [author componentsSeparatedByString:@"!"];
+	author = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
+
 	MVChatUser *authorUser = ( author ? [self chatUserWithUniqueIdentifier:author] : nil );
 	NSDate *time = ( channel -> topic_time ? [NSDate dateWithTimeIntervalSince1970:channel -> topic_time] : nil );
 
 	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
 	[room _setTopic:msgData byAuthor:authorUser withDate:time];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 #pragma mark -
@@ -704,7 +705,7 @@ static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
 
 	unsigned int changedModes = ( oldModes ^ [room modes] );
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", byMember, @"by", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", byMember, @"by", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -902,9 +903,6 @@ static void MVChatUserIdle( IRC_SERVER_REC *server, const char *data ) {
 	if( [[self stringWithEncodedBytes:connected] intValue] > 631138520 ) // prevent showing 34+ years connected time, this makes sure it is a viable date
 		[user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:[[self stringWithEncodedBytes:connected] intValue]]];
 	else [user _setDateConnected:nil];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatUserIdleTimeUpdatedNotification object:user userInfo:nil];		
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 	g_free( params );
 }

@@ -24,9 +24,6 @@
 	IBOutlet NSTextView *topic;
 	JVChatRoom *_room;
 	BOOL _nibLoaded;
-	unsigned int _modes;
-	NSString *_key;
-	int _limit;
 }
 - (id) initWithRoom:(JVChatRoom *) room;
 - (IBAction) changeChatOption:(id) sender;

@@ -79,7 +79,7 @@
 }
 
 - (NSSet *) supportedAttributes {
-	return [NSSet setWithObjects:MVChatUserKnownRoomsAttribute, MVChatUserPictureAttribute, MVChatUserLocalTimeAttribute, MVChatUserClientInfoAttribute, MVChatUserVCardAttribute, MVChatUserServiceAttribute, MVChatUserMoodAttribute, MVChatUserStatusMessageAttribute, MVChatUserPreferredLanguageAttribute, MVChatUserPreferredContactMethodsAttribute, MVChatUserTimezoneAttribute, MVChatUserGeoLocationAttribute, MVChatUserDeviceInfoAttribute, MVChatUserExtensionAttribute, MVChatUserPublicKeyAttribute, MVChatUserServerPublicKeyAttribute, MVChatUserDigitalSignatureAttribute, MVChatUserServerDigitalSignatureAttribute, nil];
+	return [NSSet setWithObjects:MVChatUserKnownRoomsAttribute, MVChatUserPictureAttribute, MVChatUserLocalTimeDifferenceAttribute, MVChatUserClientInfoAttribute, MVChatUserVCardAttribute, MVChatUserServiceAttribute, MVChatUserMoodAttribute, MVChatUserStatusMessageAttribute, MVChatUserPreferredLanguageAttribute, MVChatUserPreferredContactMethodsAttribute, MVChatUserTimezoneAttribute, MVChatUserGeoLocationAttribute, MVChatUserDeviceInfoAttribute, MVChatUserExtensionAttribute, MVChatUserPublicKeyAttribute, MVChatUserServerPublicKeyAttribute, MVChatUserDigitalSignatureAttribute, MVChatUserServerDigitalSignatureAttribute, nil];
 }
 
 #pragma mark -
@@ -101,5 +101,11 @@
 		if( client ) silc_client_send_private_message( [[self connection] _silcClient], [[self connection] _silcConn], client, flags, (char *) msg, strlen( msg ), false );	
 		[[[self connection] _silcClientLock] unlock];
 	}
+}
+
+#pragma mark -
+
+- (void) refreshInformation {
+	[[self connection] sendRawMessageWithFormat:@"WHOIS %@", [self nickname]];
 }
 @end

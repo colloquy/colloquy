@@ -18,7 +18,7 @@ typedef enum {
 
 extern NSString *MVChatUserKnownRoomsAttribute;
 extern NSString *MVChatUserPictureAttribute;
-extern NSString *MVChatUserLocalTimeAttribute;
+extern NSString *MVChatUserLocalTimeDifferenceAttribute;
 extern NSString *MVChatUserClientInfoAttribute;
 extern NSString *MVChatUserVCardAttribute;
 extern NSString *MVChatUserServiceAttribute;
@@ -42,7 +42,6 @@ extern NSString *MVChatUserIdleTimeUpdatedNotification;
 extern NSString *MVChatUserModeChangedNotification;
 extern NSString *MVChatUserInformationUpdatedNotification;
 extern NSString *MVChatUserAttributeUpdatedNotification;
-extern NSString *MVChatUserAttributesUpdatedNotification;
 
 @class MVChatConnection;
 @class MVUploadFileTransfer;
@@ -116,6 +115,8 @@ extern NSString *MVChatUserAttributesUpdatedNotification;
 
 - (unsigned long) supportedModes;
 - (unsigned long) modes;
+
+- (void) refreshInformation;
 
 - (void) refreshAttributes;
 - (void) refreshAttributeForKey:(NSString *) key;

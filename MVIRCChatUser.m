@@ -41,7 +41,7 @@
 }
 
 - (NSSet *) supportedAttributes {
-	return [NSSet setWithObjects:MVChatUserKnownRoomsAttribute, MVChatUserLocalTimeAttribute, MVChatUserClientInfoAttribute, nil];
+	return [NSSet setWithObjects:MVChatUserKnownRoomsAttribute, MVChatUserLocalTimeDifferenceAttribute, MVChatUserClientInfoAttribute, nil];
 }
 
 #pragma mark -
@@ -73,13 +73,13 @@
 
 #pragma mark -
 
-- (void) refreshAttributes {
+- (void) refreshInformation {
 	[[self connection] sendRawMessageWithFormat:@"WHOIS %@ %@", [self nickname], [self nickname]];
 }
 
 - (void) refreshAttributeForKey:(NSString *) key {
 	[super refreshAttributeForKey:key];
-	if( [key isEqualToString:MVChatUserLocalTimeAttribute] ) {
+	if( [key isEqualToString:MVChatUserLocalTimeDifferenceAttribute] ) {
 		[self sendSubcodeRequest:@"TIME" withArguments:nil];
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
 		[self sendSubcodeRequest:@"VERSION" withArguments:nil];
@@ -94,7 +94,11 @@
 	if( ! [command caseInsensitiveCompare:@"version"] ) {
 		[self _setAttribute:arguments forKey:MVChatUserClientInfoAttribute];
 	} else if( ! [command caseInsensitiveCompare:@"time"] ) {
-		[self _setAttribute:[NSDate dateWithNaturalLanguageString:arguments] forKey:MVChatUserLocalTimeAttribute];
+		NSDate *localThere = [NSDate dateWithNaturalLanguageString:arguments];
+		if( localThere ) {
+			NSTimeInterval diff = [localThere timeIntervalSinceDate:[NSDate date]];
+			[self _setAttribute:[NSNumber numberWithDouble:diff] forKey:MVChatUserLocalTimeDifferenceAttribute];
+		} else [self _setAttribute:nil forKey:MVChatUserLocalTimeDifferenceAttribute]; 
 	}
 }
 @end

@@ -27,17 +27,13 @@
 	IBOutlet NSTextField *clientInfo;
 	IBOutlet NSButton *requestInfo;
 	JVChatRoomMember *_member;
-	BOOL _localOnly;
+	NSTimer *_localTimeUpdateTimer;
+	NSTimer *_updateTimer;
 	BOOL _nibLoaded;
-	BOOL _classSet;
 	BOOL _addressResolved;
-	BOOL _whoisComplete;
 }
 - (id) initWithChatMember:(JVChatRoomMember *) member;
 
-- (void) setFetchLocalServerInfoOnly:(BOOL) localOnly;
-
-- (IBAction) sendPing:(id) sender;
 - (IBAction) requestLocalTime:(id) sender;
 - (IBAction) requestClientInfo:(id) sender;
 @end

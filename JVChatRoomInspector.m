@@ -4,6 +4,7 @@
 #import "JVChatTranscript.h"
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
+#import <ChatCore/NSAttributedStringAdditions.h>
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (NSMenu *) _stylesMenu;
@@ -28,7 +29,7 @@
 
 @implementation JVChatRoom (JVChatRoomInspection)
 - (id <JVInspector>) inspector {
-	return nil; //[[[JVChatRoomInspector alloc] initWithRoom:self] autorelease];
+	return [[[JVChatRoomInspector alloc] initWithRoom:self] autorelease];
 }
 @end
 
@@ -36,12 +37,8 @@
 
 @implementation JVChatRoomInspector
 - (id) initWithRoom:(JVChatRoom *) room {
-	if( ( self = [self init] ) ) {
+	if( ( self = [self init] ) )
 		_room = [room retain];
-		_modes = 0;
-		_key = [[NSString alloc] init];
-		_limit = 0;
-	}
 	return self;
 }
 
@@ -74,11 +71,12 @@
 }
 
 - (void) willLoad {
-	[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@", [_room target]]];
+	[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@", (MVChatRoom *)[_room target]]];
 
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatConnectionGotRoomTopicNotification object:[_room connection]];
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatConnectionGotMemberModeNotification object:[_room connection]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatRoomModeChangedNotification object:_room];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatRoomTopicChangedNotification object:[_room target]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatRoomUserModeChangedNotification object:[_room target]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatRoomModesChangedNotification object:[_room target]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatRoomKickedNotification object:[_room target]];
 
 	[encodingSelection setMenu:[_room _encodingMenu]];
 	[styleSelection setMenu:[_room _stylesMenu]];
@@ -94,37 +92,43 @@
 	if( sender == requiresPassword ) {
 		[password setEnabled:(BOOL)[sender state]];
 		if( [sender state] ) [[password window] makeFirstResponder:password];
-		else [[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ -k *", [_room target]]];
+		else [(MVChatRoom *)[_room target] removeMode:MVChatRoomPassphraseToJoinMode];
 	} else if( sender == limitMembers ) {
 		[memberLimit setEnabled:(BOOL)[sender state]];
 		if( [sender state] ) [[memberLimit window] makeFirstResponder:memberLimit];
-		else [[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ -l *", [_room target]]];
+		else [(MVChatRoom *)[_room target] removeMode:MVChatRoomLimitNumberOfMembersMode];
 	} else if( sender == password ) {
 		BOOL enabled = ( [[sender stringValue] length] ? YES : NO );
-		if( enabled ) [[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ +k %@", [_room target], [sender stringValue]]];
+		if( enabled ) [(MVChatRoom *)[_room target] setMode:MVChatRoomPassphraseToJoinMode withAttribute:[sender stringValue]];
 		else {
 			[requiresPassword setState:NSOffState];
 			[sender setEnabled:NO];
 		}
 	} else if( sender == memberLimit ) {
 		BOOL enabled = ( [sender intValue] > 1 ? YES : NO );
-		if( enabled ) [[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ +l %d", [_room target], [sender intValue]]];
+		if( enabled ) [(MVChatRoom *)[_room target] setMode:MVChatRoomLimitNumberOfMembersMode withAttribute:[sender stringValue]];
 		else {
 			[limitMembers setState:NSOffState];
 			[sender setEnabled:NO];
 		}
 	} else if( [sender selectedCell] == privateRoom ) {
-		[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %cp", [_room target], ( [[sender selectedCell] state] ? '+' : '-' )]];
+		if( [[sender selectedCell] state] ) [(MVChatRoom *)[_room target] setMode:MVChatRoomPrivateMode];
+		else [(MVChatRoom *)[_room target] removeMode:MVChatRoomPrivateMode];
 	} else if( [sender selectedCell] == secretRoom ) {
-		[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %cs", [_room target], ( [[sender selectedCell] state] ? '+' : '-' )]];
+		if( [[sender selectedCell] state] ) [(MVChatRoom *)[_room target] setMode:MVChatRoomSecretMode];
+		else [(MVChatRoom *)[_room target] removeMode:MVChatRoomSecretMode];
 	} else if( [sender selectedCell] == inviteOnly ) {
-		[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %ci", [_room target], ( [[sender selectedCell] state] ? '+' : '-' )]];
+		if( [[sender selectedCell] state] ) [(MVChatRoom *)[_room target] setMode:MVChatRoomInviteOnlyMode];
+		else [(MVChatRoom *)[_room target] removeMode:MVChatRoomInviteOnlyMode];
 	} else if( [sender selectedCell] == noOutside ) {
-		[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %cn", [_room target], ( [[sender selectedCell] state] ? '+' : '-' )]];
+		if( [[sender selectedCell] state] ) [(MVChatRoom *)[_room target] setMode:MVChatRoomNoOutsideMessagesMode];
+		else [(MVChatRoom *)[_room target] removeMode:MVChatRoomNoOutsideMessagesMode];
 	} else if( [sender selectedCell] == topicChangeable ) {
-		[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %ct", [_room target], ( [[sender selectedCell] state] ? '+' : '-' )]];
+		if( [[sender selectedCell] state] ) [(MVChatRoom *)[_room target] setMode:MVChatRoomOperatorsOnlySetTopicMode];
+		else [(MVChatRoom *)[_room target] removeMode:MVChatRoomOperatorsOnlySetTopicMode];
 	} else if( [sender selectedCell] == moderated ) {
-		[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@ %cm", [_room target], ( [[sender selectedCell] state] ? '+' : '-' )]];
+		if( [[sender selectedCell] state] ) [(MVChatRoom *)[_room target] setMode:MVChatRoomNormalUsersSilencedMode];
+		else [(MVChatRoom *)[_room target] removeMode:MVChatRoomNormalUsersSilencedMode];
 	}
 }
 
@@ -135,9 +139,9 @@
 }
 
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
-/*	unichar zeroWidthSpaceChar = 0x200b;	
+	unichar zeroWidthSpaceChar = 0x200b;	
 	[[[topic textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[topic textStorage] length] )];
-	[[_room connection] setTopic:[topic textStorage] withEncoding:[_room encoding] forRoom:[_room target]]; */
+	[(MVChatRoom *)[_room target] setTopic:[topic textStorage]];
 	return YES;
 }
 
@@ -147,7 +151,7 @@
 }
 
 - (void) textDidEndEditing:(NSNotification *) notification {
-//	[[_room connection] setTopic:[topic textStorage] withEncoding:[_room encoding] forRoom:[_room target]];
+	[self textView:topic returnKeyPressed:nil];
 }
 @end
 
@@ -155,19 +159,24 @@
 
 @implementation JVChatRoomInspector (JVChatRoomInspectorPrivate)
 - (void) _topicChanged:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame ) return;
 	if( [[topic window] firstResponder] == topic && [topic isEditable] ) return;
 
-	NSMutableAttributedString *topicString = [[[[_room target] topic] mutableCopy] autorelease];
-	[topicString removeAttribute:NSParagraphStyleAttributeName range:NSMakeRange( 0, [topicString length] )];
-	[topicString removeAttribute:NSLinkAttributeName range:NSMakeRange( 0, [topicString length] )];
-	[[topic textStorage] setAttributedString:topicString];
+	NSFont *baseFont = [NSFont userFontOfSize:12.];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[_room encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSAttributedString *messageString = [NSMutableAttributedString attributedStringWithIRCFormat:[(MVChatRoom *)[_room target] topic] options:options];
+
+	if( ! messageString ) {
+		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
+		messageString = [NSAttributedString attributedStringWithIRCFormat:[(MVChatRoom *)[_room target] topic] options:options];
+	}
+
+	[[topic textStorage] setAttributedString:messageString];
 }
 
 - (void) _refreshEditStatus:(NSNotification *) notification {
-	if( notification && [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame && [[[_room connection] nickname] isEqualToString:[[notification userInfo] objectForKey:@"who"]] ) return;
+	if( notification && ! [[[notification userInfo] objectForKey:@"who"] isLocalUser] ) return;
 
-	BOOL canEdit = NO; // [[_room chatRoomMemberWithName:[[_room connection] nickname]] operator];
+	BOOL canEdit = [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] & MVChatRoomMemberOperatorMode;
 
 	[topicChangeable setEnabled:canEdit];
 	[privateRoom setEnabled:canEdit];
@@ -175,8 +184,8 @@
 	[inviteOnly setEnabled:canEdit];
 	[noOutside setEnabled:canEdit];
 	[moderated setEnabled:canEdit];
-	
-//	[topic setEditable:(canEdit || ! (_modes & MVChatRoomSetTopicOperatorOnlyMode))];
+
+	[topic setEditable:( canEdit || ! ( [(MVChatRoom *)[_room target] modes] & MVChatRoomOperatorsOnlySetTopicMode ) )];
 
 	[limitMembers setEnabled:canEdit];
 	if( [limitMembers state] == NSOnState ) [memberLimit setEnabled:canEdit];
@@ -188,61 +197,44 @@
 }
 
 - (void) _roomModeChanged:(NSNotification *) notification {
-	//if( [notification object] != _room ) return;
-	
-/*	unsigned int currentModes = [_room modes];
-	unsigned int newModes = currentModes & ~ _modes;
-	unsigned int oldModes = _modes & ~ currentModes;
-	unsigned int changedModes = newModes | oldModes;
-	_modes = [_room modes];
-	NSString *key = [_room key];
-	int limit = [_room limit];
-			
-	if (changedModes & MVChatRoomPrivateMode) {
-		[privateRoom setState:(newModes & MVChatRoomPrivateMode ? NSOnState : NSOffState)];
+	unsigned int changedModes = ( notification ? [[[notification userInfo] objectForKey:@"changedModes"] unsignedIntValue] : [(MVChatRoom *)[_room target] modes] );
+	unsigned int newModes = [(MVChatRoom *)[_room target] modes];
+
+	if( changedModes & MVChatRoomPrivateMode )
+		[privateRoom setState:( newModes & MVChatRoomPrivateMode ? NSOnState : NSOffState )];
+
+	if( changedModes & MVChatRoomSecretMode )
+		[secretRoom setState:( newModes & MVChatRoomSecretMode ? NSOnState : NSOffState )];
+
+	if( changedModes & MVChatRoomInviteOnlyMode )
+		[inviteOnly setState:( newModes & MVChatRoomInviteOnlyMode ? NSOnState : NSOffState )];
+
+	if( changedModes & MVChatRoomNormalUsersSilencedMode )
+		[moderated setState:( newModes & MVChatRoomNormalUsersSilencedMode ? NSOnState : NSOffState )];
+
+	if( changedModes & MVChatRoomOperatorsOnlySetTopicMode ) {
+		BOOL enabled = ( newModes & MVChatRoomOperatorsOnlySetTopicMode ? YES : NO );
+		if( enabled ) [self _topicChanged:nil];
+		if( [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] & MVChatRoomMemberOperatorMode ) [topic setEditable:YES];
+		else [topic setEditable:( ! enabled )];
+		[topicChangeable setState:( enabled ? NSOnState : NSOffState )];
 	}
-	if (changedModes & MVChatRoomSecretMode) {
-		[secretRoom setState:(newModes & MVChatRoomSecretMode ? NSOnState : NSOffState)];
+
+	if( changedModes & MVChatRoomNoOutsideMessagesMode )
+		[noOutside setState:( newModes & MVChatRoomNoOutsideMessagesMode ? NSOnState : NSOffState )];
+
+	if( changedModes & MVChatRoomPassphraseToJoinMode ) {
+		[requiresPassword setState:( newModes & MVChatRoomPassphraseToJoinMode ? NSOnState : NSOffState )];
+		if( newModes & MVChatRoomPassphraseToJoinMode ) [password setStringValue:[(MVChatRoom *)[_room target] attributeForMode:MVChatRoomPassphraseToJoinMode]];
+		else [password setStringValue:@""];
 	}
-	if (changedModes & MVChatRoomInviteOnlyMode) {
-		[inviteOnly setState:(newModes & MVChatRoomInviteOnlyMode ? NSOnState : NSOffState)];
+
+	if( changedModes & MVChatRoomLimitNumberOfMembersMode ) {
+		[limitMembers setState:( newModes & MVChatRoomLimitNumberOfMembersMode ? NSOnState : NSOffState )];
+		if( newModes & MVChatRoomLimitNumberOfMembersMode ) [memberLimit setObjectValue:[(MVChatRoom *)[_room target] attributeForMode:MVChatRoomLimitNumberOfMembersMode]];
+		else [memberLimit setStringValue:@""];
 	}
-	if (changedModes & MVChatRoomModeratedMode) {
-		[moderated setState:(newModes & MVChatRoomModeratedMode ? NSOnState : NSOffState)];
-	}
-	if (changedModes & MVChatRoomSetTopicOperatorOnlyMode) {
-		BOOL enabled = (newModes & MVChatRoomSetTopicOperatorOnlyMode ? YES : NO);
-		if (enabled) [self _topicChanged:nil];
-		if ([[_room chatRoomMemberWithName:[[_room connection] nickname]] operator]) {
-			[topic setEditable:YES];
-		} else [topic setEditable: (!enabled)];
-		[topicChangeable setState:(enabled ? NSOnState : NSOffState)];
-	}
-	if (changedModes & MVChatRoomNoOutsideMessagesMode) {
-		[noOutside setState:(newModes & MVChatRoomNoOutsideMessagesMode ? NSOnState : NSOffState)];
-	}
-	if ((changedModes & MVChatRoomPasswordRequiredMode) || 
-		((currentModes & MVChatRoomPasswordRequiredMode) && ![key isEqualToString:_key])) {
-		[requiresPassword setState:(newModes & MVChatRoomPasswordRequiredMode ? NSOnState : NSOffState)];
-		if (currentModes & MVChatRoomPasswordRequiredMode) {
-			[password setStringValue:key];
-			[_key autorelease];
-			_key = [key copy];
-		} else {
-			[password setStringValue:@""];
-		}
-	}
-	if ((changedModes & MVChatRoomMemberLimitMode) ||
-		((currentModes & MVChatRoomMemberLimitMode) && (limit != _limit))) {
-		[limitMembers setState:(newModes & MVChatRoomMemberLimitMode ? NSOnState : NSOffState)];
-		if (currentModes & MVChatRoomMemberLimitMode) {
-			[memberLimit setIntValue:limit];
-			_limit = limit;
-		} else {
-			[memberLimit setStringValue:@""];
-		}
-	}
-	
-	[self _refreshEditStatus:nil]; */
+
+	[self _refreshEditStatus:nil];
 }
 @end

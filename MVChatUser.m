@@ -1,10 +1,11 @@
 #import "MVChatUser.h"
 #import "MVChatConnection.h"
 #import "MVFileTransfer.h"
+#import "NSNotificationAdditions.h"
 
 NSString *MVChatUserKnownRoomsAttribute = @"MVChatUserKnownRoomsAttribute";
 NSString *MVChatUserPictureAttribute = @"MVChatUserPictureAttribute";
-NSString *MVChatUserLocalTimeAttribute = @"MVChatUserLocalTimeAttribute";
+NSString *MVChatUserLocalTimeDifferenceAttribute = @"MVChatUserLocalTimeDifferenceAttribute";
 NSString *MVChatUserClientInfoAttribute = @"MVChatUserClientInfoAttribute";
 NSString *MVChatUserVCardAttribute = @"MVChatUserVCardAttribute";
 NSString *MVChatUserServiceAttribute = @"MVChatUserServiceAttribute";
@@ -28,7 +29,6 @@ NSString *MVChatUserIdleTimeUpdatedNotification = @"MVChatUserIdleTimeUpdatedNot
 NSString *MVChatUserModeChangedNotification = @"MVChatUserModeChangedNotification";
 NSString *MVChatUserInformationUpdatedNotification = @"MVChatUserInformationUpdatedNotification";
 NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedNotification";
-NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdatedNotification";
 
 @implementation MVChatUser
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host {
@@ -308,8 +308,17 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 
 #pragma mark -
 
-- (void) refreshAttributes {
+- (void) refreshInformation {
 // subclass this method, if needed	
+}
+
+#pragma mark -
+
+- (void) refreshAttributes {
+	NSEnumerator *enumerator = [[self supportedAttributes] objectEnumerator];
+	NSString *attribute = nil;
+	while( ( attribute = [enumerator nextObject] ) )
+		[self refreshAttributeForKey:attribute];
 }
 
 - (void) refreshAttributeForKey:(NSString *) key {
@@ -429,6 +438,9 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 
 - (void) _setIdleTime:(NSTimeInterval) time {
 	_idleTime = time;
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];		
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 - (void) _setDateConnected:(NSDate *) date {
@@ -452,5 +464,9 @@ NSString *MVChatUserAttributesUpdatedNotification = @"MVChatUserAttributesUpdate
 		if( attribute ) [_attributes setObject:attribute forKey:key];
 		else [_attributes removeObjectForKey:key];
 	}
+
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
+	NSNotification *note = [NSNotification notificationWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];		
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 @end

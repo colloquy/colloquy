@@ -1,11 +1,14 @@
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatUser.h>
+#import <ChatCore/MVChatRoom.h>
 #import "JVChatMemberInspector.h"
+#import "JVChatRoom.h"
 #import "JVBuddy.h"
 #import "MVFileTransferController.h"
 
 @implementation JVChatRoomMember (JVChatRoomMemberInspection)
 - (id <JVInspector>) inspector {
-	return nil; //[[[JVChatMemberInspector alloc] initWithChatMember:self] autorelease];
+	return [[[JVChatMemberInspector alloc] initWithChatMember:self] autorelease];
 }
 @end
 
@@ -15,24 +18,29 @@
 - (id) initWithChatMember:(JVChatRoomMember *) member {
 	if( ( self = [self init] ) ) {
 		_member = [member retain];
-		_localOnly = NO;
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserWhois: ) name:MVChatConnectionGotUserWhoisNotification object:[_member connection]];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserServer: ) name:MVChatConnectionGotUserServerNotification object:[_member connection]];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserChannels: ) name:MVChatConnectionGotUserChannelsNotification object:[_member connection]];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserOperator: ) name:MVChatConnectionGotUserOperatorNotification object:[_member connection]];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserIdle: ) name:MVChatConnectionGotUserIdleNotification object:[_member connection]];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserWhoisComplete: ) name:MVChatConnectionGotUserWhoisCompleteNotification object:[_member connection]];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotAwayStatus: ) name:MVChatConnectionUserAwayStatusNotification object:[_member connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( errorOccurred : ) name:MVChatConnectionErrorNotification object:[_member connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotCTCPResponse: ) name:MVChatConnectionSubcodeReplyNotification object:[_member connection]];
+		_localTimeUpdateTimer = nil;
+		_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( updateInformation ) userInfo:nil repeats:YES] retain];
 	}
 	return self;
+}
+
+- (void) release {
+	if( ( [self retainCount] - ( _localTimeUpdateTimer ? 2 : 1 ) ) == 1 ) {
+		[_localTimeUpdateTimer invalidate];
+		[_updateTimer invalidate];
+	}
+	[super release];
 }
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[_localTimeUpdateTimer release];
+	[_updateTimer release];
 	[_member release];
+
+	_localTimeUpdateTimer = nil;
+	_updateTimer = nil;
 	_member = nil;
 
 	[super dealloc];
@@ -58,135 +66,93 @@
 }
 
 - (void) willLoad {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( infoUpdated: ) name:MVChatUserInformationUpdatedNotification object:[_member user]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( attributeUpdated: ) name:MVChatUserAttributeUpdatedNotification object:[_member user]];
+
+	[[_member user] refreshInformation];
 	[progress startAnimation:nil];
-	_whoisComplete = NO;
 	_addressResolved = NO;
-	_classSet = NO;
 	[nickname setObjectValue:[_member nickname]];
 	if( [[_member buddy] picture] ) [image setImage:[[_member buddy] picture]];
-//	[[_member connection] fetchInformationForUser:[_member nickname] withPriority:NO fromLocalServer:_localOnly];
 }
 
 #pragma mark -
 
-- (void) setFetchLocalServerInfoOnly:(BOOL) localOnly {
-	_localOnly = localOnly;
+- (void) updateInformation {
+	[[_member user] refreshInformation];	
+	[progress startAnimation:nil];
 }
+
+#pragma mark -
 
 - (void) gotAddress:(NSString *) ip {
 	[address setObjectValue:( ip ? ip : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 	[address setToolTip:( ip ? ip : nil )];
 	_addressResolved = YES;
-	if (_whoisComplete)
-		[progress stopAnimation:nil];
+	[progress stopAnimation:nil];
 }
 
-- (oneway void) lookupAddress:(NSString *) host {
+- (oneway void) lookupAddress {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *ip = [[NSHost hostWithName:host] address];
-	[self performSelectorOnMainThread:@selector(gotAddress:) withObject:ip waitUntilDone:YES];
+	NSString *ip = [[NSHost hostWithName:[[_member user] address]] address];
+	[self performSelectorOnMainThread:@selector( gotAddress: ) withObject:ip waitUntilDone:YES];
 	[pool release];
 }
 
-/*- (void) gotUserInfo:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	NSDictionary *info = [[notification userInfo] objectForKey:@"info"];
-	NSString *clas = nil;
-	if( [[info objectForKey:@"flags"] intValue] == 0 ) {
-		clas = NSLocalizedString( @"Restricted user", "restricted user class" );
-	} else if( [[info objectForKey:@"flags"] intValue] & 0x02 ) {
-		clas = NSLocalizedString( @"Normal user", "normal user class" );
-	} else if( [[info objectForKey:@"flags"] intValue] & 0x04 ) {
-		clas = NSLocalizedString( @"Server operator", "server operator class" );
-	}
-	[class setObjectValue:clas];
-	[username setObjectValue:[info objectForKey:@"username"]];
-	[hostname setObjectValue:[info objectForKey:@"hostname"]];
-	[hostname setToolTip:[info objectForKey:@"hostname"]];
-	[NSThread detachNewThreadSelector:@selector( lookupAddress: ) toTarget:self withObject:[[[info objectForKey:@"hostname"] copy] autorelease]];
-	[server setObjectValue:[info objectForKey:@"server"]];
-	[realName setObjectValue:[info objectForKey:@"realName"]];
-	[realName setToolTip:[info objectForKey:@"realName"]];
-	[connected setObjectValue:MVReadableTime( [[info objectForKey:@"connected"] doubleValue], YES )];
-	[idle setObjectValue:MVReadableTime( [[NSDate date] timeIntervalSince1970] + [[info objectForKey:@"idle"] doubleValue], YES )];
-}*/
-
-- (void) gotUserWhois:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	[username setObjectValue:[[notification userInfo] objectForKey:@"username"]];
-	[hostname setObjectValue:[[notification userInfo] objectForKey:@"hostname"]];
-	[hostname setToolTip:[[notification userInfo] objectForKey:@"hostname"]];
-	[NSThread detachNewThreadSelector:@selector( lookupAddress: ) toTarget:self withObject:[[[[notification userInfo] objectForKey:@"hostname"] copy] autorelease]];
-	[realName setObjectValue:[[notification userInfo] objectForKey:@"realname"]];
-	[realName setToolTip:[[notification userInfo] objectForKey:@"realname"]];
-}
-
-- (void) gotUserServer:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	[server setObjectValue:[[notification userInfo] objectForKey:@"server"]];
-}
-
-- (void) gotUserChannels:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	[rooms setObjectValue:[[[notification userInfo] objectForKey:@"channels"] componentsJoinedByString:@" "]];
-}
-
-- (void) gotUserOperator:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	_classSet = YES;
-	[class setObjectValue:NSLocalizedString( @"Server operator", "server operator class" )];
-}
-
-- (void) gotUserIdle:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	[connected setObjectValue:MVReadableTime( [[[notification userInfo] objectForKey:@"connected"] doubleValue], YES )];
-	[idle setObjectValue:MVReadableTime( [[NSDate date] timeIntervalSince1970] + [[[notification userInfo] objectForKey:@"idle"] doubleValue], YES )];
-}
-
-- (void) gotUserWhoisComplete:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	_whoisComplete = YES;
-	if (!_classSet)
+- (void) infoUpdated:(NSNotification *) notification {
+	if( [[_member user] isIdentified] ) {
+		[class setObjectValue:NSLocalizedString( @"Registered user", "registered user class" )];
+	} else if( [[_member user] isServerOperator] ) {
+		[class setObjectValue:NSLocalizedString( @"Server operator", "server operator class" )];
+	} else {
 		[class setObjectValue:NSLocalizedString( @"Normal user", "normal user class" )];
-	if (_addressResolved)
-		[progress stopAnimation:nil];
-}
-
-- (void) gotAwayStatus:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	NSData *data = [[notification userInfo] objectForKey:@"message"];
-	NSString *strMsg = [[[NSString alloc] initWithData:data encoding:[[_member connection] encoding]] autorelease];
-	if( ! strMsg ) strMsg = [NSString stringWithCString:[data bytes] length:[data length]];
-	[away setObjectValue:strMsg];
-}
-
-- (void) errorOccurred:(NSNotification *) notification {
-/*	MVChatError error = (MVChatError) [[[notification userInfo] objectForKey:@"error"] intValue];
-	id target = [[notification userInfo] objectForKey:@"target"];
-	if( ! [target isKindOfClass:[NSString class]] || [target caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	if( error == MVChatBadTargetError ) {
-		[progress stopAnimation:nil];
-		[address setObjectValue:NSLocalizedString( @"n/a", "not applicable or not available" )];
-		[address setToolTip:nil];
-	} */
-}
-
-- (void) gotCTCPResponse:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"from"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
-	if( [[[notification userInfo] objectForKey:@"command"] caseInsensitiveCompare:@"VERSION"] == NSOrderedSame ) {
-		[clientInfo setStringValue:[[notification userInfo] objectForKey:@"arguments"]];
 	}
+
+	[username setObjectValue:[[_member user] username]];
+
+	[hostname setObjectValue:[[_member user] address]];
+	[hostname setToolTip:[[_member user] address]];
+
+	if( ! _addressResolved ) [NSThread detachNewThreadSelector:@selector( lookupAddress ) toTarget:self withObject:nil];
+
+	[server setObjectValue:[[_member user] serverAddress]];
+	[server setToolTip:[[_member user] serverAddress]];
+
+	[realName setObjectValue:[[_member user] realName]];
+	[realName setToolTip:[[_member user] realName]];
+
+	[connected setObjectValue:MVReadableTime( [[[_member user] dateConnected] timeIntervalSince1970], YES )];
+	[idle setObjectValue:MVReadableTime( [[NSDate date] timeIntervalSince1970] + [[_member user] idleTime], YES )];
+
+	if( _addressResolved ) [progress stopAnimation:nil];
+}
+
+- (void) attributeUpdated:(NSNotification *) notification {
+	NSString *key = [[notification userInfo] objectForKey:@"attribute"];
+	if( [key isEqualToString:MVChatUserLocalTimeDifferenceAttribute] ) {
+		if( ! _localTimeUpdateTimer )
+			_localTimeUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:10. target:self selector:@selector( updateLocalTime ) userInfo:nil repeats:YES] retain];
+	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
+		[clientInfo setObjectValue:[[_member user] attributeForKey:key]];
+		[clientInfo setToolTip:[[_member user] attributeForKey:key]];
+	}
+}
+
+- (void) updateLocalTime {
+	NSString *format = [[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString];
+	NSDate *current = [[NSDate dateWithTimeIntervalSinceNow:[[[_member user] attributeForKey:MVChatUserLocalTimeDifferenceAttribute] doubleValue]] dateWithCalendarFormat:format timeZone:nil];
+	[localTime setObjectValue:current];
 }
 
 - (IBAction) sendPing:(id) sender {
-//	[[_member connection] sendSubcodeRequest:@"PING" toUser:[_member nickname] withArguments:nil];
+
 }
 
 - (IBAction) requestLocalTime:(id) sender {
-//	[[_member connection] sendSubcodeRequest:@"TIME" toUser:[_member nickname] withArguments:nil];
+	[[_member user] refreshAttributeForKey:MVChatUserLocalTimeDifferenceAttribute];
 }
 
 - (IBAction) requestClientInfo:(id) sender {
-//	[[_member connection] sendSubcodeRequest:@"VERSION" toUser:[_member nickname] withArguments:nil];
+	[[_member user] refreshAttributeForKey:MVChatUserClientInfoAttribute];
 }
 @end

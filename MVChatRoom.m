@@ -3,6 +3,7 @@
 #import "MVChatUser.h"
 
 #import "NSStringAdditions.h"
+#import "NSNotificationAdditions.h"
 
 NSString *MVChatRoomJoinedNotification = @"MVChatRoomJoinedNotification";
 NSString *MVChatRoomPartedNotification = @"MVChatRoomPartedNotification";
@@ -21,8 +22,8 @@ NSString *MVChatRoomUserModeChangedNotification = @"MVChatRoomUserModeChangedNot
 
 NSString *MVChatRoomGotMessageNotification = @"MVChatRoomGotMessageNotification";
 NSString *MVChatRoomTopicChangedNotification = @"MVChatRoomTopicChangedNotification";
-NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotification";
-NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdatedNotification";
+NSString *MVChatRoomModesChangedNotification = @"MVChatRoomModesChangedNotification";
+NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedNotification";
 
 @implementation MVChatRoom
 - (id) init {
@@ -554,9 +555,12 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 
 	[_topicAuthor autorelease];
 	_topicAuthor = [author retain];
-
+	
 	[_dateTopicChanged autorelease];
 	_dateTopicChanged = [date copyWithZone:[self zone]];
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomTopicChangedNotification object:self userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 - (void) _setAttribute:(id) attribute forKey:(id) key {
@@ -565,5 +569,9 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 		if( attribute ) [_attributes setObject:attribute forKey:key];
 		else [_attributes removeObjectForKey:key];
 	}
+
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];		
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 @end

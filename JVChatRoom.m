@@ -61,7 +61,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberJoined: ) name:MVChatRoomUserJoinedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberParted: ) name:MVChatRoomUserPartedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberKicked: ) name:MVChatRoomUserKickedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatRoomModeChangedNotification object:target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatRoomModesChangedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberModeChanged: ) name:MVChatRoomUserModeChangedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanned: ) name:MVChatRoomUserBannedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanRemoved: ) name:MVChatRoomUserBanRemovedNotification object:target];
