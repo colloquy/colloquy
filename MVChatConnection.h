@@ -7,36 +7,36 @@
 #define MVURLDecodeString(t) ([(NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)(t), NULL) autorelease])
 
 typedef enum {
-	MVChatConnectionDisconnectedStatus = 'disC',
-	MVChatConnectionServerDisconnectedStatus = 'sdsC',
-	MVChatConnectionConnectingStatus = 'conG',
-	MVChatConnectionConnectedStatus = 'conD',
-	MVChatConnectionSuspendedStatus = 'susP'
+	MVChatConnectionDisconnectedStatus			= 'disC',
+	MVChatConnectionServerDisconnectedStatus	= 'sdsC',
+	MVChatConnectionConnectingStatus			= 'conG',
+	MVChatConnectionConnectedStatus				= 'conD',
+	MVChatConnectionSuspendedStatus				= 'susP'
 } MVChatConnectionStatus;
 
 typedef enum {
-	MVChatConnectionNoProxy = 'nonE',
-	MVChatConnectionHTTPSProxy = 'htpS',
-	MVChatConnectionSOCKSProxy = 'sokS'
+	MVChatConnectionNoProxy		= 'nonE',
+	MVChatConnectionHTTPSProxy  = 'htpS',
+	MVChatConnectionSOCKSProxy  = 'sokS'
 } MVChatConnectionProxy;
 
 typedef enum {
-	MVChatRoomNoModes = 0x0,
-	MVChatRoomPrivateMode = 0x1,
-	MVChatRoomSecretMode = 0x2,
-	MVChatRoomInviteOnlyMode = 0x4,
-	MVChatRoomModeratedMode = 0x8,
-	MVChatRoomSetTopicOperatorOnlyMode = 0x10,
-	MVChatRoomNoOutsideMessagesMode = 0x20,
-	MVChatRoomPasswordRequiredMode = 0x40,
-	MVChatRoomMemberLimitMode = 0x80
+	MVChatRoomNoModes					= 0x0,
+	MVChatRoomPrivateMode				= 0x1,
+	MVChatRoomSecretMode				= 0x2,
+	MVChatRoomInviteOnlyMode			= 0x4,
+	MVChatRoomModeratedMode				= 0x8,
+	MVChatRoomSetTopicOperatorOnlyMode  = 0x10,
+	MVChatRoomNoOutsideMessagesMode		= 0x20,
+	MVChatRoomPasswordRequiredMode		= 0x40,
+	MVChatRoomMemberLimitMode			= 0x80
 } MVChatRoomMode;
 
 typedef enum {
-	MVChatMemberNoModes = 0x0,
-	MVChatMemberOperatorMode = 0x1,
-	MVChatMemberHalfOperatorMode = 0x2,
-	MVChatMemberVoiceMode = 0x4
+	MVChatMemberNoModes				= 0x0,
+	MVChatMemberOperatorMode		= 0x1,
+	MVChatMemberHalfOperatorMode	= 0x2,
+	MVChatMemberVoiceMode			= 0x4
 } MVChatMemberMode;
 
 typedef enum {
@@ -150,21 +150,26 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 @interface MVChatConnection : NSObject {
 @private
-	NSString *_npassword;
-	MVChatConnectionStatus _status;
-	MVChatConnectionProxy _proxy;
-	void *_chatConnection;
-	NSMutableDictionary *_roomsCache;
-	NSDate *_cachedDate;
-	NSAttributedString *_awayMessage;
-	BOOL _nickIdentified;
-	unsigned int _sleepNotifier; /* io_object_t */
-	unsigned int _powerConnection; /* io_connect_t */
+	NSString				*_npassword;
+	MVChatConnectionStatus  _status;
+	MVChatConnectionProxy   _proxy;
+	
+	void					*_chatConnection;
+	NSMutableDictionary		*_roomsCache;
+	NSDate					*_cachedDate;
+	NSAttributedString		*_awayMessage;
+	
+	BOOL					_nickIdentified;
+	unsigned int			_sleepNotifier;		/* io_object_t */
+	unsigned int			_powerConnection;   /* io_connect_t */
 }
+
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;
 
 + (NSString *) descriptionForError:(MVChatError) error;
+
+#pragma mark -
 
 - (id) initWithURL:(NSURL *) url;
 - (id) initWithServer:(NSString *) server port:(unsigned short) port user:(NSString *) nickname;
@@ -173,7 +178,11 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname;
 - (void) disconnect;
 
+#pragma mark -
+
 - (NSURL *) url;
+
+#pragma mark -
 
 - (void) setRealName:(NSString *) name;
 - (NSString *) realName;
@@ -200,6 +209,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) setProxyType:(MVChatConnectionProxy) type;
 - (MVChatConnectionProxy) proxyType;
 
+#pragma mark -
+
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action;
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action;
 
@@ -207,16 +218,24 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now;
 - (void) sendRawMessageWithFormat:(NSString *) format, ...;
 
+#pragma mark -
+
 - (void) sendFile:(NSString *) path toUser:(NSString *) user;
 - (void) acceptFileTransfer:(NSString *) identifier saveToPath:(NSString *) path resume:(BOOL) resume;
 - (void) cancelFileTransfer:(NSString *) identifier;
 
+#pragma mark -
+
 - (void) sendSubcodeRequest:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments;
 - (void) sendSubcodeReply:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments;
+
+#pragma mark -
 
 - (void) joinChatRooms:(NSArray *) rooms;
 - (void) joinChatRoom:(NSString *) room;
 - (void) partChatRoom:(NSString *) room;
+
+#pragma mark -
 
 - (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room;
 
@@ -230,19 +249,27 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) banMember:(NSString *) member inRoom:(NSString *) room;
 - (void) unbanMember:(NSString *) member inRoom:(NSString *) room;
 
+#pragma mark -
+
 - (void) addUserToNotificationList:(NSString *) user;
 - (void) removeUserFromNotificationList:(NSString *) user;
 
 - (void) fetchInformationForUser:(NSString *) user withPriority:(BOOL) priority fromLocalServer:(BOOL) localOnly;
+
+#pragma mark -
 
 - (void) fetchRoomList;
 - (void) fetchRoomListWithRooms:(NSArray *) rooms;
 - (void) stopFetchingRoomList;
 - (NSMutableDictionary *) roomListResults;
 
+#pragma mark -
+
 - (NSAttributedString *) awayStatusMessage;
 - (void) setAwayStatusWithMessage:(NSAttributedString *) message;
 - (void) clearAwayStatus;
+
+#pragma mark -
 
 - (BOOL) isConnected;
 - (MVChatConnectionStatus) status;

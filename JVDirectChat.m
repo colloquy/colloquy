@@ -27,7 +27,6 @@
 #import "MVTextView.h"
 #import "MVMenuButton.h"
 #import "NSURLAdditions.h"
-#import "KAConnectionHandler.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
 
@@ -1358,7 +1357,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 		 
 		xmlSetProp( child, "classification", [self _classificationForNickname:user] );
-		if ( [[KAConnectionHandler defaultHandler] shouldIgnoreMessage:[NSAttributedString attributedStringWithHTMLFragment:[NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", messageString] baseURL:NULL] inRoom:_target] ) {
+		if ( [[JVChatController defaultManager] shouldIgnoreMessage:[NSAttributedString attributedStringWithHTMLFragment:[NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", messageString] baseURL:NULL] inRoom:_target] ) {
 			xmlSetProp( child, "ignore", "yes" );
 		}
 	}

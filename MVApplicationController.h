@@ -1,5 +1,4 @@
-#import <Foundation/NSObject.h>
-#import <Foundation/NSKeyValueCoding.h>
+#import <Cocoa/Cocoa.h>
 
 extern NSString *JVChatStyleInstalledNotification;
 extern NSString *JVChatEmoticonSetInstalledNotification;

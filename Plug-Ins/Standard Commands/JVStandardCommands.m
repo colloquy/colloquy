@@ -11,7 +11,6 @@
 #import "JVInspectorController.h"
 #import "JVChatMemberInspector.h"
 #import "JVChatRoomBrowser.h"
-#import "KAConnectionHandler.h"
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (void) _reloadCurrentStyle:(id) sender;

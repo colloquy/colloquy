@@ -10,6 +10,7 @@
 @class JVDirectChat;
 @class JVChatTranscript;
 @class JVChatConsole;
+@class NSAttributedString;
 
 @protocol JVChatViewController;
 
@@ -17,6 +18,7 @@
 	@private
 	NSMutableArray *_chatWindows;
 	NSMutableArray *_chatControllers;
+	NSMutableDictionary *_ignoreRules;
 }
 + (JVChatController *) defaultManager;
 
@@ -35,4 +37,9 @@
 - (void) disposeViewController:(id <JVChatViewController>) controller;
 
 - (IBAction) detachView:(id) sender;
+
+- (void) addIgnore:(NSString *)inIgnoreName withKey:(NSString *)ignoreKeyExpression inRooms:(NSArray *) rooms usesRegex:(BOOL) regex isMember:(BOOL) member;
+- (BOOL) shouldIgnoreUser:(NSString *) user inRoom:(NSString *) room;
+- (BOOL) shouldIgnoreMessage:(NSAttributedString *) message inRoom:(NSString *) room;
+- (BOOL) shouldIgnoreMessage:(NSAttributedString *) message fromUser:(NSString *)user inRoom:(NSString *) room;
 @end
