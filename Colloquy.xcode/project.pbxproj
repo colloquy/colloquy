@@ -1208,13 +1208,8 @@
 				1CB2CD20052DDC560094AAA4,
 				1CB2CD21052DDC560094AAA4,
 				1CB2CD22052DDC560094AAA4,
-				1CB2CD23052DDC560094AAA4,
 				1CB2CD24052DDC560094AAA4,
-				1CB2CD25052DDC560094AAA4,
-				1CB2CD26052DDC560094AAA4,
-				1CB2CD27052DDC560094AAA4,
 				1CB2CD28052DDC560094AAA4,
-				1CB2CD29052DDC560094AAA4,
 				1CB2CD2A052DDC560094AAA4,
 				1CB2CD2B052DDC560094AAA4,
 				1CB2CD2C052DDC560094AAA4,
@@ -1238,8 +1233,6 @@
 				1CB2CD3E052DDC560094AAA4,
 				1CB2CD3F052DDC560094AAA4,
 				1CB2CD40052DDC560094AAA4,
-				1CB2CD41052DDC560094AAA4,
-				1CB2CD42052DDC560094AAA4,
 				1CB2CD43052DDC560094AAA4,
 				1CB2CD44052DDC560094AAA4,
 				1CB2CD45052DDC560094AAA4,
@@ -1295,6 +1288,7 @@
 				1CEE3B030578421400AD6DE2,
 				1CEE3B170578491B00AD6DE2,
 				1CDEE48D0583E268000B9075,
+				1CDEE8270586C723000B9075,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1407,44 +1401,14 @@
 			settings = {
 			};
 		};
-		1CB2CD23052DDC560094AAA4 = {
-			fileRef = F531814201CD139601EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CB2CD24052DDC560094AAA4 = {
 			fileRef = F5675B8601DB767601EE70DE;
 			isa = PBXBuildFile;
 			settings = {
 			};
 		};
-		1CB2CD25052DDC560094AAA4 = {
-			fileRef = F5BEC20701F13A8601EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CB2CD26052DDC560094AAA4 = {
-			fileRef = F5BEC20901F13AA201EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CB2CD27052DDC560094AAA4 = {
-			fileRef = F5BEC20B01F13B0001EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CB2CD28052DDC560094AAA4 = {
 			fileRef = F5BEC20D01F1EF1901EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CB2CD29052DDC560094AAA4 = {
-			fileRef = F5BEC20E01F1EF1901EE70DE;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1583,18 +1547,6 @@
 		};
 		1CB2CD40052DDC560094AAA4 = {
 			fileRef = F5E0640A038D703901000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CB2CD41052DDC560094AAA4 = {
-			fileRef = F5844DA70395478101000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CB2CD42052DDC560094AAA4 = {
-			fileRef = F5844DA903954C0601000102;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2216,6 +2168,7 @@
 				1CBC62F705488DB1009E59E1,
 				1CBC630205488F99009E59E1,
 				1CBC62FC05488E6E009E59E1,
+				1CDEE81D0586C15A000B9075,
 				1CBC62FF05488F89009E59E1,
 			);
 			isa = PBXGroup;
@@ -2293,6 +2246,7 @@
 		};
 		1CBC6317054896CB009E59E1 = {
 			children = (
+				1CDEE8260586C723000B9075,
 				1CBC63180548975E009E59E1,
 				1CC6FCD4054A2BF80075807C,
 				1CC6FCD2054A25040075807C,
@@ -2885,6 +2839,46 @@
 			settings = {
 			};
 		};
+		1CDEE81D0586C15A000B9075 = {
+			children = (
+				1CDEE8210586C289000B9075,
+				1CDEE8200586C289000B9075,
+			);
+			isa = PBXGroup;
+			name = Interface;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CDEE8200586C289000B9075 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVInterfacePreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CDEE8210586C289000B9075 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVInterfacePreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CDEE8260586C723000B9075 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = InterfacePreferences.tif;
+			path = "Resources/Preference Related/InterfacePreferences.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CDEE8270586C723000B9075 = {
+			fileRef = 1CDEE8260586C723000B9075;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CE2BC1D042F4AD300000102 = {
 			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
@@ -3260,10 +3254,6 @@
 				1CC6FD62054B70BC0075807C,
 				F551EE490209FB3301EE70DE,
 				F551EE4A0209FB3301EE70DE,
-				F593E6A401A564F201A35792,
-				F593E6A501A564F201A35792,
-				F52BDCC801A8472101A84BDE,
-				F52BDCC901A8472101A84BDE,
 			);
 			isa = PBXGroup;
 			name = "Other Sources & Additions";
@@ -3451,7 +3441,6 @@
 				F5E2536A0387618E01000102,
 				F5E253710387690301000102,
 				F5E2536603874B5601000102,
-				F531814201CD139601EE70DE,
 				F51A4F3101C2ED2C01EE70DE,
 				F51A4F3201C2ED2C01EE70DE,
 				F51A4F3701C319D801EE70DE,
@@ -3461,7 +3450,6 @@
 				F56539F301C5A91401A35792,
 				F56539F501C5B6C301A35792,
 				F56539F601C5B6C301A35792,
-				F5765F9701C6A6D601A35792,
 			);
 			isa = PBXGroup;
 			name = Misc.;
@@ -3569,22 +3557,6 @@
 			isa = PBXBuildStyle;
 			name = Deployment;
 		};
-		F52BDCC801A8472101A84BDE = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = NSImageAdditions.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52BDCC901A8472101A84BDE = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = NSImageAdditions.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F52D043001873FC401EE70DE = {
 			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 4;
@@ -3598,14 +3570,6 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			path = MVChatConnection.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F531814201CD139601EE70DE = {
-			expectedFileType = image.tiff;
-			isa = PBXFileReference;
-			name = personHeader.tif;
-			path = Resources/personHeader.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3759,8 +3723,6 @@
 				F5BEC20E01F1EF1901EE70DE,
 				F544999E018E46CB01EE70DE,
 				F5BEC20701F13A8601EE70DE,
-				F5844DA70395478101000102,
-				F5844DA903954C0601000102,
 				F544999F018E46CB01EE70DE,
 				F5BEC20B01F13B0001EE70DE,
 				F54499A0018E46CB01EE70DE,
@@ -3894,14 +3856,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5765F9701C6A6D601A35792 = {
-			expectedFileType = image.tiff;
-			isa = PBXFileReference;
-			name = MVLinkCursor.tif;
-			path = Resources/MVLinkCursor.tif;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F57D9685018CD26001EE70DE = {
 			expectedFileType = image.tiff;
 			isa = PBXFileReference;
@@ -3917,22 +3871,6 @@
 			path = "Resources/Toolbar Icons/hide.tif";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		F5844DA70395478101000102 = {
-			expectedFileType = image.tiff;
-			isa = PBXFileReference;
-			name = "person-half.tif";
-			path = "Resources/person-half.tif";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		F5844DA903954C0601000102 = {
-			expectedFileType = image.tiff;
-			isa = PBXFileReference;
-			name = "person-away.tif";
-			path = "Resources/person-away.tif";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
 		};
 		F588A8F001922CDC01EE70DE = {
 			expectedFileType = image.tiff;
@@ -3979,22 +3917,6 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			path = MVTableView.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F593E6A401A564F201A35792 = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = NSToolbarAdditions.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F593E6A501A564F201A35792 = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = NSToolbarAdditions.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
