@@ -287,6 +287,26 @@
 	return nil;
 }
 
+- (NSArray *) customTabViewAcceptableDragTypes:(AICustomTabsView *) tabsView {
+	return [NSArray arrayWithObject:NSFilenamesPboardType];
+}
+
+- (BOOL) customTabView:(AICustomTabsView *) tabsView didAcceptDragPasteboard:(NSPasteboard *) pasteboard onTabViewItem:(NSTabViewItem *) tabViewItem {
+	NSArray *files = [pasteboard propertyListForType:NSFilenamesPboardType];
+	NSEnumerator *enumerator = [files objectEnumerator];
+	BOOL accepted = NO;
+	id file = nil;
+
+	while( ( file = [enumerator nextObject] ) ) {
+		if( [[(JVChatTabItem *)tabViewItem chatViewController] acceptsDraggedFileOfType:[file pathExtension]] ) {
+			[[(JVChatTabItem *)tabViewItem chatViewController] handleDraggedFile:file];
+			accepted = YES;
+		}
+	}
+
+	return accepted;
+}
+
 #pragma mark -
 
 - (int) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
