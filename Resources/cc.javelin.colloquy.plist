@@ -30,6 +30,8 @@
 	<true/>
 	<key>JVChatBuddyListShowOfflineBuddies</key>
 	<true/>
+	<key>JVSortRoomMembersByStatus</key>
+	<false/>
 	<key>MVChatSendOnReturn</key>
 	<true/>
 	<key>MVChatActionOnReturn</key>
