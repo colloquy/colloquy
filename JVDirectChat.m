@@ -299,24 +299,10 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 #pragma mark -
 
-- (IBAction) saveDocumentTo:(id) sender {
-	NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
-	[savePanel setDelegate:self];
-	[savePanel setCanSelectHiddenExtension:YES];
-	[savePanel setRequiredFileType:@"colloquyTranscript"];
-	[savePanel beginSheetForDirectory:NSHomeDirectory() file:_target modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( savePanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
-}
-
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	[sheet autorelease];
-	if( returnCode == NSOKButton ) {
-		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "ended", [[[NSDate date] description] UTF8String] );
-		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[_chatStyle bundleIdentifier] UTF8String] );
-		xmlSaveFormatFile( [[sheet filename] fileSystemRepresentation], _xmlLog, (int) [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] );
-		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] atPath:[sheet filename]];
-		xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "ended" );
-		xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "style" );
-	}
+	if( returnCode == NSOKButton ) xmlSetProp( xmlDocGetRootElement( _xmlLog ), "ended", [[[NSDate date] description] UTF8String] );
+	[super savePanelDidEnd:sheet returnCode:returnCode contextInfo:contextInfo];
+	if( returnCode == NSOKButton ) xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "ended" );
 }
 
 #pragma mark -
@@ -765,8 +751,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 }
 
 - (IBAction) clearDisplay:(id) sender {
-//	[_html setString:@""];
-//	[[display mainFrame] loadHTMLString:[self _fullDisplayHTML] baseURL:nil];
+	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 }
 
 #pragma mark -
@@ -826,6 +811,14 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	return YES;
 }
 
+- (BOOL) textView:(NSTextView *) textView tabHit:(NSEvent *) event {
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
+		[textView complete:nil];
+		return YES;
+	}
+	return NO;
+}	
+	
 - (void) textDidChange:(NSNotification *) notification {
 	_historyIndex = 0;
 }
