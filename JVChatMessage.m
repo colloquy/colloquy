@@ -17,20 +17,28 @@
 	[super initialize];
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
-		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceValue:toClass: ) toConvertFromClass:[self class] toClass:[NSString class]];
-		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceValue:toClass: ) toConvertFromClass:[NSString class] toClass:[self class]];
-		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceValue:toClass: ) toConvertFromClass:[JVMutableChatMessage class] toClass:[NSString class]];
-		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceValue:toClass: ) toConvertFromClass:[NSString class] toClass:[JVMutableChatMessage class]];
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceMessage:toString: ) toConvertFromClass:[JVChatMessage class] toClass:[NSString class]];
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceString:toMessage: ) toConvertFromClass:[NSString class] toClass:[JVChatMessage class]];
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceMessage:toTextStorage: ) toConvertFromClass:[JVChatMessage class] toClass:[NSTextStorage class]];
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceTextStorage:toMessage: ) toConvertFromClass:[NSTextStorage class] toClass:[JVChatMessage class]];
 		tooLate = YES;
 	}
 }
 
-+ (id) coerceValue:(id) value toClass:(Class) class {
-	if( class == [NSString class] && [value isKindOfClass:[self class]] ) {
-		return [value bodyAsPlainText];
-	} else if( ( class == [JVChatMessage class] || class == [JVMutableChatMessage class] ) && [value isKindOfClass:[NSString class]] ) {
-		return [[[JVMutableChatMessage alloc] initWithText:value sender:nil] autorelease];
-	} return nil;
++ (id) coerceString:(id) value toMessage:(Class) class {
+	return [[[JVMutableChatMessage alloc] initWithText:value sender:nil] autorelease];
+}
+
++ (id) coerceMessage:(id) value toString:(Class) class {
+	return [value bodyAsPlainText];
+}
+
++ (id) coerceTextStorage:(id) value toMessage:(Class) class {
+	return [[[JVMutableChatMessage alloc] initWithText:value sender:nil] autorelease];
+}
+
++ (id) coerceMessage:(id) value toTextStorage:(Class) class {
+	return [value body];
 }
 
 #pragma mark -
@@ -346,6 +354,18 @@
 #pragma mark -
 
 @implementation JVMutableChatMessage
++ (void) initialize {
+	[super initialize];
+	static BOOL tooLate = NO;
+	if( ! tooLate ) {
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceMessage:toString: ) toConvertFromClass:[JVMutableChatMessage class] toClass:[NSString class]];
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceString:toMessage: ) toConvertFromClass:[NSString class] toClass:[JVMutableChatMessage class]];
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceMessage:toTextStorage: ) toConvertFromClass:[JVMutableChatMessage class] toClass:[NSTextStorage class]];
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceTextStorage:toMessage: ) toConvertFromClass:[NSTextStorage class] toClass:[JVMutableChatMessage class]];
+		tooLate = YES;
+	}
+}
+
 + (id) messageWithText:(id) body sender:(id) sender {
 	return [[[self alloc] initWithText:body sender:sender] autorelease];
 }

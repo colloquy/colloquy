@@ -27,6 +27,21 @@ NSString *MVChatRoomModesChangedNotification = @"MVChatRoomModesChangedNotificat
 NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedNotification";
 
 @implementation MVChatRoom
++ (void) initialize {
+	[super initialize];
+	static BOOL tooLate = NO;
+	if( ! tooLate ) {
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceChatRoom:toString: ) toConvertFromClass:[MVChatRoom class] toClass:[NSString class]];
+		tooLate = YES;
+	}
+}
+
++ (id) coerceChatRoom:(id) value toString:(Class) class {
+	return [value name];
+}
+
+#pragma mark -
+
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_connection = nil;

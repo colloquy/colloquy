@@ -25,6 +25,7 @@
 #import "JVChatRoomBrowser.h"
 #import "NSBundleAdditions.h"
 #import "JVStyle.h"
+#import "JVGetCommand.h"
 
 #import <Foundation/NSDebug.h>
 
@@ -269,6 +270,7 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
+	[JVGetCommand poseAsClass:[NSGetCommand class]];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 #ifdef DEBUG

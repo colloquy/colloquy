@@ -2395,6 +2395,7 @@
 				1C7C76EA07DBA1C100FB5F83,
 				1C7C76EB07DBA1C100FB5F83,
 				1C7C76EC07DBA1C100FB5F83,
+				1CE3C4F707E13F4C004931E6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2876,6 +2877,7 @@
 				1C5EF35B07B45C1F004E66D3,
 				1C5EF36C07B45FBF004E66D3,
 				1C66913A07BFA76D008400F7,
+				1CE3C4F807E13F4C004931E6,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4473,6 +4475,34 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1CE3C4F507E13F4C004931E6 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVGetCommand.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE3C4F607E13F4C004931E6 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVGetCommand.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE3C4F707E13F4C004931E6 = {
+			fileRef = 1CE3C4F507E13F4C004931E6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CE3C4F807E13F4C004931E6 = {
+			fileRef = 1CE3C4F607E13F4C004931E6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CE3F7BC07C7B60A0049A366 = {
 			children = (
 				1CE3F9BB07C7C29A0049A366,
@@ -5037,6 +5067,8 @@
 				1CABF8750656414100801C15,
 				1C4671E406D7759100071DC6,
 				1C4671E306D7759100071DC6,
+				1CE3C4F607E13F4C004931E6,
+				1CE3C4F507E13F4C004931E6,
 			);
 			isa = PBXGroup;
 			name = "Other Sources & Additions";

@@ -32,6 +32,21 @@ NSString *MVChatUserInformationUpdatedNotification = @"MVChatUserInformationUpda
 NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedNotification";
 
 @implementation MVChatUser
++ (void) initialize {
+	[super initialize];
+	static BOOL tooLate = NO;
+	if( ! tooLate ) {
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceChatUser:toString: ) toConvertFromClass:[MVChatUser class] toClass:[NSString class]];
+		tooLate = YES;
+	}
+}
+
++ (id) coerceChatUser:(id) value toString:(Class) class {
+	return [value nickname];
+}
+
+#pragma mark -
+
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host {
 	MVChatUser *ret = [[[self alloc] init] autorelease];
 	ret -> _type = MVChatWildcardUserType;

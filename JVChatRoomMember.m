@@ -21,6 +21,21 @@
 #pragma mark -
 
 @implementation JVChatRoomMember
++ (void) initialize {
+	[super initialize];
+	static BOOL tooLate = NO;
+	if( ! tooLate ) {
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceChatRoomMember:toString: ) toConvertFromClass:[JVChatRoomMember class] toClass:[NSString class]];
+		tooLate = YES;
+	}
+}
+
++ (id) coerceChatRoomMember:(id) value toString:(Class) class {
+	return [value nickname];
+}
+
+#pragma mark -
+
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_parent = nil;
