@@ -327,6 +327,16 @@
 	} else if( ! [command caseInsensitiveCompare:@"globops"] ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"%@ :%@", command, [arguments string]]];
 		return YES;
+	} else if( ! [command caseInsensitiveCompare:@"notice"] ) {
+        NSString *nick = nil;
+        NSString *message = nil;
+        NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
+		[scanner scanUpToCharactersFromSet:whitespace intoString:&nick];
+		[scanner scanCharactersFromSet:whitespace intoString:NULL];
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"] intoString:&message];
+		[connection sendRawMessage:[NSString stringWithFormat:@"%@ %@ :%@", command, nick, message]];
+		return YES;
 	}
 
 	return NO;
