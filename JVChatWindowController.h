@@ -82,6 +82,8 @@ extern NSString *JVChatViewPboardType;
 
 - (void) willUnselect;
 - (void) didUnselect;
+
+- (void) willDispose;
 @end
 
 @protocol JVChatListItemScripting
