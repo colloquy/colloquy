@@ -379,9 +379,9 @@
 	}
 
 	path = [options objectForKey:@"path"];
-	if( [files count] && ( ! matched && [path length] ) ) [menu addItem:[NSMenuItem separatorItem]];
-
 	if( ! matched && [path length] ) {
+		[menu addItem:[NSMenuItem separatorItem]];
+
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
 		NSImageRep *sourceImageRep = [icon bestRepresentationForDevice:nil];
 		NSImage *smallImage = [[[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )] autorelease];
@@ -522,7 +522,9 @@
 							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
 							AGRegexMatch *vmatch = [regex findInString:value];
 							if( [vmatch count] ) {
-								[info setObject:[vmatch groupAtIndex:1] forKey:@"path"];
+								if( ! [[vmatch groupAtIndex:1] isEqualToString:@"none"] )
+									[info setObject:[vmatch groupAtIndex:1] forKey:@"path"];
+								else [info removeObjectForKey:@"path"];
 								if( [info objectForKey:@"cell"] )
 									[self buildFileMenuForCell:[info objectForKey:@"cell"] andOptions:info];
 							}
