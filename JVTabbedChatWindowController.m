@@ -346,6 +346,13 @@
 }
 
 #pragma mark -
+
+- (void) windowDidResize:(NSNotification *) notification {
+	[super windowDidResize:notification];
+	[customTabsView resetCursorTracking];
+}
+
+#pragma mark -
 #pragma mark Tab Bar Visibility toggle
 
 // Toggles whether we should hide or show the tab bar
