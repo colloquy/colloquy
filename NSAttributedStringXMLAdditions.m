@@ -123,6 +123,8 @@ static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary 
 }
 
 static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionary *currentAttributes, NSURL *base, BOOL first ) {
+	if( ! node ) return nil;
+
 	NSMutableAttributedString *ret = [[NSMutableAttributedString new] autorelease];
 	NSMutableDictionary *newAttributes = [[currentAttributes mutableCopy] autorelease];
 	xmlNodePtr child = node -> children;
