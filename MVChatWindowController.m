@@ -635,7 +635,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 #pragma mark -
 
-- (void) changeTopic:(NSData *) topic by:(NSString *) author {
+- (void) changeTopic:(NSData *) topic by:(NSString *) author { /* ~CRASH! */
 	NSData *tData = nil;
 	NSParameterAssert( topic != nil );
 	if( [topic length] ) tData = topic;
@@ -814,7 +814,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
 
-	if( ! _lastDateMessage || [_lastDateMessage timeIntervalSinceNow] < -300 ) {
+	if( ! _lastDateMessage || [_lastDateMessage timeIntervalSinceNow] < -300. ) {
 		[_lastDateMessage autorelease];
 		_lastDateMessage = [[NSDate date] retain];
 
@@ -825,9 +825,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	begin = [[displayText textStorage] length];
 
 	if( user ) {
-		if( action ) [displayText replaceCharactersInRange:NSMakeRange([[displayText textStorage] length], 0) withString:@"\xA5"];
-		[displayText replaceCharactersInRange:NSMakeRange([[displayText textStorage] length], 0) withString:user];
-		if( ! action ) [displayText replaceCharactersInRange:NSMakeRange([[displayText textStorage] length], 0) withString:@":"];
+		if( action ) [displayText replaceCharactersInRange:NSMakeRange( [[displayText textStorage] length], 0 ) withString:@"\xA5"];
+		[displayText replaceCharactersInRange:NSMakeRange( [[displayText textStorage] length], 0 ) withString:user];
+		if( ! action ) [displayText replaceCharactersInRange:NSMakeRange( [[displayText textStorage] length], 0 ) withString:@":"];
 		length = [[displayText textStorage] length] - begin;
 		if( ( [[msgString string] rangeOfString:@"'"].location && action ) || ! action ) {
 			[displayText replaceCharactersInRange:NSMakeRange( [[displayText textStorage] length], 0 ) withString:@" "];
