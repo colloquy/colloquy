@@ -151,19 +151,20 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 - (void) awakeFromNib {
 	[display setUIDelegate:self];
 	[display setPolicyDelegate:self];
+	[display setFrameLoadDelegate:self];
 
 	if( [self isMemberOfClass:[JVChatTranscript class]] ) {
+		if( ! _chatEmoticons && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ) {
+			xmlChar *emoticonProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" );
+			[self setChatEmoticons:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:emoticonProp]] performRefresh:NO];
+			xmlFree( emoticonProp );
+		}
+
 		if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
 			xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
 			JVStyle *style = [JVStyle styleWithIdentifier:[NSString stringWithUTF8String:styleProp]];
 			if( style ) [self setChatStyle:style withVariant:nil];
 			xmlFree( styleProp );
-		}
-
-		if( ! _chatEmoticons && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ) {
-			xmlChar *emoticonProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" );
-			[self setChatEmoticons:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:emoticonProp]]];
-			xmlFree( emoticonProp );
 		}
 	}
 
@@ -184,8 +185,6 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	[self _updateChatStylesMenu];
 	[self _updateChatEmoticonsMenu];
-
-	[self performSelector:@selector( _reloadCurrentStyle: ) withObject:nil afterDelay:0.];
 }
 
 - (void) dealloc {
@@ -427,7 +426,6 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	[[display window] disableFlushWindow];
 
-	[display setFrameLoadDelegate:self];
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 }
 
@@ -827,8 +825,6 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	if( [[display window] isFlushWindowDisabled] )
 		[[display window] enableFlushWindow];
-
-	[display setFrameLoadDelegate:nil];
 
 	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
 	[scrollView setHasHorizontalScroller:NO];

@@ -258,19 +258,23 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	JVStyle *style = nil;
 	NSString *variant = nil;
 	NSBundle *emoticon = nil;
-	
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
-	
+
+	[display setUIDelegate:self];
+	[display setPolicyDelegate:self];
+	[display setFrameLoadDelegate:self];
+
+	if( [(NSString *)[self preferenceForKey:@"emoticon"] length] ) {
+		emoticon = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"emoticon"]];
+		if( emoticon ) [self setChatEmoticons:emoticon performRefresh:NO];
+	}
+
 	if( [self preferenceForKey:@"style"] ) {
 		style = [JVStyle styleWithIdentifier:[self preferenceForKey:@"style"]];
 		variant = [self preferenceForKey:@"style variant"];
 		if( style ) [self setChatStyle:style withVariant:variant];
-	}
-
-	if( [(NSString *)[self preferenceForKey:@"emoticon"] length] ) {
-		emoticon = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"emoticon"]];
-		if( emoticon ) [self setChatEmoticons:emoticon];
 	}
 
 	[super awakeFromNib];
