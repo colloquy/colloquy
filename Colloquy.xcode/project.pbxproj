@@ -2052,6 +2052,7 @@
 				1C7E023E06B42C470037F173,
 				1C46785006D77F0900071DC6,
 				1C46785106D77F0900071DC6,
+				1CF627CB07558F79005DFCFA,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3903,6 +3904,20 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1CF627CA07558F79005DFCFA = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = fileSend.tif;
+			path = "Resources/Toolbar Icons/fileSend.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF627CB07558F79005DFCFA = {
+			fileRef = 1CF627CA07558F79005DFCFA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CF6511406EA22480073DEA8 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -5178,6 +5193,7 @@
 				F588A8F001922CDC01EE70DE,
 				F5D04C03019489B801A35792,
 				1CBECD660508C61B000001C8,
+				1CF627CA07558F79005DFCFA,
 			);
 			isa = PBXGroup;
 			name = "Toolbar Icons";
