@@ -88,14 +88,22 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 + (id) attributedStringWithHTMLFragment:(NSString *) fragment baseURL:(NSURL *) url {
 	NSParameterAssert( fragment != nil );
 
-	NSMutableAttributedString *result = nil;
-	if( NSAppKitVersionNumber >= 700. ) {
-		// the rgba CSS makes WebKit give colorless text where no color was specified (instead of black)
-		NSString *render = [NSString stringWithFormat:@"<span style=\"color: rgba( 0, 0, 0, 0.0 )\">%@</span>", fragment];
-		result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", url, @"BaseURL", nil] documentAttributes:NULL];
-	} else {
-		NSString *render = [NSString stringWithFormat:@"<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body>%@</body></html>", fragment];
-		result = [[NSAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] baseURL:url documentAttributes:NULL];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", nil];
+	if( url ) [options setObject:url forKey:@"BaseURL"];
+
+	// we suround the fragment in the #01fe02 green color so we can later key it out and strip it
+	// this will result in colorless areas of our string, letting the color be defined by the interface
+
+	NSString *render = [NSString stringWithFormat:@"<span style=\"color: #01fe02\">%@</span>", fragment];
+	NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:options documentAttributes:NULL];
+
+	NSRange limitRange, effectiveRange;
+	limitRange = NSMakeRange( 0, [result length] );
+	while( limitRange.length > 0 ) {
+		NSColor *color = [result attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
+		if( [[color HTMLAttributeValue] isEqualToString:@"#01fe02"] ) // strip the color if it matched
+			[result removeAttribute:NSForegroundColorAttributeName range:effectiveRange];
+		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 
 	NSAttributedString *ret = [[self alloc] initWithAttributedString:result];
@@ -108,9 +116,8 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 	NSRange limitRange, effectiveRange;
 	NSMutableString *ret = [NSMutableString string];
 
-	if( [[options objectForKey:@"FullDocument"] boolValue] ) {
+	if( [[options objectForKey:@"FullDocument"] boolValue] )
 		[ret appendString:@"<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>"];
-	}
 
 	limitRange = NSMakeRange( 0, [self length] );
 	while( limitRange.length > 0 ) {
@@ -128,9 +135,8 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 		NSMutableString *spanString = [NSMutableString stringWithString:@"<span"];
 		NSMutableString *styleString = [NSMutableString string];
 
-		if( foregoundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
+		if( foregoundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
 			[styleString appendFormat:@"color: %@", [foregoundColor CSSAttributeValue]];
-		}
 
 		if( backgroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
 			if( [styleString length] ) [styleString appendString:@"; "];
@@ -469,6 +475,9 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 		if( backgroundColor && ! foregroundColor )
 			foregroundColor = [NSColor colorWithCalibratedRed:0. green:0. blue:0. alpha:1.];
 
+		if( ! [[foregroundColor colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && ! [[foregroundColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] )
+			foregroundColor = [foregroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace]; // we need to convert to RGB space
+
 		if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
 			char buffer[6];
 			float red = 0., green = 0., blue = 0.;
@@ -478,6 +487,9 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 
 			sprintf( buffer, "\003%02d", ircColor );
 			[ret appendBytes:buffer length:strlen( buffer )];
+
+			if( ! [[backgroundColor colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && ! [[backgroundColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] )
+				backgroundColor = [backgroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace]; // we need to convert to RGB space
 
 			if( backgroundColor ) {
 				[backgroundColor getRed:&red green:&green blue:&blue alpha:NULL];
