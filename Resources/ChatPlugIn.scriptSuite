@@ -339,6 +339,38 @@
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
 		</dict>
+		<key>connected</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>cTsX</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>ChatCore.MVChatConnection</string>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+		</dict>
+		<key>disconnecting</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>dFsX</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>ChatCore.MVChatConnection</string>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+		</dict>
 		<key>memberJoinedRoom</key>
 		<dict>
 			<key>AppleEventClassCode</key>

@@ -214,7 +214,31 @@
 			<key>Description</key>
 			<string>Called when we are in the process of laveing a room. Messages can still be sent.</string>
 			<key>Name</key>
-			<string>part from chat room</string>
+			<string>parting chat room</string>
+		</dict>
+		<key>connected</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat conenction.</string>
+			</dict>
+			<key>Description</key>
+			<string>Called when we have just finished connecting to a chat server.</string>
+			<key>Name</key>
+			<string>connected</string>
+		</dict>
+		<key>disconnecting</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat conenction.</string>
+			</dict>
+			<key>Description</key>
+			<string>Called when we are in the process of disconnecting from a chat server. Messages can still be sent.</string>
+			<key>Name</key>
+			<string>disconnecting</string>
 		</dict>
 		<key>kickedFromRoom</key>
 		<dict>
