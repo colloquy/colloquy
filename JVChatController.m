@@ -259,10 +259,10 @@ static JVChatController *sharedInstance = nil;
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", 
 																		"you were invited to join a chat room status message" ), room, by];
 	
-	result = NSGetInformationalAlertPanel( title, message, @"Join", @"Decline", nil ) withName:@"invitePanel"]; 
+	result = NSGetInformationalAlertPanel( title, message, @"Join", @"Decline", nil ); 
 	
 	if ( result == NSOKButton ) {
-		JVChatRoom *room = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:NO];
+		JVChatRoom *room = [self chatViewControllerForRoom:room withConnection:connection ifExists:NO];
 		[room joined];
 	}
 
