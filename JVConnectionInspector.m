@@ -237,12 +237,12 @@
 			regexMessage = YES;
 		}
 	}
-	
+
 	[editRuleName setStringValue:[rule friendlyName]];
 	[makeRulePermanent setState:( [rule isPermanent] ? NSOnState : NSOffState )];
 	[ruleUsesSender setState:( ! [rule user] ? NSOffState : NSOnState )];
 	[ruleUsesMessage setState:( ! [rule message] ? NSOffState : NSOnState )];
-	[ruleUsesRooms setState:( ! [rule inRooms] ? NSOffState : NSOnState )];
+	[ruleUsesRooms setState:( ! [[rule inRooms] count] ? NSOffState : NSOnState )];
 	[senderType selectItemAtIndex:( regexUser ? 1 : 0 )];
 	[messageType selectItemAtIndex:( regexMessage ? 1 : 0 )];
 	[editRuleSender setStringValue:( user ? user : @"" )];
