@@ -49,6 +49,7 @@ extern NSString *MVChatConnectionDidDisconnectNotification;
 extern NSString *MVChatConnectionErrorNotification;
 
 extern NSString *MVChatConnectionNeedNicknamePasswordNotification;
+extern NSString *MVChatConnectionNeedCertificatePasswordNotification;
 
 extern NSString *MVChatConnectionGotPrivateMessageNotification;
 
@@ -151,6 +152,10 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) setNicknamePassword:(NSString *) password;
 - (NSString *) nicknamePassword;
+
+- (NSString *) certificateServiceName;
+- (BOOL) setCertificatePassword:(NSString *) password;
+- (NSString *) certificatePassword;
 
 - (void) setPassword:(NSString *) password;
 - (NSString *) password;

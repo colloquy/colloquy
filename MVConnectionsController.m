@@ -147,7 +147,9 @@ static NSMenu *favoritesMenu = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:nil];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestCertificatePassword: ) name:MVChatConnectionNeedCertificatePasswordNotification object:nil];
 
 		[self _loadBookmarkList];
 	}
@@ -431,6 +433,22 @@ static NSMenu *favoritesMenu = nil;
 
 	[_passConnection autorelease];
 	_passConnection = nil;
+}
+
+- (IBAction) sendCertificatePassword:(id) sender {
+	[certificateAuth orderOut:nil];
+
+	MVChatConnection *ourConnection = _certificateConnection;
+	[_certificateConnection autorelease];
+	_certificateConnection = nil;
+
+	if( [sender tag] ) {
+		[ourConnection setCertificatePassword:[certificatePassphrase stringValue]];
+
+		if( [certificateKeychain state] == NSOnState ) {
+			[[MVKeyChain defaultKeyChain] setGenericPassword:[certificatePassphrase stringValue] forService:[ourConnection certificateServiceName] account:@"Colloquy"];
+		}
+	}
 }
 
 #pragma mark -
@@ -1402,6 +1420,31 @@ static NSMenu *favoritesMenu = nil;
 
 	[nicknameAuth center];
 	[nicknameAuth orderFront:nil];
+}
+
+- (void) _requestCertificatePassword:(NSNotification *) notification {
+	MVChatConnection *connection = [notification object];
+
+	NSString *pass = [[MVKeyChain defaultKeyChain] genericPasswordForService:[connection certificateServiceName] account:@"Colloquy"];
+	if( [pass length] ) {
+		// if setCertificatePassword returns no, its the wrong password.
+		if( [connection setCertificatePassword:pass] ) return;
+	}
+
+	if( [certificateAuth isVisible] ) {
+		// Do somthing better here, like queue requests until the current one is sent
+		return;
+	}
+
+	[certificateDescription setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Your certificate is locked with a passphrase. In order to connect to %@, you need to unlock your certificate.", "certificate unlock request, server name inserted" ), [connection server]]];
+	[certificatePassphrase setObjectValue:@""];
+	[certificateKeychain setState:NSOffState];
+
+	[_certificateConnection autorelease];
+	_certificateConnection = [connection retain];
+
+	[certificateAuth center];
+	[certificateAuth orderFront:nil];	
 }
 
 - (IBAction) _connect:(id) sender {

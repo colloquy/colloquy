@@ -8,12 +8,18 @@
 	IBOutlet NSPanel *openConnection;
 	IBOutlet NSPanel *messageUser;
 	IBOutlet NSPanel *nicknameAuth;
+	IBOutlet NSPanel *certificateAuth;
 
 	/* Nick Auth */
 	IBOutlet NSTextField *authNickname;
 	IBOutlet NSTextField *authAddress;
 	IBOutlet NSTextField *authPassword;
 	IBOutlet NSButton *authKeychain;
+
+	/* Certificate Auth */
+	IBOutlet NSTextField *certificateDescription;
+	IBOutlet NSTextField *certificatePassphrase;
+	IBOutlet NSButton *certificateKeychain;
 
 	/* New Connection */
 	IBOutlet NSTextField *newNickname;
@@ -37,6 +43,7 @@
 	NSMutableArray *_bookmarks;
 	NSMutableArray *_joinRooms;
 	MVChatConnection *_passConnection;
+	MVChatConnection *_certificateConnection;
 }
 + (MVConnectionsController *) defaultManager;
 
@@ -56,6 +63,8 @@
 - (IBAction) messageUser:(id) sender;
 
 - (IBAction) sendPassword:(id) sender;
+
+- (IBAction) sendCertificatePassword:(id) sender;
 
 - (NSArray *) connections;
 - (NSArray *) connectedConnections;

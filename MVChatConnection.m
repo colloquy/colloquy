@@ -19,6 +19,8 @@ NSString *MVChatConnectionDidDisconnectNotification = @"MVChatConnectionDidDisco
 NSString *MVChatConnectionErrorNotification = @"MVChatConnectionErrorNotification";
 
 NSString *MVChatConnectionNeedNicknamePasswordNotification = @"MVChatConnectionNeedNicknamePasswordNotification";
+NSString *MVChatConnectionNeedCertificatePasswordNotification = @"MVChatConnectionNeedCertificatePasswordNotification";
+
 NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotPrivateMessageNotification";
 
 NSString *MVChatConnectionBuddyIsOnlineNotification = @"MVChatConnectionBuddyIsOnlineNotification";
@@ -167,7 +169,7 @@ BOOL MVChatApplicationQuitting = NO;
 #pragma mark -
 
 - (MVChatConnectionType) type {
-	// subclass this method
+// subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 	return 0;
 }
@@ -234,13 +236,11 @@ BOOL MVChatApplicationQuitting = NO;
 #pragma mark -
 
 - (void) setRealName:(NSString *) name {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (NSString *) realName {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 	return nil;
 }
 
@@ -258,8 +258,7 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (NSString *) preferredNickname {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 	return nil;
 }
 
@@ -299,27 +298,40 @@ BOOL MVChatApplicationQuitting = NO;
 
 #pragma mark -
 
+- (NSString *) certificateServiceName {
+// subclass this method, if needed
+	return nil;
+}
+
+- (BOOL) setCertificatePassword:(NSString *) password {
+// subclass this method. if needed
+	return NO;
+}
+
+- (NSString *) certificatePassword {
+// subclass this method. if needed
+	return nil;
+}
+
+#pragma mark -
+
 - (void) setPassword:(NSString *) password {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (NSString *) password {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 	return nil;
 }
 
 #pragma mark -
 
 - (void) setUsername:(NSString *) username {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (NSString *) username {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 	return nil;
 }
 
@@ -352,13 +364,11 @@ BOOL MVChatApplicationQuitting = NO;
 #pragma mark -
 
 - (void) setSecure:(BOOL) ssl {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (BOOL) isSecure {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 	return NO;
 }
 
@@ -375,52 +385,44 @@ BOOL MVChatApplicationQuitting = NO;
 #pragma mark -
 
 - (void) setProxyServer:(NSString *) address {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (NSString *) proxyServer {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 	return nil;
 }
 
 #pragma mark -
 
 - (void) setProxyServerPort:(unsigned short) port {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (unsigned short) proxyServerPort {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 	return 0;
 }
 
 #pragma mark -
 
 - (void) setProxyUsername:(NSString *) username {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (NSString *) proxyUsername {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 	return nil;
 }
 
 #pragma mark -
 
 - (void) setProxyPassword:(NSString *) password {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (NSString *) proxyPassword {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 	return nil;
 }
 
@@ -477,13 +479,11 @@ BOOL MVChatApplicationQuitting = NO;
 #pragma mark -
 
 - (void) sendSubcodeRequest:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (void) sendSubcodeReply:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 #pragma mark -
@@ -523,7 +523,7 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (NSString *) properNameForChatRoom:(NSString *) room {
-	// subclass this method, if needed
+// subclass this method, if needed
 	return room;
 }
 
@@ -537,48 +537,39 @@ BOOL MVChatApplicationQuitting = NO;
 #pragma mark -
 
 - (void) promoteMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (void) demoteMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (void) halfopMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (void) dehalfopMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (void) voiceMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (void) devoiceMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (void) kickMember:(NSString *) member inRoom:(NSString *) room forReason:(NSString *) reason {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (void) banMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (void) unbanMember:(NSString *) member inRoom:(NSString *) room {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 #pragma mark -
@@ -613,8 +604,7 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (void) stopFetchingRoomList {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 }
 
 - (NSMutableDictionary *) roomListResults {
@@ -651,8 +641,7 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (unsigned int) lag {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, if needed
 	return 0;
 }
 @end

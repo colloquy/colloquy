@@ -14,6 +14,8 @@ static SilcPrivateKey silcPrivateKey;
 static NSMutableArray *silcChatConnections;
 NSLock *silcChatConnectionsLock;
 
+NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCertificate";
+
 @interface MVSILCChatConnection (MVSILCChatConnectionPrivate)
 - (SilcClient) _silcClient;
 - (NSRecursiveLock *) _silcClientLock;
@@ -32,6 +34,9 @@ NSLock *silcChatConnectionsLock;
 - (NSNumber *) _getModeForUser:(NSString *)nick_name onChannel:(NSString *)channel_name;
 - (NSMutableArray *) _queuedCommands;
 - (NSLock *) _queuedCommandsLock;
+- (BOOL) _loadKeyPair;
+- (BOOL) _isKeyPairLoaded;
+- (void) _connectKeyPairLoaded:(NSNotification *) notification;
 @end
 
 #pragma mark -
@@ -542,7 +547,9 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 			NSString *command;
 
 			while( ( command = [enumerator nextObject] ) ) {
+				[[self _silcClientLock] lock];
 				silc_client_command_call( client, conn, (char *)[command UTF8String] );
+				[[self _silcClientLock] unlock];
 			}
 
 			[commands removeAllObjects];
@@ -550,7 +557,10 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 
 		[[self _queuedCommandsLock] unlock];
 	} else {
+		[[self _silcClientLock] lock];
 		silc_client_close_connection( client, conn );
+		[[self _silcClientLock] unlock];
+		
 		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	}	
 }
@@ -565,6 +575,7 @@ static void silc_get_auth_method( SilcClient client, SilcClientConnection conn, 
 }
 
 static void silc_verify_public_key( SilcClient client, SilcClientConnection conn, SilcSocketType conn_type, unsigned char *pk, SilcUInt32 pk_len, SilcSKEPKType pk_type, SilcVerifyPublicKey completion, void *context ) {
+	// we should ask the user about the servers public key, and save it somewhere if he accepts it
 	completion( TRUE, context );
 }
 
@@ -614,18 +625,6 @@ static SilcClientOperations silcClientOps = {
 		silc_cipher_register_default();
 		silc_hmac_register_default();
 
-		NSString *publicKeyPath = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Silc/public_key.pub"] stringByExpandingTildeInPath];
-		NSString *privateKeyPath = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Silc/private_key.prv"] stringByExpandingTildeInPath];
-
-		if( ! [[NSFileManager defaultManager] fileExistsAtPath:publicKeyPath] || 
-			! [[NSFileManager defaultManager] fileExistsAtPath:privateKeyPath] ) {
-			// create new keys .. we should propably move that somewhere else..
-			silc_create_key_pair( NULL, 1024, [publicKeyPath fileSystemRepresentation], [privateKeyPath fileSystemRepresentation], NULL, "", &silcPkcs, &silcPublicKey, &silcPrivateKey, FALSE );
-		} else {
-			// we should check for errors on the silc_create_key_pair/silc_load_key_pair functions.
-			silc_load_key_pair( [publicKeyPath fileSystemRepresentation], [privateKeyPath fileSystemRepresentation], "", &silcPkcs, &silcPublicKey, &silcPrivateKey );
-		}
-
 		silcChatConnections = [[NSMutableArray array] retain];
 		silcChatConnectionsLock = [[NSLock alloc] init];
 
@@ -647,6 +646,7 @@ static SilcClientOperations silcClientOps = {
 		_silcClient = silc_client_alloc( &silcClientOps, &_silcClientParams, self, NULL );
 		if( ! _silcClient) {
 			// what should we do here?
+			[self release];
 			return nil;
 		}
 
@@ -673,6 +673,11 @@ static SilcClientOperations silcClientOps = {
 	[silcChatConnectionsLock unlock];
 
 	[_silcClientLock lock];
+	if( _silcClient -> realname ) free( _silcClient -> realname );
+	if( _silcClient -> username ) free( _silcClient -> username );
+	if( _silcClient -> hostname ) free( _silcClient -> hostname );
+	if( _silcClient -> nickname ) free( _silcClient -> nickname );
+
 	silc_client_free(_silcClient);
 	[_silcClientLock unlock];
 	_silcClient = NULL;
@@ -705,6 +710,13 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) connect {
+	if( ! [self _isKeyPairLoaded] ) {
+		if( ! [self _loadKeyPair] ) {
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _connectKeyPairLoaded: ) name:MVSILCChatConnectionLoadedCertificate object:nil];
+			return;
+		}
+	}
+
 	[super connect];
 
 	// check if nickname/username and realname are set
@@ -732,8 +744,7 @@ static SilcClientOperations silcClientOps = {
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
 	if( [[reason string] length] ) {
-		[[self _silcClientLock] lock];
-		[self sendRawMessageWithFormat:@"QUIT %@", reason];
+		[self sendRawMessageWithFormat:@"QUIT %@", [reason string]];
 	} else {
 		[self sendRawMessage:@"QUIT"];
 	}
@@ -810,6 +821,30 @@ static SilcClientOperations silcClientOps = {
 
 - (NSString *) nicknamePassword {
 	return nil;
+}
+
+
+#pragma mark -
+
+- (NSString *) certificateServiceName {
+	return @"SILC Keypair";
+}
+
+- (BOOL) setCertificatePassword:(NSString *) password {
+	[_certificatePassword release];
+	_certificatePassword = [password copy];
+
+	if( _waitForCertificatePassword ) {
+		_waitForCertificatePassword = NO;
+		return [self _loadKeyPair];
+	}
+
+	// we don't know if the password is the right one - we return YES anyway
+	return YES;
+}
+
+- (NSString *) certificatePassword {
+	return _certificatePassword;
 }
 
 #pragma mark -
@@ -1220,6 +1255,8 @@ static SilcClientOperations silcClientOps = {
 	return _silcClientLock;
 }
 
+#pragma mark -
+
 - (void) _setSilcConn:(SilcClientConnection) aSilcConn {
 	_silcConn = aSilcConn;
 }
@@ -1227,6 +1264,8 @@ static SilcClientOperations silcClientOps = {
 - (SilcClientConnection) _silcConn {
 	return _silcConn;
 }
+
+#pragma mark -
 
 - (NSMutableArray *) _joinedChannels {
 	return _joinedChannels;
@@ -1363,11 +1402,59 @@ static SilcClientOperations silcClientOps = {
 	}
 }
 
+#pragma mark -
+
 - (NSMutableArray *) _queuedCommands {
 	return _queuedCommands;
 }
 
 - (NSLock *) _queuedCommandsLock {
 	return _queuedCommandsLock;
+}
+
+#pragma mark -
+
+- (BOOL) _loadKeyPair {
+	NSString *publicKeyPath = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Silc/public_key.pub"] stringByExpandingTildeInPath];
+	NSString *privateKeyPath = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Silc/private_key.prv"] stringByExpandingTildeInPath];
+
+	if( ! [[NSFileManager defaultManager] fileExistsAtPath:publicKeyPath] || ! [[NSFileManager defaultManager] fileExistsAtPath:privateKeyPath] ) {
+		// create new keys .. we should propably move this somewhere else..
+		silc_create_key_pair( NULL, 1024, [publicKeyPath fileSystemRepresentation], [privateKeyPath fileSystemRepresentation], NULL, "", &silcPkcs, &silcPublicKey, &silcPrivateKey, FALSE );
+		return YES;
+	}
+
+	BOOL requestPassword = NO;
+
+	if( ! silc_load_key_pair( [publicKeyPath fileSystemRepresentation], [privateKeyPath fileSystemRepresentation], "", &silcPkcs, &silcPublicKey, &silcPrivateKey ) ) {
+		if( [[self certificatePassword] length] ) {
+			if( ! silc_load_key_pair( [publicKeyPath fileSystemRepresentation], [privateKeyPath fileSystemRepresentation], [[self certificatePassword] UTF8String], &silcPkcs, &silcPublicKey, &silcPrivateKey ) )
+				requestPassword = YES;
+		} else requestPassword = YES;
+	}
+
+	if( requestPassword ) {
+		_waitForCertificatePassword = YES;
+
+		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedCertificatePasswordNotification object:self userInfo:nil];
+		[[NSNotificationCenter defaultCenter] postNotification:note];
+
+		return NO;
+	}
+
+	NSNotification *note = [NSNotification notificationWithName:MVSILCChatConnectionLoadedCertificate object:self userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+
+	return YES;
+}
+
+- (BOOL) _isKeyPairLoaded {
+	if( ! silcPkcs ) return NO;
+	return YES;
+}
+
+- (void) _connectKeyPairLoaded:(NSNotification *) notification {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVSILCChatConnectionLoadedCertificate object:nil];
+	[self connect];
 }
 @end

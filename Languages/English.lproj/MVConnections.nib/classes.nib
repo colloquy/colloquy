@@ -10,6 +10,7 @@
                 newConnection = id; 
                 openNetworkPreferences = id; 
                 removeRoom = id; 
+                sendCertificatePassword = id; 
                 sendPassword = id; 
                 showConnectionManager = id; 
                 toggleNewConnectionDetails = id; 
@@ -21,6 +22,10 @@
                 authKeychain = NSButton; 
                 authNickname = NSTextField; 
                 authPassword = NSTextField; 
+                certificateAuth = NSPanel; 
+                certificateDescription = NSTextField; 
+                certificateKeychain = NSButton; 
+                certificatePassphrase = NSTextField; 
                 connections = NSTableView; 
                 detailsTabView = NSTabView; 
                 messageUser = NSPanel; 
