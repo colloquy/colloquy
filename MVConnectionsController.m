@@ -1596,7 +1596,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _requestPublicKeyVerification:(NSNotification *) notification {
-	NSDictionary *dict = [notification object];
+	NSDictionary *dict = [notification userInfo];
 
 	if ( [publicKeyVerification isVisible] ) {
 		[_publicKeyRequestQueue addObject:notification];

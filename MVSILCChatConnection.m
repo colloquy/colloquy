@@ -764,7 +764,7 @@ static void silc_verify_public_key( SilcClient client, SilcClientConnection conn
 	// we release it in the verfied callback
 	[dict retain];
 	
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedPublicKeyVerificationNotification object:dict userInfo:nil];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedPublicKeyVerificationNotification object:self userInfo:dict];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
