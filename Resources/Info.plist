@@ -104,7 +104,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2C11 source</string>
+	<string>2C11</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
 	<string>http://colloquy.info</string>
 	<key>NSAppleScriptEnabled</key>
