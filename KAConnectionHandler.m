@@ -1,10 +1,6 @@
-//
 //  KAConnectionHandler.m
 //  Colloquy
-//
 //  Created by Karl Adam on Thu Apr 15 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
-//
 
 #import "KAConnectionHandler.h"
 #import "MVApplicationController.h"
@@ -15,29 +11,19 @@
 static KAConnectionHandler *sharedHandler = nil;
 
 @implementation KAConnectionHandler
-
 + (KAConnectionHandler *) defaultHandler {
 	extern KAConnectionHandler *sharedHandler;
 	if ( !sharedHandler && [MVApplicationController isTerminating] ) return nil;
 	return ( sharedHandler ? sharedHandler : (sharedHandler = [[self alloc] init]) );
 }
 
-- (id) init {
-	return [super init];
-}
-
-- (void) dealloc {
-	//free the world!
-}
-
 # pragma mark -
 
 - (BOOL) connection:(MVChatConnection *) connection willPostMessage:(NSData *) message from:(NSString *) user toRoom:(BOOL) flag {
 	BOOL retVal = YES;
-	
+
 	if ( [[JVChatController defaultManager] chatViewControllerForUser:user withConnection:connection ifExists:YES] ) {
 		retVal = NO;
-		
 	} else {
 		NSString *curMsg = [NSString stringWithCString:[message bytes] length:[message length]];
 		NSAttributedString *curAMsg = [[[NSAttributedString alloc] initWithHTML:message documentAttributes:NULL] autorelease]; 
@@ -52,7 +38,7 @@ static KAConnectionHandler *sharedHandler = nil;
 				[[JVNotificationController defaultManager] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
 			}
 		}
-		
+
 		if ( [user isEqualToString:@"MemoServ"] ) {
 			if ( [curMsg rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
 				NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -64,12 +50,8 @@ static KAConnectionHandler *sharedHandler = nil;
 				[[JVNotificationController defaultManager] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
 			}	
 		}
-		
-		
 	}
-	
-	return retVal; //message handled
+
+	return retVal;
 }
-
-
 @end
