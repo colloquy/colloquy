@@ -724,7 +724,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 			if( noneSelected || ! connected ) {
 				[item setLabel:NSLocalizedString( @"Connect", short toolbar connect button name )];
 				[item setToolTip:NSLocalizedString( @"Connect to Server", connect button tooltip )];
-				if( noneSelected ) [item setAction:NULL];
+				if( noneSelected ) [item setAction:@selector( newConnection: )];
 				else [item setAction:@selector( _connect: )];
 				[item setImage:[NSImage imageNamed:@"connect"]];
 			} else if( connected ) {
