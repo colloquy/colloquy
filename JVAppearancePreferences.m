@@ -98,17 +98,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	// we shouldn't have to post this notification manually, but this seems to make webkit refresh with new prefs
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"WebPreferencesChangedNotification" object:[preview preferences]];
 
-	WebPreferences *prefs = [[[preview preferences] retain] autorelease];
-	[prefs setMinimumFontSize:[minimumFontSize intValue]];
-	[[preview preferences] setAutosaves:YES];
+	WebPreferences *prefs = [preview preferences];
+	[prefs setAutosaves:YES];
 
-	[standardFont setFont:[NSFont fontWithName:[[preview preferences] standardFontFamily] size:[[preview preferences] defaultFontSize]]];
+	[standardFont setFont:[NSFont fontWithName:[prefs standardFontFamily] size:[prefs defaultFontSize]]];
 
-	[minimumFontSize setIntValue:[[preview preferences] minimumFontSize]];
-	[minimumFontSizeStepper setIntValue:[[preview preferences] minimumFontSize]];
+	[minimumFontSize setIntValue:[prefs minimumFontSize]];
+	[minimumFontSizeStepper setIntValue:[prefs minimumFontSize]];
 
-	[baseFontSize setIntValue:[[preview preferences] defaultFontSize]];
-	[baseFontSizeStepper setIntValue:[[preview preferences] defaultFontSize]];
+	[baseFontSize setIntValue:[prefs defaultFontSize]];
+	[baseFontSizeStepper setIntValue:[prefs defaultFontSize]];
 
 	[self updatePreview];
 }
