@@ -370,6 +370,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
 	} else return NO;
 
+	// exclude device-dependent flags and fn key (necessary for pg up/pg dn/home/end on portables)
+	if( [event modifierFlags] & ~ ( NSFunctionKeyMask | 0xffff ) ) return NO;
+	
 	if( chr == NSUpArrowFunctionKey ) {
 		return [self upArrowKeyPressed];
 	} else if( chr == NSDownArrowFunctionKey ) {
