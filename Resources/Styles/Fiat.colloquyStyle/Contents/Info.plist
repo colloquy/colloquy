@@ -22,7 +22,7 @@
 			<key>description</key>
 			<string>Your headers</string>
 			<key>style</key>
-			<string>.outgoing .header &gt; div &gt; div { background-color: %@ !important; } .outgoing .messages .sep { background-color: %@ !important; }</string>
+			<string>.outgoing .header &gt; span &gt; span { background-color: %@ !important; } .outgoing .messages .sep { background-color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
@@ -42,7 +42,7 @@
 			<key>description</key>
 			<string>Your timestamps</string>
 			<key>style</key>
-			<string>.outgoing .messages .time:after { color: %@ !important; }</string>
+			<string>.outgoing .messages .time.inline { color: %@ !important; } .outgoing .messages .time[title]:after { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
@@ -52,7 +52,7 @@
 			<key>description</key>
 			<string>Headers</string>
 			<key>style</key>
-			<string>.incoming .header &gt; div &gt; div { background-color: %@ !important; } .incoming .messages .sep { background-color: %@ !important; }</string>
+			<string>.incoming .header &gt; span &gt; span { background-color: %@ !important; } .incoming .messages .sep { background-color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
@@ -72,7 +72,7 @@
 			<key>description</key>
 			<string>Timestamps</string>
 			<key>style</key>
-			<string>.incoming .messages .time:after { color: %@ !important; }</string>
+			<string>.incoming .messages .time.inline { color: %@ !important; } .incoming .messages .time[title]:after { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
@@ -92,7 +92,7 @@
 			<key>description</key>
 			<string>Event timestamps</string>
 			<key>style</key>
-			<string>.event .time:after { color: %@ !important; }</string>
+			<string>.event .time { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
