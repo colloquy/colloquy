@@ -59,8 +59,8 @@
 	NSComparisonResult retVal = NSOrderedSame;
 	unsigned myStatus = 0, yourStatus = 0;
 
-	myStatus = ( [self serverOperator] * 50 ) + ( [self operator] * 10 ) + ( [self halfOperator] * 5 ) + ( [self voice] * 1 );
-	yourStatus = ( [member serverOperator] * 50 ) + ( [member operator] * 10 ) + ( [member halfOperator] * 5 ) + ( [member voice] * 1 );
+	myStatus = ( [self serverOperator] ? 50 : ( [self operator] ? 10 : ( [self halfOperator] ? 5 : ( [self voice] ? 1 : 0 ) ) ) );
+	yourStatus = ( [member serverOperator] ? 50 : ( [member operator] ? 10 : ( [member halfOperator] ? 5 : ( [member voice] ? 1 : 0 ) ) ) );
 
 	if( myStatus > yourStatus ) {
 		retVal = NSOrderedAscending;
