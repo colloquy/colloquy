@@ -9,7 +9,7 @@
         {
             CLASS = JVChatRoom; 
             LANGUAGE = ObjC; 
-            OUTLETS = {topicLine = NSTextView; topicRenderer = WebView; }; 
+            OUTLETS = {topicLine = NSTextView; }; 
             SUPERCLASS = JVDirectChat; 
         }, 
         {
