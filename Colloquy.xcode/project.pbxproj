@@ -2066,6 +2066,7 @@
 				1C46785006D77F0900071DC6,
 				1C46785106D77F0900071DC6,
 				1CF627CB07558F79005DFCFA,
+				1CD4C099078249C10003620F,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2755,6 +2756,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				CB9B52CA06351B060055AB73,
+				1CD4C09A07824A010003620F,
 				1C8CE1ED05A921AB0020D841,
 				1C51B8F2052DFAAA00BB459B,
 			);
@@ -3152,6 +3154,7 @@
 				1CC478480427BB5500000102,
 				1CA56CCD042A713E00000102,
 				CB9B52AB06351A130055AB73,
+				1CD4C093078249A50003620F,
 			);
 			isa = PBXGroup;
 			name = "Plug–Ins";
@@ -3895,6 +3898,37 @@
 		};
 		1CD4BD9E05AA773800F72EE6 = {
 			fileRef = 1CD4BD9C05AA773800F72EE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CD4C093078249A50003620F = {
+			children = (
+				1CD4C098078249C10003620F,
+			);
+			isa = PBXGroup;
+			name = WebSearch;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4C098078249C10003620F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.scpt;
+			name = WebSearch.scpt;
+			path = "Plug-Ins/WebSearch/WebSearch.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD4C099078249C10003620F = {
+			fileRef = 1CD4C098078249C10003620F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CD4C09A07824A010003620F = {
+			fileRef = 1CD4C098078249C10003620F;
 			isa = PBXBuildFile;
 			settings = {
 			};
