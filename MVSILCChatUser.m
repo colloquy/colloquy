@@ -48,6 +48,15 @@ finish:
 - (id) initLocalUserWithConnection:(MVSILCChatConnection *) connection {
 	if( ( self = [self initWithClientEntry:[connection _silcConn] -> local_entry andConnection:connection] ) ) {
 		_type = MVChatLocalUserType;
+
+		// this info will be pulled live from the connection
+		[_nickname release];
+		[_username release];
+		[_username release];
+
+		_nickname = nil;
+		_realName = nil;
+		_username = nil;		
 	}
 
 	return self;
