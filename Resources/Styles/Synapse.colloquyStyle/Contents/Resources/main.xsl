@@ -1,5 +1,5 @@
 <xsl:transform xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-	<xsl:output omit-xml-declaration="yes" indent="yes" />
+	<xsl:output omit-xml-declaration="yes" indent="no" />
 	<xsl:param name="subsequent" />
 	<xsl:param name="timeFormat" />
 
@@ -15,21 +15,26 @@
 	</xsl:template>
 
 	<xsl:template match="event">
-		<div class="event">
-			<xsl:apply-templates select="message/child::node()" mode="copy" />
-			<xsl:text> (</xsl:text>
+		<xsl:variable name="timestamp">
 			<xsl:call-template name="short-time">
 				<xsl:with-param name="date" select="@occurred" />
 			</xsl:call-template>
-			<xsl:text>)</xsl:text>
+		</xsl:variable>
+
+		<span class="event">
+			<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
+			<xsl:apply-templates select="message/child::node()" mode="copy" />
+			<xsl:text> (</xsl:text>
+			<xsl:value-of select="$timestamp" />
+			<xsl:text>) </xsl:text>
 			<xsl:if test="reason!=''">
 				<span class="reason">
-					<br/>
 					<xsl:text>Reason: </xsl:text>
 					<xsl:apply-templates select="reason/child::node()" mode="copy"/>
 				</span>
 			</xsl:if>
-		</div>
+			<br />
+		</span>
 	</xsl:template>
 
 	<xsl:template match="message">
@@ -53,8 +58,10 @@
 			</xsl:call-template>
 		</xsl:variable>
 
-		<div class="{$messageClass}">
-			<span class="time" title="{$timestamp}">&#8203;</span>
+		<span class="{$messageClass}">
+			<span class="hidden">[</span>
+			<span class="time"><xsl:value-of select="$timestamp" /></span>
+			<span class="hidden">] <xsl:value-of select="../sender" />: </span>
       		<xsl:if test="@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
 				<a href="member:{../sender}" class="member action">
@@ -63,9 +70,10 @@
 				<xsl:text> </xsl:text>
 			</xsl:if>
 			<xsl:apply-templates select="child::node()" mode="copy" />
-		</div>
+			<br />
+		</span>
 		<xsl:if test="$subsequent = 'yes'">
-			<div id="consecutiveInsert">&#8203;</div>
+			<span id="consecutiveInsert">&#8203;</span>
 		</xsl:if>
 	</xsl:template>
 
@@ -90,10 +98,12 @@
 			</xsl:call-template>
 		</xsl:variable>
 
-		<div id="{@id}" class="{$messageClass}">
-			<div class="header">
+		<span id="{@id}" class="{$messageClass}">
+			<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
+			<span class="header">
 				<a href="member:{sender}" class="name"><xsl:value-of select="sender" /></a>
-			</div>
+			</span>
+			<span class="hidden">: </span>
 			<span class="time" title="{$timestamp}">&#8203;</span>
       		<xsl:if test="message[1]/@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
@@ -103,12 +113,13 @@
 				<xsl:text> </xsl:text>
 			</xsl:if>
 			<xsl:apply-templates select="message[1]/child::node()" mode="copy" />
-		</div>
+			<br />
+		</span>
 		<xsl:apply-templates select="message[position() &gt; 1]" />
 		<xsl:if test="position() = last()">
-			<div id="consecutiveInsert">&#8203;</div>
+			<span id="consecutiveInsert">&#8203;</span>
 		</xsl:if>
-		<div class="shadow">&#8203;</div>
+		<span class="shadow">&#8203;</span>
 	</xsl:template>
 
 	<xsl:template match="span[@class='member']" mode="copy">
