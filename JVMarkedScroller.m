@@ -149,24 +149,36 @@
 #pragma mark -
 
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement {
+	BOOL negative = ( displacement >= 0 ? NO : YES );
 	NSMutableSet *shiftedMarks = [NSMutableSet set];
-	NSEnumerator *enumerator = [_marks objectEnumerator];
 	NSNumber *location = nil;
 
+	NSEnumerator *enumerator = [_marks objectEnumerator];
 	while( ( location = [enumerator nextObject] ) ) {
-		long long shifted = ( [location unsignedLongLongValue] + displacement );
-		[shiftedMarks addObject:[NSNumber numberWithUnsignedLongLong:shifted]];
+		unsigned long long shifted = [location unsignedLongLongValue];
+		if( ! ( negative && shifted < ABS( displacement ) ) )
+			[shiftedMarks addObject:[NSNumber numberWithUnsignedLongLong:( shifted + displacement )]];
 	}
 
 	[_marks setSet:shiftedMarks];
 
 	NSMutableArray *shiftedShades = [NSMutableArray array];
-	enumerator = [_shades objectEnumerator];
-	location = nil;
+	NSNumber *start = nil;
+	NSNumber *stop = nil;
 
-	while( ( location = [enumerator nextObject] ) ) {
-		long long shifted = ( [location unsignedLongLongValue] + displacement );
-		[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:MAX( shifted, 0 )]];
+	enumerator = [_shades objectEnumerator];
+	while( ( start = [enumerator nextObject] ) && ( ( stop = [enumerator nextObject] ) || YES ) ) {
+		unsigned long long shiftedStart = [start unsignedLongLongValue];
+
+		if( stop ) {
+			unsigned long long shiftedStop = [stop unsignedLongLongValue];
+			if( ! ( negative && shiftedStart < ABS( displacement ) ) && ! ( negative && shiftedStop < ABS( displacement ) ) ) {
+				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + displacement )]];
+				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStop + displacement )]];
+			}
+		} else if( ! ( negative && shiftedStart < ABS( displacement ) ) ) {
+			[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + displacement )]];
+		}
 	}
 
 	[_shades setArray:shiftedShades];
