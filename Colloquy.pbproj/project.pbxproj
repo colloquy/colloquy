@@ -436,6 +436,28 @@
 			settings = {
 			};
 		};
+		1CCAD89204263A8200000102 = {
+			children = (
+				1CCAD89304263A8200000102,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			path = "";
+			refType = 2;
+		};
+		1CCAD89304263A8200000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = English;
+			path = "Preference Panes/Notification/English.lproj/Localizable.strings";
+			refType = 4;
+		};
+		1CCAD89404263A8200000102 = {
+			fileRef = 1CCAD89204263A8200000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //1C0
 //1C1
 //1C2
@@ -586,7 +608,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Colloquy</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Colloquy 1.0.1;
+	<string>Colloquy 1.0.2;
 Copyright © 2003, Timothy Hatcher</string>
 	<key>CFBundleIconFile</key>
 	<string>Colloquy</string>
@@ -599,7 +621,7 @@ Copyright © 2003, Timothy Hatcher</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.0.2</string>
 	<key>CFBundleSignature</key>
 	<string>coRC</string>
 	<key>CFBundleURLTypes</key>
@@ -614,7 +636,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1B9</string>
+	<string>1B12</string>
 	<key>NSMainNibFile</key>
 	<string>Colloquy</string>
 	<key>NSPrincipalClass</key>
@@ -2348,6 +2370,7 @@ Copyright © 2003, Timothy Hatcher</string>
 				F5DD34810382FD8C01000102,
 				F5DD34830382FDC601000102,
 				1C9A54AA0425747400000102,
+				1CCAD89204263A8200000102,
 				F5CED8C001A3596001A35792,
 				F520457F01B1BF6301EBB4B5,
 				F520458201B1C47001EBB4B5,
@@ -3195,6 +3218,7 @@ Copyright © 2003, Timothy Hatcher</string>
 				F5E3BD0E0383675101000102,
 				F5E3BD0F0383675201000102,
 				1C9A54AC0425747400000102,
+				1CCAD89404263A8200000102,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
