@@ -343,10 +343,12 @@
 #pragma mark -
 
 - (void) reloadStyles:(NSNotification *) notification {
-	if( ! [_userStyle length] || ! [[preview window] isVisible] ) return;
+	if( ! [[preview window] isVisible] ) return;
+	[JVStyle scanForStyles];
+
+	if( ! [_userStyle length] ) return;
 	[self parseStyleOptions];
 	[self updateVariant];
-	[JVStyle scanForStyles];
 }
 
 - (void) parseStyleOptions {

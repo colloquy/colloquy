@@ -11,6 +11,7 @@
 #import "JVInspectorController.h"
 #import "JVChatMemberInspector.h"
 #import "JVChatRoomBrowser.h"
+#import "JVStyle.h"
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (void) _reloadCurrentStyle:(id) sender;
@@ -269,7 +270,7 @@
 			[room _reloadCurrentStyle:nil];
 			return YES;
 		} else if( [[arguments string] isEqualToString:@"styles"] ) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatStyleInstalledNotification" object:nil]; 
+			[NSClassFromString( @"JVStyle" ) scanForStyles];
 			return YES;
 		} else if( [[arguments string] isEqualToString:@"emoticons"] ) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatEmoticonSetInstalledNotification" object:nil]; 
