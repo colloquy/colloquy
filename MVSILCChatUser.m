@@ -24,29 +24,47 @@
 		_type = MVChatRemoteUserType;
 		_connection = connection; // prevent circular retain
 
-		[[connection _silcClientLock] lock];
-
-		_nickname = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> nickname];
-		if( clientEntry -> username ) _username = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> username];
-		if( clientEntry -> hostname ) _address = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> hostname];
-		if( clientEntry -> server ) _serverAddress = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> server];
-		if( clientEntry -> realname ) _realName = [[NSString allocWithZone:[self zone]] initWithUTF8String:clientEntry -> realname];
-		if( clientEntry -> fingerprint ) _fingerprint = [[NSString allocWithZone:[self zone]] initWithBytes:clientEntry -> fingerprint length:clientEntry -> fingerprint_len encoding:NSASCIIStringEncoding];
-
-		if( clientEntry -> public_key ) {
-			unsigned long len = 0;
-			unsigned char *key = silc_pkcs_public_key_encode( clientEntry -> public_key, &len );
-			_publicKey = [[NSData allocWithZone:[self zone]] initWithBytes:key length:len];
-		}
-
-		unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
-		unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
-		_uniqueIdentifier = [[NSData allocWithZone:[self zone]] initWithBytes:identifier length:len];
-
-		[[connection _silcClientLock] unlock];
+		[self updateWithClientEntry:clientEntry];
 	}
 
 	return self;
+}
+
+#pragma mark -
+
+- (void) updateWithClientEntry:(SilcClientEntry) clientEntry {
+	[[[self connection] _silcClientLock] lock];
+
+	[self _setNickname:[NSString stringWithUTF8String:clientEntry -> nickname]];
+
+	if( clientEntry -> username )
+		[self _setUsername:[NSString stringWithUTF8String:clientEntry -> username]];
+
+	if( clientEntry -> hostname )
+		[self _setAddress:[NSString stringWithUTF8String:clientEntry -> hostname]];
+
+	if( clientEntry -> server )
+		[self _setServerAddress:[NSString stringWithUTF8String:clientEntry -> server]];
+
+	if( clientEntry -> realname )
+		[self _setRealName:[NSString stringWithUTF8String:clientEntry -> realname]];
+
+	if( clientEntry -> fingerprint )
+		[self _setFingerprint:[NSString stringWithUTF8String:clientEntry -> fingerprint]];
+
+	if( clientEntry -> public_key ) {
+		unsigned long len = 0;
+		unsigned char *key = silc_pkcs_public_key_encode( clientEntry -> public_key, &len );
+		[self _setPublicKey:[NSData dataWithBytes:key length:len]];
+	}
+
+	[self _setServerOperator:( clientEntry -> mode & SILC_UMODE_SERVER_OPERATOR || clientEntry -> mode & SILC_UMODE_ROUTER_OPERATOR )];
+
+	unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
+	unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
+	[self _setUniqueIdentifier:[NSData dataWithBytes:identifier length:len]];
+
+	[[[self connection] _silcClientLock] unlock];
 }
 
 #pragma mark -

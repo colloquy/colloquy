@@ -19,9 +19,7 @@ void silc_channel_get_clients_per_list_callback( SilcClient client, SilcClientCo
 	MVSILCChatRoom *room = context;
 	MVSILCChatConnection *self = (MVSILCChatConnection *)[room connection];
 
-	[[self _silcClientLock] lock];
 	SilcChannelEntry channel = silc_client_get_channel( [self _silcClient], [self _silcConn], (char *) [[room name] UTF8String]);
-	[[self _silcClientLock] unlock];
 
 	unsigned int i = 0;
 	for( i = 0; i < clients_count; i++ ) {
@@ -86,8 +84,14 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 	switch( type ) {
 		case SILC_NOTIFY_TYPE_MOTD:
 			break;
-		case SILC_NOTIFY_TYPE_NONE:
-			break;
+		case SILC_NOTIFY_TYPE_NONE: {
+			char *message = va_arg( list, char * );
+			if( message ) {
+				NSString *msgString = [NSString stringWithUTF8String:message];
+				NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];
+			}
+		}	break;
 		case SILC_NOTIFY_TYPE_SIGNOFF: {
 			SilcClientEntry signoff_client = va_arg( list, SilcClientEntry );
 			char *signoff_message = va_arg( list, char * );
@@ -96,6 +100,8 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			NSData *reasonData = ( signoff_message ? [NSData dataWithBytes:signoff_message length:strlen( signoff_message )] : nil );
 			NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
 			MVChatRoom *room = nil;
+
+			[member _setDateDisconnected:[NSDate date]];
 
 			while( ( room = [enumerator nextObject] ) ) {
 				if( ! [room isJoined] || ! [room hasUser:member] ) continue;
@@ -156,6 +162,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> channel_name]];
 			MVChatUser *member = [self _chatUserWithClientEntry:joining_client];
 
+			[member _setDateDisconnected:nil];
 			[room _addMemberUser:member];
 
 			SilcChannelUser channelUser = silc_client_on_channel( channel, joining_client );
@@ -341,6 +348,8 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
 			MVChatRoom *room = nil;
 
+			[member _setDateDisconnected:[NSDate date]];
+
 			while( ( room = [enumerator nextObject] ) ) {
 				if( ! [room isJoined] || ! [room hasUser:member] ) continue;
 				[room _removeMemberUser:member];
@@ -402,8 +411,8 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 	case SILC_COMMAND_WHOIS: {
 		SilcClientEntry client_entry = va_arg( list, SilcClientEntry );
 		/* char *nickname = */ va_arg( list, char * );
-		char *username = va_arg( list, char * );
-		char *realname = va_arg( list, char * );
+		/* char *username = */ va_arg( list, char * );
+		/* char *realname = */ va_arg( list, char * );
 		SilcBuffer channels = va_arg( list, SilcBuffer );
 		/* SilcUInt32 usermode = */ va_arg( list, int );
 		SilcUInt32 idletime = va_arg( list, int );
@@ -411,10 +420,10 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		/* SilcBuffer user_modes = */ va_arg( list, SilcBuffer );
 		/* SilcDList attrs = */ va_arg( list, SilcDList );
 
-		MVChatUser *user = [self _chatUserWithClientEntry:client_entry];
-		[user _setRealName:[NSString stringWithUTF8String:realname]];
-		[user _setUsername:[NSString stringWithUTF8String:username]];
+		MVSILCChatUser *user = (MVSILCChatUser *)[self _chatUserWithClientEntry:client_entry];
+		[user updateWithClientEntry:client_entry];
 		[user _setIdleTime:idletime];
+		[user _setDateDisconnected:nil];
 
 		if( channels ) {
 			NSMutableArray *chanArray = [NSMutableArray array];
@@ -548,10 +557,6 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 	[self _setSilcConn:conn];
 
 	if( status == SILC_CLIENT_CONN_SUCCESS || status == SILC_CLIENT_CONN_SUCCESS_RESUME ) {
-		[[self _silcClientLock] unlock];
-		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:YES];
-		[[self _silcClientLock] lock];
-
 		@synchronized( [self _queuedCommands] ) {
 			NSEnumerator *enumerator = [[self _queuedCommands] objectEnumerator];
 			NSString *command = nil;
@@ -561,21 +566,20 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 
 			[[self _queuedCommands] removeAllObjects];
 		}
+
+		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 	} else {
-		[[self _silcClientLock] lock];
 		silc_client_close_connection( client, conn );
-		[[self _silcClientLock] unlock];
-		
 		[self _setSilcConn:NULL];
-		
 		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
-	}	
+	}
 }
 
 static void silc_disconnected( SilcClient client, SilcClientConnection conn, SilcStatus status, const char *message ) {
 	MVSILCChatConnection *self = conn -> context;
-
+	[[self _silcClientLock] unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
 	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
+	[[self _silcClientLock] lock]; // lock back up like nothing happened
 }
 
 static void silc_get_auth_method( SilcClient client, SilcClientConnection conn, char *hostname, SilcUInt16 port, SilcGetAuthMeth completion, void *context ) {
@@ -903,65 +907,6 @@ static SilcClientOperations silcClientOps = {
 - (unsigned short) serverPort {
 	return _silcPort;
 }
-
-/*
-#pragma mark -
-
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action {
-	NSParameterAssert( message != nil );
-	NSParameterAssert( user != nil );
-
-	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message];
-	SilcMessageFlags flags = SILC_MESSAGE_FLAG_UTF8;
-
-	if( action) flags |= SILC_MESSAGE_FLAG_ACTION;
-
-	SilcUInt32 clientsCount;
-	[[self _silcClientLock] lock];
-	SilcClientEntry *clients = silc_client_get_clients_local( [self _silcClient], [self _silcConn], [user UTF8String], _silcClientParams.nickname_format, &clientsCount );
-	[[self _silcClientLock] unlock];
-
-	if( ! clients || ! clientsCount ) {
-		NSMutableDictionary *dict = [[NSMutableDictionary dictionary] retain];
-		[dict setObject:message forKey:@"message"];
-		[dict setObject:user forKey:@"user"];
-		[dict setObject:self forKey:@"connection"];
-		[dict setObject:[NSNumber numberWithInt:flags] forKey:@"flags"];
-
-		[[self _silcClientLock] lock];
-		silc_client_get_clients_whois( [self _silcClient], [self _silcConn], [user UTF8String], NULL, NULL, silc_privmessage_resolve_callback, dict );
-		[[self _silcClientLock] unlock];
-		return;
-	}
-
-	[[self _silcClientLock] lock];
-	silc_client_send_private_message( [self _silcClient], [self _silcConn], clients[0], flags, (char *) msg, strlen( msg ), false );	
-	[[self _silcClientLock] unlock];
-}
-
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action {
-	NSParameterAssert( message != nil );
-	NSParameterAssert( room != nil );
-
-	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message];
-	SilcMessageFlags flags = SILC_MESSAGE_FLAG_UTF8;
-
-	if( action ) flags |= SILC_MESSAGE_FLAG_ACTION;
-
-	[[self _silcClientLock] lock];
-
-	SilcChannelEntry channel = silc_client_get_channel( [self _silcClient], [self _silcConn], (char *) [room UTF8String] );
-
-	if( ! channel) {
-		[[self _silcClientLock] unlock];
-		return;
-	}
-
-	silc_client_send_channel_message( [self _silcClient], [self _silcConn], channel, NULL, flags, (char *) msg, strlen( msg ), false );
-
-	[[self _silcClientLock] unlock];
-}
-*/
 
 #pragma mark -
 
