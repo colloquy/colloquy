@@ -93,7 +93,7 @@
 	while( ! [scanner isAtEnd] ) {
 		[scanner scanUpToCharactersFromSet:set intoString:nil];
 		if( ! [scanner isAtEnd] ) {
-			[self insertString:@"\\"atIndex:[scanner scanLocation] + offset++];
+			[self insertString:@"\\" atIndex:[scanner scanLocation] + offset++];
 			[scanner setScanLocation:[scanner scanLocation] + 1];
 		}
 	}
