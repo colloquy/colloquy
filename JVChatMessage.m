@@ -318,6 +318,14 @@
 - (NSString *) debugDescription {
 	return [NSString stringWithFormat:@"<%@ 0x%x: (%@) %@>", NSStringFromClass( [self class] ), (unsigned long) self, [self senderNickname], [self body]];
 }
+
+#pragma mark -
+
+- (void) setValue:(id) value forKey:(NSString *) key {
+	// this is a non-mutable message, give AppleScript a good error if this is a script command call
+	[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
+	[[NSScriptCommand currentCommand] setScriptErrorString:@"The message and it's properties are not changeable."];
+}
 @end
 
 #pragma mark -

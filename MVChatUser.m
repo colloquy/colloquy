@@ -496,4 +496,8 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	NSScriptObjectSpecifier *container = [[self connection] objectSpecifier];
 	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"knownChatUsersArray" uniqueID:[self scriptUniqueIdentifier]] autorelease];
 }
+
+- (void) refreshInformationScriptCommand:(NSScriptCommand *) command {
+	[self refreshInformation];
+}
 @end

@@ -54,7 +54,7 @@
 				<cocoa class="NSWindow"/>
 				<elements>
 					<element code="chvC" type="panel" access="r">
-						<cocoa method="views"/>
+						<cocoa method="chatViews"/>
 					</element>
 					<element code="ccoM" type="console panel" access="r">
 						<cocoa method="chatConsoles"/>
@@ -419,52 +419,57 @@
 			</enumeration>
 		</types>
 		<classes>
-			<class name="chat user" code="chUs" description="Represents a user on a chat server.">
+			<class name="chat user" code="chUs" description="Represents a user on a chat server. Many properties of this class require the refresh information command to be called first on the instance.">
 				<cocoa class="MVChatUser"/>
 				<properties>
-					<property name="id" code="ID  " description="The unique identifier of the room." type="string" access="r">
+					<property name="id" code="ID  " description="The unique identifier of the user on the server." type="string" access="r">
 						<cocoa method="scriptUniqueIdentifier"/>
 					</property>
-					<property name="name" code="pnam" description="Full room name." type="string" access="r">
+					<property name="name" code="pnam" description="The current nickname." type="string" access="r">
 						<cocoa method="nickname"/>
 					</property>
 					<property name="display name" code="dNmA" description="Display name, almost always the nickname." type="string" access="r">
 						<cocoa method="displayName"/>
 					</property>
-					<property name="real name" code="rElA" description="The real name supplied by the user, not always a person&apos;s name. This might require a &quot;refresh information&quot;" type="string" access="r">
+					<property name="real name" code="rElA" description="The real name supplied by the user, not always a person&apos;s name." type="string" access="r">
 						<cocoa method="realName"/>
 					</property>
-					<property name="user name" code="uSnA" description="The user name supplied by the user. This might require a &quot;refresh information&quot;" type="string" access="r">
+					<property name="user name" code="uSnA" description="The user name supplied by the user." type="string" access="r">
 						<cocoa method="username"/>
 					</property>
-					<property name="address" code="adRA" description="The address the user connected to the server from. Somtimes this is a fake (masked) address. This might require a &quot;refresh information&quot;" type="string" access="r">
+					<property name="address" code="adRA" description="The address the user connected to the server from. Somtimes this is a fake (masked) address." type="string" access="r">
 						<cocoa method="address"/>
 					</property>
-					<property name="server address" code="sevA" description="The server address the user is connected to. This might be a different address than you are connected to, since servers are sometimes clustered. This might require a &quot;refresh information&quot;" type="string" access="r">
+					<property name="server address" code="sevA" description="The server address the user is connected to. This might be a different address than you are connected to, since servers are sometimes clustered." type="string" access="r">
 						<cocoa method="serverAddress"/>
 					</property>
-					<property name="idle time" code="iDlA" description="The number of seconds the user has been idle on the server. This isn&apos;t a live number and requires a &quot;refresh information&quot;" type="real" access="r">
-						<cocoa method="serverAddress"/>
+					<property name="idle time" code="iDlA" description="The number of seconds the user has been idle on the server." type="real" access="r">
+						<cocoa method="idleTime"/>
 					</property>
-					<property name="date updated" code="uPdA" description="The last time the &quot;refresh information&quot;" type="date" access="r">
-						<cocoa method="serverAddress"/>
+					<property name="date updated" code="uPdA" description="The last time the refresh information command finished." type="date" access="r">
+						<cocoa method="dateUpdated"/>
 					</property>
-					<property name="date connected" code="dCoA" description="The date the user connected to the server. This might require a &quot;refresh information&quot;" type="date" access="r">
+					<property name="date connected" code="dCoA" description="The date the user connected to the server." type="date" access="r">
 						<cocoa method="dateConnected"/>
 					</property>
 					<property name="date disconnected" code="dDcA" description="The date the user disconnected from the server. This will not be available for all users." type="date" access="r">
 						<cocoa method="dateDisconnected"/>
 					</property>
-					<property name="user status" code="stsA" description="The current status of the user. This isn&apos;t a live value and requires a &quot;refresh information&quot;" type="user status" access="r">
+					<property name="user status" code="stsA" description="The current status of the user." type="user status" access="r">
 						<cocoa method="status"/>
 					</property>
-					<property name="away message" code="aStA" description="The user&apos;s current away message. This might require a &quot;refresh information&quot;" type="text" access="r">
+					<property name="away message" code="aStA" description="The user&apos;s current away message." type="text" access="r">
 						<cocoa method="scriptTypedAwayMessage"/>
 					</property>
 					<property name="attributes" code="atRA" description="User attributes containing various itmes." type="record" access="rw">
 						<cocoa method="attributes"/>
 					</property>
 				</properties>
+				<responds-to-commands>
+					<responds-to name="refresh information">
+						<cocoa method="refreshInformationScriptCommand:"/>
+					</responds-to>
+				</responds-to-commands>
 			</class>
 			<class name="chat room" code="chRm" description="Represents a join chat room.">
 				<cocoa class="MVChatRoom"/>
@@ -600,6 +605,9 @@
 				<parameter name="on" code="jCr1" description="The connection to join on." type="connection">
 					<cocoa key="connection"/>
 				</parameter>
+			</command>
+			<command name="refresh information" code="ccoRrfsX" description="Refresh various properties of a chat user.">
+				<direct-parameter type="chat user" description="The chat user."/>
 			</command>
 		</commands>
 	</suite>

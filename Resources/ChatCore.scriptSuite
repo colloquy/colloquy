@@ -290,6 +290,15 @@
 					<key>Type</key>
 					<string>NSDate</string>
 				</dict>
+				<key>dateUpdated</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>uPdA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSDate</string>
+				</dict>
 				<key>displayName</key>
 				<dict>
 					<key>AppleEventCode</key>
@@ -298,6 +307,15 @@
 					<string>YES</string>
 					<key>Type</key>
 					<string>NSString</string>
+				</dict>
+				<key>idleTime</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>iDlA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Double&gt;</string>
 				</dict>
 				<key>nickname</key>
 				<dict>
@@ -365,6 +383,11 @@
 			</dict>
 			<key>Superclass</key>
 			<string>NSCoreSuite.AbstractObject</string>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>ChatCore.RefreshInformation</key>
+				<string>refreshInformationScriptCommand:</string>
+			</dict>
 		</dict>
 	</dict>
 	<key>Commands</key>
@@ -419,6 +442,20 @@
 			<dict>
 				<key>Type</key>
 				<string>NSObject</string>
+			</dict>
+		</dict>
+		<key>RefreshInformation</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>ccoR</string>
+			<key>AppleEventCode</key>
+			<string>rfsX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>ChatCore.MVChatUser</string>
 			</dict>
 		</dict>
 		<key>SendChatMessage</key>

@@ -189,7 +189,7 @@
 				<key>address</key>
 				<dict>
 					<key>Description</key>
-					<string>The address the user connected to the server from. Somtimes this is a fake (masked) address. This might require a "refresh information"</string>
+					<string>The address the user connected to the server from. Somtimes this is a fake (masked) address.</string>
 					<key>Name</key>
 					<string>address</string>
 				</dict>
@@ -203,7 +203,7 @@
 				<key>dateConnected</key>
 				<dict>
 					<key>Description</key>
-					<string>The date the user connected to the server. This might require a "refresh information"</string>
+					<string>The date the user connected to the server.</string>
 					<key>Name</key>
 					<string>date connected</string>
 				</dict>
@@ -214,6 +214,13 @@
 					<key>Name</key>
 					<string>date disconnected</string>
 				</dict>
+				<key>dateUpdated</key>
+				<dict>
+					<key>Description</key>
+					<string>The last time the refresh information command finished.</string>
+					<key>Name</key>
+					<string>date updated</string>
+				</dict>
 				<key>displayName</key>
 				<dict>
 					<key>Description</key>
@@ -221,58 +228,65 @@
 					<key>Name</key>
 					<string>display name</string>
 				</dict>
+				<key>idleTime</key>
+				<dict>
+					<key>Description</key>
+					<string>The number of seconds the user has been idle on the server.</string>
+					<key>Name</key>
+					<string>idle time</string>
+				</dict>
 				<key>nickname</key>
 				<dict>
 					<key>Description</key>
-					<string>Full room name.</string>
+					<string>The current nickname.</string>
 					<key>Name</key>
 					<string>name</string>
 				</dict>
 				<key>realName</key>
 				<dict>
 					<key>Description</key>
-					<string>The real name supplied by the user, not always a person's name. This might require a "refresh information"</string>
+					<string>The real name supplied by the user, not always a person's name.</string>
 					<key>Name</key>
 					<string>real name</string>
 				</dict>
 				<key>scriptTypedAwayMessage</key>
 				<dict>
 					<key>Description</key>
-					<string>The user's current away message. This might require a "refresh information"</string>
+					<string>The user's current away message.</string>
 					<key>Name</key>
 					<string>away message</string>
 				</dict>
 				<key>scriptUniqueIdentifier</key>
 				<dict>
 					<key>Description</key>
-					<string>The unique identifier of the room.</string>
+					<string>The unique identifier of the user on the server.</string>
 					<key>Name</key>
 					<string>id</string>
 				</dict>
 				<key>serverAddress</key>
 				<dict>
 					<key>Description</key>
-					<string>The server address the user is connected to. This might be a different address than you are connected to, since servers are sometimes clustered. This might require a "refresh information"</string>
+					<string>The server address the user is connected to. This might be a different address than you are connected to, since servers are sometimes clustered.</string>
 					<key>Name</key>
 					<string>server address</string>
 				</dict>
 				<key>status</key>
 				<dict>
 					<key>Description</key>
-					<string>The current status of the user. This isn't a live value and requires a "refresh information"</string>
+					<string>The current status of the user.</string>
 					<key>Name</key>
 					<string>user status</string>
 				</dict>
 				<key>username</key>
 				<dict>
 					<key>Description</key>
-					<string>The user name supplied by the user. This might require a "refresh information"</string>
+					<string>The user name supplied by the user.</string>
 					<key>Name</key>
 					<string>user name</string>
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Represents a user on a chat server.</string>
+			<string>Represents a user on a chat server. Many properties of this class require the refresh information command to be called first on the instance.</string>
 			<key>Name</key>
 			<string>chat user</string>
 			<key>PluralName</key>
@@ -325,6 +339,18 @@
 			<dict>
 				<key>Description</key>
 				<string>Room to join. (Can also be a list of rooms.)</string>
+			</dict>
+		</dict>
+		<key>RefreshInformation</key>
+		<dict>
+			<key>Description</key>
+			<string>Refresh various properties of a chat user.</string>
+			<key>Name</key>
+			<string>refresh information</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The chat user.</string>
 			</dict>
 		</dict>
 		<key>SendChatMessage</key>
