@@ -1656,6 +1656,13 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 @implementation NSApplication (NSApplicationActivePanelScripting)
 - (id) sendMessageScriptCommand:(NSScriptCommand *) command {
+	// check if the subject responds to the command directly, if so execute that implementation
+	if( [command subjectSupportsCommand] ) return [command executeCommandOnSubject];
+
+	// if there is a subject, perform the default implementation
+	if( [command subjectSpecifier] ) return [command performDefaultImplementation];
+
+	// if nothing responds to this command make it perform on the active panel of the front window
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
 	id container = [[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:nil key:@"orderedWindows" index:0] autorelease];
 	if( ! container ) return nil;
@@ -1669,6 +1676,13 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (id) addEventMessageScriptCommand:(NSScriptCommand *) command {
+	// check if the subject responds to the command directly, if so execute that implementation
+	if( [command subjectSupportsCommand] ) return [command executeCommandOnSubject];
+
+	// if there is a subject, perform the default implementation
+	if( [command subjectSpecifier] ) return [command performDefaultImplementation];
+
+	// if nothing responds to this command make it perform on the active panel of the front window
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
 	id container = [[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:nil key:@"orderedWindows" index:0] autorelease];
 	if( ! container ) return nil;
