@@ -12,11 +12,10 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 currentFiles = NSTableView; 
-                panel = NSPanel; 
                 progressBar = NSProgressIndicator; 
                 transferStatus = NSTextField; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = NSWindowController; 
         }
     ); 
     IBVersion = 1; 

@@ -370,8 +370,8 @@
 	<key>CFBundleExecutable</key>
 	<string>Colloquy</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Colloquy 1.0;
-Copyright © 2001, The Massinova Project</string>
+	<string>Colloquy 1.0.1;
+Copyright © 2003, Timothy Hatcher</string>
 	<key>CFBundleIconFile</key>
 	<string>Colloquy</string>
 	<key>CFBundleIdentifier</key>
@@ -383,7 +383,7 @@ Copyright © 2001, The Massinova Project</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.0.1</string>
 	<key>CFBundleSignature</key>
 	<string>coRC</string>
 	<key>CFBundleURLTypes</key>
@@ -411,14 +411,12 @@ Copyright © 2001, The Massinova Project</string>
 			buildActionMask = 2147483647;
 			files = (
 				F5F9AF430170EE4A01A84BDE,
-				F5F9AF470170EF4D01A84BDE,
 				F5F9AF5A01711CD401A84BDE,
 				F592CAC101824AE901EE70DE,
 				F52D043801873FC401EE70DE,
 				F599994B01890E4601EE70DE,
 				F5E98624018B412B01EE70DE,
 				F56CD5450191182601EE70DE,
-				F588A8FE019256D101EE70DE,
 				F52BDCC601A835B001A84BDE,
 				F52BDCCA01A8472201A84BDE,
 				F53AC4DC01AC01E201A35792,
@@ -559,7 +557,6 @@ Copyright © 2001, The Massinova Project</string>
 			files = (
 				F50B0AB40170CBA501A84BDE,
 				F5F9AF440170EE4A01A84BDE,
-				F5F9AF480170EF4D01A84BDE,
 				F5F9AF5B01711CD401A84BDE,
 				F592CAC201824AE901EE70DE,
 				F52D043A01873FC401EE70DE,
@@ -567,7 +564,6 @@ Copyright © 2001, The Massinova Project</string>
 				F599994C01890E4601EE70DE,
 				F5E98625018B412C01EE70DE,
 				F56CD5460191182601EE70DE,
-				F588A8FF019256D101EE70DE,
 				F593E6A701A564F201A35792,
 				F52BDCC701A835B001A84BDE,
 				F52BDCCB01A8472201A84BDE,
@@ -1557,18 +1553,6 @@ Copyright © 2001, The Massinova Project</string>
 			isa = PBXFileReference;
 			path = MVShapePanel.h;
 			refType = 4;
-		};
-		F588A8FE019256D101EE70DE = {
-			fileRef = F588A8FD019256D101EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F588A8FF019256D101EE70DE = {
-			fileRef = F588A8FC019256D101EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F590EA180190A42101EE70DE = {
 			isa = PBXFileReference;
@@ -3519,18 +3503,6 @@ Copyright © 2001, The Massinova Project</string>
 			isa = PBXFileReference;
 			path = MVBorderlessPanel.h;
 			refType = 4;
-		};
-		F5F9AF470170EF4D01A84BDE = {
-			fileRef = F5F9AF460170EF4C01A84BDE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5F9AF480170EF4D01A84BDE = {
-			fileRef = F5F9AF450170EF4C01A84BDE;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5F9AF5801711CD401A84BDE = {
 			fileEncoding = 4;
