@@ -6,6 +6,9 @@
 #import "JVInspectorController.h"
 #import "JVPreferencesController.h"
 #import "JVGeneralPreferences.h"
+#import "JVAppearancePreferences.h"
+#import "JVFileTransferPreferences.h"
+#import "JVAdvancedPreferences.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
 //#import "MVBuddyListController.h"
@@ -128,8 +131,13 @@
 
 	[WebCoreCache setDisabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"]];
 
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NSToolbar Configuration NSPreferences"];
+
 	[NSPreferences setDefaultPreferencesClass:[JVPreferencesController class]];
-	[[NSPreferences sharedPreferences] addPreferenceNamed:@"General" owner:[JVGeneralPreferences sharedInstance]];
+	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"General", "general preference pane name" ) owner:[JVGeneralPreferences sharedInstance]];
+	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Appearance", "appearance preference pane name" ) owner:[JVAppearancePreferences sharedInstance]];
+	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
+	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Advanced", "advanced preference pane name" ) owner:[JVAdvancedPreferences sharedInstance]];
 
 	[JVChatController defaultManager];
 //	[MVBuddyListController sharedBuddyList];

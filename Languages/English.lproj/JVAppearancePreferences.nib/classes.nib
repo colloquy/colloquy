@@ -1,0 +1,35 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = JVAppearancePreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                emoticons = NSPopUpButton; 
+                fixedWidthFont = NSTextField; 
+                minimumFontSize = NSTextField; 
+                minimumFontSizeStepper = NSStepper; 
+                preview = WebView; 
+                sansSerifFont = NSTextField; 
+                serifFont = NSTextField; 
+                standardFont = NSTextField; 
+                styles = NSPopUpButton; 
+            }; 
+            SUPERCLASS = NSPreferencesModule; 
+        }, 
+        {
+            ACTIONS = {chooseFontWithFontPanel = id; selectFont = id; }; 
+            CLASS = JVFontPreviewField; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {
+            CLASS = NSPreferencesModule; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
