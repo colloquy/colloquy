@@ -32,11 +32,11 @@
 @interface NSPreferences : NSObject {
 #if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_2
 	id preferencesPanel;
-    NSBox *preferenceBox;
-    id moduleMatrix;
-    id okButton;
-    id cancelButton;
-    id applyButton;
+	NSBox *preferenceBox;
+	id moduleMatrix;
+	id okButton;
+	id cancelButton;
+	id applyButton;
 #else
 	NSWindow *_preferencesPanel;
 	NSBox *_preferenceBox;
