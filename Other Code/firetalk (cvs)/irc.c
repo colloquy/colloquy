@@ -302,7 +302,7 @@ char *irc_irc_to_html(const char * const string) {
 		while( i < l && strspn( &string[i], attributsCharSet ) ) {
 			switch( string[i] ) {
 			case '\017': /* reset all */
-				attributes = IRC_BOLD;
+				attributes = 0;
 				fgcolor = -1;
 				bgcolor = -1;
 				i++;
@@ -730,7 +730,7 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 	struct s_firetalk_buddy *buddyiter = NULL;
 	struct s_irc_whois *whoisiter, *whoisiter2 = NULL;
 	struct s_firetalk_handle *fchandle = NULL;
-	int tempint = 0,tempint2 = 0,tempint3 = 0;
+	int tempint = 0,tempint2 = 0,tempint3 = 0,tempint4 = 0;
 	char tempbuf[512];
 
 	fchandle = firetalk_find_handle(c);
@@ -1039,6 +1039,7 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 				tempint = 0;
 				tempint2 = 4;
 				tempint3 = 0;
+				tempint4 = 4;
 				while ((args[tempint2] != NULL) && (args[3][tempint] != '\0')) {
 					switch (args[3][tempint++]) {
 						case '+':
@@ -1056,13 +1057,6 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 								firetalk_callback_chat_user_deopped(c,args[2],args[tempint2++],irc_get_nickname(args[0]));
 								if (irc_compare_nicks(args[tempint2-1],c->nickname) == FE_SUCCESS) {
 									firetalk_callback_chat_deopped(c,args[2],irc_get_nickname(args[0]));
-/*									if (c->identified == 1) {
-										// this is us, and we're identified, so we can request a reop
-										if (irc_send_printf(c,0,"PRIVMSG ChanServ :OP %s %s",args[2],c->nickname) != FE_SUCCESS) {
-											irc_internal_disconnect(c,FE_PACKET);
-											return FE_PACKET;
-										}
-									}*/
 								}
 							}
 							break;
@@ -1075,15 +1069,35 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 								firetalk_callback_chat_user_devoiced(c,args[2],args[tempint2++],irc_get_nickname(args[0]));
 								if (irc_compare_nicks(args[tempint2-1],c->nickname) == FE_SUCCESS) {
 									firetalk_callback_chat_devoiced(c,args[2],irc_get_nickname(args[0]));
-/*									if (c->identified == 1) {
-										// this is us, and we're identified, so we can request a revoice
-										if (irc_send_printf(c,0,"PRIVMSG ChanServ :VOICE %s %s",args[2],c->nickname) != FE_SUCCESS) {
-											irc_internal_disconnect(c,FE_PACKET);
-											return FE_PACKET;
-										}
-									}*/
 								}
 							}
+							break;
+						case 't':
+							firetalk_callback_chat_room_mode(c,irc_get_nickname(args[0]),args[2],( tempint3 > 0 ? 1 : 0 ),FM_OPERATORTOPICONLY,NULL);
+							break;
+						case 'n':
+							firetalk_callback_chat_room_mode(c,irc_get_nickname(args[0]),args[2],( tempint3 > 0 ? 1 : 0 ),FM_NOOUTSIDEMSGS,NULL);
+							break;
+						case 'm':
+							firetalk_callback_chat_room_mode(c,irc_get_nickname(args[0]),args[2],( tempint3 > 0 ? 1 : 0 ),FM_MODERATED,NULL);
+							break;
+						case 'i':
+							firetalk_callback_chat_room_mode(c,irc_get_nickname(args[0]),args[2],( tempint3 > 0 ? 1 : 0 ),FM_INVITEONLY,NULL);
+							break;
+						case 'l':
+							if( tempint3 > 0 && ! ( atoi(args[tempint4]) >= 1 ) ) break;
+							firetalk_callback_chat_room_mode(c,irc_get_nickname(args[0]),args[2],( tempint3 > 0 ? 1 : 0 ),FM_MEMBERLIMIT,args[tempint4]);
+							tempint4++;
+							break;
+						case 'p':
+							firetalk_callback_chat_room_mode(c,irc_get_nickname(args[0]),args[2],( tempint3 > 0 ? 1 : 0 ),FM_PRIVATE,NULL);
+							break;
+						case 's':
+							firetalk_callback_chat_room_mode(c,irc_get_nickname(args[0]),args[2],( tempint3 > 0 ? 1 : 0 ),FM_SECRET,NULL);
+							break;
+						case 'k':
+							firetalk_callback_chat_room_mode(c,irc_get_nickname(args[0]),args[2],( tempint3 > 0 ? 1 : 0 ),FM_PASSWORDED,args[tempint4]);
+							tempint4++;
 							break;
 						default:
 							tempint2++;
@@ -1127,6 +1141,54 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 			switch (tempint) {
 				case 322: /* RPL_LIST */
 					firetalk_callback_gotroomlist(c,args[3],atoi(args[4]),irc_irc_to_html(args[5]));
+					break;
+				case 324: /* RPL_CHANNELMODEIS */
+					tempint = 0;
+					tempint2 = 5;
+					tempint3 = 0;
+					tempint4 = 5;
+					while ((args[tempint2] != NULL) && (args[4][tempint] != '\0')) {
+						switch (args[4][tempint++]) {
+							case '+':
+								tempint3 = 1;
+								if( args[4][tempint] == '\0' )
+									firetalk_callback_chat_room_mode(c,NULL,args[3],0,FM_NONE,NULL);
+								break;
+							case '-':
+								tempint3 = -1;
+								break;
+							case 't':
+								firetalk_callback_chat_room_mode(c,NULL,args[3],( tempint3 > 0 ? 1 : 0 ),FM_OPERATORTOPICONLY,NULL);
+								break;
+							case 'n':
+								firetalk_callback_chat_room_mode(c,NULL,args[3],( tempint3 > 0 ? 1 : 0 ),FM_NOOUTSIDEMSGS,NULL);
+								break;
+							case 'm':
+								firetalk_callback_chat_room_mode(c,NULL,args[3],( tempint3 > 0 ? 1 : 0 ),FM_MODERATED,NULL);
+								break;
+							case 'i':
+								firetalk_callback_chat_room_mode(c,NULL,args[3],( tempint3 > 0 ? 1 : 0 ),FM_INVITEONLY,NULL);
+								break;
+							case 'l':
+								if( tempint3 > 0 && ! ( atoi(args[tempint4]) >= 1 ) ) break;
+								firetalk_callback_chat_room_mode(c,NULL,args[3],( tempint3 > 0 ? 1 : 0 ),FM_MEMBERLIMIT,args[tempint4]);
+								tempint4++;
+								break;
+							case 'p':
+								firetalk_callback_chat_room_mode(c,NULL,args[3],( tempint3 > 0 ? 1 : 0 ),FM_PRIVATE,NULL);
+								break;
+							case 's':
+								firetalk_callback_chat_room_mode(c,NULL,args[3],( tempint3 > 0 ? 1 : 0 ),FM_SECRET,NULL);
+								break;
+							case 'k':
+								firetalk_callback_chat_room_mode(c,NULL,args[3],( tempint3 > 0 ? 1 : 0 ),FM_PASSWORDED,args[tempint4]);
+								tempint4++;
+								break;
+							default:
+								tempint2++;
+								break;
+						}
+					}
 					break;
 				case 353: /* RPL_NAMREPLY */
 					tempchr2 = args[5];
@@ -1214,13 +1276,14 @@ enum firetalk_error irc_got_data_connecting(client_t c, unsigned char * buffer, 
 		} else {
 			switch (atoi(args[1])) {
 				case 001: // RPL_WELCOME
-				case 376: // RPL_ENDOFMOTD
-				case 422: // ERR_NOMOTD
 					// reset the password to clear the server password
 					if (c->password) {
 						free(c->password);
 						c->password = NULL;
 					}
+					break;
+				case 376: // RPL_ENDOFMOTD
+				case 422: // ERR_NOMOTD
 					firetalk_callback_doinit(c,c->nickname);
 					firetalk_callback_connected(c);
 					break;

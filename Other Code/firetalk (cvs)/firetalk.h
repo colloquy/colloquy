@@ -114,6 +114,8 @@ enum firetalk_callback {
 		/* void *connection, void *clientstruct, char *room, char *by */
 	FC_CHAT_DEVOICED,
 		/* void *connection, void *clientstruct, char *room, char *by */
+	FC_CHAT_ROOM_MODE,
+		/* void *connection, void *clientstruct, char *room, char *by, int on, enum firetalk_room_mode mode, char *params */
 	FC_CHAT_USER_JOINED,
 		/* void *connection, void *clientstruct, char *room, char *who, int previousmember */
 	FC_CHAT_USER_LEFT,
@@ -193,6 +195,17 @@ enum firetalk_error {
 	FE_NOTDONE
 };
 
+enum firetalk_room_mode {
+	FM_NONE = 0x0,
+	FM_PRIVATE = 0x1,
+	FM_SECRET = 0x2,
+	FM_INVITEONLY = 0x4,
+	FM_MODERATED = 0x8,
+	FM_OPERATORTOPICONLY = 0x10,
+	FM_NOOUTSIDEMSGS = 0x20,
+	FM_PASSWORDED = 0x40,
+	FM_MEMBERLIMIT = 0x80
+};
 
 /* Firetalk functions */
 const char *firetalk_strprotocol(const enum firetalk_protocol p);

@@ -1306,6 +1306,21 @@ void firetalk_callback_chat_gottopic(client_t c, const char * const room, const 
 	return;
 }
 
+void firetalk_callback_chat_room_mode(client_t c, const char * const op, const char * const room, const int on, enum firetalk_room_mode mode, const char * const params) {
+	struct s_firetalk_handle *conn;
+	struct s_firetalk_room *r;
+	conn = firetalk_find_handle(c);
+	if (conn == NULL)
+		return;
+	r = firetalk_find_room(conn,room);
+	if (r == NULL)
+		return;
+	if (on) r->modes |= mode;
+	else r->modes &= ~mode;
+	if (conn->callbacks[FC_CHAT_ROOM_MODE])
+		conn->callbacks[FC_CHAT_ROOM_MODE](conn,conn->clientstruct,room,op,on,mode,params);
+}
+
 void firetalk_callback_chat_user_opped(client_t c, const char * const room, const char * const who, const char * const by) {
 	struct s_firetalk_handle *conn;
 	struct s_firetalk_room *r;
