@@ -875,7 +875,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 - (void) dealloc {
-	[super dealloc];
+	[self disconnect];
 
 	[_proxyUsername release];
 	_proxyUsername = nil;
@@ -888,6 +888,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	extern unsigned int connectionCount;
 	connectionCount--;
+
+	[super dealloc];
 }
 
 #pragma mark -

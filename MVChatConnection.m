@@ -143,8 +143,6 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (void) dealloc {
-	[self disconnect];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 
