@@ -1,0 +1,14 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = KABubbleWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {
+            CLASS = KABubbleWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {icon = NSImageView; msgText = NSTextField; username = NSTextField; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = KABubbleWindowView; LANGUAGE = ObjC; SUPERCLASS = NSView; }
+    ); 
+    IBVersion = 1; 
+}
