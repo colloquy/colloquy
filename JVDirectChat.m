@@ -1196,7 +1196,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	}
 
 	if( ! [messageString length] ) 
-		messageString = [NSMutableString stringWithString:[NSString stringWithFormat:@"<span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )]];
+		messageString = [NSMutableString stringWithFormat:@"<span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"] ) {
 		AGRegex *regex = [AGRegex regexWithPattern:@"</?font.*?>" options:AGRegexCaseInsensitive];
