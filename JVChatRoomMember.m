@@ -325,8 +325,8 @@
 }
 
 - (IBAction) toggleHalfOperatorStatus:(id) sender {
-	if( _halfOperator ) [[_parent connection] sendRawMessageWithFormat:@"MODE %@ +h %@", [_parent target], _nickname];
-	else [[_parent connection] sendRawMessageWithFormat:@"MODE %@ -h %@", [_parent target], _nickname];
+	if( _halfOperator ) [[_parent connection] dehalfopMember:_nickname inRoom:[_parent targer]];
+	else [[_parent connection] halfopMember:_nickname inRoom:[_parent target]];
 }
 
 - (IBAction) toggleVoiceStatus:(id) sender {

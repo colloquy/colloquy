@@ -218,6 +218,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) promoteMember:(NSString *) member inRoom:(NSString *) room;
 - (void) demoteMember:(NSString *) member inRoom:(NSString *) room;
+- (void) halfopMember:(NSString *) member inRoom:(NSString *) room;
+- (void) dehalfopMember:(NSString *) member inRoom:(NSString *) room;
 - (void) voiceMember:(NSString *) member inRoom:(NSString *) room;
 - (void) devoiceMember:(NSString *) member inRoom:(NSString *) room;
 - (void) kickMember:(NSString *) member inRoom:(NSString *) room forReason:(NSString *) reason;

@@ -1374,6 +1374,18 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	[self sendRawMessageWithFormat:@"MODE %@ -o %@", [self _roomWithProperPrefix:room], member];
 }
 
+- (void) halfopMember:(NSString *) member inRoom:(NSString *) room {
+	NSParamaterAssert( member != nil );
+	NSParameterAssert( room != nil );
+	[self sendRawMEssageWithFormat:@"MODE %@ +h %@", [self _roomWithProperPrefix:room], member];
+}
+
+- (void) dehalfopMember:(NSString *) member inRoom:(NSString *) room {
+	NSParameterAssert( member != nil );
+	NSParameterAssert( room != nil );
+	[self sendRawMessageWithFormat:@"MODE %@ -h %@", [self _roomWithProperPrefix:room], member];
+}
+
 - (void) voiceMember:(NSString *) member inRoom:(NSString *) room {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( room != nil );
