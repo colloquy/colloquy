@@ -400,6 +400,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[emoticonView retain];
 	[encodingView retain];
 
+	[emoticonView setControlSize:NSRegularControlSize];
+	[emoticonView setSmallImage:[NSImage imageNamed:@"emoticonSmall"]];
+
 	[[[encodingView menu] itemAtIndex:0] setImage:[NSImage imageNamed:@"encoding"]];
 
 	[window setDelegate:self];
@@ -1404,8 +1407,6 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus )];
-
-		[button setControlSize:NSRegularControlSize];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Add Emotions with Emoticons", emoticons toolbar button tooltip )];
 		[toolbarItem setView:button];
