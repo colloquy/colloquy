@@ -381,7 +381,7 @@
 					<key>Description</key>
 					<string>Member's nickname in the room.</string>
 					<key>Name</key>
-					<string>nickname</string>
+					<string>name</string>
 				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>

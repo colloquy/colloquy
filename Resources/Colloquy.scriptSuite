@@ -583,7 +583,7 @@
 				<key>nickname</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>mncA</string>
+					<string>pnam</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
