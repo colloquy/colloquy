@@ -86,13 +86,17 @@
 	float longestStringWidth = 0.;
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[NSApplication sharedApplication] isActive] );
 	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ), NSForegroundColorAttributeName, nil];
+	NSDictionary *subAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:9.], NSFontAttributeName, ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.75] ), NSForegroundColorAttributeName, nil];
 	NSImage *mainImage = nil;
+	NSSize mainStringSize = [_mainText sizeWithAttributes:attributes];
+	NSSize subStringSize = [_infoText sizeWithAttributes:subAttributes];
 
 	if( highlighted && _altImage ) {
 		mainImage = [[self image] retain];
 		[self setImage:_altImage];
 	}
 
+	cellFrame = NSMakeRect( cellFrame.origin.x + 3., cellFrame.origin.y, cellFrame.size.width - 3., cellFrame.size.height );
 	[super drawWithFrame:cellFrame inView:controlView];
 
 	if( highlighted && mainImage ) {
@@ -120,9 +124,8 @@
 #define JVDetailCellStatusImageLeftPadding 2.
 #define JVDetailCellStatusImageRightPadding JVDetailCellStatusImageLeftPadding
 
-	if( ! [_infoText length] && [_mainText length] ) {
+	if( ( ! [_infoText length] && [_mainText length] ) || ( ( subStringSize.height + mainStringSize.height ) >= NSHeight( cellFrame ) - 2. ) ) {
 		float mainYLocation = 0.;
-		NSSize mainStringSize = [_mainText sizeWithAttributes:attributes];
 
 		longestStringWidth = mainStringSize.width;
 
@@ -132,9 +135,6 @@
 		}
 	} else if( [_infoText length] && [_mainText length] ) {
 		float mainYLocation = 0., subYLocation = 0.;
-		NSDictionary *subAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:9.], NSFontAttributeName, ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.75] ), NSForegroundColorAttributeName, nil];
-		NSSize mainStringSize = [_mainText sizeWithAttributes:attributes];
-		NSSize subStringSize = [_infoText sizeWithAttributes:subAttributes];
 
 		if( mainStringSize.width > subStringSize.width ) longestStringWidth = mainStringSize.width;
 		else longestStringWidth = subStringSize.width;
