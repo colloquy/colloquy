@@ -1,5 +1,6 @@
 #import "JVGeneralPreferences.h"
 #import <Cocoa/Cocoa.h>
+#import "JVBuddy.h"
 
 @implementation JVGeneralPreferences
 - (NSString *) preferencesNibName {
@@ -61,6 +62,7 @@
 }
 
 - (IBAction) changeBuddyPreferredName:(id) sender {
+	[JVBuddy setPreferredName:(JVBuddyName)[[sender selectedItem] tag]];
 	[[NSUserDefaults standardUserDefaults] setInteger:[[sender selectedItem] tag] forKey:@"JVChatBuddyNameStyle"];
 }
 
