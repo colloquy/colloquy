@@ -26,7 +26,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) _refreshWindow;
 - (void) _refreshWindowTitle;
 - (void) _refreshList;
-- (void) _refreshChatActivityToolbarItemWithListItem:(id <JVChatListItem>) item;
 @end
 
 #pragma mark -
@@ -48,7 +47,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		chatViewsOutlineView = nil;
 		viewActionButton = nil;
 		favoritesButton = nil;
-		activityToolbarButton = nil;
 		_activityToolbarItem = nil;
 		_activeViewController = nil;
 		_views = [[NSMutableArray array] retain];
@@ -75,10 +73,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
-
-//	[activityToolbarButton retain];
-//	[activityToolbarButton removeFromSuperview];
-//	[activityToolbarButton setDrawsArrow:YES];
 
 	[[self window] setFrameUsingName:@"Chat Window"];
 	[[self window] setFrameAutosaveName:@"Chat Window"];
@@ -412,22 +406,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[toolbarItem setAction:@selector( toggleViewsDrawer: )];
 
 	return toolbarItem;
-}
-
-- (NSToolbarItem *) chatActivityToolbarItem {
-	return nil;
-
-/*	if( _activityToolbarItem ) return _activityToolbarItem;
-
-	_activityToolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:JVToolbarToggleChatActivityItemIdentifier];
-
-	[_activityToolbarItem setLabel:NSLocalizedString( @"Activity", "chat activity toolbar item name" )];
-	[_activityToolbarItem setPaletteLabel:NSLocalizedString( @"Chat Activity", "chat activity drawer toolbar customize palette name" )];
-
-	[activityToolbarButton setToolbarItem:_activityToolbarItem];
-	[_activityToolbarItem setView:activityToolbarButton];
-
-	return _activityToolbarItem;*/
 }
 
 - (IBAction) toggleViewsDrawer:(id) sender {
@@ -809,47 +787,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView noteNumberOfRowsChanged];
 	[chatViewsOutlineView sizeLastColumnToFit];
 	[self _refreshSelectionMenu];
-}
-
-- (void) _refreshChatActivityToolbarItemWithListItem:(id <JVChatListItem>) item {
-	NSMutableArray *chats = [NSMutableArray array];
-	NSEnumerator *enumerator = [_views objectEnumerator];
-	id <JVChatViewController> controller = nil;
-
-	while( ( controller = [enumerator nextObject] ) )
-		if( [controller isKindOfClass:[JVDirectChat class]] )
-			[chats addObject:controller];
-
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-	NSMenuItem *menuItem = nil;
-	JVDirectChat *chat = nil;
-	BOOL newMsg = NO;
-	BOOL newHighMsg = NO;
-
-	enumerator = [chats objectEnumerator];
-	while( ( chat = [enumerator nextObject] ) ) {
-		NSImage *icon = [[[chat icon] copy] autorelease];
-		[icon setScalesWhenResized:YES];
-		[icon setSize:NSMakeSize( 16., 16. )];
-
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[chat title] action:@selector( _switchViews: ) keyEquivalent:@""] autorelease];
-		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:chat];
-		[menuItem setImage:icon];
-		[menu addItem:menuItem];
-
-		if( chat == _activeViewController ) [menuItem setState:NSOnState];
-		else if( [chat newMessagesWaiting] ) [menuItem setState:NSMixedState];
-
-		if( [chat newMessagesWaiting] && chat != _activeViewController ) newMsg = YES;
-		if( [chat newHighlightMessagesWaiting] && chat != _activeViewController ) newHighMsg = YES;
-	}
-
-	if( newHighMsg ) [activityToolbarButton setImage:[NSImage imageNamed:@"activityNewImportant"]];
-	else if( newMsg ) [activityToolbarButton setImage:[NSImage imageNamed:@"activityNew"]];
-	else [activityToolbarButton setImage:[NSImage imageNamed:@"activity"]];
-
-	[activityToolbarButton setMenu:menu];
 }
 
 - (void) _switchViews:(id) sender {

@@ -29,7 +29,6 @@ extern NSString *JVChatViewPboardType;
 	IBOutlet NSOutlineView *chatViewsOutlineView;
 	IBOutlet MVMenuButton *viewActionButton;
 	IBOutlet MVMenuButton *favoritesButton;
-	IBOutlet MVMenuButton *activityToolbarButton;
 	NSToolbarItem *_activityToolbarItem;
 	NSView *_placeHolder;
 	NSMutableArray *_views;
@@ -67,11 +66,10 @@ extern NSString *JVChatViewPboardType;
 - (IBAction) selectNextActivePanel:(id) sender;
 
 - (NSToolbarItem *) toggleChatDrawerToolbarItem;
-- (NSToolbarItem *) chatActivityToolbarItem;
 - (IBAction) toggleViewsDrawer:(id) sender;
 - (IBAction) openViewsDrawer:(id) sender;
 - (IBAction) closeViewsDrawer:(id) sender;
-	
+
 - (void) reloadListItem:(id <JVChatListItem>) controller andChildren:(BOOL) children;
 - (BOOL) isListItemExpanded:(id <JVChatListItem>) item;
 - (void) expandListItem:(id <JVChatListItem>) item;
