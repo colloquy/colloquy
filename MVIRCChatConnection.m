@@ -1068,6 +1068,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		[MVIRCChatConnectionThreadLock unlock];
 
 		while( ! irssiThreadReady ) usleep( 50 );
+
 		extern NSPort *threadConnectionPort;
 		NSConnection *threadConnection = [NSConnection connectionWithReceivePort:nil sendPort:threadConnectionPort];
 		_irssiThreadConnection = [[(MVIRCConnectionThreadHelper *)[threadConnection rootProxy] vendChatConnection:self] retain];
@@ -1669,8 +1670,6 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 + (void) _irssiRunLoop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	[MVIRCChatConnectionThreadLock lock];
-
 	MVIRCConnectionThreadHelper *helper = [[MVIRCConnectionThreadHelper alloc] init];
 	NSConnection *server = [[NSConnection defaultConnection] retain];
 	[server enableMultipleThreads];
@@ -1686,8 +1685,6 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 
 	extern BOOL irssiThreadReady;
 	irssiThreadReady = YES;
-
-	[MVIRCChatConnectionThreadLock unlock];
 
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
