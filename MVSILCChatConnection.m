@@ -41,8 +41,6 @@ NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCe
 - (BOOL) _isKeyPairLoaded;
 - (void) _connectKeyPairLoaded:(NSNotification *) notification;
 
-- (void) _allocSilcClient;
-
 - (void) _addCommand:(NSString *)raw forNumber:(SilcUInt16) cmd_ident;
 - (NSString *) _getCommandForNumber:(SilcUInt16) cmd_ident;
 - (NSLock *) _sentCommandsLock;
@@ -99,7 +97,7 @@ void silc_privmessage_resolve_callback( SilcClient client, SilcClientConnection 
 		}
 
 		[[self _silcClientLock] lock];
-		silc_client_send_private_message( [self _silcClient], [self _silcConn], target, [[dict objectForKey:@"flags"] intValue], (char *)[[[dict objectForKey:@"message"] string] UTF8String], strlen( [[[dict objectForKey:@"message"] string] UTF8String] ), false );
+		silc_client_send_private_message( [self _silcClient], [self _silcConn], target, [[dict objectForKey:@"flags"] intValue], (char *) [[[dict objectForKey:@"message"] string] UTF8String], strlen( [[[dict objectForKey:@"message"] string] UTF8String] ), false );
 		[[self _silcClientLock] unlock];
 	}
 
@@ -117,7 +115,7 @@ void silc_channel_get_clients_per_list_callback( SilcClient client, SilcClientCo
 	NSMutableArray *nickArray = [NSMutableArray arrayWithCapacity:clients_count];
 
 	[[self _silcClientLock] lock];
-	SilcChannelEntry channel = silc_client_get_channel( [self _silcClient], [self _silcConn], (char *)[[dict objectForKey:@"channel_name"] UTF8String]);
+	SilcChannelEntry channel = silc_client_get_channel( [self _silcClient], [self _silcConn], (char *) [[dict objectForKey:@"channel_name"] UTF8String]);
 	[[self _silcClientLock] unlock];
 
 	int i = 0;
@@ -777,7 +775,12 @@ static SilcClientOperations silcClientOps = {
 		_silcClientParams.nickname_parse = silc_nickname_format_parse;
 
 		_silcClientLock = [[NSRecursiveLock alloc] init];
-		[self _allocSilcClient];
+		_silcClient = silc_client_alloc( &silcClientOps, &_silcClientParams, self, NULL );
+		if( ! _silcClient) {
+			// we need some error handling here.. silc conenction CAN'T work without silc client
+			[self release];
+			return nil;
+		}
 
 		[self setUsername:NSUserName()];
 		[self setRealName:NSFullUserName()];
@@ -849,31 +852,33 @@ static SilcClientOperations silcClientOps = {
 
 	[super connect];
 
+	[self _willConnect]; // call early so other code has a chance to change our info
+
 	_sentQuitCommand = NO;
 
-	// check if nickname/username and realname are set
-	_silcClient -> hostname = (char *) strdup( [[[NSProcessInfo processInfo] hostName] UTF8String] );
-
+	_silcClient -> hostname = strdup( [[[NSProcessInfo processInfo] hostName] UTF8String] );
 	_silcClient -> pkcs = silcPkcs;
 	_silcClient -> private_key = silcPrivateKey;
 	_silcClient -> public_key = silcPublicKey;
 
-	if( ! silc_client_init( _silcClient ) ) return;
+	if( ! silc_client_init( _silcClient ) ) {
+		// some error, do better reporting
+		[self _didNotConnect];
+		return;
+	}
 
 	BOOL errorOnConnect = NO;
 
 	[_silcClientLock lock];
-	if( silc_client_connect_to_server( [self _silcClient], NULL, [self serverPort], (char *)[[self server] UTF8String], self ) == -1 )
+	if( silc_client_connect_to_server( [self _silcClient], NULL, [self serverPort], (char *) [[self server] UTF8String], self ) == -1 )
 		errorOnConnect = YES;
 	[_silcClientLock unlock];
 
 	[_lastConnectAttempt autorelease];
 	_lastConnectAttempt = [[NSDate date] retain];
 
-	[self _willConnect];
 	if( errorOnConnect) [self _didNotConnect];
-
-	[NSThread detachNewThreadSelector:@selector( _silcRunloop ) toTarget:self withObject:nil];
+	else [NSThread detachNewThreadSelector:@selector( _silcRunloop ) toTarget:self withObject:nil];
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
@@ -1147,7 +1152,7 @@ static SilcClientOperations silcClientOps = {
 		return;
 	}
 
-	silc_client_send_channel_message( [self _silcClient], [self _silcConn], channel, NULL, flags, (char *)msg, strlen( msg ), false );
+	silc_client_send_channel_message( [self _silcClient], [self _silcConn], channel, NULL, flags, (char *) msg, strlen( msg ), false );
 
 	[[self _silcClientLock] unlock];
 }
@@ -1582,14 +1587,6 @@ static SilcClientOperations silcClientOps = {
 - (void) _connectKeyPairLoaded:(NSNotification *) notification {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVSILCChatConnectionLoadedCertificate object:nil];
 	[self connect];
-}
-
-- (void) _allocSilcClient {
-	_silcClient = silc_client_alloc( &silcClientOps, &_silcClientParams, self, NULL );
-	if( ! _silcClient) {
-		// we need some error handling here.. silc conenction CAN'T work without silc client
-		return;
-	}
 }
 
 - (void) _addCommand:(NSString *)raw forNumber:(SilcUInt16) cmd_ident {

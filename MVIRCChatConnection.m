@@ -928,6 +928,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	[super connect];
 
+	[self _willConnect]; // call early so other code has a chance to change our info
+
 	[MVIRCChatConnectionThreadLock lock];
 
 	CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( _chatConnectionSettings -> chat_type );
