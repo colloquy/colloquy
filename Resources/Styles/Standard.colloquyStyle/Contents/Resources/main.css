@@ -55,10 +55,13 @@ body {
 	font-weight: inherit;
 }
 
-.envelope > .member:after {
-	content: ":";
+.envelope > .member {
 	margin-right: 0.5ex;
 	white-space: nowrap;
+}
+
+.envelope > .member:after {
+	content: ":";
 }
 
 .action > .member:before {
