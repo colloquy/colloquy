@@ -20,6 +20,9 @@
 	BOOL _invalidateMembers;
 	BOOL _kickedFromRoom;
 }
+- (void) joined;
+- (void) parting;
+
 - (void) addMemberToChat:(NSString *) member asPreviousMember:(BOOL) previous;
 - (void) removeChatMember:(NSString *) member withReason:(NSData *) reason;
 - (void) changeChatMember:(NSString *) member to:(NSString *) nick;
@@ -43,4 +46,19 @@
 
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromMember:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room;
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room;
+
+- (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room;
+- (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoom *) room forReason:(NSString *) reason;
+- (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by forReason:(NSString *) reason;
+
+- (void) memberPromoted:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by;
+- (void) memberDemoted:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by;
+- (void) memberVoiced:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by;
+- (void) memberDevoiced:(JVChatRoomMember *) member inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by;
+
+- (void) joinedRoom:(JVChatRoom *) room;
+- (void) partingFromRoom:(JVChatRoom *) room;
+- (void) kickedFromRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by forReason:(NSString *) reason;
+
+- (void) topicChangedTo:(NSString *) topic inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) member;
 @end

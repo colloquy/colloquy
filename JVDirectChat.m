@@ -354,6 +354,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 - (void) setTarget:(NSString *) target {
+	NSString *oldNick = _target;
+
 	[_target autorelease];
 	_target = [target copy];
 
@@ -368,6 +370,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	[_buddy autorelease];
 	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_target onServer:[[self connection] server]] retain];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( NSString * ), @encode( JVDirectChat * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( userNamed:isNowKnowAs:inView: )];
+	[invocation setArgument:&oldNick atIndex:2];
+	[invocation setArgument:&target atIndex:3];
+	[invocation setArgument:&self atIndex:4];
+
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 }
 
 - (JVBuddy *) buddy {
@@ -1481,5 +1493,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( ! result ) [self doesNotRespondToSelector:_cmd];
 	else if( [result isKindOfClass:[NSString class]] )
 		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
+}
+
+- (void) userNamed:(NSString *) nickname isNowKnowAs:(NSString *) newNickname inView:(id <JVChatViewController>) view {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:nickname, @"----", newNickname, @"uNc1", view, @"uNc2", nil];
+	if( ! [self callScriptHandler:'uNcX' withArguments:args] )
+		[self doesNotRespondToSelector:_cmd];
 }
 @end
