@@ -33,11 +33,13 @@ body {
 
 .envelope.highlight {
 	background-color: #efefec;
+	background-color: rgba( 0, 0, 0, 0.1 );
 }
 
 .member {
 	font-weight: bold;
 	color: #f90;
+	text-decoration: none;
 }
 
 .member.self {
