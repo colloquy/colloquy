@@ -1074,7 +1074,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
 		_irssiThreadProxy = [[connection rootProxy] retain];
 		[(NSDistantObject *)_irssiThreadProxy setProtocolForProxy:@protocol( MVIRCChatConnectionIrssiThread )];
-		NSLog( @"got us a distant object");
 	}
 
 	return self;
@@ -1682,8 +1681,8 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 
 	GMainLoop *glibMainLoop = g_main_new( TRUE );
 
-	CFRunLoopTimerRef timer = CFRunLoopTimerCreate( NULL, 0., 0.01, 0, 0, irssiRunCallback, NULL );
-    CFRunLoopAddTimer( [[NSRunLoop currentRunLoop] getCFRunLoop], timer, kCFRunLoopDefaultMode );
+	CFRunLoopTimerRef timer = CFRunLoopTimerCreate( NULL, 0., 0.05, 0, 0, irssiRunCallback, NULL );
+    CFRunLoopAddTimer( (CFRunLoopRef) [NSRunLoop currentRunLoop], timer, kCFRunLoopDefaultMode );
 
 	extern BOOL irssiThreadReady;
 	irssiThreadReady = YES;
