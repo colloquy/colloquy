@@ -76,6 +76,61 @@
 	[super setFloatValue:position knobProportion:percent];
 }
 
+- (NSMenu *) menuForEvent:(NSEvent *) event {
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenuItem *item = nil;
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear All Marks", "clear all marks contextual menu item title" ) action:@selector( removeAllMarks ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	[menu addItem:item];
+
+	if( sFlags.isHoriz ) {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Left", "clear marks from here left contextual menu") action:@selector( clearMarksHereLess: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+		
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Right", "clear marks from here right contextual menu") action:@selector( clearMarksHereGreater: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	} else {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Up", "clear marks from here up contextual menu") action:@selector( clearMarksHereLess: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+		
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Down", "clear marks from here up contextual menu") action:@selector( clearMarksHereGreater: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	}
+
+	return menu;
+}
+
+- (IBAction) clearMarksHereLess:(id) sender {
+	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
+	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
+	NSRect clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 6. : 0. ), ( sFlags.isHoriz ? 0. : 6. ) );
+	float scale = NSHeight( clip ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+	[self removeMarksLessThan:( ( sFlags.isHoriz ? where.x : where.y ) / scale )];
+}
+
+- (IBAction) clearMarksHereGreater:(id) sender {
+	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
+	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
+	NSRect clip = NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 6. : 0. ), ( sFlags.isHoriz ? 0. : 6. ) );
+	float scale = NSHeight( clip ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+	[self removeMarksGreaterThan:( ( sFlags.isHoriz ? where.x : where.y ) / scale )];
+}
+
+#pragma mark -
+
+- (void) shiftMarksAndShadedAreasBy:(unsigned long) displacement {
+	NSAffineTransform *transform = [NSAffineTransform transform];
+	[transform translateXBy:( sFlags.isHoriz ? displacement : 0. ) yBy:( sFlags.isHoriz ? 0. : displacement )];
+
+	[_lines transformUsingAffineTransform:transform];
+	[_shadedAreas transformUsingAffineTransform:transform];
+}
+
 #pragma mark -
 
 - (void) buildLineAtLocation:(unsigned long long) location {
@@ -104,6 +159,42 @@
 
 - (void) removeMarkAt:(unsigned long long) location {
 	[_marks removeObject:[NSNumber numberWithUnsignedLongLong:location]];
+	[self rebuildLines];
+	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
+}
+
+- (void) removeMarksGreaterThan:(unsigned long long) location {
+	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
+	NSNumber *number = nil;
+
+	while( ( number = [enumerator nextObject] ) )
+		if( [number unsignedIntValue] > location )
+			[_marks removeObject:number];
+
+	[self rebuildLines];
+	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
+}
+
+- (void) removeMarksLessThan:(unsigned long long) location {
+	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
+	NSNumber *number = nil;
+
+	while( ( number = [enumerator nextObject] ) )
+		if( [number unsignedIntValue] < location )
+			[_marks removeObject:number];
+
+	[self rebuildLines];
+	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
+}
+
+- (void) removeMarksInRange:(NSRange) range {
+	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
+	NSNumber *number = nil;
+
+	while( ( number = [enumerator nextObject] ) )
+		if( NSLocationInRange( [number unsignedIntValue], range ) )
+			[_marks removeObject:number];
+
 	[self rebuildLines];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
