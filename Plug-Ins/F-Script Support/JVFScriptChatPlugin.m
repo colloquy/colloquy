@@ -39,7 +39,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 		NSString *contents = [NSString stringWithContentsOfFile:path];
 		FSInterpreterResult *result = [[self scriptInterpreter] execute:contents];
 		if( ! [result isOk] ) {
-			NSRunCriticalAlertPanel( NSLocalizedString( @"F-Script Plugin Error", "F-Script plugin error title" ), NSLocalizedString( @"The F-Script plugin \"%@\" had an error while loading. The error occured near character %d.\n\n%@", "F-Script plugin error message" ), nil, nil, nil, [[path lastPathComponent] stringByDeletingPathExtension], [result errorRange].location, [result errorMessage] );
+			NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"F-Script Plugin Error", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error title" ), NSLocalizedStringFromTableInBundle( @"The F-Script plugin \"%@\" had an error while loading. The error occured near character %d.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, nil, nil, [[path lastPathComponent] stringByDeletingPathExtension], [result errorRange].location, [result errorMessage] );
 			[self release];
 			return nil;
 		}
@@ -96,7 +96,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 	[self performSelector:@selector( load )];
 
 	if( ! [result isOk] ) {
-		NSRunCriticalAlertPanel( NSLocalizedString( @"F-Script Plugin Error", "F-Script plugin error title" ), NSLocalizedString( @"The F-Script plugin \"%@\" had an error while loading. The error occured near character %d.\n\n%@", "F-Script plugin error message" ), nil, nil, nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], [result errorRange].location, [result errorMessage] );
+		NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"F-Script Plugin Error", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error title" ), NSLocalizedStringFromTableInBundle( @"The F-Script plugin \"%@\" had an error while loading. The error occured near character %d.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, nil, nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], [result errorRange].location, [result errorMessage] );
 		return;
 	}
 
@@ -117,7 +117,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 #pragma mark -
 
 - (void) promptForReload {
-	if( NSRunInformationalAlertPanel( NSLocalizedString( @"F-Script Plugin Changed", "F-Script plugin file changed dialog title" ), NSLocalizedString( @"The F-Script plugin \"%@\" has changed on disk. Any script variables will reset if reloaded. All local block modifications will also be lost.", "F-Script plugin changed on disk message" ), NSLocalizedString( @"Reload", "reload button title" ), NSLocalizedString( @"Keep Previous Version", "keep previous version button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] ) == NSOKButton ) {
+	if( NSRunInformationalAlertPanel( NSLocalizedStringFromTableInBundle( @"F-Script Plugin Changed", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin file changed dialog title" ), NSLocalizedStringFromTableInBundle( @"The F-Script plugin \"%@\" has changed on disk. Any script variables will reset if reloaded. All local block modifications will also be lost.", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin changed on disk message" ), NSLocalizedStringFromTableInBundle( @"Reload", nil, [NSBundle bundleForClass:[self class]], "reload button title" ), NSLocalizedStringFromTableInBundle( @"Keep Previous Version", nil, [NSBundle bundleForClass:[self class]], "keep previous version button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] ) == NSOKButton ) {
 		[self reloadFromDisk];
 	}
 }
@@ -162,7 +162,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 			BlockStackElem *stack = [[[exception userInfo] objectForKey:@"blockStack"] lastObject];
 			NSString *locationError = @"";
 			if( stack ) locationError = [NSString stringWithFormat:@" The error occured near character %d inside the block.", [stack firstCharIndex]];
-			int result = NSRunCriticalAlertPanel( NSLocalizedString( @"F-Script Plugin Error", "F-Script plugin error title" ), NSLocalizedString( @"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@", "F-Script plugin error message" ), nil, NSLocalizedString( @"Inspect", "inspect button title" ), NSLocalizedString( @"Edit...", "edit button title" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], blockName, locationError, [exception reason] );
+			int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"F-Script Plugin Error", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error title" ), NSLocalizedStringFromTableInBundle( @"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, NSLocalizedStringFromTableInBundle( @"Inspect", nil, [NSBundle bundleForClass:[self class]], "inspect button title" ), NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], blockName, locationError, [exception reason] );
 			if( result == NSCancelButton ) {
 				if( stack && [stack lastCharIndex] != -1 ) [(Block *)object showError:[stack errorStr] start:[stack firstCharIndex] end:[stack lastCharIndex]];
 				else if( stack ) [(Block *)object showError:[stack errorStr]];

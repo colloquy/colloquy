@@ -73,15 +73,37 @@
 
 - (NSToolbar *) toolbar {
 	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"F-Script Console"];
+	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:NO];
 	[toolbar setAutosavesConfiguration:NO];
 	return [toolbar autorelease];
 }
 
+- (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+	if( [identifier isEqualToString:@"JVFScriptBrowseToolbarItem"] ) {
+		NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		[toolbarItem setLabel:NSLocalizedStringFromTableInBundle( @"Browse", nil, [NSBundle bundleForClass:[self class]], "browse fscript toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedStringFromTableInBundle( @"Object Browser", nil, [NSBundle bundleForClass:[self class]], "browse fscript toolbar customize palette name" )];
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector(objectBrowser:)];
+		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
+		return toolbarItem;
+	}
+	return nil;
+}
+
+- (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
+	return [NSArray arrayWithObject:@"JVFScriptBrowseToolbarItem"];
+}
+
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
+	return [NSArray arrayWithObject:@"JVFScriptBrowseToolbarItem"];
+}
+
 - (NSString *) title {
 	if( [self plugin] )
-		return [NSString stringWithFormat:NSLocalizedString( @"%@ Console", "plugin named console panel title" ), [[[[self plugin] scriptFilePath] lastPathComponent] stringByDeletingPathExtension]];
-	return NSLocalizedString( @"F-Script Console", "F-Script console panel title" );
+		return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"%@ Console", nil, [NSBundle bundleForClass:[self class]], "plugin named console panel title" ), [[[[self plugin] scriptFilePath] lastPathComponent] stringByDeletingPathExtension]];
+	return NSLocalizedStringFromTableInBundle( @"F-Script Console", nil, [NSBundle bundleForClass:[self class]], "F-Script console panel title" );
 }
 
 - (NSString *) windowTitle {
@@ -149,30 +171,30 @@
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Object Browser", "object browser menu item title" ) action:@selector( objectBrowser: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle( @"Object Browser", nil, [NSBundle bundleForClass:[self class]], "object browser menu item title" ) action:@selector( objectBrowser: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
 	if( [self plugin] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Open Script File", "open script file menu item title" ) action:@selector( openScriptFile: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle( @"Open Script File", nil, [NSBundle bundleForClass:[self class]], "open script file menu item title" ) action:@selector( openScriptFile: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Reload Script File", "reload script file menu item title" ) action:@selector( reloadScriptFile: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle( @"Reload Script File", nil, [NSBundle bundleForClass:[self class]], "reload script file menu item title" ) action:@selector( reloadScriptFile: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
 	}
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle( @"Detach From Window", nil, [NSBundle bundleForClass:[self class]], "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
 	[item setTarget:[JVChatController defaultManager]];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle( @"Close", nil, [NSBundle bundleForClass:[self class]], "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
