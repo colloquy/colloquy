@@ -2,12 +2,24 @@
 <!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
 <plist version="0.9">
 <dict>
+	<key>JVAutoAcceptFilesFrom</key>
+	<integer>1</integer>
+	<key>JVChatConsolePreferredOpenMode</key>
+	<integer>0</integer>
+	<key>JVChatRoomPreferredOpenMode</key>
+	<integer>2</integer>
+	<key>JVChatTranscriptPreferredOpenMode</key>
+	<integer>0</integer>
+	<key>JVDirectChatPreferredOpenMode</key>
+	<integer>3</integer>
+	<key>JVChatWindowDrawerOpen</key>
+	<true/>
 	<key>JVChatSelfNameStyle</key>
 	<integer>1</integer>
 	<key>JVChatBuddyNameStyle</key>
 	<integer>1</integer>
 	<key>JVChatEncoding</key>
-	<integer>5</integer>
+	<integer>4</integer>
 	<key>MVChatHighlightNames</key>
 	<array></array>
 	<key>MVChatBookmarks</key>
@@ -162,6 +174,21 @@
 		<key>showBubbleOnlyIfBackground</key>
 		<true/>
 	</dict>
+	<key>JVNotificationSettings JVChatRoomInvite</key>
+	<dict>
+		<key>playSound</key>
+		<true/>
+		<key>showBubble</key>
+		<true/>
+		<key>soundPath</key>
+		<string>Beep 1.aiff</string>
+	</dict>
+	<key>JVOpenSafeFiles</key>
+	<true/>
+	<key>JVRemoveTransferedItems</key>
+	<integer>1</integer>
+	<key>JVSortRoomMembersByStatus</key>
+	<true/>
 	<key>JVChatDefaultStyle</key>
 	<string>cc.javelin.colloquy.style.standard</string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.bland</key>
