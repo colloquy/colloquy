@@ -1,12 +1,13 @@
 #import <AppKit/NSTextView.h>
 
 @interface MVTextView : NSTextView {
-    NSDictionary *typingAttributes;
-	
-	NSSize			lastPostedSize;
-	NSSize			_desiredSizeCached;
+    NSDictionary *defaultTypingAttributes;
+	NSSize lastPostedSize;
+	NSSize _desiredSizeCached;
 }
-- (BOOL)checkKeyEvent:(NSEvent *)event;
+- (BOOL) checkKeyEvent:(NSEvent *) event;
+
+- (void) setBaseFont:(NSFont *) font;
 
 - (void) reset:(id) sender;
 - (void) bold:(id) sender;

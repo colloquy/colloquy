@@ -1722,6 +1722,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[send replaceCharactersInRange:NSMakeRange( [[send textStorage] length], 0 ) withString:[NSString stringWithFormat:@"%@ ", [sender representedObject]]];
 }
 
+- (void) _switchingStyleEnded:(NSString *) html {
+	[super _switchingStyleEnded:html];
+	WebPreferences *preferences = [display preferences];
+	NSFont *baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[preferences standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size: [preferences defaultFontSize]];
+	[send setBaseFont:baseFont];
+}
+
 - (BOOL) _usingSpecificStyle {
 	return ( [NSBundle bundleWithIdentifier:[self preferenceForKey:@"style"]] ? YES : NO );
 }

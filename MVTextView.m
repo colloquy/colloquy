@@ -77,10 +77,22 @@
 	return NO;
 }
 
+- (void) setBaseFont:(NSFont *) font {
+	[defaultTypingAttributes release];
+	if( font == nil ) {
+		font = [NSFont userFontOfSize:0.];
+		defaultTypingAttributes = nil;
+	} else {
+		defaultTypingAttributes = [[NSDictionary dictionaryWithObject: font forKey: NSFontAttributeName] retain];
+	}
+	[self setTypingAttributes:defaultTypingAttributes];
+	[self setFont:font];
+}
+
 - (void) reset:(id) sender {
 	if( ! [self isEditable] ) return;
 	[self setString:@""];
-	[self setTypingAttributes:nil];
+	[self setTypingAttributes:defaultTypingAttributes];
 	[self resetCursorRects];
 }
 
