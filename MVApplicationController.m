@@ -98,7 +98,8 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
-	if( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame ) {
+	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES];
+	if( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) {
 		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
 		return YES;
 	}
