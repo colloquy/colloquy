@@ -134,7 +134,7 @@
 		};
 		0A60C1600630D96D00DC6280 = {
 			children = (
-				1CE952E1063D55F00071C9C3,
+				1CEF8F5A064DB2B600564692,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -210,6 +210,62 @@
 //1C2
 //1C3
 //1C4
+		1C06052306471FFB002438AF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVMixedTableColumn.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C06052406471FFB002438AF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVMixedTableColumn.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C06052506471FFB002438AF = {
+			fileRef = 1C06052306471FFB002438AF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C06052606471FFB002438AF = {
+			fileRef = 1C06052406471FFB002438AF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C060779064A5DE8002438AF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVColorWellCell.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C06077A064A5DE8002438AF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVColorWellCell.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C06077B064A5DE8002438AF = {
+			fileRef = 1C060779064A5DE8002438AF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C06077C064A5DE8002438AF = {
+			fileRef = 1C06077A064A5DE8002438AF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C088A0E04FCFEE700A8FE6E = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1296,6 +1352,8 @@
 				CB77A8890612622E0076BEE0,
 				CB742C010630E08200CF2B0E,
 				1C94370A0639F86700618CD9,
+				1C06052506471FFB002438AF,
+				1C06077B064A5DE8002438AF,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2007,6 +2065,8 @@
 				1CB3717A060CC81C00F6A81F,
 				CB742C020630E08200CF2B0E,
 				1C94370B0639F86700618CD9,
+				1C06052606471FFB002438AF,
+				1C06077C064A5DE8002438AF,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2138,7 +2198,7 @@
 				1CB2CD80052DDC560094AAA4,
 				1CD0201F05758F26000F93B4,
 				1C6C75460630AD5300698F55,
-				1CE9532C063D55F70071C9C3,
+				1CEF8F92064DB2C000564692,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2196,7 +2256,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1CE9532D063D55FD0071C9C3,
+				1CEF8F93064DB2C600564692,
 				1C6C75490630AD9500698F55,
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
@@ -2515,8 +2575,8 @@
 				1CBC62F705488DB1009E59E1,
 				1CBC630205488F99009E59E1,
 				1C9981FD0603EF4A006C6417,
-				1CBC62FC05488E6E009E59E1,
 				1CDEE81D0586C15A000B9075,
+				1CBC62FC05488E6E009E59E1,
 				1CBC62FF05488F89009E59E1,
 			);
 			isa = PBXGroup;
@@ -2542,6 +2602,7 @@
 			);
 			isa = PBXGroup;
 			name = "File Transfers";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3430,33 +3491,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1CE952E1063D55F00071C9C3 = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = ChatCore.framework;
-			refType = 3;
-			remoteRef = 1CE95330063D56060071C9C3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1CE9532C063D55F70071C9C3 = {
-			fileRef = 1CE952E1063D55F00071C9C3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CE9532D063D55FD0071C9C3 = {
-			fileRef = 1CE952E1063D55F00071C9C3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CE95330063D56060071C9C3 = {
-			containerPortal = 0A60C15F0630D96D00DC6280;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
-			remoteInfo = "Chat Core (Framework)";
-		};
 		1CE95885063F3BF90071C9C3 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -3569,6 +3603,33 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		1CEF8F5A064DB2B600564692 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = ChatCore.framework;
+			refType = 3;
+			remoteRef = 1CEF8F94064DB2DB00564692;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CEF8F92064DB2C000564692 = {
+			fileRef = 1CEF8F5A064DB2B600564692;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CEF8F93064DB2C600564692 = {
+			fileRef = 1CEF8F5A064DB2B600564692;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CEF8F94064DB2DB00564692 = {
+			containerPortal = 0A60C15F0630D96D00DC6280;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
 		};
 		1CF038FF062F8DBB009774D8 = {
 			buildActionMask = 2147483647;
@@ -3808,12 +3869,16 @@
 				1C2462A205F9205900505752,
 				1C9437090639F86700618CD9,
 				1C9437080639F86700618CD9,
+				1C06052406471FFB002438AF,
+				1C06052306471FFB002438AF,
 				F592CABF01824AE801EE70DE,
 				F592CAC001824AE801EE70DE,
 				F599994901890E4601EE70DE,
 				F599994A01890E4601EE70DE,
 				1CBB23DA04F03CA7000001C8,
 				1CBB23D904F03CA7000001C8,
+				1C06077A064A5DE8002438AF,
+				1C060779064A5DE8002438AF,
 				1CC6FD63054B70BC0075807C,
 				1CC6FD62054B70BC0075807C,
 				F551EE490209FB3301EE70DE,
