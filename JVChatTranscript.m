@@ -678,7 +678,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"about"] ) {
-		[listener use];
+		if( [[[actionInformation objectForKey:WebActionOriginalURLKey] standardizedURL] path] )
+			[listener ignore];
+		else [listener use];
 	} else if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"self"] ) {
 		NSString *resource = [[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier];
 		NSRange range = [resource rangeOfString:@"?"];
