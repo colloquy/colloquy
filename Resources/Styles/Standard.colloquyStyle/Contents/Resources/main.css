@@ -44,16 +44,16 @@ body {
 	color: #a21;
 }
 
-.action .member:before {
+.action > .member:before {
 	content: "\2022";
 	margin-right: 0.3ex;
 }
 
-.action .member:after {
+.action > .member:after {
 	content: "";
 }
 
-.member:after {
+.envelope > .member:after {
 	content: ":";
 	margin-right: 0.5ex;
 	white-space: nowrap;
