@@ -50,6 +50,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyAwayStatusChange: ) name:MVChatConnectionBuddyIsAwayNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyAwayStatusChange: ) name:MVChatConnectionBuddyIsUnawayNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatConnectionBuddyIsIdleNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatConnectionGotUserIdleNotification object:nil];
 
 		_person = [person retain];
 		_nicknames = [[NSMutableSet set] retain];

@@ -1392,7 +1392,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) addUserToNotificationList:(NSString *) user {
 	NSParameterAssert( user != nil );
-	notifylist_add( [[NSString stringWithFormat:@"%@!*@*", user] UTF8String], NULL, TRUE, 1 );
+	notifylist_add( [[NSString stringWithFormat:@"%@!*@*", user] UTF8String], NULL, TRUE, 600 );
 }
 
 - (void) removeUserFromNotificationList:(NSString *) user {
@@ -1523,6 +1523,12 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	signal_add_last( "event 317", (SIGNAL_FUNC) MVChatUserIdle );
 	signal_add_last( "event 318", (SIGNAL_FUNC) MVChatUserWhoisComplete );
 	signal_add_last( "event 319", (SIGNAL_FUNC) MVChatUserChannels );
+	
+	// And to catch the notifylist whois ones as well
+	signal_add_last( "notifylist event whois end", (SIGNAL_FUNC) MVChatUserWhoisComplete );
+	signal_add_last( "notifylist event whois away", (SIGNAL_FUNC) MVChatUserAway );
+	signal_add_last( "notifylist event whois", (SIGNAL_FUNC) MVChatUserWhois );
+	signal_add_last( "notifylist event whois idle", (SIGNAL_FUNC) MVChatUserIdle );
 
 	signal_add_last( "event 322", (SIGNAL_FUNC) MVChatListRoom );
 
