@@ -9,6 +9,7 @@
 	IBOutlet NSPanel *messageUser;
 	IBOutlet NSPanel *nicknameAuth;
 	IBOutlet NSPanel *certificateAuth;
+	IBOutlet NSPanel *publicKeyVerification;
 
 	/* Nick Auth */
 	IBOutlet NSTextField *authNickname;
@@ -20,6 +21,14 @@
 	IBOutlet NSTextField *certificateDescription;
 	IBOutlet NSTextField *certificatePassphrase;
 	IBOutlet NSButton *certificateKeychain;
+	
+	/* Public Key Verification */
+	IBOutlet NSTextField *publicKeyDescription;
+	IBOutlet NSTextField *publicKeyName;
+	IBOutlet NSTextField *publicKeyNameDescription;
+	IBOutlet NSTextField *publicKeyFingerprint;
+	IBOutlet NSTextField *publicKeyBabbleprint;
+	IBOutlet NSButton *publicKeyAlwaysAccept;
 
 	/* New Connection */
 	IBOutlet NSTextField *newNickname;
@@ -44,6 +53,8 @@
 	NSMutableArray *_joinRooms;
 	MVChatConnection *_passConnection;
 	MVChatConnection *_certificateConnection;
+	NSDictionary *_publicKeyDictionary;
+	NSMutableSet *_publicKeyRequestQueue;
 }
 + (MVConnectionsController *) defaultManager;
 
@@ -66,6 +77,8 @@
 - (IBAction) sendPassword:(id) sender;
 
 - (IBAction) sendCertificatePassword:(id) sender;
+
+- (IBAction) verifiedPublicKey:(id) sender;
 
 - (NSArray *) connections;
 - (NSArray *) connectedConnections;

@@ -18,6 +18,11 @@ typedef enum {
 	MVChatConnectionSOCKSProxy = 'sokS'
 } MVChatConnectionProxy;
 
+typedef enum {
+	MVChatConnectionServerPublicKeyType = 'serV',
+	MVChatConnectionClientPublicKeyType = 'clnT'
+} MVChatConnectionPublicKeyType;
+
 @class MVChatRoom;
 @class MVChatUser;
 @class MVUploadFileTransfer;
@@ -31,6 +36,7 @@ extern NSString *MVChatConnectionErrorNotification;
 
 extern NSString *MVChatConnectionNeedNicknamePasswordNotification;
 extern NSString *MVChatConnectionNeedCertificatePasswordNotification;
+extern NSString *MVChatConnectionNeedPublicKeyVerificationNotification;
 
 extern NSString *MVChatConnectionGotRawMessageNotification;
 extern NSString *MVChatConnectionGotPrivateMessageNotification;
@@ -148,6 +154,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) setPersistentInformation:(NSDictionary *) information;
 - (NSDictionary *) persistentInformation;
+
+- (void) publicKeyVerified:(NSDictionary *) dictionary andAccepted:(BOOL) accepted andAlwaysAccept:(BOOL) alwaysAccept;
 
 #pragma mark -
 

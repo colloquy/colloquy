@@ -113,6 +113,8 @@ static NSMenu *favoritesMenu = nil;
 		_bookmarks = nil;
 		_joinRooms = nil;
 		_passConnection = nil;
+		
+		_publicKeyRequestQueue = [[NSMutableSet set] retain];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuitting: ) name:NSApplicationWillTerminateNotification object:nil];
 
@@ -129,6 +131,7 @@ static NSMenu *favoritesMenu = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestCertificatePassword: ) name:MVChatConnectionNeedCertificatePasswordNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPublicKeyVerification: ) name:MVChatConnectionNeedPublicKeyVerificationNotification object:nil];
 
 		[self _loadBookmarkList];
 	}
@@ -148,10 +151,12 @@ static NSMenu *favoritesMenu = nil;
 	[_bookmarks release];
 	[_joinRooms release];
 	[_passConnection release];
+	[_publicKeyRequestQueue release];
 
 	_bookmarks = nil;
 	_joinRooms = nil;
 	_passConnection = nil;
+	_publicKeyRequestQueue = nil;
 
 	[super dealloc];
 }
@@ -450,6 +455,38 @@ static NSMenu *favoritesMenu = nil;
 
 		if( [certificateKeychain state] == NSOnState ) {
 			[[MVKeyChain defaultKeyChain] setGenericPassword:[certificatePassphrase stringValue] forService:[ourConnection certificateServiceName] account:@"Colloquy"];
+		}
+	}
+}
+
+- (IBAction) verifiedPublicKey:(id) sender {
+	NSDictionary *dict = _publicKeyDictionary;
+	
+	[_publicKeyDictionary autorelease];
+	_publicKeyDictionary = nil;
+	
+	MVChatConnection *connection = [dict objectForKey:@"connection"];
+	
+	BOOL accepted = NO;
+	
+	if ( [sender tag] )
+		accepted = YES;
+	
+	BOOL alwaysAccept = NO;
+	
+	if ( [publicKeyAlwaysAccept state] == NSOnState ) 
+		alwaysAccept = YES;
+	
+	[connection publicKeyVerified:dict andAccepted:accepted andAlwaysAccept:alwaysAccept];
+	
+	[publicKeyVerification orderOut:nil];
+	
+	if ( [_publicKeyRequestQueue count] ) {
+		NSNotification *note = [_publicKeyRequestQueue anyObject];
+		
+		if ( note ) {
+			[_publicKeyRequestQueue removeObject:note];
+			[[NSNotificationCenter defaultCenter] postNotification:note];
 		}
 	}
 }
@@ -1475,6 +1512,37 @@ static NSMenu *favoritesMenu = nil;
 
 	[certificateAuth center];
 	[certificateAuth orderFront:nil];	
+}
+
+- (void) _requestPublicKeyVerification:(NSNotification *) notification {
+	NSDictionary *dict = [notification object];
+	
+	if ( [publicKeyVerification isVisible] ) {
+		[_publicKeyRequestQueue addObject:notification];
+		return;
+	}
+	
+	switch ( (MVChatConnectionPublicKeyType) [[dict objectForKey:@"publicKeyType"] unsignedIntValue] ) {
+		case MVChatConnectionClientPublicKeyType:
+			[publicKeyNameDescription setObjectValue:@"User name:"];
+			[publicKeyDescription setObjectValue:@"Please verify the users public key."];
+			break;
+		case MVChatConnectionServerPublicKeyType:
+			[publicKeyNameDescription setObjectValue:@"Server name"];
+			[publicKeyDescription setObjectValue:@"Please verify the servers public key."];
+			break;
+	}
+	
+	[publicKeyName setObjectValue:[dict objectForKey:@"name"]];
+	[publicKeyFingerprint setObjectValue:[dict objectForKey:@"fingerprint"]];
+	[publicKeyBabbleprint setObjectValue:[dict objectForKey:@"babbleprint"]];
+	[publicKeyAlwaysAccept setState:NSOffState];
+	
+	[_publicKeyDictionary autorelease];
+	_publicKeyDictionary = [dict retain];
+	
+	[publicKeyVerification center];
+	[publicKeyVerification orderFront:nil];
 }
 
 - (IBAction) _connect:(id) sender {

@@ -303,6 +303,7 @@
 				1CF6528B06EA2C8E0073DEA8,
 				1C91405E07051A9200CBA5F1,
 				1CDDD9AD0718BD2E00FE11C3,
+				431261C2072EE37A00720AD1,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -340,6 +341,7 @@
 				1CF6B82D07122670008ABEFA,
 				1CF6B82E07122672008ABEFA,
 				1CF6B82F07122673008ABEFA,
+				431261C3072EE37A00720AD1,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -492,6 +494,8 @@
 				1CF6B4960710894D008ABEFA,
 				1CF6B4990710894D008ABEFA,
 				1CF6B4980710894D008ABEFA,
+				431261C1072EE37A00720AD1,
+				431261C0072EE37A00720AD1,
 			);
 			isa = PBXGroup;
 			name = "SILC Support";
@@ -3493,6 +3497,44 @@
 //1C2
 //1C3
 //1C4
+//430
+//431
+//432
+//433
+//434
+		431261C0072EE37A00720AD1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MVSILCFileTransfer.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		431261C1072EE37A00720AD1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MVSILCFileTransfer.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		431261C2072EE37A00720AD1 = {
+			fileRef = 431261C0072EE37A00720AD1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		431261C3072EE37A00720AD1 = {
+			fileRef = 431261C1072EE37A00720AD1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//430
+//431
+//432
+//433
+//434
 //F50
 //F51
 //F52

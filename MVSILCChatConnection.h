@@ -57,6 +57,8 @@
 
 - (MVChatUser *) _chatUserWithClientEntry:(SilcClientEntry) clientEntry;
 - (void) _updateKnownUser:(MVChatUser *) user withClientEntry:(SilcClientEntry) clientEntry;
+
+- (NSString *) _publicKeyFilename:(SilcSocketType) connType andPublicKey:(unsigned char *) pk withLen:(SilcUInt32) pkLen usingSilcConn:(SilcClientConnection) conn;
 @end
 
 #pragma mark -

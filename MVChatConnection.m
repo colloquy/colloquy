@@ -19,6 +19,7 @@ NSString *MVChatConnectionErrorNotification = @"MVChatConnectionErrorNotificatio
 
 NSString *MVChatConnectionNeedNicknamePasswordNotification = @"MVChatConnectionNeedNicknamePasswordNotification";
 NSString *MVChatConnectionNeedCertificatePasswordNotification = @"MVChatConnectionNeedCertificatePasswordNotification";
+NSString *MVChatConnectionNeedPublicKeyVerificationNotification = @"MVChatConnectionNeedPublicKeyVerificationNotification";
 
 NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";
 NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotPrivateMessageNotification";
@@ -453,6 +454,12 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+- (void) publicKeyVerified:(NSDictionary *) dictionary andAccepted:(BOOL) accepted andAlwaysAccept:(BOOL) alwaysAccept {
+// subclass this method, if needed
+}
+
+#pragma mark -
+
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action {
 // subclass this method, if used
 	[self doesNotRecognizeSelector:_cmd];
@@ -663,7 +670,8 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) _applicationWillTerminate:(NSNotification *) notification {
 	extern BOOL MVChatApplicationQuitting;
 	MVChatApplicationQuitting = YES;
-	[self disconnect];
+	if ( [self isConnected] )
+		[self disconnect];
 }
 
 #pragma mark -

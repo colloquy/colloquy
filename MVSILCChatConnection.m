@@ -645,8 +645,94 @@ static void silc_get_auth_method( SilcClient client, SilcClientConnection conn, 
 }
 
 static void silc_verify_public_key( SilcClient client, SilcClientConnection conn, SilcSocketType conn_type, unsigned char *pk, SilcUInt32 pk_len, SilcSKEPKType pk_type, SilcVerifyPublicKey completion, void *context ) {
-	// we should ask the user about the servers public key, and save it somewhere if he accepts it
-	completion( TRUE, context );
+	MVSILCChatConnection *self = conn -> context;
+
+	char *tmp;
+	
+	tmp = silc_hash_fingerprint( NULL, pk, pk_len );
+	NSString *asciiFingerprint = [NSString stringWithUTF8String:tmp];
+	silc_free( tmp );
+	
+	tmp = silc_hash_babbleprint( NULL, pk, pk_len );
+	NSString *asciiBabbleprint = [NSString stringWithUTF8String:tmp];
+	silc_free(tmp);
+	
+	NSString *filename = NULL;
+	MVChatConnectionPublicKeyType publicKeyType;
+	
+	switch ( conn_type ) {
+		case SILC_SOCKET_TYPE_UNKNOWN:
+			completion( FALSE, context );
+			return;
+			
+		case SILC_SOCKET_TYPE_CLIENT:
+			publicKeyType = MVChatConnectionClientPublicKeyType;
+			break;
+			
+		case SILC_SOCKET_TYPE_SERVER:
+		case SILC_SOCKET_TYPE_ROUTER:
+			publicKeyType = MVChatConnectionServerPublicKeyType;
+			break;
+	}
+	
+	filename = [self _publicKeyFilename:conn_type andPublicKey:pk withLen:pk_len usingSilcConn:conn];
+	
+	BOOL needVerify = YES;
+	
+	if ( [[NSFileManager defaultManager] fileExistsAtPath:filename] ) {
+		SilcPublicKey publicKey = NULL;
+		unsigned char *encodedPublicKey;
+		SilcUInt32 encodedPublicKeyLen;
+		
+		if ( silc_pkcs_load_public_key( [filename fileSystemRepresentation], &publicKey, SILC_PKCS_FILE_PEM ) ||
+			 silc_pkcs_load_public_key( [filename fileSystemRepresentation], &publicKey, SILC_PKCS_FILE_BIN ) ) {
+			encodedPublicKey = silc_pkcs_public_key_encode( publicKey, &encodedPublicKeyLen );
+			if ( encodedPublicKey ) {
+				if ( ! memcmp( encodedPublicKey, pk, encodedPublicKeyLen ) ) {
+					needVerify = NO;
+				}
+				
+				silc_free( encodedPublicKey );
+			}
+			
+			silc_pkcs_public_key_free( publicKey );
+		}
+	}
+
+	if ( ! needVerify ) {
+		completion( TRUE, context );
+		return;
+	}
+	
+	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+	[dict setObject:[NSNumber numberWithUnsignedInt:publicKeyType] forKey:@"publicKeyType"];
+	[dict setObject:asciiFingerprint forKey:@"fingerprint"];
+	[dict setObject:asciiBabbleprint forKey:@"babbleprint"];
+	
+	if ( conn_type == SILC_SOCKET_TYPE_SERVER || conn_type == SILC_SOCKET_TYPE_ROUTER ) {
+		if ( conn -> sock -> hostname && strlen( conn -> sock -> hostname ) ) {
+			[dict setObject:[NSString stringWithUTF8String:conn -> sock -> hostname] forKey:@"name"];
+		} else if ( conn -> sock -> ip && strlen( conn -> sock -> ip ) ) {
+			[dict setObject:[NSString stringWithUTF8String:conn -> sock -> ip] forKey:@"name"];
+		} else {
+			[dict setObject:@"unknown server" forKey:@"name"];
+		}
+	} else if ( conn_type == SILC_SOCKET_TYPE_CLIENT ) {
+		[dict setObject:@"unknown user" forKey:@"name"];
+	}
+	
+	[dict setObject:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(completion)] forKey:@"completition"];
+	[dict setObject:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(context)] forKey:@"completitionContext"];
+	[dict setObject:self forKey:@"connection"];
+	[dict setObject:[NSData dataWithBytes:pk length:pk_len] forKey:@"pk"];
+	[dict setObject:[NSNumber numberWithUnsignedInt:conn_type] forKey:@"connType"];
+	[dict setObject:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(conn)] forKey:@"silcConn"];
+	
+	// we release it in the verfied callback
+	[dict retain];
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedPublicKeyVerificationNotification object:dict userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 static void silc_ask_passphrase( SilcClient client, SilcClientConnection conn, SilcAskPassphrase completion, void *context ) {
@@ -912,8 +998,8 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (NSString *) nickname {
-  if( [self _silcConn] && [self _silcConn] -> nickname )
-    return [NSString stringWithUTF8String:[self _silcConn] -> nickname];
+	if( [self isConnected] && [self _silcConn] && [self _silcConn] -> nickname )
+		return [NSString stringWithUTF8String:[self _silcConn] -> nickname];
 
 	return [NSString stringWithUTF8String:_silcClient -> nickname];
 }
@@ -992,6 +1078,32 @@ static SilcClientOperations silcClientOps = {
 
 - (unsigned short) serverPort {
 	return _silcPort;
+}
+
+#pragma mark -
+
+- (void) publicKeyVerified:(NSDictionary *) dictionary andAccepted:(BOOL) accepted andAlwaysAccept:(BOOL) alwaysAccept {
+	SilcVerifyPublicKey completition;
+	void *context;
+	SilcClientConnection conn;
+	
+	completition = SILC_32_TO_PTR([[dictionary objectForKey:@"completition"] unsignedIntValue]);
+	context = SILC_32_TO_PTR([[dictionary objectForKey:@"completitionContext"] unsignedIntValue]);
+	conn = SILC_32_TO_PTR([[dictionary objectForKey:@"silcConn"] unsignedIntValue]);
+	
+	if ( accepted ) {
+		completition( TRUE, context );
+	} else {
+		completition( FALSE, context );
+	}
+	
+	if ( alwaysAccept ) {
+		NSData *pk = [dictionary objectForKey:@"pk"];
+		NSString *filename = [self _publicKeyFilename:[[dictionary objectForKey:@"connType"] unsignedIntValue] andPublicKey:(unsigned char *)[pk bytes] withLen:[pk length] usingSilcConn:conn];
+		silc_pkcs_save_public_key_data( [filename fileSystemRepresentation], (unsigned char *)[pk bytes], [pk length], SILC_PKCS_FILE_PEM);
+	}
+	
+	[dictionary release];
 }
 
 #pragma mark -
@@ -1347,5 +1459,43 @@ static SilcClientOperations silcClientOps = {
 		[_knownUsers setObject:user forKey:uniqueIdentfier];
 		[user release];
 	}
+}
+
+- (NSString *) _publicKeyFilename:(SilcSocketType) connType andPublicKey:(unsigned char *) pk withLen:(SilcUInt32) pkLen usingSilcConn:(SilcClientConnection) conn {
+	NSString *filename = NULL;
+	
+	switch ( connType ) {
+		case SILC_SOCKET_TYPE_UNKNOWN:
+			return nil;
+			
+		case SILC_SOCKET_TYPE_CLIENT: {
+			char *tmp;
+			tmp = silc_hash_fingerprint( NULL, pk, pkLen );
+			NSString *asciiFingerprint = [NSString stringWithUTF8String:tmp];
+			silc_free( tmp );
+			
+			filename = [NSString stringWithFormat:@"%@/%@.pub", [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Silc/Client Keys/"] stringByExpandingTildeInPath], asciiFingerprint];
+		}	break;
+			
+		case SILC_SOCKET_TYPE_SERVER:
+		case SILC_SOCKET_TYPE_ROUTER: {
+			NSString *host;
+			
+			if ( conn -> sock -> hostname && strlen( conn -> sock -> hostname ) ) {
+				host = [NSString stringWithUTF8String:conn -> sock -> hostname];
+			} else if ( conn -> sock -> ip && strlen( conn -> sock -> ip ) ) {
+				host = [NSString stringWithUTF8String:conn -> sock -> ip];
+			} else {
+				char *tmp;
+				tmp = silc_hash_fingerprint( NULL, pk, pkLen );
+				host = [NSString stringWithUTF8String:tmp];
+				silc_free( tmp );
+			}
+			
+			filename = [NSString stringWithFormat:@"%@/%@.pub", [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Silc/Server Keys/"] stringByExpandingTildeInPath], host];
+		}	break;
+	}
+	
+	return filename;
 }
 @end
