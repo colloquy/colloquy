@@ -4,7 +4,7 @@
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/MVChatPlugin.h>
+#import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSColorAdditions.h>
 #import <libxml/xinclude.h>
@@ -613,6 +613,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	xmlDocPtr doc = NULL, msgDoc = NULL;
 	xmlNodePtr root = NULL, child = NULL;
 	const char *msgStr = NULL;
+	NSMutableData *mutableMsg = [[message mutableCopy] autorelease];
 	NSMutableString *messageString = nil;
 
 	NSParameterAssert( message != nil );
@@ -620,9 +621,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	if( ! _nibLoaded ) [self view];
 
-	messageString = [[[NSMutableString alloc] initWithData:message encoding:_encoding] autorelease];
+	if( ! [user isEqualToString:[[self connection] nickname]] )
+		[self processMessage:mutableMsg asAction:action fromUser:user];
+
+	messageString = [[[NSMutableString alloc] initWithData:mutableMsg encoding:_encoding] autorelease];
 	if( ! messageString ) {
-		messageString = [NSMutableString stringWithCString:[message bytes] length:[message length]];
+		messageString = [NSMutableString stringWithCString:[mutableMsg bytes] length:[mutableMsg length]];
 		[messageString appendFormat:@" <span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
 	}
 
@@ -724,6 +728,14 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[_windowController reloadListItem:self andChildren:NO];
 }
 
+- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
+	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:inChat: )] objectEnumerator];
+	id item = nil;
+
+	while( ( item = [enumerator nextObject] ) )
+		[item processMessage:message asAction:action inChat:self];
+}
+
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action {
 	char *msg = NULL;
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"]], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"]], @"NSHTMLIgnoreFontTraits", nil];
@@ -781,11 +793,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 				arguments = [subMsg attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], range.location - [scanner scanLocation] )];
 
-				handled = [self processUserCommand:command withArguments:arguments];
-
-				if( ! handled ) {
+				if( ! ( handled = [self processUserCommand:command withArguments:arguments] ) )
 					[[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
-				}
 			} else {
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
 					extern NSArray *JVAutoActionVerbs;
@@ -802,8 +811,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 					}
 				}
 
-				subMsg = [self sendAttributedMessage:subMsg asAction:action];
-				[self echoSentMessageToDisplay:subMsg asAction:action];
+				[self sendAttributedMessage:subMsg asAction:action];
 			}
 		}
 		if( range.length ) range.location++;
@@ -812,6 +820,52 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	[send reset:nil];
 	[display stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
+}
+
+- (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
+	WebView *webView = [[[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 300., 100. ) frameName:nil groupName:nil] autorelease];
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:webView, @"webView", [NSNumber numberWithBool:action], @"action", nil];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
+	NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
+	NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
+	NSMutableAttributedString *editString = [[[NSMutableAttributedString alloc] initWithString:messageString] autorelease];
+
+	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toChat: )] objectEnumerator];
+	id item = nil;
+
+	while( ( item = [enumerator nextObject] ) )
+		if( [item isKindOfClass:[MVChatScriptPlugin class]] )
+			[item processMessage:editString asAction:action toChat:self];
+
+	[[webView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", [editString string]] baseURL:nil];
+
+	[self performSelector:@selector( finishSendAttributedMessage: ) withObject:info afterDelay:0.];
+}
+
+- (void) finishSendAttributedMessage:(NSDictionary *) info {
+	WebView *webView = [info objectForKey:@"webView"];
+	BOOL action = [[info objectForKey:@"action"] boolValue];
+
+	NSMutableAttributedString *attributeMsg = [[[(id <WebDocumentText>)[[[webView mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
+
+	NSRange limitRange, effectiveRange;
+	limitRange = NSMakeRange( 0, [attributeMsg length] );
+	while( limitRange.length > 0 ) {
+		NSColor *color = [attributeMsg attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
+		if( [[color colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && [[color htmlAttributeValue] isEqualToString:@"#01fe02"] )
+			[attributeMsg removeAttribute:NSForegroundColorAttributeName range:effectiveRange];
+		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
+	}
+
+	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toChat: )] objectEnumerator];
+	id item = nil;
+
+	while( ( item = [enumerator nextObject] ) )
+		if( ! [item isKindOfClass:[MVChatScriptPlugin class]] )
+			[item processMessage:attributeMsg asAction:action toChat:self];
+
+	[[self connection] sendMessage:attributeMsg withEncoding:_encoding toUser:[self target] asAction:action];
+	[self echoSentMessageToDisplay:attributeMsg asAction:action];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
@@ -825,18 +879,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	}
 
 	return handled;
-}
-
-- (NSMutableAttributedString *) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
-	id item = nil;
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processPrivateMessage:asAction:toChat: )] objectEnumerator];
-
-	while( ( item = [enumerator nextObject] ) )
-		message = [item processMessage:message asAction:action toChat:self];
-
-	[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
-
-	return message;
 }
 
 #pragma mark -
@@ -1405,5 +1447,33 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	[self sendAttributedMessage:attributeMsg asAction:action];
 	if( localEcho ) [self echoSentMessageToDisplay:attributeMsg asAction:action];
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatScriptPlugin (MVChatScriptPluginChatSupport)
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toChat:(JVDirectChat *) chat {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", chat, @"pcC2", nil];
+	id result = [self callScriptHandler:'pcCX' withArguments:args];
+	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
+}
+
+- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action inChat:(JVDirectChat *) chat {
+	NSString *messageString = [[[NSString alloc] initWithData:message encoding:[chat encoding]] autorelease];
+	if( ! messageString ) messageString = [NSString stringWithCString:[message bytes] length:[message length]];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:messageString, @"----", [NSNumber numberWithBool:action], @"piM1", [chat target], @"piM2", chat, @"piM3", nil];
+	id result = [self callScriptHandler:'piMX' withArguments:args];
+	if( [result isKindOfClass:[NSString class]] ) {
+		NSData *resultData = [result dataUsingEncoding:[chat encoding] allowLossyConversion:YES];
+		if( resultData ) [message setData:resultData];
+	}
+}
+
+- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toChat:(JVDirectChat *) chat {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"poM1", chat, @"poM2", nil];
+	id result = [self callScriptHandler:'poMX' withArguments:args];
+	if( [result isKindOfClass:[NSString class]] )
+		[[message mutableString] setString:result];
 }
 @end

@@ -1,8 +1,11 @@
+#import <unistd.h>
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/MVChatPlugin.h>
+#import <ChatCore/MVChatScriptPlugin.h>
+#import <ChatCore/NSAttributedStringAdditions.h>
+#import <ChatCore/NSColorAdditions.h>
 
 #import "JVChatController.h"
 #import "JVChatRoom.h"
@@ -180,16 +183,58 @@
 	return handled;
 }
 
-- (NSMutableAttributedString *) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processRoomMessage:asAction:toRoom: )] objectEnumerator];
+- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
+	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:fromUser:inRoom: )] objectEnumerator];
+	id item = nil;
+	
+	while( ( item = [enumerator nextObject] ) )
+		[item processMessage:message asAction:action fromUser:user inRoom:self];
+}
+
+- (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
+	WebView *webView = [[[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 300., 100. ) frameName:nil groupName:nil] autorelease];
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:webView, @"webView", [NSNumber numberWithBool:action], @"action", nil];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
+	NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
+	NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
+	NSMutableAttributedString *editString = [[[NSMutableAttributedString alloc] initWithString:messageString] autorelease];
+
+	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )] objectEnumerator];
 	id item = nil;
 
 	while( ( item = [enumerator nextObject] ) )
-		message = [item processMessage:message asAction:action toRoom:self];
+		if( [item isKindOfClass:[MVChatScriptPlugin class]] )
+			[item processMessage:editString asAction:action toRoom:self];
 
-	[[self connection] sendMessage:message withEncoding:_encoding toChatRoom:[self target] asAction:action];
+	[[webView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", [editString string]] baseURL:nil];
 
-	return [[message retain] autorelease];
+	[self performSelector:@selector( finishSendAttributedMessage: ) withObject:info afterDelay:0.];
+}
+
+- (void) finishSendAttributedMessage:(NSDictionary *) info {
+	WebView *webView = [info objectForKey:@"webView"];
+	BOOL action = [[info objectForKey:@"action"] boolValue];
+
+	NSMutableAttributedString *attributeMsg = [[[(id <WebDocumentText>)[[[webView mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
+
+	NSRange limitRange, effectiveRange;
+	limitRange = NSMakeRange( 0, [attributeMsg length] );
+	while( limitRange.length > 0 ) {
+		NSColor *color = [attributeMsg attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
+		if( [[color colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && [[color htmlAttributeValue] isEqualToString:@"#01fe02"] )
+			[attributeMsg removeAttribute:NSForegroundColorAttributeName range:effectiveRange];
+		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
+	}
+
+	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )] objectEnumerator];
+	id item = nil;
+
+	while( ( item = [enumerator nextObject] ) )
+		if( ! [item isKindOfClass:[MVChatScriptPlugin class]] )
+			[item processMessage:attributeMsg asAction:action toRoom:self];
+
+	[[self connection] sendMessage:attributeMsg withEncoding:_encoding toChatRoom:[self target] asAction:action];
+	[self echoSentMessageToDisplay:attributeMsg asAction:action];
 }
 
 #pragma mark -
@@ -705,5 +750,33 @@
 			return member;
 
 	return nil;
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatScriptPlugin (MVChatScriptPluginRoomSupport)
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(JVChatRoom *) room {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", room, @"pcC2", nil];
+	id result = [self callScriptHandler:'pcCX' withArguments:args];
+	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
+}
+
+- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user inRoom:(JVChatRoom *) room {
+	NSString *messageString = [[[NSString alloc] initWithData:message encoding:[room encoding]] autorelease];
+	if( ! messageString ) messageString = [NSString stringWithCString:[message bytes] length:[message length]];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:messageString, @"----", [NSNumber numberWithBool:action], @"piM1", user, @"piM2", room, @"piM3", nil];
+	id result = [self callScriptHandler:'piMX' withArguments:args];
+	if( [result isKindOfClass:[NSString class]] ) {
+		NSData *resultData = [result dataUsingEncoding:[room encoding] allowLossyConversion:YES];
+		if( resultData ) [message setData:resultData];
+	}
+}
+
+- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"poM1", room, @"poM2", nil];
+	id result = [self callScriptHandler:'poMX' withArguments:args];
+	if( [result isKindOfClass:[NSString class]] )
+		[[message mutableString] setString:result];
 }
 @end

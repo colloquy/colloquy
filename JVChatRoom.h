@@ -46,6 +46,6 @@
 @interface NSObject (MVChatPluginRoomSupport)
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(JVChatRoom *) room;
 
-- (NSMutableData *) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user inRoom:(JVChatRoom *) room;
-- (NSMutableAttributedString *) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room;
+- (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user inRoom:(JVChatRoom *) room;
+- (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room;
 @end
