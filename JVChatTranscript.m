@@ -33,6 +33,19 @@ NSString *JVChatEmoticonsScannedNotification = @"JVChatEmoticonsScannedNotificat
 static NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
+static unsigned long xmlChildElementsCount( xmlNodePtr node ) {
+	xmlNodePtr current = node -> children;
+	if( ! current ) return 0;
+
+	unsigned long i = 0;
+	while( current -> next ) {
+		if( current -> type == XML_ELEMENT_NODE ) i++;
+		current = current -> next;
+	}
+
+	return i;
+}
+
 #pragma mark -
 
 @interface WebCoreCache
@@ -130,8 +143,6 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		_isArchive = YES;
 
 		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:filename]];
-
-//		[NSBundle loadNibNamed:@"JVTranscriptSelectSheet" owner:self];
 	}
 	return self;
 }
@@ -297,23 +308,6 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 #pragma mark -
 #pragma mark Drawer/Outline View Methods
 
-- (IBAction) specifyTranscriptSectionSheet:(id) sender {
-	[[NSApplication sharedApplication] beginSheet:selectSheet modalForWindow:[_windowController window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-}
-
-- (IBAction) cancelTranscriptSectionSheet:(id) sender {
-	[[NSApplication sharedApplication] endSheet:selectSheet];
-	[selectSheet orderOut:self];
-}
-
-- (IBAction) confirmTranscriptSectionSheet:(id) sender {
-	[[NSApplication sharedApplication] endSheet:selectSheet];
-	[selectSheet orderOut:self];
-}
-
-#pragma mark -
-#pragma mark Drawer/Outline View Methods
-
 - (id <JVChatListItem>) parent {
 	return nil;
 }
@@ -392,20 +386,9 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		return;
 	}
 
-//	BOOL manyMessages = ( xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) > 2000 ? YES : NO );
-
-//	NSString *styleswitch = NSLocalizedString( @"Time Consuming Style Switch", "time consuming style switch alert title" );
-
-//	int result = NSOKButton;
-//	if( _isArchive && _previousStyleSwitch && manyMessages ) {
-//		result = NSRunInformationalAlertPanel( styleswitch, NSLocalizedString( @"This transcript is large and will take a considerable amount of time to switch the style. Would you like to continue anyway?", "large transcript style switch alert message" ), NSLocalizedString( @"Continue", "continue button name" ), @"Cancel", nil );
-//	} else if( ! _isArchive && manyMessages ) {
-//		result = NSRunInformationalAlertPanel( styleswitch, NSLocalizedString( @"This converstaion is large and will take a considerable amount of time to switch the style. Would you like to do a full switch and wait until the switch is complete or a quick switch by hiding previous messages and return to the conversation?", "large transcript style switch alert message" ), NSLocalizedString( @"Full Switch", "full switch button name" ), @"Cancel", NSLocalizedString( @"Quick Switch", "clear button name" ) );
-//	}
-
-//	if( result == NSCancelButton ) return;
-
 	if( ! [_logLock tryLock] ) return;
+
+	_switchingStyles = YES;
 
 	if( ! [self _usingSpecificEmoticons] ) {
 		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]]];
@@ -425,7 +408,6 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	_styleParams = [[NSMutableDictionary dictionary] retain];
 
 	// add single-quotes so that these are not interpreted as XPath expressions
-
 	[_styleParams setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];
 	[_styleParams setObject:@"'.tif'" forKey:@"buddyIconExtension"];
 
@@ -436,15 +418,13 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 	[self _changeChatStyleMenuSelection];
 
-//	if( result == NSAlertOtherReturn ) {
-//		[self _switchingStyleEnded:@""];
-//	} else 
+	[display setFrameLoadDelegate:self];
+
+	[display setPreferencesIdentifier:[_chatStyle identifier]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"WebPreferencesChangedNotification" object:[display preferences]];
+	[[display preferences] setJavaScriptEnabled:YES];
 
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
-
-	[NSThread detachNewThreadSelector:@selector( _switchStyle: ) toTarget:self withObject:nil];
-
-	_previousStyleSwitch = YES;
 }
 
 - (JVStyle *) chatStyle {
@@ -800,10 +780,40 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 #endif
 
 	[display setFrameLoadDelegate:nil];
-	[[display preferences] setJavaScriptEnabled:YES];
+
+	if( _switchingStyles )
+		[NSThread detachNewThreadSelector:@selector( _switchStyle: ) toTarget:self withObject:nil];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatTranscript (JVChatTranscriptPrivate)
+#pragma mark -
+#pragma mark Style Support
+
+- (void) _reloadCurrentStyle:(id) sender {
+	JVStyle *style = [[_chatStyle retain] autorelease];
+
+	[WebCoreCache empty];
+
+	[style reload];
+
+	[_chatStyle autorelease];
+	_chatStyle = nil;
+
+	[self setChatStyle:style withVariant:_chatStyleVariant];
+
+	if( ! _chatStyle ) _chatStyle = [style retain];
+}
+
+- (void) _switchingStyleEnded:(in NSString *) html {
+	_switchingStyles = NO;
 	[_logLock unlock];
 
-	NSScrollView *scrollView = [[[[sender mainFrame] frameView] documentView] enclosingScrollView];
+	return;
+
+	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
 	[scrollView setHasHorizontalScroller:NO];
 	[scrollView setAllowsHorizontalScrolling:NO];
 
@@ -831,54 +841,26 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	unsigned int c = ( result -> nodesetval ? result -> nodesetval -> nodeNr : 0 );
 	unsigned int i = 0;
 	for( i = 0; i < c; i++ ) {
-		cur = result -> nodesetval -> nodeTab[i];   	    
-		unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%s\" );", xmlGetProp( cur, "id" )]] intValue];
+		cur = result -> nodesetval -> nodeTab[i];
+		xmlChar *idProp = xmlGetProp( cur, "id" );
+		unsigned int loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%s\" );", idProp]] intValue];
 		if( loc ) [(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] addMarkAt:loc];
+		xmlFree( idProp );
 	}
 
 	xmlXPathFreeContext( ctx );
 	xmlXPathFreeObject( result );
-}
-@end
-
-#pragma mark -
-
-@implementation JVChatTranscript (JVChatTranscriptPrivate)
-#pragma mark -
-#pragma mark Style Support
-
-- (void) _reloadCurrentStyle:(id) sender {
-	JVStyle *style = [[_chatStyle retain] autorelease];
-
-	[WebCoreCache empty];
-
-	[style reload];
-
-	[_chatStyle autorelease];
-	_chatStyle = nil;
-
-	[self setChatStyle:style withVariant:_chatStyleVariant];
-
-	if( ! _chatStyle ) _chatStyle = [style retain];
-}
-
-- (void) _switchingStyleEnded:(in NSString *) html {
-	[display setPreferencesIdentifier:[_chatStyle identifier]];
-	[display setFrameLoadDelegate:self];
-	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:( html ? html : @"" )] baseURL:nil];
 }
 
 - (oneway void) _switchStyle:(id) sender {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *result = nil;
 
-	unsigned long elements = xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) );
+	unsigned long elements = xmlChildElementsCount( xmlDocGetRootElement( _xmlLog ) );
 	unsigned long i = elements;
 	xmlNodePtr startNode = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 
-	for( i = elements; i > ( elements - 300 ) && startNode; i -= 25 ) {
-		NSLog( @"%d %d %x", i, elements, startNode );
-
+	for( i = elements; i > ( elements - MIN( 600, elements ) ) && startNode; i -= MIN( 25, i ) ) {
 		unsigned int j = 25;
 		xmlNodePtr node = startNode;
 		xmlNodePtr nextNode = startNode -> next;
@@ -887,8 +869,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		startNode -> next = NULL;
 
 		while( j > 0 && node -> prev ) {
+			if( node -> type == XML_ELEMENT_NODE ) j--;
 			node = node -> prev;
-			j--;
 		}
 
 		xmlNodePtr root = xmlNewNode( NULL, "log" );
@@ -911,8 +893,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		startNode = node -> prev;
 
 		if( result ) {
-			[self performSelectorOnMainThread:@selector( _prependMessagesChunk: ) withObject:result waitUntilDone:YES];
-			usleep( 1000 );
+			[self performSelectorOnMainThread:@selector( _prependMessages: ) withObject:result waitUntilDone:YES];
+			usleep( 100000 );
 		} else if( ! result ) goto finish;
 	}
 
@@ -921,8 +903,7 @@ finish:
 	[pool release];
 }
 
-- (void) _prependMessagesChunk:(NSString *) messages {
-	NSLog( @"_prependMessagesChunk %d", [messages length] );
+- (void) _prependMessages:(NSString *) messages {
 	NSMutableString *result = [[messages mutableCopy] autorelease];
 	[result escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 	[result replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];

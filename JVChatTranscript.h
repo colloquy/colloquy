@@ -35,23 +35,11 @@ extern NSString *JVChatEmoticonsScannedNotification;
 	NSBundle *_chatEmoticons;
 	NSDictionary *_emoticonMappings;
 
-	BOOL _previousStyleSwitch;
-
-	// Select sheet NIB outlets, JVChatTranscript only.
-	IBOutlet NSPanel *selectSheet;
-	IBOutlet NSTextField *transcriptDescription;
-	IBOutlet NSMatrix *selectOptions;
-	IBOutlet NSPopUpButton *transcriptMembers;
-	IBOutlet NSPopUpButton *transcriptSessions;
-	IBOutlet NSTextField *transcriptFilter;
+	BOOL _switchingStyles;
 }
 - (id) initWithTranscript:(NSString *) filename;
 
 - (void) saveTranscriptTo:(NSString *) path;
-
-- (IBAction) specifyTranscriptSectionSheet:(id) sender;
-- (IBAction) cancelTranscriptSectionSheet:(id) sender;
-- (IBAction) confirmTranscriptSectionSheet:(id) sender;
 
 - (IBAction) changeChatStyle:(id) sender;
 - (void) setChatStyle:(JVStyle *) style withVariant:(NSString *) variant;

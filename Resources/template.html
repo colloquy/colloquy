@@ -12,28 +12,39 @@
 		var scrollBackLimit = 500;
 
 		function prependMessages( html ) {
+			checkIfScrollToBottomIsNeeded();
+
+			bodyNode = document.getElementsByTagName( "body" ).item( 0 );
 			range = document.createRange();
-			range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
+			range.selectNode( bodyNode );
 			documentFragment = range.createContextualFragment( html );
-			if( document.body.firstNode ) document.body.insertBefore( documentFragment, document.body.firstNode );
-			else document.body.appendChild( documentFragment );
+			if( bodyNode.children.length ) document.body.insertBefore( documentFragment, bodyNode.children[0] );
+			else bodyNode.appendChild( documentFragment );
+
+			scrollToBottomIfNeeded();
 		}
 
 		function appendMessages( html ) {
+			checkIfScrollToBottomIsNeeded();
+
+			bodyNode = document.getElementsByTagName( "body" ).item( 0 );
 			range = document.createRange();
-			range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
+			range.selectNode( bodyNode );
 			documentFragment = range.createContextualFragment( html );
-			document.body.appendChild( documentFragment );
+			bodyNode.appendChild( documentFragment );
+
+			scrollToBottomIfNeeded();
 		}
 
 		function appendMessage( html ) {
 			checkIfScrollToBottomIsNeeded();
 			removeConsecutiveInsertPoint();
 
+			bodyNode = document.getElementsByTagName( "body" ).item( 0 );
 			range = document.createRange();
-			range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
+			range.selectNode( bodyNode );
 			documentFragment = range.createContextualFragment( html );
-			document.body.appendChild( documentFragment );
+			bodyNode.appendChild( documentFragment );
 
 			enforceScrollBackLimit();
 			scrollToBottomIfNeeded();
@@ -63,19 +74,19 @@
 		}
 
 		function scrollBackMessageCount() {
-			var bodyNode = document.getElementsByTagName( "body" ).item( 0 );
+			bodyNode = document.getElementsByTagName( "body" ).item( 0 );
 			return bodyNode.children.length;
 		}
 
 		function firstMessageIdentifier() {
-			var bodyNode = document.getElementsByTagName( "body" ).item( 0 );
+			bodyNode = document.getElementsByTagName( "body" ).item( 0 );
 			return bodyNode.children[0].id;
 		}
 
 		function enforceScrollBackLimit() {
-			var bodyNode = document.getElementsByTagName( "body" ).item( 0 );
+			bodyNode = document.getElementsByTagName( "body" ).item( 0 );
 			if( scrollBackLimit > 0 && bodyNode.children.length > scrollBackLimit )
-				for( var i = 0; bodyNode.children.length > scrollBackLimit && i < ( bodyNode.children.length - scrollBackLimit ); i++ )
+				for( i = 0; bodyNode.children.length > scrollBackLimit && i < ( bodyNode.children.length - scrollBackLimit ); i++ )
 					bodyNode.removeChild( bodyNode.children[0] );
 		}
 
@@ -85,7 +96,7 @@
 		}
 
 		function locationOfElementByIndex( index ) {
-			var bodyNode = document.getElementsByTagName( "body" ).item( 0 );
+			bodyNode = document.getElementsByTagName( "body" ).item( 0 );
 			return bodyNode.children[index].offsetTop;
 		}
 
