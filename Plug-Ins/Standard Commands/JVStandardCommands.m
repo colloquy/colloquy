@@ -7,6 +7,7 @@
 #import "JVChatController.h"
 #import "JVChatRoom.h"
 #import "JVDirectChat.h"
+#import "JVChatMessage.h"
 #import "JVChatRoomMember.h"
 #import "JVInspectorController.h"
 #import "MVFileTransferController.h"
@@ -51,12 +52,14 @@
 		if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] || ! [command caseInsensitiveCompare:@"say"] ) {
 			if( [arguments length] ) {
 				BOOL action = ( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] );
-				if (action && [view respondsToSelector:@selector(sendActionMessage:)]) {
-					// This is so plugins can respond to actions as well
-					// We're avoiding /say for now, as that really should just output exactly what the input was
-					// so we should still bypass plugins for that
-					NSAttributedString *result = [chat sendActionMessage:arguments];
-					[chat echoSentMessageToDisplay:result asAction:YES];
+				if( action ) {
+					// This is so plugins can process /me actions as well
+					// We're avoiding /say for now, as that really should just output exactly what
+					// the input was so we should still bypass plugins for /say
+					JVMutableChatMessage *message = [[[NSClassFromString( @"JVMutableChatMessage" ) alloc] initWithText:arguments sender:[[chat connection] nickname] andTranscript:chat] autorelease];
+					[message setAction:YES];
+					[chat sendMessage:message];
+					[chat echoSentMessageToDisplay:[message body] asAction:YES];
 				} else {
 					[[chat connection] sendMessage:arguments withEncoding:[chat encoding] toChatRoom:[chat target] asAction:action];
 					[chat echoSentMessageToDisplay:arguments asAction:action];
