@@ -253,6 +253,102 @@
 			settings = {
 			};
 		};
+		1C9A52FE04256F4F00000102 = {
+			fileRef = F5DD3499038301FF01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9A52FF04256F4F00000102 = {
+			fileRef = F5E3BCDA038361EF01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9A530004256F4F00000102 = {
+			fileRef = F5E3BCF00383640D01000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9A530104256F4F00000102 = {
+			fileRef = F5E3BD05038366F001000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9A54980425721E00000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = "Preference Panes/Identity/French.lproj/Identity.nib";
+			refType = 4;
+		};
+		1C9A54A4042573A400000102 = {
+			children = (
+				1C9A54A5042573A400000102,
+			);
+			isa = PBXVariantGroup;
+			name = InfoPlist.strings;
+			path = "";
+			refType = 2;
+		};
+		1C9A54A5042573A400000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = English;
+			path = "Preference Panes/Identity/English.lproj/InfoPlist.strings";
+			refType = 4;
+		};
+		1C9A54A6042573A400000102 = {
+			fileRef = 1C9A54A4042573A400000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9A54AA0425747400000102 = {
+			children = (
+				1C9A54AB0425747400000102,
+			);
+			isa = PBXVariantGroup;
+			name = InfoPlist.strings;
+			path = "";
+			refType = 2;
+		};
+		1C9A54AB0425747400000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = English;
+			path = "Preference Panes/Notification/English.lproj/InfoPlist.strings";
+			refType = 4;
+		};
+		1C9A54AC0425747400000102 = {
+			fileRef = 1C9A54AA0425747400000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9A5582042574A200000102 = {
+			children = (
+				1C9A5583042574A200000102,
+			);
+			isa = PBXVariantGroup;
+			name = InfoPlist.strings;
+			path = "";
+			refType = 2;
+		};
+		1C9A5583042574A200000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = English;
+			path = "Preference Panes/Behavior/English.lproj/InfoPlist.strings";
+			refType = 4;
+		};
+		1C9A5584042574A200000102 = {
+			fileRef = 1C9A5582042574A200000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CC7CAAE03C48E8B001C0D62 = {
 			children = (
 				1CC7CAAF03C48E8B001C0D62,
@@ -293,6 +389,49 @@
 		};
 		1CC7CAB303C48E8B001C0D62 = {
 			fileRef = 1CC7CAB003C48E8B001C0D62;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CCAD859042576CE00000102 = {
+			children = (
+				1CCAD85A042576CE00000102,
+			);
+			isa = PBXVariantGroup;
+			name = Appearance.nib;
+			path = "";
+			refType = 2;
+		};
+		1CCAD85A042576CE00000102 = {
+			isa = PBXFileReference;
+			name = English;
+			path = "Preference Panes/Appearance/English.lproj/Appearance.nib";
+			refType = 4;
+		};
+		1CCAD85B042576CE00000102 = {
+			children = (
+				1CCAD85C042576CE00000102,
+			);
+			isa = PBXVariantGroup;
+			name = InfoPlist.strings;
+			path = "";
+			refType = 2;
+		};
+		1CCAD85C042576CE00000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = English;
+			path = "Preference Panes/Appearance/English.lproj/InfoPlist.strings";
+			refType = 4;
+		};
+		1CCAD85D042576CE00000102 = {
+			fileRef = 1CCAD859042576CE00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CCAD85E042576CE00000102 = {
+			fileRef = 1CCAD85B042576CE00000102;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -593,7 +732,6 @@ Copyright © 2003, Timothy Hatcher</string>
 				F52BA2A1037C13C201A35792,
 				F52BA325037C64B501A35792,
 				F5DD34740382E5E501000102,
-				F5A706F00383044901000102,
 				F5C4977D0385785401000102,
 				F5E2536703874B5601000102,
 				F5E2536B0387618E01000102,
@@ -1783,18 +1921,6 @@ Copyright © 2003, Timothy Hatcher</string>
 			settings = {
 			};
 		};
-		F5A706F00383044901000102 = {
-			fileRef = F5DD3499038301FF01000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5A706F50383044C01000102 = {
-			fileRef = F5DD3499038301FF01000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F5A89F1C019302BD01EE70DE = {
 			isa = PBXFrameworkReference;
 			name = IOKit.framework;
@@ -2125,10 +2251,10 @@ Copyright © 2003, Timothy Hatcher</string>
 			dstPath = Contents/PreferencePanes;
 			dstSubfolderSpec = 1;
 			files = (
-				F5E3BCE40383627F01000102,
-				F5A706F50383044C01000102,
-				F5E3BCF90383652F01000102,
-				F5E3BD080383673701000102,
+				1C9A52FE04256F4F00000102,
+				1C9A52FF04256F4F00000102,
+				1C9A530004256F4F00000102,
+				1C9A530104256F4F00000102,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2221,6 +2347,7 @@ Copyright © 2003, Timothy Hatcher</string>
 				F5DD348B0382FFF401000102,
 				F5DD34810382FD8C01000102,
 				F5DD34830382FDC601000102,
+				1C9A54AA0425747400000102,
 				F5CED8C001A3596001A35792,
 				F520457F01B1BF6301EBB4B5,
 				F520458201B1C47001EBB4B5,
@@ -2233,7 +2360,8 @@ Copyright © 2003, Timothy Hatcher</string>
 			children = (
 				F5DD34860382FE2A01000102,
 				F5DD34850382FE2A01000102,
-				F5DD347B0382FD6601000102,
+				1CCAD859042576CE00000102,
+				1CCAD85B042576CE00000102,
 				F5E3BD350383EBD501000102,
 			);
 			isa = PBXGroup;
@@ -2245,6 +2373,7 @@ Copyright © 2003, Timothy Hatcher</string>
 				F5DD34880382FE4D01000102,
 				F5DD34870382FE4D01000102,
 				F5DD347D0382FD7401000102,
+				1C9A5582042574A200000102,
 				F5C497700384B8F001000102,
 			);
 			isa = PBXGroup;
@@ -2256,25 +2385,11 @@ Copyright © 2003, Timothy Hatcher</string>
 				F5DD348A0382FFC901000102,
 				F5DD34890382FFC901000102,
 				F5DD347F0382FD8001000102,
+				1C9A54A4042573A400000102,
 				F5E3BD370383EC8201000102,
 			);
 			isa = PBXGroup;
 			name = Idenity;
-			refType = 4;
-		};
-		F5DD347B0382FD6601000102 = {
-			children = (
-				F5DD347C0382FD6601000102,
-			);
-			isa = PBXVariantGroup;
-			name = Appearance.nib;
-			path = "";
-			refType = 2;
-		};
-		F5DD347C0382FD6601000102 = {
-			isa = PBXFileReference;
-			name = Engligh;
-			path = "Preference Panes/Appearance/Engligh.lproj/Appearance.nib";
 			refType = 4;
 		};
 		F5DD347D0382FD7401000102 = {
@@ -2295,6 +2410,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5DD347F0382FD8001000102 = {
 			children = (
 				F5DD34800382FD8001000102,
+				1C9A54980425721E00000102,
 			);
 			isa = PBXVariantGroup;
 			name = Identity.nib;
@@ -2407,6 +2523,7 @@ Copyright © 2003, Timothy Hatcher</string>
 			files = (
 				F5DD349C038302DD01000102,
 				F5E3BD380383EC8201000102,
+				1C9A54A6042573A400000102,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2787,9 +2904,10 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5E3BCD2038361EF01000102 = {
 			buildActionMask = 2147483647;
 			files = (
-				F5E3BCDE0383625101000102,
 				F5E3BD360383EBD501000102,
 				F5E063E6038D490A01000102,
+				1CCAD85D042576CE00000102,
+				1CCAD85E042576CE00000102,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2849,18 +2967,6 @@ Copyright © 2003, Timothy Hatcher</string>
 		};
 		F5E3BCDD0383625001000102 = {
 			fileRef = F5DD34850382FE2A01000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5E3BCDE0383625101000102 = {
-			fileRef = F5DD347B0382FD6601000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5E3BCE40383627F01000102 = {
-			fileRef = F5E3BCDA038361EF01000102;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2941,6 +3047,7 @@ Copyright © 2003, Timothy Hatcher</string>
 			files = (
 				F5E3BCF40383646501000102,
 				F5C497710384B8F001000102,
+				1C9A5584042574A200000102,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3004,12 +3111,6 @@ Copyright © 2003, Timothy Hatcher</string>
 		};
 		F5E3BCF40383646501000102 = {
 			fileRef = F5DD347D0382FD7401000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F5E3BCF90383652F01000102 = {
-			fileRef = F5E3BCF00383640D01000102;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3093,6 +3194,7 @@ Copyright © 2003, Timothy Hatcher</string>
 				F5E3BD0D0383675001000102,
 				F5E3BD0E0383675101000102,
 				F5E3BD0F0383675201000102,
+				1C9A54AC0425747400000102,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3141,12 +3243,6 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5E3BD06038366FA01000102 = {
 			isa = PBXTargetDependency;
 			target = F5E3BCFA038366F001000102;
-		};
-		F5E3BD080383673701000102 = {
-			fileRef = F5E3BD05038366F001000102;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F5E3BD090383674E01000102 = {
 			fileRef = F5DD348C0382FFF401000102;
