@@ -2,11 +2,10 @@
 <xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 	<xsl:output omit-xml-declaration="yes" indent="no" />
 	<xsl:param name="bulkTransform" />
-	<xsl:param name="debug" />
 
 	<xsl:template match="/">
 		<xsl:choose>
-			<xsl:when test="count( /envelope/message) &gt; 1">
+			<xsl:when test="count( /envelope/message ) &gt; 1">
 				<xsl:apply-templates select="/envelope/message[last()]" />
 			</xsl:when>
 			<xsl:otherwise>
@@ -39,20 +38,21 @@
 			</xsl:if>
 		</xsl:variable>
 
-		<xsl:variable name="properIdentifier">
+		<xsl:variable name="senderNick" select="sender | ../sender" />
+		
+		<xsl:variable name="memberLink">
 			<xsl:choose>
-				<xsl:when test="@id">
-					<xsl:value-of select="@id" />
+				<xsl:when test="sender/@identifier or ../sender/@identifier">
+					<xsl:text>member:identifier:</xsl:text><xsl:value-of select="sender/@identifier | ../sender/@identifier" />
+				</xsl:when>
+				<xsl:when test="sender/@nickname or ../sender/@nickname">
+					<xsl:text>member:</xsl:text><xsl:value-of select="sender/@nickname | ../sender/@nickname" />
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="../@id" />
-					<xsl:text>.</xsl:text>
-					<xsl:value-of select="position()" />
+					<xsl:text>member:</xsl:text><xsl:value-of select="sender | ../sender" />
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
-		<xsl:variable name="senderNick" select="sender | ../sender" />
 
 		<!-- Not sure I caught all legal characters found in an IRC nick -->
 		<xsl:variable name="senderHash" select="number(translate($senderNick,'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM-_^[]{}','12345678901234567890123456789012345678901234567890123456789'))" />
@@ -73,7 +73,7 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<div id="{$properIdentifier}" class="{$envelopeClasses}">
+		<div id="{message[1]/@id | @id}" class="{$envelopeClasses}">
 			<span class="timestamp hidden">[</span>
 			<span class="timestamp">
 				<xsl:call-template name="short-time">
@@ -81,15 +81,15 @@
 				</xsl:call-template>
 			</span>
 			<span class="timestamp hidden">] &lt;</span>
-			<a href="member:{$senderNick}" class="{$senderClasses}"><span class="{$senderColor}"><xsl:value-of select="$senderNick" /></span></a>
+			<a href="{$memberLink}" class="{$senderClasses}"><span class="{$senderColor}"><xsl:value-of select="$senderNick" /></span></a>
 			<span class="hidden">&gt; </span>
 			<span class="message">
- 				<xsl:choose>
+				<xsl:choose>
 					<xsl:when test="message[1]">
-						<xsl:copy-of select="message[1]/child::node()" />
+						<xsl:apply-templates select="message[1]/child::node()" mode="copy" />
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:copy-of select="child::node()" />
+						<xsl:apply-templates select="child::node()" mode="copy" />
 					</xsl:otherwise>
 				</xsl:choose>
 			</span>
@@ -103,7 +103,7 @@
 			<span class="timestamp hidden">[</span>
 			<span class="timestamp">
 				<xsl:call-template name="short-time">
-				  <xsl:with-param name="date" select="@occurred" />
+					<xsl:with-param name="date" select="@occurred" />
 				</xsl:call-template>
 			</span>
 			<span class="timestamp hidden">] </span>
@@ -118,6 +118,14 @@
 				</xsl:if>
 			</span>
 		</div>
+	</xsl:template>
+
+	<xsl:template match="span[contains(@class,'member')]" mode="copy">
+		<a href="member:{current()}" class="member"><xsl:value-of select="current()" /></a>
+	</xsl:template>
+
+	<xsl:template match="@*|*" mode="copy">
+		<xsl:copy><xsl:apply-templates select="@*|node()" mode="copy" /></xsl:copy>
 	</xsl:template>
 
 	<xsl:template name="short-time">
@@ -145,5 +153,3 @@
 		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>
-
-
