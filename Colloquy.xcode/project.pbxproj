@@ -2102,7 +2102,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks build";
+				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/Frameworks $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks Frameworks build";
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_CW_ASM_SYNTAX = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
