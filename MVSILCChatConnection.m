@@ -1178,7 +1178,7 @@ static SilcClientOperations silcClientOps = {
 		NSEnumerator *enumerator = [silcChatConnections objectEnumerator];
 		MVSILCChatConnection *connection;
 
-		while (connection = [enumerator nextObject]) {
+		while( ( connection = [enumerator nextObject] ) ) {
 			[[connection _silcClientLock] lock];
 			if( [connection _silcClient] && [connection _silcClient] -> schedule) 
 				silc_client_run_one( [connection _silcClient] );
@@ -1187,7 +1187,7 @@ static SilcClientOperations silcClientOps = {
 
 		[silcChatConnectionsLock unlock];
 
-		usleep( 50000 ); // give time to other threads
+		usleep( 50 ); // give time to other threads
 	}
 
 	[pool release];
