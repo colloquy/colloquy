@@ -188,6 +188,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	[_connection release];
 	[_sendHistory release];
 	[_waitingAlertNames release];
+	[_settings release];
+	[_spillEncodingMenu release];
 
 	NSEnumerator *enumerator = [_waitingAlerts objectEnumerator];
 	id alert = nil;
@@ -202,6 +204,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	_connection = nil;
 	_waitingAlerts = nil;
 	_waitingAlertNames = nil;
+	_settings = nil;
+	_spillEncodingMenu = nil;
 
 	[super dealloc];
 }
@@ -384,7 +388,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	if( value ) [_settings setObject:value forKey:key];
 	else [_settings removeObjectForKey:key];
 
-	[[NSUserDefaults standardUserDefaults] setObject:_settings forKey:[[self identifier] stringByAppendingString:@" Settings"]];
+	if( [_settings count] ) [[NSUserDefaults standardUserDefaults] setObject:_settings forKey:[[self identifier] stringByAppendingString:@" Settings"]];
+	else [[NSUserDefaults standardUserDefaults] removeObjectForKey:[[self identifier] stringByAppendingString:@" Settings"]];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 

@@ -83,7 +83,6 @@ static JVChatController *sharedInstance = nil;
 - (void) disposeChatWindowController:(JVChatWindowController *) controller {
 	NSParameterAssert( controller != nil );
 //	NSAssert1( [_chatWindows containsObject:controller], @"%@ is not a member of chat controller.", controller );
-	NSLog( @"disposeChatWindowController %d", [controller retainCount] );
 	[_chatControllers minusSet:[NSSet setWithArray:[controller allChatViewControllers]]];
 	[_chatWindows removeObject:controller];
 }

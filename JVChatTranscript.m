@@ -160,12 +160,17 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[_chatEmoticons release];
 	[_emoticonMappings release];
 	[_logLock release];
+	[_styleParams release];
+	[_filePath release];
 
 	[JVChatStyleBundles autorelease];
 	[JVChatEmoticonBundles autorelease];
 
 	xmlFreeDoc( _xmlLog );
 	_xmlLog = NULL;
+
+	xmlFreeDoc( _xmlQueue );
+	_xmlQueue = NULL;
 
 	xsltFreeStylesheet( _chatXSLStyle );
 	_chatXSLStyle = NULL;
@@ -183,6 +188,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	_chatEmoticons = nil;
 	_emoticonMappings = nil;
 	_logLock = nil;
+	_styleParams = nil;
+	_filePath = nil;
 	_windowController = nil;
 
 	[super dealloc];

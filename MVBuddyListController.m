@@ -121,6 +121,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[_picker release];
 	[_oldPositions release];
 	[_sortTimer release];
+	[_addPerson release];
 
 	_onlineBuddies = nil;
 	_buddyList = nil;
@@ -128,6 +129,7 @@ static MVBuddyListController *sharedInstance = nil;
 	_picker = nil;
 	_oldPositions = nil;
 	_sortTimer = nil;
+	_addPerson = nil;
 
 	[super dealloc];
 }

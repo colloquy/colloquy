@@ -57,8 +57,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		_nicknameStatus = [[NSMutableDictionary dictionary] retain];
 		_activeNickname = nil;
 
-		NSLog( @"init buddy %@", [self firstName] );
-
 		ABMultiValue *value = [person valueForProperty:@"IRCNickname"];
 		unsigned int i = 0, count = [value count];
 		NSURL *url = nil;
@@ -75,8 +73,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	NSLog( @"dealloc buddy %@", _activeNickname );
 
 	[_person release];
 	[_nicknames release];

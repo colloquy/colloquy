@@ -31,7 +31,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 	IBOutlet NSProgressIndicator *progressBar;
 	IBOutlet NSTextField *transferStatus;
 	IBOutlet NSTableView *currentFiles;
-	NSMutableArray *_transferStorage, *_calculationItems;
+	NSMutableArray *_transferStorage;
+	NSMutableArray *_calculationItems;
 	NSTimer *_updateTimer;
 	NSSet *_safeFileExtentions;
 }
