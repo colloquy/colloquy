@@ -16,7 +16,7 @@ typedef enum _JVIgnoreMatchResult {
 	NSString *_ignoredMessage;
 	AGRegex *_userRegex;
 	AGRegex *_messageRegex;
-	NSMutableArray *_inRooms;
+	NSMutableArray *_rooms;
 	NSString *_friendlyName;
 	BOOL _permanent;
 }
@@ -26,13 +26,13 @@ typedef enum _JVIgnoreMatchResult {
 - (JVIgnoreMatchResult) matchUser:(NSString *) user message:(NSString *) message inView:(id <JVChatViewController>) view;
 
 - (BOOL) isPermanent;
-- (void) setIsPermanent:(BOOL) permanent;
+- (void) setPermanent:(BOOL) permanent;
 
 - (NSString *) friendlyName;
 - (void) setFriendlyName:(NSString *) friendlyName;
 
-- (NSArray *) inRooms;
-- (void) setInRooms:(NSArray *) newInRooms;
+- (NSArray *) rooms;
+- (void) setRooms:(NSArray *) rooms;
 
 - (NSString *) message;
 - (void) setMessage:(NSString *) message;

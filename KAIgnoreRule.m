@@ -14,6 +14,8 @@
 	return [[[KAIgnoreRule alloc] initForUser:user message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName] autorelease];
 }
 
+#pragma mark -
+
 - (id) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
 	if( ( self = [super init] ) ) {
 		_userRegex = nil;
@@ -22,7 +24,7 @@
 		_ignoredMessage = nil;
 		[self setUser:user];
 		[self setMessage:message];
-		_inRooms = [rooms copy];
+		_rooms = [rooms copy];
 		_friendlyName = [friendlyName copy];
 		_permanent = permanent;
 	}
@@ -41,7 +43,7 @@
 	if( [coder allowsKeyedCoding] ) {
 		[coder encodeObject:_ignoredUser forKey:@"KAIgnoreUser"];
 		[coder encodeObject:_ignoredMessage forKey:@"KAIgnoreMessage"];
-		[coder encodeObject:_inRooms forKey:@"KAIgnoreRooms"];
+		[coder encodeObject:_rooms forKey:@"KAIgnoreRooms"];
 		[coder encodeBool:_permanent forKey:@"KAIgnorePermanent"];
 		[coder encodeObject:_friendlyName forKey:@"KAIgnoreFriendlyName"];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
@@ -50,15 +52,17 @@
 - (void) dealloc {
 	[_ignoredUser release];
 	[_ignoredMessage release];
-	[_inRooms release];
+	[_rooms release];
 	[_userRegex release];
 	[_messageRegex release];
 	[_friendlyName release];
 	[super dealloc];
 }
 
+#pragma mark -
+
 - (JVIgnoreMatchResult) matchUser:(NSString *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
-	if( ! [_inRooms count] || ( [view isKindOfClass:[JVDirectChat class]] && [_inRooms containsObject:[(JVDirectChat *)view target]] ) ) {
+	if( ! [_rooms count] || ( [view isKindOfClass:[JVDirectChat class]] && [_rooms containsObject:[(JVDirectChat *)view target]] ) ) {
 		BOOL userFound = NO;
 		BOOL messageFound = NO;
 		BOOL userRequired = ( _userRegex || [_ignoredUser length] );
@@ -82,13 +86,17 @@
 	return JVNotIgnored;
 }
 
+#pragma mark -
+
 - (BOOL) isPermanent {
 	return _permanent;
 }
 
-- (void) setIsPermanent:(BOOL) permanent {
+- (void) setPermanent:(BOOL) permanent {
 	_permanent = permanent;
 }
+
+#pragma mark -
 
 - (NSString *) friendlyName {
 	if( ! [_friendlyName length] ) {
@@ -106,16 +114,18 @@
     }
 }
 
-- (NSArray *) inRooms {
-    return [[_inRooms retain] autorelease];
+#pragma mark -
+
+- (NSArray *) rooms {
+    return [[_rooms retain] autorelease];
 }
 
-- (void) setInRooms:(NSArray *) newInRooms {
-    if( _inRooms != newInRooms ) {
-        [_inRooms release];
-        _inRooms = [newInRooms copy];
-    }
+- (void) setRooms:(NSArray *) rooms {
+    [_rooms autorelease];
+	_rooms = [rooms copy];
 }
+
+#pragma mark -
 
 - (NSString *) message {
     return [[_ignoredMessage retain] autorelease];
@@ -131,6 +141,8 @@
 	if( message && ( [message length] > 2 ) && [message hasPrefix:@"/"] && [message hasSuffix:@"/"] )
 		_messageRegex = [[AGRegex alloc] initWithPattern:[message substringWithRange:NSMakeRange( 1, [message length] - 2)] options:AGRegexCaseInsensitive];
 }
+
+#pragma mark -
 
 - (NSString *) user {
     return [[_ignoredUser retain] autorelease];

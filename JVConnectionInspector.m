@@ -234,7 +234,7 @@
 	KAIgnoreRule *rule = [_ignoreRules objectAtIndex:[editRules selectedRow]];
 
 	[_editingRuleRooms release];
-	_editingRuleRooms = [[rule inRooms] mutableCopy];
+	_editingRuleRooms = [[rule rooms] mutableCopy];
 
 	NSString *user = [rule user];
 	NSString *message = [rule message];
@@ -259,7 +259,7 @@
 	[makeRulePermanent setState:( [rule isPermanent] ? NSOnState : NSOffState )];
 	[ruleUsesSender setState:( ! [[rule user] length] ? NSOffState : NSOnState )];
 	[ruleUsesMessage setState:( ! [[rule message] length] ? NSOffState : NSOnState )];
-	[ruleUsesRooms setState:( ! [[rule inRooms] count] ? NSOffState : NSOnState )];
+	[ruleUsesRooms setState:( ! [[rule rooms] count] ? NSOffState : NSOnState )];
 	[senderType selectItemAtIndex:( regexUser ? 1 : 0 )];
 	[messageType selectItemAtIndex:( regexMessage ? 1 : 0 )];
 	[editRuleSender setStringValue:( user ? user : @"" )];
@@ -309,8 +309,8 @@
 			KAIgnoreRule *rule = [_ignoreRules objectAtIndex:[editRules selectedRow]];
 			[rule setUser:user];
 			[rule setMessage:message];
-			[rule setInRooms:_editingRuleRooms];
-			[rule setIsPermanent:isPermanent];
+			[rule setRooms:_editingRuleRooms];
+			[rule setPermanent:isPermanent];
 			[rule setFriendlyName:friendlyName];
 			[editRules reloadData];
 		}
