@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
+#import "NSNumberAdditions.h"
 
 static unsigned long MVChatScriptPluginClass = 'cplG';
 
@@ -50,7 +51,7 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 
 @implementation NSValue (NSAppleEventDescriptor)
 - (NSAppleEventDescriptor *) appleEventDescriptor {
-	void *data[24];
+	void *data[32];
 	const char *valueType = [self objCType];
 	unsigned long valueKeywordType = 0;
 	unsigned long valueSize = 0;
@@ -146,7 +147,11 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 
 @implementation MVChatScriptPlugin
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	return ( self = [super init] );
+	if( ( self = [self init] ) ) {
+		_doseNotRespond = [[NSMutableSet set] retain];
+		_script = nil;
+	}
+	return self;
 }
 
 - (id) initWithScript:(NSAppleScript *) script andManager:(MVChatPluginManager *) manager {
@@ -157,7 +162,11 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 
 - (void) dealloc {
 	[_script release];
+	[_doseNotRespond release];
+
 	_script = nil;
+	_doseNotRespond = nil;
+
 	[super dealloc];
 }
 
@@ -177,6 +186,8 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 	NSString *key = nil;
 	id value = nil;
 
+	if( ! _script ) return nil;
+
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
 		if( [value isKindOfClass:[NSValue class]] || [value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]] ) {
 			descriptor = [value appleEventDescriptor];
@@ -187,7 +198,11 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 		if( descriptor ) [event setDescriptor:descriptor forKeyword:[key fourCharCode]];
 	}
 
-	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:NULL];
+	NSDictionary *errors = nil;
+	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:&errors];
+
+	if( [[errors objectForKey:NSAppleScriptErrorNumber] isEqual:[NSNumber numberWithInt:-1708]] )
+		return nil;
 
 	switch( [result descriptorType] ) {
 		case typeChar:
@@ -198,10 +213,21 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 		case typeShortInteger: return [NSNumber numberWithInt:(int)[result int32Value]];
 		case typeLongInteger: return [NSNumber numberWithLong:(long)[result int32Value]];
 		case typeMagnitude: return [NSNumber numberWithUnsignedLong:(unsigned long)[result int32Value]];
-		case typeShortFloat: return [NSNumber value:[[result data] bytes] withObjCType:@encode( float )];
-		case typeLongFloat: return [NSNumber value:[[result data] bytes] withObjCType:@encode( double )];
+		case typeShortFloat: return [NSNumber numberWithBytes:[[result data] bytes] objCType:@encode( float )];
+		case typeLongFloat: return [NSNumber numberWithBytes:[[result data] bytes] objCType:@encode( double )];
 	}
 
-	return nil;
+	return [NSNull null];
+}
+
+#pragma mark -
+
+- (BOOL) respondsToSelector:(SEL) selector {
+	if( ! _script || [_doseNotRespond containsObject:NSStringFromSelector( selector )] ) return NO;
+	return [super respondsToSelector:selector];
+}
+
+- (void) doesNotRespondToSelector:(SEL) selector {
+	[_doseNotRespond addObject:NSStringFromSelector( selector )];
 }
 @end
