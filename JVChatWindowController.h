@@ -52,9 +52,6 @@ extern NSString *JVChatViewPboardType;
 @end
 
 @protocol JVChatViewController <NSObject, JVChatListItem>
-- (id) initWithTarget:(NSString *) target forConnection:(MVChatConnection *) connection;
-
-- (NSString *) target;
 - (MVChatConnection *) connection;
 
 - (JVChatWindowController *) windowController;
