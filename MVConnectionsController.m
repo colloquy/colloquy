@@ -13,13 +13,13 @@
 
 static MVConnectionsController *sharedInstance = nil;
 
-static NSString *MVToolbarConnectToggleItemIdentifier = @"MVToolbarConnectToggleItem";
-static NSString *MVToolbarEditItemIdentifier = @"MVToolbarEditItem";
-static NSString *MVToolbarInspectorItemIdentifier = @"MVToolbarInspectorItem";
-static NSString *MVToolbarDeleteItemIdentifier = @"MVToolbarDeleteItem";
-static NSString *MVToolbarConsoleItemIdentifier = @"MVToolbarConsoleItem";
-static NSString *MVToolbarJoinRoomItemIdentifier = @"MVToolbarJoinRoomItem";
-static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
+static NSString *MVToolbarConnectToggleItemIdentifier   = @"MVToolbarConnectToggleItem";
+static NSString *MVToolbarEditItemIdentifier			= @"MVToolbarEditItem";
+static NSString *MVToolbarInspectorItemIdentifier		= @"MVToolbarInspectorItem";
+static NSString *MVToolbarDeleteItemIdentifier			= @"MVToolbarDeleteItem";
+static NSString *MVToolbarConsoleItemIdentifier			= @"MVToolbarConsoleItem";
+static NSString *MVToolbarJoinRoomItemIdentifier		= @"MVToolbarJoinRoomItem";
+static NSString *MVToolbarQueryUserItemIdentifier		= @"MVToolbarQueryUserItem";
 
 static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteboard type";
 
@@ -992,7 +992,8 @@ static NSMenu *favoritesMenu = nil;
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Inspector", "inspector toolbar button in customize palette" )];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Show inspector", "connection info button tooltip" )];
-		[toolbarItem setImage:[NSImage imageNamed:@"inspector"]];
+		//[toolbarItem setImage:[NSImage imageNamed:@"inspector"]];
+		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
 
 		[toolbarItem setTarget:[JVInspectorController class]];
 		[toolbarItem setAction:@selector( showInspector: )];
@@ -1179,6 +1180,9 @@ static NSMenu *favoritesMenu = nil;
 		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
 
 		if( [[info objectForKey:@"automatic"] boolValue] ) {
+			//NSEnumerator *renumerator = nil;
+			//id item = nil;
+
 			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 				[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
 
