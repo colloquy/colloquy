@@ -110,6 +110,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) _breakLongLinesInString:(NSMutableString *) string;
 - (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
+- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
 - (char *) _classificationForNickname:(NSString *) nickname;
 - (void) _saveSelfIcon;
 - (void) _saveBuddyIcon:(JVBuddy *) buddy;
@@ -1626,7 +1627,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message {
-	NSFont *baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
+	return [self _convertRawMessage:message withBaseFont:nil];
+}
+
+- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont {
+	if( ! message || ! [message length] ) return nil;
+
+	if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
 	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
 
 	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];

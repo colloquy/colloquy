@@ -26,6 +26,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
+- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
 - (void) _didConnect:(NSNotification *) notification;
 - (void) _didDisconnect:(NSNotification *) notification;
 @end
@@ -628,7 +629,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	JVChatRoomMember *mbr = [[[self chatRoomMemberWithName:member] retain] autorelease];
 	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), @encode( NSString * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), @encode( NSAttributedString * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( memberKicked:fromRoom:by:forReason: )];
@@ -688,7 +689,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	JVChatRoomMember *mbr = [[[self chatRoomMemberWithName:[[self connection] nickname]] retain] autorelease];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), @encode( NSString * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), @encode( NSAttributedString * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( kickedFromRoom:by:forReason: )];
@@ -756,42 +757,39 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (void) changeTopic:(NSData *) topic by:(NSString *) author displayChange:(BOOL) showChange {
-	NSMutableString *topicString = ( topic ? [[[NSMutableString alloc] initWithData:topic encoding:_encoding] autorelease] : nil );
-	if( ! topicString && topic ) topicString = [NSMutableString stringWithCString:[topic bytes] length:[topic length]];
+	[_topic autorelease];
+	_topic = [topic copy];
 
-//	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
-//		[self _makeHyperlinksInString:topicString];
+	[_topicAttributed autorelease];
+	_topicAttributed = [self _convertRawMessage:topic withBaseFont:[NSFont systemFontOfSize:11.]];
 
 	if( showChange && author ) {
 		author = [[author componentsSeparatedByString:@"!"] objectAtIndex:0];
 		JVChatRoomMember *mbr = [self chatRoomMemberWithName:author];
+		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+		NSString *topicString = [_topicAttributed HTMLFormatWithOptions:options];
 		if( [mbr isLocalUser] ) {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You changed the topic to \"%@\".", "you changed the topic chat room status message" ), topicString] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : author ), @"by", author, @"bynickname", topicString, @"topic", nil]];
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You changed the topic to \"%@\".", "you changed the topic chat room status message" ), topicString] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : author ), @"by", author, @"bynickname", _topicAttributed, @"topic", nil]];
 		} else {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"Topic changed to \"%@\" by <span class=\"member\">%@</span>.", "topic changed chat room status message" ), topicString, ( mbr ? [mbr title] : author )] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : author ), @"by", author, @"bynickname", topicString, @"topic", nil]];
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"Topic changed to \"%@\" by <span class=\"member\">%@</span>.", "topic changed chat room status message" ), topicString, ( mbr ? [mbr title] : author )] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : author ), @"by", author, @"bynickname", _topicAttributed, @"topic", nil]];
 		}
 
-		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), nil];
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSAttributedString * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 		[invocation setSelector:@selector( topicChangedTo:inRoom:by: )];
-		[invocation setArgument:&topicString atIndex:2];
+		[invocation setArgument:&_topicAttributed atIndex:2];
 		[invocation setArgument:&self atIndex:3];
 		[invocation setArgument:&mbr atIndex:4];
 
 		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	}
 
-	if( ! [topicString length] )
-		topicString = [NSString stringWithFormat:@"<span style=\"color: #6c6c6c\">%@</span>", NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" )];
-
-	topicString = [NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", topicString];
-
-	[_topic autorelease];
-	_topic = [topic copy];
-
-	[_topicAttributed autorelease];
-	_topicAttributed = [[NSMutableAttributedString attributedStringWithHTMLFragment:topicString baseURL:nil] retain];
+	if( ! [_topicAttributed length] ) {
+		NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor], NSForegroundColorAttributeName, [NSFont systemFontOfSize:11.], NSFontAttributeName, nil];
+		[_topicAttributed autorelease];
+		_topicAttributed = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" ) attributes:attributes];
+	}
 
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 	[paraStyle setMaximumLineHeight:13.];
@@ -996,7 +994,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		if( [reason isKindOfClass:[NSData class]] )
 			rstring = [self _convertRawMessage:reason];
 
-		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( NSString * ), nil];
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( NSAttributedString * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 		[invocation setSelector:@selector( memberParted:fromRoom:forReason: )];
@@ -1420,14 +1418,14 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[self doesNotRespondToSelector:_cmd];
 }
 
-- (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoom *) room forReason:(NSString *) reason {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mPr1", reason, @"mPr2", nil];
+- (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoom *) room forReason:(NSAttributedString *) reason {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mPr1", [reason string], @"mPr2", nil];
 	if( ! [self callScriptHandler:'mPrX' withArguments:args] )
 		[self doesNotRespondToSelector:_cmd];
 }
 
-- (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by forReason:(NSString *) reason {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mKr1", by, @"mKr2", reason, @"mKr3", nil];
+- (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mKr1", by, @"mKr2", [reason string], @"mKr3", nil];
 	if( ! [self callScriptHandler:'mKrX' withArguments:args] )
 		[self doesNotRespondToSelector:_cmd];
 }
@@ -1468,14 +1466,14 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[self doesNotRespondToSelector:_cmd];
 }
 
-- (void) kickedFromRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by forReason:(NSString *) reason {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", by, @"kRm1", reason, @"kRm2", nil];
+- (void) kickedFromRoom:(JVChatRoom *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", by, @"kRm1", [reason string], @"kRm2", nil];
 	if( ! [self callScriptHandler:'kRmX' withArguments:args] )
 		[self doesNotRespondToSelector:_cmd];
 }
 
-- (void) topicChangedTo:(NSString *) topic inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) member {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:topic, @"rTc1", member, @"rTc2", room, @"rTc3", nil];
+- (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoom *) room by:(JVChatRoomMember *) member {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[topic string], @"rTc1", member, @"rTc2", room, @"rTc3", nil];
 	if( ! [self callScriptHandler:'rTcX' withArguments:args] )
 		[self doesNotRespondToSelector:_cmd];
 }
