@@ -24,6 +24,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 @class NSMutableArray;
 @class NSRecursiveLock;
 @class MVChatConnection;
+@class NSTimer;
 
 @interface MVFileTransferController : NSWindowController {
 @private
@@ -31,6 +32,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 	IBOutlet NSTextField *transferStatus;
 	IBOutlet NSTableView *currentFiles;
 	NSMutableArray *_transferStorage, *_calculationItems;
+	NSTimer *_updateTimer;
 }
 + (MVFileTransferController *) defaultManager;
 - (IBAction) showTransferManager:(id) sender;

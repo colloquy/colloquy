@@ -60,7 +60,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 @interface MVFileTransferController (MVFileTransferControllerPrivate)
-- (void) _updateProgress;
+- (void) _updateProgress:(id) sender;
 @end
 
 #pragma mark -
@@ -84,8 +84,16 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferFinished: ) name:MVChatConnectionFileTransferFinishedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferError: ) name:MVChatConnectionFileTransferErrorNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferStatus: ) name:MVChatConnectionFileTransferStatusNotification object:nil];
+
+		_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];
 	}
 	return self;
+}
+
+- (void) release {
+	if( ( [self retainCount] - 1 ) == 1 )
+		[_updateTimer invalidate];
+	[super release];
 }
 
 - (void) dealloc {
@@ -93,11 +101,13 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	[_transferStorage autorelease];
 	[_calculationItems autorelease];
+	[_updateTimer autorelease];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	_transferStorage = nil;
 	_calculationItems = nil;
+	_updateTimer = nil;
 
 	if( self == sharedInstance ) sharedInstance = nil;
 	[super dealloc];
@@ -133,7 +143,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	[progressBar setMinValue:0.];
 	[progressBar setUsesThreadedAnimation:YES];
-	[self _updateProgress];
+	[self _updateProgress:nil];
 
 	[self setWindowFrameAutosaveName:@"transfer"];
 }
@@ -156,10 +166,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	if( path ) [download setDestination:path allowOverwrite:NO];
 
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
-	[info setObject:[NSDate date] forKey:@"updated"];
 	[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"transfered"];
 	[info setObject:[NSNumber numberWithUnsignedInt:0] forKey:@"rate"];
-	[info setObject:[NSDate date] forKey:@"added"];
 	[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"size"];
 	[info setObject:[NSNumber numberWithUnsignedInt:MVDownloadTransfer] forKey:@"type"];
 	[info setObject:[NSNumber numberWithUnsignedInt:MVTransferHolding] forKey:@"status"];
@@ -173,7 +181,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	[self showTransferManager:nil];
 
-	[self _updateProgress];	
+	[self _updateProgress:nil];	
 }
 
 - (void) addFileTransfer:(NSString *) identifier withUser:(NSString *) user forConnection:(MVChatConnection *) connection asType:(MVTransferOperation) type withSize:(unsigned long) size withLocalFile:(NSString *) path {
@@ -190,16 +198,14 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		if( [[info objectForKey:@"user"] isEqualToString:user] && [[info objectForKey:@"path"] isEqualToString:path] && [[info objectForKey:@"size"] unsignedLongValue] == size && [[info objectForKey:@"type"] unsignedIntValue] == type ) {
 			[info setObject:[NSNumber numberWithUnsignedInt:MVTransferHolding] forKey:@"status"];
 			[info setObject:identifier forKey:@"identifier"];
-			[self _updateProgress];
+			[self _updateProgress:nil];
 			return;
 		}
 	}
 
 	info = [NSMutableDictionary dictionary];
-	[info setObject:[NSDate date] forKey:@"updated"];
 	[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"transfered"];
 	[info setObject:[NSNumber numberWithUnsignedInt:0] forKey:@"rate"];
-	[info setObject:[NSDate date] forKey:@"added"];
 	[info setObject:[NSNumber numberWithUnsignedLong:size] forKey:@"size"];
 	[info setObject:[NSNumber numberWithUnsignedInt:type] forKey:@"type"];
 	[info setObject:[NSNumber numberWithUnsignedInt:MVTransferHolding] forKey:@"status"];
@@ -212,7 +218,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _changeUser: ) name:MVChatConnectionUserNicknameChangedNotification object:connection];
 
-	[self _updateProgress];
+	[self _updateProgress:nil];
 }
 
 - (BOOL) updateFileTransfer:(NSString *) identifier withNewTransferedSize:(unsigned long) transfered {
@@ -224,22 +230,16 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	enumerator = [_transferStorage objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [[info objectForKey:@"status"] unsignedIntValue] != MVTransferDone && [identifier isEqualToString:[info objectForKey:@"identifier"]] ) {
-			NSTimeInterval timeslice = [[info objectForKey:@"updated"] timeIntervalSinceNow] * -1;
-			double sizeslice = ( transfered - [[info objectForKey:@"transfered"] unsignedLongValue] );
-			double rate = (sizeslice / timeslice), avgrate = 0.;
-			avgrate = ( [[info objectForKey:@"rate"] doubleValue] + rate ) / 2.;
+			NSTimeInterval timeslice = [[info objectForKey:@"started"] timeIntervalSinceNow] * -1;
 			[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"transfered"];
-			if( transfered != [[info objectForKey:@"size"] unsignedLongValue] ) {
-				[info setObject:[NSNumber numberWithDouble:rate] forKey:@"rate"];
-				[info setObject:[NSNumber numberWithDouble:avgrate] forKey:@"rateAverage"];
-			}
-			[info setObject:[NSDate date] forKey:@"updated"];
-			if( ! [info objectForKey:@"started"] ) [info setObject:[NSDate date] forKey:@"started"];
+			if( transfered != [[info objectForKey:@"size"] unsignedLongValue] )
+				[info setObject:[NSNumber numberWithDouble:(transfered / timeslice)] forKey:@"rate"];
+			if( ! [info objectForKey:@"started"] )
+				[info setObject:[NSDate date] forKey:@"started"];
 			ret = YES;
 			break;
 		}
 	}
-	[self _updateProgress];
 	return ret;
 }
 
@@ -258,7 +258,6 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			break;
 		}
 	}
-	[self _updateProgress];
 	return ret;
 }
 
@@ -273,7 +272,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		else if( [info objectForKey:@"controller"] )
 			[[info objectForKey:@"controller"] cancel];
 		[info setObject:[NSNumber numberWithUnsignedInt:MVTransferStopped] forKey:@"status"];
-		[self _updateProgress];
+		[self _updateProgress:nil];
 	}
 }
 
@@ -290,7 +289,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 				[_transferStorage removeObject:info];
 			} else i++;
 		}
-		[self _updateProgress];
+		[self _updateProgress:nil];
 	} else if( [currentFiles numberOfSelectedRows] == 1 ) {
 		info = [_transferStorage objectAtIndex:[currentFiles selectedRow]];
 		if( [[info objectForKey:@"status"] unsignedIntValue] == MVTransferDone || [[info objectForKey:@"status"] unsignedIntValue] == MVTransferError || [[info objectForKey:@"status"] unsignedIntValue] == MVTransferStopped ) {
@@ -299,7 +298,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			[_calculationItems removeObject:info];
 			[_transferStorage removeObject:info];
 		}
-		[self _updateProgress];
+		[self _updateProgress:nil];
 	}
 }
 
@@ -349,7 +348,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		return ( size ? MVPrettyFileSize( size ) : @"--" );
 	} else if( [[column identifier] isEqual:@"user"] ) {
 		NSString *ret = [[_transferStorage objectAtIndex:row] objectForKey:@"user"];
-		return ( ret ? ret : @"n/a" );
+		return ( ret ? ret : NSLocalizedString( @"n/a", "not applicable identifier" ) );
 	}
 	return nil;
 }
@@ -399,7 +398,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		[_calculationItems addObject:[_transferStorage objectAtIndex:[item unsignedIntValue]]];
 	}
 
-	[self _updateProgress];
+	[self _updateProgress:nil];
 }
 
 - (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
@@ -488,7 +487,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		}
 	}
 
-	[self _updateProgress];
+	[self _updateProgress:nil];
 }
 
 - (NSWindow *) downloadWindowForAuthenticationSheet:(WebDownload *) download {
@@ -502,24 +501,17 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	enumerator = [_transferStorage objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"controller"] == download ) {
-			NSTimeInterval timeslice = [[info objectForKey:@"updated"] timeIntervalSinceNow] * -1;
+			NSTimeInterval timeslice = [[info objectForKey:@"started"] timeIntervalSinceNow] * -1;
 			unsigned long transfered = [[info objectForKey:@"transfered"] unsignedIntValue] + length;
-			double sizeslice = length;
-			double rate = (sizeslice / timeslice), avgrate = 0.;
-			avgrate = ( [[info objectForKey:@"rate"] doubleValue] + rate ) / 2.;
-			[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"transfered"];
-			if( transfered != [[info objectForKey:@"size"] unsignedLongValue] ) {
-				[info setObject:[NSNumber numberWithDouble:rate] forKey:@"rate"];
-				[info setObject:[NSNumber numberWithDouble:avgrate] forKey:@"rateAverage"];
-			}
-			[info setObject:[NSDate date] forKey:@"updated"];
-			if( ! [info objectForKey:@"started"] ) [info setObject:[NSDate date] forKey:@"started"];
 			[info setObject:[NSNumber numberWithUnsignedInt:MVTransferNormal] forKey:@"status"];
+			[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"transfered"];
+			if( transfered != [[info objectForKey:@"size"] unsignedLongValue] )
+				[info setObject:[NSNumber numberWithDouble:(transfered / timeslice)] forKey:@"rate"];
+			if( ! [info objectForKey:@"started"] )
+				[info setObject:[NSDate date] forKey:@"started"];
 			break;
 		}
 	}
-
-	[self _updateProgress];
 }
 
 - (BOOL) download:(NSURLDownload *) download shouldDecodeSourceDataOfMIMEType:(NSString *) encodingType {
@@ -538,7 +530,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		}
 	}
 	
-	[self _updateProgress];
+	[self _updateProgress:nil];
 }
 
 - (void) download:(NSURLDownload *) download didFailWithError:(NSError *) error {
@@ -553,7 +545,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		}
 	}
 	
-	[self _updateProgress];
+	[self _updateProgress:nil];
 }
 @end
 
@@ -620,7 +612,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		}
 
 		[download setDestination:[sheet filename] allowOverwrite:YES];
-		[self _updateProgress];
+		[self _updateProgress:nil];
 	} else {
 		NSEnumerator *enumerator = nil;
 		NSMutableDictionary *info = nil;
@@ -635,7 +627,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			}
 		}
 
-		[self _updateProgress];
+		[self _updateProgress:nil];
 	}
 }
 
@@ -676,7 +668,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	}
 }
 
-- (void) _updateProgress {
+- (void) _updateProgress:(id) sender {
 	NSString *str = nil;
 	NSEnumerator *enumerator = nil;
 	NSDictionary *info = nil;
@@ -685,33 +677,32 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	double upRate = 0., downRate = 0., avgRate = 0.;
 	unsigned upCount = 0, downCount = 0;
 	NSDate *startDate = nil;
-	BOOL mixed = YES;
+
+	if( ! [[self window] isVisible] ) return;
 
 	[currentFiles reloadData];
 	if( [_calculationItems count] ) enumerator = [_calculationItems objectEnumerator];
 	else enumerator = [_transferStorage objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [[info objectForKey:@"status"] unsignedIntValue] == MVTransferNormal )
-			startDate = [[[info objectForKey:@"started"] copy] autorelease];
+			startDate = [[[info objectForKey:@"started"] retain] autorelease];
 		else startDate = nil;
 		if( [[info objectForKey:@"type"] unsignedIntValue] == MVUploadTransfer ) {
 			totalSizeUp += [[info objectForKey:@"size"] unsignedLongValue];
 			totalTransferedUp += [[info objectForKey:@"transfered"] unsignedLongValue];
-			upRate += [[info objectForKey:@"rateAverage"] doubleValue];
+			upRate += [[info objectForKey:@"rate"] doubleValue];
 			upCount++;
 		} else if( [[info objectForKey:@"type"] unsignedIntValue] == MVDownloadTransfer ) {
 			totalSizeDown += [[info objectForKey:@"size"] unsignedLongValue];
 			totalTransferedDown += [[info objectForKey:@"transfered"] unsignedLongValue];
-			downRate += [[info objectForKey:@"rateAverage"] doubleValue];
+			downRate += [[info objectForKey:@"rate"] doubleValue];
 			downCount++;
 		}
 	}
 
-	if( upCount && downCount ) mixed = YES;
-	else mixed = NO;
 	totalTransfered = totalTransferedDown + totalTransferedUp;
 	totalSize = totalSizeDown + totalSizeUp;
-	if( mixed ) {
+	if( upCount && downCount ) {
 		upRate = upRate / (float) upCount;
 		if( ! totalTransferedUp || ! totalSizeUp ) {
 			str = NSLocalizedString( @"nothing uploaded yet", "status of pending upload file transfer" );
@@ -723,11 +714,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		str = [str stringByAppendingString:@"\n"];
 		downRate = downRate / (float) downCount;
 		if( ! totalTransferedDown || ! totalSizeDown ) {
-			str = NSLocalizedString( @"nothing downloaded yet", "status of pending download file transfer" );
+			str = [str stringByAppendingString:NSLocalizedString( @"nothing downloaded yet", "status of pending download file transfer" )];
 		} else if( totalSizeDown != totalTransferedDown ) {
-			str = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ downloaded, at %@ per second", "status of current download file transfer" ), MVPrettyFileSize( totalTransferedDown ), MVPrettyFileSize( totalSizeDown ), MVPrettyFileSize( downRate )];
+			str = [str stringByAppendingFormat:NSLocalizedString( @"%@ of %@ downloaded, at %@ per second", "status of current download file transfer" ), MVPrettyFileSize( totalTransferedDown ), MVPrettyFileSize( totalSizeDown ), MVPrettyFileSize( downRate )];
 		} else if( totalTransferedDown >= totalSizeDown ) {
-			str = [NSString stringWithFormat:NSLocalizedString( @"total of %@ downloaded, at %@ per second", "results final download file transfer" ), MVPrettyFileSize( totalSizeDown ), MVPrettyFileSize( downRate )];
+			str = [str stringByAppendingFormat:NSLocalizedString( @"total of %@ downloaded, at %@ per second", "results final download file transfer" ), MVPrettyFileSize( totalSizeDown ), MVPrettyFileSize( downRate )];
 		}
 	} else if( upCount || downCount ) {
 		avgRate = ( upRate + downRate ) / ( (float) upCount + (float) downCount );
@@ -751,6 +742,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		totalSize = 1;
 		str = NSLocalizedString( @"no recent file transfers", "no files have been transfered or in the process of transfering" );
 	}
+
 	[transferStatus setStringValue:str];
 	[progressBar setDoubleValue:totalTransfered];
 	[progressBar setMaxValue:totalSize];
