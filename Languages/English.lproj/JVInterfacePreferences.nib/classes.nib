@@ -7,6 +7,7 @@
                 changeSendHistory = id; 
                 changeSendOnEnterAction = id; 
                 changeSendOnReturnAction = id; 
+                changeSortByStatus = id; 
                 changeTabKeyComplete = id; 
             }; 
             CLASS = JVInterfacePreferences; 
@@ -20,6 +21,7 @@
                 returnKeyAction = NSPopUpButton; 
                 sendHistory = NSTextField; 
                 sendHistoryStepper = NSStepper; 
+                sortByStatus = NSButton; 
                 tabKeyComplete = NSButton; 
                 tabKeyCompleteLabel = NSTextField; 
             }; 
