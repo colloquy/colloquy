@@ -202,6 +202,7 @@ finish:
 	theColumn = [currentFiles tableColumnWithIdentifier:@"file"];
 	prototypeCell = [[JVDetailCell new] autorelease];
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
+	[prototypeCell setLineBreakMode:NSLineBreakByTruncatingMiddle];
 	[theColumn setDataCell:prototypeCell];
 
 	theColumn = [currentFiles tableColumnWithIdentifier:@"status"];
