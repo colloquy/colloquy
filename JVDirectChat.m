@@ -1194,6 +1194,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[messageString setString:[regex replaceWithString:@"" inString:messageString]];
 	}
 
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
+		[self _makeHyperlinksInString:messageString];
+
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 		NSMutableArray *names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
@@ -1253,9 +1256,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatMentioned"] forKey:@"coalesceKey"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
 	}
-
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
-		[self _makeHyperlinksInString:messageString];
 
 	[self _performEmoticonSubstitutionOnString:messageString];
 
