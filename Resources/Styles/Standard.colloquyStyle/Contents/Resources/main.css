@@ -8,6 +8,12 @@ body {
 	background-image: url( "Backgrounds/colloquy.png" );
 }
 
+.hidden {
+	position: fixed;
+	top: -900px;
+	left: -900px;
+}
+
 .error {
 	color: #aaa;
 }
