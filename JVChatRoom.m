@@ -114,6 +114,12 @@
 
 #pragma mark -
 
+- (NSString *) identifier {
+	return [NSString stringWithFormat:@"%@.%@.chatRoom", [[self connection] server], _target];
+}
+
+#pragma mark -
+
 - (void) setTarget:(NSString *) target {
 	NSAssert( YES, @"JVChatRoom does not implement setTarget:" );
 	return;
