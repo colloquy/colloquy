@@ -243,7 +243,7 @@
 	NSEnumerator *enumerator = [[[_emoticonBundles allObjects] sortedArrayUsingFunction:sortBundlesByName context:self] objectEnumerator];
 	NSMenu *menu = nil;
 	NSMenuItem *menuItem = nil;
-	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
+	NSString *style = [_style identifier];
 	NSString *defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
 	NSBundle *emoticon = [NSBundle bundleWithIdentifier:defaultEmoticons];
 
@@ -555,15 +555,14 @@
 - (IBAction) createNewVariant:(id) sender {
 	[self closeNewVariantSheet:sender];
 
-	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
-	[[NSFileManager defaultManager] createDirectoryAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", style] stringByExpandingTildeInPath] attributes:nil];
+	[[NSFileManager defaultManager] createDirectoryAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [_style identifier]] stringByExpandingTildeInPath] attributes:nil];
 
-	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", style, [newVariantName stringValue]] stringByExpandingTildeInPath];
-	[[NSUserDefaults standardUserDefaults] setObject:path forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
+	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [_style identifier], [newVariantName stringValue]] stringByExpandingTildeInPath];
 	[_userStyle writeToFile:path atomically:NO];
 
-	NSBundle *bundle = [NSBundle bundleWithIdentifier:style];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVNewStyleVariantAddedNotification object:bundle]; 
+	[_style setDefaultVariantName:[newVariantName stringValue]];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVNewStyleVariantAddedNotification object:_style]; 
 
 	[self updateChatStylesMenu];
 	[self updatePreview];
