@@ -659,7 +659,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		}
 	}
 
-	if( ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
+	if( ! [defaultMenuItems count] && ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style", "choose style contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
 		[item setSubmenu:_styleMenu];
 		[ret addObject:item];

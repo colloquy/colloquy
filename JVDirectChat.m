@@ -1102,7 +1102,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
 	NSMutableArray *ret = (NSMutableArray *)[super webView:sender contextMenuItemsForElement:element defaultMenuItems:defaultMenuItems];
 
-	if( ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
+	if( ! [defaultMenuItems count] && ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
 		NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
 		[item setSubmenu:_spillEncodingMenu];
 		[ret addObject:item];
