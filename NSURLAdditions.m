@@ -13,7 +13,7 @@
 			finderLaunched = YES;
 
 	if( finderLaunched ) {
-		NSAppleScript *script = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"Finder\" to return location of internet location file (POSIX file \"%@\")", path]]; 
+		NSAppleScript *script = [[[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"Finder\" to return location of internet location file (POSIX file \"%@\")", path]] autorelease]; 
 		NSAppleEventDescriptor *result = [script executeAndReturnError:NULL];
 		if( ! [[result stringValue] length] ) return nil;
 		NSURL *ret = [NSURL URLWithString:[result stringValue]];
@@ -40,7 +40,7 @@
 
 		if( [[path pathExtension] isEqualToString:@"inetloc"] || [[path pathExtension] isEqualToString:@"webloc"] || [[path pathExtension] isEqualToString:@"ftploc"] || [[path pathExtension] isEqualToString:@"mailloc"] || [[path pathExtension] isEqualToString:@"afploc"] ) fileName = [fileName stringByDeletingPathExtension];
 
-		NSAppleScript *script = [[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"Finder\" to make new internet location file to \"%@\" at (POSIX file \"%@\") with properties {name:\"%@\", comment:\"%@\"}", [self absoluteString], folderPath, fileName, [self absoluteString]]];
+		NSAppleScript *script = [[[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"Finder\" to make new internet location file to \"%@\" at (POSIX file \"%@\") with properties {name:\"%@\", comment:\"%@\"}", [self absoluteString], folderPath, fileName, [self absoluteString]]] autorelease];
 		[script executeAndReturnError:NULL];
 	}
 }
