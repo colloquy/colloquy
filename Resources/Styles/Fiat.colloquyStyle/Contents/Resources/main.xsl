@@ -22,7 +22,7 @@
 				<xsl:apply-templates select=".." />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="@ignored != 'yes'">
+				<xsl:if test="@ignored != 'yes' and ../@ignored != 'yes'">
 					<xsl:variable name="timestamp">
 						<xsl:call-template name="short-time">
 							<xsl:with-param name="date" select="@received" />

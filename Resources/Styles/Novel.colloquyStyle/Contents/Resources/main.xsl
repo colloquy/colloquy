@@ -39,7 +39,7 @@
 				<xsl:apply-templates select=".." />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="@ignored != 'yes'">
+				<xsl:if test="@ignored != 'yes' and ../@ignored != 'yes'">
 					<span class="submessage">
 					<xsl:if test="@action = 'yes'">
 						<xsl:value-of select="../sender" />

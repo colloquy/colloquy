@@ -135,7 +135,7 @@
 				<xsl:apply-templates select=".." />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="@ignored != 'yes'">
+				<xsl:if test="@ignored != 'yes' and ../@ignored != 'yes'">
 					<hr />
 					<span>
 					<xsl:if test="@action = 'yes'">
