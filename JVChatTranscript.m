@@ -630,8 +630,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		toolbarItem = [_windowController toggleChatDrawerToolbarItem];
 		[_toolbarItems setObject:toolbarItem forKey:identifier];
 	} else if( [identifier isEqualToString:JVToolbarToggleChatActivityItemIdentifier] ) {
-		toolbarItem = [_windowController chatActivityToolbarItem];
-		[_toolbarItems setObject:toolbarItem forKey:identifier];
+//		toolbarItem = [_windowController chatActivityToolbarItem];
+//		[_toolbarItems setObject:toolbarItem forKey:identifier];
 	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] /* && willBeInserted */ ) {
 		[_toolbarItems setObject:toolbarItem forKey:identifier];
 
@@ -676,12 +676,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarToggleChatActivityItemIdentifier, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarToggleChatActivityItemIdentifier */, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarToggleChatActivityItemIdentifier, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarShowColorsItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier/*, JVToolbarToggleChatActivityItemIdentifier */, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarShowColorsItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
