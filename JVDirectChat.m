@@ -1369,6 +1369,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[self processIncomingMessage:_currentMessage];
 
+	user = [[_currentMessage sender] description]; // if plugins changed the sending user for some reason, allow it
+
 	if( ! [messageString length] && [_currentMessage ignoreStatus] == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
 		_newMessageCount--;
 		return;
@@ -1461,7 +1463,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 
 	child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
-	xmlSetProp( child, "received", [[[NSDate date] description] UTF8String] );
+	xmlSetProp( child, "received", [[[_currentMessage date] description] UTF8String] );
 	if( [_currentMessage isAction] ) xmlSetProp( child, "action", "yes" );
 	if( [_currentMessage isHighlighted] ) xmlSetProp( child, "highlight", "yes" );
 	if( [_currentMessage ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, "ignored", "yes" );

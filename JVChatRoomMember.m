@@ -85,6 +85,28 @@
 	return retVal;
 }
 
+- (NSComparisonResult) compareUsingBuddyStatus:(JVChatRoomMember *) member {
+	NSComparisonResult retVal;
+
+	if( ( _buddy && [member buddy]) || ( ! _buddy && ! [member buddy]) ) {
+		if( _buddy && [member buddy] ) {
+			// if both are buddies, sort by availability
+			retVal = [_buddy availabilityCompare:[member buddy]];
+		} else {
+			retVal = [[self title] caseInsensitiveCompare:[member title]]; // maybe an alpha sort here
+		}
+	} else if ( _buddy ) {
+		// we have a buddy but since the first test failed, member does not
+		// so of course the buddy is greater :)
+		retVal = NSOrderedAscending;
+	} else {
+		// member is a buddy
+		retVal = NSOrderedDescending;
+	}
+
+	return retVal;
+}
+
 #pragma mark -
 #pragma mark User Info
 
@@ -149,26 +171,8 @@
 	return [[[_parent connection] retain] autorelease];
 }
 
-- (NSComparisonResult) compareUsingBuddyStatus:(JVChatRoomMember *) member {
-	NSComparisonResult retVal;
-
-	if( ( _buddy && [member buddy]) || ( ! _buddy && ! [member buddy]) ) {
-		if( _buddy && [member buddy] ) {
-			// if both are buddies, sort by availability
-			retVal = [_buddy availabilityCompare:[member buddy]];
-		} else {
-			retVal = [[self title] caseInsensitiveCompare:[member title]]; // maybe an alpha sort here
-		}
-	} else if ( _buddy ) {
-		// we have a buddy but since the first test failed, member does not
-		// so of course the buddy is greater :)
-		retVal = NSOrderedAscending;
-	} else {
-		// member is a buddy
-		retVal = NSOrderedDescending;
-	}
-
-	return retVal;
+- (NSString *) description {
+	return [self nickname];
 }
 
 #pragma mark -

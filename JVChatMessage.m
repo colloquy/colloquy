@@ -200,8 +200,7 @@
 
 - (NSString *) description {
 	[self load];
-	return [NSString stringWithFormat:@"<%@ 0x%x: (%@) %@>", NSStringFromClass( [self class] ), (unsigned long) self, [self sender], [self body]];
-//	return [self bodyAsPlainText];
+	return [self bodyAsPlainText];
 }
 
 - (NSString *) debugDescription {
