@@ -1308,39 +1308,39 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:@"Get Info" action:NULL keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:NULL keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:@"Send Message" action:@selector( startChatWithSelectedUser: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChatWithSelectedUser: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
 	if( [[memberList objectForKey:[[self connection] nickname]] objectForKey:@"op"] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:@"Kick From Room" action:@selector( kickSelectedUser: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room", "kick from room contextual menu - admin only" ) action:@selector( kickSelectedUser: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
 
 		[menu addItem:[NSMenuItem separatorItem]];
 
 		if( [[memberList objectForKey:[sortedMembers objectAtIndex:[memberListTable selectedRow]]] objectForKey:@"op"] ) {
-			item = [[[NSMenuItem alloc] initWithTitle:@"Demote Operator" action:@selector( promoteSelectedUser: ) keyEquivalent:@""] autorelease];
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Demote Operator", "demote operator contextual menu - admin only" ) action:@selector( promoteSelectedUser: ) keyEquivalent:@""] autorelease];
 			[item setTarget:self];
 			[menu addItem:item];
 		} else {
-			item = [[[NSMenuItem alloc] initWithTitle:@"Make Operator" action:@selector( promoteSelectedUser: ) keyEquivalent:@""] autorelease];
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" ) action:@selector( promoteSelectedUser: ) keyEquivalent:@""] autorelease];
 			[item setTarget:self];
 			[menu addItem:item];
 		}
 
 		if( [[memberList objectForKey:[sortedMembers objectAtIndex:[memberListTable selectedRow]]] objectForKey:@"voice"] ) {
-			item = [[[NSMenuItem alloc] initWithTitle:@"Remove Voice" action:@selector( voiceSelectedUser: ) keyEquivalent:@""] autorelease];
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Remove Voice", "remove voice contextual menu - admin only" ) action:@selector( voiceSelectedUser: ) keyEquivalent:@""] autorelease];
 			[item setTarget:self];
 			[menu addItem:item];
 		} else {
-			item = [[[NSMenuItem alloc] initWithTitle:@"Grant Voice" action:@selector( voiceSelectedUser: ) keyEquivalent:@""] autorelease];
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" ) action:@selector( voiceSelectedUser: ) keyEquivalent:@""] autorelease];
 			[item setTarget:self];
 			[menu addItem:item];
 		}
