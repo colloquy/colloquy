@@ -448,6 +448,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	_styleParams = [[NSMutableDictionary dictionaryWithContentsOfFile:[_chatStyle pathForResource:@"parameters" ofType:@"plist"]] retain];
 	if( ! [_styleParams count] ) _styleParams = [[NSMutableDictionary dictionary] retain];
 
+	[_styleParams setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];
+	[_styleParams setObject:@"'.tif'" forKey:@"buddyIconExtension"];
+
 	if( _params ) [[self class] _freeXsltParamArray:_params];
 	_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
 
@@ -626,6 +629,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	if( [identifier isEqualToString:JVToolbarToggleChatDrawerItemIdentifier] ) {
 		toolbarItem = [_windowController toggleChatDrawerToolbarItem];
 		[_toolbarItems setObject:toolbarItem forKey:identifier];
+	} else if( [identifier isEqualToString:JVToolbarToggleChatActivityItemIdentifier] ) {
+		toolbarItem = [_windowController chatActivityToolbarItem];
+		[_toolbarItems setObject:toolbarItem forKey:identifier];
 	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] /* && willBeInserted */ ) {
 		[_toolbarItems setObject:toolbarItem forKey:identifier];
 
@@ -647,8 +653,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		[toolbarItem setMenuFormRepresentation:menuItem];
 	} else if( [identifier isEqualToString:JVToolbarEmoticonsItemIdentifier] /* && willBeInserted */ ) {
 		[_toolbarItems setObject:toolbarItem forKey:identifier];
-
-		[chooseEmoticon setSmallImage:[NSImage imageNamed:@"emoticonSmall"]];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item patlette label" )];
@@ -672,12 +676,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarToggleChatActivityItemIdentifier, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarShowColorsItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarToggleChatActivityItemIdentifier, JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarShowColorsItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
