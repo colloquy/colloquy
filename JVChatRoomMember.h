@@ -15,6 +15,8 @@
 }
 - (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name;
 
+- (NSComparisonResult) compare:(JVChatRoomMember *) member;
+
 - (MVChatConnection *) connection;
 - (NSString *) nickname;
 - (JVBuddy *) buddy;

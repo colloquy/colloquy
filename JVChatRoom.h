@@ -21,10 +21,8 @@
 	BOOL _kickedFromRoom;
 }
 - (void) addMemberToChat:(NSString *) member asPreviousMember:(BOOL) previous;
-- (void) updateMember:(NSString *) member withInfo:(NSDictionary *) info;
 - (void) removeChatMember:(NSString *) member withReason:(NSData *) reason;
 - (void) changeChatMember:(NSString *) member to:(NSString *) nick;
-- (void) changeSelfTo:(NSString *) nick;
 
 - (void) promoteChatMember:(NSString *) member by:(NSString *) by;
 - (void) demoteChatMember:(NSString *) member by:(NSString *) by;
@@ -37,11 +35,7 @@
 - (void) changeTopic:(NSData *) topic by:(NSString *) author;
 - (NSAttributedString *) topic;
 
-- (BOOL) doesMemberHaveOperatorStatus:(NSString *) member;
-- (BOOL) doesMemberHaveVoiceStatus:(NSString *) member;
-
 - (JVChatRoomMember *) chatRoomMemberWithName:(NSString *) name;
-- (NSString *) preferredNameForMember:(NSString *) member;
 @end
 
 @interface NSObject (MVChatPluginRoomSupport)

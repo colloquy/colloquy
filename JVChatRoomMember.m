@@ -1,10 +1,19 @@
 #import <Cocoa/Cocoa.h>
+#import <AddressBook/AddressBook.h>
 #import <ChatCore/MVChatConnection.h>
+
 #import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
 #import "JVChatController.h"
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
+
+@interface JVChatRoomMember (JVChatRoomMemberPrivate)
+- (NSString *) _selfStoredNickname;
+- (NSString *) _selfCompositeName;
+@end
+
+#pragma mark -
 
 @implementation JVChatRoomMember
 - (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name {
@@ -41,8 +50,19 @@
 
 #pragma mark -
 
+- (NSComparisonResult) compare:(JVChatRoomMember *) member {
+	return [[self title] caseInsensitiveCompare:[member title]];
+}
+
+#pragma mark -
+
 - (NSString *) title {
-	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+	if( [self isLocalUser] ) {
+		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
+			return [self _selfCompositeName];
+		else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyGivenNickname )
+			return [self _selfStoredNickname];
+	} else if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [_buddy preferredName];
 	return [[_nickname retain] autorelease];
 }
@@ -77,7 +97,7 @@
 		[menu addItem:item];
 	}
 
-	if( [_parent doesMemberHaveOperatorStatus:[[_parent connection] nickname]] ) {
+	if( ( [self isLocalUser] && _operator ) || [[_parent chatRoomMemberWithName:[[_parent connection] nickname]] operator] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room", "kick from room contextual menu - admin only" ) action:@selector( kick: ) keyEquivalent:@""] autorelease];
@@ -228,6 +248,35 @@
 
 - (void) _setOperator:(BOOL) operator {
 	_operator = operator;
+}
+
+- (NSString *) _selfCompositeName {
+	ABPerson *_person = [[ABAddressBook sharedAddressBook] me];
+	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
+	NSString *lastName = [_person valueForProperty:kABLastNameProperty];
+
+	if( ! firstName && lastName ) return lastName;
+	else if( firstName && ! lastName ) return firstName;
+	else if( firstName && lastName ) {
+		switch( [[ABAddressBook sharedAddressBook] defaultNameOrdering] ) {
+			default:
+			case kABFirstNameFirst:
+				return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+			case kABLastNameFirst:
+				return [NSString stringWithFormat:@"%@ %@", lastName, firstName];
+		}
+	}
+
+	firstName = [_person valueForProperty:kABNicknameProperty];
+	if( firstName ) return firstName;
+
+	return [[_parent connection] nickname];
+}
+
+- (NSString *) _selfStoredNickname {
+	NSString *nickname = [[[ABAddressBook sharedAddressBook] me] valueForProperty:kABNicknameProperty];
+	if( nickname ) return nickname;
+	return [[_parent connection] nickname];
 }
 @end
 
