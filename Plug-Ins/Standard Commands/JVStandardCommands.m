@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import "JVStandardCommands.h"
 #import "MVConnectionsController.h"
+#import "MVChatConnection.h"
 
 @implementation JVStandardCommands
 - (id) initWithBundle:(NSBundle *) bundle {
@@ -10,7 +11,7 @@
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(NSString *) room forConnection:(MVChatConnection *) connection {
 //	Class chatWindowControllerClass = NSClassFromString( @"MVChatWindowController" );
-	Class connectionsControllerClass = NSClassFromString( @"MVConnectionsController" );
+	MVConnectionsController *connectionsController = [NSClassFromString( @"MVConnectionsController" ) defaultManager];
 	NSStringEncoding encoding = NSUTF8StringEncoding; //[[chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES] encoding];
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
 		if( [arguments length] )
@@ -61,7 +62,7 @@
 		while( ( item = [enumerator nextObject] ) )
 			[connection joinChatForRoom:item];
 		return YES;
-	} else if( [command isEqualToString:@"part"] ) {
+	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
 		if( ! [arguments length] ) {
 			[connection partChatForRoom:room];
 		} else {
@@ -76,7 +77,7 @@
 	} else if( [command isEqualToString:@"server"] ) {
 		NSURL *url = nil;
 		if( [arguments string] && ( url = [NSURL URLWithString:[arguments string]] ) ) {
-			[[connectionsControllerClass defaultManager] handleURL:url andConnectIfPossible:YES];
+			[connectionsController handleURL:url andConnectIfPossible:YES];
 		} else if( [arguments string] ) {
 			NSString *address = nil;
 			int port = 0;
@@ -89,10 +90,10 @@
 			
 			if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", MVURLEncodeString( address ), port]];
 			else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", MVURLEncodeString( address )]];
-			else [[connectionsControllerClass defaultManager] newConnection:nil];
+			else [connectionsController newConnection:nil];
 
-			if( url ) [[connectionsControllerClass defaultManager] handleURL:url andConnectIfPossible:YES];
-		} else [[connectionsControllerClass defaultManager] newConnection:nil];
+			if( url ) [connectionsController handleURL:url andConnectIfPossible:YES];
+		} else [connectionsController newConnection:nil];
 		return YES;
 	} else if( [command isEqualToString:@"dcc"] ) {
 		NSString *subcmd = nil;
@@ -197,7 +198,8 @@
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toUser:(NSString *) user forConnection:(MVChatConnection *) connection {
 //	Class chatWindowControllerClass = NSClassFromString( @"MVChatWindowController" );
-	Class connectionsControllerClass = NSClassFromString( @"MVConnectionsController" );
+//	Class connectionsControllerClass = NSClassFromString( @"MVConnectionsController" );
+	MVConnectionsController *connectionsController = [NSClassFromString( @"MVConnectionsController" ) defaultManager];
 	NSStringEncoding encoding = NSUTF8StringEncoding;//[[chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES] encoding];
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
 		if( [arguments length] )
@@ -251,7 +253,7 @@
 	} else if( [command isEqualToString:@"server"] ) {
 		NSURL *url = nil;
 		if( [arguments string] && ( url = [NSURL URLWithString:[arguments string]] ) ) {
-			[[connectionsControllerClass defaultManager] handleURL:url andConnectIfPossible:YES];
+			[connectionsController handleURL:url andConnectIfPossible:YES];
 		} else if( [arguments string] ) {
 			NSString *address = nil;
 			int port = 0;
@@ -264,10 +266,10 @@
 
 			if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", MVURLEncodeString( address ), port]];
 			else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", MVURLEncodeString( address )]];
-			else [[connectionsControllerClass defaultManager] newConnection:nil];
+			else [connectionsController newConnection:nil];
 
-			if( url ) [[connectionsControllerClass defaultManager] handleURL:url andConnectIfPossible:YES];
-		} else [[connectionsControllerClass defaultManager] newConnection:nil];
+			if( url ) [connectionsController handleURL:url andConnectIfPossible:YES];
+		} else [connectionsController newConnection:nil];
 		return YES;
 	} else if( [command isEqualToString:@"dcc"] ) {
 		NSString *subcmd = nil;
