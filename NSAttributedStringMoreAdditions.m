@@ -152,7 +152,6 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	NSMutableAttributedString *ret = [[NSMutableAttributedString new] autorelease];
 	NSMutableDictionary *newAttributes = [[currentAttributes mutableCopy] autorelease];
 	xmlNodePtr child = node -> children;
-	xmlChar *content = node -> content;
 	BOOL skipTag = NO;
 
 	switch( node -> name[0] ) {
@@ -228,65 +227,50 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		}
 	}
 
-	// Parse and inline CSS styles attached to this node, do this last incase the CSS overrides any of the previous attributes
-	xmlChar *style = xmlGetProp( node, (xmlChar *) "style" );
-	NSString *unhandledStyles = nil;
-	if( style ) {
-		unhandledStyles = parseCSSStyleAttribute( (char *) style, newAttributes );
-		xmlFree( style );
-	}
+	if( skipTag || first ) {
+		// Parse and inline CSS styles attached to this node, do this last incase the CSS overrides any of the previous attributes
+		xmlChar *style = xmlGetProp( node, (xmlChar *) "style" );
+		NSString *unhandledStyles = nil;
+		if( style ) {
+			unhandledStyles = parseCSSStyleAttribute( (char *) style, newAttributes );
+			xmlFree( style );
+		}
 
-	if( node -> type == XML_ELEMENT_NODE ) {
-		if( ! first && ! skipTag ) {
-			int count = 0;
-
+		while( child ) {
+			if( child -> type == XML_TEXT_NODE ) {
+				xmlChar *content = child -> content;
+				NSAttributedString *new = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(char *) content] attributes:newAttributes];
+				[ret appendAttributedString:new];
+				[new release];
+			} else [ret appendAttributedString:parseXHTMLTreeNode( child, newAttributes, base, NO )];
+			child = child -> next;
+		}
+	} else if( ! skipTag && node -> type == XML_ELEMENT_NODE ) {
+		if( ! first ) {
 			NSMutableString *front = [newAttributes objectForKey:@"XHTMLStart"];
 			if( ! front ) front = [NSMutableString string];
-			[front appendFormat:@"<%s", node -> name];
 
-			xmlAttrPtr prop = NULL;
-			for( prop = node -> properties; prop; prop = prop -> next ) {
-				if( ! strcmp( (char *) prop -> name, "style" ) ) {
-					if( [unhandledStyles length] ) {
-						[front appendFormat:@" %s=\"%@\"", prop -> name, unhandledStyles];
-						count++;
-					}
-					continue;
-				}
+			xmlBufferPtr buf = xmlBufferCreate();
+			xmlNodeDump( buf, node -> doc, node, 0, 0 );
 
-				xmlChar *value = xmlGetProp( node, prop -> name );
-				if( value ) {
-					[front appendFormat:@" %s=\"%s\"", prop -> name, value];
-					count++;
-					xmlFree( value );
-				}
-			}
+			NSData *xmlData = [NSData dataWithBytesNoCopy:buf -> content length:buf -> use freeWhenDone:NO];
+			NSString *string = [[[NSString alloc] initWithData:xmlData encoding:NSUTF8StringEncoding] autorelease];
 
-			if( ! strcmp( (char *) node -> name, "span" ) && ! count )
-				skipTag = YES;
-
-			[front appendString:@">"];
+			[front appendString:string];
 			[newAttributes setObject:front forKey:@"XHTMLStart"];
 
-			NSMutableString *ending = [newAttributes objectForKey:@"XHTMLEnd"];
-			if( ! ending ) ending = [NSMutableString string];
-			[ending setString:[NSString stringWithFormat:@"</%s>%@", node -> name, ending]];
-			[newAttributes setObject:ending forKey:@"XHTMLEnd"];
+			unichar zeroWidthSpaceChar = 0x200b;
+			NSString *zero = [NSString stringWithCharacters:&zeroWidthSpaceChar length:1];
+
+			NSAttributedString *new = [[NSAttributedString alloc] initWithString:zero attributes:newAttributes];
+			[ret appendAttributedString:new];
+			[new release];
+
+			xmlBufferFree( buf );
 		} else if( first ) {
 			[newAttributes removeObjectForKey:@"XHTMLStart"];
 			[newAttributes removeObjectForKey:@"XHTMLEnd"];
 		}
-	}
-
-	if( content ) {
-		NSAttributedString *new = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(char *) content] attributes:newAttributes];
-		[ret appendAttributedString:new];
-		[new release];
-	}
-
-	while( child ) {
-		[ret appendAttributedString:parseXHTMLTreeNode( child, newAttributes, base, NO )];
-		child = child -> next;
 	}
 
 	return ret;
