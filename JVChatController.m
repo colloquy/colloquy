@@ -52,6 +52,10 @@ static JVChatController *sharedInstance = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberModeChanged: ) name:MVChatConnectionGotMemberModeNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberKicked: ) name:MVChatConnectionUserKickedFromRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _kickedFromRoom: ) name:MVChatConnectionKickedFromRoomNotification object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _newBan: ) name:MVChatConnectionNewBanNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _removedBan: ) name:MVChatConnectionRemovedBanNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _banlistReceived: ) name:MVChatConnectionBanlistReceivedNotification object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotPrivateMessage: ) name:MVChatConnectionGotPrivateMessageNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatConnectionGotRoomMessageNotification object:nil];
@@ -390,6 +394,21 @@ static JVChatController *sharedInstance = nil;
 - (void) _kickedFromRoom:(NSNotification *) notification {
 	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
 	[controller kickedFromChatBy:[[notification userInfo] objectForKey:@"by"] forReason:[[notification userInfo] objectForKey:@"reason"]];
+}
+
+- (void) _newBan:(NSNotification *) notification {
+	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
+	[controller newBan:[[notification userInfo] objectForKey:@"ban"] by:[[notification userInfo] objectForKey:@"by"]];
+}
+
+- (void) _removedBan:(NSNotification *) notification {
+	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
+	[controller removedBan:[[notification userInfo] objectForKey:@"ban"] by:[[notification userInfo] objectForKey:@"by"]];
+}
+
+- (void) _banlistReceived:(NSNotification *) notification {
+	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
+	[controller banlistReceived];
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {

@@ -126,6 +126,10 @@ extern NSString *MVChatConnectionGotRoomModeNotification;
 extern NSString *MVChatConnectionGotRoomMessageNotification;
 extern NSString *MVChatConnectionGotRoomTopicNotification;
 
+extern NSString *MVChatConnectionNewBanNotification;
+extern NSString *MVChatConnectionRemovedBanNotification;
+extern NSString *MVChatConnectionBanlistReceivedNotification;
+
 extern NSString *MVChatConnectionKickedFromRoomNotification;
 extern NSString *MVChatConnectionInvitedToRoomNotification;
 

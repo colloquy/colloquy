@@ -58,6 +58,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		_sortedMembers = [[NSMutableArray array] retain];
 		_kickedFromRoom = NO;
 		_keepAfterPart = NO;
+		_initialBanlistReceived = NO;
 	}
 	return self;
 }
@@ -722,6 +723,41 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 
 	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You were kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You were kicked from the chat room by %@. You are no longer part of this chat and can't send anymore messages.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, ( byMbr ? [byMbr title] : by ) ) withName:nil];
+}
+
+- (void) newBan:(NSString *) ban by:(NSString *) by {
+	// only show this if we've received the initial banlist already
+	if( _initialBanlistReceived ) {
+		// by is a full hostmask. Lets fix that
+		by = (NSString *)[[by componentsSeparatedByString:@"!"] objectAtIndex:0];
+		JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
+		NSString *message;
+		if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You set a ban on %@.", "you set a ban chat room status message" ), ban];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> set a ban on %@.", "user set a ban chat room status message" ), ( byMbr ? [byMbr title] : by ), ban];
+		}
+		
+		[self addEventMessageToDisplay:message withName:@"banRemoved" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"bynickname", ban, @"ban", nil]];
+	}
+}
+
+- (void) removedBan:(NSString *) ban by:(NSString *) by {
+	// by is a full hostmask. Lets fix that
+	by = (NSString *)[[by componentsSeparatedByString:@"!"] objectAtIndex:0];
+	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
+	NSString *message;
+	if( [byMbr isLocalUser] ) {
+		message = [NSString stringWithFormat:NSLocalizedString( @"You removed the ban on %@.", "you removed a ban chat room status message" ), ban];
+	} else {
+		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> removed the ban on %@.", "user removed a ban chat room status message" ), ( byMbr ? [byMbr title] : by ), ban];
+	}
+	
+	[self addEventMessageToDisplay:message withName:@"memberBanned" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"bynickname", ban, @"ban", nil]];
+}
+
+- (void) banlistReceived {
+	_initialBanlistReceived = YES;
 }
 
 - (void) changeTopic:(NSData *) topic by:(NSString *) author displayChange:(BOOL) showChange {

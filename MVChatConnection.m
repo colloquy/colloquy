@@ -24,6 +24,7 @@
 #import "channels.h"
 #import "nicklist.h"
 #import "notifylist.h"
+#import "mode-lists.h"
 
 #import "settings.h"
 
@@ -71,6 +72,10 @@ NSString *MVChatConnectionGotMemberModeNotification = @"MVChatConnectionGotMembe
 NSString *MVChatConnectionGotRoomModeNotification = @"MVChatConnectionGotRoomModeNotification";
 NSString *MVChatConnectionGotRoomMessageNotification = @"MVChatConnectionGotRoomMessageNotification";
 NSString *MVChatConnectionGotRoomTopicNotification = @"MVChatConnectionGotRoomTopicNotification";
+
+NSString *MVChatConnectionNewBanNotification = @"MVChatConnectionNewBanNotification";
+NSString *MVChatConnectionRemovedBanNotification = @"MVChatConnectionRemovedBanNotification";
+NSString *MVChatConnectionBanlistReceivedNotification = @"MVChatConnectionBanlistReceivedNotification";
 
 NSString *MVChatConnectionKickedFromRoomNotification = @"MVChatConnectionKickedFromRoomNotification";
 NSString *MVChatConnectionInvitedToRoomNotification = @"MVChatConnectionInvitedToRoomNotification";
@@ -815,6 +820,34 @@ static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRoomModeNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:( channel -> name ? [NSString stringWithUTF8String:channel -> name] : @"" ), @"room", [NSNumber numberWithUnsignedInt:currentModes], @"mode", [NSNumber numberWithUnsignedInt:channel -> limit], @"limit", ( channel -> key ? [NSString stringWithUTF8String:channel -> key] : @"" ), @"key", ( setby ? [NSString stringWithUTF8String:setby] : [NSNull null] ), @"by", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+}
+
+#pragma mark -
+
+static void MVChatBanNew( CHANNEL_REC *channel, BAN_REC *ban ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNewBanNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:( channel -> name ? [NSString stringWithUTF8String:channel -> name] : @"" ), @"room", ( ban -> ban ? [NSString stringWithUTF8String:ban -> ban] : @"" ), @"ban", ( ban -> setby ? [NSString stringWithUTF8String:ban -> setby] : [NSNull null] ), @"by", nil]];
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+}
+
+static void MVChatBanRemove( CHANNEL_REC *channel, BAN_REC *ban ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:channel -> server];
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionRemovedBanNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:( channel -> name ? [NSString stringWithUTF8String:channel -> name] : @"" ), @"room", ( ban -> ban ? [NSString stringWithUTF8String:ban -> ban] : @"" ), @"ban", ( ban -> setby ? [NSString stringWithUTF8String:ban -> setby] : [NSNull null] ), @"by", nil]];
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+}
+
+static void MVChatBanlistReceived( IRC_SERVER_REC *server, const char *data ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+	
+	char *channel = NULL;
+	char *params = event_get_params( data, 2, NULL, &channel );
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBanlistReceivedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel], @"room", nil]];
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+	
+	g_free( params );
 }
 
 #pragma mark -
@@ -1624,6 +1657,10 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	signal_add_last( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
 	signal_add_last( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
 	signal_add_last( "channel mode changed", (SIGNAL_FUNC) MVChatGotRoomMode );
+	
+	signal_add_last( "ban new", (SIGNAL_FUNC) MVChatBanNew );
+	signal_add_last( "ban remove", (SIGNAL_FUNC) MVChatBanRemove );
+	signal_add_last( "chanquery ban end", (SIGNAL_FUNC) MVChatBanlistReceived );
 
 	signal_add_last( "event join", (SIGNAL_FUNC) MVChatUserJoinedRoom );
 	signal_add_last( "event part", (SIGNAL_FUNC) MVChatUserLeftRoom );
@@ -1686,6 +1723,10 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	signal_remove( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
 	signal_remove( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
 	signal_remove( "channel mode changed", (SIGNAL_FUNC) MVChatGotRoomMode );
+	
+	signal_remove( "ban new", (SIGNAL_FUNC) MVChatBanNew );
+	signal_remove( "ban remove", (SIGNAL_FUNC) MVChatBanRemove );
+	signal_remove( "event 368", (SIGNAL_FUNC) MVChatBanlistReceived );
 
 	signal_remove( "event join", (SIGNAL_FUNC) MVChatUserJoinedRoom );
 	signal_remove( "event part", (SIGNAL_FUNC) MVChatUserLeftRoom );

@@ -27,6 +27,8 @@ extern NSString *MVChatRoomModeChangedNotification;
 	BOOL _kickedFromRoom;
 	BOOL _inRoom;
 	BOOL _keepAfterPart;
+	
+	BOOL _initialBanlistReceived;
 }
 - (void) joined;
 - (void) parting;
@@ -49,6 +51,10 @@ extern NSString *MVChatRoomModeChangedNotification;
 
 - (void) chatMember:(NSString *) member kickedBy:(NSString *) by forReason:(NSData *) reason;
 - (void) kickedFromChatBy:(NSString *) by forReason:(NSData *) reason;
+
+- (void) newBan:(NSString *) ban by:(NSString *) by;
+- (void) removedBan:(NSString *) ban by:(NSString *) by;
+- (void) banlistReceived;
 
 - (void) changeTopic:(NSData *) topic by:(NSString *) author displayChange:(BOOL) showChange;
 - (NSAttributedString *) topic;
