@@ -210,7 +210,6 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 }
 
 - (void) dealloc {
-	[self cancel];
 	[self _setDCCFileRecord:NULL];
 
 	[_startDate release];
