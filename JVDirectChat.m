@@ -6,6 +6,7 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
+#import <ChatCore/NSColorAdditions.h>
 #import <libxml/xinclude.h>
 
 #import "JVChatController.h"
@@ -1372,5 +1373,37 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (BOOL) _usingSpecificEmoticons {
 	return ( [self preferenceForKey:@"emoticon"] ? YES : NO );
+}
+@end
+
+#pragma mark -
+
+@implementation JVDirectChat (JVDirectChatScripting)
+- (void) sendMessageScriptCommand:(NSScriptCommand *) command {
+	WebView *webView = [[[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 300., 100. ) frameName:nil groupName:nil] autorelease];
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:webView, @"webView", command, @"command", nil];
+	NSString *message = [[command evaluatedArguments] objectForKey:@"message"];
+	[[webView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", message] baseURL:nil];
+	[self performSelector:@selector( finishSendMessageScriptCommand: ) withObject:info afterDelay:0.];
+}
+
+- (void) finishSendMessageScriptCommand:(NSDictionary *) info {
+	NSScriptCommand *command = [info objectForKey:@"command"];
+	WebView *webView = [info objectForKey:@"webView"];
+	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
+	BOOL localEcho = ( [[command evaluatedArguments] objectForKey:@"echo"] ? [[[command evaluatedArguments] objectForKey:@"echo"] boolValue] : YES );
+	NSMutableAttributedString *attributeMsg = [[[(id <WebDocumentText>)[[[webView mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
+
+	NSRange limitRange, effectiveRange;
+	limitRange = NSMakeRange( 0, [attributeMsg length] );
+	while( limitRange.length > 0 ) {
+		NSColor *color = [attributeMsg attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
+		if( [[color colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && [[color htmlAttributeValue] isEqualToString:@"#01fe02"] )
+			[attributeMsg removeAttribute:NSForegroundColorAttributeName range:effectiveRange];
+		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
+	}
+
+	[self sendAttributedMessage:attributeMsg asAction:action];
+	if( localEcho ) [self echoSentMessageToDisplay:attributeMsg asAction:action];
 }
 @end
