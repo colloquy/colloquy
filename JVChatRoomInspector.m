@@ -19,7 +19,6 @@
 #pragma mark -
 
 @interface JVChatRoomInspector (JVChatRoomInspectorPrivate)
-- (void) _finishTopicChange:(id) sender;
 - (void) _topicChanged:(NSNotification *) notification;
 - (void) _refreshEditStatus:(NSNotification *) notification;
 @end
@@ -83,7 +82,7 @@
 	[styleSelection setMenu:[_room _stylesMenu]];
 	[emoticonSelection setMenu:[_room _emoticonsMenu]];
 
-	[self _finishTopicChange:nil];
+	[self _topicChanged:nil];
 }
 
 #pragma mark -
@@ -154,17 +153,14 @@
 #pragma mark -
 
 @implementation JVChatRoomInspector (JVChatRoomInspectorPrivate)
-- (void) _finishTopicChange:(id) sender {
+- (void) _topicChanged:(NSNotification *) notification {
+	if( [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame ) return;
+	if( [[topic window] firstResponder] == topic && [topic isEditable] ) return;
+
 	NSMutableAttributedString *topicString = [[[_room topic] mutableCopy] autorelease];
 	[topicString removeAttribute:NSParagraphStyleAttributeName range:NSMakeRange( 0, [topicString length] )];
 	[topicString removeAttribute:NSLinkAttributeName range:NSMakeRange( 0, [topicString length] )];
 	[[topic textStorage] setAttributedString:topicString];
-}
-
-- (void) _topicChanged:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame ) return;
-	if( [[topic window] firstResponder] == topic && [topic isEditable] ) return;
-	[self performSelector:@selector( _finishTopicChange: ) withObject:nil afterDelay:0.];
 }
 
 - (void) _refreshEditStatus:(NSNotification *) notification {
@@ -208,7 +204,7 @@
 		break;
 	case MVChatRoomSetTopicOperatorOnlyMode:
 		enabled = [[[notification userInfo] objectForKey:@"enabled"] boolValue];
-		if( enabled ) [self _finishTopicChange:nil];
+		if( enabled ) [self _topicChanged:nil];
 		if( [[_room chatRoomMemberWithName:[[_room connection] nickname]] operator] ) {
 			[topic setEditable:YES];
 		} else [topic setEditable:( ! enabled )];
