@@ -6,6 +6,7 @@
 	NSImage *_altImage;
 	NSString *_mainText;
 	NSString *_infoText;
+	NSLineBreakMode _lineBreakMode;
 }
 - (void) setStatusImage:(NSImage *) image;
 - (NSImage *) statusImage;
@@ -18,4 +19,6 @@
 
 - (void) setInformationText:(NSString *) text;
 - (NSString *) informationText;
+
+- (void) setLineBreakMode:(NSLineBreakMode) mode;
 @end

@@ -13,6 +13,7 @@
 	[self setImageAlignment:NSImageAlignLeft];
 	[self setImageScaling:NSScaleProportionally];
 	[self setImageFrameStyle:NSImageFrameNone];
+	[self setLineBreakMode:NSLineBreakByTruncatingTail];
 
 	return self;
 }
@@ -23,6 +24,7 @@
 	cell -> _altImage = [_altImage retain];
 	cell -> _mainText = [_mainText copy];
 	cell -> _infoText = [_infoText copy];
+	cell -> _lineBreakMode = _lineBreakMode;
 	return cell;
 }
 
@@ -91,7 +93,7 @@
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[controlView window] isKeyWindow] && [[NSApplication sharedApplication] isActive] );
 
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-	[paraStyle setLineBreakMode:NSLineBreakByTruncatingTail];
+	[paraStyle setLineBreakMode:_lineBreakMode];
 
 	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.50] ) ), NSForegroundColorAttributeName, nil];
 	NSDictionary *subAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:9.], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.75] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.40] ) ), NSForegroundColorAttributeName, nil];
@@ -178,5 +180,9 @@
 
 - (void) setImageAlignment:(NSImageAlignment) newAlign {
 	[super setImageAlignment:NSImageAlignLeft];
+}
+
+- (void) setLineBreakMode:(NSLineBreakMode) mode {
+	_lineBreakMode = mode;
 }
 @end
