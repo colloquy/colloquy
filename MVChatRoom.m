@@ -613,6 +613,53 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
+- (NSArray *) memberUsersArray {
+	return [[self memberUsers] allObjects];
+}
+
+- (MVChatUser *) valueInMemberUsersArrayAtIndex:(unsigned) index {
+	return [[self memberUsersArray] objectAtIndex:index];
+}
+
+- (MVChatUser *) valueInMemberUsersArrayWithUniqueID:(id) identifier {
+	return [self memberUserWithUniqueIdentifier:identifier];
+}
+
+- (MVChatUser *) valueInMemberUsersArrayWithName:(NSString *) name {
+	NSEnumerator *enumerator = [[self memberUsers] objectEnumerator];
+	MVChatUser *user = nil;
+
+	while( ( user = [enumerator nextObject] ) )
+		if( [[user nickname] caseInsensitiveCompare:name] == NSOrderedSame )
+			return user;
+
+	return nil;
+}
+
+#pragma mark -
+
+- (NSString *) urlString {
+	return [[self url] absoluteString];
+}
+
+#pragma mark -
+
+- (NSArray *) bannedUsersArray {
+	return [[self bannedUsers] allObjects];
+}
+
+#pragma mark -
+
+- (unsigned long) scriptTypedEncoding {
+	return [NSString scriptTypedEncodingFromStringEncoding:[self encoding]];
+}
+
+- (void) setScriptTypedEncoding:(unsigned long) encoding {
+	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:encoding]];
+}
+
+#pragma mark -
+
 - (id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];

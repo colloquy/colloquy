@@ -2,6 +2,8 @@
 + (NSString *) locallyUniqueString;
 
 + (NSString *) mimeCharsetTagFromStringEncoding:(NSStringEncoding) encoding;
++ (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding;
++ (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding;
 
 - (unsigned long) UTF8StringByteLength;
 

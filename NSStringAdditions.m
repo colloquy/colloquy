@@ -94,6 +94,103 @@
 	}
 }
 
++ (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding {
+	switch( encoding ) {
+		default:
+		case NSUTF8StringEncoding: return 'utF8';
+		case NSASCIIStringEncoding: return 'ascI';
+		case NSNonLossyASCIIStringEncoding: return 'nlAs';
+
+		case NSISOLatin1StringEncoding: return 'isL1';
+		case NSISOLatin2StringEncoding: return 'isL2';
+		case (NSStringEncoding) 0x80000203: return 'isL3';
+		case (NSStringEncoding) 0x80000204: return 'isL4';
+		case (NSStringEncoding) 0x80000205: return 'isL5';
+		case (NSStringEncoding) 0x8000020F: return 'isL9';
+
+		case NSWindowsCP1250StringEncoding: return 'cp50';
+		case NSWindowsCP1251StringEncoding: return 'cp51';
+		case NSWindowsCP1252StringEncoding: return 'cp52';
+
+		case NSMacOSRomanStringEncoding: return 'mcRo';
+		case (NSStringEncoding) 0x8000001D: return 'mcEu';
+		case (NSStringEncoding) 0x80000007: return 'mcCy';
+		case (NSStringEncoding) 0x80000001: return 'mcJp';
+		case (NSStringEncoding) 0x80000019: return 'mcSc';
+		case (NSStringEncoding) 0x80000002: return 'mcTc';
+		case (NSStringEncoding) 0x80000003: return 'mcKr';
+
+		case (NSStringEncoding) 0x80000A02: return 'ko8R';
+
+		case (NSStringEncoding) 0x80000421: return 'wnSc';
+		case (NSStringEncoding) 0x80000423: return 'wnTc';
+		case (NSStringEncoding) 0x80000422: return 'wnKr';
+
+		case NSJapaneseEUCStringEncoding: return 'jpUC';
+		case (NSStringEncoding) 0x80000A01: return 'sJiS';
+		case NSShiftJISStringEncoding: return 'sJiS';
+
+		case (NSStringEncoding) 0x80000940: return 'krUC';
+		case (NSStringEncoding) 0x80000930: return 'scUC';
+		case (NSStringEncoding) 0x80000931: return 'tcUC';
+
+		case (NSStringEncoding) 0x80000632: return 'gb30';
+		case (NSStringEncoding) 0x80000631: return 'gbKK';
+		case (NSStringEncoding) 0x80000A03: return 'biG5';
+		case (NSStringEncoding) 0x80000A06: return 'bG5H';
+	}
+
+	return 'utF8'; // default encoding
+}
+
++ (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding {
+	switch( encoding ) {
+		default:
+		case 'utF8': return NSUTF8StringEncoding;
+		case 'ascI': return NSASCIIStringEncoding;
+		case 'nlAs': return NSNonLossyASCIIStringEncoding;
+
+		case 'isL1': return NSISOLatin1StringEncoding;
+		case 'isL2': return NSISOLatin2StringEncoding;
+		case 'isL3': return (NSStringEncoding) 0x80000203;
+		case 'isL4': return (NSStringEncoding) 0x80000204;
+		case 'isL5': return (NSStringEncoding) 0x80000205;
+		case 'isL9': return (NSStringEncoding) 0x8000020F;
+
+		case 'cp50': return NSWindowsCP1250StringEncoding;
+		case 'cp51': return NSWindowsCP1251StringEncoding;
+		case 'cp52': return NSWindowsCP1252StringEncoding;
+
+		case 'mcRo': return NSMacOSRomanStringEncoding;
+		case 'mcEu': return (NSStringEncoding) 0x8000001D;
+		case 'mcCy': return (NSStringEncoding) 0x80000007;
+		case 'mcJp': return (NSStringEncoding) 0x80000001;
+		case 'mcSc': return (NSStringEncoding) 0x80000019;
+		case 'mcTc': return (NSStringEncoding) 0x80000002;
+		case 'mcKr': return (NSStringEncoding) 0x80000003;
+
+		case 'ko8R': return (NSStringEncoding) 0x80000A02;
+
+		case 'wnSc': return (NSStringEncoding) 0x80000421;
+		case 'wnTc': return (NSStringEncoding) 0x80000423;
+		case 'wnKr': return (NSStringEncoding) 0x80000422;
+
+		case 'jpUC': return NSJapaneseEUCStringEncoding;
+		case 'sJiS': return (NSStringEncoding) 0x80000A01;
+
+		case 'krUC': return (NSStringEncoding) 0x80000940;
+		case 'scUC': return (NSStringEncoding) 0x80000930;
+		case 'tcUC': return (NSStringEncoding) 0x80000931;
+
+		case 'gb30': return (NSStringEncoding) 0x80000632;
+		case 'gbKK': return (NSStringEncoding) 0x80000631;
+		case 'biG5': return (NSStringEncoding) 0x80000A03;
+		case 'bG5H': return (NSStringEncoding) 0x80000A06;
+	}
+
+	return NSUTF8StringEncoding; // default encoding
+}
+
 #pragma mark -
 
 - (unsigned long) UTF8StringByteLength {
