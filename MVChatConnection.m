@@ -1,8 +1,3 @@
-#import <string.h>
-#import <IOKit/IOKitLib.h>
-#import <IOKit/IOTypes.h>
-#import <IOKit/IOMessage.h>
-#import <IOKit/pwr_mgt/IOPMLib.h>
 #import "MVChatConnection.h"
 #import "MVFileTransfer.h"
 #import "MVChatPluginManager.h"
@@ -109,20 +104,15 @@ typedef struct {
 	MVChatConnection *connection;
 } MVChatConnectionModuleData;
 
-#pragma mark -
-
 @interface MVChatConnection (MVChatConnectionPrivate)
 + (MVChatConnection *) _connectionForServer:(SERVER_REC *) server;
 + (void) _registerCallbacks;
 + (void) _deregisterCallbacks;
 + (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc;
-- (io_connect_t) _powerConnection;
 - (SERVER_REC *) _irssiConnection;
 - (void) _setIrssiConnection:(SERVER_REC *) server;
 - (SERVER_CONNECT_REC *) _irssiConnectSettings;
 - (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings;
-- (void) _registerForSleepNotifications;
-- (void) _deregisterForSleepNotifications;
 - (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic;
 - (NSString *) _roomWithProperPrefix:(NSString *) room;
 - (void) _setStatus:(MVChatConnectionStatus) status;
@@ -136,36 +126,6 @@ typedef struct {
 - (void) _scheduleReconnectAttemptEvery:(NSTimeInterval) seconds;
 - (void) _cancelReconnectAttempts;
 @end
-
-#pragma mark -
-
-void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t messageType, void *messageArgument ) {
-	MVChatConnection *self = refcon;
-	switch( messageType ) {
-		case kIOMessageSystemWillRestart:
-		case kIOMessageSystemWillPowerOff:
-		case kIOMessageSystemWillSleep:
-		case kIOMessageDeviceWillPowerOff:
-			if( [self isConnected] ) {
-				[self disconnect];
-				[self _setStatus:MVChatConnectionSuspendedStatus];
-			}
-			IOAllowPowerChange( [self _powerConnection], (long) messageArgument );
-			break;
-		case kIOMessageCanSystemPowerOff:
-		case kIOMessageCanSystemSleep:
-		case kIOMessageCanDevicePowerOff:
-			IOAllowPowerChange( [self _powerConnection], (long) messageArgument );
-			break;
-		case kIOMessageSystemWillNotSleep:
-		case kIOMessageSystemWillNotPowerOff:
-		case kIOMessageSystemHasPoweredOn:
-		case kIOMessageDeviceWillNotPowerOff:
-		case kIOMessageDeviceHasPoweredOn:
-			if( [self status] == MVChatConnectionSuspendedStatus ) [self connect];
-			break;
-	}
-}
 
 #pragma mark -
 
@@ -251,17 +211,17 @@ void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t mess
 
 static void MVChatConnecting( SERVER_REC *server ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
-	[self performSelectorOnMainThread:@selector( _willConnect ) withObject:nil waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector( _willConnect ) withObject:nil waitUntilDone:NO];
 }
 
 static void MVChatConnected( SERVER_REC *server ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
-	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 }
 
 static void MVChatDisconnect( SERVER_REC *server ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
-	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
 }
 
 static void MVChatConnectFailed( SERVER_REC *server ) {
@@ -269,7 +229,7 @@ static void MVChatConnectFailed( SERVER_REC *server ) {
 	if( ! self ) return;
 
 	server_ref( server );
-	[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 }
 
 static void MVChatRawIncomingMessage( SERVER_REC *server, char *data ) {
@@ -953,7 +913,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		_proxy = MVChatConnectionNoProxy;
 		_roomsCache = [[NSMutableDictionary dictionary] retain];
 
-		[self _registerForSleepNotifications];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:nil];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemWillSleep: ) name:NSWorkspaceWillSleepNotification object:nil];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSWorkspaceWillPowerOffNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
 
 		extern unsigned int connectionCount;
@@ -993,9 +955,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 - (void) dealloc {
 	[self disconnect];
-	[self _deregisterForSleepNotifications];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 
 	[_npassword release];
 	[_roomsCache release];
@@ -1758,12 +1720,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
-- (io_connect_t) _powerConnection {
-	return _powerConnection;
-}
-
-#pragma mark -
-
 - (SERVER_REC *) _irssiConnection {
 	return _chatConnection;
 }
@@ -1814,19 +1770,16 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
-- (void) _registerForSleepNotifications {
-	IONotificationPortRef sleepNotePort = NULL;
-	CFRunLoopSourceRef rls = NULL;
-	_powerConnection = IORegisterForSystemPower( (void *) self, &sleepNotePort, MVChatHandlePowerChange, &_sleepNotifier );
-	if( ! _powerConnection ) return;
-	rls = IONotificationPortGetRunLoopSource( sleepNotePort );
-	CFRunLoopAddSource( CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode );
-	CFRelease( rls );
+- (void) _systemWillSleep:(NSNotification *) notification {
+	if( [self isConnected] ) {
+		[self disconnect];
+		[self _setStatus:MVChatConnectionSuspendedStatus];
+	}
 }
 
-- (void) _deregisterForSleepNotifications {
-	IODeregisterForSystemPower( &_sleepNotifier );
-	_powerConnection = NULL;
+- (void) _systemDidWake:(NSNotification *) notification {
+	if( [self status] == MVChatConnectionSuspendedStatus )
+		[self connect];
 }
 
 - (void) _applicationWillTerminate:(NSNotification *) notification {

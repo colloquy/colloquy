@@ -157,8 +157,6 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 	BOOL _nickIdentified;
 	unsigned int _nextAltNickIndex;
-	unsigned int _sleepNotifier; /* io_object_t */
-	unsigned int _powerConnection; /* io_connect_t */
 }
 - (id) initWithURL:(NSURL *) url;
 - (id) initWithServer:(NSString *) server port:(unsigned short) port user:(NSString *) nickname;

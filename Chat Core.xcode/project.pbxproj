@@ -115,7 +115,6 @@
 			children = (
 				1CB61DB7059D2DC400FE75AD,
 				1058C7ADFEA557BF11CA2CBB,
-				F5A89F1C019302BD01EE70DE,
 				1CCB3C3705228EFD000001C8,
 			);
 			isa = PBXGroup;
@@ -359,7 +358,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C51B485052DE0CB00BB459B,
-				1C51B486052DE0CB00BB459B,
 				1C51B487052DE0CB00BB459B,
 				1CB61DB8059D2DC400FE75AD,
 				1CB37348060E315400F6A81F,
@@ -377,12 +375,6 @@
 		};
 		1C51B485052DE0CB00BB459B = {
 			fileRef = 1CCB3C3705228EFD000001C8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C51B486052DE0CB00BB459B = {
-			fileRef = F5A89F1C019302BD01EE70DE;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3333,14 +3325,6 @@
 			path = MVChatConnection.h;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		F5A89F1C019302BD01EE70DE = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = IOKit.framework;
-			path = /System/Library/Frameworks/IOKit.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
 		};
 		F5E98622018B412B01EE70DE = {
 			fileEncoding = 4;
