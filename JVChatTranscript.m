@@ -781,22 +781,23 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
 - (void) _changeChatStyleMenuSelection {
 	NSEnumerator *enumerator = [[_styleMenu itemArray] objectEnumerator];
-	NSEnumerator *senumerator = nil;
-	NSMenuItem *menuItem = nil, *subMenuItem = nil;
+	NSMenuItem *menuItem = nil;
 	BOOL hasPerRoomStyle = [self _usingSpecificStyle];
 
 	while( ( menuItem = [enumerator nextObject] ) ) {
 		if( [menuItem tag] != 5 ) continue;
+
 		if( [_chatStyle isEqualTo:[menuItem representedObject]] && hasPerRoomStyle ) [menuItem setState:NSOnState];
 		else if( ! [menuItem representedObject] && ! hasPerRoomStyle ) [menuItem setState:NSOnState];
 		else if( [_chatStyle isEqualTo:[menuItem representedObject]] && ! hasPerRoomStyle ) [menuItem setState:NSMixedState];
 		else [menuItem setState:NSOffState];
 
-		senumerator = [[[menuItem submenu] itemArray] objectEnumerator];
+		NSEnumerator *senumerator = [[[menuItem submenu] itemArray] objectEnumerator];
+		NSMenuItem *subMenuItem = nil;
 		while( ( subMenuItem = [senumerator nextObject] ) ) {
-			if( [subMenuItem action] == @selector( changeChatStyle: ) && [_chatStyle isEqualTo:[subMenuItem representedObject]] && ! [_chatStyleVariant length] )
-				[subMenuItem setState:NSOnState];
-			else if( [subMenuItem action] == @selector( changeChatStyleVariant: ) && [_chatStyle isEqualTo:[[subMenuItem representedObject] objectForKey:@"style"]] && [_chatStyleVariant isEqualToString:[[subMenuItem representedObject] objectForKey:@"variant"]] ) 
+			JVStyle *style = [[subMenuItem representedObject] objectForKey:@"style"];
+			NSString *variant = [[subMenuItem representedObject] objectForKey:@"variant"];
+			if( [subMenuItem action] == @selector( changeChatStyleVariant: ) && [_chatStyle isEqualTo:style] && ( [_chatStyleVariant isEqualToString:variant] || ( ! _chatStyleVariant && ! variant ) ) ) 
 				[subMenuItem setState:NSOnState];
 			else [subMenuItem setState:NSOffState];
 		}
@@ -820,6 +821,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Default", "default style menu item title" ) action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
 	[menuItem setTag:5];
 	[menuItem setTarget:self];
+	[menuItem setRepresentedObject:nil];
 	[menu addItem:menuItem];
 
 	[menu addItem:[NSMenuItem separatorItem]];
@@ -842,9 +844,9 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 		if( [variants count] || [userVariants count] ) {
 			subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
-			subMenuItem = [[[NSMenuItem alloc] initWithTitle:[style mainVariantDisplayName] action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
+			subMenuItem = [[[NSMenuItem alloc] initWithTitle:[style mainVariantDisplayName] action:@selector( changeChatStyleVariant: ) keyEquivalent:@""] autorelease];
 			[subMenuItem setTarget:self];
-			[subMenuItem setRepresentedObject:style];
+			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
 			[subMenu addItem:subMenuItem];
 
 			venumerator = [variants objectEnumerator];

@@ -523,18 +523,21 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (IBAction) changeChatStyle:(id) sender {
 	JVStyle *style = [sender representedObject];
-
-	[super changeChatStyle:sender];
-
+	
 	[self setPreference:[style identifier] forKey:@"style"];
 	[self setPreference:nil forKey:@"style variant"];
+	
+	[super changeChatStyle:sender];
 }
 
 - (IBAction) changeChatStyleVariant:(id) sender {
+	JVStyle *style = [[sender representedObject] objectForKey:@"style"];
+	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
+	
+	[self setPreference:[style identifier] forKey:@"style"];
+	[self setPreference:variant forKey:@"style variant"];
+	
 	[super changeChatStyleVariant:sender];
-
-	[self setPreference:[_chatStyle identifier] forKey:@"style"];
-	[self setPreference:_chatStyleVariant forKey:@"style variant"];
 }
 
 - (IBAction) changeChatEmoticons:(id) sender {
@@ -1778,7 +1781,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (BOOL) _usingSpecificStyle {
-	return ( [NSBundle bundleWithIdentifier:[self preferenceForKey:@"style"]] ? YES : NO );
+	return ( [self preferenceForKey:@"style"] ? YES : NO );
 }
 
 - (BOOL) _usingSpecificEmoticons {
