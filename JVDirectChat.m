@@ -1488,9 +1488,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1. )];
 		}
 
+		BOOL subsequent = ( [messageString rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
+		NSLog( @"%@", messageString );
+		
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		if( parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, messageString]];
+		if( subsequent && parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, messageString]];
 		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, messageString]];
 
 		if( highlight && [scroller isKindOfClass:[JVMarkedScroller class]] ) {
