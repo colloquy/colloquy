@@ -73,7 +73,8 @@
 							[self loadPluginNamed:path];
 						} else if( ! [subcmd caseInsensitiveCompare:@"create"] ) {
 							path = [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"fscript"];
-							path = [[[[_manager class] pluginSearchPaths] objectAtIndex:0] stringByAppendingPathComponent:path];
+							if( ! [path isAbsolutePath] )
+								path = [[[[_manager class] pluginSearchPaths] objectAtIndex:0] stringByAppendingPathComponent:path];
 							if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) {
 								if( [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil] )
 									[[NSWorkspace sharedWorkspace] openFile:path];
