@@ -88,6 +88,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferError: ) name:MVChatConnectionFileTransferErrorNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferStatus: ) name:MVChatConnectionFileTransferStatusNotification object:nil];
 
+		_safeFileExtentions = [[NSSet setWithObjects:@"jpg",@"jpeg",@"gif",@"png",@"tif",@"tiff",@"psd",@"pdf",@"txt",@"rtf",@"html",@"htm",@"swf",@"mp3",@"wma",@"wmv",@"ogg",@"ogm",@"mov",@"mpg",@"mpeg",@"m1v",@"m2v",@"mp4",@"avi",@"vob",@"avi",@"asx",@"asf",@"pls",@"m3u",@"rmp",@"aif",@"aiff",@"aifc",@"wav",@"wave",@"m4a",@"m4p",@"m4b",@"dmg",@"udif",@"ndif",@"dart",@"sparseimage",@"cdr",@"dvdr",@"iso",@"img",@"toast",@"rar",@"sit",@"sitx",@"bin",@"hqx",@"zip",@"gz",@"tgz",@"tar",@"bz",@"bz2",@"tbz",@"z",@"taz",@"uu",@"uue",@"colloquytranscript",@"torrent",nil] retain];
 		_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];
 	}
 	return self;
@@ -103,12 +104,14 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	extern MVFileTransferController *sharedInstance;
 
 	[_transferStorage autorelease];
+	[_safeFileExtentions autorelease];
 	[_calculationItems autorelease];
 	[_updateTimer autorelease];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	_transferStorage = nil;
+	_safeFileExtentions = nil;
 	_calculationItems = nil;
 	_updateTimer = nil;
 
@@ -216,6 +219,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	[_transferStorage addObject:info];
 
+	[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _changeUser: ) name:MVChatConnectionUserNicknameChangedNotification object:connection];
 
 	[self _updateProgress:nil];
@@ -254,10 +259,16 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		if( [identifier isEqualToString:[info objectForKey:@"identifier"]] ) {
 			if( ! [info objectForKey:@"started"] ) [info setObject:[NSDate date] forKey:@"started"];
 			[info setObject:[NSNumber numberWithUnsignedInt:status] forKey:@"status"];
-			if( status == MVTransferDone && [[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2 ) {
-				[_calculationItems removeObject:info];
-				[_transferStorage removeObject:info];
-				[self _updateProgress:nil];
+			if( status == MVTransferDone ) {
+				NSLog( @"done %@ %d %d %d", [[info objectForKey:@"path"] pathExtension], [_safeFileExtentions count], [[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"], [_safeFileExtentions containsObject:[[[info objectForKey:@"path"] pathExtension] lowercaseString]] );
+				[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[info objectForKey:@"path"]];				
+				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"] && [_safeFileExtentions containsObject:[[[info objectForKey:@"path"] pathExtension] lowercaseString]] )
+					[[NSWorkspace sharedWorkspace] openFile:[info objectForKey:@"path"] withApplication:nil andDeactivate:NO];
+				if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2 ) {
+					[_calculationItems removeObject:info];
+					[_transferStorage removeObject:info];
+					[self _updateProgress:nil];
+				}
 			}
 			ret = YES;
 			break;
@@ -512,8 +523,10 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"transfered"];
 			if( transfered != [[info objectForKey:@"size"] unsignedLongValue] )
 				[info setObject:[NSNumber numberWithDouble:(transfered / timeslice)] forKey:@"rate"];
-			if( ! [info objectForKey:@"started"] )
+			if( ! [info objectForKey:@"started"] ) {
+				[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[info objectForKey:@"path"]];
 				[info setObject:[NSDate date] forKey:@"started"];
+			}
 			break;
 		}
 	}
@@ -531,6 +544,9 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"controller"] == download ) {
 			[info setObject:[NSNumber numberWithUnsignedInt:MVTransferDone] forKey:@"status"];
+			[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[info objectForKey:@"path"]];
+			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"] && [_safeFileExtentions containsObject:[[[info objectForKey:@"path"] pathExtension] lowercaseString]] )
+				[[NSWorkspace sharedWorkspace] openFile:[info objectForKey:@"path"] withApplication:nil andDeactivate:NO];
 			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2 ) {
 				[_calculationItems removeObject:info];
 				[_transferStorage removeObject:info];

@@ -33,6 +33,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 	IBOutlet NSTableView *currentFiles;
 	NSMutableArray *_transferStorage, *_calculationItems;
 	NSTimer *_updateTimer;
+	NSSet *_safeFileExtentions;
 }
 + (MVFileTransferController *) defaultManager;
 - (IBAction) showTransferManager:(id) sender;
