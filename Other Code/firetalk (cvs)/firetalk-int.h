@@ -159,6 +159,7 @@ struct s_firetalk_handle {
 	struct s_firetalk_queued_data *datahead;
 	/* where to place new data */
 	struct s_firetalk_queued_data *datatail;
+	enum firetalk_proxy proxy;
 };
 
 struct s_firetalk_protocol_functions {
@@ -275,12 +276,12 @@ void firetalk_handle_receive(struct s_firetalk_handle * c, struct s_firetalk_fil
 void firetalk_internal_send_data(struct s_firetalk_handle * c, char * const data, const int length, const int urgent);
 void firetalk_transmit(struct s_firetalk_handle *c);
 
-int firetalk_internal_connect_host(const char * const host, const uint16_t port);
+int firetalk_internal_connect_host(const char * const host, const uint16_t port, enum firetalk_proxy proxy);
 int firetalk_internal_connect(struct sockaddr_in *inet4_ip
 #ifdef _FC_USE_IPV6
 		, struct sockaddr_in6 *inet6_ip
 #endif
-		);
+		, enum firetalk_proxy proxy );
 int firetalk_internal_resolve4(const char * const host, struct in_addr *inet4_ip);
 struct sockaddr_in *firetalk_internal_remotehost4(client_t c);
 #ifdef _FC_USE_IPV6

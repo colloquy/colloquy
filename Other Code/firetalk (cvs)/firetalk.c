@@ -407,7 +407,7 @@ struct sockaddr_in6 *firetalk_internal_remotehost6(client_t c) {
 
 #endif
 
-int firetalk_internal_connect_host(const char * const host, const uint16_t port) {
+int firetalk_internal_connect_host(const char * const host, const uint16_t port, enum firetalk_proxy proxy) {
 	struct sockaddr_in myinet4;
 	struct sockaddr_in *sendinet4 = NULL;
 #ifdef _FC_USE_IPV6
@@ -432,6 +432,7 @@ int firetalk_internal_connect_host(const char * const host, const uint16_t port)
 #ifdef _FC_USE_IPV6
 	   , sendinet6
 #endif
+	   , proxy
 	   );
 }
 
@@ -439,6 +440,7 @@ int firetalk_internal_connect(struct sockaddr_in *inet4_ip
 #ifdef _FC_USE_IPV6
 		, struct sockaddr_in6 *inet6_ip
 #endif
+		, enum firetalk_proxy proxy
 		) {
 	int s,i;
 
@@ -450,7 +452,7 @@ int firetalk_internal_connect(struct sockaddr_in *inet4_ip
 			goto ipv6fail;
 		if (fcntl(s, F_SETFL, O_NONBLOCK))
 			goto ipv6fail;
-		i = connect(s,(const struct sockaddr *)inet6_ip,sizeof(struct sockaddr_in6));
+		i = firetalk_connect(s,(const struct sockaddr *)inet6_ip,sizeof(struct sockaddr_in6),proxy);
 		if (i != 0 && errno != EINPROGRESS)
 			goto ipv6fail;
 		return s;
@@ -464,7 +466,7 @@ ipv6fail:
 			goto ipv4fail;
 		if (fcntl(s, F_SETFL, O_NONBLOCK))
 			goto ipv4fail;
-		i = connect(s,(const struct sockaddr *)inet4_ip,sizeof(struct sockaddr_in));
+		i = firetalk_connect(s,(const struct sockaddr *)inet4_ip,sizeof(struct sockaddr_in),proxy);
 		if (i != 0 && errno != EINPROGRESS)
 			goto ipv4fail;
 		return s;
@@ -1600,6 +1602,7 @@ void firetalk_callback_subcode_request(client_t c, const char * const from, cons
 #ifdef _FC_USE_IPV6
 											   , NULL
 #endif
+											   , conn->proxy
 											   );
 		if (fileiter->sockfd == -1) {
 			firetalk_file_cancel(conn,fileiter);
@@ -1978,6 +1981,7 @@ firetalk_t firetalk_create_handle(const int protocol, void *clientstruct) {
 	handle_head->flood_intervals[1] = firetalkrates[protocol][1];
 	handle_head->flood_intervals[2] = firetalkrates[protocol][2];
 	handle_head->flood_intervals[3] = firetalkrates[protocol][3];
+	handle_head->proxy = FX_NONE;
 	return handle_head;
 }
 
@@ -2127,6 +2131,12 @@ void firetalk_set_flood_intervals(firetalk_t conn, const double flood, const dou
 	conn->flood_intervals[3] = ceiling;
 }
 
+void firetalk_set_proxy_type(firetalk_t conn, enum firetalk_proxy type ) {
+	if( type == FX_SOCKS ) conn->proxy = FX_SOCKS;
+	else if( type == FX_HTTPS ) conn->proxy = FX_HTTPS;
+	else conn->proxy = FX_NONE;
+}
+
 enum firetalk_error firetalk_disconnect(firetalk_t conn) {
 #ifdef DEBUG
 	if (firetalk_check_handle(conn) != FE_SUCCESS)
@@ -2187,6 +2197,7 @@ enum firetalk_error firetalk_signon(firetalk_t conn, const char * const server, 
 #ifdef _FC_USE_IPV6
 			,realremote6
 #endif
+			,conn->proxy
 			);
 	if (conn->fd != -1) {
 		conn->connected = FCS_WAITING_SYNACK;
@@ -2913,6 +2924,7 @@ enum firetalk_error firetalk_file_accept(firetalk_t conn, void *filehandle, void
 #ifdef _FC_USE_IPV6
 	, NULL
 #endif
+	,conn->proxy
 	);
 	if (fileiter->sockfd == -1) {
 		firetalk_file_cancel(conn,filehandle);
