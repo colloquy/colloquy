@@ -146,7 +146,7 @@ void silc_channel_get_clients_per_list_callback( SilcClient client, SilcClientCo
 		if( channelUser ) mode = channelUser -> mode;
 
 		[self _addUser:[NSString stringWithUTF8String:clients[i] -> nickname] toChannel:[dict objectForKey:@"channel_name"] withMode:[NSNumber numberWithUnsignedInt:mode]];
-
+		
 		[nickArray addObject:info];
 	}
 
@@ -584,9 +584,6 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		/* SilcBuffer channel_pubkeys = */ va_arg( list, SilcBuffer );
 		/* SilcUInt32 user_limit = */ va_arg( list, SilcUInt32 );
 
-		NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:self, @"connection", [NSString stringWithUTF8String:channel_name], @"channel_name", NULL];
-		silc_client_get_clients_by_list( [self _silcClient], [self _silcConn], list_count, client_id_list, silc_channel_get_clients_per_list_callback, dict );
-
 		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel_name], @"room", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
@@ -598,6 +595,10 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 		[self _addChannel:[NSString stringWithUTF8String:channel_name]];
+		
+		NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:self, @"connection", [NSString stringWithUTF8String:channel_name], @"channel_name", NULL];
+		silc_client_get_clients_by_list( [self _silcClient], [self _silcConn], list_count, client_id_list, silc_channel_get_clients_per_list_callback, dict );
+
 	}	break;
 	case SILC_COMMAND_MOTD:
 		break;
