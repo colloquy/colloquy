@@ -72,7 +72,8 @@
 				return YES;
 			}
 		} else if( ! [command caseInsensitiveCompare:@"whois"] || ! [command caseInsensitiveCompare:@"wi"] || ! [command caseInsensitiveCompare:@"wii"] ) {
-			MVChatUser *user = [[connection chatUsersWithNickname:[arguments string]] anyObject];
+			NSString *nick = [[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			MVChatUser *user = [[connection chatUsersWithNickname:nick] anyObject];
 			if( ! user ) return NO;
 			JVChatRoomMember *member = [[[JVChatRoomMember alloc] initWithRoom:nil andUser:user] autorelease];
 			[[JVInspectorController inspectorOfObject:member] show:nil];
