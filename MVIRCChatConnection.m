@@ -84,6 +84,7 @@ typedef struct {
 @interface MVChatRoom (MVChatRoomPrivate)
 - (void) _updateMemberUser:(MVChatUser *) user fromOldNickname:(NSString *) oldNickname;
 - (void) _clearMemberUsers;
+- (void) _clearBannedUsers;
 - (void) _addMemberUser:(MVChatUser *) user;
 - (void) _removeMemberUser:(MVChatUser *) user;
 - (void) _addBanForUser:(MVChatUser *) user;
@@ -282,6 +283,7 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 	[room _setDateJoined:[NSDate date]];
 	[room _setDateParted:nil];
 	[room _clearMemberUsers];
+	[room _clearBannedUsers];
 
 	GSList *nicks = nicklist_getnicks( channel );
 	GSList *nickItem = NULL;
