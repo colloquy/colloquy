@@ -31,6 +31,7 @@
 	const char **_params;
 	BOOL _isArchive;
 	BOOL _nibLoaded;
+	BOOL _previousStyleSwitch;
 }
 - (id) initWithTranscript:(NSString *) filename;
 

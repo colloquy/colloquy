@@ -8,6 +8,7 @@
 #import "MVMenuButton.h"
 
 #import <libxml/xinclude.h>
+#import <libxml/debugXML.h>
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>
 
@@ -334,7 +335,19 @@ void MVChatPlaySoundForAction( NSString *action ) {
 }
 
 - (void) setChatStyle:(NSBundle *) style withVariant:(NSString *) variant {
-	if( ! [_logLock tryLock] ) return;
+	int result = NSOKButton;
+	BOOL manyMessages = NO;
+
+	manyMessages = ( xmlLsCountNode( xmlDocGetRootElement( _xmlLog ) ) > 2000 ? YES : NO );
+
+	if( _isArchive && _previousStyleSwitch && manyMessages ) result = NSRunInformationalAlertPanel( NSLocalizedString( @"Time Consuming Style Switch", "time consuming style switch alert title" ), NSLocalizedString( @"This transcript is large and will take a considerable amount of time to switch the style. Would you like to continue anyway?", "large transcript style switch alert message" ), NSLocalizedString( @"Continue", "continue button name" ), @"Cancel", nil );
+	else if( ! _isArchive && manyMessages ) result = NSRunInformationalAlertPanel( NSLocalizedString( @"Time Consuming Style Switch", "time consuming style switch alert title" ), NSLocalizedString( @"This converstaion is large and will take a considerable amount of time to switch the style. Would you like to do a full switch and wait until the switch is complete or a quick switch by hiding previous messages and return to the conversation?", "large transcript style switch alert message" ), NSLocalizedString( @"Full Switch", "full switch button name" ), @"Cancel", NSLocalizedString( @"Quick Switch", "clear button name" ) );
+
+	if( result == NSCancelButton ) return;
+
+	if( ! [_logLock tryLock] ) return;	
+
+	_previousStyleSwitch = YES;
 
 	[_chatStyle autorelease];
 	_chatStyle = [style retain];
@@ -353,7 +366,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 	[self _changeChatStyleMenuSelection];
 
-	[NSThread detachNewThreadSelector:@selector( _switchStyle: ) toTarget:self withObject:nil];
+	if( result == NSAlertOtherReturn ) {
+		[self _switchingStyleEnded:@""];
+	} else [NSThread detachNewThreadSelector:@selector( _switchStyle: ) toTarget:self withObject:nil];
 }
 
 - (NSBundle *) chatStyle {
