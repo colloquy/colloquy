@@ -119,25 +119,25 @@
 	for( ri = 0; ri < rows; ri++ ) {
 		for( ci = 0; ci < columns; ci++ ) {
 			NSRect rect = [self frameOfCellAtColumn:ci row:ri];
-			int enc = ( ri | ( ( ci && 0xFFFF ) << 16 ) );
-			[self addToolTipRect:rect owner:self userData:(void *)enc];
+			[self addToolTipRect:rect owner:self userData:NULL];
 		}
 	}
 }
 
 - (void) reloadData {
-	[self rebuildTooltipRects];
 	[super reloadData];
+	[self rebuildTooltipRects];
 }
 
 - (void) noteNumberOfRowsChanged {
-	[self rebuildTooltipRects];
 	[super noteNumberOfRowsChanged];
+	[self rebuildTooltipRects];
 }
 
 - (NSString *) view:(NSView *) view stringForToolTip:(NSToolTipTag) tag point:(NSPoint) point userData:(void *) userData {
-	int row = ( (int) userData & 0xFFFF );
-	int column = ( (int) userData >> 16 );
+	int row = [self rowAtPoint:point];
+    int column = [self columnAtPoint:point];
+
 	NSTableColumn *tcolumn = nil;
 	if( column >= 0 ) tcolumn = [_tableColumns objectAtIndex:column];
 
