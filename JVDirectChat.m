@@ -103,6 +103,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 @interface JVDirectChat (JVDirectChatPrivate) <ABImageClient>
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier;
+- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier asNotice:(BOOL) notice;
 - (void) scrollToBottom;
 - (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent;
 - (void) processQueue;
@@ -693,13 +694,17 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
+	[self addMessageToDisplay:message fromUser:user asAction:action withIdentifier:identifier asNotice:NO];
+}
+
+- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier asNotice:(BOOL) notice {
 	if( ! _nibLoaded ) [self view];
 	if( [_logLock tryLock] ) {
 		[self displayQueue];
-		[self addMessageToLogAndDisplay:message fromUser:user asAction:action withIdentifier:identifier];
+		[self addMessageToLogAndDisplay:message fromUser:user asAction:action withIdentifier:identifier asNotice:notice];
 		[_logLock unlock];
 	} else { // Queue the message
-		NSDictionary *queueEntry = [NSDictionary dictionaryWithObjectsAndKeys:@"message", @"type", message, @"message", user, @"user", identifier, @"identifier", [NSNumber numberWithBool:action], @"action", nil];
+		NSDictionary *queueEntry = [NSDictionary dictionaryWithObjectsAndKeys:@"message", @"type", message, @"message", user, @"user", identifier, @"identifier", [NSNumber numberWithBool:action], @"action", [NSNumber numberWithBool:notice], @"notice", nil];
 		[_messageQueue addObject:queueEntry];
 		if( [_messageQueue count] == 1 ) // We just added to an empty queue, so we need to attempt to process it soon
 			[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
@@ -1315,6 +1320,10 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
+	[self addMessageToLogAndDisplay:message fromUser:user asAction:action withIdentifier:identifier asNotice:NO];
+}
+
+- (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier asNotice:(BOOL) notice {
 	// DO *NOT* call this method without first acquiring _logLock!
 	NSParameterAssert( message != nil );
 	NSParameterAssert( user != nil );
@@ -1432,7 +1441,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
 	if( ! ctx ) return;
 
-	xmlXPathObjectPtr result = xmlXPathEval( [[NSString stringWithFormat:@"/log/*[name() = 'envelope' and position() = last() and (sender = '%@' or sender/@nickname = '%@')]", user, user] UTF8String], ctx );
+	xmlXPathObjectPtr result = xmlXPathEval( [[NSString stringWithFormat:@"/log/child::*[name() = 'envelope' and position() = last() and (sender = '%@' or sender/@nickname = '%@')]", user, user] UTF8String], ctx );
 	xmlDocPtr doc = xmlNewDoc( "1.0" ), msgDoc = NULL;
 	xmlNodePtr root = NULL, child = NULL, parent = NULL;
 
@@ -1505,6 +1514,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	if( [cmessage isHighlighted] ) xmlSetProp( child, "highlight", "yes" );
 	if( [cmessage ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, "ignored", "yes" );
 	else if( [cmessage ignoreStatus] == JVUserIgnored ) xmlSetProp( root, "ignored", "yes" );
+	if( notice ) xmlSetProp( child, "notice", "yes" );
 	xmlAddChild( root, child );
 
 	[self writeToLog:root withDoc:doc initializing:NO continuation:( parent ? YES : NO )];
@@ -1639,7 +1649,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		NSDictionary *msg = [[[_messageQueue objectAtIndex:0] retain] autorelease];
 		[_messageQueue removeObjectAtIndex:0];
 		if( [[msg objectForKey:@"type"] isEqualToString:@"message"] ) {
-			[self addMessageToLogAndDisplay:[msg objectForKey:@"message"] fromUser:[msg objectForKey:@"user"] asAction:[[msg objectForKey:@"action"] boolValue] withIdentifier:[msg objectForKey:@"identifier"]];
+			[self addMessageToLogAndDisplay:[msg objectForKey:@"message"] fromUser:[msg objectForKey:@"user"] asAction:[[msg objectForKey:@"action"] boolValue] withIdentifier:[msg objectForKey:@"identifier"] asNotice:[[msg objectForKey:@"notice"] boolValue]];
 		} else if( [[msg objectForKey:@"type"] isEqualToString:@"event"] ) {
 			if( [[msg objectForKey:@"message"] isEqual:[NSNull null]] ) {
 				[self addEventMessageToLogAndDisplay:nil withName:[msg objectForKey:@"name"] andAttributes:[msg objectForKey:@"attributes"] entityEncodeAttributes:[[msg objectForKey:@"encode"] boolValue]];

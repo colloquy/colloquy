@@ -54,6 +54,7 @@
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier;
+- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier asNotice:(BOOL) notice;
 - (void) processIncomingMessage:(JVMutableChatMessage *) message;
 - (void) echoSentMessageToDisplay:(JVMutableChatMessage *) message;
 - (JVMutableChatMessage *) currentMessage;

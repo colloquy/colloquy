@@ -837,7 +837,7 @@
 }
 
 - (void) _gotMessage:(NSNotification *) notification {
-	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"user"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"]];
+	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"user"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] asNotice:[[[notification userInfo] objectForKey:@"auto"] boolValue]];
 }
 
 - (void) _memberJoined:(NSNotification *) notification {
