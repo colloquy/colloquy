@@ -5,6 +5,7 @@
             ACTIONS = {
                 bounceIcon = id; 
                 bounceIconUntilFront = id; 
+                keepBubbleOnScreen = id; 
                 playSound = id; 
                 saveHighlightWords = id; 
                 showBubble = id; 
@@ -18,6 +19,7 @@
                 bounceIcon = NSButton; 
                 chatActions = NSPopUpButton; 
                 highlightWords = NSTextField; 
+                keepOnScreen = NSButton; 
                 onlyIfBackground = NSButton; 
                 playSound = NSButton; 
                 showBubble = NSButton; 
