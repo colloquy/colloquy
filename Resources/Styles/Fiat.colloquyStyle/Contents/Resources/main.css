@@ -24,6 +24,18 @@ a:hover {
 	display: none;
 }
 
+.error {
+	color: #aaa;
+}
+
+.error:before {
+	content: "(";
+}
+
+.error:after {
+	content: ")";
+}
+
 .header_top {
 	margin-top: 2px;
 	height: 2px;
