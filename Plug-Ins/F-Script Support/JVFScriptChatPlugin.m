@@ -151,7 +151,13 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 		}
 
 		@try {
-			return [(Block *)object valueWithArguments:arguments];
+			id returnValue = [(Block *)object valueWithArguments:arguments];
+			if( [returnValue isKindOfClass:[FSBoolean class]] ) {
+				BOOL returnBool = ( [returnValue isEqual:[FSBoolean fsTrue]] ? YES : NO );
+				return [NSNumber numberWithBool:returnBool];
+			} else {
+				return returnValue;
+			}
 		} @catch ( NSException *exception ) {
 			BlockStackElem *stack = [[[exception userInfo] objectForKey:@"blockStack"] lastObject];
 			NSString *locationError = @"";
