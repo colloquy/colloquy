@@ -167,7 +167,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.JVChatRoomMember</string>
+					<string>NSObject</string>
 				</dict>
 				<key>reason</key>
 				<dict>
@@ -186,6 +186,27 @@
 				<key>Type</key>
 				<string>Colloquy.JVChatRoomPanel</string>
 			</dict>
+		</dict>
+		<key>Load</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>lOdX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>path</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>lOd1</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
 		</dict>
 		<key>MemberJoined</key>
 		<dict>
@@ -210,7 +231,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Type</key>
-				<string>ChatCore.MVChatConnection</string>
+				<string>Colloquy.JVChatRoomMember</string>
 			</dict>
 		</dict>
 		<key>MemberKicked</key>
@@ -228,7 +249,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.JVChatRoomMember</string>
+					<string>NSObject</string>
 				</dict>
 				<key>reason</key>
 				<dict>
@@ -254,7 +275,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Type</key>
-				<string>ChatCore.MVChatConnection</string>
+				<string>Colloquy.JVChatRoomMember</string>
 			</dict>
 		</dict>
 		<key>MemberParted</key>
@@ -289,7 +310,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Type</key>
-				<string>ChatCore.MVChatConnection</string>
+				<string>Colloquy.JVChatRoomMember</string>
 			</dict>
 		</dict>
 		<key>PartingChatRoom</key>
@@ -365,7 +386,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.JVChatRoomMember</string>
+					<string>NSObject</string>
 				</dict>
 				<key>view</key>
 				<dict>
@@ -570,7 +591,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.JVChatRoomMember</string>
+					<string>NSObject</string>
 				</dict>
 				<key>room</key>
 				<dict>
@@ -591,6 +612,15 @@
 					<string>NSString</string>
 				</dict>
 			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+		</dict>
+		<key>Unload</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>uldX</string>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
 		</dict>

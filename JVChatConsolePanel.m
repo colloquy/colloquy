@@ -588,4 +588,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (NSNumber *) uniqueIdentifier {
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
+
+- (NSWindow *) window {
+	return [[self windowController] window];
+}
 @end

@@ -2,6 +2,7 @@
 #import "MVChatConnection.h"
 #import "MVFileTransfer.h"
 #import "NSNotificationAdditions.h"
+#import "NSDataAdditions.h"
 
 NSString *MVChatUserKnownRoomsAttribute = @"MVChatUserKnownRoomsAttribute";
 NSString *MVChatUserPictureAttribute = @"MVChatUserPictureAttribute";
@@ -468,5 +469,31 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
 	NSNotification *note = [NSNotification notificationWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];		
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatUser (MVChatUserScripting)
+- (NSString *) scriptUniqueIdentifier {
+	if( [[self uniqueIdentifier] isKindOfClass:[NSString class]] )
+		return [self uniqueIdentifier];
+
+	if( [[self uniqueIdentifier] isKindOfClass:[NSData class]] )
+		return [[self uniqueIdentifier] base64Encoding];
+
+	return [[self uniqueIdentifier] description];
+}
+
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	if( self == [[self connection] localUser] ) {
+		id classDescription = [NSClassDescription classDescriptionForClass:[MVChatConnection class]];
+		NSScriptObjectSpecifier *container = [[self connection] objectSpecifier];
+		return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"localUser"] autorelease];
+	}
+
+	id classDescription = [NSClassDescription classDescriptionForClass:[MVChatConnection class]];
+	NSScriptObjectSpecifier *container = [[self connection] objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"knownChatUsersArray" uniqueID:[self scriptUniqueIdentifier]] autorelease];
 }
 @end

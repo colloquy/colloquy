@@ -32,3 +32,8 @@ extern NSString *MVChatPluginManagerDidReloadPluginsNotification;
 @protocol MVChatPlugin
 - (id) initWithManager:(MVChatPluginManager *) manager;
 @end
+
+@interface NSObject (MVChatPluginReloadSupport)
+- (void) load;
+- (void) unload;
+@end

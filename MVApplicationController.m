@@ -367,12 +367,6 @@ static BOOL applicationIsTerminating = NO;
 	return menu;
 }
 
-- (BOOL) application:(NSApplication *) sender delegateHandlesKey:(NSString *) key {
-	if( [key isEqualToString:@"chatController"] || [key isEqualToString:@"connectionsController"] || [key isEqualToString:@"transferManager"] || [key isEqualToString:@"buddyList"] )
-		return YES;
-	return NO;
-}
-
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( joinRoom: ) ) {
 		if( [[[MVConnectionsController defaultManager] connections] count] ) return YES;
@@ -389,33 +383,3 @@ static BOOL applicationIsTerminating = NO;
 	[[MVConnectionsController defaultManager] newConnection:nil];
 }
 @end
-
-/* #pragma mark -
-
-@implementation JVChatController (JVChatControllerObjectSpecifier)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
-	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatController"] autorelease];
-}
-@end
-
-#pragma mark -
-
-@implementation MVConnectionsController (MVConnectionsControllerObjectSpecifier)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
-	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"connectionsController"] autorelease];
-}
-@end
-
-#pragma mark -
-
-@implementation MVBuddyListController (MVBuddyListControllerObjectSpecifier)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
-	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"buddyList"] autorelease];
-}
-@end */

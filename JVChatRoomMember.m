@@ -694,7 +694,7 @@
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
 
-#pragma mark -
+/*#pragma mark -
 
 - (void) voiceScriptCommand:(NSScriptCommand *) command {
 	if( ! [self voice] ) [self toggleVoiceStatus:nil];
@@ -710,5 +710,5 @@
 
 - (void) demoteScriptCommand:(NSScriptCommand *) command {
 	if( [self operator] ) [self toggleOperatorStatus:nil];
-}
+} */
 @end

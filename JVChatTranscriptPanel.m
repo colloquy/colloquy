@@ -53,6 +53,9 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 
 		_transcript = [[JVChatTranscript allocWithZone:[self zone]] init];
 
+		id classDescription = [NSClassDescription classDescriptionForClass:[JVChatTranscriptPanel class]];
+		[_transcript setObjectSpecifier:[[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"] autorelease]];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateStylesMenu ) name:JVStylesScannedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateStylesMenu ) name:JVNewStyleVariantAddedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateEmoticonsMenu ) name:JVEmoticonSetsScannedNotification object:nil];
@@ -65,6 +68,10 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 	if( ( self = [self init] ) ) {
 		[_transcript autorelease];
 		_transcript = [[JVChatTranscript allocWithZone:[self zone]] initWithContentsOfFile:filename];
+
+		id classDescription = [NSClassDescription classDescriptionForClass:[JVChatTranscriptPanel class]];
+		[_transcript setObjectSpecifier:[[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"] autorelease]];
+
 		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:filename]];
 	}
 	return self;
@@ -784,20 +791,7 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
 
-- (JVChatMessage *) valueInMessagesAtIndex:(unsigned) index {
-	return [[self transcript] messageAtIndex:index];
-}
-
-#pragma mark -
-
-- (void) saveScriptCommand:(NSScriptCommand *) command {
-	NSString *path = [[command evaluatedArguments] objectForKey:@"File"];
-
-	if( ! [[path pathComponents] count] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid path."];
-		return;
-	}
-
-	[[self transcript] writeToFile:path atomically:YES];
+- (NSWindow *) window {
+	return [[self windowController] window];
 }
 @end

@@ -55,6 +55,11 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerWillReloadPluginsNotification object:self];
 
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	[invocation setSelector:@selector( unload )];
+	[self makePluginsPerformInvocation:invocation];
+
 	// unload all plugins, this resets everything and purges plugins that moved since the last load
 	[_plugins removeAllObjects];
 
@@ -72,15 +77,28 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 		}
 	}
 
+	signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), nil];
+	invocation = [NSInvocation invocationWithMethodSignature:signature];
+	[invocation setSelector:@selector( load )];
+	[self makePluginsPerformInvocation:invocation];
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidReloadPluginsNotification object:self];
 }
 
 - (void) addPlugin:(id) plugin {
-	if( plugin ) [_plugins addObject:plugin];
+	if( plugin ) {
+		[_plugins addObject:plugin];
+		if( [plugin respondsToSelector:@selector( load )] )
+			[plugin performSelector:@selector( load )];
+	}
 }
 
 - (void) removePlugin:(id) plugin {
-	if( plugin ) [_plugins removeObject:plugin];
+	if( plugin ) {
+		if( [plugin respondsToSelector:@selector( unload )] )
+			[plugin performSelector:@selector( unload )];
+		[_plugins removeObject:plugin];
+	}
 }
 
 #pragma mark -

@@ -42,7 +42,7 @@
 	const char *fileSystemPath = [[NSFileManager defaultManager] fileSystemRepresentationWithPath:parentPath];
 
 	FSRef ref, parentRef;
-	if( FSPathMakeRef( fileSystemPath, &parentRef, FALSE ) ) {
+	if( FSPathMakeRef( (unsigned char *) fileSystemPath, &parentRef, FALSE ) ) {
 		NSLog( @"Couldn't make FSRef from: %@", parentPath );
 		return;
 	}
@@ -71,7 +71,7 @@
 	};
 
 	memcpy( *res, &dragBuffer, sizeof( dragBuffer ) );
-	AddResource( res, 'drag', 128, "" );
+	AddResource( res, 'drag', 128, (unsigned char *) "" );
 
 	// Create the 'TEXT' and 'url ' resources
 	NSString *urlString = [self absoluteString];
@@ -79,11 +79,11 @@
 
 	res = NewHandle( strlen( utf8string ) );
 	memcpy( *res, utf8string, strlen( utf8string ) );
-	AddResource( res, 'TEXT', 256, "" ); // This takes over the Handle - don't dispose it
+	AddResource( res, 'TEXT', 256, (unsigned char *) "" ); // This takes over the Handle - don't dispose it
 
 	res = NewHandle( strlen( utf8string ) );
 	memcpy( *res, utf8string, strlen( utf8string ) );
-	AddResource( res, 'url ', 256, "" ); // This takes over the Handle - don't dispose it
+	AddResource( res, 'url ', 256, (unsigned char *) "" ); // This takes over the Handle - don't dispose it
 
 	CloseResFile( fileRefNum );
 

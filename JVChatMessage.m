@@ -39,28 +39,28 @@
 	if( _loaded || ! _node ) return;
 
 	@synchronized( [self transcript] ) {
-		xmlChar *prop = xmlGetProp( _node, "received" );
-		_date = ( prop ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:prop]] : nil );
+		xmlChar *prop = xmlGetProp( _node, (xmlChar *) "received" );
+		_date = ( prop ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
 		xmlFree( prop );
 
-		prop = xmlGetProp( _node, "action" );
-		_action = ( ( prop && ! strcmp( prop, "yes" ) ) ? YES : NO );
+		prop = xmlGetProp( _node, (xmlChar *) "action" );
+		_action = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? YES : NO );
 		xmlFree( prop );
 
-		prop = xmlGetProp( _node, "highlight" );
-		_highlighted = ( ( prop && ! strcmp( prop, "yes" ) ) ? YES : NO );
+		prop = xmlGetProp( _node, (xmlChar *) "highlight" );
+		_highlighted = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? YES : NO );
 		xmlFree( prop );
 
-		prop = xmlGetProp( _node, "ignored" );
-		_ignoreStatus = ( ( prop && ! strcmp( prop, "yes" ) ) ? JVMessageIgnored : _ignoreStatus );
+		prop = xmlGetProp( _node, (xmlChar *) "ignored" );
+		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVMessageIgnored : _ignoreStatus );
 		xmlFree( prop );
 
-		prop = xmlGetProp( _node, "type" );
-		_type = ( ( prop && ! strcmp( prop, "notice" ) ) ? JVChatMessageNoticeType : JVChatMessageNormalType );
+		prop = xmlGetProp( _node, (xmlChar *) "type" );
+		_type = ( ( prop && ! strcmp( (char *) prop, "notice" ) ) ? JVChatMessageNoticeType : JVChatMessageNormalType );
 		xmlFree( prop );
 
-		prop = xmlGetProp( ((xmlNode *) _node) -> parent, "ignored" );
-		_ignoreStatus = ( ( prop && ! strcmp( prop, "yes" ) ) ? JVUserIgnored : _ignoreStatus );
+		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "ignored" );
+		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVUserIgnored : _ignoreStatus );
 		xmlFree( prop );
 	}
 
@@ -84,27 +84,27 @@
 		xmlNode *subNode = ((xmlNode *) _node) -> parent -> children;
 
 		do {
-			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", subNode -> name, 6 ) ) {
-				_senderName = [[NSString allocWithZone:[self zone]] initWithUTF8String:xmlNodeGetContent( subNode )];
+			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
+				_senderName = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) xmlNodeGetContent( subNode )];
 
-				xmlChar *prop = xmlGetProp( subNode, "nickname" );
-				if( prop ) _senderNickname = [[NSString allocWithZone:[self zone]] initWithUTF8String:prop];
+				xmlChar *prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
+				if( prop ) _senderNickname = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				xmlFree( prop );
 
-				prop = xmlGetProp( subNode, "identifier" );
-				if( prop ) _senderIdentifier = [[NSString allocWithZone:[self zone]] initWithUTF8String:prop];
+				prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
+				if( prop ) _senderIdentifier = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				xmlFree( prop );
 
-				prop = xmlGetProp( subNode, "hostmask" );
-				if( prop ) _senderHostmask = [[NSString allocWithZone:[self zone]] initWithUTF8String:prop];
+				prop = xmlGetProp( subNode, (xmlChar *) "hostmask" );
+				if( prop ) _senderHostmask = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				xmlFree( prop );
 
-				prop = xmlGetProp( subNode, "class" );
-				if( prop ) _senderClass = [[NSString allocWithZone:[self zone]] initWithUTF8String:prop];
+				prop = xmlGetProp( subNode, (xmlChar *) "class" );
+				if( prop ) _senderClass = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				xmlFree( prop );
 
-				prop = xmlGetProp( subNode, "self" );
-				if( prop && ! strcmp( prop, "yes" ) ) _senderIsLocalUser = YES;
+				prop = xmlGetProp( subNode, (xmlChar *) "self" );
+				if( prop && ! strcmp( (char *) prop, "yes" ) ) _senderIsLocalUser = YES;
 				else _senderIsLocalUser = NO;
 				xmlFree( prop );
 
@@ -149,8 +149,8 @@
 		}
 
 		@synchronized( [self transcript] ) {
-			xmlChar *idStr = xmlGetProp( (xmlNode *) _node, "id" );
-			_messageIdentifier = ( idStr ? [[NSString allocWithZone:[self zone]] initWithUTF8String:idStr] : nil );
+			xmlChar *idStr = xmlGetProp( (xmlNode *) _node, (xmlChar *) "id" );
+			_messageIdentifier = ( idStr ? [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) idStr] : nil );
 			xmlFree( idStr );
 		}
 	}
@@ -363,10 +363,10 @@
 - (void *) node {
 	if( ! _node ) {
 		if( _doc ) xmlFreeDoc( _doc );
-		_doc = xmlNewDoc( "1.0" );
+		_doc = xmlNewDoc( (xmlChar *) "1.0" );
 
 		xmlNodePtr child = NULL;
-		xmlNodePtr root = xmlNewNode( NULL, "envelope" );
+		xmlNodePtr root = xmlNewNode( NULL, (xmlChar *) "envelope" );
 		xmlDocSetRootElement( _doc, root );
 
 		if( [[self sender] respondsToSelector:@selector( xmlDescriptionWithTagName: )] ) {
@@ -389,13 +389,13 @@
 		if( ! msgDoc ) return NULL; // somthing bad with the message contents
 
 		_node = child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
-		xmlSetProp( child, "id", [[self messageIdentifier] UTF8String] );
-		xmlSetProp( child, "received", [[[self date] description] UTF8String] );
-		if( [self isAction] ) xmlSetProp( child, "action", "yes" );
-		if( [self isHighlighted] ) xmlSetProp( child, "highlight", "yes" );
-		if( [self ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, "ignored", "yes" );
-		else if( [self ignoreStatus] == JVUserIgnored ) xmlSetProp( root, "ignored", "yes" );
-		if( [self type] == JVChatMessageNoticeType ) xmlSetProp( child, "type", "notice" );
+		xmlSetProp( child, (xmlChar *) "id", (xmlChar *) [[self messageIdentifier] UTF8String] );
+		xmlSetProp( child, (xmlChar *) "received", (xmlChar *) [[[self date] description] UTF8String] );
+		if( [self isAction] ) xmlSetProp( child, (xmlChar *) "action", (xmlChar *) "yes" );
+		if( [self isHighlighted] ) xmlSetProp( child, (xmlChar *) "highlight", (xmlChar *) "yes" );
+		if( [self ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, (xmlChar *) "ignored", (xmlChar *) "yes" );
+		else if( [self ignoreStatus] == JVUserIgnored ) xmlSetProp( root, (xmlChar *) "ignored", (xmlChar *) "yes" );
+		if( [self type] == JVChatMessageNoticeType ) xmlSetProp( child, (xmlChar *) "type", (xmlChar *) "notice" );
 		xmlAddChild( root, child );
 
 		xmlFreeDoc( msgDoc );

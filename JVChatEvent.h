@@ -33,8 +33,8 @@
 	@protected
 	/* xmlDoc */ void *_doc;
 }
-+ (id) chatEventWithName:(NSString *) name andMessage:(NSString *) message;
-- (id) initWithName:(NSString *) name andMessage:(NSString *) message;
++ (id) chatEventWithName:(NSString *) name andMessage:(id) message;
+- (id) initWithName:(NSString *) name andMessage:(id) message;
 
 - (void) setDate:(NSDate *) date;
 - (void) setName:(NSString *) name;

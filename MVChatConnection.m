@@ -616,6 +616,12 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 
 #pragma mark -
 
+- (NSSet *) knownChatUsers {
+	// subclass this method
+	[self doesNotRecognizeSelector:_cmd];
+	return nil;
+}
+
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
@@ -828,6 +834,8 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
 }
 
+#pragma mark -
+
 - (void) connectScriptCommand:(NSScriptCommand *) command {
 	[self connect];
 }
@@ -836,40 +844,17 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 	[self disconnect];
 }
 
-- (void) sendRawMessageScriptCommand:(NSScriptCommand *) command {
-	NSString *msg = [[command evaluatedArguments] objectForKey:@"message"];
-
-	if( ! [msg isKindOfClass:[NSString class]] || ! [msg length] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid raw message."];
-		return;
-	}
-
-	[self sendRawMessage:[[command evaluatedArguments] objectForKey:@"message"]];
-}
-
 - (void) returnFromAwayStatusScriptCommand:(NSScriptCommand *) command {
 	[self clearAwayStatus];
 }
 
-- (void) joinChatRoomScriptCommand:(NSScriptCommand *) command {
-	id rooms = [[command evaluatedArguments] objectForKey:@"room"];
-
-	if( rooms && ! [rooms isKindOfClass:[NSString class]] && ! [rooms isKindOfClass:[NSArray class]] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid chat room to join."];
-		return;
-	}
-
-	NSArray *rms = nil;
-	if( [rooms isKindOfClass:[NSString class]] )
-		rms = [NSArray arrayWithObject:rooms];
-	else rms = rooms;
-
-	[self joinChatRoomsNamed:rms];
-}
+#pragma mark -
 
 - (NSString *) urlString {
 	return [[self url] absoluteString];
 }
+
+#pragma mark -
 
 - (NSTextStorage *) scriptTypedAwayMessage {
 	return [[[NSTextStorage alloc] initWithAttributedString:_awayMessage] autorelease];
@@ -878,6 +863,56 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 - (void) setScriptTypedAwayMessage:(NSString *) message {
 	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
 	[self setAwayStatusWithMessage:attributeMsg];
+}
+
+#pragma mark -
+
+- (NSArray *) knownChatUsersArray {
+	return [[self knownChatUsers] allObjects];
+}
+
+- (MVChatUser *) valueInKnownChatUsersArrayAtIndex:(unsigned) index {
+	return [[self knownChatUsersArray] objectAtIndex:index];
+}
+
+- (MVChatUser *) valueInKnownChatUsersArrayWithUniqueID:(id) identifier {
+	return [self chatUserWithUniqueIdentifier:identifier];
+}
+
+- (MVChatUser *) valueInKnownChatUsersArrayWithName:(NSString *) name {
+	NSEnumerator *enumerator = [[self knownChatUsers] objectEnumerator];
+	MVChatUser *user = nil;
+
+	while( ( user = [enumerator nextObject] ) )
+		if( [[user displayName] caseInsensitiveCompare:name] == NSOrderedSame )
+			return user;
+
+	return nil;
+}
+
+#pragma mark -
+
+- (NSArray *) joinedChatRoomsArray {
+	return [[self joinedChatRooms] allObjects];
+}
+
+- (MVChatRoom *) valueInJoinedChatRoomsArrayAtIndex:(unsigned) index {
+	return [[self joinedChatRoomsArray] objectAtIndex:index];
+}
+
+- (MVChatRoom *) valueInJoinedChatRoomsArrayWithUniqueID:(id) identifier {
+	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
+	MVChatRoom *room = nil;
+
+	while( ( room = [enumerator nextObject] ) )
+		if( [[room scriptUniqueIdentifier] isEqual:identifier] )
+			return room;
+
+	return nil;
+}
+
+- (MVChatRoom *) valueInJoinedChatRoomsArrayWithName:(NSString *) name {
+	return [self joinedChatRoomWithName:name];
 }
 @end
 

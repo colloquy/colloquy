@@ -13,8 +13,8 @@
 		}
 
 		@synchronized( [self transcript] ) {
-			xmlChar *startedStr = xmlGetProp( (xmlNode *) _node, "started" );
-			_startDate = ( startedStr ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:startedStr]] : nil );
+			xmlChar *startedStr = xmlGetProp( (xmlNode *) _node, (xmlChar *) "started" );
+			_startDate = ( startedStr ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) startedStr]] : nil );
 			xmlFree( startedStr );
 		}
 	}

@@ -495,7 +495,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 				SilcChannelPayload entry = NULL;
 				while( ( entry = silc_dlist_get( list ) ) != SILC_LIST_END ) {
 					SilcUInt32 name_len = 0;
-					char *name = silc_channel_get_name( entry, &name_len );
+					unsigned char *name = silc_channel_get_name( entry, &name_len );
 					[chanArray addObject:[NSString stringWithCharacters:(const unichar *)name length:name_len]];
 				}
 
@@ -663,7 +663,7 @@ static void silc_get_auth_method_callback( SilcClient client, SilcClientConnecti
 				break;
 			}
 			
-			completion( TRUE, auth_method, [[self password] UTF8String], [[self password] length], completionContext );
+			completion( TRUE, auth_method, (unsigned char *)[[self password] UTF8String], [[self password] length], completionContext );
 			break;
 		case SILC_AUTH_PUBLIC_KEY:
 			completion( TRUE, auth_method, NULL, 0, completionContext );
@@ -1174,6 +1174,10 @@ static SilcClientOperations silcClientOps = {
 }
 
 #pragma mark -
+
+- (NSSet *) knownChatUsers {
+	return [NSSet setWithArray:[_knownUsers allValues]];
+}
 
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
 	// do silc_client_get_clients_local first, then if no local matches

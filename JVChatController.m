@@ -450,16 +450,6 @@ static JVChatController *sharedInstance = nil;
 
 @end
 
-/* #pragma mark -
-
-@implementation JVChatWindowController (JVChatWindowControllerObjectSpecifier)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatController class]];
-	NSScriptObjectSpecifier *container = [[JVChatController defaultManager] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatWindows" uniqueID:[self uniqueIdentifier]] autorelease];
-}
-@end */
-
 #pragma mark -
 
 @implementation JVChatTranscriptPanel (JVChatTranscriptObjectSpecifier)

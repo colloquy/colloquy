@@ -56,6 +56,13 @@
 					<key>Type</key>
 					<string>NSTextSuite.NSTextStorage</string>
 				</dict>
+				<key>scriptTypedEncoding</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>eNcA</string>
+					<key>Type</key>
+					<string>NSNumber&lt;ChatCore.Encoding&gt;</string>
+				</dict>
 				<key>server</key>
 				<dict>
 					<key>AppleEventCode</key>
@@ -106,8 +113,6 @@
 				<string>connectScriptCommand:</string>
 				<key>ChatCore.Disconnect</key>
 				<string>disconnectScriptCommand:</string>
-				<key>ChatCore.ReturnFromAwayStatus</key>
-				<string>returnFromAwayStatusScriptCommand:</string>
 			</dict>
 			<key>ToManyRelationships</key>
 			<dict>
@@ -205,18 +210,18 @@
 				<key>scriptTypedEncoding</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>enCA</string>
+					<string>eNcA</string>
 					<key>Type</key>
 					<string>NSNumber&lt;ChatCore.Encoding&gt;</string>
 				</dict>
-				<key>uniqueIdentifier</key>
+				<key>scriptUniqueIdentifier</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>ID  </string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSObject</string>
+					<string>NSString</string>
 				</dict>
 				<key>urlString</key>
 				<dict>
@@ -321,6 +326,15 @@
 					<key>Type</key>
 					<string>NSTextSuite.NSTextStorage</string>
 				</dict>
+				<key>scriptUniqueIdentifier</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ID  </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
 				<key>serverAddress</key>
 				<dict>
 					<key>AppleEventCode</key>
@@ -338,15 +352,6 @@
 					<string>YES</string>
 					<key>Type</key>
 					<string>NSNumber&lt;ChatCore.UserStatus&gt;</string>
-				</dict>
-				<key>uniqueIdentifier</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>ID  </string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSObject</string>
 				</dict>
 				<key>username</key>
 				<dict>
@@ -414,20 +419,6 @@
 			<dict>
 				<key>Type</key>
 				<string>NSObject</string>
-			</dict>
-		</dict>
-		<key>ReturnFromAwayStatus</key>
-		<dict>
-			<key>AppleEventClassCode</key>
-			<string>ccoR</string>
-			<key>AppleEventCode</key>
-			<string>rAsX</string>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Type</key>
-				<string>ChatCore.MVChatConnection</string>
 			</dict>
 		</dict>
 		<key>SendChatMessage</key>

@@ -149,6 +149,23 @@
 				<string>The chat room.</string>
 			</dict>
 		</dict>
+		<key>Load</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>path</key>
+				<dict>
+					<key>Description</key>
+					<string>The path the script was loaded from.</string>
+					<key>Name</key>
+					<string>from</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when the script is loaded into the host application.</string>
+			<key>Name</key>
+			<string>load</string>
+		</dict>
 		<key>MemberJoined</key>
 		<dict>
 			<key>Arguments</key>
@@ -473,6 +490,13 @@
 			<string>Called when a member changes the room topic.</string>
 			<key>Name</key>
 			<string>topic changed</string>
+		</dict>
+		<key>Unload</key>
+		<dict>
+			<key>Description</key>
+			<string>Called right before the script is unloaded from the host application. The script might be loaded again if a reload is being performed.</string>
+			<key>Name</key>
+			<string>unload</string>
 		</dict>
 	</dict>
 	<key>Description</key>

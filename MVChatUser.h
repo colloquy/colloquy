@@ -133,3 +133,10 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments;
 - (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments;
 @end
+
+#pragma mark -
+
+@interface MVChatUser (MVChatUserScripting)
+- (NSString *) scriptUniqueIdentifier;
+- (NSScriptObjectSpecifier *) objectSpecifier;
+@end

@@ -1444,6 +1444,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
+- (NSSet *) knownChatUsers {
+	return [NSSet setWithArray:[_knownUsers allValues]];
+}
+
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
 	return [NSSet setWithObject:[self chatUserWithUniqueIdentifier:nickname]];
 }

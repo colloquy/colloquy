@@ -203,6 +203,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 #pragma mark -
 
+- (NSSet *) knownChatUsers;
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname;
 - (NSSet *) chatUsersWithFingerprint:(NSString *) fingerprint;
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier;

@@ -156,9 +156,13 @@
 	NSAppleScript *script = [[[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:NULL] autorelease];
 	if( ! [script compileAndReturnError:nil] ) return;
 
+	[self performSelector:@selector( unload )];
+
 	[self setScript:script];
 	[_doseNotRespond removeAllObjects];
 	[self performSelector:@selector( idle: ) withObject:nil afterDelay:1.];
+
+	[self performSelector:@selector( load )];
 }
 
 #pragma mark -
@@ -280,6 +284,15 @@
 }
 
 #pragma mark -
+
+- (void) load {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[self scriptFilePath], @"lOd1", nil];
+	[self callScriptHandler:'lOdX' withArguments:args forSelector:_cmd];
+}
+
+- (void) unload {
+	[self callScriptHandler:'uldX' withArguments:nil forSelector:_cmd];
+}
 
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psR1", user, @"psR2", [user connection], @"psR3", nil];

@@ -3,6 +3,7 @@
 #import "MVChatUser.h"
 
 #import "NSStringAdditions.h"
+#import "NSDataAdditions.h"
 #import "NSNotificationAdditions.h"
 
 NSString *MVChatRoomJoinedNotification = @"MVChatRoomJoinedNotification";
@@ -573,5 +574,25 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];		
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatRoom (MVChatRoomScripting)
+- (NSString *) scriptUniqueIdentifier {
+	if( [[self uniqueIdentifier] isKindOfClass:[NSString class]] )
+		return [self uniqueIdentifier];
+
+	if( [[self uniqueIdentifier] isKindOfClass:[NSData class]] )
+		return [[self uniqueIdentifier] base64Encoding];
+
+	return [[self uniqueIdentifier] description];
+}
+
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[MVChatConnection class]];
+	NSScriptObjectSpecifier *container = [[self connection] objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"joinedChatRoomsArray" uniqueID:[self scriptUniqueIdentifier]] autorelease];
 }
 @end

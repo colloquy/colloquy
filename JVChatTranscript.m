@@ -88,6 +88,7 @@
 	if( ( self = [super init] ) ) {
 		_filePath = nil;
 		_logFile = nil;
+		_objectSpecifier = nil;
 		_autoWriteChanges = NO;
 		_requiresNewEnvelope = YES;
 		_previousLogOffset = 0;
@@ -95,9 +96,9 @@
 		@synchronized( self ) {
 			_messages = [[NSMutableArray allocWithZone:[self zone]] initWithCapacity:100];
 
-			_xmlLog = xmlNewDoc( "1.0" );
-			xmlDocSetRootElement( _xmlLog, xmlNewNode( NULL, "log" ) );
-			xmlSetProp( xmlDocGetRootElement( _xmlLog ), "began", [[[NSDate date] description] UTF8String] );
+			_xmlLog = xmlNewDoc( (xmlChar *) "1.0" );
+			xmlDocSetRootElement( _xmlLog, xmlNewNode( NULL, (xmlChar *) "log" ) );
+			xmlSetProp( xmlDocGetRootElement( _xmlLog ), (xmlChar *) "began", (xmlChar *) [[[NSDate date] description] UTF8String] );
 		}
 	}
 
@@ -161,9 +162,11 @@
 	[_filePath release];
 	[_logFile release];
 	[_messages release];
+	[_objectSpecifier release];
 
 	xmlFreeDoc( _xmlLog );
 
+	_objectSpecifier = nil;
 	_filePath = nil;
 	_logFile = nil;
 	_messages = nil;
@@ -198,10 +201,10 @@
 	@synchronized( self ) {
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", node -> name, 8 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) node -> name, 8 ) ) {
 				xmlNode *subNode = node -> children;
 				do {
-					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", subNode -> name, 7 ) )
+					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) )
 						count++;
 				} while( subNode && ( subNode = subNode -> next ) ); 
 			} else if( node && node -> type == XML_ELEMENT_NODE ) count++;
@@ -217,7 +220,7 @@
 	@synchronized( self ) {
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", node -> name, 7 ) )
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) )
 				count++;
 		} while( node && ( node = node -> next ) );
 	}
@@ -231,10 +234,10 @@
 	@synchronized( self ) {
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", node -> name, 8 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) node -> name, 8 ) ) {
 				xmlNode *subNode = node -> children;
 				do {
-					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", subNode -> name, 7 ) )
+					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) )
 						count++;
 				} while( subNode && ( subNode = subNode -> next ) ); 
 			}
@@ -250,7 +253,7 @@
 	@synchronized( self ) {
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", node -> name, 5 ) )
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", (char *) node -> name, 5 ) )
 				count++;
 		} while( node && ( node = node -> next ) );
 	}
@@ -273,10 +276,10 @@
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", node -> name, 8 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) node -> name, 8 ) ) {
 				xmlNode *subNode = node -> children;
 				do {
-					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", subNode -> name, 7 ) ) {
+					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) ) {
 						if( NSLocationInRange( i, range ) ) {
 							JVChatMessage *msg = [JVChatMessage messageWithNode:subNode andTranscript:self];
 							if( msg ) [ret addObject:msg];
@@ -285,14 +288,14 @@
 						if( ++i > ( range.location + range.length ) ) goto done;
 					}
 				} while( subNode && ( subNode = subNode -> next ) ); 
-			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", node -> name, 7 ) ) {
+			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) ) {
 				if( NSLocationInRange( i, range ) ) {
 					JVChatSession *session = [JVChatSession sessionWithNode:node andTranscript:self];
 					if( session ) [ret addObject:session];
 				}
 
 				if( ++i > ( range.location + range.length ) ) goto done;
-			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", node -> name, 5 ) ) {
+			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", (char *) node -> name, 5 ) ) {
 				if( NSLocationInRange( i, range ) ) {
 					JVChatEvent *event = [JVChatEvent eventWithNode:node andTranscript:self];
 					if( event ) [ret addObject:event];
@@ -315,15 +318,15 @@
 	@synchronized( self ) {
 		xmlNode *node = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", node -> name, 8 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) node -> name, 8 ) ) {
 				xmlNode *subNode = xmlGetLastChild( node );
 				do {
-					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", subNode -> name, 7 ) )
+					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) )
 						return [JVChatMessage messageWithNode:subNode andTranscript:self];
 				} while( subNode && ( subNode = subNode -> prev ) );
-			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", node -> name, 7 ) ) {
+			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) ) {
 				return [JVChatSession sessionWithNode:node andTranscript:self];
-			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", node -> name, 5 ) ) {
+			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", (char *) node -> name, 5 ) ) {
 				return [JVChatEvent eventWithNode:node andTranscript:self];
 			}
 		} while( node && ( node = node -> prev ) );
@@ -387,22 +390,22 @@
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", node -> name, 8 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) node -> name, 8 ) ) {
 				xmlNode *subNode = node -> children;
 				do {
-					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", subNode -> name, 7 ) ) {
+					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) ) {
 						if( NSLocationInRange( i, range ) ) {
 							if( [_messages count] > i && [[_messages objectAtIndex:i] isKindOfClass:[JVChatMessage class]] ) {
 								msg = [_messages objectAtIndex:i];
 							} else if( [_messages count] > i && [[_messages objectAtIndex:i] isKindOfClass:[NSNull class]] ) {
 								msg = [JVChatMessage messageWithNode:subNode andTranscript:self];
 								id classDesc = [NSClassDescription classDescriptionForClass:[self class]];
-								[msg setObjectSpecifier:[[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[self objectSpecifier] key:@"messages" index:i] autorelease]];
+								[msg setObjectSpecifier:[[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[self objectSpecifier] key:@"messages" uniqueID:[msg messageIdentifier]] autorelease]];
 								[_messages replaceObjectAtIndex:i withObject:msg];
 							} else if( [_messages count] == i ) {
 								msg = [JVChatMessage messageWithNode:subNode andTranscript:self];
 								id classDesc = [NSClassDescription classDescriptionForClass:[self class]];
-								[msg setObjectSpecifier:[[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[self objectSpecifier] key:@"messages" index:i] autorelease]];
+								[msg setObjectSpecifier:[[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[self objectSpecifier] key:@"messages" uniqueID:[msg messageIdentifier]] autorelease]];
 								[_messages insertObject:msg atIndex:i];
 							} else continue;
 							if( msg ) [ret addObject:msg];
@@ -442,12 +445,12 @@
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", node -> name, 8 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) node -> name, 8 ) ) {
 				xmlNode *subNode = node -> children;
 				do {
-					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", subNode -> name, 7 ) ) {
-						xmlChar *prop = xmlGetProp( subNode, "id" );
-						if( prop && ! strcmp( prop, ident ) ) foundNode = subNode;
+					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) ) {
+						xmlChar *prop = xmlGetProp( subNode, (xmlChar *) "id" );
+						if( prop && ! strcmp( (char *) prop, ident ) ) foundNode = subNode;
 						if( prop ) xmlFree( prop );
 						if( foundNode ) break;
 					}
@@ -469,7 +472,7 @@
 		NSMutableArray *results = [NSMutableArray array];
 
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "message", node -> name, 7 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) node -> name, 7 ) ) {
 				JVChatMessage *msg = [JVChatMessage messageWithNode:node andTranscript:self];
 				if( msg ) [results addObject:msg];
 			}
@@ -487,10 +490,10 @@
 		xmlNode *node = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", node -> name, 8 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) node -> name, 8 ) ) {
 				xmlNode *subNode = xmlGetLastChild( node );
 				do {
-					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", subNode -> name, 7 ) ) {
+					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) ) {
 						foundNode = subNode;
 						break;
 					}
@@ -514,12 +517,12 @@
 		BOOL found = NO;
 
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", node -> name, 8 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) node -> name, 8 ) ) {
 				xmlNode *subNode = node -> children;
 				do {
-					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", subNode -> name, 7 ) ) {
-						xmlChar *prop = xmlGetProp( subNode, "id" );
-						if( prop && ! strcmp( prop, ident ) ) found = YES;
+					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) ) {
+						xmlChar *prop = xmlGetProp( subNode, (xmlChar *) "id" );
+						if( prop && ! strcmp( (char *) prop, ident ) ) found = YES;
 						if( prop ) xmlFree( prop );
 						if( found ) return YES;
 					}
@@ -548,27 +551,27 @@
 		if( ! _requiresNewEnvelope && ! forceEnvelope ) {
 			// check if the last node is an envelope by the same sender, if so append this message to that envelope
 			xmlNode *lastChild = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
-			if( lastChild && lastChild -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", lastChild -> name, 8 ) ) {
+			if( lastChild && lastChild -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) lastChild -> name, 8 ) ) {
 				xmlNode *subNode = lastChild -> children;
 				do {
-					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", subNode -> name, 6 ) ) {
+					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
 						NSString *identifier = [message senderIdentifier];
 						NSString *nickname = [message senderNickname];
 						NSString *name = [message senderName];
 
 						xmlChar *senderNameStr = xmlNodeGetContent( subNode );
-						NSString *senderName = [NSString stringWithUTF8String:senderNameStr];
+						NSString *senderName = [NSString stringWithUTF8String:(char *) senderNameStr];
 						xmlFree( senderNameStr );
 
 						NSString *senderNickname = nil;
 						NSString *senderIdentifier = nil;
 
-						xmlChar *prop = xmlGetProp( subNode, "nickname" );
-						if( prop ) senderNickname = [NSString stringWithUTF8String:prop];
+						xmlChar *prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
+						if( prop ) senderNickname = [NSString stringWithUTF8String:(char *) prop];
 						xmlFree( prop );
 
-						prop = xmlGetProp( subNode, "identifier" );
-						if( prop ) senderIdentifier = [NSString stringWithUTF8String:prop];
+						prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
+						if( prop ) senderIdentifier = [NSString stringWithUTF8String:(char *) prop];
 						xmlFree( prop );
 
 						if( [senderIdentifier isEqualToString:identifier] || [senderNickname isEqualToString:nickname] || [senderName isEqualToString:name] )
@@ -581,16 +584,16 @@
 		}
 
 		if( ! parent ) { // make a new envelope to append
-			root = xmlNewNode( NULL, "envelope" );
+			root = xmlNewNode( NULL, (xmlChar *) "envelope" );
 			root = xmlAddChild( xmlDocGetRootElement( _xmlLog ), root );
 
 			if( [message ignoreStatus] == JVUserIgnored )
-				xmlSetProp( root, "ignored", "yes" );
+				xmlSetProp( root, (xmlChar *) "ignored", (xmlChar *) "yes" );
 
 			xmlNode *subNode = ((xmlNode *) [message node]) -> parent -> children;
 
 			do {
-				if( ! strncmp( "sender", subNode -> name, 6 ) ) break;
+				if( ! strncmp( "sender", (char *) subNode -> name, 6 ) ) break;
 			} while( subNode && ( subNode = subNode -> next ) ); 
 
 			child = xmlDocCopyNode( subNode, _xmlLog, 1 );
@@ -649,7 +652,7 @@
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", node -> name, 7 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) ) {
 				if( NSLocationInRange( i, range ) ) {
 					JVChatSession *session = [JVChatSession sessionWithNode:node andTranscript:self];
 					if( session ) [ret addObject:session];
@@ -672,7 +675,7 @@
 	@synchronized( self ) {
 		xmlNode *node = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", node -> name, 7 ) )
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) )
 				return [JVChatSession sessionWithNode:node andTranscript:self];
 		} while( node && ( node = node -> prev ) );
 	}
@@ -687,8 +690,8 @@
 }
 
 - (JVChatSession *) appendSessionWithStartDate:(NSDate *) startDate {
-	xmlNodePtr sessionNode = xmlNewNode( NULL, "session" );
-	xmlSetProp( sessionNode, "started", [[startDate description] UTF8String] );
+	xmlNodePtr sessionNode = xmlNewNode( NULL, (xmlChar *) "session" );
+	xmlSetProp( sessionNode, (xmlChar *) "started", (xmlChar *) [[startDate description] UTF8String] );
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), sessionNode );
 	return [JVChatSession sessionWithNode:sessionNode andTranscript:self];
 }
@@ -708,7 +711,7 @@
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", node -> name, 5 ) ) {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", (char *) node -> name, 5 ) ) {
 				if( NSLocationInRange( i, range ) ) {
 					JVChatEvent *event = [JVChatEvent eventWithNode:node andTranscript:self];
 					if( event ) [ret addObject:event];
@@ -731,7 +734,7 @@
 	@synchronized( self ) {
 		xmlNode *node = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", node -> name, 5 ) )
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", (char *) node -> name, 5 ) )
 				return [JVChatEvent eventWithNode:node andTranscript:self];
 		} while( node && ( node = node -> prev ) );
 	}
@@ -751,9 +754,9 @@
 		BOOL found = NO;
 
 		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", node -> name, 5 ) ) {
-				xmlChar *prop = xmlGetProp( node, "id" );
-				if( prop && ! strcmp( prop, ident ) ) found = YES;
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", (char *) node -> name, 5 ) ) {
+				xmlChar *prop = xmlGetProp( node, (xmlChar *) "id" );
+				if( prop && ! strcmp( (char *) prop, ident ) ) found = YES;
 				if( prop ) xmlFree( prop );
 				if( found ) return YES;
 			}
@@ -878,6 +881,17 @@
 
 	return ret;
 }
+
+#pragma mark -
+
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	return _objectSpecifier;
+}
+
+- (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier {
+	[_objectSpecifier autorelease];
+	_objectSpecifier = [objectSpecifier retain];
+}
 @end
 
 #pragma mark -
@@ -964,5 +978,29 @@
 
 - (void) _chnageFileAttributesAtPath:(NSString *) path {
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatTranscript (JVChatTranscriptScripting)
+- (NSNumber *) uniqueIdentifier {
+	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+}
+
+- (JVChatMessage *) valueInMessagesAtIndex:(unsigned) index {
+	return [self messageAtIndex:index];
+}
+
+- (JVChatMessage *) valueInMessagesWithUniqueID:(id) identifier {
+	return [self messageWithIdentifier:identifier];
+}
+
+- (void) addInMessages:(JVChatMessage *) message {
+	[self appendMessage:message];
+}
+
+- (void) insertInMessages:(JVChatMessage *) message {
+	[self appendMessage:message];
 }
 @end

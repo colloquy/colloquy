@@ -35,8 +35,8 @@
 		}
 
 		@synchronized( [self transcript] ) {
-			xmlChar *prop = xmlGetProp( (xmlNode *) _node, "id" );
-			_eventIdentifier = ( prop ? [[NSString allocWithZone:[self zone]] initWithUTF8String:prop] : nil );
+			xmlChar *prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "id" );
+			_eventIdentifier = ( prop ? [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop] : nil );
 			xmlFree( prop );
 		}
 	}
@@ -73,12 +73,12 @@
 	if( _loadedSmall || ! _node ) return;
 
 	@synchronized( [self transcript] ) {
-		xmlChar *prop = xmlGetProp( (xmlNode *) _node, "name" );
-		_name = ( prop ? [[NSString allocWithZone:[self zone]] initWithUTF8String:prop] : nil );
+		xmlChar *prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "name" );
+		_name = ( prop ? [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop] : nil );
 		xmlFree( prop );
 
-		prop = xmlGetProp( (xmlNode *) _node, "occurred" );
-		_date = ( prop ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:prop]] : nil );
+		prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "occurred" );
+		_date = ( prop ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
 		xmlFree( prop );
 	}
 
@@ -92,7 +92,7 @@
 		xmlNode *subNode = ((xmlNode *) _node) -> children;
 
 		do {
-			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", subNode -> name, 6 ) ) {
+			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 6 ) ) {
 				_message = [[NSTextStorage allocWithZone:[self zone]] initWithXHTMLTree:subNode baseURL:nil defaultAttributes:nil];
 				break;
 			}
@@ -110,13 +110,13 @@
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 
 		do {
-			if( subNode -> type == XML_ELEMENT_NODE && strncmp( "message", subNode -> name, 6 ) ) { // everything but "message"
+			if( subNode -> type == XML_ELEMENT_NODE && strncmp( "message", (char *) subNode -> name, 6 ) ) { // everything but "message"
 				NSMutableDictionary *properties = [NSMutableDictionary dictionary];
 				xmlAttrPtr prop = NULL;
 				for( prop = subNode -> properties; prop; prop = prop -> next ) {
 					xmlChar *value = xmlGetProp( subNode, prop -> name );
 					if( value ) {
-						[properties setObject:[NSString stringWithUTF8String:value] forKey:[NSString stringWithUTF8String:prop -> name]];
+						[properties setObject:[NSString stringWithUTF8String:(char *) value] forKey:[NSString stringWithUTF8String:(char *) prop -> name]];
 						xmlFree( value );
 					}
 				}
@@ -133,15 +133,15 @@
 					value = [NSTextStorage attributedStringWithXHTMLTree:subNode baseURL:nil defaultAttributes:nil];
 				} else {
 					xmlChar *content = xmlNodeGetContent( subNode );
-					value = [NSString stringWithUTF8String:content];
+					value = [NSString stringWithUTF8String:(char *) content];
 					xmlFree( content );
 				}
 
 				if( [properties count] ) {
 					[properties setObject:value forKey:@"value"];
-					[attributes setObject:properties forKey:[NSString stringWithUTF8String:subNode -> name]];
+					[attributes setObject:properties forKey:[NSString stringWithUTF8String:(char *) subNode -> name]];
 				} else {
-					[attributes setObject:value forKey:[NSString stringWithUTF8String:subNode -> name]];
+					[attributes setObject:value forKey:[NSString stringWithUTF8String:(char *) subNode -> name]];
 				}
 			}
 		} while( ( subNode = subNode -> next ) );
@@ -248,12 +248,12 @@
 - (void *) node {
 	if( ! _node ) {
 		if( _doc ) xmlFreeDoc( _doc );
-		_doc = xmlNewDoc( "1.0" );
+		_doc = xmlNewDoc( (xmlChar *) "1.0" );
 
-		xmlNodePtr root = xmlNewNode( NULL, "event" );
-		xmlSetProp( root, "id", [[self eventIdentifier] UTF8String] );
-		xmlSetProp( root, "name", [[self name] UTF8String] );
-		xmlSetProp( root, "occurred", [[[self date] description] UTF8String] );
+		xmlNodePtr root = xmlNewNode( NULL, (xmlChar *) "event" );
+		xmlSetProp( root, (xmlChar *) "id", (xmlChar *) [[self eventIdentifier] UTF8String] );
+		xmlSetProp( root, (xmlChar *) "name", (xmlChar *) [[self name] UTF8String] );
+		xmlSetProp( root, (xmlChar *) "occurred", (xmlChar *) [[[self date] description] UTF8String] );
 		xmlDocSetRootElement( _doc, root );
 
 		xmlDocPtr msgDoc = NULL;

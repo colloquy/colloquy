@@ -50,7 +50,7 @@
 		[self _setRealName:[NSString stringWithUTF8String:clientEntry -> realname]];
 
 	if( clientEntry -> fingerprint )
-		[self _setFingerprint:[NSString stringWithUTF8String:clientEntry -> fingerprint]];
+		[self _setFingerprint:[NSString stringWithUTF8String:(char *)clientEntry -> fingerprint]];
 
 	if( clientEntry -> public_key ) {
 		unsigned long len = 0;
@@ -98,7 +98,7 @@
 	if( clientID ) {
 		[[[self connection] _silcClientLock] lock];
 		SilcClientEntry client = silc_client_get_client_by_id( [[self connection] _silcClient], [[self connection] _silcConn], clientID );
-		if( client ) silc_client_send_private_message( [[self connection] _silcClient], [[self connection] _silcConn], client, flags, (char *) msg, strlen( msg ), false );	
+		if( client ) silc_client_send_private_message( [[self connection] _silcClient], [[self connection] _silcConn], client, flags, (unsigned char *) msg, strlen( msg ), false );	
 		[[[self connection] _silcClientLock] unlock];
 	}
 }

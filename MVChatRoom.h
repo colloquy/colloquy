@@ -136,3 +136,10 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (void) setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
 - (void) removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
 @end
+
+#pragma mark -
+
+@interface MVChatRoom (MVChatRoomScripting)
+- (NSString *) scriptUniqueIdentifier;
+- (NSScriptObjectSpecifier *) objectSpecifier;
+@end

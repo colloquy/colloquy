@@ -82,8 +82,12 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 - (void) reloadFromDisk {
+	[self performSelector:@selector( unload )];
+
 	NSString *contents = [NSString stringWithContentsOfFile:[self scriptFilePath]];
 	FSInterpreterResult *result = [[self scriptInterpreter] execute:contents];
+
+	[self performSelector:@selector( load )];
 
 	if( ! [result isOk] ) {
 		NSRunCriticalAlertPanel( NSLocalizedString( @"F-Script Plugin Error", "F-Script plugin error title" ), NSLocalizedString( @"The F-Script plugin \"%@\" had an error while loading. The error occured near character %d.\n\n%@", "F-Script plugin error message" ), nil, nil, nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], [result errorRange].location, [result errorMessage] );
@@ -160,6 +164,15 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 #pragma mark -
+
+- (void) load {
+	NSArray *args = [NSArray arrayWithObjects:[self scriptFilePath], nil];
+	[self callScriptBlockNamed:@"load" withArguments:args forSelector:_cmd];
+}
+
+- (void) unload {
+	[self callScriptBlockNamed:@"unload" withArguments:[NSArray arrayWithObject:[NSNull null]] forSelector:_cmd];
+}
 
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view {
 	NSArray *args = [NSArray arrayWithObjects:object, view, nil];

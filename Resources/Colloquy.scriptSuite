@@ -15,7 +15,7 @@
 				<key>awayMessage</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>awmA</string>
+					<string>aStA</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
@@ -47,20 +47,11 @@
 				<key>idleTime</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>idlA</string>
+					<string>iDlA</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Double&gt;</string>
-				</dict>
-				<key>isOnline</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>isoA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
 				<key>lastName</key>
 				<dict>
@@ -179,7 +170,7 @@
 				<key>transcript</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>trnA</string>
+					<string>traM</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
@@ -197,6 +188,15 @@
 			<string>chmM</string>
 			<key>Attributes</key>
 			<dict>
+				<key>buddy</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>budM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVBuddy</string>
+				</dict>
 				<key>nickname</key>
 				<dict>
 					<key>AppleEventCode</key>
@@ -206,14 +206,14 @@
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
-				<key>realName</key>
+				<key>room</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>rNaA</string>
+					<string>crmM</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>Colloquy.JVChatRoomPanel</string>
 				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>
@@ -224,16 +224,16 @@
 					<key>Type</key>
 					<string>NSNumber</string>
 				</dict>
-				<key>username</key>
+				<key>user</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>uNaA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
+					<string>chUs</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>ChatCore.MVChatUser</string>
 				</dict>
 			</dict>
+			<key>DefaultSubcontainerAttribute</key>
+			<string>user</string>
 			<key>Superclass</key>
 			<string>Colloquy.ListItem</string>
 		</dict>
@@ -243,6 +243,20 @@
 			<string>crmM</string>
 			<key>Superclass</key>
 			<string>Colloquy.JVDirectChatPanel</string>
+			<key>ToManyRelationships</key>
+			<dict>
+				<key>chatMembers</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>chmM</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatRoomMember</string>
+				</dict>
+			</dict>
 		</dict>
 		<key>JVChatTranscript</key>
 		<dict>
@@ -267,6 +281,20 @@
 		<dict>
 			<key>AppleEventCode</key>
 			<string>ctrM</string>
+			<key>Attributes</key>
+			<dict>
+				<key>transcript</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>traM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatTranscript</string>
+				</dict>
+			</dict>
+			<key>DefaultSubcontainerAttribute</key>
+			<string>transcript</string>
 			<key>Superclass</key>
 			<string>Colloquy.Panel</string>
 		</dict>
@@ -274,8 +302,79 @@
 		<dict>
 			<key>AppleEventCode</key>
 			<string>dchM</string>
+			<key>Attributes</key>
+			<dict>
+				<key>cantSendMessages</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>csmA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>currentMessage</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>cRmA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVChatMessage</string>
+				</dict>
+				<key>isActive</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>iacA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>newHighlightMessage</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>nhmA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>newMessage</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>nemA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>scriptTypedEncoding</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>eNcA</string>
+					<key>Type</key>
+					<string>NSNumber&lt;ChatCore.Encoding&gt;</string>
+				</dict>
+				<key>target</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>trgA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSObject</string>
+				</dict>
+			</dict>
 			<key>Superclass</key>
 			<string>Colloquy.JVChatTranscriptPanel</string>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>Colloquy.addEventMessage</key>
+				<string>addEventMessageScriptCommand</string>
+				<key>Colloquy.sendMessage</key>
+				<string>sendMessageScriptCommand:</string>
+			</dict>
 		</dict>
 		<key>ListItem</key>
 		<dict>
@@ -292,10 +391,46 @@
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
+				<key>isEnabled</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>enBA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>numberOfChildren</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>cDcA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber</string>
+				</dict>
+				<key>parent</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>pArA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.ListItem</string>
+				</dict>
 				<key>title</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>pnam</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>toolTip</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>toLA</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
@@ -313,7 +448,7 @@
 			<string>NSCoreSuite.NSApplication</string>
 			<key>ToManyRelationships</key>
 			<dict>
-				<key>buddies</key>
+				<key>chatBuddies</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>budM</string>
@@ -587,6 +722,91 @@
 			<string>Colloquy.ListItem</string>
 		</dict>
 	</dict>
+	<key>Commands</key>
+	<dict>
+		<key>addEventMessage</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>aEvX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>attributes</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>aEv3</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSDictionary</string>
+				</dict>
+				<key>message</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>aEv1</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>aEv2</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSObject</string>
+			</dict>
+		</dict>
+		<key>sendMessage</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>coRC</string>
+			<key>AppleEventCode</key>
+			<string>sNdX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>action</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sNd2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>echo</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sNd3</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>message</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sNd1</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSObject</string>
+			</dict>
+		</dict>
+	</dict>
 	<key>Enumerations</key>
 	<dict>
 		<key>BuddyStatus</key>
@@ -622,6 +842,17 @@
 	</dict>
 	<key>Name</key>
 	<string>Colloquy</string>
+	<key>Synonyms</key>
+	<dict>
+		<key>catr</key>
+		<string>NSTextStorage</string>
+		<key>cha </key>
+		<string>NSTextStorage</string>
+		<key>cpar</key>
+		<string>NSTextStorage</string>
+		<key>cwor</key>
+		<string>NSTextStorage</string>
+	</dict>
 	<key>UsedFeatures</key>
 	<array>
 		<string>UnnamedArguments</string>

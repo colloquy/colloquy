@@ -175,32 +175,32 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 			}
 
 			skipTag = YES;
-		} else */ if( ! strcmp( node -> name, "i" ) ) {
+		} else */ if( ! strcmp( (char *) node -> name, "i" ) ) {
 			setItalicOrObliqueFont( newAttributes );
 			skipTag = YES;
 		}
 		break;
 	case 'u':
-		if( ! strcmp( node -> name, "u" ) ) {
+		if( ! strcmp( (char *) node -> name, "u" ) ) {
 			[newAttributes setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
 			skipTag = YES;
 		}
 		break;
 	case 'a':
-		if( ! strcmp( node -> name, "a" ) ) {
-			xmlChar *link = xmlGetProp( node, "href" );
+		if( ! strcmp( (char *) node -> name, "a" ) ) {
+			xmlChar *link = xmlGetProp( node, (xmlChar *) "href" );
 			if( link ) {
-				[newAttributes setObject:[NSString stringWithUTF8String:link] forKey:NSLinkAttributeName];
+				[newAttributes setObject:[NSString stringWithUTF8String:(char *) link] forKey:NSLinkAttributeName];
 				xmlFree( link );
 				skipTag = YES;
 			}
 		}
 		break;
 	case 'f':
-		if( ! strcmp( node -> name, "font" ) ) {
-			xmlChar *attr = xmlGetProp( node, "color" );
+		if( ! strcmp( (char *) node -> name, "font" ) ) {
+			xmlChar *attr = xmlGetProp( node, (xmlChar *) "color" );
 			if( attr ) {
-				NSColor *color = [NSColor colorWithHTMLAttributeValue:[NSString stringWithUTF8String:attr]];
+				NSColor *color = [NSColor colorWithHTMLAttributeValue:[NSString stringWithUTF8String:(char *) attr]];
 				if( color ) [newAttributes setObject:color forKey:NSForegroundColorAttributeName];
 				xmlFree( attr );
 				skipTag = YES;
@@ -208,9 +208,9 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		}
 		break;
 	case 'b':
-		if( ! strcmp( node -> name, "br" ) ) {
+		if( ! strcmp( (char *) node -> name, "br" ) ) {
 			return [[[NSAttributedString alloc] initWithString:@"\n" attributes:newAttributes] autorelease]; // known to have no content, return now
-		} else if( ! strcmp( node -> name, "b" ) ) {
+		} else if( ! strcmp( (char *) node -> name, "b" ) ) {
 			NSFont *font = [[NSFontManager sharedFontManager] convertFont:[newAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask];
 			if( font ) {
 				[newAttributes setObject:font forKey:NSFontAttributeName];
@@ -219,7 +219,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		}
 		break;
 	case 'p':
-		if( ! strcmp( node -> name, "p" ) ) {
+		if( ! strcmp( (char *) node -> name, "p" ) ) {
 			NSAttributedString *newStr = [[NSAttributedString alloc] initWithString:@"\n\n" attributes:newAttributes];
 			if( newStr ) {
 				[ret appendAttributedString:newStr];
@@ -229,10 +229,10 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	}
 
 	// Parse and inline CSS styles attached to this node, do this last incase the CSS overrides any of the previous attributes
-	xmlChar *style = xmlGetProp( node, "style" );
+	xmlChar *style = xmlGetProp( node, (xmlChar *) "style" );
 	NSString *unhandledStyles = nil;
 	if( style ) {
-		unhandledStyles = parseCSSStyleAttribute( style, newAttributes );
+		unhandledStyles = parseCSSStyleAttribute( (char *) style, newAttributes );
 		xmlFree( style );
 	}
 
@@ -246,7 +246,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 
 			xmlAttrPtr prop = NULL;
 			for( prop = node -> properties; prop; prop = prop -> next ) {
-				if( ! strcmp( prop -> name, "style" ) ) {
+				if( ! strcmp( (char *) prop -> name, "style" ) ) {
 					if( [unhandledStyles length] ) {
 						[front appendFormat:@" %s=\"%@\"", prop -> name, unhandledStyles];
 						count++;
@@ -262,7 +262,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 				}
 			}
 
-			if( ! strcmp( node -> name, "span" ) && ! count )
+			if( ! strcmp( (char *) node -> name, "span" ) && ! count )
 				skipTag = YES;
 
 			[front appendString:@">"];
@@ -279,7 +279,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	}
 
 	if( content ) {
-		NSAttributedString *new = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:content] attributes:newAttributes];
+		NSAttributedString *new = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(char *) content] attributes:newAttributes];
 		[ret appendAttributedString:new];
 		[new release];
 	}

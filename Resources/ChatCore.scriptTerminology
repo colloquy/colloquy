@@ -50,6 +50,13 @@
 					<key>Name</key>
 					<string>away message</string>
 				</dict>
+				<key>scriptTypedEncoding</key>
+				<dict>
+					<key>Description</key>
+					<string>The default connection encoding that is used when sending raw messages or chat messages without a specific encoding.</string>
+					<key>Name</key>
+					<string>encoding</string>
+				</dict>
 				<key>server</key>
 				<dict>
 					<key>Description</key>
@@ -153,7 +160,7 @@
 					<key>Name</key>
 					<string>encoding</string>
 				</dict>
-				<key>uniqueIdentifier</key>
+				<key>scriptUniqueIdentifier</key>
 				<dict>
 					<key>Description</key>
 					<string>The unique identifier of the room.</string>
@@ -235,6 +242,13 @@
 					<key>Name</key>
 					<string>away message</string>
 				</dict>
+				<key>scriptUniqueIdentifier</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the room.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
 				<key>serverAddress</key>
 				<dict>
 					<key>Description</key>
@@ -248,13 +262,6 @@
 					<string>The current status of the user. This isn't a live value and requires a "refresh information"</string>
 					<key>Name</key>
 					<string>user status</string>
-				</dict>
-				<key>uniqueIdentifier</key>
-				<dict>
-					<key>Description</key>
-					<string>The unique identifier of the room.</string>
-					<key>Name</key>
-					<string>id</string>
 				</dict>
 				<key>username</key>
 				<dict>
@@ -318,18 +325,6 @@
 			<dict>
 				<key>Description</key>
 				<string>Room to join. (Can also be a list of rooms.)</string>
-			</dict>
-		</dict>
-		<key>ReturnFromAwayStatus</key>
-		<dict>
-			<key>Description</key>
-			<string>Removes any away message.</string>
-			<key>Name</key>
-			<string>return from away status</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Connection to clear away status for.</string>
 			</dict>
 		</dict>
 		<key>SendChatMessage</key>

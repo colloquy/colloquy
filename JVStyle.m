@@ -202,7 +202,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 - (NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters {
 	@synchronized( ( [element transcript] ? (id) [element transcript] : (id) element ) ) {
-		xmlDoc *doc = xmlNewDoc( "1.0" );
+		xmlDoc *doc = xmlNewDoc( (xmlChar *) "1.0" );
 		xmlNode *root = xmlDocCopyNode( (xmlNode *) [element node], doc, 1 );
 		xmlDocSetRootElement( doc, root );
 
@@ -226,7 +226,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		// Styles depend on being passed all the messages in the same envelope.
 		// This lets them know it is a consecutive message.
 
-		xmlDoc *doc = xmlNewDoc( "1.0" );
+		xmlDoc *doc = xmlNewDoc( (xmlChar *) "1.0" );
 		xmlNode *envelope = xmlDocCopyNode( ((xmlNode *) [message node]) -> parent, doc, 1 );
 		xmlDocSetRootElement( doc, envelope );
 
@@ -280,7 +280,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		}
 
 		if( result ) {
-			ret = [NSString stringWithUTF8String:result];
+			ret = [NSString stringWithUTF8String:(char *) result];
 			free( result );
 		}
 

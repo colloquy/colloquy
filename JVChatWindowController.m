@@ -881,6 +881,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 @implementation NSWindow (JVChatWindowControllerScripting)
+- (id <JVChatViewController>) activeChatViewController {
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return nil;
+	return [[self windowController] activeChatViewController];
+}
+
+- (id <JVChatListItem>) selectedListItem {
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return nil;
+	return [[self windowController] selectedListItem];
+}
+
+#pragma mark -
+
 - (NSArray *) views {
 	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return nil;
 	return [[self windowController] allChatViewControllers];
@@ -913,23 +925,28 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) addInViews:(id <JVChatViewController>) view {
-	[self addChatViewController:view];
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+	[[self windowController] addChatViewController:view];
 }
 
 - (void) insertInViews:(id <JVChatViewController>) view {
-	[self addChatViewController:view];
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+	[[self windowController] addChatViewController:view];
 }
 
 - (void) insertInViews:(id <JVChatViewController>) view atIndex:(int) index {
-	[self insertChatViewController:view atIndex:index];
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+	[[self windowController] insertChatViewController:view atIndex:index];
 }
 
 - (void) removeFromViewsAtIndex:(unsigned) index {
-	[self removeChatViewControllerAtIndex:index];
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+	[[self windowController] removeChatViewControllerAtIndex:index];
 }
 
 - (void) replaceInViews:(id <JVChatViewController>) view atIndex:(unsigned) index {
-	[self replaceChatViewControllerAtIndex:index withController:view];
+	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
+	[[self windowController] replaceChatViewControllerAtIndex:index withController:view];
 }
 
 #pragma mark -
@@ -967,7 +984,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) addInChatViews:(id <JVChatViewController>) view withClass:(Class) class {
 	unsigned int index = [[self views] indexOfObject:[[self chatViewsWithClass:class] lastObject]];
-	[self insertChatViewController:view atIndex:( index + 1 )];
+	[self insertInViews:view atIndex:( index + 1 )];
 }
 
 - (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index withClass:(Class) class {
@@ -975,18 +992,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self addInChatViews:view withClass:class];
 	} else {
 		unsigned int indx = [[self views] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
-		[self insertChatViewController:view atIndex:indx];
+		[self insertInViews:view atIndex:indx];
 	}
 }
 
 - (void) removeFromChatViewsAtIndex:(unsigned) index withClass:(Class) class {
 	unsigned int indx = [[self views] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
-	[self removeChatViewControllerAtIndex:indx];
+	[self removeFromViewsAtIndex:indx];
 }
 
 - (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index withClass:(Class) class {
 	unsigned int indx = [[self views] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
-	[self replaceChatViewControllerAtIndex:indx withController:view];
+	[self replaceInViews:view atIndex:indx];
 }
 
 #pragma mark -

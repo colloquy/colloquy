@@ -43,13 +43,6 @@
 					<key>Name</key>
 					<string>idle time</string>
 				</dict>
-				<key>isOnline</key>
-				<dict>
-					<key>Description</key>
-					<string>Weither the active nickname is online.</string>
-					<key>Name</key>
-					<string>online</string>
-				</dict>
 				<key>lastName</key>
 				<dict>
 					<key>Description</key>
@@ -181,19 +174,26 @@
 		<dict>
 			<key>Attributes</key>
 			<dict>
+				<key>buddy</key>
+				<dict>
+					<key>Description</key>
+					<string>The buddy (if any) this member represents.</string>
+					<key>Name</key>
+					<string>buddy</string>
+				</dict>
 				<key>nickname</key>
 				<dict>
 					<key>Description</key>
-					<string>Member'</string>
+					<string>Member's nickname.</string>
 					<key>Name</key>
 					<string>name</string>
 				</dict>
-				<key>realName</key>
+				<key>room</key>
 				<dict>
 					<key>Description</key>
-					<string>The user'</string>
+					<string>The chat room panel this member is part of.</string>
 					<key>Name</key>
-					<string>real name</string>
+					<string>chat room panel</string>
 				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>
@@ -202,12 +202,12 @@
 					<key>Name</key>
 					<string>id</string>
 				</dict>
-				<key>username</key>
+				<key>user</key>
 				<dict>
 					<key>Description</key>
-					<string>The user'</string>
+					<string>The chat user for this member. (Default subcontainer.)</string>
 					<key>Name</key>
-					<string>username</string>
+					<string>chat user</string>
 				</dict>
 			</dict>
 			<key>Description</key>
@@ -237,6 +237,16 @@
 		</dict>
 		<key>JVChatTranscriptPanel</key>
 		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>transcript</key>
+				<dict>
+					<key>Description</key>
+					<string>The transcript shown in the panel.</string>
+					<key>Name</key>
+					<string>transcript</string>
+				</dict>
+			</dict>
 			<key>Description</key>
 			<string>A log panel of some previous conversation.</string>
 			<key>Name</key>
@@ -246,6 +256,58 @@
 		</dict>
 		<key>JVDirectChatPanel</key>
 		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>cantSendMessages</key>
+				<dict>
+					<key>Description</key>
+					<string>Can send messages?</string>
+					<key>Name</key>
+					<string>unavailable</string>
+				</dict>
+				<key>currentMessage</key>
+				<dict>
+					<key>Description</key>
+					<string>The current emssage that is being passed to plugins to process.</string>
+					<key>Name</key>
+					<string>current message</string>
+				</dict>
+				<key>isActive</key>
+				<dict>
+					<key>Description</key>
+					<string>Is the active (visible) view?</string>
+					<key>Name</key>
+					<string>active</string>
+				</dict>
+				<key>newHighlightMessage</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the chat has had a recent highlighted message that hasn't been seen yet.</string>
+					<key>Name</key>
+					<string>new highlight message</string>
+				</dict>
+				<key>newMessage</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the chat has had a recent message that hasn't been seen yet.</string>
+					<key>Name</key>
+					<string>new message</string>
+				</dict>
+				<key>scriptTypedEncoding</key>
+				<dict>
+					<key>Description</key>
+					<string>The encoding to use when reading and sending messages.</string>
+					<key>Name</key>
+					<string>encoding</string>
+				</dict>
+				<key>target</key>
+				<dict>
+					<key>Description</key>
+					<string>The user or room that we engaged in conversation with.</string>
+					<key>Name</key>
+					<string>target</string>
+				</dict>
+			</dict>
 			<key>Description</key>
 			<string>Direct (private) chat panel with another user.</string>
 			<key>Name</key>
@@ -260,9 +322,30 @@
 				<key>information</key>
 				<dict>
 					<key>Description</key>
-					<string>Sub-title information to show hwen list has room.</string>
+					<string>Subtitle information to show when list has space.</string>
 					<key>Name</key>
 					<string>subtitle</string>
+				</dict>
+				<key>isEnabled</key>
+				<dict>
+					<key>Description</key>
+					<string>Is the list item enabled?</string>
+					<key>Name</key>
+					<string>enabled</string>
+				</dict>
+				<key>numberOfChildren</key>
+				<dict>
+					<key>Description</key>
+					<string>The number of children this item has under it.</string>
+					<key>Name</key>
+					<string>child count</string>
+				</dict>
+				<key>parent</key>
+				<dict>
+					<key>Description</key>
+					<string>This list item's parent (if any).</string>
+					<key>Name</key>
+					<string>parent</string>
 				</dict>
 				<key>title</key>
 				<dict>
@@ -270,6 +353,13 @@
 					<string>Title to show in the list.</string>
 					<key>Name</key>
 					<string>name</string>
+				</dict>
+				<key>toolTip</key>
+				<dict>
+					<key>Description</key>
+					<string>The tooltip for the listem item.</string>
+					<key>Name</key>
+					<string>tooltip</string>
 				</dict>
 			</dict>
 			<key>Description</key>
@@ -396,7 +486,7 @@
 				<key>identifier</key>
 				<dict>
 					<key>Description</key>
-					<string>Consicse description of the chat view.</string>
+					<string>Consicse description of the chat view and what it represents.</string>
 					<key>Name</key>
 					<string>description</string>
 				</dict>
@@ -421,6 +511,81 @@
 			<string>panel</string>
 			<key>PluralName</key>
 			<string>panels</string>
+		</dict>
+	</dict>
+	<key>Commands</key>
+	<dict>
+		<key>addEventMessage</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>attributes</key>
+				<dict>
+					<key>Description</key>
+					<string>Custom information to be stored with this event message. Can be used by chat styles.</string>
+					<key>Name</key>
+					<string>and attributes</string>
+				</dict>
+				<key>message</key>
+				<dict>
+					<key>Description</key>
+					<string>Message to add. Can include HTML formatting.</string>
+					<key>Name</key>
+					<string>message</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>Description</key>
+					<string>A name for this type of event message.</string>
+					<key>Name</key>
+					<string>with name</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Add an event message a chat room panel or direct chat panel.</string>
+			<key>Name</key>
+			<string>add event</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Chat room panel or direct chat panel to affect.</string>
+			</dict>
+		</dict>
+		<key>sendMessage</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>action</key>
+				<dict>
+					<key>Description</key>
+					<string>Send as an action?</string>
+					<key>Name</key>
+					<string>action tense</string>
+				</dict>
+				<key>echo</key>
+				<dict>
+					<key>Description</key>
+					<string>Show message in conversation? (Defaults on.)</string>
+					<key>Name</key>
+					<string>local echo</string>
+				</dict>
+				<key>message</key>
+				<dict>
+					<key>Description</key>
+					<string>Message to send. Can include HTML formatting.</string>
+					<key>Name</key>
+					<string>message</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Send message to chat room or user that is represented by a panel.</string>
+			<key>Name</key>
+			<string>send</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Chat room panel or direct chat panel to send through.</string>
+			</dict>
 		</dict>
 	</dict>
 	<key>Description</key>
@@ -471,5 +636,44 @@
 	</dict>
 	<key>Name</key>
 	<string>Colloquy Suite</string>
+	<key>Synonyms</key>
+	<dict>
+		<key>catr</key>
+		<dict>
+			<key>Description</key>
+			<string>This subdivides the text into chunks that all have the same attributes.</string>
+			<key>Name</key>
+			<string>attribute run</string>
+			<key>PluralName</key>
+			<string>attribute runs</string>
+		</dict>
+		<key>cha </key>
+		<dict>
+			<key>Description</key>
+			<string>This subdivides the text into characters.</string>
+			<key>Name</key>
+			<string>character</string>
+			<key>PluralName</key>
+			<string>characters</string>
+		</dict>
+		<key>cpar</key>
+		<dict>
+			<key>Description</key>
+			<string>This subdivides the text into paragraphs.</string>
+			<key>Name</key>
+			<string>paragraph</string>
+			<key>PluralName</key>
+			<string>paragraphs</string>
+		</dict>
+		<key>cwor</key>
+		<dict>
+			<key>Description</key>
+			<string>This subdivides the text into words.</string>
+			<key>Name</key>
+			<string>word</string>
+			<key>PluralName</key>
+			<string>words</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

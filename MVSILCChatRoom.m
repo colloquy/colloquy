@@ -71,7 +71,7 @@
 		return;
 	}
 
-	silc_client_send_channel_message( [[self connection] _silcClient], [[self connection] _silcConn], channel, NULL, flags, (char *) msg, strlen( msg ), false );
+	silc_client_send_channel_message( [[self connection] _silcClient], [[self connection] _silcConn], channel, NULL, flags, (unsigned char *) msg, strlen( msg ), false );
 
 	[[[self connection] _silcClientLock] unlock];
 }

@@ -9,6 +9,7 @@
 @end
 
 @interface JVChatTranscript : NSObject {
+	NSScriptObjectSpecifier *_objectSpecifier;
 	void *_xmlLog; /* xmlDoc * */
 	NSMutableArray *_messages;
 	NSString *_filePath;
@@ -84,4 +85,6 @@
 
 - (BOOL) writeToFile:(NSString *) path atomically:(BOOL) useAuxiliaryFile;
 - (BOOL) writeToURL:(NSURL *) url atomically:(BOOL) atomically;
+
+- (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier;
 @end
