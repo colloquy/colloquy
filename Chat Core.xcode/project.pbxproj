@@ -167,15 +167,6 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
-		1C0D8866067D1E7100E851AC = {
-			fileRef = 1C0D8864067D1E7100E851AC;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
 		1C0D8867067D1E7100E851AC = {
 			fileRef = 1C0D8865067D1E7100E851AC;
 			isa = PBXBuildFile;
@@ -239,15 +230,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C3D55BB05A4CBBE00F25F5E = {
-			fileRef = 1C3D55B905A4CBBE00F25F5E;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
 		1C3D55BC05A4CBBE00F25F5E = {
 			fileRef = 1C3D55BA05A4CBBE00F25F5E;
 			isa = PBXBuildFile;
@@ -270,15 +252,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C3D55C105A4DC1E00F25F5E = {
-			fileRef = 1C3D55BF05A4DC1E00F25F5E;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
 		1C3D55C205A4DC1E00F25F5E = {
 			fileRef = 1C3D55C005A4DC1E00F25F5E;
 			isa = PBXBuildFile;
@@ -298,6 +271,8 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ChatCore.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = DISABLE_TOC_PROTOCOL;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -329,30 +304,13 @@
 		1C51B46F052DE0CB00BB459B = {
 			buildActionMask = 2147483647;
 			files = (
-				1C51B479052DE0CB00BB459B,
-				1CD020B405759347000F93B4,
-				1CD020BE057593A9000F93B4,
 				1C1C5651059EA8C9002FBEFB,
-				1C3D55BB05A4CBBE00F25F5E,
-				1C3D55C105A4DC1E00F25F5E,
 				1C9CF4FE0615091400330D8D,
-				1C9CF5000615091600330D8D,
 				1C943AAB063C260800618CD9,
-				1C7B83CB0668D765004F1EFE,
-				1C0D8866067D1E7100E851AC,
-				1CF4E5110698E9E900986498,
+				1CF6513006EA23300073DEA8,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C51B479052DE0CB00BB459B = {
-			fileRef = F5E98623018B412B01EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
 		};
 		1C51B47A052DE0CB00BB459B = {
 			buildActionMask = 2147483647;
@@ -464,15 +422,6 @@
 			path = NSNotificationAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		1C7B83CB0668D765004F1EFE = {
-			fileRef = 1C7B83C90668D765004F1EFE;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
 		};
 		1C7B83CC0668D765004F1EFE = {
 			fileRef = 1C7B83CA0668D765004F1EFE;
@@ -1286,15 +1235,6 @@
 			fileRef = 1C2EF7EC0427A40B00000102;
 			isa = PBXBuildFile;
 			settings = {
-			};
-		};
-		1C9CF5000615091600330D8D = {
-			fileRef = F52D043101873FC401EE70DE;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
 			};
 		};
 		1C9CF5010615091700330D8D = {
@@ -3140,15 +3080,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1CD020B405759347000F93B4 = {
-			fileRef = 1CD020B205759347000F93B4;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
 		1CD020B505759347000F93B4 = {
 			fileRef = 1CD020B305759347000F93B4;
 			isa = PBXBuildFile;
@@ -3170,15 +3101,6 @@
 			path = NSColorAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		1CD020BE057593A9000F93B4 = {
-			fileRef = 1CD020BC057593A9000F93B4;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
 		};
 		1CD020C0057593F9000F93B4 = {
 			fileRef = 1CD020BD057593A9000F93B4;
@@ -3202,19 +3124,27 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1CF4E5110698E9E900986498 = {
-			fileRef = 1CF4E50F0698E9E900986498;
+		1CF4E5120698E9E900986498 = {
+			fileRef = 1CF4E5100698E9E900986498;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF6512A06EA22C40073DEA8 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ChatCore.pch;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF6513006EA23300073DEA8 = {
+			fileRef = F52D043101873FC401EE70DE;
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
 					Public,
 				);
-			};
-		};
-		1CF4E5120698E9E900986498 = {
-			fileRef = 1CF4E5100698E9E900986498;
-			isa = PBXBuildFile;
-			settings = {
 			};
 		};
 //1C0
@@ -3232,6 +3162,7 @@
 				1CB373EA060E47B300F6A81F,
 				1CB37361060E470600F6A81F,
 				1C9CF42B061507CE00330D8D,
+				1CF6512A06EA22C40073DEA8,
 				F52D043001873FC401EE70DE,
 				F52D043101873FC401EE70DE,
 				1C943AAA063C260800618CD9,

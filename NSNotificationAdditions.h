@@ -1,6 +1,3 @@
-#import <Foundation/NSNotification.h>
-#import <Foundation/NSNotificationQueue.h>
-
 @interface NSNotificationCenter (NSNotificationAdditions)
 - (void) postNotificationOnMainThread:(NSNotification *) notification;
 @end

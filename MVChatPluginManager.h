@@ -1,11 +1,3 @@
-#import <Foundation/NSObject.h>
-#import <Foundation/NSMethodSignature.h>
-
-@class NSMutableDictionary;
-@class NSArray;
-@class NSSet;
-@class NSEnumerator;
-
 @interface MVChatPluginManager : NSObject {
 	@private
 	NSMutableDictionary *_plugins;

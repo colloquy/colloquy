@@ -1,4 +1,3 @@
-#import <Foundation/NSObject.h>
 #import <ChatCore/MVChatPluginManager.h>
 
 @interface MVChatScriptPlugin : NSObject <MVChatPlugin> {
