@@ -118,7 +118,7 @@ static JVChatController *sharedInstance = nil;
 
 	enumerator = [_chatControllers objectEnumerator];
 	while( ( ret = [enumerator nextObject] ) )
-		if( [ret isMemberOfClass:[JVChatRoom class]] && [ret connection] == connection && [[(JVChatRoom *)ret target] isEqualToString:room] )
+		if( [ret isMemberOfClass:[JVChatRoom class]] && [ret connection] == connection && [[(JVChatRoom *)ret target] caseInsensitiveCompare:room] == NSOrderedSame )
 			break;
 
 	if( ! ret && ! exists ) {
