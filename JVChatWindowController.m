@@ -80,12 +80,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 	_currentlyDragging = NO;
 
-	[activityToolbarButton retain];
-	[activityToolbarButton removeFromSuperview];
-	[activityToolbarButton setDrawsArrow:YES];
+//	[activityToolbarButton retain];
+//	[activityToolbarButton removeFromSuperview];
+//	[activityToolbarButton setDrawsArrow:YES];
 
 	[[self window] setFrameUsingName:@"Chat Window"];
 	[[self window] setFrameAutosaveName:@"Chat Window"];
+
+	NSSize drawerSize = NSSizeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatWindowDrawerSize"] );
+	if( drawerSize.width ) [viewsDrawer setContentSize:drawerSize];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] )
 		[viewsDrawer open:nil];
@@ -502,6 +505,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 @implementation JVChatWindowController (JVChatWindowControllerDelegate)
+- (NSSize) drawerWillResizeContents:(NSDrawer *) drawer toSize:(NSSize) contentSize {
+	[[NSUserDefaults standardUserDefaults] setObject:NSStringFromSize( contentSize ) forKey:@"JVChatWindowDrawerSize"];
+	return contentSize;
+}
+
+#pragma mark -
+
 - (void) windowWillClose:(NSNotification *) notification {
     if( ! [[[[[NSApplication sharedApplication] keyWindow] windowController] className] isEqual:[self className]] )
 		[self _resignMenuCommands];
