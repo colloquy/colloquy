@@ -6,6 +6,7 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
+#import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <libxml/xinclude.h>
 
@@ -538,7 +539,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
 	NSEnumerator *enumerator = nil, *kenumerator = nil;
-	NSString *key = nil, *value = nil;
+	NSMutableString *key = nil, *value = nil;
 	NSMutableString *messageString = nil;
 	xmlDocPtr doc = NULL, msgDoc = NULL;
 	xmlNodePtr root = NULL, child = NULL;
@@ -565,7 +566,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		}
 	}
 
-	NSMutableString *valueMute = nil;
 	kenumerator = [attributes keyEnumerator];
 	enumerator = [attributes objectEnumerator];
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
@@ -574,14 +574,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		if( [value isMemberOfClass:[NSNull class]] ) {
 			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
 		} else {
-			valueMute = [[value mutableCopy] autorelease];
-			[valueMute replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [valueMute length] )];
-			[valueMute replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, [valueMute length] )];
-			[valueMute replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, [valueMute length] )];
-			[valueMute replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange( 0, [valueMute length] )];
-			[valueMute replaceOccurrencesOfString:@"'" withString:@"&apos;" options:NSLiteralSearch range:NSMakeRange( 0, [valueMute length] )];
-
-			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, valueMute, key] UTF8String];
+			value = [[value mutableCopy] autorelease];
+			[value encodeXMLSpecialCharactersAsEntities];
+			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
 		}
 
 		if( msgStr ) {
@@ -762,15 +757,17 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action {
-	char *msg = NULL;
+	NSMutableAttributedString *encodedMsg = [[message mutableCopy] autorelease];
+	[[encodedMsg mutableString] encodeXMLSpecialCharactersAsEntities];
+
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"]], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"]], @"NSHTMLIgnoreFontTraits", nil];
-	NSMutableData *msgData = [[[message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES] mutableCopy] autorelease];
+	NSMutableData *msgData = [[[encodedMsg HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES] mutableCopy] autorelease];
 	[msgData appendBytes:"\0" length:1];
 
-	msg = irc_html_to_irc( (const char * const) [msgData bytes] );
+	char *msg = irc_html_to_irc( (const char * const) [msgData bytes] );
 	msg = irc_irc_to_html( msg );
 
-	[self addMessageToDisplay:[[[NSData dataWithBytes:msg length:strlen( msg )] retain] autorelease] fromUser:[[self connection] nickname] asAction:action];
+	[self addMessageToDisplay:[NSData dataWithBytes:msg length:strlen( msg )] fromUser:[[self connection] nickname] asAction:action];
 }
 
 #pragma mark -
@@ -792,11 +789,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	if( [sender isKindOfClass:[NSNumber class]] && [sender boolValue] ) action = YES;
 
-	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
-	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
-	[[[send textStorage] mutableString] replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
-	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
-	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"'" withString:@"&apos;" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
 	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
 
 	while( [[send textStorage] length] ) {
@@ -1278,9 +1270,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		srcEnumerator = [obj objectEnumerator];
 		while( ( str = [srcEnumerator nextObject] ) ) {
 			str = [[str mutableCopy] autorelease];
-			[str replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [str length] )];
-			[str replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, [str length] )];
-			[str replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, [str length] )];
+			[str encodeXMLSpecialCharactersAsEntities];
 			moreReplacements = YES;
 			while( moreReplacements ) {
 				NSRange range = [string rangeOfString:str];
@@ -1430,14 +1420,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 @implementation JVDirectChat (JVDirectChatScripting)
 - (void) sendMessageScriptCommand:(NSScriptCommand *) command {
 	NSString *message = [[command evaluatedArguments] objectForKey:@"message"];
-	NSMutableAttributedString *attributeMsg = [NSMutableAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
-	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
-	BOOL localEcho = ( [[command evaluatedArguments] objectForKey:@"echo"] ? [[[command evaluatedArguments] objectForKey:@"echo"] boolValue] : YES );
 
-	if( ! [[attributeMsg string] length] ) {
+	if( ! [message length] ) {
 		[NSException raise:NSInvalidArgumentException format:@"Message can't be blank"];
 		return;
 	}
+
+	NSMutableAttributedString *attributeMsg = [NSMutableAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
+	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
+	BOOL localEcho = ( [[command evaluatedArguments] objectForKey:@"echo"] ? [[[command evaluatedArguments] objectForKey:@"echo"] boolValue] : YES );
 
 	[self sendAttributedMessage:attributeMsg asAction:action];
 	if( localEcho ) [self echoSentMessageToDisplay:attributeMsg asAction:action];
