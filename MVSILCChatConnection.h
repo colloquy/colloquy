@@ -14,7 +14,6 @@
 	unsigned short _silcPort;
 
 	NSString *_silcPassword;
-	NSData *_detachInfo;
 
 	NSString *_certificatePassword;
 	BOOL _waitForCertificatePassword;

@@ -34,6 +34,12 @@ NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeRe
 
 BOOL MVChatApplicationQuitting = NO;
 
+@interface MVChatRoom (MVChatRoomPrivate)
+- (void) _setDateParted:(NSDate *) date;
+@end
+
+#pragma mark -
+
 @implementation MVChatConnection
 + (BOOL) supportsURLScheme:(NSString *) scheme {
 	if( ! scheme ) return NO;
@@ -55,6 +61,7 @@ BOOL MVChatApplicationQuitting = NO;
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
 		_roomsCache = [[NSMutableDictionary dictionaryWithCapacity:250] retain];
+		_persistentInformation = [[NSMutableDictionary dictionaryWithCapacity:2] retain];
 		_joinedRooms = [[NSMutableSet setWithCapacity:5] retain];
 		_localUser = nil;
 
@@ -121,6 +128,7 @@ BOOL MVChatApplicationQuitting = NO;
 	[_localUser release];
 	[_lastConnectAttempt release];
 	[_awayMessage release];
+	[_persistentInformation release];
 
 	_npassword = nil;
 	_roomsCache = nil;
@@ -129,6 +137,7 @@ BOOL MVChatApplicationQuitting = NO;
 	_localUser = nil;
 	_lastConnectAttempt = nil;
 	_awayMessage = nil;
+	_persistentInformation = nil;
 
 	[super dealloc];
 }
@@ -245,7 +254,7 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (NSArray *) alternateNicknames {
-	return [[_alternateNicks retain] autorelease];
+	return [NSArray arrayWithArray:_alternateNicks];
 }
 
 - (NSString *) nextAlternateNickname {
@@ -398,6 +407,17 @@ BOOL MVChatApplicationQuitting = NO;
 - (NSString *) proxyPassword {
 // subclass this method, if needed
 	return nil;
+}
+
+#pragma mark -
+
+- (void) setPersistentInformation:(NSDictionary *) information {
+	if( [information count] ) [_persistentInformation setDictionary:information];
+	else [_persistentInformation removeAllObjects];
+}
+
+- (NSDictionary *) persistentInformation {
+	return [NSDictionary dictionaryWithDictionary:_persistentInformation];
 }
 
 #pragma mark -
@@ -659,6 +679,14 @@ BOOL MVChatApplicationQuitting = NO;
 - (void) _didDisconnect {
 	if( _status != MVChatConnectionSuspendedStatus && _status != MVChatConnectionServerDisconnectedStatus ) {
 		_status = MVChatConnectionDisconnectedStatus;
+	}
+
+	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
+	MVChatRoom *room = nil;
+
+	while( ( room = [enumerator nextObject] ) ) {
+		if( ! [room isJoined] ) continue;
+		[room _setDateParted:[NSDate date]];	
 	}
 
 	[_localUser release];

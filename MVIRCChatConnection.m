@@ -1109,14 +1109,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		return;
 	}
 
-	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-	MVChatRoom *room = nil;
-
-	while( ( room = [enumerator nextObject] ) ) {
-		if( ! [room isJoined] ) continue;
-		[room _setDateParted:[NSDate date]];	
-	}
-
 	if( [[reason string] length] ) {
 		const char *msg = [[self class] _flattenedIRCStringForMessage:reason withEncoding:[self encoding]];
 		[self sendRawMessage:[NSString stringWithFormat:@"QUIT :%s", msg] immediately:YES];

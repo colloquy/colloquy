@@ -58,6 +58,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSDate *_lastConnectAttempt;
 	NSTimer *_reconnectTimer;
 	NSAttributedString *_awayMessage;
+	NSMutableDictionary *_persistentInformation;
 
 	NSArray *_alternateNicks;
 	unsigned int _nextAltNickIndex;
@@ -135,6 +136,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) setSecure:(BOOL) ssl;
 - (BOOL) isSecure;
+
+- (void) setPersistentInformation:(NSDictionary *) information;
+- (NSDictionary *) persistentInformation;
 
 #pragma mark -
 

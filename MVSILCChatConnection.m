@@ -47,6 +47,12 @@ void silc_channel_get_clients_per_list_callback( SilcClient client, SilcClientCo
 }
 
 static void silc_say( SilcClient client, SilcClientConnection conn, SilcClientMessageType type, char *msg, ... ) {
+	MVSILCChatConnection *self = conn -> context;
+	if( msg ) {
+		NSString *msgString = [NSString stringWithUTF8String:msg];
+		NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];
+	}
 }
 
 static void silc_channel_message( SilcClient client, SilcClientConnection conn, SilcClientEntry sender, SilcChannelEntry channel, SilcMessagePayload payload, SilcChannelPrivateKey key, SilcMessageFlags flags, const unsigned char *message, SilcUInt32 message_len ) {
@@ -615,7 +621,9 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 	} else {
 		silc_client_close_connection( client, conn );
-		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
+		[[self _silcClientLock] unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:YES];
+		[[self _silcClientLock] lock]; // lock back up like nothing happened
 	}
 }
 
@@ -706,7 +714,6 @@ static SilcClientOperations silcClientOps = {
 		[self setUsername:NSUserName()];
 		[self setRealName:NSFullUserName()];
 
-		_detachInfo = nil;
 		_knownUsers = [[NSMutableDictionary dictionaryWithCapacity:200] retain];
 		_queuedCommands = [[NSMutableArray arrayWithCapacity:5] retain];
 		_sentCommands = [[NSMutableDictionary dictionaryWithCapacity:2] retain];
@@ -745,9 +752,6 @@ static SilcClientOperations silcClientOps = {
 
 	[_knownUsers release];
 	_knownUsers = nil;
-
-	[_detachInfo release];
-	_detachInfo = nil;
 
 	[super dealloc];
 }
@@ -801,10 +805,11 @@ static SilcClientOperations silcClientOps = {
 
 	BOOL errorOnConnect = NO;
 
+	NSData *detachInfo = [[self persistentInformation] objectForKey:@"detachData"];
 	SilcClientConnectionParams params;
 	memset( &params, 0, sizeof( params ) );
-	params.detach_data = ( [self _detachInfo] ? (unsigned char *)[[self _detachInfo] bytes] : NULL );
-	params.detach_data_len = ( [self _detachInfo] ? [[self _detachInfo] length] : 0 );
+	params.detach_data = ( detachInfo ? (unsigned char *)[detachInfo bytes] : NULL );
+	params.detach_data_len = ( detachInfo ? [detachInfo length] : 0 );
 
 	[_silcClientLock lock];
 	if( silc_client_connect_to_server( [self _silcClient], &params, [self serverPort], (char *) [[self server] UTF8String], self ) == -1 )
@@ -819,14 +824,6 @@ static SilcClientOperations silcClientOps = {
 	[self cancelPendingReconnectAttempts];
 
 	if( [self status] != MVChatConnectionConnectedStatus ) return;
-
-	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-	MVChatRoom *room = nil;
-
-	while( ( room = [enumerator nextObject] ) ) {
-		if( ! [room isJoined] ) continue;
-		[room _setDateParted:[NSDate date]];	
-	}
 
 	_sentQuitCommand = YES;
 
@@ -1195,13 +1192,11 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (NSData *) _detachInfo {
-	return [[_detachInfo retain] autorelease];
-}
-
 - (void) _setDetachInfo:(NSData *) info {
-	[_detachInfo autorelease];
-	_detachInfo = [info retain];
+	@synchronized( _persistentInformation ) {
+		if( info ) [_persistentInformation setObject:info forKey:@"detachData"];
+		else [_persistentInformation removeObjectForKey:@"detachData"];
+	}
 }
 
 #pragma mark -
@@ -1255,7 +1250,7 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) _didDisconnect {
-	if( ! _sentQuitCommand ) {
+	if( ! _sentQuitCommand || ! [[self persistentInformation] objectForKey:@"detachData"] ) {
 		if( _status != MVChatConnectionSuspendedStatus )
 			_status = MVChatConnectionServerDisconnectedStatus;
 		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
