@@ -313,6 +313,7 @@
 				1C9CF4FE0615091400330D8D,
 				1C9CF5000615091600330D8D,
 				1C943AAB063C260800618CD9,
+				1C7B83CB0668D765004F1EFE,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -348,6 +349,7 @@
 				1C9CF4FF0615091500330D8D,
 				1C9CF5010615091700330D8D,
 				1C943AAC063C260800618CD9,
+				1C7B83CC0668D765004F1EFE,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -425,6 +427,34 @@
 			settings = {
 			};
 		};
+		1C7B83C90668D765004F1EFE = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSNotificationAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7B83CA0668D765004F1EFE = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSNotificationAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7B83CB0668D765004F1EFE = {
+			fileRef = 1C7B83C90668D765004F1EFE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C7B83CC0668D765004F1EFE = {
+			fileRef = 1C7B83CA0668D765004F1EFE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C943AA9063C260800618CD9 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -445,6 +475,9 @@
 			fileRef = 1C943AA9063C260800618CD9;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		1C943AAC063C260800618CD9 = {
@@ -3207,6 +3240,8 @@
 				1CD020BC057593A9000F93B4,
 				1C3D55C005A4DC1E00F25F5E,
 				1C3D55BF05A4DC1E00F25F5E,
+				1C7B83CA0668D765004F1EFE,
+				1C7B83C90668D765004F1EFE,
 			);
 			isa = PBXGroup;
 			name = "Other Sources & Additions";

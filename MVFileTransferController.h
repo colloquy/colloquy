@@ -2,20 +2,7 @@
 #import <Foundation/NSDate.h>
 #import <AppKit/NSNibDeclarations.h>
 
-typedef enum {
-	MVUploadTransfer = 0x1,
-	MVDownloadTransfer = 0x2
-} MVTransferOperation;
-
-typedef enum {
-	MVTransferDone = 0x0,
-	MVTransferNormal = 0x1,
-	MVTransferHolding = 0x2,
-	MVTransferStopped = 0x3,
-	MVTransferError = 0x4
-} MVTransferStatus;
-
-NSString *MVPrettyFileSize( unsigned long size );
+NSString *MVPrettyFileSize( unsigned long long size );
 NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 
 @class NSPanel;
@@ -24,7 +11,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 @class NSTableView;
 @class NSMutableArray;
 @class NSRecursiveLock;
-@class MVChatConnection;
+@class MVFileTransfer;
 @class NSTimer;
 
 @interface MVFileTransferController : NSWindowController {
@@ -46,9 +33,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 - (IBAction) hideTransferManager:(id) sender;
 
 - (void) downloadFileAtURL:(NSURL *) url toLocalFile:(NSString *) path;
-- (void) addFileTransfer:(NSString *) identifier withUser:(NSString *) user forConnection:(MVChatConnection *) connection asType:(MVTransferOperation) type withSize:(unsigned long) size withLocalFile:(NSString *) path;
-- (BOOL) updateFileTransfer:(NSString *) identifier withNewTransferedSize:(unsigned long) transfered;
-- (BOOL) updateFileTransfer:(NSString *) identifier withStatus:(MVTransferStatus) status;
+- (void) addFileTransfer:(MVFileTransfer *) trtansfer;
 
 - (IBAction) stopSelectedTransfer:(id) sender;
 - (IBAction) clearFinishedTransfers:(id) sender;

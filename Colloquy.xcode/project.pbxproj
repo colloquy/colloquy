@@ -134,6 +134,7 @@
 		};
 		0A60C1600630D96D00DC6280 = {
 			children = (
+				1C7B831A06668A0D004F1EFE,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -936,6 +937,37 @@
 			lastKnownFileType = text.plist;
 			name = emoticons.plist;
 			path = Resources/emoticons.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7B831A06668A0D004F1EFE = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = ChatCore.framework;
+			refType = 3;
+			remoteRef = 1C7B831B06668A1D004F1EFE;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C7B831B06668A1D004F1EFE = {
+			containerPortal = 0A60C15F0630D96D00DC6280;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+		1C7B83C50668D732004F1EFE = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSNotificationAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C7B83C60668D732004F1EFE = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSNotificationAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4299,6 +4331,8 @@
 				1C3D55A305A4CB2B00F25F5E,
 				1C3D562205A4DCCD00F25F5E,
 				1C3D562105A4DCCD00F25F5E,
+				1C7B83C60668D732004F1EFE,
+				1C7B83C50668D732004F1EFE,
 			);
 			isa = PBXGroup;
 			name = "Chat Core";
