@@ -229,24 +229,15 @@ void firetalk_timeout_handler(int signal) {
 	longjmp(buf,1);
 }
 
-enum firetalk_error firetalk_set_timeout(unsigned int seconds) {
-	if (setjmp(buf)) {
-		/* we timed out */
-		return FE_TIMEOUT;
-	}
-
+void firetalk_set_timeout(unsigned int seconds) {
 	alarm(0);
 	oldhandler = signal(SIGALRM,firetalk_timeout_handler);
 	alarm(seconds);
-
-	return FE_SUCCESS;
 }
 
-enum firetalk_error firetalk_clear_timeout() {
+void firetalk_clear_timeout() {
 	alarm(0);
 	signal(SIGALRM,oldhandler);
-
-	return FE_SUCCESS;
 }
 
 double firetalk_gettime() {
@@ -361,8 +352,10 @@ enum firetalk_error firetalk_im_internal_add_deny(firetalk_t conn, const char * 
 
 int firetalk_internal_resolve4(const char * const host, struct in_addr *inet4_ip) {
 	struct hostent *he = NULL;
-	if (firetalk_set_timeout(5) != FE_SUCCESS)
-		return FE_TIMEOUT;
+	if (setjmp(buf))
+		return FE_TIMEOUT;	
+	
+	firetalk_set_timeout(5);
 
 	he = gethostbyname(host);
 	if (he && he != (struct hostent *) FE_TIMEOUT && he->h_addr_list) {
@@ -386,8 +379,10 @@ struct sockaddr_in *firetalk_internal_remotehost4(client_t c) {
 int firetalk_internal_resolve6(const char * const host, struct in6_addr *inet6_ip) {
 	struct hostent *he = NULL;
 	int result = 0;
-	if (firetalk_set_timeout(5) != FE_SUCCESS)
+	if (setjmp(buf))
 		return FE_TIMEOUT;
+
+	firetalk_set_timeout(5);
 
 	he = getipnodebyname(host, AF_INET6, AI_ADDRCONFIG, &result);
 	if (he && he != (struct hostent *) FE_TIMEOUT && he->h_addr_list) {
@@ -418,17 +413,17 @@ int firetalk_internal_connect_host(const char * const host, const uint16_t port,
 #endif
 
 #ifdef _FC_USE_IPV6	
-	if (firetalk_internal_resolve6(host,&myinet6.sin6_addr) == FE_SUCCESS) {
+	if ((firetalkerror = firetalk_internal_resolve6(host,&myinet6.sin6_addr)) == FE_SUCCESS) {
 		myinet6.sin6_port = htons(port);
 		myinet6.sin6_family = AF_INET6;
 		sendinet6 = &myinet6;
-	}
+	} else return -1;
 #endif
-	if (firetalk_internal_resolve4(host,&myinet4.sin_addr) == FE_SUCCESS) {
+	if ((firetalkerror = firetalk_internal_resolve4(host,&myinet4.sin_addr)) == FE_SUCCESS) {
 		myinet4.sin_port = htons(port);
 		myinet4.sin_family = AF_INET;
 		sendinet4 = &myinet4;
-	}
+	} else return -1;
 
 	return firetalk_internal_connect(sendinet4
 #ifdef _FC_USE_IPV6
@@ -2177,10 +2172,6 @@ enum firetalk_error firetalk_disconnect(firetalk_t conn) {
 }
 
 enum firetalk_error firetalk_signon(firetalk_t conn, const char * const server, const short port, const char * const username) {
-	struct sockaddr_in *realremote4 = NULL;
-#ifdef _FC_USE_IPV6
-	struct sockaddr_in6 *realremote6 = NULL;
-#endif
 	short realport;
 	const char * realserver;
 
@@ -2206,26 +2197,9 @@ enum firetalk_error firetalk_signon(firetalk_t conn, const char * const server, 
 		realport = defaultport[conn->protocol];
 	else
 		realport = port;
+	
+	conn->fd = firetalk_internal_connect_host(realserver,realport,conn->proxy);
 
-#ifdef _FC_USE_IPV6
-	if (firetalk_internal_resolve6(realserver,&conn->remote_addr6.sin6_addr) == FE_SUCCESS) {
-		conn->remote_addr6.sin6_port = htons(realport);
-		conn->remote_addr6.sin6_family = AF_INET6;
-		realremote6 = &conn->remote_addr6;
-	}
-#endif
-	if (firetalk_internal_resolve4(realserver,&conn->remote_addr.sin_addr) == FE_SUCCESS) {
-		conn->remote_addr.sin_port = htons(realport);
-		conn->remote_addr.sin_family = AF_INET;
-		realremote4 = &conn->remote_addr;
-	}
-
-	conn->fd = firetalk_internal_connect(realremote4
-#ifdef _FC_USE_IPV6
-			,realremote6
-#endif
-			,conn->proxy
-			);
 	if (conn->fd != -1) {
 		conn->connected = FCS_WAITING_SYNACK;
 		return FE_SUCCESS;

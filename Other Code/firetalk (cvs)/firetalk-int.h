@@ -301,7 +301,7 @@ void firetalk_internal_file_register_customdata(client_t c, int fd, void *custom
 #ifdef DEBUG
 enum firetalk_error firetalk_check_handle(struct s_firetalk_handle *c);
 #endif
-enum firetalk_error firetalk_set_timeout(unsigned int seconds);
-enum firetalk_error firetalk_clear_timeout();
+void firetalk_set_timeout(unsigned int seconds);
+void firetalk_clear_timeout();
 
 #endif
