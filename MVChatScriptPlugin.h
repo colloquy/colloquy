@@ -1,8 +1,6 @@
 #import <Foundation/NSObject.h>
 #import <ChatCore/MVChatPluginManager.h>
 
-extern unsigned long MVChatScriptPluginClass;
-
 @interface MVChatScriptPlugin : NSObject <MVChatPlugin> {
 	NSAppleScript *_script;
 	NSMutableSet *_doseNotRespond;
