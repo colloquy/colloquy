@@ -19,7 +19,7 @@
 	if( [[NSFileManager defaultManager] fileExistsAtPath:logPath] && ( [modDate timeIntervalSinceDate:lastDate] > 0. || ! lastDate ) ) crashLogExists = YES;
 	if( ! crashLogExists || ! [programName length] ) [self autorelease];
 	else [NSBundle loadNibNamed:@"MVCrashCatcher" owner:self];
-	return self;
+	return nil;
 }
 
 - (void) dealloc {

@@ -65,7 +65,7 @@ static void MVSoftwareUpdateClearTimeout() {
 	end:
 	if( ! retain ) [self autorelease];
 
-	return self;
+	return nil;
 }
 
 - (void) dealloc {
