@@ -187,6 +187,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	extern NSMutableSet *JVChatStyleBundles;
 	extern NSMutableSet *JVChatEmoticonBundles;
 
+	[display setUIDelegate:nil];
+	[display setPolicyDelegate:nil];
+
 	[contents release];
 	[chooseStyle release];
 	[chooseEmoticon release];
