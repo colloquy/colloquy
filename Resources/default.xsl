@@ -17,43 +17,26 @@
 
 	<xsl:template match="envelope | message">
 		<xsl:variable name="envelopeClasses">
-			<xsl:choose>
-				<xsl:when test="(message[1]/@highlight = 'yes' and message[1]/@action = 'yes') or (@highlight = 'yes' and @action = 'yes')">
-					<xsl:text>envelope highlight action</xsl:text>
-				</xsl:when>
-				<xsl:when test="message[1]/@action = 'yes' or @action = 'yes'">
-					<xsl:text>envelope action</xsl:text>
-				</xsl:when>
-				<xsl:when test="message[1]/@highlight = 'yes' or @highlight = 'yes'">
-					<xsl:text>envelope highlight</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>envelope</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
-		<xsl:variable name="allClasses">
-			<xsl:choose>
-				<xsl:when test="(message[1]/@ignored = 'yes' or ../@ignored = 'yes') or (@ignored = 'yes')">
-					<xsl:value-of select="$envelopeClasses" />
-					<xsl:text> ignore</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$envelopeClasses" />
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:text>envelope</xsl:text>
+			<xsl:if test="message[1]/@highlight = 'yes' or @highlight = 'yes'">
+				<xsl:text> highlight</xsl:text>
+			</xsl:if>
+			<xsl:if test="message[1]/@action = 'yes' or @action = 'yes'">
+				<xsl:text> action</xsl:text>
+			</xsl:if>
+			<xsl:if test="message[1]/@notice = 'yes' or @notice = 'yes'">
+				<xsl:text> notice</xsl:text>
+			</xsl:if>
+			<xsl:if test="message[1]/@ignored = 'yes' or @ignored = 'yes' or ../@ignored = 'yes'">
+				<xsl:text> ignore</xsl:text>
+			</xsl:if>
 		</xsl:variable>
 
 		<xsl:variable name="senderClasses">
-			<xsl:choose>
-				<xsl:when test="sender/@self = 'yes' or ../sender/@self = 'yes'">
-					<xsl:text>member self</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>member</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:text>member</xsl:text>
+			<xsl:if test="sender/@self = 'yes' or ../sender/@self = 'yes'">
+				<xsl:text> self</xsl:text>
+			</xsl:if>
 		</xsl:variable>
 
 		<xsl:variable name="memberLink">
@@ -70,7 +53,7 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<div id="{message[1]/@id | @id}" class="{$allClasses}">
+		<div id="{message[1]/@id | @id}" class="{$envelopeClasses}">
 			<span class="timestamp hidden">[</span>
 			<span class="timestamp">
 				<xsl:call-template name="short-time">

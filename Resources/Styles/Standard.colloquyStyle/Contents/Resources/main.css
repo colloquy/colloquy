@@ -75,6 +75,11 @@ body {
 	content: ":";
 }
 
+.notice > .member:before {
+	content: "\2014";
+	margin-right: 0.3ex;
+}
+
 .action > .member:before {
 	content: "\2022";
 	margin-right: 0.3ex;
