@@ -547,7 +547,115 @@ static WebView *fragmentWebView = nil;
 }
 
 - (NSData *) _CTCP2FormatWithOptions:(NSDictionary *) options {
-	return nil;
+	NSRange limitRange, effectiveRange;
+	NSMutableData *ret = [NSMutableData data];
+	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
+	if( ! encoding ) encoding = NSUTF8StringEncoding;
+
+	char ctcpEncoding = NULL;
+
+	switch( encoding ) {
+	case NSUTF8StringEncoding:
+		ctcpEncoding = 'U';
+		break;
+	case NSISOLatin1StringEncoding:
+		ctcpEncoding = '1';
+		break;
+	case NSISOLatin2StringEncoding:
+		ctcpEncoding = '2';
+		break;
+	case 0x80000203:
+		ctcpEncoding = '3';
+		break;
+	case 0x80000204:
+		ctcpEncoding = '4';
+		break;
+	case 0x80000205:
+		ctcpEncoding = '5';
+		break;
+	case 0x80000206:
+		ctcpEncoding = '6';
+		break;
+	case 0x80000207:
+		ctcpEncoding = '7';
+		break;
+	case 0x80000208:
+		ctcpEncoding = '8';
+		break;
+	case 0x8000020F:
+		ctcpEncoding = '9';
+		break;
+	}
+
+	if( ctcpEncoding ) {
+		char buffer[5];
+		sprintf( buffer, "\006E%c\006", ctcpEncoding );
+		[ret appendBytes:buffer length:strlen( buffer )];
+	}
+
+	limitRange = NSMakeRange( 0, [self length] );
+	while( limitRange.length > 0 ) {
+		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
+
+		id link = [dict objectForKey:NSLinkAttributeName];
+		NSFont *currentFont = [dict objectForKey:NSFontAttributeName];
+		NSColor *foregroundColor = [dict objectForKey:NSForegroundColorAttributeName];
+		NSColor *backgroundColor = [dict objectForKey:NSBackgroundColorAttributeName];
+		BOOL bold = NO, italic = NO, underline = NO, strikethrough = NO;
+
+		if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
+			int traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
+			if( traits & NSBoldFontMask ) bold = YES;
+			if( traits & NSItalicFontMask ) italic = YES;
+			if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
+			if( [[dict objectForKey:NSStrikethroughStyleAttributeName] intValue] ) strikethrough = YES;
+		}
+
+		if( ( foregroundColor || backgroundColor ) && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
+			NSString *hexColor = nil;
+
+			[ret appendBytes:"\006C" length:2];
+
+			if( foregroundColor ) {
+				hexColor = [foregroundColor HTMLAttributeValue];				
+				[ret appendBytes:[hexColor UTF8String] length:strlen( [hexColor UTF8String] )];
+			} else [ret appendBytes:"." length:1];
+
+			if( backgroundColor ) {
+				hexColor = [backgroundColor HTMLAttributeValue];				
+				[ret appendBytes:[hexColor UTF8String] length:strlen( [hexColor UTF8String] )];
+			} else [ret appendBytes:"." length:1];
+
+			[ret appendBytes:"\006" length:1];
+		}
+
+		if( bold ) [ret appendBytes:"\006B\006" length:3];
+		if( italic ) [ret appendBytes:"\006I\006" length:3];
+		if( underline ) [ret appendBytes:"\006U\006" length:3];
+		if( strikethrough ) [ret appendBytes:"\006S\006" length:3];
+
+		NSData *data = nil;
+		if( [link isKindOfClass:[NSURL class]] || [link isKindOfClass:[NSString class]] ) {
+			data = [[link description] dataUsingEncoding:encoding allowLossyConversion:YES];
+			[ret appendBytes:"\006L\006" length:3];
+			[ret appendData:data];
+			[ret appendBytes:"\006L-\006" length:4];
+		} else {
+			NSString *text = [[self attributedSubstringFromRange:effectiveRange] string];
+			data = [text dataUsingEncoding:encoding allowLossyConversion:YES];
+			[ret appendData:data];
+		}
+
+		if( foregroundColor || backgroundColor || bold || italic || underline || strikethrough )
+			[ret appendBytes:"\006N\006" length:3]; // reset the formatting only if we had formatting
+
+		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
+	}
+
+	if( [[options objectForKey:@"NullTerminatedReturn"] boolValue] )
+		[ret appendBytes:"\0" length:1];
+
+	return [[ret retain] autorelease];
 }
 
 - (NSData *) IRCFormatWithOptions:(NSDictionary *) options {
