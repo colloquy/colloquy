@@ -83,7 +83,7 @@
 		<key>showBubble</key>
 		<true/>
 	</dict>
-	<key>JVNotificationSettings JVChatFisrtMessage</key>
+	<key>JVNotificationSettings JVChatFirstMessage</key>
 	<dict>
 		<key>bounceIcon</key>
 		<true/>

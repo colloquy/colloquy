@@ -54,7 +54,7 @@
 	</dict>
 	<dict>
 		<key>identifier</key>
-		<string>JVChatFisrtMessage</string>
+		<string>JVChatFirstMessage</string>
 		<key>title</key>
 		<string>First Private Message</string>
 	</dict>

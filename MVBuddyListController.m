@@ -869,12 +869,14 @@ static MVBuddyListController *sharedInstance = nil;
 	if( ! _animating ) [buddies reloadData];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"Buddy Available", "available buddy bubble title" ) forKey:@"bubbleTitle"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now online.", "available buddy bubble text" ), [buddy preferredName]] forKey:@"bubbleText"];
+	[context setObject:NSLocalizedString( @"Buddy Available", "available buddy bubble title" ) 
+				forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now online.", "available buddy bubble text" ), [buddy preferredName]] 
+				forKey:@"description"];
 
 	NSImage *icon = [buddy picture];
 	if( ! icon ) icon = [NSImage imageNamed:@"largePerson"];
-	[context setObject:icon forKey:@"bubbleIcon"];
+	[context setObject:icon forKey:@"image"];
 
 	[[JVNotificationController defaultManager] performNotification:@"JVChatBuddyOnline" withContextInfo:context];
 }
@@ -893,12 +895,14 @@ static MVBuddyListController *sharedInstance = nil;
 	if( ! _animating ) [buddies reloadData];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"Buddy Unavailable", "unavailable buddy bubble title" ) forKey:@"bubbleTitle"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now offline.", "unavailable buddy bubble text" ), [buddy preferredName]] forKey:@"bubbleText"];
+	[context setObject:NSLocalizedString( @"Buddy Unavailable", "unavailable buddy bubble title" ) 
+				forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now offline.", "unavailable buddy bubble text" ), [buddy preferredName]] 
+				forKey:@"description"];
 
 	NSImage *icon = [buddy picture];
 	if( ! icon ) icon = [NSImage imageNamed:@"largePerson"];
-	[context setObject:icon forKey:@"bubbleIcon"];
+	[context setObject:icon forKey:@"image"];
 
 	[[JVNotificationController defaultManager] performNotification:@"JVChatBuddyOffline" withContextInfo:context];
 }

@@ -77,8 +77,6 @@ extern char *irc_irc_to_html(const char * const string);
 
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
 
-#pragma mark -
-
 NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 #pragma mark -
@@ -260,18 +258,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return contents;
 }
 
-- (NSToolbar *) toolbar {
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Direct Chat"];
-	[toolbar setDelegate:self];
-	[toolbar setAllowsUserCustomization:YES];
-	[toolbar setAutosavesConfiguration:YES];
-
-	[_toolbarItems release];
-	_toolbarItems = [[NSMutableDictionary dictionary] retain];
-
-	return [toolbar autorelease];
-}
-
 #pragma mark -
 
 - (BOOL) isEnabled {
@@ -366,7 +352,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[[NSApplication sharedApplication] beginSheet:[_waitingAlerts objectAtIndex:0] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
 }
 
-#pragma mark -
+#pragma mark Drag & Drop Support
 
 - (BOOL) acceptsDraggedFileOfType:(NSString *) type {
 	return YES;
@@ -459,7 +445,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[_windowController reloadListItem:self andChildren:NO];
 }
 
-#pragma mark -
+#pragma mark Prefences/User Defaults
 
 - (void) setPreference:(id) value forKey:(NSString *) key {
 	NSParameterAssert( key != nil );
@@ -589,7 +575,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	} else [self setPreference:nil forKey:@"encoding"];
 }
 
-#pragma mark -
+#pragma mark Messages & Events
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
 	NSEnumerator *enumerator = nil, *kenumerator = nil;
@@ -704,17 +690,23 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 		if( [self isMemberOfClass:[JVDirectChat class]] && _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"bubbleTitle"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"bubbleText"];
-			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"bubbleIcon"];
-			[[JVNotificationController defaultManager] performNotification:@"JVChatFisrtMessage" withContextInfo:context];
+			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) 
+						forKey:@"title"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]]
+						forKey:@"description"];
+			[context setObject:[NSImage imageNamed:@"messageUser"] 
+						forKey:@"image"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
 		}
 
 		if( [self isMemberOfClass:[JVDirectChat class]] && ! _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"bubbleTitle"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ sent you another private message.", "new message bubble text" ), [self title]] forKey:@"bubbleText"];
-			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"bubbleIcon"];
+			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) 
+						forKey:@"title"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ sent you another private message.", "new message bubble text" ), [self title]] 
+						forKey:@"description"];
+			[context setObject:[NSImage imageNamed:@"messageUser"] 
+						forKey:@"image"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
 		}
 
@@ -724,9 +716,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		while( ( item = [enumerator nextObject] ) ) {
 			if( [messageString rangeOfString:item options:NSCaseInsensitiveSearch].length ) {
 				NSMutableDictionary *context = [NSMutableDictionary dictionary];
-				[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"bubbleTitle"];
-				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"bubbleText"];
-				[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"bubbleIcon"];
+				[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) 
+							forKey:@"title"];
+				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] 
+							forKey:@"description"];
+				[context setObject:[NSImage imageNamed:@"activityNewImportant"] 
+							forKey:@"image"];
 				[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
 				_newHighlightMessage = YES;
 				highlight = YES;
@@ -994,7 +989,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return [[results lastObject] boolValue];
 }
 
-#pragma mark -
+#pragma mark ScrollBack
 
 - (IBAction) clear:(id) sender {
 	[send reset:nil];
@@ -1005,7 +1000,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 }
 
-#pragma mark -
+#pragma mark TextView Support
 
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event {
 	BOOL ret = NO;
@@ -1116,7 +1111,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	_historyIndex = 0;
 }
 
-#pragma mark -
+#pragma mark SplitView Support
 
 - (BOOL) splitView:(NSSplitView *) sender canCollapseSubview:(NSView *) subview {
 	return NO;
@@ -1163,7 +1158,19 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[[[display superview] superview] setFrame:webFrame];
 }
 
-#pragma mark -
+#pragma mark Toolbar Support
+
+- (NSToolbar *) toolbar {
+	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Direct Chat"];
+	[toolbar setDelegate:self];
+	[toolbar setAllowsUserCustomization:YES];
+	[toolbar setAutosavesConfiguration:YES];
+	
+	[_toolbarItems release];
+	_toolbarItems = [[NSMutableDictionary dictionary] retain];
+	
+	return [toolbar autorelease];
+}
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	if( [_toolbarItems objectForKey:identifier] ) return [_toolbarItems objectForKey:identifier];

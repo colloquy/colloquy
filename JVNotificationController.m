@@ -68,8 +68,8 @@ static JVNotificationController *sharedInstance = nil;
 }
 
 - (void) _showBubbleWithContext:(NSDictionary *) context andPrefs:(NSDictionary *) eventPrefs {
-	NSImage *icon = [context objectForKey:@"bubbleIcon"];
-	KABubbleWindowController *bubble = [KABubbleWindowController bubbleWithTitle:[context objectForKey:@"bubbleTitle"] text:[context objectForKey:@"bubbleText"] icon:( icon ? icon : [[NSApplication sharedApplication] applicationIconImage] )];
+	NSImage *icon = [context objectForKey:@"image"];
+	KABubbleWindowController *bubble = [KABubbleWindowController bubbleWithTitle:[context objectForKey:@"title"] text:[context objectForKey:@"description"] icon:( icon ? icon : [[NSApplication sharedApplication] applicationIconImage] )];
 	[bubble startFadeIn];
 }
 

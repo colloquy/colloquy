@@ -294,7 +294,13 @@
 
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
-			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberPromoted" withContextInfo:nil];
+			//create notification
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"ChatRoom Member Promoted", "member promoted title" ) 
+						forKey:@"title"];
+			[context setObject:message forKey:@"description"];				
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberPromoted" 
+														   withContextInfo:context];
 		}
 	}
 
@@ -339,8 +345,15 @@
 			[invocation setArgument:&byMbr atIndex:4];
 		
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+			
+			//create notification
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"ChatRoom Member Demoted", "member demoted title" ) 
+						forKey:@"title"];
+			[context setObject:message forKey:@"description"];
 
-			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDemoted" withContextInfo:nil];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDemoted" 
+														   withContextInfo:context];
 		}
 	}
 
@@ -386,7 +399,13 @@
 		
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
-			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberVoiced" withContextInfo:nil];
+			//create notification
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"ChatRoom Member Voiced", "member voiced title" ) 
+						forKey:@"title"];
+			[context setObject:message forKey:@"description"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberVoiced" 
+														   withContextInfo:context];
 		}
 	}
 
@@ -432,7 +451,12 @@
 
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
-			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDevoiced" withContextInfo:nil];
+			//create notification
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"ChatRoom Member Lost Voice", "member devoiced title" ) 
+						forKey:@"title"];
+			[context setObject:message forKey:@"description"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDevoiced" withContextInfo:context];
 		}
 	}
 
@@ -472,13 +496,23 @@
 
 	[_windowController reloadListItem:self andChildren:YES];
 
+	NSString *message = nil;
 	if( [byMbr isLocalUser] ) {
-		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You kicked %@ from the chat room.", "you removed a user by force from a chat room status message" ), ( mbr ? [mbr title] : member )] withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"byNickname", ( mbr ? [mbr title] : member ), @"who", member, @"whoNickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+		message = [NSString stringWithFormat:NSLocalizedString( @"You kicked %@ from the chat room.", "you removed a user by force from a chat room status message" ), ( mbr ? [mbr title] : member )];
 	} else {
-		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from the chat room by %@.", "user has been removed by force from a chat room status message" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by )] withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"byNickname", ( mbr ? [mbr title] : member ), @"who", member, @"whoNickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+		message = [NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from the chat room by %@.", "user has been removed by force from a chat room status message" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by )];
 	}
-
-	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:nil];
+	[self addEventMessageToDisplay:message 
+						  withName:@"memberKicked" 
+					 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"byNickname", ( mbr ? [mbr title] : member ), @"who", member, @"whoNickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+	
+	
+	//create notification
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"ChatRoom Member Kicked", "member kicked title" ) 
+				forKey:@"title"];
+	[context setObject:message forKey:@"description"];
+	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 }
 
 - (void) kickedFromChatBy:(NSString *) by forReason:(NSData *) reason {
@@ -490,7 +524,8 @@
 	if( ! rstring ) rstring = [NSString stringWithCString:[reason bytes] length:[reason length]];
 
 	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
-	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), by] withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[byMbr title], @"by", by, @"byNickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), by];
+	[self addEventMessageToDisplay:message withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[byMbr title], @"by", by, @"byNickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 	JVChatRoomMember *mbr = [[[self chatRoomMemberWithName:[[self connection] nickname]] retain] autorelease];
 
@@ -516,7 +551,12 @@
 	_kickedFromRoom = YES;
 	_cantSendMessages = YES;
 
-	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:nil];
+	//create notification
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"ChatRoom Member Kicked", "member kicked title" ) 
+				forKey:@"title"];
+	[context setObject:message forKey:@"description"];		
+	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 
 	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You were kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You were kicked from the chat room by %@. You are no longer part of this chat and can't send anymore messages.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, ( byMbr ? [byMbr title] : by ) ) withName:nil];
 }
@@ -672,7 +712,9 @@
 		
 		if( ! previous ) {
 			NSString *name = [listItem title];
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room.", "a user has join a chat room status message" ), name] withName:@"memberJoined" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"nickname", name, @"who", nil]];
+			NSString *message = [NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room.", "a user has join a chat room status message" ), name];
+			[self addEventMessageToDisplay:message withName:@"memberJoined" 
+							 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"nickname", name, @"who", nil]];
 			
 			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -683,7 +725,13 @@
 			
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 			
-			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:nil];
+
+			//create notification
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"ChatRoom Member Kicked", "member kicked title" ) 
+						forKey:@"title"];
+			[context setObject:message forKey:@"description"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
 		}
 	}
 }
@@ -718,8 +766,16 @@
 		[_windowController reloadListItem:self andChildren:YES];
 		
 		NSString *name = [mbr title];
-		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room.", "a user has left the chat room status message" ), name] withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"who", member, @"nickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+		NSString *message = [NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room.", "a user has left the chat room status message" ), name];
+		[self addEventMessageToDisplay:message 
+							  withName:@"memberParted" 
+						 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"who", member, @"nickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 		
+		//create notification
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:NSLocalizedString( @"ChatRoom Member Left", "member left title" ) 
+					forKey:@"title"];
+		[context setObject:message forKey:@"description"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:nil];
 	}
 }
