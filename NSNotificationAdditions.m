@@ -31,6 +31,6 @@
 	unsigned coalesceMask = [[info objectForKey:@"coalesceMask"] unsignedIntValue];
 	NSArray *modes = [info objectForKey:@"modes"];
 
-	[self enqueueNotification:notification postingStyle:postingStyle coalesceMask:coalesceMask forModes:modes];
+	[[[self class] defaultQueue] enqueueNotification:notification postingStyle:postingStyle coalesceMask:coalesceMask forModes:modes];
 }
 @end
