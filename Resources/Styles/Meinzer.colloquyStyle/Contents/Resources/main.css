@@ -97,6 +97,10 @@ a.member {
 	border-bottom: 1px black dotted;
 }
 
+a.member.action {
+	border-bottom: none;
+}
+
 .event a.member {
 	border-bottom: 1px white dotted;
 }

@@ -47,7 +47,9 @@
 			</span>
       		<xsl:if test="@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
+				<a href="member:{../sender}" class="member action">
 				<xsl:value-of select="../sender" />
+				</a>
 				<xsl:text> </xsl:text>
 			</xsl:if>
 			<xsl:apply-templates select="child::node()" mode="copy" />
@@ -83,7 +85,9 @@
 			</span>
       		<xsl:if test="message[1]/@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
+				<a href="member:{sender}" class="member action">
 				<xsl:value-of select="sender" />
+				</a>
 				<xsl:text> </xsl:text>
 			</xsl:if>
 			<xsl:apply-templates select="message[1]/child::node()" mode="copy" />
