@@ -1397,33 +1397,19 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 - (void) disconnect {
-	if( ! [self _irssiConnection] ) return;
-	if( [self status] != MVChatConnectionConnectingStatus && [self status] != MVChatConnectionConnectedStatus ) return;
-
-	[self _willDisconnect];
-	[self sendRawMessage:@"QUIT :Quitting" immediately:YES];
-
-	[self _irssiConnection] -> connection_lost = NO;
-	[self _irssiConnection] -> no_reconnect = YES;
-
-	server_disconnect( [self _irssiConnection] );
-
-	[self _cancelReconnectAttempts];
+	[self disconnectWithReason:nil];
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
-	if( ! [[reason string] length] ) {
-		[self disconnect];
-		return;
-	}
-
 	if( ! [self _irssiConnection] ) return;
 	if( [self status] != MVChatConnectionConnectingStatus && [self status] != MVChatConnectionConnectedStatus ) return;
 
 	[self _willDisconnect];
 
-	NSData *encodedData = [MVChatConnection _flattenedHTMLDataForMessage:reason withEncoding:[self encoding]];
-	[self sendRawMessage:[NSString stringWithFormat:@"QUIT :%s", MVChatXHTMLToIRC( (char *) [encodedData bytes] )] immediately:YES];
+	if( [[reason string] length] ) {
+		NSData *encodedData = [MVChatConnection _flattenedHTMLDataForMessage:reason withEncoding:[self encoding]];
+		[self sendRawMessage:[NSString stringWithFormat:@"QUIT :%s", MVChatXHTMLToIRC( (char *) [encodedData bytes] )] immediately:YES];
+	} else [self sendRawMessage:@"QUIT" immediately:YES];
 
 	[self _irssiConnection] -> connection_lost = NO;
 	[self _irssiConnection] -> no_reconnect = YES;
