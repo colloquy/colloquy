@@ -3,10 +3,6 @@
 //  Created by Karl Adam on Thu Apr 15 2004.
 
 #import <Cocoa/Cocoa.h>
-
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/NSAttributedStringAdditions.h>
-
 #import "KAIgnoreRule.h"
 
 @implementation KAInternalIgnoreRule
