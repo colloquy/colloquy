@@ -17,7 +17,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 
 @implementation JVFScriptChatPlugin
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( ( self = [self init] ) ) {
+	if( self = [self init] ) {
 		_manager = manager;
 		_scriptInterpreter = nil;
 		_path = nil;
@@ -28,7 +28,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
-	if( ( self = [self initWithManager:manager] ) ) {
+	if( self = [self initWithManager:manager] ) {
 		_path = [path copyWithZone:[self zone]];
 		_scriptInterpreter = [[FSInterpreter interpreter] retain];
 		if( ! _scriptInterpreter ) {
@@ -65,6 +65,16 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 	_modDate = nil;
 
 	[super dealloc];
+}
+
+- (oneway void) release {
+	int retainCount = [self retainCount] - 1;
+	if( retainCount == 1 ) {
+		id temp = _scriptInterpreter;
+		_scriptInterpreter = nil;
+		[temp release];
+	}
+	[super release];
 }
 
 #pragma mark -

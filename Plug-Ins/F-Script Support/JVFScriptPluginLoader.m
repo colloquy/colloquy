@@ -113,7 +113,7 @@
 		}
 	}
 	
-	JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:name withManager:_manager] autorelease];;
+	JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:name withManager:_manager] autorelease];
 	if( plugin ) [_manager addPlugin:plugin];
 }
 
