@@ -166,6 +166,75 @@
 //1C2
 //1C3
 //1C4
+		1C20B0940424A11100000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/Colloquy.nib;
+			refType = 4;
+		};
+		1C20B0980424A14100000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVBuddyList.nib;
+			refType = 4;
+		};
+		1C20B0990424A15300000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVFileTransfer.nib;
+			refType = 4;
+		};
+		1C20B09A0424A16600000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVChatWindow.nib;
+			refType = 4;
+		};
+		1C20B09B0424A17700000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVConnections.nib;
+			refType = 4;
+		};
+		1C20B09C0424A18B00000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVCrashCatcher.nib;
+			refType = 4;
+		};
+		1C20B09D0424A19D00000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVSoftwareUpdate.nib;
+			refType = 4;
+		};
+		1C20B09E0424A1B700000102 = {
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/Credits.rtf;
+			refType = 4;
+		};
+		1C20B09F0424A1C500000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/InfoPlist.strings;
+			refType = 4;
+		};
+		1C20B0A00424A1DE00000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/Localizable.strings;
+			refType = 4;
+		};
+		1C20B0A10424A22600000102 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = French;
+			path = Languages/French.lproj/MVPreferences.strings;
+			refType = 4;
+		};
 		1C95D5B6041FA02C00000102 = {
 			isa = PBXFileReference;
 			name = emoticonSmall.tif;
@@ -181,6 +250,7 @@
 		1CC7CAAE03C48E8B001C0D62 = {
 			children = (
 				1CC7CAAF03C48E8B001C0D62,
+				1C20B0980424A14100000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVBuddyList.nib;
@@ -196,6 +266,7 @@
 		1CC7CAB003C48E8B001C0D62 = {
 			children = (
 				1CC7CAB103C48E8B001C0D62,
+				1C20B0990424A15300000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVFileTransfer.nib;
@@ -1002,6 +1073,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5394BEB0378E23701A35792 = {
 			children = (
 				F5394BEC0378E23701A35792,
+				1C20B0940424A11100000102,
 			);
 			isa = PBXVariantGroup;
 			name = Colloquy.nib;
@@ -1017,6 +1089,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5394BED0378E23701A35792 = {
 			children = (
 				F5394BEE0378E23701A35792,
+				1C20B09A0424A16600000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVChatWindow.nib;
@@ -1032,6 +1105,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5394BEF0378E23701A35792 = {
 			children = (
 				F5394BF00378E23701A35792,
+				1C20B09C0424A18B00000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVCrashCatcher.nib;
@@ -1047,6 +1121,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5394BF10378E23701A35792 = {
 			children = (
 				F5394BF20378E23701A35792,
+				1C20B09D0424A19D00000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVSoftwareUpdate.nib;
@@ -1098,6 +1173,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5394C070378E44D01A35792 = {
 			children = (
 				F5394C080378E44D01A35792,
+				1C20B09E0424A1B700000102,
 			);
 			isa = PBXVariantGroup;
 			name = Credits.rtf;
@@ -1113,6 +1189,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5394C090378E44D01A35792 = {
 			children = (
 				F5394C0A0378E44D01A35792,
+				1C20B09F0424A1C500000102,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -1129,6 +1206,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5394C0B0378E44D01A35792 = {
 			children = (
 				F5394C0C0378E44D01A35792,
+				1C20B0A00424A1DE00000102,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -1145,6 +1223,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5394C0D0378E44D01A35792 = {
 			children = (
 				F5394C0E0378E44D01A35792,
+				1C20B0A10424A22600000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVPreferences.strings;
@@ -1998,6 +2077,7 @@ Copyright © 2003, Timothy Hatcher</string>
 		F5C4977B0385785401000102 = {
 			children = (
 				F5C4977C0385785401000102,
+				1C20B09B0424A17700000102,
 			);
 			isa = PBXVariantGroup;
 			name = MVConnections.nib;
