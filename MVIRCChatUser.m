@@ -83,7 +83,9 @@
 		[self sendSubcodeRequest:@"TIME" withArguments:nil];
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
 		[self sendSubcodeRequest:@"VERSION" withArguments:nil];
-	} else [self refreshAttributes];
+	} else if( [key isEqualToString:MVChatUserKnownRoomsAttribute] ) {
+		[self refreshInformation];
+	}
 }
 
 #pragma mark -
