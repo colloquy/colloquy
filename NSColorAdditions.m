@@ -88,7 +88,7 @@
 					[scanner scanCharactersFromSet:whites intoString:nil];
 					if( [scanner scanDouble:&lightness] && [scanner scanString:@"%" intoString:nil] ) {
 						[scanner scanCharactersFromSet:whites intoString:nil];
-						hue = MAX( 0., MIN( 365., hue ) );
+						hue = ( ( ( (long) hue % 360 ) + 360 ) % 360 );
 						saturation = MAX( 0., MIN( 100., saturation ) );
 						lightness = MAX( 0., MIN( 100., lightness ) );
 						if( hasAlpha ) {
