@@ -43,8 +43,17 @@
 			if( insert ) insert.parentNode.removeChild( insert );
 		}
 
-		function scrollToBottom() {
+		function jumpToBottom() {
 			document.body.scrollTop = document.body.offsetHeight;
+		}
+
+		function scrollToBottom() {
+			if( document.body.scrollTop >= ( document.body.scrollHeight - ( window.innerHeight * 1.3 ) ) ) {
+				document.body.scrollTop += 5;
+				if( document.body.scrollTop < ( document.body.scrollHeight - window.innerHeight ) ) {
+					setTimeout( 'scrollToBottom()', 5 );
+				} else jumpToBottom();
+			} else jumpToBottom();
 		}
 
 		function checkIfScrollToBottomIsNeeded() {
@@ -53,7 +62,7 @@
 
 		function scrollToBottomIfNeeded() {
 			if( scrollToBottomIsNeeded )
-				document.body.scrollTop = document.body.offsetHeight;
+				scrollToBottom();
 		}
 
 		function setStylesheet( id, url ) {
