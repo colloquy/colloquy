@@ -4,6 +4,7 @@
 #import <WebKit/WebKit.h>
 
 #import "JVChatController.h"
+#import "MVFileTransferController.h"
 #import "MVMenuButton.h"
 
 #import <libxml/xinclude.h>
@@ -388,6 +389,11 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[_windowController removeChatViewController:self];
 }
 
+- (void) downloadLinkToDisk:(id) sender {
+	NSURL *url = [[sender representedObject] objectForKey:@"WebElementLinkURL"];
+	[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
+}
+
 #pragma mark -
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
@@ -438,12 +444,39 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	return YES;
 }
 
-- (void) webView:(WebView *) webView decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
+- (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
+	NSMutableArray *ret = [[defaultMenuItems mutableCopy] autorelease];
+	NSMenuItem *item = nil;
+	unsigned i = 0;
+
+	for( i = 0; i < [ret count]; i++ ) {
+		item = [ret objectAtIndex:i];
+		switch( [item tag] ) {
+		case WebMenuItemTagOpenLinkInNewWindow:
+		case WebMenuItemTagOpenImageInNewWindow:
+		case WebMenuItemTagOpenFrameInNewWindow:
+			[ret removeObjectAtIndex:i];
+			i--;
+			break;
+		case WebMenuItemTagDownloadLinkToDisk:
+		case WebMenuItemTagDownloadImageToDisk:
+			[item setTarget:[sender UIDelegate]];
+			break;
+		}
+	}
+	return ret;
+}
+
+- (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"about"]  ) {
 		[listener use];
 	} else {
+		if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
+			[[MVFileTransferController defaultManager] downloadFileAtURL:[actionInformation objectForKey:WebActionOriginalURLKey] toLocalFile:nil];
+		} else {
+			[[NSWorkspace sharedWorkspace] openURL:[actionInformation objectForKey:WebActionOriginalURLKey]];	
+		}
 		[listener ignore];
-		[[NSWorkspace sharedWorkspace] openURL:[actionInformation objectForKey:WebActionOriginalURLKey]];
 	}
 }
 @end
