@@ -160,7 +160,7 @@ static JVChatController *sharedInstance = nil;
 
 	enumerator = [_chatControllers objectEnumerator];
 	while( ( ret = [enumerator nextObject] ) )
-		if( [ret isMemberOfClass:[JVDirectChat class]] && [ret connection] == connection && [[(JVDirectChat *)ret target] isEqualToString:user] )
+		if( [ret isMemberOfClass:[JVDirectChat class]] && [ret connection] == connection && [[(JVDirectChat *)ret target] caseInsensitiveCompare:user] == NSOrderedSame )
 			break;
 
 	if( ! ret && ! exists ) {
