@@ -987,7 +987,7 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 	}
 
 	if( ! target ) target = [self subjectParameter];
-	if( ! target || ( ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[MVChatRoom class]] ) ) {
+	if( ! target || ( ! [target isKindOfClass:[NSArray class]] && ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[MVChatRoom class]] ) ) {
 		[self setScriptErrorNumber:1000];
 		[self setScriptErrorString:@"The \"to\" parameter was missing, not a chat user nor a chat room object. The nearest enclosing tell block also did not accept this command."];
 		return nil;
@@ -1022,41 +1022,48 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 	BOOL realAction = ( action ? [action boolValue] : NO );
 	BOOL realLocalEcho = ( localEcho ? [localEcho boolValue] : YES );
 
-	if( encoding ) {
-		realEncoding = stringEncodingForScriptValue( [encoding unsignedIntValue] );
-	} else if( [target isKindOfClass:[MVChatRoom class]] ) {
-		realEncoding = [(MVChatRoom *)target encoding];
-	} else {
-		realEncoding = [[(MVChatRoom *)target connection] encoding];
-	}
+	NSArray *targets = nil;
+	if( [target isKindOfClass:[NSArray class]] ) targets = target;
+	else targets = [NSArray arrayWithObject:target];
 
-	[target sendMessage:realMessage withEncoding:realEncoding asAction:realAction];
+	NSEnumerator *enumerator = [targets objectEnumerator];
+	while( ( target = [enumerator nextObject] ) ) {
+		if( ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[MVChatRoom class]] )
+			continue;
 
-	if( realLocalEcho ) {
-		NSString *cformat = nil;
-
-		switch( [[(MVChatRoom *)target connection] outgoingChatFormat] ) {
-			case MVChatConnectionDefaultMessageFormat:
-			case MVChatWindowsIRCMessageFormat:
-				cformat = NSChatWindowsIRCFormatType;
-				break;
-			case MVChatCTCPTwoMessageFormat:
-				cformat = NSChatCTCPTwoFormatType;
-				break;
-			default:
-			case MVChatNoMessageFormat:
-				cformat = nil;
+		if( encoding ) {
+			realEncoding = stringEncodingForScriptValue( [encoding unsignedIntValue] );
+		} else if( [target isKindOfClass:[MVChatRoom class]] ) {
+			realEncoding = [(MVChatRoom *)target encoding];
+		} else {
+			realEncoding = [[(MVChatRoom *)target connection] encoding];
 		}
 
-		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
-		NSData *msgData = [realMessage chatFormatWithOptions:options];
+		[target sendMessage:realMessage withEncoding:realEncoding asAction:realAction];
 
-		if( [target isKindOfClass:[MVChatRoom class]] ) {
-			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
-			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
-		} else if( [target isKindOfClass:[MVChatUser class]] ) {
-			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", nil];
-			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
+		if( realLocalEcho ) {
+			NSString *cformat = nil;
+
+			switch( [[(MVChatRoom *)target connection] outgoingChatFormat] ) {
+				case MVChatConnectionDefaultMessageFormat:
+				case MVChatWindowsIRCMessageFormat:
+					cformat = NSChatWindowsIRCFormatType;
+					break;
+				case MVChatCTCPTwoMessageFormat:
+					cformat = NSChatCTCPTwoFormatType;
+					break;
+				default:
+				case MVChatNoMessageFormat:
+					cformat = nil;
+			}
+
+			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
+			NSData *msgData = [realMessage chatFormatWithOptions:options];
+
+			if( [target isKindOfClass:[MVChatRoom class]] ) {
+				NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
+				[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
+			} // we can't really echo a private message with our current notifications
 		}
 	}
 
