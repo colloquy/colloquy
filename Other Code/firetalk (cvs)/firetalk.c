@@ -61,6 +61,8 @@ enum firetalk_error firetalkerror;
 static struct s_firetalk_handle *handle_head = NULL;
 static jmp_buf buf;
 static sighandler_t oldhandler;
+static unsigned short minDCCPort = 1024;
+static unsigned short maxDCCPort = 1028;
 
 /* 
  * client can send up to <flood> messages in <delay>
@@ -1640,6 +1642,8 @@ void firetalk_callback_subcode_request(client_t c, const char * const from, cons
 		addr.sin_family = AF_INET;
 		addr.sin_port = fileiter->port;
 		memcpy(&addr.sin_addr.s_addr,&fileiter->inet_ip,4);
+		memset( &(addr.sin_zero), 0, 8);
+
 		fileiter->sockfd = firetalk_internal_connect(&addr
 #ifdef _FC_USE_IPV6
 											   , NULL
@@ -2164,6 +2168,20 @@ void firetalk_destroy_handle(firetalk_t conn) {
 //end add
 	free(conn);
 	return;
+}
+
+void firetalk_get_dcc_port_range(unsigned short * const min, unsigned short * const max) {
+	extern unsigned short minDCCPort;
+	extern unsigned short maxDCCPort;
+	*min = minDCCPort;
+	*max = maxDCCPort;
+}
+
+void firetalk_set_dcc_port_range(const unsigned short min, const unsigned short max) {
+	extern unsigned short minDCCPort;
+	extern unsigned short maxDCCPort;
+	minDCCPort = ( min >= 1024 && min <= 65534 ? min : 1024 );
+	maxDCCPort = ( max >= 1025 && max <= 65535 ? max : 1048 );
 }
 
 void firetalk_set_flood_intervals(firetalk_t conn, const double flood, const double delay, const double backoff, const double ceiling ) {
@@ -2852,12 +2870,15 @@ char *firetalk_file_name( const char *name ) {
 }
 
 enum firetalk_error firetalk_file_offer(firetalk_t conn, void **filehandle, const char * const nickname, const char * const filename) {
+	extern unsigned short minDCCPort;
+	extern unsigned short maxDCCPort;
 	struct s_firetalk_file *iter;
 	struct stat s;
 	struct sockaddr_in addr;
 	char args[256];
 	char *encoded_filename;
 	unsigned int l;
+	unsigned short startPort = minDCCPort;
 
 	if (filehandle) *filehandle = NULL;
 
@@ -2892,13 +2913,31 @@ enum firetalk_error firetalk_file_offer(firetalk_t conn, void **filehandle, cons
 		return FE_SOCKET;
 	}
 
+	if( iter ) startPort = iter->port + 1;
+	if( startPort > maxDCCPort ) startPort = minDCCPort;
+
 	addr.sin_family = AF_INET;
-	addr.sin_port = 0;
+	addr.sin_port = htons(startPort);
 	addr.sin_addr.s_addr = INADDR_ANY;
-	if (bind(conn->file_head->sockfd,(struct sockaddr *) &addr,sizeof(struct sockaddr_in)) != 0) {
+	memset( &(addr.sin_zero), 0, 8);
+
+	while(1) {
+		if (bind(conn->file_head->sockfd,(struct sockaddr *) &addr,sizeof(struct sockaddr_in)) != 0) {
+			addr.sin_port++;
+			if( addr.sin_port > maxDCCPort )
+				addr.sin_port = minDCCPort;
+			if( addr.sin_port == startPort ) {
+				firetalk_file_cancel(conn,conn->file_head);
+				return FE_SOCKET;
+			}
+			continue;
+		} else break;
+	}
+
+/*	if (bind(conn->file_head->sockfd,(struct sockaddr *) &addr,sizeof(struct sockaddr_in)) != 0) {
 		firetalk_file_cancel(conn,conn->file_head);
 		return FE_SOCKET;
-	}
+	} */
 
 	if (listen(conn->file_head->sockfd,1) != 0) {
 		firetalk_file_cancel(conn,conn->file_head);
@@ -2924,7 +2963,7 @@ enum firetalk_error firetalk_file_offer(firetalk_t conn, void **filehandle, cons
 	safe_snprintf(args,256,"SEND %s %y %u %l",encoded_filename,conn->localip,conn->file_head->port,conn->file_head->size);
 
 	free(encoded_filename);
-	
+
 	if (filehandle) *filehandle = conn->file_head;
 
 	return firetalk_subcode_send_request(conn,nickname,"DCC",args);
@@ -2951,6 +2990,8 @@ enum firetalk_error firetalk_file_accept(firetalk_t conn, void *filehandle, void
 	addr.sin_family = AF_INET;
 	addr.sin_port = fileiter->port;
 	memcpy(&addr.sin_addr.s_addr,&fileiter->inet_ip,4);
+	memset( &(addr.sin_zero), 0, 8);
+
 	fileiter->sockfd = firetalk_internal_connect(&addr
 #ifdef _FC_USE_IPV6
 	, NULL

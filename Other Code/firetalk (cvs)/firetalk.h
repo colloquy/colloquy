@@ -214,6 +214,8 @@ const char *firetalk_strprotocol(const enum firetalk_protocol p);
 const char *firetalk_strerror(const enum firetalk_error e);
 firetalk_t firetalk_create_handle(const int protocol, void *clientstruct);
 void firetalk_destroy_handle(firetalk_t conn);
+void firetalk_get_dcc_port_range(unsigned short * const min, unsigned short * const max);
+void firetalk_set_dcc_port_range(const unsigned short min, const unsigned short max);
 void firetalk_set_flood_intervals(firetalk_t conn, const double flood, const double delay, const double backoff, const double ceiling );
 void firetalk_set_proxy_type(firetalk_t conn, enum firetalk_proxy type );
 enum firetalk_protocol firetalk_get_protocol(firetalk_t conn);

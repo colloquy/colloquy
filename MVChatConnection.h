@@ -109,6 +109,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	unsigned int /* io_object_t */ _sleepNotifier;
 	unsigned int /* io_connect_t */ _powerConnection;
 }
++ (void) setFileTransferPortRange:(NSRange) range;
++ (NSRange) fileTransferPortRange;
+
 - (id) initWithURL:(NSURL *) url;
 - (id) initWithServer:(NSString *) server port:(unsigned short) port user:(NSString *) nickname;
 

@@ -494,7 +494,7 @@ void MVChatFileTransferStart( void *c, void *cs, const void * const filehandle, 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionFileTransferStartedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%x", filehandle], @"identifier", nil]];
 }
 
-void MVChatFileTransferFinish( void *c, void *cs, const void * const filehandle, const void * const clientfilestruct, const long size ) {
+void MVChatFileTransferFinish( void *c, void *cs, const void * const filehandle, const void * const clientfilestruct, const unsigned long size ) {
 	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( filehandle != NULL );
@@ -509,7 +509,7 @@ void MVChatFileTransferError( void *c, void *cs, const void * const filehandle, 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionFileTransferErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%x", filehandle], @"identifier", [NSNumber numberWithInt:error], @"error", nil]];
 }
 
-void MVChatFileTransferStatus( void *c, void *cs, const void * const filehandle, const void * const clientfilestruct, const long bytes, const long size ) {
+void MVChatFileTransferStatus( void *c, void *cs, const void * const filehandle, const void * const clientfilestruct, const unsigned long bytes, const unsigned long size ) {
 	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( filehandle != NULL );
@@ -563,6 +563,21 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 #pragma mark -
 
 @implementation MVChatConnection
++ (void) setFileTransferPortRange:(NSRange) range {
+	unsigned short min = (unsigned short)range.location;
+	unsigned short max = (unsigned short)(range.location + range.length);
+	firetalk_set_dcc_port_range( min, max );
+}
+
++ (NSRange) fileTransferPortRange {
+	unsigned short min = 1024;
+	unsigned short max = 1048;
+	firetalk_get_dcc_port_range( &min, &max );
+	return NSMakeRange( (unsigned int) min, (unsigned int)( max - min ) );
+}
+
+#pragma mark -
+
 - (id) init {
 	self = [super init];
 
