@@ -167,6 +167,8 @@
 	return [[[_parent connection] retain] autorelease];
 }
 
+#pragma mark -
+
 - (BOOL) acceptsDraggedFileOfType:(NSString *) type {
 	return YES;
 }
@@ -197,7 +199,12 @@
 
 #pragma mark -
 
+- (IBAction) doubleClicked:(id) sender {
+	[self startChat:sender];
+}
+
 - (IBAction) startChat:(id) sender {
+	if( [self isLocalUser] ) return;
 	[[JVChatController defaultManager] chatViewControllerForUser:_nickname withConnection:[_parent connection] ifExists:NO];
 }
 
