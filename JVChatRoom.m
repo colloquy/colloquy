@@ -377,10 +377,7 @@
 		[_members removeObjectForKey:member];
 		[mbr _setNickname:nick];
 
-		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
-			[_sortedMembers sortUsingSelector:@selector( compare: )];
-			[_windowController reloadListItem:self andChildren:YES];
-		}
+		[self resortMembers];
 
 		if( [mbr isLocalUser] ) {
 			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as %@.", "you changed nicknames" ), nick] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[mbr title], @"name", member, @"old", nick, @"new", nil]];
@@ -443,10 +440,8 @@
 	}
 
 	// sort again if needed
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
-		[_sortedMembers sortUsingSelector:@selector( compareUsingStatus: )];
-		[_windowController reloadListItem:self andChildren:YES];
-	}
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] )
+		[self resortMembers];
 }
 
 - (void) demoteChatMember:(NSString *) member by:(NSString *) by {
@@ -488,12 +483,10 @@
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		}
 	}
-	
+
 	// sort again if needed
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
-		[_sortedMembers sortUsingSelector:@selector( compareUsingStatus: )];
-		[_windowController reloadListItem:self andChildren:YES];
-	}
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] )
+		[self resortMembers];
 }
 
 - (void) voiceChatMember:(NSString *) member by:(NSString *) by {
@@ -535,12 +528,10 @@
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		}
 	}
-	
+
 	// sort again if needed
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
-		[_sortedMembers sortUsingSelector:@selector( compareUsingStatus: )];
-		[_windowController reloadListItem:self andChildren:YES];
-	}
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] )
+		[self resortMembers];
 }
 
 - (void) devoiceChatMember:(NSString *) member by:(NSString *) by {
@@ -582,12 +573,10 @@
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		}
 	}
-	
+
 	// sort again if needed
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
-		[_sortedMembers sortUsingSelector:@selector( compareUsingStatus: )];
-		[_windowController reloadListItem:self andChildren:YES];
-	}
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] )
+		[self resortMembers];
 }
 
 #pragma mark -
