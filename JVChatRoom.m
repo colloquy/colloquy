@@ -206,20 +206,22 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	[item setTarget:self];
 	[menu addItem:item];
 
-	if( _inRoom ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Room", "leave room contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-	} else {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room", "join room contextual menu item title" ) action:@selector( joinChat: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
+	[menu addItem:[NSMenuItem separatorItem]];
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
 	[item setTarget:[JVChatController defaultManager]];
 	[menu addItem:item];
+
+	if( _inRoom ) {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Room", "leave room contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	} else {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Rejoin Room", "rejoin room contextual menu item title" ) action:@selector( joinChat: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	}
 
 	return [[menu retain] autorelease];
 }

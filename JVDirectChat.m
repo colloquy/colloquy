@@ -431,13 +431,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Chat", "leave chat contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
-	[item setTarget:self];
-	[menu addItem:item];
-
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
 	[item setTarget:[JVChatController defaultManager]];
+	[menu addItem:item];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
 	[menu addItem:item];
 
 	return [[menu retain] autorelease];
@@ -1474,14 +1474,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( parent ) xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
 	else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
-	NSMutableDictionary *params = _styleParams;
-	if( continuation ) {
-		params = [NSMutableDictionary dictionaryWithDictionary:_styleParams];
-		[params setObject:@"'yes'" forKey:@"subsequent"];
-	}
-
 	@try {
-		messageString = [[[_chatStyle transformXMLDocument:doc withParameters:params] mutableCopy] autorelease];
+		messageString = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
 	} @catch ( NSException *exception ) {
 		messageString = nil;
 		[self performSelectorOnMainThread:@selector( _styleError: ) withObject:exception waitUntilDone:YES];
@@ -1501,10 +1495,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 
 		BOOL subsequent = ( [messageString rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
-		
+
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-		if( subsequent && parent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, messageString]];
+		if( subsequent ) [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, messageString]];
 		else [display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, messageString]];
 
 		if( highlight && [scroller isKindOfClass:[JVMarkedScroller class]] ) {
