@@ -1,5 +1,4 @@
 #import <Cocoa/Cocoa.h>
-#import <ChatCore/MVChatConnection.h>
 
 #import "JVChatWindowController.h"
 #import "MVConnectionsController.h"
@@ -7,12 +6,9 @@
 #import "JVChatRoom.h"
 #import "JVDetailCell.h"
 #import "MVMenuButton.h"
-#import "NSURLAdditions.h"
 
 NSString *JVToolbarToggleChatDrawerItemIdentifier = @"JVToolbarToggleChatDrawerItem";
 NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
-
-static NSMenu *favoritesMenu = nil;
 
 @interface NSToolbar (NSToolbarPrivate)
 - (NSView *) _toolbarView;
@@ -25,7 +21,6 @@ static NSMenu *favoritesMenu = nil;
 - (void) _refreshWindow;
 - (void) _refreshWindowTitle;
 - (void) _refreshList;
-- (void) _refreshFavoritesMenu;
 @end
 
 #pragma mark -
@@ -43,17 +38,12 @@ static NSMenu *favoritesMenu = nil;
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"JVChatWindow"] ) ) {
-		extern NSMenu *favoritesMenu;
-
 		viewsDrawer = nil;
 		chatViewsOutlineView = nil;
 		viewActionButton = nil;
 		_activeViewController = nil;
 		_views = [[NSMutableArray array] retain];
 		_usesSmallIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowUseSmallDrawerIcons"];
-
-		if( ! favoritesMenu ) favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
-		else [favoritesMenu retain];
 
 		[[self window] makeKeyAndOrderFront:nil];
 	}
@@ -75,15 +65,12 @@ static NSMenu *favoritesMenu = nil;
 	[chatViewsOutlineView setMenu:[[[NSMenu alloc] initWithTitle:@""] autorelease]];
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
 
-	[favoritesButton setMenu:favoritesMenu];
+	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 
 	[self _refreshList];
-	[self _refreshFavoritesMenu];
 }
 
 - (void) dealloc {
-	extern NSMenu *favoritesMenu;
-
 	[[self window] setDelegate:nil];
 	[[self window] setToolbar:nil];
 	[[self window] setContentView:_placeHolder];
@@ -98,10 +85,6 @@ static NSMenu *favoritesMenu = nil;
 	[_placeHolder release];
 	[_activeViewController release];
 	[_views release];
-
-	[favoritesMenu autorelease];
-	if( ! ( [favoritesMenu retainCount] - 1 ) )
-		favoritesMenu = nil;
 
 	_placeHolder = nil;
 	_activeViewController = nil;
@@ -619,66 +602,6 @@ static NSMenu *favoritesMenu = nil;
 	[chatViewsOutlineView noteNumberOfRowsChanged];
 	[chatViewsOutlineView sizeLastColumnToFit];
 	[self _refreshSelectionMenu];
-}
-
-- (void) _refreshFavoritesMenu {
-	NSMenuItem *menuItem = nil;
-	NSEnumerator *enumerator = [[[[favoritesMenu itemArray] copy] autorelease] objectEnumerator];
-	while( ( menuItem = [enumerator nextObject] ) )
-		[favoritesMenu removeItem:menuItem];
-
-	NSURL *url = nil;
-	NSString *item = nil;
-	NSMutableArray *rooms = [NSMutableArray array], *roomNames = [NSMutableArray array];
-	NSMutableArray *users = [NSMutableArray array], *userNames = [NSMutableArray array];
-
-	enumerator = [[NSFileManager defaultManager] enumeratorAtPath:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath]];
-	while( ( item = [enumerator nextObject] ) ) {
-		if( [[item pathExtension] isEqualToString:@"inetloc"] ) {
-			url = [NSURL URLWithInternetLocationFile:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@", item] stringByExpandingTildeInPath]];
-			if( [url isChatRoomURL] ) {
-				[rooms addObject:url];
-				[roomNames addObject:[item stringByDeletingPathExtension]];
-			} else if( [url isDirectChatURL] ) {
-				[users addObject:url];
-				[userNames addObject:[item stringByDeletingPathExtension]];
-			}
-		}
-	}
-
-	extern NSMenu *favoritesMenu;
-	NSEnumerator *nameEnumerator = [roomNames objectEnumerator];
-	NSImage *icon = [NSImage imageNamed:@"room"];
-	[icon setScalesWhenResized:YES];
-	[icon setSize:NSMakeSize( 16., 16. )];
-	enumerator = [rooms objectEnumerator];
-	while( ( url = [enumerator nextObject] ) && ( item = [nameEnumerator nextObject] ) ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( _connectToFavorite: ) keyEquivalent:@""] autorelease];
-		[menuItem setImage:icon];
-		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:url];
-		[favoritesMenu addItem:menuItem];
-	}
-
-	if( [users count] ) [favoritesMenu addItem:[NSMenuItem separatorItem]];
-
-	enumerator = [users objectEnumerator];
-	nameEnumerator = [userNames objectEnumerator];
-	icon = [NSImage imageNamed:@"messageUser"];
-	[icon setScalesWhenResized:YES];
-	[icon setSize:NSMakeSize( 16., 16. )];
-	while( ( url = [enumerator nextObject] ) && ( item = [nameEnumerator nextObject] ) ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( _connectToFavorite: ) keyEquivalent:@""] autorelease];
-		[menuItem setImage:icon];
-		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:url];
-		[favoritesMenu addItem:menuItem];
-	}
-}
-
-- (void) _connectToFavorite:(id) sender {
-	if( ! [sender representedObject] ) return;
-	[[MVConnectionsController defaultManager] handleURL:[sender representedObject] andConnectIfPossible:YES];
 }
 @end
 
