@@ -18,6 +18,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 @implementation JVFScriptChatPlugin
 - (id) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [self init] ) ) {
+		_manager = manager;
 		_scriptInterpreter = nil;
 		_path = nil;
 	}
@@ -54,11 +55,16 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 
 	_scriptInterpreter = nil;
 	_path = nil;
+	_manager = nil;
 
 	[super dealloc];
 }
 
 #pragma mark -
+
+- (MVChatPluginManager *) pluginManager {
+	return _manager;
+}
 
 - (FSInterpreter *) scriptInterpreter {
 	return _scriptInterpreter;

@@ -123,6 +123,25 @@
 	[[console interpreter] browse];
 }
 
+- (IBAction) openScriptFile:(id) sender {
+	[[NSWorkspace sharedWorkspace] openFile:[[self plugin] scriptFilePath]];
+}
+
+- (IBAction) reloadScriptFile:(id) sender {
+	NSString *filePath = [[[[self plugin] scriptFilePath] copy] autorelease];
+	MVChatPluginManager *manager = [[self plugin] pluginManager];
+
+	[[[self plugin] pluginManager] removePlugin:[self plugin]];
+
+	[_plugin release];
+	_plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:filePath withManager:manager] autorelease];
+
+	if( [self plugin] ) {
+		[manager addPlugin:[self plugin]];
+		[(id)[self interpreterView] setInterpreter:[[self plugin] scriptInterpreter]];
+	} else [(id)[self interpreterView] setInterpreter:[FSInterpreter interpreter]];
+}
+
 - (NSMenu *) menu {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
@@ -130,6 +149,18 @@
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Object Browser", "object browser menu item title" ) action:@selector( objectBrowser: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
+
+	if( [self plugin] ) {
+		[menu addItem:[NSMenuItem separatorItem]];
+
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Open Script File", "open script file menu item title" ) action:@selector( openScriptFile: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Reload Script File", "reload script file menu item title" ) action:@selector( reloadScriptFile: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	}
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
