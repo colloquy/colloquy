@@ -134,7 +134,7 @@
 		};
 		0A60C1600630D96D00DC6280 = {
 			children = (
-				1C3B28BD06529E310066197C,
+				1CABF3480654E74600801C15,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -503,20 +503,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C3B28BD06529E310066197C = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = ChatCore.framework;
-			refType = 3;
-			remoteRef = 1C3B293506529EAE0066197C;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1C3B28D906529E340066197C = {
-			fileRef = 1C3B28BD06529E310066197C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C3B290706529E720066197C = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -536,13 +522,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		1C3B293506529EAE0066197C = {
-			containerPortal = 0A60C15F0630D96D00DC6280;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
-			remoteInfo = "Chat Core (Framework)";
 		};
 		1C3B4D560427BD5200000102 = {
 			fileEncoding = 4;
@@ -1312,6 +1291,21 @@
 			path = Resources/newHighlightMessage.tif;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1CABF3480654E74600801C15 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = ChatCore.framework;
+			refType = 3;
+			remoteRef = 1CABF58B0654E76800801C15;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CABF58B0654E76800801C15 = {
+			containerPortal = 0A60C15F0630D96D00DC6280;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
 		};
 		1CB2C8CC052DDA360094AAA4 = {
 			children = (
@@ -2256,7 +2250,6 @@
 				1CB2CD80052DDC560094AAA4,
 				1CD0201F05758F26000F93B4,
 				1C6C75460630AD5300698F55,
-				1C3B28D906529E340066197C,
 				1C3B290806529E720066197C,
 			);
 			isa = PBXFrameworksBuildPhase;

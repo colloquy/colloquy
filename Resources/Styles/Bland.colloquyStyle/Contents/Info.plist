@@ -18,5 +18,76 @@
 	<string>Old IRC monospaced look.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Josh Gibbs</string>
+	<key>JVStyleOptions</key>
+	<array>
+		<dict>
+			<key>style</key>
+			<string>.envelope &gt; .member.self { color: %@ !important; }</string>
+			<key>default</key>
+			<string>#F00</string>
+			<key>description</key>
+			<string>Your name</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<string>.envelope &gt; .member { color: %@ !important; }</string>
+			<key>default</key>
+			<string>#00F</string>
+			<key>description</key>
+			<string>Room members</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<string>.envelope.highlight { background-color: %@ !important; }</string>
+			<key>default</key>
+			<string>#ccd</string>
+			<key>description</key>
+			<string>Message highlight</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<array>
+				<string>.timestamp { display: block; }</string>
+				<string>.timestamp { display: none; }</string>
+			</array>
+			<key>default</key>
+			<integer>0</integer>
+			<key>description</key>
+			<string>Timestamp</string>
+			<key>type</key>
+			<string>list</string>
+			<key>options</key>
+			<array>
+				<string>Visible</string>
+				<string>Hidden</string>
+			</array>
+		</dict>
+		<dict>
+			<key>style</key>
+			<array>
+				<string>.envelope { margin: 0; }</string>
+				<string>.envelope { margin: 2px 0; }</string>
+				<string>.envelope { margin: 3px 0; }</string>
+			</array>
+			<key>default</key>
+			<integer>0</integer>
+			<key>description</key>
+			<string>Line spacing</string>
+			<key>type</key>
+			<string>list</string>
+			<key>options</key>
+			<array>
+				<string>Normal</string>
+				<string>Small Gap</string>
+				<string>Large Gap</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

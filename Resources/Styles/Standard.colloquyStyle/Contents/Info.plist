@@ -17,12 +17,8 @@
 	<key>JVStyleOptions</key>
 	<array>
 		<dict>
-			<key>selector</key>
-			<string>.member.self</string>
-			<key>property</key>
-			<string>color</string>
-			<key>important</key>
-			<true />
+			<key>style</key>
+			<string>.member.self { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#a21</string>
 			<key>description</key>
@@ -31,12 +27,8 @@
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>selector</key>
-			<string>.member</string>
-			<key>property</key>
-			<string>color</string>
-			<key>important</key>
-			<true />
+			<key>style</key>
+			<string>.member { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#f90</string>
 			<key>description</key>
@@ -45,12 +37,8 @@
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>selector</key>
-			<string>.envelope.highlight</string>
-			<key>property</key>
-			<string>background-color</string>
-			<key>important</key>
-			<true />
+			<key>style</key>
+			<string>.envelope.highlight { background-color: %@ !important; }</string>
 			<key>default</key>
 			<string>rgba( 0, 0, 0, 0.1 )</string>
 			<key>description</key>
@@ -59,10 +47,11 @@
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>selector</key>
-			<string>.timestamp</string>
-			<key>property</key>
-			<string>display</string>
+			<key>style</key>
+			<array>
+				<string>.timestamp { display: block; }</string>
+				<string>.timestamp { display: none; }</string>
+			</array>
 			<key>default</key>
 			<integer>0</integer>
 			<key>description</key>
@@ -74,19 +63,13 @@
 				<string>Visible</string>
 				<string>Hidden</string>
 			</array>
-			<key>values</key>
-			<array>
-				<string>block</string>
-				<string>none</string>
-			</array>
 		</dict>
 		<dict>
-			<key>selector</key>
-			<string>body</string>
-			<key>property</key>
-			<string>background-image</string>
-			<key>important</key>
-			<true />
+			<key>style</key>
+			<array>
+				<string>body { background-image: url( "colloquy.png" ); }</string>
+				<string>body { background-image: none !important; }</string>
+			</array>
 			<key>default</key>
 			<integer>0</integer>
 			<key>description</key>
@@ -98,10 +81,25 @@
 				<string>Yes</string>
 				<string>No</string>
 			</array>
-			<key>values</key>
+		</dict>
+		<dict>
+			<key>style</key>
 			<array>
-				<string>url( "colloquy.png" )</string>
-				<string>none</string>
+				<string>.envelope { margin-bottom: 1px !important; }</string>
+				<string>.envelope { margin-bottom: 3px !important; }</string>
+				<string>.envelope { margin-bottom: 7px !important; }</string>
+			</array>
+			<key>default</key>
+			<integer>1</integer>
+			<key>description</key>
+			<string>Line spacing</string>
+			<key>type</key>
+			<string>list</string>
+			<key>options</key>
+			<array>
+				<string>Small Gap</string>
+				<string>Normal</string>
+				<string>Large Gap</string>
 			</array>
 		</dict>
 	</array>

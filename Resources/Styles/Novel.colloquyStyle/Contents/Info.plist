@@ -14,5 +14,28 @@
 	<string>Novel</string>
 	<key>CFBundlePackageType</key>
 	<string>coSt</string>
+	<key>JVStyleOptions</key>
+	<array>
+		<dict>
+			<key>style</key>
+			<string>.sender { color: %@ !important; }</string>
+			<key>default</key>
+			<string>#129</string>
+			<key>description</key>
+			<string>Room members</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<string>.envelopeHighlight { background-color: %@ !important; }</string>
+			<key>default</key>
+			<string>#efefec</string>
+			<key>description</key>
+			<string>Message highlight</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+	</array>
 </dict>
 </plist>

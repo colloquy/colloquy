@@ -97,8 +97,6 @@
 	if( ! variant ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
 	else [[NSUserDefaults standardUserDefaults] setObject:variant forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
 
-	[[preview mainFrame] loadHTMLString:@"" baseURL:nil];
-	// give webkit some time to load the blank before we switch preferences so we don't double refresh	
 	[self performSelector:@selector( changePreferences: ) withObject:nil afterDelay:0.];
 }
 
@@ -112,7 +110,6 @@
 	_styleOptions = [[NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"styleOptions" ofType:@"plist"]] retain];
 	if( [style objectForInfoDictionaryKey:@"JVStyleOptions"] )
 		[_styleOptions addObjectsFromArray:[[[style objectForInfoDictionaryKey:@"JVStyleOptions"] mutableCopy] autorelease]];
-//	_styleOptions = [[style objectForInfoDictionaryKey:@"JVStyleOptions"] mutableCopy];
 
 	[preview setPreferencesIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 	// we shouldn't have to post this notification manually, but this seems to make webkit refresh with new prefs
@@ -128,6 +125,8 @@
 
 	[baseFontSize setIntValue:[prefs defaultFontSize]];
 	[baseFontSizeStepper setIntValue:[prefs defaultFontSize]];
+
+	[self setUserStyle:[NSString stringWithContentsOfFile:[[[preview preferences] userStyleSheetLocation] path]]];
 
 	[self updatePreview];
 	[self parseUserStyleOptions];
@@ -314,67 +313,115 @@
 #pragma mark -
 
 - (void) parseUserStyleOptions {
-	[_userStyle autorelease];
-	_userStyle = [[NSString stringWithContentsOfFile:[[[preview preferences] userStyleSheetLocation] path]] retain];
+	NSBundle *bundle = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
+	NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [bundle bundleIdentifier]]];
+	NSString *css = _userStyle;
 
-	if( ! _userStyle ) _userStyle = [[NSString string] retain];
+	if( variant ) css = [css stringByAppendingString:[NSString stringWithContentsOfFile:( [variant isAbsolutePath] ? variant : [bundle pathForResource:variant ofType:@"css" inDirectory:@"Variants"] )]];
+	css = [css stringByAppendingString:[NSString stringWithContentsOfFile:( bundle ? [bundle pathForResource:@"main" ofType:@"css"] : @"" )]];
 
-	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-	NSEnumerator *enumerator = nil;
+	NSEnumerator *enumerator = [_styleOptions objectEnumerator];
 	NSMutableDictionary *info = nil;
-	AGRegex *regex = nil;
-	AGRegexMatch *match = nil;
-	NSString *style = _userStyle;
-	NSString *selector = nil;
-	NSString *property = nil;
-	unsigned int i = 1;
 
-	do {
-		enumerator = [_styleOptions objectEnumerator];
-		while( ( info = [enumerator nextObject] ) ) {
-			if( [info objectForKey:@"value"] ) continue;
+	while( ( info = [enumerator nextObject] ) ) {
+		NSMutableArray *styleLayouts = [NSMutableArray array];
+		NSArray *sarray = nil;
+		NSEnumerator *senumerator = nil;
+		if( ! [info objectForKey:@"style"] ) continue;
+		if( [[info objectForKey:@"style"] isKindOfClass:[NSArray class]] && [[info objectForKey:@"type"] isEqualToString:@"list"] )
+			sarray = [info objectForKey:@"style"];
+		else sarray = [NSArray arrayWithObject:[info objectForKey:@"style"]];
+		senumerator = [sarray objectEnumerator];
 
-			selector = [[info objectForKey:@"selector"] stringByEscapingCharactersInSet:escapeSet];
-			property = [[info objectForKey:@"property"] stringByEscapingCharactersInSet:escapeSet];
+		int listOption = -1, count = 0;
+		NSString *style = nil;
+		while( ( style = [senumerator nextObject] ) ) {
+			AGRegex *regex = [AGRegex regexWithPattern:@"([^\\s].*?)\\s*\{([^\\}]*?)\\}" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
+			NSEnumerator *selectors = [regex findEnumeratorInString:style];
+			AGRegexMatch *selector = nil;
 
-			regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"%@\\s*\\{[^\\}]*?\\s%@:\\s*(.*?)(?:\\s*!\\s*important\\s*)?;.*?\\}", selector, property] options:( AGRegexCaseInsensitive | AGRegexDotAll )];
-			match = [regex findInString:style];
-			if( [match count] > 1 && ! [info objectForKey:@"value"] )
-				[info setObject:[match groupAtIndex:1] forKey:@"value"];
+			NSMutableArray *styleLayout = [NSMutableArray array];
+			[styleLayouts addObject:styleLayout];
+
+			while( ( selector = [selectors nextObject] ) ) {
+				regex = [AGRegex regexWithPattern:@"([^\\s]*?):\\s*(.*?);" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
+				NSEnumerator *properties = [regex findEnumeratorInString:[selector groupAtIndex:2]];
+				AGRegexMatch *property = nil;
+
+				while( ( property = [properties nextObject] ) ) {
+					NSMutableDictionary *propertyInfo = [NSMutableDictionary dictionary];
+					NSString *p = [property groupAtIndex:1];
+					NSString *s = [selector groupAtIndex:1];
+					NSString *v = [property groupAtIndex:2];
+
+					[propertyInfo setObject:s forKey:@"selector"];
+					[propertyInfo setObject:p forKey:@"property"];
+					[propertyInfo setObject:v forKey:@"value"];
+					[styleLayout addObject:propertyInfo];
+
+					NSString *value = [self valueOfProperty:p forSelector:s inStyle:css];
+					if( [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
+						regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
+						NSString *compare = [regex replaceWithString:@"" inString:[propertyInfo objectForKey:@"value"]];
+						listOption = count;
+						if( ! [value isEqualToString:compare] ) listOption = -1;
+						else [info setObject:[NSNumber numberWithInt:listOption] forKey:@"value"];
+					} else if( [[info objectForKey:@"type"] isEqualToString:@"color"] ) {
+						if( value && [[propertyInfo objectForKey:@"value"] rangeOfString:@"%@"].location != NSNotFound ) {
+							NSString *expression = [NSString stringWithFormat:v, @"(.*)"];
+							regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
+							expression = [regex replaceWithString:@"" inString:expression];
+							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
+							AGRegexMatch *vmatch = [regex findInString:value];
+							if( [vmatch count] ) [info setObject:[vmatch groupAtIndex:1] forKey:@"value"];
+						}
+					}
+				}
+			}
+
+			count++;
 		}
 
-		NSBundle *bundle = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
-		NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [bundle bundleIdentifier]]];
-
-		if( i == 1 && variant ) style = [NSString stringWithContentsOfFile:( [variant isAbsolutePath] ? variant : [bundle pathForResource:variant ofType:@"css" inDirectory:@"Variants"] )];
-		else if( ( i == 1 && ! variant ) || i == 2 ) style = [NSString stringWithContentsOfFile:( bundle ? [bundle pathForResource:@"main" ofType:@"css"] : @"" )];
-		else style = nil;
-
-		i++;
-	} while( style );
+		[info setObject:styleLayouts forKey:@"layouts"];
+	}
 
 	[optionsTable reloadData];
 }
 
-- (void) changeUserStyleProperty:(NSString *) property ofSelector:(NSString *) selector toValue:(NSString *) value isImportant:(BOOL) important {
+- (NSString *) valueOfProperty:(NSString *) property forSelector:(NSString *) selector inStyle:(NSString *) style {
+	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+	selector = [selector stringByEscapingCharactersInSet:escapeSet];
+	property = [property stringByEscapingCharactersInSet:escapeSet];
+
+	AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"%@\\s*\\{[^\\}]*?\\s%@:\\s*(.*?)(?:\\s*!\\s*important\\s*)?;.*?\\}", selector, property] options:( AGRegexCaseInsensitive | AGRegexDotAll )];
+	AGRegexMatch *match = [regex findInString:style];
+	if( [match count] > 1 ) return [match groupAtIndex:1];
+
+	return nil;
+}
+
+- (void) setUserStyleProperty:(NSString *) property forSelector:(NSString *) selector toValue:(NSString *) value {
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 	NSString *rselector = [selector stringByEscapingCharactersInSet:escapeSet];
 	NSString *rproperty = [property stringByEscapingCharactersInSet:escapeSet];
 
-	AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(%@\\s*\\{[^\\}]*?\\s%@:\\s*)(?:.*?)((?:\\s*!\\s*important\\s*)?;.*?\\})", rselector, rproperty] options:( AGRegexCaseInsensitive | AGRegexDotAll )];
+	AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(%@\\s*\\{[^\\}]*?\\s%@:\\s*)(?:.*?)(;.*?\\})", rselector, rproperty] options:( AGRegexCaseInsensitive | AGRegexDotAll )];
 	if( [[regex findInString:_userStyle] count] ) { // Change existing property in selector block
-		[_userStyle autorelease];
-		_userStyle = [[regex replaceWithString:[NSString stringWithFormat:@"$1%@$2", value] inString:_userStyle] retain];
+		[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1%@$2", value] inString:_userStyle]];
 	} else {
 		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(\\s%@\\s*\\{)(\\s*)", rselector] options:AGRegexCaseInsensitive];
 		if( [[regex findInString:_userStyle] count] ) { // Append to existing selector block
-			[_userStyle autorelease];
-			_userStyle = [[regex replaceWithString:[NSString stringWithFormat:@"$1$2%@: %@%@;$2", rproperty, value, ( important ? @" !important" : @"" )] inString:_userStyle] retain];
+			[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1$2%@: %@;$2", rproperty, value] inString:_userStyle]];
 		} else { // Create new selector block
-			[_userStyle autorelease];
-			_userStyle = [[_userStyle stringByAppendingFormat:@"%@%@ {\n\t%@: %@%@;\n}", ( [_userStyle length] ? @"\n\n": @"" ), selector, property, value, ( important ? @" !important" : @"" )] retain];
+			[self setUserStyle:[_userStyle stringByAppendingFormat:@"%@%@ {\n\t%@: %@;\n}", ( [_userStyle length] ? @"\n\n": @"" ), selector, property, value]];
 		}
 	}
+}
+
+- (void) setUserStyle:(NSString *) style {
+	[_userStyle autorelease];
+	if( ! style ) _userStyle = [[NSString string] retain];
+	else _userStyle = [style retain];
 }
 
 - (void) saveUserStyleOptions {
@@ -405,10 +452,7 @@
 	} else if( [[column identifier] isEqualToString:@"value"] ) {
 		NSDictionary *info = [_styleOptions objectAtIndex:row];
 		id value = [info objectForKey:@"value"];
-		if( value && [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
-			int index = [[info objectForKey:@"values"] indexOfObject:value];
-			return [NSNumber numberWithInt:( index != NSNotFound ? index : -1 )];
-		} else if( value ) return value;
+		if( value ) return value;
 		return [info objectForKey:@"default"];
 	}
 	return nil;
@@ -417,17 +461,22 @@
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
 	if( [[column identifier] isEqualToString:@"value"] ) {
 		NSMutableDictionary *info = [_styleOptions objectAtIndex:row];
-		NSString *value = object;
+		NSArray *style = nil;
 
-		if( [[info objectForKey:@"type"] isEqualToString:@"list"] )
-			value = [[info objectForKey:@"values"] objectAtIndex:[object intValue]];
+		if( [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
+			[info setObject:object forKey:@"value"];
+			style = [[info objectForKey:@"layouts"] objectAtIndex:[object intValue]];
+		} else return;
 
-		if( value ) {
-			[info setObject:value forKey:@"value"];
-			[self changeUserStyleProperty:[info objectForKey:@"property"] ofSelector:[info objectForKey:@"selector"] toValue:value isImportant:[[info objectForKey:@"important"] boolValue]];
-			[self saveUserStyleOptions];
-			[self updatePreview];
+		NSEnumerator *enumerator = [style objectEnumerator];
+		NSDictionary *styleInfo = nil;
+
+		while( ( styleInfo = [enumerator nextObject] ) ) {
+			[self setUserStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:[styleInfo objectForKey:@"value"]];
 		}
+
+		[self saveUserStyleOptions];
+		[self updatePreview];
 	}
 }
 
@@ -439,7 +488,17 @@
 	NSMutableDictionary *info = [_styleOptions objectAtIndex:row];
 	[info setObject:[cell color] forKey:@"value"];
 
-	[self changeUserStyleProperty:[info objectForKey:@"property"] ofSelector:[info objectForKey:@"selector"] toValue:[[cell color] CSSAttributeValue] isImportant:[[info objectForKey:@"important"] boolValue]];
+	NSArray *style = [[info objectForKey:@"layouts"] objectAtIndex:0];
+	NSString *value = [[cell color] CSSAttributeValue];
+	NSEnumerator *enumerator = [style objectEnumerator];
+	NSDictionary *styleInfo = nil;
+	NSString *setting = nil;
+
+	while( ( styleInfo = [enumerator nextObject] ) ) {
+		setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], value];
+		[self setUserStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
+	}
+
 	[self saveUserStyleOptions];
 	[self updatePreview];
 }

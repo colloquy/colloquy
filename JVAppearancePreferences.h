@@ -44,6 +44,8 @@
 - (void) updatePreview;
 
 - (void) parseUserStyleOptions;
-- (void) changeUserStyleProperty:(NSString *) property ofSelector:(NSString *) selector toValue:(NSString *) value isImportant:(BOOL) important;
+- (NSString *) valueOfProperty:(NSString *) property forSelector:(NSString *) selector inStyle:(NSString *) style;
+- (void) setUserStyleProperty:(NSString *) property forSelector:(NSString *) selector toValue:(NSString *) value;
+- (void) setUserStyle:(NSString *) style;
 - (void) saveUserStyleOptions;
 @end

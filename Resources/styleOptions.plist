@@ -3,12 +3,8 @@
 <plist version="1.0">
 <array>
 	<dict>
-		<key>selector</key>
-		<string>body</string>
-		<key>property</key>
-		<string>color</string>
-		<key>important</key>
-		<true />
+		<key>style</key>
+		<string>body { color: %@ !important; }</string>
 		<key>default</key>
 		<string>#000000</string>
 		<key>description</key>
@@ -17,12 +13,8 @@
 		<string>color</string>
 	</dict>
 	<dict>
-		<key>selector</key>
-		<string>body</string>
-		<key>property</key>
-		<string>background-color</string>
-		<key>important</key>
-		<true />
+		<key>style</key>
+		<string>body { background-color: %@ !important; }</string>
 		<key>default</key>
 		<string>#ffffff</string>
 		<key>description</key>
@@ -31,10 +23,8 @@
 		<string>color</string>
 	</dict>
 	<dict>
-		<key>selector</key>
-		<string>a:link</string>
-		<key>property</key>
-		<string>color</string>
+		<key>style</key>
+		<string>a:link { color: %@; }</string>
 		<key>default</key>
 		<string>#0000aa</string>
 		<key>description</key>
@@ -43,10 +33,11 @@
 		<string>color</string>
 	</dict>
 	<dict>
-		<key>selector</key>
-		<string>a:link</string>
-		<key>property</key>
-		<string>text-decoration</string>
+		<key>style</key>
+		<array>
+			<string>a:link { text-decoration: underline; }</string>
+			<string>a:link { text-decoration: none; }</string>
+		</array>
 		<key>default</key>
 		<integer>0</integer>
 		<key>description</key>
@@ -57,11 +48,6 @@
 		<array>
 			<string>Yes</string>
 			<string>No</string>
-		</array>
-		<key>values</key>
-		<array>
-			<string>underline</string>
-			<string>none</string>
 		</array>
 	</dict>
 </array>

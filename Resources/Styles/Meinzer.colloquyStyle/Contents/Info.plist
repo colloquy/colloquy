@@ -19,12 +19,18 @@
 	<key>JVStyleOptions</key>
 	<array>
 		<dict>
-			<key>selector</key>
-			<string>.message.highlight</string>
-			<key>property</key>
-			<string>background-color</string>
-			<key>important</key>
-			<true />
+			<key>style</key>
+			<string>.message { background-color: %@ !important; } .submessage { background-color: %@ !important; }</string>
+			<key>default</key>
+			<string>rgba( 255, 191, 78, 0.6 )</string>
+			<key>description</key>
+			<string>Message background</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<string>.message.highlight { background-color: %@ !important; } .submessage.highlight { background-color: %@ !important; }</string>
 			<key>default</key>
 			<string>rgba( 255, 191, 78, 0.6 )</string>
 			<key>description</key>
@@ -33,24 +39,11 @@
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>selector</key>
-			<string>.submessage.highlight</string>
-			<key>property</key>
-			<string>background-color</string>
-			<key>important</key>
-			<true />
-			<key>default</key>
-			<string>rgba( 255, 191, 78, 0.6 )</string>
-			<key>description</key>
-			<string>Submessage highlight</string>
-			<key>type</key>
-			<string>color</string>
-		</dict>
-		<dict>
-			<key>selector</key>
-			<string>.time</string>
-			<key>property</key>
-			<string>display</string>
+			<key>style</key>
+			<array>
+				<string>.time { display: block; }</string>
+				<string>.time { display: none; }</string>
+			</array>
 			<key>default</key>
 			<integer>0</integer>
 			<key>description</key>
@@ -62,10 +55,25 @@
 				<string>Visible</string>
 				<string>Hidden</string>
 			</array>
-			<key>values</key>
+		</dict>
+		<dict>
+			<key>style</key>
 			<array>
-				<string>block</string>
-				<string>none</string>
+				<string>a.member { border-bottom: none !important; } .event a.member { border-bottom: none !important; }</string>
+				<string>a.member { border-bottom: 1px black dotted !important; } .event a.member { border-bottom: 1px white dotted !important; }</string>
+				<string>a.member { border-bottom: 1px black solid !important; } .event a.member { border-bottom: 1px white solid !important; }</string>
+			</array>
+			<key>default</key>
+			<integer>1</integer>
+			<key>description</key>
+			<string>Member underline</string>
+			<key>type</key>
+			<string>list</string>
+			<key>options</key>
+			<array>
+				<string>Hidden</string>
+				<string>Dotted</string>
+				<string>Solid</string>
 			</array>
 		</dict>
 	</array>
