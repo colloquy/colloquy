@@ -80,6 +80,9 @@
 - (void) cancel:(id) sender;
 - (void) apply:(id) sender;
 
+- (NSString *) windowTitle;
+- (BOOL) usesButtons;
+
 #if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_2
 - (void) selectModule:(id) sender;
 #endif
