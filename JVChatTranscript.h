@@ -39,6 +39,8 @@
 }
 - (id) initWithTranscript:(NSString *) filename;
 
+- (void) saveTranscriptTo:(NSString *) path;
+
 - (IBAction) changeChatStyle:(id) sender;
 - (void) setChatStyle:(NSBundle *) style withVariant:(NSString *) variant;
 - (NSBundle *) chatStyle;

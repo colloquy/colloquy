@@ -119,8 +119,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 - (id) initWithTranscript:(NSString *) filename {
 	if( ( self = [self init] ) ) {
 		xmlFreeDoc( _xmlLog );
+		if( ! ( _xmlLog = xmlParseFile( [filename fileSystemRepresentation] ) ) ) return nil;
 		_filePath = [filename copy];
-		_xmlLog = xmlParseFile( [filename fileSystemRepresentation] );
 		_isArchive = YES;
 	}
 	return self;
@@ -267,14 +267,14 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 
 - (NSString *) title {
-	return [[[[_filePath lastPathComponent] stringByDeletingPathExtension] retain] autorelease];
+	return [[NSFileManager defaultManager] displayNameAtPath:_filePath];
 }
 
 - (NSString *) windowTitle {
 	xmlChar *began = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "began" );
 	NSCalendarDate *date = ( began ? [NSCalendarDate dateWithString:[NSString stringWithUTF8String:began]] : nil );
 	xmlFree( began );
-	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [[_filePath lastPathComponent] stringByDeletingPathExtension], ( date ? [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]] : @"" )];
+	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [self title], ( date ? [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]] : @"" )];
 }
 
 - (NSString *) information {
@@ -339,7 +339,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 #pragma mark -
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"Transcript %@", [[_filePath lastPathComponent] stringByDeletingPathExtension]];
+	return [NSString stringWithFormat:@"Transcript %@", [self title]];
 }
 
 - (MVChatConnection *) connection {
@@ -353,18 +353,23 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[savePanel setDelegate:self];
 	[savePanel setCanSelectHiddenExtension:YES];
 	[savePanel setRequiredFileType:@"colloquyTranscript"];
-	[savePanel beginSheetForDirectory:NSHomeDirectory() file:@"" modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( savePanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+	[savePanel beginSheetForDirectory:NSHomeDirectory() file:[self title] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( savePanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
 }
 
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
-		if( ! _chatEmoticons ) xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", "" );
-		else xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", [[_chatEmoticons bundleIdentifier] UTF8String] );
-		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[_chatStyle bundleIdentifier] UTF8String] );
-		xmlSaveFormatFile( [[sheet filename] fileSystemRepresentation], _xmlLog, (int) [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] );
+		[self saveTranscriptTo:[sheet filename]];
 		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] atPath:[sheet filename]];
 	}
+}
+
+- (void) saveTranscriptTo:(NSString *) path {
+	if( ! _chatEmoticons ) xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", "" );
+	else xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", [[_chatEmoticons bundleIdentifier] UTF8String] );
+	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[_chatStyle bundleIdentifier] UTF8String] );
+	xmlSaveFormatFile( [path fileSystemRepresentation], _xmlLog, (int) [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"] );	
+	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
 }
 
 #pragma mark -
@@ -1106,5 +1111,18 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 - (JVChatMessage *) valueInMessagesAtIndex:(unsigned) index {
 	return [self messageAtIndex:index];
+}
+
+#pragma mark -
+
+- (void) saveScriptCommand:(NSScriptCommand *) command {
+	NSString *path = [[command evaluatedArguments] objectForKey:@"File"];
+
+	if( ! [[path pathComponents] count] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid path."];
+		return;
+	}
+
+	[self saveTranscriptTo:path];
 }
 @end
