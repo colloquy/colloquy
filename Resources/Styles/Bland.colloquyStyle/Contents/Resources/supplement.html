@@ -1,54 +1,4 @@
-<style type="text/css" media="screen,print">
-	.envelope > .member {
-		overflow: hidden;
-		display: block;
-		width: 15ex;
-		float: left;
-		text-align: right;
-		text-decoration: none;
-		color: #00f;
-	}
-
-	.event {
-		display: block;
-		text-align: left;
-		margin-left: 14ex;
-		margin-right: 0;
-	}
-
-	.message {
-		display: block;
-		text-align: left;
-		margin-left: 16ex;
-		margin-right: 9ex;
-	}
-</style>
 <script type="text/javascript">
-	maxNickLength = 10;
-
-	function adjustMarginsIfNeeded() {
-		if( document.body.lastChild.firstChild.firstChild.data.length > maxNickLength ) {
-			maxNickLength = document.body.lastChild.firstChild.firstChild.data.length + 6;
-			document.styleSheets[3].cssRules[0].style.width = maxNickLength + 'ex';
-			document.styleSheets[3].cssRules[1].style.marginLeft = ( maxNickLength - 1 ) + 'ex';
-			document.styleSheets[3].cssRules[2].style.marginLeft = ( maxNickLength + 1 ) + 'ex';
-		}
-	}
-
-	function appendMessage( html ) {
-		checkIfScrollToBottomIsNeeded();
-		removeConsecutiveInsertPoint();
-
-		range = document.createRange();
-		range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
-		documentFragment = range.createContextualFragment( html );
-		document.body.appendChild( documentFragment );
-
-		scrollToBottomIfNeeded();
-		adjustMarginsIfNeeded();
-		bottomAlignChat();
-	}
-
 	function bottomAlignChat() {
 		var windowHeight = window.innerHeight;
 		if( windowHeight > 0 ) {
@@ -62,6 +12,6 @@
 		}
 	}
 
-	window.onresize = bottomAlignChat;
-	bottomAlignChat();
+//	window.onresize = bottomAlignChat;
+//	bottomAlignChat();
 </script>

@@ -22,6 +22,28 @@
 	<array>
 		<dict>
 			<key>style</key>
+			<array>
+				<string>.envelope &gt; .member { width: 10ex !important; } .message { margin-left: 12ex !important; } .event { margin-left: 10ex !important; }</string>
+				<string>.envelope &gt; .member { width: 14ex !important; } .message { margin-left: 16ex !important; } .event { margin-left: 14ex !important; }</string>
+				<string>.envelope &gt; .member { width: 18ex !important; } .message { margin-left: 20ex !important; } .event { margin-left: 18ex !important; }</string>
+				<string>.envelope &gt; .member { width: 22ex !important; } .message { margin-left: 24ex !important; } .event { margin-left: 22ex !important; }</string>
+			</array>
+			<key>default</key>
+			<integer>1</integer>
+			<key>description</key>
+			<string>Nickname column</string>
+			<key>type</key>
+			<string>list</string>
+			<key>options</key>
+			<array>
+				<string>Small</string>
+				<string>Medium</string>
+				<string>Large</string>
+				<string>Extra Large</string>
+			</array>
+		</dict>
+		<dict>
+			<key>style</key>
 			<string>.envelope &gt; .member.self { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#F00</string>

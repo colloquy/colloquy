@@ -1,4 +1,4 @@
- body {
+body {
 	margin: 4px 0 5px 0;
 	color: black;
 	background-repeat: no-repeat;
@@ -51,7 +51,14 @@ i {
 }
 
 .envelope > .member {
-	color: #00F;
+	overflow: hidden;
+	display: block;
+	padding-left: 1ex;
+	width: 14ex;
+	float: left;
+	text-align: right;
+	text-decoration: none;
+	color: #00f;
 }
 
 .envelope > .member.self {
@@ -82,6 +89,20 @@ i {
 	margin-left: 0;
 	text-decoration: none !important;
 	color: inherit !important;
+}
+
+.event {
+	display: block;
+	text-align: left;
+	margin-left: 14ex;
+	margin-right: 0;
+}
+
+.message {
+	display: block;
+	text-align: left;
+	margin-left: 16ex;
+	margin-right: 9ex;
 }
 
 .timestamp {
