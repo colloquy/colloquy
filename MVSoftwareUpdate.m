@@ -2,7 +2,7 @@
 #import <unistd.h>
 #import "MVSoftwareUpdate.h"
 
-#define MVSoftwareUpdateURLFormat @"http://colloquy.info/global/update.php?MVApplicationBuild=%@&MVApplicationName=%@"
+#define MVSoftwareUpdateURLFormat @"http://colloquy.info/update.php?MVApplicationBuild=%@&MVApplicationName=%@"
 
 #pragma mark -
 
