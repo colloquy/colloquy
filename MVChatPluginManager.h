@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import "MVChatPlugin.h"
 
 @interface MVChatPluginManager : NSObject {
 	@private

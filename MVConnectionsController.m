@@ -1,7 +1,8 @@
 #import <Cocoa/Cocoa.h>
+#import <ChatCore/MVChatConnection.h>
+
 #import "MVConnectionsController.h"
 #import "JVChatController.h"
-#import "MVChatConnection.h"
 #import "MVKeyChain.h"
 
 static MVConnectionsController *sharedInstance = nil;
@@ -16,6 +17,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteboard type";
 
 @interface MVConnectionsController (MVConnectionsControllerPrivate)
+- (void) _refresh:(NSNotification *) notification;
 - (void) _loadInterfaceIfNeeded;
 - (void) _saveBookmarkList;
 - (void) _loadBookmarkList;

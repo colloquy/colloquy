@@ -1,6 +1,6 @@
-#import "MVChatPluginManager.h"
-#import "MVChatPlugin.h"
-#import "MVChatConnection.h"
+#import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/MVChatPlugin.h>
 
 static MVChatPluginManager *sharedInstance = nil;
 

@@ -1,7 +1,7 @@
 #import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
-#import <IOKit/IOKitLib.h>
-#import <IOKit/IOTypes.h>
+#import <Foundation/NSDate.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSURL.h>
 
 #define MVURLEncodeString(t) ((NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)(t), NULL, CFSTR(",;:/?@&$="), kCFStringEncodingUTF8))
 #define MVURLDecodeString(t) ((NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)(t), NULL))
@@ -68,7 +68,11 @@ extern NSString *MVChatConnectionFileTransferStatusNotification;
 extern NSString *MVChatConnectionSubcodeRequestNotification;
 extern NSString *MVChatConnectionSubcodeReplyNotification;
 
-@class NSString;
+@class NSTimer;
+@class NSMutableArray;
+@class NSMutableDictionary;
+@class NSDictionary;
+@class NSAttributedString;
 
 @interface MVChatConnection : NSObject {
 @private
@@ -86,8 +90,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSDate *_cachedDate;
 	NSTimeInterval _backlogDelay;
 	NSDictionary *_floodIntervals;
-	io_object_t _sleepNotifier;
-	io_connect_t _powerConnection;
+	unsigned int /* io_object_t */ _sleepNotifier;
+	unsigned int /* io_connect_t */ _powerConnection;
 }
 - (id) initWithURL:(NSURL *) url;
 - (id) initWithServer:(NSString *) server port:(unsigned short) port user:(NSString *) nickname;

@@ -1,7 +1,8 @@
 #import <Cocoa/Cocoa.h>
+#import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatPluginManager.h>
+
 #import "MVChatWindowController.h"
-#import "MVChatConnection.h"
-#import "MVChatPluginManager.h"
 #import "MVTextView.h"
 #import "MVTableView.h"
 #import "MVImageTextCell.h"

@@ -1,9 +1,12 @@
+#import <Cocoa/Cocoa.h>
 #import <string.h>
-#import <Foundation/Foundation.h>
+#import <IOKit/IOKitLib.h>
+#import <IOKit/IOTypes.h>
 #import <IOKit/IOMessage.h>
 #import <IOKit/pwr_mgt/IOPMLib.h>
-#import "MVChatConnection.h"
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/MVChatPlugin.h>
 #import "NSAttributedStringAdditions.h"
 #import "firetalk.h"
 
@@ -768,8 +771,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (void) sendMessageToUser:(NSString *) user attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	if( [self isConnected] ) {
 		NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
-
 		[encodedData appendBytes:"\0" length:1];
+
 		if( action ) firetalk_im_send_action( _chatConnection, [user UTF8String], (char *) [encodedData bytes], 0 );
 		else firetalk_im_send_message( _chatConnection, [user UTF8String], (char *) [encodedData bytes], 0 );
 
@@ -780,8 +783,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (void) sendMessageToChatRoom:(NSString *) room attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	if( [self isConnected] ) {
 		NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
-
 		[encodedData appendBytes:"\0" length:1];
+
 		if( action ) firetalk_chat_send_action( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes], 0 );
 		else firetalk_chat_send_message( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes], 0 );
 
@@ -1115,8 +1118,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 @implementation NSURL (NSURLChatAdditions)
 - (BOOL) isChatURL {
-	if( [[self scheme] isEqualToString:@"irc"] )
-		return YES;
+	if( [[self scheme] isEqualToString:@"irc"] ) return YES;
 	return NO;
 }
 

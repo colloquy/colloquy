@@ -1,7 +1,8 @@
 #import <Cocoa/Cocoa.h>
+#import <ChatCore/MVChatConnection.h>
+
 #import "MVFileTransferController.h"
 //#import "MVChatWindowController.h"
-#import "MVChatConnection.h"
 #import "JVDetailCell.h"
 
 static MVFileTransferController *sharedInstance = nil;
