@@ -5,7 +5,6 @@
             ACTIONS = {
                 addRoom = id; 
                 conenctNewConnection = id; 
-                joinRoom = id; 
                 messageUser = id; 
                 newConnection = id; 
                 openNetworkPreferences = id; 
@@ -23,20 +22,19 @@
                 authPassword = NSTextField; 
                 connections = NSTableView; 
                 detailsTabView = NSTabView; 
-                joinRoom = NSPanel; 
                 messageUser = NSPanel; 
                 newAddress = NSTextField; 
                 newJoinRooms = NSTableView; 
                 newNickname = NSTextField; 
                 newPort = NSTextField; 
                 newProxy = NSPopUpButton; 
+                newRealName = NSTextField; 
                 newRemember = NSButton; 
                 newRemoveRoom = NSButton; 
                 newServerPassword = NSTextField; 
+                newUsername = NSTextField; 
                 nicknameAuth = NSPanel; 
                 openConnection = NSPanel; 
-                roomPassword = NSTextField; 
-                roomToJoin = NSComboBox; 
                 showDetails = NSButton; 
                 userToMessage = NSTextField; 
             }; 

@@ -19,9 +19,11 @@
                 editPassword = NSTextField; 
                 editPort = NSTextField; 
                 editProxy = NSPopUpButton; 
+                editRealName = NSTextField; 
                 editRemoveRoom = NSButton; 
                 editRooms = NSTableView; 
                 editServerPassword = NSTextField; 
+                editUsername = NSTextField; 
                 view = NSView; 
             }; 
             SUPERCLASS = NSObject; 
