@@ -274,11 +274,10 @@ static WebView *fragmentWebView = nil;
 				break;
 			case '\003': // color
 				if( [[options objectForKey:@"IgnoreFontColors"] boolValue] ) break;
-				[attributes removeObjectForKey:NSForegroundColorAttributeName];
-				[attributes removeObjectForKey:NSBackgroundColorAttributeName];
 				if( [message length] > ( location + 1 ) ) {
-					unsigned int fcolor = 0;
 					[scanner setScanLocation:( location + 1 )];
+
+					unsigned int fcolor = 0;
 					if( [scanner scanInt:&fcolor] ) {
 						fcolor %= 16;
 
@@ -291,6 +290,9 @@ static WebView *fragmentWebView = nil;
 							NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[bcolor][0] / 255. ) green:( (float) mIRCColors[bcolor][1] / 255. ) blue:( (float) mIRCColors[bcolor][2] / 255. ) alpha:1.];
 							if( backgroundColor ) [attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
 						}
+					} else { // no color, reset both colors
+						[attributes removeObjectForKey:NSForegroundColorAttributeName];
+						[attributes removeObjectForKey:NSBackgroundColorAttributeName];
 					}
 				}
 			}
