@@ -1,6 +1,7 @@
 #import <Foundation/NSObject.h>
 
 @class NSMutableDictionary;
+@class NSArray;
 @class NSSet;
 @class NSEnumerator;
 
@@ -9,6 +10,9 @@
 	NSMutableDictionary *_plugins;
 }
 + (MVChatPluginManager *) defaultManager;
+
+- (NSArray *) pluginSearchPaths;
+- (void) findAndLoadPlugins;
 
 - (NSSet *) plugins;
 - (NSSet *) pluginsThatRespondToSelector:(SEL) selector;
