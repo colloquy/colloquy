@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "proxy.h"
 
 #define LIBFIRETALK_VERSION "0.1.0 (Javelin.cc Extensions)"
-#define LIBFIRETALK_HOMEPAGE "http://www.penguinhosting.net/~ian/firetalk/"
+#define LIBFIRETALK_HOMEPAGE "http://www.firestuff.org/projects/firetalk/"
 
 #ifndef _HAVE_FIRETALK_T
 typedef void * firetalk_t;
