@@ -1,0 +1,55 @@
+.emoticon samp {
+	display: none;
+}
+
+.emoticon:after {
+	vertical-align: -40%;
+}
+
+.emoticon.smile:after {
+	content: url( "smile.tiff" );
+}
+
+.emoticon.wink:after {
+	content: url( "wink.tiff" );
+}
+
+.emoticon.happy:after {
+	content: url( "laugh.tiff" );
+}
+
+.emoticon.frown:after {
+	content: url( "frown.tiff" );
+}
+
+.emoticon.annoyed:after {
+	content: url( "slant.tiff" );
+}
+
+.emoticon.razz:after {
+	content: url( "yuck.tiff" );
+}
+
+.emoticon.angry:after {
+	content: url( "angry.tiff" );
+}
+
+.emoticon.cool:after {
+	content: url( "cool.tiff" );
+}
+
+.emoticon.angel:after {
+	content: url( "inocent.tiff" );
+}
+
+.emoticon.suprised:after {
+	content: url( "gasp.tiff" );
+}
+
+.emoticon.cry:after {
+	content: url( "cry.tiff" );
+}
+
+.emoticon.cry:after {
+	content: url( "cry.tiff" );
+}

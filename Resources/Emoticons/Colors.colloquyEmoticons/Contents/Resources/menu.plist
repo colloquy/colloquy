@@ -1,0 +1,12 @@
+(
+	{name = Smile; image = "smile.tif"; insert = ":)";},
+	{name = Happy; image = "happy.tif"; insert = ":D";},
+	{name = Wink; image = "wink.tif"; insert = ";)";},
+	{name = Cool; image = "cool.tif"; insert = "8)";},
+	{name = Frown; image = "frown.tif"; insert = ":(";},
+	{name = Stoic; image = "stoic.tif"; insert = ":|";},
+	{name = Annoyed; image = "annoyed.tif"; insert = ":\\";},
+	{name = Surprised; image = "surprised.tif"; insert = ":O";},
+	{name = Razz; image = "razz.tif"; insert = ":P";},
+	{name = Angry; image = "angry.tif"; insert = ":x";}
+)
