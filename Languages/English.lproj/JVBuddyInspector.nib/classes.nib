@@ -2,7 +2,17 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {addNickname = id; changeServer = id; editCard = id; removeNickname = id; }; 
+            ACTIONS = {
+                addNickname = id; 
+                changeBuddyIcon = id; 
+                changeEmail = id; 
+                changeFirstName = id; 
+                changeLastName = id; 
+                changeNickname = id; 
+                changeServer = id; 
+                editCard = id; 
+                removeNickname = id; 
+            }; 
             CLASS = JVBuddyInspector; 
             LANGUAGE = ObjC; 
             OUTLETS = {
