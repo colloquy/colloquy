@@ -37,7 +37,7 @@
 		_collapsed = YES;
 		_needsRefresh = YES;
 
-		_refreshTimer = [[NSTimer scheduledTimerWithTimeInterval:( 1. ) target:self selector:@selector( _refreshResults: ) userInfo:nil repeats:YES] retain];
+		_refreshTimer = [[NSTimer scheduledTimerWithTimeInterval:( 2. ) target:self selector:@selector( _refreshResults: ) userInfo:nil repeats:YES] retain];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _connectionChange: ) name:MVChatConnectionDidConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _connectionChange: ) name:MVChatConnectionDidDisconnectNotification object:nil];
@@ -131,7 +131,7 @@
 	[[self window] orderOut:nil];
 	[[NSApplication sharedApplication] endSheet:[self window]];
 
-	if( _connection )[self _stopFetch];
+	if( _connection ) [self _stopFetch];
 
 	[super close];
 
@@ -517,19 +517,19 @@ NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *r
 	NSString *room = nil;
 	NSDictionary *info = nil;
 
+	[_roomOrder removeAllObjects]; // this is far more efficient than doing a containsObject: and a removeObject: during the while
+
 	while( ( room = [enumerator nextObject] ) && ( info = [venumerator nextObject] ) ) {
-		if( [room rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound ||
-			[[[info objectForKey:@"topicAttributed"] string] rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound ) {
-			if( ! [_roomOrder containsObject:room] )
-				[_roomOrder addObject:room];
-		} else [_roomOrder removeObject:room];
+		if( [room rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound || [[[info objectForKey:@"topicAttributed"] string] rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound ) {
+			[_roomOrder addObject:room];
+		}
 	}
 
 refresh:
 	if( _connection && [_connection isConnected] && [_roomResults count] ) {
 		[indexResults setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"%d rooms indexed.", "number of rooms listed on the server" ), [_roomResults count]]];
 		if( ! [_currentFilter length] ) {
-			[indexAndFindResults setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"%d rooms indexed.", "number of rooms listed on the server" ), [_roomResults count]]];
+			[indexAndFindResults setObjectValue:[indexResults stringValue]];
 		} else {
 			[indexAndFindResults setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"%d of %d rooms found.", "number of rooms found with a filter from the server listing" ), [_roomOrder count], [_roomResults count]]];
 		}
@@ -568,6 +568,7 @@ refresh:
 }
 
 - (void) _stopFetch {
+	[_connection stopFetchingChatRoomList];
 	JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
 	[console resume];
 }
