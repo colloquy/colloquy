@@ -16,6 +16,7 @@
 #import "JVAppearancePreferences.h"
 #import "JVChatTranscriptPrivates.h"
 #import "JVMarkedScroller.h"
+#import "NSBundleAdditions.h"
 
 #import <libxml/xinclude.h>
 #import <libxml/debugXML.h>
@@ -44,9 +45,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 #pragma mark Style and Emoticon Bundle Sort
 
 NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
-	NSString *styleName1 = [JVChatTranscript _nameForBundle:style1];
-	NSString *styleName2 = [JVChatTranscript _nameForBundle:style2];
-    return [styleName1 caseInsensitiveCompare:styleName2];
+	return [[style1 displayName] caseInsensitiveCompare:[style2 displayName]];
 }
 
 #pragma mark -
@@ -786,14 +785,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	free( params );
 }
 
-+ (NSString *) _nameForBundle:(NSBundle *) bundle {
-	NSDictionary *info = [bundle localizedInfoDictionary];
-	NSString *label = [info objectForKey:@"CFBundleName"];
-	if( ! label ) label = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
-	if( ! label ) label = [bundle bundleIdentifier];
-	return [[label retain] autorelease];
-}
-
 #pragma mark -
 #pragma mark Style Support
 
@@ -901,7 +892,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	} else {
 		NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
 
-		if( [menu numberOfItems] > ( [JVChatStyleBundles count] + 2 ) )
+		if( [menu numberOfItems] > ( [JVChatStyleBundles count] + 3 ) )
 			[enumerator nextObject];
 
 		while( ( menuItem = [enumerator nextObject] ) )
@@ -915,7 +906,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	while( ( style = [enumerator nextObject] ) ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[[self class] _nameForBundle:style] action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[style bundleIdentifier]];
 		[menu addItem:menuItem];
@@ -1131,7 +1122,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 	enumerator = [[[JVChatEmoticonBundles allObjects] sortedArrayUsingFunction:sortBundlesByName context:self] objectEnumerator];
 	while( ( emoticon = [enumerator nextObject] ) ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[[self class] _nameForBundle:emoticon] action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[emoticon bundleIdentifier]];
 		[menu addItem:menuItem];
