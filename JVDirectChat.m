@@ -99,6 +99,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (void) _makeHyperlinksInString:(NSMutableString *) string;
 - (void) _breakLongLinesInString:(NSMutableString *) string;
 - (void) _preformEmoticonSubstitutionOnString:(NSMutableString *) string;
+- (char *) _classificationForNickname:(NSString *) nickname;
+- (void) _saveSelfIcon;
+- (void) _saveBuddyIcon:(JVBuddy *) buddy;
 @end
 
 #pragma mark -
@@ -735,7 +738,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		if( [_buddy preferredNameWillReturn] != JVBuddyActiveNickname ) theirName = [_buddy preferredName];
 		child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
 		if( ! [theirName isEqualToString:user] )
-			xmlSetProp( child, "nickname", [user UTF8String] );		
+			xmlSetProp( child, "nickname", [user UTF8String] );
+		xmlSetProp( child, "card", [[_buddy uniqueIdentifier] UTF8String] );
+		[self _saveBuddyIcon:_buddy];
 	} else if( [user isEqualToString:[[self connection] nickname]] ) {
 		NSString *selfName = user;
 		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
@@ -743,9 +748,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyGivenNickname )
 			selfName = [self _selfStoredNickname];
 		child = xmlNewTextChild( root, NULL, "sender", [selfName UTF8String] );
-		xmlSetProp( child, "self", "yes" );		
 		if( ! [selfName isEqualToString:user] )
-			xmlSetProp( child, "nickname", [user UTF8String] );		
+			xmlSetProp( child, "nickname", [user UTF8String] );
+		xmlSetProp( child, "self", "yes" );
+		xmlSetProp( child, "card", [[[[ABAddressBook sharedAddressBook] me] uniqueId] UTF8String] );
+		[self _saveSelfIcon];
 	} else {
 		NSString *theirName = user;
 		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:user onServer:[[self connection] server]];
@@ -754,7 +761,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		child = xmlNewTextChild( root, NULL, "sender", [theirName UTF8String] );
 		if( ! [theirName isEqualToString:user] )
 			xmlSetProp( child, "nickname", [user UTF8String] );		
+		if( buddy ) {
+			xmlSetProp( child, "card", [[buddy uniqueIdentifier] UTF8String] );
+			[self _saveBuddyIcon:buddy];
+		}
 	}
+
+	xmlSetProp( child, "classification", [self _classificationForNickname:user] );		
 
 	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
@@ -1467,6 +1480,26 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (BOOL) _usingSpecificEmoticons {
 	return ( [self preferenceForKey:@"emoticon"] ? YES : NO );
+}
+
+- (char *) _classificationForNickname:(NSString *) nickname {
+	return "normal";
+}
+
+- (void) _saveSelfIcon {
+	ABPerson *_person = [[ABAddressBook sharedAddressBook] me];
+	if( [[NSFileManager defaultManager] isReadableFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]]] )
+		return;
+	NSImage *icon = [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
+	NSData *imageData = [icon TIFFRepresentation];
+	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]] atomically:NO];
+}
+
+- (void) _saveBuddyIcon:(JVBuddy *) buddy {
+	if( [[NSFileManager defaultManager] isReadableFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]]] )
+		return;
+	NSData *imageData = [[buddy picture] TIFFRepresentation];
+	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] atomically:NO];
 }
 @end
 
