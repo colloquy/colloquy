@@ -11,6 +11,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (NSView *) _toolbarView;
 @end
 
+#pragma mark -
+
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
 - (void) _refreshSelectionMenu;
 - (void) _refreshWindow;
@@ -289,9 +291,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[toolbarItem setImage:[NSImage imageNamed:@"showdrawer"]];
 
 	[toolbarItem setTarget:self];
-	[toolbarItem setAction:@selector( toggleMemberDrawer: )];
+	[toolbarItem setAction:@selector( toggleViewsDrawer: )];
 
 	return [[toolbarItem retain] autorelease];
+}
+
+- (IBAction) toggleViewsDrawer:(id) sender {
+	[viewsDrawer toggle:sender];
 }
 
 #pragma mark -

@@ -47,6 +47,7 @@ extern NSString *JVChatViewPboardType;
 - (NSArray *) allChatViewControllers;
 
 - (NSToolbarItem *) toggleChatDrawerToolbarItem;
+- (IBAction) toggleViewsDrawer:(id) sender;
 
 - (void) reloadChatView:(id <JVChatViewController>) controller;
 @end
