@@ -24,14 +24,14 @@
 	[super dealloc];
 }
 
-- (void) displayInstalationWarning {
+- (void) displayInstallationWarning {
 	NSRunCriticalAlertPanel( NSLocalizedString( @"F-Script Framework Required", "F-Script required error title" ), NSLocalizedString( @"The F-Script framework was not found. The F-Script console and any F-Script plugins will not work during this session. For the latest version of F-Script visit http://www.fscript.org.", "F-Script framework required error message" ), nil, nil, nil );
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
 	if( view && ! [command caseInsensitiveCompare:@"fscript"] && ! [[arguments string] caseInsensitiveCompare:@"console"] ) {
 		if( ! _fscriptInstalled ) {
-			[self displayInstalationWarning];
+			[self displayInstallationWarning];
 			return YES;
 		}
 
@@ -41,7 +41,7 @@
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"fscript"] ) {
 		if( ! _fscriptInstalled ) {
-			[self displayInstalationWarning];
+			[self displayInstallationWarning];
 			return NO;
 		}
 
@@ -64,8 +64,7 @@
 				break;
 
 		if( ! plugin && ! [subcmd caseInsensitiveCompare:@"load"] ) {
-			plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager] autorelease];;
-			if( plugin ) [_manager addPlugin:plugin];
+			[self loadPluginNamed:path];
 		} else if( ( ! [subcmd caseInsensitiveCompare:@"reload"] || ! [subcmd caseInsensitiveCompare:@"load"] ) && plugin ) {
 			[plugin reloadFromDisk];
 		} else if( ! [subcmd caseInsensitiveCompare:@"unload"] && plugin ) {
@@ -84,6 +83,36 @@
 	return NO;
 }
 
+- (void) loadPluginNamed:(NSString *) name {
+	// Look through the standard plugin paths
+	if( ! _manager ) return;
+	
+	if( ! [name isAbsolutePath] ) {
+		NSArray *paths = [[_manager class] pluginSearchPaths];
+		NSFileManager *fm = [NSFileManager defaultManager];
+		
+		NSEnumerator *enumerator = [paths objectEnumerator];
+		NSString *path = nil;
+		while( path = [enumerator nextObject] ) {
+			path = [path stringByAppendingPathComponent:name];
+			path = [path stringByAppendingPathExtension:@"fscript"];
+			if( [fm fileExistsAtPath:path] ) {
+				if( ! _fscriptInstalled ) {
+					[self displayInstallationWarning];
+					return;
+				}
+				
+				JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager] autorelease];
+				if( plugin ) [_manager addPlugin:plugin];
+				return;
+			}
+		}
+	}
+	
+	JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:name withManager:_manager] autorelease];;
+	if( plugin ) [_manager addPlugin:plugin];
+}
+
 - (void) reloadPlugins {
 	if( ! _manager ) return;
 
@@ -91,12 +120,12 @@
 	NSString *file = nil, *path = nil;
 
 	NSEnumerator *enumerator = [paths objectEnumerator];
-	while( ( path = [enumerator nextObject] ) ) {
+	while( path = [enumerator nextObject] ) {
 		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
 		while( ( file = [denumerator nextObject] ) ) {
 			if( [[file pathExtension] isEqualToString:@"fscript"] ) {
 				if( ! _fscriptInstalled ) {
-					[self displayInstalationWarning];
+					[self displayInstallationWarning];
 					return;
 				}
 

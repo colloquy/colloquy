@@ -4,4 +4,5 @@
 	MVChatPluginManager *_manager;
 	BOOL _fscriptInstalled;
 }
+- (void) loadPluginNamed:(NSString *) name;
 @end

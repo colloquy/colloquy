@@ -71,16 +71,18 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 				bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]];
 				if( [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
 					id plugin = [[[[bundle principalClass] alloc] initWithManager:self] autorelease];
-					if( plugin ) [_plugins addObject:plugin];
+					//if( plugin ) [_plugins addObject:plugin];
+					if( plugin ) [self addPlugin:plugin];
 				}
 			}
 		}
 	}
 
-	signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), nil];
+	// Loading at the end means StandardCommands comes before all AS and FScript plugins
+	/*signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), nil];
 	invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( load )];
-	[self makePluginsPerformInvocation:invocation];
+	[self makePluginsPerformInvocation:invocation];*/
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidReloadPluginsNotification object:self];
 }
