@@ -339,18 +339,64 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 #pragma mark -
 
+- (void) addConnection:(MVChatConnection *) connection {
+	[self addConnection:connection keepBookmark:YES];
+}
+
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep {
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
-
 	[info setObject:[NSDate date] forKey:@"created"];
-	if( ! keep ) [info setObject:[NSNumber numberWithBool:YES] forKey:@"temporary"];
 	[info setObject:connection forKey:@"connection"];
+	if( ! keep ) [info setObject:[NSNumber numberWithBool:YES] forKey:@"temporary"];
 
 	[_bookmarks addObject:info];
-	[connections noteNumberOfRowsChanged];
 	[self _saveBookmarkList];
-	[connections selectRow:[_bookmarks indexOfObject:info] byExtendingSelection:NO];
+
+	[connections noteNumberOfRowsChanged];
 }
+
+- (void) insertConnection:(MVChatConnection *) connection atIndex:(unsigned) index {
+	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	[info setObject:[NSDate date] forKey:@"created"];
+	[info setObject:connection forKey:@"connection"];
+
+	[_bookmarks insertObject:info atIndex:index];
+	[self _saveBookmarkList];
+
+	[connections noteNumberOfRowsChanged];
+}
+
+- (void) removeConnectionAtIndex:(unsigned) index {
+	MVChatConnection *connection = [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
+    [connection disconnect];
+
+	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+
+	[_bookmarks removeObjectAtIndex:index];
+	[self _saveBookmarkList];
+
+	[connections noteNumberOfRowsChanged];
+}
+
+- (void) replaceConnectionAtIndex:(unsigned) index withConnection:(MVChatConnection *) connection {
+	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	[info setObject:[NSDate date] forKey:@"created"];
+	[info setObject:connection forKey:@"connection"];
+
+	MVChatConnection *oldConnection = [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
+    [oldConnection disconnect];
+
+	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[oldConnection server] securityDomain:[oldConnection server] account:[oldConnection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[oldConnection server] securityDomain:[oldConnection server] account:nil path:nil port:[oldConnection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+
+	[_bookmarks replaceObjectAtIndex:index withObject:info];
+	[self _saveBookmarkList];
+
+	[connections noteNumberOfRowsChanged];
+}
+
+#pragma mark -
 
 - (void) handleURL:(NSURL *) url andConnectIfPossible:(BOOL) connect {
 	if( [url isChatURL] ) {
@@ -401,8 +447,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 			[[self window] makeKeyAndOrderFront:nil];
 
-			if( target && isRoom ) [connection joinChatRoom:target];
-			else if( target && ! isRoom ) [[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:NO];
+			if( target && ! isRoom ) [[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:NO];
 		}
 	}
 }
@@ -412,7 +457,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 - (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection {
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	NSMutableDictionary *info = nil;
-	
+
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			if( autoConnect ) [info setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
@@ -425,13 +470,13 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 - (BOOL) autoConnectForConnection:(MVChatConnection *) connection {
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	NSMutableDictionary *info = nil;
-	
+
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			return [[info objectForKey:@"automatic"] boolValue];
 		}
 	}
-	
+
 	return NO;
 }
 
@@ -440,7 +485,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 - (void) setJoinRooms:(NSArray *) rooms forConnection:(MVChatConnection *) connection {
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	NSMutableDictionary *info = nil;
-	
+
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			if( rooms ) [info setObject:[[rooms mutableCopy] autorelease] forKey:@"rooms"];
@@ -453,13 +498,13 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 - (NSArray *) joinRoomsForConnection:(MVChatConnection *) connection {
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	NSMutableDictionary *info = nil;
-	
+
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			return [info objectForKey:@"rooms"];
 		}
 	}
-	
+
 	return nil;
 }
 
@@ -493,9 +538,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 - (IBAction) paste:(id) sender {
 	NSURL *url = [NSURL URLFromPasteboard:[NSPasteboard generalPasteboard]];
-
 	if( ! url ) url = [NSURL URLWithString:[[NSPasteboard generalPasteboard] stringForType:NSStringPboardType]];
-
 	[self handleURL:url andConnectIfPossible:NO];
 }
 
@@ -568,11 +611,11 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 		NSMenuItem *item = nil;
 		BOOL connected = [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected];
-	
+
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
-	
+
 		if( connected ) {
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Disconnect", "disconnect from server title" ) action:@selector( _disconnect: ) keyEquivalent:@""] autorelease];
 			[item setTarget:self];
@@ -582,25 +625,25 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 			[item setTarget:self];
 			[menu addItem:item];
 		}
-	
+
 		[menu addItem:[NSMenuItem separatorItem]];
 	
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", "join room contextual menu item title" ) action:@selector( _joinRoom: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		if( ! connected ) [item setAction:NULL];
 		[menu addItem:item];
-	
+
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Message User...", "message user contextual menu item title" ) action:@selector( _messageUser: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		if( ! connected ) [item setAction:NULL];
 		[menu addItem:item];
-	
+
 		[menu addItem:[NSMenuItem separatorItem]];
-	
+
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete item title" ) action:@selector( _delete: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
-	
+
 		return [[menu retain] autorelease];
 	}
 
@@ -648,34 +691,34 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		NSString *string = nil;
 		NSData *data = nil;
 		id plist = nil;
-	
+
 		if( row == -1 ) return NO;
-	
+
 		info = [_bookmarks objectAtIndex:row];
 		connection = [info objectForKey:@"connection"];
 		data = [NSData dataWithBytes:&row length:sizeof( &row )];
-	
+
 		[board declareTypes:[NSArray arrayWithObjects:MVConnectionPboardType, NSURLPboardType, NSStringPboardType, @"CorePasteboardFlavorType 0x75726C20", @"CorePasteboardFlavorType 0x75726C6E", @"WebURLsWithTitlesPboardType", nil] owner:self];
-	
+
 		[board setData:data forType:MVConnectionPboardType];
-	
+
 		[[connection url] writeToPasteboard:board];
-	
+
 		string = [[connection url] absoluteString];
 		data = [string dataUsingEncoding:NSASCIIStringEncoding];
 		[board setString:string forType:NSStringPboardType];
 		[board setData:data forType:NSStringPboardType];
-	
+
 		string = [[connection url] absoluteString];
 		data = [string dataUsingEncoding:NSASCIIStringEncoding];
 		[board setString:string forType:@"CorePasteboardFlavorType 0x75726C20"];
 		[board setData:data forType:@"CorePasteboardFlavorType 0x75726C20"];
-	
+
 		string = [[connection url] host];
 		data = [string dataUsingEncoding:NSASCIIStringEncoding];
 		[board setString:string forType:@"CorePasteboardFlavorType 0x75726C6E"];
 		[board setData:data forType:@"CorePasteboardFlavorType 0x75726C6E"];
-	
+
 		plist = [NSArray arrayWithObjects:[NSArray arrayWithObject:[[connection url] absoluteString]], [NSArray arrayWithObject:[[connection url] host]], nil];
 		data = [NSPropertyListSerialization dataFromPropertyList:plist format:NSPropertyListXMLFormat_v1_0 errorDescription:NULL];
 		string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
@@ -691,23 +734,23 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	if( view == connections ) {
 		NSString *string = nil;
 		int index = -1;
-	
+
 		if( operation == NSTableViewDropOn && row != -1 ) return NSDragOperationNone;
-	
+
 		string = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:MVConnectionPboardType]];
 		[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index];
 		if( string && row >= 0 && row != index && ( row - 1 ) != index ) return NSDragOperationEvery;
 		else if( string && row == -1 ) return NSDragOperationNone;
-	
+
 		if( row == -1 ) {
 			if( [[NSURL URLFromPasteboard:[info draggingPasteboard]] isChatURL] ) return NSDragOperationEvery;
-	
+
 			string = [[info draggingPasteboard] stringForType:NSStringPboardType];
 			if( string && [[NSURL URLWithString:string] isChatURL] ) return NSDragOperationEvery;
-	
+
 			string = [[info draggingPasteboard] stringForType:@"CorePasteboardFlavorType 0x75726C20"];
 			if( string && [[NSURL URLWithString:string] isChatURL] ) return NSDragOperationEvery;
-	
+
 			string = [[[[info draggingPasteboard] propertyListForType:@"WebURLsWithTitlesPboardType"] objectAtIndex:0] objectAtIndex:0];
 			if( string && [[NSURL URLWithString:string] isChatURL] ) return NSDragOperationEvery;
 		}
@@ -731,22 +774,22 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		} else {
 			NSString *string = nil;
 			NSURL *url = [NSURL URLFromPasteboard:[info draggingPasteboard]];
-	
+
 			if( ! [url isChatURL] ) {
 				string = [[info draggingPasteboard] stringForType:@"CorePasteboardFlavorType 0x75726C20"];
 				if( string ) url = [NSURL URLWithString:string];
 			}
-	
+
 			if( ! [url isChatURL] ) {
 				string = [[[[info draggingPasteboard] propertyListForType:@"WebURLsWithTitlesPboardType"] objectAtIndex:0] objectAtIndex:0];
 				if( string ) url = [NSURL URLWithString:string];
 			}
-	
+
 			if( ! [url isChatURL] ) {
 				string = [[info draggingPasteboard] stringForType:NSStringPboardType];
 				if( string ) url = [NSURL URLWithString:string];
 			}
-	
+
 			if( [url isChatURL] ) {
 				[self handleURL:url andConnectIfPossible:NO];
 				return YES;
@@ -1161,6 +1204,10 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	return [[ret retain] autorelease];
 }
 
+- (MVChatConnection *) valueInConnectionsArrayAtIndex:(unsigned) index {
+	return [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
+}
+
 - (MVChatConnection *) valueInConnectionsArrayWithUniqueID:(id) identifier {
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	MVChatConnection *connection = nil;
@@ -1176,37 +1223,23 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 }
 
 - (void) addInConnectionsArray:(MVChatConnection *) connection {
-	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	[self addConnection:connection];
+}
 
-	[info setObject:[NSDate date] forKey:@"created"];
-	[info setObject:connection forKey:@"connection"];
-
-	[_bookmarks addObject:info];
-	[connections noteNumberOfRowsChanged];
-	[self _saveBookmarkList];
-	[connections selectRow:[_bookmarks indexOfObject:info] byExtendingSelection:NO];
+- (void) insertInConnectionsArray:(MVChatConnection *) connection {
+	[self addConnection:connection];
 }
 
 - (void) insertInConnectionsArray:(MVChatConnection *) connection atIndex:(unsigned) index {
-	NSMutableDictionary *info = [NSMutableDictionary dictionary];
-
-	[info setObject:[NSDate date] forKey:@"created"];
-	[info setObject:connection forKey:@"connection"];
-
-	[_bookmarks insertObject:info atIndex:index];
-	[connections noteNumberOfRowsChanged];
-	[self _saveBookmarkList];
-	[connections selectRow:index byExtendingSelection:NO];
+	[self insertConnection:connection atIndex:index];
 }
 
 - (void) removeFromConnectionsArrayAtIndex:(unsigned) index {
-	MVChatConnection *connection = [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
-    [connection disconnect];
-	[_bookmarks removeObjectAtIndex:index];
-	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
-	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
-	[connections noteNumberOfRowsChanged];
-	[self _saveBookmarkList];
+	[self removeConnectionAtIndex:index];
+}
+
+- (void) replaceInConnectionsArray:(MVChatConnection *) connection atIndex:(unsigned) index {
+	[self replaceConnectionAtIndex:index withConnection:connection];
 }
 
 - (MVChatConnection *) handleURLScriptCommand:(NSScriptCommand *) command {
@@ -1216,7 +1249,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	MVChatConnection *connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
 	if( ! connection ) return nil;
 
-	[self addInConnectionsArray:connection];
+	[self addConnection:connection];
 	return connection;
 }
 @end
