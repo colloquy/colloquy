@@ -1,16 +1,16 @@
 #import <Cocoa/Cocoa.h>
 #import "JVChatController.h"
 #import "JVChatWindowController.h"
-#import "JVChatRoom.h"
+#import "JVChatTranscript.h"
 #import "JVDirectChat.h"
+#import "JVChatRoom.h"
 #import "MVChatConnection.h"
+
+#import <libxml/parser.h>
 
 static JVChatController *sharedInstance = nil;
 
 @interface JVChatController (JVChatControllerPrivate)
-- (void) _joinedRoom:(NSNotification *) notification;
-- (void) _leftRoom:(NSNotification *) notification;
-- (void) _nicknameChanged:(NSNotification *) notification;
 - (void) _addWindowController:(JVChatWindowController *) windowController;
 - (void) _addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller;
 @end
@@ -32,7 +32,6 @@ static JVChatController *sharedInstance = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatConnectionJoinedRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _leftRoom: ) name:MVChatConnectionLeftRoomNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _nicknameChanged: ) name:MVChatConnectionNicknameAcceptedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberJoinedRoom: ) name:MVChatConnectionUserJoinedRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberLeftRoom: ) name:MVChatConnectionUserLeftRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberNicknameChanged: ) name:MVChatConnectionUserNicknameChangedNotification object:nil];
@@ -117,7 +116,7 @@ static JVChatController *sharedInstance = nil;
 
 	enumerator = [_chatControllers objectEnumerator];
 	while( ( ret = [enumerator nextObject] ) )
-		if( [ret isMemberOfClass:[JVChatRoom class]] && [ret connection] == connection && [[ret target] isEqualToString:room] )
+		if( [ret isMemberOfClass:[JVChatRoom class]] && [ret connection] == connection && [[(JVChatRoom *)ret target] isEqualToString:room] )
 			break;
 
 	if( ! ret && ! exists ) {
@@ -139,7 +138,7 @@ static JVChatController *sharedInstance = nil;
 
 	enumerator = [_chatControllers objectEnumerator];
 	while( ( ret = [enumerator nextObject] ) )
-		if( [ret isMemberOfClass:[JVDirectChat class]] && [ret connection] == connection && [[ret target] isEqualToString:user] )
+		if( [ret isMemberOfClass:[JVDirectChat class]] && [ret connection] == connection && [[(JVDirectChat *)ret target] isEqualToString:user] )
 			break;
 
 	if( ! ret && ! exists ) {
@@ -149,6 +148,15 @@ static JVChatController *sharedInstance = nil;
 		}
 	}
 
+	return [[ret retain] autorelease];
+}
+
+- (id <JVChatViewController>) chatViewControllerForTranscript:(NSString *) filename {
+	id <JVChatViewController> ret = nil;
+	if( ( ret = [[[JVChatTranscript alloc] initWithTranscript:filename] autorelease] ) ) {
+		[_chatControllers addObject:ret];
+		[self _addViewControllerToPreferedWindowController:ret];
+	}
 	return [[ret retain] autorelease];
 }
 
@@ -178,10 +186,6 @@ static JVChatController *sharedInstance = nil;
 
 - (void) _leftRoom:(NSNotification *) notification {
 	NSLog( @"_leftRoom" );
-}
-
-- (void) _nicknameChanged:(NSNotification *) notification {
-	NSLog( @"_nicknameChanged" );
 }
 
 - (void) _memberJoinedRoom:(NSNotification *) notification {
