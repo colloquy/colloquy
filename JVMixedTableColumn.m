@@ -1,7 +1,12 @@
 #import "JVMixedTableColumn.h"
 #import <AppKit/NSTableView.h>
+#import <Cocoa/Cocoa.h>
 
 @implementation JVMixedTableColumn
+- (void) awakeFromNib {
+	delegateDataCellForRow = [[_tableView delegate] respondsToSelector:@selector( tableView:dataCellForRow:tableColumn: )];
+}
+	
 - (void) setTableView:(NSTableView *) tableView {
 	[super setTableView:tableView];
 	delegateDataCellForRow = [[_tableView delegate] respondsToSelector:@selector( tableView:dataCellForRow:tableColumn: )];
