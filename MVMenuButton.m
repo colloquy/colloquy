@@ -88,9 +88,12 @@
 		[_toolbarItem setMaxSize:NSMakeSize( 32., 32. )];
 	} else if( controlSize == NSSmallControlSize ) {
 		if( ! _smallImage ) {
-			_smallImage = [_orgImage copy];
-			[_smallImage setScalesWhenResized:YES];
-			[_smallImage setSize:NSMakeSize( 24., 24. )];
+			NSImageRep *sourceImageRep = [_orgImage bestRepresentationForDevice:nil];
+			_smallImage = [[NSImage alloc] initWithSize:NSMakeSize( 24., 24. )];
+			[_smallImage lockFocus];
+			[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+			[sourceImageRep drawInRect:NSMakeRect( 0., 0., 24., 24. )];
+			[_smallImage unlockFocus];
 		}
 		[super setImage:_smallImage];
 		[_toolbarItem setMinSize:NSMakeSize( 24., 24. )];
