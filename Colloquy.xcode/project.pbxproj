@@ -2515,7 +2515,6 @@
 				1CEE3F06057AEC0200AD6DE2,
 				1CDEE25E05823C26000B9075,
 				1CDEE47A0583DC58000B9075,
-				1CCA236F05956E7C0050EDE0,
 				1CD733CC05A0E2470080F952,
 				1C6EA24405A738DD006A559F,
 				1C2462A505F9205900505752,
@@ -3150,8 +3149,6 @@
 		};
 		1CC478470427BB2C00000102 = {
 			children = (
-				1CCA236D05956E7C0050EDE0,
-				1CCA236C05956E7C0050EDE0,
 				1CC478480427BB5500000102,
 				1CA56CCD042A713E00000102,
 				CB9B52AB06351A130055AB73,
@@ -3388,28 +3385,6 @@
 			path = Languages/English.lproj/MVFileTransfer.nib;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		1CCA236C05956E7C0050EDE0 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = MVChatPluginManagerAdditions.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CCA236D05956E7C0050EDE0 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = MVChatPluginManagerAdditions.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CCA236F05956E7C0050EDE0 = {
-			fileRef = 1CCA236D05956E7C0050EDE0;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1CCA510D0598108000F0A4CD = {
 			fileEncoding = 4;

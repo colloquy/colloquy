@@ -1,6 +1,5 @@
 #import <Cocoa/Cocoa.h>
 #import "JVStandardCommands.h"
-#import "MVChatPluginManagerAdditions.h"
 #import "MVConnectionsController.h"
 #import "MVChatConnection.h"
 #import "NSStringAdditions.h"
@@ -31,16 +30,7 @@
 
 @implementation JVStandardCommands
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( ( self = [super init] ) ) {
-		_manager = manager;
-	}
-
-	return self;
-}
-
-- (void) dealloc {
-	_manager = nil;
-	[super dealloc];
+	return ( self = [super init] );
 }
 
 #pragma mark -
@@ -74,7 +64,7 @@
 			[chat clearDisplay:nil];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"console"] ) {
-			id controller = [[_manager chatController] chatConsoleForConnection:[chat connection] ifExists:NO];
+			id controller = [[JVChatController defaultManager] chatConsoleForConnection:[chat connection] ifExists:NO];
 			[[controller windowController] showChatViewController:controller];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
@@ -328,7 +318,7 @@
         return YES;
 	} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
 		if( ! [[arguments string] caseInsensitiveCompare:@"plugins"] || ! [[arguments string] caseInsensitiveCompare:@"scripts"] ) {
-			[_manager findAndLoadPlugins];
+			[[MVChatPluginManager defaultManager] findAndLoadPlugins];
 			return YES;
 		} else if( ! [[arguments string] caseInsensitiveCompare:@"styles"] ) {
 			[JVStyle scanForStyles];
@@ -372,9 +362,9 @@
 		if( [panel runModalForTypes:nil] == NSOKButton ) {
 			NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 			while( ( path = [enumerator nextObject] ) )
-				[[_manager fileTransferController] addFileTransfer:[user sendFile:path passively:passive]];
+				[[MVFileTransferController defaultManager] addFileTransfer:[user sendFile:path passively:passive]];
 		}
-	} else [[_manager fileTransferController] addFileTransfer:[user sendFile:path passively:passive]];
+	} else [[MVFileTransferController defaultManager] addFileTransfer:[user sendFile:path passively:passive]];
 	return YES;
 }
 
@@ -397,7 +387,7 @@
 - (BOOL) handleServerConnectWithArguments:(NSString *) arguments {
 	NSURL *url = nil;
 	if( arguments && ( url = [NSURL URLWithString:arguments] ) ) {
-		[[_manager connectionsController] handleURL:url andConnectIfPossible:YES];
+		[[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
 	} else if( arguments ) {
 		NSString *address = nil;
 		int port = 0;
@@ -410,10 +400,10 @@
 
 		if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", [address stringByEncodingIllegalURLCharacters], port]];
 		else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", [address stringByEncodingIllegalURLCharacters]]];
-		else [[_manager connectionsController] newConnection:nil];
+		else [[MVConnectionsController defaultManager] newConnection:nil];
 
-		if( url ) [[_manager connectionsController] handleURL:url andConnectIfPossible:YES];
-	} else [[_manager connectionsController] newConnection:nil];
+		if( url ) [[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
+	} else [[MVConnectionsController defaultManager] newConnection:nil];
 	return YES;
 }
 
@@ -493,10 +483,10 @@
 
 	if( ! [command caseInsensitiveCompare:@"msg"] && ( ! chanSet || [chanSet characterIsMember:[to characterAtIndex:0]] ) ) {
 		MVChatRoom *room = [connection joinedChatRoomWithName:to];
-		chatView = [[_manager chatController] chatViewControllerForRoom:room ifExists:YES];
+		chatView = [[JVChatController defaultManager] chatViewControllerForRoom:room ifExists:YES];
 	}
 
-	if( ! chatView ) chatView = [[_manager chatController] chatViewControllerForUser:user ifExists:( ! show )];
+	if( ! chatView ) chatView = [[JVChatController defaultManager] chatViewControllerForUser:user ifExists:( ! show )];
 
 	if( [msg length] ) {
 		[chatView echoSentMessageToDisplay:msg asAction:NO];
@@ -517,7 +507,7 @@
 
 	BOOL action = ( ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"bract"] );
 
-	NSEnumerator *enumerator = [[[_manager chatController] chatViewControllersOfClass:[JVChatRoom class]] objectEnumerator];
+	NSEnumerator *enumerator = [[[JVChatController defaultManager] chatViewControllersOfClass:[JVChatRoom class]] objectEnumerator];
 	JVChatRoom *room = nil;
 	while( ( room = [enumerator nextObject] ) ) {
 		[room echoSentMessageToDisplay:message asAction:action];
@@ -528,7 +518,7 @@
 }
 
 - (BOOL) handleMassAwayWithMessage:(NSAttributedString *) message {
-	NSEnumerator *enumerator = [[[_manager connectionsController] connectedConnections] objectEnumerator];
+	NSEnumerator *enumerator = [[[MVConnectionsController defaultManager] connectedConnections] objectEnumerator];
 	id item = nil;
 	while( ( item = [enumerator nextObject] ) )
 		[item setAwayStatusWithMessage:message];
@@ -601,7 +591,7 @@
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 
 	KAIgnoreRule *rule = [KAIgnoreRule ruleForUser:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];
-	NSMutableArray *rules = [[_manager connectionsController] ignoreRulesForConnection:[view connection]];
+	NSMutableArray *rules = [[MVConnectionsController defaultManager] ignoreRulesForConnection:[view connection]];
 	[rules addObject:rule];
 
 	return YES;
