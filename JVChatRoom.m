@@ -9,7 +9,6 @@
 
 #import "JVChatController.h"
 #import "JVTabbedChatWindowController.h"
-#import "MVApplicationController.h"
 #import "MVConnectionsController.h"
 #import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
@@ -87,8 +86,7 @@
 }
 
 - (void) dealloc {
-	if( [[self target] isJoined] && ! [MVApplicationController isTerminating] )
-		[[self target] part];
+	[self partChat:nil];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
@@ -386,7 +384,8 @@
 #pragma mark -
 
 - (void) joinChat:(id) sender {
-	if( ! [[self target] isJoined] ) [[self target] join];
+	if( ! [[self target] isJoined] )
+		[[self target] join];
 }
 
 - (void) partChat:(id) sender {
@@ -619,11 +618,7 @@
 
 - (void) _partedRoom:(NSNotification *) notification {
 	if( ! [[self connection] isConnected] ) return;
-
-	[self parting];
-
-	if( ! [self keepAfterPart] )
-		[self close:nil];
+	if( ! [self keepAfterPart] ) [self close:nil];
 }
 
 - (void) _roomModeChanged:(NSNotification *) notification {
