@@ -1182,15 +1182,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[messageString appendFormat:@" <span class=\"error incompatible\">%@</span>", NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )];
 	}
 
-	[self processMessage:messageString asAction:action fromUser:user];
-
-	if( ! [messageString length] ) {
-		_newMessageCount--;
-		return;
-	}
-
-	_firstMessage = NO;
-
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		NSEnumerator *enumerator = nil;
 		NSMutableArray *names = nil;
@@ -1221,6 +1212,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[self _makeHyperlinksInString:messageString];
 
 	[self _performEmoticonSubstitutionOnString:messageString];
+
+	[self processMessage:messageString asAction:action fromUser:user];
+
+	if( ! [messageString length] ) {
+		_newMessageCount--;
+		return;
+	}
+
+	_firstMessage = NO;
 
 	doc = xmlNewDoc( "1.0" );
 
