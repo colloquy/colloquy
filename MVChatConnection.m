@@ -578,6 +578,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 	_firetalkSelectTimer = [[NSTimer scheduledTimerWithTimeInterval:.100 target:self selector:@selector( _executeRunLoopCheck: ) userInfo:nil repeats:YES] retain];
 
+	firetalk_set_proxy_type( _chatConnection, FX_NONE );
+
 	return self;
 }
 
@@ -1097,5 +1099,42 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (void) _didDisconnect {
 	_status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
+}
+@end
+
+#pragma mark -
+
+@implementation NSURL (NSURLChatAdditions)
+- (BOOL) isChatURL {
+	if( [[self scheme] isEqualToString:@"irc"] )
+		return YES;
+	return NO;
+}
+
+- (BOOL) isChatRoomURL {
+	BOOL isRoom = NO;
+	if( [[self scheme] isEqualToString:@"irc"] ) {
+		if( [self fragment] ) {
+			if( [[self fragment] length] > 0 ) isRoom = YES;
+		} else if( [self path] && [[self path] length] >= 2 ) {
+			if( [[[self path] substringFromIndex:1] hasPrefix:@"&"] || [[[self path] substringFromIndex:1] hasPrefix:@"+"] )
+				isRoom = YES;
+		}
+	}
+	return isRoom;
+}
+
+- (BOOL) isDirectChatURL {
+	BOOL isDirect = NO;
+	if( [[self scheme] isEqualToString:@"irc"] ) {
+		if( [self fragment] ) {
+			if( [[self fragment] length] > 0 ) isDirect = NO;
+		} else if( [self path] ) {
+			if( [[self path] length] >= 2 && [[[self path] substringFromIndex:1] hasPrefix:@"&"] || [[[self path] substringFromIndex:1] hasPrefix:@"+"] ) {
+				isDirect = NO;
+			} else isDirect = YES;
+		}
+	}
+	return isDirect;
 }
 @end

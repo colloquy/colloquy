@@ -146,3 +146,9 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (BOOL) isConnected;
 - (MVChatConnectionStatus) status;
 @end
+
+@interface NSURL (NSURLChatAdditions)
+- (BOOL) isChatURL;
+- (BOOL) isChatRoomURL;
+- (BOOL) isDirectChatURL;
+@end
