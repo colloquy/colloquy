@@ -68,7 +68,7 @@
 	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
 		if( [[self delegate] textView:self enterKeyPressed:event] ) return YES;
 	} else if( chr == NSTabCharacter ) {
-		return [self autocomplete];
+		return [self autocompleteWithSuffix:( ! ( [event modifierFlags] & NSAlternateKeyMask ) )];
 	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
 		if( [[self delegate] textView:self escapeKeyPressed:event] ) return YES;
 	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
@@ -210,7 +210,7 @@
 
 #pragma mark -
 
-- (BOOL) autocomplete {
+- (BOOL) autocompleteWithSuffix:(BOOL) suffix {
 	if( [self usesSystemCompleteOnTab] ) {
 		[self complete:nil];
 		return YES;
@@ -244,8 +244,8 @@
 			NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
 
 			[self replaceCharactersInRange:replacementRange withString:name];
-			if( replacementRange.location == 0 ) [self insertText:@": "];
-			else [self insertText:@" "];
+			if( suffix && replacementRange.location == 0 ) [self insertText:@": "];
+			else if( suffix ) [self insertText:@" "];
 		} else if ( [possibleNicks count] > 1 ) {
 			// since several are available, we highlight the modified text
 
@@ -268,15 +268,15 @@
 
 			if( ! keepSearching ) {
 				name = [possibleNicks objectAtIndex:count];
-				if( wordRange.location == 0 ) name = [name stringByAppendingString:@": "];
-				else name = [name stringByAppendingString:@" "];
+				if( suffix && wordRange.location == 0 ) name = [name stringByAppendingString:@": "];
+				else if( suffix ) name = [name stringByAppendingString:@" "];
 				[self replaceCharactersInRange:wordRange withString:[possibleNicks objectAtIndex:count]];
 				[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
 			} else if( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) {
 				NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
 				name = [possibleNicks objectAtIndex:0];
-				if( replacementRange.location == 0 ) name = [name stringByAppendingString:@": "];
-				else name = [name stringByAppendingString:@" "];
+				if( suffix && replacementRange.location == 0 ) name = [name stringByAppendingString:@": "];
+				else if( suffix ) name = [name stringByAppendingString:@" "];
 				[self replaceCharactersInRange:replacementRange withString:name];
 				[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
 			}

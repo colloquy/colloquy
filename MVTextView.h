@@ -15,7 +15,7 @@
 - (void) setUsesSystemCompleteOnTab:(BOOL) use;
 - (BOOL) usesSystemCompleteOnTab;
 
-- (BOOL) autocomplete;
+- (BOOL) autocompleteWithSuffix:(BOOL) suffix;
 @end
 
 @interface NSObject (MVTextViewDelegate)
