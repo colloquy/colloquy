@@ -979,8 +979,14 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 - (void) _delete:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
-	[_bookmarks removeObjectAtIndex:[connections selectedRow]];
+	unsigned int row = [connections selectedRow];
+	MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
+    [connection disconnect];
+	[_bookmarks removeObjectAtIndex:row];
+	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 	[connections noteNumberOfRowsChanged];
+	[self _saveBookmarkList];
 }
 
 - (void) _messageUser:(id) sender {
