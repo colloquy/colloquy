@@ -5,6 +5,8 @@
 - (id) init {
 	self = [super init];
 
+//	NSLog( @"init %@", self );
+	
 	_altImage = nil;
 	_mainText = nil;
 	_infoText = nil;
@@ -21,10 +23,13 @@
 	cell -> _altImage = [_altImage retain];
 	cell -> _mainText = [_mainText copy];
 	cell -> _infoText = [_infoText copy];
+//	NSLog( @"copy %@", cell );
 	return cell;
 }
 
 - (void) dealloc {
+//	NSLog( @"dealloc %@", self );
+
 	[self setAlternateImage:nil];
 	[self setMainText:nil];
 	[self setInformationText:nil];
@@ -70,7 +75,7 @@
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	float imageWidth = 0.;
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[NSApplication sharedApplication] isActive] );
-	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:11.], NSFontAttributeName, ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ), NSForegroundColorAttributeName, nil];
+	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ), NSForegroundColorAttributeName, nil];
 	NSImage *mainImage = nil;
 
 	if( highlighted && _altImage ) {
