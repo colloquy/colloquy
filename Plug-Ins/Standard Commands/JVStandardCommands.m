@@ -556,48 +556,60 @@
 }
 
 - (BOOL) handleIgnoreWithArguments:(NSString *) args inView:(id <JVChatViewController>) view {
-	// USAGE: /ignore -[e|m|n] nickname "message" #rooms...
-	// e activates regex matching, m is primarily for when there is no nickname to affix this to
+	// USAGE: /ignore -[p|m|n] [nickname|/regex/] ["message"|/regex/|word] [#rooms ...|*]
+	// p makes the ignore permanent (i.e. the ignore is saved to disk)
 	// m is to specify a message
 	// n is to specify a nickname
 
 	// EXAMPLES: 
 	// /ignore Loser23094 - ignore Loser23094 in the current room
-	// /ignore -em "is listening .*" - ignore the message expression "is listening *" from everyone
-	// /ignore -emn eevyl* "is listening .*" #adium #colloquy #here
-	// /ignore -en bunny.* * - ignore user in all rooms
+	// /ignore -m "is listening" - ignore any message that has "is listening" from everyone
+	// /ignore -m /is listening .*/ - ignore the message expression "is listening *" from everyone
+	// /ignore -mn /eevyl.*/ /is listening .*/ #adium #colloquy #here
+	// /ignore -n /bunny.*/ * - ignore user in all rooms
 
 	NSArray *argsArray = [args componentsSeparatedByString:@" "];
 	NSString *memberString = nil;
 	NSString *messageString = nil;
 	NSArray *rooms = nil;
 	BOOL regex = NO;
+	BOOL permanent = NO;
 	BOOL member = YES;
 	BOOL message = NO;
 	int offset = 0;
 
 	if( [args hasPrefix:@"-"] ) { // parse commands/flags
-		if( [[argsArray objectAtIndex:0] rangeOfString:@"e"].location != NSNotFound ) regex = YES;
+		if( [[argsArray objectAtIndex:0] rangeOfString:@"p"].location != NSNotFound ) permanent = YES;
 		if( [[argsArray objectAtIndex:0] rangeOfString:@"m"].location != NSNotFound ) {
 			member = NO;
 			message = YES;
 		}
-
+	
 		if( [[argsArray objectAtIndex:0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
-
-		if( [argsArray count] < ( 1 + ( message ? 1 : 0 ) + ( member ? 1 : 0 ) ) ) return NO;
-		// wrong number of arguments
-
+	
 		offset++; // lookup next arg.
 	}
 
+	// check for wrong number of arguments
+	if( [argsArray count] < ( 1 + ( message ? 1 : 0 ) + ( member ? 1 : 0 ) ) ) return NO;
+
 	if( member ) {
 		memberString = [argsArray objectAtIndex:offset];
+		if( [memberString hasPrefix:@"/"] && [memberString hasSuffix:@"/"] && [memberString length] > 2 ) {
+			memberString = [args substringWithRange:NSMakeRange( 1, [memberString length] - 2 )];
+			regex = YES;
+		}
 		offset++;
 	}
 
 	if( message ) {
-		messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location + 1, [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ( [args rangeOfString:@"\""].location + 1 ) )];
+		if( [args rangeOfString:@"\""].location ) {
+			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location + 1, [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ( [args rangeOfString:@"\""].location + 1 ) )];
+		} else if( [args rangeOfString:@"/"].location ) {
+			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"/"].location + 1, [args rangeOfString:@"/" options:NSBackwardsSearch].location - ( [args rangeOfString:@"/"].location + 1 ) )];
+			regex = YES;
+		} else messageString = [argsArray objectAtIndex:offset];
+		
 		offset += [[messageString componentsSeparatedByString:@" "] count];
 	}
 
@@ -608,7 +620,7 @@
 
 	if( [rooms containsObject:@"*"] ) rooms = nil; // We want all rooms.
 
-	[[_manager chatController] addIgnoreForUser:memberString withMessage:messageString inRooms:rooms usesRegex:regex];
+	[[_manager chatController] addIgnoreForUser:memberString withMessage:messageString inRooms:rooms usesRegex:regex isPermanent:permanent];
 
 	return YES;
 }

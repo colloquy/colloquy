@@ -39,7 +39,12 @@ static JVChatController *sharedInstance = nil;
 		_chatWindows = [[NSMutableArray array] retain];
 		_chatControllers = [[NSMutableArray array] retain];
 		_ignoreRules = [[NSMutableArray alloc] init];
-		
+
+		NSEnumerator *permanentRulesEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVIgnoreRules"] objectEnumerator];
+		NSData *archivedRule = nil;
+		while( ( archivedRule = [permanentRulesEnumerator nextObject] ) )
+			[_ignoreRules addObject:[NSKeyedUnarchiver unarchiveObjectWithData:archivedRule]];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatConnectionJoinedRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _leftRoom: ) name:MVChatConnectionLeftRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _existingRoomMembers: ) name:MVChatConnectionRoomExistingMemberListNotification object:nil];
@@ -271,8 +276,15 @@ static JVChatController *sharedInstance = nil;
 #pragma mark -
 #pragma mark Ignores
 
-- (void) addIgnoreForUser:(NSString *)user withMessage:(NSString *)message inRooms:(NSArray *)rooms usesRegex:(BOOL) regex {
-	[_ignoreRules addObject:[KAIgnoreRule ruleForUser:user message:message inRooms:rooms usesRegex:regex]];
+- (void) addIgnoreForUser:(NSString *)user withMessage:(NSString *)message inRooms:(NSArray *)rooms usesRegex:(BOOL) regex isPermanent:(BOOL) permanent {
+	KAIgnoreRule *rule = [KAIgnoreRule ruleForUser:user message:message inRooms:rooms usesRegex:regex isPermanent:permanent];
+	[_ignoreRules addObject:rule];
+
+	if( permanent ) {
+		NSArray *permanentRules = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVIgnoreRules"];
+		if( ! permanentRules ) permanentRules = [NSArray array];
+		[[NSUserDefaults standardUserDefaults] setObject:[permanentRules arrayByAddingObject:[NSKeyedArchiver archivedDataWithRootObject:rule]] forKey:@"JVIgnoreRules"];
+	}
 }
 
 - (JVIgnoreMatchResult) shouldIgnoreUser:(NSString *) name withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view {

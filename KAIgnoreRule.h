@@ -17,10 +17,10 @@ typedef enum _JVIgnoreMatchResult {
 	AGRegex *_userRegex;
 	AGRegex *_messageRegex;
 	NSArray *_inRooms;
+	BOOL _permanent;
 }
-
-+ (id) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms usesRegex:(BOOL) regex;
-- (id) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms usesRegex:(BOOL) regex;
++ (id) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms usesRegex:(BOOL) regex isPermanent:(BOOL) permanent;
+- (id) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms usesRegex:(BOOL) regex isPermanent:(BOOL) permanent;
 
 - (JVIgnoreMatchResult) matchUser:(NSString *) user message:(NSString *) message inView:(id <JVChatViewController>) view;
 @end

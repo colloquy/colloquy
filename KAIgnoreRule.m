@@ -9,17 +9,18 @@
 #import <AGRegex/AGRegex.h>
 
 @implementation KAIgnoreRule
-+ (id) ruleForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex {
-	return [[[KAIgnoreRule alloc] initForUser:user message:message inRooms:rooms usesRegex:regex] autorelease];
++ (id) ruleForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex isPermanent:(BOOL) permanent {
+	return [[[KAIgnoreRule alloc] initForUser:user message:message inRooms:rooms usesRegex:regex isPermanent:permanent] autorelease];
 }
 
-- (id) initForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex {
+- (id) initForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex isPermanent:(BOOL) permanent {
 	if( ( self = [super init] ) ) {
 		_ignoredUser = [user copy];
 		_ignoredMessage = [message copy];
 		_inRooms = [rooms copy];
 		_userRegex = nil;
 		_messageRegex = nil;
+		_permanent = permanent;
 
 		if( regex ) {
 			if( user ) _userRegex = [[AGRegex alloc] initWithPattern:user options:AGRegexCaseInsensitive];
@@ -32,7 +33,7 @@
 
 - (id) initWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] )
-		return [self initForUser:[coder decodeObjectForKey:@"KAIgnoreUser"] message:[coder decodeObjectForKey:@"KAIgnoreMessage"] inRooms:[coder decodeObjectForKey:@"KAIgnoreRooms"] usesRegex:[coder decodeBoolForKey:@"KAIgnoreUseRegex"]];
+		return [self initForUser:[coder decodeObjectForKey:@"KAIgnoreUser"] message:[coder decodeObjectForKey:@"KAIgnoreMessage"] inRooms:[coder decodeObjectForKey:@"KAIgnoreRooms"] usesRegex:[coder decodeBoolForKey:@"KAIgnoreUseRegex"] isPermanent:[coder decodeBoolForKey:@"KAIgnorePermanent"]];
 	else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 	return nil;
 }
@@ -43,6 +44,7 @@
 		[coder encodeObject:_ignoredMessage forKey:@"KAIgnoreMessage"];
 		[coder encodeObject:_inRooms forKey:@"KAIgnoreRooms"];
 		[coder encodeBool:( _userRegex || _messageRegex ) forKey:@"KAIgnoreUseRegex"];
+		[coder encodeBool:_permanent forKey:@"KAIgnorePermanent"];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
@@ -76,5 +78,9 @@
 	}
 
 	return JVNotIgnored;
+}
+
+- (BOOL) isPermanent {
+	return _permanent;
 }
 @end
