@@ -257,7 +257,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (NSString *) toolTip {
-	return [self title];
+	return [NSString stringWithFormat:@"%@\n%@", [self title], [self information]];
 }
 
 - (IBAction) leaveChat:(id) sender {

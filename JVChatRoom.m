@@ -119,7 +119,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (NSString *) windowTitle {
 	NSMutableString *title = [NSMutableString stringWithString:_target];
 	[title deleteCharactersInRange:NSMakeRange( 0, 1 )];
-	return [NSString stringWithFormat:NSLocalizedString( @"%@ (%@)", "chat room window - window title" ), title, [[self connection] server]];
+	return [NSString stringWithFormat:@"%@ (%@)", title, [[self connection] server]];
 }
 
 - (NSString *) information {
@@ -133,7 +133,11 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (NSString *) toolTip {
-	return [NSString stringWithFormat:NSLocalizedString( @"%@\n%@\n%d members", "room status info tooltip in drawer" ), [self title], [_connection server], [_sortedMembers count]];
+	NSString *messageCount = @"";
+	if( [self newMessagesWaiting] == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
+	else if( [self newMessagesWaiting] == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
+	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
+	return [NSString stringWithFormat:NSLocalizedString( @"%@ (%@)\n%d members\n%@", "room status info tooltip in drawer" ), _target, [_connection server], [_sortedMembers count], messageCount];
 }
 
 - (NSView *) view {

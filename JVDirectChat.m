@@ -311,8 +311,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (NSString *) windowTitle {
 	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-		return [NSString stringWithFormat:NSLocalizedString( @"%@ (%@)", "private message with user - window title" ), [_buddy preferredName], [[self connection] server]];
-	return [NSString stringWithFormat:NSLocalizedString( @"%@ (%@)", "private message with user - window title" ), _target, [[self connection] server]];
+		return [NSString stringWithFormat:@"%@ (%@)", [_buddy preferredName], [[self connection] server]];
+	return [NSString stringWithFormat:@"%@ (%@)", _target, [[self connection] server]];
 }
 
 - (NSString *) information {
@@ -322,7 +322,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (NSString *) toolTip {
-	return [NSString stringWithFormat:@"%@\n%@", _target, [[self connection] server]];
+	NSString *messageCount = @"";
+	if( [self newMessagesWaiting] == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
+	else if( [self newMessagesWaiting] == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
+	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
+	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+		return [NSString stringWithFormat:@"%@\n%@ (%@)\n%@", [_buddy preferredName], _target, [[self connection] server], messageCount];
+	return [NSString stringWithFormat:@"%@ (%@)\n%@", _target, [[self connection] server], messageCount];
 }
 
 #pragma mark -
