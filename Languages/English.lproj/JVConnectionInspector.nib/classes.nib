@@ -37,7 +37,7 @@
                 editRealName = NSTextField; 
                 editRemoveRoom = NSButton; 
                 editRooms = NSTableView; 
-                editRule = id; 
+                editRule = NSButton; 
                 editRuleMessage = NSTextField; 
                 editRuleName = NSTextField; 
                 editRuleRooms = NSTableView; 
@@ -54,6 +54,7 @@
                 ruleUsesSender = NSButton; 
                 senderType = NSPopUpButton; 
                 sslConnection = NSButton; 
+                tabView = NSTabView; 
                 view = NSView; 
             }; 
             SUPERCLASS = NSObject; 
