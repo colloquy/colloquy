@@ -220,7 +220,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) fetchRoomList;
 - (void) fetchRoomListWithRooms:(NSArray *) rooms;
 - (void) stopFetchingRoomList;
-- (NSDictionary *) roomListResults;
+- (NSMutableDictionary *) roomListResults;
 
 - (NSAttributedString *) awayStatusMessage;
 - (void) setAwayStatusWithMessage:(NSAttributedString *) message;

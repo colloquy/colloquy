@@ -966,7 +966,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	}
 }
 
-- (NSDictionary *) roomListResults {
+- (NSMutableDictionary *) roomListResults {
 	return [[_roomsCache retain] autorelease];
 }
 
@@ -1108,12 +1108,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (void) _addRoomToCache:(NSString *) room withUsers:(int) users andTopic:(NSData *) topic {
 	if( room ) {
-		NSString *topicString = [[[NSString alloc] initWithData:topic encoding:NSUTF8StringEncoding] autorelease];
-		if( ! topicString ) topicString = [NSString stringWithCString:[topic bytes] length:[topic length]];
-		topicString = [NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", topicString];
-
-		NSAttributedString *t = [NSAttributedString attributedStringWithHTMLFragment:topicString baseURL:nil];
-		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:users], @"users", t, @"topic", [NSDate date], @"cached", nil];
+		NSDictionary *info = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:users], @"users", topic, @"topic", [NSDate date], @"cached", nil];
 		[_roomsCache setObject:info forKey:room];
 
 		NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionGotRoomInfoNotification object:self];
