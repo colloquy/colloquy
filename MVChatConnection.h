@@ -19,6 +19,18 @@ typedef enum {
 	MVChatConnectionSOCKSProxy = 0x2
 } MVChatConnectionProxy;
 
+typedef enum {
+	MVChatRoomNoModes = 0x0,
+	MVChatRoomPrivateMode = 0x1,
+	MVChatRoomSecretMode = 0x2,
+	MVChatRoomInviteOnlyMode = 0x4,
+	MVChatRoomModeratedMode = 0x8,
+	MVChatRoomSetTopicOperatorOnlyMode = 0x10,
+	MVChatRoomNoOutsideMessagesMode = 0x20,
+	MVChatRoomPasswordRequiredMode = 0x40,
+	MVChatRoomMemberLimitMode = 0x80
+} MVChatRoomMode;
+
 extern NSString *MVChatConnectionGotRawMessageNotification;
 
 extern NSString *MVChatConnectionWillConnectNotification;
@@ -51,6 +63,7 @@ extern NSString *MVChatConnectionUserDeoppedInRoomNotification;
 extern NSString *MVChatConnectionUserVoicedInRoomNotification;
 extern NSString *MVChatConnectionUserDevoicedInRoomNotification;
 extern NSString *MVChatConnectionUserKickedFromRoomNotification;
+extern NSString *MVChatConnectionGotRoomModeNotification;
 extern NSString *MVChatConnectionGotRoomMessageNotification;
 extern NSString *MVChatConnectionGotRoomTopicNotification;
 

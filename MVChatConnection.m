@@ -46,6 +46,7 @@ NSString *MVChatConnectionUserDeoppedInRoomNotification = @"MVChatConnectionUser
 NSString *MVChatConnectionUserVoicedInRoomNotification = @"MVChatConnectionUserVoicedInRoomNotification";
 NSString *MVChatConnectionUserDevoicedInRoomNotification = @"MVChatConnectionUserDevoicedInRoomNotification";
 NSString *MVChatConnectionUserKickedFromRoomNotification = @"MVChatConnectionUserKickedFromRoomNotification";
+NSString *MVChatConnectionGotRoomModeNotification = @"MVChatConnectionGotRoomModeNotification";
 NSString *MVChatConnectionGotRoomMessageNotification = @"MVChatConnectionGotRoomMessageNotification";
 NSString *MVChatConnectionGotRoomTopicNotification = @"MVChatConnectionGotRoomTopicNotification";
 
@@ -430,6 +431,13 @@ void MVChatNewNickname( void *c, void *cs, const char * const newnick ) {
 }
 
 #pragma mark -
+
+void MVChatGotRoomMode( void *c, void *cs, const char * const room, const char * const by, const int on, enum firetalk_room_mode mode, const char * const param ) {
+	MVChatConnection *self = cs;
+	NSCParameterAssert( c != NULL );
+	NSCParameterAssert( room != NULL );
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomModeNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", (param?[NSString stringWithUTF8String:param]:[NSNull null]), @"param", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", [NSNumber numberWithBool:on], @"enabled", [NSNumber numberWithUnsignedInt:(unsigned int)mode], @"mode", nil]];
+}
 
 void MVChatUserOpped( void *c, void *cs, const char * const room, const char * const who, const char * const by ) {
 	MVChatConnection *self = cs;
@@ -866,7 +874,9 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room {
 	NSParameterAssert( room != nil );
 	if( [self isConnected] ) {
-		NSData *encodedData = [MVChatConnection _flattenedHTMLDataForMessage:topic withEncoding:encoding];
+		NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:topic withEncoding:encoding] mutableCopy] autorelease];
+		[encodedData appendBytes:"\0" length:1];
+
 		firetalk_chat_set_topic( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes] );
 //		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	}
@@ -1024,6 +1034,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	firetalk_register_callback( _chatConnection, FC_IM_LISTROOM, (firetalk_callback) MVChatListRoom );
 	firetalk_register_callback( _chatConnection, FC_IM_GOTINFO, (firetalk_callback) MVChatGotInfo );
 	firetalk_register_callback( _chatConnection, FC_IM_IDLEINFO, (firetalk_callback) MVChatBuddyGotIdle );
+	firetalk_register_callback( _chatConnection, FC_CHAT_ROOM_MODE, (firetalk_callback) MVChatGotRoomMode );
 	firetalk_register_callback( _chatConnection, FC_CHAT_JOINED, (firetalk_callback) MVChatJoinedRoom );
 	firetalk_register_callback( _chatConnection, FC_CHAT_LEFT, (firetalk_callback) MVChatLeftRoom );
 	firetalk_register_callback( _chatConnection, FC_CHAT_KICKED, (firetalk_callback) MVChatKicked );
@@ -1098,16 +1109,9 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 }
 
 - (void) _didConnect {
-	NSEnumerator *enumerator = [_joinList objectEnumerator];
-	NSString *room = nil;
-
 	_status = MVChatConnectionConnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidConnectNotification object:self];
-
-	while( ( room = [enumerator nextObject] ) )
-		[self joinChatForRoom:room];
-
-	[_joinList removeAllObjects];
+	[NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector( _joinRooms: ) userInfo:NULL repeats:NO];
 }
 
 - (void) _didNotConnect {
@@ -1122,6 +1126,16 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (void) _didDisconnect {
 	_status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
+}
+
+- (void) _joinRooms:(id) sender {
+	NSEnumerator *enumerator = [_joinList objectEnumerator];
+	NSString *room = nil;
+
+	while( ( room = [enumerator nextObject] ) )
+		[self joinChatForRoom:room];
+
+	[_joinList removeAllObjects];	
 }
 @end
 
