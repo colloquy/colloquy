@@ -67,7 +67,7 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 	extern NSPoint inspectorLastPoint;
 	[self _loadInspector];
 	inspectorLastPoint = [[self window] cascadeTopLeftFromPoint:inspectorLastPoint];
-	[[self window] orderFront:nil];
+	[[self window] makeKeyAndOrderFront:nil];
 }
 
 - (BOOL) locked {
