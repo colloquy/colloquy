@@ -22,8 +22,8 @@
 	<integer>15</integer>
 	<key>JVFileTransferPortRange</key>
 	<integer>{1024, 24}</integer>
-	<key>JVTransferSaveLocation</key>
-	<string>ask</string>
+	<key>JVAskForTransferSaveLocation</key>
+	<true/>
 	<key>JVChatBuddyListShowIcons</key>
 	<true/>
 	<key>JVChatBuddyListShowFullNames</key>
