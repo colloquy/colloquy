@@ -419,10 +419,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) windowDidBecomeMain:(NSNotification *) notification {
 	[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
+	[self reloadListItem:_activeViewController andChildren:NO];
 }
 
 - (void) windowDidBecomeKey:(NSNotification *) notification {
 	[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
+	[self reloadListItem:_activeViewController andChildren:NO];
 }
 
 #pragma mark -
