@@ -7,6 +7,7 @@
 	NSTimeInterval menuDelay;
 	NSImage *orgImage, *smallImage;
 	NSControlSize size;
+	NSToolbarItem *tbitem;
 }
 - (void) setMenuDelay:(NSTimeInterval) aDelay;
 - (NSTimeInterval) menuDelay;
@@ -21,4 +22,7 @@
 
 - (NSImage *) smallImage;
 - (void) setSmallImage:(NSImage *) smimg;
+
+- (NSToolbarItem *) toolbarItem;
+- (void) setToolbarItem:(NSToolbarItem *) item;
 @end

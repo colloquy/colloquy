@@ -16,6 +16,7 @@
 	[newObj setMenu:[self menu]];
 	[newObj setMenuDelay:[self menuDelay]];
 	[newObj setControlSize:[self controlSize]];
+	[newObj setToolbarItem:nil];
 
 	return newObj;
 }
@@ -42,6 +43,7 @@
 	}
 	menuDidDisplay = NO;
 	clickHoldTimer = nil;
+	tbitem = nil;
 	return self;
 }
 
@@ -116,6 +118,8 @@
 	if( ! orgImage ) orgImage = [[self image] copy];
 	if( controlSize == NSRegularControlSize ) {
 		[self setImage:orgImage];
+		[tbitem setMinSize:NSMakeSize( 32., 32. )];
+		[tbitem setMaxSize:NSMakeSize( 32., 32. )];
 	} else if( controlSize == NSSmallControlSize ) {
 		if( ! smallImage ) {
 			smallImage = [orgImage copy];
@@ -123,7 +127,10 @@
 			[smallImage setSize:NSMakeSize( 22., 22. )];
 		}
 		[self setImage:smallImage];
+		[tbitem setMinSize:NSMakeSize( 24., 24. )];
+		[tbitem setMaxSize:NSMakeSize( 24., 24. )];
 	}
+	NSLog( @"%@", NSStringFromRect( [self frame] ) );
 	size = controlSize;
 }
 
@@ -134,5 +141,14 @@
 - (void) setSmallImage:(NSImage *) smimg {
 	[smallImage autorelease];
 	smallImage = [smimg copy];
+}
+
+- (NSToolbarItem *) toolbarItem {
+	return [[tbitem retain] autorelease];
+}
+
+- (void) setToolbarItem:(NSToolbarItem *) item {
+	[tbitem autorelease];
+	tbitem = [item retain];
 }
 @end

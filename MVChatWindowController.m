@@ -1405,13 +1405,13 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		NSImage *icon = [[[NSImage imageNamed:@"emoticon"] copy] autorelease];
 		MVMenuButton *button = [emoticonView copyWithZone:[self zone]];
 
+		[button setToolbarItem:toolbarItem];
+
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus )];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Add Emotions with Emoticons", emoticons toolbar button tooltip )];
 		[toolbarItem setView:button];
-		[toolbarItem setMinSize:NSMakeSize( 24., 24. )];
-		[toolbarItem setMaxSize:NSMakeSize( 32., 32. )];
 
 		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Smile", smile emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@":)"];
