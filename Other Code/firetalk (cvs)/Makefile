@@ -46,7 +46,7 @@ oscar.o: oscar.c oscar.h firetalk.h firetalk-int.h Makefile
 aim.o: aim.h aim.c Makefile
 	$(CC) $(CFLAGS) $(MYFLAGS) -c aim.c
 
-firetalk.o: firetalk.c toc.h irc.h oscar.h aim.h firetalk.h firetalk-int.h Makefile
+firetalk.o: firetalk.c firetalk.h firetalk-int.h Makefile
 	$(CC) $(CFLAGS) $(MYFLAGS) -c firetalk.c
 
 libfiretalk.a: $(OBJECTS) Makefile
