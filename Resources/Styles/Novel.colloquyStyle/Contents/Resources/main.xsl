@@ -14,7 +14,14 @@
 	</xsl:template>
 
 	<xsl:template match="event">
+		<xsl:variable name="timestamp">
+			<xsl:call-template name="short-time">
+				<xsl:with-param name="date" select="@occurred" />
+			</xsl:call-template>
+		</xsl:variable>
+
 		<div class="event">
+			<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
 			<xsl:copy-of select="message/child::node()" />
 			<xsl:if test="reason!=''">
 				<span class="reason">
