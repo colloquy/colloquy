@@ -315,27 +315,35 @@
 
 - (void) comboBoxSelectionDidChange:(NSNotification *) notification {
 	[acceptButton setEnabled:( [roomField indexOfSelectedItem] != -1 || [[roomField stringValue] length] )];
-	if( ! _collapsed ) {
+
+	if( ! _collapsed && roomsTable != [[roomsTable window] firstResponder] ) {
 		int index = [roomField indexOfSelectedItem];
-		if( index != -1 ) [roomsTable selectRow:index byExtendingSelection:NO];
-		else [roomsTable deselectAll:nil];
+		if( index != -1 ) {
+			[roomsTable selectRow:index byExtendingSelection:NO];
+			[roomsTable scrollRowToVisible:index];
+		} else [roomsTable deselectAll:nil];
 	}
 }
 
 - (void) controlTextDidChange:(NSNotification *) notification {
 	[acceptButton setEnabled:( [[roomField stringValue] length] )];
-	if( ! _collapsed ) {
+
+	if( ! _collapsed && roomsTable != [[roomsTable window] firstResponder] ) {
 		int index = [roomField indexOfSelectedItem];
-		if( index != -1 ) [roomsTable selectRow:index byExtendingSelection:NO];
-		else [roomsTable deselectAll:nil];
+		if( index != -1 ) {
+			[roomsTable selectRow:index byExtendingSelection:NO];
+			[roomsTable scrollRowToVisible:index];
+		} else [roomsTable deselectAll:nil];
 	}
 }
 
 - (void) controlTextDidEndEditing:(NSNotification *) notification {
-	if( ! _collapsed ) {
+	if( ! _collapsed && roomsTable != [[roomsTable window] firstResponder] ) {
 		int index = [roomField indexOfSelectedItem];
-		if( index != -1 ) [roomsTable selectRow:index byExtendingSelection:NO];
-		else [roomsTable deselectAll:nil];
+		if( index != -1 ) {
+			[roomsTable selectRow:index byExtendingSelection:NO];
+			[roomsTable scrollRowToVisible:index];
+		} else [roomsTable deselectAll:nil];
 	}
 }
 
@@ -406,6 +414,8 @@
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
+	if( [notification object] != [[[notification object] window] firstResponder] ) return;
+
 	if( [roomsTable selectedRow] == -1 ) {
 		[roomField setObjectValue:@""];
 		[acceptButton setEnabled:( [[roomField stringValue] length] )];
