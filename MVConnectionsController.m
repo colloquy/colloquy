@@ -83,7 +83,8 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
-	[_bookmarks release];
+#warning Releasing _bookmarks causes a crash.
+//	[_bookmarks release];
 	[_joinRooms release];
 	[_passConnection release];
 
