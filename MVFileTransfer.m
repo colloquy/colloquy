@@ -182,8 +182,9 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 + (void) updateExternalIPAddress {
 	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
-	NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
-	if( [result length] ) settings_set_str( "dcc_own_ip", [[NSString stringWithFormat:@"%*s", [result length], [result bytes]] UTF8String] );
+	NSMutableData *result = [[[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopy] autorelease];
+	[result appendBytes:"\0" length:1];
+	if( [result length] ) settings_set_str( "dcc_own_ip", [result bytes] );
 }
 
 #pragma mark -
