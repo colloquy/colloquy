@@ -74,7 +74,7 @@ typedef enum {
 	int _transferQueue;
 	NSString *_source;
 }
-+ (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection;
++ (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection passively:(BOOL) passive;
 
 - (NSString *) source;
 @end

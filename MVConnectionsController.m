@@ -180,13 +180,10 @@ static NSMenu *favoritesMenu = nil;
 	[newUsername setObjectValue:NSUserName()];
 	[newRealName setObjectValue:NSFullUserName()];
 
-	NSPanel *panel = (NSPanel *)[self window];
-	
-	[panel setFloatingPanel:NO];
-	
-	[panel setResizeIncrements:NSMakeSize(1, [connections rowHeight] + [connections intercellSpacing].height)];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( windowWillClose: ) name:NSWindowWillCloseNotification object:panel];
+	[(NSPanel *)[self window] setFloatingPanel:NO];
+	[[self window] setResizeIncrements:NSMakeSize( 1, [connections rowHeight] + [connections intercellSpacing].height )];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( windowWillClose: ) name:NSWindowWillCloseNotification object:[self window]];
 
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];

@@ -1422,7 +1422,11 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user {
-	return [[MVUploadFileTransfer transferWithSourceFile:path toUser:user onConnection:self] retain];
+	return [self sendFile:path toUser:user passively:NO];
+}
+
+- (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user passively:(BOOL) passive {
+	return [[MVUploadFileTransfer transferWithSourceFile:path toUser:user onConnection:self passively:passive] retain];
 }
 
 #pragma mark -

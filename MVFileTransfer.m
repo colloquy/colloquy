@@ -352,13 +352,13 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 #pragma mark -
 
 @implementation MVUploadFileTransfer
-+ (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection {
++ (id) transferWithSourceFile:(NSString *) path toUser:(NSString *) nickname onConnection:(MVChatConnection *) connection passively:(BOOL) passive {
 	int queue = dcc_queue_new();
 	NSString *source = [[path stringByStandardizingPath] copy];
 
 	char *tag = [connection _irssiConnection] -> tag;
 
-	if( 1 ) dcc_queue_add( queue, DCC_QUEUE_NORMAL, [nickname UTF8String], [source fileSystemRepresentation], tag, NULL );
+	if( ! passive ) dcc_queue_add( queue, DCC_QUEUE_NORMAL, [nickname UTF8String], [source fileSystemRepresentation], tag, NULL );
 	else dcc_queue_add_passive( queue, DCC_QUEUE_NORMAL, [nickname UTF8String], [source fileSystemRepresentation], tag, NULL );
 
 	dcc_queue_send_next( queue );

@@ -210,6 +210,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) sendRawMessageWithFormat:(NSString *) format, ...;
 
 - (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user;
+- (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user passively:(BOOL) passive;
 
 #pragma mark -
 
