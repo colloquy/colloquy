@@ -151,6 +151,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 - (void) awakeFromNib {
 	[display setUIDelegate:self];
 	[display setPolicyDelegate:self];
+	[display setFrameLoadDelegate:self];
 
 	if( [self isMemberOfClass:[JVChatTranscript class]] ) {
 		if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
@@ -185,7 +186,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 	[self _updateChatStylesMenu];
 	[self _updateChatEmoticonsMenu];
 
-	[self performSelector:@selector( _reloadCurrentStyle: ) withObject:nil afterDelay:0.];
+//	[self performSelector:@selector( _reloadCurrentStyle: ) withObject:nil afterDelay:0.];
 }
 
 - (void) dealloc {
@@ -427,7 +428,6 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	[[display window] disableFlushWindow];
 
-	[display setFrameLoadDelegate:self];
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 }
 
@@ -827,8 +827,6 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	if( [[display window] isFlushWindowDisabled] )
 		[[display window] enableFlushWindow];
-
-	[display setFrameLoadDelegate:nil];
 
 	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
 	[scrollView setHasHorizontalScroller:NO];

@@ -25,7 +25,8 @@
 #import "MVConnectionsController.h"
 #import "JVDirectChat.h"
 #import "MVBuddyListController.h"
-#import "MVFileTransferController.h"#import "JVBuddy.h"
+#import "MVFileTransferController.h"
+#import "JVBuddy.h"
 #import "MVTextView.h"
 #import "MVMenuButton.h"
 #import "JVMarkedScroller.h"
@@ -261,10 +262,14 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	JVStyle *style = nil;
 	NSString *variant = nil;
 	NSBundle *emoticon = nil;
-	
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
-	
+
+	[display setUIDelegate:self];
+	[display setPolicyDelegate:self];
+	[display setFrameLoadDelegate:self];
+
 	if( [self preferenceForKey:@"style"] ) {
 		style = [JVStyle styleWithIdentifier:[self preferenceForKey:@"style"]];
 		variant = [self preferenceForKey:@"style variant"];
