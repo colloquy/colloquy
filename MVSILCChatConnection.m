@@ -671,7 +671,7 @@ static bool silc_key_agreement( SilcClient client, SilcClientConnection conn, Si
 #endif
 	
 	return FALSE;
-}I 
+}
 
 static void silc_ftp( SilcClient client, SilcClientConnection conn, SilcClientEntry client_entry, SilcUInt32 session_id, const char *hostname, SilcUInt16 port ) {
 /*	MVSILCChatConnection *self = conn -> context;
