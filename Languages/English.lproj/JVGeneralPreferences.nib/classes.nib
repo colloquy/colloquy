@@ -2,8 +2,24 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {
+                changeAutomaticVersionCheck = id; 
+                changeEncoding = id; 
+                changeNaturalActionDetection = id; 
+                changeSendOnEnterAction = id; 
+                changeSendOnReturnAction = id; 
+            }; 
             CLASS = JVGeneralPreferences; 
             LANGUAGE = ObjC; 
+            OUTLETS = {
+                autoCheckVersion = NSButton; 
+                detectNaturalActions = NSButton; 
+                encoding = NSPopUpButton; 
+                enterKeyAction = NSPopUpButton; 
+                returnKeyAction = NSPopUpButton; 
+                sendHistory = NSTextField; 
+                sendHistoryStepper = NSStepper; 
+            }; 
             SUPERCLASS = NSPreferencesModule; 
         }, 
         {
