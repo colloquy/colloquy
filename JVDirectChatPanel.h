@@ -66,6 +66,6 @@
 @end
 
 @interface NSObject (MVChatPluginDirectChatSupport)
-- (void) processIncomingMessage:(JVMutableChatMessage *) message;
-- (void) processOutgoingMessage:(JVMutableChatMessage *) message;
+- (void) processIncomingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view;
+- (void) processOutgoingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view;
 @end

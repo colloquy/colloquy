@@ -142,13 +142,13 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
-- (void) processIncomingMessage:(JVMutableChatMessage *) message {
-	NSArray *args = [NSArray arrayWithObject:message];
+- (void) processIncomingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view {
+	NSArray *args = [NSArray arrayWithObjects:message, view, nil];
 	[self callScriptBlockNamed:@"processIncomingMessage" withArguments:args forSelector:_cmd];
 }
 
-- (void) processOutgoingMessage:(JVMutableChatMessage *) message {
-	NSArray *args = [NSArray arrayWithObject:message];
+- (void) processOutgoingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view {
+	NSArray *args = [NSArray arrayWithObjects:message, view, nil];
 	[self callScriptBlockNamed:@"processOutgoingMessage" withArguments:args forSelector:_cmd];
 }
 

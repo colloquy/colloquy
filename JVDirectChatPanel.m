@@ -781,11 +781,12 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		}
 	}
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVMutableChatMessage * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVMutableChatMessage * ), @encode( id ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	[invocation setSelector:@selector( processIncomingMessage: )];
+	[invocation setSelector:@selector( processIncomingMessage:inView: )];
 	[invocation setArgument:&message atIndex:2];
+	[invocation setArgument:&self atIndex:3];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 }
@@ -909,11 +910,12 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) sendMessage:(JVMutableChatMessage *) message {
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVMutableChatMessage * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVMutableChatMessage * ), @encode( id ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	[invocation setSelector:@selector( processOutgoingMessage: )];
+	[invocation setSelector:@selector( processOutgoingMessage:inView: )];
 	[invocation setArgument:&message atIndex:2];
+	[invocation setArgument:&self atIndex:3];
 
 	[self _setCurrentMessage:message];
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
