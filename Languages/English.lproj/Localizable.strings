@@ -151,11 +151,14 @@
 /* delete item title */
 "Delete" = "Delete";
 
+/* name for delete connection button in customize palette */
+"Delete Connection" = "Delete Connection";
+
 /* delete connection button tooltip */
 "Delete connection" = "Delete connection";
 
-/* name for delete connection button in customize palette */
-"Delete Connection" = "Delete Connection";
+/* demote operator contextual menu - admin only */
+"Demote Operator" = "Demote Operator";
 
 /* user was removed from chat room operator status - presented as an action */
 "demoted %@ from operator." = "demoted %@ from operator.";
@@ -180,6 +183,9 @@
 
 /* get info contextual menu item title */
 "Get Info" = "Get Info";
+
+/* grant voice contextual menu - admin only */
+"Grant Voice" = "Grant Voice";
 
 /* user now has special voice status - presented as an action */
 "granted %@ voice." = "granted %@ voice.";
@@ -235,6 +241,9 @@
 /* a user has join a chat room - presented as an action */
 "joined the chat room." = "joined the chat room.";
 
+/* kick from room contextual menu - admin only */
+"Kick From Room" = "Kick From Room";
+
 /* leave chat toolbar item */
 "Leave Chat" = "Leave Chat";
 
@@ -246,6 +255,9 @@
 
 /* a user has left a chat room - presented as an action */
 "left the chat room." = "left the chat room.";
+
+/* make operator contextual menu - admin only */
+"Make Operator" = "Make Operator";
 
 /* chat room members toolbar item name */
 "Members" = "Members";
@@ -313,6 +325,9 @@
 /* relaxed emoticon name - hat on */
 "Relaxed" = "Relaxed";
 
+/* remove voice contextual menu - admin only */
+"Remove Voice" = "Remove Voice";
+
 /* user was removed from chat room special voice status - presented as an action */
 "removed voice from %@." = "removed voice from %@.";
 
@@ -345,6 +360,9 @@
 
 /* send button name */
 "Send" = "Send";
+
+/* send message contextual menu */
+"Send Message" = "Send Message";
 
 /* singular server label */
 "server" = "server";

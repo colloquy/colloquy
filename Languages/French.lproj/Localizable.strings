@@ -1,5 +1,5 @@
 /* who posted the current topic */
-" posted by %@" = " post√© par %@";
+" posted by %@" = " posté par %@";
 
 /* file size measured in kilobytes */
 "%.1f KB" = "%.1f Ko";
@@ -17,31 +17,31 @@
 "%1I:%M %p" = "%1I:%M %p";
 
 /* user offline time stamp */
-"%1I:%M %p, user offline." = "%1I:%M %p, utilisateur d√©connect√©.";
+"%1I:%M %p, user offline." = "%1I:%M %p, utilisateur déconnecté.";
 
 /* offline time stamp */
-"%1I:%M %p, you're offline." = "%1I:%M %p, vous √™tes d√©connect√©.";
+"%1I:%M %p, you're offline." = "%1I:%M %p, vous êtes déconnecté.";
 
 /* chat room window - window title */
-"%@ - Chat Room" = "Canal ‚Äî %@";
+"%@ - Chat Room" = "Canal — %@";
 
 /* private message with user - window title */
-"%@ - Private Message" = "Message priv√© ‚Äî %@";
+"%@ - Private Message" = "Message privé — %@";
 
 /* time that has passed on selected transfer */
-"%@ elapsed" = "%@ √©coul√©e";
+"%@ elapsed" = "%@ écoulée";
 
 /* time that has passed and time that remains on selected transfer */
-"%@ elapsed, %@ remaining" = "%@ √©coul√©e, %@ restante";
+"%@ elapsed, %@ remaining" = "%@ écoulée, %@ restante";
 
 /* crash message */
 "%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@." = "%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@.";
 
 /* status of current download file transfer */
-"%@ of %@ downloaded, at %@ per second" = "%@ sur %@ t√©l√©charg√©s, √† %@ par seconde";
+"%@ of %@ downloaded, at %@ per second" = "%@ sur %@ téléchargés, à %@ par seconde";
 
 /* status of current upload file transfer */
-"%@ of %@ uploaded, at %@ per second" = "%@ sur %@ envoy√©s, √† %@ par seconde";
+"%@ of %@ uploaded, at %@ per second" = "%@ sur %@ envoyés, à %@ par seconde";
 
 /* program update */
 "%@ Update" = "%@ Update";
@@ -53,7 +53,7 @@
 "(no chat topic is set)" = "(no chat topic is set)";
 
 /* new file transfer dialog message */
-"A file named \"%@\" is being sent to you from %@. This file is %@ in size." = "Un fichier nomm√© \"%@\" va vous √™tre envoy√© par %@. Ce fichier fait une taille de %@.";
+"A file named \"%@\" is being sent to you from %@. This file is %@ in size." = "Un fichier nommé \"%@\" va vous être envoyé par %@. Ce fichier fait une taille de %@.";
 
 /* the software needs updated question */
 "A newer version of this software has just been detected, would you like to see what's new?" = "A newer version of this software has just been detected, would you like to see what's new?";
@@ -62,7 +62,7 @@
 "Accept" = "Accepter";
 
 /* emoticons toolbar button tooltip */
-"Add Emotions with Emoticons" = "Ajouter des √©motions gr√¢ce aux √âmotic√¥nes";
+"Add Emotions with Emoticons" = "Ajouter des émotions grâce aux Émoticônes";
 
 /* chat invalid nickname dialog title */
 "Already connected" = "Already connected";
@@ -71,10 +71,10 @@
 "Angel" = "Ange";
 
 /* angry emoticon name */
-"Angry" = "En p√©tard";
+"Angry" = "En pétard";
 
 /* annoyed emoticon name */
-"Annoyed" = "G√™n√©";
+"Annoyed" = "Gêné";
 
 /* buddy list available status message with the number of servers entered at runtime */
 "Available (%d %@)" = "Available (%d %@)";
@@ -83,13 +83,13 @@
 "Bold" = "Gras";
 
 /* title of the booted message sheet */
-"Booted" = "√âject√©";
+"Booted" = "Éjecté";
 
 /* user has been removed by force from a chat room - presented as an action */
-"booted %@ with this reason '%@'." = "%@ √©ject√© pour cette raison '%@'.";
+"booted %@ with this reason '%@'." = "%@ éjecté pour cette raison '%@'.";
 
 /* you were removed by force from a chat room - presented as an action */
-"booted you with this reason '%@'." = "vous avez √©t√© √©ject√© pour cette raison '%@'.";
+"booted you with this reason '%@'." = "vous avez été éjecté pour cette raison '%@'.";
 
 /* chat room members toolbar customize palette name */
 "Chat Members" = "Membres du canal";
@@ -157,6 +157,9 @@
 /* name for delete connection button in customize palette */
 "Delete Connection" = "Delete Connection";
 
+/* demote operator contextual menu - admin only */
+"Demote Operator" = "Demote Operator";
+
 /* user was removed from chat room operator status - presented as an action */
 "demoted %@ from operator." = "demoted %@ from operator.";
 
@@ -181,6 +184,9 @@
 /* get info contextual menu item title */
 "Get Info" = "Get Info";
 
+/* grant voice contextual menu - admin only */
+"Grant Voice" = "Grant Voice";
+
 /* user now has special voice status - presented as an action */
 "granted %@ voice." = "granted %@ voice.";
 
@@ -191,7 +197,7 @@
 "Hide Chat" = "Masquer la discussion";
 
 /* hide chat tooltip */
-"Hide this Chat Window" = "Masquer cette fen√™tre de discussion";
+"Hide this Chat Window" = "Masquer cette fenêtre de discussion";
 
 /* singular hour */
 "hour" = "heure";
@@ -209,10 +215,10 @@
 "Info for: %@" = "Info for: %@";
 
 /* invited to a chat room - sheet title */
-"Invited to Chat" = "Invit√© √† discuter";
+"Invited to Chat" = "Invité à discuter";
 
 /* user has changed nicknames - presented as an action */
-"is now known as %@." = "est √† pr√©sent connu sous %@.";
+"is now known as %@." = "est à présent connu sous %@.";
 
 /* italic font style toolbar item */
 "Italic" = "Italique";
@@ -235,6 +241,9 @@
 /* a user has join a chat room - presented as an action */
 "joined the chat room." = "a joint le canal.";
 
+/* kick from room contextual menu - admin only */
+"Kick From Room" = "Kick From Room";
+
 /* leave chat toolbar item */
 "Leave Chat" = "Quitter le canal";
 
@@ -245,7 +254,10 @@
 "left the chat room for this reason: %@." = "left the chat room for this reason: %@.";
 
 /* a user has left a chat room - presented as an action */
-"left the chat room." = "a quitt√© le canal.";
+"left the chat room." = "a quitté le canal.";
+
+/* make operator contextual menu - admin only */
+"Make Operator" = "Make Operator";
 
 /* chat room members toolbar item name */
 "Members" = "Membres";
@@ -313,6 +325,9 @@
 /* relaxed emoticon name - hat on */
 "Relaxed" = "Tranquille";
 
+/* remove voice contextual menu - admin only */
+"Remove Voice" = "Remove Voice";
+
 /* user was removed from chat room special voice status - presented as an action */
 "removed voice from %@." = "removed voice from %@.";
 
@@ -346,6 +361,9 @@
 /* send button name */
 "Send" = "Send";
 
+/* send message contextual menu */
+"Send Message" = "Send Message";
+
 /* singular server label */
 "server" = "server";
 
@@ -362,7 +380,7 @@
 "Smile" = "Sourire";
 
 /* stoic emoticon name - flat face */
-"Stoic" = "Sto√Øque";
+"Stoic" = "Stoïque";
 
 /* short toolbar stop button name */
 "Stop" = "Stop";
@@ -377,7 +395,7 @@
 "Text Encoding" = "Encodage du texte";
 
 /* encoding menu toolbar item tooltip */
-"Text Encoding Options" = "Changer le codage du jeu de caract√®res";
+"Text Encoding Options" = "Changer le codage du jeu de caractères";
 
 /* chat server port invalid dialog message */
 "The chat server port you specified is invalid because it can't be negative or greater than 65535." = "The chat server port you specified is invalid because it can't be negative or greater than 65535.";
@@ -425,16 +443,16 @@
 "This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user." = "This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.";
 
 /* bold font tooltip */
-"Toggle Bold Style" = "Activer/d√©sactiver le style gras";
+"Toggle Bold Style" = "Activer/désactiver le style gras";
 
 /* chat room members toolbar item tooltip */
 "Toggle Chat Members" = "Afficher/masquer l'onglet affichant\rles membres";
 
 /* italic style tooltip */
-"Toggle Italic Style" = "Activer/d√©sactiver le style italique";
+"Toggle Italic Style" = "Activer/désactiver le style italique";
 
 /* underline style tooltip */
-"Toggle Underline Style" = "Activer/d√©sactiver le style soulign√©";
+"Toggle Underline Style" = "Activer/désactiver le style souligné";
 
 /* chat room topic prefix */
 "Topic: " = "Sujet: ";
@@ -443,7 +461,7 @@
 "total" = "total";
 
 /* underline font style toolbar item */
-"Underline" = "Soulign√©";
+"Underline" = "Souligné";
 
 /* singular week */
 "week" = "semaine";
@@ -455,22 +473,22 @@
 "Wink" = "Clin d'oeil";
 
 /* singular year */
-"year" = "ann√©e";
+"year" = "année";
 
 /* plural years */
-"years" = "ann√©es";
+"years" = "années";
 
 /* yes answer */
 "Yes" = "Yes";
 
 /* description for getting booted */
-"You have been booted out of this room by %@." = "Vous avez √©t√© √©ject√© de ce canal par %@.";
+"You have been booted out of this room by %@." = "Vous avez été éjecté de ce canal par %@.";
 
 /* title of the you have been disconnected error */
 "You have been disconnected" = "You have been disconnected";
 
 /* invited to chat room description - sheet message */
-"You have been invited to chat in the %@ room by %@." = "Vous avez √©t√© invit√© √† discuter dans le canal %@ par %@.";
+"You have been invited to chat in the %@ room by %@." = "Vous avez été invité à discuter dans le canal %@ par %@.";
 
 /* no irc commands error dialog message */
 "You have typed in an IRC command that wont be processed. If you choose Send, the message will be sent exactly as you typed it." = "You have typed in an IRC command that wont be processed. If you choose Send, the message will be sent exactly as you typed it.";
@@ -479,7 +497,7 @@
 "You left the chat." = "You left the chat.";
 
 /* title of the you're offline message sheet */
-"You're offline" = "Vous √™tes d√©connect√©";
+"You're offline" = "Vous êtes déconnecté";
 
 /* chat invalid nickname dialog title */
 "Your Chat nickname could not be used" = "Your Chat nickname could not be used";
@@ -491,5 +509,5 @@
 "Your software is all up-to-date with the latest version released. Check back at a later date." = "Your software is all up-to-date with the latest version released. Check back at a later date.";
 
 /* no file size */
-"Zero bytes" = "Z√©ro octets";
+"Zero bytes" = "Zéro octets";
 
