@@ -64,11 +64,63 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) _updateProgress:(id) sender;
 - (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 - (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
+- (void) _downloadFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 @end
 
 #pragma mark -
 
 @implementation MVFileTransferController
++ (NSString *) systemDefaultDownloadFolder {
+	OSStatus err = noErr;
+	ICInstance inst = NULL;
+	ICFileSpec folder;
+	long length = kICFileSpecHeaderSize;
+
+	err = ICStart( &inst, 'coRC' );
+	if( err == noErr ) ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
+	ICStop( inst );
+
+	FSRef ref;
+	FSpMakeFSRef( &folder.fss, &ref );
+	unsigned char path[1024];
+	FSRefMakePath( &ref, path, 1024 );
+
+	return [NSString stringWithUTF8String:path];
+}
+
++ (void) setSystemDefaultDownloadFolder:(NSString *) path {
+	OSStatus err = noErr;
+	ICInstance inst = NULL;
+	ICFileSpec *dir = NULL;
+	FSRef ref;
+	AliasHandle alias;
+	unsigned long length = 0;
+
+	if( ( err = FSPathMakeRef( [path UTF8String], &ref, NULL ) ) != noErr )
+		return;
+
+	if( ( err = FSNewAliasMinimal( &ref, &alias ) ) != noErr )
+ 		return;
+
+	length = ( kICFileSpecHeaderSize + GetHandleSize( (Handle) alias ) );
+	dir = malloc( length );
+	memset( dir, 0, length );
+
+	if( ( err = FSGetCatalogInfo( &ref, kFSCatInfoNone, NULL, NULL, &dir -> fss, NULL ) ) != noErr )
+		return;
+
+	memcpy( &dir -> alias, *alias, length - kICFileSpecHeaderSize );
+
+	err = ICStart( &inst, 'coRC' );
+	if( err == noErr ) ICSetPref( inst, kICDownloadFolder, NULL, dir, length );
+	ICStop( inst );
+
+	free( dir );
+	DisposeHandle( (Handle) alias );
+}
+
+#pragma mark -
+
 + (MVFileTransferController *) defaultManager {
 	extern MVFileTransferController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
@@ -486,8 +538,24 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 - (void) download:(NSURLDownload *) download decideDestinationWithSuggestedFilename:(NSString *) filename {
-	NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
-	[savePanel beginSheetForDirectory:NSHomeDirectory() file:filename modalForWindow:nil modalDelegate:self didEndSelector:@selector( _downloadFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [download retain]];
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskForTransferSaveLocation"] ) {
+		NSString *path = [[[self class] systemDefaultDownloadFolder] stringByAppendingPathComponent:filename];
+		NSEnumerator *enumerator = nil;
+		NSMutableDictionary *info = nil;
+
+		enumerator = [_transferStorage objectEnumerator];
+		while( ( info = [enumerator nextObject] ) ) {
+			if( [info objectForKey:@"controller"] == download ) {
+				[info setObject:path forKey:@"path"];
+				break;
+			}
+		}
+
+		[self _downloadFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *) [download retain]];
+	} else {
+		NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
+		[savePanel beginSheetForDirectory:[[self class] systemDefaultDownloadFolder] file:filename modalForWindow:nil modalDelegate:self didEndSelector:@selector( _downloadFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [download retain]];
+	}
 }
 
 - (void) download:(NSURLDownload *) download didReceiveResponse:(NSURLResponse *) response {
@@ -596,8 +664,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	NSMutableDictionary *info = [(NSMutableDictionary *) contextInfo autorelease]; // for the previous retain in _incomingFile:
 	if( returnCode == NSOKButton ) {
-		if( ! [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVTransferSaveLocation"] isEqualToString:@"ask"] ) {
-			NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVTransferSaveLocation"] stringByAppendingPathComponent:[info objectForKey:@"filename"]];
+		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskForTransferSaveLocation"] ) {
+			NSString *path = [[[self class] systemDefaultDownloadFolder] stringByAppendingPathComponent:[info objectForKey:@"filename"]];
 			[sheet close];
 			[info setObject:path forKey:@"filename"];
 			[self _incomingFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *) [info retain]];
@@ -605,7 +673,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
 			[sheet close];
 			[savePanel setDelegate:self];
-			[savePanel beginSheetForDirectory:NSHomeDirectory() file:[info objectForKey:@"filename"] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
+			[savePanel beginSheetForDirectory:[[self class] systemDefaultDownloadFolder] file:[info objectForKey:@"filename"] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
 		}
 	}
 }
@@ -647,12 +715,12 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		enumerator = [_transferStorage objectEnumerator];
 		while( ( info = [enumerator nextObject] ) ) {
 			if( [info objectForKey:@"controller"] == download ) {
-				[info setObject:[sheet filename] forKey:@"path"];
+				if( sheet ) [info setObject:[sheet filename] forKey:@"path"];
 				break;
 			}
 		}
 
-		[download setDestination:[sheet filename] allowOverwrite:YES];
+		[download setDestination:[info objectForKey:@"path"] allowOverwrite:YES];
 		[self _updateProgress:nil];
 	} else {
 		NSEnumerator *enumerator = nil;
