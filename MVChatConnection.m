@@ -1040,9 +1040,9 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 			core_init_paths( 1, args );
 			core_init();
 			irc_init();
-			
-			settings_set_bool("override_coredump_limit", FALSE);
-			signal_emit("setup changed", 0);
+
+			settings_set_bool( "override_coredump_limit", FALSE );
+			signal_emit( "setup changed", 0 );
 
 			signal_emit( "irssi init finished", 0 );	
 
@@ -1146,7 +1146,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (NSURL *) url {
-	NSString *url = [NSString stringWithFormat:@"irc://%@@%@:%hu", MVURLEncodeString( [self nickname] ), MVURLEncodeString( [self server] ), [self serverPort]];
+	NSString *url = [NSString stringWithFormat:@"irc://%@@%@:%hu", MVURLEncodeString( [self preferredNickname] ), MVURLEncodeString( [self server] ), [self serverPort]];
 	if( url ) return [NSURL URLWithString:url];
 	return nil;
 }
@@ -1189,6 +1189,10 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 - (NSString *) nickname {
 	if( [self isConnected] )
 		return [NSString stringWithUTF8String:[self _irssiConnection] -> nick];
+	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> nick];
+}
+
+- (NSString *) preferredNickname {
 	return [NSString stringWithUTF8String:[self _irssiConnection] -> connrec -> nick];
 }
 

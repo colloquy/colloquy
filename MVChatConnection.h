@@ -180,6 +180,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) setNickname:(NSString *) nickname;
 - (NSString *) nickname;
+- (NSString *) preferredNickname;
 
 - (void) setNicknamePassword:(NSString *) password;
 - (NSString *) nicknamePassword;
