@@ -833,6 +833,15 @@
 
 	return nil;
 }
+
+- (NSTextStorage *) scriptTypedTopic {
+	return [[[NSTextStorage alloc] initWithAttributedString:_topicAttributed] autorelease];
+}
+
+- (void) setScriptTypedTopic:(NSString *) topic {
+	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:topic baseURL:nil];
+	[[self connection] setTopic:attributeMsg withEncoding:_encoding forRoom:[self target]];
+}
 @end
 
 #pragma mark -

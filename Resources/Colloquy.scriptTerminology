@@ -340,6 +340,13 @@
 					<key>Name</key>
 					<string>number of members</string>
 				</dict>
+				<key>scriptTypedTopic</key>
+				<dict>
+					<key>Description</key>
+					<string>Topic of the room.</string>
+					<key>Name</key>
+					<string>topic</string>
+				</dict>
 			</dict>
 		</dict>
 		<key>JVChatRoomMember</key>
@@ -580,6 +587,13 @@
 					<string>The user or room that we engaged in conversation with.</string>
 					<key>Name</key>
 					<string>target</string>
+				</dict>
+				<key>scriptTypedEncoding</key>
+				<dict>
+					<key>Description</key>
+					<string>The encoding to use when reading and sending messages.</string>
+					<key>Name</key>
+					<string>encoding</string>
 				</dict>
 			</dict>
 			<key>Description</key>
