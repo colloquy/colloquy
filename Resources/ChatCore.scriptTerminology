@@ -103,92 +103,6 @@
 			<key>Name</key>
 			<string>disconnect</string>
 		</dict>
-		<key>sendMsgToUser</key>
-		<dict>
-			<key>Description</key>
-			<string>Send a message to another user. This message will not echo locally.</string>
-			<key>Name</key>
-			<string>send private</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Connection to send from.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>message</key>
-				<dict>
-					<key>Description</key>
-					<string>Message to send to user. Can include HTML formatting.</string>
-					<key>Name</key>
-					<string>message</string>
-				</dict>
-				<key>user</key>
-				<dict>
-					<key>Description</key>
-					<string>Name of user.</string>
-					<key>Name</key>
-					<string>to user</string>
-				</dict>
-				<key>encoding</key>
-				<dict>
-					<key>Description</key>
-					<string>Encoding to use. (Default is UTF-8.)</string>
-					<key>Name</key>
-					<string>encoded as</string>
-				</dict>
-				<key>action</key>
-				<dict>
-					<key>Description</key>
-					<string>Send as an action?</string>
-					<key>Name</key>
-					<string>action tense</string>
-				</dict>
-			</dict>
-		</dict>
-		<key>sendMsgToRoom</key>
-		<dict>
-			<key>Description</key>
-			<string>Send a message to a room you're a member of. This message will not echo locally.</string>
-			<key>Name</key>
-			<string>send public</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Connection to send from.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>message</key>
-				<dict>
-					<key>Description</key>
-					<string>Message to send to room. Can include HTML formatting.</string>
-					<key>Name</key>
-					<string>message</string>
-				</dict>
-				<key>room</key>
-				<dict>
-					<key>Description</key>
-					<string>Name of room. (Doesn't need to have prefix '#' symbol.)</string>
-					<key>Name</key>
-					<string>to room</string>
-				</dict>
-				<key>encoding</key>
-				<dict>
-					<key>Description</key>
-					<string>Encoding to use. (Default is UTF-8.)</string>
-					<key>Name</key>
-					<string>encoded as</string>
-				</dict>
-				<key>action</key>
-				<dict>
-					<key>Description</key>
-					<string>Send as an action?</string>
-					<key>Name</key>
-					<string>action tense</string>
-				</dict>
-			</dict>
-		</dict>
 		<key>sendRawMessage</key>
 		<dict>
 			<key>Description</key>
@@ -208,49 +122,6 @@
 					<string>Raw message to send to server.</string>
 					<key>Name</key>
 					<string>message</string>
-				</dict>
-			</dict>
-		</dict>
-		<key>sendSubcodeCommand</key>
-		<dict>
-			<key>Description</key>
-			<string>Send a subcode (CTCP) command to another user.</string>
-			<key>Name</key>
-			<string>send subcode</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Connection to send from.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>command</key>
-				<dict>
-					<key>Description</key>
-					<string>CTCP command to send to user.</string>
-					<key>Name</key>
-					<string>command</string>
-				</dict>
-				<key>arguments</key>
-				<dict>
-					<key>Description</key>
-					<string>Command arguments to send. Can include HTML formatting.</string>
-					<key>Name</key>
-					<string>with arguments</string>
-				</dict>
-				<key>type</key>
-				<dict>
-					<key>Description</key>
-					<string>Type of subcode message to send.</string>
-					<key>Name</key>
-					<string>as</string>
-				</dict>
-				<key>user</key>
-				<dict>
-					<key>Description</key>
-					<string>Name of user.</string>
-					<key>Name</key>
-					<string>to user</string>
 				</dict>
 			</dict>
 		</dict>
@@ -285,35 +156,6 @@
 					<string>Room to join. Can also be a list of rooms.</string>
 					<key>Name</key>
 					<string>room</string>
-				</dict>
-			</dict>
-		</dict>
-		<key>sendFile</key>
-		<dict>
-			<key>Description</key>
-			<string>Send a file (DCC) to another user.</string>
-			<key>Name</key>
-			<string>transfer file</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Description</key>
-				<string>Connection user is on.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>path</key>
-				<dict>
-					<key>Description</key>
-					<string>Path of file to send the user.</string>
-					<key>Name</key>
-					<string>at</string>
-				</dict>
-				<key>user</key>
-				<dict>
-					<key>Description</key>
-					<string>User to send file to.</string>
-					<key>Name</key>
-					<string>to user</string>
 				</dict>
 			</dict>
 		</dict>

@@ -758,7 +758,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 }
 @end
-/*
+
 #pragma mark -
 
 @implementation MVChatConnection (MVChatConnectionScripting)
@@ -774,78 +774,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self disconnect];
 }
 
-- (void) sendMessageScriptCommand:(NSScriptCommand *) command {
-	NSString *message = [[command evaluatedArguments] objectForKey:@"message"];
-	NSString *user = [[command evaluatedArguments] objectForKey:@"user"];
-	NSString *room = [[command evaluatedArguments] objectForKey:@"room"];
-	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
-	unsigned long enc = [[[command evaluatedArguments] objectForKey:@"encoding"] unsignedLongValue];
-	NSStringEncoding encoding = NSUTF8StringEncoding;
-
-	if( ! [message isKindOfClass:[NSString class]] || ! [message length] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid message."];
-		return;
-	}
-
-	if( ! user && ( ! [room isKindOfClass:[NSString class]] || ! [room length] ) ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid room."];
-		return;
-	}
-
-	if( ! room && ( ! [user isKindOfClass:[NSString class]] || ! [user length] ) ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid user."];
-		return;
-	}
-
-	switch( enc ) {
-		default:
-		case 'utF8': encoding = NSUTF8StringEncoding; break;
-		case 'ascI': encoding = NSASCIIStringEncoding; break;
-		case 'nlAs': encoding = NSNonLossyASCIIStringEncoding; break;
-
-		case 'isL1': encoding = NSISOLatin1StringEncoding; break;
-		case 'isL2': encoding = NSISOLatin2StringEncoding; break;
-		case 'isL3': encoding = (NSStringEncoding) 0x80000203; break;
-		case 'isL4': encoding = (NSStringEncoding) 0x80000204; break;
-		case 'isL5': encoding = (NSStringEncoding) 0x80000205; break;
-		case 'isL9': encoding = (NSStringEncoding) 0x8000020F; break;
-
-		case 'cp50': encoding = NSWindowsCP1250StringEncoding; break;
-		case 'cp51': encoding = NSWindowsCP1251StringEncoding; break;
-		case 'cp52': encoding = NSWindowsCP1252StringEncoding; break;
-
-		case 'mcRo': encoding = NSMacOSRomanStringEncoding; break;
-		case 'mcEu': encoding = (NSStringEncoding) 0x8000001D; break;
-		case 'mcCy': encoding = (NSStringEncoding) 0x80000007; break;
-		case 'mcJp': encoding = (NSStringEncoding) 0x80000001; break;
-		case 'mcSc': encoding = (NSStringEncoding) 0x80000019; break;
-		case 'mcTc': encoding = (NSStringEncoding) 0x80000002; break;
-		case 'mcKr': encoding = (NSStringEncoding) 0x80000003; break;
-
-		case 'ko8R': encoding = (NSStringEncoding) 0x80000A02; break;
-
-		case 'wnSc': encoding = (NSStringEncoding) 0x80000421; break;
-		case 'wnTc': encoding = (NSStringEncoding) 0x80000423; break;
-		case 'wnKr': encoding = (NSStringEncoding) 0x80000422; break;
-
-		case 'jpUC': encoding = NSJapaneseEUCStringEncoding; break;
-		case 'sJiS': encoding = (NSStringEncoding) 0x80000A01; break;
-
-		case 'krUC': encoding = (NSStringEncoding) 0x80000940; break;
-
-		case 'scUC': encoding = (NSStringEncoding) 0x80000930; break;
-		case 'tcUC': encoding = (NSStringEncoding) 0x80000931; break;
-		case 'gb30': encoding = (NSStringEncoding) 0x80000632; break;
-		case 'gbKK': encoding = (NSStringEncoding) 0x80000631; break;
-		case 'biG5': encoding = (NSStringEncoding) 0x80000A03; break;
-		case 'bG5H': encoding = (NSStringEncoding) 0x80000A06; break;
-	}
-
-	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
-	if( [user length] ) [self sendMessage:attributeMsg withEncoding:encoding toUser:user asAction:action];
-	else if( [room length] ) [self sendMessage:attributeMsg withEncoding:encoding toChatRoom:room asAction:action];
-}
-
 - (void) sendRawMessageScriptCommand:(NSScriptCommand *) command {
 	NSString *msg = [[command evaluatedArguments] objectForKey:@"message"];
 
@@ -855,44 +783,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	[self sendRawMessage:[[command evaluatedArguments] objectForKey:@"message"]];
-}
-
-- (void) sendSubcodeMessageScriptCommand:(NSScriptCommand *) command {
-	NSString *cmd = [[command evaluatedArguments] objectForKey:@"command"];
-	NSString *user = [[command evaluatedArguments] objectForKey:@"user"];
-	id arguments = [[command evaluatedArguments] objectForKey:@"arguments"];
-	unsigned long type = [[[command evaluatedArguments] objectForKey:@"type"] unsignedLongValue];
-
-	if( ! [cmd isKindOfClass:[NSString class]] || ! [cmd length] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid subcode command."];
-		return;
-	}
-
-	if( ! [user isKindOfClass:[NSString class]] || ! [user length] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid subcode user."];
-		return;
-	}
-
-	if( [arguments isKindOfClass:[NSNull class]] ) arguments = nil;
-
-	if( arguments && ! [arguments isKindOfClass:[NSString class]] && ! [arguments isKindOfClass:[NSArray class]] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid subcode arguments."];
-		return;
-	}
-
-	NSString *argumnentsString = nil;
-	if( [arguments isKindOfClass:[NSArray class]] ) {
-		NSEnumerator *enumerator = [arguments objectEnumerator];
-		id arg = nil;
-
-		argumnentsString = [NSMutableString stringWithFormat:@"%@", [enumerator nextObject]];
-
-		while( ( arg = [enumerator nextObject] ) )
-			[(NSMutableString *)argumnentsString appendFormat:@" %@", arg];
-	} else argumnentsString = arguments;
-
-	if( type == 'srpL' ) [self sendSubcodeReply:cmd toUser:user withArguments:argumnentsString];
-	else [self sendSubcodeRequest:cmd toUser:user withArguments:argumnentsString];
 }
 
 - (void) returnFromAwayStatusScriptCommand:(NSScriptCommand *) command {
@@ -912,24 +802,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		rms = [NSArray arrayWithObject:rooms];
 	else rms = rooms;
 
-	[self joinChatRooms:rms];
-}
-
-- (void) sendFileScriptCommand:(NSScriptCommand *) command {
-	NSString *path = [[command evaluatedArguments] objectForKey:@"path"];
-	NSString *user = [[command evaluatedArguments] objectForKey:@"user"];
-
-	if( ! [path isKindOfClass:[NSString class]] || ! [path length] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid file path."];
-		return;
-	}
-
-	if( ! [user isKindOfClass:[NSString class]] || ! [user length] ) {
-		[NSException raise:NSInvalidArgumentException format:@"Invalid user."];
-		return;
-	}
-
-	[self sendFile:path toUser:user];
+	[self joinChatRoomsNamed:rms];
 }
 
 - (NSString *) urlString {
@@ -970,4 +843,4 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
 	[self callScriptHandler:'dFsX' withArguments:args forSelector:_cmd];
 }
-@end */
+@end

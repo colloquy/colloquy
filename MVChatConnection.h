@@ -226,7 +226,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) cancelPendingReconnectAttempts;
 - (BOOL) isWaitingToReconnect;
 @end
-/*
+
 #pragma mark -
 
 @interface MVChatConnection (MVChatConnectionScripting)
@@ -241,4 +241,4 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (void) connected:(MVChatConnection *) connection;
 - (void) disconnecting:(MVChatConnection *) connection;
-@end */
+@end
