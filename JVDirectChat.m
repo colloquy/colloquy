@@ -1488,17 +1488,25 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (void) _saveSelfIcon {
 	ABPerson *_person = [[ABAddressBook sharedAddressBook] me];
-	if( [[NSFileManager defaultManager] isReadableFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]]] )
-		return;
 	NSImage *icon = [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
 	NSData *imageData = [icon TIFFRepresentation];
+	if( ! [imageData length] ) {
+		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]] handler:nil];
+		return;
+	}
+	if( [[NSFileManager defaultManager] isReadableFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]]] )
+		return;
 	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]] atomically:NO];
 }
 
 - (void) _saveBuddyIcon:(JVBuddy *) buddy {
+	NSData *imageData = [[buddy picture] TIFFRepresentation];
+	if( ! [imageData length] ) {
+		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] handler:nil];
+		return;
+	}
 	if( [[NSFileManager defaultManager] isReadableFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]]] )
 		return;
-	NSData *imageData = [[buddy picture] TIFFRepresentation];
 	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] atomically:NO];
 }
 @end
