@@ -616,6 +616,7 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 
 @implementation JVChatTranscriptPanel (JVChatTranscriptPrivate)
 - (void) _refreshWindowFileProxy {
+	if(	[[self windowController] activeChatViewController] != self ) return;
 	if( ! [[NSFileManager defaultManager] fileExistsAtPath:[[self transcript] filePath]] ) {
 		[[_windowController window] setRepresentedFilename:@""];
 	} else {
