@@ -262,7 +262,7 @@
 	else if( [self voice] ) icon = [NSImage imageNamed:@"voice"];
 	else icon = [NSImage imageNamed:@"person"];
 
-	if( [[self user] isIdentified] ) {
+/*	if( [[self user] isIdentified] ) {
 		NSImage *badge = [NSImage imageNamed:@"identified-badge"];
 		NSImage *new = [[[NSImage alloc] initWithSize:[icon size]] autorelease];
 		[new lockFocus];
@@ -270,7 +270,7 @@
         [badge compositeToPoint:NSMakePoint( 0., 0. ) operation:NSCompositeSourceOver];
 		[new unlockFocus];
 		icon = new;
-	}
+	} */
 
 	return icon;
 }
