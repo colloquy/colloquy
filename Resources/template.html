@@ -67,25 +67,16 @@
 		}
 
 		function scrollToBottomIfNeeded() {
-			if( scrollToBottomIsNeeded )
-				scrollToBottom();
+			if( scrollToBottomIsNeeded ) scrollToBottom();
 		}
 
 		function setStylesheet( id, url ) {
-			code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
-			if( url.length ) code += "@import url( \"" + url + "\" );";
-			code += "</style>";
-			range = document.createRange();
-			head = document.getElementsByTagName( "head" ).item(0);
-			range.selectNode( head );
-			documentFragment = range.createContextualFragment( code );
-			head.removeChild( document.getElementById( id ) );
-			head.appendChild( documentFragment );
+			document.getElementById( id ).href = url;
 		}
 	</script>
-	<style id="emoticonStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
-	<style id="mainStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
-	<style id="variantStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
+	<link id="emoticonStyle" rel="stylesheet" type="text/css" href="%@" />
+	<link id="mainStyle" rel="stylesheet" type="text/css" href="%@" />
+	<link id="variantStyle" rel="stylesheet" type="text/css" href="%@" />
 	<base href="%@" />
 </head>
 <body onload="jumpToBottom()">
