@@ -92,13 +92,13 @@
 }
 
 - (BOOL) isChatURL {
-	if( [[self scheme] isEqualToString:@"irc"] ) return YES;
+	if( [[self scheme] isEqualToString:@"irc"] || [[self scheme] isEqualToString:@"silc"] ) return YES;
 	return NO;
 }
 
 - (BOOL) isChatRoomURL {
 	BOOL isRoom = NO;
-	if( [[self scheme] isEqualToString:@"irc"] ) {
+	if( [[self scheme] isEqualToString:@"irc"] || [[self scheme] isEqualToString:@"silc"] ) {
 		if( [self fragment] ) {
 			if( [[self fragment] length] > 0 ) isRoom = YES;
 		} else if( [self path] && [[self path] length] >= 2 ) {
@@ -111,7 +111,7 @@
 
 - (BOOL) isDirectChatURL {
 	BOOL isDirect = NO;
-	if( [[self scheme] isEqualToString:@"irc"] ) {
+	if( [[self scheme] isEqualToString:@"irc"] || [[self scheme] isEqualToString:@"silc"] ) {
 		if( [self fragment] ) {
 			if( [[self fragment] length] > 0 ) isDirect = NO;
 		} else if( [self path] && [[self path] length] >= 2) {
