@@ -6,6 +6,7 @@
                 closeCurrentPanel = id; 
                 getInfo = id; 
                 italic = id; 
+                joinRoom = id; 
                 newConnection = id; 
                 selectNextPanel = id; 
                 selectPreviousPanel = id; 
