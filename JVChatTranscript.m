@@ -660,10 +660,10 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 #pragma mark WebView
 
 #ifndef WebMenuItemTagGoBack
-#define WebMenuItemTagGoBack -1
-#define WebMenuItemTagGoForward -2
-#define WebMenuItemTagStop -3
-#define WebMenuItemTagReload -4
+#define WebMenuItemTagGoBack 9
+#define WebMenuItemTagGoForward 10
+#define WebMenuItemTagStop 11
+#define WebMenuItemTagReload 12
 #endif
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {

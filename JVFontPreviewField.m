@@ -50,9 +50,9 @@
 }
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_2
-#define NSFontPanelStandardModesMask -1
-#define NSFontPanelSizeModeMask -2
-#define NSFontPanelFaceModeMask -3
+#define NSFontPanelStandardModesMask 0xFFFF
+#define NSFontPanelSizeModeMask 1 << 1
+#define NSFontPanelFaceModeMask 1 << 0
 #endif
 
 - (unsigned int) validModesForFontPanel:(NSFontPanel *) fontPanel {
