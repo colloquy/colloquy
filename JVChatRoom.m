@@ -51,7 +51,6 @@
 	[topicLine setDrawsBackground:NO];
 	[[topicLine enclosingScrollView] setDrawsBackground:NO];
 	[super awakeFromNib];
-	[self changeTopic:nil by:nil];
 
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
 
@@ -245,7 +244,7 @@
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
 	NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
 	NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
-
+	
 	[message setAttributedString:[[[NSAttributedString alloc] initWithString:messageString] autorelease]];
 
 	NSSet *plugins = [[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )];
@@ -657,13 +656,13 @@
 
 - (void) changeTopic:(NSData *) topic by:(NSString *) author {
 	if( ! [topic isMemberOfClass:[NSNull class]] ) {
-		NSMutableString *topicString = [[[NSMutableString alloc] initWithData:topic encoding:_encoding] autorelease];
-		if( ! topicString ) topicString = [NSMutableString stringWithCString:[topic bytes] length:[topic length]];
+		NSMutableString *topicString = ( topic ? [[[NSMutableString alloc] initWithData:topic encoding:_encoding] autorelease] : nil );
+		if( ! topicString && topic ) topicString = [NSMutableString stringWithCString:[topic bytes] length:[topic length]];
 
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 			[self _makeHyperlinksInString:topicString];
 
-		if( author && topic && ! [author isMemberOfClass:[NSNull class]] ) {
+		if( topic && author && ! [author isMemberOfClass:[NSNull class]] ) {
 			JVChatRoomMember *mbr = [self chatRoomMemberWithName:author];
 			if( [mbr isLocalUser] ) {
 				[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You changed the topic to \"%@\".", "you changed the topic chat room status message" ), topicString] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[mbr title], @"by", author, @"byNickname", topicString, @"topic", nil]];
@@ -702,7 +701,7 @@
 		[[topicLine textStorage] setAttributedString:_topicAttributed];
 	}
 
-	if( ! [author isMemberOfClass:[NSNull class]] ) {
+	if( author && ! [author isMemberOfClass:[NSNull class]] ) {
 		[_topicAuth autorelease];
 		_topicAuth = [author retain];
 	}
