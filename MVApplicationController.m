@@ -27,6 +27,8 @@
 //	[[MVBuddyListController sharedBuddyList] autorelease];
 	[[MVChatPluginManager defaultManager] autorelease];
 
+	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];
+
 	[super dealloc];
 }
 
@@ -91,10 +93,16 @@
 	return NO;
 }
 
+- (void) handleURLEvent:(NSAppleEventDescriptor *) event withReplyEvent:(NSAppleEventDescriptor *) replyEvent {
+	NSURL *url = [NSURL URLWithString:[[event descriptorAtIndex:1] stringValue]];
+	[[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
+}
+
 #pragma mark -
 
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
+	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
