@@ -389,6 +389,23 @@ static JVChatController *sharedInstance = nil;
 	return [self newChatWindowController];
 }
 
+- (void) startChatScriptCommand:(NSScriptCommand *) command {
+	MVChatConnection *connection = [[command evaluatedArguments] objectForKey:@"connection"];
+	NSString *user = [[command evaluatedArguments] objectForKey:@"user"];
+
+	if( ! [user length] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid user nickname."];
+		return;
+	}
+
+	if( ! connection || ! [connection isConnected] ) {
+		[NSException raise:NSInvalidArgumentException format:@"Invalid conenction or it is not connected."];
+		return;
+	}
+
+	[self chatViewControllerForUser:user withConnection:connection ifExists:NO];
+}
+
 #pragma mark -
 
 - (NSArray *) chatWindows {
