@@ -4174,7 +4174,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "touch Resources/Styles\ntouch Resources/Emoticons";
+			shellScript = "touch Resources/Styles\ntouch Resources/Emoticons\nfind build/Colloquy.app -name '.svn' -print0 | xargs -0 rm -rf\n";
 		};
 		1CF9BB9A04FBE96D00A8FE6E = {
 			isa = PBXFileReference;
