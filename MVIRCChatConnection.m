@@ -38,7 +38,6 @@ void irc_deinit( void );
 
 NSRecursiveLock *MVIRCChatConnectionThreadLock = nil;
 static unsigned int connectionCount = 0;
-static BOOL irssiSetupFinished = NO;
 static GMainLoop *glibMainLoop = NULL;
 
 typedef struct {
@@ -832,6 +831,26 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
 		MVIRCChatConnectionThreadLock = [[NSRecursiveLock alloc] init];
+
+		irssi_gui = IRSSI_GUI_NONE;
+
+		NSString *temp = NSTemporaryDirectory();
+		temp = [temp stringByAppendingPathComponent:@"Colloquy/irssi"];
+		temp = [@"--home=" stringByAppendingString:temp];
+		char *args[] = { "Chat Core", (char *)[temp cString] };
+		core_init_paths( sizeof( args ) / sizeof( char * ), args );
+
+		core_init();
+		irc_init();
+
+		settings_set_bool( "override_coredump_limit", FALSE );
+		settings_set_bool( "settings_autosave", FALSE );
+		signal_emit( "setup changed", 0 );
+
+		signal_emit( "irssi init finished", 0 );	
+
+		[self _registerCallbacks];
+
 		[NSThread detachNewThreadSelector:@selector( _irssiRunLoop ) toTarget:self withObject:nil];
 		tooLate = YES;
 	}
@@ -846,9 +865,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		_proxyPassword = nil;
 		_chatConnection = NULL;
 		_chatConnectionSettings = NULL;
-
-		// wait for the Irssi thread to get to a stable point
-		while( ! irssiSetupFinished ) usleep( 10 );
 
 		extern unsigned int connectionCount;
 		connectionCount++;
@@ -1565,40 +1581,15 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 + (void) _irssiRunLoop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	[MVIRCChatConnectionThreadLock lock];
-
 	extern GMainLoop *glibMainLoop;
 	glibMainLoop = g_main_new( TRUE );
-	irssi_gui = IRSSI_GUI_NONE;
-
-	NSString *temp = NSTemporaryDirectory();
-	temp = [temp stringByAppendingPathComponent:@"Colloquy/irssi"];
-	temp = [@"--home=" stringByAppendingString:temp];
-	char *args[] = { "Chat Core", (char *)[temp cString] };
-	core_init_paths( sizeof( args ) / sizeof( char * ), args );
-
-	core_init();
-	irc_init();
-
-	settings_set_bool( "override_coredump_limit", FALSE );
-	settings_set_bool( "settings_autosave", FALSE );
-	signal_emit( "setup changed", 0 );
-
-	signal_emit( "irssi init finished", 0 );	
-
-	[self _registerCallbacks];
-
-	[MVIRCChatConnectionThreadLock unlock];
-
-	extern BOOL irssiSetupFinished;
-	irssiSetupFinished = YES;
 
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
 	while( ! MVChatApplicationQuitting || connectionCount ) {
 		usleep( 500 ); // give time for other theads to lock
 		if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
-			g_main_iteration( TRUE );
+			g_main_iteration( TRUE ); // this will block if TRUE is passed
 			[MVIRCChatConnectionThreadLock unlock];
 		}
 	}
@@ -1611,7 +1602,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	signal_emit( "gui exit", 0 );
 
-	extern GMainLoop *glibMainLoop;
 	g_main_destroy( glibMainLoop );
 	glibMainLoop = NULL;
 
