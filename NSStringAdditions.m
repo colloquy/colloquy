@@ -128,7 +128,7 @@
 }
 
 - (NSString *) stringByDecodingIllegalURLCharacters {
-	return [(NSString *)CFURLCreateStringByReplacingPercentEscapes( NULL, (CFStringRef)self, NULL ) autorelease];
+	return [(NSString *)CFURLCreateStringByReplacingPercentEscapes( NULL, (CFStringRef)self, CFSTR( "" ) ) autorelease];
 }
 @end
 
