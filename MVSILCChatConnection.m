@@ -949,6 +949,9 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (NSString *) nickname {
+  if ( [self _silcConn] && [self _silcConn] -> nickname )
+    return [NSString stringWithUTF8String:[self _silcConn] -> nickname];
+
 	return [NSString stringWithUTF8String:_silcClient -> nickname];
 }
 
@@ -1340,12 +1343,18 @@ static SilcClientOperations silcClientOps = {
 		[[self _silcClientLock] lock];
 		silc_client_set_away_message( [self _silcClient], [self _silcConn], (char *) [MVSILCChatConnection _flattenedSILCStringForMessage:message] );
 		[[self _silcClientLock] unlock];
+		
+		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSelfAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"away", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	} else {
 		[self sendRawMessage:@"UMODE -g"];
 
 		[[self _silcClientLock] lock];
 		silc_client_set_away_message( [self _silcClient], [self _silcConn], NULL );
 		[[self _silcClientLock] unlock];
+		
+		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSelfAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], @"away", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
 }
 
