@@ -571,7 +571,6 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		char *nickname = va_arg( list, char * );
 		/*const SilcClientID *old_client_id =*/ va_arg( list, SilcClientID * );
 
-		NSLog( @"self nick change %s", nickname );
 		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nickname], @"nickname", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}	break;
@@ -1361,7 +1360,7 @@ static SilcClientOperations silcClientOps = {
 	while( [self isConnected] || [self status] == MVChatConnectionConnectingStatus ) {
 		if( [_silcClientLock tryLock] ) { // give up quick and let another SILC connection run sooner
 			if( _silcClient && _silcClient -> schedule )
-				silc_schedule_one(  _silcClient -> schedule, 50000 );
+				silc_schedule_one(  _silcClient -> schedule, 100000 );
 				// use silc_schedule_one over silc_client_run_one since we want to block a bit inside the locks
 			[_silcClientLock unlock];
 		}
@@ -1620,14 +1619,12 @@ static SilcClientOperations silcClientOps = {
 
 - (void) _sendCommandSucceededNotify:(NSString *) message {
 	NSString *raw = [NSString stringWithFormat:@"Command succeeded: %@", message];
-	NSLog( @"%@", raw );
 	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];
 }
 
 - (void) _sendCommandFailedNotify:(NSString *) message {
 	NSString *raw = [NSString stringWithFormat:@"Command failure: %@", message];
-	NSLog( @"%@", raw );
 	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];	
 }
