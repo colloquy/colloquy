@@ -66,8 +66,8 @@
 	} else if ( ! _voice && [member voice] ) {
 		retVal = NSOrderedDescending;
 	} else {
-		retVal = [self compareUsingBuddyStatus:member];
-		// retVal = [[self title] caseInsensitiveCompare:[member title]];
+		// retVal = [self compareUsingBuddyStatus:member];
+		retVal = [[self title] caseInsensitiveCompare:[member title]];
 	}
 
 	return retVal;
