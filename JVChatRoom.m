@@ -21,6 +21,7 @@
 	if( ( self = [super init] ) ) {
 		_topic = nil;
 		_topicAuth = nil;
+		_topicAttributed = nil;
 		_members = [[NSMutableDictionary dictionary] retain];
 		_sortedMembers = [[NSMutableArray array] retain];
 		_kickedFromRoom = NO;
@@ -43,11 +44,13 @@
 	[_sortedMembers autorelease];
 	[_topic autorelease];
 	[_topicAuth autorelease];
+	[_topicAttributed autorelease];
 
 	_members = nil;
 	_sortedMembers = nil;
 	_topic = nil;
 	_topicAuth = nil;
+	_topicAttributed = nil;
 
 	[super dealloc];
 }
@@ -379,7 +382,7 @@
 
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 			[self _makeHyperlinksInString:topicString];
-
+		
 		if( ! [topicString length] )
 			topicString = [NSString stringWithFormat:@"<span style=\"color: #6c6c6c\">%@</span>", NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" )];
 
@@ -397,6 +400,34 @@
 	}
 
 	[NSTimer scheduledTimerWithTimeInterval:0. target:self selector:@selector( _finishTopicChange: ) userInfo:NULL repeats:NO];
+}
+
+- (NSAttributedString *) topic {
+	return [[_topicAttributed retain] autorelease];
+}
+
+#pragma mark -
+
+- (BOOL) doesMemberHaveOperatorStatus:(NSString *) member {
+	NSEnumerator *enumerator = [_members objectEnumerator], *keyEnumerator = [_members keyEnumerator];
+	id item = nil, key = nil;
+
+	while( ( item = [enumerator nextObject] ) && ( key = [keyEnumerator nextObject] ) )
+		if( [member isEqualToString:key] )
+			return [[item objectForKey:@"op"] boolValue];
+
+	return NO;
+}
+
+- (BOOL) doesMemberHaveVoiceStatus:(NSString *) member {
+	NSEnumerator *enumerator = [_members objectEnumerator], *keyEnumerator = [_members keyEnumerator];
+	id item = nil, key = nil;
+
+	while( ( item = [enumerator nextObject] ) && ( key = [keyEnumerator nextObject] ) )
+		if( [member isEqualToString:key] )
+			return [[item objectForKey:@"voice"] boolValue];
+
+	return NO;
 }
 
 #pragma mark -
@@ -477,10 +508,16 @@
 	NSMutableAttributedString *topic = [[[(id <WebDocumentText>)[[[topicRenderer mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 	NSString *toolTip = nil;
+
 	[paraStyle setMaximumLineHeight:13.];
 	[paraStyle setAlignment:NSCenterTextAlignment];
 	[topic addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange( 0, [topic length] )];
 	[[topicLine textStorage] setAttributedString:topic];
+
+	[_topicAttributed autorelease];
+	if( [_topic length] ) {
+		_topicAttributed = [topic copy];
+	} else _topicAttributed = nil;
 
 	toolTip = [[[topic string] copy] autorelease];
 	if( _topicAuth ) {

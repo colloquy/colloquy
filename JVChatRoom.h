@@ -14,6 +14,7 @@
 	IBOutlet WebView *topicRenderer;
 	NSMutableDictionary *_members;
 	NSMutableArray *_sortedMembers;
+	NSAttributedString *_topicAttributed;
 	NSData *_topic;
 	NSString *_topicAuth;
 	BOOL _invalidateMembers;
@@ -34,4 +35,8 @@
 - (void) kickedFromChatBy:(NSString *) by forReason:(NSData *) reason;
 
 - (void) changeTopic:(NSData *) topic by:(NSString *) author;
+- (NSAttributedString *) topic;
+
+- (BOOL) doesMemberHaveOperatorStatus:(NSString *) member;
+- (BOOL) doesMemberHaveVoiceStatus:(NSString *) member;
 @end
