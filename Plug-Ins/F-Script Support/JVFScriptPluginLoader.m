@@ -75,8 +75,8 @@
 							path = [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"fscript"];
 							path = [[[[_manager class] pluginSearchPaths] objectAtIndex:0] stringByAppendingPathComponent:path];
 							if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) {
-								[[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil];
-								[[NSWorkspace sharedWorkspace] openFile:path];
+								if( [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil] )
+									[[NSWorkspace sharedWorkspace] openFile:path];
 							}
 						}
 					} else if( plugin ) {
