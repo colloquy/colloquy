@@ -157,9 +157,9 @@
 						break;
 					if( (signed)( range.location + [str length] ) < [string length] && [string characterAtIndex:( range.location + [str length] )] != ' ' )
 						break;
-					attributes = [self attributesAtIndex:range.location longestEffectiveRange:NULL inRange:range];
+					//attributes = [self attributesAtIndex:range.location longestEffectiveRange:NULL inRange:range];
 					[self replaceCharactersInRange:range withAttributedString:imageAttachString];
-					[self addAttributes:attributes range:NSMakeRange( range.location, 1 )];
+					//[self addAttributes:attributes range:NSMakeRange( range.location, 1 )]; /* ~CRASH! */
 				} else moreReplacements = NO;
 			}
 		}
