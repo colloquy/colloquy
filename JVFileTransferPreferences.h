@@ -6,6 +6,7 @@
 	IBOutlet NSPopUpButton *saveDownloads;
 	IBOutlet NSPopUpButton *removeTransfers;
 	IBOutlet NSButton *openSafe;
+	IBOutlet NSButton *sendPassive;
 	IBOutlet NSTextField *minRate;
 	IBOutlet NSTextField *maxRate;
 }
@@ -14,4 +15,5 @@
 - (IBAction) changeSaveDownloads:(id) sender;
 - (IBAction) changeRemoveTransfers:(id) sender;
 - (IBAction) toggleOpenSafeFiles:(id) sender;
+- (IBAction) toggleSendPassive:(id) sender;
 @end

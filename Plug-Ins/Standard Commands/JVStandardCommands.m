@@ -10,6 +10,7 @@
 #import "JVDirectChat.h"
 #import "JVChatRoomMember.h"
 #import "JVInspectorController.h"
+#import "MVFileTransferController.h"
 #import "JVChatMemberInspector.h"
 #import "JVChatRoomBrowser.h"
 #import "JVStyle.h"
@@ -409,6 +410,7 @@
 
 - (BOOL) handleFileSendWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
 	NSString *to = nil, *path = nil;
+	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
 	NSScanner *scanner = [NSScanner scannerWithString:arguments];
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:nil];
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
@@ -429,9 +431,9 @@
 		if( [panel runModalForTypes:nil] == NSOKButton ) {
 			NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 			while( ( path = [enumerator nextObject] ) )
-				[connection sendFile:path toUser:to];
+				[[_manager fileTransferController] addFileTransfer:[connection sendFile:path toUser:to passively:passive]];
 		}
-	} else [connection sendFile:path toUser:to];
+	} else [[_manager fileTransferController] addFileTransfer:[connection sendFile:path toUser:to passively:passive]];
 	return YES;
 }
 

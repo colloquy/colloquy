@@ -434,6 +434,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (IBAction) sendFileToSelectedBuddy:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
+	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
 	NSURL *url = [buddy activeNickname];
 	NSOpenPanel *panel = [NSOpenPanel openPanel];
@@ -446,7 +447,7 @@ static MVBuddyListController *sharedInstance = nil;
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		NSString *path = nil;
 		while( ( path = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:path toUser:[url user]]];
+			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:path toUser:[url user] passively:passive]];
 	}
 }
 
@@ -759,6 +760,7 @@ static MVBuddyListController *sharedInstance = nil;
 - (BOOL) tableView:(NSTableView *) tableView acceptDrop:(id <NSDraggingInfo>) info row:(int) row dropOperation:(NSTableViewDropOperation) operation {
 	NSPasteboard *board = [info draggingPasteboard];
 	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
+		BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 		NSURL *url = [buddy activeNickname];
 		MVChatConnection *connection = [[MVConnectionsController defaultManager] connectionForServerAddress:[url host]];
@@ -767,7 +769,7 @@ static MVBuddyListController *sharedInstance = nil;
 		id file = nil;
 
 		while( ( file = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:file toUser:[url user]]];
+			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:file toUser:[url user] passively:passive]];
 
 		return YES;
 	}

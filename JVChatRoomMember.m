@@ -211,7 +211,8 @@
 }
 
 - (void) handleDraggedFile:(NSString *) path {
-	[[MVFileTransferController defaultManager] addFileTransfer:[[self connection] sendFile:path toUser:_nickname]];
+	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
+	[[MVFileTransferController defaultManager] addFileTransfer:[[self connection] sendFile:path toUser:_nickname passively:passive]];
 }
 
 #pragma mark -
@@ -342,6 +343,7 @@
 }
 
 - (IBAction) sendFile:(id) sender {
+	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
 	NSString *path = nil;
 	NSOpenPanel *panel = [NSOpenPanel openPanel];
 	[panel setResolvesAliases:YES];
@@ -351,7 +353,7 @@
 	if( [panel runModalForTypes:nil] == NSOKButton ) {
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		while( ( path = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultManager] addFileTransfer:[[_parent connection] sendFile:path toUser:_nickname]];
+			[[MVFileTransferController defaultManager] addFileTransfer:[[_parent connection] sendFile:path toUser:_nickname passively:passive]];
 	}
 }
 

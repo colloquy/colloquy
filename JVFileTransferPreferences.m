@@ -44,6 +44,7 @@
 	[autoAccept selectItemAtIndex:[autoAccept indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"]]];
 	[removeTransfers selectItemAtIndex:[removeTransfers indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"]]];
 	[openSafe setState:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"]];
+	[sendPassive setState:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"]];
 }
 
 - (IBAction) changePortRange:(id) sender {
@@ -98,5 +99,9 @@
 
 - (IBAction) toggleOpenSafeFiles:(id) sender {
 	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVOpenSafeFiles"];
+}
+
+- (IBAction) toggleSendPassive:(id) sender {
+	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVSendFilesPassively"];
 }
 @end

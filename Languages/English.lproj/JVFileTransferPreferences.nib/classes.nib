@@ -8,6 +8,7 @@
                 changeRemoveTransfers = id; 
                 changeSaveDownloads = id; 
                 toggleOpenSafeFiles = id; 
+                toggleSendPassive = id; 
             }; 
             CLASS = JVFileTransferPreferences; 
             LANGUAGE = ObjC; 
@@ -18,6 +19,7 @@
                 openSafe = NSButton; 
                 removeTransfers = NSPopUpButton; 
                 saveDownloads = NSPopUpButton; 
+                sendPassive = NSButton; 
             }; 
             SUPERCLASS = NSPreferencesModule; 
         }, 
