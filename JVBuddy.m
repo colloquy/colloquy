@@ -217,7 +217,14 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 - (NSImage *) picture {
-	if( ! _loadingPersonImage ) [_person beginLoadingImageDataForClient:self];
+	if( ! _loadingPersonImage ) {
+		@try {
+			[_person beginLoadingImageDataForClient:self];
+		} @catch ( NSException *exception ) {
+			return nil;
+		}
+	}
+
 	_loadingPersonImage = YES;
 
 	while( ! _personImageData && _loadingPersonImage ) // asynchronously load the image incase it is on the network

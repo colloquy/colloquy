@@ -1930,7 +1930,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	_loadingPersonImage = YES;
 
 	ABPerson *me = [[ABAddressBook sharedAddressBook] me];
-	[me beginLoadingImageDataForClient:self];
+
+	@try {
+		[me beginLoadingImageDataForClient:self];
+	} @catch ( NSException *exception ) {
+		_loadingPersonImage = NO;
+		return;
+	}
 
 	while( ! _personImageData && _loadingPersonImage ) // asynchronously load the image incase it is on the network
 		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
