@@ -113,7 +113,6 @@ typedef struct {
 - (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings;
 - (void) _addRoomToCache:(NSMutableDictionary *) info;
 - (NSString *) _roomWithProperPrefix:(NSString *) room;
-- (void) _setStatus:(MVChatConnectionStatus) status;
 - (void) _nicknameIdentified:(BOOL) identified;
 - (void) _willConnect;
 - (void) _didConnect;
@@ -204,8 +203,6 @@ typedef struct {
 #define ERR_NEEDPONG         513
 
 #define ERR_LISTSYNTAX       521
-
-#pragma mark -
 
 static void MVChatConnecting( SERVER_REC *server ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
@@ -917,9 +914,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		_proxy = MVChatConnectionNoProxy;
 		_roomsCache = [[NSMutableDictionary dictionary] retain];
 
-		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:nil];
-		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemWillSleep: ) name:NSWorkspaceWillSleepNotification object:nil];
-		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSWorkspaceWillPowerOffNotification object:nil];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemWillSleep: ) name:NSWorkspaceWillSleepNotification object:[NSWorkspace sharedWorkspace]];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSWorkspaceWillPowerOffNotification object:[NSWorkspace sharedWorkspace]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
 
 		extern unsigned int connectionCount;
@@ -1785,7 +1782,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) _systemWillSleep:(NSNotification *) notification {
 	if( [self isConnected] ) {
 		[self disconnect];
-		[self _setStatus:MVChatConnectionSuspendedStatus];
+		_status = MVChatConnectionSuspendedStatus;
 	}
 }
 
@@ -1817,10 +1814,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 #pragma mark -
-
-- (void) _setStatus:(MVChatConnectionStatus) status {
-	_status = status;
-}
 
 - (void) _nicknameIdentified:(BOOL) identified {
 	_nickIdentified = identified;
@@ -1868,10 +1861,14 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 - (void) _didDisconnect {
 	if( [self _irssiConnection] -> connection_lost ) {
-		_status = MVChatConnectionServerDisconnectedStatus;
+		if( _status != MVChatConnectionSuspendedStatus )
+			_status = MVChatConnectionServerDisconnectedStatus;
 		[self performSelector:@selector( connect ) withObject:nil afterDelay:2.]; // wait until the old connection is detached
 		[self _scheduleReconnectAttemptEvery:30.];
-	} else _status = MVChatConnectionDisconnectedStatus;
+	} else if( _status != MVChatConnectionSuspendedStatus ) {
+		_status = MVChatConnectionDisconnectedStatus;
+	}
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
 	[self performSelector:@selector( _detachConnection ) withObject:nil afterDelay:0.]; // wait until the next run loop, so we are done disconnecting
 }
