@@ -76,8 +76,6 @@ BOOL MVChatApplicationQuitting = NO;
 - (void) _didNotConnect;
 - (void) _willDisconnect;
 - (void) _didDisconnect;
-- (void) _scheduleReconnectAttemptEvery:(NSTimeInterval) seconds;
-- (void) _cancelReconnectAttempts;
 @end
 
 #pragma mark -
@@ -631,13 +629,29 @@ BOOL MVChatApplicationQuitting = NO;
 	return _status;
 }
 
-- (BOOL) waitingToReconnect {
-	return ( ! [self isConnected] && _reconnectTimer ? YES : NO );
-}
-
 - (unsigned int) lag {
 // subclass this method, if needed
 	return 0;
+}
+
+#pragma mark -
+
+- (void) scheduleReconnectAttemptEvery:(NSTimeInterval) seconds {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( connect ) object:nil];
+	[_reconnectTimer invalidate];
+	[_reconnectTimer release];
+	_reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector( connect ) userInfo:nil repeats:YES] retain];
+}
+
+- (void) cancelPendingReconnectAttempts {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( connect ) object:nil];
+	[_reconnectTimer invalidate];
+	[_reconnectTimer release];
+	_reconnectTimer = nil;
+}
+
+- (BOOL) isWaitingToReconnect {
+	return ( ! [self isConnected] && _reconnectTimer ? YES : NO );
 }
 @end
 
@@ -671,7 +685,7 @@ BOOL MVChatApplicationQuitting = NO;
 }
 
 - (void) _didConnect {
-	[self _cancelReconnectAttempts];
+	[self cancelPendingReconnectAttempts];
 
 	_status = MVChatConnectionConnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidConnectNotification object:self];
@@ -688,7 +702,7 @@ BOOL MVChatApplicationQuitting = NO;
 - (void) _didNotConnect {
 	_status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidNotConnectNotification object:self];
-	[self _scheduleReconnectAttemptEvery:30.];
+	[self scheduleReconnectAttemptEvery:30.];
 }
 
 - (void) _willDisconnect {
@@ -709,21 +723,6 @@ BOOL MVChatApplicationQuitting = NO;
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
-}
-
-#pragma mark -
-
-- (void) _scheduleReconnectAttemptEvery:(NSTimeInterval) seconds {
-	[_reconnectTimer invalidate];
-	[_reconnectTimer release];
-	_reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector( connect ) userInfo:nil repeats:YES] retain];
-}
-
-- (void) _cancelReconnectAttempts {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( connect ) object:nil];
-	[_reconnectTimer invalidate];
-	[_reconnectTimer release];
-	_reconnectTimer = nil;
 }
 
 #pragma mark -

@@ -58,8 +58,6 @@ NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCe
 - (void) _didNotConnect;
 - (void) _willDisconnect;
 - (void) _didDisconnect;
-- (void) _scheduleReconnectAttemptEvery:(NSTimeInterval) seconds;
-- (void) _cancelReconnectAttempts;
 @end
 
 #pragma mark -
@@ -862,9 +860,10 @@ static SilcClientOperations silcClientOps = {
 		}
 	}
 
-	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 15. ) {
-		[self _cancelReconnectAttempts];
-		[self performSelector:_cmd withObject:nil afterDelay:( 15. - ABS( [_lastConnectAttempt timeIntervalSinceNow] ) )];
+	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 5. ) {
+		// prevents conencting too quick
+		// cancel any reconnect attempts, this lets a user cancel the attempts with a "double connect"
+		[self cancelPendingReconnectAttempts];
 		return;
 	}
 
@@ -898,6 +897,8 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
+	[self cancelPendingReconnectAttempts];
+
 	if( [self status] != MVChatConnectionConnectedStatus ) return;
 
 	_sentQuitCommand = YES;
@@ -1658,14 +1659,15 @@ static SilcClientOperations silcClientOps = {
 	if( ! _sentQuitCommand ) {
 		if( _status != MVChatConnectionSuspendedStatus )
 			_status = MVChatConnectionServerDisconnectedStatus;
-		[self performSelector:@selector( connect ) withObject:nil afterDelay:10.];
-		[self _scheduleReconnectAttemptEvery:30.];
+		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
+			[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
+		[self scheduleReconnectAttemptEvery:30.];
 	} else if( _status != MVChatConnectionSuspendedStatus ) {
 		_status = MVChatConnectionDisconnectedStatus;
 	}
-	
+
 	[super _didDisconnect];
-	
+
 	[self _setSilcConn:NULL];
 }
 

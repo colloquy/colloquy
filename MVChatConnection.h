@@ -257,8 +257,13 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 - (BOOL) isConnected;
 - (MVChatConnectionStatus) status;
-- (BOOL) waitingToReconnect;
 - (unsigned int) lag;
+
+#pragma mark -
+
+- (void) scheduleReconnectAttemptEvery:(NSTimeInterval) seconds;
+- (void) cancelPendingReconnectAttempts;
+- (BOOL) isWaitingToReconnect;
 @end
 
 #pragma mark -
