@@ -1454,7 +1454,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (void) _didDisconnect:(NSNotification *) notification {
 //	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You're now offline", "title of the you're offline message sheet" ), NSLocalizedString( @"You are no longer connected to the server where you were chatting. No messages can be sent at this time. Reconnecting might be in progress.", "chat window error description for loosing connection" ), @"OK", nil, nil ) withName:@"disconnected"];
-	// You left the chat by logging out or being disconnected.
 	[self addEventMessageToDisplay:NSLocalizedString( @"You left the chat by being disconnected from the server.", "disconenct from the server status message" ) withName:@"disconnected" andAttributes:nil];
 	_cantSendMessages = YES;
 }
