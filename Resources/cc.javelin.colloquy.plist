@@ -19,7 +19,7 @@
 	<key>JVChatMaximumHistory</key>
 	<integer>15</integer>
 	<key>JVFileTransferPortRange</key>
-	<integer>{1024, 24}</integer>
+	<string>{1024, 24}</string>
 	<key>JVAskForTransferSaveLocation</key>
 	<true/>
 	<key>JVChatBuddyListShowIcons</key>
