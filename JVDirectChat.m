@@ -101,6 +101,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 @interface JVDirectChat (JVDirectChatPrivate) <ABImageClient>
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action;
+- (int) visibleMessageCount;
 - (int) locationOfMessage:(unsigned int) identifier;
 - (int) locationOfElementByIndex:(unsigned int) index;
 - (void) scrollToBottom;
@@ -118,6 +119,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 - (char *) _classificationForUser:(MVChatUser *) user;
 - (void) _saveSelfIcon;
 - (void) _saveBuddyIcon:(JVBuddy *) buddy;
+- (void) _setCurrentMessage:(JVMutableChatMessage *) message;
 @end
 
 #pragma mark -
@@ -498,7 +500,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 }
 
 - (void) handleDraggedFile:(NSString *) path {
-	[[self target] sendFile:path passively:NO];
+	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
+	[[self target] sendFile:path passively:passive];
 }
 
 #pragma mark -
@@ -797,9 +800,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 				if( ! ( handled = [self processUserCommand:command withArguments:arguments] ) && [[self connection] isConnected] )
 					[[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
 			} else {
-				if( [[subMsg string] hasPrefix:@"//"] ) {
-					[subMsg deleteCharactersInRange:NSMakeRange(0,1)];
-				}
+				if( [[subMsg string] hasPrefix:@"//"] ) [subMsg deleteCharactersInRange:NSMakeRange( 0, 1 )];
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
 					extern NSArray *JVAutoActionVerbs;
 					if( ! JVAutoActionVerbs ) JVAutoActionVerbs = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]] retain];
@@ -815,21 +816,15 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 					}
 				}
 
-				[_currentMessage autorelease]; // set the message to an object property for plugins, if needed...
-				_currentMessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] nickname] andTranscript:self];
-				[_currentMessage setAction:action];
+				JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] nickname] andTranscript:self];
+				[cmessage setAction:action];
 
-				id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
-				id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
-				[_currentMessage setObjectSpecifier:msgSpecifier];
-
-				[self sendMessage:_currentMessage];
+				[self sendMessage:cmessage];
 
 				if( [[subMsg string] length] )
-					[self echoSentMessageToDisplay:[_currentMessage body] asAction:[_currentMessage isAction]];
+					[self echoSentMessageToDisplay:[cmessage body] asAction:[cmessage isAction]];
 
-				[_currentMessage release];
-				_currentMessage = nil;
+				[cmessage release];
 			}
 		}
 
@@ -848,7 +843,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[invocation setSelector:@selector( processOutgoingMessage: )];
 	[invocation setArgument:&message atIndex:2];
 
+	[self _setCurrentMessage:message];
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
+	[self _setCurrentMessage:nil];
 
 	if( [[message body] length] )
 		[[self target] sendMessage:[message body] withEncoding:_encoding asAction:[message isAction]];
@@ -1295,18 +1292,15 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		messageString = [[[NSTextStorage alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes] autorelease];
 	}
 
-	[_currentMessage autorelease]; // set the message to an object property for plugins, if needed...
-	_currentMessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:[user nickname] andTranscript:self];
-	[_currentMessage setAction:action];
+	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:user andTranscript:self];
+	[cmessage setAction:action];
 
-	id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
-	id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
-	[_currentMessage setObjectSpecifier:msgSpecifier];
+	[self _setCurrentMessage:cmessage];
 
 	if( ! [user isLocalUser] )
-		[_currentMessage setIgnoreStatus:[[JVChatController defaultManager] shouldIgnoreUser:user withMessage:messageString inView:self]];
+		[cmessage setIgnoreStatus:[[JVChatController defaultManager] shouldIgnoreUser:user withMessage:messageString inView:self]];
 
-	if( ! [user isLocalUser] && [_currentMessage ignoreStatus] == JVNotIgnored )
+	if( ! [user isLocalUser] && [cmessage ignoreStatus] == JVNotIgnored )
 		_newMessageCount++;
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] ) {
@@ -1345,23 +1339,23 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 				if( ! classes ) classes = [NSMutableSet setWithObject:@"highlight"];
 				else [classes addObject:@"highlight"];
 				[messageString addAttribute:@"CSSClasses" value:classes range:foundRange];
-				[_currentMessage setHighlighted:YES];
+				[cmessage setHighlighted:YES];
 			}
 		}
 	}
 
-	[self processIncomingMessage:_currentMessage];
+	[self processIncomingMessage:cmessage];
 
-//	user = [[_currentMessage sender] description]; // if plugins changed the sending user for some reason, allow it
+//	user = [[cmessage sender] description]; // if plugins changed the sending user for some reason, allow it
 
-	if( ! [messageString length] && [_currentMessage ignoreStatus] == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
+	if( ! [messageString length] && [cmessage ignoreStatus] == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
 		_newMessageCount--;
 		return;
 	}
 
 	[self _breakLongLinesInString:messageString];
 
-	if( [_currentMessage isHighlighted] && [_currentMessage ignoreStatus] == JVNotIgnored ) {
+	if( [cmessage isHighlighted] && [cmessage ignoreStatus] == JVNotIgnored ) {
 		_newHighlightMessageCount++;
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
@@ -1373,13 +1367,13 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
 	}
 
-	if( [_currentMessage ignoreStatus] != JVNotIgnored ) {
+	if( [cmessage ignoreStatus] != JVNotIgnored ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:( ( [_currentMessage ignoreStatus] == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
+		[context setObject:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
 		if( [self isMemberOfClass:[JVChatRoom class]] ) [context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", user, [self title]] forKey:@"description"];
 		else [context setObject:[NSString stringWithFormat:@"%@'s message was ignored.", user] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-		[[JVNotificationController defaultManager] performNotification:( ( [_currentMessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
+		[[JVNotificationController defaultManager] performNotification:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
 
 	xmlXPathContextPtr ctx = xmlXPathNewContext( _xmlLog );
@@ -1457,11 +1451,11 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 
 	child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
-	xmlSetProp( child, "received", [[[_currentMessage date] description] UTF8String] );
-	if( [_currentMessage isAction] ) xmlSetProp( child, "action", "yes" );
-	if( [_currentMessage isHighlighted] ) xmlSetProp( child, "highlight", "yes" );
-	if( [_currentMessage ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, "ignored", "yes" );
-	else if( [_currentMessage ignoreStatus] == JVUserIgnored ) xmlSetProp( root, "ignored", "yes" );
+	xmlSetProp( child, "received", [[[cmessage date] description] UTF8String] );
+	if( [cmessage isAction] ) xmlSetProp( child, "action", "yes" );
+	if( [cmessage isHighlighted] ) xmlSetProp( child, "highlight", "yes" );
+	if( [cmessage ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, "ignored", "yes" );
+	else if( [cmessage ignoreStatus] == JVUserIgnored ) xmlSetProp( root, "ignored", "yes" );
 	xmlAddChild( root, child );
 
 	[self writeToLog:root withDoc:doc initializing:NO continuation:( parent ? YES : NO )];
@@ -1493,7 +1487,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		BOOL subsequent = ( [transformedMessage rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
 		[self appendMessage:transformedMessage subsequent:subsequent];
 
-		if( [_currentMessage isHighlighted] ) {
+		if( [cmessage isHighlighted] ) {
 			NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 			if( [scroller isKindOfClass:[JVMarkedScroller class]] ) {
 				unsigned int loc = [self locationOfMessage:( _messageId - 1 )];
@@ -1505,73 +1499,77 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 		_firstMessage = NO; // not the first message anymore
 		_requiresFullMessage = NO; // next message will not require a new envelope if it is consecutive
-	} else if( [_currentMessage ignoreStatus] == JVNotIgnored ) {
+	} else if( [cmessage ignoreStatus] == JVNotIgnored ) {
 		// the style decided to excluded this message, decrease the new message counts
-		if( [_currentMessage isHighlighted] ) _newHighlightMessageCount--;
+		if( [cmessage isHighlighted] ) _newHighlightMessageCount--;
 		_newMessageCount--;		
 	}
 
 	xmlFreeDoc( doc );
 
-	[_currentMessage release]; // not needed anymore
-	_currentMessage = nil;
+	[self _setCurrentMessage:nil];
+	[cmessage release];
 
 	[_windowController reloadListItem:self andChildren:NO];
 }
 
 - (int) locationOfMessage:(unsigned int) identifier {
+#ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-#ifdef _WEB_SCRIPT_OBJECT_H_
 		DOMElement *element = [[[display mainFrame] DOMDocument] getElementById:[NSString stringWithFormat:@"%d", identifier]];
 		return [[element valueForKey:@"offsetTop"] intValue];
+	} else
 #endif
-	} else { // old JavaScript method
-		return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", identifier]] intValue];
-	}
+	// old JavaScript method
+	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", identifier]] intValue];
 }
 
 - (int) locationOfElementByIndex:(unsigned int) index {
+#ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-#ifdef _WEB_SCRIPT_OBJECT_H_
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
 		if( index < [[body children] length] ) return [[[[body children] item:index] valueForKey:@"offsetTop"] intValue];
 		else return 0;
+	} else
 #endif
-	} else { // old JavaScript method
-		return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", index]] intValue];
-	}
+	// old JavaScript method
+	return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", index]] intValue];
+}
+
+- (int) visibleMessageCount {
+#ifdef WebKitVersion146
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+		return [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
+	} else
+#endif
+	// old JavaScript method
+	return [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
 }
 
 - (void) scrollToBottom {
+#ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-#ifdef _WEB_SCRIPT_OBJECT_H_
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
 		[body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
+	} else
 #endif
-	} else {
-		[display stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
-	}
+	// old JavaScript method
+	[display stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
 }
 
 - (void) appendMessage:(NSString *) html subsequent:(BOOL) subsequent {
-	unsigned int messageCount = 0;
+	unsigned int messageCount = [self visibleMessageCount];
 	unsigned int scrollbackLimit = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"];
 	NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-#ifdef _WEB_SCRIPT_OBJECT_H_
-		messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
-#endif
-	} else messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
-
-	if( ( messageCount + 1 ) > scrollbackLimit ) {
+	if( ! subsequent && ( messageCount + 1 ) > scrollbackLimit ) {
 		int loc = [self locationOfElementByIndex:( ( messageCount + 1 ) - scrollbackLimit )];
 		if( loc > 0 && [scroller isKindOfClass:[JVMarkedScroller class]] )
 			[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1 )];
 	}
 
+#ifdef WebKitVersion146
 	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-#ifdef _WEB_SCRIPT_OBJECT_H_
 		DOMHTMLElement *element = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] createElement:@"span"];
 		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] getElementById:@"consecutiveInsert"];
 		if( ! replaceElement ) subsequent = NO;
@@ -1612,8 +1610,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 		// scroll down if we need to
 		if( [scrollNeeded boolValue] ) [self scrollToBottom];
-#endif
-	} else { // old JavaScript method
+	} else
+#endif	
+	{ // old JavaScript method
 		NSMutableString *transformedMessage = [html mutableCopy];
 		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[transformedMessage replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
@@ -1859,36 +1858,16 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:messageString, @"away-message", nil]];
 
-		unsigned int messageCount = 0;
-		unsigned long loc = 0;
-
-		if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-#ifdef _WEB_SCRIPT_OBJECT_H_
-			messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
-			loc = [self locationOfElementByIndex:( messageCount - 1 )];
-#endif
-		} else {
-			messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
-			loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
-		}
+		unsigned int messageCount = [self visibleMessageCount];
+		unsigned long loc = [self locationOfElementByIndex:( messageCount - 1 )];
 
 		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 		if( [scroller isKindOfClass:[JVMarkedScroller class]] ) [(JVMarkedScroller *)scroller startShadedAreaAt:loc];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
 
-		unsigned int messageCount = 0;
-		unsigned long loc = 0;
-
-		if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
-#ifdef _WEB_SCRIPT_OBJECT_H_
-			messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
-			loc = [self locationOfElementByIndex:( messageCount - 1 )];
-#endif
-		} else {
-			messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
-			loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
-		}
+		unsigned int messageCount = [self visibleMessageCount];
+		unsigned long loc = [self locationOfElementByIndex:( messageCount - 1 )];
 
 		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 		if( [scroller isKindOfClass:[JVMarkedScroller class]] ) [(JVMarkedScroller *)scroller stopShadedAreaAt:loc];
@@ -2099,6 +2078,16 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 			[[MVFileTransferController defaultManager] addFileTransfer:[[self target] sendFile:path passively:passive]];
 	}
 }
+
+- (void) _setCurrentMessage:(JVMutableChatMessage *) message {
+	[_currentMessage setObjectSpecifier:nil];
+	[_currentMessage autorelease];
+	_currentMessage = [message retain];
+
+	id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
+	id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
+	[_currentMessage setObjectSpecifier:msgSpecifier];
+}
 @end
 
 #pragma mark -
@@ -2121,20 +2110,14 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
 	BOOL localEcho = ( [[command evaluatedArguments] objectForKey:@"echo"] ? [[[command evaluatedArguments] objectForKey:@"echo"] boolValue] : YES );
 
-	[_currentMessage autorelease]; // set the message to an object property for plugins, if needed...
-	_currentMessage = [[JVMutableChatMessage alloc] initWithText:attributeMsg sender:[[self connection] nickname] andTranscript:self];
-	[_currentMessage setAction:action];
+	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:attributeMsg sender:[[self connection] nickname] andTranscript:self];
+	[cmessage setAction:action];
 
-	id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
-	id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
-	[_currentMessage setObjectSpecifier:msgSpecifier];
+	[self sendMessage:cmessage];
 
-	[self sendMessage:_currentMessage];
+	if( localEcho ) [self echoSentMessageToDisplay:[cmessage body] asAction:[cmessage isAction]];
 
-	if( localEcho ) [self echoSentMessageToDisplay:[_currentMessage body] asAction:[_currentMessage isAction]];
-
-	[_currentMessage release];
-	_currentMessage = nil;
+	[cmessage release];
 }
 
 - (void) addEventMessageScriptCommand:(NSScriptCommand *) command {

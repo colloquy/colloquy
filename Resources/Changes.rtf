@@ -13,6 +13,9 @@
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
 \f2\b0\fs20 \cf0 \'b7
+\f3  Can't join channels that require a key with the GUI. A workaround is to use this command "/join #room password" for the room.\
+
+\f2 \'b7
 \f3  SOCKS and HTTP proxies don't function still.\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
@@ -20,31 +23,68 @@
 changes\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\fs20 \cf0 Build 2C11 
-\f3\b0 (October, 2004) \'d1
+\fs20 \cf0 Build 2C12 
+\f3\b0 (November, 2004) \'d1
 \f1\b\fs28 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
 \f2\b0\fs20 \cf0 \'b7
-\f3  Rewrite of most of the legacy code.\
+\f3\fs24  
+\fs20 Fixed a crash that occurred sometimes when changing away status and when members parted a room with a malformed part reason.\
 
 \f2 \'b7
-\f3  Support for the Quieted mode for servers that support it, SILC also supports it.\
+\f3\fs24  
+\fs20 Fixed a few reported exception errors.\
 
 \f2 \'b7
-\f3  Joining chat rooms with a password is now supported.\
+\f3  Added the German (Deutsch) localization by Alexander Kempgen.\
 
 \f2 \'b7
-\f3  Kicks that you perform on another user can have colors and text formatting, and will use the room's encoding.\
+\f3  Fixed the appearance of the Direct Chat panel where it meets the tab bar. There is now a divider line like Chat Rooms.\
+
+\f2 \'b7
+\f3  Enabled the Send File context menu for private chat panels.\
+
+\f2 \'b7
+\f3\fs24  
+\fs20 Dragging files to private chat tabs will transfer the files to that user.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 \
+Build 2C11 
+\f3\b0 (November 9, 2004) \'d1
+\f1\b\fs28 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f2\b0\fs20 \cf0 \'b7
+\f3  All DCC file transfer crashes fixed, thank you for submiting your crash reports!\
+
+\f2 \'b7
+\f3  Plugins and script plugins can now add contextual menu items to any GUI element in Colloquy that has an existing contextual menu.\
+
+\f2 \'b7
+\f3  Updated iTunes script that has the option to show a progress bar, current and duration time and save the preferences. To see all the preference keys, type: 
+\f4\fs18 \cf4 \CocoaLigature0 /itunes prefs 
+\f3\fs20 \cf0 \CocoaLigature1 To toggle a preference, type: 
+\f4\fs18 \cf4 \CocoaLigature0 /itunes prefs <key> [on|off]
+\f3\fs20 \cf0 \CocoaLigature1 \
+
+\f2 \'b7
+\f3  Added a multi-search script that lets you search any of 11 search engines from Yahoo!, Google, ADC, VersionTracker, PHP, Google Image Search and more. For a list of all the commands type: 
+\f4\fs18 \cf4 \CocoaLigature0 /search help
+\f3\fs20 \cf0 \CocoaLigature1 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
 \f1\b \cf0 \
 Build 2C10 
-\f3\b0 (September, 2004) \'d1
+\f3\b0 (October 21, 2004) \'d1
 \f1\b\fs28 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
 \f2\b0\fs20 \cf0 \'b7
+\f3  Some DCC file transfer crashes fixed.\
+
+\f2 \'b7
 \f3  The SILC protocol is now supported right along side existing IRC connections. For more information about SILC visit http://silcnet.org.\
 
 \f2 \'b7
@@ -74,7 +114,7 @@ Build 2C10
 
 \f1\b \cf0 \
 Build 2C9 
-\f3\b0 (August, 2004) \'d1
+\f3\b0 (August & September, 2004) \'d1
 \f1\b\fs28 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
@@ -860,9 +900,8 @@ Build 2B91
  
 \f2 \'b7
 \f3  Some perferences will not carry over from version 1.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f2 \cf0  \'b7
+\f2  \'b7
 \f3  No longer crashes when you don't have an outside internet connection and/or the host-name can't be resolved.\
  
 \f2 \'b7
@@ -923,9 +962,8 @@ Build 1B20
  
 \f2 \'b7
 \f3  Windows that are miniaturized into the Dock will not keep popping out when either "Show hidden \'c9 on \'c9 activity" preferences are on.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f2 \cf0  \'b7
+\f2  \'b7
 \f3  All windows remember their position on screen better, and chat windows remember the member drawer size and state.\
 
 \f2  \'b7
@@ -956,9 +994,8 @@ Build 1B12
 \f3\i0 . Contact me for the plug-in software development kit. Try 
 \f5\i /itunes
 \f3\i0  in a room to test the basic iTunes plugin.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f2 \cf0  \'b7
+\f2  \'b7
 \f3  Added the French localization.\
  
 \f2 \'b7
@@ -1009,9 +1046,8 @@ Build 1B3
 \f3\b0\fs20 \cf0  
 \f2 \'b7
 \f3  NickServ password authorization enabled with password prompts and saving passwords in your keychain.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f2 \cf0  \'b7
+\f2  \'b7
 \f3  Connections are stored different now, old bookmarks will not load and may show up as blank lines in the connection manager.\
  
 \f2 \'b7
@@ -1110,9 +1146,8 @@ Build 1A21
  
 \f2 \'b7
 \f3  IRC URLs are now handled from the system and internally in chat dialog (was only rooms before, now allows new server connections). Here is an example URL that will connect to 'javelin.cc' as user 'test' on port '6669' and will join the room 'colloquy' when connected: \ul irc://test@javelin.cc:6669/#colloquy\ulnone . Note that only the scheme and host part of the URL need to be present. Valid room paths a begin with '#', '&' or '+'; if the path of the URL is not a valid room then a new message to that user is made. Mozilla's Chatzilla handles IRC URLs in this manner also.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f2 \cf0  \'b7
+\f2  \'b7
 \f3  Nickname changes were not being reported due to a Firetalk API change \'d1 now fixed.\
  
 \f2 \'b7
@@ -1143,9 +1178,8 @@ Build 1A21
 Build 1A8 
 \f3\b0 (Wednesday November 13, 2002) \'d1
 \f1\b\fs28 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f3\b0\fs20 \cf0  
+\f3\b0\fs20  
 \f2 \'b7
 \f3  Enabled the Software Update check.\
  

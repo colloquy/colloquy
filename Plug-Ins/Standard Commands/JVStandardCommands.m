@@ -54,23 +54,19 @@
 	if( isChatRoom || isDirectChat ) {
 		if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] || ! [command caseInsensitiveCompare:@"say"] ) {
 			if( [arguments length] ) {
-				BOOL action = ( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] );
-				[chat echoSentMessageToDisplay:arguments asAction:action];
-				if( isChatRoom ) [[room target] sendMessage:arguments asAction:action];
-				else [[chat target] sendMessage:arguments withEncoding:[chat encoding] asAction:action];
-			}
-			return YES;
-		} else if( [[command substringToIndex:1] isEqualToString:@"/"] ) {
-			NSMutableAttributedString *line = [[[NSMutableAttributedString alloc] init] autorelease];
-			if( [command length] > 1 ) [line replaceCharactersInRange:NSMakeRange( 0, 0 ) withString:command];
-			if( [arguments length] ) {
-				[line replaceCharactersInRange:NSMakeRange( [line length], 0 ) withString:@" "];
-				[line appendAttributedString:arguments];
-			}
-			if( [line length] ) {
-				[chat echoSentMessageToDisplay:line asAction:NO];
-				if( isChatRoom ) [[room target] sendMessage:line asAction:NO];
-				else [[chat target] sendMessage:line withEncoding:[chat encoding] asAction:NO];
+				if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] ) {
+					// This is so plugins can process /me actions as well
+					// We're avoiding /say for now, as that really should just output exactly what
+					// the input was so we should still bypass plugins for /say
+					JVMutableChatMessage *message = [[[NSClassFromString( @"JVMutableChatMessage" ) alloc] initWithText:arguments sender:[[chat connection] nickname] andTranscript:chat] autorelease];
+					[message setAction:YES];
+					[chat sendMessage:message];
+					[chat echoSentMessageToDisplay:[message body] asAction:YES];
+				} else {
+					[chat echoSentMessageToDisplay:arguments asAction:NO];
+					if( isChatRoom ) [[room target] sendMessage:arguments asAction:NO];
+					else [[chat target] sendMessage:arguments withEncoding:[chat encoding] asAction:NO];
+				}
 			}
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"clear"] && ! [[arguments string] length] ) {
@@ -591,7 +587,7 @@
 		offset += [[messageString componentsSeparatedByString:@" "] count];
 	}
 
-	if( offset < [argsArray count] )
+	if( offset < [argsArray count] && [(NSString *)[argsArray objectAtIndex:offset] length] )
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 
 	KAIgnoreRule *rule = [NSClassFromString( @"KAIgnoreRule" ) ruleForUser:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];
