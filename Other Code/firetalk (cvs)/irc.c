@@ -658,7 +658,9 @@ enum firetalk_error irc_set_password(client_t c, const char * const oldpass, con
 	} else if( newpass ) {
 		if( c->password ) free( c->password );
 		c->password = safe_strdup( newpass );
-		return irc_send_printf(c,1,"PRIVMSG NickServ :IDENTIFY %s",c->password);
+		if( c->nickname ) {
+			return irc_send_printf(c,1,"PRIVMSG NickServ :IDENTIFY %s",c->password);
+		} else return FE_SUCCESS;
 	}
 	return FE_BADUSERPASS;
 }
@@ -692,10 +694,18 @@ client_t irc_create_handle() {
 }
 
 enum firetalk_error irc_signon(client_t c, const char * const nickname) {
+	char hostname[256];
+
+	if ( safe_strlen( c->password ) ) if (irc_send_printf(c,1,"PASS %s",c->password) != FE_SUCCESS)
+		return FE_PACKET;
+
 	if (irc_send_printf(c,1,"NICK %s",nickname) != FE_SUCCESS)
 		return FE_PACKET;
 
-	if (irc_send_printf(c,1,"USER %s %s %s :%s",nickname,nickname,nickname,nickname) != FE_SUCCESS)
+	if( gethostname( hostname, 256 ) )
+		safe_strncpy( hostname, "localhost", 10 );
+
+	if (irc_send_printf(c,1,"USER %s %s %s :%s",nickname,hostname,hostname,nickname) != FE_SUCCESS)
 		return FE_PACKET;
 
 	c->nickname = safe_strdup(nickname);
@@ -1162,7 +1172,7 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 }
 
 enum firetalk_error irc_got_data_connecting(client_t c, unsigned char * buffer, unsigned short * bufferpos) {
-	char **args;
+	char **args = NULL;
 
 	args = irc_recv_parse(c,buffer,bufferpos);
 	while (args) {
@@ -1193,24 +1203,33 @@ enum firetalk_error irc_got_data_connecting(client_t c, unsigned char * buffer, 
 			}
 		} else {
 			switch (atoi(args[1])) {
-				case 376:
-				case 422:
+				case 376: // RPL_ENDOFMOTD
+				case 422: // ERR_NOMOTD
+					// reset the password to clear the server password
+					if (c->password) {
+						free(c->password);
+						c->password = NULL;
+					}
 					firetalk_callback_doinit(c,c->nickname);
 					firetalk_callback_connected(c);
 					break;
-				case 431:
-				case 432:
-				case 436:
-				case 461:
+				case 431: // ERR_NONICKNAMEGIVEN
+				case 432: // ERR_ERRONEUSNICKNAME
+				case 436: // ERR_NICKCOLLISION
+				case 461: // ERR_NEEDMOREPARAMS
 					irc_send_printf(c,1,"QUIT :Invalid nickname");
 					firetalk_callback_connectfailed(c,FE_BADUSER,"Invalid nickname");
 					return FE_BADUSER;
-				case 433:
-					irc_send_printf(c,1,"QUIT :Invalid nickname");
+				case 433: // ERR_NICKNAMEINUSE
+					irc_send_printf(c,1,"QUIT :Nickname in use");
 					firetalk_callback_connectfailed(c,FE_BADUSER,"Nickname in use");
 					return FE_BADUSER;
-				case 465:
-					irc_send_printf(c,1,"QUIT :banned");
+				case 464: // ERR_PASSWDMISMATCH
+					irc_send_printf(c,1,"QUIT :Invalid connection password");
+					firetalk_callback_connectfailed(c,FE_BADUSER,"Invalid server password");
+					return FE_BADUSERPASS;
+				case 465: // ERR_YOUREBANNEDCREEP
+					irc_send_printf(c,1,"QUIT :Banned");
 					firetalk_callback_connectfailed(c,FE_BLOCKED,"You are banned");
 					return FE_BLOCKED;
 			}
