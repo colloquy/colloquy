@@ -268,10 +268,10 @@ static NSImage		*tabCloseFrontRollover = nil;
 - (void)removeTrackingRectsFromView:(NSView *)view
 {
     [view removeTrackingRect:trackingTag]; trackingTag = 0;
-    [userData release]; userData = nil;
-    
+    [userData autorelease]; userData = nil;
+
     [view removeTrackingRect:closeTrackingTag]; closeTrackingTag = 0;
-    [closeUserData release]; closeUserData = nil;
+    [closeUserData autorelease]; closeUserData = nil;
 }
 
 //Mouse entered our tabs (or close button)
