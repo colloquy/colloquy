@@ -11,14 +11,16 @@
 
 @interface JVChatRoom : JVDirectChat {
 	@protected
-	IBOutlet NSTextView *topicLine;
-	NSMutableDictionary *_members;
-	NSMutableArray *_sortedMembers;
-	NSAttributedString *_topicAttributed;
-	NSData *_topic;
-	NSString *_topicAuth;
-	BOOL _invalidateMembers;
-	BOOL _kickedFromRoom;
+	IBOutlet NSTextView		*topicLine;
+	
+	NSMutableDictionary		*_members;
+	NSMutableArray			*_sortedMembers;
+	NSAttributedString		*_topicAttributed;
+	NSData					*_topic;
+	NSString				*_topicAuth;
+	
+	BOOL					_invalidateMembers;
+	BOOL					_kickedFromRoom;
 }
 - (void) joined;
 - (void) parting;
