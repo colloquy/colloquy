@@ -2202,7 +2202,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 - (void) _detachConnection {
-	[self _setIrssiConnection:NULL];	
+	[self _setIrssiConnection:NULL];
+	if( [self waitingToReconnect] ) [self connect];
 }
 
 - (void) _forceDisconnect {
