@@ -1,8 +1,4 @@
-/* KABubbleWindowView */
-
 #import <Cocoa/Cocoa.h>
 
-@interface KABubbleWindowView : NSView
-{
-}
+@interface KABubbleWindowView : NSView {}
 @end
