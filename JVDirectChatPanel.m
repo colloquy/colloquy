@@ -99,6 +99,8 @@ static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingIt
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
+NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNotification";
+
 @interface JVDirectChatPanel (JVDirectChatPrivate) <ABImageClient>
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
@@ -755,6 +757,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		if( [cmessage isHighlighted] ) _newHighlightMessageCount--;
 		_newMessageCount--;		
 	}
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatMessageWasProcessedNotification object:self userInfo:[NSDictionary dictionaryWithObject:newMessage forKey:@"message"]];
 
 	[self _setCurrentMessage:nil];
 	[cmessage release];

@@ -7,6 +7,7 @@
 @class JVChatRoomPanel;
 @class JVDirectChatPanel;
 @class JVChatTranscriptPanel;
+@class JVSmartTranscriptPanel;
 @class JVChatConsolePanel;
 @class KAInternalIgnoreRule;
 
@@ -19,7 +20,9 @@
 	NSMutableArray *_ignoreRules;
 }
 + (JVChatController *) defaultManager;
-
++ (NSMenu *) smartTranscriptMenu;
++ (void) refreshSmartTranscriptMenu;
+	
 - (NSSet *) allChatWindowControllers;
 - (JVChatWindowController *) newChatWindowController;
 - (void) disposeChatWindowController:(JVChatWindowController *) controller;
@@ -34,6 +37,8 @@
 - (JVDirectChatPanel *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;
 - (JVChatTranscriptPanel *) chatViewControllerForTranscript:(NSString *) filename;
 - (JVChatConsolePanel *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
+
+- (JVSmartTranscriptPanel *) newSmartTranscript;
 
 - (void) disposeViewController:(id <JVChatViewController>) controller;
 - (void) detachViewController:(id <JVChatViewController>) controller;

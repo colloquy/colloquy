@@ -1,0 +1,55 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                activate = id; 
+                changeEmoticons = id; 
+                changeStyle = id; 
+                changeStyleVariant = id; 
+                close = id; 
+            }; 
+            CLASS = JVChatTranscriptPanel; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {contents = NSView; display = JVStyleView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                addRow = id; 
+                closeEditSettingsSheet = id; 
+                editSettings = id; 
+                removeRow = id; 
+                saveSettings = id; 
+            }; 
+            CLASS = JVSmartTranscriptPanel; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                ignoreCase = NSButton; 
+                operation = NSPopUpButton; 
+                settingsSheet = NSWindow; 
+                subviewTableView = NSTableView; 
+            }; 
+            SUPERCLASS = JVChatTranscriptPanel; 
+        }, 
+        {
+            ACTIONS = {addRow = id; findNext = id; findPrevious = id; removeRow = id; }; 
+            CLASS = JVTranscriptFindWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                hiddenResults = NSView; 
+                hiddenResultsCount = NSTextField; 
+                ignoreCase = NSButton; 
+                operation = NSPopUpButton; 
+                resultCount = NSTextField; 
+                resultProgress = NSProgressIndicator; 
+                scrollbackOnly = NSButton; 
+                subviewTableView = NSTableView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {CLASS = NoHitTabView; LANGUAGE = ObjC; SUPERCLASS = NSTabView; }
+    ); 
+    IBVersion = 1; 
+}

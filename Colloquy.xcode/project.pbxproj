@@ -799,6 +799,8 @@
 				1C7EF53F06B341890037F173,
 				1C7EF5C006B346E50037F173,
 				1C7EF5C106B346E50037F173,
+				1CF4D2F007E5489D00DB421A,
+				1CF4D30207E5497400DB421A,
 			);
 			isa = PBXGroup;
 			name = Tabs;
@@ -1425,6 +1427,52 @@
 			settings = {
 			};
 		};
+		1C70377C07E49F25005CEA40 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVSmartTranscriptPanel.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C70377D07E49F25005CEA40 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVSmartTranscriptPanel.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C70377F07E49F25005CEA40 = {
+			fileRef = 1C70377D07E49F25005CEA40;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C703EF307E4B956005CEA40 = {
+			children = (
+				1C703EF407E4B956005CEA40,
+			);
+			isa = PBXVariantGroup;
+			name = JVSmartTranscriptFilterSheet.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C703EF407E4B956005CEA40 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Languages/English.lproj/JVSmartTranscriptFilterSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C703EF507E4B956005CEA40 = {
+			fileRef = 1C703EF307E4B956005CEA40;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C7055C40519E54C00A8FE6E = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -1599,30 +1647,6 @@
 		};
 		1C7C77E507DBD4E600FB5F83 = {
 			fileRef = 1C7C76ED07DBA1D000FB5F83;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C7E023C06B42C470037F173 = {
-			children = (
-				1C7E023D06B42C470037F173,
-			);
-			isa = PBXVariantGroup;
-			name = JVTranscriptSelectSheet.nib;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C7E023D06B42C470037F173 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = English;
-			path = Languages/English.lproj/JVTranscriptSelectSheet.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C7E023E06B42C470037F173 = {
-			fileRef = 1C7E023C06B42C470037F173;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2152,6 +2176,8 @@
 				1CE72A95052C745400A8FE6E,
 				1CD6C414051DFA1D00A8FE10,
 				1CD6C413051DFA1C00A8FE10,
+				1C70377D07E49F25005CEA40,
+				1C70377C07E49F25005CEA40,
 				1CCB279E04FE93FE00A8FE6E,
 				1CCB279D04FE93FE00A8FE6E,
 				1CE2BC4A042F53AD00000102,
@@ -2387,7 +2413,6 @@
 				1C7EF54206B341890037F173,
 				1C7EF5C206B346E50037F173,
 				1C7EF5C306B346E50037F173,
-				1C7E023E06B42C470037F173,
 				1CF627CB07558F79005DFCFA,
 				1C0A4C9C0799BDB00093B702,
 				1C0A4C9D0799BDB00093B702,
@@ -2395,6 +2420,10 @@
 				1C7C76EA07DBA1C100FB5F83,
 				1C7C76EB07DBA1C100FB5F83,
 				1C7C76EC07DBA1C100FB5F83,
+				1C703EF507E4B956005CEA40,
+				1CF4D2F107E5489D00DB421A,
+				1CF4D30307E5497400DB421A,
+				1CF4D38907E54C0C00DB421A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2877,6 +2906,7 @@
 				1C5EF36C07B45FBF004E66D3,
 				1C66913A07BFA76D008400F7,
 				1CE3C4F807E13F4C004931E6,
+				1C70377F07E49F25005CEA40,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4717,6 +4747,48 @@
 			shellPath = /bin/sh;
 			shellScript = "touch Resources/Styles\ntouch Resources/Emoticons\n";
 		};
+		1CF4D2F007E5489D00DB421A = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = smartTranscriptTab.png;
+			path = Resources/smartTranscriptTab.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF4D2F107E5489D00DB421A = {
+			fileRef = 1CF4D2F007E5489D00DB421A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF4D30207E5497400DB421A = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = smartTranscriptTabActivity.png;
+			path = Resources/smartTranscriptTabActivity.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF4D30307E5497400DB421A = {
+			fileRef = 1CF4D30207E5497400DB421A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF4D38807E54C0C00DB421A = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = smartTranscript.png;
+			path = Resources/smartTranscript.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF4D38907E54C0C00DB421A = {
+			fileRef = 1CF4D38807E54C0C00DB421A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CF4E51D0698E9FB00986498 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -5155,7 +5227,7 @@
 				1C6EA23C05A735D6006A559F,
 				1C9982040603F097006C6417,
 				0A3187FA067ECEB600271E42,
-				1C7E023C06B42C470037F173,
+				1C703EF307E4B956005CEA40,
 			);
 			isa = PBXGroup;
 			name = Interfaces;
@@ -5251,6 +5323,7 @@
 				CB66DEA00631F8160034F76E,
 				CB66DEA10631F8160034F76E,
 				1C6075E005138ED600A8FE6E,
+				1CF4D38807E54C0C00DB421A,
 				1CF9BB9A04FBE96D00A8FE6E,
 				1C705701051A830200A8FE6E,
 				1CA95D28051B413E00A8FE10,

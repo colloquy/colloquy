@@ -7,6 +7,8 @@
 @class JVMutableChatMessage;
 @class JVBuddy;
 
+extern NSString *JVChatMessageWasProcessedNotification;
+
 @interface JVDirectChatPanel : JVChatTranscriptPanel {
 	@protected
 	IBOutlet MVTextView *send;

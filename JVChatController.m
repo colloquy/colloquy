@@ -9,6 +9,7 @@
 #import "JVTabbedChatWindowController.h"
 #import "JVNotificationController.h"
 #import "JVChatTranscriptPanel.h"
+#import "JVSmartTranscriptPanel.h"
 #import "JVDirectChatPanel.h"
 #import "JVChatRoomPanel.h"
 #import "JVChatConsolePanel.h"
@@ -19,6 +20,7 @@
 #import <libxml/parser.h>
 
 static JVChatController *sharedInstance = nil;
+static NSMenu *smartTranscriptMenu = nil;
 
 @interface JVChatController (JVChatControllerPrivate)
 - (void) _addWindowController:(JVChatWindowController *) windowController;
@@ -31,6 +33,51 @@ static JVChatController *sharedInstance = nil;
 + (JVChatController *) defaultManager {
 	extern JVChatController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
+}
+
++ (NSMenu *) smartTranscriptMenu {
+	extern NSMenu *smartTranscriptMenu;
+	[self refreshSmartTranscriptMenu];
+	return smartTranscriptMenu;
+}
+
++ (void) refreshSmartTranscriptMenu {
+	extern NSMenu *smartTranscriptMenu;
+	if( ! smartTranscriptMenu ) smartTranscriptMenu = [[NSMenu alloc] initWithTitle:@""];
+
+	NSMenuItem *menuItem = nil;
+	NSEnumerator *enumerator = [[[[smartTranscriptMenu itemArray] copy] autorelease] objectEnumerator];
+	while( ( menuItem = [enumerator nextObject] ) )
+		[smartTranscriptMenu removeItem:menuItem];
+
+	NSURL *url = nil;
+	NSString *item = nil;
+	NSMutableArray *items = [NSMutableArray array];
+
+/*	NSEnumerator *nameEnumerator = [items objectEnumerator];
+	NSImage *icon = [[[NSImage imageNamed:@"room"] copy] autorelease];
+	[icon setScalesWhenResized:YES];
+	[icon setSize:NSMakeSize( 16., 16. )];
+	enumerator = [rooms objectEnumerator];
+	while( ( url = [enumerator nextObject] ) && ( item = [nameEnumerator nextObject] ) ) {
+		menuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( _connectToFavorite: ) keyEquivalent:@""] autorelease];
+		[menuItem setImage:icon];
+		[menuItem setTarget:self];
+		[menuItem setRepresentedObject:url];
+		[smartTranscriptMenu addItem:menuItem];
+	} */
+
+	if( ! [items count] ) {
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Smart Transcripts", "no smart transcripts menu title" ) action:NULL keyEquivalent:@""] autorelease];
+		[smartTranscriptMenu addItem:menuItem];
+	}
+
+	[smartTranscriptMenu addItem:[NSMenuItem separatorItem]];
+
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Smart Transcript...", "new smart transcript menu title" ) action:@selector( _newSmartTranscript: ) keyEquivalent:@"N"] autorelease];
+	[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+	[menuItem setTarget:[JVChatController defaultManager]];
+	[smartTranscriptMenu addItem:menuItem];
 }
 
 #pragma mark -
@@ -197,6 +244,18 @@ static JVChatController *sharedInstance = nil;
 	if( ( ret = [[[JVChatTranscriptPanel alloc] initWithTranscript:filename] autorelease] ) ) {
 		[_chatControllers addObject:ret];
 		[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
+	}
+	return [[ret retain] autorelease];
+}
+
+#pragma mark -
+
+- (JVSmartTranscriptPanel *) newSmartTranscript {
+	JVSmartTranscriptPanel *ret = nil;
+	if( ( ret = [[[JVSmartTranscriptPanel alloc] initWithSettings:nil] autorelease] ) ) {
+		[_chatControllers addObject:ret];
+		[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
+		[ret editSettings:nil];
 	}
 	return [[ret retain] autorelease];
 }
@@ -456,6 +515,9 @@ static JVChatController *sharedInstance = nil;
 	[self chatViewControllerForUser:user ifExists:NO];
 }
 
+- (IBAction) _newSmartTranscript:(id) sender {
+	[[JVChatController defaultManager] newSmartTranscript];
+}
 @end
 
 #pragma mark -
