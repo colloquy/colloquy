@@ -629,7 +629,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[self _refreshWindowFileProxy];
 }
 
-- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
+- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(JVChatMessageType) type {
 	if( ! _nibLoaded ) [self view];
 
 	NSParameterAssert( message != nil );
@@ -659,6 +659,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:user];
 	[cmessage setMessageIdentifier:identifier];
 	[cmessage setAction:action];
+	[cmessage setType:type];
 
 	messageString = [cmessage body]; // just incase
 
@@ -816,7 +817,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[self encoding]], @"StringEncoding", cformat, @"FormatType", nil];
 	NSData *msgData = [[message body] chatFormatWithOptions:options]; // we could save this back to the message object before sending
-	[self addMessageToDisplay:msgData fromUser:[message sender] asAction:[message isAction] withIdentifier:[message messageIdentifier]];
+	[self addMessageToDisplay:msgData fromUser:[message sender] asAction:[message isAction] withIdentifier:[message messageIdentifier] andType:JVChatMessageNormalType];
 }
 
 - (unsigned int) newMessagesWaiting {
@@ -1381,7 +1382,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	if( ! messageString ) {
 		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
-		messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
+		messageString = [NSMutableAttributedString attributedStringWithChatFormat		:message options:options];
 	}
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] ) {

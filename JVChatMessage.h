@@ -1,6 +1,11 @@
 #import "JVChatTranscript.h"
 #import "KAIgnoreRule.h"
 
+typedef enum _JVChatMessageType {
+	JVChatMessageNormalType = 'noMt',
+	JVChatMessageNoticeType = 'nTMt'
+} JVChatMessageType;
+
 @interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement> {
 	@protected
 	/* xmlNode */ void *_node;
@@ -19,6 +24,7 @@
 	NSTextStorage *_attributedMessage;
 	NSDate *_date;
 	JVIgnoreMatchResult _ignoreStatus;
+	JVChatMessageType _type;
 	BOOL _senderIsLocalUser;
 	BOOL _action;
 	BOOL _highlighted;
@@ -45,6 +51,7 @@
 - (BOOL) isAction;
 - (BOOL) isHighlighted;
 - (JVIgnoreMatchResult) ignoreStatus;
+- (JVChatMessageType) type;
 
 - (JVChatTranscript *) transcript;
 - (NSString *) messageIdentifier;
@@ -73,6 +80,7 @@
 - (void) setAction:(BOOL) action;
 - (void) setHighlighted:(BOOL) highlighted;
 - (void) setIgnoreStatus:(JVIgnoreMatchResult) ignoreStatus;
+- (void) setType:(JVChatMessageType) type;
 
 - (void) setMessageIdentifier:(NSString *) identifier;
 @end

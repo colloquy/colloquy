@@ -55,6 +55,10 @@
 		_ignoreStatus = ( ( prop && ! strcmp( prop, "yes" ) ) ? JVMessageIgnored : _ignoreStatus );
 		xmlFree( prop );
 
+		prop = xmlGetProp( _node, "type" );
+		_type = ( ( prop && ! strcmp( prop, "notice" ) ) ? JVChatMessageNoticeType : JVChatMessageNormalType );
+		xmlFree( prop );
+
 		prop = xmlGetProp( ((xmlNode *) _node) -> parent, "ignored" );
 		_ignoreStatus = ( ( prop && ! strcmp( prop, "yes" ) ) ? JVUserIgnored : _ignoreStatus );
 		xmlFree( prop );
@@ -279,6 +283,11 @@
 	return _ignoreStatus;
 }
 
+- (JVChatMessageType) type {
+	[self load];
+	return _type;
+}
+
 #pragma mark -
 
 - (JVChatTranscript *) transcript {
@@ -386,6 +395,7 @@
 		if( [self isHighlighted] ) xmlSetProp( child, "highlight", "yes" );
 		if( [self ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, "ignored", "yes" );
 		else if( [self ignoreStatus] == JVUserIgnored ) xmlSetProp( root, "ignored", "yes" );
+		if( [self type] == JVChatMessageNoticeType ) xmlSetProp( child, "type", "notice" );
 		xmlAddChild( root, child );
 
 		xmlFreeDoc( msgDoc );
@@ -523,6 +533,11 @@
 - (void) setIgnoreStatus:(JVIgnoreMatchResult) ignoreStatus {
 	[self setNode:NULL];
 	_ignoreStatus = ignoreStatus;
+}
+
+- (void) setType:(JVChatMessageType) type {
+	[self setNode:NULL];
+	_type = type;
 }
 
 #pragma mark -

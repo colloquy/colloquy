@@ -23,7 +23,7 @@
 			<xsl:if test="message[1]/@action = 'yes' or @action = 'yes'">
 				<xsl:text> action</xsl:text>
 			</xsl:if>
-			<xsl:if test="message[1]/@notice = 'yes' or @notice = 'yes'">
+			<xsl:if test="message[1]/@type = 'notice' or @type = 'notice'">
 				<xsl:text> notice</xsl:text>
 			</xsl:if>
 			<xsl:if test="message[1]/@ignored = 'yes' or @ignored = 'yes' or ../@ignored = 'yes'">

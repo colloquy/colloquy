@@ -14,6 +14,7 @@
 #import "JVChatRoomPanel.h"
 #import "JVChatConsolePanel.h"
 #import "KAIgnoreRule.h"
+#import "JVChatMessage.h"
 
 #import <libxml/parser.h>
 
@@ -304,7 +305,7 @@ static JVChatController *sharedInstance = nil;
 	MVChatUser *user = [notification object];
 	NSData *message = [[notification userInfo] objectForKey:@"message"];
 
-	if( [[[notification userInfo] objectForKey:@"auto"] boolValue] ) {
+	if( [[[notification userInfo] objectForKey:@"notice"] boolValue] ) {
 		MVChatConnection *connection = [user connection];
 
 		if( ! [self chatViewControllerForUser:user ifExists:YES] )
@@ -346,7 +347,8 @@ static JVChatController *sharedInstance = nil;
 
 	if( ! hideFromUser && ( [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored ) ) {
 		JVDirectChatPanel *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
-		[controller addMessageToDisplay:message fromUser:user asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"]];
+		JVChatMessageType type = ( [[[notification userInfo] objectForKey:@"notice"] boolValue] ? JVChatMessageNoticeType : JVChatMessageNormalType );
+		[controller addMessageToDisplay:message fromUser:user asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] andType:type];
 	}
 }
 

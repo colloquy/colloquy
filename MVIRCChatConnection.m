@@ -560,10 +560,10 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 		if( ! user ) user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"auto", nil]];
+		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", nil]];
 	} else {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"auto", nil]];
+		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", nil]];
 		if( ! strncasecmp( nick, "NickServ", 8 ) && message ) {
 			if( strstr( message, nick ) && strstr( message, "IDENTIFY" ) ) {
 				if( ! [self nicknamePassword] ) {
