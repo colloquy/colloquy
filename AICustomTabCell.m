@@ -250,7 +250,7 @@ static NSSize		rightCapSize;
         }
 		
         //Draw the right cap
-        [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver fraction:( [tabViewItem isEnabled] ? 1. : 0.5 )];
+        [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
 		
     }else if(highlighted){
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.1] set];
@@ -270,7 +270,7 @@ static NSSize		rightCapSize;
 	}else{
 		destPoint = [self _tabIconRect].origin;
 	}
-	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
+	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver fraction:( hoveringClose || [tabViewItem isEnabled] ? 1. : 0.5 )];
 
 	//Move over for label drawing.  We always move based on the tab icon and not on the close button.  This prevents
 	//tab text from jumping when hovered if the tab icons are a different size from the close button
