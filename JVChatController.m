@@ -201,6 +201,7 @@ static JVChatController *sharedInstance = nil;
 - (void) disposeViewController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
 	NSAssert1( [_chatControllers containsObject:controller], @"%@ is not a member of chat controller.", controller );
+	[[controller windowController] removeChatViewController:controller];
 	[_chatControllers removeObject:controller];
 }
 
@@ -223,7 +224,9 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) _leftRoom:(NSNotification *) notification {
-	NSLog( @"_leftRoom" );
+	id view = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
+	if( ! view ) return;
+	[[JVChatController defaultManager] disposeViewController:view];
 }
 
 - (void) _memberJoinedRoom:(NSNotification *) notification {
