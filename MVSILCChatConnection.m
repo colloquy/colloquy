@@ -203,6 +203,11 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 		case SILC_NOTIFY_TYPE_JOIN: {
 			SilcClientEntry joining_client = va_arg( list, SilcClientEntry );
 			SilcChannelEntry channel = va_arg( list, SilcChannelEntry );
+			
+			if ( [[self nickname] isEqualToString:[NSString stringWithUTF8String:joining_client -> nickname]] ) {
+				// we send a notification that we joined the channel in the COMMAND callback, no need to do it here too.
+				return;
+			}
 
 			NSMutableDictionary *info = [NSMutableDictionary dictionary];
 			[info setObject:[NSString stringWithUTF8String:joining_client -> nickname] forKey:@"nickname"];
