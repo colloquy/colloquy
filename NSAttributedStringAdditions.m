@@ -18,18 +18,27 @@ static WebView *fragmentWebView = nil;
 		renderingFragmentLock = [[NSConditionLock alloc] initWithCondition:2];
 	fragmentWebView = nil;
 
-	[renderingFragmentLock lockWhenCondition:2];
+	[renderingFragmentLock lockWhenCondition:2]; // wait until any other call to this method finishes
 	[renderingFragmentLock unlockWithCondition:0];
 
 	[NSThread detachNewThreadSelector:@selector( renderHTMLFragment: ) toTarget:self withObject:[NSDictionary dictionaryWithObjectsAndKeys:fragment, @"fragment", url, @"url", nil]];
 
-	[renderingFragmentLock lockWhenCondition:1];
+	[renderingFragmentLock lockWhenCondition:1]; // wait until the rendering is done
 
-	id result = [[[self alloc] initWithAttributedString:[(id <WebDocumentText>)[[[fragmentWebView mainFrame] frameView] documentView] attributedString]] autorelease];
+	NSMutableAttributedString *result = [[[(id <WebDocumentText>)[[[fragmentWebView mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
 
-	[renderingFragmentLock unlockWithCondition:2];
+	[renderingFragmentLock unlockWithCondition:2]; // we are done, safe for relase WebView
 
-	return result;
+	NSRange limitRange, effectiveRange;
+	limitRange = NSMakeRange( 0, [result length] );
+	while( limitRange.length > 0 ) {
+		NSColor *color = [result attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
+		if( [[color colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && [[color htmlAttributeValue] isEqualToString:@"#01fe02"] )
+			[result removeAttribute:NSForegroundColorAttributeName range:effectiveRange];
+		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
+	}
+
+	return [[[self alloc] initWithAttributedString:result] autorelease];
 }
 
 + (void) renderHTMLFragment:(NSDictionary *) info {
@@ -37,7 +46,7 @@ static WebView *fragmentWebView = nil;
 	extern NSConditionLock *renderingFragmentLock;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	[renderingFragmentLock lockWhenCondition:0];
+	[renderingFragmentLock lockWhenCondition:0]; // start the rendering, makes parent thread block
 
 	[NSThread setThreadPriority:1.0];
 
@@ -50,7 +59,7 @@ static WebView *fragmentWebView = nil;
 
 	[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.25]];
 
-	[renderingFragmentLock lockWhenCondition:2];
+	[renderingFragmentLock lockWhenCondition:2]; // wait until it is safe to release
 	[renderingFragmentLock unlockWithCondition:2];
 
 	[fragmentWebView release];
@@ -61,7 +70,7 @@ static WebView *fragmentWebView = nil;
 
 + (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
 	extern NSConditionLock *renderingFragmentLock;
-	[renderingFragmentLock unlockWithCondition:1];
+	[renderingFragmentLock unlockWithCondition:1]; // rendering is complete
 }
 
 - (NSData *) HTMLWithOptions:(NSDictionary *) options usingEncoding:(NSStringEncoding) encoding allowLossyConversion:(BOOL) loss {
