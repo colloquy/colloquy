@@ -6,7 +6,7 @@
 #import "MVPreferencesController.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
-#import "MVBuddyListController.h"
+//#import "MVBuddyListController.h"
 #import "MVChatPluginManager.h"
 //#import <AddressBook/AddressBook.h>
 
@@ -15,7 +15,8 @@
 	[[MVPreferencesController sharedInstance] autorelease];
 	[[MVConnectionsController defaultManager] autorelease];
 	[[MVFileTransferController defaultManager] autorelease];
-	[[MVBuddyListController sharedBuddyList] autorelease];
+	//[[MVBuddyListController sharedBuddyList] autorelease];
+	[[MVChatPluginManager defaultManager] autorelease];
 
 	[super dealloc];
 }
@@ -53,7 +54,7 @@
 }
 
 - (IBAction) showBuddyList:(id) sender {
-	[[MVBuddyListController sharedBuddyList] showBuddyList:nil];
+	//[[MVBuddyListController sharedBuddyList] showBuddyList:nil];
 }
 
 #pragma mark -
@@ -87,7 +88,7 @@
 
 	[MVChatPluginManager defaultManager];
 
-	[MVBuddyListController sharedBuddyList];
+//	[MVBuddyListController sharedBuddyList];
 	[MVConnectionsController defaultManager];
 	[MVFileTransferController defaultManager];
 }
