@@ -1667,7 +1667,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			NSMutableString *search = [str mutableCopy];
 			[search escapeCharactersInSet:escapeSet];
 
-			AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", search]];
+			AGRegex *regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", search]];
 			NSArray *matches = [regex findAllInString:[string string]];
 			NSEnumerator *enumerator = [matches objectEnumerator];
 			AGRegexMatch *match = nil;
@@ -1683,6 +1683,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			}
 
 			[search release];
+			[regex release];
 		}
 	}
 }
