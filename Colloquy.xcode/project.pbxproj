@@ -370,6 +370,28 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
+		1C2E98C306207AD0000715D8 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = "half-op.tif";
+			path = "Resources/half-op.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C2E98C406207AD0000715D8 = {
+			fileRef = 1C2E98C306207AD0000715D8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C2E98C506207AE1000715D8 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = "half-op-idle.tif";
+			path = "Resources/half-op-idle.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		1C2EF7EB0427A40B00000102 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1463,6 +1485,7 @@
 				1C9982AA0604B979006C6417,
 				1C9982AE0604BA1F006C6417,
 				1C9982B00604BEAA006C6417,
+				1C2E98C406207AD0000715D8,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4049,6 +4072,8 @@
 				F5BEC20B01F13B0001EE70DE,
 				F54499A0018E46CB01EE70DE,
 				F5BEC20901F13AA201EE70DE,
+				1C2E98C306207AD0000715D8,
+				1C2E98C506207AE1000715D8,
 			);
 			isa = PBXGroup;
 			name = "Chat Icons";
