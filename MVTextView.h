@@ -4,6 +4,7 @@
     NSDictionary *defaultTypingAttributes;
 	NSSize lastPostedSize;
 	NSSize _desiredSizeCached;
+	BOOL _usesSystemCompleteOnTab;
 }
 - (BOOL) checkKeyEvent:(NSEvent *) event;
 
@@ -12,6 +13,9 @@
 - (void) reset:(id) sender;
 - (void) bold:(id) sender;
 - (void) italic:(id) sender;
+
+- (void) setUsesSystemCompleteOnTab:(BOOL) use;
+- (BOOL) usesSystemCompleteOnTab;
 
 - (BOOL) autocomplete;
 @end

@@ -146,10 +146,6 @@
 	return YES;
 }
 
-- (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event {
-	return YES;
-}
-
 - (void) textDidEndEditing:(NSNotification *) notification {
 	[[_room connection] setTopic:[topic textStorage] withEncoding:[_room encoding] forRoom:[_room target]];
 }

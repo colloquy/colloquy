@@ -31,6 +31,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) awakeFromNib {
+	[send setUsesSystemCompleteOnTab:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
 	[send setContinuousSpellCheckingEnabled:NO];
 	[send setUsesFontPanel:NO];
 	[send setUsesRuler:NO];

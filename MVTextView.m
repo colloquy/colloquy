@@ -6,6 +6,8 @@
 - (BOOL) triggerKeyEvent:(NSEvent *) event;
 @end
 
+#pragma mark -
+
 @implementation MVTextView
 - (void) interpretKeyEvents:(NSArray *) eventArray {
 	NSMutableArray *newArray = [NSMutableArray array];
@@ -197,9 +199,18 @@
 
 #pragma mark -
 
+- (void) setUsesSystemCompleteOnTab:(BOOL) use {
+	_usesSystemCompleteOnTab = use;
+}
+
+- (BOOL) usesSystemCompleteOnTab {
+	return _usesSystemCompleteOnTab;
+}
+
+#pragma mark -
+
 - (BOOL) autocomplete {
-	//get list of suggestions from delegate
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
+	if( [self usesSystemCompleteOnTab] ) {
 		[self complete:nil];
 		return YES;
 	}

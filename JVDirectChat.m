@@ -231,6 +231,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[send setUsesRuler:NO];
 	[send setDelegate:self];
 	[send setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatSpellChecking"]];
+	[send setUsesSystemCompleteOnTab:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
 	[send reset:nil];
 
 	[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
@@ -939,30 +940,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return NO;
 }
 
-- (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event {
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"] ) {
-		[textView complete:nil];
-		return YES;
-	}
-
-	NSArray *tabArr = [[send string] componentsSeparatedByString:@" "];
-	unsigned len = [(NSString *)[tabArr lastObject] length];
-	if( ! len ) return YES;
-	if( len <= [_target length] && [[tabArr lastObject] caseInsensitiveCompare:[_target substringToIndex:len]] == NSOrderedSame ) {
-		[[send textStorage] replaceCharactersInRange:NSMakeRange([[send textStorage] length] - len, len) withString:_target];
-		if( ! [[send string] rangeOfString:@" "].length ) [send replaceCharactersInRange:NSMakeRange([[send textStorage] length], 0) withString:@": "];
-		else [send replaceCharactersInRange:NSMakeRange([[send textStorage] length], 0) withString:@" "];
-	}
-	return YES;
-}
-
 - (NSArray *) completionsFor:(NSString *) inFragment {
 	NSArray *retVal = nil;
-	
-	if( [_target rangeOfString:inFragment options:NSCaseInsensitiveSearch|NSAnchoredSearch].location == 0 ) {
+
+	if( [_target rangeOfString:inFragment options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
 		retVal = [NSArray arrayWithObject:_target];
-	}
-	
+
 	return retVal;	
 }
 

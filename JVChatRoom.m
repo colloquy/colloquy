@@ -1042,11 +1042,11 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	NSMutableArray *possibleNicks = [NSMutableArray array];
 	NSString *name = nil;
-	
-	while( name = [[enumerator nextObject] nickname] )
-		if( [name rangeOfString:inFragment options:NSCaseInsensitiveSearch|NSAnchoredSearch].location == 0 )
+
+	while( ( name = [[enumerator nextObject] nickname] ) )
+		if( [name rangeOfString:inFragment options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
 			[possibleNicks addObject:name];
-	
+
 	return possibleNicks;
 }
 
