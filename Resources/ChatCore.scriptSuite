@@ -112,7 +112,11 @@
 				<key>disconnect</key>
 				<string>disconnectScriptCommand:</string>
 				<key>sendMsgToUser</key>
-				<string>sendMessageToUserScriptCommand:</string>
+				<string>sendMessageScriptCommand:</string>
+				<key>sendMsgToRoom</key>
+				<string>sendMessageScriptCommand:</string>
+				<key>sendRawMessage</key>
+				<string>sendRawMessageScriptCommand:</string>
 			</dict>
 		</dict>
 	</dict>
@@ -139,7 +143,7 @@
 		<key>sendMsgToUser</key>
 		<dict>
 			<key>AppleEventClassCode</key>
-			<string>coRC</string>
+			<string>ccoR</string>
 			<key>AppleEventCode</key>
 			<string>smuX</string>
 			<key>CommandClass</key>
@@ -188,6 +192,89 @@
 					<string>encE</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Encoding&gt;</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>sendMsgToRoom</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>ccoR</string>
+			<key>AppleEventCode</key>
+			<string>smrX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>MVChatConnection</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>message</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>meSA</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>room</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>usRA</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>action</key>
+				<dict>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>AppleEventCode</key>
+					<string>actA</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>encoding</key>
+				<dict>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>AppleEventCode</key>
+					<string>encE</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Encoding&gt;</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>sendRawMessage</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>ccoR</string>
+			<key>AppleEventCode</key>
+			<string>srmX</string>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>MVChatConnection</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>message</key>
+				<dict>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>AppleEventCode</key>
+					<string>rMsA</string>
+					<key>Type</key>
+					<string>NSString</string>
 				</dict>
 			</dict>
 		</dict>

@@ -106,9 +106,9 @@
 		<key>sendMsgToUser</key>
 		<dict>
 			<key>Description</key>
-			<string>Send a message to another user.</string>
+			<string>Send a message to another user. This message will not echo locally.</string>
 			<key>Name</key>
-			<string>send</string>
+			<string>send private</string>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
@@ -143,6 +143,71 @@
 					<string>Send as an action?</string>
 					<key>Name</key>
 					<string>action tense</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>sendMsgToRoom</key>
+		<dict>
+			<key>Description</key>
+			<string>Send a message to a room you're a member of. This message will not echo locally.</string>
+			<key>Name</key>
+			<string>send public</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Connection to send from.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>message</key>
+				<dict>
+					<key>Description</key>
+					<string>Message to send to room. Can include HTML formatting.</string>
+					<key>Name</key>
+					<string>message</string>
+				</dict>
+				<key>room</key>
+				<dict>
+					<key>Description</key>
+					<string>Name of room. (Doesn't need to have prefix '#' symbol.)</string>
+					<key>Name</key>
+					<string>to room</string>
+				</dict>
+				<key>encoding</key>
+				<dict>
+					<key>Description</key>
+					<string>Encoding to use. (Default is UTF-8.)</string>
+					<key>Name</key>
+					<string>encoded as</string>
+				</dict>
+				<key>action</key>
+				<dict>
+					<key>Description</key>
+					<string>Send as an action?</string>
+					<key>Name</key>
+					<string>action tense</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>sendRawMessage</key>
+		<dict>
+			<key>Description</key>
+			<string>Send raw message to server.</string>
+			<key>Name</key>
+			<string>send raw</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Connection to send with.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>message</key>
+				<dict>
+					<key>Description</key>
+					<string>Raw message to send to server.</string>
+					<key>Name</key>
+					<string>message</string>
 				</dict>
 			</dict>
 		</dict>
@@ -357,6 +422,6 @@
 		</dict>
 	</dict>
 	<key>Name</key>
-	<string>Chat Core</string>
+	<string>Chat Core Suite</string>
 </dict>
 </plist>

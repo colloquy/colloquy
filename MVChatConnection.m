@@ -1135,18 +1135,19 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	[self disconnect];
 }
 
-- (void) sendMessageToUserScriptCommand:(NSScriptCommand *) command {
+- (void) sendMessageScriptCommand:(NSScriptCommand *) command {
 	WebView *webView = [[[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 300., 100. ) frameName:nil groupName:nil] autorelease];
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:webView, @"webView", command, @"command", nil];
 	NSString *message = [[command evaluatedArguments] objectForKey:@"message"];
 	[[webView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", message] baseURL:nil];
-	[self performSelector:@selector( finishSendMessageToUserScriptCommand: ) withObject:info afterDelay:0.];
+	[self performSelector:@selector( finishSendMessageScriptCommand: ) withObject:info afterDelay:0.];
 }
 
-- (void) finishSendMessageToUserScriptCommand:(NSDictionary *) info {
+- (void) finishSendMessageScriptCommand:(NSDictionary *) info {
 	NSScriptCommand *command = [info objectForKey:@"command"];
 	WebView *webView = [info objectForKey:@"webView"];
 	NSString *user = [[command evaluatedArguments] objectForKey:@"user"];
+	NSString *room = [[command evaluatedArguments] objectForKey:@"room"];
 	BOOL action = [[[command evaluatedArguments] objectForKey:@"action"] boolValue];
 	unsigned long enc = [[[command evaluatedArguments] objectForKey:@"encoding"] unsignedLongValue];
 	NSStringEncoding encoding = NSUTF8StringEncoding;
@@ -1225,7 +1226,8 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 
-	[self sendMessage:attributeMsg withEncoding:encoding toUser:user asAction:action];
+	if( [user length] ) [self sendMessage:attributeMsg withEncoding:encoding toUser:user asAction:action];
+	else if( [room length] ) [self sendMessage:attributeMsg withEncoding:encoding toChatRoom:room asAction:action];
 }
 
 - (void) sendRawMessageScriptCommand:(NSScriptCommand *) command {
