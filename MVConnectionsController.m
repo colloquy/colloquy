@@ -306,6 +306,10 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	id info = nil;
 
 	while( ( info = [enumerator nextObject] ) )
+		if( [[info objectForKey:@"connection"] isConnected] && [[(MVChatConnection *)[info objectForKey:@"connection"] server] caseInsensitiveCompare:address] == NSOrderedSame )
+			return [info objectForKey:@"connection"];
+
+	while( ( info = [enumerator nextObject] ) )
 		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] caseInsensitiveCompare:address] == NSOrderedSame )
 			return [info objectForKey:@"connection"];
 
