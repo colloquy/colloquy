@@ -11,22 +11,33 @@ static WebView *fragmentWebView = nil;
 + (id) attributedStringWithHTMLFragment:(NSString *) fragment baseURL:(NSURL *) url {
 	extern NSConditionLock *renderingFragmentLock;
 	extern WebView *fragmentWebView;
+	NSMutableAttributedString *result = nil;
 
 	NSParameterAssert( fragment != nil );
 
-	if( ! renderingFragmentLock )
-		renderingFragmentLock = [[NSConditionLock alloc] initWithCondition:2];
+	if( NSAppKitVersionNumber >= 700. ) {
+		NSString *render = [NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", fragment];
+		result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", url, @"BaseURL", nil] documentAttributes:NULL];
+	} else {
+		if( ! renderingFragmentLock )
+			renderingFragmentLock = [[NSConditionLock alloc] initWithCondition:2];
 
-	[renderingFragmentLock lockWhenCondition:2]; // wait until any other call to this method finishes
-	[renderingFragmentLock unlockWithCondition:0];
+		if( [renderingFragmentLock lockWhenCondition:2 beforeDate:[NSDate dateWithTimeIntervalSinceNow:2.]] ) { // wait until any other call to this method finishes; timesout after 2 seconds waiting
+			[renderingFragmentLock unlockWithCondition:0];
 
-	[NSThread detachNewThreadSelector:@selector( renderHTMLFragment: ) toTarget:self withObject:[NSDictionary dictionaryWithObjectsAndKeys:fragment, @"fragment", url, @"url", nil]];
+			[NSThread detachNewThreadSelector:@selector( renderHTMLFragment: ) toTarget:self withObject:[NSDictionary dictionaryWithObjectsAndKeys:fragment, @"fragment", url, @"url", nil]];
 
-	[renderingFragmentLock lockWhenCondition:1]; // wait until the rendering is done
+			if( [renderingFragmentLock lockWhenCondition:1 beforeDate:[NSDate dateWithTimeIntervalSinceNow:3.]] ) { // wait until the rendering is done; timeouts in 3 seconds
+				result = [[[(id <WebDocumentText>)[[[fragmentWebView mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
+				[renderingFragmentLock unlockWithCondition:2]; // we are done, safe for relase WebView
+			}
+		}
 
-	NSMutableAttributedString *result = [[[(id <WebDocumentText>)[[[fragmentWebView mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
-
-	[renderingFragmentLock unlockWithCondition:2]; // we are done, safe for relase WebView
+		if( ! result ) {
+			NSString *render = [NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", fragment];
+			result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] baseURL:url documentAttributes:NULL];
+		}
+	}
 
 	NSRange limitRange, effectiveRange;
 	limitRange = NSMakeRange( 0, [result length] );
@@ -148,6 +159,7 @@ static WebView *fragmentWebView = nil;
 		if( linkFlag ) [out appendFormat: @"<a href=\"%@\">", link];
 
 		substr = [NSMutableString stringWithString:[[self attributedSubstringFromRange:effectiveRange] string]];
+		[substr encodeXMLSpecialCharactersAsEntities];
 		[out appendString:substr];
 
 		if( linkFlag ) [out appendString: @"</a>"];
