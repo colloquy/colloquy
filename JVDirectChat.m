@@ -1477,6 +1477,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSScanner *urlScanner = nil;
 	NSCharacterSet *legalSchemeSet = nil;
 	NSCharacterSet *legalAddressSet = nil;
+	NSCharacterSet *legalDomainSet = nil;
 	NSCharacterSet *ircChannels = [NSCharacterSet characterSetWithCharactersInString:@"#&"];
 	NSCharacterSet *seperaters = [NSCharacterSet characterSetWithCharactersInString:@"<> \t\n\r&"];
 	NSString *link = nil, *urlHandle = nil;
@@ -1517,6 +1518,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		// catch well-formed urls like "http://www.apple.com" or "irc://irc.javelin.cc"
 		legalSchemeSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-"];
 		legalAddressSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890:;#.,\\/?!&%$-+=_~@*'"];
+		legalDomainSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.!~*'()%;:&=+$,"];
 		urlScanner = [NSScanner scannerWithString:part];
 		srange = [part rangeOfString:@"://"];
 		range = [part rangeOfCharacterFromSet:[legalSchemeSet invertedSet] options:( NSLiteralSearch | NSBackwardsSearch ) range:NSMakeRange( 0, ( srange.location != NSNotFound ? srange.location : 0 ) )];
@@ -1541,17 +1543,30 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		// catch www urls like "www.apple.com"
 		urlScanner = [NSScanner scannerWithString:part];
 		[urlScanner scanUpToString:@"www." intoString:NULL];
-		if( [urlScanner scanCharactersFromSet:legalAddressSet intoString:&link] ) {
-			if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' || [link characterAtIndex:([link length] - 1)] == '!' || [link characterAtIndex:([link length] - 1)] == ',' )
-				 link = [link substringToIndex:( [link length] - 1 )];
-			if( [link length] >= 8 ) {
-				mutableLink = [[link mutableCopy] autorelease];
-				[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"%" withString:@"&#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[mutableLink replaceOccurrencesOfString:@"&" withString:@"&#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
-				[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"http://%@\">%@</a>", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
-				goto finish;
+		// Skip them if they come immediately after an alphanumeric character
+		if( [urlScanner scanLocation] == 0 || ! [[NSCharacterSet alphanumericCharacterSet] characterIsMember:[part characterAtIndex:[urlScanner scanLocation] - 1]]) {
+			NSString *domain, *path;
+			if( [urlScanner scanCharactersFromSet:legalDomainSet intoString:&domain] ) {
+				NSRange dotRange = [domain rangeOfString:@".."];
+				if( dotRange.location != NSNotFound )
+					domain = [domain substringWithRange:NSMakeRange(0, dotRange.location)];
+				if( [[domain componentsSeparatedByString:@"."] count] >= 3 ) {
+					if( [urlScanner scanString:@"/" intoString:nil] ) {
+						[urlScanner scanCharactersFromSet:legalAddressSet intoString:&path];
+						link = [NSString stringWithFormat:@"%@/%@", domain, path];
+					} else {
+						link = domain;
+					}
+					if( [link characterAtIndex:([link length] - 1)] == '.' || [link characterAtIndex:([link length] - 1)] == '?' || [link characterAtIndex:([link length] - 1)] == '!' || [link characterAtIndex:([link length] - 1)] == ',' )
+						 link = [link substringToIndex:( [link length] - 1 )];
+					mutableLink = [[link mutableCopy] autorelease];
+					[mutableLink replaceOccurrencesOfString:@"/" withString:@"/&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+					[mutableLink replaceOccurrencesOfString:@"+" withString:@"+&#8203;" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+					[mutableLink replaceOccurrencesOfString:@"%" withString:@"&#8203;%" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+					[mutableLink replaceOccurrencesOfString:@"&" withString:@"&#8203;&" options:NSLiteralSearch range:NSMakeRange( 0, [mutableLink length] )];
+					[part replaceOccurrencesOfString:link withString:[NSString stringWithFormat:@"<a href=\"http://%@\">%@</a>", link, mutableLink] options:NSLiteralSearch range:NSMakeRange( 0, [part length] )];
+					goto finish;
+				}
 			}
 		}
 
