@@ -279,7 +279,7 @@ static NSImage		*tabCloseFrontRollover = nil;
 		//Paragraph Style (Turn off clipping by word)
 		NSMutableParagraphStyle *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 		[paragraphStyle setAlignment:NSCenterTextAlignment];
-		[paragraphStyle setLineBreakMode:NSLineBreakByClipping];
+		[paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
 
 		//Update the attributed string
 		[attributedLabel release];
