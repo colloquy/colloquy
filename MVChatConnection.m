@@ -10,6 +10,7 @@
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
 #import "NSMethodSignatureAdditions.h"
+//#import "KAConnectionHandler.h"
 
 #define MODULE_NAME "MVChatConnection"
 
@@ -699,8 +700,10 @@ static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const ch
 	NSNotification *note = nil;
 
 	if( ischannel( *target ) ) {
+		//[[KAConnectionHandler defaultHandler] connection:self willPostMessage:msgData toRoom:YES];
 		note = [NSNotification notificationWithName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:target], @"room", [NSString stringWithUTF8String:nick], @"from", msgData, @"message", nil]];
 	} else {
+		//[[KAConnectionHandler defaultHandler] connection:self willPostMessage:msgData toRoom:NO];
 		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"from", msgData, @"message", nil]];
 	}
 
@@ -719,7 +722,7 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 	if( ! address ) address = "";
 
 	if( ! strncasecmp( nick, "NickServ", 8 ) && message ) {
-		if( strstr( message, "/msg" ) && strstr( message, "NickServ" ) && strstr( message, "IDENTIFY" ) ) {
+		if( strstr( message, "owned by someone else" ) /* && strstr( message, "NickServ" ) && strstr( message, "IDENTIFY" ) */) {
 			if( ! [self nicknamePassword] ) {
 				NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
