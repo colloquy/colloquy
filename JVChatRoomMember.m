@@ -29,7 +29,8 @@
 }
 
 - (NSString *) title {
-	if( _buddy ) return [_buddy compositeName];
+	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+		return [_buddy preferredName];
 	return [[_memberName retain] autorelease];
 }
 

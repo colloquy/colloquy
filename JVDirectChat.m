@@ -233,16 +233,21 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 #pragma mark -
 
 - (NSString *) title {
-	if( _buddy ) return [_buddy compositeName];
+	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+		return [_buddy preferredName];
 	return [[_target retain] autorelease];
 }
 
 - (NSString *) windowTitle {
+	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+		return [NSString stringWithFormat:NSLocalizedString( @"%@ - Private Message", "private message with user - window title" ), [_buddy preferredName]];
 	return [NSString stringWithFormat:NSLocalizedString( @"%@ - Private Message", "private message with user - window title" ), _target];
 }
 
 - (NSString *) information {
-	return nil;
+	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
+		return [NSString stringWithFormat:@"%@ (%@)", _target, [[self connection] server]];
+	return [[self connection] server];
 }
 
 #pragma mark -
