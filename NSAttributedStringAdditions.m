@@ -617,19 +617,21 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
 			}
 			if( foreColorString || backColorString ) {
 				[ret appendBytes:"\006C" length:2];
+				
+				// If both foreground and background colors are unset, don't bother
+				// with anything since .. is assumed
+				if( ! ( foregroundColor == nil && backgroundColor == nil ) ) {
+					if( foreColorString ) {
+						[ret appendBytes:[foreColorString UTF8String]
+								  length:strlen( [foreColorString UTF8String] )];
+					} else {
+						[ret appendBytes:"-" length:1];
+					}
 
-				if( foreColorString ) {
-					[ret appendBytes:[foreColorString UTF8String]
-							  length:strlen( [foreColorString UTF8String] )];
-				} else {
-					[ret appendBytes:"-" length:1];
-				}
-
-				if( backColorString ) {
-					[ret appendBytes:[backColorString UTF8String]
-							  length:strlen( [backColorString UTF8String] )];
-				} else {
-					[ret appendBytes:"-" length:1];
+					if( backColorString ) {
+						[ret appendBytes:[backColorString UTF8String]
+								  length:strlen( [backColorString UTF8String] )];
+					} // If no background, don't bother with "-" since it's assumed
 				}
 
 				[ret appendBytes:"\006" length:1];
