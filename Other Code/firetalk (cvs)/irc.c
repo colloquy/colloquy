@@ -1372,6 +1372,7 @@ enum firetalk_error irc_got_data_connecting(client_t c, unsigned char * buffer, 
 				case 422: // ERR_NOMOTD
 					firetalk_callback_doinit(c,c->nickname);
 					firetalk_callback_connected(c);
+					irc_got_data(c,buffer,bufferpos);
 					break;
 				case 431: // ERR_NONICKNAMEGIVEN
 				case 432: // ERR_ERRONEUSNICKNAME
