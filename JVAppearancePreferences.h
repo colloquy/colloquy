@@ -1,3 +1,4 @@
+#import <AppKit/NSNibDeclarations.h>
 #import "NSPreferences.h"
 
 @class WebView;

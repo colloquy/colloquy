@@ -1,5 +1,7 @@
+#import <AppKit/NSNibDeclarations.h>
 #import "NSPreferences.h"
-#import <Cocoa/Cocoa.h>
+
+@class NSButton;
 
 @interface JVAdvancedPreferences : NSPreferencesModule {
 	IBOutlet NSButton *openConsole;
