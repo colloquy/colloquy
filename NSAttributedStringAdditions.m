@@ -648,7 +648,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
-	NSCharacterSet *nonASCIISet = [[NSCharacterSet characterSetWithRange:NSMakeRange(0,128)] invertedSet];
+	NSCharacterSet *nonASCIISet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 128 )] invertedSet];
 
 	char *ctcpEncoding = NULL;
 	if( [[self string] rangeOfCharacterFromSet:nonASCIISet].location != NSNotFound ) {
@@ -782,9 +782,9 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				// Ok, upgrade to declared encoding
 				currentEncoding = encoding;
 				data = [text dataUsingEncoding:currentEncoding allowLossyConversion:NO];
-				if( data != nil ) {
+				if( data != nil && ctcpEncoding ) {
 					[ret appendBytes:"\006E" length:2];
-					[ret appendBytes:ctcpEncoding length:strlen(ctcpEncoding)];
+					[ret appendBytes:ctcpEncoding length:strlen( ctcpEncoding )];
 					[ret appendBytes:"\006" length:1];
 				}
 			} else if( ! data ) {
