@@ -25,7 +25,7 @@
 #import "MVConnectionsController.h"
 #import "JVDirectChat.h"
 #import "MVBuddyListController.h"
-#import "JVBuddy.h"
+#import "MVFileTransferController.h"#import "JVBuddy.h"
 #import "MVTextView.h"
 #import "MVMenuButton.h"
 #import "JVMarkedScroller.h"
@@ -421,15 +421,15 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:NULL keyEquivalent:@""] autorelease];
+/*	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:NULL keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
-	[menu addItem:item];
+	[menu addItem:item]; */
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFileToSelectedUser: ) keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( _sendFile: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
@@ -500,7 +500,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) handleDraggedFile:(NSString *) path {
-	[[self connection] sendFile:path toUser:_target];
+	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
+	[[MVFileTransferController defaultManager] addFileTransfer:[[self connection] sendFile:path toUser:_target passively:passive]];
 }
 
 #pragma mark -
@@ -2075,6 +2076,40 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) _refreshIcon:(NSNotification *) notification {
 	[_windowController reloadListItem:self andChildren:NO];
+}
+
+- (IBAction) _sendFile:(id) sender {
+	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
+	NSString *path = nil;
+	NSOpenPanel *panel = [NSOpenPanel openPanel];
+	[panel setResolvesAliases:YES];
+	[panel setCanChooseFiles:YES];
+	[panel setCanChooseDirectories:NO];
+	[panel setAllowsMultipleSelection:YES];
+
+	NSView *view = [[[NSView alloc] initWithFrame:NSMakeRect( 0., 0., 200., 28. )] autorelease];
+	[view setAutoresizingMask:( NSViewWidthSizable | NSViewMaxXMargin )];
+
+	NSButton *passiveButton = [[[NSButton alloc] initWithFrame:NSMakeRect( 0., 6., 200., 18. )] autorelease];
+	[[passiveButton cell] setButtonType:NSSwitchButton];
+	[passiveButton setState:passive];
+	[passiveButton setTitle:NSLocalizedString( @"Send File Passively", "send files passively file send open dialog button" )];
+	[passiveButton sizeToFit];
+
+	NSRect frame = [view frame];
+	frame.size.width = NSWidth( [passiveButton frame] );
+
+	[view setFrame:frame];
+	[view addSubview:passiveButton];
+
+	[panel setAccessoryView:view];
+
+	if( [panel runModalForTypes:nil] == NSOKButton ) {
+		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
+		passive = [passiveButton state];
+		while( ( path = [enumerator nextObject] ) )
+			[[MVFileTransferController defaultManager] addFileTransfer:[[self connection] sendFile:path toUser:_target passively:passive]];
+	}
 }
 @end
 
