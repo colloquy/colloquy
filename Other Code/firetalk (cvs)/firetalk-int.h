@@ -70,6 +70,9 @@ struct s_firetalk_room {
 	struct s_firetalk_member *member_head;
 	int admin;
 	int voice;
+	unsigned modes;
+	char *password;
+	int member_limit;
 	char *name;
 	char *topic;
 	char *author;
@@ -249,6 +252,7 @@ void firetalk_callback_chat_user_joined(client_t c, const char * const room, con
 void firetalk_callback_chat_user_left(client_t c, const char * const room, const char * const who, const char * const reason);
 void firetalk_callback_chat_user_quit(client_t c, const char * const who, const char * const reason);
 void firetalk_callback_chat_gottopic(client_t c, const char * const room, const char * const topic, const char * const author);
+void firetalk_callback_chat_room_mode(client_t c, const char * const op, const char * const room, const int on, enum firetalk_room_mode mode, const char * const params);
 void firetalk_callback_chat_user_opped(client_t c, const char * const room, const char * const who, const char * const by);
 void firetalk_callback_chat_user_deopped(client_t c, const char * const room, const char * const who, const char * const by);
 void firetalk_callback_chat_user_voiced(client_t c, const char * const room, const char * const who, const char * const by);
