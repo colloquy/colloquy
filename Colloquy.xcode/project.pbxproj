@@ -965,6 +965,20 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
+		1C2A91E907F351E00027B92A = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "identified-badge.png";
+			path = "Resources/identified-badge.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C2A91EA07F351E00027B92A = {
+			fileRef = 1C2A91E907F351E00027B92A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C2E98C306207AD0000715D8 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -2425,6 +2439,7 @@
 				1CF4D30307E5497400DB421A,
 				1CF4D38907E54C0C00DB421A,
 				1CF4D76607E6AD4400DB421A,
+				1C2A91EA07F351E00027B92A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5554,6 +5569,7 @@
 				F5BEC20901F13AA201EE70DE,
 				1C2E98C306207AD0000715D8,
 				1C2E98C506207AE1000715D8,
+				1C2A91E907F351E00027B92A,
 			);
 			isa = PBXGroup;
 			name = "Chat Icons";

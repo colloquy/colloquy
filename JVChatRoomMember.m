@@ -50,6 +50,8 @@
 	if( ( self = [self init] ) ) {
 		_parent = room;
 		_user = [user retain];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserInformationUpdatedNotification object:user];
 	}
 	return self;
 }
@@ -59,9 +61,13 @@
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[_user release];
+
 	_parent = nil;
 	_user = nil;
+
 	[super dealloc];
 }
 
@@ -255,6 +261,17 @@
 	else if( [self halfOperator] ) icon = [NSImage imageNamed:@"half-op"];
 	else if( [self voice] ) icon = [NSImage imageNamed:@"voice"];
 	else icon = [NSImage imageNamed:@"person"];
+
+	if( [[self user] isIdentified] ) {
+		NSImage *badge = [NSImage imageNamed:@"identified-badge"];
+		NSImage *new = [[[NSImage alloc] initWithSize:[icon size]] autorelease];
+		[new lockFocus];
+        [icon compositeToPoint:NSMakePoint( 0., 0. ) operation:NSCompositeCopy];
+        [badge compositeToPoint:NSMakePoint( 0., 0. ) operation:NSCompositeSourceOver];
+		[new unlockFocus];
+		icon = new;
+	}
+
 	return icon;
 }
 
@@ -266,7 +283,8 @@
 		case JVBuddyOfflineStatus:
 		default: return nil;
 	}
-		return nil;
+
+	return nil;
 }
 
 - (NSString *) title {
@@ -705,6 +723,10 @@
 #pragma mark -
 
 @implementation JVChatRoomMember (JVChatMemberPrivate)
+- (void) _refreshIcon:(NSNotification *) notification {
+	[[[self room] windowController] reloadListItem:self andChildren:NO];
+}
+
 - (NSString *) _selfCompositeName {
 	ABPerson *_person = [[ABAddressBook sharedAddressBook] me];
 	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
