@@ -14,9 +14,23 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	JVColorWellCell *cell = nil;
 
 	while( ( cell = [enumerator nextObject] ) ) {
-		if( [cell isActive] ) [cell setColor:[panel color]];
+		if( [cell isActive] ) {
+			[cell setColor:[panel color]];
+			[[NSNotificationCenter defaultCenter] postNotificationName:JVColorWellCellColorDidChangeNotification object:cell userInfo:nil];
+		}
 	}
 }
+
++ (void) colorPanelClosed:(NSNotification *) notification {
+	extern NSMutableSet *colorWellCells;
+	NSEnumerator *enumerator = [colorWellCells objectEnumerator];
+	JVColorWellCell *cell = nil;
+	
+	while( ( cell = [enumerator nextObject] ) )
+		if( [cell isActive] ) [cell deactivate];
+}
+
+#pragma mark -
 
 - (id) initTextCell:(NSString *) string {
 	return ( self = [self initImageCell:nil] );
@@ -24,6 +38,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 
 - (id) initImageCell:(NSImage *) image {
 	[[NSNotificationCenter defaultCenter] addObserver:[self class] selector:@selector( colorPanelColorChanged: ) name:NSColorPanelColorDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:[self class] selector:@selector( colorPanelClosed: ) name:NSWindowWillCloseNotification object:[NSColorPanel sharedColorPanel]];
 
 	if( ( self = [super initImageCell:nil] ) ) {
 		extern NSMutableSet *colorWellCells;
@@ -77,6 +92,8 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	[super dealloc];
 }
 
+#pragma mark -
+
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	NSRect rect = NSInsetRect( cellFrame, 3., 3. );
 	rect.size.width = ( rect.size.height * 1.5 );
@@ -102,6 +119,8 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	rect.size.width = ( rect.size.height * 1.5 );
 	return [super trackMouse:event inRect:rect ofView:controlView untilMouseUp:flag];
 }
+
+#pragma mark -
 
 - (void) deactivate {
 	[super setState:NSOffState];
@@ -143,19 +162,18 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	return [self state];
 }
 
+#pragma mark -
+
 - (void) takeColorFrom:(id) sender {
 	if( ! [sender respondsToSelector:@selector( color )] ) return;
 	[self setColor:[sender color]];
 }
 
 - (void) setColor:(NSColor *) color {
-	NSParameterAssert( color != nil );
-	if( [_color isEqual:color] ) return;
+	if( ! color || [_color isEqual:color] ) return;
 
 	[_color autorelease];
 	_color = [color retain];
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVColorWellCellColorDidChangeNotification object:self userInfo:nil];
 
 	if( [self isActive] )
 		[[NSColorPanel sharedColorPanel] setColor:_color];
@@ -167,6 +185,8 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	return [[_color retain] autorelease];
 }
 
+#pragma mark -
+
 - (void) setTarget:(id) object {
 	[NSException raise:NSIllegalSelectorException format:@"JVColorWellCell does not implement setTarget:"];
 }
@@ -174,6 +194,8 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 - (void) setAction:(SEL) action {
 	[NSException raise:NSIllegalSelectorException format:@"JVColorWellCell does not implement setAction:"];
 }
+
+#pragma mark -
 
 - (BOOL) hasValidObjectValue {
 	return YES;
@@ -191,6 +213,8 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	}
 }
 
+#pragma mark -
+
 - (NSString *) stringValue {
 	return [_color HTMLAttributeValue];
 }
@@ -198,6 +222,8 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 - (void) setStringValue:(NSString *) string {
 	[self setColor:[NSColor colorWithCSSAttributeValue:string]];
 }
+
+#pragma mark -
 
 - (void) setShowsWebValue:(BOOL) web {
 	_showsWebValue = web;
