@@ -70,6 +70,8 @@
 - (NSNumber *) uniqueIdentifier;
 @end
 
+#pragma mark -
+
 @interface NSObject (MVChatPluginLinkClickSupport)
 - (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view;
 @end
