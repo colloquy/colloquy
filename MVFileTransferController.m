@@ -1,8 +1,8 @@
 #import <Cocoa/Cocoa.h>
 #import "MVFileTransferController.h"
-#import "MVChatWindowController.h"
+//#import "MVChatWindowController.h"
 #import "MVChatConnection.h"
-#import "MVImageTextCell.h"
+#import "JVDetailCell.h"
 
 static MVFileTransferController *sharedInstance = nil;
 
@@ -66,16 +66,16 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 @implementation MVFileTransferController
 + (MVFileTransferController *) defaultManager {
 	extern MVFileTransferController *sharedInstance;
-	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
+	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 
 #pragma mark -
 
-- (id) init {
-	if( ( self = [super init] ) ) {
+- (id) initWithWindowNibName:(NSString *) windowNibName {
+	if( ( self = [super initWithWindowNibName:@"MVFileTransfer"] ) ) {
 		_transferStorage = [[NSMutableArray array] retain];
 		_calculationItems = [[NSMutableArray array] retain];
-		
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _incomingFile: ) name:MVChatConnectionFileTransferAvailableNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _outgoingFile: ) name:MVChatConnectionFileTransferOfferedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferStarted: ) name:MVChatConnectionFileTransferStartedNotification object:nil];
@@ -89,8 +89,6 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) dealloc {
 	extern MVFileTransferController *sharedInstance;
 
-	[[self window] close];
-
 	[_transferStorage autorelease];
 	[_calculationItems autorelease];
 
@@ -103,7 +101,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	[super dealloc];
 }
 
-- (void) awakeFromNib {
+- (void) windowDidLoad {
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"transfer.toolbar"] autorelease];
 	NSTableColumn *theColumn = nil;
 	id prototypeCell = nil;
@@ -116,13 +114,13 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	[currentFiles setAutosaveTableColumns:YES];
 
 	theColumn = [currentFiles tableColumnWithIdentifier:@"file"];
-	prototypeCell = [MVImageTextCell new];
+	prototypeCell = [[JVDetailCell new] autorelease];
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
 	[theColumn setDataCell:prototypeCell];
 
 	theColumn = [currentFiles tableColumnWithIdentifier:@"status"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"statusHeader"]];
-	prototypeCell = [NSImageCell new];
+	prototypeCell = [[NSImageCell new] autorelease];
 	[prototypeCell setImageAlignment:NSImageAlignCenter];
 	[theColumn setDataCell:prototypeCell];
 
@@ -141,8 +139,6 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 - (IBAction) showTransferManager:(id) sender {
-	static BOOL loaded = NO;
-	if( ! loaded ) loaded = [NSBundle loadNibNamed:@"MVFileTransfer" owner:self];
 	[[self window] orderFront:nil];
 }
 
@@ -440,7 +436,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 @implementation MVFileTransferController (MVFileTransferControllerPrivate)
 - (void) _incomingFile:(NSNotification *) notification {
 	NSMutableDictionary *info = [[[notification userInfo] mutableCopy] autorelease];
-	NSWindow *win = [[MVChatWindowController chatWindowWithUser:[info objectForKey:@"from"] withConnection:[notification object] ifExists:YES] window];
+//	NSWindow *win = [[MVChatWindowController chatWindowWithUser:[info objectForKey:@"from"] withConnection:[notification object] ifExists:YES] window];
+	NSWindow *win = nil;
 
 	[info setObject:[notification object] forKey:@"connection"];
 
@@ -450,7 +447,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	NSDictionary *info = [(NSDictionary *) contextInfo autorelease]; // for the previous retain in _incomingFile:
 	if( returnCode == NSOKButton ) {
-		NSWindow *win = [[MVChatWindowController chatWindowWithUser:[info objectForKey:@"from"] withConnection:[info objectForKey:@"connection"] ifExists:YES] window];
+//		NSWindow *win = [[MVChatWindowController chatWindowWithUser:[info objectForKey:@"from"] withConnection:[info objectForKey:@"connection"] ifExists:YES] window];
+		NSWindow *win = nil;
 		NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
 		[[NSApplication sharedApplication] endSheet:sheet];
 		[sheet close];
@@ -473,7 +471,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		else if( fileExists ) result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists and can't be resumed. Replace it?", "replace transfer save dialog message" ), NSLocalizedString( @"Replace", "replace button name" ), @"Cancel", nil, [filename lastPathComponent], [filename stringByDeletingLastPathComponent] );
 
 		if( result == NSCancelButton ) {
-			NSWindow *win = [[MVChatWindowController chatWindowWithUser:[info objectForKey:@"from"] withConnection:[info objectForKey:@"connection"] ifExists:YES] window];
+//			NSWindow *win = [[MVChatWindowController chatWindowWithUser:[info objectForKey:@"from"] withConnection:[info objectForKey:@"connection"] ifExists:YES] window];
+			NSWindow *win = nil;
 			NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
 			[[NSApplication sharedApplication] endSheet:sheet];
 			[sheet close];
