@@ -25,10 +25,14 @@
 
 - (MVChatConnection *) connection;
 - (NSString *) nickname;
+- (NSString *) realName;
+- (NSString *) address;
 - (JVBuddy *) buddy;
 
 - (BOOL) voice;
 - (BOOL) operator;
+- (BOOL) halfOperator;
+- (BOOL) serverOperator;
 - (BOOL) isLocalUser;
 
 - (IBAction) startChat:(id) sender;

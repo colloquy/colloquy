@@ -601,10 +601,8 @@ static void MVChatJoinedRoomNickList( CHANNEL_REC *channel ) {
 		[info setObject:[NSNumber numberWithBool:nick -> op] forKey:@"operator"];
 		[info setObject:[NSNumber numberWithBool:nick -> halfop] forKey:@"halfOperator"];
 		[info setObject:[NSNumber numberWithBool:nick -> voice] forKey:@"voice"];
-		NSString *address = [NSString stringWithUTF8String:nick -> host];
-		if( address ) [info setObject:address forKey:@"address"];
-		NSString *realName = [NSString stringWithUTF8String:nick -> realname];
-		if( realName ) [info setObject:realName forKey:@"realName"];
+		if( nick -> host ) [info setObject:[NSString stringWithUTF8String:nick -> host] forKey:@"address"];
+		if( nick -> realname ) [info setObject:[NSString stringWithUTF8String:nick -> realname] forKey:@"realName"];
 		[nickArray addObject:info];
 	}
 
@@ -630,7 +628,20 @@ static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, cons
 	char *channel = NULL;
 	char *params = event_get_params( data, 1, &channel );
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel], @"room", [NSString stringWithUTF8String:nick], @"who", [NSString stringWithUTF8String:address], @"address", [NSNumber numberWithBool:NO], @"previousMember", nil]];
+	CHANNEL_REC *room = channel_find( (SERVER_REC *) server, channel );
+	NICK_REC *nickname = nicklist_find( room, nick );
+
+	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	[info setObject:[NSString stringWithUTF8String:nickname -> nick] forKey:@"nickname"];
+	[info setObject:[NSNumber numberWithBool:nickname -> serverop] forKey:@"serverOperator"];
+	[info setObject:[NSNumber numberWithBool:nickname -> op] forKey:@"operator"];
+	[info setObject:[NSNumber numberWithBool:nickname -> halfop] forKey:@"halfOperator"];
+	[info setObject:[NSNumber numberWithBool:nickname -> voice] forKey:@"voice"];
+	if( address ) [info setObject:[NSString stringWithUTF8String:address] forKey:@"address"];
+	if( nickname -> realname )
+		[info setObject:[NSString stringWithUTF8String:nickname -> realname] forKey:@"realName"];
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel], @"room", [NSString stringWithUTF8String:nick], @"who", info, @"info", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 
 	g_free( params );
