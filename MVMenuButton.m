@@ -5,6 +5,7 @@
 	id newObj = [[[self class] allocWithZone:zone] init];
 
 	[newObj setImage:[self image]];
+	[newObj setSmallImage:[self smallImage]];
 	[newObj setAlternateImage:[self alternateImage]];
 	[newObj setImagePosition:[self imagePosition]];
 	[newObj setButtonType:NSMomentaryChangeButton];
@@ -123,5 +124,14 @@
 		[self setImage:smallImage];
 	}
 	size = controlSize;
+}
+
+- (NSImage *) smallImage {
+	return [[smallImage retain] autorelease];
+}
+
+- (void) setSmallImage:(NSImage *) smimg {
+	[smallImage autorelease];
+	smallImage = [smimg copy];
 }
 @end
