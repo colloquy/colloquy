@@ -340,6 +340,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) outlineView:(NSOutlineView *) outlineView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn item:(id) item {
 	[(JVDetailCell *) cell setMainText:[item title]];
 	[(JVDetailCell *) cell setInformationText:[item information]];
+	[(JVDetailCell *) cell setStatusImage:[item statusImage]];
+
+	[chatViewsOutlineView sizeLastColumnToFit];
 
 	if( ! ( [[chatViewsOutlineView window] firstResponder] == chatViewsOutlineView && [[NSApplication sharedApplication] isActive] ) && [outlineView itemAtRow:[outlineView selectedRow]] == item && ! [item conformsToProtocol:@protocol( JVChatViewController )] ) {
 		[outlineView selectRow:[outlineView rowForItem:_activeViewController] byExtendingSelection:NO];
@@ -384,14 +387,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self _refreshWindow];
 
 	[self _refreshSelectionMenu];
-}
-
-- (void) outlineViewItemDidExpand:(NSNotification *) notification {
-	[chatViewsOutlineView sizeLastColumnToFit];
-}
-
-- (void) outlineViewItemDidCollapse:(NSNotification *) notification {
-	[chatViewsOutlineView sizeLastColumnToFit];
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView writeItems:(NSArray *) items toPasteboard:(NSPasteboard *) board {
@@ -492,12 +487,23 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
 
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
+		id lastActive = _activeViewController;
+		if( [_activeViewController respondsToSelector:@selector( willUnselect )] )
+			[(NSObject *)_activeViewController willUnselect];
+		if( [item respondsToSelector:@selector( willSelect )] )
+			[(NSObject *)item willSelect];
+
 		[_activeViewController autorelease];
 		_activeViewController = [item retain];
 
 		[[self window] setContentView:[item view]];
 		[[self window] setToolbar:[item toolbar]];
 		[[self window] makeFirstResponder:[[item view] nextKeyView]];
+
+		if( [lastActive respondsToSelector:@selector( didUnselect )] )
+			[(NSObject *)lastActive didUnselect];
+		if( [_activeViewController respondsToSelector:@selector( didSelect )] )
+			[(NSObject *)_activeViewController didSelect];
 	} else if( ! [_views count] || ! _activeViewController ) {
 //		NSToolbar *placeHolder = [[[NSToolbar alloc] initWithIdentifier:@"chat.placeHolder"] autorelease];
 		[[self window] setContentView:_placeHolder];

@@ -65,6 +65,14 @@ extern NSString *JVChatViewPboardType;
 - (NSString *) windowTitle;
 @end
 
+@interface NSObject (JVChatViewControllerOptional)
+- (void) willSelect;
+- (void) didSelect;
+
+- (void) willUnselect;
+- (void) didUnselect;
+@end
+
 @protocol JVChatListItem <NSObject>
 - (id <JVChatListItem>) parent;
 
@@ -72,6 +80,7 @@ extern NSString *JVChatViewPboardType;
 - (NSMenu *) menu;
 - (NSString *) title;
 - (NSString *) information;
+- (NSImage *) statusImage;
 
 - (int) numberOfChildren;
 - (id) childAtIndex:(int) index;
