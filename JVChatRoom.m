@@ -1075,6 +1075,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (void) _didConnect:(NSNotification *) notification {
 	[[self connection] joinChatRoom:_target];
 	[super _didConnect:notification];
+	_cantSendMessages = YES;
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
