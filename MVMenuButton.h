@@ -2,13 +2,12 @@
 
 @interface MVMenuButton : NSButton <NSCoding> {
 @protected
-	BOOL _menuDidDisplay;
-	NSImage *_orgImage, *_smallImage;
+	BOOL _drawsArrow;
+	NSImage *_orgImage;
+	NSImage *_smallImage;
 	NSControlSize _size;
 	NSToolbarItem *_toolbarItem;
 }
-- (void) displayMenu:(id) sender;
-
 - (NSControlSize) controlSize;
 - (void) setControlSize:(NSControlSize) controlSize;
 
@@ -17,4 +16,7 @@
 
 - (NSToolbarItem *) toolbarItem;
 - (void) setToolbarItem:(NSToolbarItem *) item;
+
+- (BOOL) drawsArrow;
+- (void) setDrawsArrow:(BOOL) arrow;
 @end
