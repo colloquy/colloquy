@@ -146,6 +146,24 @@
 
 		[[room connection] kickMember:member inRoom:[room target] forReason:msg];
 		return YES;
+	} else if( [command isEqualToString:@"op"] ) {
+		[[room connection] promoteMember:[arguments string] inRoom:[room target]];
+		return YES;
+	} else if( [command isEqualToString:@"deop"] ) {
+		[[room connection] demoteMember:[arguments string] inRoom:[room target]];
+		return YES;
+	} else if( [command isEqualToString:@"halfop"] ) {
+		[[room connection] halfopMember:[arguments string] inRoom:[room target]];
+		return YES;
+	} else if( [command isEqualToString:@"dehalfop"] ) {
+		[[room connection] dehalfopMember:[arguments string] inRoom:[room target]];
+		return YES;
+	} else if( [command isEqualToString:@"voice"] ) {
+		[[room connection] voiceMember:[arguments string] inRoom:[room target]];
+		return YES;
+	} else if( [command isEqualToString:@"devoice"] ) {
+		[[room connection] devoiceMember:[arguments string] inRoom:[room target]];
+		return YES;
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
