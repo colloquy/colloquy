@@ -215,9 +215,13 @@
 		return YES;
 	}
 
+	NSMutableCharacterSet *allowedCharacters = (NSMutableCharacterSet *)[NSMutableCharacterSet alphanumericCharacterSet];
+	[allowedCharacters addCharactersInString:@"`_-|^"];
+
+	NSCharacterSet *illegalCharacters = [allowedCharacters invertedSet];
+
 	// get partial completion & insertion point location
 	NSRange curPos = [self selectedRange];
-	NSCharacterSet *illegalCharacters = [[NSCharacterSet alphanumericCharacterSet] invertedSet];
 	NSString *partialCompletion = nil;
 	NSRange wordStart = [[self string] rangeOfCharacterFromSet:illegalCharacters options:NSBackwardsSearch range:NSMakeRange( 0, curPos.location )];
 
