@@ -1538,29 +1538,18 @@ static NSMenu *favoritesMenu = nil;
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[MVConnectionsController class]];
 	NSScriptObjectSpecifier *container = [[MVConnectionsController defaultManager] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"connectionsArray" uniqueID:[self uniqueIdentifier]] autorelease];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"connections" uniqueID:[self uniqueIdentifier]] autorelease];
 }
 @end
 
 #pragma mark -
 
 @implementation MVConnectionsController (MVConnectionsControllerScripting)
-- (NSArray *) connectionsArray {
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	id info = nil;
-
-	while( ( info = [enumerator nextObject] ) )
-		[ret addObject:[info objectForKey:@"connection"]];
-
-	return [[ret retain] autorelease];
-}
-
-- (MVChatConnection *) valueInConnectionsArrayAtIndex:(unsigned) index {
+- (MVChatConnection *) valueInConnectionsAtIndex:(unsigned) index {
 	return [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
 }
 
-- (MVChatConnection *) valueInConnectionsArrayWithUniqueID:(id) identifier {
+- (MVChatConnection *) valueInConnectionsWithUniqueID:(id) identifier {
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	MVChatConnection *connection = nil;
 	NSDictionary *info = nil;
@@ -1574,23 +1563,23 @@ static NSMenu *favoritesMenu = nil;
 	return nil;
 }
 
-- (void) addInConnectionsArray:(MVChatConnection *) connection {
+- (void) addInConnections:(MVChatConnection *) connection {
 	[self addConnection:connection];
 }
 
-- (void) insertInConnectionsArray:(MVChatConnection *) connection {
+- (void) insertInConnections:(MVChatConnection *) connection {
 	[self addConnection:connection];
 }
 
-- (void) insertInConnectionsArray:(MVChatConnection *) connection atIndex:(unsigned) index {
+- (void) insertInConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
 	[self insertConnection:connection atIndex:index];
 }
 
-- (void) removeFromConnectionsArrayAtIndex:(unsigned) index {
+- (void) removeFromConnectionsAtIndex:(unsigned) index {
 	[self removeConnectionAtIndex:index];
 }
 
-- (void) replaceInConnectionsArray:(MVChatConnection *) connection atIndex:(unsigned) index {
+- (void) replaceInConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
 	[self replaceConnectionAtIndex:index withConnection:connection];
 }
 
