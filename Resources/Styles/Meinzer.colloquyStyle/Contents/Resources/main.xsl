@@ -22,9 +22,11 @@
 			</xsl:call-template>
 			<xsl:text>)</xsl:text>
 			<xsl:if test="reason!=''">
-				<br/>
-				<xsl:text>Reason: </xsl:text>
-				<xsl:apply-templates select="reason/child::node()" mode="copy"/>
+				<span class="reason">
+					<br/>
+					<xsl:text>Reason: </xsl:text>
+					<xsl:apply-templates select="reason/child::node()" mode="copy"/>
+				</span>
 			</xsl:if>
 		</div>
 	</xsl:template>

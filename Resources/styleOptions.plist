@@ -50,5 +50,23 @@
 			<string>No</string>
 		</array>
 	</dict>
+	<dict>
+		<key>style</key>
+		<array>
+			<string>.reason { display: inline; }</string>
+			<string>.reason { display: none; }</string>
+		</array>
+		<key>default</key>
+		<integer>0</integer>
+		<key>description</key>
+		<string>Display event reasons</string>
+		<key>type</key>
+		<string>list</string>
+		<key>options</key>
+		<array>
+			<string>Yes</string>
+			<string>No</string>
+		</array>
+	</dict>
 </array>
 </plist>

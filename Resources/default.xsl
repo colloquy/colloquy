@@ -82,9 +82,11 @@
 		<div class="event">
 			<xsl:apply-templates select="message/child::node()" mode="copy" />
 			<xsl:if test="reason!=''">
-				<xsl:text> (</xsl:text>
-				<xsl:apply-templates select="reason/child::node()" mode="copy"/>
-				<xsl:text>)</xsl:text>
+				<span class="reason">
+					<xsl:text> (</xsl:text>
+					<xsl:apply-templates select="reason/child::node()" mode="copy"/>
+					<xsl:text>)</xsl:text>
+				</span>
 			</xsl:if>
 		</div>
 	</xsl:template>
