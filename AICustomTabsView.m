@@ -625,6 +625,8 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
     NSPoint		clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     AICustomTabCell	*tabCell = [self tabAtPoint:clickLocation];
 	
+ 	[tabView selectTabViewItem:[tabCell tabViewItem]];
+	
     //Pass this on to our delegate
     if(tabCell && [delegate respondsToSelector:@selector(customTabView:menuForTabViewItem:)]){
         return([delegate customTabView:self menuForTabViewItem:[tabCell tabViewItem]]);
@@ -639,9 +641,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 	NSPoint		location = [self convertPoint:point fromView:nil];
     AICustomTabCell	*tabCell = [self tabAtPoint:location];
 
-	[tabView selectTabViewItem:[tabCell tabViewItem]];
-
-    //Pass this on to our delegate
+   //Pass this on to our delegate
     if(tabCell && [delegate respondsToSelector:@selector(customTabView:toolTipForTabViewItem:)]){
         return([delegate customTabView:self toolTipForTabViewItem:[tabCell tabViewItem]]);
     }
