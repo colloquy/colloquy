@@ -118,7 +118,7 @@ static NSMenu *favoritesMenu = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuitting: ) name:NSApplicationWillTerminateNotification object:nil];
 
-		[self _loadBookmarkList];
+		[self performSelector:@selector( _loadBookmarkList ) withObject:nil afterDelay:0];
 	}
 	return self;
 }
@@ -1468,7 +1468,7 @@ static NSMenu *favoritesMenu = nil;
 
 		[connection setSecure:[[info objectForKey:@"secure"] boolValue]];
 
-		if( [[info objectForKey:@"automatic"] boolValue] ) {
+		if( [[info objectForKey:@"automatic"] boolValue] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ) {
 			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 				[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
 
@@ -1646,44 +1646,46 @@ static NSMenu *favoritesMenu = nil;
 	NSArray *rooms = [self joinRoomsForConnection:connection];
 	NSString *strcommands = [self connectCommandsForConnection:connection];
 
-	if( [rooms count] && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVPreventAutoJoinRooms"] )
+	if( [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
 		[connection joinChatRoomsNamed:rooms];
 
 	NSEnumerator *commands = [[strcommands componentsSeparatedByString:@"\n"] objectEnumerator];
 	NSMutableString *command = nil;
 
-	while( ( command = [commands nextObject] ) ) {
-		command = [[command mutableCopy] autorelease];
-		[command replaceOccurrencesOfString:@"%@" withString:[connection nickname] options:NSLiteralSearch range:NSMakeRange( 0, [command length] )];
+	if( ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ) {
+		while( ( command = [commands nextObject] ) ) {
+			command = [[command mutableCopy] autorelease];
+			[command replaceOccurrencesOfString:@"%@" withString:[connection nickname] options:NSLiteralSearch range:NSMakeRange( 0, [command length] )];
 
-		if( [command hasPrefix:@"/"] ) {
-			command = (NSMutableString *)[command substringFromIndex:1];
+			if( [command hasPrefix:@"/"] ) {
+				command = (NSMutableString *)[command substringFromIndex:1];
 
-			NSString *arguments = nil;
-			NSRange range = [command rangeOfString:@" "];
-			if( range.location != NSNotFound ) {
-				if( ( range.location + 1 ) < [command length] )
-					arguments = [command substringFromIndex:( range.location + 1 )];
-				command = (NSMutableString *)[command substringToIndex:range.location];
+				NSString *arguments = nil;
+				NSRange range = [command rangeOfString:@" "];
+				if( range.location != NSNotFound ) {
+					if( ( range.location + 1 ) < [command length] )
+						arguments = [command substringFromIndex:( range.location + 1 )];
+					command = (NSMutableString *)[command substringToIndex:range.location];
+				}
+
+				NSAttributedString *args = [[[NSAttributedString alloc] initWithString:arguments] autorelease];
+				id view = nil;
+
+				NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), @encode( id ), nil];
+				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+				[invocation setSelector:@selector( processUserCommand:withArguments:toConnection:inView: )];
+				[invocation setArgument:&command atIndex:2];
+				[invocation setArgument:&args atIndex:3];
+				[invocation setArgument:&connection atIndex:4];
+				[invocation setArgument:&view atIndex:5];
+
+				NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+				if( ! [[results lastObject] boolValue] )
+					[connection sendRawMessage:[command stringByAppendingFormat:@" %@", arguments]];
+			} else if( [command length] ) {
+				[connection sendRawMessage:command];
 			}
-
-			NSAttributedString *args = [[[NSAttributedString alloc] initWithString:arguments] autorelease];
-			id view = nil;
-
-			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), @encode( id ), nil];
-			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-
-			[invocation setSelector:@selector( processUserCommand:withArguments:toConnection:inView: )];
-			[invocation setArgument:&command atIndex:2];
-			[invocation setArgument:&args atIndex:3];
-			[invocation setArgument:&connection atIndex:4];
-			[invocation setArgument:&view atIndex:5];
-
-			NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
-			if( ! [[results lastObject] boolValue] )
-				[connection sendRawMessage:[command stringByAppendingFormat:@" %@", arguments]];
-		} else if( [command length] ) {
-			[connection sendRawMessage:command];
 		}
 	}
 
