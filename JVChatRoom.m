@@ -549,7 +549,7 @@
 	if( [member isEqualToString:[[self connection] nickname]] ) {
 		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
 			member = [self _selfCompositeName];
-		else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyStoredNickname )
+		else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyGivenNickname )
 			member = [self _selfStoredNickname];
 	} else {
 		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:member onServer:[[self connection] server]];

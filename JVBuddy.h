@@ -27,7 +27,7 @@ typedef enum {
 
 typedef enum {
 	JVBuddyActiveNickname = 0x0,
-	JVBuddyStoredNickname = 0x1,
+	JVBuddyGivenNickname = 0x1,
 	JVBuddyFullName = 0x2
 } JVBuddyName;
 
@@ -73,6 +73,7 @@ typedef enum {
 - (NSString *) firstName;
 - (NSString *) lastName;
 - (NSString *) primaryEmail;
+- (NSString *) givenNickname;
 
 - (NSString *) uniqueIdentifier;
 

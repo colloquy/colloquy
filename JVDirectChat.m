@@ -624,7 +624,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		NSString *selfName = user;
 		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
 			selfName = [self _selfCompositeName];
-		else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyStoredNickname )
+		else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyGivenNickname )
 			selfName = [self _selfStoredNickname];
 		child = xmlNewTextChild( root, NULL, "sender", [selfName UTF8String] );
 		xmlSetProp( child, "self", "yes" );		

@@ -203,9 +203,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		default:
 		case JVBuddyFullName:
 			return [self compositeName];
-		case JVBuddyStoredNickname:
-			if( [_person valueForProperty:kABNicknameProperty] )
-				return [_person valueForProperty:kABNicknameProperty];
+		case JVBuddyGivenNickname:
+			if( [[self givenNickname] length] )
+				return [self givenNickname];
 		case JVBuddyActiveNickname:
 			return [[self activeNickname] user];
 	}
@@ -213,29 +213,29 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (JVBuddyName) preferredNameWillReturn {
-	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
-	NSString *lastName = [_person valueForProperty:kABLastNameProperty];
+	NSString *firstName = [self firstName];
+	NSString *lastName = [self lastName];
 
 	if( [firstName length] || [lastName length] ) return JVBuddyFullName;
-	if( [(NSString *)[_person valueForProperty:kABNicknameProperty] length] ) return JVBuddyStoredNickname;
+	if( [[self givenNickname] length] ) return JVBuddyGivenNickname;
 
 	return JVBuddyActiveNickname;
 }
 
 - (unsigned int) availableNames {
 	unsigned int ret = JVBuddyActiveNickname;
-	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
-	NSString *lastName = [_person valueForProperty:kABLastNameProperty];
+	NSString *firstName = [self firstName];
+	NSString *lastName = [self lastName];
 
 	if( [firstName length] || [lastName length] ) ret |= JVBuddyFullName;
-	if( [(NSString *)[_person valueForProperty:kABNicknameProperty] length] ) ret |= JVBuddyStoredNickname;
+	if( [[self givenNickname] length] ) ret |= JVBuddyGivenNickname;
 
 	return ret;
 }
 
 - (NSString *) compositeName {
-	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
-	NSString *lastName = [_person valueForProperty:kABLastNameProperty];
+	NSString *firstName = [self firstName];
+	NSString *lastName = [self lastName];
 
 	if( ! firstName && lastName ) return lastName;
 	else if( firstName && ! lastName ) return firstName;
@@ -249,8 +249,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		}
 	}
 
-	firstName = [_person valueForProperty:kABNicknameProperty];
-	if( firstName ) return firstName;
+	firstName = [self givenNickname];
+	if( [firstName length] ) return firstName;
 
 	return [[self activeNickname] user];
 }
@@ -266,6 +266,10 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (NSString *) primaryEmail {
 	ABMultiValue *value = [_person valueForProperty:kABEmailProperty];
 	return [value valueAtIndex:[value indexForIdentifier:[value primaryIdentifier]]];
+}
+
+- (NSString *) givenNickname {
+	return [_person valueForProperty:kABNicknameProperty];
 }
 
 #pragma mark -
