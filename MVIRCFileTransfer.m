@@ -191,7 +191,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	[MVIRCChatConnectionThreadLock lock];
 
 	int queue = dcc_queue_new();
-	NSString *source = [[path stringByStandardizingPath] copy];
+	NSString *source = [[path stringByStandardizingPath] copyWithZone:[self zone]];
 
 	char *tag = [[user connection] _irssiConnection] -> tag;
 
@@ -203,7 +203,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	DCC_REC *dcc = dcc_find_request( DCC_SEND_TYPE, [[user connection] encodedBytesWithString:[user nickname]], [[source lastPathComponent] fileSystemRepresentation] );
 
 	MVIRCUploadFileTransfer *ret = [[[MVIRCUploadFileTransfer alloc] initWithDCCFileRecord:dcc toUser:user] autorelease];
-	ret -> _source = [[source stringByStandardizingPath] copy];
+	ret -> _source = [[source stringByStandardizingPath] copyWithZone:[self zone]];
 	ret -> _transferQueue = queue;
 
 	[MVIRCChatConnectionThreadLock unlock];
@@ -460,7 +460,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
 	[_destination autorelease];
-	_destination = [[path stringByStandardizingPath] copy];
+	_destination = [[path stringByStandardizingPath] copyWithZone:[self zone]];
 
 	if( ! [self _DCCFileRecord] ) return;
 	[MVIRCChatConnectionThreadLock lock];

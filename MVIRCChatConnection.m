@@ -275,7 +275,7 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 
 	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
 	if( ! room ) {
-		room = [[[MVIRCChatRoom alloc] initWithName:[self stringWithEncodedBytes:channel -> name] andConnection:self] autorelease];
+		room = [[[MVIRCChatRoom allocWithZone:[self zone]] initWithName:[self stringWithEncodedBytes:channel -> name] andConnection:self] autorelease];
 		[self _addJoinedRoom:room];
 	}
 
@@ -1465,7 +1465,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		user = [_knownUsers objectForKey:uniqueIdentfier];
 		if( user ) return [[user retain] autorelease];
 
-		user = [[[MVIRCChatUser alloc] initWithNickname:identifier andConnection:self] autorelease];
+		user = [[[MVIRCChatUser allocWithZone:[self zone]] initWithNickname:identifier andConnection:self] autorelease];
 		[_knownUsers setObject:user forKey:uniqueIdentfier];
 	}
 
@@ -1515,7 +1515,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	_awayMessage = nil;
 
 	if( [[message string] length] ) {
-		_awayMessage = [message copy];
+		_awayMessage = [message copyWithZone:[self zone]];
 		const char *msg = [[self class] _flattenedIRCStringForMessage:message withEncoding:[self encoding]];
 
 		[MVIRCChatConnectionThreadLock lock];
@@ -1768,7 +1768,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 - (void) _didConnect {
 	[_localUser release];
-	_localUser = [[MVIRCChatUser alloc] initLocalUserWithConnection:self];
+	_localUser = [[MVIRCChatUser allocWithZone:[self zone]] initLocalUserWithConnection:self];
 	[super _didConnect];
 }
 

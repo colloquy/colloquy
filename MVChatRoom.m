@@ -521,22 +521,22 @@ NSString *MVChatRoomAttributesUpdatedNotification = @"MVChatRoomAttributesUpdate
 
 - (void) _setDateJoined:(NSDate *) date {
 	[_dateJoined autorelease];
-	_dateJoined = [date copy];
+	_dateJoined = [date copyWithZone:[self zone]];
 }
 
 - (void) _setDateParted:(NSDate *) date {
 	[_dateParted autorelease];
-	_dateParted = [date copy];
+	_dateParted = [date copyWithZone:[self zone]];
 }
 
 - (void) _setTopic:(NSData *) topic byAuthor:(MVChatUser *) author withDate:(NSDate *) date {
 	[_topicData autorelease];
-	_topicData = [topic copy];
+	_topicData = [topic copyWithZone:[self zone]];
 
 	[_topicAuthor autorelease];
 	_topicAuthor = [author retain];
 
 	[_dateTopicChanged autorelease];
-	_dateTopicChanged = [date copy];
+	_dateTopicChanged = [date copyWithZone:[self zone]];
 }
 @end

@@ -272,7 +272,7 @@ BOOL MVChatApplicationQuitting = NO;
 
 - (void) setNicknamePassword:(NSString *) password {
 	[_npassword autorelease];
-	if( [password length] ) _npassword = [password copy];
+	if( [password length] ) _npassword = [password copyWithZone:[self zone]];
 	else _npassword = nil;
 }
 
