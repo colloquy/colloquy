@@ -79,7 +79,7 @@ static const double firetalkrates[][4] = {
 	,
 #endif
 #ifndef DISABLE_IRC_PROTOCOL
-	{ 6.0, 1.0, 1.1, 1.5 }
+	{ 6.0, 1.0, 1.5, 2.5 }
 #endif
 };
 
@@ -91,7 +91,7 @@ static const char *defaultserver[] = {
 	,
 #endif
 #ifndef DISABLE_IRC_PROTOCOL
-	"irc.openprojects.net"
+	"irc.freenode.net"
 #endif
 };
 
@@ -509,16 +509,15 @@ void firetalk_internal_send_data(firetalk_t c, char * const data, const int leng
 	if (!c) return;
 
 	curtime = firetalk_gettime();
-	if (curtime > c->lastsend + firetalkrates[c->protocol][1]) {
+	if (curtime > c->lastsend + c->flood_intervals[1]) {
 		c->lastsend = curtime;
 		c->flood = 0;
 	}
 
 	c->flood++;
 
-
 	/* if this isn't an urgent message and (there's already a queue or we're over the flood limit) queue it */
-	if (urgent == 0 && (c->datatail != NULL || c->flood > firetalkrates[c->protocol][0] || c->connected != FCS_ACTIVE)) {
+	if (urgent == 0 && (c->datatail != NULL || c->flood > c->flood_intervals[0] || c->connected != FCS_ACTIVE)) {
 		/* queue */
 		struct s_firetalk_queued_data *d;
 		d = safe_malloc(sizeof(struct s_firetalk_queued_data));
@@ -530,13 +529,13 @@ void firetalk_internal_send_data(firetalk_t c, char * const data, const int leng
 			/* first item in queue */
 			c->datatail = d;
 			c->datahead = d;
-			d->delta = firetalkrates[c->protocol][1];
+			d->delta = c->flood_intervals[1];
 		} else {
 			/* add to end of queue */
 			c->datatail->next = d;
-			d->delta = c->datatail->delta * firetalkrates[c->protocol][2]; /* backoff */
-			if (d->delta > firetalkrates[c->protocol][3]) /* enforce ceiling */
-				d->delta = firetalkrates[c->protocol][3];
+			d->delta = c->datatail->delta * c->flood_intervals[2]; /* backoff */
+			if (d->delta > c->flood_intervals[3]) /* enforce ceiling */
+				d->delta = c->flood_intervals[3];
 			c->datatail = d;
 		}
 		firetalk_callback_backlog(c);
@@ -1975,6 +1974,10 @@ firetalk_t firetalk_create_handle(const int protocol, void *clientstruct) {
 	handle_head->connected = FCS_NOTCONNECTED;
 	handle_head->protocol = protocol;
 	handle_head->handle = protocol_functions[protocol].create_handle();
+	handle_head->flood_intervals[0] = firetalkrates[protocol][0];
+	handle_head->flood_intervals[1] = firetalkrates[protocol][1];
+	handle_head->flood_intervals[2] = firetalkrates[protocol][2];
+	handle_head->flood_intervals[3] = firetalkrates[protocol][3];
 	return handle_head;
 }
 
@@ -2115,6 +2118,13 @@ void firetalk_destroy_handle(firetalk_t conn) {
 //end add
 	free(conn);
 	return;
+}
+
+void firetalk_set_flood_intervals(firetalk_t conn, const double flood, const double delay, const double backoff, const double ceiling ) {
+	conn->flood_intervals[0] = flood;
+	conn->flood_intervals[1] = delay;
+	conn->flood_intervals[2] = backoff;
+	conn->flood_intervals[3] = ceiling;
 }
 
 enum firetalk_error firetalk_disconnect(firetalk_t conn) {

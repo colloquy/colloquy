@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <netinet/in.h>
 
 #define LIBFIRETALK_VERSION "0.1.0 (Javelin.cc Extensions)"
-#define LIBFIRETALK_HOMEPAGE "http://www.javelin.cc?firetalk"
+#define LIBFIRETALK_HOMEPAGE "http://www.penguinhosting.net/~ian/firetalk/"
 
 #ifndef _HAVE_FIRETALK_T
 typedef void * firetalk_t;
@@ -195,6 +195,7 @@ const char *firetalk_strprotocol(const enum firetalk_protocol p);
 const char *firetalk_strerror(const enum firetalk_error e);
 firetalk_t firetalk_create_handle(const int protocol, void *clientstruct);
 void firetalk_destroy_handle(firetalk_t conn);
+void firetalk_set_flood_intervals(firetalk_t conn, const double flood, const double delay, const double backoff, const double ceiling );
 enum firetalk_protocol firetalk_get_protocol(firetalk_t conn);
 
 enum firetalk_error firetalk_disconnect(firetalk_t conn);

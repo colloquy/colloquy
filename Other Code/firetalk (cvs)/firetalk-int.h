@@ -153,6 +153,7 @@ struct s_firetalk_handle {
 	struct s_firetalk_subcode_callback *subcode_reply_default;
 	double lastsend;
 	double lasttransmit;
+	double flood_intervals[4];
 	int flood;
 	/* next data to send */
 	struct s_firetalk_queued_data *datahead;
