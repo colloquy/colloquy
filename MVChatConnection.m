@@ -1370,8 +1370,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ! [self _irssiConnectSettings] ) return;
 	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
 
-	if( _lastConnectAttempt && [_lastConnectAttempt timeIntervalSinceNow] > -10. ) {
-		[self _scheduleReconnectAttemptEvery:15.];
+	if( _lastConnectAttempt && [_lastConnectAttempt timeIntervalSinceNow] > -15. ) {
+		[self _scheduleReconnectAttemptEvery:20.];
 		return;
 	}
 
@@ -1390,6 +1390,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	}
 
 	proto -> server_connect( [self _irssiConnection] );
+
+	[_lastConnectAttempt autorelease];
+	_lastConnectAttempt = [[NSDate date] retain];
 }
 
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname {
