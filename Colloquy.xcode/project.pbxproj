@@ -4319,7 +4319,7 @@
 		1CD9DF6507D934F70006BB99 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.sdef;
+			lastKnownFileType = text.xml;
 			name = Colloquy.sdef;
 			path = Resources/Colloquy.sdef;
 			refType = 4;
