@@ -1,5 +1,6 @@
 @interface NSNotificationCenter (NSNotificationAdditions)
 - (void) postNotificationOnMainThread:(NSNotification *) notification;
+- (void) postNotificationOnMainThread:(NSNotification *) notification waitUntilDone:(BOOL) wait;
 @end
 
 @interface NSNotificationQueue (NSNotificationAdditions)

@@ -2,11 +2,11 @@
 
 @implementation NSNotificationCenter (NSNotificationAdditions)
 - (void) postNotificationOnMainThread:(NSNotification *) notification {
-	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:notification waitUntilDone:YES];
+	[self postNotificationOnMainThread:notification waitUntilDone:NO];
 }
 
-- (void) _postNotification:(NSNotification *) notification {
-	[self postNotification:notification];
+- (void) postNotificationOnMainThread:(NSNotification *) notification waitUntilDone:(BOOL) wait {
+	[self performSelectorOnMainThread:@selector( postNotification: ) withObject:notification waitUntilDone:wait];
 }
 @end
 
