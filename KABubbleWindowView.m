@@ -1,3 +1,4 @@
+#import <Cocoa/Cocoa.h>
 #import "KABubbleWindowView.h"
 
 void KABubbleShadeInterpolate( void *info, float const *inData, float *outData ) {

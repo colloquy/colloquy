@@ -1,13 +1,11 @@
-/* KABubbleWindowController */
+#import <AppKit/NSWindowController.h>
 
-#import <Cocoa/Cocoa.h>
+@class NSTimer;
 
 @interface KABubbleWindowController : NSWindowController {
-	NSTimer *animationTimer;
+	NSTimer *_animationTimer;
+	unsigned int _depth;
 }
-
-- (void) fadeIn:(NSTimer *) inTimer;
-- (void) fadeOut:(NSTimer *) inTimer;
-- (void) stopTimer;
-
+- (void) startFadeIn;
+- (void) startFadeOut;
 @end
