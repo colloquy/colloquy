@@ -71,6 +71,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
 - (NSString *) _applyStyleOnXMLDocument:(xmlDocPtr) doc;
+- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 @end
 
 #pragma mark -
@@ -299,6 +300,16 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 #pragma mark -
 
+- (BOOL) acceptsDraggedFileOfType:(NSString *) type {
+	return YES;
+}
+
+- (void) handleDraggedFile:(NSString *) path {
+	[[self connection] sendFileToUser:_target withFilePath:path];
+}
+
+#pragma mark -
+
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	if( returnCode == NSOKButton ) xmlSetProp( xmlDocGetRootElement( _xmlLog ), "ended", [[[NSDate date] description] UTF8String] );
 	[super savePanelDidEnd:sheet returnCode:returnCode contextInfo:contextInfo];
@@ -517,8 +528,6 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		}
 
 		[_logLock unlock];
-
-		_firstMessage = NO;
 	} else {
 		if( ! _xmlQueue ) {
 			_xmlQueue = xmlNewDoc( "1.0" );
@@ -528,6 +537,8 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	}
 
 	xmlFreeDoc( doc );
+
+	_firstMessage = NO;
 }
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
@@ -613,8 +624,6 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		}
 
 		[_logLock unlock];
-
-		_firstMessage = NO;
 	} else {
 		if( ! _xmlQueue ) {
 			_xmlQueue = xmlNewDoc( "1.0" );
@@ -625,6 +634,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 	xmlFreeDoc( doc );
 
+	_firstMessage = NO;
 	_newMessage = YES;
 
 	[_windowController reloadListItem:self andChildren:NO];
