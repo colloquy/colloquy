@@ -1,31 +1,63 @@
 #import <Cocoa/Cocoa.h>
 #import "MVTextView.h"
 
+@interface MVTextView (MVTextViewPrivate)
+- (BOOL) checkKeyEvent:(NSEvent *) event;
+- (BOOL) triggerKeyEvent:(NSEvent *) event;
+@end
+
 @implementation MVTextView
-- (void)interpretKeyEvents:(NSArray *)eventArray
-{
+- (void) interpretKeyEvents:(NSArray *) eventArray {
 	NSMutableArray *newArray = [NSMutableArray array];
 	NSEnumerator *e = [eventArray objectEnumerator];
-	id anEvent;
-	
-	if (![self isEditable]) {
+	NSEvent *anEvent = nil;
+
+	if( ! [self isEditable] ) {
 		[super interpretKeyEvents:eventArray];
 		return;
 	}
-	
-	while (anEvent = [e nextObject]) {
-		if (![self checkKeyEvent:(NSEvent *)anEvent])
+
+	while( anEvent = [e nextObject] ) {
+		if( [self checkKeyEvent:anEvent] ) {
+			if( [newArray count] > 0 ) {
+				[super interpretKeyEvents:newArray];
+				[newArray removeAllObjects];
+			}
+			if( ! [self triggerKeyEvent:anEvent] )
+				[newArray addObject:anEvent];
+		} else {
 			[newArray addObject:anEvent];
+		}
 	}
-	
-	if ([newArray count] > 0)
+
+	if( [newArray count] > 0 )
 		[super interpretKeyEvents:newArray];
-	
+
 	if( ! [[self textStorage] length] )
 		[self reset:nil];
 }
 
-- (BOOL)checkKeyEvent:(NSEvent *) event {
+- (BOOL) checkKeyEvent:(NSEvent *) event {
+	unichar chr = 0;
+	if( [[event charactersIgnoringModifiers] length] )
+		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
+
+	if( chr == NSCarriageReturnCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
+		return YES;
+	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
+		return YES;
+	} else if( chr == NSTabCharacter && [[self delegate] respondsToSelector:@selector( textView:tabKeyPressed: )]) {
+		return YES;
+	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
+		return YES;
+	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
+		return YES;
+	}
+	
+	return NO;
+}
+
+- (BOOL) triggerKeyEvent:(NSEvent *) event {
 	unichar chr = 0;
 	if( [[event charactersIgnoringModifiers] length] )
 		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
@@ -41,7 +73,7 @@
 	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
 		if( [[self delegate] textView:self functionKeyPressed:event] ) return YES;
 	}
-	
+
 	return NO;
 }
 
