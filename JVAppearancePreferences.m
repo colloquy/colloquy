@@ -115,6 +115,7 @@
 
 - (void) initializeFromDefaults {
 	[preview setPolicyDelegate:self];
+	[preview setFrameLoadDelegate:self];
 	[preview setUIDelegate:self];
 	[optionsTable setRefusesFirstResponder:YES];
 
@@ -179,9 +180,9 @@
 	[_styleOptions autorelease];
 	_styleOptions = [[_style styleSheetOptions] mutableCopy];
 
+	[[preview window] disableFlushWindow];
+
 	[preview setPreferencesIdentifier:[_style identifier]];
-	// we shouldn't have to post this notification manually, but this seems to make webkit refresh with new prefs
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"WebPreferencesChangedNotification" object:[preview preferences]];
 
 	WebPreferences *prefs = [preview preferences];
 	[prefs setAutosaves:YES];
@@ -202,6 +203,9 @@
 
 	[self updatePreview];
 	[self parseStyleOptions];
+
+	if( [[preview window] isFlushWindowDisabled] )
+		[[preview window] enableFlushWindow];
 }
 
 - (IBAction) noGraphicEmoticons:(id) sender {
@@ -331,6 +335,8 @@
 	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, [[_style mainStyleSheetLocation] absoluteString], [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString], [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
 
 	[WebCoreCache empty];
+
+	[[preview window] disableFlushWindow];
 	[[preview mainFrame] loadHTMLString:html baseURL:nil];
 }
 
@@ -361,6 +367,11 @@
 		[[NSWorkspace sharedWorkspace] openURL:url];	
 		[listener ignore];
 	}
+}
+
+- (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
+	if( [[preview window] isFlushWindowDisabled] )
+		[[preview window] enableFlushWindow];
 }
 
 #pragma mark -
