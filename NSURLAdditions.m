@@ -4,44 +4,90 @@
 
 @implementation NSURL (NSURLAdditions)
 + (id) URLWithInternetLocationFile:(NSString *) path {
-	NSEnumerator *enumerator = [[[NSWorkspace sharedWorkspace] launchedApplications] objectEnumerator];
-	NSDictionary *info = nil;
-	BOOL finderLaunched = NO;
-
-	while( ( info = [enumerator nextObject] ) )
-		if( [[info objectForKey:@"NSApplicationBundleIdentifier"] isEqualToString:@"com.apple.finder"] ) 
-			finderLaunched = YES;
-
-	if( finderLaunched ) {
-		NSAppleScript *script = [[[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"Finder\" to return location of internet location file (POSIX file \"%@\")", path]] autorelease]; 
-		NSAppleEventDescriptor *result = [script executeAndReturnError:NULL];
-		if( ! [[result stringValue] length] ) return nil;
-		NSURL *ret = [NSURL URLWithString:[result stringValue]];
-		return [[ret retain] autorelease];
+	const char *fileSystemPath = [[NSFileManager defaultManager] fileSystemRepresentationWithPath:path];
+	FSRef ref;
+	if( FSPathMakeRef((UInt8 *)fileSystemPath, &ref, NULL) != 0 ) {
+		NSLog(@"Couldn't make FSRef from: %@", path);
+		return nil;
 	}
-
-	return nil;
+	short fileRefNum;
+	if( (fileRefNum = FSOpenResFile(&ref, fsRdPerm)) == -1 ) {
+		NSLog(@"Couldn't open inetloc file at: %@", path);
+		return nil;
+	}
+	if( Count1Resources('url ') == 0 ) {
+		NSLog(@"Inetloc file '%@' contains no 'url ' resources", path);
+		CloseResFile(fileRefNum);
+		return nil;
+	}
+	Handle res = Get1IndResource('url ', 1);
+	NSString *urlString = [[[NSString alloc] initWithBytes:*res length:GetHandleSize(res)
+												  encoding:NSUTF8StringEncoding] autorelease];
+	NSURL *url = [NSURL URLWithString:urlString];
+	ReleaseResource(res);
+	CloseResFile(fileRefNum);
+	
+	return url;
 }
 
 - (void) writeToInternetLocationFile:(NSString *) path {
-	NSEnumerator *enumerator = [[[NSWorkspace sharedWorkspace] launchedApplications] objectEnumerator];
-	NSDictionary *info = nil;
-	BOOL finderLaunched = NO;
-
-	while( ( info = [enumerator nextObject] ) )
-		if( [[info objectForKey:@"NSApplicationBundleIdentifier"] isEqualToString:@"com.apple.finder"] ) 
-			finderLaunched = YES;
-
-	if( finderLaunched ) {
-		NSString *folderPath = [[path stringByExpandingTildeInPath] stringByDeletingLastPathComponent];
-		NSString *fileName = [path lastPathComponent];
-
-		[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
-
-		if( [[path pathExtension] isEqualToString:@"inetloc"] || [[path pathExtension] isEqualToString:@"webloc"] || [[path pathExtension] isEqualToString:@"ftploc"] || [[path pathExtension] isEqualToString:@"mailloc"] || [[path pathExtension] isEqualToString:@"afploc"] ) fileName = [fileName stringByDeletingPathExtension];
-
-		NSAppleScript *script = [[[NSAppleScript alloc] initWithSource:[NSString stringWithFormat:@"tell application \"Finder\" to make new internet location file to \"%@\" at (POSIX file \"%@\") with properties {name:\"%@\", comment:\"%@\"}", [self absoluteString], folderPath, fileName, [self absoluteString]]] autorelease];
-		[script executeAndReturnError:NULL];
+	if( !( [[path pathExtension] isEqualToString:@"inetloc"] ||
+		   [[path pathExtension] isEqualToString:@"webloc"] ||
+		   [[path pathExtension] isEqualToString:@"ftploc"] ||
+		   [[path pathExtension] isEqualToString:@"mailloc"] ||
+		   [[path pathExtension] isEqualToString:@"afploc"] ) )
+		path = [path stringByAppendingPathExtension:@"inetloc"];
+	[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
+	NSString *parentPath = [path stringByDeletingLastPathComponent];
+	NSString *pathName = [path lastPathComponent];
+	const char *fileSystemPath = [[NSFileManager defaultManager] fileSystemRepresentationWithPath:parentPath];
+	FSRef ref, parentRef;
+	if( FSPathMakeRef(fileSystemPath, &parentRef, FALSE) != 0) {
+		NSLog(@"Couldn't make FSRef from: %@", parentPath);
+		return;
 	}
+	short fileRefNum;
+	unichar *buffer = (unichar *)calloc([pathName length], sizeof(unichar));
+	[pathName getCharacters:buffer];
+	FSCreateResFile(&parentRef, [pathName length], buffer, 0, NULL, &ref, NULL);
+	free(buffer);
+	if( (fileRefNum = FSOpenResFile(&ref, fsWrPerm)) == -1 ) {
+		NSLog(@"Couldn't open inetloc at: %@", path);
+		[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
+		return;
+	}
+	
+	// Create the 'drag' resource first
+	Handle res = NewHandle(48);
+	Byte dragBuffer[48] = {
+		0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02,
+		0x54, 0x45, 0x58, 0x54, 0x00, 0x00, 0x01, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x75, 0x72, 0x6C, 0x20, 0x00, 0x00, 0x01, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	};
+	memcpy(*res, &dragBuffer, sizeof(dragBuffer));
+	AddResource(res, 'drag', 128, "");
+	
+	// Create the 'TEXT' and 'url ' resources
+	NSString *urlString = [self absoluteString];
+	const char *utf8string = [urlString UTF8String];
+	
+	res = NewHandle(strlen(utf8string));
+	memcpy(*res, utf8string, strlen(utf8string));
+	AddResource(res, 'TEXT', 256, ""); // This takes over the Handle - don't dispose it
+	
+	res = NewHandle(strlen(utf8string));
+	memcpy(*res, utf8string, strlen(utf8string));
+	AddResource(res, 'url ', 256, ""); // This takes over the Handle - don't dispose it
+	
+	CloseResFile(fileRefNum);
+	
+	// Set the file type/creator
+	[[NSFileManager defaultManager] changeFileAttributes:
+		[NSDictionary dictionaryWithObjectsAndKeys:
+			[NSNumber numberWithUnsignedLong:'ilge'], NSFileHFSTypeCode,
+			[NSNumber numberWithUnsignedLong:'MACS'], NSFileHFSCreatorCode, nil] atPath:path];
 }
 @end
