@@ -781,7 +781,8 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	[display setFrameLoadDelegate:nil];
 
-	[[display window] enableFlushWindow];
+	if( [[display window] isFlushWindowDisabled] )
+		[[display window] enableFlushWindow];
 
 	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
 	[scrollView setHasHorizontalScroller:NO];
