@@ -12,6 +12,24 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 
 #pragma mark -
 
+@interface NSArray (NSAppleEventDescriptor)
++ (id) arrayWithAppleEventDescriptor:(NSAppleEventDescriptor *) descriptor;
+@end
+
+#pragma mark -
+
+@interface NSDictionary (NSAppleEventDescriptor)
++ (id) dictionaryWithAppleEventDescriptor:(NSAppleEventDescriptor *) descriptor;
+@end
+
+#pragma mark -
+
+@interface NSAppleEventDescriptor (NSAppleEventDescriptorObjectValue)
+- (id) objectValue;
+@end
+
+#pragma mark -
+
 @implementation NSAppleScript (NSAppleScriptIdentifier)
 - (NSNumber *) scriptIdentifier {
 	return [NSNumber numberWithUnsignedLong:_compiledScriptID];
@@ -92,26 +110,36 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 #pragma mark -
 
 @implementation NSArray (NSAppleEventDescriptor)
++ (id) arrayWithAppleEventDescriptor:(NSAppleEventDescriptor *) descriptor {
+	unsigned int c = [descriptor numberOfItems];
+	id ret = [NSMutableArray arrayWithCapacity:c];
+	unsigned int i = 1;
+
+	for( i = 1, c = [descriptor numberOfItems]; i <= c; i++ ) {
+		id value = [[descriptor descriptorAtIndex:i] objectValue];
+		if( value ) [ret addObject:value];
+	}
+
+	return ret;
+}
+
 - (NSAppleEventDescriptor *) appleEventDescriptor {
 	NSAppleEventDescriptor *list = [NSAppleEventDescriptor listDescriptor];
-	unsigned int count = 1;
+	NSAppleEventDescriptor *descriptor = nil;
 	NSEnumerator *enumerator = [self objectEnumerator];
+	unsigned int count = 1;
 	id value = nil;
 
 	while( ( value = [enumerator nextObject] ) ) {
 		if( [value isKindOfClass:[NSValue class]] || [value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]] ) {
-			[list insertDescriptor:[value appleEventDescriptor] atIndex:count];
-			count++;
+			descriptor = [value appleEventDescriptor];
 		} else if( [value isKindOfClass:[NSNull class]] ) {
-			[list insertDescriptor:[NSAppleEventDescriptor nullDescriptor] atIndex:count];
-			count++;
-		} else {
-			NSAppleEventDescriptor *descriptor = [[value objectSpecifier] _asDescriptor];
-			if( descriptor ) {
-				[list insertDescriptor:descriptor atIndex:count];
-				count++;
-			}
-		}
+			descriptor = [NSAppleEventDescriptor nullDescriptor];
+		} else descriptor = [[value objectSpecifier] _asDescriptor];
+
+		if( ! descriptor ) descriptor = [NSAppleEventDescriptor nullDescriptor];
+		[list insertDescriptor:descriptor atIndex:count];
+		count++;
 	}
 
 	return list;
@@ -121,6 +149,23 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 #pragma mark -
 
 @implementation NSDictionary (NSAppleEventDescriptor)
++ (id) dictionaryWithAppleEventDescriptor:(NSAppleEventDescriptor *) descriptor {
+	if( ! [descriptor numberOfItems] ) return nil;
+
+	descriptor = [descriptor descriptorAtIndex:1];
+	unsigned int c = [descriptor numberOfItems];
+	id ret = [NSMutableDictionary dictionaryWithCapacity:c];
+	unsigned int i = 1;
+
+	for( i = 1, c = [descriptor numberOfItems]; i <= c; i += 2 ) {
+		NSString *key = [[descriptor descriptorAtIndex:i] stringValue];
+		id value = [[descriptor descriptorAtIndex:(i + 1)] objectValue];
+		if( key && value ) [ret setObject:value forKey:key];
+	}
+
+	return ret;
+}
+
 - (NSAppleEventDescriptor *) appleEventDescriptor {
 	NSAppleEventDescriptor *record = [NSAppleEventDescriptor recordDescriptor];
 	NSAppleEventDescriptor *descriptor = nil;
@@ -136,10 +181,37 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 			descriptor = [NSAppleEventDescriptor nullDescriptor];
 		} else descriptor = [[value objectSpecifier] _asDescriptor];
 
-		if( descriptor ) [record setDescriptor:descriptor forKeyword:[key fourCharCode]];
+		if( ! descriptor ) descriptor = [NSAppleEventDescriptor nullDescriptor];
+		[record setDescriptor:descriptor forKeyword:[key fourCharCode]];
 	}
 
 	return record;
+}
+@end
+
+#pragma mark -
+
+@implementation NSAppleEventDescriptor (NSAppleEventDescriptorObjectValue)
+- (id) objectValue {
+	switch( [self descriptorType] ) {
+		case typeChar:
+		case typeUnicodeText: return [self stringValue];
+		case typeBoolean: return [NSNumber numberWithBool:(BOOL)[self booleanValue]];
+		case typeTrue: return [NSNumber numberWithBool:YES];
+		case typeFalse: return [NSNumber numberWithBool:NO];
+		case typeShortInteger: return [NSNumber numberWithInt:(int)[self int32Value]];
+		case typeLongInteger: return [NSNumber numberWithLong:(long)[self int32Value]];
+		case typeType: return [NSNumber numberWithUnsignedLong:(unsigned long)[self typeCodeValue]];
+		case typeEnumerated: return [NSNumber numberWithUnsignedLong:(unsigned long)[self enumCodeValue]];
+		case typeMagnitude: return [NSNumber numberWithUnsignedLong:(unsigned long)[self int32Value]];
+		case typeShortFloat: return [NSNumber numberWithBytes:[[self data] bytes] objCType:@encode( float )];
+		case typeLongFloat: return [NSNumber numberWithBytes:[[self data] bytes] objCType:@encode( double )];
+		case typeAERecord: return [NSDictionary dictionaryWithAppleEventDescriptor:self];
+		case typeAEList: return [NSArray arrayWithAppleEventDescriptor:self];
+		case typeNull: return [NSNull null];
+	}
+
+	return [self data];
 }
 @end
 
@@ -195,29 +267,15 @@ static unsigned long MVChatScriptPluginClass = 'cplG';
 			descriptor = [NSAppleEventDescriptor nullDescriptor];
 		} else descriptor = [[value objectSpecifier] _asDescriptor];
 
-		if( descriptor ) [event setDescriptor:descriptor forKeyword:[key fourCharCode]];
+		if( ! descriptor ) descriptor = [NSAppleEventDescriptor nullDescriptor];
+		[event setDescriptor:descriptor forKeyword:[key fourCharCode]];
 	}
 
-	NSDictionary *errors = nil;
-	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:&errors];
+	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:NULL];
 
-	if( [[errors objectForKey:NSAppleScriptErrorNumber] isEqual:[NSNumber numberWithInt:-1708]] )
-		return nil;
+	if( ! result ) return nil;
 
-	switch( [result descriptorType] ) {
-		case typeChar:
-		case typeUnicodeText: return [result stringValue];
-		case typeBoolean: return [NSNumber numberWithBool:(BOOL)[result booleanValue]];
-		case typeTrue: return [NSNumber numberWithBool:YES];
-		case typeFalse: return [NSNumber numberWithBool:NO];
-		case typeShortInteger: return [NSNumber numberWithInt:(int)[result int32Value]];
-		case typeLongInteger: return [NSNumber numberWithLong:(long)[result int32Value]];
-		case typeMagnitude: return [NSNumber numberWithUnsignedLong:(unsigned long)[result int32Value]];
-		case typeShortFloat: return [NSNumber numberWithBytes:[[result data] bytes] objCType:@encode( float )];
-		case typeLongFloat: return [NSNumber numberWithBytes:[[result data] bytes] objCType:@encode( double )];
-	}
-
-	return [NSNull null];
+	return [result objectValue];
 }
 
 #pragma mark -
