@@ -510,6 +510,7 @@
 	[[self window] disableFlushWindow];
 
 	id item = [(JVChatTabItem *)[tabView selectedTabViewItem] chatViewController];
+	if( ! item ) goto end;
 
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
 		id lastActive = _activeViewController;
@@ -537,6 +538,7 @@
 
 	[self _refreshWindowTitle];
 
+end:
 	[[self window] displayIfNeeded];
 	[[self window] enableFlushWindow];
 }

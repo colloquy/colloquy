@@ -67,7 +67,7 @@ extern NSString *JVChatViewPboardType;
 - (NSNumber *) uniqueIdentifier;
 @end
 
-@protocol JVChatViewController <NSObject, JVChatListItem>
+@protocol JVChatViewController <JVChatListItem>
 - (MVChatConnection *) connection;
 
 - (JVChatWindowController *) windowController;
