@@ -600,13 +600,13 @@
 				<key>name</key>
 				<dict>
 					<key>Description</key>
-					<string>A name for this type of event message. This is not visible to the user, and should be fairly unique.</string>
+					<string>A name for this type of event message. This is not visible to the user, and should be fairly unique. Defaults to a name based on the calling script.</string>
 					<key>Name</key>
 					<string>with name</string>
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user.</string>
+			<string>Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user. Defaults to the active panel of the front window if no other tell block specifies the target.</string>
 			<key>Name</key>
 			<string>add event message</string>
 			<key>UnnamedArgument</key>

@@ -46,7 +46,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			},
 
 			"add event message",
-			"Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user.",
+			"Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user. Defaults to the active panel of the front window if no other tell block specifies the target.",
 			'coRC', 'aEvX',
 			reply_none__,
 			'TEXT',
@@ -165,6 +165,13 @@ resource 'aete' (0, "Colloquy Terminology") {
 
 			"item", 'cobj',
 			"A scriptable object.",
+			{
+			},
+			{
+			},
+
+			"application", 'capp',
+			"The Colloquy application'",
 			{
 			},
 			{
@@ -474,7 +481,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			/* Events */
 
 			"add event message",
-			"Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user.",
+			"Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user. Defaults to the active panel of the front window if no other tell block specifies the target.",
 			'coRC', 'aEvX',
 			reply_none__,
 			'TEXT',
@@ -483,8 +490,8 @@ resource 'aete' (0, "Colloquy Terminology") {
 			singleItem, notEnumerated, Reserved13,
 			{
 				"with name", 'aEv2', 'TEXT',
-				"A name for this type of event message. This is not visible to the user, and should be fairly unique.",
-				required,
+				"A name for this type of event message. This is not visible to the user, and should be fairly unique. Defaults to a name based on the calling script.",
+				optional,
 				singleItem, notEnumerated, Reserved13,
 				"and attributes", 'aEv3', 'reco',
 				"Custom information to be stored with this event message. Can be used by chat styles and is saved in transcripts.",
@@ -565,7 +572,8 @@ resource 'aete' (0, "Colloquy Terminology") {
 				'dchM', { },
 				'crmM', { },
 				'conM', { },
-				'budM', { }
+				'budM', { },
+				'flTx', { }
 			},
 			"applications", 'capp', plural__,
 
@@ -1222,7 +1230,62 @@ resource 'aete' (0, "Colloquy Terminology") {
 				'chRm', { },
 				'chUs', { }
 			},
-			"connections", 'conM', plural__
+			"connections", 'conM', plural__,
+
+			"file transfer", 'flTx',
+			"Represents a file transfer with another chat user.",
+			{
+				"id", 'ID  ', 'nmbr',
+				"The unique identifier of the file transfer.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12,
+
+				"type", 'typA', 'ftTE',
+				"The type of this transfer.",
+				reserved, singleItem, enumerated, readOnly, Reserved12,
+
+				"file", 'kfil', 'file',
+				"The file this transfer is associated with.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12,
+
+				"status", 'stsA', 'ftSt',
+				"The current status of the transfer.",
+				reserved, singleItem, enumerated, readOnly, Reserved12,
+
+				"start date", 'sDtA', 'ldt ',
+				"The date and time this file transfer started.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12,
+
+				"start offset", 'sOfA', 'nmbr',
+				"The location (offset) in the file where transfer was resumed.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12,
+
+				"chat user", 'chUs', 'chUs',
+				"The chat user this transfer is with.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12,
+
+				"host address", 'HoSA', 'TEXT',
+				"The address of the other user engaged in the transfer.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12,
+
+				"port", 'pOrA', 'nmbr',
+				"The port this the transfer is using.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12,
+
+				"passive", 'pAsA', 'bool',
+				"Is the transfer using passive mode?",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12,
+
+				"final size", 'fSzA', 'nmbr',
+				"The final expected size (in bytes) of the file.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12,
+
+				"transfered size", 'TrzA', 'nmbr',
+				"The current size (in bytes) this file has transfered.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12
+			},
+			{
+			},
+			"file transfers", 'flTx', plural__
 		},
 		{
 			/* Comparisons */
@@ -1292,6 +1355,21 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"GBK", 'gbKK', "",
 				"Big 5", 'biG5', "",
 				"Big 5 HKSCS", 'bG5H', ""
+			},
+
+			'ftTE',
+			{
+				"upload", 'fTtU', "",
+				"download", 'fTtD', ""
+			},
+
+			'ftSt',
+			{
+				"done", 'trDn', "",
+				"in progress", 'trNo', "",
+				"waiting", 'trHo', "",
+				"stopped", 'trSt', "",
+				"error", 'trEr', ""
 			}
 		},
 

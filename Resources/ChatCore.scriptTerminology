@@ -292,6 +292,102 @@
 			<key>PluralName</key>
 			<string>chat users</string>
 		</dict>
+		<key>MVFileTransfer</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>finalSize</key>
+				<dict>
+					<key>Description</key>
+					<string>The final expected size (in bytes) of the file.</string>
+					<key>Name</key>
+					<string>final size</string>
+				</dict>
+				<key>hostString</key>
+				<dict>
+					<key>Description</key>
+					<string>The address of the other user engaged in the transfer.</string>
+					<key>Name</key>
+					<string>host address</string>
+				</dict>
+				<key>isPassive</key>
+				<dict>
+					<key>Description</key>
+					<string>Is the transfer using passive mode?</string>
+					<key>Name</key>
+					<string>passive</string>
+				</dict>
+				<key>port</key>
+				<dict>
+					<key>Description</key>
+					<string>The port this the transfer is using.</string>
+					<key>Name</key>
+					<string>port</string>
+				</dict>
+				<key>scriptFilePath</key>
+				<dict>
+					<key>Description</key>
+					<string>The file this transfer is associated with.</string>
+					<key>Name</key>
+					<string>file</string>
+				</dict>
+				<key>scriptType</key>
+				<dict>
+					<key>Description</key>
+					<string>The type of this transfer.</string>
+					<key>Name</key>
+					<string>type</string>
+				</dict>
+				<key>startDate</key>
+				<dict>
+					<key>Description</key>
+					<string>The date and time this file transfer started.</string>
+					<key>Name</key>
+					<string>start date</string>
+				</dict>
+				<key>startOffset</key>
+				<dict>
+					<key>Description</key>
+					<string>The location (offset) in the file where transfer was resumed.</string>
+					<key>Name</key>
+					<string>start offset</string>
+				</dict>
+				<key>status</key>
+				<dict>
+					<key>Description</key>
+					<string>The current status of the transfer.</string>
+					<key>Name</key>
+					<string>status</string>
+				</dict>
+				<key>transfered</key>
+				<dict>
+					<key>Description</key>
+					<string>The current size (in bytes) this file has transfered.</string>
+					<key>Name</key>
+					<string>transfered size</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the file transfer.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat user this transfer is with.</string>
+					<key>Name</key>
+					<string>chat user</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Represents a file transfer with another chat user.</string>
+			<key>Name</key>
+			<string>file transfer</string>
+			<key>PluralName</key>
+			<string>file transfers</string>
+		</dict>
 	</dict>
 	<key>Commands</key>
 	<dict>
@@ -629,6 +725,47 @@
 			<dict>
 				<key>Name</key>
 				<string>Windows Trad. Chinese</string>
+			</dict>
+		</dict>
+		<key>FileTransferStatus</key>
+		<dict>
+			<key>Done</key>
+			<dict>
+				<key>Name</key>
+				<string>done</string>
+			</dict>
+			<key>Error</key>
+			<dict>
+				<key>Name</key>
+				<string>error</string>
+			</dict>
+			<key>InProgress</key>
+			<dict>
+				<key>Name</key>
+				<string>in progress</string>
+			</dict>
+			<key>Stopped</key>
+			<dict>
+				<key>Name</key>
+				<string>stopped</string>
+			</dict>
+			<key>Waiting</key>
+			<dict>
+				<key>Name</key>
+				<string>waiting</string>
+			</dict>
+		</dict>
+		<key>FileTransferType</key>
+		<dict>
+			<key>Download</key>
+			<dict>
+				<key>Name</key>
+				<string>download</string>
+			</dict>
+			<key>Upload</key>
+			<dict>
+				<key>Name</key>
+				<string>upload</string>
 			</dict>
 		</dict>
 		<key>Proxy</key>

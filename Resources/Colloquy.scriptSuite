@@ -404,7 +404,7 @@
 				<key>ChatCore.SendMessage</key>
 				<string>sendMessageScriptCommand:</string>
 				<key>Colloquy.AddEventMessage</key>
-				<string></string>
+				<string> </string>
 				<key>Colloquy.Send</key>
 				<string>sendMessageScriptCommand:</string>
 			</dict>
@@ -516,6 +516,10 @@
 			<string>NSCoreSuite.AbstractObject</string>
 			<key>SupportedCommands</key>
 			<dict>
+				<key>ChatCore.SendMessage</key>
+				<string>sendMessageScriptCommand:</string>
+				<key>Colloquy.AddEventMessage</key>
+				<string>addEventMessageScriptCommand:</string>
 				<key>Colloquy.newConnection</key>
 				<string>newConnection:</string>
 				<key>NSCoreSuite.Open</key>
@@ -533,6 +537,8 @@
 					<string>budM</string>
 					<key>LocationRequiredToCreate</key>
 					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
 					<key>Type</key>
 					<string>Colloquy.JVBuddy</string>
 				</dict>
@@ -542,6 +548,8 @@
 					<string>conM</string>
 					<key>LocationRequiredToCreate</key>
 					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
 					<key>Type</key>
 					<string>ChatCore.MVChatConnection</string>
 				</dict>
@@ -599,6 +607,17 @@
 					<string>YES</string>
 					<key>Type</key>
 					<string>Colloquy.JVDirectChatPanel</string>
+				</dict>
+				<key>fileTransfers</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>flTx</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVFileTransfer</string>
 				</dict>
 				<key>orderedWindows</key>
 				<dict>
@@ -908,6 +927,8 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>aEv2</string>
+					<key>Optional</key>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>

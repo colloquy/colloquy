@@ -238,6 +238,12 @@
 					<responds-to name="display new connection dialog">
 						<cocoa method="newConnection:"/>
 					</responds-to>
+					<responds-to name="add event message" hidden="hidden">
+						<cocoa method="addEventMessageScriptCommand:"/>
+					</responds-to>
+					<responds-to name="send message" hidden="hidden">
+						<cocoa method="sendMessageScriptCommand:"/>
+					</responds-to>
 				</responds-to-commands>
 			</class>
 			<class name="window" code="cwin" description="A window that can contain panels.">
@@ -541,13 +547,13 @@
 					<cocoa key="echo"/>
 				</parameter>
 			</command>
-			<command name="add event message" code="coRCaEvX" description="Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user.">
+			<command name="add event message" code="coRCaEvX" description="Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user. Defaults to the active panel of the front window if no other tell block specifies the target.">
 				<cocoa class="JVAddEventMessageScriptCommand"/>
 				<direct-parameter type="string" description="Message to add (visible to the user). (Plain text with HTML formatting. Must entity encode HTML special characters.)"/>
 				<parameter name="message" code="aEv1" hidden="hidden" description="Message to add. Can include HTML formatting. This parameter is deprecated, the message is now the direct parameter." type="string" optional="optional">
 					<cocoa key="message"/>
 				</parameter>
-				<parameter name="with name" code="aEv2" description="A name for this type of event message. This is not visible to the user, and should be fairly unique." type="string">
+				<parameter name="with name" code="aEv2" description="A name for this type of event message. This is not visible to the user, and should be fairly unique. Defaults to a name based on the calling script." type="string" optional="optional">
 					<cocoa key="name"/>
 				</parameter>
 				<parameter name="and attributes" code="aEv3" description="Custom information to be stored with this event message. Can be used by chat styles and is saved in transcripts." type="record" optional="optional">
@@ -638,6 +644,17 @@
 				<enumerator name="GBK" code="gbKK"/>
 				<enumerator name="Big 5" code="biG5"/>
 				<enumerator name="Big 5 HKSCS" code="bG5H"/>
+			</enumeration>
+			<enumeration name="file transfer type" code="ftTE">
+				<enumerator name="upload" code="fTtU"/>
+				<enumerator name="download" code="fTtD"/>
+			</enumeration>
+			<enumeration name="file transfer status" code="ftSt">
+				<enumerator name="done" code="trDn"/>
+				<enumerator name="in progress" code="trNo"/>
+				<enumerator name="waiting" code="trHo"/>
+				<enumerator name="stopped" code="trSt"/>
+				<enumerator name="error" code="trEr"/>
 			</enumeration>
 		</types>
 		<classes>

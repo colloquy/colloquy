@@ -1654,6 +1654,36 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 #pragma mark -
 
+@implementation NSApplication (NSApplicationActivePanelScripting)
+- (id) sendMessageScriptCommand:(NSScriptCommand *) command {
+	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
+	id container = [[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:nil key:@"orderedWindows" index:0] autorelease];
+	if( ! container ) return nil;
+
+	classDescription = [NSClassDescription classDescriptionForClass:[NSWindow class]];
+	id specifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"activeChatViewController"] autorelease];
+	if( ! specifier ) return nil;
+
+	[command setSubjectSpecifier:specifier];
+	return [command performDefaultImplementation];
+}
+
+- (id) addEventMessageScriptCommand:(NSScriptCommand *) command {
+	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
+	id container = [[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:nil key:@"orderedWindows" index:0] autorelease];
+	if( ! container ) return nil;
+
+	classDescription = [NSClassDescription classDescriptionForClass:[NSWindow class]];
+	id specifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"activeChatViewController"] autorelease];
+	if( ! specifier ) return nil;
+
+	[command setSubjectSpecifier:specifier];
+	return [command performDefaultImplementation];
+}
+@end
+
+#pragma mark -
+
 @implementation JVDirectChatPanel (JVDirectChatScripting)
 - (id) sendMessageScriptCommand:(NSScriptCommand *) command {
 	NSDictionary *args = [command evaluatedArguments];
@@ -1665,31 +1695,31 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		message = [args objectForKey:@"message"];
 
 	if( ! message ) {
-		[self setScriptErrorNumber:-1715]; // errAEParamMissed
-		[self setScriptErrorString:@"The message was missing."];
+		[command setScriptErrorNumber:-1715]; // errAEParamMissed
+		[command setScriptErrorString:@"The message was missing."];
 		return nil;
 	}
 
 	if( ! [message isKindOfClass:[NSString class]] ) {
 		message = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:message toClass:[NSString class]];
 		if( ! [message isKindOfClass:[NSString class]] ) {
-			[self setScriptErrorNumber:-1700]; // errAECoercionFail
-			[self setScriptErrorString:@"The message was not a string value and coercion failed."];
+			[command setScriptErrorNumber:-1700]; // errAECoercionFail
+			[command setScriptErrorString:@"The message was not a string value and coercion failed."];
 			return nil;
 		}
 	}
 
 	if( ! [(NSString *)message length] ) {
-		[self setScriptErrorNumber:-1715]; // errAEParamMissed
-		[self setScriptErrorString:@"The message can't be blank."];
+		[command setScriptErrorNumber:-1715]; // errAEParamMissed
+		[command setScriptErrorString:@"The message can't be blank."];
 		return nil;
 	}
 
 	if( action && ! [action isKindOfClass:[NSNumber class]] ) {
 		action = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:action toClass:[NSNumber class]];
 		if( ! [action isKindOfClass:[NSNumber class]] ) {
-			[self setScriptErrorNumber:-1700]; // errAECoercionFail
-			[self setScriptErrorString:@"The action tense parameter was not a boolean value and coercion failed."];
+			[command setScriptErrorNumber:-1700]; // errAECoercionFail
+			[command setScriptErrorString:@"The action tense parameter was not a boolean value and coercion failed."];
 			return nil;
 		}
 	}
@@ -1697,8 +1727,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	if( localEcho && ! [localEcho isKindOfClass:[NSNumber class]] ) {
 		localEcho = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:localEcho toClass:[NSNumber class]];
 		if( ! [localEcho isKindOfClass:[NSNumber class]] ) {
-			[self setScriptErrorNumber:-1700]; // errAECoercionFail
-			[self setScriptErrorString:@"The local echo parameter was not a boolean value and coercion failed."];
+			[command setScriptErrorNumber:-1700]; // errAECoercionFail
+			[command setScriptErrorString:@"The local echo parameter was not a boolean value and coercion failed."];
 			return nil;
 		}
 	}
@@ -1751,7 +1781,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		message = [args objectForKey:@"message"];
 	}
 
-	if( ! target || ( target && [target isKindOfClass:[NSArray class]] && ! [target count] ) )
+	if( ! target || ( target && [target isKindOfClass:[NSArray class]] && ! [(NSArray *)target count] ) )
 		return nil; // silently fail like normal tell blocks do when the target is nil or an empty list
 
 	if( ! [target isKindOfClass:[JVDirectChatPanel class]] && ! [target isKindOfClass:[NSArray class]] ) {
@@ -1781,12 +1811,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		return nil;
 	}
 
-	if( ! name ) {
-		[self setScriptErrorNumber:-1715]; // errAEParamMissed
-		[self setScriptErrorString:@"The event name was missing."];
-		return nil;
-	}
-
+	if( ! name ) name = @"unknown";
 	if( ! [name isKindOfClass:[NSString class]] ) {
 		name = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:name toClass:[NSString class]];
 		if( ! [name isKindOfClass:[NSString class]] ) {

@@ -114,9 +114,9 @@
 				<key>ChatCore.Disconnect</key>
 				<string>disconnectScriptCommand:</string>
 				<key>ChatCore.sendMsgToRoom</key>
-				<string></string>
+				<string> </string>
 				<key>ChatCore.sendMsgToUser</key>
-				<string></string>
+				<string> </string>
 			</dict>
 			<key>ToManyRelationships</key>
 			<dict>
@@ -392,6 +392,124 @@
 				<key>ChatCore.RefreshInformation</key>
 				<string>refreshInformationScriptCommand:</string>
 			</dict>
+		</dict>
+		<key>MVFileTransfer</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>flTx</string>
+			<key>Attributes</key>
+			<dict>
+				<key>finalSize</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>fSzA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber</string>
+				</dict>
+				<key>hostString</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>HoSA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>isPassive</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>pAsA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>port</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>pOrA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber</string>
+				</dict>
+				<key>scriptFilePath</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>kfil</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString&lt;FilePath&gt;</string>
+				</dict>
+				<key>scriptType</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>typA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;ChatCore.FileTransferType&gt;</string>
+				</dict>
+				<key>startDate</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sDtA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSDate</string>
+				</dict>
+				<key>startOffset</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sOfA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber</string>
+				</dict>
+				<key>status</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>stsA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;ChatCore.FileTransferStatus&gt;</string>
+				</dict>
+				<key>transfered</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>TrzA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ID  </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber</string>
+				</dict>
+				<key>user</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>chUs</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatUser</string>
+				</dict>
+			</dict>
+			<key>Superclass</key>
+			<string>NSCoreSuite.AbstractObject</string>
 		</dict>
 	</dict>
 	<key>Commands</key>
@@ -836,6 +954,36 @@
 				<string>wnSc</string>
 				<key>WindowsTrad.Chinese</key>
 				<string>wnTc</string>
+			</dict>
+		</dict>
+		<key>FileTransferStatus</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>ftSt</string>
+			<key>Enumerators</key>
+			<dict>
+				<key>Done</key>
+				<string>trDn</string>
+				<key>Error</key>
+				<string>trEr</string>
+				<key>InProgress</key>
+				<string>trNo</string>
+				<key>Stopped</key>
+				<string>trSt</string>
+				<key>Waiting</key>
+				<string>trHo</string>
+			</dict>
+		</dict>
+		<key>FileTransferType</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>ftTE</string>
+			<key>Enumerators</key>
+			<dict>
+				<key>Download</key>
+				<string>fTtD</string>
+				<key>Upload</key>
+				<string>fTtU</string>
 			</dict>
 		</dict>
 		<key>Proxy</key>
