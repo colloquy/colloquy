@@ -570,7 +570,6 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 	} else {
 		silc_client_close_connection( client, conn );
-		[self _setSilcConn:NULL];
 		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	}
 }
@@ -605,6 +604,8 @@ static void silc_ftp( SilcClient client, SilcClientConnection conn, SilcClientEn
 }
 
 static void silc_detach( SilcClient client, SilcClientConnection conn, const unsigned char *detach_data, SilcUInt32 detach_data_len ) {
+	MVSILCChatConnection *self = conn -> context;
+	[self _setDetachInfo:[NSData dataWithBytes:detach_data length:detach_data_len]];
 }
 
 static SilcClientOperations silcClientOps = {
@@ -660,6 +661,7 @@ static SilcClientOperations silcClientOps = {
 		[self setUsername:NSUserName()];
 		[self setRealName:NSFullUserName()];
 
+		_detachInfo = nil;
 		_knownUsers = [[NSMutableDictionary dictionaryWithCapacity:200] retain];
 		_queuedCommands = [[NSMutableArray arrayWithCapacity:5] retain];
 		_sentCommands = [[NSMutableDictionary dictionaryWithCapacity:2] retain];
@@ -695,10 +697,13 @@ static SilcClientOperations silcClientOps = {
 
 	[_sentCommands release];
 	_sentCommands = nil;
-	
+
 	[_knownUsers release];
 	_knownUsers = nil;
-	
+
+	[_detachInfo release];
+	_detachInfo = nil;
+
 	[super dealloc];
 }
 
@@ -751,8 +756,13 @@ static SilcClientOperations silcClientOps = {
 
 	BOOL errorOnConnect = NO;
 
+	SilcClientConnectionParams params;
+	memset( &params, 0, sizeof( params ) );
+	params.detach_data = ( [self _detachInfo] ? (unsigned char *)[[self _detachInfo] bytes] : NULL );
+	params.detach_data_len = ( [self _detachInfo] ? [[self _detachInfo] length] : 0 );
+
 	[_silcClientLock lock];
-	if( silc_client_connect_to_server( [self _silcClient], NULL, [self serverPort], (char *) [[self server] UTF8String], self ) == -1 )
+	if( silc_client_connect_to_server( [self _silcClient], &params, [self serverPort], (char *) [[self server] UTF8String], self ) == -1 )
 		errorOnConnect = YES;
 	[_silcClientLock unlock];
 
@@ -1067,7 +1077,9 @@ static SilcClientOperations silcClientOps = {
 #pragma mark -
 
 - (void) _setSilcConn:(SilcClientConnection) aSilcConn {
+	[[self _silcClientLock] lock];
 	_silcConn = aSilcConn;
+	[[self _silcClientLock] unlock];
 }
 
 - (SilcClientConnection) _silcConn {
@@ -1138,6 +1150,17 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
+- (NSData *) _detachInfo {
+	return [[_detachInfo retain] autorelease];
+}
+
+- (void) _setDetachInfo:(NSData *) info {
+	[_detachInfo autorelease];
+	_detachInfo = [info retain];
+}
+
+#pragma mark -
+
 - (void) _addCommand:(NSString *) raw forNumber:(SilcUInt16) cmd_ident {
 	@synchronized( _sentCommands ) {
 		[_sentCommands setObject:raw forKey:[NSNumber numberWithUnsignedShort:cmd_ident]];
@@ -1174,7 +1197,16 @@ static SilcClientOperations silcClientOps = {
 - (void) _didConnect {
 	[_localUser release];
 	_localUser = [[MVSILCChatUser allocWithZone:[self zone]] initLocalUserWithConnection:self];
+
+	[self _setDetachInfo:nil];
+
 	[super _didConnect];
+}
+
+- (void) _didNotConnect {
+	[self _setSilcConn:NULL];
+	[self _setDetachInfo:nil];
+	[super _didNotConnect];
 }
 
 - (void) _didDisconnect {
@@ -1191,6 +1223,14 @@ static SilcClientOperations silcClientOps = {
 	[super _didDisconnect];
 
 	[self _setSilcConn:NULL];
+}
+
+- (void) _systemWillSleep:(NSNotification *) notification {
+	if( [self isConnected] ) {
+		[self sendRawMessage:@"DETACH"];
+		_status = MVChatConnectionSuspendedStatus;
+		usleep( 5000000 );
+	}
 }
 
 #pragma mark -
