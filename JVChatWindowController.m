@@ -8,6 +8,7 @@
 #import "MVMenuButton.h"
 
 NSString *JVToolbarToggleChatDrawerItemIdentifier = @"JVToolbarToggleChatDrawerItem";
+NSString *JVToolbarToggleChatActivityItemIdentifier = @"JVToolbarToggleChatActivityItem";
 NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 @interface NSToolbar (NSToolbarPrivate)
@@ -69,6 +70,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
+
+	[activityToolbarButton retain];
+	[activityToolbarButton removeFromSuperview];
+	[activityToolbarButton setDrawsArrow:YES];
 
 	[[self window] setFrameUsingName:@"Chat Window"];
 	[[self window] setFrameAutosaveName:@"Chat Window"];
@@ -352,6 +357,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return toolbarItem;
 }
 
+- (NSToolbarItem *) chatActivityToolbarItem {
+	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:JVToolbarToggleChatActivityItemIdentifier] autorelease];
+
+	[toolbarItem setLabel:NSLocalizedString( @"Activity", "chat activity toolbar item name" )];
+	[toolbarItem setPaletteLabel:NSLocalizedString( @"Chat Activity", "chat activity drawer toolbar customize palette name" )];
+
+	[activityToolbarButton setToolbarItem:toolbarItem];
+	[toolbarItem setView:activityToolbarButton];
+
+	return toolbarItem;
+}
+
 - (IBAction) toggleViewsDrawer:(id) sender {
 	[viewsDrawer toggle:sender];
 
@@ -451,14 +468,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[(JVDetailCell *) cell setInformationText:[item information]];
 	[(JVDetailCell *) cell setStatusImage:[item statusImage]];
 
-	[chatViewsOutlineView sizeLastColumnToFit];
+	if( [item respondsToSelector:@selector( isEnabled )] ) {
+		[cell setEnabled:[item isEnabled]];
+	} else [cell setEnabled:YES];
 
-/*	if( ! ( [[chatViewsOutlineView window] firstResponder] == chatViewsOutlineView && [[NSApplication sharedApplication] isActive] ) && [outlineView itemAtRow:[outlineView selectedRow]] == item && ! [item conformsToProtocol:@protocol( JVChatViewController )] ) {
-		[outlineView selectRow:[outlineView rowForItem:_activeViewController] byExtendingSelection:NO];
-		[outlineView reloadItem:_activeViewController reloadChildren:YES];
-		[outlineView redisplayItemEqualTo:_activeViewController];
-		[outlineView setNeedsDisplay:YES];
-	}*/
+	[chatViewsOutlineView sizeLastColumnToFit];
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
@@ -489,6 +503,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldEditTableColumn:(NSTableColumn *) tableColumn item:(id) item {
 	return NO;
+}
+
+- (BOOL) outlineView:(NSOutlineView *) outlineView shouldExpandItem:(id) item {
+	// test here if we are dragging, and don't expand
+	return YES;
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView heightOfRow:(int) row {

@@ -20,6 +20,7 @@
 @protocol JVChatListItem;
 
 extern NSString *JVToolbarToggleChatDrawerItemIdentifier;
+extern NSString *JVToolbarToggleChatActivityItemIdentifier;
 extern NSString *JVChatViewPboardType;
 
 @interface JVChatWindowController : NSWindowController <JVInspectionDelegator> {
@@ -28,6 +29,8 @@ extern NSString *JVChatViewPboardType;
 	IBOutlet NSOutlineView *chatViewsOutlineView;
 	IBOutlet MVMenuButton *viewActionButton;
 	IBOutlet MVMenuButton *favoritesButton;
+	IBOutlet MVMenuButton *activityToolbarButton;
+	NSToolbarItem *_activityToolbarItem;
 	NSView *_placeHolder;
 	NSMutableArray *_views;
 	id <JVChatViewController> _activeViewController;
@@ -53,6 +56,7 @@ extern NSString *JVChatViewPboardType;
 - (id <JVChatListItem>) selectedListItem;
 
 - (NSToolbarItem *) toggleChatDrawerToolbarItem;
+- (NSToolbarItem *) chatActivityToolbarItem;
 - (IBAction) toggleViewsDrawer:(id) sender;
 - (IBAction) openViewsDrawer:(id) sender;
 - (IBAction) closeViewsDrawer:(id) sender;
@@ -108,4 +112,5 @@ extern NSString *JVChatViewPboardType;
 - (BOOL) acceptsDraggedFileOfType:(NSString *) type;
 - (void) handleDraggedFile:(NSString *) path;
 - (IBAction) doubleClicked:(id) sender;
+- (BOOL) isEnabled;
 @end
