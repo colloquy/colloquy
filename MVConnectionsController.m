@@ -5,6 +5,7 @@
 #import "JVConnectionInspector.h"
 #import "MVApplicationController.h"
 #import "JVChatController.h"
+#import "JVChatRoomBrowser.h"
 #import "MVKeyChain.h"
 #import "JVChatRoom.h"
 #import "JVDirectChat.h"
@@ -254,18 +255,9 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 }
 
 - (IBAction) joinRoom:(id) sender {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionGotRoomInfoNotification object:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"]];
-
-	[joinRoom orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:joinRoom];
-
-	if( [connections selectedRow] == -1 ) return;
-
-	[(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] stopFetchingRoomList];
-
-	if( [sender tag] ) {
-		[(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] joinChatRoom:[roomToJoin stringValue]];
-	}
+	if( ! [_bookmarks count] ) return;
+	JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:( [connections selectedRow] == -1 ? nil : [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] )];
+	[[NSApplication sharedApplication] beginSheet:[browser window] modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
 #pragma mark -
@@ -287,8 +279,8 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 #pragma mark -
 
-- (NSSet *) connections {
-	NSMutableSet *ret = [NSMutableSet setWithCapacity:[_bookmarks count]];
+- (NSArray *) connections {
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
 
@@ -298,8 +290,8 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	return [[ret retain] autorelease];
 }
 
-- (NSSet *) connectedConnections {
-	NSMutableSet *ret = [NSMutableSet setWithCapacity:[_bookmarks count]];
+- (NSArray *) connectedConnections {
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
 
@@ -325,8 +317,8 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	return ret;
 }
 
-- (NSSet *) connectionsForServerAddress:(NSString *) address {
-	NSMutableSet *ret = [NSMutableSet setWithCapacity:[_bookmarks count]];
+- (NSArray *) connectionsForServerAddress:(NSString *) address {
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
 
@@ -557,6 +549,9 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		if( [connections selectedRow] == -1 ) return NO;
 	} else if( [menuItem action] == @selector( clear: ) ) {
 		if( [connections selectedRow] == -1 ) return NO;
+	} else if( [menuItem action] == @selector( joinRoom: ) ) {
+		if( ! [_bookmarks count] ) return NO;
+		else return YES;
 	} else if( [menuItem action] == @selector( getInfo: ) ) {
 		if( [connections selectedRow] == -1 ) return NO;
 		else return YES;
@@ -693,7 +688,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		id plist = nil;
 
 		if( row == -1 ) return NO;
-
+		
 		info = [_bookmarks objectAtIndex:row];
 		connection = [info objectForKey:@"connection"];
 		data = [NSData dataWithBytes:&row length:sizeof( &row )];
@@ -802,34 +797,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 #pragma mark -
 
-- (int) numberOfItemsInComboBox:(NSComboBox *) comboBox {
-	if( comboBox == roomToJoin && [connections selectedRow] != -1 ) return [[[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] roomListResults] count];
-	else return 0;
-}
-
-- (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(int) index {
-	if( index == -1 ) return nil;
-	if( comboBox == roomToJoin && [connections selectedRow] != -1 ) return [[[[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] roomListResults] allKeys] objectAtIndex:index];
-	return nil;
-}
-
-- (unsigned int) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
-	if( comboBox == roomToJoin && [connections selectedRow] != -1 ) return [[[[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] roomListResults] allKeys] indexOfObject:string];
-	return NSNotFound;
-}
-
-- (NSString *) comboBox:(NSComboBox *) comboBox completedString:(NSString *) substring {
-	if( comboBox == roomToJoin && [connections selectedRow] != -1 ) {
-		NSEnumerator *enumerator = [[[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] roomListResults] keyEnumerator];
-		NSString *room = nil;
-		while( ( room = [enumerator nextObject] ) )
-			if( [room hasPrefix:substring] ) return room;
-	}
-	return nil;
-}
-
-#pragma mark -
-
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
 
@@ -877,7 +844,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		[toolbarItem setImage:[NSImage imageNamed:@"joinRoom"]];
 
 		[toolbarItem setTarget:self];
-		[toolbarItem setAction:NULL];
+		[toolbarItem setAction:@selector( joinRoom: )];
 	} else if( [itemIdent isEqualToString:MVToolbarQueryUserItemIdentifier] ) {
 		[toolbarItem setLabel:NSLocalizedString( @"Message User", "toolbar message user button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Message User", "toolbar message user button name" )];
@@ -921,10 +888,6 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	}
 	[connections reloadData];
 	[connections noteNumberOfRowsChanged];
-}
-
-- (void) _refreshRooms:(NSNotification *) notification {
-	[roomToJoin noteNumberOfItemsChanged];
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
@@ -1074,7 +1037,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 				[item setImage:[NSImage imageNamed:@"disconnect"]];
 			}
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarJoinRoomItemIdentifier] ) {
-			if( connected ) [item setAction:@selector( _joinRoom: )];
+			if( [_bookmarks count] ) [item setAction:@selector( joinRoom: )];
 			else [item setAction:NULL];
 		} else if( [[item itemIdentifier] isEqualToString:MVToolbarQueryUserItemIdentifier] ) {
 			if( connected ) [item setAction:@selector( _messageUser: )];
@@ -1145,21 +1108,15 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 }
 
 - (void) _disconnect:(id) sender {
-	if( [connections selectedRow] == -1 ) return;
-	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
-	[connection disconnect];
+	unsigned int row = [connections selectedRow];
+	if( row == -1 ) return;
+	[[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] disconnect];
 }
 
 - (void) _delete:(id) sender {
-	if( [connections selectedRow] == -1 ) return;
 	unsigned int row = [connections selectedRow];
-	MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
-    [connection disconnect];
-	[_bookmarks removeObjectAtIndex:row];
-	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
-	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
-	[connections noteNumberOfRowsChanged];
-	[self _saveBookmarkList];
+	if( row == -1 ) return;
+	[self removeConnectionAtIndex:row];
 }
 
 - (void) _messageUser:(id) sender {
@@ -1167,16 +1124,10 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 	[[NSApplication sharedApplication] beginSheet:messageUser modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
-- (void) _joinRoom:(id) sender {
-	if( [connections selectedRow] == -1 ) return;
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshRooms: ) name:MVChatConnectionGotRoomInfoNotification object:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"]];
-	[(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] fetchRoomList];
-	[[NSApplication sharedApplication] beginSheet:joinRoom modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-}
-
 - (void) _openConsole:(id) sender {
-	if( [connections selectedRow] == -1 ) return;
-	[[JVChatController defaultManager] chatConsoleForConnection:[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] ifExists:NO];
+	unsigned int row = [connections selectedRow];
+	if( row == -1 ) return;
+	[[JVChatController defaultManager] chatConsoleForConnection:[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] ifExists:NO];
 }
 @end
 

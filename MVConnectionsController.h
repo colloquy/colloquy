@@ -41,9 +41,7 @@
 	IBOutlet NSTableView *newJoinRooms;
 	IBOutlet NSButton *newRemoveRoom;
 
-	/* Join Room & Message User */
-	IBOutlet NSComboBox *roomToJoin;
-	IBOutlet NSTextField *roomPassword;
+	/* Message User */
 	IBOutlet NSTextField *userToMessage;
 
 	NSMutableArray *_bookmarks;
@@ -62,14 +60,13 @@
 - (IBAction) conenctNewConnection:(id) sender;
 
 - (IBAction) messageUser:(id) sender;
-- (IBAction) joinRoom:(id) sender;
 
 - (IBAction) sendPassword:(id) sender;
 
-- (NSSet *) connections;
-- (NSSet *) connectedConnections;
+- (NSArray *) connections;
+- (NSArray *) connectedConnections;
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;
-- (NSSet *) connectionsForServerAddress:(NSString *) address;
+- (NSArray *) connectionsForServerAddress:(NSString *) address;
 
 - (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection;
 - (BOOL) autoConnectForConnection:(MVChatConnection *) connection;

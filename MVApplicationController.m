@@ -17,7 +17,9 @@
 #import "JVChatController.h"
 #import "MVChatConnection.h"
 
-@interface WebCoreCache : NSObject {}
+#import "JVChatRoomBrowser.h"
+
+@interface WebCoreCache
 + (void) setDisabled:(BOOL) disabled;
 @end
 
@@ -95,6 +97,10 @@ static BOOL applicationIsTerminating = NO;
 	[[MVConnectionsController defaultManager] newConnection:nil];
 }
 
+- (IBAction) joinRoom:(id) sender {
+	[[JVChatRoomBrowser chatRoomBrowserForConnection:nil] showWindow:nil];
+}
+
 #pragma mark -
 
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
@@ -143,6 +149,7 @@ static BOOL applicationIsTerminating = NO;
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Advanced", "advanced preference pane name" ) owner:[JVAdvancedPreferences sharedInstance]];
 
+	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultManager];
 	[JVChatController defaultManager];
 	[MVFileTransferController defaultManager];
@@ -169,6 +176,14 @@ static BOOL applicationIsTerminating = NO;
 	if( [key isEqualToString:@"chatController"] || [key isEqualToString:@"connectionsController"] || [key isEqualToString:@"transferManager"] || [key isEqualToString:@"buddyList"] )
 		return YES;
 	return NO;
+}
+
+- (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
+	if( [menuItem action] == @selector( joinRoom: ) ) {
+		if( [[[MVConnectionsController defaultManager] connections] count] ) return YES;
+		else return NO;
+	}
+	return YES;
 }
 @end
 
