@@ -46,8 +46,8 @@
 #pragma mark -
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
-	BOOL isChatRoom = [view isKindOfClass:NSClassFromString( @"JVChatRoom" )];
-	BOOL isDirectChat = [view isKindOfClass:NSClassFromString( @"JVDirectChat" )];
+	BOOL isChatRoom = [view isKindOfClass:[JVChatRoom class]];
+	BOOL isDirectChat = [view isKindOfClass:[JVDirectChat class]];
 
 	JVDirectChat *chat = view;
 	JVChatRoom *room = view;
@@ -59,7 +59,7 @@
 					// This is so plugins can process /me actions as well
 					// We're avoiding /say for now, as that really should just output exactly what
 					// the input was so we should still bypass plugins for /say
-					JVMutableChatMessage *message = [[[NSClassFromString( @"JVMutableChatMessage" ) alloc] initWithText:arguments sender:[[chat connection] nickname] andTranscript:chat] autorelease];
+					JVMutableChatMessage *message = [[[JVMutableChatMessage alloc] initWithText:arguments sender:[[chat connection] nickname] andTranscript:chat] autorelease];
 					[message setAction:YES];
 					[chat sendMessage:message];
 					[chat echoSentMessageToDisplay:[message body] asAction:YES];
@@ -83,14 +83,14 @@
 				return YES;
 			}
 		} else if( ! [command caseInsensitiveCompare:@"whois"] || ! [command caseInsensitiveCompare:@"wi"] ) {
-//			id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
-//			id info = [NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member];
+//			id member = [[[JVChatRoomMember alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
+//			id info = [JVInspectorController inspectorOfObject:member];
 //			[(id)[info inspector] setFetchLocalServerInfoOnly:YES];
 //			[info show:nil];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"wii"] ) {
-//			id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
-//			[[NSClassFromString( @"JVInspectorController" ) inspectorOfObject:member] show:nil];
+//			id member = [[[JVChatRoomMember alloc] initWithRoom:room andNickname:[arguments string]] autorelease];
+//			[[JVInspectorController inspectorOfObject:member] show:nil];
 			return YES;
 		}
 	}
@@ -236,7 +236,7 @@
 					NSArray *parts = [arg componentsSeparatedByString:@"!"];
 					NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
 					NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
-					MVChatUser *user = [NSClassFromString( @"MVChatUser" ) wildcardUserWithNicknameMask:nickname andHostMask:host];
+					MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
 					[[room target] addBanForUser:user];
 				}
 			}
@@ -250,7 +250,7 @@
 					NSArray *parts = [arg componentsSeparatedByString:@"!"];
 					NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
 					NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
-					MVChatUser *user = [NSClassFromString( @"MVChatUser" ) wildcardUserWithNicknameMask:nickname andHostMask:host];
+					MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
 					[[room target] removeBanForUser:user];
 				}
 			}
@@ -295,7 +295,7 @@
 //		[connection fetchInformationForUser:[arguments string] withPriority:NO fromLocalServer:NO];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"list"] ) {
-		JVChatRoomBrowser *browser = [NSClassFromString( @"JVChatRoomBrowser" ) chatRoomBrowserForConnection:connection];
+		JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:connection];
 		[connection fetchChatRoomList];
 		[browser showWindow:nil];
 		if( [[arguments string] length] ) {
@@ -331,7 +331,7 @@
 			[_manager findAndLoadPlugins];
 			return YES;
 		} else if( ! [[arguments string] caseInsensitiveCompare:@"styles"] ) {
-			[NSClassFromString( @"JVStyle" ) scanForStyles];
+			[JVStyle scanForStyles];
 			return YES;
 		} else if( ! [[arguments string] caseInsensitiveCompare:@"emoticons"] ) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatEmoticonSetInstalledNotification" object:nil]; 
@@ -436,7 +436,7 @@
 		[connection joinChatRoomsNamed:channels];
 		return YES;
 	} else {
-		id browser = [NSClassFromString( @"JVChatRoomBrowser" ) chatRoomBrowserForConnection:connection];
+		id browser = [JVChatRoomBrowser chatRoomBrowserForConnection:connection];
 		[browser showWindow:nil];
 		[browser setFilter:arguments];
 		[browser showRoomBrowser:nil];
@@ -500,7 +500,7 @@
 
 	if( [msg length] ) {
 		[chatView echoSentMessageToDisplay:msg asAction:NO];
-		if( [[chatView target] isKindOfClass:NSClassFromString( @"MVChatRoom" )] ) {
+		if( [[chatView target] isKindOfClass:[MVChatRoom class]] ) {
 			[[chatView target] sendMessage:msg asAction:NO];
 		} else {
 			NSStringEncoding encoding = [chatView encoding];
@@ -517,7 +517,7 @@
 
 	BOOL action = ( ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"bract"] );
 
-	NSEnumerator *enumerator = [[[_manager chatController] chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
+	NSEnumerator *enumerator = [[[_manager chatController] chatViewControllersOfClass:[JVChatRoom class]] objectEnumerator];
 	JVChatRoom *room = nil;
 	while( ( room = [enumerator nextObject] ) ) {
 		[room echoSentMessageToDisplay:message asAction:action];
@@ -559,7 +559,7 @@
 	int offset = 0;
 
 	if( ! [args length] ) {
-		id info = [NSClassFromString( @"JVInspectorController" ) inspectorOfObject:[view connection]];
+		id info = [JVInspectorController inspectorOfObject:[view connection]];
 		[info show:nil];		
 		[(id)[info inspector] performSelector:@selector(selectTabWithIdentifier:) withObject:@"Ignores"];
 		return YES;
@@ -600,7 +600,7 @@
 	if( offset < [argsArray count] && [(NSString *)[argsArray objectAtIndex:offset] length] )
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 
-	KAIgnoreRule *rule = [NSClassFromString( @"KAIgnoreRule" ) ruleForUser:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];
+	KAIgnoreRule *rule = [KAIgnoreRule ruleForUser:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];
 	NSMutableArray *rules = [[_manager connectionsController] ignoreRulesForConnection:[view connection]];
 	[rules addObject:rule];
 

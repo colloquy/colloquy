@@ -975,8 +975,9 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				HEADER_SEARCH_PATHS = "\"Plug-Ins/Standard Commands\"";
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-fconstant-cfstrings";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-undefined dynamic_lookup";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = "Standard Commands";
 				SECTORDER_FLAGS = "";
