@@ -2,32 +2,47 @@
 #import "MVTextView.h"
 
 @implementation MVTextView
-- (void) keyDown:(NSEvent *) event {
-	if( ! [self isEditable] ) {
-		[super keyDown:event];
+- (void)interpretKeyEvents:(NSArray *)eventArray
+{
+	NSMutableArray *newArray = [NSMutableArray array];
+	NSEnumerator *e = [eventArray objectEnumerator];
+	id anEvent;
+	
+	if (![self isEditable]) {
+		[super interpretKeyEvents:eventArray];
 		return;
 	}
+	
+	while (anEvent = [e nextObject]) {
+		if (![self checkKeyEvent:(NSEvent *)anEvent])
+			[newArray addObject:anEvent];
+	}
+	
+	if ([newArray count] > 0)
+		[super interpretKeyEvents:newArray];
+	
+	if( ! [[self textStorage] length] )
+		[self reset:nil];
+}
 
+- (BOOL)checkKeyEvent:(NSEvent *) event {
 	unichar chr = 0;
 	if( [[event charactersIgnoringModifiers] length] )
 		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
 
-	if( chr == 0xD && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
-		if( [[self delegate] textView:self returnKeyPressed:event] ) return;
-	} else if( chr == 0x3 && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
-		if( [[self delegate] textView:self enterKeyPressed:event] ) return;
-	} else if( chr == 0x9 && [[self delegate] respondsToSelector:@selector( textView:tabKeyPressed: )]) {
-		if( [[self delegate] textView:self tabKeyPressed:event] ) return;
+	if( chr == NSCarriageReturnCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
+		if( [[self delegate] textView:self returnKeyPressed:event] ) return YES;
+	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
+		if( [[self delegate] textView:self enterKeyPressed:event] ) return YES;
+	} else if( chr == NSTabCharacter && [[self delegate] respondsToSelector:@selector( textView:tabKeyPressed: )]) {
+		if( [[self delegate] textView:self tabKeyPressed:event] ) return YES;
 	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
-		if( [[self delegate] textView:self escapeKeyPressed:event] ) return;
+		if( [[self delegate] textView:self escapeKeyPressed:event] ) return YES;
 	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
-		if( [[self delegate] textView:self functionKeyPressed:event] ) return;
+		if( [[self delegate] textView:self functionKeyPressed:event] ) return YES;
 	}
-
-	[super keyDown:event];
-
-	if( ! [[self textStorage] length] )
-		[self reset:nil];
+	
+	return NO;
 }
 
 - (void) reset:(id) sender {

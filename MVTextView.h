@@ -3,8 +3,9 @@
 @interface MVTextView : NSTextView {
     NSDictionary *typingAttributes;
 }
-- (void) reset:(id) sender;
+- (BOOL)checkKeyEvent:(NSEvent *)event;
 
+- (void) reset:(id) sender;
 - (void) bold:(id) sender;
 - (void) italic:(id) sender;
 @end
