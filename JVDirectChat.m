@@ -845,20 +845,26 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event {
 	BOOL ret = NO;
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnEnter"] ) {
+
+	if( [textView hasMarkedText] ) {
+		ret = NO;
+	} else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnEnter"] ) {
 		[self send:nil];
 		ret = YES;
 	} else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatActionOnEnter"] ) {
 		[self send:[NSNumber numberWithBool:YES]];
 		ret = YES;
 	}
+
 	return ret;
 }
 
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
 	BOOL ret = NO;
-	
-	if( ( [event modifierFlags] & NSAlternateKeyMask ) != 0 ) {
+
+	if( [textView hasMarkedText] ) {
+		ret = NO;
+	} else if( ( [event modifierFlags] & NSAlternateKeyMask ) != 0 ) {
 		ret = NO;
 	} else if ( ([event modifierFlags] & NSControlKeyMask) != 0 ) {
 		[self send:[NSNumber numberWithBool:YES]];
