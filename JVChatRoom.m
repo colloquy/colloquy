@@ -318,29 +318,24 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	while( ( name = [[enumerator nextObject] nickname] ) ) {
 		NSString *escapedName = [name stringByEscapingCharactersInSet:escapeSet];
 		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"\\b(%@)\\b", escapedName]];
-		NSRange searchRange = NSMakeRange(0, [message length]);
-		NSRange backSearchRange = NSMakeRange(0, [message length]);
+		NSRange searchRange = NSMakeRange( 0, [message length] );
+		NSRange backSearchRange = NSMakeRange( 0, [message length] );
 		AGRegexMatch *match = [regex findInString:message range:searchRange];
 		while ( match ) {
 			NSRange foundRange = [match rangeAtIndex:1];
-			// Search to see if we're in a link
 			backSearchRange.length = foundRange.location - backSearchRange.location;
-			NSRange openRange = [message rangeOfString:@"<a "
-											   options:(NSBackwardsSearch|NSLiteralSearch)
-												 range:backSearchRange];
-			NSRange closeRange = [message rangeOfString:@"</a>"
-												options:(NSBackwardsSearch|NSLiteralSearch)
-												  range:backSearchRange];
-			if( openRange.location == NSNotFound ||
-				(closeRange.location != NSNotFound && closeRange.location > openRange.location) ) {
-				[message replaceCharactersInRange:foundRange
-									   withString:
-					[NSString stringWithFormat:@"<span class=\"member\">%@</span>", name]];
-				searchRange.location = NSMaxRange(foundRange) + 28;
+
+			// Search to see if we're in a link
+			NSRange openRange = [message rangeOfString:@"<a " options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
+			NSRange closeRange = [message rangeOfString:@"</a>" options:(NSBackwardsSearch|NSLiteralSearch) range:backSearchRange];
+
+			if( openRange.location == NSNotFound || ( closeRange.location != NSNotFound && closeRange.location > openRange.location ) ) {
+				[message replaceCharactersInRange:foundRange withString:[NSString stringWithFormat:@"<span class=\"member\">%@</span>", name]];
+				searchRange.location = NSMaxRange( foundRange ) + 28;
 				searchRange.length = [message length] - searchRange.location;
 				backSearchRange.location = searchRange.location;
 			} else {
-				searchRange.location = NSMaxRange(foundRange);
+				searchRange.location = NSMaxRange( foundRange );
 				searchRange.length = [message length] - searchRange.location;
 			}
 			match = [regex findInString:message range:searchRange];
@@ -962,9 +957,9 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[self resortMembers];
 
 		if( [mbr isLocalUser] ) {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as %@.", "you changed nicknames" ), nick] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[mbr title], @"name", member, @"old", nick, @"new", nil]];
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as <span class=\"member\">%@</span>.", "you changed nicknames" ), nick] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[mbr title], @"name", member, @"old", nick, @"new", nil]];
 		} else {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as %@.", "user has changed nicknames" ), name, nick] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"name", member, @"old", nick, @"new", nil]];
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), name, nick] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"name", member, @"old", nick, @"new", nil]];
 		}
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( NSString * ), @encode( JVChatRoom * ), nil];
