@@ -411,7 +411,7 @@ static void MVChatUserLeftRoom( IRC_SERVER_REC *server, const char *data, const 
 	[room _removeMemberUser:member];
 
 	NSData *reasonData = [NSData dataWithBytes:reason length:strlen( reason )];
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", ( reasonData ? (id) reasonData : (id) [NSNull null] ), @"reason", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 	g_free( params );
@@ -435,7 +435,7 @@ static void MVChatUserQuit( IRC_SERVER_REC *server, const char *data, const char
 	while( ( room = [enumerator nextObject] ) ) {
 		if( ! [room isJoined] || ! [room hasUser:member] ) continue;
 		[room _removeMemberUser:member];
-		NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", ( reasonData ? (id) reasonData : (id) [NSNull null] ), @"reason", nil]];
+		NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
 }
@@ -456,9 +456,9 @@ static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const ch
 	[room _removeMemberUser:member];
 
 	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) {
-		note = [NSNotification notificationWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:byMember, @"byUser", ( msgData ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];		
+		note = [NSNotification notificationWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:byMember, @"byUser", msgData, @"reason", nil]];		
 	} else {
-		note = [NSNotification notificationWithName:MVChatRoomUserKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", byMember, @"byUser", ( msgData ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
+		note = [NSNotification notificationWithName:MVChatRoomUserKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", byMember, @"byUser", msgData, @"reason", nil]];
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -654,7 +654,7 @@ static void MVChatGotUserMode( CHANNEL_REC *channel, NICK_REC *nick, char *by, c
 	if( *type == '+' ) [room _setMode:m forMemberUser:member];
 	else [room _removeMode:m forMemberUser:member];
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", ( byMember ? (id) byMember : (id) [NSNull null] ), @"by", [NSNumber numberWithBool:( *type == '+' ? YES : NO )], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:( *type == '+' ? YES : NO )], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", byMember, @"by", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -695,7 +695,7 @@ static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
 
 	unsigned int changedModes = ( oldModes ^ [room modes] );
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", ( byMember ? (id) byMember : (id) [NSNull null] ), @"by", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", byMember, @"by", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -716,7 +716,7 @@ static void MVChatBanNew( CHANNEL_REC *channel, BAN_REC *ban ) {
 
 	[room _addBanForUser:user];
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserBannedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", ( byMember ? (id) byMember : (id) [NSNull null] ), @"byUser", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserBannedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", byMember, @"byUser", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -947,7 +947,7 @@ static void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, cons
 		return;
 	}
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeRequestNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];		
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeRequestNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ags, @"arguments", nil]];		
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -979,7 +979,7 @@ static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const 
 		return;
 	}
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];		
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ags, @"arguments", nil]];		
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 

@@ -161,7 +161,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			while( ( room = [enumerator nextObject] ) ) {
 				if( ! [room isJoined] || ! [room hasUser:member] ) continue;
 				[room _removeMemberUser:member];
-				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", ( reasonData ? (id) reasonData : (id) [NSNull null] ), @"reason", nil]];
+				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil]];
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			}
 		}	break;
@@ -295,13 +295,13 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 				enabled = NO;
 				m = MVChatRoomMemberFounderMode;
 
-				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", ( changerUser ? (id) changerUser : (id) [NSNull null] ), @"by", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", nil]];
+				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", changerUser, @"by", nil]];
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			} else if( ! ( oldModes & MVChatRoomMemberFounderMode ) && ( mode & SILC_CHANNEL_UMODE_CHANFO ) ) {
 				enabled = YES;
 				m = MVChatRoomMemberFounderMode;
 
-				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", ( changerUser ? (id) changerUser : (id) [NSNull null] ), @"by", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", nil]];
+				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", changerUser, @"by", nil]];
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			}
 
@@ -309,13 +309,13 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 				enabled = NO;
 				m = MVChatRoomMemberOperatorMode;
 
-				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", ( changerUser ? (id) changerUser : (id) [NSNull null] ), @"by", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", nil]];
+				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", changerUser, @"by", nil]];
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			} else if( ! ( oldModes & MVChatRoomMemberOperatorMode ) && ( mode & SILC_CHANNEL_UMODE_CHANOP ) ) {
 				enabled = YES;
 				m = MVChatRoomMemberOperatorMode;
 
-				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", ( changerUser ? (id) changerUser : (id) [NSNull null] ), @"by", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", nil]];
+				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", changerUser, @"by", nil]];
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			}
 
@@ -323,13 +323,13 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 				enabled = NO;
 				m = MVChatRoomMemberQuietedMode;
 
-				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", ( changerUser ? (id) changerUser : (id) [NSNull null] ), @"by", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", nil]];
+				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", changerUser, @"by", nil]];
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			} else if( ! ( oldModes & MVChatRoomMemberQuietedMode ) && ( mode & SILC_CHANNEL_UMODE_QUIET ) ) {
 				enabled = YES;
 				m = MVChatRoomMemberQuietedMode;
 
-				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", ( changerUser ? (id) changerUser : (id) [NSNull null] ), @"by", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", nil]];
+				NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", changerUser, @"by", nil]];
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			}
 		}	break;
@@ -352,9 +352,9 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			[room _removeMemberUser:member];
 
 			if( kicked == conn -> local_entry ) {
-				note = [NSNotification notificationWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:byMember, @"byUser", ( msgData ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];		
+				note = [NSNotification notificationWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:byMember, @"byUser", msgData, @"reason", nil]];		
 			} else {
-				note = [NSNotification notificationWithName:MVChatRoomUserKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", byMember, @"byUser", ( msgData ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
+				note = [NSNotification notificationWithName:MVChatRoomUserKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", byMember, @"byUser", msgData, @"reason", nil]];
 			}
 
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
