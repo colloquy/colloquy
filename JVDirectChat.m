@@ -94,7 +94,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 @interface JVDirectChat (JVDirectChatPrivate)
-- (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
+- (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
 - (void) processQueue;
 - (void) displayQueue;
@@ -622,12 +622,16 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark Messages & Events
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
+	[self addEventMessageToDisplay:message withName:name andAttributes:attributes entityEncodeAttributes:YES];
+}
+
+- (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode {
 	if( [_logLock tryLock] ) {
 		[self displayQueue];
-		[self addEventMessageToLogAndDisplay:message withName:name andAttributes:attributes];
+		[self addEventMessageToLogAndDisplay:message withName:name andAttributes:attributes entityEncodeAttributes:encode];
 		[_logLock unlock];
 	} else { // Queue the message
-		NSDictionary *queueEntry = [NSDictionary dictionaryWithObjectsAndKeys:@"event", @"type", message, @"message", name, @"name", attributes, @"attributes", nil];
+		NSDictionary *queueEntry = [NSDictionary dictionaryWithObjectsAndKeys:@"event", @"type", message, @"message", name, @"name", attributes, @"attributes", [NSNumber numberWithBool:encode], @"encode", nil];
 		[_messageQueue addObject:queueEntry];
 		if( [_messageQueue count] == 1 ) // We just added to an empty queue, so we need to attempt to process it soon
 			[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
@@ -1103,7 +1107,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 @implementation JVDirectChat (JVDirectChatPrivate)
-- (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
+- (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode {
 	NSEnumerator *enumerator = nil, *kenumerator = nil;
 	NSString *key = nil, *value = nil;
 	NSMutableString *messageString = nil;
@@ -1138,8 +1142,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		if( [value isMemberOfClass:[NSNull class]] ) {
 			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
 		} else {
-			if( ! [key isEqualToString:@"reason"] ) // This is a quick hack
-				value = [value stringByEncodingXMLSpecialCharactersAsEntities];
+			if( encode ) value = [value stringByEncodingXMLSpecialCharactersAsEntities];
 			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
 		}
 
@@ -1392,9 +1395,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			[self addMessageToLogAndDisplay:[msg objectForKey:@"message"] fromUser:[msg objectForKey:@"user"] asAction:[[msg objectForKey:@"action"] boolValue]];
 		} else if( [[msg objectForKey:@"type"] isEqualToString:@"event"] ) {
 			if( [[msg objectForKey:@"message"] isEqual:[NSNull null]] ) {
-				[self addEventMessageToLogAndDisplay:nil withName:[msg objectForKey:@"name"] andAttributes:[msg objectForKey:@"attributes"]];
+				[self addEventMessageToLogAndDisplay:nil withName:[msg objectForKey:@"name"] andAttributes:[msg objectForKey:@"attributes"] entityEncodeAttributes:[[msg objectForKey:@"encode"] boolValue]];
 			} else {
-				[self addEventMessageToLogAndDisplay:[msg objectForKey:@"message"] withName:[msg objectForKey:@"name"] andAttributes:[msg objectForKey:@"attributes"]];
+				[self addEventMessageToLogAndDisplay:[msg objectForKey:@"message"] withName:[msg objectForKey:@"name"] andAttributes:[msg objectForKey:@"attributes"] entityEncodeAttributes:[[msg objectForKey:@"encode"] boolValue]];
 			}
 		}
 	}

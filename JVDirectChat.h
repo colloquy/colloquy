@@ -71,6 +71,7 @@
 - (IBAction) changeEncoding:(id) sender;	
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
+- (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
 - (void) processMessage:(NSMutableString *) message asAction:(BOOL) action fromUser:(NSString *) user;
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action;

@@ -654,7 +654,14 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	} else {
 		message = [NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from the chat room by <span class=\"member\">%@</span>.", "user has been removed by force from a chat room status message" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by )];
 	}
-	[self addEventMessageToDisplay:message withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"bynickname", ( mbr ? [mbr title] : member ), @"who", member, @"whonickname", ( [mbr address] ? [mbr address] : @"" ), @"mask", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+
+	NSString *byAttr = [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities];
+	NSString *byNickAttr = [by stringByEncodingXMLSpecialCharactersAsEntities];
+	NSString *whoAttr = [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities];
+	NSString *whoNickAttr = [member stringByEncodingXMLSpecialCharactersAsEntities];
+	NSString *mask = [[mbr address] stringByEncodingXMLSpecialCharactersAsEntities];
+
+	[self addEventMessageToDisplay:message withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byAttr ? byAttr : byNickAttr ), @"by", byNickAttr, @"bynickname", ( whoAttr ? whoAttr : whoNickAttr ), @"who", whoNickAttr, @"whonickname", ( mask ? (id) mask : (id) [NSNull null] ), @"mask", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil] entityEncodeAttributes:NO];
 
 	//create notification
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -676,7 +683,11 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), ( byMbr ? [byMbr title] : by )];
-	[self addEventMessageToDisplay:message withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[byMbr title], @"by", by, @"bynickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+
+	NSString *byAttr = [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities];
+	NSString *byNickAttr = [by stringByEncodingXMLSpecialCharactersAsEntities];
+	
+	[self addEventMessageToDisplay:message withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byAttr ? byAttr : byNickAttr ), @"by", byNickAttr, @"bynickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 	JVChatRoomMember *mbr = [[[self chatRoomMemberWithName:[[self connection] nickname]] retain] autorelease];
 
@@ -963,7 +974,12 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 		NSString *name = [mbr title];
 		NSString *message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> left the chat room.", "a user has left the chat room status message" ), name];
-		[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"who", member, @"nickname", ( [mbr address] ? [mbr address] : @"" ), @"mask", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+
+		NSString *whoAttr = [name stringByEncodingXMLSpecialCharactersAsEntities];
+		NSString *whoNickAttr = [member stringByEncodingXMLSpecialCharactersAsEntities];
+		NSString *mask = [[mbr address] stringByEncodingXMLSpecialCharactersAsEntities];
+
+		[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( whoAttr ? whoAttr : whoNickAttr ), @"who", whoNickAttr, @"nickname", ( mask ? (id) mask : (id) [NSNull null] ), @"mask", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil] entityEncodeAttributes:NO];
 
 		//create notification
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
