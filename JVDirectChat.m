@@ -198,8 +198,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
 
 				while( ! nameFound ) {
-					if( org ) logName = [NSString stringWithFormat:@"%@ %d.colloquyTranscript", _target, i];
-					else logName = [NSString stringWithFormat:@"%@ (%@) %d.colloquyTranscript", _target, [_connection server], i];
+					if( org ) logName = [NSString stringWithFormat:@"%@ %d.colloquyTranscript", _target, i++];
+					else logName = [NSString stringWithFormat:@"%@ (%@) %d.colloquyTranscript", _target, [_connection server], i++];
 					nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
 				}
 			} else if( session == 1 ) {
