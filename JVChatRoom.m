@@ -902,7 +902,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[_windowController reloadListItem:self andChildren:YES];
 
 		NSString *name = [mbr title];
-		NSString *message = [NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room.", "a user has left the chat room status message" ), name];
+		NSString *message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> left the chat room.", "a user has left the chat room status message" ), name];
 		[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"who", member, @"nickname", ( [mbr address] ? [mbr address] : @"" ), @"mask", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 		//create notification
@@ -970,7 +970,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"member"] ) {
 		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier]];
-		[mbr startChat:nil];
+		if( mbr ) [mbr startChat:nil];
+		else [[JVChatController defaultManager] chatViewControllerForUser:[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier] withConnection:[self connection] ifExists:NO];
 		[listener ignore];
 	} else {
 		[super webView:sender decidePolicyForNavigationAction:actionInformation request:request frame:frame decisionListener:listener];
