@@ -8,14 +8,18 @@
 @class NSString;
 @class NSBundle;
 @class NSDictionary;
+@class NSConnection;
+@class NSLock;
 
 @interface JVChatTranscript : NSObject <JVChatViewController> {
 	@protected
 	IBOutlet NSView *contents;
 	IBOutlet WebView *display;
 	IBOutlet MVMenuButton *chooseStyle;
-	/* xmlDocPtr */ void *_xmlLog;
 	/* xsltStylesheetPtr */ void *_chatXSLStyle;
+	/* xmlDocPtr */ void *_xmlLog;
+	/* xmlDocPtr */ void *_xmlQueue;
+	NSLock *_logLock;
 	JVChatWindowController *_windowController;
 	NSString *_filePath;
 	NSBundle *_chatStyle;
@@ -23,6 +27,7 @@
 	NSBundle *_chatEmoticons;
 	NSDictionary *_emoticonMappings;
 	NSDictionary *_styleParams;
+	NSConnection *_mainThreadConnection;
 	const char **_params;
 	BOOL _isArchive;
 	BOOL _nibLoaded;

@@ -330,7 +330,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 - (void) setTarget:(NSString *) target {
 	[_target autorelease];
 	_target = [target copy];
-	[_windowController reloadChatView:self];
+	[_windowController reloadListItem:self andChildren:YES];
 }
 
 #pragma mark -
@@ -354,7 +354,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 			if( alert ) [_waitingAlerts addObject:alert];
 		}
 	}
-	[_windowController reloadChatView:self];
+	[_windowController reloadListItem:self andChildren:NO];
 }
 
 #pragma mark -
@@ -497,23 +497,31 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		}
 	}
 
-	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
+	if( [_logLock tryLock] ) {
+		xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
-	if( _firstMessage ) { // If we just got a private message and this panel was just opened WebKit hasn't had time load the template.
-		[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[self _applyStyleOnXMLDocument:doc]] baseURL:nil];
-	} else {
-		messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
-		if( [messageString length] ) {
-			[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottom();", messageString]];
+		if( _firstMessage ) { // If we just got a private message and this panel was just opened WebKit hasn't had time load the template.
+			[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[self _applyStyleOnXMLDocument:doc]] baseURL:nil];
+		} else {
+			messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
+			if( [messageString length] ) {
+				[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+				[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+				[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottom();", messageString]];
+			}
 		}
+
+		[_logLock unlock];
+
+		_firstMessage = NO;
+	} else {
+		if( ! _xmlQueue ) {
+			_xmlQueue = xmlNewDoc( "1.0" );
+			xmlDocSetRootElement( _xmlQueue, xmlNewNode( NULL, "queue" ) );
+		}
+		xmlAddChild( xmlDocGetRootElement( _xmlQueue ), xmlDocCopyNode( root, _xmlQueue, 1 ) );
 	}
-
-	_firstMessage = NO;
-
-	xmlDocFormatDump( stdout, doc, 1 );
 
 	xmlFreeDoc( doc );
 }
@@ -583,33 +591,37 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 	xmlFreeDoc( msgDoc );
 
-	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
+	if( [_logLock tryLock] ) {
+		xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
-	if( _firstMessage ) { // If we just got a private message and this panel was just opened WebKit hasn't had time load the template.
-		[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[self _applyStyleOnXMLDocument:doc]] baseURL:nil];
-	} else {
-		messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
-		if( [messageString length] ) {
-			[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
-			[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottom();", messageString]];
+		if( _firstMessage ) { // If we just got a private message and this panel was just opened WebKit hasn't had time load the template.
+			[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[self _applyStyleOnXMLDocument:doc]] baseURL:nil];
+		} else {
+			messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
+			if( [messageString length] ) {
+				[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+				[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+				[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
+				[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottom();", messageString]];
+			}
 		}
-	}
 
-//	xmlDocFormatDump( stdout, doc, 1 );
-//	NSLog( [self _applyStyleOnXMLDocument:doc] );
-//	NSLog( @"%@", [self _fullDisplayHTMLWithBody:@""] );
+		[_logLock unlock];
+
+		_firstMessage = NO;
+	} else {
+		if( ! _xmlQueue ) {
+			_xmlQueue = xmlNewDoc( "1.0" );
+			xmlDocSetRootElement( _xmlQueue, xmlNewNode( NULL, "queue" ) );
+		}
+		xmlAddChild( xmlDocGetRootElement( _xmlQueue ), xmlDocCopyNode( root, _xmlQueue, 1 ) );
+	}
 
 	xmlFreeDoc( doc );
 
 	_newMessage = YES;
-	_firstMessage = NO;
 
-	[_windowController reloadChatView:self];
-
-//	if( NSMinY( [[[display mainFrame] frameView] visibleRect] ) >= ( NSHeight( [[[display mainFrame] frameView] bounds] ) - ( NSHeight( [[[display mainFrame] frameView] visibleRect] ) * 1.1 ) ) )
-//	[[[[display mainFrame] frameView] documentView] scrollPoint:NSMakePoint( 0., NSHeight( [[[[display mainFrame] frameView] documentView] bounds] ) )];
+	[_windowController reloadListItem:self andChildren:NO];
 }
 
 #pragma mark -
@@ -990,7 +1002,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		urlStopSet = [NSCharacterSet characterSetWithCharactersInString:@" \t\n\r\"',!<>[]{}()|*^!"];
 		urlScanner = [NSScanner scannerWithString:part];
 		if( ( ( [urlScanner scanUpToCharactersFromSet:ircChannels intoString:NULL] && [urlScanner scanLocation] < [part length] && ! [[NSCharacterSet alphanumericCharacterSet] characterIsMember:[part characterAtIndex:( [urlScanner scanLocation] - 1 )]] ) || [part rangeOfCharacterFromSet:ircChannels].location == 0 ) && [urlScanner scanUpToCharactersFromSet:urlStopSet intoString:&urlHandle] ) {
-			if( [urlHandle length] >= 1 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != 1 ) {
+			if( [urlHandle length] >= 3 && [urlHandle rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != 1 ) {
 				if( [urlHandle characterAtIndex:([urlHandle length] - 1)] == '.' || [urlHandle characterAtIndex:([urlHandle length] - 1)] == '?' )
 					urlHandle = [urlHandle substringToIndex:( [urlHandle length] - 1 )];
 				link = [NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], urlHandle];

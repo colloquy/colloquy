@@ -47,7 +47,15 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 #pragma mark -
 
+@protocol JVChatTranscriptProxy
+- (void) _switchingStyleEnded:(in NSString *) html;
+@end
+
+#pragma mark -
+
 @interface JVChatTranscript (JVChatTranscriptPrivate)
+- (void) _switchingStyleEnded:(in NSString *) html;
+- (oneway void) _switchStyle:(id) sender;
 - (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
 - (void) _freeXsltParamArray:(const char **) params;
 - (void) _changeChatStyleMenuSelection;
@@ -87,8 +95,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		_filePath = nil;
 		_chatXSLStyle = NULL;
 
-		xmlSubstituteEntitiesDefault( 1 );
-		xmlLoadExtDtdDefaultValue = 1;
+		_mainThreadConnection = [[NSConnection connectionWithReceivePort:[NSPort port] sendPort:[NSPort port]] retain];
+		[_mainThreadConnection setRootObject:self];
+		[_mainThreadConnection enableMultipleThreads];		
 
 		if( ! JVChatStyleBundles )
 			JVChatStyleBundles = [NSMutableSet set];
@@ -100,6 +109,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 		[self _scanForChatStyles];
 		[self _scanForEmoticons];
+
+		_logLock = [[NSLock alloc] init];
 
 		_xmlLog = xmlNewDoc( "1.0" );
 		xmlDocSetRootElement( _xmlLog, xmlNewNode( NULL, "log" ) );
@@ -151,6 +162,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[_chatStyleVariant autorelease];
 	[_chatEmoticons autorelease];
 	[_emoticonMappings autorelease];
+	[_mainThreadConnection autorelease];
+	[_logLock autorelease];
 
 	[JVChatStyleBundles autorelease];
 	[JVChatEmoticonBundles autorelease];
@@ -164,9 +177,6 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[self _freeXsltParamArray:_params];
 	_params = NULL;
 
-	xsltCleanupGlobals();
-	xmlCleanupParser();
-
 	if( [JVChatStyleBundles retainCount] == 1 ) JVChatStyleBundles = nil;
 	if( [JVChatEmoticonBundles retainCount] == 1 ) JVChatEmoticonBundles = nil;
 
@@ -176,6 +186,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	_chatStyleVariant = nil;
 	_chatEmoticons = nil;
 	_emoticonMappings = nil;
+	_mainThreadConnection = nil;
+	_logLock = nil;
 	_windowController = nil;
 
 	[super dealloc];
@@ -322,7 +334,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 }
 
 - (void) setChatStyle:(NSBundle *) style withVariant:(NSString *) variant {
-	NSString *result = nil;
+	if( ! [_logLock tryLock] ) return;
 
 	[_chatStyle autorelease];
 	_chatStyle = [style retain];
@@ -339,10 +351,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	if( _chatXSLStyle ) xsltFreeStylesheet( _chatXSLStyle );
 	_chatXSLStyle = xsltParseStylesheetFile( (const xmlChar *)[self _chatStyleXSLFilePath] );
 
-	result = [self _applyStyleOnXMLDocument:_xmlLog];
-	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:( result ? result : @"" )] baseURL:nil];
-
 	[self _changeChatStyleMenuSelection];
+
+	[NSThread detachNewThreadSelector:@selector( _switchStyle: ) toTarget:self withObject:nil];
 }
 
 - (NSBundle *) chatStyle {
@@ -484,6 +495,10 @@ void MVChatPlaySoundForAction( NSString *action ) {
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"about"]  ) {
 		[listener use];
+	} else if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"self"]  ) {
+		NSString *command = [[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier];
+		[self performSelector:NSSelectorFromString( [command stringByAppendingString:@":"] ) withObject:nil];
+		[listener ignore];
 	} else {
 		if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
 			[[MVFileTransferController defaultManager] downloadFileAtURL:[actionInformation objectForKey:WebActionOriginalURLKey] toLocalFile:nil];
@@ -498,6 +513,31 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptPrivate)
+- (void) _switchingStyleEnded:(in NSString *) html {
+	NSString *queueResult = @"";
+	if( _xmlQueue ) {
+		queueResult = [self _applyStyleOnXMLDocument:_xmlQueue];
+		xmlAddChildList( xmlDocGetRootElement( _xmlLog ), xmlCopyNodeList( xmlDocGetRootElement( _xmlQueue ) -> children ) );
+		xmlFreeDoc( _xmlQueue );
+		_xmlQueue = NULL;
+	}
+	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[( html ? html : @"" ) stringByAppendingString:queueResult]] baseURL:nil];
+	[_logLock unlock];
+}
+
+- (oneway void) _switchStyle:(id) sender {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSString *result = nil;
+	NSConnection *mainThread = [NSConnection connectionWithReceivePort:[_mainThreadConnection sendPort] sendPort:[_mainThreadConnection receivePort]];
+	id proxy = [mainThread rootProxy];
+	[proxy setProtocolForProxy:@protocol( JVChatTranscriptProxy )];
+
+	result = [self _applyStyleOnXMLDocument:_xmlLog];
+	[proxy _switchingStyleEnded:result];
+
+	[pool release];
+}
+
 - (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
 	NSEnumerator *keyEnumerator = [dictionary keyEnumerator];
 	NSEnumerator *enumerator = [dictionary objectEnumerator];
