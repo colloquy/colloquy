@@ -12,13 +12,19 @@
 	return NO;
 }
 
+#ifndef _preferencesPanel
+#define _preferencesPanel (id)0
+#endif
+
 - (void) showPreferencesPanel {
 	[super showPreferencesPanel];
-	[_preferencesPanel setOpaque:NO]; // let us poke transparant holes in the window
+	// let us poke transparant holes in the window
+	if( NSAppKitVersionNumber >= 700. ) [_preferencesPanel setOpaque:NO];
 }
 
 - (void) showPreferencesPanelForOwner:(id) owner {
 	[super showPreferencesPanelForOwner:owner];
-	[_preferencesPanel setOpaque:NO]; // let us poke transparant holes in the window
+	// let us poke transparant holes in the window
+	if( NSAppKitVersionNumber >= 700. ) [_preferencesPanel setOpaque:NO];
 }
 @end
