@@ -106,11 +106,13 @@
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
 	if( item == _activeViewController ) {
 		[customTabsView smoothlyArrangeTabs];
+		[customTabsView resetCursorTracking];
 //		[customTabsView redisplayTabForTabViewItem:[tabView selectedTabViewItem]];
 		[self _refreshList];
 		[self _refreshWindowTitle];
 	} else if( [_views containsObject:item] ) {
 		[customTabsView smoothlyArrangeTabs];
+		[customTabsView resetCursorTracking];
 //		[customTabsView redisplayTabForTabViewItem:[tabView tabViewItemAtIndex:[_views indexOfObjectIdenticalTo:item]]];
 	} else {
 		[chatViewsOutlineView reloadItem:item reloadChildren:( children && [chatViewsOutlineView isItemExpanded:item] ? YES : NO )];
@@ -228,6 +230,7 @@
 - (void) _refreshList {
 	[super _refreshList];
 	[customTabsView smoothlyArrangeTabs];
+	[customTabsView resetCursorTracking];
 }
 
 - (void) _refreshWindow {
