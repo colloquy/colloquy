@@ -62,6 +62,8 @@ NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCe
 - (void) _didNotConnect;
 - (void) _willDisconnect;
 - (void) _didDisconnect;
+- (void) _scheduleReconnectAttemptEvery:(NSTimeInterval) seconds;
+- (void) _cancelReconnectAttempts;
 @end
 
 #pragma mark -
@@ -701,9 +703,8 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 static void silc_disconnected( SilcClient client, SilcClientConnection conn, SilcStatus status, const char *message ) {
 	MVSILCChatConnection *self = conn -> context;
 	
-	[self _setSilcConn:NULL];
-	
-	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
+
+	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
 }
 
 static void silc_get_auth_method( SilcClient client, SilcClientConnection conn, char *hostname, SilcUInt16 port, SilcGetAuthMeth completion, void *context ) {
@@ -858,6 +859,8 @@ static SilcClientOperations silcClientOps = {
 	}
 
 	[super connect];
+	
+	_sentQuitCommand = NO;
 
 	// check if nickname/username and realname are set
 	_silcClient -> hostname = (char *) strdup( [[[NSProcessInfo processInfo] hostName] UTF8String] );
@@ -883,6 +886,8 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
+	_sentQuitCommand = YES;
+	
 	if( [[reason string] length] ) {
 		const char *tmp = [MVSILCChatConnection _flattenedSILCStringForMessage:reason];
 		[self sendRawMessageWithFormat:@"QUIT %s", tmp];
@@ -1648,4 +1653,22 @@ static SilcClientOperations silcClientOps = {
 	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];	
 }
+
+#pragma mark -
+
+- (void) _didDisconnect {
+	if( ! _sentQuitCommand ) {
+		if( _status != MVChatConnectionSuspendedStatus )
+			_status = MVChatConnectionServerDisconnectedStatus;
+		[self performSelector:@selector( connect ) withObject:nil afterDelay:10.];
+		[self _scheduleReconnectAttemptEvery:30.];
+	} else if( _status != MVChatConnectionSuspendedStatus ) {
+		_status = MVChatConnectionDisconnectedStatus;
+	}
+	
+	[super _didDisconnect];
+	
+	[self _setSilcConn:NULL];
+}
+
 @end

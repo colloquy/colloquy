@@ -24,5 +24,7 @@
 	
 	NSMutableDictionary *_sentCommands;
 	NSLock *_sentCommandsLock;
+	
+	BOOL _sentQuitCommand;
 }
 @end
