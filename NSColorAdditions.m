@@ -55,6 +55,46 @@
 				}
 			}
 		}
+	} else if( ! ret && [attribute hasPrefix:@"hsl"] ) {
+		NSCharacterSet *whites = [NSCharacterSet whitespaceCharacterSet];
+		BOOL hasAlpha = [attribute hasPrefix:@"hsla"];
+		NSScanner *scanner = [NSScanner scannerWithString:attribute];
+		[scanner scanCharactersFromSet:whites intoString:nil];
+		if( [scanner scanUpToString:@"(" intoString:nil] ) {
+			double hue = 0., saturation = 0., lightness = 0., alpha = 1.;
+			[scanner scanString:@"(" intoString:nil];
+			[scanner scanCharactersFromSet:whites intoString:nil];
+			if( [scanner scanDouble:&hue] ) {
+				[scanner scanCharactersFromSet:whites intoString:nil];
+				[scanner scanString:@"," intoString:nil];
+				[scanner scanCharactersFromSet:whites intoString:nil];
+				if( [scanner scanDouble:&saturation] && [scanner scanString:@"%" intoString:nil] ) {
+					[scanner scanCharactersFromSet:whites intoString:nil];
+					[scanner scanString:@"," intoString:nil];
+					[scanner scanCharactersFromSet:whites intoString:nil];
+					if( [scanner scanDouble:&lightness] && [scanner scanString:@"%" intoString:nil] ) {
+						[scanner scanCharactersFromSet:whites intoString:nil];
+						hue = MAX( 0., MIN( 365., hue ) );
+						saturation = MAX( 0., MIN( 100., saturation ) );
+						lightness = MAX( 0., MIN( 100., lightness ) );
+						if( hasAlpha ) {
+							[scanner scanString:@"," intoString:nil];
+							[scanner scanCharactersFromSet:whites intoString:nil];
+							if( [scanner scanDouble:&alpha] ) {
+								[scanner scanCharactersFromSet:whites intoString:nil];
+								[scanner scanString:@")" intoString:nil];
+								alpha = MAX( 0., MIN( 1., alpha ) );
+								ret = [self colorWithCalibratedHue:( hue / 365. ) saturation:( saturation / 100. ) brightness:( lightness / 100. ) alpha:alpha];
+							}
+						} else {
+							ret = [self colorWithCalibratedHue:( hue / 365. ) saturation:( saturation / 100. ) brightness:( lightness / 100. ) alpha:1.];
+						}
+					}
+				}
+			}
+		}
+	} else if( ! ret && [attribute hasPrefix:@"transparent"] ) {
+		ret = [self clearColor];
 	}
 
 	return ret;
