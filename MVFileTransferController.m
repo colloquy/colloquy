@@ -12,20 +12,20 @@ static NSString *MVToolbarClearItemIdentifier = @"MVToolbarClearItem";
 
 NSString *MVPrettyFileSize( unsigned long size ) {
 	NSString *ret = nil;
-	if( size == 0. ) ret = NSLocalizedString( @"Zero bytes", no file size );
-	else if( size > 0. && size < 1024. ) ret = [NSString stringWithFormat:NSLocalizedString( @"%lu bytes", file size measured in bytes ), size];
-	else if( size >= 1024. && size < pow( 1024., 2. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.1f KB", file size measured in kilobytes ), ( size / 1024. )];
-	else if( size >= pow( 1024., 2. ) && size < pow( 1024., 3. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.2f MB", file size measured in megabytes ), ( size / pow( 1024., 2. ) )];
-	else if( size >= pow( 1024., 3. ) && size < pow( 1024., 4. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.3f GB", file size measured in gigabytes ), ( size / pow( 1024., 3. ) )];
-	else if( size >= pow( 1024., 4. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.4f TB", file size measured in terabytes ), ( size / pow( 1024., 4. ) )];
+	if( size == 0. ) ret = NSLocalizedString( @"Zero bytes", "no file size" );
+	else if( size > 0. && size < 1024. ) ret = [NSString stringWithFormat:NSLocalizedString( @"%lu bytes", "file size measured in bytes" ), size];
+	else if( size >= 1024. && size < pow( 1024., 2. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.1f KB", "file size measured in kilobytes" ), ( size / 1024. )];
+	else if( size >= pow( 1024., 2. ) && size < pow( 1024., 3. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.2f MB", "file size measured in megabytes" ), ( size / pow( 1024., 2. ) )];
+	else if( size >= pow( 1024., 3. ) && size < pow( 1024., 4. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.3f GB", "file size measured in gigabytes" ), ( size / pow( 1024., 3. ) )];
+	else if( size >= pow( 1024., 4. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.4f TB", "file size measured in terabytes" ), ( size / pow( 1024., 4. ) )];
 	return [[ret retain] autorelease];
 }
 
 NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	NSTimeInterval secs = [[NSDate date] timeIntervalSince1970] - date;
 	unsigned int i = 0, stop = 0;
-	NSDictionary *desc = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString( @"second", singular ), [NSNumber numberWithUnsignedInt:1], NSLocalizedString( @"minute", singular ), [NSNumber numberWithUnsignedInt:60], NSLocalizedString( @"hour", singular ), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString( @"day", singular ), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString( @"week", singular ), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString( @"month", singular ), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString( @"year", singular ), [NSNumber numberWithUnsignedInt:31536000], nil];
-	NSDictionary *plural = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString( @"seconds", plural ), [NSNumber numberWithUnsignedInt:1], NSLocalizedString( @"minutes", plural ), [NSNumber numberWithUnsignedInt:60], NSLocalizedString( @"hours", plural ), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString( @"days", plural ), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString( @"weeks", plural ), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString( @"months", plural ), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString( @"years", plural ), [NSNumber numberWithUnsignedInt:31536000], nil];
+	NSDictionary *desc = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString( @"second", "singular second" ), [NSNumber numberWithUnsignedInt:1], NSLocalizedString( @"minute", "singular minute" ), [NSNumber numberWithUnsignedInt:60], NSLocalizedString( @"hour", "singular hour" ), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString( @"day", "singular day" ), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString( @"week", "singular week" ), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString( @"month", "singular month" ), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString( @"year", "singular year" ), [NSNumber numberWithUnsignedInt:31536000], nil];
+	NSDictionary *plural = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString( @"seconds", "plural seconds" ), [NSNumber numberWithUnsignedInt:1], NSLocalizedString( @"minutes", "plural minutes" ), [NSNumber numberWithUnsignedInt:60], NSLocalizedString( @"hours", "plural hours" ), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString( @"days", "plural days" ), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString( @"weeks", "plural weeks" ), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString( @"months", "plural months" ), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString( @"years", "plural years" ), [NSNumber numberWithUnsignedInt:31536000], nil];
 	NSDictionary *use = nil;
 	NSMutableArray *breaks = nil;
 	unsigned int val = 0.;
@@ -385,28 +385,28 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
 
 	if( [itemIdent isEqual:MVToolbarStopItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Stop", short toolbar stop button name )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Stop Tranfser", name for stop button in customize palette )];
+		[toolbarItem setLabel:NSLocalizedString( @"Stop", "short toolbar stop button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Stop Tranfser", "name for stop button in customize palette" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Stop File Tranfser", stop button tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Stop File Tranfser", "stop button tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"stop"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
 	} else if( [itemIdent isEqual:MVToolbarRevealItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Reveal", show file in Finder toolbar button name )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Reveal File", show filein Finder toolbar customize palette name )];
+		[toolbarItem setLabel:NSLocalizedString( @"Reveal", "show file in Finder toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Reveal File", "show file in Finder toolbar customize palette name" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Reveal File in Finder", reveal button tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Reveal File in Finder", "reveal button tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
 	} else if( [itemIdent isEqual:MVToolbarClearItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Clear", clear finished transfers toolbar button name )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Clear Finished", clear finished transfers toolbar customize palette name )];
+		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear finished transfers toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Clear Finished", "clear finished transfers toolbar customize palette name" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Clear Finished Transfers", clear finished transfers tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Clear Finished Transfers", "clear finished transfers tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"clear"]];
 
 		[toolbarItem setTarget:self];
@@ -442,7 +442,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	[info setObject:[notification object] forKey:@"connection"];
 
-	NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", new file transfer dialog title ), NSLocalizedString( @"Accept", accept button name ), NSLocalizedString( @"Refuse", refuse button name ), nil, win, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *) [info retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", new file transfer dialog message ), [info objectForKey:@"filename"], [info objectForKey:@"from"], MVPrettyFileSize( [[info objectForKey:@"size"] unsignedLongValue] ) );
+	NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, win, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *) [info retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [info objectForKey:@"filename"], [info objectForKey:@"from"], MVPrettyFileSize( [[info objectForKey:@"size"] unsignedLongValue] ) );
 }
 
 - (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
@@ -467,8 +467,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		BOOL resumePossible = ( fileExists && [size unsignedLongValue] < [[info objectForKey:@"size"] unsignedLongValue] ? YES : NO );
 		int result = NSOKButton;
 
-		if( resumePossible ) result = NSRunAlertPanel( NSLocalizedString( @"Save", save dialog title ), NSLocalizedString( @"The file %@ in %@ already exists. Would you like to resume from where a previous transfer stopped or replace it?", replace or resume transfer save dialog message ), NSLocalizedString( @"Resume", resume button name ), @"Cancel", NSLocalizedString( @"Replace", replace button name ), [filename lastPathComponent], [filename stringByDeletingLastPathComponent] );
-		else if( fileExists ) result = NSRunAlertPanel( NSLocalizedString( @"Save", save dialog title ), NSLocalizedString( @"The file %@ in %@ already exists and can't be resumed. Replace it?", replace transfer save dialog message ), NSLocalizedString( @"Replace", replace button name ), @"Cancel", nil, [filename lastPathComponent], [filename stringByDeletingLastPathComponent] );
+		if( resumePossible ) result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists. Would you like to resume from where a previous transfer stopped or replace it?", "replace or resume transfer save dialog message" ), NSLocalizedString( @"Resume", "resume button name" ), @"Cancel", NSLocalizedString( @"Replace", "replace button name" ), [filename lastPathComponent], [filename stringByDeletingLastPathComponent] );
+		else if( fileExists ) result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists and can't be resumed. Replace it?", "replace transfer save dialog message" ), NSLocalizedString( @"Replace", "replace button name" ), @"Cancel", nil, [filename lastPathComponent], [filename stringByDeletingLastPathComponent] );
 
 		if( result == NSCancelButton ) {
 			NSWindow *win = [[MVChatWindowController chatWindowWithUser:[info objectForKey:@"from"] withConnection:[info objectForKey:@"connection"] ifExists:YES] window];
@@ -560,25 +560,25 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	if( mixed ) {
 		NSString *str = nil;
 		upRate = upRate / (float) upCount;
-		str = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ uploaded, at %@ per second", status of current upload file transfer ), ( totalSizeUp != totalTransferedUp ? MVPrettyFileSize( totalTransferedUp ) : @"total" ), MVPrettyFileSize( totalSizeUp ), MVPrettyFileSize( upRate )];
+		str = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ uploaded, at %@ per second", "status of current upload file transfer" ), ( totalSizeUp != totalTransferedUp ? MVPrettyFileSize( totalTransferedUp ) : NSLocalizedString( @"total", "total label for transfers" ) ), MVPrettyFileSize( totalSizeUp ), MVPrettyFileSize( upRate )];
 		str = [str stringByAppendingString:@"\n"];
 		downRate = downRate / (float) downCount;
-		str = [str stringByAppendingFormat:NSLocalizedString( @"%@ of %@ downloaded, at %@ per second", status of current download file transfer ), ( totalSizeDown != totalTransferedDown ? MVPrettyFileSize( totalTransferedDown ) : @"total" ), MVPrettyFileSize( totalSizeDown ), MVPrettyFileSize( downRate )];
+		str = [str stringByAppendingFormat:NSLocalizedString( @"%@ of %@ downloaded, at %@ per second", "status of current download file transfer" ), ( totalSizeDown != totalTransferedDown ? MVPrettyFileSize( totalTransferedDown ) : NSLocalizedString( @"total", "total label for transfers" ) ), MVPrettyFileSize( totalSizeDown ), MVPrettyFileSize( downRate )];
 		attrStr = [[[NSAttributedString alloc] initWithString:str] autorelease];
 	} else if( upCount || downCount ) {
 		NSString *str = nil;
 		avgRate = ( upRate + downRate ) / ( (float) upCount + (float) downCount );
-		if( downCount ) str = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ downloaded, at %@ per second", status of current download file transfer ), ( totalSize != totalTransfered ? MVPrettyFileSize( totalTransfered ) : @"total" ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
-		else if( upCount ) str = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ uploaded, at %@ per second", status of current upload file transfer ), ( totalSize != totalTransfered ? MVPrettyFileSize( totalTransfered ) : @"total" ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
+		if( downCount ) str = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ downloaded, at %@ per second", "status of current download file transfer" ), ( totalSize != totalTransfered ? MVPrettyFileSize( totalTransfered ) : NSLocalizedString( @"total", "total label for transfers" ) ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
+		else if( upCount ) str = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ uploaded, at %@ per second", "status of current upload file transfer" ), ( totalSize != totalTransfered ? MVPrettyFileSize( totalTransfered ) : NSLocalizedString( @"total", "total label for transfers" ) ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
 		if( ( upCount + downCount ) == 1 && startDate ) {
 			str = [str stringByAppendingString:@"\n"];
-			if( avgRate > 0 ) str = [str stringByAppendingFormat:NSLocalizedString( @"%@ elapsed, %@ remaining", time that has passed and time that remains on selected transfer ), MVReadableTime( [startDate timeIntervalSince1970], YES ), MVReadableTime( [[NSDate date] timeIntervalSince1970] + ( ( totalSize - totalTransfered) / avgRate ), NO )];
-			else str = [str stringByAppendingFormat:NSLocalizedString( @"%@ elapsed", time that has passed on selected transfer ), MVReadableTime( [startDate timeIntervalSince1970], YES )];
+			if( avgRate > 0 ) str = [str stringByAppendingFormat:NSLocalizedString( @"%@ elapsed, %@ remaining", "time that has passed and time that remains on selected transfer" ), MVReadableTime( [startDate timeIntervalSince1970], YES ), MVReadableTime( [[NSDate date] timeIntervalSince1970] + ( ( totalSize - totalTransfered) / avgRate ), NO )];
+			else str = [str stringByAppendingFormat:NSLocalizedString( @"%@ elapsed", "time that has passed on selected transfer" ), MVReadableTime( [startDate timeIntervalSince1970], YES )];
 		}
 		attrStr = [[[NSAttributedString alloc] initWithString:str] autorelease];
 	} else if( ! upCount && ! downCount ) {
 		totalSize = 1;
-		attrStr = [[[NSAttributedString alloc] initWithString:NSLocalizedString( @"No recent file transfers.", no files have been transfered or in the process of transfering )] autorelease];
+		attrStr = [[[NSAttributedString alloc] initWithString:NSLocalizedString( @"No recent file transfers.", "no files have been transfered or in the process of transfering" )] autorelease];
 	}
 	[transferStatus setAttributedStringValue:attrStr];
 	[progressBar setDoubleValue:totalTransfered];

@@ -37,7 +37,7 @@
 
 - (void) awakeFromNib {
 	if( crashLogExists ) {
-		[description setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@.", crash message ), programName, programName]];
+		[description setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@.", "crash message" ), programName, programName]];
 		[log replaceCharactersInRange:NSMakeRange( 0, 0 ) withString:[NSString stringWithContentsOfFile:logPath]];
 		[window center];
 		[window makeKeyAndOrderFront:nil];

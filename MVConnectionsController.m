@@ -134,19 +134,19 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 
 	if( ! [[newNickname stringValue] length] ) {
 		[[self window] makeFirstResponder:newNickname];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Nickname is blank", chat invalid nickname dialog title ), NSLocalizedString( @"The nickname you specified is invalid because it was left blank.", chat nickname blank dialog message ), nil, nil, nil );
+		NSRunCriticalAlertPanel( NSLocalizedString( @"Nickname is blank", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname you specified is invalid because it was left blank.", "chat nickname blank dialog message" ), nil, nil, nil );
 		return;
 	}
 
 	if( ! [[newAddress stringValue] length] ) {
 		[[self window] makeFirstResponder:newAddress];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server is blank", chat invalid nickname dialog title ), NSLocalizedString( @"The chat server you specified is invalid because it was left blank.", chat server blank dialog message ), nil, nil, nil );
+		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server is blank", "chat invalid nickname dialog title" ), NSLocalizedString( @"The chat server you specified is invalid because it was left blank.", "chat server blank dialog message" ), nil, nil, nil );
 		return;
 	}
 
 	if( [newPort intValue] < 0 || [newPort intValue] > 65535 ) {
 		[[self window] makeFirstResponder:newPort];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server Port is invalid", chat invalid nickname dialog title ), NSLocalizedString( @"The chat server port you specified is invalid because it can't be negative or greater than 65535.", chat server port invalid dialog message ), nil, nil, nil );
+		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server Port is invalid", "chat invalid nickname dialog title" ), NSLocalizedString( @"The chat server port you specified is invalid because it can't be negative or greater than 65535.", "chat server port invalid dialog message" ), nil, nil, nil );
 		return;
 	}
 
@@ -158,7 +158,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 			if( [[(MVChatConnection *)[data objectForKey:@"connection"] server] isEqualToString:[newAddress stringValue]] &&
 				[[(MVChatConnection *)[data objectForKey:@"connection"] nickname] isEqualToString:[newNickname stringValue]] ) {
 				if( [(MVChatConnection *)[data objectForKey:@"connection"] isConnected] ) {
-					NSRunCriticalAlertPanel( NSLocalizedString( @"Already connected", chat invalid nickname dialog title ), NSLocalizedString( @"The chat server with the nickname you specified is already connected to from this computer. Use another nickname if you desire multiple connections.", chat already connected message ), nil, nil, nil );
+					NSRunCriticalAlertPanel( NSLocalizedString( @"Already connected", "chat invalid nickname dialog title" ), NSLocalizedString( @"The chat server with the nickname you specified is already connected to from this computer. Use another nickname if you desire multiple connections.", "chat already connected message" ), nil, nil, nil );
 				} else {
 					[(MVChatConnection *)[data objectForKey:@"connection"] connect];
 					[openConnection orderOut:nil];
@@ -458,35 +458,35 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 		BOOL connected = [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected];
 
 		if( connected ) {
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Disconnect", disconnect contextual menu item title ) action:@selector( _disconnect: ) keyEquivalent:@""] autorelease];
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Disconnect", "disconnect from server title" ) action:@selector( _disconnect: ) keyEquivalent:@""] autorelease];
 			[item setTarget:self];
 			[menu addItem:item];
 		} else {
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Connect", connect contextual menu item title ) action:@selector( _connect: ) keyEquivalent:@""] autorelease];
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Connect", "connect to server title" ) action:@selector( _connect: ) keyEquivalent:@""] autorelease];
 			[item setTarget:self];
 			[menu addItem:item];
 		}
 
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", join room contextual menu item title ) action:@selector( _joinRoom: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", "join room contextual menu item title" ) action:@selector( _joinRoom: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		if( ! connected ) [item setAction:NULL];
 		[menu addItem:item];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Message User...", message user contextual menu item title ) action:@selector( _messageUser: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Message User...", "message user contextual menu item title" ) action:@selector( _messageUser: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		if( ! connected ) [item setAction:NULL];
 		[menu addItem:item];
 
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", get info contextual menu item title ) action:@selector( _editConnection: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( _editConnection: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		if( [editConnection isVisible] ) [item setAction:NULL];
 		[menu addItem:item];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", delete contextual menu item title ) action:@selector( _delete: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete item title" ) action:@selector( _delete: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		if( [editConnection isVisible] ) [item setAction:NULL];
 		[menu addItem:item];
@@ -560,55 +560,55 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
 
 	if( [itemIdent isEqualToString:MVToolbarConnectToggleItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Connect", short toolbar connect button name )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Connect", name for connect button in customize palette )];
+		[toolbarItem setLabel:NSLocalizedString( @"Connect", "connect to server title" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Connect", "connect to server title" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Connect to server", connect button tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Connect to server", "connect button tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"connect"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
 	} else if( [itemIdent isEqualToString:MVToolbarEditItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Info", short toolbar connection info button name )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Connection Info", name for connection info button in customize palette )];
+		[toolbarItem setLabel:NSLocalizedString( @"Info", "short toolbar connection info button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Connection Info", "name for connection info button in customize palette" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Show connection info", connection info button tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Show connection info", "connection info button tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"info"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
 	} else if( [itemIdent isEqualToString:MVToolbarDeleteItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Delete", short toolbar delete connection button name )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Delete Connection", name for delete connection button in customize palette )];
+		[toolbarItem setLabel:NSLocalizedString( @"Delete", "delete item title" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Delete Connection", "name for delete connection button in customize palette" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Delete connection", delete connection button tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Delete connection", "delete connection button tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"delete"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
 	} else if( [itemIdent isEqualToString:MVToolbarConsoleItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Console", short toolbar server console button name )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Server Console", name for server console button in customize palette )];
+		[toolbarItem setLabel:NSLocalizedString( @"Console", "short toolbar server console button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Server Console", "name for server console button in customize palette" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Open the server console", server console button tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Open the server console", "server console button tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"console"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
 	} else if( [itemIdent isEqualToString:MVToolbarJoinRoomItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Join Room", short toolbar join chat room button name )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Join Chat Room", name for join chat room button in customize palette )];
+		[toolbarItem setLabel:NSLocalizedString( @"Join Room", "short toolbar join chat room button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Join Chat Room", "name for join chat room button in customize palette" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Join a chat room", join chat room button tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Join a chat room", "join chat room button tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"joinRoom"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
 	} else if( [itemIdent isEqualToString:MVToolbarQueryUserItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Message User", short toolbar message user button name )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Message User", name for message user button in customize palette )];
+		[toolbarItem setLabel:NSLocalizedString( @"Message User", "toolbar message user button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Message User", "toolbar message user button name" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Message a user", message user button tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Message a user", "message user button tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"messageUser"]];
 
 		[toolbarItem setTarget:self];
@@ -723,14 +723,14 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	while( ( item = [enumerator nextObject] ) ) {
 		if( [[item itemIdentifier] isEqualToString:MVToolbarConnectToggleItemIdentifier] ) {
 			if( noneSelected || ! connected ) {
-				[item setLabel:NSLocalizedString( @"Connect", short toolbar connect button name )];
-				[item setToolTip:NSLocalizedString( @"Connect to Server", connect button tooltip )];
+				[item setLabel:NSLocalizedString( @"Connect", "connect to server title" )];
+				[item setToolTip:NSLocalizedString( @"Connect to Server", "connect button tooltip" )];
 				if( noneSelected ) [item setAction:@selector( newConnection: )];
 				else [item setAction:@selector( _connect: )];
 				[item setImage:[NSImage imageNamed:@"connect"]];
 			} else if( connected ) {
-				[item setLabel:NSLocalizedString( @"Disconnect", short toolbar disconnect button name )];
-				[item setToolTip:NSLocalizedString( @"Disconnect from Server", disconnect button tooltip )];
+				[item setLabel:NSLocalizedString( @"Disconnect", "disconnect from server title" )];
+				[item setToolTip:NSLocalizedString( @"Disconnect from Server", "disconnect button tooltip" )];
 				[item setAction:@selector( _disconnect: )];
 				[item setImage:[NSImage imageNamed:@"disconnect"]];
 			}
@@ -852,7 +852,7 @@ static NSString *MVToolbarQueryUserItemIdentifier = @"MVToolbarQueryUserItem";
 	if( ! _editingRooms ) _editingRooms = [[NSMutableArray array] retain];
 	[editRooms reloadData];
 
-	[editConnection setTitle:[NSString stringWithFormat:NSLocalizedString( @"Info for: %@", connection info window title ), [connection server]]];
+	[editConnection setTitle:[NSString stringWithFormat:NSLocalizedString( @"Info for: %@", "connection info window title" ), [connection server]]];
 
 	[editConnection makeKeyAndOrderFront:nil];
 	[self _validateToolbar];

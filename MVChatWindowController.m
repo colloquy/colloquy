@@ -498,7 +498,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[sortedMembers sortUsingSelector:@selector( caseInsensitiveCompare: )];
 		if( [memberListTable editedRow] < 0 ) [memberListTable reloadData];
 		if( ! previous ) {
-			[self addMessageToDisplay:NSLocalizedString( @"joined the chat room.", a user has join a chat room - presented as an action ) fromUser:member asAction:YES asAlert:YES];
+			[self addMessageToDisplay:NSLocalizedString( @"joined the chat room.", "a user has join a chat room - presented as an action" ) fromUser:member asAction:YES asAlert:YES];
 			MVChatPlaySoundForAction( @"MVChatMemberJoinedRoomAction" );
 		}
 	}
@@ -522,9 +522,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 			if( [memberListTable editedRow] < 0 ) [memberListTable reloadData];
 			if( reason ) {
 				NSString *rstring = [[[NSString alloc] initWithData:reason encoding:encoding] autorelease];
-				NSData *data = [[NSString stringWithFormat:NSLocalizedString( @"left the chat room for this reason: %@.", a user has left a chat room with a reason - presented as an action ), rstring] dataUsingEncoding:encoding allowLossyConversion:YES];
+				NSData *data = [[NSString stringWithFormat:NSLocalizedString( @"left the chat room for this reason: %@.", "a user has left a chat room with a reason - presented as an action" ), rstring] dataUsingEncoding:encoding allowLossyConversion:YES];
 				[self addHTMLMessageToDisplay:data fromUser:member asAction:YES asAlert:YES];
-			} else [self addMessageToDisplay:NSLocalizedString( @"left the chat room.", a user has left a chat room - presented as an action ) fromUser:member asAction:YES asAlert:YES];
+			} else [self addMessageToDisplay:NSLocalizedString( @"left the chat room.", "a user has left a chat room - presented as an action" ) fromUser:member asAction:YES asAlert:YES];
 			MVChatPlaySoundForAction( @"MVChatMemberLeftRoomAction" );
 		}
 	}
@@ -540,9 +540,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[sortedMembers addObject:nick];
 		[sortedMembers sortUsingSelector:@selector( caseInsensitiveCompare: )];
 		if( [memberListTable editedRow] < 0 ) [memberListTable reloadData];
-		[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"is now known as %@.", user has changed nicknames - presented as an action ), nick] fromUser:member asAction:YES asAlert:YES];
+		[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"is now known as %@.", "user has changed nicknames - presented as an action" ), nick] fromUser:member asAction:YES asAlert:YES];
 		if( [member isEqualToString:[self targetUser]] ) {
-			[window setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ - Private Message", private message with user - window title ), nick]];
+			[window setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ - Private Message", "private message with user - window title" ), nick]];
 			[NSWindow removeFrameUsingName:[window frameAutosaveName]];
 			[window setFrameAutosaveName:[NSString stringWithFormat:@"chat.user.%@.%@", [[self connection] server], nick]];
 			[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"chat.user.%@.encoding", member]];
@@ -580,8 +580,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 			[[memberList objectForKey:member] setObject:[NSNumber numberWithBool:YES] forKey:@"op"];
 			if( [memberListTable editedRow] < 0 ) [memberListTable reloadData];
 			if( by ) {
-				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"promoted %@ to operator.", user is now a chat room operator - presented as an action ), member] fromUser:by asAction:YES asAlert:YES];
-//				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"has been promoted to operator by %@.", user is now a chat room operator - presented as an action ), by] fromUser:member asAction:YES asAlert:YES];
+				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"promoted %@ to operator.", "user is now a chat room operator - presented as an action" ), member] fromUser:by asAction:YES asAlert:YES];
 				MVChatPlaySoundForAction( @"MVChatMemberPromotedAction" );
 			}
 		}
@@ -595,8 +594,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 			[[memberList objectForKey:member] removeObjectForKey:@"op"];
 			if( [memberListTable editedRow] < 0 ) [memberListTable reloadData];
 			if( by ) {
-				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"demoted %@ from operator.", user was removed from chat room operator status - presented as an action ), member] fromUser:by asAction:YES asAlert:YES];
-//				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"has been demoted from operator by %@.", user was removed from chat room operator status - presented as an action ), by] fromUser:member asAction:YES asAlert:YES];
+				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"demoted %@ from operator.", "user was removed from chat room operator status - presented as an action" ), member] fromUser:by asAction:YES asAlert:YES];
 				MVChatPlaySoundForAction( @"MVChatMemberDemotedAction" );
 			}
 		}
@@ -610,8 +608,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 			[[memberList objectForKey:member] setObject:[NSNumber numberWithBool:YES] forKey:@"voice"];
 			if( [memberListTable editedRow] < 0 ) [memberListTable reloadData];
 			if( by ) {
-				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"granted %@ voice.", user now has special voice status - presented as an action ), member] fromUser:by asAction:YES asAlert:YES];
-//				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"has been granted voice by %@.", user now has special voice status - presented as an action ), by] fromUser:member asAction:YES asAlert:YES];
+				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"granted %@ voice.", "user now has special voice status - presented as an action" ), member] fromUser:by asAction:YES asAlert:YES];
 				MVChatPlaySoundForAction( @"MVChatMemberVoicedAction" );
 			}
 		}
@@ -625,8 +622,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 			[[memberList objectForKey:member] removeObjectForKey:@"voice"];
 			if( [memberListTable editedRow] < 0 ) [memberListTable reloadData];
 			if( by ) {
-				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"removed voice from %@.", user was removed from chat room special voice status - presented as an action ), member] fromUser:by asAction:YES asAlert:YES];
-//				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"has voice removed by %@.", user was removed from chat room special voice status - presented as an action ), by] fromUser:member asAction:YES asAlert:YES];
+				[self addMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"removed voice from %@.", "user was removed from chat room special voice status - presented as an action" ), member] fromUser:by asAction:YES asAlert:YES];
 				MVChatPlaySoundForAction( @"MVChatMemberDevoicedAction" );
 			}
 		}
@@ -640,7 +636,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSParameterAssert( topic != nil );
 	if( [topic length] ) tData = topic;
 	else {
-		tData = [[NSString stringWithFormat:@"<font color=\"#6c6c6c\">%@</font>", NSLocalizedString( @"(no chat topic is set)", no chat topic is set message )] dataUsingEncoding:NSUTF8StringEncoding];
+		tData = [[NSString stringWithFormat:@"<font color=\"#6c6c6c\">%@</font>", NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" )] dataUsingEncoding:NSUTF8StringEncoding];
 		author = nil;
 	}
 	if( chatRoom ) {
@@ -660,12 +656,12 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		}
 
 		attributes = [NSMutableDictionary dictionaryWithObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Helvetica" traits:NSBoldFontMask weight:5 size:0.] forKey:NSFontAttributeName];
-		addons = [[[NSMutableAttributedString alloc] initWithString:NSLocalizedString( @"Topic: ", chat room topic prefix ) attributes:attributes] autorelease];
+		addons = [[[NSMutableAttributedString alloc] initWithString:NSLocalizedString( @"Topic: ", "chat room topic prefix" ) attributes:attributes] autorelease];
 		[topicAttr insertAttributedString:addons atIndex:0];
 
 		if( author ) {
 			attributes = [NSMutableDictionary dictionaryWithObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Helvetica" traits:NSItalicFontMask weight:5 size:0.] forKey:NSFontAttributeName];
-			addons = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString( @" posted by %@", who posted the current topic ), author] attributes:attributes] autorelease];
+			addons = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString( @" posted by %@", "who posted the current topic" ), author] attributes:attributes] autorelease];
 			[topicAttr appendAttributedString:addons];
 		}
 
@@ -696,7 +692,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSParameterAssert( member != nil );
 	NSParameterAssert( by != nil );
 	rstring = [[[NSString alloc] initWithData:reason encoding:encoding] autorelease];
-	data = [[NSString stringWithFormat:NSLocalizedString( @"booted %@ with this reason '%@'.", user has been removed by force from a chat room - presented as an action ), member, rstring] dataUsingEncoding:encoding allowLossyConversion:YES];
+	data = [[NSString stringWithFormat:NSLocalizedString( @"booted %@ with this reason '%@'.", "user has been removed by force from a chat room - presented as an action" ), member, rstring] dataUsingEncoding:encoding allowLossyConversion:YES];
 	[self addHTMLMessageToDisplay:data fromUser:by asAction:YES asAlert:YES];
 	[memberList removeObjectForKey:member];
 	[sortedMembers removeObject:member];
@@ -709,10 +705,10 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSData *data = nil;
 	NSParameterAssert( by != nil );
 	rstring = [[[NSString alloc] initWithData:reason encoding:encoding] autorelease];
-	data = [[NSString stringWithFormat:NSLocalizedString( @"booted you with this reason '%@'.", you were removed by force from a chat room - presented as an action ), rstring] dataUsingEncoding:encoding allowLossyConversion:YES];
+	data = [[NSString stringWithFormat:NSLocalizedString( @"booted you with this reason '%@'.", "you were removed by force from a chat room - presented as an action" ), rstring] dataUsingEncoding:encoding allowLossyConversion:YES];
 	[self addHTMLMessageToDisplay:data fromUser:by asAction:YES asAlert:YES];
 	MVChatPlaySoundForAction( @"MVChatMemberKickedAction" );
-	NSBeginCriticalAlertSheet( NSLocalizedString( @"Booted", title of the booted message sheet ), nil, nil, nil, window, self, NULL, @selector( _kickedFromChatPart:returnCode:contextInfo: ), NULL, NSLocalizedString( @"You have been booted out of this room by %@.", error description for gettign booted ), by );
+	NSBeginCriticalAlertSheet( NSLocalizedString( @"Booted", "title of the booted message sheet" ), nil, nil, nil, window, self, NULL, @selector( _kickedFromChatPart:returnCode:contextInfo: ), NULL, NSLocalizedString( @"You have been booted out of this room by %@.", "description for getting booted" ), by );
 }
 
 #pragma mark -
@@ -724,15 +720,15 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 - (void) disconnected {
 	invalidateMembers = YES;
-	[self addStatusMessageToDisplay:[[NSDate date] descriptionWithCalendarFormat:NSLocalizedString( @"%1I:%M %p, you're offline.", offline time stamp ) timeZone:nil locale:nil]];
-	NSBeginCriticalAlertSheet( NSLocalizedString( @"You're offline", title of the youre offline message sheet ), nil, NSLocalizedString( @"Close", close window button text ), nil, window, self, NULL, @selector( _disconnectedEnd:returnCode:contextInfo: ), NULL, NSLocalizedString( @"No messages can be sent at this time. Reconnecting might be in progress.", error description for loseing connection ) );
+	[self addStatusMessageToDisplay:[[NSDate date] descriptionWithCalendarFormat:NSLocalizedString( @"%1I:%M %p, you're offline.", "offline time stamp" ) timeZone:nil locale:nil]];
+	NSBeginCriticalAlertSheet( NSLocalizedString( @"You're offline", "title of the you're offline message sheet" ), nil, NSLocalizedString( @"Close", "close window button text" ), nil, window, self, NULL, @selector( _disconnectedEnd:returnCode:contextInfo: ), NULL, NSLocalizedString( @"No messages can be sent at this time. Reconnecting might be in progress.", "error description for loosing connection" ) );
 }
 
 - (void) unavailable {
 	invalidateMembers = YES;
 	if( ! chatRoom ) {
-		[self addStatusMessageToDisplay:[[NSDate date] descriptionWithCalendarFormat:NSLocalizedString( @"%1I:%M %p, user offline.", user offline time stamp ) timeZone:nil locale:nil]];
-		NSBeginCriticalAlertSheet( NSLocalizedString( @"Message undeliverable", title of the user offline message sheet ), nil, NSLocalizedString( @"Close", close window button text ), nil, window, self, NULL, @selector( _disconnectedEnd:returnCode:contextInfo: ), NULL, NSLocalizedString( @"This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.", error description for messaging a user that went offline or invalid ) );
+		[self addStatusMessageToDisplay:[[NSDate date] descriptionWithCalendarFormat:NSLocalizedString( @"%1I:%M %p, user offline.", "user offline time stamp" ) timeZone:nil locale:nil]];
+		NSBeginCriticalAlertSheet( NSLocalizedString( @"Message undeliverable", "title of the user offline message sheet" ), nil, NSLocalizedString( @"Close", "close window button text" ), nil, window, self, NULL, @selector( _disconnectedEnd:returnCode:contextInfo: ), NULL, NSLocalizedString( @"This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.", "error description for messaging a user that went offline or invalid" ) );
 	}
 }
 
@@ -818,7 +814,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[_lastDateMessage autorelease];
 		_lastDateMessage = [[NSDate date] retain];
 
-		[self addStatusMessageToDisplay:[_lastDateMessage descriptionWithCalendarFormat:NSLocalizedString( @"%1I:%M %p", time format for chat time stamps: hour:minute am/pm ) timeZone:nil locale:nil]];
+		[self addStatusMessageToDisplay:[_lastDateMessage descriptionWithCalendarFormat:NSLocalizedString( @"%1I:%M %p", "time format for chat time stamps: hour:minute am/pm" ) timeZone:nil locale:nil]];
 	}
 
 	msgString = [[message mutableCopy] autorelease];
@@ -933,7 +929,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	}
 
 	if( [[sendText string] hasPrefix:@"/"] && ! [[sendText string] hasPrefix:@"/me "] ) {
-		if( NSRunInformationalAlertPanelRelativeToWindow( NSLocalizedString( @"No IRC Commands", no irc commands error dialog title ), NSLocalizedString( @"You have typed in an IRC command that wont be processed. If you choose Send, the message will be sent exactly as you typed it.", no irc commands error dialog message ), NSLocalizedString( @"Cancel", cancel button name ), NSLocalizedString( @"Send", send button name ), nil, window ) == NSOKButton )
+		if( NSRunInformationalAlertPanelRelativeToWindow( NSLocalizedString( @"No IRC Commands", "no irc commands error dialog title" ), NSLocalizedString( @"You have typed in an IRC command that wont be processed. If you choose Send, the message will be sent exactly as you typed it.", "no irc commands error dialog message" ), @"Cancel", NSLocalizedString( @"Send", "send button name" ), nil, window ) == NSOKButton )
 			return;
 	}
 
@@ -1021,7 +1017,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		}
 	}
 
-	if( ! _spillEncodingMenu ) _spillEncodingMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString( @"Encoding", encoding menu toolbar item )];
+	if( ! _spillEncodingMenu ) _spillEncodingMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding menu toolbar item" )];
 	count = [_spillEncodingMenu numberOfItems];
 	for( i = 0; i < count; i++ ) [_spillEncodingMenu removeItemAtIndex:0];
 	count = [[encodingView menu] numberOfItems];
@@ -1042,7 +1038,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 - (IBAction) partChat:(id) sender {
-	[self addStatusMessageToDisplay:NSLocalizedString( @"You left the chat.", left the chat message displayed before window is closed )];
+	[self addStatusMessageToDisplay:NSLocalizedString( @"You left the chat.", "left the chat message displayed before window is closed" )];
 	if( chatRoom ) [[self connection] partChatForRoom:[self targetRoom]];
 	else [[self class] disposeWindowWithUser:[self targetUser] withConnection:[self connection]];
 }
@@ -1390,7 +1386,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[self changeSelfTo:object];
 		[memberListTable reloadData];
 	} else if( ! [object isEqualToString:[sortedMembers objectAtIndex:row]] ) {
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", chat invalid nickname dialog title ), NSLocalizedString( @"The nickname you specified is in use or invalid on this server.", chat invalid nickname dialog message ), nil, nil, nil );
+		NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname you specified is in use or invalid on this server.", "chat invalid nickname dialog message" ), nil, nil, nil );
 	}
 }
 
@@ -1400,85 +1396,85 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
 
 	if( [itemIdent isEqual:MVToolbarEmoticonsItemIdentifier] ) {
-		NSMenu *newMenu = [[[NSMenu alloc] initWithTitle:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus )] autorelease];
+		NSMenu *newMenu = [[[NSMenu alloc] initWithTitle:NSLocalizedString( @"Emoticons", "emoticons options title - used in a few places like toolbar and menus" )] autorelease];
 		NSMenuItem *menuItem = nil;
 		NSImage *icon = [[[NSImage imageNamed:@"emoticon"] copy] autorelease];
 		MVMenuButton *button = [emoticonView copyWithZone:[self zone]];
 
 		[button setToolbarItem:toolbarItem];
 
-		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus )];
+		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", "emoticons options title - used in a few places like toolbar and menus" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", "emoticons options title - used in a few places like toolbar and menus" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Add Emotions with Emoticons", emoticons toolbar button tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Add Emotions with Emoticons", "emoticons toolbar button tooltip" )];
 		[toolbarItem setView:button];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Smile", smile emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Smile", "smile emoticon name" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@":)"];
 		[menuItem setImage:[NSImage imageNamed:@"smile"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Wink", wink emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Wink", "wink emoticon name" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@";)"];
 		[menuItem setImage:[NSImage imageNamed:@"wink"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Grin", grin emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Grin", "grin emoticon name" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@":D"];
 		[menuItem setImage:[NSImage imageNamed:@"happy"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Stoic", stoic emoticon name - flat face ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Stoic", "stoic emoticon name - flat face" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@"=|"];
 		[menuItem setImage:[NSImage imageNamed:@"stoic"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Frown", frown emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Frown", "frown emoticon name" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@":("];
 		[menuItem setImage:[NSImage imageNamed:@"frown"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Annoyed", annoyed emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Annoyed", "annoyed emoticon name" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@":\\"];
 		[menuItem setImage:[NSImage imageNamed:@"annoyed"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Razz", razz emoticon name - tounge out ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Razz", "razz emoticon name - tounge out" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@":P"];
 		[menuItem setImage:[NSImage imageNamed:@"razz"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Angry", angry emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Angry", "angry emoticon name" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@":x"];
 		[menuItem setImage:[NSImage imageNamed:@"angry"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Cool", cool guy emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Cool", "cool guy emoticon name" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@"8)"];
 		[menuItem setImage:[NSImage imageNamed:@"cool"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Jamming", jamming emoticon name - headphones on ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Jamming", "jamming emoticon name - headphones on" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@"[=)"];
 		[menuItem setImage:[NSImage imageNamed:@"headphones"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Relaxed", relaxed emoticon name - hat on ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Relaxed", "relaxed emoticon name - hat on" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@"d:)"];
 		[menuItem setImage:[NSImage imageNamed:@"hat"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Angel", angel emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Angel", "angel emoticon name" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@"O:)"];
 		[menuItem setImage:[NSImage imageNamed:@"angel"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Evil", evil emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Evil", "evil emoticon name" ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:@">:)"];
 		[menuItem setImage:[NSImage imageNamed:@"evil"]];
 		[newMenu addItem:menuItem];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus ) action:NULL keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "emoticons options title - used in a few places like toolbar and menus" ) action:NULL keyEquivalent:@""] autorelease];
 		[icon setScalesWhenResized:YES];
 		[icon setSize:NSMakeSize( 16., 16. )];
 		[menuItem setImage:icon];
@@ -1488,75 +1484,75 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[button setMenu:newMenu];
 		[button setMenuDelay:0.];
 	} else if( [itemIdent isEqual:MVToolbarCloseWindowItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Leave Chat", leave chat toolbar item )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Leave Chat", nil)];
+		[toolbarItem setLabel:NSLocalizedString( @"Leave Chat", "leave chat toolbar item" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Leave Chat", "leave chat toolbar item" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Leave this Chat", leave chat tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Leave this Chat", "leave chat tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"part"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( partChat: )];
 	} else if( [itemIdent isEqual:MVToolbarHideWindowItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Hide Chat", hide current chat toolbar item )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Hide Chat", nil)];
+		[toolbarItem setLabel:NSLocalizedString( @"Hide Chat", "hide current chat toolbar item" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Hide Chat", "hide current chat toolbar item" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Hide this Chat Window", hide chat tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Hide this Chat Window", "hide chat tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"hide"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( hideWindow: )];
 	} else if( [itemIdent isEqual:MVToolbarBoldFontItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Bold", bold font toolbar item )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Bold", nil)];
+		[toolbarItem setLabel:NSLocalizedString( @"Bold", "bold font toolbar item" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Bold", "bold font toolbar item" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Bold Style", bold font tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Bold Style", "bold font tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"bold"]];
 
 		[toolbarItem setTarget:sendText];
 		[toolbarItem setAction:@selector( bold: )];
 	} else if( [itemIdent isEqual:MVToolbarItalicFontItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Italic", italic font style toolbar item )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Italic", nil)];
+		[toolbarItem setLabel:NSLocalizedString( @"Italic", "italic font style toolbar item" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Italic", "italic font style toolbar item" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Italic Style", italic style tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Italic Style", "italic style tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"italic"]];
 
 		[toolbarItem setTarget:sendText];
 		[toolbarItem setAction:@selector( italic: )];
 	} else if( [itemIdent isEqual:MVToolbarUnderlineFontItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Underline", underline font style toolbar item )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Underline", nil)];
+		[toolbarItem setLabel:NSLocalizedString( @"Underline", "underline font style toolbar item" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Underline", "underline font style toolbar item" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Underline Style", underline style tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Underline Style", "underline style tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"underline"]];
 
 		[toolbarItem setTarget:sendText];
 		[toolbarItem setAction:@selector( underline: )];
 	} else if( [itemIdent isEqual:MVToolbarChatMembersItemIdentifier] ) {
-		[toolbarItem setLabel:NSLocalizedString( @"Members", chat room members toolbar item name )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Chat Members", chat room members toolbar customize palette name )];
+		[toolbarItem setLabel:NSLocalizedString( @"Members", "chat room members toolbar item name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Chat Members", "chat room members toolbar customize palette name" )];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Chat Members", chat room members toolbar item tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Toggle Chat Members", "chat room members toolbar item tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"members"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( toggleMemberDrawer: )];
 	} else if( [itemIdent isEqual:MVToolbarTextEncodingItemIdentifier] ) {
 		NSMenuItem *menuItem = nil;
-		[toolbarItem setLabel:NSLocalizedString( @"Encoding", encoding menu toolbar item )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Text Encoding", encoding menu toolbar customize palette name )];
+		[toolbarItem setLabel:NSLocalizedString( @"Encoding", "encoding menu toolbar item" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Text Encoding", "encoding menu toolbar customize palette name" )];
 
 		[toolbarItem setTarget:nil];
 		[toolbarItem setAction:NULL];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Text Encoding Options", encoding menu toolbar item tooltip )];
+		[toolbarItem setToolTip:NSLocalizedString( @"Text Encoding Options", "encoding menu toolbar item tooltip" )];
 		[toolbarItem setView:encodingView];
 		[toolbarItem setMinSize:NSMakeSize( 60., 24. )];
 		[toolbarItem setMaxSize:NSMakeSize( 60., 32. )];
 
 		[self changeEncoding:nil];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", encoding menu toolbar item ) action:NULL keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding menu toolbar item" ) action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setImage:[NSImage imageNamed:@"encoding"]];
 		[menuItem setSubmenu:_spillEncodingMenu];
 
@@ -1619,7 +1615,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 - (void) _setTargetUser:(NSString *) user {
 	NSParameterAssert( user != nil );
-	[window setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ - Private Message", private message with user - window title ), user]];
+	[window setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ - Private Message", "private message with user - window title" ), user]];
 	[outlet autorelease];
 	outlet = [user copy];
 	chatRoom = NO;
@@ -1628,7 +1624,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 - (void) _setTargetRoom:(NSString *) room {
 	NSParameterAssert( room != nil );
-	[window setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ - Chat Room", chat room window - window title ), [room lowercaseString]]];
+	[window setTitle:[NSString stringWithFormat:NSLocalizedString( @"%@ - Chat Room", "chat room window - window title" ), [room lowercaseString]]];
 	[outlet autorelease];
 	outlet = [[room lowercaseString] copy];
 	chatRoom = YES;

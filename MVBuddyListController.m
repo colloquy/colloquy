@@ -168,12 +168,12 @@ static MVBuddyListController *sharedInstance = nil;
 	if( ! [status length] ) {
 		if( ! [_connections count] ) {
 			[myStatus setEditable:NO];
-			[self setStatus:NSLocalizedString( @"Offline", buddy list offline status message ) sendToServers:NO];
+			[self setStatus:NSLocalizedString( @"Offline", "buddy list offline status message" ) sendToServers:NO];
 			[_statusMessage autorelease];
 			_statusMessage = nil;
 		} else {
 			[myStatus setEditable:YES];
-			[self setStatus:[NSString stringWithFormat:NSLocalizedString( @"Available (%d %@)", buddy list available status message with the number of servers entered at runtime ), [_connections count], ( [_connections count] == 1 ? NSLocalizedString( @"server", singular server label ) : NSLocalizedString( @"servers", plural server label ) )] sendToServers:NO];
+			[self setStatus:[NSString stringWithFormat:NSLocalizedString( @"Available (%d %@)", "buddy list available status message with the number of servers entered at runtime" ), [_connections count], ( [_connections count] == 1 ? NSLocalizedString( @"server", "singular server label" ) : NSLocalizedString( @"servers", "plural server label" ) )] sendToServers:NO];
 		}
 	} else {
 		NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor darkGrayColor], NSForegroundColorAttributeName, nil];

@@ -128,14 +128,14 @@ void MVChatConnectionFailed( void *c, void *cs, const int error, const char * co
 	switch( error ) {
 		case FE_SOCKET:
 		case FE_RESOLV:
-			if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", chat invalid password dialog title ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are conencted to the internet and have access to the server.", chat invalid password dialog message ), NSLocalizedString( @"Retry", retry connecting to server ), NSLocalizedString( @"Cancel", cancel button ), nil ) == NSOKButton )
+			if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are conencted to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
 				[self connect];
 			break;
 		case FE_BADUSERPASS:
-			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat password is invalid", chat invalid password dialog title ), NSLocalizedString( @"The password you specified is invalid or a connection could not be made without a proper password. Make sure you have access to the server.", chat invalid password dialog message ), nil, nil, nil );
+			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat password is invalid", "chat invalid password dialog title" ), NSLocalizedString( @"The password you specified is invalid or a connection could not be made without a proper password. Make sure you have access to the server.", "chat invalid password dialog message" ), nil, nil, nil );
 			break;
 		case FE_BADUSER:
-			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", chat invalid nickname dialog title ), [NSString stringWithFormat:NSLocalizedString( @"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.", chat invalid nicknames dialog message ), [self nickname]], nil, nil, nil );
+			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.", "chat invalid nicknames dialog message" ), [self nickname]], nil, nil, nil );
 			break;
 		default: NSLog( @"unable to login to irc, error %d (%s)", error, reason );
 	}
@@ -152,10 +152,10 @@ void MVChatDisconnect( void *c, void *cs, const int error ) {
 		case FE_PACKET:
 		case FE_PACKETSIZE:
 			if( status == MVChatConnectionConnectedStatus ) {
-				if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", title of the you have been disconnected error ), NSLocalizedString( @"The server may have shut down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", connection droped ), NSLocalizedString( @"Reconnect", retry connecting to server button ), @"Cancel", nil ) == NSOKButton )
+				if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), @"Cancel", nil ) == NSOKButton )
 					[self connect];
 			} else {
-				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", title of the could not connect error ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", connection failed ), NSLocalizedString( @"Retry", connect to server button ), @"Cancel", nil ) == NSOKButton )
+				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
 					[self connect];
 			}
 			NSLog( @"connection lost, error: %s", firetalk_strerror( error ) );
@@ -174,7 +174,7 @@ void MVChatError( void *c, void *cs, const int error, const char * const roomoru
 			else if( roomoruser ) [[MVChatWindowController chatWindowWithUser:[NSString stringWithUTF8String:roomoruser] withConnection:self ifExists:YES] unavailable];
 			else {
 				[MVChatWindowController changeSelfInChatWindowsTo:[self nickname] forConnection:self];
-				NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", chat invalid nickname dialog title ), NSLocalizedString( @"The nickname you specified is in use or invalid on this server.", chat invalid nickname dialog message ), nil, nil, nil );
+				NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname you specified is in use or invalid on this server.", "chat invalid nickname dialog message" ), nil, nil, nil );
 			}
 			break;
 		default: NSLog( @"error from user/room %s: %s", roomoruser, firetalk_strerror( error ) );
@@ -380,7 +380,7 @@ void MVChatInvited( void *c, void *cs, const char * const room, const char * con
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( from != NULL );
 	win = [[MVChatWindowController chatWindowWithUser:[NSString stringWithUTF8String:from] withConnection:self ifExists:YES] window];
-	if( NSRunAlertPanelRelativeToWindow( NSLocalizedString( @"Invited to Chat", invited to a chat room - sheet title ), [NSString stringWithFormat:NSLocalizedString( @"You have been invited to chat in the %@ room by %@.", invited to chat room description - sheet message ), [NSString stringWithUTF8String:room], [NSString stringWithUTF8String:from]], nil, NSLocalizedString( @"Refuse", refuse button name ), nil, win ) == NSOKButton ) {
+	if( NSRunAlertPanelRelativeToWindow( NSLocalizedString( @"Invited to Chat", "invited to a chat room - sheet title" ), [NSString stringWithFormat:NSLocalizedString( @"You have been invited to chat in the %@ room by %@.", "invited to chat room description - sheet message" ), [NSString stringWithUTF8String:room], [NSString stringWithUTF8String:from]], nil, NSLocalizedString( @"Refuse", "refuse button name" ), nil, win ) == NSOKButton ) {
 		[self joinChatForRoom:[NSString stringWithUTF8String:room]];
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionInvitedToRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", nil]];

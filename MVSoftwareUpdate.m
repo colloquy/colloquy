@@ -49,17 +49,17 @@ static void MVSoftwareUpdateClearTimeout() {
 
 	if( ! updateInfo ) {
 		error:
-		if( ! flag ) NSRunCriticalAlertPanel( NSLocalizedString( @"Connection to the Update server failed.", connection failed to the update server ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", connection droped ), nil, nil, nil );
+		if( ! flag ) NSRunCriticalAlertPanel( NSLocalizedString( @"Connection to the Update server failed.", "connection failed to the update server" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), nil, nil, nil );
 	} else if( [[updateInfo objectForKey:@"MVNeedsUpdate"] boolValue] ) {
 		if( flag ) {
-			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"There is a new version of %@ currently available.", no new version ), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]], NSLocalizedString( @"A newer version of this software has just been detected, would you like to see what's new?", the software needs updated question ), NSLocalizedString( @"Yes", yes answer ), NSLocalizedString( @"Never", never answer ), NSLocalizedString( @"No", no answer ) ) != NSOKButton ) {
+			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"There is a new version of %@ currently available.", "new version available" ), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]], NSLocalizedString( @"A newer version of this software has just been detected, would you like to see what's new?", "the software needs updated question" ), NSLocalizedString( @"Yes", "yes answer" ), NSLocalizedString( @"Never", "never answer" ), NSLocalizedString( @"No", "no answer" ) ) != NSOKButton ) {
 				goto end;
 			}
 		}
 		retain = YES;
 		[NSBundle loadNibNamed:@"MVSoftwareUpdate" owner:self];
 	} else if( ! flag ) {
-		NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"There are no new versions of %@ currently available.", no new version ), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]], NSLocalizedString( @"Your software is all up-to-date with the latest version released. Check back at a later date.", the software is all up-to-date ), nil, nil, nil );
+		NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"There are no new versions of %@ currently available.", "no new version" ), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]], NSLocalizedString( @"Your software is all up-to-date with the latest version released. Check back at a later date.", "the software is all up-to-date" ), nil, nil, nil );
 	}
 
 	end:
@@ -82,8 +82,8 @@ static void MVSoftwareUpdateClearTimeout() {
 	if( [[updateInfo objectForKey:@"MVNeedsUpdate"] boolValue] ) {
 		NSString *label = NSLocalizedStringFromTableInBundle( @"CFBundleName", @"InfoPlist", [NSBundle mainBundle], nil );
 		if( [label isEqualToString:@"CFBundleName"] ) label = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
-		[program setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%@ Update", current version ), label]];
-		[version setStringValue:[NSString stringWithFormat:NSLocalizedString( @"currently using %@ (v%@)", current version ), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
+		[program setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%@ Update", "program update" ), label]];
+		[version setStringValue:[NSString stringWithFormat:NSLocalizedString( @"currently using %@ (v%@)", "current version" ), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
 		[[about textStorage] replaceCharactersInRange:NSMakeRange( 0, 0 ) withAttributedString:[[[NSAttributedString alloc] initWithHTML:[[updateInfo objectForKey:@"MVInformation"] dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES] documentAttributes:nil] autorelease]];
 		[window center];
 		[window makeKeyAndOrderFront:nil];
