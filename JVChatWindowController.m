@@ -623,6 +623,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self _refreshWindow];
 
 	[self _refreshSelectionMenu];
+	[chatViewsOutlineView sizeLastColumnToFit];
 //	[self _refreshChatActivityToolbarItemWithListItem:item];
 }
 
