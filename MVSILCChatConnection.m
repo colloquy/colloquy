@@ -45,10 +45,13 @@ NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCe
 
 - (void) _allocSilcClient;
 
-- (void) _addCommand:(NSString *)raw forNumber:(SilcUInt16)cmd_ident;
-- (NSString *) _getCommandForNumber:(SilcUInt16)cmd_ident;
+- (void) _addCommand:(NSString *)raw forNumber:(SilcUInt16) cmd_ident;
+- (NSString *) _getCommandForNumber:(SilcUInt16) cmd_ident;
 - (NSLock *) _sentCommandsLock;
 - (NSMutableDictionary *) _sentCommands;
+
+- (void) _sendCommandSucceededNotify:(NSString *) message;
+- (void) _sendCommandFailedNotify:(NSString *) message;
 @end
 
 #pragma mark -
@@ -120,8 +123,15 @@ void silc_channel_get_clients_per_list_callback( SilcClient client, SilcClientCo
 	int i = 0;
 	for( i = 0; i < clients_count; i++ ) {
 		NSMutableDictionary *info = [NSMutableDictionary dictionary];
+		
+		NSString *nickname = nil;
+		if ( clients[i] -> nickname ) nickname = [NSString stringWithUTF8String:clients[i] -> nickname];
+		if ( ! nickname ) {
+			// we can't add a user without its nickname ... continue
+			continue;
+		}
 
-		[info setObject:[NSString stringWithUTF8String:clients[i] -> nickname] forKey:@"nickname"];
+		[info setObject:nickname forKey:@"nickname"];
 
 		SilcChannelUser channelUser = silc_client_on_channel( channel, clients[i] );
 		BOOL serverOperator = NO;
@@ -139,13 +149,17 @@ void silc_channel_get_clients_per_list_callback( SilcClient client, SilcClientCo
 		[info setObject:[NSNumber numberWithBool:operator] forKey:@"operator"];
 		[info setObject:[NSNumber numberWithBool:NO] forKey:@"halfOperator"];
 		[info setObject:[NSNumber numberWithBool:NO] forKey:@"voice"];
-		[info setObject:[NSString stringWithUTF8String:clients[i] -> hostname] forKey:@"address"];
+		
+		if ( clients[i] -> hostname )
+			[info setObject:[NSString stringWithUTF8String:clients[i] -> hostname] forKey:@"address"];
+		else
+			[info setObject:@"" forKey:@"address"];
 		// [info setObject:[NSString stringWithUTF8String:clients[i] -> realname] forKey:@"realName"];
 
 		unsigned int mode = 0;
 		if( channelUser ) mode = channelUser -> mode;
 
-		[self _addUser:[NSString stringWithUTF8String:clients[i] -> nickname] toChannel:[dict objectForKey:@"channel_name"] withMode:[NSNumber numberWithUnsignedInt:mode]];
+		[self _addUser:nickname toChannel:[dict objectForKey:@"channel_name"] withMode:[NSNumber numberWithUnsignedInt:mode]];
 		
 		[nickArray addObject:info];
 	}
@@ -437,8 +451,30 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 		case SILC_NOTIFY_TYPE_UMODE_CHANGE:
 		case SILC_NOTIFY_TYPE_BAN:
 		case SILC_NOTIFY_TYPE_ERROR:
-		case SILC_NOTIFY_TYPE_INVITE:
-			break;
+		case SILC_NOTIFY_TYPE_INVITE: {
+			SilcChannelEntry channel = va_arg( list, SilcChannelEntry );
+			char *channel_name = va_arg( list, char * );
+			SilcClientEntry inviter = va_arg( list, SilcClientEntry );
+			
+			NSString *channelName = nil;
+			if ( channel && channel -> channel_name ) channelName = [NSString stringWithUTF8String:channel -> channel_name];
+			if ( ! channelName && channel_name ) channelName = [NSString stringWithUTF8String:channel_name];
+			if ( ! channelName ) {
+				// we don't get the channel name .. I don't understand this, but silc toolkit documentation
+				// tells us that channel_name *can* be NULL ... we just return ...
+				return;
+			}
+			
+			NSString *by = nil;
+			if ( inviter && inviter -> nickname ) by = [NSString stringWithUTF8String:inviter -> nickname];
+			if ( ! by ) {
+				return;
+			}
+			
+			NSNotification *note = [NSNotification notificationWithName:MVChatConnectionInvitedToRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:channelName, @"room", by, @"from", nil]];		
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+			
+		}	break;
 	} 
 
 	va_end( list );
@@ -458,13 +494,11 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 	if ( ! rawCommand ) rawCommand = @"Unknown command";
 	
 	if ( ! success ) {
-		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawCommand, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+		[self _sendCommandFailedNotify:rawCommand];
 		return;
 	}
 	
-	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawCommand, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];
+	[self _sendCommandSucceededNotify:rawCommand];
 	
 	va_start( list, status );
 	switch( command ) {
@@ -1134,8 +1168,12 @@ static SilcClientOperations silcClientOps = {
 
 	[[self _silcClientLock] lock];
 	bool b = silc_client_command_call( [self _silcClient], [self _silcConn], [raw UTF8String] );
-	[self _addCommand:raw forNumber:[self _silcConn] -> cmd_ident];
+	if ( b ) [self _addCommand:raw forNumber:[self _silcConn] -> cmd_ident];
 	[[self _silcClientLock] unlock];
+	
+	if ( ! b ) {
+		[self _sendCommandFailedNotify:raw];
+	}
 }
 
 #pragma mark -
@@ -1574,13 +1612,13 @@ static SilcClientOperations silcClientOps = {
 	}
 }
 
-- (void) _addCommand:(NSString *)raw forNumber:(SilcUInt16)cmd_ident {
+- (void) _addCommand:(NSString *)raw forNumber:(SilcUInt16) cmd_ident {
 	[[self _sentCommandsLock] lock];
 	[[self _sentCommands] setObject:raw forKey:[NSNumber numberWithUnsignedShort:cmd_ident]];
 	[[self _sentCommandsLock] unlock];
 }
 
-- (NSString *) _getCommandForNumber:(SilcUInt16)cmd_ident {
+- (NSString *) _getCommandForNumber:(SilcUInt16) cmd_ident {
 	NSString *string;
 	NSNumber *number = [NSNumber numberWithUnsignedShort:cmd_ident];
 	[[self _sentCommandsLock] lock];
@@ -1597,5 +1635,17 @@ static SilcClientOperations silcClientOps = {
 
 - (NSMutableDictionary *) _sentCommands {
 	return _sentCommands;
+}
+
+- (void) _sendCommandSucceededNotify:(NSString *) message {
+	NSString *raw = [NSString stringWithFormat:@"Command succeeded: %@", message];
+	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];
+}
+
+- (void) _sendCommandFailedNotify:(NSString *) message {
+	NSString *raw = [NSString stringWithFormat:@"Command failure: %@", message];
+	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];	
 }
 @end
