@@ -419,7 +419,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 - (IBAction) leaveChat:(id) sender {
 	[[JVChatController defaultManager] disposeViewController:self];
-	[_windowController removeChatViewController:self];
 }
 
 - (void) downloadLinkToDisk:(id) sender {

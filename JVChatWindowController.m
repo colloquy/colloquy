@@ -130,7 +130,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (IBAction) closeCurrentPanel:(id) sender {
 	[[JVChatController defaultManager] disposeViewController:_activeViewController];
-	[self removeChatViewController:_activeViewController];
 }
 
 - (IBAction) selectPreviousPanel:(id) sender {

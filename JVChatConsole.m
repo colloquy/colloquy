@@ -71,7 +71,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (IBAction) close:(id) sender {
 	[[JVChatController defaultManager] disposeViewController:self];
-	[_windowController removeChatViewController:self];
 }
 
 #pragma mark -
