@@ -448,8 +448,17 @@ static BOOL applicationIsTerminating = NO;
 				}
 
 				if( [iconPath length] ) {
-					if( [NSURL URLWithString:iconPath] ) {
-						NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingURL:[NSURL URLWithString:iconPath]] autorelease];
+					NSURL *iconURL;
+					if( iconURL = [NSURL URLWithString:iconPath] ) {
+						//NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingURL:[NSURL URLWithString:iconPath]] autorelease];
+						// Lets download the icon with a 1-second timeout
+						// Let's also ask for the cache if it exists rather than using protocol default
+						NSURLRequest *iconRequest = [NSURLRequest requestWithURL:iconURL
+																	 cachePolicy:NSURLRequestReturnCacheDataElseLoad
+																 timeoutInterval:1.0];
+						NSData *iconData = [NSURLConnection sendSynchronousRequest:iconRequest
+																 returningResponse:nil error:nil];
+						NSImage *icon = [[[NSImage alloc] initWithData:iconData] autorelease];
 						if( icon ) [mitem setImage:icon];
 					} else {
 						if( ! [iconPath isAbsolutePath] ) {
