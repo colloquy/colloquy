@@ -17,7 +17,7 @@
     float               maxOpacity;
 }
 
-+ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask;
++ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title;
 - (void)moveFloaterToPoint:(NSPoint)inPoint;
 - (IBAction)close:(id)sender;
 - (void)endFloater;

@@ -239,17 +239,25 @@
 	id newWindowController = [[destTabView window] windowController];
 
 	if( oldWindowController != newWindowController ) {
-		[chatController retain];
-		[[chatController windowController] removeChatViewController:chatController];
-
 		if( ! newWindowController ) {
 			NSRect newFrame;
 			newWindowController = [[JVChatController defaultManager] newChatWindowController];
 			newFrame.origin = screenPoint;
 			newFrame.size = [[oldWindowController window] frame].size;
+
+			NSToolbar *toolbar = [[oldWindowController window] toolbar];
+			if( toolbar && [toolbar isVisible] ) {
+				NSWindow *window = [oldWindowController window];
+				NSRect windowFrame = [NSWindow contentRectForFrameRect:[window frame] styleMask:[window styleMask]];
+				newFrame.size.height -= NSHeight( windowFrame ) - NSHeight( [[window contentView] frame] );
+			}
+
 			[[newWindowController window] setFrame:newFrame display:NO];
 		}
 
+		[chatController retain];
+		[[chatController windowController] removeChatViewController:chatController];
+		
 		if( index > 0 ) [newWindowController insertChatViewController:chatController atIndex:index];
 		else [newWindowController addChatViewController:chatController];
 		[chatController release];

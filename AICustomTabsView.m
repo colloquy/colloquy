@@ -604,9 +604,9 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 	//Give the tab cell a chance to handle tracking
     if(tabCell = [self tabAtPoint:lastClickLocation]){
         if(![tabCell willTrackMouse:theEvent inRect:[tabCell frame] ofView:self]){
-			if(! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ){ //Allow background dragging
+//			if(! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ){ //Allow background dragging
                 [tabView selectTabViewItem:[tabCell tabViewItem]];
-            }
+//            }
         }
     }
 }
@@ -633,7 +633,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 					[[AICustomTabDragging sharedInstance] dragTabCell:dragCell
 												   fromCustomTabsView:self 
 															withEvent:theEvent 
-															selectTab:(!( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ))];
+															selectTab:YES /*(!( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask )) */];
 					[dragCell release];
 					
 				}

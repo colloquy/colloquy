@@ -37,11 +37,11 @@
 	
 	if(useFancyAnimations){
 		//Create a floating window for our tab
-		dragTabFloater = [ESFloater floaterWithImage:floaterTabImage styleMask:NSBorderlessWindowMask];
+		dragTabFloater = [ESFloater floaterWithImage:floaterTabImage styleMask:NSBorderlessWindowMask title:nil];
 		[dragTabFloater setMaxOpacity:1.0];
 		
 		//Create a floating window for the stand-alone window our tab would produce
-		dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:NSTitledWindowMask];
+		dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:NSTitledWindowMask title:[[inTabView window] title]];
 		[dragWindowFloater setMaxOpacity:0.75];
 	}
 		

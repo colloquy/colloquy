@@ -114,6 +114,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 		//Hide the source window
 		if(sourceWindowWillHide){
 			[[sourceTabBar window] setAlphaValue:0.0];
+			[[[sourceTabBar window] drawers] makeObjectsPerformSelector:@selector( close )];
 		}
 		
 		//Perform the drag
