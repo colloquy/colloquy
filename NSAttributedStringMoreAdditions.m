@@ -56,17 +56,17 @@ static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary 
 			if( [attr rangeOfString:@"italic"].location != NSNotFound ) {
 				NSFont *oldFont = [currentAttributes objectForKey:NSFontAttributeName];
 				NSFont *font = [[NSFontManager sharedFontManager] convertFont:oldFont toHaveTrait:NSItalicFontMask];
-				if( font ) {
+				if( ! [font isEqual:oldFont] ) {
 					[currentAttributes setObject:font forKey:NSFontAttributeName];
 					handled = YES;
 				} else {
-					[currentAttributes setObject:[NSNumber numberWithFloat:0.16] forKey:NSObliquenessAttributeName];
+					[currentAttributes setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue] forKey:NSObliquenessAttributeName];
 					handled = YES;
 				}
 			} else {
 				NSFont *oldFont = [currentAttributes objectForKey:NSFontAttributeName];
 				NSFont *font = [[NSFontManager sharedFontManager] convertFont:oldFont toNotHaveTrait:NSItalicFontMask];
-				if( font ) {
+				if( ! [font isEqual:oldFont] ) {
 					[currentAttributes setObject:font forKey:NSFontAttributeName];
 					handled = YES;
 				} else {
@@ -161,11 +161,11 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		} else */ if( ! strcmp( node -> name, "i" ) ) {
 			NSFont *oldFont = [newAttributes objectForKey:NSFontAttributeName];
 			NSFont *font = [[NSFontManager sharedFontManager] convertFont:oldFont toHaveTrait:NSItalicFontMask];
-			if( [font isEqual:oldFont] ) {
+			if( ! [font isEqual:oldFont] ) {
 				[newAttributes setObject:font forKey:NSFontAttributeName];
 				skipTag = YES;
 			} else {
-				[newAttributes setObject:[NSNumber numberWithFloat:0.16] forKey:NSObliquenessAttributeName];
+				[newAttributes setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue] forKey:NSObliquenessAttributeName];
 				skipTag = YES;
 			}
 		}

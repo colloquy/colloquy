@@ -179,7 +179,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
 			int traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
 			if( traits & NSBoldFontMask ) bold = YES;
-			if( traits & NSItalicFontMask ) italic = YES;
+			if( traits & NSItalicFontMask || [[dict objectForKey:NSObliquenessAttributeName] floatValue] > 0 ) italic = YES;
 			if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
 			if( [[dict objectForKey:NSStrikethroughStyleAttributeName] intValue] ) strikethrough = YES;
 		}
