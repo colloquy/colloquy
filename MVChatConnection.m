@@ -156,37 +156,38 @@ void MVChatBackLog( void *c, void *cs, const double backlog ) {
 #pragma mark -
 
 void MVChatNeedPassword( void *c, void *cs, char *password, const int size ) {
+	NSCParameterAssert( password != NULL );
+
 	MVChatConnection *self = cs;
 	const char *pass = [[self nicknamePassword] UTF8String];
 	if( ! pass ) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedPasswordNotification object:self userInfo:nil];
 		return;
 	}
+
 	strncpy( password, pass, size );
 }
 
 #pragma mark -
 
 void MVChatGetMessage( void *c, void *cs, const char * const who, const int automessage, const char * const message ) {
-	MVChatConnection *self = cs;
-	NSData *msgData = nil;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
 	NSCParameterAssert( message != NULL );
 
-	msgData = [NSData dataWithBytes:message length:strlen( message )];
+	MVChatConnection *self = cs;
+	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"from", [NSNumber numberWithBool:automessage], @"auto", msgData, @"message", nil]];
 }
 
 void MVChatGetAction( void *c, void *cs, const char * const who, const int automessage, const char * const message ) {
-	MVChatConnection *self = cs;
-	NSData *msgData = nil;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
 	NSCParameterAssert( message != NULL );
 
-	msgData = [NSData dataWithBytes:message length:strlen( message )];
+	MVChatConnection *self = cs;
+	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"from", [NSNumber numberWithBool:automessage], @"auto", [NSNumber numberWithBool:YES], @"action", msgData, @"message", nil]];
 }
@@ -194,294 +195,302 @@ void MVChatGetAction( void *c, void *cs, const char * const who, const int autom
 #pragma mark -
 
 void MVChatBuddyOnline( void *c, void *cs, const char * const who ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", nil]];
 }
 
 void MVChatBuddyOffline( void *c, void *cs, const char * const who ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", nil]];
 }
 
 void MVChatBuddyAway( void *c, void *cs, const char * const who ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsAwayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", nil]];
 }
 
 void MVChatBuddyUnaway( void *c, void *cs, const char * const who ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsUnawayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", nil]];
 }
 
 void MVChatBuddyGotIdle( void *c, void *cs, const char * const who, const long idletime ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsIdleNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", [NSNumber numberWithLong:idletime], @"idle", nil]];
 }
 
 #pragma mark -
 
 void MVChatGotInfo( void *c, void *cs, const char * const who, const char * const username, const char * const hostname, const char * const server, const char * const realname, const int warning, const long idle, const long connected, const int flags ) {
-	MVChatConnection *self = cs;
-	NSDictionary *infoDic = nil;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
-	infoDic = [NSDictionary dictionaryWithObjectsAndKeys:( username ? [NSString stringWithUTF8String:username] : [NSNull null] ), @"username", ( hostname ? [NSString stringWithUTF8String:hostname] : [NSNull null] ), @"hostname", ( server ? [NSString stringWithUTF8String:server] : [NSNull null] ), @"server", ( realname ? [NSString stringWithUTF8String:realname] : [NSNull null] ), @"realName", [NSNumber numberWithUnsignedInt:idle], @"idle", [NSNumber numberWithUnsignedInt:connected], @"connected", [NSNumber numberWithUnsignedInt:flags], @"flags", nil];
+
+	MVChatConnection *self = cs;
+	NSDictionary *infoDic = [NSDictionary dictionaryWithObjectsAndKeys:( username ? [NSString stringWithUTF8String:username] : [NSNull null] ), @"username", ( hostname ? [NSString stringWithUTF8String:hostname] : [NSNull null] ), @"hostname", ( server ? [NSString stringWithUTF8String:server] : [NSNull null] ), @"server", ( realname ? [NSString stringWithUTF8String:realname] : [NSNull null] ), @"realName", [NSNumber numberWithUnsignedInt:idle], @"idle", [NSNumber numberWithUnsignedInt:connected], @"connected", [NSNumber numberWithUnsignedInt:flags], @"flags", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotUserInfoNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", infoDic, @"info", nil]];
 }
 
 void MVChatListRoom( void *c, void *cs, const char * const room, const int users, const char * const topic ) {
-	MVChatConnection *self = cs;
-	NSString *r = nil, *t = nil;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( topic != NULL );
-	r = [NSString stringWithUTF8String:room];
-	t = [NSString stringWithUTF8String:topic];
+
+	MVChatConnection *self = cs;
+	NSString *r = [NSString stringWithUTF8String:room];
+	NSString *t = [NSString stringWithUTF8String:topic];
 	[self _addRoomToCache:r withUsers:users andTopic:t];
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomInfoNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:r, @"room", [NSNumber numberWithUnsignedInt:users], @"users", t, @"topic", nil]];
 }
 
 #pragma mark -
 
 void MVChatJoinedRoom( void *c, void *cs, const char * const room ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", nil]];
 }
 
 void MVChatLeftRoom( void *c, void *cs, const char * const room ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", nil]];
 }
 
 void MVChatGetRoomMessage( void *c, void *cs, const char * const room, const char * const from, const int automessage, const char * message ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( message != NULL );
-	{
-		NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", [NSNumber numberWithBool:automessage], @"auto", msgData, @"message", nil]];
-	}
+
+	MVChatConnection *self = cs;
+	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", [NSNumber numberWithBool:automessage], @"auto", msgData, @"message", nil]];
 }
 
 void MVChatGetRoomAction( void *c, void *cs, const char * const room, const char * const from, const int automessage, const char * message ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( message != NULL );
-	{
-		NSData *msgData = [NSData dataWithBytes:message length:strlen(message)];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", [NSNumber numberWithBool:automessage], @"auto", [NSNumber numberWithBool:YES], @"action", msgData, @"message", nil]];
-	}
+
+	MVChatConnection *self = cs;
+	NSData *msgData = [NSData dataWithBytes:message length:strlen(message)];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", [NSNumber numberWithBool:automessage], @"auto", [NSNumber numberWithBool:YES], @"action", msgData, @"message", nil]];
 }
 
 #pragma mark -
 
 void MVChatKicked( void *c, void *cs, const char * const room, const char * const by, const char * const reason ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
-	{
-		NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionKickedFromRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", ( by ? [NSString stringWithUTF8String:by] : [NSNull null] ), @"by", ( reason ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
-	}
+
+	MVChatConnection *self = cs;
+	NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionKickedFromRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", ( by ? [NSString stringWithUTF8String:by] : [NSNull null] ), @"by", ( reason ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
 }
 
 void MVChatInvited( void *c, void *cs, const char * const room, const char * const from, const char * message ) {
-	MVChatConnection *self = cs;
 #pragma unused(message)
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( from != NULL );
-/*	if( NSRunAlertPanelRelativeToWindow( NSLocalizedString( @"Invited to Chat", "invited to a chat room - sheet title" ), [NSString stringWithFormat:NSLocalizedString( @"You have been invited to chat in the %@ room by %@.", "invited to chat room description - sheet message" ), [NSString stringWithUTF8String:room], [NSString stringWithUTF8String:from]], nil, NSLocalizedString( @"Refuse", "refuse button name" ), nil, win ) == NSOKButton ) {
-		[self joinChatRoom:[NSString stringWithUTF8String:room]];
-	}*/
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionInvitedToRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", nil]];
 }
 
 void MVChatGotTopic( void *c, void *cs, const char * const room, const char * const topic, const char * const author ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
-	{
-		NSData *msgData = [NSData dataWithBytes:topic length:(topic ? strlen(topic) : 0)];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomTopicNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", ( author ? (id) [NSString stringWithUTF8String:author] : (id) [NSNull null] ), @"author", ( topic ? (id) msgData : (id) [NSNull null] ), @"topic", nil]];
-	}
+
+	MVChatConnection *self = cs;
+	NSData *msgData = [NSData dataWithBytes:topic length:(topic ? strlen(topic) : 0)];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomTopicNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", ( author ? (id) [NSString stringWithUTF8String:author] : (id) [NSNull null] ), @"author", ( topic ? (id) msgData : (id) [NSNull null] ), @"topic", nil]];
 }
 
 #pragma mark -
 
 void MVChatUserJoinedRoom( void *c, void *cs, const char * const room, const char * const who, const int previousmember ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
-//	firetalk_im_get_info( c, who, 0 );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", [NSNumber numberWithBool:previousmember], @"previousMember", nil]];
 }
 
 void MVChatUserLeftRoom( void *c, void *cs, const char * const room, const char * const who, const char * const reason ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
-	{
-		NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", ( reason ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
-	}
+
+	MVChatConnection *self = cs;
+	NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", ( reason ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
 }
 
 void MVChatUserNicknameChanged( void *c, void *cs, const char * const room, const char * const oldnick, const char * const newnick ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( oldnick != NULL );
 	NSCParameterAssert( newnick != NULL );
 
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserNicknameChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:oldnick], @"oldNickname", [NSString stringWithUTF8String:newnick], @"newNickname", nil]];
 }
 
 #pragma mark -
 
 void MVChatNewNickname( void *c, void *cs, const char * const newnick ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( newnick != NULL );
+
+	MVChatConnection *self = cs;
 	[self _confirmNewNickname:[NSString stringWithUTF8String:newnick]];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNicknameAcceptedNotification object:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:newnick], @"nickname", nil]];
 }
 
 #pragma mark -
 
 void MVChatGotRoomMode( void *c, void *cs, const char * const room, const char * const by, const int on, enum firetalk_room_mode mode, const char * const param ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomModeNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", (param?[NSString stringWithUTF8String:param]:[NSNull null]), @"param", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", [NSNumber numberWithBool:on], @"enabled", [NSNumber numberWithUnsignedInt:(unsigned int)mode], @"mode", nil]];
 }
 
 void MVChatUserOpped( void *c, void *cs, const char * const room, const char * const who, const char * const by ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserOppedInRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", nil]];
 }
 
 void MVChatUserDeopped( void *c, void *cs, const char * const room, const char * const who, const char * const by ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserDeoppedInRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", nil]];
 }
 
 void MVChatUserVoiced( void *c, void *cs, const char * const room, const char * const who, const char * const by ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserVoicedInRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", nil]];
 }
 
 void MVChatUserDevoiced( void *c, void *cs, const char * const room, const char * const who, const char * const by ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserDevoicedInRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", nil]];
 }
 
 void MVChatUserKicked( void *c, void *cs, const char * const room, const char * const who, const char * const by, const char * const reason ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
-	{
-		NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserKickedFromRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", msgData, @"reason", nil]];
-	}
+
+	MVChatConnection *self = cs;
+	NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserKickedFromRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", msgData, @"reason", nil]];
 }
 
 void MVChatUserAway( void *c, void *cs, const char * const who, const char * const message ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
-	{
-		NSData *msgData = [NSData dataWithBytes:message length:(message ? strlen(message) : 0)];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", msgData, @"message", nil]];
-	}
+
+	MVChatConnection *self = cs;
+	NSData *msgData = [NSData dataWithBytes:message length:(message ? strlen(message) : 0)];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", msgData, @"message", nil]];
 }
 
 #pragma mark -
 
 void MVChatFileTransferAccept( void *c, void *cs, const void * const filehandle, const char * const from, const char * const filename, const long size ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( filehandle != NULL );
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( filename != NULL );
 	NSCParameterAssert( size >= 0 );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionFileTransferAvailableNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%x", filehandle], @"identifier", [NSString stringWithUTF8String:from], @"from", [NSString stringWithUTF8String:filename], @"filename", [NSNumber numberWithUnsignedLong:size], @"size", nil]];
 }
 
 void MVChatFileTransferStart( void *c, void *cs, const void * const filehandle, const void * const clientfilestruct ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( filehandle != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionFileTransferStartedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%x", filehandle], @"identifier", nil]];
 }
 
 void MVChatFileTransferFinish( void *c, void *cs, const void * const filehandle, const void * const clientfilestruct, const unsigned long size ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( filehandle != NULL );
 	NSCParameterAssert( size >= 0 );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionFileTransferFinishedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%x", filehandle], @"identifier", [NSNumber numberWithUnsignedLong:size], @"size", nil]];
 }
 
 void MVChatFileTransferError( void *c, void *cs, const void * const filehandle, const void * const clientfilestruct, const int error ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( filehandle != NULL );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionFileTransferErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%x", filehandle], @"identifier", [NSNumber numberWithInt:error], @"error", nil]];
 }
 
 void MVChatFileTransferStatus( void *c, void *cs, const void * const filehandle, const void * const clientfilestruct, const unsigned long bytes, const unsigned long size ) {
-	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( filehandle != NULL );
 	NSCParameterAssert( bytes >= 0 );
 	NSCParameterAssert( size >= 0 );
+
+	MVChatConnection *self = cs;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionFileTransferStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%x", filehandle], @"identifier", [NSNumber numberWithUnsignedLong:bytes], @"transfered", [NSNumber numberWithUnsignedLong:size], @"size", nil]];
 }
 
 #pragma mark -
 
 void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const char * const command, const char * const args ) {
-	MVChatConnection *self = cs;
-
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( command != NULL );
 
+	MVChatConnection *self = cs;
 	NSString *cmd = [NSString stringWithUTF8String:command];
 	NSString *ags = ( args ? [NSString stringWithUTF8String:args] : nil );
 	NSString *frm = [NSString stringWithUTF8String:from];
@@ -500,7 +509,7 @@ void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const cha
 	if( ! strcasecmp( command, "VERSION" ) ) {
 		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 		NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
-		NSString *reply = [NSString stringWithFormat:@"%@ %@ - %@ %@ - http://www.javelin.cc?colloquy", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"]];
+		NSString *reply = [NSString stringWithFormat:@"%@ %@ - %@ %@ - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
 		[self sendSubcodeReply:@"VERSION" toUser:[NSString stringWithUTF8String:from] withArguments:reply];
 		return;
 	}
@@ -509,16 +518,15 @@ void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const cha
 }
 
 void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char * const command, const char * const args ) {
-	MVChatConnection *self = cs;
-
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( command != NULL );
 
+	MVChatConnection *self = cs;
 	NSString *cmd = [NSString stringWithUTF8String:command];
 	NSString *ags = ( args ? [NSString stringWithUTF8String:args] : nil );
 	NSString *frm = [NSString stringWithUTF8String:from];
-	
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processSubcodeReply:withArguments:fromUser:forConnection: )];
@@ -526,10 +534,10 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	[invocation setArgument:&ags atIndex:3];
 	[invocation setArgument:&frm atIndex:4];
 	[invocation setArgument:&self atIndex:5];
-	
+
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 	if( [[results lastObject] boolValue] ) return;
-	
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];
 }
 
