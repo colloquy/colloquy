@@ -1,6 +1,5 @@
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
-#import <OpenScripting/OpenScripting.h>
 
 @interface NSScriptObjectSpecifier (NSScriptObjectSpecifierPrivate) // Private Foundation Methods
 + (id) _objectSpecifierFromDescriptor:(NSAppleEventDescriptor *) descriptor inCommandConstructionContext:(id) context;
@@ -55,7 +54,7 @@
 	return [NSNumber numberWithUnsignedLong:_compiledScriptID];
 }
 
-- (BOOL) saveToFile:(NSString *) path {
+/* - (BOOL) saveToFile:(NSString *) path {
 	FSRef ref;
 	FSPathMakeRef( [path UTF8String], &ref, NULL );
 	OSAError result = OSAStoreFile( [NSAppleScript _defaultScriptingComponent], _compiledScriptID, typeOSAGenericStorage, kOSAModeNull, &ref );
@@ -72,7 +71,7 @@
 	if( number == -1 ) return 0;
 
 	return number;
-}
+} */
 @end
 
 #pragma mark -

@@ -116,7 +116,6 @@
 			children = (
 				1CB61DB7059D2DC400FE75AD,
 				1058C7ADFEA557BF11CA2CBB,
-				1C09B251072AFE900046D190,
 				1CCB3C3705228EFD000001C8,
 				1C5A233D06FA4FEE00A51F10,
 				1C5A233E06FA4FEE00A51F10,
@@ -154,20 +153,6 @@
 //1C2
 //1C3
 //1C4
-		1C09B251072AFE900046D190 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = Carbon.framework;
-			path = /System/Library/Frameworks/Carbon.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		1C09B252072AFE900046D190 = {
-			fileRef = 1C09B251072AFE900046D190;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C0D8864067D1E7100E851AC = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -393,7 +378,6 @@
 				1CA66049060EAF05008FCC95,
 				1C5A233F06FA4FEE00A51F10,
 				1C5A234006FA4FEE00A51F10,
-				1C09B252072AFE900046D190,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
