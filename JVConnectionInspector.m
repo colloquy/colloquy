@@ -122,16 +122,11 @@
 }
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
-	if( [[column identifier] isEqual:@"room"] ) {
-		return [_editingRooms objectAtIndex:row];
-	}
-	return nil;
+	return [_editingRooms objectAtIndex:row];
 }
 
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
-	if( [[column identifier] isEqual:@"room"] ) {
-		[_editingRooms replaceObjectAtIndex:row withObject:object];
-	}
+	[_editingRooms replaceObjectAtIndex:row withObject:object];
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
