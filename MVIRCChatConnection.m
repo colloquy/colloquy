@@ -456,6 +456,7 @@ static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const ch
 	[room _removeMemberUser:member];
 
 	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) {
+		[room _setDateParted:[NSDate date]];
 		note = [NSNotification notificationWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:byMember, @"byUser", msgData, @"reason", nil]];		
 	} else {
 		note = [NSNotification notificationWithName:MVChatRoomUserKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", byMember, @"byUser", msgData, @"reason", nil]];

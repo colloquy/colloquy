@@ -54,9 +54,11 @@
 		_keepAfterPart = NO;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _partedRoom: ) name:MVChatRoomPartedNotification object:target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _kicked: ) name:MVChatRoomKickedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotMessage: ) name:MVChatRoomGotMessageNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberJoined: ) name:MVChatRoomUserJoinedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberParted: ) name:MVChatRoomUserPartedNotification object:target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberKicked: ) name:MVChatRoomUserKickedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatRoomModeChangedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberModeChanged: ) name:MVChatRoomUserModeChangedNotification object:target];
 	}
@@ -612,7 +614,7 @@
 - (void) _roomModeChanged:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"by"];
 
-	if( ! user || [user isMemberOfClass:[NSNull class]] ) return;
+	if( ! user ) return;
 	if( [[self connection] type] == MVChatConnectionIRCType && [[user nickname] rangeOfString:@"."].location != NSNotFound )
 		return; // a server telling us the initial modes when we join, ignore these on IRC connections
 
@@ -829,10 +831,7 @@
 	JVChatRoomMember *mbr = [self chatRoomMemberForUser:user];
 	if( ! mbr ) return;
 
-	id reason = [[notification userInfo] objectForKey:@"reason"];
-	NSMutableAttributedString *rstring = nil;
-	if( [reason isKindOfClass:[NSData class]] )
-		rstring = [self _convertRawMessage:reason];
+	NSMutableAttributedString *rstring = [self _convertRawMessage:[[notification userInfo] objectForKey:@"reason"]];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( NSAttributedString * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -860,8 +859,88 @@
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
 
 	[_sortedMembers removeObjectIdenticalTo:mbr];
-
 	[_windowController reloadListItem:self andChildren:YES];
+}
+
+- (void) _kicked:(NSNotification *) notification {
+	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
+	JVChatRoomMember *byMbr = [self chatRoomMemberForUser:byUser];
+	NSMutableAttributedString *rstring = [self _convertRawMessage:[[notification userInfo] objectForKey:@"reason"]];
+	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+
+	[self addEventMessageToDisplay:message withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( [byMbr title] ? [byMbr title] : [byUser nickname] ), @"by", [byUser nickname], @"by-nickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), @encode( NSAttributedString * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( kickedFromRoom:by:forReason: )];
+	[invocation setArgument:&self atIndex:2];
+	[invocation setArgument:&byMbr atIndex:3];
+	[invocation setArgument:&rstring atIndex:4];
+
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+
+	JVChatRoomMember *mbr = [[[self localChatRoomMember] retain] autorelease];
+	if( [_windowController selectedListItem] == mbr )
+		[_windowController showChatViewController:[_windowController activeChatViewController]];
+
+	[_sortedMembers removeObjectIdenticalTo:mbr];
+	[_windowController reloadListItem:self andChildren:YES];
+
+	_kickedFromRoom = YES;
+	_cantSendMessages = YES;
+
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"You Were Kicked", "member kicked title" ) forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were kicked from %@ by %@.", "bubble message member kicked string" ), [self title], ( byMbr ? [byMbr title] : [byUser nickname] )] forKey:@"description"];
+	[context setObject:self forKey:@"target"];
+	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
+
+	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You have been kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You have been kicked from the chat room by %@ with the reason \"%@\" and cannot send further messages without rejoining.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, ( byMbr ? [byMbr title] : [byUser nickname] ), ( rstring ? [rstring string] : @"" ) ) withName:nil];
+}
+
+- (void) _memberKicked:(NSNotification *) notification {
+	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	JVChatRoomMember *mbr = [[[self chatRoomMemberForUser:user] retain] autorelease];
+	if( ! mbr ) return;
+
+	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
+	JVChatRoomMember *byMbr = [self chatRoomMemberForUser:byUser];
+	NSMutableAttributedString *rstring = [self _convertRawMessage:[[notification userInfo] objectForKey:@"reason"]];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), @encode( NSAttributedString * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( memberKicked:fromRoom:by:forReason: )];
+	[invocation setArgument:&mbr atIndex:2];
+	[invocation setArgument:&self atIndex:3];
+	[invocation setArgument:&byMbr atIndex:4];
+	[invocation setArgument:&rstring atIndex:5];
+
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+
+	if( [_windowController selectedListItem] == mbr )
+		[_windowController showChatViewController:[_windowController activeChatViewController]];
+
+	[_sortedMembers removeObjectIdenticalTo:mbr];
+	[_windowController reloadListItem:self andChildren:YES];
+
+	NSString *message = nil;
+	if( [byMbr isLocalUser] ) {
+		message = [NSString stringWithFormat:NSLocalizedString( @"You kicked %@ from the chat room.", "you removed a user by force from a chat room status message" ), ( mbr ? [mbr title] : [user nickname] )];
+	} else {
+		message = [NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from the chat room by <span class=\"member\">%@</span>.", "user has been removed by force from a chat room status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+	}
+
+	[self addEventMessageToDisplay:message withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( [byMbr title] ? [byMbr title] : [byUser nickname] ), @"by", [byUser nickname], @"by-nickname", ( [mbr title] ? [mbr title] : [user nickname] ), @"who", [user nickname], @"who-nickname", ( [mbr hostmask] ? (id) [mbr hostmask] : (id) [NSNull null] ), @"mask", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"Room Member Kicked", "member kicked title" ) forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from %@ by %@.", "bubble message member kicked string" ), ( mbr ? [mbr title] : [user nickname] ), [self title], ( byMbr ? [byMbr title] : [byUser nickname] )] forKey:@"description"];
+	[context setObject:self forKey:@"target"];
+	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 }
 
 - (void) _memberModeChanged:(NSNotification *) notification {
@@ -872,8 +951,7 @@
 	MVChatUser *user = [[notification userInfo] objectForKey:@"who"];
 	MVChatUser *byUser = [[notification userInfo] objectForKey:@"by"];
 
-	if( ! user || [user isMemberOfClass:[NSNull class]] ) return;
-	if( [byUser isMemberOfClass:[NSNull class]] ) byUser = nil;
+	if( ! user ) return;
 
 	JVChatRoomMember *mbr = [self chatRoomMemberForUser:user];
 	JVChatRoomMember *byMbr = [self chatRoomMemberForUser:byUser];

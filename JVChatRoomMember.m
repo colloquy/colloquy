@@ -436,7 +436,7 @@
 #pragma mark -
 
 - (IBAction) kick:(id) sender {
-//	[[self connection] kickMember:[self nickname] inRoom:[[self room] target] forReason:@""];
+	[[[self room] target] kickOutMemberUser:[self user] forReason:nil];
 }
 
 - (IBAction) ban:(id) sender {
@@ -564,29 +564,38 @@
 }
 
 - (IBAction) closeKickSheet:(id) sender {
-	NSString *reason = [firstField stringValue];
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 
-//	[[self connection] kickMember:[self nickname] inRoom:[[self room] target] forReason:reason];
+	NSAttributedString *reason = [[[NSAttributedString alloc] initWithString:[firstField stringValue]] autorelease];
+	[[[self room] target] kickOutMemberUser:[self user] forReason:reason];
 }
 
 - (IBAction) closeBanSheet:(id) sender {
-	NSString *hostmask = [firstField stringValue];
-	[NSApp endSheet:banWindow];
-	[banWindow orderOut:self];
-
-//	[[self connection] banMember:hostmask inRoom:[[self room] target]];
-}
-
-- (IBAction) closeKickbanSheet:(id) sender {
-	NSString *hostmask = [firstField stringValue];
-	NSString *reason = [secondField stringValue];
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 
-//	[[self connection] banMember:hostmask inRoom:[[self room] target]];
-//	[[self connection] kickMember:[self nickname] inRoom:[[self room] target] forReason:reason];
+	NSArray *parts = [[firstField stringValue] componentsSeparatedByString:@"!"];
+	NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
+	NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
+
+	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
+	[[[self room] target] addBanForUser:user];
+}
+
+- (IBAction) closeKickbanSheet:(id) sender {
+	[[NSApplication sharedApplication] endSheet:banWindow];
+	[banWindow orderOut:self];
+
+	NSArray *parts = [[firstField stringValue] componentsSeparatedByString:@"!"];
+	NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
+	NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
+
+	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
+	[[[self room] target] addBanForUser:user];
+
+	NSAttributedString *reason = [[[NSAttributedString alloc] initWithString:[secondField stringValue]] autorelease];
+	[[[self room] target] kickOutMemberUser:[self user] forReason:reason];
 }
 
 - (IBAction) cancelSheet:(id) sender {
