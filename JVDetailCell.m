@@ -128,7 +128,7 @@
 		[mainImage autorelease];
 	}
 
-	switch( [self imageScaling] ) {
+	if( [self image] ) switch( [self imageScaling] ) {
 	case NSScaleProportionally:
 		if( NSHeight( cellFrame ) < [[self image] size].height )
 			imageWidth = ( NSHeight( cellFrame ) / [[self image] size].height ) * [[self image] size].width;
@@ -139,12 +139,11 @@
 		imageWidth = [[self image] size].width;
 		break;
 	case NSScaleToFit:
-		imageWidth = 0.;
+		imageWidth = [[self image] size].width;
 		break;
-		
-
 	}
 
+#define JVDetailCellLabelPadding 2.
 #define JVDetailCellImageLabelPadding 5.
 #define JVDetailCellTextLeading 2.
 #define JVDetailCellStatusImageLeftPadding 2.
@@ -155,17 +154,17 @@
 
 		if( NSHeight( cellFrame ) >= mainStringSize.height ) {
 			mainYLocation = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2 ) - ( mainStringSize.height / 2 );
-			[_mainText drawInRect:NSMakeRect( cellFrame.origin.x + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : 0. ), mainYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 2. ) - ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. ), [_mainText sizeWithAttributes:attributes].height ) withAttributes:attributes];
+			[_mainText drawInRect:NSMakeRect( NSMinX( cellFrame ) + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ), mainYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 2. ) - ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. ), [_mainText sizeWithAttributes:attributes].height ) withAttributes:attributes];
 		}
 	} else if( [_infoText length] && [_mainText length] ) {
 		float mainYLocation = 0., subYLocation = 0.;
 
 		if( NSHeight( cellFrame ) >= mainStringSize.height ) {
-			mainYLocation = cellFrame.origin.y + ( NSHeight( cellFrame ) / 2 ) - mainStringSize.height + ( JVDetailCellTextLeading / 2. );
-			[_mainText drawInRect:NSMakeRect( cellFrame.origin.x + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : 0. ), mainYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 2. ) - ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. ), [_mainText sizeWithAttributes:attributes].height ) withAttributes:attributes];
+			mainYLocation = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2 ) - mainStringSize.height + ( JVDetailCellTextLeading / 2. );
+			[_mainText drawInRect:NSMakeRect( cellFrame.origin.x + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ), mainYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 2. ) - ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. ), [_mainText sizeWithAttributes:attributes].height ) withAttributes:attributes];
 
 			subYLocation = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2 ) + subStringSize.height - mainStringSize.height + ( JVDetailCellTextLeading / 2. );
-			[_infoText drawInRect:NSMakeRect( NSMinX( cellFrame ) + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : 0. ), subYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 2. ) - ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. ), [_infoText sizeWithAttributes:subAttributes].height ) withAttributes:subAttributes];
+			[_infoText drawInRect:NSMakeRect( NSMinX( cellFrame ) + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ), subYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 2. ) - ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. ), [_infoText sizeWithAttributes:subAttributes].height ) withAttributes:subAttributes];
 		}
 	}
 
