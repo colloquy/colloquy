@@ -195,6 +195,28 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self showChatViewController:[_views objectAtIndex:index]];
 }
 
+- (IBAction) selectPreviousActivePanel:(id) sender {
+	int currentIndex = [_views indexOfObject:_activeViewController];
+	int index = currentIndex;
+	BOOL done = NO;
+	
+	do {
+		if( [[_views objectAtIndex:index] respondsToSelector:@selector( newMessagesWaiting )] && [[_views objectAtIndex:index] newMessagesWaiting] > 0 ){
+			done = YES;
+			NSLog( @"done" );
+		}
+			
+		if ( !done ) {
+			if ( index == 0 ) index = [_views count]-1;
+			else index--;
+		}
+		NSLog( @"%d %@", index, [_views objectAtIndex:index]);
+	}while ( index != currentIndex && !done );
+
+	
+	[self showChatViewController:[_views objectAtIndex:index]];
+}
+
 - (IBAction) selectNextPanel:(id) sender {
 	int currentIndex = [_views indexOfObject:_activeViewController];
 	int index = 0;
@@ -202,6 +224,28 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( currentIndex + 1 < [_views count] ) index = ( currentIndex + 1 );
 	else index = 0;
 
+	[self showChatViewController:[_views objectAtIndex:index]];
+}
+
+- (IBAction) selectNextActivePanel:(id) sender {
+	int currentIndex = [_views indexOfObject:_activeViewController];
+	int index = currentIndex;
+	BOOL done = NO;
+	
+	do {
+		if( [[_views objectAtIndex:index] respondsToSelector:@selector( newMessagesWaiting )] && [[_views objectAtIndex:index] newMessagesWaiting] > 0 ){
+			done = YES;
+			NSLog( @"done" );
+		}
+		
+		if ( !done ) {
+			if ( index == [_views count]-1 ) index = 0;
+			else index++;
+		}
+		NSLog( @"%d  %@", index, [_views objectAtIndex:index]);
+	}while ( index != currentIndex && !done );
+	
+	
 	[self showChatViewController:[_views objectAtIndex:index]];
 }
 

@@ -8,7 +8,9 @@
                 italic = id; 
                 joinRoom = id; 
                 newConnection = id; 
+                selectNextActivePanel = id; 
                 selectNextPanel = id; 
+                selectPreviousActivePanel = id; 
                 selectPreviousPanel = id; 
                 showInspector = id; 
                 toggleSmallDrawerIcons = id; 
