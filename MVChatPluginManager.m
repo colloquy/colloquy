@@ -1,7 +1,6 @@
 #import <Foundation/Foundation.h>
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/MVChatPlugin.h>
+#import "MVChatPluginManager.h"
+#import "MVChatScriptPlugin.h"
 
 static MVChatPluginManager *sharedInstance = nil;
 
@@ -35,8 +34,13 @@ static MVChatPluginManager *sharedInstance = nil;
 					bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]];
 					if( ! [_plugins objectForKey:[bundle bundleIdentifier]] && [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
 						id plugin = [[[[bundle principalClass] alloc] initWithManager:self] autorelease];
-						[_plugins setObject:plugin forKey:[bundle bundleIdentifier]];
+						if( plugin ) [_plugins setObject:plugin forKey:[bundle bundleIdentifier]];
 					}
+				} else if( [[file pathExtension] isEqualToString:@"scpt"] || [[file pathExtension] isEqualToString:@"applescript"] ) {
+					NSAppleScript *script = [[[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", path, file]] error:NULL] autorelease];
+					if( ! [script compileAndReturnError:nil] ) continue;
+					MVChatScriptPlugin *plugin = [[[MVChatScriptPlugin alloc] initWithScript:script andManager:self] autorelease];
+					if( plugin ) [_plugins setObject:plugin forKey:file];
 				}
 			}
 		}
@@ -59,7 +63,7 @@ static MVChatPluginManager *sharedInstance = nil;
 #pragma mark -
 
 - (NSSet *) plugins {
-	return [[[NSSet setWithArray:[_plugins allValues]] retain] autorelease];
+	return [NSSet setWithArray:[_plugins allValues]];
 }
 
 - (NSSet *) pluginsThatRespondToSelector:(SEL) selector {
@@ -67,15 +71,14 @@ static MVChatPluginManager *sharedInstance = nil;
 	NSMutableSet *qualified = [NSMutableSet set];
 	id plugin = nil;
 
-	while( ( plugin = [enumerator nextObject] ) ) {
+	while( ( plugin = [enumerator nextObject] ) )
 		if( [plugin respondsToSelector:selector] )
 			[qualified addObject:plugin];
-	}
 
-	return [[qualified retain] autorelease];
+	return qualified;
 }
 
 - (NSEnumerator *) pluginEnumerator {
-	return [[[_plugins objectEnumerator] retain] autorelease];
+	return [_plugins objectEnumerator];
 }
 @end

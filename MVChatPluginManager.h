@@ -14,3 +14,7 @@
 - (NSSet *) pluginsThatRespondToSelector:(SEL) selector;
 - (NSEnumerator *) pluginEnumerator;
 @end
+
+@protocol MVChatPlugin
+- (id) initWithManager:(MVChatPluginManager *) manager;
+@end
