@@ -508,13 +508,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 }
 
 - (void) setChatEmoticons:(NSBundle *) emoticons preformRefresh:(BOOL) refresh {
+	[_emoticonMappings autorelease];
+	_emoticonMappings = [[NSDictionary dictionaryWithContentsOfFile:[self _chatEmoticonsMappingFilePath]] retain];
+	
 	if( emoticons == _chatEmoticons ) return;
 
 	[_chatEmoticons autorelease];
 	_chatEmoticons = [emoticons retain];
-
-	[_emoticonMappings autorelease];
-	_emoticonMappings = [[NSDictionary dictionaryWithContentsOfFile:[self _chatEmoticonsMappingFilePath]] retain];
 
 	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "emoticon", [[_chatEmoticons bundleIdentifier] UTF8String] );
 
@@ -971,8 +971,18 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 - (NSString *) _chatStyleVariantCSSFileURL {
 	NSString *path = nil;
 	if( _chatStyleVariant ) {
-		if( [_chatStyleVariant isAbsolutePath] ) path = [[NSURL fileURLWithPath:_chatStyleVariant] absoluteString];
-		else path = [[NSURL fileURLWithPath:[_chatStyle pathForResource:_chatStyleVariant ofType:@"css" inDirectory:@"Variants"]] absoluteString];
+		if( [_chatStyleVariant isAbsolutePath] ) {
+			path = [[NSURL fileURLWithPath:_chatStyleVariant] absoluteString];
+		} else {
+			path = [_chatStyle pathForResource:_chatStyleVariant ofType:@"css" inDirectory:@"Variants"];
+			if( path ) path = [[NSURL fileURLWithPath:[_chatStyle pathForResource:_chatStyleVariant ofType:@"css" inDirectory:@"Variants"]] absoluteString];
+			if( ! path ) {
+				[_chatStyleVariant autorelease];
+				_chatStyleVariant = nil;
+
+				[self _changeChatStyleMenuSelection];
+			}
+		}
 	}
 	if( ! path ) path = @"";
 	return [[path retain] autorelease];
