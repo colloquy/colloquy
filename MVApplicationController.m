@@ -42,15 +42,15 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) connectToSupportRoom:(id) sender {
-	[[MVConnectionsController defaultManager] handleURL:[NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@irc.javelin.cc/#colloquy", NSUserName()]] andConnectIfPossible:YES];
+	[[MVConnectionsController defaultManager] handleURL:[NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@irc.freenode.net/#colloquy", NSUserName()]] andConnectIfPossible:YES];
 }
 
 - (IBAction) emailDeveloper:(id) sender {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"mailto:timothy@javelin.cc?subject=Colloquy%%20%%28build%%20%@%%29", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"mailto:timothy@colloquy.info?subject=Colloquy%%20%%28build%%20%@%%29", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]]];
 }
 
 - (IBAction) productWebsite:(id) sender {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://www.javelin.cc/?colloquy"]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://colloquy.info"]];
 }
 
 #pragma mark -
