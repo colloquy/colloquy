@@ -2,12 +2,26 @@
 #import "NSColorAdditions.h"
 
 @implementation NSColor (NSColorAdditions)
-+ (NSColor *) colorWithHTMLAttributeValue:(NSString *) hexcolor {
-	if( [hexcolor length] < 6 ) return nil; // We should add support for short-hand hex colors too, like #fff, etc.
-	NSScanner *scanner = [NSScanner scannerWithString:( [hexcolor hasPrefix:@"#"] ? [hexcolor substringFromIndex:1] : hexcolor )];
-	unsigned int color = 0;
-	if( ! [scanner scanHexInt:&color] ) return nil;
-	return [self colorWithCalibratedRed:( ( color >> 16 ) & 0xff ) / 255. green:( ( color >> 8 ) & 0xff ) / 255. blue:( color & 0xff ) / 255. alpha:1.];
++ (NSColor *) colorWithHTMLAttributeValue:(NSString *) attribute {
+	NSCharacterSet *hex = [NSCharacterSet characterSetWithCharactersInString:@"1234567890abcdefABCDEF"];
+	NSScanner *scanner = [NSScanner scannerWithString:( [attribute hasPrefix:@"#"] ? [attribute substringFromIndex:1] : attribute )];
+	NSString *code = nil;
+
+	if( ! [scanner scanCharactersFromSet:hex intoString:&code] ) return nil;
+
+	if( [code length] == 6 ) { // decode colors like #ffee33
+		unsigned int color = 0;
+		scanner = [NSScanner scannerWithString:code];
+		if( ! [scanner scanHexInt:&color] ) return nil;
+		return [self colorWithCalibratedRed:( ( ( color >> 16 ) & 0xff ) / 255. ) green:( ( ( color >> 8 ) & 0xff ) / 255. ) blue:( ( color & 0xff ) / 255. ) alpha:1.];
+	} else if( [code length] == 3 ) {  // decode short-hand colors like #fe3
+		unsigned int color = 0;
+		scanner = [NSScanner scannerWithString:code];
+		if( ! [scanner scanHexInt:&color] ) return nil;
+		return [self colorWithCalibratedRed:( ( ( ( ( color >> 8 ) & 0xf ) << 4 ) | ( ( color >> 8 ) & 0xf ) ) / 255. ) green:( ( ( ( ( color >> 4 ) & 0xf ) << 4 ) | ( ( color >> 4 ) & 0xf ) ) / 255. ) blue:( ( ( ( color & 0xf ) << 4 ) | ( color & 0xf ) ) / 255. ) alpha:1.];
+	}
+
+	return nil;
 }
 
 + (NSColor *) colorWithCSSAttributeValue:(NSString *) attribute {
