@@ -1,12 +1,12 @@
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 
+#import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatPluginManager.h>
 #import <libxml/xinclude.h>
 
 #import "JVChatController.h"
 #import "JVDirectChat.h"
-#import "MVChatConnection.h"
-#import "MVChatPluginManager.h"
 #import "MVTextView.h"
 #import "MVMenuButton.h"
 #import "NSAttributedStringAdditions.h"
@@ -14,6 +14,12 @@
 
 extern char *irc_html_to_irc(const char * const string);
 extern char *irc_irc_to_html(const char * const string);
+
+#pragma mark -
+
+@interface JVChatTranscript (JVChatTranscriptPrivate)
+- (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
+@end
 
 #pragma mark -
 
@@ -27,9 +33,6 @@ extern char *irc_irc_to_html(const char * const string);
 
 @implementation JVDirectChat
 - (id) init {
-	extern NSMutableSet *JVChatStyleBundles;
-	extern NSMutableSet *JVChatEmoticonBundles;
-
 	if( ( self = [super init] ) ) {
 		send = nil;
 		_messageId = 0;
@@ -384,15 +387,10 @@ extern char *irc_irc_to_html(const char * const string);
 	if( ! messageString )
 		messageString = [[[NSMutableString alloc] initWithData:message encoding:NSNonLossyASCIIStringEncoding] autorelease];
 
-	NSLog( @"%@", messageString );
-
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 		[self _makeHyperlinksInString:messageString];
 
 	[self _preformEmoticonSubstitutionOnString:messageString];
-
-	if( [messageString rangeOfString:@"\007"].length )
-		[messageString replaceOccurrencesOfString:@"\007" withString:@"&#266A;" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		NSEnumerator *enumerator = nil;
@@ -401,7 +399,6 @@ extern char *irc_irc_to_html(const char * const string);
 
 //		if( _firstMessage ) MVChatPlaySoundForAction( @"MVChatFisrtMessageAction" );
 //		if( ! _firstMessage ) MVChatPlaySoundForAction( @"MVChatAdditionalMessagesAction" );
-//		if( [messageString rangeOfString:@"\007"].length ) MVChatPlaySoundForAction( @"MVChatInlineMessageBeepAction" );
 
 		names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
 		[names addObject:[[self connection] nickname]];
@@ -445,6 +442,7 @@ extern char *irc_irc_to_html(const char * const string);
 		[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:[self _applyStyleOnXMLDocument:doc]] baseURL:nil];
 	} else {
 		messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
+		[messageString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 		[messageString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 		[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"documentAppend( \"%@\" ); scrollToBottom();", messageString]];
