@@ -561,6 +561,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[cell setEnabled:[item isEnabled]];
 	} else [cell setEnabled:YES];
 
+	[chatViewsOutlineView sizeLastColumnToFit];
+	
 	// This is needed if we reorder the list and selection dosen't change.
 	// This will catch it incase the previous selected item moved.
 	// We could follow the item through the sort, but we don't sort in
@@ -633,7 +635,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self _refreshWindow];
 
 	[self _refreshSelectionMenu];
-	[chatViewsOutlineView sizeLastColumnToFit];
 //	[self _refreshChatActivityToolbarItemWithListItem:item];
 }
 
