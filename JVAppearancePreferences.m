@@ -9,6 +9,7 @@
 #import "JVFontPreviewField.h"
 #import "JVColorWellCell.h"
 #import "JVDetailCell.h"
+#import "NSBundleAdditions.h"
 
 #import <libxml/xinclude.h>
 #import <libxslt/transform.h>
@@ -167,7 +168,7 @@
 	menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
 	while( ( style = [enumerator nextObject] ) ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[JVChatTranscript _nameForBundle:style] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:[style bundleIdentifier], @"style", nil]];
 		if( [defaultStyle isEqualToString:[style bundleIdentifier]] )
@@ -244,7 +245,7 @@
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	while( ( emoticon = [enumerator nextObject] ) ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[JVChatTranscript _nameForBundle:emoticon] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[emoticon bundleIdentifier]];
 		if( [defaultEmoticons isEqualToString:[emoticon bundleIdentifier]] )
