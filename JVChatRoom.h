@@ -11,7 +11,6 @@
 @interface JVChatRoom : JVDirectChat {
 	@protected
 	IBOutlet NSTextView *topicLine;
-	IBOutlet WebView *topicRenderer;
 	NSMutableDictionary *_members;
 	NSMutableArray *_sortedMembers;
 	NSAttributedString *_topicAttributed;

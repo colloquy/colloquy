@@ -1,11 +1,8 @@
-#import <unistd.h>
 #import <Cocoa/Cocoa.h>
-#import <WebKit/WebKit.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
-#import <ChatCore/NSColorAdditions.h>
 
 #import "JVChatController.h"
 #import "JVChatRoom.h"
@@ -28,7 +25,6 @@
 - (id) init {
 	if( ( self = [super init] ) ) {
 		topicLine = nil;
-		topicRenderer = nil;
 		_topic = nil;
 		_topicAuth = nil;
 		_topicAttributed = nil;
@@ -186,55 +182,33 @@
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
 	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:fromUser:inRoom: )] objectEnumerator];
 	id item = nil;
-	
+
 	while( ( item = [enumerator nextObject] ) )
 		[item processMessage:message asAction:action fromUser:user inRoom:self];
 }
 
 - (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
-	WebView *webView = [[[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 300., 100. ) frameName:nil groupName:nil] autorelease];
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:webView, @"webView", [NSNumber numberWithBool:action], @"action", nil];
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
 	NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
 	NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
-	NSMutableAttributedString *editString = [[[NSMutableAttributedString alloc] initWithString:messageString] autorelease];
+
+	[message setAttributedString:[[[NSAttributedString alloc] initWithString:messageString] autorelease]];
 
 	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )] objectEnumerator];
 	id item = nil;
 
 	while( ( item = [enumerator nextObject] ) )
 		if( [item isKindOfClass:[MVChatScriptPlugin class]] )
-			[item processMessage:editString asAction:action toRoom:self];
+			[item processMessage:message asAction:action toRoom:self];
 
-	[[webView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", [editString string]] baseURL:nil];
+	[message setAttributedString:[NSAttributedString attributedStringWithHTMLFragment:[message string] baseURL:nil]];
 
-	[self performSelector:@selector( finishSendAttributedMessage: ) withObject:info afterDelay:0.];
-}
-
-- (void) finishSendAttributedMessage:(NSDictionary *) info {
-	WebView *webView = [info objectForKey:@"webView"];
-	BOOL action = [[info objectForKey:@"action"] boolValue];
-
-	NSMutableAttributedString *attributeMsg = [[[(id <WebDocumentText>)[[[webView mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
-
-	NSRange limitRange, effectiveRange;
-	limitRange = NSMakeRange( 0, [attributeMsg length] );
-	while( limitRange.length > 0 ) {
-		NSColor *color = [attributeMsg attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
-		if( [[color colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && [[color htmlAttributeValue] isEqualToString:@"#01fe02"] )
-			[attributeMsg removeAttribute:NSForegroundColorAttributeName range:effectiveRange];
-		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
-	}
-
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )] objectEnumerator];
-	id item = nil;
-
+	enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )] objectEnumerator];
 	while( ( item = [enumerator nextObject] ) )
 		if( ! [item isKindOfClass:[MVChatScriptPlugin class]] )
-			[item processMessage:attributeMsg asAction:action toRoom:self];
+			[item processMessage:message asAction:action toRoom:self];
 
-	[[self connection] sendMessage:attributeMsg withEncoding:_encoding toChatRoom:[self target] asAction:action];
-	[self echoSentMessageToDisplay:attributeMsg asAction:action];
+	[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
 }
 
 #pragma mark -
@@ -540,10 +514,18 @@
 
 		topicString = [NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", topicString];
 
-		[[topicRenderer mainFrame] loadHTMLString:topicString baseURL:nil];
-
 		[_topic autorelease];
 		_topic = [topic copy];
+
+		[_topicAttributed autorelease];
+		_topicAttributed = [[NSMutableAttributedString attributedStringWithHTMLFragment:topicString baseURL:nil] retain];
+
+		NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+		[paraStyle setMaximumLineHeight:13.];
+		[paraStyle setAlignment:NSCenterTextAlignment];
+		[(NSMutableAttributedString *)_topicAttributed addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange( 0, [_topicAttributed length] )];
+
+		[[topicLine textStorage] setAttributedString:_topicAttributed];
 	}
 
 	if( ! [author isMemberOfClass:[NSNull class]] ) {
@@ -551,7 +533,13 @@
 		_topicAuth = [author retain];
 	}
 
-	[self performSelector:@selector( _finishTopicChange: ) withObject:nil afterDelay:0.];
+	NSMutableString *toolTip = [[[_topicAttributed string] mutableCopy] autorelease];
+	if( _topicAuth ) {
+		[toolTip appendString:@"\n"];
+		[toolTip appendFormat:NSLocalizedString( @"Topic set by: %@", "topic author tooltip" ), _topicAuth];
+	}
+
+	[[topicLine enclosingScrollView] setToolTip:toolTip];
 }
 
 - (NSAttributedString *) topic {
@@ -692,29 +680,6 @@
 	[[self connection] joinChatRoom:_target];
 	[super _didConnect:notification];
 }
-
-- (void) _finishTopicChange:(id) sender {
-	NSMutableAttributedString *topic = [[[(id <WebDocumentText>)[[[topicRenderer mainFrame] frameView] documentView] attributedString] mutableCopy] autorelease];
-	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-	NSString *toolTip = nil;
-
-	[paraStyle setMaximumLineHeight:13.];
-	[paraStyle setAlignment:NSCenterTextAlignment];
-	[topic addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange( 0, [topic length] )];
-	[[topicLine textStorage] setAttributedString:topic];
-
-	[_topicAttributed autorelease];
-	if( [_topic length] ) {
-		_topicAttributed = [topic copy];
-	} else _topicAttributed = nil;
-
-	toolTip = [[[topic string] copy] autorelease];
-	if( _topicAuth ) {
-		toolTip = [toolTip stringByAppendingString:@"\n"];
-		toolTip = [toolTip stringByAppendingFormat:NSLocalizedString( @"Topic set by: %@", "topic author tooltip" ), _topicAuth];
-	}
-	[[topicLine enclosingScrollView] setToolTip:toolTip];
-}
 @end
 
 #pragma mark -
@@ -777,6 +742,6 @@
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"poM1", room, @"poM2", nil];
 	id result = [self callScriptHandler:'poMX' withArguments:args];
 	if( [result isKindOfClass:[NSString class]] )
-		[[message mutableString] setString:result];
+		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
 }
 @end
