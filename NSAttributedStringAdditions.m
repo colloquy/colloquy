@@ -17,7 +17,7 @@ static WebView *fragmentWebView = nil;
 
 	if( NSAppKitVersionNumber >= 700. ) {
 		NSString *render = [NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", fragment];
-		result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", url, @"BaseURL", nil] documentAttributes:NULL];
+		result = [[[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", url, @"BaseURL", nil] documentAttributes:NULL] autorelease];
 	} else {
 		if( ! renderingFragmentLock )
 			renderingFragmentLock = [[NSConditionLock alloc] initWithCondition:2];
@@ -34,8 +34,8 @@ static WebView *fragmentWebView = nil;
 		}
 
 		if( ! result ) {
-			NSString *render = [NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", fragment];
-			result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] baseURL:url documentAttributes:NULL];
+			NSString *render = [NSString stringWithFormat:@"<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body><font color=\"#01fe02\">%@</font></body></html>", fragment];
+			result = [[[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] baseURL:url documentAttributes:NULL] autorelease];
 		}
 	}
 
@@ -48,7 +48,7 @@ static WebView *fragmentWebView = nil;
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 
-	return [[[self alloc] initWithAttributedString:result] autorelease];
+	return result;
 }
 
 + (void) renderHTMLFragment:(NSDictionary *) info {
@@ -65,7 +65,7 @@ static WebView *fragmentWebView = nil;
 
 	if( ! fragmentWebView ) fragmentWebView = [[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 2000., 100. ) frameName:nil groupName:nil];
 	[fragmentWebView setFrameLoadDelegate:self];
-	[[fragmentWebView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", fragment] baseURL:url];
+	[[fragmentWebView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body><font color=\"#01fe02\">%@</font></body></html>", fragment] baseURL:url];
 
 	[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.25]];
 
