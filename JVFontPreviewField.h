@@ -5,6 +5,7 @@
 @interface JVFontPreviewField : NSTextField {
 	NSFont *_actualFont;
 	BOOL _showPointSize;
+	BOOL _showFontFace;
 }
 - (void) selectFont:(id) sender;
 - (IBAction) chooseFontWithFontPanel:(id) sender;

@@ -6,9 +6,11 @@
 	self = [super initWithCoder:coder];
 	if( [coder allowsKeyedCoding] ) {
 		_showPointSize = [coder decodeBoolForKey:@"showPointSize"];
+		_showFontFace = [coder decodeBoolForKey:@"showFontFace"];
 		_actualFont = [[coder decodeObjectForKey:@"actualFont"] retain];
 	} else {
 		[coder decodeValueOfObjCType:@encode( char ) at:&_showPointSize];
+		[coder decodeValueOfObjCType:@encode( char ) at:&_showFontFace];
 		_actualFont = [[coder decodeObject] retain];
 	}
 	return self;
@@ -18,15 +20,19 @@
 	[super encodeWithCoder:coder];
 	if( [coder allowsKeyedCoding] ) {
 		[coder encodeBool:_showPointSize forKey:@"showPointSize"];
+		[coder encodeBool:_showFontFace forKey:@"showFontFace"];
 		[coder encodeObject:_actualFont forKey:@"actualFont"];
 	} else {
 		[coder encodeValueOfObjCType:@encode( char ) at:&_showPointSize];
+		[coder encodeValueOfObjCType:@encode( char ) at:&_showFontFace];
 		[coder encodeObject:_actualFont];
 	}
 }
 
 - (void) selectFont:(id) sender {
 	NSFont *font = [sender convertFont:[self font]];
+
+	if( ! font ) return;
 
 	if( [[self delegate] respondsToSelector:@selector( fontPreviewField:shouldChangeToFont: )] )
 		if( ! [[self delegate] fontPreviewField:self shouldChangeToFont:font] ) return;
@@ -37,22 +43,37 @@
 		[[self delegate] fontPreviewField:self didChangeToFont:font];
 }
 
+#ifndef MAC_OS_X_VERSION_10_3
+#define NSFontPanelStandardModesMask 0
+#define NSFontPanelSizeModeMask 0
+#define NSFontPanelFaceModeMask 0
+#endif
+
+- (unsigned int) validModesForFontPanel:(NSFontPanel *) fontPanel {
+	unsigned int ret = NSFontPanelStandardModesMask;
+	if( ! _showPointSize ) ret ^= NSFontPanelSizeModeMask;
+	if( ! _showFontFace ) ret ^= NSFontPanelFaceModeMask;
+	return ret;
+}
+
 - (BOOL) becomeFirstResponder {
 	[[NSFontManager sharedFontManager] setSelectedFont:_actualFont isMultiple:NO];
 	return YES;
 }
 
 - (void) setFont:(NSFont *) font {
+	if( ! font ) return;
+
 	[_actualFont autorelease];
 	_actualFont = [font retain];
 
-	[super setFont:[NSFont fontWithName:[font fontName] size:11.]];
+	[super setFont:[[NSFontManager sharedFontManager] convertFont:font toSize:11.]];
 
 	NSMutableAttributedString *text = nil;
 	if( _showPointSize ) {
-		text = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %.0f", [_actualFont familyName], [_actualFont pointSize]]] autorelease];
+		text = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %.0f", ( _showFontFace ? [_actualFont displayName] : [_actualFont familyName] ), [_actualFont pointSize]]] autorelease];
 	} else {
-		text = [[[NSMutableAttributedString alloc] initWithString:[_actualFont familyName]] autorelease];
+		text = [[[NSMutableAttributedString alloc] initWithString:( _showFontFace ? [_actualFont displayName] : [_actualFont familyName] )] autorelease];
 	}
 
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
@@ -72,5 +93,9 @@
 
 - (void) setShowPointSize:(BOOL) show {
 	_showPointSize = show;
+}
+
+- (void) setShowFontFace:(BOOL) show {
+	_showFontFace = show;
 }
 @end
