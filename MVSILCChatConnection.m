@@ -658,7 +658,7 @@ static void silc_verify_public_key( SilcClient client, SilcClientConnection conn
 	silc_free(tmp);
 	
 	NSString *filename = NULL;
-	MVChatConnectionPublicKeyType publicKeyType;
+	MVChatConnectionPublicKeyType publicKeyType = MVChatConnectionClientPublicKeyType;
 	
 	switch ( conn_type ) {
 		case SILC_SOCKET_TYPE_UNKNOWN:
