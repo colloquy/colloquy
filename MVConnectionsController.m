@@ -339,7 +339,12 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	if( [[newUsername stringValue] rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].location != NSNotFound ) {
+	NSMutableCharacterSet *allowedCharacters = (NSMutableCharacterSet *)[NSMutableCharacterSet alphanumericCharacterSet];
+	[allowedCharacters addCharactersInString:@"`_-|^{}[]"];
+
+	NSCharacterSet *illegalCharacters = [allowedCharacters invertedSet];
+
+	if( [[newUsername stringValue] rangeOfCharacterFromSet:illegalCharacters].location != NSNotFound ) {
 		if( [showDetails state] != NSOnState ) {
 			[showDetails setState:NSOnState];
 			[self toggleNewConnectionDetails:showDetails];
