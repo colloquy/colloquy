@@ -344,6 +344,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[[memberDrawer contentView] autorelease];
 	[memberDrawer autorelease];
 
+	[emoticonView autorelease];
+	[encodingView autorelease];
 	[sendHistory autorelease];
 	[memberList autorelease];
 	[sortedMembers autorelease];
@@ -394,6 +396,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"chat.message.toolbar"] autorelease];
 	NSTableColumn *theColumn = nil;
 	id prototypeCell = nil;
+
+	[emoticonView retain];
+	[encodingView retain];
 
 	[[[encodingView menu] itemAtIndex:0] setImage:[NSImage imageNamed:@"encoding"]];
 
@@ -738,7 +743,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 #pragma mark -
 
-- (void) addStatusMessageToDisplay:(NSString *) message {
+- (void) addStatusMessageToDisplay:(NSString *) message { /* ~CRASH! */
 	NSParameterAssert( message != nil );
 	{
 		NSMutableAttributedString *msgString = nil;
@@ -795,7 +800,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	}
 }
 
-- (void) addAttributedMessageToDisplay:(NSAttributedString *) message fromUser:(NSString *) user asAction:(BOOL) action asAlert:(BOOL) alert {
+- (void) addAttributedMessageToDisplay:(NSAttributedString *) message fromUser:(NSString *) user asAction:(BOOL) action asAlert:(BOOL) alert { /* ~CRASH! */
 	NSMutableAttributedString *msgString = nil;
 	NSScanner *urlScanner = nil;
 	NSString *urlHandle = nil;
@@ -1395,12 +1400,15 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		NSMenu *newMenu = [[[NSMenu alloc] initWithTitle:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus )] autorelease];
 		NSMenuItem *menuItem = nil;
 		NSImage *icon = [[[NSImage imageNamed:@"emoticon"] copy] autorelease];
+		MVMenuButton *button = [emoticonView copyWithZone:[self zone]];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", emoticons options title - used in a few places like toolbar and menus )];
 
+		[button setControlSize:NSRegularControlSize];
+
 		[toolbarItem setToolTip:NSLocalizedString( @"Add Emotions with Emoticons", emoticons toolbar button tooltip )];
-		[toolbarItem setView:emoticonView];
+		[toolbarItem setView:button];
 		[toolbarItem setMinSize:NSMakeSize( 32., 32. )];
 		[toolbarItem setMaxSize:NSMakeSize( 32., 32. )];
 
@@ -1476,8 +1484,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[menuItem setSubmenu:newMenu];
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
-		[emoticonView setMenu:newMenu];
-		[emoticonView setMenuDelay:0.];
+		[button setMenu:newMenu];
+		[button setMenuDelay:0.];
 	} else if( [itemIdent isEqual:MVToolbarCloseWindowItemIdentifier] ) {
 		[toolbarItem setLabel:NSLocalizedString( @"Leave Chat", leave chat toolbar item )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Leave Chat", nil)];
@@ -1542,7 +1550,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Text Encoding Options", encoding menu toolbar item tooltip )];
 		[toolbarItem setView:encodingView];
-		[toolbarItem setMinSize:NSMakeSize( 60., 32. )];
+		[toolbarItem setMinSize:NSMakeSize( 60., 24. )];
 		[toolbarItem setMaxSize:NSMakeSize( 60., 32. )];
 
 		[self changeEncoding:nil];
