@@ -64,15 +64,21 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) showTransferManager:(id) sender {
-	[[MVFileTransferController defaultManager] showTransferManager:nil];
+	if( [[[MVFileTransferController defaultManager] window] isVisible] )
+		[[MVFileTransferController defaultManager] hideTransferManager:nil];
+	else [[MVFileTransferController defaultManager] showTransferManager:nil];
 }
 
 - (IBAction) showConnectionManager:(id) sender {
-	[[MVConnectionsController defaultManager] showConnectionManager:nil];
+	if( [[[MVConnectionsController defaultManager] window] isVisible] )
+		[[MVConnectionsController defaultManager] hideConnectionManager:nil];
+	else [[MVConnectionsController defaultManager] showConnectionManager:nil];
 }
 
 - (IBAction) showBuddyList:(id) sender {
-	[[MVBuddyListController sharedBuddyList] showBuddyList:nil];
+	if( [[[MVBuddyListController sharedBuddyList] window] isVisible] )
+		[[MVBuddyListController sharedBuddyList] hideBuddyList:nil];
+	else [[MVBuddyListController sharedBuddyList] showBuddyList:nil];
 }
 
 #pragma mark -

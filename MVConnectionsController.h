@@ -55,6 +55,7 @@
 + (void) refreshFavoritesMenu;
 
 - (IBAction) showConnectionManager:(id) sender;
+- (IBAction) hideConnectionManager:(id) sender;
 
 - (IBAction) newConnection:(id) sender;
 - (IBAction) toggleNewConnectionDetails:(id) sender;

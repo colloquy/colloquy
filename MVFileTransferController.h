@@ -43,6 +43,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 + (MVFileTransferController *) defaultManager;
 
 - (IBAction) showTransferManager:(id) sender;
+- (IBAction) hideTransferManager:(id) sender;
 
 - (void) downloadFileAtURL:(NSURL *) url toLocalFile:(NSString *) path;
 - (void) addFileTransfer:(NSString *) identifier withUser:(NSString *) user forConnection:(MVChatConnection *) connection asType:(MVTransferOperation) type withSize:(unsigned long) size withLocalFile:(NSString *) path;

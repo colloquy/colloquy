@@ -200,6 +200,10 @@ static MVBuddyListController *sharedInstance = nil;
 	[[self window] orderFront:nil];
 }
 
+- (IBAction) hideBuddyList:(id) sender {
+	[[self window] orderOut:nil];
+}
+
 #pragma mark -
 
 - (JVBuddy *) buddyForNickname:(NSString *) name onServer:(NSString *) address {

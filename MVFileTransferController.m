@@ -226,6 +226,10 @@ finish:
 	[[self window] orderFront:nil];
 }
 
+- (IBAction) hideTransferManager:(id) sender {
+	[[self window] orderOut:nil];
+}
+
 #pragma mark -
 
 - (void) downloadFileAtURL:(NSURL *) url toLocalFile:(NSString *) path {

@@ -67,6 +67,7 @@ typedef enum {
 - (IBAction) getInfo:(id) sender;
 
 - (IBAction) showBuddyList:(id) sender;
+- (IBAction) hideBuddyList:(id) sender;
 
 - (JVBuddy *) buddyForNickname:(NSString *) name onServer:(NSString *) address;
 - (NSArray *) buddies;

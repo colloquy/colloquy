@@ -222,6 +222,10 @@ static NSMenu *favoritesMenu = nil;
 	[[self window] orderFront:nil];
 }
 
+- (IBAction) hideConnectionManager:(id) sender {
+	[[self window] orderOut:nil];
+}
+
 #pragma mark -
 
 - (IBAction) newConnection:(id) sender {
