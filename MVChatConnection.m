@@ -82,8 +82,8 @@ void irc_deinit( void );
 
 #pragma mark -
 
-static BOOL firstConnection = YES;
 static BOOL applicationQuitting = NO;
+static unsigned int connectionCount = 0;
 static GMainLoop *glibMainLoop = NULL;
 
 @interface MVChatConnection (MVChatConnectionPrivate)
@@ -973,27 +973,24 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 		[self _registerForSleepNotifications];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
 
-		extern BOOL firstConnection;
+		extern unsigned int connectionCount;
+		connectionCount++;
 
-		if( firstConnection ) {
-			char *args[] = { "Colloquy" };
-			core_init_paths( 1, args );
+		if( connectionCount == 1 ) {
+			extern GMainLoop *glibMainLoop;
+			glibMainLoop = g_main_new( TRUE );
 			irssi_gui = IRSSI_GUI_NONE;
 
+			char *args[] = { "Chat Core" };
+			core_init_paths( 1, args );
 			core_init();
 			irc_init();
 
-			extern GMainLoop *glibMainLoop;
-			glibMainLoop = g_main_new( TRUE );
-
-			[NSThread detachNewThreadSelector:@selector( _glibRunloop: ) toTarget:[self class] withObject:nil];
-			[[NSNotificationCenter defaultCenter] addObserver:[self class] selector:@selector( _applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
+			signal_emit( "irssi init finished", 0 );	
 
 			[[self class] _registerCallbacks];
 
-			signal_emit( "irssi init finished", 0 );
-
-			firstConnection = NO;
+			[NSThread detachNewThreadSelector:@selector( _glibRunloop: ) toTarget:[self class] withObject:nil];
 		}
 
 		CHAT_PROTOCOL_REC *proto = chat_protocol_get_default();
@@ -1009,8 +1006,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 			conn -> proxy_password = g_strdup( "" );
 		} */
 
-		_chatConnection = proto -> server_init_connect( conn );
-		server_ref( [self _irssiConnection] );
+		[self _setIrssiConnection:proto -> server_init_connect( conn )];
 		server_connect_unref( conn );
 	}
 	return self;
@@ -1050,17 +1046,15 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	[_cachedDate release];
 	[_awayMessage release];
 
-	if( _chatConnection ) {
-		g_free_not_null( [self _irssiConnection] -> tag );
-		[self _irssiConnection] -> tag = NULL;
-		server_unref( _chatConnection );
-	}
+	[self _setIrssiConnection:NULL];
 
-	_chatConnection = NULL;
 	_npassword = nil;
 	_roomsCache = nil;
 	_cachedDate = nil;
 	_awayMessage = nil;
+
+	extern unsigned int connectionCount;
+	connectionCount--;
 
 	[super dealloc];
 }
@@ -1447,7 +1441,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	sscanf( server -> tag, "%8lx", (unsigned long *) &ret );
 
 	if( ! ret ) return nil;
-	if( [ret _irssiConnection] == server ) return ret;
+	if( [ret _irssiConnection] == server || ! [ret _irssiConnection] ) return ret;
 
 	[ret _setIrssiConnection:server];
 	return ret;
@@ -1540,24 +1534,24 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	return [[encodedData retain] autorelease];
 }
 
-+ (void) _applicationWillTerminate:(NSNotification *) notification {
++ (void) _glibRunloop:(id) sender {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	extern BOOL applicationQuitting;
-	applicationQuitting = YES;
+	extern unsigned int connectionCount;
+	extern GMainLoop *glibMainLoop;
+
+	while( ! applicationQuitting && connectionCount ) g_main_iteration( TRUE );
 
 	[self _deregisterCallbacks];
 
 	signal_emit( "gui exit", 0 );
 
-	extern GMainLoop *glibMainLoop;
 	g_main_destroy( glibMainLoop );
+	glibMainLoop = NULL;
 
 	irc_deinit();
 	core_deinit();
-}
 
-+ (void) _glibRunloop:(id) sender {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	while( ! applicationQuitting ) g_main_iteration( TRUE );
 	[pool release];
 	[NSThread exit];
 }
@@ -1576,10 +1570,24 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) _setIrssiConnection:(SERVER_REC *) server {
 	SERVER_REC *old = _chatConnection;
-	_chatConnection = server;
 
+	_chatConnection = server;
 	if( _chatConnection ) server_ref( _chatConnection );
-	if( old ) server_unref( old );
+
+	if( old ) {
+		old -> no_reconnect = 1;
+
+		g_free_not_null( old -> tag );
+		old -> tag = g_strdup( "detached" );
+
+		g_free_not_null( old -> connrec -> tag );
+		old -> connrec -> tag = g_strdup( "detached" );
+
+		g_free_not_null( old -> connrec -> chatnet );
+		old -> connrec -> chatnet = g_strdup( "detached" );
+
+		server_unref( old );
+	}
 }
 
 #pragma mark -
@@ -1600,6 +1608,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) _applicationWillTerminate:(NSNotification *) notification {
+	extern BOOL applicationQuitting;
+	applicationQuitting = YES;
 	[self disconnect];
 }
 
