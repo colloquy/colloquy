@@ -20,14 +20,23 @@
 		if( ! [scanner scanHexInt:&color] ) return nil;
 		return [self colorWithCalibratedRed:( ( ( ( ( color >> 8 ) & 0xf ) << 4 ) | ( ( color >> 8 ) & 0xf ) ) / 255. ) green:( ( ( ( ( color >> 4 ) & 0xf ) << 4 ) | ( ( color >> 4 ) & 0xf ) ) / 255. ) blue:( ( ( ( color & 0xf ) << 4 ) | ( color & 0xf ) ) / 255. ) alpha:1.];
 	} else if( ! [attribute hasPrefix:@"#"] ) {
-		if( [attribute hasPrefix:@"white"] ) return [NSColor whiteColor];
-		else if( [attribute hasPrefix:@"black"] ) return [NSColor blackColor];
-		else if( [attribute hasPrefix:@"aqua"] ) return [NSColor cyanColor];
-		else if( [attribute hasPrefix:@"blue"] ) return [NSColor blueColor];
-		else if( [attribute hasPrefix:@"yellow"] ) return [NSColor yellowColor];
-		else if( [attribute hasPrefix:@"lime"] ) return [NSColor greenColor];
-		else if( [attribute hasPrefix:@"fuchsia"] ) return [NSColor magentaColor];
-		else if( [attribute hasPrefix:@"red"] ) return [NSColor redColor];
+		attribute = [attribute lowercaseString];
+		if( [attribute hasPrefix:@"white"] ) return [self whiteColor];
+		else if( [attribute hasPrefix:@"black"] ) return [self blackColor];
+		else if( [attribute hasPrefix:@"gray"] ) return [self grayColor];
+		else if( [attribute hasPrefix:@"aqua"] ) return [self cyanColor];
+		else if( [attribute hasPrefix:@"blue"] ) return [self blueColor];
+		else if( [attribute hasPrefix:@"yellow"] ) return [self yellowColor];
+		else if( [attribute hasPrefix:@"lime"] ) return [self greenColor];
+		else if( [attribute hasPrefix:@"fuchsia"] ) return [self magentaColor];
+		else if( [attribute hasPrefix:@"red"] ) return [self redColor];
+		else if( [attribute hasPrefix:@"silver"] ) return [self colorWithCalibratedRed:0.75 green:0.75 blue:0.75 alpha:1.];
+		else if( [attribute hasPrefix:@"maroon"] ) return [self colorWithCalibratedRed:0.5 green:0. blue:0. alpha:1.];
+		else if( [attribute hasPrefix:@"purple"] ) return [self colorWithCalibratedRed:0.5 green:0. blue:0.5 alpha:1.];
+		else if( [attribute hasPrefix:@"green"] ) return [self colorWithCalibratedRed:0. green:0.5 blue:0. alpha:1.];
+		else if( [attribute hasPrefix:@"olive"] ) return [self colorWithCalibratedRed:0.5 green:0.5 blue:0. alpha:1.];
+		else if( [attribute hasPrefix:@"navy"] ) return [self colorWithCalibratedRed:0. green:0. blue:0.5 alpha:1.];
+		else if( [attribute hasPrefix:@"teal"] ) return [self colorWithCalibratedRed:0. green:0.5 blue:0.5 alpha:1.];
 	}
 
 	return nil;
