@@ -137,6 +137,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	NSView *toolbarItemContainerView = nil;
 	NSBundle *style = nil;
 	NSString *variant = nil;
+	NSBundle *emoticon = nil;
 
 	[self changeEncoding:nil];
 
@@ -149,8 +150,13 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		}
 	}
 
-//	[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
+	if( [self preferenceForKey:@"emoticon"] ) {
+		style = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"emoticon"]];
+		if( ! style ) [self setPreference:nil forKey:@"emoticon"];
+	}
+
 	if( style ) [self setChatStyle:style withVariant:variant];
+	if( emoticon ) [self setChatEmoticons:emoticon];
 
 	if( ( toolbarItemContainerView = [chooseStyle superview] ) ) {
 		[chooseStyle retain];

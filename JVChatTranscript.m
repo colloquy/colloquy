@@ -124,9 +124,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	if( xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" ) )
 		[self setChatStyle:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" )]] withVariant:nil];
 
-	if( ! _chatEmoticons )
-		[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
-
 	if( ! _chatStyle ) {
 		NSBundle *style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 		NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [style bundleIdentifier]]];		
@@ -136,6 +133,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 			variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [style bundleIdentifier]]];
 		}
 		[self setChatStyle:style withVariant:variant];
+	}
+
+	if( ! _chatEmoticons ) {
+		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle bundleIdentifier]]]];
+		if( ! emoticon ) {
+			[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle bundleIdentifier]]];
+			emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle bundleIdentifier]]]];
+		}
+		[self setChatEmoticons:emoticon];
 	}
 
 	[self _updateChatStylesMenu];

@@ -29,7 +29,6 @@
 - (IBAction) changeDefaultChatStyle:(id) sender;
 
 - (IBAction) noGraphicEmoticons:(id) sender;
-- (IBAction) hideEmoticons:(id) sender;
 - (IBAction) changeDefaultEmoticons:(id) sender;
 
 - (void) updateChatStylesMenu;

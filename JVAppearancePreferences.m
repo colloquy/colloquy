@@ -170,13 +170,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (IBAction) noGraphicEmoticons:(id) sender {
 	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
-	[[NSUserDefaults standardUserDefaults] setObject:@"none" forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
-	[self updatePreview];
-}
-
-- (IBAction) hideEmoticons:(id) sender {
-	NSString *style = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"];
-	[[NSUserDefaults standardUserDefaults] setObject:@"hidden" forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
+	[[NSUserDefaults standardUserDefaults] setObject:@"" forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
 	[self updatePreview];
 }
 
@@ -194,21 +188,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSString *defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
 	NSBundle *emoticon = [NSBundle bundleWithIdentifier:defaultEmoticons];
 
-	if( ! emoticon && ! [defaultEmoticons isEqualToString:@"hidden"] && ! [defaultEmoticons isEqualToString:@"none"] ) {
+	if( ! emoticon && [defaultEmoticons length] ) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
 		defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
 	}
 
 	menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Graphics", "no graphic emoticons menu item title" ) action:@selector( noGraphicEmoticons: ) keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Text Only", "text only emoticons menu item title" ) action:@selector( noGraphicEmoticons: ) keyEquivalent:@""] autorelease];
 	[menuItem setTarget:self];
-	if( [defaultEmoticons isEqualToString:@"none"] ) [menuItem setState:NSOnState];
-	[menu addItem:menuItem];
-
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Hidden", "hide emoticons menu item title" ) action:@selector( hideEmoticons: ) keyEquivalent:@""] autorelease];
-	[menuItem setTarget:self];
-	if( [defaultEmoticons isEqualToString:@"hidden"] ) [menuItem setState:NSOnState];
+	if( ! [defaultEmoticons length] ) [menuItem setState:NSOnState];
 	[menu addItem:menuItem];
 
 	[menu addItem:[NSMenuItem separatorItem]];
@@ -237,15 +226,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSString *variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [style bundleIdentifier]]];
 	NSBundle *emoticon = nil;
 	NSString *emoticonStyle = @"";
-
-	if( [(NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style bundleIdentifier]]] length] ) {
-		NSString *emoticonSetting = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style bundleIdentifier]]];
-		if( [emoticonSetting isEqualToString:@"hidden"] ) {
-			emoticonStyle = [[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"emoticonsHidden" ofType:@"css"]] absoluteString];
-		} else if( ! [emoticonSetting isEqualToString:@"none"] ) {
-			emoticon = [NSBundle bundleWithIdentifier:emoticonSetting];
-			emoticonStyle = ( emoticon ? [[NSURL fileURLWithPath:[emoticon pathForResource:@"emoticons" ofType:@"css"]] absoluteString] : @"" );
-		}
+	NSString *emoticonSetting = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style bundleIdentifier]]];
+	if( [emoticonSetting length] ) {
+		emoticon = [NSBundle bundleWithIdentifier:emoticonSetting];
+		emoticonStyle = ( emoticon ? [[NSURL fileURLWithPath:[emoticon pathForResource:@"emoticons" ofType:@"css"]] absoluteString] : @"" );
 	}
 
 	NSString *path = [style pathForResource:@"main" ofType:@"xsl"];
