@@ -426,6 +426,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[self _setBuddiesNeedSortAnimated];
 	[self _sortBuddiesAnimatedIfNeeded:nil];
 	[[NSUserDefaults standardUserDefaults] setBool:flag forKey:@"JVChatBuddyListShowFullNames"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL) showFullNames {
@@ -444,6 +445,7 @@ static MVBuddyListController *sharedInstance = nil;
 	else [buddies setRowHeight:18.];
 	[buddies reloadData];
 	[[NSUserDefaults standardUserDefaults] setBool:flag forKey:@"JVChatBuddyListShowNicknameAndServer"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL) showNicknameAndServer {
@@ -462,6 +464,7 @@ static MVBuddyListController *sharedInstance = nil;
 	else [buddies setRowHeight:18.];
 	[buddies reloadData];
 	[[NSUserDefaults standardUserDefaults] setBool:flag forKey:@"JVChatBuddyListShowIcons"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL) showIcons {
@@ -482,6 +485,7 @@ static MVBuddyListController *sharedInstance = nil;
 	else [_buddyOrder addObjectsFromArray:[offlineBuddies allObjects]];
 	[self _manuallySortAndUpdate];
 	[[NSUserDefaults standardUserDefaults] setBool:flag forKey:@"JVChatBuddyListShowOfflineBuddies"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL) showOfflineBuddies {
@@ -499,6 +503,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[self _setBuddiesNeedSortAnimated];
 	[self _sortBuddiesAnimatedIfNeeded:nil];
 	[[NSUserDefaults standardUserDefaults] setInteger:order forKey:@"JVChatBuddyListSortOrder"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (MVBuddyListSortOrder) sortOrder {
