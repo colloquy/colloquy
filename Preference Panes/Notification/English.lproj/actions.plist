@@ -34,9 +34,9 @@
         MVChatActionTitle = "Message beeps"; 
     }, {
         MVChatActionIdentifier = MVChatFriendOnlineAction; 
-        MVChatActionTitle = "Friend came online"; 
+        MVChatActionTitle = "Buddy came online"; 
     }, {
         MVChatActionIdentifier = MVChatFriendOfflineAction; 
-        MVChatActionTitle = "Friend went offline"; 
+        MVChatActionTitle = "Buddy went offline"; 
     }
 )
