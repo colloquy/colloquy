@@ -71,7 +71,7 @@ static void MVFileTransferDestroyed( FILE_DCC_REC *dcc ) {
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
 
-	[self _destroying];
+	[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
 }
 
 static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
