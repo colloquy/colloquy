@@ -82,12 +82,14 @@
 	[super dealloc];
 }
 
+#pragma mark -
 #pragma mark Delegate Methods
 //or method
 - (void) willDispose {
 	[self parting];
 }
 
+#pragma mark -
 #pragma mark Miscellaneous Support
 
 - (NSString *) title {
@@ -104,10 +106,12 @@
 
 - (NSString *) information {
 	if( _kickedFromRoom )
-		return [NSString stringWithFormat:NSLocalizedString( @"kicked out", "chat room kicked status line in drawer" )];
+		return NSLocalizedString( @"kicked out", "chat room kicked status line in drawer" );
+	if( ! [_sortedMembers count] )
+		return NSLocalizedString( @"joining...", "joining status info line in drawer" );
 	if( [[self connection] isConnected] )
-		return [NSString stringWithFormat:@"%d members", [_sortedMembers count]];
-	return [NSString stringWithFormat:NSLocalizedString( @"disconnected", "disconnected status info line in drawer" )];
+		return [NSString stringWithFormat:NSLocalizedString( @"%d members", "member count status info line in drawer" ), [_sortedMembers count]];
+	return NSLocalizedString( @"disconnected", "disconnected status info line in drawer" );
 }
 
 - (NSView *) view {
@@ -119,7 +123,9 @@
 	return [NSString stringWithFormat:@"Chat Room %@ (%@)", _target, [[self connection] server]];
 }
 
+#pragma mark -
 #pragma mark Drawer/Outline View Support
+
 - (NSImage *) icon {
 	return [NSImage imageNamed:@"room"];
 }
@@ -141,35 +147,28 @@
 - (NSMenu *) menu {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
-	
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) 
-									   action:@selector( getInfo: ) 
-								keyEquivalent:@""] autorelease];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
 	[item setTarget:_windowController];
 	[menu addItem:item];
-	
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") 
-									   action:@selector( addToFavorites: ) 
-								keyEquivalent:@""] autorelease];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
-	
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Room", "leave room contextual menu item title" ) 
-									   action:@selector( leaveChat: ) 
-								keyEquivalent:@""] autorelease];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Room", "leave room contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) 
-									   action:@selector( detachView: ) 
-								keyEquivalent:@""] autorelease];
-	
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+
 	[item setRepresentedObject:self];
 	[item setTarget:[JVChatController defaultManager]];
 	[menu addItem:item];
-	
+
 	return [[menu retain] autorelease];
 }
 
+#pragma mark -
 #pragma mark Drag & Drop Support
 
 - (BOOL) acceptsDraggedFileOfType:(NSString *) type {
@@ -181,7 +180,8 @@
 	return;
 }
 
-#pragma mark Unsupported Methods
+#pragma mark -
+#pragma mark Unsupported Methods Inherited Methods
 
 - (void) setTarget:(NSString *) target {
 	[NSException raise:NSIllegalSelectorException format:@"JVChatRoom does not implement setTarget:"];
@@ -194,16 +194,10 @@
 }
 
 #pragma mark -
+#pragma mark Miscellaneous
 
 - (void) unavailable {
-	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You're offline", 
-																	 "title of the you're offline message sheet" ), 
-												  NSLocalizedString( @"You are no longer connected to the server where you were chatting. No messages can be sent at this time. Reconnecting might be in progress.", 
-																	 "chat window error description for loosing connection" ), 
-												  @"OK", 
-												  nil, nil ) 
-		   withName:@"disconnected"];
-	
+//	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You're offline", "title of the you're offline message sheet" ), NSLocalizedString( @"You are no longer connected to the server where you were chatting. No messages can be sent at this time. Reconnecting might be in progress.", "chat window error description for loosing connection" ), @"OK", nil, nil ) withName:@"disconnected"];
 	_cantSendMessages = YES;
 }
 
@@ -217,6 +211,7 @@
 	[MVConnectionsController refreshFavoritesMenu];
 }
 
+#pragma mark -
 #pragma mark Message Handling
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
@@ -272,6 +267,7 @@
 		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
 }
 
+#pragma mark -
 #pragma mark Operator Support
 //It's their world, we just live in it
 
@@ -314,16 +310,12 @@
 
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-
-			[context setObject:NSLocalizedString( @"Room Member Promoted", "member promoted title" ) 
-						forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ in %@.", "bubble message member operator promotion string" ), [message substringToIndex:[message length]-2], _target]
-						forKey:@"description"];
-			[context setObject:member   forKey:@"performedOn"];
-			[context setObject:by		forKey:@"performedBy"];
-			[context setObject:_target  forKey:@"performedInRoom"];
-			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberPromoted" 
-														   withContextInfo:context];
+			[context setObject:NSLocalizedString( @"Room Member Promoted", "member promoted title" ) forKey:@"title"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was promoted to operator by %@ in %@.", "bubble message member operator promotion string" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by ), _target] forKey:@"description"];
+			[context setObject:member forKey:@"performedOn"];
+			[context setObject:by forKey:@"performedBy"];
+			[context setObject:_target forKey:@"performedInRoom"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberPromoted" withContextInfo:context];
 		}
 	}
 
@@ -366,19 +358,17 @@
 			[invocation setArgument:&mbr atIndex:2];
 			[invocation setArgument:&self atIndex:3];
 			[invocation setArgument:&byMbr atIndex:4];
-		
+
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-			
+
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Room Member Demoted", "member demoted title" ) forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ in %@.", "bubble message member operator demotion string" ), [message substringToIndex:[message length]-2], _target]
-						forKey:@"description"];
-			[context setObject:member   forKey:@"performedOn"];
-			[context setObject:by		forKey:@"performedBy"];
-			[context setObject:_target  forKey:@"performedInRoom"];
-			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDemoted" 
-														   withContextInfo:context];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was demoted from operator by %@ in %@.", "bubble message member operator demotion string" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by ), _target] forKey:@"description"];
+			[context setObject:member forKey:@"performedOn"];
+			[context setObject:by forKey:@"performedBy"];
+			[context setObject:_target forKey:@"performedInRoom"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDemoted" withContextInfo:context];
 		}
 	}
 
@@ -421,20 +411,17 @@
 			[invocation setArgument:&mbr atIndex:2];
 			[invocation setArgument:&self atIndex:3];
 			[invocation setArgument:&byMbr atIndex:4];
-		
+
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"Room Member Voiced", "member voiced title" ) 
-						forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ in %@.", "bubble message member voiced string" ), [message substringToIndex:[message length]-2], _target]
-						forKey:@"description"];
-			[context setObject:member   forKey:@"performedOn"];
-			[context setObject:by		forKey:@"performedBy"];
-			[context setObject:_target  forKey:@"performedInRoom"];
-			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberVoiced" 
-														   withContextInfo:context];
+			[context setObject:NSLocalizedString( @"Room Member Voiced", "member voiced title" ) forKey:@"title"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was granted voice by %@ in %@.", "bubble message member voiced string" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by ), _target] forKey:@"description"];
+			[context setObject:member forKey:@"performedOn"];
+			[context setObject:by forKey:@"performedBy"];
+			[context setObject:_target forKey:@"performedInRoom"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberVoiced" withContextInfo:context];
 		}
 	}
 
@@ -482,13 +469,11 @@
 
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"Room Member Lost Voice", "member devoiced title" ) 
-						forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ in %@.", "bubble message member lost voice string" ), [message substringToIndex:[message length]-2], _target]
-						forKey:@"description"];
-			[context setObject:member   forKey:@"performedOn"];
-			[context setObject:by		forKey:@"performedBy"];
-			[context setObject:_target  forKey:@"performedInRoom"];
+			[context setObject:NSLocalizedString( @"Room Member Lost Voice", "member devoiced title" ) forKey:@"title"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ had voice removed by %@ in %@.", "bubble message member lost voice string" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by ), _target] forKey:@"description"];
+			[context setObject:member forKey:@"performedOn"];
+			[context setObject:by forKey:@"performedBy"];
+			[context setObject:_target forKey:@"performedInRoom"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDevoiced" withContextInfo:context];
 		}
 	}
@@ -535,20 +520,15 @@
 	} else {
 		message = [NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from the chat room by %@.", "user has been removed by force from a chat room status message" ), ( mbr ? [mbr title] : member ), ( byMbr ? [byMbr title] : by )];
 	}
-	[self addEventMessageToDisplay:message 
-						  withName:@"memberKicked" 
-					 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"byNickname", ( mbr ? [mbr title] : member ), @"who", member, @"whoNickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
-	
-	
+	[self addEventMessageToDisplay:message withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMbr ? [byMbr title] : by ), @"by", by, @"byNickname", ( mbr ? [mbr title] : member ), @"who", member, @"whoNickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+
 	//create notification
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"Room Member Kicked", "member kicked title" ) 
-				forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"In %@ %@.", "bubble message member kicked string" ), _target, [message substringToIndex:[message length]-2]]
-				forKey:@"description"];
-	[context setObject:member   forKey:@"performedOn"];
-	[context setObject:by		forKey:@"performedBy"];
-	[context setObject:_target  forKey:@"performedInRoom"];
+	[context setObject:NSLocalizedString( @"Room Member Kicked", "member kicked title" ) forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from %@ by %@.", "bubble message member kicked string" ), ( mbr ? [mbr title] : member ), _target, ( byMbr ? [byMbr title] : by )] forKey:@"description"];
+	[context setObject:member forKey:@"performedOn"];
+	[context setObject:( byMbr ? [byMbr title] : by ) forKey:@"performedBy"];
+	[context setObject:_target forKey:@"performedInRoom"];
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 }
 
@@ -561,7 +541,7 @@
 	if( ! rstring ) rstring = [NSString stringWithCString:[reason bytes] length:[reason length]];
 
 	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
-	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), by];
+	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), ( byMbr ? [byMbr title] : by )];
 	[self addEventMessageToDisplay:message withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[byMbr title], @"by", by, @"byNickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 	JVChatRoomMember *mbr = [[[self chatRoomMemberWithName:[[self connection] nickname]] retain] autorelease];
@@ -590,86 +570,74 @@
 
 	//create notification
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"You Were Kicked", "member kicked title" ) 
-				forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"In %@ %@.", "bubble message member kicked string" ), _target, [message substringToIndex:[message length]-2]]
-				forKey:@"description"];
-	[context setObject:[[self connection] nickname]   forKey:@"performedOn"];
-	[context setObject:by		forKey:@"performedBy"];
-	[context setObject:_target  forKey:@"performedInRoom"];
+	[context setObject:NSLocalizedString( @"You Were Kicked", "member kicked title" ) forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were kicked from %@ by %@.", "bubble message member kicked string" ), _target, ( byMbr ? [byMbr title] : by )] forKey:@"description"];
+	[context setObject:[[self connection] nickname] forKey:@"performedOn"];
+	[context setObject:( byMbr ? [byMbr title] : by ) forKey:@"performedBy"];
+	[context setObject:_target forKey:@"performedInRoom"];
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 
-	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You were kicked from the chat room.", 
-																	 "you were removed by force from a chat room error message title" ), 
-												  NSLocalizedString( @"You were kicked from the chat room by %@. You are no longer part of this chat and can't send anymore messages.", 
-																	 "you were removed by force from a chat room error message" ), 
-												  @"OK", 
-												  nil, nil, 
-												  ( byMbr ? [byMbr title] : by ) ) withName:nil];
+	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You were kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You were kicked from the chat room by %@. You are no longer part of this chat and can't send anymore messages.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, ( byMbr ? [byMbr title] : by ) ) withName:nil];
 }
 
 - (void) changeTopic:(NSData *) topic by:(NSString *) author {
 	if( ! [topic isMemberOfClass:[NSNull class]] ) {
 		NSMutableString *topicString = ( topic ? [[[NSMutableString alloc] initWithData:topic encoding:_encoding] autorelease] : nil );
 		if( ! topicString && topic ) topicString = [NSMutableString stringWithCString:[topic bytes] length:[topic length]];
-		
+
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 			[self _makeHyperlinksInString:topicString];
-		
+
 		if( topic && author && ! [author isMemberOfClass:[NSNull class]] ) {
 			JVChatRoomMember *mbr = [self chatRoomMemberWithName:author];
 			if( [mbr isLocalUser] ) {
-				[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You changed the topic to \"%@\".", "you changed the topic chat room status message" ), topicString] 
-									  withName:@"topicChanged" 
-								 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : author ), @"by", author, @"byNickname", topicString, @"topic", nil]];
+				[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You changed the topic to \"%@\".", "you changed the topic chat room status message" ), topicString] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : author ), @"by", author, @"byNickname", topicString, @"topic", nil]];
 			} else {
-				[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"Topic changed to \"%@\" by %@.", "topic changed chat room status message" ), topicString, ( mbr ? [mbr title] : author )] 
-									  withName:@"topicChanged" 
-								 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : author ), @"by", author, @"byNickname", topicString, @"topic", nil]];
+				[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"Topic changed to \"%@\" by %@.", "topic changed chat room status message" ), topicString, ( mbr ? [mbr title] : author )] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : author ), @"by", author, @"byNickname", topicString, @"topic", nil]];
 			}
-			
+
 			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( JVChatRoom * ), @encode( JVChatRoomMember * ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-			
+
 			[invocation setSelector:@selector( topicChangedTo:inRoom:by: )];
 			[invocation setArgument:&topicString atIndex:2];
 			[invocation setArgument:&self atIndex:3];
 			[invocation setArgument:&mbr atIndex:4];
-			
+
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		}
-		
+
 		if( ! [topicString length] )
 			topicString = [NSString stringWithFormat:@"<span style=\"color: #6c6c6c\">%@</span>", NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" )];
-		
+
 		topicString = [NSString stringWithFormat:@"<span style=\"font-size: 11px; font-family: Lucida Grande, san-serif\">%@</span>", topicString];
-		
+
 		[_topic autorelease];
 		_topic = [topic copy];
-		
+
 		[_topicAttributed autorelease];
 		_topicAttributed = [[NSMutableAttributedString attributedStringWithHTMLFragment:topicString baseURL:nil] retain];
-		
+
 		NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 		[paraStyle setMaximumLineHeight:13.];
 		[paraStyle setAlignment:NSCenterTextAlignment];
 		[paraStyle setLineBreakMode:NSLineBreakByTruncatingTail];
 		[(NSMutableAttributedString *)_topicAttributed addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange( 0, [_topicAttributed length] )];
-		
+
 		[[topicLine textStorage] setAttributedString:_topicAttributed];
 	}
-	
+
 	if( author && ! [author isMemberOfClass:[NSNull class]] ) {
 		[_topicAuth autorelease];
 		_topicAuth = [author retain];
 	}
-	
+
 	NSMutableString *toolTip = [[[_topicAttributed string] mutableCopy] autorelease];
 	if( _topicAuth ) {
 		[toolTip appendString:@"\n"];
 		[toolTip appendFormat:NSLocalizedString( @"Topic set by: %@", "topic author tooltip" ), _topicAuth];
 	}
-	
+
 	[[topicLine enclosingScrollView] setToolTip:toolTip];
 }
 
@@ -677,6 +645,7 @@
 	return [[_topicAttributed retain] autorelease];
 }
 
+#pragma mark -
 #pragma mark Encoding Support
 
 - (IBAction) changeEncoding:(id) sender {
@@ -684,7 +653,8 @@
 	[self changeTopic:_topic by:_topicAuth];
 }
 
-#pragma mark UserList Management
+#pragma mark -
+#pragma mark User List Management
 
 - (void) joined {
 	if( _invalidateMembers ) {
@@ -742,49 +712,49 @@
 	[_windowController reloadListItem:self andChildren:YES];
 }
 
+- (void) addExistingMembersToChat:(NSArray *) members {
+	// future irssi stuff.
+}
+
 - (void) addMemberToChat:(NSString *) member asPreviousMember:(BOOL) previous {
 	NSParameterAssert( member != nil );
-	
+
 	if( _invalidateMembers ) {
 		[_members removeAllObjects];
 		[_sortedMembers removeAllObjects];
 		_invalidateMembers = NO;
 	}
-	
+
 	if( ! [self chatRoomMemberWithName:member] ) {
 		JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] initWithRoom:self andNickname:member] autorelease];
-		
+
 		[_members setObject:listItem forKey:member];
 		[_sortedMembers addObject:listItem];
-		
+
 		[self resortMembers];
-		
-		if( ! previous ) {
+
+		if( ! previous) {
 			NSString *name = [listItem title];
 			NSString *message = [NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room.", "a user has join a chat room status message" ), name];
-			[self addEventMessageToDisplay:message withName:@"memberJoined" 
-							 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"nickname", name, @"who", nil]];
-			
+			[self addEventMessageToDisplay:message withName:@"memberJoined" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"nickname", name, @"who", nil]];
+
 			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-			
+
 			[invocation setSelector:@selector( memberJoined:inRoom: )];
 			[invocation setArgument:&listItem atIndex:2];
 			[invocation setArgument:&self atIndex:3];
-			
+
 			[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-			
 
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"Room Member Joined", "member joined title" ) 
-						forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ %@.", "bubble message member joined string" ), [message substringToIndex:[message length]-2], _target]
-						forKey:@"description"];
-			[context setObject:member   forKey:@"performedOn"];
-			[context setObject:_target  forKey:@"performedInRoom"];
+			[context setObject:NSLocalizedString( @"Room Member Joined", "member joined title" ) forKey:@"title"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room %@.", "bubble message member joined string" ), name, _target] forKey:@"description"];
+			[context setObject:member forKey:@"performedOn"];
+			[context setObject:_target forKey:@"performedInRoom"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
-		}
+			}
 	}
 }
 
@@ -819,18 +789,14 @@
 		
 		NSString *name = [mbr title];
 		NSString *message = [NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room.", "a user has left the chat room status message" ), name];
-		[self addEventMessageToDisplay:message 
-							  withName:@"memberParted" 
-						 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"who", member, @"nickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
-		
+		[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"who", member, @"nickname", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+
 		//create notification
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:NSLocalizedString( @"Room Member Left", "member left title" ) 
-					forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ %@.", "bubble message member left string" ), [message substringToIndex:[message length]-2], _target]
-					forKey:@"description"];
-		[context setObject:member   forKey:@"performedOn"];
-		[context setObject:_target  forKey:@"performedInRoom"];
+		[context setObject:NSLocalizedString( @"Room Member Left", "member left title" ) forKey:@"title"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room %@.", "bubble message member left string" ), name, _target] forKey:@"description"];
+		[context setObject:member forKey:@"performedOn"];
+		[context setObject:_target forKey:@"performedInRoom"];
 		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
 	}
 }
@@ -842,36 +808,32 @@
 	JVChatRoomMember *mbr = nil;
 	if( ( mbr = [[[self chatRoomMemberWithName:member] retain] autorelease] ) ) {
 		NSString *name = [[[mbr title] copy] autorelease];
-		
+
 		[_members setObject:mbr forKey:nick];
 		[_members removeObjectForKey:member];
 		[mbr _setNickname:nick];
-		
+
 		[self resortMembers];
-		
+
 		if( [mbr isLocalUser] ) {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as %@.", "you changed nicknames" ), nick] 
-								  withName:@"newNickname" 
-							 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[mbr title], @"name", member, @"old", nick, @"new", nil]];
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as %@.", "you changed nicknames" ), nick] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[mbr title], @"name", member, @"old", nick, @"new", nil]];
 		} else {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as %@.", "user has changed nicknames" ), name, nick] 
-								  withName:@"memberNewNickname" 
-							 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"name", member, @"old", nick, @"new", nil]];
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as %@.", "user has changed nicknames" ), name, nick] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:name, @"name", member, @"old", nick, @"new", nil]];
 		}
-		
+
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSString * ), @encode( NSString * ), @encode( JVChatRoom * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-		
+
 		[invocation setSelector:@selector( userNamed:isNowKnowAs:inView: )];
 		[invocation setArgument:&member atIndex:2];
 		[invocation setArgument:&nick atIndex:3];
 		[invocation setArgument:&self atIndex:4];
-		
+
 		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	}
 }
 
-
+#pragma mark -
 #pragma mark TextView/Input supprt
 
 - (BOOL) textView:(NSTextView *) textView tabKeyPressed:(NSEvent *) event {
@@ -935,6 +897,7 @@
 	return ret;
 }
 
+#pragma mark -
 #pragma mark Toolbar Support
 - (NSToolbar *) toolbar {
 	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Chat Room"];
@@ -1132,9 +1095,7 @@
 			break;
 	}
 
-	[self addEventMessageToDisplay:message 
-						  withName:@"modeChange" 
-					 andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : member ), @"by", member, @"byNickname", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", [[notification userInfo] objectForKey:@"param"], @"parameter", nil]];
+	[self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : member ), @"by", member, @"byNickname", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", [[notification userInfo] objectForKey:@"param"], @"parameter", nil]];
 }
 @end
 

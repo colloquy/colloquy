@@ -25,6 +25,7 @@
 - (void) joined;
 - (void) parting;
 
+- (void) addExistingMembersToChat:(NSArray *) members;
 - (void) addMemberToChat:(NSString *) member asPreviousMember:(BOOL) previous;
 - (void) removeChatMember:(NSString *) member withReason:(NSData *) reason;
 - (void) changeChatMember:(NSString *) member to:(NSString *) nick;

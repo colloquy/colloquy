@@ -79,8 +79,8 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	(NSStringEncoding) 0x80000422,		// Windows
 	/* End */ 0 };
 
-extern char *irc_html_to_irc(const char * const string);
-extern char *irc_irc_to_html(const char * const string);
+//extern char *irc_html_to_irc(const char * const string);
+//extern char *irc_irc_to_html(const char * const string);
 
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
 
@@ -369,6 +369,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		[[NSApplication sharedApplication] beginSheet:[_waitingAlerts objectAtIndex:0] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
 }
 
+#pragma mark -
 #pragma mark Drag & Drop Support
 
 - (BOOL) acceptsDraggedFileOfType:(NSString *) type {
@@ -383,7 +384,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	if( returnCode == NSOKButton ) xmlSetProp( xmlDocGetRootElement( _xmlLog ), "ended", [[[NSDate date] description] UTF8String] );
-	[super savePanelDidEnd:sheet returnCode:returnCode contextInfo:contextInfo];
+	[(id) super savePanelDidEnd:sheet returnCode:returnCode contextInfo:contextInfo];
 	if( returnCode == NSOKButton ) xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "ended" );
 }
 
@@ -466,6 +467,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[_windowController reloadListItem:self andChildren:NO];
 }
 
+#pragma mark -
 #pragma mark Prefences/User Defaults
 
 - (void) setPreference:(id) value forKey:(NSString *) key {
@@ -487,6 +489,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return [[[_settings objectForKey:key] retain] autorelease];
 }
 
+#pragma mark -
 #pragma mark Styles
 
 - (IBAction) changeChatStyle:(id) sender {
@@ -552,6 +555,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	}
 }
 
+#pragma mark -
 #pragma mark Encoding Support
 
 - (NSStringEncoding) encoding {
@@ -596,15 +600,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	} else [self setPreference:nil forKey:@"encoding"];
 }
 
+#pragma mark -
 #pragma mark Messages & Events
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
-	NSEnumerator *enumerator		= nil, *kenumerator		= nil;
-	NSMutableString *key			= nil, *value			= nil;
-	NSMutableString *messageString  = nil;
-	xmlDocPtr doc					= NULL, msgDoc			= NULL;
-	xmlNodePtr root					= NULL, child			= NULL;
-	const char *msgStr				= NULL;
+	NSEnumerator *enumerator = nil, *kenumerator = nil;
+	NSMutableString *key = nil, *value = nil;
+	NSMutableString *messageString = nil;
+	xmlDocPtr doc = NULL, msgDoc = NULL;
+	xmlNodePtr root = NULL, child = NULL;
+	const char *msgStr = NULL;
 
 	NSParameterAssert( name != nil );
 	NSParameterAssert( [name length] );
@@ -678,10 +683,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
-	BOOL highlight		= NO;
-	xmlDocPtr doc		= NULL, msgDoc  = NULL;
-	xmlNodePtr root		= NULL, child   = NULL, parent = NULL;
-	const char *msgStr  = NULL;
+	BOOL highlight = NO;
+	xmlDocPtr doc = NULL, msgDoc = NULL;
+	xmlNodePtr root = NULL, child = NULL, parent = NULL;
+	const char *msgStr = NULL;
 	NSMutableData *mutableMsg = [[message mutableCopy] autorelease];
 	NSMutableString *messageString = nil;
 
@@ -712,24 +717,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		if( [self isMemberOfClass:[JVDirectChat class]] && _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]]
-						forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
-			[context setObject:[[self connection] nickname] forKey:@"performedOn"];
-			[context setObject:user		forKey:@"performedBy"];
-			[context setObject:_target  forKey:@"performedInRoom"];
+			[context setObject:_target forKey:@"performedOn"];
+			[context setObject:user forKey:@"performedBy"];
+			[context setObject:_target forKey:@"performedInRoom"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
 		}
 
 		if( [self isMemberOfClass:[JVDirectChat class]] && ! _firstMessage ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ sent you another private message.", "new message bubble text" ), [self title]] 
-						forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ sent you another private message.", "new message bubble text" ), [self title]] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
-			[context setObject:[[self connection] nickname] forKey:@"performedOn"];
-			[context setObject:user		forKey:@"performedBy"];
-			[context setObject:_target  forKey:@"performedInRoom"];
+			[context setObject:_target forKey:@"performedOn"];
+			[context setObject:user forKey:@"performedBy"];
+			[context setObject:_target forKey:@"performedInRoom"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
 		}
 
@@ -739,14 +742,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		while( ( item = [enumerator nextObject] ) ) {
 			if( [messageString rangeOfString:item options:NSCaseInsensitiveSearch].length ) {
 				NSMutableDictionary *context = [NSMutableDictionary dictionary];
-				[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) 
-							forKey:@"title"];
-				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] 
-							forKey:@"description"];
+				[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
+				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"description"];
 				[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-				[context setObject:[[self connection] nickname] forKey:@"performedOn"];
-				[context setObject:user		forKey:@"performedBy"];
-				[context setObject:_target  forKey:@"performedInRoom"];
+				[context setObject:_target forKey:@"performedOn"];
+				[context setObject:user forKey:@"performedBy"];
+				[context setObject:_target forKey:@"performedInRoom"];
 				[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
 				_newHighlightMessage = YES;
 				highlight = YES;
@@ -900,6 +901,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return _newHighlightMessage;
 }
 
+#pragma mark -
 #pragma mark Input Handling
 
 - (IBAction) send:(id) sender {
@@ -1013,6 +1015,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	return [[results lastObject] boolValue];
 }
 
+#pragma mark -
 #pragma mark ScrollBack
 
 - (IBAction) clear:(id) sender {
@@ -1024,6 +1027,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
 }
 
+#pragma mark -
 #pragma mark TextView Support
 
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event {
@@ -1135,6 +1139,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	_historyIndex = 0;
 }
 
+#pragma mark -
 #pragma mark SplitView Support
 
 - (BOOL) splitView:(NSSplitView *) sender canCollapseSubview:(NSView *) subview {
@@ -1182,6 +1187,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[[[display superview] superview] setFrame:webFrame];
 }
 
+#pragma mark -
 #pragma mark Toolbar Support
 
 - (NSToolbar *) toolbar {
