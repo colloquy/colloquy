@@ -4,7 +4,7 @@
 @implementation MVTextView
 - (void) insertText:(id) insertString {
 	if( [insertString characterAtIndex:0] == NSNewlineCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] )
-		if( [[self delegate] textView:self returnKeyPressed:event] ) return;
+		if( [[self delegate] textView:self returnKeyPressed:[[NSApplication sharedApplication] currentEvent]] ) return;
 	[super insertText:insertString];
 }
 
@@ -232,7 +232,6 @@
 	}
 
 	return YES;
-
 }
 
 #pragma mark -
