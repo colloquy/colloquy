@@ -42,7 +42,7 @@
 }
 
 - (NSString *) title {
-	return [_member memberName];
+	return [_member nickname];
 }
 
 - (NSString *) type {
@@ -51,8 +51,8 @@
 
 - (void) willLoad {
 	[progress startAnimation:nil];
-	[nickname setObjectValue:[_member memberName]];
-	[[_member connection] fetchInformationForUser:[_member memberName] withPriority:NO];
+	[nickname setObjectValue:[_member nickname]];
+	[[_member connection] fetchInformationForUser:[_member nickname] withPriority:NO];
 }
 
 #pragma mark -
@@ -71,7 +71,7 @@
 }
 
 - (void) gotUserInfo:(NSNotification *) notification {
-	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member memberName]] != NSOrderedSame ) return;
+	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
 	NSDictionary *info = [[notification userInfo] objectForKey:@"info"];
 	NSString *clas = nil;
 	if( [[info objectForKey:@"flags"] intValue] == 0 ) {
