@@ -22,6 +22,9 @@
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&to];
+
+		if( ! to ) return NO;
+
 		if( [arguments length] >= [scanner scanLocation] + 1 ) {
 			[scanner setScanLocation:[scanner scanLocation] + 1];
 			msg = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [arguments length] - [scanner scanLocation] )];
@@ -37,12 +40,13 @@
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
 		NSEnumerator *enumerator = [[chatWindowControllerClass roomChatWindowsForConnection:connection] keyEnumerator];
 		id item = nil;
-		if( ! [arguments length] ) return YES;
+		if( ! [arguments length] ) return NO;
 		while( ( item = [enumerator nextObject] ) )
 			[connection sendMessageToChatRoom:item attributedMessage:arguments withEncoding:NSUTF8StringEncoding asAction:[command isEqualToString:@"ame"]];
 		return YES;
 	} else if( [command isEqualToString:@"nick"] ) {
 		NSString *nick = nil;
+		if( ! [arguments length] ) return NO;
 		[[NSScanner scannerWithString:[arguments string]] scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&nick];
 		[connection setNickname:nick];
 		return YES;
@@ -53,16 +57,18 @@
 		NSArray *rooms = [[arguments string] componentsSeparatedByString:@" "];
 		NSEnumerator *enumerator = [rooms objectEnumerator];
 		id item = nil;
+		if( ! [rooms count] ) return NO;
 		while( ( item = [enumerator nextObject] ) )
 			[connection joinChatForRoom:item];
 		return YES;
 	} else if( [command isEqualToString:@"part"] ) {
-		if( ! [arguments string] ) {
+		if( ! [arguments length] ) {
 			[connection partChatForRoom:room];
 		} else {
 			NSArray *rooms = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *enumerator = [rooms objectEnumerator];
 			id item = nil;
+			if( ! [rooms count] ) return NO;
 			while( ( item = [enumerator nextObject] ) )
 				[connection partChatForRoom:item];
 		}
@@ -99,12 +105,10 @@
 			if( [arguments length] >= [scanner scanLocation] + 1 ) {
 				[scanner setScanLocation:[scanner scanLocation] + 1];
 				path = [[arguments string] substringFromIndex:[scanner scanLocation]];
+				if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) return NO;
 			}
 
-			if( ! to ) {
-				// display error
-				return YES;
-			}
+			if( ! to ) return NO;
 
 			if( ! [path length] ) {
 				NSOpenPanel *panel = [NSOpenPanel openPanel];
@@ -120,11 +124,45 @@
 			} else [connection sendFileToUser:to withFilePath:path];
 			return YES;
 		}
+		return NO;
 	} else if( [command isEqualToString:@"topic"] ) {
+		if( ! [arguments length] ) return NO;
 		[connection setTopic:arguments withEncoding:NSUTF8StringEncoding forRoom:room];
 		return YES;
 	} else if( [command isEqualToString:@"mode"] ) {
-		return NO;
+		NSRange vrange, orange, vsrange, osrange;
+		BOOL handled = NO;
+		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
+		NSString *modes = nil, *who = nil;
+
+		if( ! [arguments length] ) return NO;
+
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&modes];
+		vrange = [modes rangeOfString:@"v"];
+		if( vrange.location != NSNotFound ) vsrange = [modes rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"-+"] options:NSBackwardsSearch range:NSMakeRange( 0, vrange.location )];
+		orange = [modes rangeOfString:@"o"];
+		if( orange.location != NSNotFound ) osrange = [modes rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"-+"] options:NSBackwardsSearch range:NSMakeRange( 0, orange.location )];
+
+		if( [arguments length] >= [scanner scanLocation] + 1 )
+			[scanner setScanLocation:[scanner scanLocation] + 1];
+		else return NO;
+
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&who];
+
+		if( ! who ) return NO;
+
+		if( vrange.location != NSNotFound && vsrange.location != NSNotFound ) {
+			if( [modes characterAtIndex:vsrange.location] == '+' ) [connection voiceMember:who inRoom:room];
+			else [connection devoiceMember:who inRoom:room];
+			handled = YES;
+		}
+
+		if( orange.location != NSNotFound && osrange.location != NSNotFound ) {
+			if( [modes characterAtIndex:osrange.location] == '+' ) [connection promoteMember:who inRoom:room];
+			else [connection demoteMember:who inRoom:room];
+			handled = YES;
+		}
+		return handled;
 	} else if( [command isEqualToString:@"names"] ) {
 		MVChatWindowController *window = [chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:NO];
 		[window openMemberDrawer:nil];
@@ -138,6 +176,8 @@
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&member];
+		if( ! member ) return NO;
+
 		if( [arguments length] >= [scanner scanLocation] + 1 ) {
 			[scanner setScanLocation:[scanner scanLocation] + 1];
 			msg = [[arguments string] substringFromIndex:[scanner scanLocation]];
