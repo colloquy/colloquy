@@ -1587,11 +1587,12 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
 	while( ! MVChatApplicationQuitting || connectionCount ) {
-		usleep( 500 ); // give time for other theads to lock
 		if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
 			g_main_iteration( TRUE ); // this will block if TRUE is passed
 			[MVIRCChatConnectionThreadLock unlock];
 		}
+
+		usleep( 500 ); // give time for other theads to lock
 	}
 
 	usleep( 1000 ); // give time for other theads to lock before we dealloc
