@@ -1374,11 +1374,14 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _loadBookmarkList {
-	NSMutableArray *list = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"]];
+	NSArray *list = [[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"];
 	NSEnumerator *enumerator = [list objectEnumerator];
-	id info = nil;
+	NSMutableArray *bookmarks = [NSMutableArray array];
+	NSMutableDictionary *info = nil;
 
 	while( ( info = [enumerator nextObject] ) ) {
+		info = [NSMutableDictionary dictionaryWithDictionary:info];
+
 		MVChatConnection *connection = nil;
 		MVChatConnectionType type = ( ! [(NSString *)[info objectForKey:@"type"] length] ? MVChatConnectionIRCType : ( [[info objectForKey:@"type"] isEqualToString:@"irc"] ? MVChatConnectionIRCType : ( [[info objectForKey:@"type"] isEqualToString:@"silc"] ? MVChatConnectionSILCType : MVChatConnectionIRCType ) ) );
 
@@ -1424,10 +1427,11 @@ static NSMenu *favoritesMenu = nil;
 		}
 
 		[info setObject:connection forKey:@"connection"];
+		[bookmarks addObject:info];
 	}
 
 	[_bookmarks autorelease];
-	_bookmarks = [list retain];
+	_bookmarks = [bookmarks retain];
 
 	[connections noteNumberOfRowsChanged];
 
