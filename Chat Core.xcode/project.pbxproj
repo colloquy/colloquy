@@ -341,6 +341,7 @@
 				1C943AAB063C260800618CD9,
 				1C7B83CB0668D765004F1EFE,
 				1C0D8866067D1E7100E851AC,
+				1CF4E5110698E9E900986498,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -378,6 +379,7 @@
 				1C943AAC063C260800618CD9,
 				1C7B83CC0668D765004F1EFE,
 				1C0D8867067D1E7100E851AC,
+				1CF4E5120698E9E900986498,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3192,6 +3194,34 @@
 			settings = {
 			};
 		};
+		1CF4E50F0698E9E900986498 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSDataAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF4E5100698E9E900986498 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSDataAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF4E5110698E9E900986498 = {
+			fileRef = 1CF4E50F0698E9E900986498;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CF4E5120698E9E900986498 = {
+			fileRef = 1CF4E5100698E9E900986498;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //1C0
 //1C1
 //1C2
@@ -3234,6 +3264,8 @@
 				1CD020BC057593A9000F93B4,
 				1C0D8865067D1E7100E851AC,
 				1C0D8864067D1E7100E851AC,
+				1CF4E5100698E9E900986498,
+				1CF4E50F0698E9E900986498,
 				1C3D55C005A4DC1E00F25F5E,
 				1C3D55BF05A4DC1E00F25F5E,
 				1C7B83CA0668D765004F1EFE,

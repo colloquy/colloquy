@@ -4188,6 +4188,22 @@
 			shellPath = /bin/sh;
 			shellScript = "touch Resources/Styles\ntouch Resources/Emoticons\n";
 		};
+		1CF4E51D0698E9FB00986498 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSDataAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CF4E51E0698E9FB00986498 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSDataAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		1CF9BB9A04FBE96D00A8FE6E = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -4707,6 +4723,8 @@
 				F5E98623018B412B01EE70DE,
 				F56CD5430191182601EE70DE,
 				F56CD5440191182601EE70DE,
+				1CF4E51E0698E9FB00986498,
+				1CF4E51D0698E9FB00986498,
 				1C3D55A405A4CB2B00F25F5E,
 				1C3D55A305A4CB2B00F25F5E,
 				1C3D562205A4DCCD00F25F5E,
