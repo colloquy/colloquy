@@ -20,11 +20,21 @@
 	<array>
 		<dict>
 			<key>style</key>
+			<string>.message.self { background-color: %@ !important; } .submessage.self { background-color: %@ !important; }</string>
+			<key>default</key>
+			<string>rgba( 255, 191, 78, 0.6 )</string>
+			<key>description</key>
+			<string>Your message</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
 			<string>.message { background-color: %@ !important; } .submessage { background-color: %@ !important; }</string>
 			<key>default</key>
 			<string>rgba( 255, 191, 78, 0.6 )</string>
 			<key>description</key>
-			<string>Message background</string>
+			<string>Message</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
