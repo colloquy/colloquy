@@ -80,7 +80,7 @@ static void MVSoftwareUpdateClearTimeout() {
 
 - (void) awakeFromNib {
 	if( [[updateInfo objectForKey:@"MVNeedsUpdate"] boolValue] ) {
-		NSString *label = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleName"];
+		NSString *label = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 		[program setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%@ Update", "program update" ), label]];
 		[version setStringValue:[NSString stringWithFormat:NSLocalizedString( @"currently using %@ (v%@)", "current version" ), [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
 		[[about textStorage] replaceCharactersInRange:NSMakeRange( 0, 0 ) withAttributedString:[[[NSAttributedString alloc] initWithHTML:[[updateInfo objectForKey:@"MVInformation"] dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES] documentAttributes:nil] autorelease]];

@@ -12,7 +12,7 @@
 - (id) init {
 	NSDate *modDate = nil, *lastDate = nil;
 	self = [super init];
-	programName = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"] copy];
+	programName = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] copy];
 	logPath = [[[NSString stringWithFormat:@"~/Library/Logs/CrashReporter/%@.crash.log", programName] stringByExpandingTildeInPath] retain];
 	modDate = [[[NSFileManager defaultManager] fileAttributesAtPath:logPath traverseLink:NO] objectForKey:NSFileModificationDate];
 	lastDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"MVCrashCatcherLastDate"];
