@@ -675,6 +675,7 @@ static NSMenu *favoritesMenu = nil;
 		if( [info objectForKey:@"connection"] == connection ) {
 			if( autoConnect ) [info setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
 			[info setObject:[NSNumber numberWithBool:autoConnect] forKey:@"automatic"];
+			[self _saveBookmarkList];
 			break;
 		}
 	}
@@ -718,6 +719,7 @@ static NSMenu *favoritesMenu = nil;
 			if( ! ret ) {
 				ret = [NSMutableArray array];
 				[info setObject:ret forKey:@"rooms"];
+				[self _saveBookmarkList];
 			}
 			return ret;
 		}
@@ -736,6 +738,7 @@ static NSMenu *favoritesMenu = nil;
 		if( [info objectForKey:@"connection"] == connection ) {
 			if( commands ) [info setObject:[[commands mutableCopy] autorelease] forKey:@"commands"];
 			else [info removeObjectForKey:@"commands"];
+			[self _saveBookmarkList];
 			break;
 		}
 	}
@@ -768,6 +771,7 @@ static NSMenu *favoritesMenu = nil;
 					copy = [[ignores mutableCopy] autorelease];
 				[info setObject:copy forKey:@"ignores"];
 			} else [info removeObjectForKey:@"ignores"];
+			[self _saveBookmarkList];
 			break;
 		}
 	}
@@ -1263,6 +1267,8 @@ static NSMenu *favoritesMenu = nil;
 		connection = [info objectForKey:@"connection"];
 		[connection sendRawMessage:@"QUIT"];
 	}
+
+	[self _saveBookmarkList];
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
@@ -1364,7 +1370,7 @@ static NSMenu *favoritesMenu = nil;
 					[permIgnores addObject:[NSKeyedArchiver archivedDataWithRootObject:rule]];
 
 			if( [permIgnores count] ) [data setObject:permIgnores forKey:@"ignores"];
-
+			
 			[saveList addObject:data];
 		}
 	}
