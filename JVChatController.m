@@ -420,11 +420,17 @@ static JVChatController *sharedInstance = nil;
 
 	if( ! windowController ) windowController = [self newChatWindowController];
 
+	if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) focus = NO;
+	if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) focus = NO;
+
 	[windowController addChatViewController:controller];
 	if( focus || [[windowController allChatViewControllers] count] == 1 ) {
 		[windowController showChatViewController:controller];
 		if( focus ) [[windowController window] makeKeyAndOrderFront:nil];
 	}
+
+	if( ! focus && [_chatWindows count] == 1 )
+		[[windowController window] makeKeyAndOrderFront:nil];
 }
 
 - (IBAction) _checkMemos:(id) sender {
