@@ -31,6 +31,7 @@ extern NSString *JVStyleVariantChangedNotification;
 + (void) setDefaultStyle:(JVStyle *) style;
 
 - (id) initWithBundle:(NSBundle *) bundle;
+- (void) unlink;
 
 - (NSBundle *) bundle;
 - (NSString *) identifier;

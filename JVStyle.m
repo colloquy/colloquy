@@ -76,6 +76,9 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		if( [[style identifier] isEqualToString:identifier] )
 			return style;
 
+	NSBundle *bundle = [NSBundle bundleWithIdentifier:identifier];
+	if( bundle ) return [[[JVStyle alloc] initWithBundle:bundle] autorelease];
+
 	return nil;
 }
 
@@ -114,6 +117,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 - (id) initWithBundle:(NSBundle *) bundle {
+	if( ! bundle ) return nil;
+
 	if( ( self = [self init] ) ) {
 		extern NSMutableSet *allStyles;
 		[allStyles addObject:self];
@@ -134,14 +139,10 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return self;
 }
 
-- (void) release {
-	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
-		extern NSMutableSet *allStyles;
-		[allStyles removeObject:self];
-		_releasing = YES;
-	}
-
-	[super release];
+- (void) unlink {
+	extern NSMutableSet *allStyles;
+	[allStyles removeObject:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles]; 
 }
 
 - (void) dealloc {
