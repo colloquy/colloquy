@@ -23,6 +23,13 @@
 
 #pragma mark -
 
+@interface WebView (WebViewPrivate) // WebKit 1.3 pending public API
+- (void) setDrawsBackground:(BOOL) draws;
+- (BOOL) drawsBackground;
+@end
+
+#pragma mark -
+
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 + (void) _scanForEmoticons;
 @end
@@ -103,6 +110,11 @@
 }
 
 #pragma mark -
+
+- (void) willBeDisplayed {
+	if( [preview respondsToSelector:@selector( setDrawsBackground: )] )
+		[preview setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
+}
 
 - (void) initializeFromDefaults {
 	[preview setPolicyDelegate:self];
@@ -736,14 +748,14 @@
 			[options setObject:cell forKey:@"cell"];
 			return cell;
 		} else if( [[options objectForKey:@"type"] isEqualToString:@"list"] ) {
-			id cell = [[NSPopUpButtonCell new] autorelease];
+			NSPopUpButtonCell *cell = [[NSPopUpButtonCell new] autorelease];
 			[cell setControlSize:NSSmallControlSize];
 			[cell setFont:[NSFont menuFontOfSize:[NSFont smallSystemFontSize]]];
 			[cell addItemsWithTitles:[options objectForKey:@"options"]];
 			[options setObject:cell forKey:@"cell"];
 			return cell;
         } else if( [[options objectForKey:@"type"] isEqualToString:@"file"] ) {
-			id cell = [[NSPopUpButtonCell new] autorelease];
+			NSPopUpButtonCell *cell = [[NSPopUpButtonCell new] autorelease];
 			[cell setControlSize:NSSmallControlSize];
 			[cell setFont:[NSFont menuFontOfSize:[NSFont smallSystemFontSize]]];
 			[self buildFileMenuForCell:cell andOptions:options];
