@@ -270,15 +270,15 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[display setPolicyDelegate:self];
 	[display setFrameLoadDelegate:self];
 
+	if( [(NSString *)[self preferenceForKey:@"emoticon"] length] ) {
+		emoticon = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"emoticon"]];
+		if( emoticon ) [self setChatEmoticons:emoticon performRefresh:NO];
+	}
+
 	if( [self preferenceForKey:@"style"] ) {
 		style = [JVStyle styleWithIdentifier:[self preferenceForKey:@"style"]];
 		variant = [self preferenceForKey:@"style variant"];
 		if( style ) [self setChatStyle:style withVariant:variant];
-	}
-
-	if( [(NSString *)[self preferenceForKey:@"emoticon"] length] ) {
-		emoticon = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"emoticon"]];
-		if( emoticon ) [self setChatEmoticons:emoticon];
 	}
 
 	[super awakeFromNib];

@@ -154,17 +154,17 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 	[display setFrameLoadDelegate:self];
 
 	if( [self isMemberOfClass:[JVChatTranscript class]] ) {
+		if( ! _chatEmoticons && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ) {
+			xmlChar *emoticonProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" );
+			[self setChatEmoticons:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:emoticonProp]] performRefresh:NO];
+			xmlFree( emoticonProp );
+		}
+
 		if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
 			xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
 			JVStyle *style = [JVStyle styleWithIdentifier:[NSString stringWithUTF8String:styleProp]];
 			if( style ) [self setChatStyle:style withVariant:nil];
 			xmlFree( styleProp );
-		}
-
-		if( ! _chatEmoticons && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ) {
-			xmlChar *emoticonProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" );
-			[self setChatEmoticons:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:emoticonProp]]];
-			xmlFree( emoticonProp );
 		}
 	}
 
