@@ -115,9 +115,6 @@ void MVChatPlaySoundForAction( NSString *action ) {
 - (void) awakeFromNib {
 	NSView *toolbarItemContainerView = nil;
 
-	[display setMaintainsBackForwardList:NO];
-	[display setPolicyDelegate:self];
-
 	if( ! _chatEmoticons )
 		[self setChatEmoticons:[NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultEmoticons"]]];
 
@@ -278,6 +275,10 @@ void MVChatPlaySoundForAction( NSString *action ) {
 }
 
 #pragma mark -
+
+- (NSString *) identifier {
+	return [NSString stringWithFormat:@"%@.transcript", [[_filePath lastPathComponent] stringByDeletingPathExtension]];
+}
 
 - (MVChatConnection *) connection {
 	return nil;
@@ -472,7 +473,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 			[menu removeItem:menuItem];
 	}
 
-	if( [self connection] && [self target] && [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"chat.style.%@.%@", [[self connection] server], [self target]]] )
+	if( [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"chat.style.%@", [self identifier]]] )
 		hasPerRoomStyle = YES;
 
 	style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
