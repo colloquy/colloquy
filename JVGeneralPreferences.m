@@ -21,27 +21,12 @@
 - (void) initializeFromDefaults {
 	[self buildEncodingMenu];
 
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnReturn"] )
-		[returnKeyAction selectItemAtIndex:[returnKeyAction indexOfItemWithTag:0]];
-	else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatActionOnReturn"] )
-		[returnKeyAction selectItemAtIndex:[returnKeyAction indexOfItemWithTag:1]];
-	else [returnKeyAction selectItemAtIndex:[returnKeyAction indexOfItemWithTag:2]];
+	[yourName selectItemAtIndex:[yourName indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"]]];
+	[buddyNames selectItemAtIndex:[yourName indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyNameStyle"]]];
 
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnEnter"] )
-		[enterKeyAction selectItemAtIndex:[enterKeyAction indexOfItemWithTag:0]];
-	else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatActionOnEnter"] )
-		[enterKeyAction selectItemAtIndex:[enterKeyAction indexOfItemWithTag:1]];
-	else [enterKeyAction selectItemAtIndex:[enterKeyAction indexOfItemWithTag:2]];
-
-	[sendHistory setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
-	[sendHistoryStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
-
+	[checkSpelling setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatSpellChecking"]];
 	[detectNaturalActions setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"]];
 	[autoCheckVersion setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"]];
-}
-
-- (void) saveChanges {
-	[[NSUserDefaults standardUserDefaults] setInteger:[sendHistory intValue] forKey:@"JVChatMaximumHistory"];
 }
 
 - (void) buildEncodingMenu {
@@ -63,7 +48,7 @@
 		[menuItem setTarget:self];
 		[menu addItem:menuItem];
 	}
-	
+
 	[encoding setMenu:menu];
 }
 
@@ -71,30 +56,16 @@
 	[[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:@"JVChatEncoding"];
 }
 
-- (IBAction) changeSendOnReturnAction:(id) sender {
-	if( [[sender selectedItem] tag] == 0 ) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MVChatSendOnReturn"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatActionOnReturn"];
-	} else if( [[sender selectedItem] tag] == 1 ) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MVChatActionOnReturn"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatSendOnReturn"];
-	} else {
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatSendOnReturn"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatActionOnReturn"];
-	}
+- (IBAction) changeSelfPreferredName:(id) sender {
+	[[NSUserDefaults standardUserDefaults] setInteger:[[sender selectedItem] tag] forKey:@"JVChatSelfNameStyle"];
 }
 
-- (IBAction) changeSendOnEnterAction:(id) sender {
-	if( [[sender selectedItem] tag] == 0 ) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MVChatSendOnEnter"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatActionOnEnter"];
-	} else if( [[sender selectedItem] tag] == 1 ) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MVChatActionOnEnter"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatSendOnEnter"];
-	} else {
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatSendOnEnter"];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatActionOnEnter"];
-	}
+- (IBAction) changeBuddyPreferredName:(id) sender {
+	[[NSUserDefaults standardUserDefaults] setInteger:[[sender selectedItem] tag] forKey:@"JVChatBuddyNameStyle"];
+}
+
+- (IBAction) changeSpellChecking:(id) sender {
+	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVChatSpellChecking"];
 }
 
 - (IBAction) changeNaturalActionDetection:(id) sender {

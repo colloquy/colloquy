@@ -8,17 +8,17 @@
 
 @interface JVGeneralPreferences : NSPreferencesModule {
 	IBOutlet NSPopUpButton *encoding;
-	IBOutlet NSPopUpButton *returnKeyAction;
-	IBOutlet NSPopUpButton *enterKeyAction;
-	IBOutlet NSTextField *sendHistory;
-	IBOutlet NSStepper *sendHistoryStepper;
+	IBOutlet NSPopUpButton *yourName;
+	IBOutlet NSPopUpButton *buddyNames;
+	IBOutlet NSButton *checkSpelling;
 	IBOutlet NSButton *detectNaturalActions;
 	IBOutlet NSButton *autoCheckVersion;
 }
 - (void) buildEncodingMenu;
 - (IBAction) changeEncoding:(id) sender;
-- (IBAction) changeSendOnReturnAction:(id) sender;
-- (IBAction) changeSendOnEnterAction:(id) sender;
+- (IBAction) changeSelfPreferredName:(id) sender;
+- (IBAction) changeBuddyPreferredName:(id) sender;
+- (IBAction) changeSpellChecking:(id) sender;
 - (IBAction) changeNaturalActionDetection:(id) sender;
 - (IBAction) changeAutomaticVersionCheck:(id) sender;
 @end
