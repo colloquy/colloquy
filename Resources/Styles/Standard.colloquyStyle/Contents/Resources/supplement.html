@@ -1,0 +1,26 @@
+<script type="text/javascript">
+	function appendMessage( html ) {
+		checkIfScrollToBottomIsNeeded();
+		removeConsecutiveInsertPoint();
+
+		range = document.createRange();
+		range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
+		documentFragment = range.createContextualFragment( html );
+		document.body.appendChild( documentFragment );
+
+		document.body.lastChild.previousSibling.style.opacity = '1.0';
+		document.body.lastChild.style.opacity = '0.0';
+		step = 0.0;
+		fadeIn();
+
+		scrollToBottomIfNeeded();
+	}
+
+	function fadeIn() {
+		step += 0.25;
+		if( step < 10 ) {
+			document.body.lastChild.style.opacity = '0.' + step;
+			setTimeout( 'fadeIn()', 10 );
+		} else document.body.lastChild.style.opacity = '1.0';
+	}
+</script>
