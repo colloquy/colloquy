@@ -17,6 +17,12 @@
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>
 
+@interface WebCoreCache
++ (void) empty;
+@end
+
+#pragma mark -
+
 @implementation JVAppearancePreferences
 - (id) init {
 	if( ( self = [super init] ) ) {
@@ -136,7 +142,7 @@
 
 	WebPreferences *prefs = [preview preferences];
 	[prefs setAutosaves:YES];
-	
+
 	// disable the user style sheet for users of 2C4 who got this
 	// turned on, we do this different now and the user style can interfere
 	[prefs setUserStyleSheetEnabled:NO];
@@ -480,6 +486,8 @@
 	if( [variant isAbsolutePath] ) path = variant;
 
 	if( path ) [_userStyle writeToFile:path atomically:NO];
+
+	[WebCoreCache empty];
 }
 
 - (IBAction) showOptions:(id) sender {

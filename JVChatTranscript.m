@@ -38,7 +38,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 #pragma mark -
 
 @interface WebCoreCache
-+ (void) setDisabled:(BOOL) disabled;
++ (void) empty;
 @end
 
 #pragma mark -
@@ -846,7 +846,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 - (void) _reloadCurrentStyle:(id) sender {
 	NSBundle *style = [[_chatStyle retain] autorelease];
 
-	[WebCoreCache setDisabled:YES];
+	[WebCoreCache empty];
 
 	[_chatStyle autorelease];
 	_chatStyle = nil;
