@@ -375,7 +375,9 @@ static NSMenu *favoritesMenu = nil;
 
 	[openConnection orderOut:nil];
 
-	connection = [[[MVChatConnection alloc] initWithType:MVChatConnectionIRCType] autorelease];
+	MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
+
+	connection = [[[MVChatConnection alloc] initWithType:type] autorelease];
 	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 	[connection setProxyType:[[newProxy selectedItem] tag]];
 	[connection setSecure:[sslConnection state]];
@@ -587,6 +589,10 @@ static NSMenu *favoritesMenu = nil;
 		if( ! handled && ! [url user] ) {
 			[newAddress setObjectValue:[url host]];
 			if( [url port] ) [newPort setObjectValue:[url port]];
+
+			unsigned index = [newType indexOfItemWithTag:( [[url scheme] isEqualToString:@"silc"] ? 2 : 1 )];
+			[newType selectItemAtIndex:index];
+
 			[self newConnection:nil];
 			handled = YES;
 		} else if( ! handled && [url user] ) {

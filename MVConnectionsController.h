@@ -17,6 +17,7 @@
 
 	/* New Connection */
 	IBOutlet NSTextField *newNickname;
+	IBOutlet NSPopUpButton *newType;
 	IBOutlet NSTextField *newAddress;
 	IBOutlet NSTextField *newPort;
 	IBOutlet NSButton *newRemember;

@@ -33,6 +33,7 @@
                 newRemember = NSButton; 
                 newRemoveRoom = NSButton; 
                 newServerPassword = NSTextField; 
+                newType = NSPopUpButton; 
                 newUsername = NSTextField; 
                 nicknameAuth = NSPanel; 
                 openConnection = NSPanel; 
