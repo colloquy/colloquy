@@ -3,6 +3,9 @@
 @interface MVTableView : NSTableView {
 	BOOL autosaveTableColumnHighlight;
 }
++ (NSImage *) ascendingSortIndicator;
++ (NSImage *) descendingSortIndicator;
+
 - (NSImage *) dragImageForRows:(NSArray *) dragRows event:(NSEvent *) dragEvent dragImageOffset:(NSPointPointer) dragImageOffset;
 
 - (BOOL) autosaveTableColumnHighlight;

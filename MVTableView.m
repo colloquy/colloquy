@@ -1,6 +1,20 @@
 #import "MVTableView.h"
 
 @implementation MVTableView
++ (NSImage *) ascendingSortIndicator {
+	NSImage *result = [NSImage imageNamed:@"NSAscendingSortIndicator"];
+	if( ! result && [[NSTableView class] respondsToSelector:@selector( _defaultTableHeaderSortImage )])
+		result = [NSTableView performSelector:@selector( _defaultTableHeaderSortImage )];
+	return result;
+}
+
++ (NSImage *) descendingSortIndicator {
+	NSImage *result = [NSImage imageNamed:@"NSDescendingSortIndicator"];
+	if( ! result && [[NSTableView class] respondsToSelector:@selector( _defaultTableHeaderReverseSortImage )] )
+		result = [NSTableView performSelector:@selector( _defaultTableHeaderReverseSortImage )];
+	return result;
+}
+
 - (NSImage *) dragImageForRows:(NSArray *) dragRows event:(NSEvent *) dragEvent dragImageOffset:(NSPointPointer) dragImageOffset {
 	NSImage *ret = nil;
 	if( [[self dataSource] respondsToSelector:@selector( tableView:dragImageForRows:dragImageOffset: )] )
