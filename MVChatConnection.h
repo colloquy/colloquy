@@ -232,6 +232,11 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (NSNumber *) uniqueIdentifier;
 @end
 
+@interface NSObject (MVChatPluginSubcodeSupport)
+- (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection;
+- (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection;
+@end
+
 @interface NSURL (NSURLChatAdditions)
 - (BOOL) isChatURL;
 - (BOOL) isChatRoomURL;

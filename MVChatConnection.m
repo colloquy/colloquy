@@ -5,9 +5,9 @@
 #import <IOKit/IOTypes.h>
 #import <IOKit/IOMessage.h>
 #import <IOKit/pwr_mgt/IOPMLib.h>
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/MVChatPlugin.h>
+#import "MVChatConnection.h"
+#import "MVChatPluginManager.h"
+#import "MVChatScriptPlugin.h"
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
 #import "firetalk.h"
@@ -1236,6 +1236,22 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (NSString *) urlString {
 	return [[self url] absoluteString];
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatScriptPlugin (MVChatScriptPluginSubcodeSupport)
+- (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", arguments, @"psR1", user, @"psR2", connection, @"psR3", nil];
+	id result = [self callScriptHandler:'psRX' withArguments:args];
+	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
+}
+
+- (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", arguments, @"psL1", user, @"psL2", connection, @"psL3", nil];
+	id result = [self callScriptHandler:'psLX' withArguments:args];
+	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 @end
 
