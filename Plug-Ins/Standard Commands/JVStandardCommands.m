@@ -28,7 +28,7 @@
 	} else if( [command isEqualToString:@"away"] ) {
 		[connection setAwayStatusWithMessage:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"join"] ) {
+	} else if( [command isEqualToString:@"join"] || [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
 	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
 		if( [arguments length] )
@@ -77,7 +77,7 @@
 	} else if( [command isEqualToString:@"away"] ) {
 		[[room connection] setAwayStatusWithMessage:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"join"] ) {
+	} else if( [command isEqualToString:@"join"] || [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[room connection]];
 	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
 		if( ! [arguments length] ) [[room connection] partChatRoom:[room target]];
@@ -187,7 +187,7 @@
 	} else if( [command isEqualToString:@"away"] ) {
 		[[chat connection] setAwayStatusWithMessage:arguments];
 		return YES;
-	} else if( [command isEqualToString:@"join"] ) {
+	} else if( [command isEqualToString:@"join"] || [command isEqualToString:@"j"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:[chat connection]];
 	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
 		if( [arguments length] )
