@@ -17,6 +17,7 @@
 	BOOL _autoWriteChanges;
 	BOOL _requiresNewEnvelope;
 	unsigned long long _previousLogOffset;
+	unsigned long _elementLimit;
 }
 + (id) chatTranscript;
 + (id) chatTranscriptWithChatTranscript:(JVChatTranscript *) transcript;
@@ -37,6 +38,9 @@
 - (unsigned long) sessionCount;
 - (unsigned long) messageCount;
 - (unsigned long) eventCount;
+
+- (void) setElementLimit:(unsigned int) limit;
+- (unsigned int) elementLimit;
 
 - (NSArray *) elements;
 - (NSArray *) elementsInRange:(NSRange) range;

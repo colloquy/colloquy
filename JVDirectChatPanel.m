@@ -612,6 +612,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	[event setAttributes:attributes];
 
 	[display setScrollbackLimit:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
+	[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
 
 	JVChatEvent *newEvent = [[self transcript] appendEvent:event];
 	[display appendChatTranscriptElement:newEvent];
@@ -738,6 +739,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	}
 
 	[display setScrollbackLimit:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
+	[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
 
 	JVChatMessage *newMessage = [[self transcript] appendMessage:cmessage];
 

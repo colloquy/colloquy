@@ -55,6 +55,7 @@
 #pragma mark -
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
+- (void) _enforceElementLimit;
 - (void) _incrementalWriteToLog:(xmlNodePtr) node continuation:(BOOL) cont;
 - (void) _chnageFileAttributesAtPath:(NSString *) path;
 @end
@@ -92,6 +93,7 @@
 		_autoWriteChanges = NO;
 		_requiresNewEnvelope = YES;
 		_previousLogOffset = 0;
+		_elementLimit = 0;
 
 		@synchronized( self ) {
 			_messages = [[NSMutableArray allocWithZone:[self zone]] initWithCapacity:100];
@@ -259,6 +261,17 @@
 	}
 
 	return count;
+}
+
+#pragma mark -
+
+- (void) setElementLimit:(unsigned int) limit {
+	_elementLimit = limit;
+	[self _enforceElementLimit];
+}
+
+- (unsigned int) elementLimit {
+	return _elementLimit;
 }
 
 #pragma mark -
@@ -607,6 +620,7 @@
 			child = xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
 		}
 
+		[self _enforceElementLimit];
 		[self _incrementalWriteToLog:root continuation:( parent ? YES : NO )];
 
 		_requiresNewEnvelope = NO;
@@ -693,6 +707,8 @@
 	xmlNodePtr sessionNode = xmlNewNode( NULL, (xmlChar *) "session" );
 	xmlSetProp( sessionNode, (xmlChar *) "started", (xmlChar *) [[startDate description] UTF8String] );
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), sessionNode );
+	[self _enforceElementLimit];
+	[self _incrementalWriteToLog:sessionNode continuation:NO];
 	return [JVChatSession sessionWithNode:sessionNode andTranscript:self];
 }
 
@@ -775,6 +791,7 @@
 
 	@synchronized( self ) {
 		xmlNode *root = xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( [event node], _xmlLog, 1 ) );
+		[self _enforceElementLimit];
 		[self _incrementalWriteToLog:root continuation:NO];
 		return [JVChatEvent eventWithNode:root andTranscript:self];
 	}
@@ -897,6 +914,62 @@
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptPrivate)
+- (void) _enforceElementLimit {
+	if( ! [self elementLimit] ) return;
+
+	unsigned long limit = [self elementLimit];
+	unsigned long count = [self elementCount];
+	if( count <= limit ) return;
+
+	unsigned long total = ( count - limit );
+	xmlNode *tmp = NULL;
+
+	@synchronized( self ) {
+		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
+		do {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "envelope", (char *) node -> name, 8 ) ) {
+				xmlNode *subNode = node -> children;
+				BOOL removedAllMessages = YES;
+
+				do {
+					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) ) {
+						if( total > 0 ) {
+							tmp = subNode -> prev;
+							xmlUnlinkNode( subNode );
+							xmlFreeNode( subNode );
+							subNode = ( tmp ? tmp : node -> children );
+							total--;
+							if( [_messages count] > 1 ) [_messages removeObjectAtIndex:0];
+						} else if( ! total ) {
+							removedAllMessages = NO;
+							break;
+						}
+					}
+				} while( subNode && ( subNode = subNode -> next ) ); 
+
+				if( total > 0 || removedAllMessages ) { // remove the envelope since there are no messages in it
+					tmp = node -> prev;
+					xmlUnlinkNode( node );
+					xmlFreeNode( node );
+					node = ( tmp ? tmp : xmlDocGetRootElement( _xmlLog ) -> children );
+				}
+			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) ) {
+				tmp = node -> prev;
+				xmlUnlinkNode( node );
+				xmlFreeNode( node );
+				node = ( tmp ? tmp : xmlDocGetRootElement( _xmlLog ) -> children );
+				total--;
+			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", (char *) node -> name, 5 ) ) {
+				tmp = node -> prev;
+				xmlUnlinkNode( node );
+				xmlFreeNode( node );
+				node = ( tmp ? tmp : xmlDocGetRootElement( _xmlLog ) -> children );
+				total--;
+			}
+		} while( total > 0 && node && ( node = node -> next ) );
+	}
+}
+
 - (void) _incrementalWriteToLog:(xmlNode *) node continuation:(BOOL) cont {
 	if( ! [self automaticallyWritesChangesToFile] ) return;
 
