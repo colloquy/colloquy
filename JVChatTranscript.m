@@ -64,6 +64,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 + (NSSet *) _chatStyleBundles;
 + (void) _scanForChatStyles;
 - (NSString *) _applyStyleOnXMLDocument:(xmlDocPtr) doc;
+- (NSString *) _chatStyleBaseURL;
 - (NSString *) _chatStyleCSSFileURL;
 - (NSString *) _chatStyleVariantCSSFileURL;
 - (const char *) _chatStyleXSLFilePath;
@@ -972,6 +973,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return [[ret retain] autorelease];
 }
 
+- (NSString *) _chatStyleBaseURL {
+	NSString *path = [_chatStyle resourcePath];
+	if( path ) return [[[[NSURL fileURLWithPath:path] absoluteString] retain] autorelease];
+	else return @"";
+}
+
 - (NSString *) _chatStyleCSSFileURL {
 	NSString *path = [_chatStyle pathForResource:@"main" ofType:@"css"];
 	if( path ) return [[[[NSURL fileURLWithPath:path] absoluteString] retain] autorelease];
@@ -1152,7 +1159,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
-	return [[[NSString stringWithFormat:shell, [self title], [self _chatEmoticonsCSSFileURL], [self _chatStyleCSSFileURL], [self _chatStyleVariantCSSFileURL], [self _chatStyleHeaderFileContents], html] retain] autorelease];
+	return [[[NSString stringWithFormat:shell, [self title], [self _chatEmoticonsCSSFileURL], [self _chatStyleCSSFileURL], [self _chatStyleVariantCSSFileURL], [self _chatStyleBaseURL], [self _chatStyleHeaderFileContents], html] retain] autorelease];
 }
 @end
 

@@ -262,7 +262,9 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	if( variant ) path = ( [variant isAbsolutePath] ? [[NSURL fileURLWithPath:variant] absoluteString] : [[NSURL fileURLWithPath:[style pathForResource:variant ofType:@"css" inDirectory:@"Variants"]] absoluteString] );
 	else path = @"";
-	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, ( style ? [[NSURL fileURLWithPath:[style pathForResource:@"main" ofType:@"css"]] absoluteString] : @"" ), path, ( headerPath ? [NSString stringWithContentsOfFile:headerPath] : @"" ), html];
+	NSString *basePath = [style resourcePath];
+	basePath = ( basePath ? [[NSURL fileURLWithPath:basePath] absoluteString] : @"" );
+	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, ( style ? [[NSURL fileURLWithPath:[style pathForResource:@"main" ofType:@"css"]] absoluteString] : @"" ), path, basePath, ( headerPath ? [NSString stringWithContentsOfFile:headerPath] : @"" ), html];
 
 	[[preview mainFrame] loadHTMLString:html baseURL:nil];
 }
