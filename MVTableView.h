@@ -14,6 +14,7 @@
 @interface NSObject (MVTableViewDataSource)
 - (NSImage *) tableView:(MVTableView *) tableView dragImageForRows:(NSArray *) rows dragImageOffset:(NSPointPointer) dragImageOffset;
 - (NSMenu *) tableView:(MVTableView *) view menuForTableColumn:(NSTableColumn *) column row:(int) row;
+- (NSString *) tableView:(MVTableView *) view toolTipForTableColumn:(NSTableColumn *) column row:(int) row;
 @end
 
 @interface NSObject (MVTableViewDelegate)

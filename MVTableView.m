@@ -82,4 +82,28 @@
 		return [[self delegate] tableView:self rowsInRect:rect defaultRange:defaultRange];
 	return defaultRange;
 }
+
+- (NSRect) frameOfCellAtColumn:(int) column row:(int) row {
+	NSRect ret = [super frameOfCellAtColumn:column row:row];
+	int enc = ( row | ( ( column && 0xFFFF ) << 16 ) );
+	[self addToolTipRect:ret owner:self userData:(void *)enc];
+	return ret;
+}
+
+- (void) display {
+	[self removeAllToolTips];
+	[super display];
+}
+
+- (NSString *) view:(NSView *) view stringForToolTip:(NSToolTipTag) tag point:(NSPoint) point userData:(void *) userData {
+	int row = ( (int) userData & 0xFFFF );
+	int column = ( (int) userData >> 16 );
+	NSTableColumn *tcolumn = nil;
+	if( column >= 0 ) tcolumn = [[self tableColumns] objectAtIndex:column];
+
+	if( row >= 0 && [[self dataSource] respondsToSelector:@selector( tableView:toolTipForTableColumn:row: )] )
+		return [[self dataSource] tableView:self toolTipForTableColumn:tcolumn row:row];
+
+	return [self toolTip];
+}
 @end

@@ -243,6 +243,8 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	[table setAllowsMultipleSelection:NO];
 	[table setAllowsEmptySelection:NO];
 
+	[buddies registerForDraggedTypes:[NSArray arrayWithObject:NSFilenamesPboardType]];
+
 	[buddies reloadData];
 	[self _setBuddiesNeedSortAnimated];
 }
@@ -716,14 +718,66 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	[self _sortBuddiesAnimatedIfNeeded:nil];
 }
 
-- (NSMenu *) tableView:(NSTableView *) tableView menuForTableColumn:(NSTableColumn *) tableColumn row:(int) row {
+- (NSMenu *) tableView:(MVTableView *) tableView menuForTableColumn:(NSTableColumn *) tableColumn row:(int) row {
 	return actionMenu;
+}
+
+- (NSString *) tableView:(MVTableView *) tableView toolTipForTableColumn:(NSTableColumn *) column row:(int) row {
+	if( row == -1 || row >= [_buddyOrder count] ) return nil;
+	ABPerson *buddy = [_buddyOrder objectAtIndex:row];
+	NSMutableSet *onlineNicks = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"onlineNicks"];
+	NSSet *nicks = nil;
+	NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
+	NSURL *url = nil;
+	NSMutableString *ret = [NSMutableString string];
+
+	if( _showOfflineBuddies ) nicks = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"allNicks"];
+	else nicks = onlineNicks;
+
+	[ret appendFormat:@"%@\n", [buddy compositeName]];
+	if( displayNick ) {
+		url = [NSURL URLWithString:displayNick];
+		[ret appendFormat:@"%@ (%@)\n", [url user], [url host]];
+
+		NSDictionary *info = [[[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"nickInfo"] objectForKey:displayNick];
+		if( [[info objectForKey:@"away"] boolValue] ) [ret appendString:NSLocalizedString( @"Away", "away buddy status" )];
+		else if( [[info objectForKey:@"idle"] intValue] >= 600. ) [ret appendString:NSLocalizedString( @"Idle", "idle buddy status" )];
+		else if( [onlineNicks containsObject:displayNick] ) [ret appendString:NSLocalizedString( @"Available", "available buddy status" )];
+		else [ret appendString:NSLocalizedString( @"Offline", "offline buddy status" )];
+	}
+	return ret;
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
 	BOOL enabled = ! ( [buddies selectedRow] == -1 );
 	[sendMessageButton setEnabled:enabled];
 	[infoButton setEnabled:enabled];
+}
+
+- (NSDragOperation) tableView:(NSTableView *) tableView validateDrop:(id <NSDraggingInfo>) info proposedRow:(int) row proposedDropOperation:(NSTableViewDropOperation) operation {
+	if( operation == NSTableViewDropOn && row != -1 )
+		return NSDragOperationMove;
+	return NSDragOperationNone;
+}
+
+- (BOOL) tableView:(NSTableView *) tableView acceptDrop:(id <NSDraggingInfo>) info row:(int) row dropOperation:(NSTableViewDropOperation) operation {
+	NSPasteboard *board = [info draggingPasteboard];
+	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
+		ABPerson *buddy = [_buddyOrder objectAtIndex:row];
+		NSString *displayNick = [[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"displayNick"];
+		NSURL *url = [NSURL URLWithString:displayNick];
+		MVChatConnection *connection = [[MVConnectionsController defaultManager] connectionForServerAddress:[url host]];
+		NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+		NSEnumerator *enumerator = [files objectEnumerator];
+		id file = nil;
+
+		while( ( file = [enumerator nextObject] ) )
+			[connection sendFileToUser:[url user] withFilePath:file];
+
+		return YES;
+	}
+
+	return NO;
 }
 
 - (NSRange) tableView:(MVTableView *) tableView rowsInRect:(NSRect) rect defaultRange:(NSRange) defaultRange {
@@ -781,7 +835,7 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 - (void) _manuallySortAndUpdate {
 	if( _animationPosition ) return;
 	[self _sortBuddies];
-	[buddies noteNumberOfRowsChanged];
+	[buddies reloadData];
 }
 
 - (void) _sortBuddies {
@@ -877,6 +931,7 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 				[nickInfo setObject:[NSMutableDictionary dictionary] forKey:mask];
 
 				[self _setBuddiesNeedSortAnimated];
+				if( ! _animating ) [buddies reloadData];
 
 				found = YES;
 				break;
@@ -906,6 +961,7 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 				}
 			}
 			[self _setBuddiesNeedSortAnimated];
+			if( ! _animating ) [buddies reloadData];
 			break;
 		}
 	}
@@ -927,6 +983,7 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 			NSMutableDictionary *info = [[[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"nickInfo"] objectForKey:mask];
 			[info setObject:idle forKey:@"idle"];
 			[self _setBuddiesNeedSortAnimated];
+			if( ! _animating ) [buddies reloadData];
 			break;
 		}
 	}
@@ -948,6 +1005,7 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 			NSMutableDictionary *info = [[[_buddyInfo objectForKey:[person uniqueId]] objectForKey:@"nickInfo"] objectForKey:mask];
 			[info setObject:[NSNumber numberWithBool:away] forKey:@"away"];
 			[self _setBuddiesNeedSortAnimated];
+			if( ! _animating ) [buddies reloadData];
 			break;
 		}
 	}
@@ -1012,6 +1070,7 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	}
 
 	[self _setBuddiesNeedSortAnimated];
+	if( ! _animating ) [buddies reloadData];
 }
 
 - (void) _nicknameChange:(NSNotification *) notification {
@@ -1046,6 +1105,7 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 			[nickInfo setObject:info forKey:newMask];
 
 			[self _setBuddiesNeedSortAnimated];
+			if( ! _animating ) [buddies reloadData];
 
 			break;
 		}
