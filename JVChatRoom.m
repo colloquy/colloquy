@@ -42,12 +42,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 #pragma mark -
 
-@interface JVChatRoom (JVChatRoomPrivate)
-- (unsigned int) _getModes:(NSString *)mode;
-@end
-
-#pragma mark -
-
 @implementation JVChatRoom
 - (id) init {
 	if( ( self = [super init] ) ) {
@@ -91,12 +85,14 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 	[_members release];
 	[_sortedMembers release];
+	[_key release];
 	[_topic release];
 	[_topicAuth release];
 	[_topicAttributed release];
 
 	_members = nil;
 	_sortedMembers = nil;
+	_key = nil;
 	_topic = nil;
 	_topicAuth = nil;
 	_topicAttributed = nil;
@@ -132,7 +128,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	if( ! [_sortedMembers count] )
 		return NSLocalizedString( @"joining...", "joining status info line in drawer" );
 	if( [[self connection] isConnected] )
-		return [NSString stringWithFormat:@"%@", [_connection server]];
+		return [_connection server];
 	return NSLocalizedString( @"disconnected", "disconnected status info line in drawer" );
 }
 
@@ -145,8 +141,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	return [NSString stringWithFormat:@"Chat Room %@ (%@)", _target, [[self connection] server]];
 }
 
-- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)userData {
-	return [NSString stringWithFormat:NSLocalizedString( @"%@ \n %@ \n %d members", "room status info tooltip in drawer" ), [self title], [_connection server], [_sortedMembers count]];
+- (NSString *) view:(NSView *) view stringForToolTip:(NSToolTipTag) tag point:(NSPoint) point userData:(void *) userData {
+	return [NSString stringWithFormat:NSLocalizedString( @"%@\n%@\n%d members", "room status info tooltip in drawer" ), [self title], [_connection server], [_sortedMembers count]];
 }
 
 #pragma mark -
@@ -243,7 +239,10 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	[MVConnectionsController refreshFavoritesMenu];
 }
 
-- (void) setModes:(unsigned int)modes {
+#pragma mark -
+#pragma mark Modes
+
+- (void) setModes:(unsigned int) modes {
 	_modes = modes;
 }
 
@@ -251,7 +250,9 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	return _modes;
 }
 
-- (void) setKey:(NSString *)key {
+#pragma mark -
+
+- (void) setKey:(NSString *) key {
 	[_key autorelease];
 	_key = [key copy];
 }
@@ -260,11 +261,13 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	return [[_key autorelease] retain];
 }
 
-- (void) setLimit:(int)limit {
+#pragma mark -
+
+- (void) setLimit:(unsigned int) limit {
 	_limit = limit;
 }
 
-- (int) limit {
+- (unsigned int) limit {
 	return _limit;
 }
 
@@ -1081,15 +1084,15 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 - (void) _roomModeChanged:(NSNotification *) notification {
 	if( [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:_target] != NSOrderedSame ) return;
 	
-	unsigned int currentModes = [self _getModes:[[notification userInfo] objectForKey:@"mode"]];
+	unsigned int currentModes = [[[notification userInfo] objectForKey:@"mode"] unsignedIntValue];
 	unsigned int newModes = currentModes & ~ [self modes];
 	unsigned int oldModes = [self modes] & ~ currentModes;
 	unsigned int changedModes = newModes | oldModes;
 
 	[self setModes:currentModes];
 	[self setKey:[[notification userInfo] objectForKey:@"key"]];
-	[self setLimit:[(NSNumber *)[[notification userInfo] objectForKey:@"limit"] intValue]];
-	
+	[self setLimit:[(NSNumber *)[[notification userInfo] objectForKey:@"limit"] unsignedIntValue]];
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomModeChangedNotification object:self];
 
 	if( [[[notification userInfo] objectForKey:@"by"] isMemberOfClass:[NSNull class]] ) return;
@@ -1233,28 +1236,6 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 		[self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : member ), @"by", member, @"nickname", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", [[notification userInfo] objectForKey:@"param"], @"parameter", nil]];
 	}
-}
-
-- (unsigned int) _getModes:(NSString *)mode {
-	unsigned int currentModes = 0;
-	if ([mode rangeOfString:@"p"].location != NSNotFound)
-		currentModes |= MVChatRoomPrivateMode;
-	if ([mode rangeOfString:@"s"].location != NSNotFound)
-		currentModes |= MVChatRoomSecretMode;
-	if ([mode rangeOfString:@"i"].location != NSNotFound)
-		currentModes |= MVChatRoomInviteOnlyMode;
-	if ([mode rangeOfString:@"m"].location != NSNotFound)
-		currentModes |= MVChatRoomModeratedMode;
-	if ([mode rangeOfString:@"n"].location != NSNotFound)
-		currentModes |= MVChatRoomNoOutsideMessagesMode;
-	if ([mode rangeOfString:@"t"].location != NSNotFound)
-		currentModes |= MVChatRoomSetTopicOperatorOnlyMode;
-	if ([mode rangeOfString:@"k"].location != NSNotFound)
-		currentModes |= MVChatRoomPasswordRequiredMode;
-	if ([mode rangeOfString:@"l"].location != NSNotFound)
-		currentModes |= MVChatRoomMemberLimitMode;
-	
-	return currentModes;
 }
 @end
 

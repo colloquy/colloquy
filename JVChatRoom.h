@@ -20,9 +20,9 @@ extern NSString *MVChatRoomModeChangedNotification;
 	NSAttributedString *_topicAttributed;
 	NSData *_topic;
 	NSString *_topicAuth;
-	unsigned int _modes;
 	NSString *_key;
-	int _limit;
+	unsigned int _modes;
+	unsigned int _limit;
 
 	BOOL _kickedFromRoom;
 	BOOL _inRoom;
@@ -49,14 +49,14 @@ extern NSString *MVChatRoomModeChangedNotification;
 - (void) changeTopic:(NSData *) topic by:(NSString *) author displayChange:(BOOL) showChange;
 - (NSAttributedString *) topic;
 
-- (void) setModes:(unsigned int)modes;
+- (void) setModes:(unsigned int) modes;
 - (unsigned int) modes;
 
-- (void) setKey:(NSString *)key;
+- (void) setKey:(NSString *) key;
 - (NSString *) key;
 
-- (void) setLimit:(int)limit;
-- (int) limit;
+- (void) setLimit:(unsigned int) limit;
+- (unsigned int) limit;
 
 - (JVChatRoomMember *) chatRoomMemberWithName:(NSString *) name;
 - (void) resortMembers;
