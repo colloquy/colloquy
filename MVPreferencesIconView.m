@@ -395,7 +395,7 @@ const unsigned int bottomBorder = 13;
 
 	pasteboard = [NSPasteboard pasteboardWithName:NSDragPboard];
 	[pasteboard declareTypes:[NSArray arrayWithObject:@"NSToolbarIndividualItemDragType"] owner:nil];
-	[pasteboard setString:identifier forType:@"NSToolbarItemIdentiferPboardType"];
+	[pasteboard setString:identifier forType:@"NSToolbarItemIdentifierPboardType"];
 
 	dragPoint = [self convertPoint:[event locationInWindow] fromView:nil];
 	startPoint = [self _boundsForIndex:[preferencePanes indexOfObject:[NSBundle bundleWithIdentifier:identifier]]].origin;
