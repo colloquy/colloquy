@@ -46,6 +46,8 @@ NSString *MVChatConnectionBuddyIsAwayNotification = @"MVChatConnectionBuddyIsAwa
 NSString *MVChatConnectionBuddyIsUnawayNotification = @"MVChatConnectionBuddyIsUnawayNotification";
 NSString *MVChatConnectionBuddyIsIdleNotification = @"MVChatConnectionBuddyIsIdleNotification";
 
+NSString *MVChatConnectionSelfAwayStatusNotification = @"MVChatConnectionSelfAwayStatusNotification";
+
 NSString *MVChatConnectionGotUserWhoisNotification = @"MVChatConnectionGotUserWhoisNotification";
 NSString *MVChatConnectionGotUserServerNotification = @"MVChatConnectionGotUserServerNotification";
 NSString *MVChatConnectionGotUserChannelsNotification = @"MVChatConnectionGotUserChannelsNotification";
@@ -653,6 +655,17 @@ static void MVChatUserAway( IRC_SERVER_REC *server, const char *data ) {
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 
 	g_free( params );	
+}
+
+#pragma mark -
+
+static void MVChatSelfAwayChanged( IRC_SERVER_REC *server ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+	
+	NSNumber *away = [NSNumber numberWithBool:(((SERVER_REC *)server)->usermode_away == TRUE)];
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSelfAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:away, @"away", nil]];
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
 
 #pragma mark -
@@ -1528,6 +1541,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 	signal_add_last( "nicklist changed", (SIGNAL_FUNC) MVChatUserNicknameChanged );
 	signal_add_last( "nick mode changed", (SIGNAL_FUNC) MVChatGotUserMode );
+	
+	signal_add_last( "away mode changed", (SIGNAL_FUNC) MVChatSelfAwayChanged );
 
 	signal_add_last( "notifylist joined", (SIGNAL_FUNC) MVChatBuddyOnline );
 	signal_add_last( "notifylist left", (SIGNAL_FUNC) MVChatBuddyOffline );
@@ -1588,6 +1603,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 	signal_remove( "nicklist changed", (SIGNAL_FUNC) MVChatUserNicknameChanged );
 	signal_remove( "nick mode changed", (SIGNAL_FUNC) MVChatGotUserMode );
+	
+	signal_remove( "away mode changed", (SIGNAL_FUNC) MVChatSelfAwayChanged );
 
 	signal_remove( "notifylist joined", (SIGNAL_FUNC) MVChatBuddyOnline );
 	signal_remove( "notifylist left", (SIGNAL_FUNC) MVChatBuddyOffline );

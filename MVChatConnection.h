@@ -101,6 +101,8 @@ extern NSString *MVChatConnectionBuddyIsAwayNotification;
 extern NSString *MVChatConnectionBuddyIsUnawayNotification;
 extern NSString *MVChatConnectionBuddyIsIdleNotification;
 
+extern NSString *MVChatConnectionSelfAwayStatusNotification;
+
 extern NSString *MVChatConnectionGotUserWhoisNotification;
 extern NSString *MVChatConnectionGotUserServerNotification;
 extern NSString *MVChatConnectionGotUserChannelsNotification;
