@@ -2,14 +2,14 @@
 "Loading %@..." = "Chargement de %@...";
 
 /* error when loading the selected pane  */
-"Could not load %@" = "%@ n'a pu être chargé";
+"Could not load %@" = "Chargement de %@ impossible";
 
 /* show all toolbar item name  */
 "Show All" = "Tout afficher";
 
 /* preferences window title  */
-"%@ Preferences" = "Préférences";
+"%@ Preferences" = "Pr√©f√©rences de %@";
 
 /* preferences error title  */
-"Preferences Error" = "Erreur Préférences";
+"Preferences Error" = "Erreur de pr√©f√©rences";
 

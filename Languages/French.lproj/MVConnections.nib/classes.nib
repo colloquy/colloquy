@@ -29,6 +29,7 @@
                 editPort = NSTextField; 
                 editRemoveRoom = NSButton; 
                 editRooms = NSTableView; 
+                editServerPassword = NSTextField; 
                 joinRoom = NSPanel; 
                 messageUser = NSPanel; 
                 newAddress = NSTextField; 
@@ -37,12 +38,11 @@
                 newRemember = NSButton; 
                 nicknameAuth = NSPanel; 
                 openConnection = NSPanel; 
-                panel = NSPanel; 
                 roomPassword = NSTextField; 
                 roomToJoin = NSComboBox; 
                 userToMessage = NSTextField; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }

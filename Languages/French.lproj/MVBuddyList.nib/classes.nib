@@ -13,7 +13,6 @@
                 myStatus = NSTextField; 
                 pickerView = NSView; 
                 pickerWindow = NSWindow; 
-                window = NSWindow; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
