@@ -17,6 +17,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
+- (void) _claimMenuCommands;
+- (void) _resignMenuCommands;
 - (void) _refreshSelectionMenu;
 - (void) _refreshWindow;
 - (void) _refreshWindowTitle;
@@ -405,6 +407,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [item conformsToProtocol:@protocol( JVInspection )] )
 			return YES;
 		else return NO;
+	} else if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
+		return YES;
 	}
 	return YES;
 }
@@ -414,16 +418,27 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 @implementation JVChatWindowController (JVChatWindowControllerDelegate)
 - (void) windowWillClose:(NSNotification *) notification {
+	[self _resignMenuCommands];
 	if( [[self window] isVisible] ) [self close];
 }
 
+- (void) windowDidResignKey:(NSNotification *) notification {
+	[self _resignMenuCommands];
+}
+
+- (void) windowDidResignMain:(NSNotification *) notification {
+	[self _resignMenuCommands];
+}
+
 - (void) windowDidBecomeMain:(NSNotification *) notification {
+	[self _claimMenuCommands];
 	[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
 	if( _activeViewController )
 		[self reloadListItem:_activeViewController andChildren:NO];
 }
 
 - (void) windowDidBecomeKey:(NSNotification *) notification {
+	[self _claimMenuCommands];
 	[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
 	if( _activeViewController )
 		[self reloadListItem:_activeViewController andChildren:NO];
@@ -558,6 +573,26 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 @implementation JVChatWindowController (JVChatWindowControllerPrivate)
+- (void) _claimMenuCommands {
+	NSMenuItem *closeItem = [[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:1];
+	[closeItem setKeyEquivalentModifierMask:NSCommandKeyMask];
+	[closeItem setKeyEquivalent:@"W"];
+
+	closeItem = (NSMenuItem *)[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:2];
+	[closeItem setKeyEquivalentModifierMask:NSCommandKeyMask];
+	[closeItem setKeyEquivalent:@"w"];
+}
+
+- (void) _resignMenuCommands {
+	NSMenuItem *closeItem = [[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:1];
+	[closeItem setKeyEquivalentModifierMask:NSCommandKeyMask];
+	[closeItem setKeyEquivalent:@"w"];
+
+	closeItem = (NSMenuItem *)[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:2];
+	[closeItem setKeyEquivalentModifierMask:0];
+	[closeItem setKeyEquivalent:@""];
+}
+
 - (IBAction) _doubleClickedListItem:(id) sender {
 	id item = [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]];
 	if( [item respondsToSelector:@selector( doubleClicked: )] )
