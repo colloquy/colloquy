@@ -66,6 +66,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanRemoved: ) name:MVChatRoomUserBanRemovedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _membersSynced: ) name:MVChatRoomMemberUsersSyncedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _bannedMembersSynced: ) name:MVChatRoomBannedUsersSyncedNotification object:target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberNicknameChanged: ) name:MVChatUserNicknameChangedNotification object:nil];
 	}
 
 	return self;
@@ -335,8 +336,6 @@
 	MVChatUser *member = nil;
 
 	while( ( member = [enumerator nextObject] ) ) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberNicknameChanged: ) name:MVChatUserNicknameChangedNotification object:member];
-
 		JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] initWithRoom:self andUser:member] autorelease];
 		[_sortedMembers addObject:listItem];
 	}
@@ -792,6 +791,8 @@
 }
 
 - (void) _memberNicknameChanged:(NSNotification *) notification {
+	if( ! [[self target] hasUser:[notification object]] ) return;
+
 	[self resortMembers];
 
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[notification object]];
