@@ -44,6 +44,8 @@
 	<true/>
 	<key>JVSortRoomMembersByStatus</key>
 	<false/>
+	<key>JVShowConnectionsWindowOnLaunch</key>
+	<true/>
 	<key>MVChatSendOnReturn</key>
 	<true/>
 	<key>MVChatActionOnReturn</key>

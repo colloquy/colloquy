@@ -132,7 +132,7 @@ static NSMenu *favoritesMenu = nil;
 		_joinRooms = nil;
 		_passConnection = nil;
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuiting: ) name:NSApplicationWillTerminateNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuitting: ) name:NSApplicationWillTerminateNotification object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionWillConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidConnectNotification object:nil];
@@ -182,7 +182,13 @@ static NSMenu *favoritesMenu = nil;
 	[newUsername setObjectValue:NSUserName()];
 	[newRealName setObjectValue:NSFullUserName()];
 
-	[(NSPanel *)[self window] setFloatingPanel:NO];
+	NSPanel *panel = (NSPanel *)[self window];
+	
+	[panel setFloatingPanel:NO];
+	
+	[panel setResizeIncrements:NSMakeSize(1, [connections rowHeight] + [connections intercellSpacing].height)];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( windowWillClose: ) name:NSWindowWillCloseNotification object:panel];
 
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];
@@ -203,6 +209,37 @@ static NSMenu *favoritesMenu = nil;
 	[self _validateToolbar];
 }
 
+- (NSRect) windowWillUseStandardFrame:(NSWindow *) sender defaultFrame:(NSRect) defaultFrame {
+	if( sender != [connections window] ) return defaultFrame;
+
+	NSRect frame = [sender frame];
+	NSScrollView *scrollView = [connections enclosingScrollView];
+	float displayedHeight = [[scrollView contentView] bounds].size.height;
+	float heightChange = [[scrollView documentView] bounds].size.height - displayedHeight;
+	float heightExcess = 0.;
+
+	if( heightChange >= 0 && heightChange <= 1 ) {
+		// either the window is already optimal size, or it's too big
+		float rowHeight = [connections rowHeight] + [connections intercellSpacing].height;
+		heightChange = (rowHeight * [connections numberOfRows]) - displayedHeight;
+	}
+
+	frame.size.height += heightChange;
+
+	if( ( heightExcess = [sender minSize].height - frame.size.height) > 1 || ( heightExcess = [sender maxSize].height - frame.size.height) < 1 ) {
+		heightChange += heightExcess;
+		frame.size.height += heightExcess;
+	}
+
+	frame.origin.y -= heightChange;
+
+	return frame;
+}
+
+- (void) windowWillClose:(NSNotification *) notification {
+	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVShowConnectionsWindowOnLaunch"];
+}
+
 #pragma mark -
 
 - (id <JVInspection>) objectToInspect {
@@ -220,10 +257,12 @@ static NSMenu *favoritesMenu = nil;
 
 - (IBAction) showConnectionManager:(id) sender {
 	[[self window] makeKeyAndOrderFront:nil];
+	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVShowConnectionsWindowOnLaunch"];
 }
 
 - (IBAction) hideConnectionManager:(id) sender {
 	[[self window] orderOut:nil];
+	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVShowConnectionsWindowOnLaunch"];
 }
 
 #pragma mark -
@@ -1019,7 +1058,7 @@ static NSMenu *favoritesMenu = nil;
 	[connections noteNumberOfRowsChanged];
 }
 
-- (void) _applicationQuiting:(NSNotification *) notification {
+- (void) _applicationQuitting:(NSNotification *) notification {
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	MVChatConnection *connection = nil;
 	NSDictionary *info = nil;
@@ -1154,8 +1193,10 @@ static NSMenu *favoritesMenu = nil;
 
 	[connections noteNumberOfRowsChanged];
 
-	if( [_bookmarks count] ) [[self window] orderFront:nil];
-	else [self newConnection:nil];
+	if( ! [_bookmarks count] ) [self newConnection:nil];
+
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowConnectionsWindowOnLaunch"] )
+		[[self window] orderFront:nil];
 
 	[self _validateToolbar];
 }
