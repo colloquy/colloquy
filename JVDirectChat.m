@@ -16,6 +16,7 @@
 #import "JVBuddy.h"
 #import "MVTextView.h"
 #import "MVMenuButton.h"
+#import "NSURLAdditions.h"
 
 static NSArray *JVAutoActionVerbs = nil;
 
@@ -178,6 +179,21 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	[super awakeFromNib];
 
+	if( [self isMemberOfClass:[JVDirectChat class]] ) {
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
+
+		[_filePath autorelease];
+		_filePath = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath] retain];
+
+		[url writeToInternetLocationFile:_filePath];
+		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:_filePath];
+
+		if( ! [[NSFileManager defaultManager] fileExistsAtPath:_filePath] ) {
+			[_filePath autorelease];
+			_filePath = nil;
+		}
+	}
+
 	[send setHorizontallyResizable:YES];
 	[send setVerticallyResizable:YES];
 	[send setAutoresizingMask:NSViewWidthSizable];
@@ -322,15 +338,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	_newMessage = NO;
 	_newHighlightMessage = NO;
 	_isActive = NO;
+	[super didUnselect];
 }
 
 - (void) didSelect {
 	_newMessage = NO;
 	_newHighlightMessage = NO;
 	_isActive = YES;
-	if( [_waitingAlerts count] ) {
+	[super didSelect];
+	if( [_waitingAlerts count] )
 		[[NSApplication sharedApplication] beginSheet:[_waitingAlerts objectAtIndex:0] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
-	}
 }
 
 #pragma mark -

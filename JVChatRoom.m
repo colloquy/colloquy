@@ -11,6 +11,7 @@
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
 #import "MVTextView.h"
+#import "NSURLAdditions.h"
 
 @interface JVDirectChat (JVDirectChatPrivate)
 - (NSString *) _selfCompositeName;
@@ -50,6 +51,19 @@
 	[[topicLine enclosingScrollView] setDrawsBackground:NO];
 	[super awakeFromNib];
 	[self changeTopic:nil by:nil];
+
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
+
+	[_filePath autorelease];
+	_filePath = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Chat Rooms/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath] retain];
+
+	[url writeToInternetLocationFile:_filePath];
+	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:_filePath];
+
+	if( ! [[NSFileManager defaultManager] fileExistsAtPath:_filePath] ) {
+		[_filePath autorelease];
+		_filePath = nil;
+	}
 }
 
 - (void) dealloc {
