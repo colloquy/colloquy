@@ -3861,8 +3861,8 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = text;
-			name = GPL;
-			path = "Other Code/firetalk (cvs)/GPL";
+			name = GPL.txt;
+			path = Resources/GPL.txt;
 			refType = 4;
 			sourceTree = "<group>";
 		};

@@ -141,6 +141,7 @@ static NSMenu *favoritesMenu = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionNicknameAcceptedNotification object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _willConnect: ) name:MVChatConnectionWillConnectNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedPasswordNotification object:nil];
 
@@ -508,7 +509,7 @@ static NSMenu *favoritesMenu = nil;
 			}
 		} else if( [url path] && [[url path] length] >= 2 ) {
 			target = [[url path] substringFromIndex:1];
-			if( [[[url path] substringFromIndex:1] hasPrefix:@"&"] || [[[url path] substringFromIndex:1] hasPrefix:@"+"] ) {
+			if( [[[url path] substringFromIndex:1] hasPrefix:@"&"] || [[[url path] substringFromIndex:1] hasPrefix:@"+"] || [[[url path] substringFromIndex:1] hasPrefix:@"!"] ) {
 				isRoom = YES;
 			} else {
 				isRoom = NO;
@@ -1070,7 +1071,7 @@ static NSMenu *favoritesMenu = nil;
 		if( [target isMemberOfClass:[NSNull class]] ) target = nil;
 		switch( error ) {
 			case MVChatBadTargetError:
-				if( [target hasPrefix:@"#"] || [target hasPrefix:@"&"] || [target hasPrefix:@"+"] ) {
+				if( [target hasPrefix:@"#"] || [target hasPrefix:@"&"] || [target hasPrefix:@"+"] || [target hasPrefix:@"!"] ) {
 					[(JVChatRoom *)[[JVChatController defaultManager] chatViewControllerForRoom:target withConnection:connection ifExists:YES] unavailable];
 				} else if( target ) {
 					[(JVDirectChat *)[[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:YES] unavailable];
@@ -1246,11 +1247,23 @@ static NSMenu *favoritesMenu = nil;
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 		[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+}
 
-	enumerator = [[info objectForKey:@"rooms"] objectEnumerator];
-	id item = nil;
-	while( ( item = [enumerator nextObject] ) )
-		[connection joinChatRoom:item];
+- (void) _didConnect:(NSNotification *) notification {
+	MVChatConnection *connection = nil;
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [[info objectForKey:@"connection"] isEqual:[notification object]] ) {
+			connection = [notification object];
+			break;
+		}
+	}
+
+	if( ! connection ) return;
+
+	[connection joinChatRooms:[info objectForKey:@"rooms"]];
 }
 
 - (IBAction) _disconnect:(id) sender {

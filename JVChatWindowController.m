@@ -101,6 +101,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	NSEnumerator *enumerator = [_views objectEnumerator];
+	id <JVChatViewController> controller = nil;
+	while( ( controller = [enumerator nextObject] ) )
+		[controller setWindowController:nil];
+
 	[_placeHolder release];
 	[_activeViewController release];
 	[_activityToolbarItem release];
@@ -408,7 +413,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) reloadListItem:(id <JVChatListItem>) item andChildren:(BOOL) children {
 	[chatViewsOutlineView reloadItem:item reloadChildren:( children && [chatViewsOutlineView isItemExpanded:item] ? YES : NO )];
-	if( _activeViewController == item ) [self _refreshWindowTitle];
+	if( _activeViewController == item )
+		[self _refreshWindowTitle];
+	if( item == [chatViewsOutlineView itemAtRow:[chatViewsOutlineView selectedRow]] )
+		[self _refreshSelectionMenu];
 //	[self _refreshChatActivityToolbarItemWithListItem:item];
 }
 

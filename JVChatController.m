@@ -37,15 +37,14 @@ static JVChatController *sharedInstance = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatConnectionJoinedRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _leftRoom: ) name:MVChatConnectionLeftRoomNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _existingRoomMembers: ) name:MVChatConnectionRoomExistingMemberListNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberJoinedRoom: ) name:MVChatConnectionUserJoinedRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberLeftRoom: ) name:MVChatConnectionUserLeftRoomNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberQuit: ) name:MVChatConnectionUserQuitNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberInvitedToRoom: ) name:MVChatConnectionInvitedToRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberNicknameChanged: ) name:MVChatConnectionUserNicknameChangedNotification object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberOpped: ) name:MVChatConnectionUserOppedInRoomNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberDeopped: ) name:MVChatConnectionUserDeoppedInRoomNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberVoiced: ) name:MVChatConnectionUserVoicedInRoomNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberDevoiced: ) name:MVChatConnectionUserDevoicedInRoomNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberModeChanged: ) name:MVChatConnectionGotMemberModeNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberKicked: ) name:MVChatConnectionUserKickedFromRoomNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _kickedFromRoom: ) name:MVChatConnectionKickedFromRoomNotification object:nil];
 
@@ -236,45 +235,57 @@ static JVChatController *sharedInstance = nil;
 - (void) _leftRoom:(NSNotification *) notification {
 	id view = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
 	if( ! view ) return;
+	[view parting];
 	[self disposeViewController:view];
+}
+
+- (void) _existingRoomMembers:(NSNotification *) notification {
+	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
+	[controller addExistingMembersToChat:[[notification userInfo] objectForKey:@"members"]];
 }
 
 - (void) _memberJoinedRoom:(NSNotification *) notification {
 	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
-	[controller addMemberToChat:[[notification userInfo] objectForKey:@"who"] asPreviousMember:[[[notification userInfo] objectForKey:@"previousMember"] boolValue]];
+	[controller addMemberToChat:[[notification userInfo] objectForKey:@"who"] withInformation:[[notification userInfo] objectForKey:@"info"]];
 }
 
 - (void) _memberLeftRoom:(NSNotification *) notification {
 	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
-	[controller removeChatMember:[[notification userInfo] objectForKey:@"who"] withReason:[[notification userInfo] objectForKey:@"reason"]];
+	[controller removeChatMember:[[notification userInfo] objectForKey:@"who"] withReason:nil];
+}
+
+- (void) _memberQuit:(NSNotification *) notification {
+	NSString *who = [[notification userInfo] objectForKey:@"who"];
+	NSEnumerator *enumerator = [[self chatViewControllersWithConnection:[notification object]] objectEnumerator];
+	id controller = nil;
+	
+	while( ( controller = [enumerator nextObject] ) ) {
+		if( [controller isKindOfClass:[JVChatRoom class]] ) {
+			[controller removeChatMember:[[notification userInfo] objectForKey:@"who"] withReason:[[notification userInfo] objectForKey:@"reason"]];
+		} else if( [controller isKindOfClass:[JVDirectChat class]] && [[controller target] isEqualToString:who] ) {
+			// [controller unavailable];
+		}
+	}
 }
 
 - (void) _memberInvitedToRoom:(NSNotification *) notification {
-	int result = NSOKButton;
 	NSString *room = [[notification userInfo] objectForKey:@"room"];
-	NSString *by   = [[notification userInfo] objectForKey:@"from"];
+	NSString *by = [[notification userInfo] objectForKey:@"from"];
 	MVChatConnection *connection = [notification object];
-	
-	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
-	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", 
-																		"you were invited to join a chat room status message" ), room, by];
-	
-	result = NSGetInformationalAlertPanel( title, message, @"Join", @"Decline", nil ); 
-	
-	if ( result == NSOKButton ) {
-		JVChatRoom *room = [self chatViewControllerForRoom:room withConnection:connection ifExists:NO];
-		[room joined];
-	}
 
-	//create notification
+	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
+	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, by];
+
+	// This should not be modal. Fix sometime.
+	if( NSRunInformationalAlertPanel( title, message, NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil ) == NSOKButton )
+		[connection joinChatRoom:room];
+
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:title forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message member invited to room string" ), room, by] forKey:@"description"];
+	[context setObject:NSLocalizedString( @"Invited to Chat", "bubble title invited to room" ) forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, by] forKey:@"description"];
 	[context setObject:[connection nickname] forKey:@"performedOn"];
 	[context setObject:by forKey:@"performedBy"];
-	//this is not a room specific notification
 	[[JVNotificationController defaultManager] performNotification:@"JVChatRoomInvite" withContextInfo:context];
-	
 }
 
 - (void) _memberNicknameChanged:(NSNotification *) notification {
@@ -285,24 +296,20 @@ static JVChatController *sharedInstance = nil;
 	[controller setTarget:[[notification userInfo] objectForKey:@"newNickname"]];
 }
 
-- (void) _memberOpped:(NSNotification *) notification {
+- (void) _memberModeChanged:(NSNotification *) notification {
 	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
-	[controller promoteChatMember:[[notification userInfo] objectForKey:@"who"] by:[[notification userInfo] objectForKey:@"by"]];
-}
+	BOOL enabled = [[[notification userInfo] objectForKey:@"enabled"] boolValue];
+	MVChatMemberMode mode = [[[notification userInfo] objectForKey:@"mode"] unsignedIntValue];
 
-- (void) _memberDeopped:(NSNotification *) notification {
-	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
-	[controller demoteChatMember:[[notification userInfo] objectForKey:@"who"] by:[[notification userInfo] objectForKey:@"by"]];
-}
-
-- (void) _memberVoiced:(NSNotification *) notification {
-	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
-	[controller voiceChatMember:[[notification userInfo] objectForKey:@"who"] by:[[notification userInfo] objectForKey:@"by"]];
-}
-
-- (void) _memberDevoiced:(NSNotification *) notification {
-	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
-	[controller devoiceChatMember:[[notification userInfo] objectForKey:@"who"] by:[[notification userInfo] objectForKey:@"by"]];
+	if( enabled && mode == MVChatMemberOperatorMode ) {
+		[controller promoteChatMember:[[notification userInfo] objectForKey:@"who"] by:[[notification userInfo] objectForKey:@"by"]];
+	} else if( ! enabled && mode == MVChatMemberOperatorMode ) {
+		[controller demoteChatMember:[[notification userInfo] objectForKey:@"who"] by:[[notification userInfo] objectForKey:@"by"]];
+	} else if( enabled && mode == MVChatMemberVoiceMode ) {
+		[controller voiceChatMember:[[notification userInfo] objectForKey:@"who"] by:[[notification userInfo] objectForKey:@"by"]];
+	} else if( ! enabled && mode == MVChatMemberVoiceMode ) {
+		[controller devoiceChatMember:[[notification userInfo] objectForKey:@"who"] by:[[notification userInfo] objectForKey:@"by"]];
+	}
 }
 
 - (void) _memberKicked:(NSNotification *) notification {
@@ -327,7 +334,7 @@ static JVChatController *sharedInstance = nil;
 
 - (void) _roomTopicChanged:(NSNotification *) notification {
 	JVChatRoom *controller = [self chatViewControllerForRoom:[[notification userInfo] objectForKey:@"room"] withConnection:[notification object] ifExists:YES];
-	[controller changeTopic:[[notification userInfo] objectForKey:@"topic"] by:[[notification userInfo] objectForKey:@"author"]];
+	[controller changeTopic:[[notification userInfo] objectForKey:@"topic"] by:[[notification userInfo] objectForKey:@"author"] displayChange:( ! [[[notification userInfo] objectForKey:@"justJoined"] boolValue] )];
 }
 
 - (void) _addWindowController:(JVChatWindowController *) windowController {

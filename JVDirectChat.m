@@ -79,8 +79,8 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	(NSStringEncoding) 0x80000422,		// Windows
 	/* End */ 0 };
 
-//extern char *irc_html_to_irc(const char * const string);
-//extern char *irc_irc_to_html(const char * const string);
+extern char *MVChatXHTMLToIRC( const char * const string );
+extern char *MVChatIRCToXHTML( const char * const string );
 
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
 
@@ -295,35 +295,25 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) 
-									   action:NULL 
-								keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:NULL keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") 
-									   action:@selector( addToFavorites: ) 
-								keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") 
-									   action:@selector( sendFileToSelectedUser: ) 
-								keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFileToSelectedUser: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Chat", "leave chat contextual menu item title" ) 
-									   action:@selector( leaveChat: ) 
-								keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Chat", "leave chat contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) 
-									   action:@selector( detachView: ) 
-								keyEquivalent:@""] autorelease];
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
 	[item setTarget:[JVChatController defaultManager]];
 	[menu addItem:item];
@@ -426,11 +416,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 #pragma mark -
 
 - (void) unavailable {
-	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"Message undeliverable", "title of the user offline message sheet" ), 
-												  NSLocalizedString( @"This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.", "error description for messaging a user that went offline or invalid" ),
-												  @"OK", 
-												  nil, nil ) 
-		   withName:@"unavailable"];
+	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"Message undeliverable", "title of the user offline message sheet" ), NSLocalizedString( @"This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.", "error description for messaging a user that went offline or invalid" ), @"OK", nil, nil ) withName:@"unavailable"];
 }
 
 - (IBAction) addToFavorites:(id) sender {
@@ -886,8 +872,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSMutableData *msgData = [[[encodedMsg HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES] mutableCopy] autorelease];
 	[msgData appendBytes:"\0" length:1];
 
-	char *msg = irc_html_to_irc( (const char * const) [msgData bytes] );
-	msg = irc_irc_to_html( msg );
+	char *msg = MVChatXHTMLToIRC( (const char * const) [msgData bytes] );
+	msg = MVChatIRCToXHTML( msg );
 
 	[self addMessageToDisplay:[NSData dataWithBytes:msg length:strlen( msg )] fromUser:[[self connection] nickname] asAction:action];
 }

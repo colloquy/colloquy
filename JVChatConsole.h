@@ -23,7 +23,6 @@
 }
 - (id) initWithConnection:(MVChatConnection *) connection;
 
-
 - (void) pause;
 - (void) resume;
 - (BOOL) isPaused;

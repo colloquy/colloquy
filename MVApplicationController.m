@@ -42,7 +42,7 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) connectToSupportRoom:(id) sender {
-	[[MVConnectionsController defaultManager] handleURL:[NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@irc.freenode.net/#colloquy", NSUserName()]] andConnectIfPossible:YES];
+	[[MVConnectionsController defaultManager] handleURL:[NSURL URLWithString:@"irc://irc.freenode.net/#colloquy"] andConnectIfPossible:YES];
 }
 
 - (IBAction) emailDeveloper:(id) sender {

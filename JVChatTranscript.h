@@ -14,31 +14,31 @@
 
 @interface JVChatTranscript : NSObject <JVChatViewController> {
 	@protected
-	IBOutlet NSView			*contents;
-	IBOutlet NSView			*toolbarItems;
-	IBOutlet WebView		*display;
-	IBOutlet MVMenuButton   *chooseStyle;
-	IBOutlet MVMenuButton   *chooseEmoticon;
-	
-	void					*_chatXSLStyle;		/* xsltStylesheetPtr */
-	void					*_xmlLog;			/* xmlDocPtr */
-	void					*_xmlQueue;			/* xmlDocPtr */
-	
-	NSLock					*_logLock;
-	JVChatWindowController  *_windowController;
-	NSString				*_filePath;
-	NSBundle				*_chatStyle;
-	NSString				*_chatStyleVariant;
-	NSBundle				*_chatEmoticons;
-	NSDictionary			*_emoticonMappings;
-	NSMutableDictionary		*_styleParams;
-	NSMutableArray			*_messages;
-	NSMutableDictionary		*_toolbarItems;
-	
-	const char				**_params;
-	BOOL					_isArchive;
-	BOOL					_nibLoaded;
-	BOOL					_previousStyleSwitch;
+	IBOutlet NSView *contents;
+	IBOutlet NSView *toolbarItems;
+	IBOutlet WebView *display;
+	IBOutlet MVMenuButton *chooseStyle;
+	IBOutlet MVMenuButton *chooseEmoticon;
+
+	void *_chatXSLStyle; /* xsltStylesheetPtr */
+	void *_xmlLog; /* xmlDocPtr */
+	void *_xmlQueue; /* xmlDocPtr */
+
+	NSLock *_logLock;
+	JVChatWindowController *_windowController;
+	NSString *_filePath;
+	NSBundle *_chatStyle;
+	NSString *_chatStyleVariant;
+	NSBundle *_chatEmoticons;
+	NSDictionary *_emoticonMappings;
+	NSMutableDictionary *_styleParams;
+	NSMutableArray *_messages;
+	NSMutableDictionary *_toolbarItems;
+
+	const char **_params;
+	BOOL _isArchive;
+	BOOL _nibLoaded;
+	BOOL _previousStyleSwitch;
 }
 - (id) initWithTranscript:(NSString *) filename;
 

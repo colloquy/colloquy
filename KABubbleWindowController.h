@@ -7,9 +7,7 @@
 	unsigned int	_depth;
 }
 + (KABubbleWindowController *) bubble;
-+ (KABubbleWindowController *) bubbleWithTitle:(NSString *) title 
-										  text:(id) text 
-										  icon:(NSImage *) icon;
++ (KABubbleWindowController *) bubbleWithTitle:(NSString *) title text:(id) text icon:(NSImage *) icon;
 
 - (void) startFadeIn;
 - (void) startFadeOut;

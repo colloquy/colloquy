@@ -17,9 +17,7 @@ static unsigned int bubbleWindowDepth = 0;
 	return [[[self alloc] init] autorelease];
 }
 
-+ (KABubbleWindowController *) bubbleWithTitle:(NSString *) title 
-										  text:(id) text 
-										  icon:(NSImage *) icon {
++ (KABubbleWindowController *) bubbleWithTitle:(NSString *) title text:(id) text icon:(NSImage *) icon {
 	id ret = [[[self alloc] init] autorelease];
 	[ret setTitle:title];
 	if( [text isKindOfClass:[NSString class]] ) [ret setText:text];
@@ -31,11 +29,7 @@ static unsigned int bubbleWindowDepth = 0;
 - (id) init {
 	extern unsigned int bubbleWindowDepth;
 
-	NSPanel *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 0., 0., 
-																	   270., 65. ) 
-												 styleMask:NSBorderlessWindowMask 
-												   backing:NSBackingStoreBuffered 
-													 defer:NO] autorelease];
+	NSPanel *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 0., 0., 270., 65. ) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO] autorelease];
 	[panel setBecomesKeyOnlyIfNeeded:YES];
 	[panel setHidesOnDeactivate:NO];
 	[panel setBackgroundColor:[NSColor clearColor]];
@@ -51,12 +45,7 @@ static unsigned int bubbleWindowDepth = 0;
 	[panel setContentView:view];
 
 	NSRect screen = [[NSScreen mainScreen] visibleFrame];
-	[panel setFrameTopLeftPoint:NSMakePoint( NSWidth( screen ) 
-											 - NSWidth( [panel frame] ) 
-											 - KABubblePadding, NSMaxY( screen ) 
-											 - KABubblePadding 
-											 - ( NSHeight( [panel frame] ) 
-												 * bubbleWindowDepth ) )];
+	[panel setFrameTopLeftPoint:NSMakePoint( NSWidth( screen ) - NSWidth( [panel frame] ) - KABubblePadding, NSMaxY( screen ) - KABubblePadding - ( NSHeight( [panel frame] ) * bubbleWindowDepth ) )];
 
 	_depth = ++bubbleWindowDepth;
 
@@ -70,27 +59,16 @@ static unsigned int bubbleWindowDepth = 0;
 
 #pragma mark -
 
-- (void) startFadeIn {
-	[self retain]; // Retain, after fade out we relase.
-	[self showWindow:nil];
-	[self _stopTimer];
-	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL 
-														target:self 
-													  selector:@selector( _fadeIn: ) 
-													  userInfo:nil 
-													   repeats:YES] retain];
+- (void) _stopTimer {
+	[_animationTimer invalidate];
+	[_animationTimer release];
+	_animationTimer = nil;
 }
 
-- (void) startFadeOut {
+- (void) _waitBeforeFadeOut {
 	[self _stopTimer];
-	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL 
-														target:self 
-													  selector:@selector( _fadeOut: ) 
-													  userInfo:nil 
-													   repeats:YES] retain];
+	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:DISPLAY_TIME target:self selector:@selector( startFadeOut ) userInfo:nil repeats:NO] retain];
 }
-
-#pragma mark -
 
 - (void) _fadeIn:(NSTimer *) inTimer {
 	if( [[self window] alphaValue] < 1. ) {
@@ -112,19 +90,18 @@ static unsigned int bubbleWindowDepth = 0;
 	}
 }
 
-- (void) _stopTimer {
-	[_animationTimer invalidate];
-	[_animationTimer release];
-	_animationTimer = nil;
+#pragma mark -
+
+- (void) startFadeIn {
+	[self retain]; // Retain, after fade out we relase.
+	[self showWindow:nil];
+	[self _stopTimer];
+	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector( _fadeIn: ) userInfo:nil repeats:YES] retain];
 }
 
-- (void) _waitBeforeFadeOut {
+- (void) startFadeOut {
 	[self _stopTimer];
-	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:DISPLAY_TIME 
-														target:self 
-													  selector:@selector( startFadeOut ) 
-													  userInfo:nil 
-													   repeats:NO] retain];
+	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector( _fadeOut: ) userInfo:nil repeats:YES] retain];
 }
 
 #pragma mark -

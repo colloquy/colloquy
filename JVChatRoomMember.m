@@ -8,6 +8,13 @@
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
 
+@interface JVChatRoomMember (JVChatMemberPrivate)
+- (NSString *) _selfStoredNickname;
+- (NSString *) _selfCompositeName;
+@end
+
+#pragma mark -
+
 @implementation JVChatRoomMember
 - (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name {
 	if( ( self = [self init] ) ) {
@@ -22,8 +29,12 @@
 	if( ( self = [super init] ) ) {
 		_parent = nil;
 		_nickname = nil;
+		_realName = nil;
+		_address = nil;
 		_buddy = nil;
 		_operator = NO;
+		_halfOperator = NO;
+		_serverOperator = NO;
 		_voice = NO;
 	}
 
@@ -32,15 +43,20 @@
 
 - (void) dealloc {
 	[_nickname release];
+	[_realName release];
+	[_address release];
 	[_buddy release];
 
 	_parent = nil;
 	_nickname = nil;
+	_realName = nil;
+	_address = nil;
 	_buddy = nil;
 
 	[super dealloc];
 }
 
+#pragma mark -
 #pragma mark Comparisons
 
 - (NSComparisonResult) compare:(JVChatRoomMember *) member {
@@ -66,10 +82,19 @@
 	return retVal;
 }
 
+#pragma mark -
 #pragma mark User Info
 
 - (NSString *) nickname {
 	return [[_nickname retain] autorelease];
+}
+
+- (NSString *) realName {
+	return [[_realName retain] autorelease];
+}
+
+- (NSString *) address {
+	return [[_address retain] autorelease];
 }
 
 - (NSImage *) icon {
@@ -97,6 +122,14 @@
 
 - (BOOL) operator {
 	return _operator;
+}
+
+- (BOOL) halfOperator {
+	return _halfOperator;
+}
+
+- (BOOL) serverOperator {
+	return _serverOperator;
 }
 
 - (BOOL) isLocalUser {
@@ -129,6 +162,7 @@
 	return retVal;
 }
 
+#pragma mark -
 #pragma mark Outline View Support
 
 - (NSString *) title {
@@ -162,6 +196,7 @@
 	return [_parent isEnabled];
 }
 
+#pragma mark -
 #pragma mark Drag & Drop Support
 //not so much drop though
 
@@ -173,6 +208,7 @@
 	[[self connection] sendFile:path toUser:_nickname];
 }
 
+#pragma mark -
 #pragma mark Contextual Menu
 
 - (NSMenu *) menu {
@@ -233,6 +269,7 @@
 	return YES;
 }
 
+#pragma mark -
 #pragma mark GUI Actions
 
 - (IBAction) doubleClicked:(id) sender {
@@ -258,6 +295,7 @@
 	}
 }
 
+#pragma mark -
 #pragma mark Operator commands/Modifiers
 
 - (IBAction) toggleOperatorStatus:(id) sender {
@@ -295,12 +333,30 @@
 	_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_nickname onServer:[[self connection] server]] retain];
 }
 
+- (void) _setAddress:(NSString *) address {
+	[_address autorelease];
+	_address = [address copy];
+}
+
+- (void) _setRealName:(NSString *) name {
+	[_realName autorelease];
+	_realName = [name copy];
+}
+
 - (void) _setVoice:(BOOL) voice {
 	_voice = voice;
 }
 
 - (void) _setOperator:(BOOL) operator {
 	_operator = operator;
+}
+
+- (void) _setHalfOperator:(BOOL) operator {
+	_halfOperator = operator;
+}
+
+- (void) _setServerOperator:(BOOL) operator {
+	_serverOperator = operator;
 }
 
 - (NSString *) _selfCompositeName {

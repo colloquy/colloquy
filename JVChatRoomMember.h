@@ -9,8 +9,12 @@
 @interface JVChatRoomMember : NSObject <JVChatListItem> {
 	JVChatRoom *_parent;
 	NSString *_nickname;
+	NSString *_address;
+	NSString *_realName;
 	JVBuddy *_buddy;
 	BOOL _operator;
+	BOOL _halfOperator;
+	BOOL _serverOperator;
 	BOOL _voice;
 }
 - (id) initWithRoom:(JVChatRoom *) room andNickname:(NSString *) name;
@@ -33,17 +37,6 @@
 - (IBAction) toggleOperatorStatus:(id) sender;
 - (IBAction) toggleVoiceStatus:(id) sender;
 - (IBAction) kick:(id) sender;
-@end
-
-#pragma mark -
-
-@interface JVChatRoomMember (JVChatMemberPrivate)
-- (NSString *) _selfStoredNickname;
-- (NSString *) _selfCompositeName;
-
-- (void) _setNickname:(NSString *) name;
-- (void) _setVoice:(BOOL) voice;
-- (void) _setOperator:(BOOL) operator;
 @end
 
 #pragma mark -

@@ -74,8 +74,7 @@
 	[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@", [_room target]]];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatConnectionGotRoomTopicNotification object:[_room connection]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatConnectionUserOppedInRoomNotification object:[_room connection]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatConnectionUserDeoppedInRoomNotification object:[_room connection]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatConnectionGotMemberModeNotification object:[_room connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatConnectionGotRoomModeNotification object:[_room connection]];
 
 	[encodingSelection setMenu:[_room _encodingMenu]];
@@ -166,7 +165,7 @@
 }
 
 - (void) _refreshEditStatus:(NSNotification *) notification {
-	if( notification && [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame ) return;
+	if( notification && [[[notification userInfo] objectForKey:@"room"] caseInsensitiveCompare:[_room target]] != NSOrderedSame && [[[_room connection] nickname] isEqualToString:[[notification userInfo] objectForKey:@"who"]] ) return;
 
 	BOOL canEdit = [[_room chatRoomMemberWithName:[[_room connection] nickname]] operator];
 

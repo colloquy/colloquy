@@ -11,22 +11,25 @@
 
 @interface JVChatRoom : JVDirectChat {
 	@protected
-	IBOutlet NSTextView		*topicLine;
-	
-	NSMutableDictionary		*_members;
-	NSMutableArray			*_sortedMembers;
-	NSAttributedString		*_topicAttributed;
-	NSData					*_topic;
-	NSString				*_topicAuth;
-	
-	BOOL					_invalidateMembers;
-	BOOL					_kickedFromRoom;
+	IBOutlet NSTextView *topicLine;
+
+	NSMutableDictionary *_members;
+	NSMutableArray *_sortedMembers;
+	NSAttributedString *_topicAttributed;
+	NSData *_topic;
+	NSString *_topicAuth;
+
+	BOOL _kickedFromRoom;
+	BOOL _inRoom;
 }
 - (void) joined;
 - (void) parting;
 
+- (void) joinChat:(id) sender;
+- (void) partChat:(id) sender;
+
 - (void) addExistingMembersToChat:(NSArray *) members;
-- (void) addMemberToChat:(NSString *) member asPreviousMember:(BOOL) previous;
+- (void) addMemberToChat:(NSString *) member withInformation:(NSDictionary *) info;
 - (void) removeChatMember:(NSString *) member withReason:(NSData *) reason;
 - (void) changeChatMember:(NSString *) member to:(NSString *) nick;
 
@@ -38,7 +41,7 @@
 - (void) chatMember:(NSString *) member kickedBy:(NSString *) by forReason:(NSData *) reason;
 - (void) kickedFromChatBy:(NSString *) by forReason:(NSData *) reason;
 
-- (void) changeTopic:(NSData *) topic by:(NSString *) author;
+- (void) changeTopic:(NSData *) topic by:(NSString *) author displayChange:(BOOL) showChange;
 - (NSAttributedString *) topic;
 
 - (JVChatRoomMember *) chatRoomMemberWithName:(NSString *) name;

@@ -23,8 +23,8 @@
 	<key>CFBundleSignature</key>
 	<string>jvCC</string>
 	<key>CFBundleVersion</key>
-	<string>1B12</string>
+	<string>2A1</string>
 	<key>NSAppleScriptEnabled</key>
-	<true />
+	<true/>
 </dict>
 </plist>
