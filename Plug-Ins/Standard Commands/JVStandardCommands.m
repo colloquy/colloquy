@@ -6,6 +6,7 @@
 #import "NSStringAdditions.h"
 #import "JVChatController.h"
 #import "MVChatRoom.h"
+#import "JVChatMessage.h"
 #import "MVChatUser.h"
 #import "JVChatRoom.h"
 #import "JVDirectChat.h"
@@ -77,7 +78,7 @@
 			[[controller windowController] showChatViewController:controller];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
-			if( [[arguments string] isEqualToString:@"style"] ) {
+			if( ! [[arguments string] caseInsensitiveCompare:@"style"] ) {
 				[chat _reloadCurrentStyle:nil];
 				return YES;
 			}
@@ -276,7 +277,7 @@
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&subcmd];
-		if( [subcmd isEqualToString:@"send"] )
+		if( ! [subcmd caseInsensitiveCompare:@"send"] )
 			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
 		return NO;
 	} else if( ! [command caseInsensitiveCompare:@"raw"] || ! [command caseInsensitiveCompare:@"quote"] ) {
@@ -326,13 +327,13 @@
 		[connection sendRawMessage:[NSString stringWithFormat:@"INVITE %@ %@", nick, roomName]];
         return YES;
 	} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
-		if( [[arguments string] isEqualToString:@"plugins"] ) {
+		if( ! [[arguments string] caseInsensitiveCompare:@"plugins"] || ! [[arguments string] caseInsensitiveCompare:@"scripts"] ) {
 			[_manager findAndLoadPlugins];
 			return YES;
-		} else if( [[arguments string] isEqualToString:@"styles"] ) {
+		} else if( ! [[arguments string] caseInsensitiveCompare:@"styles"] ) {
 			[NSClassFromString( @"JVStyle" ) scanForStyles];
 			return YES;
-		} else if( [[arguments string] isEqualToString:@"emoticons"] ) {
+		} else if( ! [[arguments string] caseInsensitiveCompare:@"emoticons"] ) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatEmoticonSetInstalledNotification" object:nil]; 
 			return YES;
 		}
