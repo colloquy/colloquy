@@ -1290,6 +1290,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	}
 
 	xmlXPathFreeObject( result );
+	xmlXPathFreeContext( ctx );
 
 	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
 
