@@ -59,6 +59,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 - (NSString *) _chatStyleCSSFileURL;
 - (NSString *) _chatStyleVariantCSSFileURL;
 - (const char *) _chatStyleXSLFilePath;
+- (NSString *) _chatStyleHeaderFileContents;
 + (NSString *) _nameForBundle:(NSBundle *) style;
 - (void) _changeChatEmoticonsMenuSelection;
 - (void) _updateChatEmoticonsMenu;
@@ -393,11 +394,6 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		xmlUnsetProp( xmlDocGetRootElement( _xmlLog ), "style" );
 	} else xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[style bundleIdentifier] UTF8String] );
 
-	if( ! [self _usingSpecificEmoticons] ) {
-		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style bundleIdentifier]]]];
-		[self setChatEmoticons:emoticon preformRefresh:NO];		
-	}
-
 	[self setChatStyle:style withVariant:nil];
 }
 
@@ -422,6 +418,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 	if( ! [_logLock tryLock] ) return;	
 
+	if( ! [self _usingSpecificEmoticons] ) {
+		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]]];
+		[self setChatEmoticons:emoticon preformRefresh:NO];
+	}
+
 	_previousStyleSwitch = YES;
 
 	[_chatStyle autorelease];
@@ -440,7 +441,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	_chatXSLStyle = xsltParseStylesheetFile( (const xmlChar *)[self _chatStyleXSLFilePath] );
 
 	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [[_chatStyle bundleIdentifier] UTF8String] );
-	
+
 	[self _changeChatStyleMenuSelection];
 
 	if( result == NSAlertOtherReturn ) {
@@ -459,13 +460,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSString *style = [[sender representedObject] objectForKey:@"style"];
 
 	if( ! [style isEqual:_chatStyle] ) {
-		if( ! [self _usingSpecificEmoticons] ) {
-			NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]]];
-			[self setChatEmoticons:emoticon preformRefresh:NO];
-		}
-
 		[self setChatStyle:[NSBundle bundleWithIdentifier:style] withVariant:variant];
-		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "style", [style UTF8String] );
 	} else {
 		[self setChatStyleVariant:variant];
 	}
@@ -970,6 +965,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	return [path fileSystemRepresentation];
 }
 
+- (NSString *) _chatStyleHeaderFileContents {
+	NSString *path = [_chatStyle pathForResource:@"supplement" ofType:@"html"];
+	return ( path ? [NSString stringWithContentsOfFile:path] : @"" );
+}
+
 + (NSString *) _nameForBundle:(NSBundle *) bundle {
 	NSDictionary *info = [bundle localizedInfoDictionary];
 	NSString *label = [info objectForKey:@"CFBundleName"];
@@ -1113,7 +1113,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
-	return [[[NSString stringWithFormat:shell, [self title], [self _chatEmoticonsCSSFileURL], [self _chatStyleCSSFileURL], [self _chatStyleVariantCSSFileURL], html] retain] autorelease];
+	return [[[NSString stringWithFormat:shell, [self title], [self _chatEmoticonsCSSFileURL], [self _chatStyleCSSFileURL], [self _chatStyleVariantCSSFileURL], [self _chatStyleHeaderFileContents], html] retain] autorelease];
 }
 @end
 

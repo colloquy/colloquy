@@ -238,7 +238,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	params = [JVChatTranscript _xsltParamArrayWithDictionary:[NSDictionary dictionaryWithContentsOfFile:[style pathForResource:@"parameters" ofType:@"plist"]]];
 	xsltStyle = xsltParseStylesheetFile( (const xmlChar *)[path fileSystemRepresentation] );
 
-	doc = xmlParseFile( [[[NSBundle mainBundle] pathForResource:@"preview" ofType:@"colloquyTranscript"] fileSystemRepresentation] );
+	if( [style pathForResource:@"preview" ofType:@"colloquyTranscript"] ) {
+		doc = xmlParseFile( [[style pathForResource:@"preview" ofType:@"colloquyTranscript"] fileSystemRepresentation] );
+	} else {
+		doc = xmlParseFile( [[[NSBundle mainBundle] pathForResource:@"preview" ofType:@"colloquyTranscript"] fileSystemRepresentation] );
+	}
 
 	if( ( res = xsltApplyStylesheet( xsltStyle, doc, params ) ) ) {
 		xsltSaveResultToString( &result, &len, res, xsltStyle );
@@ -254,10 +258,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		free( result );
 	}
 
+	NSString *headerPath = [style pathForResource:@"supplement" ofType:@"html"];
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	if( variant ) path = ( [variant isAbsolutePath] ? [[NSURL fileURLWithPath:variant] absoluteString] : [[NSURL fileURLWithPath:[style pathForResource:variant ofType:@"css" inDirectory:@"Variants"]] absoluteString] );
 	else path = @"";
-	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, ( style ? [[NSURL fileURLWithPath:[style pathForResource:@"main" ofType:@"css"]] absoluteString] : @"" ), path, html];
+	html = [NSString stringWithFormat:shell, @"Preview", emoticonStyle, ( style ? [[NSURL fileURLWithPath:[style pathForResource:@"main" ofType:@"css"]] absoluteString] : @"" ), path, ( headerPath ? [NSString stringWithContentsOfFile:headerPath] : @"" ), html];
 
 	[[preview mainFrame] loadHTMLString:html baseURL:nil];
 }
