@@ -17,15 +17,6 @@ NSMutableSet *JVChatEmoticonBundles = nil;
 
 static NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 
-NSComparisonResult sortChatStyles( id style1, id style2, void *context ) {
-	JVChatTranscript *self = context;
-	NSString *styleName1 = [self _chatStyleNameForBundle:style1];
-	NSString *styleName2 = [self _chatStyleNameForBundle:style2];
-    return [styleName1 caseInsensitiveCompare:styleName2];
-}
-
-#pragma mark -
-
 void MVChatPlaySoundForAction( NSString *action ) {
 	NSSound *sound = nil;
 	NSCParameterAssert( action != nil );
@@ -58,21 +49,31 @@ void MVChatPlaySoundForAction( NSString *action ) {
 - (void) _invalidateConnection:(id) sender;
 - (void) _switchingStyleEnded:(in NSString *) html;
 - (oneway void) _switchStyle:(id) sender;
-- (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
-- (void) _freeXsltParamArray:(const char **) params;
++ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
++ (void) _freeXsltParamArray:(const char **) params;
 - (void) _changeChatStyleMenuSelection;
 - (void) _updateChatStylesMenu;
-- (void) _scanForChatStyles;
++ (NSSet *) _chatStyleBundles;
++ (void) _scanForChatStyles;
 - (NSString *) _applyStyleOnXMLDocument:(xmlDocPtr) doc;
 - (NSString *) _chatStyleCSSFileURL;
 - (NSString *) _chatStyleVariantCSSFileURL;
 - (const char *) _chatStyleXSLFilePath;
-- (NSString *) _chatStyleNameForBundle:(NSBundle *) style;
-- (void) _scanForEmoticons;
++ (NSString *) _nameForBundle:(NSBundle *) style;
++ (NSSet *) _emoticonBundles;
++ (void) _scanForEmoticons;
 - (NSString *) _chatEmoticonsMappingFilePath;
 - (NSString *) _chatEmoticonsCSSFileURL;
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
 @end
+
+#pragma mark -
+
+NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
+	NSString *styleName1 = [JVChatTranscript _nameForBundle:style1];
+	NSString *styleName2 = [JVChatTranscript _nameForBundle:style2];
+    return [styleName1 caseInsensitiveCompare:styleName2];
+}
 
 #pragma mark -
 
@@ -101,16 +102,11 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[_mainThreadConnection setRootObject:self];
 		[_mainThreadConnection enableMultipleThreads];		
 
-		if( ! JVChatStyleBundles )
-			JVChatStyleBundles = [NSMutableSet set];
+		[[self class] _scanForChatStyles];
+		[[self class] _scanForEmoticons];
+
 		[JVChatStyleBundles retain];
-
-		if( ! JVChatEmoticonBundles )
-			JVChatEmoticonBundles = [NSMutableSet set];
 		[JVChatEmoticonBundles retain];
-
-		[self _scanForChatStyles];
-		[self _scanForEmoticons];
 
 		_logLock = [[NSLock alloc] init];
 
@@ -187,7 +183,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	xsltFreeStylesheet( _chatXSLStyle );
 	_chatXSLStyle = NULL;
 
-	[self _freeXsltParamArray:_params];
+	[[self class] _freeXsltParamArray:_params];
 	_params = NULL;
 
 	if( [JVChatStyleBundles retainCount] == 1 ) JVChatStyleBundles = nil;
@@ -372,8 +368,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[_styleParams autorelease];
 	_styleParams = [[NSDictionary dictionaryWithContentsOfFile:[_chatStyle pathForResource:@"parameters" ofType:@"plist"]] retain];
 
-	if( _params ) [self _freeXsltParamArray:_params];
-	_params = [self _xsltParamArrayWithDictionary:_styleParams];
+	if( _params ) [[self class] _freeXsltParamArray:_params];
+	_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
 
 	if( _chatXSLStyle ) xsltFreeStylesheet( _chatXSLStyle );
 	_chatXSLStyle = xsltParseStylesheetFile( (const xmlChar *)[self _chatStyleXSLFilePath] );
@@ -572,7 +568,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[pool release];
 }
 
-- (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
++ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
 	NSEnumerator *keyEnumerator = [dictionary keyEnumerator];
 	NSEnumerator *enumerator = [dictionary objectEnumerator];
 	NSString *key = nil;
@@ -593,7 +589,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	return ret;
 }
 
-- (void) _freeXsltParamArray:(const char **) params {
++ (void) _freeXsltParamArray:(const char **) params {
 	const char **temp = params;
 
 	if( ! params ) return;
@@ -642,7 +638,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 - (void) _updateChatStylesMenu {
 	extern NSMutableSet *JVChatStyleBundles;
-	NSEnumerator *enumerator = [[[JVChatStyleBundles allObjects] sortedArrayUsingFunction:sortChatStyles context:self] objectEnumerator];
+	NSEnumerator *enumerator = [[[JVChatStyleBundles allObjects] sortedArrayUsingFunction:sortBundlesByName context:self] objectEnumerator];
 	NSEnumerator *denumerator = nil;
 	NSMenu *menu = nil, *subMenu = nil;
 	NSMenuItem *menuItem = nil, *subMenuItem = nil;
@@ -670,7 +666,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	while( ( style = [enumerator nextObject] ) ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[self _chatStyleNameForBundle:style] action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[[self class] _nameForBundle:style] action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[style bundleIdentifier]];
 		[menu addItem:menuItem];
@@ -700,12 +696,20 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[self _changeChatStyleMenuSelection];
 }
 
-- (void) _scanForChatStyles {
++ (NSSet *) _chatStyleBundles {
+	extern NSMutableSet *JVChatStyleBundles;
+	return [[JVChatStyleBundles retain] autorelease];
+}
+
++ (void) _scanForChatStyles {
 	extern NSMutableSet *JVChatStyleBundles;
 	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
 	NSEnumerator *enumerator = nil, *denumerator = nil;
 	NSString *file = nil, *path = nil;
 	NSBundle *bundle = nil;
+
+	if( ! JVChatStyleBundles )
+		JVChatStyleBundles = [NSMutableSet set];
 
 	[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle mainBundle] resourcePath]]];
 	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
@@ -724,8 +728,6 @@ void MVChatPlaySoundForAction( NSString *action ) {
 			}
 		}
 	}
-
-	[self _updateChatStylesMenu];
 }
 
 - (NSString *) _applyStyleOnXMLDocument:(xmlDocPtr) doc {
@@ -772,20 +774,28 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	return [path fileSystemRepresentation];
 }
 
-- (NSString *) _chatStyleNameForBundle:(NSBundle *) style {
-	NSDictionary *info = [style localizedInfoDictionary];
++ (NSString *) _nameForBundle:(NSBundle *) bundle {
+	NSDictionary *info = [bundle localizedInfoDictionary];
 	NSString *label = [info objectForKey:@"CFBundleName"];
-	if( ! label ) label = [style objectForInfoDictionaryKey:@"CFBundleName"];
-	if( ! label ) label = [NSString stringWithFormat:@"Style %x", style];
+	if( ! label ) label = [bundle objectForInfoDictionaryKey:@"CFBundleName"];
+	if( ! label ) label = [bundle bundleIdentifier];
 	return [[label retain] autorelease];
 }
 
-- (void) _scanForEmoticons {
++ (NSSet *) _emoticonBundles {
+	extern NSMutableSet *JVChatEmoticonBundles;
+	return [[JVChatEmoticonBundles retain] autorelease];
+}
+
++ (void) _scanForEmoticons {
 	extern NSMutableSet *JVChatEmoticonBundles;
 	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
 	NSEnumerator *enumerator = nil, *denumerator = nil;
 	NSString *file = nil, *path = nil;
 	NSBundle *bundle = nil;
+
+	if( ! JVChatEmoticonBundles )
+		JVChatEmoticonBundles = [NSMutableSet set];
 
 	[paths addObject:[NSString stringWithFormat:@"%@/Emoticons", [[NSBundle mainBundle] resourcePath]]];
 	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Emoticons", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
@@ -814,7 +824,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 - (NSString *) _chatEmoticonsCSSFileURL {
 	NSString *path = [_chatEmoticons pathForResource:@"emoticons" ofType:@"css"];
-	if( path ) return [[[[NSURL fileURLWithPath: path] absoluteString] retain] autorelease];
+	if( path ) return [[[[NSURL fileURLWithPath:path] absoluteString] retain] autorelease];
 	else return @"";
 }
 
