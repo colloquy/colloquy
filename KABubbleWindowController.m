@@ -41,13 +41,21 @@ static unsigned int bubbleWindowDepth = 0;
 	[panel setReleasedWhenClosed:YES];
 	[panel setDelegate:self];
 
-	NSView *view = [[[KABubbleWindowView alloc] initWithFrame:[panel frame]] autorelease];
+	KABubbleWindowView *view = [[[KABubbleWindowView alloc] initWithFrame:[panel frame]] autorelease];
+	[view setTarget:self];
+	[view setAction:@selector( _bubbleClicked: )];
 	[panel setContentView:view];
 
 	NSRect screen = [[NSScreen mainScreen] visibleFrame];
 	[panel setFrameTopLeftPoint:NSMakePoint( NSWidth( screen ) - NSWidth( [panel frame] ) - KABubblePadding, NSMaxY( screen ) - KABubblePadding - ( NSHeight( [panel frame] ) * bubbleWindowDepth ) )];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationDidSwitch: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationDidSwitch: ) name:NSApplicationDidHideNotification object:[NSApplication sharedApplication]];
+
 	_depth = ++bubbleWindowDepth;
+	_autoFadeOut = YES;
+	_target = nil;
+	_action = NULL;
 
 	return ( self = [super initWithWindow:panel] );
 }
@@ -73,7 +81,7 @@ static unsigned int bubbleWindowDepth = 0;
 - (void) _fadeIn:(NSTimer *) inTimer {
 	if( [[self window] alphaValue] < 1. ) {
 		[[self window] setAlphaValue:[[self window] alphaValue] + FADE_INCREMENT];
-	} else {
+	} else if( _autoFadeOut ) {
 		[self _waitBeforeFadeOut];
 	}
 }
@@ -90,6 +98,16 @@ static unsigned int bubbleWindowDepth = 0;
 	}
 }
 
+- (void) _applicationDidSwitch:(NSNotification *) notification {
+	[self startFadeOut];
+}
+
+- (void) _bubbleClicked:(id) sender {
+	[self startFadeOut];
+	if( _target && _action && [_target respondsToSelector:_action] )
+		[_target performSelector:_action withObject:self];
+}
+
 #pragma mark -
 
 - (void) startFadeIn {
@@ -102,6 +120,35 @@ static unsigned int bubbleWindowDepth = 0;
 - (void) startFadeOut {
 	[self _stopTimer];
 	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector( _fadeOut: ) userInfo:nil repeats:YES] retain];
+}
+
+#pragma mark -
+
+- (BOOL) automaticallyFadesOut {
+	return _autoFadeOut;
+}
+
+- (void) setAutomaticallyFadesOut:(BOOL) autoFade {
+	_autoFadeOut = autoFade;
+}
+
+#pragma mark -
+
+- (id) target {
+	return _target;
+}
+
+- (void) setTarget:(id) object {
+	[_target autorelease];
+	_target = [object retain];
+}
+
+- (SEL) action {
+	return _action;
+}
+
+- (void) setAction:(SEL) selector {
+	_action = selector;
 }
 
 #pragma mark -
