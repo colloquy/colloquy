@@ -77,8 +77,14 @@ typedef enum {
 	MVChatNotDoneError
 } MVChatError;
 
+@class NSTimer;
 @class NSString;
 @class NSArray;
+@class NSMutableArray;
+@class NSMutableDictionary;
+@class NSDictionary;
+@class NSAttributedString;
+@class MVUploadFileTransfer;
 @class NSAttributedString;
 @class NSMutableDictionary;
 @class NSDate;
@@ -142,16 +148,11 @@ extern NSString *MVChatConnectionNicknameRejectedNotification;
 extern NSString *MVChatConnectionSubcodeRequestNotification;
 extern NSString *MVChatConnectionSubcodeReplyNotification;
 
-@class NSMutableArray;
-@class NSMutableDictionary;
-@class NSDictionary;
-@class NSAttributedString;
-@class MVUploadFileTransfer;
-
 #pragma mark -
 
 @interface MVChatConnection : NSObject {
 @private
+	NSTimer *_reconnectTimer;
 	NSString *_npassword;
 	MVChatConnectionStatus _status;
 	MVChatConnectionProxy _proxy;
@@ -165,7 +166,6 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSArray *_alternateNicks;
 
 	BOOL _nickIdentified;
-	BOOL _detachStill;
 	unsigned int _nextAltNickIndex;
 	unsigned int _sleepNotifier; /* io_object_t */
 	unsigned int _powerConnection; /* io_connect_t */
