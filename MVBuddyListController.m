@@ -71,6 +71,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 NSComparisonResult sortBuddiesByLastName( ABPerson *buddy1, ABPerson *buddy2, void *context );
 NSComparisonResult sortBuddiesByFirstName( ABPerson *buddy1, ABPerson *buddy2, void *context );
+NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2, void *context );
 
 NSComparisonResult sortBuddiesByNickname( ABPerson *buddy1, ABPerson *buddy2, void *context ) {
 	MVBuddyListController *self = context;
@@ -88,7 +89,7 @@ NSComparisonResult sortBuddiesByServer( ABPerson *buddy1, ABPerson *buddy2, void
 	name1 = [[NSURL URLWithString:name1] host];
 	name2 = [[NSURL URLWithString:name2] host];
 	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
-	return ( ret != NSOrderedSame ? ret : sortBuddiesByLastName( buddy1, buddy2, context ) );
+	return ( ret != NSOrderedSame ? ret : sortBuddiesByAvailability( buddy1, buddy2, context ) );
 }
 
 NSComparisonResult sortBuddiesByFirstName( ABPerson *buddy1, ABPerson *buddy2, void *context ) {
@@ -711,6 +712,8 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	else nicks = [[[_buddyInfo objectForKey:[buddy uniqueId]] objectForKey:@"onlineNicks"] allObjects];
 	[[_buddyInfo objectForKey:[buddy uniqueId]] setObject:[nicks objectAtIndex:[object unsignedIntValue]] forKey:@"displayNick"];
 	[buddies reloadData];
+	[self _setBuddiesNeedSortAnimated];
+	[self _sortBuddiesAnimatedIfNeeded:nil];
 }
 
 - (NSMenu *) tableView:(NSTableView *) tableView menuForTableColumn:(NSTableColumn *) tableColumn row:(int) row {
@@ -765,10 +768,8 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	if( ! _animationPosition ) start = [[NSDate date] retain];
 	NSTimeInterval elapsed = fabs( [start timeIntervalSinceNow] );
 	_animationPosition = MIN( 1., elapsed / .25 );
-//	NSLog( @"%f %f", _animationPosition, elapsed );
 
 	if( fabs( _animationPosition - 1. ) <= 0.01 ) {
-//		NSLog( @"stop" );
 		[timer invalidate];
 		[timer autorelease];
 		_animationPosition = 0.;
@@ -805,11 +806,19 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 	NSRange visibleRows;
 	NSArray *oldOrder = [[_buddyOrder copy] autorelease];
 
-//	NSLog( @"_setBuddiesNeedSortAnimated" );
+	id selectedObject = nil;
+	if( [buddies selectedRow] != -1 && [buddies selectedRow] < [oldOrder count] )
+		selectedObject = [oldOrder objectAtIndex:[buddies selectedRow]];
+
 	[self _sortBuddies];
 
+	if( selectedObject ) {
+		[buddies deselectAll:nil];
+		[buddies selectRow:[_buddyOrder indexOfObjectIdenticalTo:selectedObject] byExtendingSelection:NO];
+		[buddies setNeedsDisplay:NO];
+	}
+
 	if( [oldOrder isEqualToArray:_buddyOrder] ) return;
-//	NSLog( @"changed, animate now" );
 
 	_animating = YES;
 
