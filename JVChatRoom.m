@@ -693,7 +693,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 - (void) newBan:(NSString *) ban by:(NSString *) by {
 	// only show this if we've received the initial banlist already
-	if( _initialBanlistReceived ) {
+	if( _initialBanlistReceived && [by isKindOfClass:[NSString class]] ) {
 		// by is a full hostmask. Lets fix that
 		by = [[by componentsSeparatedByString:@"!"] objectAtIndex:0];
 		JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
@@ -709,6 +709,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (void) removedBan:(NSString *) ban by:(NSString *) by {
+	if( ! [by isKindOfClass:[NSString class]] ) return;
 	// by is a full hostmask. Lets fix that
 	by = [[by componentsSeparatedByString:@"!"] objectAtIndex:0];
 	JVChatRoomMember *byMbr = [self chatRoomMemberWithName:by];
