@@ -1295,13 +1295,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( ! [user isEqualToString:[[self connection] nickname]] && ignoreTest == JVNotIgnored )
 		_newMessageCount++;
 
-	[self processMessage:messageString asAction:action fromUser:user ignoreResult:ignoreTest];
-
-	if( ! [messageString length] && ignoreTest == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
-		_newMessageCount--;
-		return;
-	}
-
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 		[messageString makeLinkAttributesAutomatically];
 
@@ -1340,6 +1333,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				highlight = YES;
 			}
 		}
+	}
+
+	[self processMessage:messageString asAction:action fromUser:user ignoreResult:ignoreTest];
+
+	if( ! [messageString length] && ignoreTest == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
+		_newMessageCount--;
+		return;
 	}
 
 	if( highlight && ignoreTest == JVNotIgnored ) {

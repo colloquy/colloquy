@@ -365,10 +365,13 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 		while( ( match = [enumerator nextObject] ) ) {
 			NSRange foundRange = [match range];
-			NSMutableSet *classes = [message attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL];
-			if( ! classes ) classes = [NSMutableSet setWithObject:@"member"];
-			else [classes addObject:@"member"];
-			[message addAttribute:@"CSSClasses" value:classes range:foundRange];
+			// don't highlight nicks in the middle of a link
+			if( ! [message attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL] ) {
+				NSMutableSet *classes = [message attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL];
+				if( ! classes ) classes = [NSMutableSet setWithObject:@"member"];
+				else [classes addObject:@"member"];
+				[message addAttribute:@"CSSClasses" value:classes range:foundRange];
+			}
 		}
 	}
 
