@@ -85,7 +85,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferError: ) name:MVChatConnectionFileTransferErrorNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferStatus: ) name:MVChatConnectionFileTransferStatusNotification object:nil];
 
-		_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];
+		_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];
 	}
 	return self;
 }
