@@ -1012,11 +1012,18 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	if( [[[element objectForKey:WebElementLinkURLKey] scheme] isEqualToString:@"member"] ) {
 		NSMutableArray *ret = [NSMutableArray array];
 		JVChatRoomMember *mbr = [self chatRoomMemberWithName:[[[element objectForKey:WebElementLinkURLKey] resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-		NSEnumerator *enumerator = [[[mbr menu] itemArray] objectEnumerator];
 		NSMenuItem *item = nil;
 
-		while( ( item = [enumerator nextObject] ) )
-			[ret addObject:[[item copy] autorelease]];
+		if( mbr ) {
+			NSEnumerator *enumerator = [[[mbr menu] itemArray] objectEnumerator];
+			while( ( item = [enumerator nextObject] ) ) [ret addObject:[[item copy] autorelease]];
+		} else {
+			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:NULL keyEquivalent:@""] autorelease];
+			[item setRepresentedObject:[[[element objectForKey:WebElementLinkURLKey] resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+			[item setTarget:self];
+			[item setAction:@selector( _startChatWithNonMember: )];
+			[ret addObject:item];
+		}
 
 		return ret;
 	}
@@ -1280,6 +1287,10 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 
 		[self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? [mbr title] : member ), @"by", member, @"nickname", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", [[notification userInfo] objectForKey:@"param"], @"parameter", nil]];
 	}
+}
+
+-(void) _startChatWithNonMember:(id) sender {
+	[[JVChatController defaultManager] chatViewControllerForUser:[sender representedObject] withConnection:[self connection] ifExists:NO];
 }
 @end
 
