@@ -212,6 +212,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[strMsg replaceOccurrencesOfString:@" :" withString:@" " options:NSLiteralSearch range:NSMakeRange( 0, [strMsg length] )];
 	}
 
+	[strMsg replaceOccurrencesOfString:@"\r\n" withString:@"" options:NSAnchoredSearch | NSBackwardsSearch range:NSMakeRange( 0, [strMsg length] )];
+
 	if( ! outbound && ! _verbose ) {
 		NSMutableArray *parts = [[[strMsg componentsSeparatedByString:@" "] mutableCopy] autorelease];
 		NSString *tempStr = nil;
