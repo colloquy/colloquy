@@ -44,7 +44,13 @@ NSString *MVChatConnectionBuddyIsAwayNotification = @"MVChatConnectionBuddyIsAwa
 NSString *MVChatConnectionBuddyIsUnawayNotification = @"MVChatConnectionBuddyIsUnawayNotification";
 NSString *MVChatConnectionBuddyIsIdleNotification = @"MVChatConnectionBuddyIsIdleNotification";
 
-NSString *MVChatConnectionGotUserInfoNotification = @"MVChatConnectionGotUserInfoNotification";
+NSString *MVChatConnectionGotUserWhoisNotification = @"MVChatConnectionGotUserWhoisNotification";
+NSString *MVChatConnectionGotUserServerNotification = @"MVChatConnectionGotUserServerNotification";
+NSString *MVChatConnectionGotUserChannelsNotification = @"MVChatConnectionGotUserChannelsNotification";
+NSString *MVChatConnectionGotUserOperatorNotification = @"MVChatConnectionGotUserOperatorNotification";
+NSString *MVChatConnectionGotUserIdleNotification = @"MVChatConnectionGotUserIdleNotification";
+NSString *MVChatConnectionGotUserWhoisCompleteNotification = @"MVChatConnectionGotUserWhoisCompleteNotification";
+
 NSString *MVChatConnectionGotRoomInfoNotification = @"MVChatConnectionGotRoomInfoNotification";
 
 NSString *MVChatConnectionRoomExistingMemberListNotification = @"MVChatConnectionRoomExistingMemberListNotification";
@@ -833,6 +839,11 @@ static void MVChatBuddyOnline( IRC_SERVER_REC *server, const char *nick, const c
 	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBuddyIsOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+	if (awaymsg) {
+		// Mark the buddy as away
+		note = [NSNotification notificationWithName:MVChatConnectionBuddyIsAwayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", [NSString stringWithUTF8String:awaymsg], @"msg", nil]];
+		[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+	}
 }
 
 static void MVChatBuddyOffline( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
@@ -843,7 +854,11 @@ static void MVChatBuddyOffline( IRC_SERVER_REC *server, const char *nick, const 
 
 static void MVChatBuddyAway( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBuddyIsAwayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", nil]];
+	NSNotification *note;
+	if (awaymsg)
+		note = [NSNotification notificationWithName:MVChatConnectionBuddyIsAwayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", [NSString stringWithUTF8String:awaymsg], @"msg", nil]];
+	else
+		note = [NSNotification notificationWithName:MVChatConnectionBuddyIsUnawayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 }
 
@@ -855,17 +870,96 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 
 #pragma mark -
 
+static void MVChatUserWhois( IRC_SERVER_REC *server, const char *data ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+	
+	char *nick = NULL, *user = NULL, *host = NULL, *realname = NULL;
+	char *params = event_get_params( data, 6 | PARAM_FLAG_GETREST, NULL, &nick, &user, &host, NULL, &realname );
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotUserWhoisNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", [NSString stringWithUTF8String:user], @"username", [NSString stringWithUTF8String:host], @"hostname", [NSString stringWithUTF8String:realname], @"realname", nil]];		
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+	
+	g_free( params );
+}
+
+static void MVChatUserServer( IRC_SERVER_REC *server, const char *data ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+	
+	char *nick = NULL, *serv = NULL, *serverinfo = NULL;
+	char *params = event_get_params( data, 4 | PARAM_FLAG_GETREST, NULL, &nick, &serv, &serverinfo );
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotUserServerNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", [NSString stringWithUTF8String:serv], @"server", [NSString stringWithUTF8String:serverinfo], @"serverinfo", nil]];		
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+	
+	g_free( params );
+}
+
+static void MVChatUserChannels( IRC_SERVER_REC *server, const char *data ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+	
+	char *nick = NULL, *chanlist = NULL;
+	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, NULL, &nick, &chanlist );
+	
+	NSArray *chanArray = [[[NSString stringWithUTF8String:chanlist] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotUserChannelsNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", chanArray, @"channels", nil]];		
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+	
+	g_free( params );
+}
+
+static void MVChatUserOperator( IRC_SERVER_REC *server, const char *data ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+	
+	char *nick = NULL;
+	char *params = event_get_params( data, 2, NULL, &nick );
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotUserOperatorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", nil]];		
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+	
+	g_free( params );
+}
+
+static void MVChatUserIdle( IRC_SERVER_REC *server, const char *data ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+	
+	char *nick = NULL, *idle = NULL, *connected = NULL;
+	char *params = event_get_params( data, 4, NULL, &nick, &idle, &connected );
+	
+	NSNumber *idleTime = [NSNumber numberWithInt:[[NSString stringWithUTF8String:idle] intValue]];
+	NSNumber *connectedTime = [NSNumber numberWithInt:[[NSString stringWithUTF8String:connected] intValue]];
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotUserIdleNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", idleTime, @"idle", connectedTime, @"connected", nil]];		
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+	
+	g_free( params );
+}
+
+static void MVChatUserWhoisComplete( IRC_SERVER_REC *server, const char *data ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+	
+	char *nick = NULL;
+	char *params = event_get_params( data, 2, NULL, &nick );
+	
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotUserWhoisCompleteNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nick], @"who", nil]];		
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+	
+	g_free( params );
+}
+
+#pragma mark -
+
 static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
-
-	char *channel = NULL, *count = NULL, *topic = NULL;
-	char *params = event_get_params( data, 4 | PARAM_FLAG_GETREST, NULL, &channel, &count, &topic );
-
-	NSString *r = [NSString stringWithUTF8String:channel];
-	NSData *t = [NSData dataWithBytes:topic length:strlen( topic )];
-	[self _addRoomToCache:r withUsers:strtoul( count, NULL, 0 ) andTopic:t];
-
-	g_free( params );	
+	
+    char *channel = NULL, *count = NULL, *topic = NULL;
+    char *params = event_get_params( data, 4 | PARAM_FLAG_GETREST, NULL, &channel, &count, &topic );
+	
+    NSString *r = [NSString stringWithUTF8String:channel];
+    NSData *t = [NSData dataWithBytes:topic length:strlen( topic )];
+    [self _addRoomToCache:r withUsers:strtoul( count, NULL, 0 ) andTopic:t];
+	
+    g_free( params );
 }
 
 #pragma mark -
@@ -1475,6 +1569,13 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	signal_add_last( "notifylist left", (SIGNAL_FUNC) MVChatBuddyOffline );
 	signal_add_last( "notifylist away changed", (SIGNAL_FUNC) MVChatBuddyAway );
 	signal_add_last( "notifylist unidle", (SIGNAL_FUNC) MVChatBuddyUnidle );
+	
+	signal_add_last( "event 311", (SIGNAL_FUNC) MVChatUserWhois );
+	signal_add_last( "event 312", (SIGNAL_FUNC) MVChatUserServer );
+	signal_add_last( "event 313", (SIGNAL_FUNC) MVChatUserOperator );
+	signal_add_last( "event 317", (SIGNAL_FUNC) MVChatUserIdle );
+	signal_add_last( "event 318", (SIGNAL_FUNC) MVChatUserWhoisComplete );
+	signal_add_last( "event 319", (SIGNAL_FUNC) MVChatUserChannels );
 
 	signal_add_last( "event 322", (SIGNAL_FUNC) MVChatListRoom );
 
@@ -1521,6 +1622,13 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	signal_remove( "notifylist left", (SIGNAL_FUNC) MVChatBuddyOffline );
 	signal_remove( "notifylist away changed", (SIGNAL_FUNC) MVChatBuddyAway );
 	signal_remove( "notifylist unidle", (SIGNAL_FUNC) MVChatBuddyUnidle );
+	
+	signal_remove( "event 311", (SIGNAL_FUNC) MVChatUserWhois );
+	signal_remove( "event 312", (SIGNAL_FUNC) MVChatUserServer );
+	signal_remove( "event 313", (SIGNAL_FUNC) MVChatUserOperator );
+	signal_remove( "event 317", (SIGNAL_FUNC) MVChatUserIdle );
+	signal_remove( "event 318", (SIGNAL_FUNC) MVChatUserWhoisComplete );
+	signal_remove( "event 319", (SIGNAL_FUNC) MVChatUserChannels );
 
 	signal_remove( "event 322", (SIGNAL_FUNC) MVChatListRoom );
 

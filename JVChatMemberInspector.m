@@ -17,7 +17,12 @@
 	if( ( self = [self init] ) ) {
 		_member = [member retain];
 		_localOnly = NO;
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserInfo: ) name:MVChatConnectionGotUserInfoNotification object:[_member connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserWhois: ) name:MVChatConnectionGotUserWhoisNotification object:[_member connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserServer: ) name:MVChatConnectionGotUserServerNotification object:[_member connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserChannels: ) name:MVChatConnectionGotUserChannelsNotification object:[_member connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserOperator: ) name:MVChatConnectionGotUserOperatorNotification object:[_member connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserIdle: ) name:MVChatConnectionGotUserIdleNotification object:[_member connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotUserWhoisComplete: ) name:MVChatConnectionGotUserWhoisCompleteNotification object:[_member connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( gotAwayStatus: ) name:MVChatConnectionUserAwayStatusNotification object:[_member connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( errorOccurred : ) name:MVChatConnectionErrorNotification object:[_member connection]];
 	}
@@ -54,6 +59,9 @@
 
 - (void) willLoad {
 	[progress startAnimation:nil];
+	_whoisComplete = NO;
+	_addressResolved = NO;
+	_classSet = NO;
 	[nickname setObjectValue:[_member nickname]];
 	if( [[_member buddy] picture] ) [image setImage:[[_member buddy] picture]];
 	[[_member connection] fetchInformationForUser:[_member nickname] withPriority:NO fromLocalServer:_localOnly];
@@ -68,17 +76,19 @@
 - (void) gotAddress:(NSString *) ip {
 	[address setObjectValue:( ip ? ip : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 	[address setToolTip:( ip ? ip : nil )];
-	[progress stopAnimation:nil];
+	_addressResolved = YES;
+	if (_whoisComplete)
+		[progress stopAnimation:nil];
 }
 
 - (oneway void) lookupAddress:(NSString *) host {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *ip = [[NSHost hostWithName:host] address];
-	[self gotAddress:ip];
+	[self performSelectorOnMainThread:@selector(gotAddress:) withObject:ip waitUntilDone:YES];
 	[pool release];
 }
 
-- (void) gotUserInfo:(NSNotification *) notification {
+/*- (void) gotUserInfo:(NSNotification *) notification {
 	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
 	NSDictionary *info = [[notification userInfo] objectForKey:@"info"];
 	NSString *clas = nil;
@@ -99,6 +109,47 @@
 	[realName setToolTip:[info objectForKey:@"realName"]];
 	[connected setObjectValue:MVReadableTime( [[info objectForKey:@"connected"] doubleValue], YES )];
 	[idle setObjectValue:MVReadableTime( [[NSDate date] timeIntervalSince1970] + [[info objectForKey:@"idle"] doubleValue], YES )];
+}*/
+
+- (void) gotUserWhois:(NSNotification *) notification {
+	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
+	[username setObjectValue:[[notification userInfo] objectForKey:@"username"]];
+	[hostname setObjectValue:[[notification userInfo] objectForKey:@"hostname"]];
+	[hostname setToolTip:[[notification userInfo] objectForKey:@"hostname"]];
+	[NSThread detachNewThreadSelector:@selector( lookupAddress: ) toTarget:self withObject:[[[[notification userInfo] objectForKey:@"hostname"] copy] autorelease]];
+	[realName setObjectValue:[[notification userInfo] objectForKey:@"realname"]];
+	[realName setToolTip:[[notification userInfo] objectForKey:@"realname"]];
+}
+
+- (void) gotUserServer:(NSNotification *) notification {
+	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
+	[server setObjectValue:[[notification userInfo] objectForKey:@"server"]];
+}
+
+- (void) gotUserChannels:(NSNotification *) notification {
+	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
+	// We don't really have anything to do here yet until the UI gets fixed
+}
+
+- (void) gotUserOperator:(NSNotification *) notification {
+	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
+	_classSet = YES;
+	[class setObjectValue:NSLocalizedString( @"Server operator", "server operator class" )];
+}
+
+- (void) gotUserIdle:(NSNotification *) notification {
+	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
+	[connected setObjectValue:MVReadableTime( [[[notification userInfo] objectForKey:@"connected"] doubleValue], YES )];
+	[idle setObjectValue:MVReadableTime( [[NSDate date] timeIntervalSince1970] + [[[notification userInfo] objectForKey:@"idle"] doubleValue], YES )];
+}
+
+- (void) gotUserWhoisComplete:(NSNotification *) notification {
+	if( [[[notification userInfo] objectForKey:@"who"] caseInsensitiveCompare:[_member nickname]] != NSOrderedSame ) return;
+	_whoisComplete = YES;
+	if (!_classSet)
+		[class setObjectValue:NSLocalizedString( @"Normal user", "normal user class" )];
+	if (_addressResolved)
+		[progress stopAnimation:nil];
 }
 
 - (void) gotAwayStatus:(NSNotification *) notification {

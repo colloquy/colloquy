@@ -475,10 +475,12 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithBool:away] forKey:@"away"];
 		if( away ) {
 			[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyAwayStatus] forKey:@"status"];
+			[[_nicknameStatus objectForKey:url] setObject:[[[[notification userInfo] objectForKey:@"msg"] copy] autorelease] forKey:@"awayMessage"];
 		} else {
 			NSTimeInterval idle = [[[_nicknameStatus objectForKey:url] objectForKey:@"idle"] doubleValue];
 			if( idle >= 600. ) [[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyIdleStatus] forKey:@"status"];
 			else [[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyAvailableStatus] forKey:@"status"];
+			[[_nicknameStatus objectForKey:url] removeObjectForKey:@"awayMessage"];
 		}
 
 		NSNotification *notification = [NSNotification notificationWithName:JVBuddyNicknameStatusChangedNotification object:self];

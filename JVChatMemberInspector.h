@@ -33,6 +33,9 @@
 	JVChatRoomMember *_member;
 	BOOL _localOnly;
 	BOOL _nibLoaded;
+	BOOL _classSet;
+	BOOL _addressResolved;
+	BOOL _whoisComplete;
 }
 - (id) initWithChatMember:(JVChatRoomMember *) member;
 
