@@ -1595,8 +1595,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		usleep( 500 ); // give time for other theads to lock
 	}
 
-	usleep( 1000 ); // give time for other theads to lock before we dealloc
-
 	[MVIRCChatConnectionThreadLock lock];
 
 	[self _deregisterCallbacks];
