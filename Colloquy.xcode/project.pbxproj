@@ -1065,6 +1065,53 @@
 			settings = {
 			};
 		};
+		1C9982AA0604B979006C6417 = {
+			fileRef = F520458E01B1D37701EBB4B5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9982AC0604BA1F006C6417 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = sound.tif;
+			path = Resources/sound.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9982AE0604BA1F006C6417 = {
+			fileRef = 1C9982AC0604BA1F006C6417;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9982AF0604BEAA006C6417 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = notifications.plist;
+			path = Resources/notifications.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C9982B00604BEAA006C6417 = {
+			fileRef = 1C9982AF0604BEAA006C6417;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9982B90604D94C006C6417 = {
+			fileRef = 1CA7D0F106015DBA00887614;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C9982BA0604D94D006C6417 = {
+			fileRef = 1CA7D0F006015DBA00887614;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CA56CCD042A713E00000102 = {
 			children = (
 				1C8CE1EB05A921A00020D841,
@@ -1230,6 +1277,7 @@
 				1CD4BD9505AA309A00F72EE6,
 				1C2462A405F9205900505752,
 				1C9982020603EFD6006C6417,
+				1C9982BA0604D94D006C6417,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1483,6 +1531,9 @@
 				1CA7CA6805FEC88600887614,
 				1C9981FA0603EF2F006C6417,
 				1C9982060603F097006C6417,
+				1C9982AA0604B979006C6417,
+				1C9982AE0604BA1F006C6417,
+				1C9982B00604BEAA006C6417,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1937,6 +1988,7 @@
 				1CD4BD9605AA309A00F72EE6,
 				1C2462A505F9205900505752,
 				1C9982030603EFD6006C6417,
+				1C9982B90604D94C006C6417,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2448,6 +2500,7 @@
 				1CC6FCD2054A25040075807C,
 				1CC6FC6F054A02F70075807C,
 				1C9981F90603EF2F006C6417,
+				1C9982AC0604BA1F006C6417,
 			);
 			isa = PBXGroup;
 			name = Preferences;
@@ -3634,6 +3687,7 @@
 				1C3C116005029DE1000001C8,
 				1C746A95050CF86B000001C8,
 				F5675B8601DB767601EE70DE,
+				1C9982AF0604BEAA006C6417,
 				1CC6FD38054AF1940075807C,
 				1CCA510D0598108000F0A4CD,
 				1CCA510E0598108000F0A4CD,
