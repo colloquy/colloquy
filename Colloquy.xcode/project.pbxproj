@@ -2303,6 +2303,7 @@
 				1C0A4C9C0799BDB00093B702,
 				1C0A4C9D0799BDB00093B702,
 				1C04394A07CAFCA000304949,
+				1CD9DF6607D934F70006BB99,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4236,6 +4237,21 @@
 			settings = {
 			};
 		};
+		1CD9DF6507D934F70006BB99 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.sdef;
+			name = Colloquy.sdef;
+			path = Resources/Colloquy.sdef;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD9DF6607D934F70006BB99 = {
+			fileRef = 1CD9DF6507D934F70006BB99;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CDDCF830716208300FE11C3 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -4980,6 +4996,7 @@
 				1C9982AF0604BEAA006C6417,
 				1CA75A260652537A000141D5,
 				1CC6FD38054AF1940075807C,
+				1CD9DF6507D934F70006BB99,
 				1CCA510D0598108000F0A4CD,
 				1CCA510E0598108000F0A4CD,
 				1C59BD61059E2E02001487E2,

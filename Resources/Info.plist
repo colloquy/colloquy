@@ -196,5 +196,7 @@
 	<string>Colloquy</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>OSAScriptingDefinition</key>
+	<string>Colloquy.sdef</string>
 </dict>
 </plist>
