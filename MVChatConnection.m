@@ -452,11 +452,13 @@ char *MVChatIRCToXHTML( const char * const string ) {
 				i++;
 				break;
 			case '"':
+				if( iso2022esc ) goto echo;
 				memcpy( &output[o], "&quot;", 6 );
 				o += 6;
 				i++;
 				break;
 			case '\'':
+				if( iso2022esc ) goto echo;
 				memcpy( &output[o], "&apos;", 6 );
 				o += 6;
 				i++;
