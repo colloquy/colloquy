@@ -15,6 +15,7 @@ static MVConnectionsController *sharedInstance = nil;
 
 static NSString *MVToolbarConnectToggleItemIdentifier = @"MVToolbarConnectToggleItem";
 static NSString *MVToolbarEditItemIdentifier = @"MVToolbarEditItem";
+static NSString *MVToolbarInspectorItemIdentifier = @"MVToolbarInspectorItem";
 static NSString *MVToolbarDeleteItemIdentifier = @"MVToolbarDeleteItem";
 static NSString *MVToolbarConsoleItemIdentifier = @"MVToolbarConsoleItem";
 static NSString *MVToolbarJoinRoomItemIdentifier = @"MVToolbarJoinRoomItem";
@@ -145,8 +146,8 @@ static NSMenu *favoritesMenu = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
 
-		NSRange range = NSRangeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVFileTransferPortRange"] );
-		[MVChatConnection setFileTransferPortRange:range];
+//		NSRange range = NSRangeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVFileTransferPortRange"] );
+//		[MVChatConnection setFileTransferPortRange:range];
 
 		[self _loadBookmarkList];
 	}
@@ -986,6 +987,15 @@ static NSMenu *favoritesMenu = nil;
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
+	} else if( [itemIdent isEqualToString:MVToolbarInspectorItemIdentifier] ) {
+		[toolbarItem setLabel:NSLocalizedString( @"Inspector", "short toolbar inspector button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Inspector", "inspector toolbar button in customize palette" )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Show inspector", "connection info button tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"inspector"]];
+
+		[toolbarItem setTarget:[JVInspectorController class]];
+		[toolbarItem setAction:@selector( showInspector: )];
 	} else if( [itemIdent isEqualToString:MVToolbarDeleteItemIdentifier] ) {
 		[toolbarItem setLabel:NSLocalizedString( @"Delete", "delete item title" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Delete Connection", "name for delete connection button in customize palette" )];
@@ -1036,7 +1046,7 @@ static NSMenu *favoritesMenu = nil;
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	return [NSArray arrayWithObjects:NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, MVToolbarConnectToggleItemIdentifier,
-		MVToolbarEditItemIdentifier, MVToolbarDeleteItemIdentifier, MVToolbarConsoleItemIdentifier,
+		MVToolbarEditItemIdentifier, MVToolbarInspectorItemIdentifier, MVToolbarDeleteItemIdentifier, MVToolbarConsoleItemIdentifier,
 		MVToolbarJoinRoomItemIdentifier, MVToolbarQueryUserItemIdentifier, nil];
 }
 @end
