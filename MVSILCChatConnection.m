@@ -21,6 +21,7 @@ NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCe
 - (NSRecursiveLock *) _silcClientLock;
 - (void) _setSilcConn:(SilcClientConnection)aSilcConn;
 - (SilcClientConnection) _silcConn;
+- (SilcClientParams *) _silcClientParams;
 
 - (NSMutableArray *) _joinedChannels;
 - (void) _addChannel:(NSString *)channel_name;
@@ -61,47 +62,6 @@ NSString *MVSILCChatConnectionLoadedCertificate = @"MVSILCChatConnectionLoadedCe
 @end
 
 #pragma mark -
-
-void silc_privmessage_resolve_callback( SilcClient client, SilcClientConnection conn, SilcClientEntry *clients, SilcUInt32 clients_count, void *context ) {
-	NSMutableDictionary *dict = context;
-	MVSILCChatConnection *self = [dict objectForKey:@"connection"];
-
-	if( ! clients_count ) {
-		goto out;
-	} else {
-		char *nickname = NULL;
-		SilcClientEntry target;
-
-		if( clients_count > 1 ) {
-			silc_parse_userfqdn( [[dict objectForKey:@"user"] UTF8String], &nickname, NULL );
-
-			/* Find the correct one. The rec -> nick might be a formatted nick
-			so this will find the correct one. */
-
-			clients = silc_client_get_clients_local( client, conn, nickname, [[dict objectForKey:@"user"] UTF8String], &clients_count);
-			silc_free( nickname );
-			nickname = NULL;
-			if( ! clients ) goto out;
-		}
-
-		target = clients[0];
-
-		/* Still check for exact math for nickname, this compares the
-			real (formatted) nickname and the nick (maybe formatted) that
-			use gave. This is to assure that `nick' does not match `nick@host'. */
-
-		if( ! [[dict objectForKey:@"user"] isEqualToString:[NSString stringWithUTF8String:target -> nickname]] ) {
-			goto out;
-		}
-
-		[[self _silcClientLock] lock];
-		silc_client_send_private_message( [self _silcClient], [self _silcConn], target, [[dict objectForKey:@"flags"] intValue], (char *) [[[dict objectForKey:@"message"] string] UTF8String], strlen( [[[dict objectForKey:@"message"] string] UTF8String] ), false );
-		[[self _silcClientLock] unlock];
-	}
-
-out:
-	[dict release];
-}
 
 static void silc_nickname_format_parse( const char *nickname, char **ret_nickname ) {
 	silc_parse_userfqdn( nickname, ret_nickname, NULL );
@@ -929,6 +889,12 @@ static SilcClientOperations silcClientOps = {
 	return MVChatConnectionSILCType;
 }
 
+- (NSSet *) supportedFeatures {
+	return nil;
+}
+
+#pragma mark -
+
 - (void) connect {
 	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
 
@@ -998,10 +964,6 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (void) setEncoding:(NSStringEncoding) encoding {
-	// we don't support encodings other than UTF8.
-}
-
 - (NSStringEncoding) encoding {
 	return NSUTF8StringEncoding; // we don't support encodings other than UTF8.
 }
@@ -1045,28 +1007,6 @@ static SilcClientOperations silcClientOps = {
 
 - (NSString *) preferredNickname {
 	return [NSString stringWithUTF8String:_silcClient -> nickname];
-}
-
-#pragma mark -
-
-- (void) setAlternateNicknames:(NSArray *) nicknames {
-}
-
-- (NSArray *) alternateNicknames {
-	return nil;
-}
-
-- (NSString *) nextAlternateNickname {
-	return nil;
-}
-
-#pragma mark -
-
-- (void) setNicknamePassword:(NSString *) password {
-}
-
-- (NSString *) nicknamePassword {
-	return nil;
 }
 
 #pragma mark -
@@ -1141,66 +1081,7 @@ static SilcClientOperations silcClientOps = {
 	return _silcPort;
 }
 
-#pragma mark -
-
-- (void) setSecure:(BOOL) ssl {
-// always secure
-}
-
-- (BOOL) isSecure {
-	return NO;
-}
-
-#pragma mark -
-
-- (void) setProxyType:(MVChatConnectionProxy) type {
-// no proxy support
-}
-
-- (MVChatConnectionProxy) proxyType {
-	return 0;
-}
-
-#pragma mark -
-
-- (void) setProxyServer:(NSString *) address {
-	// no proxy support
-}
-
-- (NSString *) proxyServer {
-	return nil;
-}
-
-#pragma mark -
-
-- (void) setProxyServerPort:(unsigned short) port {
-	// no proxy support
-}
-
-- (unsigned short) proxyServerPort {
-	return 0;
-}
-
-#pragma mark -
-
-- (void) setProxyUsername:(NSString *) username {
-	// no proxy support
-}
-
-- (NSString *) proxyUsername {
-	return nil;
-}
-
-#pragma mark -
-
-- (void) setProxyPassword:(NSString *) password {
-	// no proxy support
-}
-
-- (NSString *) proxyPassword {
-	return nil;
-}
-
+/*
 #pragma mark -
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action {
@@ -1257,6 +1138,7 @@ static SilcClientOperations silcClientOps = {
 
 	[[self _silcClientLock] unlock];
 }
+*/
 
 #pragma mark -
 
@@ -1282,141 +1164,44 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user {
-	// return [self sendFile:path toUser:user passively:NO];
+- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
+	NSParameterAssert( room != nil );
+	NSParameterAssert( [room length] > 0 );
+	if( [passphrase length] ) [self sendRawMessageWithFormat:@"JOIN %@ %@", [self properNameForChatRoomNamed:room], passphrase];
+	else [self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
+}
+
+#pragma mark -
+
+- (NSCharacterSet *) chatRoomNamePrefixes {
+	// is this allowed?
 	return nil;
 }
 
-- (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user passively:(BOOL) passive {
-	// return [[MVUploadFileTransfer transferWithSourceFile:path toUser:user onConnection:self passively:passive] retain];
-	return nil;
+#pragma mark -
+
+- (NSSet *) chatUsersWithNickname:(NSString *) nickname {
+}
+
+- (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 }
 
 #pragma mark -
 
-- (void) sendSubcodeRequest:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments {
+- (void) addUserToNotificationList:(MVChatUser *) user {
 }
 
-- (void) sendSubcodeReply:(NSString *) command toUser:(NSString *) user withArguments:(NSString *) arguments {
-}
-
-#pragma mark -
-
-- (void) joinChatRoom:(NSString *) room {
-	NSParameterAssert( room != nil );
-	NSParameterAssert( [room length] > 0 );
-	[self sendRawMessageWithFormat:@"JOIN %@", room];
-}
-
-- (void) partChatRoom:(NSString *) room {
-	NSParameterAssert( room != nil );
-	NSParameterAssert( [room length] > 0 );
-	[self sendRawMessageWithFormat:@"LEAVE %@", room];
+- (void) removeUserFromNotificationList:(MVChatUser *) user {
 }
 
 #pragma mark -
 
-- (NSString *) displayNameFromChatRoom:(NSString *) room {
-	return room;
-}
-
-#pragma mark -
-
-- (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room {
-	NSParameterAssert( topic != nil );
-	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"TOPIC %@ %s", room, [MVSILCChatConnection _flattenedSILCStringForMessage:topic]];
-}
-
-#pragma mark -
-
-- (void) promoteMember:(NSString *) member inRoom:(NSString *) room {
-	NSParameterAssert( member != nil );
-	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"CUMODE %@ +o %@", room, member];
-}
-
-- (void) demoteMember:(NSString *) member inRoom:(NSString *) room {
-	NSParameterAssert( member != nil );
-	NSParameterAssert( room != nil );
-	[self sendRawMessageWithFormat:@"CUMODE %@ -o %@", room, member];
-}
-
-- (void) halfopMember:(NSString *) member inRoom:(NSString *) room {
-}
-
-- (void) dehalfopMember:(NSString *) member inRoom:(NSString *) room {
-}
-
-- (void) voiceMember:(NSString *) member inRoom:(NSString *) room {
-}
-
-- (void) devoiceMember:(NSString *) member inRoom:(NSString *) room {
-}
-
-- (void) kickMember:(NSString *) member inRoom:(NSString *) room forReason:(NSString *) reason {
-	NSParameterAssert( member != nil );
-	NSParameterAssert( room != nil );
-	if( reason ) [self sendRawMessageWithFormat:@"KICK %@ %@ %@", room, member, reason];
-	else [self sendRawMessageWithFormat:@"KICK %@ %@", room, member];		
-}
-
-- (void) banMember:(NSString *) member inRoom:(NSString *) room {
-	NSParameterAssert( member != nil );
-}
-
-- (void) unbanMember:(NSString *) member inRoom:(NSString *) room {
-	NSParameterAssert( member != nil );
-}
-
-#pragma mark -
-
-- (void) addUserToNotificationList:(NSString *) user {
-	NSParameterAssert( user != nil );
-}
-
-- (void) removeUserFromNotificationList:(NSString *) user {
-	NSParameterAssert( user != nil );
-}
-
-#pragma mark -
-
-- (void) fetchInformationForUser:(NSString *) user withPriority:(BOOL) priority fromLocalServer:(BOOL) localOnly {
-	NSParameterAssert( user != nil );
-	[self sendRawMessageWithFormat:@"WHOIS %@", user];
-}
-
-#pragma mark -
-
-- (void) fetchRoomList {
+- (void) fetchChatRoomList {
 	if( ! _cachedDate || [_cachedDate timeIntervalSinceNow] < -900. ) {
 		[self sendRawMessage:@"LIST"];
 		[_cachedDate autorelease];
 		_cachedDate = [[NSDate date] retain];
 	}
-}
-
-- (void) fetchRoomListWithRooms:(NSArray *) rooms {
-	NSEnumerator *enumerator = [rooms objectEnumerator];
-	NSString *roomname = [enumerator nextObject];
-
-	while (roomname = [enumerator nextObject]) {
-		[self sendRawMessageWithFormat:@"LIST %@", roomname];
-	}
-}
-
-- (void) stopFetchingRoomList {
-// can't stop the list
-}
-
-- (NSMutableDictionary *) roomListResults {
-	return [[_roomsCache retain] autorelease];
-}
-
-#pragma mark -
-
-- (NSAttributedString *) awayStatusMessage {
-	return _awayMessage;
 }
 
 - (void) setAwayStatusWithMessage:(NSAttributedString *) message {
@@ -1444,10 +1229,6 @@ static SilcClientOperations silcClientOps = {
 		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSelfAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], @"away", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
-}
-
-- (void) clearAwayStatus {
-	[self setAwayStatusWithMessage:nil];
 }
 
 #pragma mark -
@@ -1501,6 +1282,12 @@ static SilcClientOperations silcClientOps = {
 
 - (SilcClientConnection) _silcConn {
 	return _silcConn;
+}
+
+#pragma mark -
+
+- (SilcClientParams *) _silcClientParams {
+	return &_silcClientParams;
 }
 
 #pragma mark -
