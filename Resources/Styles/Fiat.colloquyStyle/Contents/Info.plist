@@ -42,7 +42,7 @@
 			<key>description</key>
 			<string>Your timestamps</string>
 			<key>style</key>
-			<string>.outgoing .messages .time { color: %@ !important; }</string>
+			<string>.outgoing .messages .time:after { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
@@ -72,7 +72,7 @@
 			<key>description</key>
 			<string>Timestamps</string>
 			<key>style</key>
-			<string>.incoming .messages .time { color: %@ !important; }</string>
+			<string>.incoming .messages .time:after { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
@@ -92,7 +92,7 @@
 			<key>description</key>
 			<string>Event timestamps</string>
 			<key>style</key>
-			<string>.event .time { color: %@ !important; }</string>
+			<string>.event .time:after { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>

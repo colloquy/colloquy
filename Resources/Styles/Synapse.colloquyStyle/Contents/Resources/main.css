@@ -72,11 +72,12 @@ body {
 	color: inherit;
 }
 
-.time {
+.time:before {
 	float: right;
 	font-size: smaller;
 	margin-left: 10px;
 	color: rgba( 0, 0, 0, 0.5 );
+	content: attr( title );
 }
 
 .event {

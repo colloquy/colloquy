@@ -15,12 +15,14 @@
 	</xsl:template>
 
 	<xsl:template match="message" mode="subsequent">
-		<div class="sep">&#8203;</div>
-		<div class="time">
+		<xsl:variable name="timestamp">
 			<xsl:call-template name="short-time">
 				<xsl:with-param name="date" select="@received" />
 			</xsl:call-template>
-		</div>
+		</xsl:variable>
+
+		<div class="sep">&#8203;</div>
+		<div class="time" title="{$timestamp}">&#8203;</div>
 		<div class="message">
 			<xsl:if test="@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
@@ -51,6 +53,12 @@
 			</xsl:choose>
 		</xsl:variable>
 
+		<xsl:variable name="timestamp">
+			<xsl:call-template name="short-time">
+				<xsl:with-param name="date" select="message[1]/@received" />
+			</xsl:call-template>
+		</xsl:variable>
+
 		<div id="{@id}" class="{$senderClasses}">
 			<div class="header_top">&#8203;</div>
 			<div class="header">
@@ -69,11 +77,7 @@
 			<div class="messages">
 				<div>
 					<div>
-						<div class="time">
-						<xsl:call-template name="short-time">
-							<xsl:with-param name="date" select="message[1]/@received" />
-						</xsl:call-template>
-						</div>
+						<div class="time" title="{$timestamp}">&#8203;</div>
 						<div class="message">
 							<xsl:if test="message[1]/@action = 'yes'">
 								<xsl:text>&#8226; </xsl:text>
@@ -99,12 +103,14 @@
 	</xsl:template>
 
 	<xsl:template match="event">
+		<xsl:variable name="timestamp">
+			<xsl:call-template name="short-time">
+				<xsl:with-param name="date" select="@occurred" />
+			</xsl:call-template>
+		</xsl:variable>
+
 		<div class="event">
-			<div class="time">
-				<xsl:call-template name="short-time">
-					<xsl:with-param name="date" select="@occurred" />
-				</xsl:call-template>
-			</div>
+			<div class="time" title="{$timestamp}">&#8203;</div>
 			<div class="message">
 			<xsl:apply-templates select="message/child::node()" mode="copy" />
 			<xsl:if test="reason!=''">

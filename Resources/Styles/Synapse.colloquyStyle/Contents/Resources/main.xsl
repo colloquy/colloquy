@@ -47,12 +47,14 @@
 			</xsl:choose>
 		</xsl:variable>
 
+		<xsl:variable name="timestamp">
+			<xsl:call-template name="short-time">
+				<xsl:with-param name="date" select="@received" />
+			</xsl:call-template>
+		</xsl:variable>
+
 		<div class="{$messageClass}">
-			<span class="time">
-				<xsl:call-template name="short-time">
-					<xsl:with-param name="date" select="@received" />
-				</xsl:call-template>
-			</span>
+			<span class="time" title="{$timestamp}" />
       		<xsl:if test="@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
 				<a href="member:{../sender}" class="member action">
@@ -82,15 +84,17 @@
 			</xsl:choose>
 		</xsl:variable>
 
+		<xsl:variable name="timestamp">
+			<xsl:call-template name="short-time">
+				<xsl:with-param name="date" select="message[1]/@received" />
+			</xsl:call-template>
+		</xsl:variable>
+
 		<div id="{@id}" class="{$messageClass}">
 			<div class="header">
 				<a href="member:{sender}" class="name"><xsl:value-of select="sender" /></a>
 			</div>
-			<span class="time">
-				<xsl:call-template name="short-time">
-					<xsl:with-param name="date" select="message[1]/@received" />
-				</xsl:call-template>
-			</span>
+			<span class="time" title="{$timestamp}" />
       		<xsl:if test="message[1]/@action = 'yes'">
 				<xsl:text>&#8226; </xsl:text>
 				<a href="member:{sender}" class="member action">

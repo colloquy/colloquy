@@ -106,10 +106,15 @@ a:hover {
 
 .messages .time {
 	float: left;
+}
+
+.messages .time:after {
+	float: left;
 	margin: 1px 4px 0;
 	padding: 0;
 	overflow: hidden;
 	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
+	content: attr( title );
 }
 
 .messages .sep {
@@ -151,10 +156,15 @@ a:hover {
 
 .event .time {
 	float: left;
+}
+
+.event .time:after {
+	float: left;
 	margin: 0 4px;
 	padding: 0;
 	overflow: hidden;
 	color: #404040;
+	content: attr( title )
 }
 
 .event .message {
