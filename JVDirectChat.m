@@ -791,13 +791,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSSet *plugins = [[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toChat: )];
 
 	if( [plugins count] ) {
-		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
-		NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
-		NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
 		NSEnumerator *enumerator = [plugins objectEnumerator];
 		id item = nil;
 
 		if( [[MVChatPluginManager defaultManager] numberOfPluginsOfClass:[MVChatScriptPlugin class] thatRespondToSelector:@selector( processMessage:asAction:toChat: )] ) {
+			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:NO], @"NSHTMLIgnoreFontTraits", nil];
+			NSData *msgData = [message HTMLWithOptions:options usingEncoding:_encoding allowLossyConversion:YES];
+			NSString *messageString = [[[NSString alloc] initWithData:msgData encoding:_encoding] autorelease];
 			[message setAttributedString:[[[NSAttributedString alloc] initWithString:messageString] autorelease]];
 
 			while( ( item = [enumerator nextObject] ) )
