@@ -1,10 +1,12 @@
 #import <Cocoa/Cocoa.h>
 
-@interface MVMenuButton : NSButton {
+@interface MVMenuButton : NSButton <NSCopying, NSCoding> {
 	NSTimer *clickHoldTimer;
 	IBOutlet NSMenu *menu;
 	BOOL menuDidDisplay;
 	NSTimeInterval menuDelay;
+	NSImage *orgImage, *smallImage;
+	NSControlSize size;
 }
 - (void) setMenuDelay:(NSTimeInterval) aDelay;
 - (NSTimeInterval) menuDelay;
@@ -13,4 +15,7 @@
 - (NSMenu *) menu;
 
 - (void) displayMenu:(id) sender;
+
+- (NSControlSize) controlSize;
+- (void) setControlSize:(NSControlSize) controlSize;
 @end
