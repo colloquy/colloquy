@@ -5,117 +5,119 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Picturesque Colloquy Chat Style</string>
+	<string>Fiat Colloquy Chat Style</string>
 	<key>CFBundleIdentifier</key>
-	<string>cc.javelin.colloquy.style.picturesque</string>
+	<string>cc.javelin.colloquy.style.fiat</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Picturesque</string>
+	<string>FIat</string>
 	<key>CFBundlePackageType</key>
 	<string>coSt</string>
 	<key>JVStyleOptions</key>
 	<array>
 		<dict>
-			<key>style</key>
-			<string>.outgoing .header &gt; div &gt; div { background-color: %@ !important; } .outgoing .messages .sep { background-color: %@ !important; }</string>
 			<key>default</key>
 			<string>#a3c5f8</string>
 			<key>description</key>
 			<string>Your headers</string>
+			<key>style</key>
+			<string>.outgoing .header &gt; div &gt; div { background-color: %@ !important; } .outgoing .messages .sep { background-color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.outgoing .header .sender { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#234578</string>
 			<key>description</key>
 			<string>Your header text</string>
+			<key>style</key>
+			<string>.outgoing .header .sender { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.outgoing .messages .time { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#234578</string>
 			<key>description</key>
 			<string>Your timestamps</string>
+			<key>style</key>
+			<string>.outgoing .messages .time { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.incoming .header &gt; div &gt; div { background-color: %@ !important; } .incoming .messages .sep { background-color: %@ !important; }</string>
 			<key>default</key>
 			<string>#a6d984</string>
 			<key>description</key>
 			<string>Headers</string>
+			<key>style</key>
+			<string>.incoming .header &gt; div &gt; div { background-color: %@ !important; } .incoming .messages .sep { background-color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.incoming .header .sender { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#265904</string>
 			<key>description</key>
 			<string>Header text</string>
+			<key>style</key>
+			<string>.incoming .header .sender { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.incoming .messages .time { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#265904</string>
 			<key>description</key>
 			<string>Timestamps</string>
+			<key>style</key>
+			<string>.incoming .messages .time { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.incoming .messages .highlight { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#265904</string>
 			<key>description</key>
 			<string>Highlight words</string>
+			<key>style</key>
+			<string>.incoming .messages .highlight { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.event .time { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#404040</string>
 			<key>description</key>
 			<string>Event timestamps</string>
+			<key>style</key>
+			<string>.event .time { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.event .message { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#303030</string>
 			<key>description</key>
 			<string>Event text</string>
+			<key>style</key>
+			<string>.event .message { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 		<dict>
-			<key>style</key>
-			<string>.event a { color: %@ !important; }</string>
 			<key>default</key>
 			<string>#404040</string>
 			<key>description</key>
 			<string>Event links</string>
+			<key>style</key>
+			<string>.event a { color: %@ !important; }</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
 	</array>
+	<key>NSHumanReadableCopyright</key>
+	<string>Jim Rodovich &amp; Andy Raffensperger</string>
 </dict>
 </plist>
