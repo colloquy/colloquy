@@ -45,6 +45,7 @@
 
 	int _historyIndex;	
 	float _sendHeight;
+	BOOL _scrollerIsAtBottom;
 }
 - (id) initWithTarget:(NSString *) target forConnection:(MVChatConnection *) connection;
 

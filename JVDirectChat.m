@@ -1147,8 +1147,21 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (void) splitViewDidResizeSubviews:(NSNotification *) notification {
 	// Cache the height of the send box so we can keep it constant during window resizes.
-	NSRect frame = [[[send superview] superview] frame];
-	_sendHeight = frame.size.height;
+	NSRect sendFrame = [[[send superview] superview] frame];
+	_sendHeight = sendFrame.size.height;
+
+	if( _scrollerIsAtBottom ) {
+		NSScrollView *scrollView = [[[[display subviews] objectAtIndex:0] subviews] objectAtIndex:0];
+		[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint(0, [[scrollView documentView] bounds].size.height)]];
+		[scrollView reflectScrolledClipView:[scrollView contentView]];
+	}
+}
+
+- (void)splitViewWillResizeSubviews:(NSNotification *) aNotification {
+	// The scrollbars are two subviews down from the JVWebView (deep in the WebKit bowls).
+	NSScrollView *scrollView = [[[[display subviews] objectAtIndex:0] subviews] objectAtIndex:0];
+	if( [[scrollView verticalScroller] floatValue] == 1. ) _scrollerIsAtBottom = YES;
+	else _scrollerIsAtBottom = NO;
 }
 
 - (void) splitView:(NSSplitView *) sender resizeSubviewsWithOldSize:(NSSize) oldSize {
