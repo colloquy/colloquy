@@ -897,7 +897,6 @@
 	NSRange curPos = [textView selectedRange];
 	NSString *partialCompletion = nil;
 	NSRange wordStart = [[textView string] rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet] options:NSBackwardsSearch range:NSMakeRange(0, curPos.location)];
-	NSLog( @"wordStart = %@;", NSStringFromRange( wordStart ) );
 
 	//get the string before
 	if ( wordStart.location == NSNotFound ) {
@@ -906,7 +905,6 @@
 		NSRange theRange = NSMakeRange(wordStart.location +1, curPos.location - NSMaxRange(wordStart));
 		partialCompletion = [[textView string] substringWithRange:theRange];
 	}
-	NSLog( @"partialCompletion = %@;", partialCompletion );
 	
 	//continue if necessary
 	if ( ![partialCompletion isEqualToString:@""] ) {
@@ -955,9 +953,6 @@
 				[textView replaceCharactersInRange:wordRange withString:[possibleNicks objectAtIndex:count]];
 				if (count + 1 != [possibleNicks count] ) {
 					[textView setSelectedRange:curPos];
-				} else {
-					if ( wprdRange.location == 0 ) [textView insertText:@": "];
-					else [textView insertText:@" "];
 				}
 			}
 		}
