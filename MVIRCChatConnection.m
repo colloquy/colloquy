@@ -691,7 +691,7 @@ static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
 		[room _setMode:MVChatRoomPassphraseToJoinMode withAttribute:[self stringWithEncodedBytes:channel -> key]];
 
 	if( strchr( channel -> mode, 'l' ) )
-		[room _setMode:MVChatRoomLimitNumberOfMembersMode withAttribute:[NSNumber numberWithUnsignedInt:channel -> limit]];
+		[room _setMode:MVChatRoomLimitNumberOfMembersMode withAttribute:[NSNumber numberWithInt:channel -> limit]];
 
 	unsigned int changedModes = ( oldModes ^ [room modes] );
 
