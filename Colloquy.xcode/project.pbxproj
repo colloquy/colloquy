@@ -4244,9 +4244,9 @@
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
 			name = fileSend.tif;
-			path = "/Users/Timothy/Projects/Colloquy/Resources/Toolbar Icons/fileSend.tif";
-			refType = 0;
-			sourceTree = "<absolute>";
+			path = "Resources/Toolbar Icons/fileSend.tif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		1CF626E207558AE6005DFCFA = {
 			fileRef = 1CF626E107558AE6005DFCFA;
