@@ -126,7 +126,7 @@ static JVChatController *sharedInstance = nil;
 	return [[ret retain] autorelease];
 }
 
-- (id <JVChatViewController>) chatViewControllerForRoom:(NSString *) room withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
+- (JVChatRoom *) chatViewControllerForRoom:(NSString *) room withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
 	id <JVChatViewController> ret = nil;
 	NSEnumerator *enumerator = nil;
 
@@ -148,7 +148,7 @@ static JVChatController *sharedInstance = nil;
 	return [[ret retain] autorelease];
 }
 
-- (id <JVChatViewController>) chatViewControllerForUser:(NSString *) user withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
+- (JVDirectChat *) chatViewControllerForUser:(NSString *) user withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
 	id <JVChatViewController> ret = nil;
 	NSEnumerator *enumerator = nil;
 
@@ -170,7 +170,7 @@ static JVChatController *sharedInstance = nil;
 	return [[ret retain] autorelease];
 }
 
-- (id <JVChatViewController>) chatViewControllerForTranscript:(NSString *) filename {
+- (JVChatTranscript *) chatViewControllerForTranscript:(NSString *) filename {
 	id <JVChatViewController> ret = nil;
 	if( ( ret = [[[JVChatTranscript alloc] initWithTranscript:filename] autorelease] ) ) {
 		[_chatControllers addObject:ret];
@@ -179,7 +179,7 @@ static JVChatController *sharedInstance = nil;
 	return [[ret retain] autorelease];
 }
 
-- (id <JVChatViewController>) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
+- (JVChatConsole *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
 	id <JVChatViewController> ret = nil;
 	NSEnumerator *enumerator = nil;
 
@@ -209,7 +209,7 @@ static JVChatController *sharedInstance = nil;
 
 #pragma mark -
 
-- (void) detachView:(id) sender {
+- (IBAction) detachView:(id) sender {
 	id <JVChatViewController> view = [[[sender representedObject] retain] autorelease];
 	JVChatWindowController *windowController = [self newChatWindowController];
 	[[view windowController] removeChatViewController:view];
@@ -280,7 +280,7 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
-	JVChatRoom *controller = [self chatViewControllerForUser:[[notification userInfo] objectForKey:@"from"] withConnection:[notification object] ifExists:NO];
+	JVDirectChat *controller = [self chatViewControllerForUser:[[notification userInfo] objectForKey:@"from"] withConnection:[notification object] ifExists:NO];
 	[controller addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"from"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue]];
 }
 
