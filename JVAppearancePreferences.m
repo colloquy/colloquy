@@ -240,7 +240,7 @@
 }
 
 - (void) updateEmoticonsMenu {
-	NSEnumerator *enumerator = [[[_emoticonBundles allObjects] sortedArrayUsingFunction:sortBundlesByName context:self] objectEnumerator];
+	NSEnumerator *enumerator = [[[_emoticonBundles allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
 	NSMenu *menu = nil;
 	NSMenuItem *menuItem = nil;
 	NSString *style = [_style identifier];
