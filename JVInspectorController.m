@@ -15,7 +15,7 @@ static NSPoint inspectorLastPoint = { 100., 800. };
 @implementation JVInspectorController
 + (JVInspectorController *) sharedInspector {
 	extern JVInspectorController *sharedInstance;
-	if( [MVApplicationController isTerminating] ) return nil;
+	if( ! sharedInstance && [MVApplicationController isTerminating] ) return nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithObject:nil lockedOn:NO] ) );
 }
 
