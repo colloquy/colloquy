@@ -16,6 +16,9 @@ NSString *JVBuddyActiveNicknameChangedNotification = @"JVBuddyActiveNicknameChan
 
 static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
+@interface JVBuddy (JVBuddyPrivate) <ABImageClient>
+@end
+
 @implementation JVBuddy
 + (JVBuddyName) preferredName {
 	extern JVBuddyName _mainPreferredName;
@@ -57,6 +60,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		_onlineNicknames = [[NSMutableSet set] retain];
 		_nicknameStatus = [[NSMutableDictionary dictionary] retain];
 		_activeNickname = nil;
+		_personImageData = nil;
+		_loadingPersonImage = NO;
 
 		ABMultiValue *value = [person valueForProperty:@"IRCNickname"];
 		unsigned int i = 0, count = [value count];
@@ -212,7 +217,20 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 - (NSImage *) picture {
-	return [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
+	if( ! _loadingPersonImage ) [_person beginLoadingImageDataForClient:self];
+	_loadingPersonImage = YES;
+
+	while( ! _personImageData && _loadingPersonImage ) // asynchronously load the image incase it is on the network
+		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+
+	NSImage *icon = nil;
+	if( [_personImageData length] ) {
+		icon = [[[NSImage alloc] initWithData:_personImageData] autorelease];
+		[_personImageData autorelease];
+		_personImageData = nil;
+	}
+
+	return icon;
 }
 
 - (void) setPicture:(NSImage *) picture {
@@ -422,6 +440,12 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 @implementation JVBuddy (JVBuddyPrivate)
+- (void) consumeImageData:(NSData *) data forTag:(int) tag {
+	[_personImageData autorelease];
+	_personImageData = [data retain];
+	_loadingPersonImage = NO;
+}
+
 - (void) _buddyOnline:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	NSString *who = [[notification userInfo] objectForKey:@"who"];

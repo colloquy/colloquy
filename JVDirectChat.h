@@ -1,4 +1,5 @@
 #import "JVChatTranscript.h"
+#import <AddressBook/ABImageLoading.h>
 #import "KAIgnoreRule.h"
 
 @class MVTextView;
@@ -37,6 +38,9 @@
 	BOOL _scrollerIsAtBottom;
 	long _previousLogOffset;
 	BOOL _forceSplitViewPosition;
+
+	BOOL _loadingPersonImage;
+	NSData *_personImageData;
 }
 - (id) initWithTarget:(NSString *) target forConnection:(MVChatConnection *) connection;
 

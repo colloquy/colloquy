@@ -95,7 +95,7 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
-@interface JVDirectChat (JVDirectChatPrivate)
+@interface JVDirectChat (JVDirectChatPrivate) <ABImageClient>
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
 - (void) processQueue;
@@ -130,6 +130,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		_messageId = 0;
 		_target = nil;
 		_buddy = nil;
+		_personImageData = nil;
+		_loadingPersonImage = NO;
 		_connection = nil;
 		_firstMessage = YES;
 		_newMessageCount = 0;
@@ -1917,17 +1919,32 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return "normal";
 }
 
+- (void) consumeImageData:(NSData *) data forTag:(int) tag {
+	[_personImageData autorelease];
+	_personImageData = [data retain];
+	_loadingPersonImage = NO;
+}
+
 - (void) _saveSelfIcon {
-	ABPerson *_person = [[ABAddressBook sharedAddressBook] me];
-	NSImage *icon = [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
-	NSData *imageData = [icon TIFFRepresentation];
-	if( ! [imageData length] ) {
-		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]] handler:nil];
-		return;
+	if( _loadingPersonImage ) return;
+	_loadingPersonImage = YES;
+
+	ABPerson *me = [[ABAddressBook sharedAddressBook] me];
+	[me beginLoadingImageDataForClient:self];
+
+	while( ! _personImageData && _loadingPersonImage ) // asynchronously load the image incase it is on the network
+		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+
+	if( ! [_personImageData length] ) {
+		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [me uniqueId]] handler:nil];
+	} else {
+		NSImage *icon = [[[NSImage alloc] initWithData:_personImageData] autorelease];
+		NSData *imageData = [icon TIFFRepresentation];
+		[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [me uniqueId]] atomically:NO];
+
+		[_personImageData autorelease];
+		_personImageData = nil;
 	}
-	if( [[NSFileManager defaultManager] isReadableFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]]] )
-		return;
-	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]] atomically:NO];
 }
 
 - (void) _saveBuddyIcon:(JVBuddy *) buddy {
@@ -1936,8 +1953,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] handler:nil];
 		return;
 	}
-	if( [[NSFileManager defaultManager] isReadableFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]]] )
-		return;
+
 	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] atomically:NO];
 }
 

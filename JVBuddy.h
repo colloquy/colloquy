@@ -28,6 +28,8 @@ typedef enum {
 	NSMutableSet *_onlineNicknames;
 	NSMutableDictionary *_nicknameStatus;
 	NSURL *_activeNickname;
+	BOOL _loadingPersonImage;
+	NSData *_personImageData;
 }
 + (JVBuddyName) preferredName;
 + (void) setPreferredName:(JVBuddyName) preferred;
