@@ -1358,7 +1358,7 @@ static SilcClientOperations silcClientOps = {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	while( [self isConnected] || [self status] == MVChatConnectionConnectingStatus ) {
-		if( [_silcClientLock tryLock] ) { // give up quick and let another SILC connection run sooner
+		if( [_silcClientLock tryLock] ) { // prevents some deadlocks
 			if( _silcClient && _silcClient -> schedule )
 				silc_schedule_one(  _silcClient -> schedule, 100000 );
 				// use silc_schedule_one over silc_client_run_one since we want to block a bit inside the locks
