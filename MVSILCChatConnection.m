@@ -884,9 +884,6 @@ static SilcClientOperations silcClientOps = {
 		errorOnConnect = YES;
 	[_silcClientLock unlock];
 
-	[_lastConnectAttempt autorelease];
-	_lastConnectAttempt = [[NSDate date] retain];
-
 	if( errorOnConnect) [self _didNotConnect];
 	else [NSThread detachNewThreadSelector:@selector( _silcRunloop ) toTarget:self withObject:nil];
 }

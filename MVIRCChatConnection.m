@@ -963,9 +963,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	proto -> server_connect( _chatConnection );
 
-	[_lastConnectAttempt autorelease];
-	_lastConnectAttempt = [[NSDate date] retain];
-
 	[MVIRCChatConnectionThreadLock unlock];
 }
 

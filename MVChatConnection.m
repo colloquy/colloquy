@@ -177,10 +177,22 @@ BOOL MVChatApplicationQuitting = NO;
 - (void) connect {
 	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
 
-	if( _lastConnectAttempt && [_lastConnectAttempt timeIntervalSinceNow] > -15. ) {
-		[self _scheduleReconnectAttemptEvery:20.];
+	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 15. ) {
+		// come back after when the remaining wait time is up (0-15 seconds)
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+		[self performSelector:_cmd withObject:nil afterDelay:( 15. - ABS( [_lastConnectAttempt timeIntervalSinceNow] ) )];
 		return;
 	}
+
+	[_lastConnectAttempt autorelease];
+	_lastConnectAttempt = [[NSDate date] retain];
+
+	_reconnectAttempt++;
+	if( _reconnectAttempt > 6 ) { // stop attempting after 6 tries
+		[self _cancelReconnectAttempts];
+		return;
+	}
+
 // subclass this method, call super
 }
 
@@ -728,6 +740,7 @@ BOOL MVChatApplicationQuitting = NO;
 	[_reconnectTimer invalidate];
 	[_reconnectTimer release];
 	_reconnectTimer = nil;
+	_reconnectAttempt = 0;
 }
 
 #pragma mark -
