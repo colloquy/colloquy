@@ -4,6 +4,7 @@
         {
             ACTIONS = {
                 changeAutoAccept = id; 
+                changePortRange = id; 
                 changeRemoveTransfers = id; 
                 changeSaveDownloads = id; 
                 toggleOpenSafeFiles = id; 

@@ -2,17 +2,25 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {
+                changeBaseFontSize = id; 
+                changeDefaultChatStyle = id; 
+                changeDefaultEmoticons = id; 
+                changeMinimumFontSize = id; 
+                changePreferences = id; 
+                hideEmoticons = id; 
+                noGraphicEmoticons = id; 
+            }; 
             CLASS = JVAppearancePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                baseFontSize = NSTextField; 
+                baseFontSizeStepper = NSStepper; 
                 emoticons = NSPopUpButton; 
-                fixedWidthFont = NSTextField; 
                 minimumFontSize = NSTextField; 
                 minimumFontSizeStepper = NSStepper; 
                 preview = WebView; 
-                sansSerifFont = NSTextField; 
-                serifFont = NSTextField; 
-                standardFont = NSTextField; 
+                standardFont = JVFontPreviewField; 
                 styles = NSPopUpButton; 
             }; 
             SUPERCLASS = NSPreferencesModule; 

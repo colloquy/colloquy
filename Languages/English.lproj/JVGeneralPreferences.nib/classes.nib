@@ -4,21 +4,21 @@
         {
             ACTIONS = {
                 changeAutomaticVersionCheck = id; 
+                changeBuddyPreferredName = id; 
                 changeEncoding = id; 
                 changeNaturalActionDetection = id; 
-                changeSendOnEnterAction = id; 
-                changeSendOnReturnAction = id; 
+                changeSelfPreferredName = id; 
+                changeSpellChecking = id; 
             }; 
             CLASS = JVGeneralPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 autoCheckVersion = NSButton; 
+                buddyNames = NSPopUpButton; 
+                checkSpelling = NSButton; 
                 detectNaturalActions = NSButton; 
                 encoding = NSPopUpButton; 
-                enterKeyAction = NSPopUpButton; 
-                returnKeyAction = NSPopUpButton; 
-                sendHistory = NSTextField; 
-                sendHistoryStepper = NSStepper; 
+                yourName = NSPopUpButton; 
             }; 
             SUPERCLASS = NSPreferencesModule; 
         }, 

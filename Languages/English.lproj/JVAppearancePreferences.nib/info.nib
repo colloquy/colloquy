@@ -9,7 +9,7 @@
 		<key>137</key>
 		<string>359 432 561 274 0 0 1280 832 </string>
 		<key>5</key>
-		<string>405 357 470 424 0 0 1280 832 </string>
+		<string>405 407 470 374 0 0 1280 832 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>349.0</string>
@@ -31,6 +31,18 @@
 			<string>148</string>
 			<string>154</string>
 		</array>
+		<key>12</key>
+		<array>
+			<string>172</string>
+			<string>174</string>
+			<string>175</string>
+		</array>
+		<key>13</key>
+		<array>
+			<string>84</string>
+			<string>126</string>
+			<string>87</string>
+		</array>
 		<key>2</key>
 		<array>
 			<string>97</string>
@@ -44,7 +56,7 @@
 		</array>
 	</dict>
 	<key>IBLastGroupID</key>
-	<string>12</string>
+	<string>14</string>
 	<key>IBOpenObjects</key>
 	<array>
 		<integer>5</integer>
