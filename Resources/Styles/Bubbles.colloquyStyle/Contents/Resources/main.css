@@ -1,6 +1,7 @@
 body {
 	margin: 4px 5px 4px 5px;
 	color: black;
+	background-image: url( "back.png" ) !important;
 	background-color: white !important;
 }
 
@@ -17,12 +18,35 @@ body {
 }
 
 .event {
-	font-size: 75%;
+	font-size: 85%;
 	line-height: 1.1em;
-	color: #888;
 	text-align: center;
 	margin-top: 6px;
 	margin-bottom: 6px;
+}
+
+.event .member {
+	color: inherit !important;
+}
+
+.member {
+	font-weight: bold;
+	font-style: inherit;
+	text-decoration: inherit;
+	color: #0054cc
+}
+
+.highlight {
+	font-weight: bold;
+	font-style: inherit;
+	text-decoration: inherit;
+	color: #0054cc
+}
+
+.member.action:before {
+	content: "\2023";
+	font-weight: bold;
+	margin-right: 0.05em;
 }
 
 table.message, table.selfMessage {
@@ -38,9 +62,8 @@ td.gutter {
 }
 
 td.icon {
-	float: left;
 	width: 32px;
-	height: 32px;
+	vertical-align: bottom;
 	margin-right: 5px;
 }
 
@@ -99,6 +122,7 @@ table td.center {
 }
 
 table td.center .text {
+	color: black;
 	display: block;
 	position: relative;
 	overflow: hidden;

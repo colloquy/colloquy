@@ -22,7 +22,7 @@
 			<key>default</key>
 			<string>white</string>
 			<key>description</key>
-			<string>Your message</string>
+			<string>Your bubbles</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
@@ -32,7 +32,7 @@
 			<key>default</key>
 			<string>black</string>
 			<key>description</key>
-			<string>Your message text</string>
+			<string>Your bubble's text</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
@@ -42,7 +42,7 @@
 			<key>default</key>
 			<string>white</string>
 			<key>description</key>
-			<string>Other messages</string>
+			<string>Other bubbles</string>
 			<key>type</key>
 			<string>color</string>
 		</dict>
@@ -52,9 +52,73 @@
 			<key>default</key>
 			<string>black</string>
 			<key>description</key>
-			<string>Other message text</string>
+			<string>Other bubble's text</string>
 			<key>type</key>
 			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<string>.highlight { color: %@ !important; }</string>
+			<key>default</key>
+			<string>#0054cc</string>
+			<key>description</key>
+			<string>Highlight words</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<array>
+				<string>.highlight { font-weight: normal !important; font-style: normal !important; text-decoration: none !important; }</string>
+				<string>.highlight { font-weight: bold !important; font-style: normal !important; text-decoration: none !important; }</string>
+				<string>.highlight { font-weight: normal !important; font-style: italic !important; text-decoration: none !important; }</string>
+				<string>.highlight { font-weight: normal !important; font-style: normal !important; text-decoration: underline !important; }</string>
+			</array>
+			<key>default</key>
+			<integer>1</integer>
+			<key>description</key>
+			<string>Highlight style</string>
+			<key>type</key>
+			<string>list</string>
+			<key>options</key>
+			<array>
+				<string>Plain</string>
+				<string>Bold</string>
+				<string>Italic</string>
+				<string>Underline</string>
+			</array>
+		</dict>
+		<dict>
+			<key>style</key>
+			<string>.member { color: %@ !important; }</string>
+			<key>default</key>
+			<string>#0054cc</string>
+			<key>description</key>
+			<string>Member names</string>
+			<key>type</key>
+			<string>color</string>
+		</dict>
+		<dict>
+			<key>style</key>
+			<array>
+				<string>.member { font-weight: normal !important; font-style: normal !important; text-decoration: none !important; }</string>
+				<string>.member { font-weight: bold !important; font-style: normal !important; text-decoration: none !important; }</string>
+				<string>.member { font-weight: normal !important; font-style: italic !important; text-decoration: none !important; }</string>
+				<string>.member { font-weight: normal !important; font-style: normal !important; text-decoration: underline !important; }</string>
+			</array>
+			<key>default</key>
+			<integer>1</integer>
+			<key>description</key>
+			<string>Member name style</string>
+			<key>type</key>
+			<string>list</string>
+			<key>options</key>
+			<array>
+				<string>Plain</string>
+				<string>Bold</string>
+				<string>Italic</string>
+				<string>Underline</string>
+			</array>
 		</dict>
 	</array>
 </dict>

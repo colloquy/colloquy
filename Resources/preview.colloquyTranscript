@@ -23,7 +23,7 @@
   <envelope count="5">
     <sender>nonex</sender>
     <message received="2003-10-25 13:50:38 -0400">no, I haven't had a chance</message>
-    <message received="2003-10-25 13:50:42 -0400" highlight="yes"><span class="member">timothy</span>: cool new things!</message>
+    <message received="2003-10-25 13:50:42 -0400" highlight="yes"><span class="highlight"><span class="member">timothy</span></span>: cool new things!</message>
   </envelope>
   <event name="memberPromoted" occurred="2003-10-25 13:50:53 -0400">
     <message><span class="member">nonex</span> was promoted to operator by you.</message>
