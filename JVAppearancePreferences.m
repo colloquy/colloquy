@@ -608,6 +608,9 @@
 	[[NSUserDefaults standardUserDefaults] setObject:path forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", style]];
 	[_userStyle writeToFile:path atomically:NO];
 
+	NSBundle *bundle = [NSBundle bundleWithIdentifier:style];
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVNewStyleVariantAddedNotification object:bundle]; 
+
 	[self updateChatStylesMenu];
 	[self updatePreview];
 }

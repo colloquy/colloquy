@@ -19,6 +19,8 @@ extern NSMutableSet *JVChatEmoticonBundles;
 extern NSString *JVChatStylesScannedNotification;
 extern NSString *JVChatEmoticonsScannedNotification;
 
+extern NSString *JVNewStyleVariantAddedNotification;
+
 @interface JVChatTranscript : NSObject <JVChatViewController> {
 	@protected
 	IBOutlet NSView *contents;

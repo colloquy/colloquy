@@ -30,6 +30,8 @@ NSMutableSet *JVChatEmoticonBundles = nil;
 NSString *JVChatStylesScannedNotification = @"JVChatStylesScannedNotification";
 NSString *JVChatEmoticonsScannedNotification = @"JVChatEmoticonsScannedNotification";
 
+NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotification";
+
 static NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 
@@ -91,6 +93,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		[[self class] _scanForEmoticons];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateChatStylesMenu ) name:JVChatStylesScannedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateChatStylesMenu ) name:JVNewStyleVariantAddedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateChatEmoticonsMenu ) name:JVChatEmoticonsScannedNotification object:nil];
 
 		[JVChatStyleBundles retain];
