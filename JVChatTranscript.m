@@ -817,6 +817,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSString *file = nil, *path = nil;
 	NSBundle *bundle = nil;
 
+	[JVChatStyleBundles removeAllObjects];
+
 	if( ! JVChatStyleBundles )
 		JVChatStyleBundles = [[NSMutableSet set] retain];
 
@@ -1054,6 +1056,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSEnumerator *enumerator = nil, *denumerator = nil;
 	NSString *file = nil, *path = nil;
 	NSBundle *bundle = nil;
+
+	[JVChatEmoticonBundles removeAllObjects];
 
 	if( ! JVChatEmoticonBundles )
 		JVChatEmoticonBundles = [[NSMutableSet set] retain];
