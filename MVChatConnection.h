@@ -112,6 +112,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) joinChatForRoom:(NSString *) room;
 - (void) partChatForRoom:(NSString *) room;
 
+- (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room;
+
 - (void) promoteMember:(NSString *) member inRoom:(NSString *) room;
 - (void) demoteMember:(NSString *) member inRoom:(NSString *) room;
 - (void) voiceMember:(NSString *) member inRoom:(NSString *) room;

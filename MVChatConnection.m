@@ -4,6 +4,7 @@
 #import <IOKit/pwr_mgt/IOPMLib.h>
 #import "MVChatConnection.h"
 #import "MVChatWindowController.h"
+#import "MVChatPluginManager.h"
 #import "NSAttributedStringAdditions.h"
 #import "firetalk.h"
 
@@ -541,9 +542,16 @@ void MVChatFileTransferStatus( void *c, void *cs, const void * const filehandle,
 
 void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const char * const command, const char * const args ) {
 	MVChatConnection *self = cs;
+	NSEnumerator *enumerator = nil;
+	id item = nil;
+
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( command != NULL );
+
+	enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processSubcodeRequest:withArguments:fromUser:forConnection: )] objectEnumerator];
+	while( ( item = [enumerator nextObject] ) )
+		if( [item processSubcodeRequest:[NSString stringWithUTF8String:command] withArguments:[NSString stringWithUTF8String:args] fromUser:[NSString stringWithUTF8String:from] forConnection:self] ) return;
 
 	if( ! strcasecmp( command, "VERSION" ) ) {
 		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
@@ -552,9 +560,11 @@ void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const cha
 		firetalk_subcode_send_reply( c, from, "VERSION", [reply UTF8String] );
 		return;
 	} else 	if( ! strcasecmp( command, "USERINFO" ) ) {
-//		firetalk_subcode_send_reply( c, from, "USERINFO", "" );
+		firetalk_subcode_send_reply( c, from, "USERINFO", "..." );
+		return;
 	} else 	if( ! strcasecmp( command, "URL" ) ) {
-//		firetalk_subcode_send_reply( c, from, "URL", "" );
+		firetalk_subcode_send_reply( c, from, "URL", "..." );
+		return;
 	}
 
 	NSLog( @"subcode request from '%s' for '%s' with args '%s'", from, command, args );
@@ -563,9 +573,16 @@ void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const cha
 
 void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char * const command, const char * const args ) {
 	MVChatConnection *self = cs;
+	NSEnumerator *enumerator = nil;
+	id item = nil;
+
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( command != NULL );
+
+	enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processSubcodeReply:withArguments:fromUser:forConnection: )] objectEnumerator];
+	while( ( item = [enumerator nextObject] ) )
+		if( [item processSubcodeReply:[NSString stringWithUTF8String:command] withArguments:[NSString stringWithUTF8String:args] fromUser:[NSString stringWithUTF8String:from] forConnection:self] ) return;
 
 	NSLog( @"subcode reply from '%s' for '%s' with args '%s'", from, command, args );
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:from], @"from", [NSString stringWithUTF8String:command], @"command", (args ? (id) [NSString stringWithUTF8String:args] : (id) [NSNull null]), @"arguments", nil]];
@@ -747,10 +764,13 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (void) sendMessageToUser:(NSString *) user attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	if( [self isConnected] ) {
+		MVChatWindowController *window = [MVChatWindowController chatWindowWithUser:user withConnection:self ifExists:YES];
 		NSData *encodedData = [MVChatWindowController flattenedHTMLDataForMessage:message withEncoding:encoding];
 
 		if( action ) firetalk_im_send_action( _chatConnection, [user UTF8String], (char *) [encodedData bytes], 0 );
 		else firetalk_im_send_message( _chatConnection, [user UTF8String], (char *) [encodedData bytes], 0 );
+
+		[window addHTMLMessageToDisplay:encodedData fromUser:[self nickname] asAction:action asAlert:NO];
 
 		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	} else [[MVChatWindowController chatWindowWithUser:user withConnection:self ifExists:YES] disconnected];
@@ -758,10 +778,13 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (void) sendMessageToChatRoom:(NSString *) room attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	if( [self isConnected] ) {
+		MVChatWindowController *window = [MVChatWindowController chatWindowForRoom:room withConnection:self ifExists:YES];
 		NSData *encodedData = [MVChatWindowController flattenedHTMLDataForMessage:message withEncoding:encoding];
 
 		if( action ) firetalk_chat_send_action( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes], 0 );
 		else firetalk_chat_send_message( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes], 0 );
+
+		[window addHTMLMessageToDisplay:encodedData fromUser:[self nickname] asAction:action asAlert:NO];
 
 		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	} else [[MVChatWindowController chatWindowForRoom:[room lowercaseString] withConnection:self ifExists:YES] disconnected];
@@ -804,6 +827,17 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (void) partChatForRoom:(NSString *) room {
 	if( [self isConnected] ) firetalk_chat_part( _chatConnection, [[room lowercaseString] UTF8String] );
+}
+
+#pragma mark -
+
+- (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room {
+	NSParameterAssert( room != nil );
+	if( [self isConnected] ) {
+		NSData *encodedData = [MVChatWindowController flattenedHTMLDataForMessage:topic withEncoding:encoding];
+		firetalk_chat_set_topic( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes] );
+		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
+	}
 }
 
 #pragma mark -
