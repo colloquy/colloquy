@@ -40,20 +40,20 @@ NOTIFYLIST_REC *notifylist_add(const char *mask, const char *ircnets,
 	NOTIFYLIST_REC *rec;
 
 	rec = notifylist_find(mask, ircnets);
-	if (rec) return;
+	if (rec) return rec;
 
 	g_return_val_if_fail(mask != NULL, NULL);
 
 	rec = g_new0(NOTIFYLIST_REC, 1);
-        rec->mask = g_strdup(mask);
+	rec->mask = g_strdup(mask);
 	rec->ircnets = ircnets == NULL || *ircnets == '\0' ? NULL :
-		g_strsplit(ircnets, " ", -1);
+	g_strsplit(ircnets, " ", -1);
 	rec->away_check = away_check;
 	rec->idle_check_time = idle_check_time;
 
-        notifylist_add_config(rec);
+	notifylist_add_config(rec);
 
-        notifies = g_slist_append(notifies, rec);
+	notifies = g_slist_append(notifies, rec);
 	signal_emit("notifylist new", 1, rec);
 	return rec;
 }
