@@ -42,7 +42,7 @@ static KAConnectionHandler *sharedHandler = nil;
 	}
 
 	if( [user isEqualToString:@"MemoServ"] ) {
-		if( [curMsg rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [curMsg rangeOfString:@"no" options:NSCaseInsensitiveSearch].location == NSNotFound ) {
+		if( [curMsg rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [curMsg rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"You Have New Memos", "new memos bubble title" ) forKey:@"title"];
 			[context setObject:curMsg forKey:@"description"];
