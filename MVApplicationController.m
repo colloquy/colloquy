@@ -283,7 +283,7 @@ static BOOL applicationIsTerminating = NO;
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableExceptionOccurredDialog"] ) {
 		NSExceptionHandler *handler = [NSExceptionHandler defaultExceptionHandler];
-		[handler setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
+		[handler setExceptionHandlingMask:( NSLogUncaughtExceptionMask | NSLogUncaughtSystemExceptionMask | NSLogUncaughtRuntimeErrorMask | NSHandleUncaughtExceptionMask|NSHandleUncaughtSystemExceptionMask | NSHandleUncaughtRuntimeErrorMask )];
 		[handler setDelegate:self];
 	}
 
