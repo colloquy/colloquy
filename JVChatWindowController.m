@@ -51,7 +51,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		activityToolbarButton = nil;
 		_activityToolbarItem = nil;
 		_activeViewController = nil;
-		_currentlyDragging = NO;
 		_views = [[NSMutableArray array] retain];
 		_usesSmallIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowUseSmallDrawerIcons"];
 
@@ -78,7 +77,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
-	_currentlyDragging = NO;
 
 //	[activityToolbarButton retain];
 //	[activityToolbarButton removeFromSuperview];
@@ -618,9 +616,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldExpandItem:(id) item {
-	BOOL retVal = YES; 
-	if ( _currentlyDragging )retVal = NO; // if we are dragging don't expand
-	return retVal;
+	if( [[[NSApplication sharedApplication] currentEvent] type] == NSLeftMouseDragged ) return NO; // if we are dragging don't expand
+	return YES;
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldCollapseItem:(id) item {
@@ -659,24 +656,21 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [item respondsToSelector:@selector( acceptsDraggedFileOfType: )] ) {
 			NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
 			NSEnumerator *enumerator = [files objectEnumerator];
-			_currentlyDragging = NO;
-			
 			id file = nil;
+
 			while( ( file = [enumerator nextObject] ) )
 				if( [item acceptsDraggedFileOfType:[file pathExtension]] )
 					return NSDragOperationMove;
+
 			return NSDragOperationNone;
 		} else return NSDragOperationNone;
 	} else if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:JVChatViewPboardType]] ) {
-		_currentlyDragging = YES;
 		if( ! item ) return NSDragOperationMove;
 		else return NSDragOperationNone;
 	} else return NSDragOperationNone;
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView acceptDrop:(id <NSDraggingInfo>) info item:(id) item childIndex:(int) index {
-	_currentlyDragging = NO;
-	
 	NSPasteboard *board = [info draggingPasteboard];
 	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
 		NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
