@@ -90,7 +90,6 @@
 
 - (IBAction) changeTabbedWindows:(id) sender {
 	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVUseTabbedWindows"];
-	NSRunInformationalAlertPanel( NSLocalizedString( @"Tabs Changed", "changes will take affect title" ), NSLocalizedString( @"Changes will take affect when a new chat window is created. You can detach your existing panels to switch the window behavior without parting the chat.", "new chat windows will reflect this change" ), nil, nil, nil );
 }
 
 - (IBAction) changePreferredWindow:(id) sender {

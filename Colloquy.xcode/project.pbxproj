@@ -5421,7 +5421,7 @@
 			sourceTree = SOURCE_ROOT;
 		};
 		F5394C0C0378E44D01A35792 = {
-			fileEncoding = 4;
+			fileEncoding = 10;
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.strings;
 			name = English;
