@@ -12,6 +12,15 @@
 	[super dealloc];
 }
 
+- (void) drawRect:(NSRect) rect {
+	[NSGraphicsContext saveGraphicsState];
+	CGContextSetShadowWithColor( [[NSGraphicsContext currentContext] graphicsPort], CGSizeMake( 0., 0. ), 0., NULL );
+
+	[super drawRect:rect];
+
+	[NSGraphicsContext restoreGraphicsState];
+}
+
 - (void) forwardSelector:(SEL) selector withObject:(id) object {
 	if( [self nextTextView] ) {
 		[[self window] makeFirstResponder:[self nextTextView]];
