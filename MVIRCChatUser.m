@@ -40,7 +40,7 @@
 }
 
 - (NSSet *) supportedAttributes {
-	return [NSSet setWithObject:MVChatUserKnownRoomsAttribute];
+	return [NSSet setWithObjects:MVChatUserKnownRoomsAttribute, MVChatUserLocalTimeAttribute, MVChatUserClientInfoAttribute, nil];
 }
 
 #pragma mark -
@@ -78,6 +78,10 @@
 
 - (void) refreshAttributeForKey:(NSString *) key {
 	[super refreshAttributeForKey:key];
-	[self refreshAttributes];
+	if( [key isEqualToString:MVChatUserLocalTimeAttribute] ) {
+		[self sendSubcodeRequest:@"TIME" withArguments:nil];
+	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
+		[self sendSubcodeRequest:@"VERSION" withArguments:nil];
+	} else [self refreshAttributes];
 }
 @end
