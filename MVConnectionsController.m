@@ -58,6 +58,9 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedPasswordNotification object:nil];
 
+		NSRange range = NSRangeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVFileTransferPortRange"] );
+		[MVChatConnection setFileTransferPortRange:range];
+
 		[self _loadBookmarkList];
 	}
 	return self;
@@ -522,13 +525,13 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
 	if( view == connections ) {
-		if( [[column identifier] isEqual:@"auto"] ) {
+		if( [[column identifier] isEqualToString:@"auto"] ) {
 			return [[_bookmarks objectAtIndex:row] objectForKey:@"automatic"];
-		} else if( [[column identifier] isEqual:@"address"] ) {
+		} else if( [[column identifier] isEqualToString:@"address"] ) {
 			return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] server];
-		} else if( [[column identifier] isEqual:@"port"] ) {
+		} else if( [[column identifier] isEqualToString:@"port"] ) {
 			return [NSNumber numberWithUnsignedShort:[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] serverPort]];
-		} else if( [[column identifier] isEqual:@"nickname"] ) {
+		} else if( [[column identifier] isEqualToString:@"nickname"] ) {
 			return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] nickname];
 		}
 	} else if( view == newJoinRooms ) {
