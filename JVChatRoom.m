@@ -1359,9 +1359,9 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 			mode = @"chatRoomSetTopicOperatorOnlyMode";
 			if( newModes & MVChatRoomSetTopicOperatorOnlyMode ) {
 				if( [mbr isLocalUser] ) {
-					message = NSLocalizedString( @"You changed this room to require opperator status to change the topic.", "require op to set topic room status message" );
+					message = NSLocalizedString( @"You changed this room to require operator status to change the topic.", "require op to set topic room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to require opperator status to change the topic.", "someone else required op to set topic room status message" ), ( mbr ? [mbr title] : member )];
+					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to require operator status to change the topic.", "someone else required op to set topic room status message" ), ( mbr ? [mbr title] : member )];
 				}
 			} else {
 				if( [mbr isLocalUser] ) {
