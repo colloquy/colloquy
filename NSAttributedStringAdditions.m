@@ -104,7 +104,6 @@ static WebView *fragmentWebView = nil;
 		BOOL uFlag = NO;
 		BOOL fontFlag = NO;
 		BOOL linkFlag = NO;
-		NSMutableString *substr = nil;
 		NSMutableString *fontstr = nil;
 		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 		NSString *link = [dict objectForKey:NSLinkAttributeName];
@@ -158,9 +157,7 @@ static WebView *fragmentWebView = nil;
 		}
 		if( linkFlag ) [out appendFormat: @"<a href=\"%@\">", link];
 
-		substr = [NSMutableString stringWithString:[[self attributedSubstringFromRange:effectiveRange] string]];
-		[substr encodeXMLSpecialCharactersAsEntities];
-		[out appendString:substr];
+		[out appendString:[[[self attributedSubstringFromRange:effectiveRange] string] stringByEncodingXMLSpecialCharactersAsEntities]];
 
 		if( linkFlag ) [out appendString: @"</a>"];
 
