@@ -1265,6 +1265,7 @@
 				1CB2CD0E052DDC560094AAA4,
 				1C1ACE430533943900F71D4E,
 				1C1ACFB705344FCC00F71D4E,
+				1CB4DCB00536282B0080D36F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1492,6 +1493,7 @@
 				1CB2CD5E052DDC560094AAA4,
 				1CB2CD60052DDC560094AAA4,
 				1C1AD00B053487ED00F71D4E,
+				1CB4DCAB053627C00080D36F,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1991,6 +1993,7 @@
 				1CB2CD77052DDC560094AAA4,
 				1C1ACE440533943900F71D4E,
 				1C1ACFB805344FCC00F71D4E,
+				1CB4DCB10536282B0080D36F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2255,6 +2258,58 @@
 			path = "Resources/Read Me.rtf";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
+		};
+		1CB4DCA9053627C00080D36F = {
+			children = (
+				1CB4DCAA053627C00080D36F,
+			);
+			isa = PBXVariantGroup;
+			name = JVRoomInspector.nib;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CB4DCAA053627C00080D36F = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/JVRoomInspector.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CB4DCAB053627C00080D36F = {
+			fileRef = 1CB4DCA9053627C00080D36F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB4DCAE0536282B0080D36F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatRoomInspector.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CB4DCAF0536282B0080D36F = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVChatRoomInspector.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CB4DCB00536282B0080D36F = {
+			fileRef = 1CB4DCAE0536282B0080D36F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CB4DCB10536282B0080D36F = {
+			fileRef = 1CB4DCAF0536282B0080D36F;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1CBB23CD04EFE233000001C8 = {
 			expectedFileType = image.tiff;
@@ -2717,6 +2772,7 @@
 				1CBECE3A0508D58F000001C8,
 				1CBECE380508D58F000001C8,
 				1C1AD009053487ED00F71D4E,
+				1CB4DCA9053627C00080D36F,
 			);
 			isa = PBXGroup;
 			name = Interfaces;
@@ -3028,6 +3084,8 @@
 				1CCB279D04FE93FE00A8FE6E,
 				1CE2BC4A042F53AD00000102,
 				1CE2BC49042F53AD00000102,
+				1CB4DCAF0536282B0080D36F,
+				1CB4DCAE0536282B0080D36F,
 				1C088A0F04FCFEE700A8FE6E,
 				1C088A0E04FCFEE700A8FE6E,
 				F5FB4D200393F70E01000102,
