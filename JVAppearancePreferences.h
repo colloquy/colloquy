@@ -35,6 +35,8 @@
 - (void) selectStyleWithIdentifier:(NSString *) identifier;
 - (void) selectEmoticonsWithIdentifier:(NSString *) identifier;
 
+- (void) setStyle:(JVStyle *) style;
+
 - (void) changePreferences;
 
 - (IBAction) changeBaseFontSize:(id) sender;
