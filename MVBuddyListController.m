@@ -341,7 +341,7 @@ static MVBuddyListController *sharedInstance = nil;
 			[emailValue replaceValueAtIndex:[emailValue indexForIdentifier:[emailValue primaryIdentifier]] withValue:[email objectValue]];
 		} else {
 			emailValue = [[[ABMutableMultiValue alloc] init] autorelease];
-			[emailValue addValue:[email objectValue] withLabel:@"_$!<Other>!$_"];
+			[emailValue addValue:[email objectValue] withLabel:kABOtherLabel];
 		}
 		[person setValue:emailValue forProperty:kABEmailProperty];
 
