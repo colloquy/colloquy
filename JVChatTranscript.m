@@ -657,6 +657,13 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 #pragma mark -
 #pragma mark WebView
 
+#ifndef WebMenuItemTagGoBack
+#define WebMenuItemTagGoBack -1
+#define WebMenuItemTagGoForward -2
+#define WebMenuItemTagStop -3
+#define WebMenuItemTagReload -4
+#endif
+
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
 	NSMutableArray *ret = [[defaultMenuItems mutableCopy] autorelease];
 	NSMenuItem *item = nil;
@@ -740,6 +747,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 }
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
+#ifdef DOMCSSStyleDeclaration
 	if( [display respondsToSelector:@selector( setDrawsBackground: )] ) {
 		DOMCSSStyleDeclaration *style = [sender computedStyleForElement:[(DOMHTMLDocument *)[[sender mainFrame] DOMDocument] body] pseudoElement:nil];
 		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
@@ -748,6 +756,7 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 			[display setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
 		else [display setDrawsBackground:YES];
 	}
+#endif
 
 	[display setFrameLoadDelegate:nil];
 	[[display preferences] setJavaScriptEnabled:YES];
