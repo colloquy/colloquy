@@ -1309,7 +1309,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		connectionCount++;
 
 		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
-		SERVER_CONNECT_REC *settings = server_create_conn( proto -> id, "irc.javelin.cc", 6667, NULL, NULL, [self encodedBytesWithString:NSUserName()] );
+		SERVER_CONNECT_REC *settings = server_create_conn( proto -> id, "irc.freenode.net", 6667, NULL, NULL, [self encodedBytesWithString:NSUserName()] );
 
 		[self _setIrssiConnectSettings:settings];
 	}
