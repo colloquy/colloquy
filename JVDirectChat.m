@@ -93,6 +93,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action;
 - (void) processQueue;
 - (void) displayQueue;
+- (void) writeToLog:(void *) root withDoc:(void *) doc initializing:(BOOL) init continuation:(BOOL) cont;
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
 - (void) _makeHyperlinksInString:(NSMutableString *) string;
@@ -144,6 +145,22 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		_buddy = [[[MVBuddyListController sharedBuddyList] buddyForNickname:_target onServer:[_connection server]] retain];
 		source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
 		xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
+
+        // Set up log directories
+        NSString *logs = [[NSString stringWithFormat:@"~/Documents/%@ Transcripts", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+        logs = [logs stringByAppendingPathComponent:[_connection server]];
+        if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+        logs = [logs stringByAppendingPathComponent:_target];
+        if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+        logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.colloquyTranscript", [[NSDate date] description]]];
+        // 'touch' the new logfile, otherwise fileHandleForUpdatingAtPath returns nil
+        [fileManager createFileAtPath:logs contents:[NSData data] attributes:nil];
+        _logFile = [[NSFileHandle fileHandleForUpdatingAtPath:logs] retain];
+
+        // Write the <log> element to the logfile
+		[self writeToLog:xmlDocGetRootElement( _xmlLog ) withDoc:_xmlLog initializing:YES continuation:NO];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
@@ -230,6 +247,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[_settings release];
 	[_spillEncodingMenu release];
 	[_messageQueue release];
+	// TODO: Read in the logfile and write it back out again after adding the 'ended' attribute to the log node.
+	[_logFile release];
 
 	NSEnumerator *enumerator = [_waitingAlerts objectEnumerator];
 	id alert = nil;
@@ -252,6 +271,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	_settings = nil;
 	_spillEncodingMenu = nil;
 	_messageQueue = nil;
+	_logFile = nil;
 
 	[super dealloc];
 }
@@ -1109,6 +1129,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	}
 
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
+	[self writeToLog:root withDoc:doc initializing:NO continuation:NO];
 
 	messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
 	if( [messageString length] ) {
@@ -1125,6 +1146,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(NSString *) user asAction:(BOOL) action {
 	// DO *NOT* call this method without first acquiring _logLock!
+	BOOL continuation = NO;
 	BOOL highlight = NO;
 	xmlDocPtr doc = NULL, msgDoc = NULL;
 	xmlNodePtr root = NULL, child = NULL, parent = NULL;
@@ -1185,6 +1207,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	result = xmlXPathEval( [[NSString stringWithFormat:@"/log/*[name() = 'envelope' and position() = last() and (sender = '%@' or sender/@nickname = '%@')]", user, user] UTF8String], ctx );
 
 	if( ! _requiresFullMessage && result && result -> nodesetval -> nodeNr ) {
+		continuation = YES;
 		if( ! [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
 			[_styleParams setObject:@"'yes'" forKey:@"subsequent"];
 			if( _params ) [[self class] _freeXsltParamArray:_params];
@@ -1195,6 +1218,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		root = xmlDocCopyNode( parent, doc, 1 );
 		xmlDocSetRootElement( doc, root );
 	} else {
+		continuation = NO;
 		if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
 			[_styleParams removeObjectForKey:@"subsequent"];
 			if( _params ) [[self class] _freeXsltParamArray:_params];
@@ -1245,6 +1269,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	xmlXPathFreeObject( result );
 
 	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
+
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 
 	child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
@@ -1252,6 +1277,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( action ) xmlSetProp( child, "action", "yes" );
 	if( highlight ) xmlSetProp( child, "highlight", "yes" );
 	xmlAddChild( root, child );
+
+    [self writeToLog:root withDoc:doc initializing:NO continuation:continuation];
 
 	xmlFreeDoc( msgDoc );
 
@@ -1297,6 +1324,35 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				[self addEventMessageToLogAndDisplay:[msg objectForKey:@"message"] withName:[msg objectForKey:@"name"] andAttributes:[msg objectForKey:@"attributes"]];
 			}
 		}
+	}
+}
+
+- (void) writeToLog:(void *) root withDoc:(void *) doc initializing:(BOOL) init continuation:(BOOL) cont {
+	// Append a node to the logfile for this chat
+	xmlBufferPtr buf = xmlBufferCreate();
+	xmlNodeDump( buf, doc, root, 0, 0 );
+
+	// To keep the XML valid at all times, we need to preserve a </log> close tag at the end of
+	// the file at all times. So, we seek to the end of the file minus 6 characters.
+	[_logFile seekToEndOfFile];
+	if( cont ) [_logFile seekToFileOffset:_previousLogOffset];
+	else if( ! init ) {
+		[_logFile seekToFileOffset:[_logFile offsetInFile] - 6];
+		_previousLogOffset = [_logFile offsetInFile];
+	}
+
+	_previousLogOffset = [_logFile offsetInFile];
+	[_logFile writeData:[NSData dataWithBytesNoCopy:buf -> content length:buf -> use freeWhenDone:NO]];
+	if( ! init ) [_logFile writeData:[@"</log>" dataUsingEncoding:NSUTF8StringEncoding]];
+	xmlBufferFree( buf );
+
+	// If we are initializing, we wrote a singleton <log> tag and we need to back up over the />
+	// and write ></log> instead.
+	if( init ) {
+		[_logFile seekToEndOfFile];
+		[_logFile seekToFileOffset:[_logFile offsetInFile] - 2];
+		_previousLogOffset = [_logFile offsetInFile];
+		[_logFile writeData:[@"></log>" dataUsingEncoding:NSUTF8StringEncoding]];
 	}
 }
 
@@ -1669,6 +1725,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 @end
 
+
 #pragma mark -
 
 @implementation JVDirectChat (JVDirectChatScripting)
@@ -1838,4 +1895,5 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( ! [self callScriptHandler:'uNcX' withArguments:args] )
 		[self doesNotRespondToSelector:_cmd];
 }
+
 @end

@@ -1,5 +1,6 @@
 #import "JVChatTranscript.h"
 #import <AppKit/NSNibDeclarations.h>
+#import <Foundation/NSFileHandle.h>
 
 @class NSView;
 @class MVTextView;
@@ -34,7 +35,7 @@
 	NSMutableDictionary *_settings;
 	NSMenu *_spillEncodingMenu;
 	JVBuddy *_buddy;
-	
+	NSFileHandle *_logFile;
 	NSMutableArray *_messageQueue;
 
 	unsigned int _messageId;
@@ -48,6 +49,7 @@
 	int _historyIndex;	
 	float _sendHeight;
 	BOOL _scrollerIsAtBottom;
+	long _previousLogOffset;
 }
 - (id) initWithTarget:(NSString *) target forConnection:(MVChatConnection *) connection;
 
@@ -90,4 +92,5 @@
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toChat:(JVDirectChat *) chat;
 
 - (void) userNamed:(NSString *) nickname isNowKnowAs:(NSString *) newNickname inView:(id <JVChatViewController>) view;
+
 @end
