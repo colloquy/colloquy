@@ -550,6 +550,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( [item respondsToSelector:@selector( isEnabled )] ) {
 		[cell setEnabled:[item isEnabled]];
 	} else [cell setEnabled:YES];
+
+	// This is needed if we reorder the list and selection dosen't change.
+	// This will catch it incase the previous selected item moved.
+	// We could follow the item through the sort, but we don't sort in
+	// this object, so it is almost impossible.
+
+	if( item == [self selectedListItem] )
+		[self _refreshSelectionMenu];
 }
 
 - (NSString *) outlineView:(NSOutlineView *) outlineView toolTipForItem:(id) item inTrackingRect:(NSRect) rect forCell:(id) cell {
@@ -686,7 +694,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return NO;
 }
 
-- (void)outlineViewItemDidExpand:(NSNotification *)notification {
+- (void) outlineViewItemDidExpand:(NSNotification *) notification {
 	[chatViewsOutlineView sizeLastColumnToFit];
 }
 @end
