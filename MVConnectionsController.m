@@ -1601,7 +1601,11 @@ static NSMenu *favoritesMenu = nil;
 	NSDictionary *dict = [notification object];
 
 	if ( [publicKeyVerification isVisible] ) {
-		[_publicKeyRequestQueue addObject:notification];
+//		FIX!: queuing the notifications from the same seems to crash us if SILC keeps asking us to verify.
+//		The SILC server koopanet.cjb.net port 706 makes this happen. So this is commented out
+//		until further investigation.
+
+//		[_publicKeyRequestQueue addObject:notification];
 		return;
 	}
 
