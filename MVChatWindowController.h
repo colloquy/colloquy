@@ -121,6 +121,7 @@ extern NSArray *chatActionVerbs;
 - (IBAction) closeMemberDrawer:(id) sender;
 
 - (IBAction) startChatWithSelectedUser:(id) sender;
+- (IBAction) sendFileToSelectedUser:(id) sender;
 
 - (IBAction) promoteSelectedUser:(id) sender;
 - (IBAction) voiceSelectedUser:(id) sender;

@@ -249,26 +249,27 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 - (id) init {
-	extern NSArray *chatActionVerbs;
-	self = [super init];
-	[NSBundle loadNibNamed:@"MVChatWindow" owner:self];
-	setup = NO;
-	memberDrawerWasOpen = NO;
-	firstMessage = YES;
-	invalidateMembers = YES;
-	_windowClosed = NO;
-	chatRoom = NO;
-	outlet = nil;
-	historyIndex = 0;
-	encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"];
-	sendHistory = [[NSMutableArray array] retain];
-	[sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
-	memberList = [[NSMutableDictionary dictionary] retain];
-	sortedMembers = [[NSMutableArray array] retain];
-	if( ! chatActionVerbs )
-		chatActionVerbs = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
-	[chatActionVerbs retain];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _preferencesDidChange: ) name:@"MVChatPreferencesDidChangeNotification" object:nil];
+	if( ( self = [super init] ) ) {
+		extern NSArray *chatActionVerbs;
+		[NSBundle loadNibNamed:@"MVChatWindow" owner:self];
+		setup = NO;
+		memberDrawerWasOpen = NO;
+		firstMessage = YES;
+		invalidateMembers = YES;
+		_windowClosed = NO;
+		chatRoom = NO;
+		outlet = nil;
+		historyIndex = 0;
+		encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"MVChatEncoding"];
+		sendHistory = [[NSMutableArray array] retain];
+		[sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
+		memberList = [[NSMutableDictionary dictionary] retain];
+		sortedMembers = [[NSMutableArray array] retain];
+		if( ! chatActionVerbs )
+			chatActionVerbs = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
+		[chatActionVerbs retain];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _preferencesDidChange: ) name:@"MVChatPreferencesDidChangeNotification" object:nil];
+	}
 	return self;
 }
 
@@ -276,26 +277,35 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	extern NSMutableDictionary *roomChatWindowPrivateStorage;
 	MVChatWindowController *ret = nil;
 	NSMutableDictionary *connectionWindows = nil;
+
 	NSParameterAssert( room != nil );
 	NSParameterAssert( connection != nil );
+
 	if( ! roomChatWindowPrivateStorage )
 		roomChatWindowPrivateStorage = [NSMutableDictionary dictionary];
+
 	connectionWindows = [roomChatWindowPrivateStorage objectForKey:[connection description]];
 	if( ! connectionWindows ) {
 		connectionWindows = [NSMutableDictionary dictionary];
 		[roomChatWindowPrivateStorage setObject:connectionWindows forKey:[connection description]];
 	}
+
 	if( ! ( ret = [connectionWindows objectForKey:[room lowercaseString]] ) ) {
-		self = [self init];
-		ret = self;
-		[connectionWindows setObject:self forKey:[room lowercaseString]];
-		[connectionWindows retain];
-		[roomChatWindowPrivateStorage retain];
-		[self _setConnection:connection];
-		[self _setTargetRoom:[room lowercaseString]];
-		[window setFrameAutosaveName:[NSString stringWithFormat:@"chat.room.%@.%@", [connection server], [room lowercaseString]]];
-		if( ! [self _isSetup] ) [self _setup];
-		_refreshTimer = [[NSTimer scheduledTimerWithTimeInterval:600. target:self selector:@selector( _refreshUserInfo: ) userInfo:nil repeats:YES] retain];
+		if( ( self = [self init] ) ) {
+			NSString *size = nil;
+			ret = self;
+			[connectionWindows setObject:self forKey:[room lowercaseString]];
+			[connectionWindows retain];
+			[roomChatWindowPrivateStorage retain];
+			[self _setConnection:connection];
+			[self _setTargetRoom:[room lowercaseString]];
+			[window setFrameAutosaveName:[NSString stringWithFormat:@"chat.room.%@.%@", [connection server], [room lowercaseString]]];
+			if( ( size = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"chat.room.%@.%@.drawerSize", [[self connection] server], [room lowercaseString]]] ) && [size length] )
+				[memberDrawer setContentSize:NSSizeFromString( size )];
+			[memberDrawer setPreferredEdge:[[NSUserDefaults standardUserDefaults] integerForKey:[NSString stringWithFormat:@"chat.room.%@.%@.drawerEdge", [[self connection] server], [room lowercaseString]]]];
+			if( ! [self _isSetup] ) [self _setup];
+			_refreshTimer = [[NSTimer scheduledTimerWithTimeInterval:600. target:self selector:@selector( _refreshUserInfo: ) userInfo:nil repeats:YES] retain];
+		}
 	}
 	return ret;
 }
@@ -304,26 +314,31 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	extern NSMutableDictionary *userChatWindowPrivateStorage;
 	MVChatWindowController *ret = nil;
 	NSMutableDictionary *connectionWindows = nil;
+
 	NSParameterAssert( user != nil );
 	NSParameterAssert( connection != nil );
+
 	if( ! userChatWindowPrivateStorage )
 		userChatWindowPrivateStorage = [NSMutableDictionary dictionary];
+
 	connectionWindows = [userChatWindowPrivateStorage objectForKey:[connection description]];
 	if( ! connectionWindows ) {
 		connectionWindows = [NSMutableDictionary dictionary];
 		[userChatWindowPrivateStorage setObject:connectionWindows forKey:[connection description]];
 	}
+
 	if( ! ( ret = [connectionWindows objectForKey:user] ) ) {
-		self = [self init];
-		ret = self;
-		[connectionWindows setObject:self forKey:user];
-		[connectionWindows retain];
-		[userChatWindowPrivateStorage retain];
-		[self _setConnection:connection];
-		[self _setTargetUser:user];
-		[window setFrameAutosaveName:[NSString stringWithFormat:@"chat.user.%@.%@", [connection server], user]];
-		if( ! [self _isSetup] ) [self _setup];
-		[self addMemberToChat:user asPreviousMember:YES];
+		if( ( self = [self init] ) ) {
+			ret = self;
+			[connectionWindows setObject:self forKey:user];
+			[connectionWindows retain];
+			[userChatWindowPrivateStorage retain];
+			[self _setConnection:connection];
+			[self _setTargetUser:user];
+			[window setFrameAutosaveName:[NSString stringWithFormat:@"chat.user.%@.%@", [connection server], user]];
+			if( ! [self _isSetup] ) [self _setup];
+			[self addMemberToChat:user asPreviousMember:YES];
+		}
 	}
 	return ret;
 }
@@ -434,7 +449,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[sendText reset:nil];
 
 	[sendTextScrollView setBorderType:NSBezelBorder];
-	[sendTextScrollView setHasVerticalScroller:YES];
+	[sendTextScrollView setHasVerticalScroller:NO];
 	[sendTextScrollView setHasHorizontalScroller:NO];
 	[sendTextScrollView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 	[[sendTextScrollView contentView] setAutoresizesSubviews:YES];
@@ -762,6 +777,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 		msgString = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", message] attributes:attribs] autorelease];
 		[[displayText textStorage] appendAttributedString:msgString];
+		[displayText resetCursorRects];
 	}
 }
 
@@ -796,6 +812,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"] )
 			[msgString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:0] range:NSMakeRange( 0, [msgString length] )];
 
+		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"] )
+			[msgString preformHTMLBackgroundColoring];
+
 		[self addAttributedMessageToDisplay:msgString fromUser:user asAction:action asAlert:alert];
 	}
 }
@@ -826,12 +845,15 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[displayText replaceCharactersInRange:NSMakeRange( [[displayText textStorage] length], 0 ) withString:user];
 		if( ! action ) [displayText replaceCharactersInRange:NSMakeRange( [[displayText textStorage] length], 0 ) withString:@":"];
 		length = [[displayText textStorage] length] - begin;
+
 		if( ( [[msgString string] rangeOfString:@"'"].location && action ) || ! action ) {
 			[displayText replaceCharactersInRange:NSMakeRange( [[displayText textStorage] length], 0 ) withString:@" "];
 			[[displayText textStorage] setAttributes:nil range:NSMakeRange( begin + length, 1. )];
 		}
+
 		[[displayText textStorage] setAttributes:nil range:NSMakeRange( begin, length )];
 		[displayText setFont:[NSFont boldSystemFontOfSize:[NSFont smallSystemFontSize]] range:NSMakeRange( begin, length )];
+
 		if( alert ) {
 			[displayText setTextColor:[NSUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"MVChatAlertColor"]] range:NSMakeRange( begin, length )];
 		} else if( ! [user caseInsensitiveCompare:[[self connection] nickname]] ) {
@@ -849,13 +871,8 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		else msgString = [item processPrivateMessage:msgString fromUser:user asAction:action forConnection:[self connection]];
 	}
 
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"] ) {
-		[msgString preformHTMLBackgroundColoring];
-	}
-
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] ) {
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 		[msgString preformLinkHighlightingUsingColor:[NSUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"MVChatLinkColor"]] withUnderline:YES];
-	}
 
 	urlScanner = [NSScanner scannerWithString:[msgString string]];
 	while( [urlScanner isAtEnd] == NO ) {
@@ -874,22 +891,28 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[msgString preformImageSubstitutionWithDictionary:dict];
 	}
 
+	if( [[msgString string] rangeOfString:@"\007"].length ) {
+		unichar soundChar = 0x266A;
+		[[msgString mutableString] replaceOccurrencesOfString:@"\007" withString:[NSString stringWithCharacters:&soundChar length:1] options:NSLiteralSearch range:NSMakeRange( 0, [msgString length] )];
+	}
+
 	[[displayText textStorage] appendAttributedString:msgString];
 	[displayText replaceCharactersInRange:NSMakeRange( [[displayText textStorage] length], 0 ) withString:@"\n"];
-	if( NSMinY( [displayText visibleRect] ) >= ( NSHeight( [displayText bounds] ) - ( NSHeight( [displayText visibleRect] ) * 1.1 ) ) ) {
-		[displayText scrollRangeToVisible:NSMakeRange( [[displayText textStorage] length], 0 )];
-	}
-	[displayText resetCursorRects];
-
-	[[displayText textStorage] addAttribute:@"MVChatAddedDate" value:[NSDate date] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )];
-	[[displayText textStorage] addAttribute:@"MVChatFrom" value:[[user copy] autorelease] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )];
-	[[displayText textStorage] addAttribute:@"MVChatMessage" value:[[message copy] autorelease] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )];
-	[[displayText textStorage] addAttribute:@"MVChatAction" value:[NSNumber numberWithBool:action] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )];
-	[[displayText textStorage] addAttribute:@"MVChatAlert" value:[NSNumber numberWithBool:alert] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )];
-	
-	[window setDocumentEdited:![window isKeyWindow]];
 
 	if( action ) [displayText setTextColor:[NSUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"MVChatActionColor"]] range:NSMakeRange( begin + 1, [[displayText textStorage] length] - begin - 1 )];
+
+	if( NSMinY( [displayText visibleRect] ) >= ( NSHeight( [displayText bounds] ) - ( NSHeight( [displayText visibleRect] ) * 1.1 ) ) )
+		[displayText scrollRangeToVisible:NSMakeRange( [[displayText textStorage] length], 0 )];
+
+	[[displayText textStorage] addAttribute:@"MVChatAddedDate" value:[NSDate date] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )];
+/*	if( user ) [[displayText textStorage] addAttribute:@"MVChatFrom" value:[[user copy] autorelease] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )];
+	[[displayText textStorage] addAttribute:@"MVChatMessage" value:[[message copy] autorelease] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )];
+	[[displayText textStorage] addAttribute:@"MVChatAction" value:[NSNumber numberWithBool:action] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )];
+	[[displayText textStorage] addAttribute:@"MVChatAlert" value:[NSNumber numberWithBool:alert] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )]; */
+
+	[displayText resetCursorRects];
+
+	[window setDocumentEdited:( ! [window isKeyWindow] )];
 
 	if( ! [user isEqualToString:[[self connection] nickname]] ) {
 		NSMutableArray *names = nil;
@@ -904,7 +927,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		while( ( item = [enumerator nextObject] ) ) {
 			if( [[[msgString string] lowercaseString] rangeOfString:item].length ) {
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatBounceIconOnMessage"] && [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatBounceIconUntilFront"] )
-					[NSApp requestUserAttention:NSCriticalRequest];
+					[[NSApplication sharedApplication] requestUserAttention:NSCriticalRequest];
 				else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatBounceIconOnMessage"] ) [NSApp requestUserAttention:NSInformationalRequest];
 				[[displayText textStorage] addAttribute:NSBackgroundColorAttributeName value:[NSUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"MVChatHighlightColor"]] range:NSMakeRange( begin, [[displayText textStorage] length] - begin )];
 				MVChatPlaySoundForAction( @"MVChatMentionedAction" );
@@ -915,12 +938,12 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 	if( ! chatRoom && ! [user isEqualToString:[[self connection] nickname]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatBounceIconOnMessage"] ) {
 		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatBounceIconUntilFront"] )
-			[NSApp requestUserAttention:NSCriticalRequest];
-		else [NSApp requestUserAttention:NSInformationalRequest];
+			[[NSApplication sharedApplication] requestUserAttention:NSCriticalRequest];
+		else [[NSApplication sharedApplication] requestUserAttention:NSInformationalRequest];
 	}
 
-	if( ( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatShowHiddenOnPrivateMessage"] && ! chatRoom ) ||
-		( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatShowHiddenOnRoomMessage"] && chatRoom ) )
+	if( ( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatShowHiddenOnPrivateMessage"] && ! [self isChatRoom] ) ||
+		( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatShowHiddenOnRoomMessage"] && [self isChatRoom] ) )
 			if( ! [self isVisible] ) [self showWindow:nil];
 }
 
@@ -1093,24 +1116,24 @@ void MVChatPlaySoundForAction( NSString *action ) {
 }
 
 - (BOOL) isVisible {
-	return [window isVisible];
+	return ( [window isVisible] || [window isMiniaturized] || [[NSApplication sharedApplication] isHidden] );
 }
 
 - (IBAction) showWindow:(id) sender {
 	[window orderFront:nil];
-	if( memberDrawerWasOpen ) [memberDrawer open];
+	if( memberDrawerWasOpen ) [self openMemberDrawer:nil];
 }
 
 - (IBAction) showWindowAndMakeKey:(id) sender {
 	[window makeKeyAndOrderFront:nil];
-	if( memberDrawerWasOpen ) [memberDrawer open];
+	if( memberDrawerWasOpen ) [self openMemberDrawer:nil];
 }
 
 - (IBAction) hideWindow:(id) sender {
 	if( [memberDrawer state] == NSDrawerOpenState || [memberDrawer state] == NSDrawerOpeningState )
 		memberDrawerWasOpen = YES;
 	else memberDrawerWasOpen = NO;
-	[memberDrawer close];
+	[self closeMemberDrawer:nil];
 	[window orderOut:nil];
 	[[NSApplication sharedApplication] changeWindowsItem:window title:[window title] filename:NO];
 }
@@ -1126,7 +1149,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 }
 
 - (IBAction) openMemberDrawer:(id) sender {
-	[memberDrawer open:sender];
+	[memberDrawer openOnEdge:[memberDrawer preferredEdge]];
 }
 
 - (IBAction) closeMemberDrawer:(id) sender {
@@ -1137,6 +1160,23 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	if( [memberListTable selectedRow] != -1 ) {
 		MVChatWindowController *chat = [[self class] chatWindowWithUser:[sortedMembers objectAtIndex:[memberListTable selectedRow]] withConnection:[self connection] ifExists:NO];
 		[chat showWindowAndMakeKey:nil];
+	}
+}
+
+- (IBAction) sendFileToSelectedUser:(id) sender {
+	if( [memberListTable selectedRow] != -1 ) {
+		NSString *to = [sortedMembers objectAtIndex:[memberListTable selectedRow]];
+		NSString *path = nil;
+		NSOpenPanel *panel = [NSOpenPanel openPanel];
+		[panel setResolvesAliases:YES];
+		[panel setCanChooseFiles:YES];
+		[panel setCanChooseDirectories:NO];
+		[panel setAllowsMultipleSelection:YES];
+		if( [panel runModalForTypes:nil] == NSOKButton ) {
+			NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
+			while( ( path = [enumerator nextObject] ) )
+				[[self connection] sendFileToUser:to withFilePath:path];
+		}
 	}
 }
 
@@ -1207,11 +1247,20 @@ void MVChatPlaySoundForAction( NSString *action ) {
 #pragma mark -
 
 - (BOOL) drawerShouldOpen:(NSDrawer *) sender {
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:[NSString stringWithFormat:@"chat.room.%@.%@.drawerOpen", [[self connection] server], [self targetRoom]]];
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:[memberDrawer edge]] forKey:[NSString stringWithFormat:@"chat.room.%@.%@.drawerEdge", [[self connection] server], [self targetRoom]]];
+	[memberDrawer setPreferredEdge:[memberDrawer edge]];
 	return YES;
 }
 
 - (BOOL) drawerShouldClose:(NSDrawer *) sender {
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:NO] forKey:[NSString stringWithFormat:@"chat.room.%@.%@.drawerOpen", [[self connection] server], [self targetRoom]]];
 	return YES;
+}
+
+- (NSSize) drawerWillResizeContents:(NSDrawer *) sender toSize:(NSSize) contentSize {
+	[[NSUserDefaults standardUserDefaults] setObject:NSStringFromSize( contentSize ) forKey:[NSString stringWithFormat:@"chat.room.%@.%@.drawerSize", [[self connection] server], [self targetRoom]]];
+	return contentSize;
 }
 
 #pragma mark -
@@ -1346,6 +1395,20 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 #pragma mark -
 
+- (BOOL) splitView:(NSSplitView *) sender canCollapseSubview:(NSView *) subview {
+	return NO;
+}
+
+- (float) splitView:(NSSplitView *) splitView constrainSplitPosition:(float) proposedPosition ofSubviewAt:(int) index {
+/*	float position = ( NSHeight( [splitView frame] ) - proposedPosition - [splitView dividerThickness] );
+	int lines = (int) floorf( position / 15. );
+	NSLog( @"%.2f %.2f / 15. = %.2f (%d)", proposedPosition, position, position / 15., lines );
+	return ( roundf( proposedPosition / 15. ) * 15. ) + [splitView dividerThickness] + 2.;*/
+	return proposedPosition;
+}
+
+#pragma mark -
+
 - (int) numberOfRowsInTableView:(NSTableView *) view {
 	return [sortedMembers count];
 }
@@ -1384,6 +1447,10 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	[menu addItem:item];
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChatWithSelectedUser: ) keyEquivalent:@""] autorelease];
+	[item setTarget:self];
+	[menu addItem:item];
+
+	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFileToSelectedUser: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
 
@@ -1675,7 +1742,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	NSEnumerator *enumerator = [sortedMembers objectEnumerator];
 	id item = nil;
 	while( ( item = [enumerator nextObject] ) ) {
-		[[self connection] fetchInformationForUser:item];
+		[[self connection] fetchInformationForUser:item withPriority:NO];
 	}
 }
 
@@ -1708,7 +1775,9 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 - (void) _setup {
 	if( chatRoom ) {
-		[memberDrawer open];
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"chat.room.%@.%@.drawerOpen", [[self connection] server], [self targetRoom]]] ) {
+			[self openMemberDrawer:nil];
+		}
 		[self changeTopic:[@"" dataUsingEncoding:NSUTF8StringEncoding] by:nil];
 	}
 	if( ! chatRoom ) {
