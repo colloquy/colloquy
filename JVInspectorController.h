@@ -24,6 +24,10 @@
 - (id <JVInspector>) inspector;
 @end
 
+@interface NSObject (JVInspectionOptional)
+- (void) willBeInspected;
+@end
+
 @protocol JVInspectionDelegator <NSObject>
 - (id <JVInspection>) objectToInspect;
 - (IBAction) getInfo:(id) sender;

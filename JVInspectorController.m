@@ -2,6 +2,7 @@
 #import <Cocoa/Cocoa.h>
 
 static JVInspectorController *sharedInstance = nil;
+static NSPoint inspectorLastPoint = { 100., 800. };
 
 @interface JVInspectorController (JVInspectionControllerPrivate)
 - (void) _loadInspector;
@@ -23,7 +24,7 @@ static JVInspectorController *sharedInstance = nil;
 #pragma mark -
 
 - (id) initWithObject:(id <JVInspection>) object lockedOn:(BOOL) locked {
-	NSWindow *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 20., 20., 250., 350. ) styleMask:( ( ! locked ? NSUtilityWindowMask : 0 ) | NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:YES] autorelease];
+	NSWindow *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 20., 20., 175., 200. ) styleMask:( ( ! locked ? NSUtilityWindowMask : 0 ) | NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:YES] autorelease];
 	[panel setDelegate:self];
 	if( locked ) {
 		[(NSPanel *)panel setFloatingPanel:YES];
@@ -61,7 +62,9 @@ static JVInspectorController *sharedInstance = nil;
 #pragma mark -
 
 - (IBAction) show:(id) sender {
+	extern NSPoint inspectorLastPoint;
 	[self _loadInspector];
+	inspectorLastPoint = [[self window] cascadeTopLeftFromPoint:inspectorLastPoint];
 	[[self window] orderFront:nil];
 }
 
@@ -113,6 +116,9 @@ static JVInspectorController *sharedInstance = nil;
 @implementation JVInspectorController (JVInspectionControllerPrivate)
 - (void) _loadInspector {
 	NSView *view = [_inspector view];
+
+	if( [_object respondsToSelector:@selector( willBeInspected )] )
+		[(NSObject *)_object willBeInspected];
 
 	if( [_inspector respondsToSelector:@selector( willLoad )] )
 		[(NSObject *)_inspector willLoad];
