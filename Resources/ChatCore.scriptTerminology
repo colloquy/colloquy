@@ -245,14 +245,14 @@
 				<key>realName</key>
 				<dict>
 					<key>Description</key>
-					<string>The real name supplied by the user, not always a person's name.</string>
+					<string>The real name supplied by the user, not always a person'</string>
 					<key>Name</key>
 					<string>real name</string>
 				</dict>
 				<key>scriptTypedAwayMessage</key>
 				<dict>
 					<key>Description</key>
-					<string>The user's current away message.</string>
+					<string>The user'</string>
 					<key>Name</key>
 					<string>away message</string>
 				</dict>

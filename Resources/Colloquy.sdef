@@ -17,15 +17,14 @@
 					<property name="class" code="pcls" description="The class of the object." type="type" access="r">
 						<cocoa method="classCode"/>
 					</property>
-					<property name="properties" code="pALL" description="All of the object&apos;s properties." type="record">
+					<property name="properties" code="pALL" description="All of the object&apos;" type="record">
 						<cocoa method="scriptingProperties"/>
 					</property>
 				</properties>
 				<responds-to-commands>
 					<!--
 						The blank method declarations are needed to emulate the existing
-						NSCoreSuite.scriptSuite.framework.  Ordinarily, you wouldn&apos;t do this.
-					-->
+						NSCoreSuite.scriptSuite.framework.  Ordinarily, you wouldn&apos;-->
 					<responds-to name="count">
 						<cocoa method=""/>
 					</responds-to>
@@ -47,7 +46,12 @@
 					<responds-to name="set">
 						<cocoa method=""/>
 					</responds-to>
-					<responds-to name="send message"/>
+					<responds-to name="send message" hidden="hidden">
+						<cocoa method="&#10;"/>
+					</responds-to>
+					<responds-to name="add event message" hidden="hidden">
+						<cocoa method="&#10;"/>
+					</responds-to>
 				</responds-to-commands>
 			</class>
 			<class name="color" code="colr" description="A color.">
@@ -61,10 +65,9 @@
 			</command>
 			<!-- NSCoreSuite doesn&apos;t define these.
 			&lt;command name=&quot;run&quot; code=&quot;aevtoapp&quot; description=&quot;Run an application.  Most applications will open an empty, untitled window.&quot;/&gt;
-			&lt;command name=&quot;reopen&quot; code=&quot;aevtrapp&quot; description=&quot;Reactivate a running application.  Some applications will open a new untitled window if no window is open.&quot;/&gt;
-			-->
+			&lt;command name=&quot;reopen&quot; code=&quot;aevtrapp&quot; description=&quot;Reactivate a running application.  Some applications will open a new untitled window if no window is open.&quot;/&gt;-->
 			<command name="print" code="aevtpdoc" description="Print an object.">
-				<!-- type would be better written as &quot;file | document&quot;. -->
+				<!-- type would be better written as &quot;file | document&quot;-->
 				<direct-parameter type="file" description="The file(s) or document(s) to be printed."/>
 			</command>
 			<command name="quit" code="aevtquit" description="Quit an application.">
@@ -100,10 +103,9 @@
 				<cocoa name="Copy" class="NSCloneCommand"/>
 				<direct-parameter type="object" description="the object(s) to duplicate"/>
 				<!-- &quot;duplicate&quot; is supposed to return the new objects.
-				&lt;result type=&quot;object&quot; description=&quot;to the duplicated object(s)&quot;/&gt;
-				-->
+				&lt;result type=&quot;object&quot; description=&quot;to the duplicated object(s)&quot;/&gt;-->
 				<parameter name="to" code="insh" description="The location for the new object(s)." type="location">
-					<!-- &quot;to&quot; is supposed to be optional. -->
+					<!-- &quot;to&quot;-->
 					<cocoa key="ToLocation"/>
 				</parameter>
 				<parameter name="with properties" code="prdt" description="Properties to be set in the new duplicated object(s)." type="record" optional="optional">
@@ -115,7 +117,7 @@
 				<direct-parameter type="object" description="the object in question"/>
 				<result type="boolean" description="true if it exists, false if not"/>
 			</command>
-			<!-- &quot;get&quot; is supposed to be hidden. -->
+			<!-- &quot;get&quot;-->
 			<command name="get" code="coregetd" description="Get the data for an object.">
 				<cocoa class="NSGetCommand"/>
 				<direct-parameter type="object"/>
@@ -141,8 +143,7 @@
 				<cocoa class="NSMoveCommand"/>
 				<direct-parameter type="object" description="the object(s) to move"/>
 				<!-- &quot;move&quot; is supposed to return the relocated objects.
-				&lt;result type=&quot;object&quot; description=&quot;to the object(s) after they have been moved&quot;/&gt;
-				-->
+				&lt;result type=&quot;object&quot; description=&quot;to the object(s) after they have been moved&quot;/&gt;-->
 				<parameter name="to" code="insh" description="The new location for the object(s)." type="location">
 					<cocoa key="ToLocation"/>
 				</parameter>
@@ -156,13 +157,12 @@
 					<cocoa key="FileType"/>
 				</parameter>
 			</command>
-			<!-- &quot;set&quot; is supposed to be hidden. -->
-			<command name="set" code="coresetd" description="Set an object&apos;s data.">
+			<!-- &quot;set&quot;-->
+			<command name="set" code="coresetd" description="Set an object&apos;">
 				<cocoa class="NSSetCommand"/>
 				<direct-parameter type="object"/>
 				<!-- &quot;set&quot; is supposed to return the fully evaluated &quot;to&quot; data.
-				&lt;result type=&quot;any&quot;/&gt;
-				-->
+				&lt;result type=&quot;any&quot;/&gt;-->
 				<parameter name="to" code="data" description="The new value." type="any">
 					<cocoa key="Value"/>
 				</parameter>
@@ -187,7 +187,7 @@
 			</enumeration>
 		</types>
 		<classes>
-			<class name="application" code="capp" description="The Colloquy application&apos;s top level scripting object.">
+			<class name="application" code="capp" description="The Colloquy application&apos;">
 				<cocoa class="NSApplication"/>
 				<elements>
 					<element type="window" access="r">
@@ -273,7 +273,7 @@
 						<cocoa method="hasTitleBar"/>
 					</property>
 					<property name="index" code="pidx" description="The index of the window in the back-to-front window ordering." type="number">
-						<!-- the type is supposed to be &quot;integer&quot; -->
+						<!-- the type is supposed to be &quot;integer&quot;-->
 						<cocoa method="orderedIndex"/>
 					</property>
 					<property name="floating" code="isfl" description="Whether the window floats." type="boolean" access="r">
@@ -285,7 +285,7 @@
 					<property name="miniaturized" code="pmnd" description="Whether the window is currently miniaturized." type="boolean">
 						<cocoa method="isMiniaturized"/>
 					</property>
-					<property name="modal" code="pmod" description="Whether the window is the application&apos;s current modal window." type="boolean" access="r">
+					<property name="modal" code="pmod" description="Whether the window is the application&apos;" type="boolean" access="r">
 						<cocoa method="isModalPanel"/>
 					</property>
 					<property name="resizable" code="prsz" description="Whether the window can be resized." type="boolean" access="r">
@@ -338,7 +338,7 @@
 					<property name="tooltip" code="toLA" description="The tooltip for the listem item." type="string" access="r">
 						<cocoa method="toolTip"/>
 					</property>
-					<property name="container" code="pArA" description="This list item&apos;s container (if any)." type="list item" access="r">
+					<property name="container" code="pArA" description="This list item&apos;" type="list item" access="r">
 						<cocoa method="parent"/>
 					</property>
 				</properties>
@@ -395,14 +395,14 @@
 					<property name="target" code="trgA" description="The user or room that we engaged in conversation with." type="chat user | chat room" access="r"/>
 				</properties>
 				<responds-to-commands>
-					<responds-to name="send">
-						<cocoa method="legacySendMessageScriptCommand:"/>
-					</responds-to>
-					<responds-to name="add event">
-						<cocoa method="addEventMessageScriptCommand"/>
+					<responds-to name="send" hidden="hidden">
+						<cocoa method="sendMessageScriptCommand:"/>
 					</responds-to>
 					<responds-to name="send message">
 						<cocoa method="sendMessageScriptCommand:"/>
+					</responds-to>
+					<responds-to name="add event message" hidden="hidden">
+						<cocoa method="&#10;"/>
 					</responds-to>
 				</responds-to-commands>
 			</class>
@@ -423,7 +423,7 @@
 					<property name="id" code="ID  " description="The unique identifier of the member. Unique even if member changes nicknames." type="number" access="r">
 						<cocoa method="uniqueIdentifier"/>
 					</property>
-					<property name="name" code="pnam" description="Member&apos;s nickname." type="string" access="r">
+					<property name="name" code="pnam" description="Member&apos;" type="string" access="r">
 						<cocoa method="nickname"/>
 					</property>
 					<property name="chat room panel" code="crmM" description="The chat room panel this member is part of." type="chat room panel" access="r">
@@ -523,7 +523,7 @@
 			</class>
 		</classes>
 		<commands>
-			<command name="send" code="coRCsNdX" hidden="hidden" description="Send message to chat room or user that is represented by a panel. This command is deprecated, use send chat message.">
+			<command name="send" code="coRCsNdX" hidden="hidden" description="Send message to chat room or user that is represented by a panel. This command is deprecated, use send chat message defined in the Chat Core Suite.">
 				<direct-parameter type="chat room panel | direct chat panel" description="Chat room panel or direct chat panel to send through."/>
 				<parameter name="message" code="sNd1" description="Message to send. Can include HTML formatting." type="string">
 					<cocoa key="message"/>
@@ -535,15 +535,16 @@
 					<cocoa key="echo"/>
 				</parameter>
 			</command>
-			<command name="add event" code="coRCaEvX" hidden="hidden" description="Add an event message to a chat room panel or direct chat panel. This command is deprecated.">
-				<direct-parameter type="chat room panel | direct chat panel" description="Chat room panel or direct chat panel to affect."/>
-				<parameter name="message" code="aEv1" description="Message to add. Can include HTML formatting." type="string">
+			<command name="add event message" code="coRCaEvX" description="Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user.">
+				<cocoa class="JVAddEventMessageScriptCommand"/>
+				<direct-parameter type="string" description="Message to add (visible to the user). (Plain text with HTML formatting. Must entity encode HTML special characters.)"/>
+				<parameter name="message" code="aEv1" hidden="hidden" description="Message to add. Can include HTML formatting. This parameter is deprecated, the message is now the direct parameter." type="string" optional="optional">
 					<cocoa key="message"/>
 				</parameter>
-				<parameter name="with name" code="aEv2" description="A name for this type of event message." type="string">
+				<parameter name="with name" code="aEv2" description="A name for this type of event message. This is not visible to the user, and should be fairly unique." type="string">
 					<cocoa key="name"/>
 				</parameter>
-				<parameter name="and attributes" code="aEv3" description="Custom information to be stored with this event message. Can be used by chat styles." type="record" optional="optional">
+				<parameter name="and attributes" code="aEv3" description="Custom information to be stored with this event message. Can be used by chat styles and is saved in transcripts." type="record" optional="optional">
 					<cocoa key="attributes"/>
 				</parameter>
 			</command>
@@ -646,7 +647,7 @@
 					<property name="display name" code="dNmA" description="Display name, almost always the nickname." type="string" access="r">
 						<cocoa method="displayName"/>
 					</property>
-					<property name="real name" code="rElA" description="The real name supplied by the user, not always a person&apos;s name." type="string" access="r">
+					<property name="real name" code="rElA" description="The real name supplied by the user, not always a person&apos;" type="string" access="r">
 						<cocoa method="realName"/>
 					</property>
 					<property name="user name" code="uSnA" description="The user name supplied by the user." type="string" access="r">
@@ -673,7 +674,7 @@
 					<property name="user status" code="stsA" description="The current status of the user." type="user status" access="r">
 						<cocoa method="status"/>
 					</property>
-					<property name="away message" code="aStA" description="The user&apos;s current away message." type="text" access="r">
+					<property name="away message" code="aStA" description="The user&apos;" type="text" access="r">
 						<cocoa method="scriptTypedAwayMessage"/>
 					</property>
 					<property name="attributes" code="atRA" description="User attributes containing various itmes." type="record" access="rw">
@@ -835,7 +836,7 @@
 	<suite name="Chat Plug-In Suite" code="cplG" description="Commands to be implemented by plug-ins.">
 		<cocoa name="ChatPlugIn"/>
 		<commands>
-			<command name="process user command" code="cplGpcCX" description="Called when the user types an unhandled &quot;/command&quot;. Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent &quot;raw&quot; to the server.">
+			<command name="process user command" code="cplGpcCX" description="Called when the user types an unhandled &quot;/command&quot;. Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent &quot;raw&quot;">
 				<direct-parameter type="string" description="Command to process."/>
 				<result type="boolean" description="Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent &quot;raw&quot;"/>
 				<parameter name="with" code="pcC1" description="Any arguments given with the command." type="string" optional="optional">
@@ -893,14 +894,14 @@
 				</parameter>
 			</command>
 			<command name="build contextual menu for item" code="cplGcMiX" description="Called for every object that the user can access a contextual/action menu. This handler is called when the selection changes in a table or right before the menu is shown, allowing you to provide a list of titles to show.">
-				<!-- The documentation element isn&apos;t supported in the 10.3 version of sdp. -->
-				<!--			&lt;documentation&gt;The title &quot;-&quot; will insert a menu separator. Sub-menus can be added by inserting into your list a record looking like: {title:&quot;Parent Item&quot;, submenu:{&quot;Item 1&quot;, &quot;Item 2&quot;}}. The depth of the sub-menu is virtually unlimited.&lt;/documentation&gt; -->
+				<!-- The documentation element isn&apos;-->
+				<!--			&lt;documentation&gt;The title &quot;-&quot; will insert a menu separator. Sub-menus can be added by inserting into your list a record looking like: {title:&quot;Parent Item&quot;, submenu:{&quot;Item 1&quot;, &quot;Item 2&quot;}}. The depth of the sub-menu is virtually unlimited.&lt;/documentation&gt;-->
 				<direct-parameter type="any" description="Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, chat connection, etc."/>
 				<parameter name="in" code="cMi1" description="The chat room or direct chat this context menu is assocated with, if any." type="panel" optional="optional">
 					<cocoa key="view"/>
 				</parameter>
 			</command>
-			<command name="handle clicked contextual menu item" code="cplGpcMX" description="Called when the user clicks on one of the supplied menu item titles you returned from the &quot;build contextual menu for item&quot;.">
+			<command name="handle clicked contextual menu item" code="cplGpcMX" description="Called when the user clicks on one of the supplied menu item titles you returned from the &quot;build contextual menu for item&quot;">
 				<direct-parameter type="string" description="Menu item title you returned from the &quot;build contextual menu for item&quot;"/>
 				<parameter name="for" code="pcM1" description="Item the menu item was built for, can be a member, chat room, direct chat, transcript, chat connection, etc." type="any" optional="optional">
 					<cocoa key="object"/>
@@ -1057,7 +1058,7 @@
 				<cocoa class="NSAttachmentTextStorage"/>
 				<properties>
 					<property name="file name" code="atfn" description="The path to the file for the attachment" type="string">
-						<!-- This property should be deprecated like all the other path-centric properties, and replaced with a type=&quot;file&quot; property. -->
+						<!-- This property should be deprecated like all the other path-centric properties, and replaced with a type=&quot;file&quot;-->
 						<cocoa method="filename"/>
 					</property>
 				</properties>

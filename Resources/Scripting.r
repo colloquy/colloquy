@@ -23,7 +23,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			/* Events */
 
 			"send",
-			"Send message to chat room or user that is represented by a panel. This command is deprecated, use send chat message.",
+			"Send message to chat room or user that is represented by a panel. This command is deprecated, use send chat message defined in the Chat Core Suite.",
 			'coRC', 'sNdX',
 			reply_none__,
 			't001',
@@ -45,25 +45,17 @@ resource 'aete' (0, "Colloquy Terminology") {
 				singleItem, notEnumerated, Reserved13
 			},
 
-			"add event",
-			"Add an event message to a chat room panel or direct chat panel. This command is deprecated.",
+			"add event message",
+			"Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user.",
 			'coRC', 'aEvX',
 			reply_none__,
-			't001',
-			"Chat room panel or direct chat panel to affect.",
+			'TEXT',
+			"Message to add (visible to the user). (Plain text with HTML formatting. Must entity encode HTML special characters.)",
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
 				"message", 'aEv1', 'TEXT',
-				"Message to add. Can include HTML formatting.",
-				required,
-				singleItem, notEnumerated, Reserved13,
-				"with name", 'aEv2', 'TEXT',
-				"A name for this type of event message.",
-				required,
-				singleItem, notEnumerated, Reserved13,
-				"and attributes", 'aEv3', 'reco',
-				"Custom information to be stored with this event message. Can be used by chat styles.",
+				"Message to add. Can include HTML formatting. This parameter is deprecated, the message is now the direct parameter.",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			}
@@ -71,13 +63,30 @@ resource 'aete' (0, "Colloquy Terminology") {
 		{
 			/* Classes */
 
-			"chat room panel or direct chat panel", 't001', "", { }, { },
+			"item", 'cobj',
+			"A scriptable object.",
+			{
+			},
+			{
+			},
+
+			"direct chat panel", 'dchM',
+			"Direct (private) chat panel with another user.",
+			{
+				"<Inheritance>", pInherits, 'ctrM',
+				"inherits elements and properties of the transcript panel class.",
+				reserved, singleItem, notEnumerated, readOnly, Reserved12
+			},
+			{
+			},
 
 			"chat room or chat user", 't000', "", { }, { },
 
-			"chat user or member", 't005', "", { }, { },
+			"chat user, member or string", 't002', "", { }, { },
 
-			"chat user, member or string", 't003', "", { }, { }
+			"chat user or member", 't004', "", { }, { },
+
+			"chat room panel or direct chat panel", 't001', "", { }, { }
 		},
 		{
 			/* Comparisons */
@@ -286,7 +295,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			},
 
 			"set",
-			"Set an object's data.",
+			"Set an object'",
 			'core', 'setd',
 			reply_none__,
 			'obj ',
@@ -311,7 +320,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"properties", 'pALL', 'reco',
-				"All of the object's properties.",
+				"All of the object'",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12
 			},
 			{
@@ -347,6 +356,25 @@ resource 'aete' (0, "Colloquy Terminology") {
 		{
 			/* Events */
 
+			"add event message",
+			"Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user.",
+			'coRC', 'aEvX',
+			reply_none__,
+			'TEXT',
+			"Message to add (visible to the user). (Plain text with HTML formatting. Must entity encode HTML special characters.)",
+			directParamRequired,
+			singleItem, notEnumerated, Reserved13,
+			{
+				"with name", 'aEv2', 'TEXT',
+				"A name for this type of event message. This is not visible to the user, and should be fairly unique.",
+				required,
+				singleItem, notEnumerated, Reserved13,
+				"and attributes", 'aEv3', 'reco',
+				"Custom information to be stored with this event message. Can be used by chat styles and is saved in transcripts.",
+				optional,
+				singleItem, notEnumerated, Reserved13
+			},
+
 			"display new connection dialog",
 			"Prompts to make a new connection.",
 			'coRC', 'nwcX',
@@ -364,7 +392,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			replyRequired, singleItem, notEnumerated, Reserved13,
 			dp_none__,
 			{
-				"for", 'sCh1', 't003',
+				"for", 'sCh1', 't002',
 				"The member or chat user. You may also pass a string nickname if you also provide the connection.",
 				required,
 				singleItem, notEnumerated, Reserved13,
@@ -398,7 +426,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			/* Classes */
 
 			"application", 'capp',
-			"The Colloquy application's top level scripting object.",
+			"The Colloquy application'",
 			{
 				"name", 'pnam', 'TEXT',
 				"The name of the application.",
@@ -464,7 +492,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
 				"modal", 'pmod', 'bool',
-				"Whether the window is the application's current modal window.",
+				"Whether the window is the application'",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"resizable", 'prsz', 'bool',
@@ -520,7 +548,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"container", 'pArA', 'cliM',
-				"This list item's container (if any).",
+				"This list item'",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12
 			},
 			{
@@ -648,7 +676,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"name", 'pnam', 'TEXT',
-				"Member's nickname.",
+				"Member'",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"chat room panel", 'crmM', 'crmM',
@@ -927,7 +955,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"real name", 'rElA', 'TEXT',
-				"The real name supplied by the user, not always a person's name.",
+				"The real name supplied by the user, not always a person'",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"user name", 'uSnA', 'TEXT',
@@ -963,7 +991,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, enumerated, readOnly, Reserved12,
 
 				"away message", 'aStA', 'ctxt',
-				"The user's current away message.",
+				"The user'",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"attributes", 'atRA', 'reco',
@@ -1159,7 +1187,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			/* Events */
 
 			"process user command",
-			"Called when the user types an unhandled \"/command\". Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent \"raw\" to the server.",
+			"Called when the user types an unhandled \"/command\". Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent \"raw\"",
 			'cplG', 'pcCX',
 			'bool',
 			"Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent \"raw\"",
@@ -1192,7 +1220,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"Is this message an action?",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"from", 'piM2', 't005',
+				"from", 'piM2', 't004',
 				"The user this message came from.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
@@ -1287,7 +1315,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			},
 
 			"handle clicked contextual menu item",
-			"Called when the user clicks on one of the supplied menu item titles you returned from the \"build contextual menu for item\".",
+			"Called when the user clicks on one of the supplied menu item titles you returned from the \"build contextual menu for item\"",
 			'cplG', 'pcMX',
 			reply_none__,
 			'TEXT',
@@ -1398,7 +1426,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"by", 'kRm1', 't005',
+				"by", 'kRm1', 't004',
 				"The member who kicked us out.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
@@ -1455,7 +1483,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The chat room.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"by", 'mKr2', 't005',
+				"by", 'mKr2', 't004',
 				"The member who kicked the other member out.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
@@ -1475,7 +1503,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The chat room.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"by", 'rTc2', 't005',
+				"by", 'rTc2', 't004',
 				"The member who changed the topic.",
 				optional,
 				singleItem, notEnumerated, Reserved13,

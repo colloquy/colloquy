@@ -184,7 +184,7 @@
 				<key>nickname</key>
 				<dict>
 					<key>Description</key>
-					<string>Member's nickname.</string>
+					<string>Member'</string>
 					<key>Name</key>
 					<string>name</string>
 				</dict>
@@ -360,7 +360,7 @@
 				<key>parent</key>
 				<dict>
 					<key>Description</key>
-					<string>This list item's container (if any).</string>
+					<string>This list item'</string>
 					<key>Name</key>
 					<string>container</string>
 				</dict>
@@ -413,7 +413,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>The Colloquy application's top level scripting object.</string>
+			<string>The Colloquy application'</string>
 			<key>Name</key>
 			<string>application</string>
 			<key>PluralName</key>
@@ -475,7 +475,7 @@
 				<key>isModalPanel</key>
 				<dict>
 					<key>Description</key>
-					<string>Whether the window is the application's current modal window.</string>
+					<string>Whether the window is the application'</string>
 					<key>Name</key>
 					<string>modal</string>
 				</dict>
@@ -586,6 +586,35 @@
 	</dict>
 	<key>Commands</key>
 	<dict>
+		<key>AddEventMessage</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>attributes</key>
+				<dict>
+					<key>Description</key>
+					<string>Custom information to be stored with this event message. Can be used by chat styles and is saved in transcripts.</string>
+					<key>Name</key>
+					<string>and attributes</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>Description</key>
+					<string>A name for this type of event message. This is not visible to the user, and should be fairly unique.</string>
+					<key>Name</key>
+					<string>with name</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user.</string>
+			<key>Name</key>
+			<string>add event message</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Message to add (visible to the user). (Plain text with HTML formatting. Must entity encode HTML special characters.)</string>
+			</dict>
+		</dict>
 		<key>DisplayChatRoomBrowser</key>
 		<dict>
 			<key>Arguments</key>

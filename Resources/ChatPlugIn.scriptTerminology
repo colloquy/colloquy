@@ -70,7 +70,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when the user clicks on one of the supplied menu item titles you returned from the "build contextual menu for item".</string>
+			<string>Called when the user clicks on one of the supplied menu item titles you returned from the "build contextual menu for item"</string>
 			<key>Name</key>
 			<string>handle clicked contextual menu item</string>
 			<key>UnnamedArgument</key>
@@ -451,7 +451,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when the user types an unhandled "/command". Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent "raw" to the server.</string>
+			<string>Called when the user types an unhandled "/command". Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent "raw"</string>
 			<key>Name</key>
 			<string>process user command</string>
 			<key>UnnamedArgument</key>

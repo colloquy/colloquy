@@ -403,10 +403,10 @@
 			<dict>
 				<key>ChatCore.SendMessage</key>
 				<string>sendMessageScriptCommand:</string>
-				<key>Colloquy.AddEvent</key>
-				<string>addEventMessageScriptCommand</string>
+				<key>Colloquy.AddEventMessage</key>
+				<string></string>
 				<key>Colloquy.Send</key>
-				<string>legacySendMessageScriptCommand:</string>
+				<string>sendMessageScriptCommand:</string>
 			</dict>
 		</dict>
 		<key>ListItem</key>
@@ -876,7 +876,7 @@
 	</dict>
 	<key>Commands</key>
 	<dict>
-		<key>AddEvent</key>
+		<key>AddEventMessage</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>coRC</string>
@@ -897,6 +897,8 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>aEv1</string>
+					<key>Optional</key>
+					<string>YES</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
@@ -909,11 +911,11 @@
 				</dict>
 			</dict>
 			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
+			<string>JVAddEventMessageScriptCommand</string>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Type</key>
-				<string>NSObject</string>
+				<string>NSString</string>
 			</dict>
 		</dict>
 		<key>DisplayChatRoomBrowser</key>

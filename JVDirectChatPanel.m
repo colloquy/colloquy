@@ -1661,13 +1661,16 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	id action = [args objectForKey:@"action"];
 	id localEcho = [args objectForKey:@"echo"];
 
+	if( [args objectForKey:@"message"] ) // support the old command that had a message parameter instead
+		message = [args objectForKey:@"message"];
+
 	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
 		[command setScriptErrorNumber:1000];
 		[command setScriptErrorString:@"The message was missing or not a string value."];
 		return nil;
 	}
 
-	if( ! [message length] ) {
+	if( ! [(NSString *)message length] ) {
 		[command setScriptErrorNumber:1000];
 		[command setScriptErrorString:@"The message can't be blank."];
 		return nil;
@@ -1691,75 +1694,11 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:realMessage sender:[[self connection] localUser]];
 	[cmessage setAction:realAction];
-	
-	[self sendMessage:cmessage];
-	if( realLocalEcho ) [self echoSentMessageToDisplay:cmessage];
-
-	[cmessage release];
-}
-
-- (void) legacySendMessageScriptCommand:(NSScriptCommand *) command {
-	NSDictionary *args = [command evaluatedArguments];
-	id message = [args objectForKey:@"message"];
-	id action = [args objectForKey:@"action"];
-	id localEcho = [args objectForKey:@"echo"];
-
-	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
-		[command setScriptErrorNumber:1000];
-		[command setScriptErrorString:@"The message was missing or not a string value."];
-		return;
-	}
-
-	if( ! [message length] ) {
-		[command setScriptErrorNumber:1000];
-		[command setScriptErrorString:@"The message can't be blank."];
-		return;
-	}
-
-	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
-	BOOL realAction = ( action ? [action boolValue] : NO );
-	BOOL realLocalEcho = ( localEcho ? [localEcho boolValue] : YES );
-
-	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:realMessage sender:[[self connection] localUser]];
-	[cmessage setAction:realAction];
 
 	[self sendMessage:cmessage];
 	if( realLocalEcho ) [self echoSentMessageToDisplay:cmessage];
 
 	[cmessage release];
-}
-
-- (void) addEventMessageScriptCommand:(NSScriptCommand *) command {
-	NSDictionary *args = [command evaluatedArguments];
-	id message = [args objectForKey:@"message"];
-	id name = [args objectForKey:@"name"];
-	id attributes = [args objectForKey:@"attributes"];
-
-	if( ! name || ! [name isKindOfClass:[NSString class]] ) {
-		[command setScriptErrorNumber:1000];
-		[command setScriptErrorString:@"The event name was missing or not a string value."];
-		return;
-	}
-
-	if( ! [name length] ) {
-		[command setScriptErrorNumber:1000];
-		[command setScriptErrorString:@"The event name can't be blank."];
-		return;
-	}
-
-	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
-		[command setScriptErrorNumber:1000];
-		[command setScriptErrorString:@"The event message was missing or not a string value."];
-		return;
-	}
-
-	if( ! [message length] ) {
-		[command setScriptErrorNumber:1000];
-		[command setScriptErrorString:@"The event message can't be blank."];
-		return;
-	}
-
-	[self addEventMessageToDisplay:message withName:name andAttributes:( [attributes isKindOfClass:[NSDictionary class]] ? attributes : nil )];
 }
 
 - (unsigned long) scriptTypedEncoding {
@@ -1856,5 +1795,63 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	[self setPreference:[NSNumber numberWithInt:encoding] forKey:@"encoding"];
 	[self changeEncoding:nil];
+}
+@end
+
+#pragma mark -
+
+@interface JVAddEventMessageScriptCommand : NSScriptCommand {}
+@end
+
+@implementation JVAddEventMessageScriptCommand
+- (id) performDefaultImplementation {
+	// check if the subject responds to the command directly, if so execute that implementation
+	if( [self subjectSupportsCommand] ) return [self executeCommandOnSubject];
+
+	// the subject didn't respond to the command, so do our default implementation
+	NSDictionary *args = [self evaluatedArguments];
+	id target = [self subjectParameter];
+	id message = [self evaluatedDirectParameter];
+	id name = [args objectForKey:@"name"];
+	id attributes = [args objectForKey:@"attributes"];
+
+	if( [message isKindOfClass:[JVDirectChatPanel class]] ) {
+		// this is from an old compiled script, flip the parameters
+		target = message;
+		message = [args objectForKey:@"message"];
+	}
+
+	if( ! [target isKindOfClass:[JVDirectChatPanel class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The nearest enclosing tell block target does not inherit from the direct chat panel class."];
+		return nil;
+	}
+
+	if( ! name || ! [name isKindOfClass:[NSString class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The event name was missing or not a string value."];
+		return nil;
+	}
+
+	if( ! [(NSString *)name length] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The event name can't be blank."];
+		return nil;
+	}
+
+	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The event message was missing or not a string value."];
+		return nil;
+	}
+
+	if( ! [(NSString *)message length] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The event message can't be blank."];
+		return nil;
+	}
+
+	[target addEventMessageToDisplay:message withName:name andAttributes:( [attributes isKindOfClass:[NSDictionary class]] ? attributes : nil )];
+	return nil;
 }
 @end

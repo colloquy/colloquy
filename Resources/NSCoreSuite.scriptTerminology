@@ -18,7 +18,7 @@
 				<key>scriptingProperties</key>
 				<dict>
 					<key>Description</key>
-					<string>All of the object's properties.</string>
+					<string>All of the object'</string>
 					<key>Name</key>
 					<string>properties</string>
 				</dict>
@@ -261,7 +261,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Set an object's data.</string>
+			<string>Set an object'</string>
 			<key>Name</key>
 			<string>set</string>
 		</dict>

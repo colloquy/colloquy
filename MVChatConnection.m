@@ -922,22 +922,12 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 @interface MVSendMessageScriptCommand : NSScriptCommand {}
 @end
 
-@interface MVSendRawMessageScriptCommand : NSScriptCommand {}
-@end
-
-@interface MVJoinChatRoomScriptCommand : NSScriptCommand {}
-@end
-
-#pragma mark -
-
 @implementation MVSendMessageScriptCommand
 - (id) performDefaultImplementation {
-	// check if the subject object responds to the command directly, if so jump to that implementation
-	if( [[[self subjectSpecifier] keyClassDescription] supportsCommand:[self commandDescription]] ) {
-		SEL selector = [[[self subjectSpecifier] keyClassDescription] selectorForCommand:[self commandDescription]];
-		return [[self subjectParameter] performSelector:selector withObject:self];
-	}
+	// check if the subject responds to the command directly, if so execute that implementation
+	if( [self subjectSupportsCommand] ) return [self executeCommandOnSubject];
 
+	// the subject didn't respond to the command, so do our default implementation
 	NSDictionary *args = [self evaluatedArguments];
 	id message = [self evaluatedDirectParameter];
 	id target = [args objectForKey:@"target"];
@@ -951,7 +941,7 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 		return nil;
 	}
 
-	if( ! [message length] ) {
+	if( ! [(NSString *)message length] ) {
 		[self setScriptErrorNumber:1000];
 		[self setScriptErrorString:@"The message can't be blank."];
 		return nil;
@@ -975,13 +965,13 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 		[self setScriptErrorString:@"The \"action tense\" parameter was not a boolean value."];
 		return nil;
 	}
-	
+
 	if( localEcho && ! [localEcho isKindOfClass:[NSNumber class]] ) {
 		[self setScriptErrorNumber:1000];
 		[self setScriptErrorString:@"The \"local echo\" parameter was not a boolean value."];
 		return nil;
 	}
-	
+
 	if( encoding && ! [encoding isKindOfClass:[NSNumber class]] ) {
 		[self setScriptErrorNumber:1000];
 		[self setScriptErrorString:@"The \"encoding\" was an invalid type."];
@@ -1030,12 +1020,15 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
 		}
 	}
-	
+
 	return nil;
 }
 @end
 
 #pragma mark -
+
+@interface MVSendRawMessageScriptCommand : NSScriptCommand {}
+@end
 
 @implementation MVSendRawMessageScriptCommand
 - (id) performDefaultImplementation {
@@ -1071,6 +1064,9 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 @end
 
 #pragma mark -
+
+@interface MVJoinChatRoomScriptCommand : NSScriptCommand {}
+@end
 
 @implementation MVJoinChatRoomScriptCommand
 - (id) performDefaultImplementation {
