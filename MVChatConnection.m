@@ -9,6 +9,7 @@
 #import "MVChatScriptPlugin.h"
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
+#import "NSMethodSignatureAdditions.h"
 #import "firetalk.h"
 
 typedef void (*firetalk_callback)(firetalk_t, void *, ...);
@@ -476,16 +477,25 @@ void MVChatFileTransferStatus( void *c, void *cs, const void * const filehandle,
 
 void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const char * const command, const char * const args ) {
 	MVChatConnection *self = cs;
-	NSEnumerator *enumerator = nil;
-	id item = nil;
 
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( command != NULL );
 
-	enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processSubcodeRequest:withArguments:fromUser:forConnection: )] objectEnumerator];
-	while( ( item = [enumerator nextObject] ) )
-		if( [item processSubcodeRequest:[NSString stringWithUTF8String:command] withArguments:( args ? [NSString stringWithUTF8String:args] : nil ) fromUser:[NSString stringWithUTF8String:from] forConnection:self] ) return;
+	NSString *cmd = [NSString stringWithUTF8String:command];
+	NSString *ags = ( args ? [NSString stringWithUTF8String:args] : nil );
+	NSString *frm = [NSString stringWithUTF8String:from];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	[invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser:forConnection: )];
+	[invocation setArgument:&cmd atIndex:2];
+	[invocation setArgument:&ags atIndex:3];
+	[invocation setArgument:&frm atIndex:4];
+	[invocation setArgument:&self atIndex:5];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+	if( [[results lastObject] boolValue] ) return;
 
 	if( ! strcasecmp( command, "VERSION" ) ) {
 		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
@@ -495,23 +505,32 @@ void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const cha
 		return;
 	}
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionSubcodeRequestNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:from], @"from", [NSString stringWithUTF8String:command], @"command", (args ? (id) [NSString stringWithUTF8String:args] : (id) [NSNull null]), @"arguments", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionSubcodeRequestNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];
 }
 
 void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char * const command, const char * const args ) {
 	MVChatConnection *self = cs;
-	NSEnumerator *enumerator = nil;
-	id item = nil;
 
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( command != NULL );
 
-	enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processSubcodeReply:withArguments:fromUser:forConnection: )] objectEnumerator];
-	while( ( item = [enumerator nextObject] ) )
-		if( [item processSubcodeReply:[NSString stringWithUTF8String:command] withArguments:( args ? [NSString stringWithUTF8String:args] : nil ) fromUser:[NSString stringWithUTF8String:from] forConnection:self] ) return;
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:from], @"from", [NSString stringWithUTF8String:command], @"command", (args ? (id) [NSString stringWithUTF8String:args] : (id) [NSNull null]), @"arguments", nil]];
+	NSString *cmd = [NSString stringWithUTF8String:command];
+	NSString *ags = ( args ? [NSString stringWithUTF8String:args] : nil );
+	NSString *frm = [NSString stringWithUTF8String:from];
+	
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	[invocation setSelector:@selector( processSubcodeReply:withArguments:fromUser:forConnection: )];
+	[invocation setArgument:&cmd atIndex:2];
+	[invocation setArgument:&ags atIndex:3];
+	[invocation setArgument:&frm atIndex:4];
+	[invocation setArgument:&self atIndex:5];
+	
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+	if( [[results lastObject] boolValue] ) return;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];
 }
 
 #pragma mark -
@@ -1186,12 +1205,14 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psR1", user, @"psR2", connection, @"psR3", nil];
 	id result = [self callScriptHandler:'psRX' withArguments:args];
+	if( ! result ) [self doesNotRespondToSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(NSString *) user forConnection:(MVChatConnection *) connection {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psL1", user, @"psL2", connection, @"psL3", nil];
 	id result = [self callScriptHandler:'psLX' withArguments:args];
+	if( ! result ) [self doesNotRespondToSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 @end

@@ -6,6 +6,7 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
 #import <libxml/xinclude.h>
 
 #import "JVChatController.h"
@@ -623,6 +624,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( ! [user isEqualToString:[[self connection] nickname]] )
 		[self processMessage:mutableMsg asAction:action fromUser:user];
 
+	if( ! [mutableMsg length] ) return;
+
 	messageString = [[[NSMutableString alloc] initWithData:mutableMsg encoding:_encoding] autorelease];
 	if( ! messageString ) {
 		messageString = [NSMutableString stringWithCString:[mutableMsg bytes] length:[mutableMsg length]];
@@ -734,11 +737,15 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 }
 
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:inChat: )] objectEnumerator];
-	id item = nil;
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( BOOL ), @encode( JVDirectChat * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	while( ( item = [enumerator nextObject] ) )
-		[item processMessage:message asAction:action inChat:self];
+	[invocation setSelector:@selector( processMessage:asAction:inChat: )];
+	[invocation setArgument:&message atIndex:2];
+	[invocation setArgument:&action atIndex:3];
+	[invocation setArgument:&self atIndex:4];
+
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 }
 
 - (void) echoSentMessageToDisplay:(NSAttributedString *) message asAction:(BOOL) action {
@@ -817,7 +824,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				}
 
 				[self sendAttributedMessage:subMsg asAction:action];
-				[self echoSentMessageToDisplay:subMsg asAction:action];
+				if( [[subMsg string] length] )
+					[self echoSentMessageToDisplay:subMsg asAction:action];
 			}
 		}
 		if( range.length ) range.location++;
@@ -835,7 +843,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	[message setAttributedString:[[[NSAttributedString alloc] initWithString:messageString] autorelease]];
 
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toChat: )] objectEnumerator];
+	NSSet *plugins = [[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toChat: )];
+	NSEnumerator *enumerator = [plugins objectEnumerator];
 	id item = nil;
 
 	while( ( item = [enumerator nextObject] ) )
@@ -844,25 +853,26 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 	[message setAttributedString:[NSAttributedString attributedStringWithHTMLFragment:[message string] baseURL:nil]];
 
-	enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toChat: )] objectEnumerator];
+	enumerator = [plugins objectEnumerator];
 	while( ( item = [enumerator nextObject] ) )
 		if( ! [item isKindOfClass:[MVChatScriptPlugin class]] )
 			[item processMessage:message asAction:action toChat:self];
 
-	[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
+	if( [[message string] length] ) return;
+		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
-	BOOL handled = NO;
-	id item = nil;
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toChat: )] objectEnumerator];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( JVDirectChat * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	while( ( item = [enumerator nextObject] ) ) {
-		handled = [item processUserCommand:command withArguments:arguments toChat:self];
-		if( handled ) break;
-	}
+	[invocation setSelector:@selector( processUserCommand:withArguments:toChat: )];
+	[invocation setArgument:&command atIndex:2];
+	[invocation setArgument:&arguments atIndex:3];
+	[invocation setArgument:&self atIndex:4];
 
-	return handled;
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+	return [[results lastObject] boolValue];
 }
 
 #pragma mark -
@@ -1421,6 +1431,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toChat:(JVDirectChat *) chat {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", chat, @"pcC2", nil];
 	id result = [self callScriptHandler:'pcCX' withArguments:args];
+	if( ! result ) [self doesNotRespondToSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
@@ -1429,7 +1440,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	if( ! messageString ) messageString = [NSString stringWithCString:[message bytes] length:[message length]];
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:messageString, @"----", [NSNumber numberWithBool:action], @"piM1", [chat target], @"piM2", chat, @"piM3", nil];
 	id result = [self callScriptHandler:'piMX' withArguments:args];
-	if( [result isKindOfClass:[NSString class]] ) {
+	if( ! result ) [self doesNotRespondToSelector:_cmd];
+	else if( [result isKindOfClass:[NSString class]] ) {
 		NSData *resultData = [result dataUsingEncoding:[chat encoding] allowLossyConversion:YES];
 		if( resultData ) [message setData:resultData];
 	}
@@ -1438,7 +1450,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toChat:(JVDirectChat *) chat {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"poM1", chat, @"poM2", nil];
 	id result = [self callScriptHandler:'poMX' withArguments:args];
-	if( [result isKindOfClass:[NSString class]] )
+	if( ! result ) [self doesNotRespondToSelector:_cmd];
+	else if( [result isKindOfClass:[NSString class]] )
 		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
 }
 @end

@@ -1,6 +1,8 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
+
 #import "JVChatConsole.h"
 #import "JVChatController.h"
 #import "MVTextView.h"
@@ -264,7 +266,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		if( ( [subMsg length] >= 1 && range.length ) || ( [subMsg length] && ! range.length ) ) {
 			if( [[subMsg string] hasPrefix:@"/"] ) {
-				BOOL handled = NO;
 				NSScanner *scanner = [NSScanner scannerWithString:[subMsg string]];
 				NSString *command = nil;
 				NSAttributedString *arguments = nil;
@@ -276,15 +277,18 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 				arguments = [subMsg attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], range.location - [scanner scanLocation] )];
 
-				NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toConnection: )] objectEnumerator];
-				id item = nil;
+				NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), nil];
+				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-				while( ( item = [enumerator nextObject] ) ) {
-					handled = [item processUserCommand:command withArguments:arguments toConnection:[self connection]];
-					if( handled ) break;
-				}
+				[invocation setSelector:@selector( processUserCommand:withArguments:toConnection: )];
+				[invocation setArgument:&command atIndex:2];
+				[invocation setArgument:&arguments atIndex:3];
+				[invocation setArgument:&_connection atIndex:4];
 
-				if( ! handled ) [[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
+				NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+
+				if( ! [[results lastObject] boolValue] )
+					[[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
 			} else {
 				[[self connection] sendRawMessage:[subMsg string]];
 			}

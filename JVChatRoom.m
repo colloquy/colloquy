@@ -3,6 +3,7 @@
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
 
 #import "JVChatController.h"
 #import "JVChatRoom.h"
@@ -175,25 +176,30 @@
 #pragma mark -
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
-	BOOL handled = NO;
-	id item = nil;
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processUserCommand:withArguments:toRoom: )] objectEnumerator];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( JVChatRoom * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	while( ( item = [enumerator nextObject] ) ) {
-		handled = [item processUserCommand:command withArguments:arguments toRoom:self];
-		if( handled ) break;
-	}
+	[invocation setSelector:@selector( processUserCommand:withArguments:toRoom: )];
+	[invocation setArgument:&command atIndex:2];
+	[invocation setArgument:&arguments atIndex:3];
+	[invocation setArgument:&self atIndex:4];
 
-	return handled;
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+	return [[results lastObject] boolValue];
 }
 
 - (void) processMessage:(NSMutableData *) message asAction:(BOOL) action fromUser:(NSString *) user {
 	JVChatRoomMember *member = [self chatRoomMemberWithName:user];
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:fromUser:inRoom: )] objectEnumerator];
-	id item = nil;
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( BOOL ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-	while( ( item = [enumerator nextObject] ) )
-		[item processMessage:message asAction:action fromMember:member inRoom:self];
+	[invocation setSelector:@selector( processMessage:asAction:fromMember:inRoom: )];
+	[invocation setArgument:&message atIndex:2];
+	[invocation setArgument:&action atIndex:3];
+	[invocation setArgument:&member atIndex:4];
+	[invocation setArgument:&self atIndex:5];
+
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 }
 
 - (void) sendAttributedMessage:(NSMutableAttributedString *) message asAction:(BOOL) action {
@@ -203,7 +209,8 @@
 
 	[message setAttributedString:[[[NSAttributedString alloc] initWithString:messageString] autorelease]];
 
-	NSEnumerator *enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )] objectEnumerator];
+	NSSet *plugins = [[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )];
+	NSEnumerator *enumerator = [plugins objectEnumerator];
 	id item = nil;
 
 	while( ( item = [enumerator nextObject] ) )
@@ -212,12 +219,13 @@
 
 	[message setAttributedString:[NSAttributedString attributedStringWithHTMLFragment:[message string] baseURL:nil]];
 
-	enumerator = [[[MVChatPluginManager defaultManager] pluginsThatRespondToSelector:@selector( processMessage:asAction:toRoom: )] objectEnumerator];
+	enumerator = [plugins objectEnumerator];
 	while( ( item = [enumerator nextObject] ) )
 		if( ! [item isKindOfClass:[MVChatScriptPlugin class]] )
 			[item processMessage:message asAction:action toRoom:self];
 
-	[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
+	if( [[message string] length] )
+		[[self connection] sendMessage:message withEncoding:_encoding toUser:[self target] asAction:action];
 }
 
 #pragma mark -
@@ -707,7 +715,7 @@
 
 @implementation JVChatRoomMember (JVChatRoomMemberObjectSpecifier)
 - (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[_parent class]];
+	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoom class]];
 	NSScriptObjectSpecifier *container = [_parent objectSpecifier];
 	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]] autorelease];
 }
@@ -730,6 +738,17 @@
 - (JVChatRoomMember *) valueInChatMembersWithName:(NSString *) name {
 	return [self chatRoomMemberWithName:name];
 }
+
+- (JVChatRoomMember *) valueInChatMembersWithUniqueID:(id) identifier {
+	NSEnumerator *enumerator = [_members objectEnumerator];
+	JVChatRoomMember *member = nil;
+
+	while( ( member = [enumerator nextObject] ) )
+		if( [[member uniqueIdentifier] isEqual:identifier] )
+			return member;
+
+	return nil;
+}
 @end
 
 #pragma mark -
@@ -738,6 +757,7 @@
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(JVChatRoom *) room {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", room, @"pcC2", nil];
 	id result = [self callScriptHandler:'pcCX' withArguments:args];
+	if( ! result ) [self doesNotRespondToSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
@@ -746,7 +766,8 @@
 	if( ! messageString ) messageString = [NSString stringWithCString:[message bytes] length:[message length]];
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:messageString, @"----", [NSNumber numberWithBool:action], @"piM1", [member nickname], @"piM2", room, @"piM3", nil];
 	id result = [self callScriptHandler:'piMX' withArguments:args];
-	if( [result isKindOfClass:[NSString class]] ) {
+	if( ! result ) [self doesNotRespondToSelector:_cmd];
+	else if( [result isKindOfClass:[NSString class]] ) {
 		NSData *resultData = [result dataUsingEncoding:[room encoding] allowLossyConversion:YES];
 		if( resultData ) [message setData:resultData];
 	}
@@ -755,7 +776,8 @@
 - (void) processMessage:(NSMutableAttributedString *) message asAction:(BOOL) action toRoom:(JVChatRoom *) room {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[message string], @"----", [NSNumber numberWithBool:action], @"poM1", room, @"poM2", nil];
 	id result = [self callScriptHandler:'poMX' withArguments:args];
-	if( [result isKindOfClass:[NSString class]] )
+	if( ! result ) [self doesNotRespondToSelector:_cmd];
+	else if( [result isKindOfClass:[NSString class]] )
 		[message setAttributedString:[[[NSAttributedString alloc] initWithString:result] autorelease]];
 }
 @end
