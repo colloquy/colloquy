@@ -2,8 +2,6 @@
 @interface JVMarkedScroller : NSScroller {
 	NSMutableSet *_marks;
 	NSMutableArray *_shades;
-	NSBezierPath *_lines;
-	NSBezierPath *_shadedAreas;
 }
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement;
 
