@@ -1072,6 +1072,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	if( [nickname length] ) [self setNickname:nickname];
 	if( [server length] ) [self setServer:server];
 	[self setServerPort:port];
+	[self disconnect];
 	[self connect];
 }
 
@@ -1115,6 +1116,9 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 			[self sendRawMessageWithFormat:@"NICK %@", nickname];
 		}
 	} else {
+		g_free_not_null( [self _irssiConnection] -> nick );
+		[self _irssiConnection] -> nick = g_strdup( [nickname UTF8String] );		
+
 		g_free_not_null( [self _irssiConnection] -> connrec -> nick );
 		[self _irssiConnection] -> connrec -> nick = g_strdup( [nickname UTF8String] );		
 	}
