@@ -41,6 +41,22 @@ q:after {
 	background-color: #efefec;
 }
 
-span.sender {
+.sender {
 	color: #129;
+}
+
+q .submessage:before {
+	content: " ";
+}
+
+q:empty:before {
+	content: "";
+}
+
+q:empty:after {
+	content: "";
+}
+
+q .submessage:first-child:before {
+	content: "";
 }

@@ -1,15 +1,41 @@
 <style type="text/css" media="screen,print">
-	.member {		overflow: hidden;		display: block;		width: 15ex;		float: left;		text-align: right;		color: #00f;	}
+	.member {
+		overflow: hidden;
+		display: block;
+		width: 15ex;
+		float: left;
+		text-align: right;
+		color: #00f;
+	}
 
-	.event {		display: block;		text-align: left;		margin-left: 14ex;		margin-right: 9ex;	}	.message {		display: block;		text-align: left;		margin-left: 16ex;		margin-right: 9ex;	}</style>
+	.event {
+		display: block;
+		text-align: left;
+		margin-left: 14ex;
+		margin-right: 9ex;
+	}
+
+	.message {
+		display: block;
+		text-align: left;
+		margin-left: 16ex;
+		margin-right: 9ex;
+	}
+</style>
 <script type="text/javascript">
 	maxNickLength = 10;
 
-	function documentAppend( html ) {
+	function appendMessage( html ) {
+		checkIfScrollToBottomIsNeeded();
+		removeConsecutiveInsertPoint();
+
 		range = document.createRange();
 		range.selectNode( document.getElementsByTagName( "body" ).item( 0 ) );
 		documentFragment = range.createContextualFragment( html );
 		document.body.appendChild( documentFragment );
+
+		scrollToBottomIfNeeded();
+
 		if( document.body.lastChild.firstChild.firstChild.data.length > maxNickLength ) {
 			maxNickLength = document.body.lastChild.firstChild.firstChild.data.length + 6;
 			document.styleSheets[3].cssRules[0].style.width = maxNickLength + 'ex';

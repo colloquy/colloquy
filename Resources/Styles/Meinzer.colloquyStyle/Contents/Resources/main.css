@@ -3,76 +3,92 @@ body {
 	margin: 0;
 }
 
-.msg1 {
-	background-color: #ddd;
-	padding: 6px;
-	padding-top: 4px;
-	padding-bottom: 2px;
-	margin-bottom: 0px;
+.error {
+	color: #aaa;
 }
 
-.msg1_again {
-	border-top: 1px dashed #888;
-	background-color: #ddd;
-	padding: 6px;
-	padding-bottom: 2px;
-	padding-top: 2px;
-	margin-bottom: 0px;
+.error:before {
+	content: "[";
 }
 
-.msg2 {
+.error:after {
+	content: "]";
+}
+
+.message {
 	background-color: rgba( 255, 255, 255, 0.6 ); 
 	padding: 6px;
 	padding-top: 4px;
 	padding-bottom: 2px;
-	margin-bottom: 0px;
+	margin-bottom: 0;
 }
 
-.msg2_again {
-	border-top: 1px dashed #888;
-	background-color: rgba( 255, 255, 255, 0.6 ); 
-	padding: 6px;
-	padding-bottom: 2px;
-	padding-top: 2px;
-	margin-bottom: 0px;
+.message.self {
+	background-color: #ddd;
 }
 
-.msg3 {
+.message.highlight {
 	background-color: rgba( 255, 191, 78, 0.6 ); 
+}
+
+.submessage {
+	border-top: 1px dashed rgba( 0, 0, 0, 0.2 );
+	background-color: rgba( 255, 255, 255, 0.6 ); 
 	padding: 6px;
-	padding-top: 4px;
 	padding-bottom: 2px;
-	margin-bottom: 0px;
+	padding-top: 2px;
+	margin-bottom: 0;
+}
+
+.submessage.self {
+	background-color: #ddd;
+}
+
+.submessage.highlight {
+	background-color: rgba( 255, 191, 78, 0.6 ); 
 }
 
 .shadow {
 	background: url( "shadow.png" ) repeat-x; 
-	border-bottom: #afafaf; 
 	width: auto;
+	height: 15px;
 }
 
-.name_time {
+.header {
    	position: relative;
-    border-bottom: 1px solid #777;
+    border-bottom: 1px solid rgba( 0, 0, 0, 0.5 );
     margin-bottom: 2px;
 }
 
-.name_time .name {
-	text-shadow: 2px 2px 4px #888;
-	width: 100%;
+.header .name {
+	text-shadow: 2px 2px 4px rgba( 0, 0, 0, 0.6 );
+	width: auto;
 	font-weight: bold;
 }
 
-.name_time .time {
+.time {
 	float: right;
 	font-size: smaller;
-	color: #444;
+	margin-left: 10px;
+	color: rgba( 0, 0, 0, 0.5 );
 }
 
 .event {
-	text-shadow: 2px 2px 4px #111;
-	width: 100%;
+	text-shadow: 2px 2px 4px rgba( 0, 0, 0, 0.1 );
+	padding: 2px;
+	margin-top: 6px;
+	margin-bottom: 6px;
+	text-align: center;
+	width: auto;
 	font-weight: bold;
 	font-size: smaller;
-	color: #fff;
+	color: white;
+}
+
+.event a {
+	color: white;
+}
+
+#consecutiveInsert {
+	display: none;
 }

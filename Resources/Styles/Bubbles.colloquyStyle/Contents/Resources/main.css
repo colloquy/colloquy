@@ -21,6 +21,8 @@ body {
 	line-height: 1.1em;
 	color: #888;
 	text-align: center;
+	margin-top: 6px;
+	margin-bottom: 6px;
 }
 
 table.message, table.selfMessage {
