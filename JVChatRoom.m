@@ -9,6 +9,7 @@
 #import <AGRegex/AGRegex.h>
 
 #import "JVChatController.h"
+#import "MVApplicationController.h"
 #import "MVConnectionsController.h"
 #import "JVChatRoom.h"
 #import "JVChatRoomMember.h"
@@ -82,9 +83,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (void) dealloc {
-	if (_inRoom) {
+	if( _inRoom && ! [MVApplicationController isTerminating] )
 		[[self connection] partChatRoom:[self target]];
-	}
 
 	[_members release];
 	[_sortedMembers release];
