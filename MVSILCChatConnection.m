@@ -788,7 +788,6 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 
 static void silc_disconnected( SilcClient client, SilcClientConnection conn, SilcStatus status, const char *message ) {
 	MVSILCChatConnection *self = conn -> context;
-	
 
 	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
 }
