@@ -12,9 +12,9 @@
 
 + (NSColor *) colorWithCSSAttributeValue:(NSString *) attribute {
 	NSColor *ret = [self colorWithHTMLAttributeValue:attribute];
-	NSCharacterSet *whites = [NSCharacterSet whitespaceCharacterSet];
 
 	if( ! ret && [attribute hasPrefix:@"rgb"] ) {
+		NSCharacterSet *whites = [NSCharacterSet whitespaceCharacterSet];
 		BOOL hasAlpha = [attribute hasPrefix:@"rgba"];
 		NSScanner *scanner = [NSScanner scannerWithString:attribute];
 		[scanner scanCharactersFromSet:whites intoString:nil];
