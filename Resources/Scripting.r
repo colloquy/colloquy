@@ -58,6 +58,106 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"Message to add. Can include HTML formatting. This parameter is deprecated, the message is now the direct parameter.",
 				optional,
 				singleItem, notEnumerated, Reserved13
+			},
+
+			"transfer file",
+			"Send a file to another user. This will use DCC or another connection specific protocol.",
+			'ccoR', 'sFiX',
+			reply_none__,
+			'file',
+			"The file to send.",
+			directParamRequired,
+			singleItem, notEnumerated, Reserved13,
+			{
+				"at", 'sFi1', 'file',
+				"Path of file to send the user. This parameter is depreciated.",
+				optional,
+				singleItem, notEnumerated, Reserved13,
+				"to", 'sFi2', 'chUs',
+				"User to send the file to. Optional if the nearest enclosing tell block accepts this command.",
+				optional,
+				singleItem, notEnumerated, Reserved13
+			},
+
+			"send subcode command",
+			"Send a subcode (CTCP or other connection specific protocol) command to another user.",
+			'ccoR', 'sSrX',
+			reply_none__,
+			'TEXT',
+			"The name of the command to send.",
+			directParamRequired,
+			singleItem, notEnumerated, Reserved13,
+			{
+				"command", 'sSr1', 'TEXT',
+				"The name of the command to send. This parameter is depreciated.",
+				optional,
+				singleItem, notEnumerated, Reserved13,
+				"as", 'sSr3', 'scTE',
+				"Type of subcode message to send. Defaults to a request.",
+				optional,
+				singleItem, enumerated, Reserved13,
+				"to", 'sSr4', 't000',
+				"The chat user or chat room to send to. Optional if the nearest enclosing tell block accepts this command.",
+				optional,
+				singleItem, notEnumerated, Reserved13,
+				"with", 'sSr2', 'TEXT',
+				"Command arguments to send. (Plain text with HTML formatting. Must entity encode HTML special characters.)",
+				optional,
+				singleItem, notEnumerated, Reserved13
+			},
+
+			"send public",
+			"Send a message to a room you'",
+			'ccoR', 'smrX',
+			reply_none__,
+			'conM',
+			"Connection to send from.",
+			directParamRequired,
+			singleItem, notEnumerated, Reserved13,
+			{
+				"action tense", 'actA', 'bool',
+				"Send as an action?",
+				optional,
+				singleItem, notEnumerated, Reserved13,
+				"to room", 'usRA', 'TEXT',
+				"Name of room. (Doesn't need to have prefix '#'",
+				required,
+				singleItem, notEnumerated, Reserved13,
+				"message", 'meSA', 'TEXT',
+				"Message to send to room. Can include HTML formatting.",
+				required,
+				singleItem, notEnumerated, Reserved13,
+				"encoded as", 'encE', 'encE',
+				"Encoding to use. (Default is UTF-8.)",
+				optional,
+				singleItem, enumerated, Reserved13
+			},
+
+			"send private",
+			"Send a message to another user. This message will not echo locally. This command is depreciated.",
+			'ccoR', 'smuX',
+			reply_none__,
+			'conM',
+			"Connection to send from.",
+			directParamRequired,
+			singleItem, notEnumerated, Reserved13,
+			{
+				"action tense", 'actA', 'bool',
+				"Send as an action?",
+				optional,
+				singleItem, notEnumerated, Reserved13,
+				"message", 'meSA', 'TEXT',
+				"Message to send to user. Can include HTML formatting.",
+				required,
+				singleItem, notEnumerated, Reserved13,
+				"to user", 'usRA', 'TEXT',
+				"Name of user.",
+				required,
+				singleItem, notEnumerated, Reserved13,
+				"encoded as", 'encE', 'encE',
+				"Encoding to use. (Default is UTF-8.)",
+				optional,
+				singleItem, enumerated, Reserved13
 			}
 		},
 		{
@@ -90,13 +190,20 @@ resource 'aete' (0, "Colloquy Terminology") {
 			{
 			},
 
-			"chat room panel or direct chat panel", 't001', "", { }, { },
+			"connection", 'conM',
+			"Manages all chat communication with a chat server.",
+			{
+			},
+			{
+			},
 
 			"chat room or chat user", 't000', "", { }, { },
 
-			"chat user or member", 't004', "", { }, { },
+			"chat user, member or string", 't002', "", { }, { },
 
-			"chat user, member or string", 't002', "", { }, { }
+			"chat user or member", 't005', "", { }, { },
+
+			"chat room panel or direct chat panel", 't001', "", { }, { }
 		},
 		{
 			/* Comparisons */
@@ -901,7 +1008,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			singleItem, notEnumerated, Reserved13,
 			{
 				"to", 'sRm1', 'conM',
-				"The conenction to send to.",
+				"The conenction to send to. Optional if the nearest enclosing tell block accepts this command.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
 				"priority", 'sRm2', 'bool',
@@ -920,7 +1027,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			singleItem, notEnumerated, Reserved13,
 			{
 				"on", 'jCr1', 'conM',
-				"The connection to join on.",
+				"The connection to join on. Optional if the nearest enclosing tell block accepts this command.",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			},
@@ -1230,7 +1337,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"Is this message an action?",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"from", 'piM2', 't004',
+				"from", 'piM2', 't005',
 				"The user this message came from.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
@@ -1436,7 +1543,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"by", 'kRm1', 't004',
+				"by", 'kRm1', 't005',
 				"The member who kicked us out.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
@@ -1493,7 +1600,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The chat room.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"by", 'mKr2', 't004',
+				"by", 'mKr2', 't005',
 				"The member who kicked the other member out.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
@@ -1513,7 +1620,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The chat room.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"by", 'rTc2', 't004',
+				"by", 'rTc2', 't005',
 				"The member who changed the topic.",
 				optional,
 				singleItem, notEnumerated, Reserved13,

@@ -867,10 +867,6 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 	[self disconnect];
 }
 
-- (void) returnFromAwayStatusScriptCommand:(NSScriptCommand *) command {
-	[self clearAwayStatus];
-}
-
 #pragma mark -
 
 - (NSString *) urlString {
@@ -957,6 +953,27 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 	id localEcho = [args objectForKey:@"echo"];
 	id encoding = [args objectForKey:@"encoding"];
 
+	if( [message isKindOfClass:[MVChatConnection class]] ) {
+		// old compatability mode; flip some parameters
+		MVChatConnection *connection = message;
+		message = [args objectForKey:@"message"];
+
+		NSString *nickname = target;
+		target = [[connection chatUsersWithNickname:[target description]] anyObject];
+
+		if( ! [connection isConnected] ) {
+			[self setScriptErrorNumber:1000];
+			[self setScriptErrorString:@"The connection needs to be connected before you can find a chat user by their nickname."];
+			return nil;
+		}
+
+		if( ! target ) {
+			[self setScriptErrorNumber:1000];
+			[self setScriptErrorString:[NSString stringWithFormat:@"The connection did not find a chat user with the nickname \"%@\".", nickname]];
+			return nil;
+		}
+	}
+
 	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
 		[self setScriptErrorNumber:1000];
 		[self setScriptErrorString:@"The message was missing or not a string value."];
@@ -976,9 +993,9 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 		return nil;
 	}
 
-	if( [target isKindOfClass:[MVChatUser class]] && [(MVChatUser *)target type] != MVChatRemoteUserType ) {
+	if( [target isKindOfClass:[MVChatUser class]] && [(MVChatUser *)target type] == MVChatWildcardUserType ) {
 		[self setScriptErrorNumber:1000];
-		[self setScriptErrorString:@"The \"to\" parameter cannot be a wildcard user nor local user."];
+		[self setScriptErrorString:@"The \"to\" parameter cannot be a wildcard user."];
 		return nil;
 	}
 
@@ -1018,7 +1035,7 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 	if( realLocalEcho ) {
 		NSString *cformat = nil;
 
-		switch( [(MVChatConnection *)[target connection] outgoingChatFormat] ) {
+		switch( [[(MVChatRoom *)target connection] outgoingChatFormat] ) {
 			case MVChatConnectionDefaultMessageFormat:
 			case MVChatWindowsIRCMessageFormat:
 				cformat = NSChatWindowsIRCFormatType;
@@ -1035,7 +1052,7 @@ static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
 		NSData *msgData = [realMessage chatFormatWithOptions:options];
 
 		if( [target isKindOfClass:[MVChatRoom class]] ) {
-			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[(MVChatConnection *)[target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
+			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
 			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
 		} else if( [target isKindOfClass:[MVChatUser class]] ) {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", nil];

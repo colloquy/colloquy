@@ -326,7 +326,7 @@
 				<key>connection</key>
 				<dict>
 					<key>Description</key>
-					<string>The connection to join on.</string>
+					<string>The connection to join on. Optional if the nearest enclosing tell block accepts this command.</string>
 					<key>Name</key>
 					<string>on</string>
 				</dict>
@@ -410,7 +410,7 @@
 				<key>connection</key>
 				<dict>
 					<key>Description</key>
-					<string>The conenction to send to.</string>
+					<string>The conenction to send to. Optional if the nearest enclosing tell block accepts this command.</string>
 					<key>Name</key>
 					<string>to</string>
 				</dict>
