@@ -170,7 +170,7 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 
 #pragma mark -
 
-- (IBAction) compile:(id) sender {
+- (BOOL) compile:(id) sender {
 	NSAppleScript *script = [[[NSAppleScript alloc] initWithSource:[[editor textStorage] string]] autorelease];
 	if( ! script ) return;
 
@@ -207,7 +207,7 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	[sheet autorelease];
-	if( returnCode == NSOKButton ) {
+	if( returnCode == NSOKButton && [self compile:nil] ) {
 		[[[self plugin] script] saveToFile:[sheet filename]];
 		[[self plugin] setScriptFilePath:[sheet filename]];
 		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] atPath:[sheet filename]];
@@ -221,14 +221,8 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 }
 
 - (IBAction) reloadScriptFile:(id) sender {
-	NSString *filePath = [[self plugin] scriptFilePath];
-	MVChatPluginManager *manager = [[self plugin] pluginManager];
-
-	NSAppleScript *script = [[[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:NULL] autorelease];
-	if( ! [script compileAndReturnError:nil] ) return;
-
-	[[self plugin] setScript:script];
-	[[editor textStorage] setAttributedString:[script richTextSource]];
+	[[self plugin] reloadFromDisk];
+	[[editor textStorage] setAttributedString:[[[self plugin] script] richTextSource]];
 }
 
 - (NSMenu *) menu {

@@ -128,7 +128,6 @@
 //104
 		1058C7ACFEA557BF11CA2CBB = {
 			children = (
-				1CF7A8A707CED4C400965F52,
 				1058C7ADFEA557BF11CA2CBB,
 			);
 			isa = PBXGroup;
@@ -190,12 +189,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C04316507CADBE100304949 = {
-			fileRef = 1C04316407CADBE100304949;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C0431B907CAEC1700304949 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -256,12 +249,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C4FD3CF07C6BF1B000EA451 = {
-			fileRef = 1C4FD3CD07C6BF1B000EA451;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CE3FB5407C7DFD50049A366 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -269,38 +256,12 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1CE3FB5507C7DFD50049A366 = {
-			fileRef = 1CE3FB5407C7DFD50049A366;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CF7A61407CD661200965F52 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
 			path = compile.png;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		1CF7A61507CD661200965F52 = {
-			fileRef = 1CF7A61407CD661200965F52;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CF7A8A707CED4C400965F52 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = Carbon.framework;
-			path = /System/Library/Frameworks/Carbon.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		1CF7A8A807CED4C400965F52 = {
-			fileRef = 1CF7A8A707CED4C400965F52;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //1C0
 //1C1
@@ -374,9 +335,6 @@
 		8D5B49AF048680CD000E48DA = {
 			buildActionMask = 2147483647;
 			files = (
-				1CE3FB5507C7DFD50049A366,
-				1C04316507CADBE100304949,
-				1CF7A61507CD661200965F52,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -385,7 +343,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C4FD36807C6BC25000EA451,
-				1C4FD3CF07C6BF1B000EA451,
 				1C0431BC07CAEC1700304949,
 			);
 			isa = PBXSourcesBuildPhase;
@@ -395,7 +352,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D5B49B4048680CD000E48DA,
-				1CF7A8A807CED4C400965F52,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,7 +10,7 @@
 		_manager = manager;
 		_fscriptInstalled = ( NSClassFromString( @"FSInterpreter" ) ? YES : NO );
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( detachNotifications ) name:MVChatPluginManagerWillReloadPluginsNotification object:manager];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( findAndLoadPlugins ) name:MVChatPluginManagerDidReloadPluginsNotification object:manager];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( reloadPlugins ) name:MVChatPluginManagerDidReloadPluginsNotification object:manager];
 	}
 
 	return self;
@@ -61,16 +61,19 @@
 			if( [[plugin scriptFilePath] isEqualToString:path] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
 				break;
 
-		if( ! [subcmd caseInsensitiveCompare:@"load"] || ! [subcmd caseInsensitiveCompare:@"reload"] ) {
-			if( plugin ) [_manager removePlugin:plugin];
-			plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager] autorelease];
+		if( ! plugin && ! [subcmd caseInsensitiveCompare:@"load"] ) {
+			plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager] autorelease];;
 			if( plugin ) [_manager addPlugin:plugin];
+		} else if( ( ! [subcmd caseInsensitiveCompare:@"reload"] || ! [subcmd caseInsensitiveCompare:@"load"] ) && plugin ) {
+			[plugin reloadFromDisk];
 		} else if( ! [subcmd caseInsensitiveCompare:@"unload"] && plugin ) {
 			[_manager removePlugin:plugin];
 		} else if( ! [subcmd caseInsensitiveCompare:@"console"] && plugin && view ) {
 			JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] initWithFScriptChatPlugin:plugin] autorelease];
 			[[view windowController] addChatViewController:console];
 			[[view windowController] showChatViewController:console];
+		} else if( ! [subcmd caseInsensitiveCompare:@"edit"] && plugin ) {
+			[[NSWorkspace sharedWorkspace] openFile:[plugin scriptFilePath]];
 		}
 
 		return YES;
@@ -80,10 +83,10 @@
 }
 
 - (void) detachNotifications {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:_manager];
 }
 
-- (void) findAndLoadPlugins {
+- (void) reloadPlugins {
 	if( ! _manager ) return;
 
 	NSArray *paths = [[_manager class] pluginSearchPaths];

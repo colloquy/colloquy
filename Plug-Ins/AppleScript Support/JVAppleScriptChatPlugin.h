@@ -6,11 +6,15 @@
 	NSString *_path;
 	NSMutableSet *_doseNotRespond;
 	NSTimer *_idleTimer;
+	NSDate *_modDate;
 }
 - (id) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
+- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
 - (NSAppleScript *) script;
 - (void) setScript:(NSAppleScript *) script;
+
+- (void) reloadFromDisk;
 
 - (MVChatPluginManager *) pluginManager;
 

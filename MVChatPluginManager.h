@@ -8,7 +8,7 @@ extern NSString *MVChatPluginManagerDidReloadPluginsNotification;
 + (MVChatPluginManager *) defaultManager;
 + (NSArray *) pluginSearchPaths;
 
-- (void) findAndLoadPlugins;
+- (void) reloadPlugins;
 - (void) addPlugin:(id) plugin;
 - (void) removePlugin:(id) plugin;
 

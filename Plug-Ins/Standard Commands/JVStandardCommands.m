@@ -14,6 +14,7 @@
 #import "JVChatMemberInspector.h"
 #import "JVChatRoomBrowser.h"
 #import "JVStyle.h"
+#import "JVEmoticonSet.h"
 
 @interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
 - (id <JVInspector>) inspector;
@@ -314,13 +315,13 @@
         return YES;
 	} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
 		if( ! [[arguments string] caseInsensitiveCompare:@"plugins"] || ! [[arguments string] caseInsensitiveCompare:@"scripts"] ) {
-			[[MVChatPluginManager defaultManager] findAndLoadPlugins];
+			[[MVChatPluginManager defaultManager] reloadPlugins];
 			return YES;
 		} else if( ! [[arguments string] caseInsensitiveCompare:@"styles"] ) {
 			[JVStyle scanForStyles];
 			return YES;
 		} else if( ! [[arguments string] caseInsensitiveCompare:@"emoticons"] ) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"JVChatEmoticonSetInstalledNotification" object:nil]; 
+			[JVEmoticonSet scanForEmoticonSets];
 			return YES;
 		}
 	} else if( ! [command caseInsensitiveCompare:@"globops"] ) {

@@ -28,7 +28,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_plugins = [[NSMutableArray array] retain];
-		[self findAndLoadPlugins];
+		[self reloadPlugins];
 	}
 	return self;
 }
@@ -47,7 +47,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 
 #pragma mark -
 
-- (void) findAndLoadPlugins {
+- (void) reloadPlugins {
 	NSArray *paths = [[self class] pluginSearchPaths];
 	NSEnumerator *enumerator = nil, *denumerator = nil;
 	NSString *file = nil, *path = nil;

@@ -80,9 +80,23 @@
 	if( ( self = [self initWithManager:manager] ) ) {
 		_script = [script retain];
 		_path = [path copyWithZone:[self zone]];
+		_modDate = [[NSDate date] retain];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( checkForModifications: ) name:NSApplicationWillBecomeActiveNotification object:[NSApplication sharedApplication]];
+
 		[self performSelector:@selector( idle: ) withObject:nil afterDelay:1.];
 	}
 	return self;
+}
+
+- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
+	NSAppleScript *script = [[[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:NULL] autorelease];
+	if( ! [script compileAndReturnError:NULL] ) {
+		[self release];
+		return nil;
+	}
+
+	return ( self = [self initWithScript:script atPath:path withManager:manager] );
 }
 
 - (void) release {
@@ -92,15 +106,19 @@
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[_script release];
 	[_path release];
 	[_doseNotRespond release];
 	[_idleTimer release];
+	[_modDate release];
 
 	_script = nil;
 	_path = nil;
 	_doseNotRespond = nil;
 	_idleTimer = nil;
+	_modDate = nil;
 
 	[super dealloc];
 }
@@ -114,6 +132,20 @@
 - (void) setScript:(NSAppleScript *) script {
 	[_script autorelease];
 	_script = [script retain];
+}
+
+#pragma mark -
+
+- (void) reloadFromDisk {
+	NSString *filePath = [self scriptFilePath];
+	MVChatPluginManager *manager = [self pluginManager];
+
+	NSAppleScript *script = [[[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:NULL] autorelease];
+	if( ! [script compileAndReturnError:nil] ) return;
+
+	[self setScript:script];
+	[_doseNotRespond removeAllObjects];
+	[self performSelector:@selector( idle: ) withObject:nil afterDelay:1.];
 }
 
 #pragma mark -
@@ -180,9 +212,26 @@
 
 #pragma mark -
 
+- (void) checkForModifications:(NSNotification *) notification {
+	if( [self scriptFilePath] && [[NSFileManager defaultManager] fileExistsAtPath:[self scriptFilePath]] ) {
+		NSDictionary *info = [[NSFileManager defaultManager] fileAttributesAtPath:[self scriptFilePath] traverseLink:YES];
+		if( [[info fileModificationDate] compare:_modDate] == NSOrderedDescending ) { // newer script file
+			[_modDate autorelease];
+			_modDate = [[NSDate date] retain];
+
+			if( NSRunInformationalAlertPanel( NSLocalizedString( @"AppleScript Plugin Changed", "AppleScript plugin file changed dialog title" ), NSLocalizedString( @"The AppleScript plugin \"%@\" has changed on disk. Any script variables will reset if reloaded.", "AppleScript plugin changed on disk message" ), NSLocalizedString( @"Reload", "reload button title" ), NSLocalizedString( @"Keep Previous Version", "keep previous version button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] ) == NSOKButton ) {
+				[self reloadFromDisk];
+			}
+		}
+	}
+}
+
+#pragma mark -
+
 - (void) idle:(id) sender {
 	[_idleTimer invalidate];
 	[_idleTimer autorelease];
+	_idleTimer = nil;
 
 	NSNumber *newTime = [self callScriptHandler:'iDlX' withArguments:nil forSelector:_cmd];
 	if( [newTime isMemberOfClass:[NSError class]] ) return;
