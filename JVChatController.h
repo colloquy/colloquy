@@ -43,5 +43,5 @@
 - (IBAction) detachView:(id) sender;
 
 - (void) addIgnoreForUser:(NSString *)user withMessage:(NSString *)message inRooms:(NSArray *)rooms usesRegex:(BOOL) regex;
-- (BOOL) ignoreUser:(NSString *) name withMessage:(NSAttributedString *) message inRoom:(NSString *) room withConnection:(MVChatConnection *) connection;
+- (BOOL) shouldIgnoreUser:(NSString *) name withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view;
 @end

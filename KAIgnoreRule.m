@@ -4,18 +4,20 @@
 
 #import <Cocoa/Cocoa.h>
 #import "KAIgnoreRule.h"
+#import "JVChatWindowController.h"
+#import "JVChatRoom.h"
 #import <AGRegex/AGRegex.h>
 
-@implementation KAInternalIgnoreRule
+@implementation KAIgnoreRule
 + (id) ruleForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex {
-	return [[[KAInternalIgnoreRule alloc] initForUser:user message:message inRooms:rooms usesRegex:regex] autorelease];
+	return [[[KAIgnoreRule alloc] initForUser:user message:message inRooms:rooms usesRegex:regex] autorelease];
 }
 
 - (id) initForUser:(NSString *) user message:(NSString *)message inRooms:(NSArray *) rooms usesRegex:(BOOL)regex {
 	if( ( self = [super init] ) ) {
 		_ignoredUser = [user copy];
 		_ignoredMessage = [message copy];
-		_inChannels	= [rooms copy];
+		_inRooms	= [rooms copy];
 		_userRegex = nil;
 		_messageRegex = nil;
 
@@ -35,11 +37,11 @@
 	return nil;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder {
+- (void) encodeWithCoder:(NSCoder *)coder {
 	if( [coder allowsKeyedCoding] ) {
 		[coder encodeObject:_ignoredUser forKey:@"KAIgnoreUser"];
 		[coder encodeObject:_ignoredMessage forKey:@"KAIgnoreMessage"];
-		[coder encodeObject:_inChannels forKey:@"KAIgnoreRooms"];
+		[coder encodeObject:_inRooms forKey:@"KAIgnoreRooms"];
 		[coder encodeBool:( _userRegex || _messageRegex ) forKey:@"KAIgnoreUseRegex"];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
@@ -47,14 +49,14 @@
 - (void) dealloc {
 	[_ignoredUser release];
 	[_ignoredMessage release];
-	[_inChannels release];
+	[_inRooms release];
 	[_userRegex release];
 	[_messageRegex release];
 	[super dealloc];
 }
 
-- (JVIgnoreMatchResult) matchesUser:(NSString *) user message:(NSString *) message inChannel:(NSString *) channel {
-	if( ! _inChannels || [_inChannels containsObject:channel] || [_inChannels containsObject:@"##ALL"] ) {
+- (JVIgnoreMatchResult) matchUser:(NSString *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
+	if( ! _inRooms || ( [view isMemberOfClass:[JVChatRoom class]] && [_inRooms containsObject:[(JVChatRoom *)view target]] ) ) {
 		BOOL userFound = NO, messageFound = NO;
 		BOOL userRequired = ( _userRegex || _ignoredUser ), messageRequired = ( _messageRegex || _ignoredMessage );
 
@@ -71,6 +73,8 @@
 			if( messageRequired && messageFound ) return JVMessageIgnored;
 			else return JVNotIgnored;
 		}
-	} else return JVNotIgnored;
+	}
+
+	return JVNotIgnored;
 }
 @end

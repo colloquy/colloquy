@@ -565,7 +565,7 @@
 	// /ignore Loser23094 - ignore Loser23094 in the current room
 	// /ignore -em "is listening .*" - ignore the message expression "is listening *" from everyone
 	// /ignore -emn eevyl* "is listening .*" #adium #colloquy #here
-	// /ignore -en bunny.* ##ALL
+	// /ignore -en bunny.* * - ignore user in all rooms
 
 	NSArray *argsArray = [args componentsSeparatedByString:@" "];
 	NSString *memberString = nil;
@@ -601,10 +601,12 @@
 		offset += [[messageString componentsSeparatedByString:@" "] count];
 	}
 
-	if( [args rangeOfString:@"#"].location != NSNotFound )
+	if( offset < [argsArray count] )
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 
 	if( ! rooms && [view isMemberOfClass:NSClassFromString( @"JVChatRoom" )] ) rooms = [NSArray arrayWithObject:[(JVChatRoom *)view target]];
+
+	if( [rooms containsObject:@"*"] ) rooms = nil; // We want all rooms.
 
 	[[_manager chatController] addIgnoreForUser:memberString withMessage:messageString inRooms:rooms usesRegex:regex];
 

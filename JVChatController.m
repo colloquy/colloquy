@@ -272,24 +272,24 @@ static JVChatController *sharedInstance = nil;
 #pragma mark Ignores
 
 - (void) addIgnoreForUser:(NSString *)user withMessage:(NSString *)message inRooms:(NSArray *)rooms usesRegex:(BOOL) regex {
-	[_ignoreRules addObject:[KAInternalIgnoreRule ruleForUser:user message:message inRooms:rooms usesRegex:regex]];
+	[_ignoreRules addObject:[KAIgnoreRule ruleForUser:user message:message inRooms:rooms usesRegex:regex]];
 }
 
-- (BOOL) ignoreUser:(NSString *) name withMessage:(NSAttributedString *) message inRoom:(NSString *) room withConnection:(MVChatConnection *) connection {
+- (BOOL) shouldIgnoreUser:(NSString *) name withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view {
 	JVIgnoreMatchResult ignoreResult = JVNotIgnored;
 	NSEnumerator *renum = [_ignoreRules objectEnumerator];
-	KAInternalIgnoreRule *rule = nil;
+	KAIgnoreRule *rule = nil;
 
 	while( ( ignoreResult == JVNotIgnored ) && ( ( rule = [renum nextObject] ) ) )
-		ignoreResult = [rule matchesUser:name message:[message string] inChannel:room];
+		ignoreResult = [rule matchUser:name message:[message string] inView:view];
 
-	if( ignoreResult != JVNotIgnored ) {   
+	if( ignoreResult != JVNotIgnored ) {
 		// send an ignored Notificatoin
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:( ( ignoreResult == JVUserMessageIgnored ) ? NSLocalizedString( @"User Message Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", name, room] forKey:@"description"];
+		if( [view isMemberOfClass:[JVChatRoom class]] ) [context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", name, [view title]] forKey:@"description"];
+		else [context setObject:[NSString stringWithFormat:@"%@'s message was ignored.", name] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-		[context setObject:connection forKey:@"representedObject"];
 		[[JVNotificationController defaultManager] performNotification:( ( ignoreResult == JVUserMessageIgnored ) ? @"JVUserMessageIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
 
@@ -423,10 +423,10 @@ static JVChatController *sharedInstance = nil;
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
 	BOOL hideFromUser = NO;
+	NSString *user = [[notification userInfo] objectForKey:@"from"];
+	NSData *message = [[notification userInfo] objectForKey:@"message"];
 
 	if( [[[notification userInfo] objectForKey:@"auto"] boolValue] ) {
-		NSString *user = [[notification userInfo] objectForKey:@"from"];
-		NSData *message = [[notification userInfo] objectForKey:@"message"];
 		MVChatConnection *connection = [notification object];
 
 		if( ! [self chatViewControllerForUser:user withConnection:connection ifExists:YES] )
@@ -461,11 +461,11 @@ static JVChatController *sharedInstance = nil;
 				[[JVNotificationController defaultManager] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
 			}	
 		}
-	}	
+	}
 
-	if( ! hideFromUser ) {
-		JVDirectChat *controller = [self chatViewControllerForUser:[[notification userInfo] objectForKey:@"from"] withConnection:[notification object] ifExists:NO userInitiated:NO];
-		[controller addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"from"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue]];
+	if( ! hideFromUser && ! [self shouldIgnoreUser:user withMessage:nil inView:nil] ) {
+		JVDirectChat *controller = [self chatViewControllerForUser:user withConnection:[notification object] ifExists:NO userInitiated:NO];
+		[controller addMessageToDisplay:message fromUser:user asAction:[[[notification userInfo] objectForKey:@"action"] boolValue]];
 	}
 }
 
