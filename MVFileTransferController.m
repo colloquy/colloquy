@@ -194,6 +194,7 @@ finish:
 	id prototypeCell = nil;
 
 	[(NSPanel *)[self window] setFloatingPanel:NO];
+	[[self window] setHidesOnDeactivate:NO];
 	[[self window] setResizeIncrements:NSMakeSize( 1, [currentFiles rowHeight] + [currentFiles intercellSpacing].height )];
 
 	[currentFiles setVerticalMotionCanBeginDrag:NO];
