@@ -107,7 +107,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) writeToLog:(void *) root withDoc:(void *) doc initializing:(BOOL) init continuation:(BOOL) cont;
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
-- (void) _breakLongLinesInString:(NSMutableString *) string;
+- (void) _breakLongLinesInString:(NSMutableAttributedString *) message;
 - (void) _performEmoticonSubstitutionOnString:(NSMutableAttributedString *) string;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
@@ -1342,6 +1342,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		return;
 	}
 
+	[self _breakLongLinesInString:messageString];
+
 	if( highlight && ignoreTest == JVNotIgnored ) {
 		_newHighlightMessageCount++;
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -1582,18 +1584,20 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return [[_encodingMenu retain] autorelease];
 }
 
-- (void) _breakLongLinesInString:(NSMutableString *) string { // Not good on strings that have prior HTML or HTML entities
-	NSScanner *scanner = [NSScanner scannerWithString:string];
+- (void) _breakLongLinesInString:(NSMutableAttributedString *) message { // Not good on strings that have prior HTML or HTML entities
+	NSScanner *scanner = [NSScanner scannerWithString:[message string]];
 	NSCharacterSet *stopSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 	unsigned int lastLoc = 0;
-
+	unichar zeroWidthSpaceChar = 0x200b;	
+	NSString *zero = [NSString stringWithCharacters:&zeroWidthSpaceChar length:1];
+		
 	while( ! [scanner isAtEnd] ) {
 		lastLoc = [scanner scanLocation];
 		[scanner scanUpToCharactersFromSet:stopSet intoString:nil];
 		if( ( [scanner scanLocation] - lastLoc ) > 34 ) { // Who says "supercalifragilisticexpialidocious" anyway?
 			unsigned int times = (unsigned int) ( ( [scanner scanLocation] - lastLoc ) / 34 );
 			while( times > 0 ) {
-				[string insertString:@"&#8203;" atIndex:( lastLoc + ( times * 34 ) )];
+				[[message mutableString] insertString:zero atIndex:( lastLoc + ( times * 34 ) )];
 				times--;
 			}
 		}
