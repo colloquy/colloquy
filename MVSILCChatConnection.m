@@ -1122,144 +1122,6 @@ static SilcClientOperations silcClientOps = {
 - (SilcClientParams *) _silcClientParams {
 	return &_silcClientParams;
 }
-/*
-#pragma mark -
-
-- (NSMutableArray *) _joinedChannels {
-	return _joinedChannels;
-}
-
-- (void) _addChannel:(NSString *) channel_name {
-	[_joinedChannels addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:channel_name, @"channel_name", NULL]];
-}
-
-- (void) _addUser:(NSString *) nick_name toChannel:(NSString *) channel_name withMode:(NSNumber *) mode {
-	NSMutableDictionary *channel = [self _getChannel:channel_name];
-	if( ! channel ) return;
-
-	NSMutableArray *users = [channel objectForKey:@"users"];
-	if( ! [users count] ) {
-		users = [NSMutableArray array];
-		[channel setObject:users forKey:@"users"];
-	}
-
-	NSMutableDictionary *user = [NSMutableDictionary dictionary];
-	[user setObject:nick_name forKey:@"nick_name"];
-	[user setObject:mode forKey:@"mode"];
-	[users addObject:user];
-}
-
-- (void) _delUser:(NSString *)nick_name fromChannel:(NSString *)channel_name {
-	NSMutableDictionary *channel = [self _getChannel:channel_name];
-	if( ! channel ) return;
-
-	NSMutableArray *users = [channel objectForKey:@"users"];
-	if( ! [users count] ) return;
-
-	NSEnumerator *enumerator = [users objectEnumerator];
-	NSDictionary *dict = nil;
-
-	while( ( dict = [enumerator nextObject] ) ) {
-		if( [[dict objectForKey:@"nick_name"] isEqualToString:nick_name]) {
-			[users removeObject:dict];
-			return;
-		}
-	}
-}
-
-- (void) _delUser:(NSString *) nick_name {
-	NSEnumerator *enumerator = [_joinedChannels objectEnumerator];
-	NSMutableDictionary *channel = nil;
-
-	while( ( channel = [enumerator nextObject] ) ) {
-		NSMutableArray *users = [channel objectForKey:@"users"];
-		if( ! [users count] ) continue;
-		[self _delUser:nick_name fromChannel:[channel objectForKey:@"channel_name"]];
-	}		
-}
-
-- (void) _delChannel:(NSString *) channel_name {
-	NSMutableDictionary *channel = [self _getChannel:channel_name];
-	if( channel ) [_joinedChannels removeObject:channel];
-}
-
-- (void) _userChangedNick:(NSString *) old_nick_name to:(NSString *) new_nick_name {
-	NSEnumerator *enumerator = [_joinedChannels objectEnumerator];
-	NSMutableDictionary *channel = nil;
-
-	while( ( channel = [enumerator nextObject] ) ) {
-		NSMutableArray *users = [channel objectForKey:@"users"];
-		if( ! [users count] ) continue;
-
-		NSEnumerator *userenum = [users objectEnumerator]; 
-		NSMutableDictionary *user = nil;
-		while( ( user = [userenum nextObject] ) ) {
-			if( [[user objectForKey:@"nick_name"] isEqualToString:old_nick_name]) {
-				[user setObject:new_nick_name forKey:@"nick_name"];
-				break;
-			}
-		}
-	}
-}
-
-- (NSArray *) _getChannelsForUser:(NSString *) nick_name {
-	NSEnumerator *enumerator = [_joinedChannels objectEnumerator];
-	NSMutableDictionary *channel = nil;
-	NSMutableArray *results = [NSMutableArray array];
-
-	while( ( channel = [enumerator nextObject] ) ) {
-		NSMutableArray *users = [channel objectForKey:@"users"];
-		if( ! [users count] ) continue;
-
-		NSEnumerator *userenum = [users objectEnumerator]; 
-		NSMutableDictionary *user = nil;
-		while( ( user = [userenum nextObject] ) ) {
-			if( [[user objectForKey:@"nick_name"] isEqualToString:nick_name]) {
-				[results addObject:channel];
-			}
-		}
-	}
-
-	return results;
-}
-
-- (NSMutableDictionary *) _getChannel:(NSString *) channel_name {
-	NSEnumerator *enumerator = [_joinedChannels objectEnumerator];
-	NSMutableDictionary *dict = nil;
-	while( ( dict = [enumerator nextObject] ) ) {
-		if( [[dict objectForKey:@"channel_name"] isEqualToString:channel_name]) {
-			return dict;
-		}
-	}
-
-	return nil;
-}
-
-- (NSNumber *) _getModeForUser:(NSString *) nick_name onChannel:(NSString *) channel_name {
-	NSDictionary *channel = [self _getChannel:channel_name];
-	NSEnumerator *userenum = [[channel objectForKey:@"users"] objectEnumerator]; 
-	NSMutableDictionary *user = nil;
-	while( ( user = [userenum nextObject] ) ) {
-		if( [[user objectForKey:@"nick_name"] isEqualToString:nick_name] ) {
-			return [user objectForKey:@"mode"];
-		}
-	}
-
-	return nil;
-}
-
-- (void) _userModeChanged:(NSString *) nick_name onChannel:(NSString *) channel_name toMode:(NSNumber *) mode {
-	NSDictionary *channel = [self _getChannel:channel_name];
-	NSEnumerator *userenum = [[channel objectForKey:@"users"] objectEnumerator]; 
-	NSMutableDictionary *user = nil;
-	while( ( user = [userenum nextObject] ) ) {
-		if( [[user objectForKey:@"nick_name"] isEqualToString:nick_name]) {
-			[user setObject:mode forKey:@"mode"];
-			return;
-		}
-	}
-} */
-
 
 #pragma mark -
 
@@ -1352,6 +1214,12 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
+- (void) _didConnect {
+	[_localUser release];
+	_localUser = [[MVSILCChatUser allocWithZone:[self zone]] initLocalUserWithConnection:self];
+	[super _didConnect];
+}
+
 - (void) _didDisconnect {
 	if( ! _sentQuitCommand ) {
 		if( _status != MVChatConnectionSuspendedStatus )
@@ -1371,6 +1239,8 @@ static SilcClientOperations silcClientOps = {
 #pragma mark -
 
 - (MVChatUser *) _chatUserWithClientEntry:(SilcClientEntry) clientEntry  {
+	NSParameterAssert( clientEntry != NULL );
+
 	unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
 	unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
 	NSData *uniqueIdentfier = [NSData dataWithBytes:identifier length:len];
@@ -1391,6 +1261,9 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) _updateKnownUser:(MVChatUser *) user withClientEntry:(SilcClientEntry) clientEntry {
+	NSParameterAssert( user != nil );
+	NSParameterAssert( clientEntry != NULL );
+
 	unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
 	unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
 	NSData *uniqueIdentfier = [NSData dataWithBytes:identifier length:len];
