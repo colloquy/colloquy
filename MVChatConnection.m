@@ -24,6 +24,7 @@
 #import "servers-setup.h"
 #import "servers-reconnect.h"
 #import "chat-protocols.h"
+#import "net-sendbuffer.h"
 #import "channels.h"
 #import "nicklist.h"
 #import "notifylist.h"
@@ -128,11 +129,12 @@ typedef struct {
 - (void) _didNotConnect;
 - (void) _willDisconnect;
 - (void) _didDisconnect;
+- (void) _forceDisconnect;
 @end
 
 #pragma mark -
 
-/* void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t messageType, void *messageArgument ) {
+void MVChatHandlePowerChange( void *refcon, io_service_t service, natural_t messageType, void *messageArgument ) {
 	MVChatConnection *self = refcon;
 	switch( messageType ) {
 		case kIOMessageSystemWillRestart:
@@ -140,7 +142,7 @@ typedef struct {
 		case kIOMessageSystemWillSleep:
 		case kIOMessageDeviceWillPowerOff:
 			if( [self isConnected] ) {
-				[self disconnect];
+				[self _forceDisconnect];
 				[self _setStatus:MVChatConnectionSuspendedStatus];
 			}
 			IOAllowPowerChange( [self _powerConnection], (long) messageArgument );
@@ -160,7 +162,7 @@ typedef struct {
 	}
 }
 
-#pragma mark - */
+#pragma mark -
 
 static const int MVChatColors[][3] = {
 	{ 0xff, 0xff, 0xff },  /* 00) white */
@@ -517,6 +519,12 @@ static void MVChatConnected( SERVER_REC *server ) {
 static void MVChatDisconnect( SERVER_REC *server ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
 	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
+}
+
+static void MVChatConnectFailed( SERVER_REC *server ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
+	[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:YES];
+	server_ref( server );
 }
 
 static void MVChatRawIncomingMessage( SERVER_REC *server, char *data ) {
@@ -1202,8 +1210,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (void) connect {
-	if( [self _irssiConnection] && [self status] != MVChatConnectionDisconnectedStatus
-		&& [self status] != MVChatConnectionServerDisconnectedStatus ) return;
+	if( ! [self _irssiConnection] ) return;
+	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
 
 	[self _willConnect];
 	[self _removePendingIrssiReconnections];
@@ -1236,8 +1244,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 }
 
 - (void) disconnect {
-	if( [self _irssiConnection] && [self status] != MVChatConnectionConnectingStatus
-		&& [self status] != MVChatConnectionConnectedStatus ) return;
+	if( ! [self _irssiConnection] ) return;
+	if( [self status] != MVChatConnectionConnectingStatus && [self status] != MVChatConnectionConnectedStatus ) return;
 
 	[self _willDisconnect];
 	[self sendRawMessage:@"QUIT :Quitting" immediately:YES];
@@ -1681,7 +1689,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	MVChatConnection *ret = NULL;
 	sscanf( server -> tag, "%8lx", (unsigned long *) &ret );
 
-	if( ! ret ) return nil;
 	[ret _setIrssiConnection:server];
 
 	return ret;
@@ -1690,6 +1697,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 + (void) _registerCallbacks {
 	signal_add_last( "server connected", (SIGNAL_FUNC) MVChatConnected );
 	signal_add_last( "server disconnected", (SIGNAL_FUNC) MVChatDisconnect );
+	signal_add_last( "server connect failed", (SIGNAL_FUNC) MVChatConnectFailed );
+
 	signal_add( "server incoming", (SIGNAL_FUNC) MVChatRawIncomingMessage );
 	signal_add( "server outgoing", (SIGNAL_FUNC) MVChatRawOutgoingMessage );
 
@@ -1748,6 +1757,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 + (void) _deregisterCallbacks {
 	signal_remove( "server connected", (SIGNAL_FUNC) MVChatConnected );
 	signal_remove( "server disconnected", (SIGNAL_FUNC) MVChatDisconnect );
+	signal_remove( "server connect failed", (SIGNAL_FUNC) MVChatConnectFailed );
+
 	signal_remove( "server incoming", (SIGNAL_FUNC) MVChatRawIncomingMessage );
 	signal_remove( "server outgoing", (SIGNAL_FUNC) MVChatRawOutgoingMessage );
 
@@ -1899,18 +1910,18 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 #pragma mark -
 
 - (void) _registerForSleepNotifications {
-/*	IONotificationPortRef sleepNotePort = NULL;
+	IONotificationPortRef sleepNotePort = NULL;
 	CFRunLoopSourceRef rls = NULL;
 	_powerConnection = IORegisterForSystemPower( (void *) self, &sleepNotePort, MVChatHandlePowerChange, &_sleepNotifier );
 	if( ! _powerConnection ) return;
 	rls = IONotificationPortGetRunLoopSource( sleepNotePort );
 	CFRunLoopAddSource( CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode );
-	CFRelease( rls ); */
+	CFRelease( rls );
 }
 
 - (void) _deregisterForSleepNotifications {
-/*	IODeregisterForSystemPower( &_sleepNotifier );
-	_powerConnection = NULL; */
+	IODeregisterForSystemPower( &_sleepNotifier );
+	_powerConnection = NULL;
 }
 
 - (void) _applicationWillTerminate:(NSNotification *) notification {
@@ -1985,6 +1996,22 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( [self _irssiConnection] -> connection_lost ) _status = MVChatConnectionServerDisconnectedStatus;
 	else _status = MVChatConnectionDisconnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
+}
+
+- (void) _forceDisconnect {
+	if( ! [self _irssiConnection] ) return;
+
+	[self _willDisconnect];
+	[self sendRawMessage:@"QUIT :Quitting" immediately:YES];
+
+	/* fake the server disconnection to auto reconnect */
+	g_io_channel_unref( net_sendbuffer_handle( [self _irssiConnection] -> handle ) );
+	net_sendbuffer_destroy( [self _irssiConnection] -> handle, FALSE);
+	[self _irssiConnection] -> handle = NULL;
+
+	[self _irssiConnection] -> connection_lost = TRUE;
+	[self _irssiConnection] -> no_reconnect = FALSE;
+	server_disconnect( [self _irssiConnection] );	
 }
 @end
 
