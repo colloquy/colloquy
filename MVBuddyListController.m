@@ -442,9 +442,28 @@ static MVBuddyListController *sharedInstance = nil;
 	[panel setCanChooseFiles:YES];
 	[panel setCanChooseDirectories:NO];
 	[panel setAllowsMultipleSelection:YES];
+
+	NSView *view = [[[NSView alloc] initWithFrame:NSMakeRect( 0., 0., 200., 28. )] autorelease];
+	[view setAutoresizingMask:( NSViewWidthSizable | NSViewMaxXMargin )];
+
+	NSButton *passiveButton = [[[NSButton alloc] initWithFrame:NSMakeRect( 0., 6., 200., 18. )] autorelease];
+	[[passiveButton cell] setButtonType:NSSwitchButton];
+	[passiveButton setState:passive];
+	[passiveButton setTitle:NSLocalizedString( @"Send File Passively", "send files passively file send open dialog button" )];
+	[passiveButton sizeToFit];
+
+	NSRect frame = [view frame];
+	frame.size.width = NSWidth( [passiveButton frame] );
+
+	[view setFrame:frame];
+	[view addSubview:passiveButton];
+
+	[panel setAccessoryView:view];
+
 	if( [panel runModalForTypes:nil] == NSOKButton ) {
 		MVChatConnection *connection = [[MVConnectionsController defaultManager] connectionForServerAddress:[url host]];
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
+		passive = [passiveButton state];
 		NSString *path = nil;
 		while( ( path = [enumerator nextObject] ) )
 			[[MVFileTransferController defaultManager] addFileTransfer:[connection sendFile:path toUser:[url user] passively:passive]];
