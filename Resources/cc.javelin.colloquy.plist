@@ -2,6 +2,8 @@
 <!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
 <plist version="0.9">
 <dict>
+	<key>JVChatSelfNameStyle</key>
+	<integer>2</integer>
 	<key>JVChatDefaultStyle</key>
 	<string>cc.javelin.colloquy.style.standard</string>
 	<key>JVChatDefaultEmoticons</key>
@@ -18,6 +20,10 @@
 	<true/>
 	<key>JVChatMaximumHistory</key>
 	<integer>15</integer>
+	<key>JVFileTransferPortRange</key>
+	<integer>{1024, 24}</integer>
+	<key>JVTransferSaveLocation</key>
+	<string>ask</string>
 	<key>JVChatBuddyListShowIcons</key>
 	<true/>
 	<key>JVChatBuddyListShowFullNames</key>
