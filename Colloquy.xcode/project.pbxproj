@@ -120,6 +120,43 @@
 //082
 //083
 //084
+//0A0
+//0A1
+//0A2
+//0A3
+//0A4
+		0AF4543606307EC2009545D7 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = ChatCore.framework;
+			refType = 3;
+			remoteRef = 0AF4548C06307EEC009545D7;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AF4548406307ED2009545D7 = {
+			fileRef = 0AF4543606307EC2009545D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		0AF4548B06307EE3009545D7 = {
+			fileRef = 0AF4543606307EC2009545D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		0AF4548C06307EEC009545D7 = {
+			containerPortal = 1CFA05F6053C960800C702F9;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+//0A0
+//0A1
+//0A2
+//0A3
+//0A4
 //100
 //101
 //102
@@ -2066,7 +2103,7 @@
 				1CB2CD7F052DDC560094AAA4,
 				1CB2CD80052DDC560094AAA4,
 				1CD0201F05758F26000F93B4,
-				1CF038EA062F80B9009774D8,
+				0AF4548B06307EE3009545D7,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2124,11 +2161,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1CF038EB062F80C3009774D8,
 				1CB2CD84052DDC560094AAA4,
 				1CB2CD85052DDC560094AAA4,
 				1CB2CD86052DDC560094AAA4,
 				1CB2CD87052DDC560094AAA4,
+				0AF4548406307ED2009545D7,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3454,33 +3491,6 @@
 			settings = {
 			};
 		};
-		1CF03782062F789C009774D8 = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = ChatCore.framework;
-			refType = 3;
-			remoteRef = 1CF038C8062F78B2009774D8;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1CF038C8062F78B2009774D8 = {
-			containerPortal = 1CFA05F6053C960800C702F9;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
-			remoteInfo = "Chat Core (Framework)";
-		};
-		1CF038EA062F80B9009774D8 = {
-			fileRef = 1CF03782062F789C009774D8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CF038EB062F80C3009774D8 = {
-			fileRef = 1CF03782062F789C009774D8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CF038FF062F8DBB009774D8 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -3511,7 +3521,7 @@
 		};
 		1CFA05F9053C960800C702F9 = {
 			children = (
-				1CF03782062F789C009774D8,
+				0AF4543606307EC2009545D7,
 			);
 			isa = PBXGroup;
 			name = Products;
