@@ -24,6 +24,8 @@
 #import "nicklist.h"
 #import "notifylist.h"
 
+#import "settings.h"
+
 #pragma mark -
 
 NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";
@@ -1025,6 +1027,9 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 			core_init_paths( 1, args );
 			core_init();
 			irc_init();
+			
+			settings_set_bool("override_coredump_limit", FALSE);
+			signal_emit("setup changed", 0);
 
 			signal_emit( "irssi init finished", 0 );	
 
