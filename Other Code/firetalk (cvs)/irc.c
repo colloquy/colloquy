@@ -1009,6 +1009,7 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 						}
 						break;
 					case 401: /* ERR_NOSUCHNICK */
+					case 402: /* ERR_NOSUCHSERVER */
 					case 441: /* ERR_USERNOTINCHANNEL */
 					case 443: /* ERR_USERONCHANNEL */
 						firetalk_callback_im_buddyonline(c,args[3],0);
