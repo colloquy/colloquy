@@ -349,7 +349,13 @@ static JVChatController *sharedInstance = nil;
 					break;
 				}
 			}
-		} else windowController = [[[self chatViewControllersOfClass:modeClass] anyObject] windowController];
+		} else {
+		    if( [[self chatViewControllersOfClass:modeClass] count ] > 1 ) {
+				NSMutableSet *tempSet = [[[self chatViewControllersOfClass:modeClass] mutableCopy] autorelease];
+				[tempSet removeObject:controller];
+				windowController = [[tempSet anyObject] windowController];
+		    }
+		}
 		break;
 	}
 
