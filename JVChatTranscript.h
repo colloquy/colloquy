@@ -7,6 +7,7 @@
 @class MVMenuButton;
 @class NSMutableSet;
 @class NSString;
+@class JVStyle;
 @class NSBundle;
 @class NSDictionary;
 @class NSMutableDictionary;
@@ -23,25 +24,26 @@ extern NSString *JVChatEmoticonsScannedNotification;
 	@protected
 	IBOutlet NSView *contents;
 	IBOutlet WebView *display;
+	BOOL _nibLoaded;
 
-	void *_chatXSLStyle; /* xsltStylesheetPtr */
-	void *_xmlLog; /* xmlDocPtr */
+	JVChatWindowController *_windowController;
+
+	NSString *_filePath;
+	BOOL _isArchive;
 
 	NSLock *_logLock;
-	JVChatWindowController *_windowController;
-	NSString *_filePath;
+	void *_xmlLog; /* xmlDocPtr */
+	NSMutableArray *_messages;
+
 	NSMenu *_styleMenu;
-	NSBundle *_chatStyle;
+	JVStyle *_chatStyle;
 	NSString *_chatStyleVariant;
+	NSMutableDictionary *_styleParams;
+
 	NSMenu *_emoticonMenu;
 	NSBundle *_chatEmoticons;
 	NSDictionary *_emoticonMappings;
-	NSMutableDictionary *_styleParams;
-	NSMutableArray *_messages;
 
-	const char **_params;
-	BOOL _isArchive;
-	BOOL _nibLoaded;
 	BOOL _previousStyleSwitch;
 }
 - (id) initWithTranscript:(NSString *) filename;
@@ -49,8 +51,8 @@ extern NSString *JVChatEmoticonsScannedNotification;
 - (void) saveTranscriptTo:(NSString *) path;
 
 - (IBAction) changeChatStyle:(id) sender;
-- (void) setChatStyle:(NSBundle *) style withVariant:(NSString *) variant;
-- (NSBundle *) chatStyle;
+- (void) setChatStyle:(JVStyle *) style withVariant:(NSString *) variant;
+- (JVStyle *) chatStyle;
 
 - (IBAction) changeChatStyleVariant:(id) sender;
 - (void) setChatStyleVariant:(NSString *) variant;

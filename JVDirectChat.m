@@ -18,6 +18,7 @@
 #import <AGRegex/AGRegex.h>
 
 #import "JVChatController.h"
+#import "JVStyle.h"
 #import "JVChatTranscriptPrivates.h"
 #import "JVNotificationController.h"
 #import "MVConnectionsController.h"
@@ -29,6 +30,7 @@
 #import "NSURLAdditions.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
+#import "NSSplitViewAdditions.h"
 
 static NSArray *JVAutoActionVerbs = nil;
 
@@ -178,20 +180,16 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) awakeFromNib {
-	NSBundle *style = nil;
+	JVStyle *style = nil;
 	NSString *variant = nil;
 	NSBundle *emoticon = nil;
 
 	if( [self preferenceForKey:@"style"] ) {
-		style = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"style"]];
+		style = [JVStyle styleWithIdentifier:[self preferenceForKey:@"style"]];
 		variant = [self preferenceForKey:@"style variant"];
-		if( ! style ) {
-			[self setPreference:nil forKey:@"style"];
-			[self setPreference:nil forKey:@"style variant"];
-		}
 	}
 
-	if( [self preferenceForKey:@"emoticon"] && [(NSString *)[self preferenceForKey:@"emoticon"] length] ) {
+	if( [(NSString *)[self preferenceForKey:@"emoticon"] length] ) {
 		emoticon = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"emoticon"]];
 		if( ! emoticon ) [self setPreference:nil forKey:@"emoticon"];
 	}
@@ -231,6 +229,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[send setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatSpellChecking"]];
 	[send setUsesSystemCompleteOnTab:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
 	[send reset:nil];
+
+	[(NSSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
 
 	[self performSelector:@selector( processQueue ) withObject:nil afterDelay:0.25];
 }
@@ -524,47 +524,19 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark Styles
 
 - (IBAction) changeChatStyle:(id) sender {
-	NSBundle *style = [NSBundle bundleWithIdentifier:[sender representedObject]];
-	NSString *variant = nil;
-	if( style ) {
-		[self setPreference:[style bundleIdentifier] forKey:@"style"];
-		[self setPreference:nil forKey:@"style variant"];
-	} else {
-		style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatDefaultStyle"]];
-		[self setPreference:nil forKey:@"style"];
-		[self setPreference:nil forKey:@"style variant"];
-		if( ! style ) {
-			[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
-			style = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
-		}
-		variant = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [style bundleIdentifier]]];
-	}
+	JVStyle *style = [sender representedObject];
 
-	if( ! [self _usingSpecificEmoticons] ) {
-		NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [style bundleIdentifier]]]];
-		[self setChatEmoticons:emoticon performRefresh:NO];		
-	}
+	[super changeChatStyle:sender];
 
-	[self setChatStyle:style withVariant:variant];
+	[self setPreference:[style identifier] forKey:@"style"];
+	[self setPreference:nil forKey:@"style variant"];
 }
 
 - (IBAction) changeChatStyleVariant:(id) sender {
-	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
-	NSString *style = [[sender representedObject] objectForKey:@"style"];
+	[super changeChatStyleVariant:sender];
 
-	[self setPreference:style forKey:@"style"];
-	[self setPreference:variant forKey:@"style variant"];
-
-	if( ! [style isEqual:_chatStyle] ) {
-		if( ! [self _usingSpecificEmoticons] ) {
-			NSBundle *emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]]];
-			[self setChatEmoticons:emoticon performRefresh:NO];
-		}
-
-		[self setChatStyle:[NSBundle bundleWithIdentifier:style] withVariant:variant];
-	} else {
-		[self setChatStyleVariant:variant];
-	}
+	[self setPreference:[_chatStyle identifier] forKey:@"style"];
+	[self setPreference:_chatStyleVariant forKey:@"style variant"];
 }
 
 - (IBAction) changeChatEmoticons:(id) sender {
@@ -580,7 +552,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[self setPreference:[emoticon bundleIdentifier] forKey:@"emoticon"];
 		[self setChatEmoticons:emoticon];
 	} else {
-		emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle bundleIdentifier]]]];
+		emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle identifier]]]];
 		[self setPreference:nil forKey:@"emoticon"];
 		[self setChatEmoticons:emoticon];
 	}
@@ -990,9 +962,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint(0, [[scrollView documentView] bounds].size.height)]];
 		[scrollView reflectScrolledClipView:[scrollView contentView]];
 	}
+
+	[(NSSplitView *)[[[send superview] superview] superview] savePositionUsingName:@"JVChatSplitViewPosition"];
 }
 
-- (void)splitViewWillResizeSubviews:(NSNotification *) aNotification {
+- (void) splitViewWillResizeSubviews:(NSNotification *) aNotification {
 	// The scrollbars are two subviews down from the JVWebView (deep in the WebKit bowls).
 	NSScrollView *scrollView = [[[[display subviews] objectAtIndex:0] subviews] objectAtIndex:0];
 	if( [[scrollView verticalScroller] floatValue] == 1. ) _scrollerIsAtBottom = YES;
@@ -1165,16 +1139,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 	}
 
-	if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
+	if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] )
 		[_styleParams removeObjectForKey:@"subsequent"];
-		if( _params ) [[self class] _freeXsltParamArray:_params];
-		_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
-	}
 
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 	[self writeToLog:root withDoc:doc initializing:NO continuation:NO];
 
-	messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
+	messageString = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
 	if( [messageString length] ) {
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
@@ -1301,22 +1272,16 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	if( ! _requiresFullMessage && result && result -> nodesetval -> nodeNr ) {
 		continuation = YES;
-		if( ! [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
+		if( ! [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] )
 			[_styleParams setObject:@"'yes'" forKey:@"subsequent"];
-			if( _params ) [[self class] _freeXsltParamArray:_params];
-			_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
-		}
 
 		parent = result -> nodesetval -> nodeTab[0];
 		root = xmlDocCopyNode( parent, doc, 1 );
 		xmlDocSetRootElement( doc, root );
 	} else {
 		continuation = NO;
-		if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
+		if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] )
 			[_styleParams removeObjectForKey:@"subsequent"];
-			if( _params ) [[self class] _freeXsltParamArray:_params];
-			_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
-		}
 
 		root = xmlNewNode( NULL, "envelope" );
 		xmlSetProp( root, "id", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
@@ -1382,7 +1347,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( parent ) xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
 	else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
-	messageString = [[[self _applyStyleOnXMLDocument:doc] mutableCopy] autorelease];
+	messageString = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
 	if( [messageString length] ) {
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
@@ -1768,7 +1733,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[menuItem setTag:20];
 		[menu addItem:menuItem];
 
-		emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle bundleIdentifier]]]];
+		emoticon = [NSBundle bundleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_chatStyle identifier]]]];
 		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style Default", "default style emoticons menu item title" ) action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[subMenu addItem:menuItem];
@@ -1782,7 +1747,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[subMenu addItem:[NSMenuItem separatorItem]];
 
-		enumerator = [[[JVChatEmoticonBundles allObjects] sortedArrayUsingFunction:sortBundlesByName context:self] objectEnumerator];
+		enumerator = [[[JVChatEmoticonBundles allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
 		while( ( emoticon = [enumerator nextObject] ) ) {
 			menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeChatEmoticons: ) keyEquivalent:@""] autorelease];
 			[menuItem setTarget:self];
