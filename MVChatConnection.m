@@ -2231,8 +2231,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( [[self scheme] isEqualToString:@"irc"] ) {
 		if( [self fragment] ) {
 			if( [[self fragment] length] > 0 ) isDirect = NO;
-		} else if( [self path] ) {
-			if( [[self path] length] >= 2 && [[[self path] substringFromIndex:1] hasPrefix:@"&"] || [[[self path] substringFromIndex:1] hasPrefix:@"+"] || [[[self path] substringFromIndex:1] hasPrefix:@"!"] ) {
+		} else if( [self path] && [[self path] length] >= 2) {
+			if( [[[self path] substringFromIndex:1] hasPrefix:@"&"] || [[[self path] substringFromIndex:1] hasPrefix:@"+"] || [[[self path] substringFromIndex:1] hasPrefix:@"!"] ) {
 				isDirect = NO;
 			} else isDirect = YES;
 		}
