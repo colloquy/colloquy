@@ -111,6 +111,7 @@ a.member.action {
 
 .itunes {
 	text-decoration: none;
+	color: inherit;
 }
 
 .itunes > *:hover {
