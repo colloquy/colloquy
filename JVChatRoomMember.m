@@ -66,11 +66,19 @@
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member {
 	NSComparisonResult retVal;
 
-	if( _operator && ! [member operator] ) {
+	if( _serverOperator && ! [member serverOperator] ) {
+		retVal = NSOrderedAscending;
+	} else if( ! _serverOperator && [member serverOperator] ) {
+		retVal = NSOrderedDescending;
+	} else if( _operator && ! [member operator] && ! [member serverOperator] ) {
 		retVal = NSOrderedAscending;
 	} else if ( ! _operator && [member operator] ) {
 		retVal = NSOrderedDescending;
-	} else if ( _voice && ! [member voice] && ! [member operator] ) {
+	} else if( _halfOperator && ! [member halfOperator] && ! [member operator] && ! [member serverOperator] ) {
+		retVal = NSOrderedAscending;
+	} else if( ! _halfOperator && [member halfOperator] ) {
+		retVal = NSOrderedDescending;
+	} else if ( _voice && ! [member voice] && ! [member operator] && ! [member halfOperator] && ! [member serverOperator] ) {
 		retVal = NSOrderedAscending;
 	} else if ( ! _voice && [member voice] ) {
 		retVal = NSOrderedDescending;
