@@ -195,6 +195,20 @@
 
 #pragma mark -
 
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
+	if( [menuItem action] == @selector( toggleTabBarVisible: ) ) {
+		if( ! _tabIsShowing ) {
+			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Show Tab Bar", "show tab bar menu title" )]];
+		} else {
+			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Hide Tab Bar", "hide tab bar menu title" )]];
+		}
+		return YES;
+	}
+	return [super validateMenuItem:menuItem];
+}
+
+#pragma mark -
+
 - (void) customTabView:(AICustomTabsView *) view didSelectTabViewItem:(NSTabViewItem *) tabViewItem {
 	if( tabViewItem ) {
 		[self _refreshWindow];
