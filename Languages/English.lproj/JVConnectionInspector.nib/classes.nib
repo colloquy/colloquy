@@ -4,6 +4,7 @@
         {
             ACTIONS = {
                 addRoom = id; 
+                changeEncoding = id; 
                 changeProxy = id; 
                 editText = id; 
                 openNetworkPreferences = id; 
@@ -15,6 +16,7 @@
             OUTLETS = {
                 connectCommands = NSTextView; 
                 editAddress = NSTextField; 
+                editAltNicknames = NSTextField; 
                 editAutomatic = NSButton; 
                 editNickname = NSTextField; 
                 editPassword = NSTextField; 

@@ -55,6 +55,7 @@
 	[editProxy selectItemAtIndex:[editProxy indexOfItemWithTag:(int)[_connection proxyType]]];
 	[editPort setIntValue:[_connection serverPort]];
 	[editNickname setObjectValue:[_connection nickname]];
+	[editAltNicknames setObjectValue:[[_connection alternateNicknames] componentsJoinedByString:@" "]];
 	[editPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[_connection server] securityDomain:[_connection server] account:[_connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 	[editServerPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[_connection server] securityDomain:[_connection server] account:nil path:nil port:[_connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 	[editRealName setObjectValue:[_connection realName]];
@@ -116,6 +117,8 @@
 		if( password ) [editPassword setObjectValue:password];
 		else [editPassword setObjectValue:@""];
 		[_connection setNickname:[sender stringValue]];
+	} else if( sender == editAltNicknames ) {
+		[_connection setAlternateNicknames:[[sender stringValue] componentsSeparatedByString:@" "]];
 	} else if( sender == editPassword ) {
 		[_connection setNicknamePassword:[sender stringValue]];
 		[[MVKeyChain defaultKeyChain] setInternetPassword:[sender stringValue] forServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:[editNickname stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];

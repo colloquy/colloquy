@@ -16,6 +16,7 @@
 @interface JVConnectionInspector : NSObject <JVInspector> {
 	IBOutlet NSView *view;
 	IBOutlet NSTextField *editNickname;
+	IBOutlet NSTextField *editAltNicknames;
 	IBOutlet NSTextField *editPassword;
 	IBOutlet NSTextField *editRealName;
 	IBOutlet NSTextField *editUsername;

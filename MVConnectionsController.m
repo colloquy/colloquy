@@ -1185,10 +1185,11 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"automatic"] boolValue]] forKey:@"automatic"];
 			[data setObject:[NSNumber numberWithInt:(int)[(MVChatConnection *)[info objectForKey:@"connection"] proxyType]] forKey:@"proxy"];
 			[data setObject:[NSNumber numberWithLong:(long)[(MVChatConnection *)[info objectForKey:@"connection"] encoding]] forKey:@"encoding"];
-			[data removeObjectForKey:@"url"];
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] server] forKey:@"server"];
 			[data setObject:[NSNumber numberWithUnsignedShort:[(MVChatConnection *)[info objectForKey:@"connection"] serverPort]] forKey:@"port"];
-			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] nickname] forKey:@"nickname"];
+			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] preferredNickname] forKey:@"nickname"];
+			if( [(MVChatConnection *)[info objectForKey:@"connection"] alternateNicknames] )
+				[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] alternateNicknames] forKey:@"alternateNicknames"];
 			if( [info objectForKey:@"rooms"] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 			if( [info objectForKey:@"commands"] ) [data setObject:[info objectForKey:@"commands"] forKey:@"commands"];
 			[data setObject:[info objectForKey:@"created"] forKey:@"created"];
@@ -1226,6 +1227,8 @@ static NSMenu *favoritesMenu = nil;
 		if( [info objectForKey:@"realName"] ) [connection setRealName:[info objectForKey:@"realName"]];
 		if( [info objectForKey:@"nickname"] ) [connection setNickname:[info objectForKey:@"nickname"]];
 		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
+		if( [info objectForKey:@"alternateNicknames"] )
+			[connection setAlternateNicknames:[info objectForKey:@"alternateNicknames"]];
 
 		if( [[info objectForKey:@"automatic"] boolValue] ) {
 			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
