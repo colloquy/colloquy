@@ -8,7 +8,7 @@
                 changeDefaultChatStyle = id; 
                 changeDefaultEmoticons = id; 
                 changeMinimumFontSize = id; 
-                changePreferences = id; 
+                changeUseStyleFont = id; 
                 closeNewVariantSheet = id; 
                 createNewVariant = id; 
                 noGraphicEmoticons = id; 
@@ -29,6 +29,7 @@
                 preview = WebView; 
                 standardFont = JVFontPreviewField; 
                 styles = NSPopUpButton; 
+                useStyleFont = NSButton; 
             }; 
             SUPERCLASS = NSPreferencesModule; 
         }, 
