@@ -1179,10 +1179,6 @@ static NSMenu *favoritesMenu = nil;
 			[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 
 			[connection connect];
-
-			renumerator = [[info objectForKey:@"rooms"] objectEnumerator];
-			while( ( item = [renumerator nextObject] ) )
-				[connection joinChatRoom:item];
 		}
 
 		[info setObject:connection forKey:@"connection"];
