@@ -125,7 +125,6 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	//Hide the source window
 	if(sourceWindowWillHide){
 		[[sourceTabBar window] setAlphaValue:0.0];
-		[[[sourceTabBar window] drawers] makeObjectsPerformSelector:@selector(close)];
 	}
 	
 	//Perform the drag
@@ -201,7 +200,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 //Invoked in the dragging source as the drag ends
 - (void)draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {	
-	if(operation == 0){ //when dropped on the screen
+	if(operation == NSDragOperationNone){ //when dropped on the screen
 		//Sneaky Bug Fix ---
 		//If a drag is done very quickly, the system will fail to send our tab bar a draggingExited event, even though
 		//the drag DID exit.  If this hapens, destTabBar will not be nil when we reach this method.  If the drag

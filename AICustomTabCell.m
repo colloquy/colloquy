@@ -26,11 +26,13 @@ static NSImage		*tabCloseFront = nil;
 static NSImage		*tabCloseBack = nil;
 static NSImage		*tabCloseFrontPressed = nil;
 static NSImage		*tabCloseFrontRollover = nil;
+static NSSize		leftCapSize;
+static NSSize		rightCapSize;
 
 #define TAB_CLOSE_LEFTPAD		2		//Padding left of close button
 #define TAB_CLOSE_RIGHTPAD		3		//Padding right of close button
 
-#define TAB_CLOSE_Y_OFFSET		1       //Vertical offset of close button from center
+#define TAB_CLOSE_Y_OFFSET		2       //Vertical offset of close button from center
 
 #define TAB_RIGHT_PAD			5       //Tab right edge padding
 #define TAB_LABEL_Y_OFFSET		1       //Vertical offset of label text from center
@@ -39,20 +41,20 @@ static NSImage		*tabCloseFrontRollover = nil;
 #define TAB_SELECTED_HIGHER     NO     	//Draw the selected tab higher?
 
 @interface AICustomTabCell (PRIVATE)
-- (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem;
+- (id)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
 - (NSRect)_closeButtonRect;
 @end
 
 @implementation AICustomTabCell
 
 //Create a new custom tab
-+ (id)customTabForTabViewItem:(NSTabViewItem *)inTabViewItem
++ (id)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView
 {
-    return([[[self alloc] initForTabViewItem:inTabViewItem] autorelease]);
+    return([[[self alloc] initForTabViewItem:inTabViewItem customTabsView:inView] autorelease]);
 }
 
 //init
-- (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem
+- (id)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView
 {
     static BOOL haveLoadedImages = NO;
     
@@ -63,19 +65,21 @@ static NSImage		*tabCloseFrontRollover = nil;
 		tabFrontLeft = [[NSImage imageNamed:@"aquaTabLeft"] retain];
 		tabFrontMiddle = [[NSImage imageNamed:@"aquaTabMiddle"] retain];
 		tabFrontRight = [[NSImage imageNamed:@"aquaTabRight"] retain];
-
-//		NSControlTint	tint = [NSColor currentControlTintSupportingJag];
+		
 		tabCloseFront = [[NSImage imageNamed:@"aquaTabClose"] retain];
 		tabCloseBack = [[NSImage imageNamed:@"aquaTabCloseBack"] retain];
 		tabCloseFrontPressed = [[NSImage imageNamed:@"aquaTabClosePressed"] retain];
 		tabCloseFrontRollover = [[NSImage imageNamed:@"aquaTabCloseRollover"] retain];
 
+		leftCapSize = [tabFrontLeft size];
+		rightCapSize = [tabFrontRight size];
+		
         haveLoadedImages = YES;
     }
 	
     tabViewItem = [inTabViewItem retain];
+	view = inView;
     allowsInactiveTabClosing = NO;
-	wasEnabled = YES;
     trackingClose = NO;
     hoveringClose = NO;
     selected = NO;
@@ -98,10 +102,10 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Return the desired size of this tab
 - (NSSize)size
 {
-	int width = [tabFrontLeft size].width + [[self attributedLabel] size].width + [tabFrontRight size].width +
+	int width = leftCapSize.width + [[self attributedLabel] size].width + rightCapSize.width +
 	(TAB_CLOSE_LEFTPAD + [[tabViewItem icon] size].width + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
 	
-    return( NSMakeSize((width > TAB_MIN_WIDTH ? width : TAB_MIN_WIDTH), [tabFrontLeft size].height) );
+    return( NSMakeSize((width > TAB_MIN_WIDTH ? width : TAB_MIN_WIDTH), leftCapSize.height) );
 }
 
 //Compare the width of this tab to another
@@ -133,11 +137,24 @@ static NSImage		*tabCloseFrontRollover = nil;
 {
 	NSSize	iconSize = [[tabViewItem icon] size];
 	NSSize	closeSize = [tabCloseFront size];
-    int 	centeredYPos = frame.origin.y + (frame.size.height - [tabCloseFront size].height) / 2.0;
-    return(NSMakeRect(frame.origin.x + [tabFrontLeft size].width + TAB_CLOSE_LEFTPAD + ((iconSize.width - closeSize.width) / 2.0),
-					  centeredYPos + TAB_CLOSE_Y_OFFSET + 1,
+    int 	centerY = (frame.size.height - [tabCloseFront size].height) / 2.0;
+
+    return(NSMakeRect(frame.origin.x + leftCapSize.width + TAB_CLOSE_LEFTPAD + ((iconSize.width - closeSize.width) / 2.0),
+					  frame.origin.y + centerY + TAB_CLOSE_Y_OFFSET + 1,
 					  [tabCloseFront size].width,
 					  [tabCloseFront size].height));
+}
+
+//Frame of our tab icon
+- (NSRect)_tabIconRect
+{
+	NSSize	imageSize = [[tabViewItem icon] size];
+	int		centerY = (frame.size.height - imageSize.height) / 2.0;
+	
+	return(NSMakeRect(frame.origin.x + leftCapSize.width + TAB_CLOSE_LEFTPAD,
+					  frame.origin.y + centerY + TAB_CLOSE_Y_OFFSET,
+					  imageSize.width,
+					  imageSize.height));
 }
 
 
@@ -162,12 +179,24 @@ static NSImage		*tabCloseFrontRollover = nil;
 }
 
 //When a tab is hovered it should be highlighted.  Highlighted tabs draw differently.
-- (void)setHighlighted:(BOOL)inHighlighted
+- (void)setHighlighted:(BOOL)inHighlight
 {
-    highlighted = inHighlighted;
+	if(highlighted != inHighlight){
+		highlighted = inHighlight;
+        [view setNeedsDisplayInRect:[self frame]];
+	}
 }
 - (BOOL)isHighlighted{
     return(highlighted);
+}
+
+//Set whether the close button is currently hovered
+- (void)setHoveringClose:(BOOL)hovering
+{
+	if(hoveringClose != hovering){
+		hoveringClose = hovering;
+        [view setNeedsDisplayInRect:NSUnionRect([self _tabIconRect],[self _closeButtonRect])];
+	}
 }
 
 //Frame determines where this tab cell will draw
@@ -191,18 +220,16 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Draw.  Pass ignore selection to ignore whether this tab is selected or not when drawing
 - (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView ignoreSelection:(BOOL)ignoreSelection
 {
-    int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge;
+    int		middleSourceWidth, middleRightEdge, middleLeftEdge;
     NSRect	sourceRect, destRect;
     NSSize	labelSize;
 	NSPoint destPoint;
     
     //Pre-calc some dimensions
     labelSize = [tabViewItem sizeOfLabel:NO];
-    leftCapWidth = [tabFrontLeft size].width;
-    rightCapWidth = [tabFrontRight size].width;
     middleSourceWidth = [tabFrontMiddle size].width;
-    middleRightEdge = (rect.origin.x + rect.size.width - rightCapWidth);
-    middleLeftEdge = (rect.origin.x + leftCapWidth);
+    middleRightEdge = (rect.origin.x + rect.size.width - rightCapSize.width);
+    middleLeftEdge = (rect.origin.x + leftCapSize.width);
 	
     //Background
     if(selected && !ignoreSelection){
@@ -229,10 +256,6 @@ static NSImage		*tabCloseFrontRollover = nil;
         [NSBezierPath fillRect:NSMakeRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)];
     }
 	
-    //Offset for icon
-    rect.origin.x += leftCapWidth;
-    rect.size.width -= leftCapWidth + rightCapWidth;
-    
 	//We'll display our close icon if the user is hovering.  Otherwise, we display the tab specified icon
 	NSImage *leftIcon = [tabViewItem icon];
 	if((hoveringClose && (selected || allowsInactiveTabClosing || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ))) || !leftIcon){		
@@ -244,22 +267,15 @@ static NSImage		*tabCloseFrontRollover = nil;
 		destPoint = [self _closeButtonRect].origin;
 
 	}else{
-		destPoint = NSMakePoint(frame.origin.x + [tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
-								((frame.size.height - [leftIcon size].height) / 2.0) + TAB_CLOSE_Y_OFFSET);
+		destPoint = [self _tabIconRect].origin;
 	}
-
-	// Draw at whole pixel points only.
-	destPoint.y = ceilf( destPoint.y );
-	destPoint.x = ceilf( destPoint.x );
-
-	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver fraction:( [tabViewItem isEnabled] ? 1. : 0.5 )];
+	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
 
 	//Move over for label drawing.  We always move based on the tab icon and not on the close button.  This prevents
 	//tab text from jumping when hovered if the tab icons are a different size from the close button
-	NSSize leftIconSize = [[tabViewItem icon] size];
-	rect.origin.x += TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD;
-	rect.size.width -= TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD + TAB_RIGHT_PAD;
-
+	int	offsetX = leftCapSize.width + TAB_CLOSE_LEFTPAD + [self _tabIconRect].size.width + TAB_CLOSE_RIGHTPAD;
+	rect.origin.x += offsetX;
+	rect.size.width -= offsetX + TAB_RIGHT_PAD;
 	
 	//Draw our label
 	destRect = NSMakeRect(rect.origin.x,
@@ -275,18 +291,17 @@ static NSImage		*tabCloseFrontRollover = nil;
 {
 	NSString	*label = [tabViewItem label];
 	
-	if(![label isEqualToString:[attributedLabel string]] || wasEnabled != [tabViewItem isEnabled] ){
-		wasEnabled = [tabViewItem isEnabled];
+	if(![label isEqualToString:[attributedLabel string]]){
 		//Paragraph Style (Turn off clipping by word)
 		NSMutableParagraphStyle *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 		[paragraphStyle setAlignment:NSCenterTextAlignment];
 		[paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
-
+		
 		//Update the attributed string
 		[attributedLabel release];
-		attributedLabel = [[NSAttributedString alloc] initWithString:label attributes:
+		attributedLabel = [[NSAttributedString alloc] initWithString:[tabViewItem label] attributes:
 			[NSDictionary dictionaryWithObjectsAndKeys:
-				( wasEnabled ? [NSColor controlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.5] ), NSForegroundColorAttributeName,
+				[NSColor controlTextColor], NSForegroundColorAttributeName,
 				[NSFont systemFontOfSize:11], NSFontAttributeName,
 				paragraphStyle, NSParagraphStyleAttributeName,
 				nil]];
@@ -299,71 +314,55 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Cursor tracking ------------------------------------------------------------------------------------------------------
 #pragma mark Cursor tracking
 //Install tracking rects for our tab and its close button
-- (void)addTrackingRectsInView:(NSView *)view withFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation
+- (void)addTrackingRectsWithFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation
 {
-    userData = [[NSDictionary dictionaryWithObjectsAndKeys:view, @"view", nil] retain]; //We have to retain and release the userData ourself
     trackingTag = [view addTrackingRect:trackRect
                                   owner:self
-                               userData:userData
+                               userData:nil
                            assumeInside:NSPointInRect(cursorLocation, trackRect)];
-    highlighted = NSPointInRect(cursorLocation, trackRect);
+    [self setHighlighted:NSPointInRect(cursorLocation, trackRect)];
 	
-    closeUserData = [[NSDictionary dictionaryWithObjectsAndKeys:view, @"view", [NSNumber numberWithBool:YES], @"close", nil] retain]; //We have to retain and release the userData ourself
     closeTrackingTag = [view addTrackingRect:[self _closeButtonRect]
                                        owner:self
-                                    userData:closeUserData
+                                    userData:nil
                                 assumeInside:NSPointInRect(cursorLocation, [self _closeButtonRect])];
-    hoveringClose = NSPointInRect(cursorLocation, [self _closeButtonRect]);
-	
+    [self setHoveringClose:NSPointInRect(cursorLocation, [self _closeButtonRect])];
+
 	toolTipTag = [view addToolTipRect:trackRect owner:view userData:NULL];
 }
 
 //Remove our tracking rects
-- (void)removeTrackingRectsFromView:(NSView *)view
+- (void)removeTrackingRects
 {
     [view removeTrackingRect:trackingTag]; trackingTag = 0;
-    [userData autorelease]; userData = nil;
-
     [view removeTrackingRect:closeTrackingTag]; closeTrackingTag = 0;
-    [closeUserData autorelease]; closeUserData = nil;
-	
 	[view removeToolTip:toolTipTag]; toolTipTag = 0;
 }
 
 //Mouse entered our tabs (or close button)
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    NSDictionary    *eventData = [theEvent userData];
-    NSView          *view = [eventData objectForKey:@"view"];
-
 	//Scrubs the tab if control is down.
-//	if(([theEvent modifierFlags] & NSAlternateKeyMask) && !selected){
-//		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
-//	}
+	if(([theEvent modifierFlags] & NSAlternateKeyMask) && !selected){
+		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
+	}
 	
-    //Set ourself (or our close button) has hovered
-    if((allowsInactiveTabClosing || selected || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ) && [[eventData objectForKey:@"close"] boolValue]){
-        hoveringClose = YES;
-        [view setNeedsDisplayInRect:[self frame]];
+    //Set ourself (or our close button) as hovered
+    if((allowsInactiveTabClosing || selected || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask )) &&
+	   ([theEvent trackingNumber] == closeTrackingTag)){
+		[self setHoveringClose:YES];
     }else{
-        highlighted = YES;
-        [view setNeedsDisplayInRect:[self frame]];
+		[self setHighlighted:YES];
     }
 }
 
-//Mouse left one of our tabs
+//Mouse left one of our tabs - Set ourself (or our close button) as not hovered
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    NSDictionary    *eventData = [theEvent userData];
-    NSView          *view = [eventData objectForKey:@"view"];
-	
-    //Set ourself (or our close button) has not hovered
-    if([[eventData objectForKey:@"close"] boolValue]){
-        hoveringClose = NO;
-        [view setNeedsDisplayInRect:[self frame]];
+    if([theEvent trackingNumber] == closeTrackingTag){
+		[self setHoveringClose:NO];
     }else{
-        highlighted = NO;
-        [view setNeedsDisplayInRect:[self frame]];
+		[self setHighlighted:NO];
     }
 }
 
@@ -373,7 +372,7 @@ static NSImage		*tabCloseFrontRollover = nil;
 //Track click and hold on the close button
 - (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView
 {
-    if((allowsInactiveTabClosing || selected || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ) &&
+    if((allowsInactiveTabClosing || selected || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask )) &&
 	   (SHOW_CLOSE_BUTTON_FOR_SINGLE_TAB || [[tabViewItem tabView] numberOfTabViewItems] != 1) &&
 	   NSPointInRect([controlView convertPoint:[theEvent locationInWindow] fromView:nil], [self _closeButtonRect])){
 		

@@ -14,20 +14,20 @@
 #define WINDOW_FADE_SNAP                        0.05 //How close to min/max we must get before fade is finished
 
 @interface ESFloater (PRIVATE)
-- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title;
+- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask;
 - (void)_setWindowOpacity:(float)opacity;
 @end
 
 @implementation ESFloater
 
 //
-+ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title
++ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask
 {
-    return([[self alloc] initWithImage:inImage styleMask:styleMask title:title]);
+    return([[self alloc] initWithImage:inImage styleMask:styleMask]);
 }
 
 //
-- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title
+- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask
 {
     NSRect  frame;
     
@@ -43,7 +43,6 @@
                                        styleMask:styleMask
                                          backing:NSBackingStoreBuffered
                                            defer:NO];
-	if( title ) [panel setTitle:title];
     [panel setHidesOnDeactivate:NO];
     [panel setIgnoresMouseEvents:YES];
     [panel setLevel:NSStatusWindowLevel];
@@ -126,10 +125,10 @@
     float   alphaValue = [panel alphaValue];
     
     if(windowIsVisible){
-        alphaValue += (maxOpacity - alphaValue) * ([[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ? WINDOW_FADE_SLOW_STEP : WINDOW_FADE_STEP);
+        alphaValue += (maxOpacity - alphaValue) * (( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ? WINDOW_FADE_SLOW_STEP : WINDOW_FADE_STEP);
         if(alphaValue > maxOpacity - WINDOW_FADE_SNAP) alphaValue = maxOpacity;
     }else{
-        alphaValue -= (alphaValue - WINDOW_FADE_MIN) * ([[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ? WINDOW_FADE_SLOW_STEP : WINDOW_FADE_STEP);
+        alphaValue -= (alphaValue - WINDOW_FADE_MIN) * (( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ? WINDOW_FADE_SLOW_STEP : WINDOW_FADE_STEP);
         if(alphaValue < WINDOW_FADE_MIN + WINDOW_FADE_SNAP) alphaValue = WINDOW_FADE_MIN;
     }
     [self _setWindowOpacity:alphaValue];

@@ -16,8 +16,7 @@
 #import "ESFloater.h"
 #define TAB_CELL_IDENTIFIER     @"Tab Cell Identifier"
 
-@class AICustomTabCell;
-@class AICustomTabsView;
+@class AICustomTabCell, AICustomTabsView;
 
 @interface NSObject (AICustomTabsViewDelegate)
 - (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
