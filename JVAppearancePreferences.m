@@ -574,6 +574,42 @@
 	[self saveStyleOptions];
 }
 
+- (IBAction) selectImageFile:(id) sender {
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+	int index = [sender selectedRow];
+	NSMutableDictionary *info = [_styleOptions objectAtIndex:index];
+
+	NSArray *style = nil;
+	NSString *value = nil;
+	NSEnumerator *enumerator = nil;
+	NSDictionary *styleInfo = nil;
+	NSString *setting = nil;
+
+	NSString *path = [info objectForKey:@"value"];
+	int result = NSCancelButton;
+
+	[openPanel setAllowsMultipleSelection:NO];
+	[openPanel setTreatsFilePackagesAsDirectories:NO];
+	[openPanel setCanChooseDirectories:NO];
+
+	NSArray *types = [NSArray arrayWithObjects:@"jpg",@"tif",@"tiff",@"jpeg",@"gif",@"png",@"pdf",nil];
+
+	if( ( result = [openPanel runModalForDirectory:[path stringByDeletingLastPathComponent] file:[path lastPathComponent] types:types] ) == NSOKButton) {
+		value = [openPanel filename];
+	} else value = @"";
+
+	[info setObject:value forKey:@"value"];
+	style = [[info objectForKey:@"layouts"] objectAtIndex:0];
+	enumerator = [style objectEnumerator];
+
+	while( ( styleInfo = [enumerator nextObject] ) ) {
+		setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], value];
+		[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
+	}
+
+	[self saveStyleOptions];
+}
+
 - (BOOL) tableView:(NSTableView *) view shouldSelectRow:(int) row {
 	static NSTimeInterval lastTime = 0;
 	if( _variantLocked && ( [NSDate timeIntervalSinceReferenceDate] - lastTime ) > 1. ) {
@@ -599,6 +635,18 @@
 			[cell setControlSize:NSSmallControlSize];
 			[cell setFont:[NSFont menuFontOfSize:[NSFont smallSystemFontSize]]];
 			[cell addItemsWithTitles:[options objectForKey:@"options"]];
+			[options setObject:cell forKey:@"cell"];
+			return cell;
+        } else if( [[options objectForKey:@"type"] isEqualToString:@"file"] ) {
+			id cell = [[NSButtonCell new] autorelease];
+			[cell setControlSize:NSSmallControlSize];
+			[cell setFont:[NSFont menuFontOfSize:[NSFont smallSystemFontSize]]];
+			[cell setButtonType:NSMomentaryPushInButton];
+			[cell setBezelStyle:NSRoundedBezelStyle];
+			[cell setBezeled:YES];
+			[cell setAction:@selector( selectImageFile: )];
+			[cell setTitle:NSLocalizedString( @"Set Image...", "set image customize button name" )];
+			[cell setTarget:self];
 			[options setObject:cell forKey:@"cell"];
 			return cell;
 		}

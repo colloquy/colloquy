@@ -24,6 +24,16 @@
 	</dict>
 	<dict>
 		<key>style</key>
+		<string>body { background-image: url("%@") !important; }</string>
+		<key>default</key>
+		<string></string>
+		<key>description</key>
+		<string>Background</string>
+		<key>type</key>
+		<string>file</string>
+	</dict>
+	<dict>
+		<key>style</key>
 		<string>a:link { color: %@; }</string>
 		<key>default</key>
 		<string>#0000aa</string>
