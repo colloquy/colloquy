@@ -651,6 +651,12 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		}
 	}
 
+	if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] ) {
+		[_styleParams removeObjectForKey:@"subsequent"];
+		if( _params ) [[self class] _freeXsltParamArray:_params];
+		_params = [[self class] _xsltParamArrayWithDictionary:_styleParams];
+	}
+
 	if( [_logLock tryLock] ) {
 		xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
