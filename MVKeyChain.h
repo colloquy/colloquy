@@ -1,5 +1,4 @@
 #import <Security/Security.h>
-#import <Foundation/NSObject.h>
 
 enum {
 	MVKeyChainAuthenticationTypeAny = 0,
@@ -33,7 +32,6 @@ enum {
 
 typedef SecProtocolType MVKeyChainProtocol;
 
-@class NSString;
 
 @interface MVKeyChain : NSObject {
 }

@@ -2,8 +2,6 @@
 // Changes by Timothy Hatcher for Colloquy.
 // Copyright Graham Booker and Timothy Hatcher. All rights reserved.
 
-#import <Cocoa/Cocoa.h>
-#import <AGRegex/AGRegex.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSColorAdditions.h>

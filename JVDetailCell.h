@@ -1,5 +1,3 @@
-#import <AppKit/NSImageCell.h>
-
 @interface JVDetailCell : NSImageCell {
 	@private
 	NSImage *_statusImage;

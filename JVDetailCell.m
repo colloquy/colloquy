@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "JVDetailCell.h"
 
 @implementation JVDetailCell

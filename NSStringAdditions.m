@@ -1,5 +1,4 @@
 #import "NSStringAdditions.h"
-#import <Cocoa/Cocoa.h>
 
 @implementation NSString (NSStringAdditions)
 + (NSString *) mimeCharsetTagFromStringEncoding:(NSStringEncoding) encoding {

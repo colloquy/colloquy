@@ -1,5 +1,3 @@
-#import <Cocoa/Cocoa.h>
-
 #import <libxml/xinclude.h>
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>

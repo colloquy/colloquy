@@ -1,4 +1,3 @@
-#import <Foundation/Foundation.h>
 #import "MVKeyChain.h"
 
 #define MVStringByteLength(a) (( [a UTF8String] ? strlen( [a UTF8String] ) : 0 ))

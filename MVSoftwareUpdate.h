@@ -1,11 +1,3 @@
-#import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
-
-@class NSDictionary;
-@class NSTextView;
-@class NSTextField;
-@class NSWindow;
-
 @interface MVSoftwareUpdate : NSObject {
 	IBOutlet NSTextView *about;
 	IBOutlet NSTextField *program, *version;

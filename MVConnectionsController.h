@@ -1,19 +1,6 @@
-#import <AppKit/NSWindowController.h>
-#import <AppKit/NSNibDeclarations.h>
 #import "JVInspectorController.h"
 
-@class NSTableView;
-@class NSWindow;
-@class NSPanel;
-@class NSTextField;
-@class NSPopUpButton;
-@class NSButton;
-@class NSTabView;
-@class NSComboBox;
-@class NSString;
-@class NSMutableArray;
 @class MVChatConnection;
-@class NSURL;
 
 @interface MVConnectionsController : NSWindowController <JVInspectionDelegator> {
 @private

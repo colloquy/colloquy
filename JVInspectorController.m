@@ -1,5 +1,4 @@
 #import "JVInspectorController.h"
-#import <Cocoa/Cocoa.h>
 #import "MVApplicationController.h"
 
 static JVInspectorController *sharedInstance = nil;

@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVFileTransfer.h>
 #import <WebKit/WebDownload.h>
@@ -191,7 +190,6 @@ finish:
 - (void) windowDidLoad {
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"Transfers"] autorelease];
 	NSTableColumn *theColumn = nil;
-	id prototypeCell = nil;
 
 	[(NSPanel *)[self window] setFloatingPanel:NO];
 	[[self window] setHidesOnDeactivate:NO];
@@ -203,7 +201,7 @@ finish:
 	[currentFiles setAutosaveTableColumns:YES];
 
 	theColumn = [currentFiles tableColumnWithIdentifier:@"file"];
-	prototypeCell = [[JVDetailCell new] autorelease];
+	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
 	[prototypeCell setLineBreakMode:NSLineBreakByTruncatingMiddle];
 	[theColumn setDataCell:prototypeCell];
@@ -397,7 +395,7 @@ finish:
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
 	NSEnumerator *enumerator = nil;
-	id item = nil;
+	NSToolbarItem *item = nil;
 	BOOL noneSelected = YES;
 
 	enumerator = [[[[self window] toolbar] visibleItems] objectEnumerator];
@@ -420,8 +418,9 @@ finish:
 
 	enumerator = [currentFiles selectedRowEnumerator];
 	[_calculationItems removeAllObjects];
-	while( ( item = [enumerator nextObject] ) )
-		[_calculationItems addObject:[self _infoForTransferAtIndex:[item unsignedIntValue]]];
+	id fileItem = nil;
+	while( ( fileItem = [enumerator nextObject] ) )
+		[_calculationItems addObject:[self _infoForTransferAtIndex:[fileItem unsignedIntValue]]];
 }
 
 - (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
@@ -797,7 +796,7 @@ finish:
 
 			NSTimeInterval timeslice = [[controller startDate] timeIntervalSinceNow] * -1;
 			if( [controller status] == MVFileTransferNormalStatus && [controller transfered] != [controller finalSize] )
-				[info setObject:[NSNumber numberWithDouble:( ( [controller transfered] - [controller startOffset] ) / timeslice )] forKey:@"rate"];
+				[info setObject:[NSNumber numberWithDouble:( ( [controller transfered] - [(MVUploadFileTransfer *)controller startOffset] ) / timeslice )] forKey:@"rate"];
 
 			[info setObject:[NSNumber numberWithUnsignedInt:[controller status]] forKey:@"status"];
 
@@ -809,7 +808,7 @@ finish:
 
 			NSTimeInterval timeslice = [[controller startDate] timeIntervalSinceNow] * -1;
 			if( [controller status] == MVFileTransferNormalStatus && [controller transfered] != [controller finalSize] )
-				[info setObject:[NSNumber numberWithDouble:( ( [controller transfered] - [controller startOffset] ) / timeslice )] forKey:@"rate"];
+				[info setObject:[NSNumber numberWithDouble:( ( [controller transfered] - [(MVDownloadFileTransfer *)controller startOffset] ) / timeslice )] forKey:@"rate"];
 
 			[info setObject:[NSNumber numberWithUnsignedInt:[controller status]] forKey:@"status"];
 

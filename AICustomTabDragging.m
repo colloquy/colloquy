@@ -6,7 +6,6 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
 #import "AICustomTabDragging.h"
 #import "AICustomTabDragWindow.h"
 #import "AICustomTabsView.h"

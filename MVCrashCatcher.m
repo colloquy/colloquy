@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <AddressBook/AddressBook.h>
 #import <ChatCore/NSStringAdditions.h>
 #import "MVCrashCatcher.h"

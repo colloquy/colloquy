@@ -2,12 +2,10 @@
 //  Colloquy
 //  Created by Karl Adam on Thu Apr 15 2004.
 
-#import <Cocoa/Cocoa.h>
 #import "KAIgnoreRule.h"
 #import "MVChatConnection.h"
 #import "JVChatWindowController.h"
 #import "JVDirectChat.h"
-#import <AGRegex/AGRegex.h>
 
 @implementation KAIgnoreRule
 + (id) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {

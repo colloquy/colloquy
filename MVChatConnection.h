@@ -1,6 +1,3 @@
-#import <Foundation/NSObject.h>
-#import <Foundation/NSString.h>
-
 typedef enum {
 	MVChatConnectionDisconnectedStatus = 'disC',
 	MVChatConnectionServerDisconnectedStatus = 'sdsC',
@@ -78,17 +75,6 @@ typedef enum {
 	MVChatNotDoneError
 } MVChatError;
 
-@class NSTimer;
-@class NSString;
-@class NSArray;
-@class NSMutableArray;
-@class NSMutableDictionary;
-@class NSDictionary;
-@class NSAttributedString;
-@class MVUploadFileTransfer;
-@class NSAttributedString;
-@class NSMutableDictionary;
-@class NSDate;
 @class MVUploadFileTransfer;
 
 extern NSString *MVChatConnectionGotRawMessageNotification;

@@ -1,7 +1,3 @@
-#import <AppKit/NSButtonCell.h>
-
-@class NSColor;
-
 extern NSString *JVColorWellCellColorDidChangeNotification;
 
 @interface JVColorWellCell : NSButtonCell {

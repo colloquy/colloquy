@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "MVFileTransfer.h"
 #import "MVChatConnection.h"
 #import "NSNotificationAdditions.h"

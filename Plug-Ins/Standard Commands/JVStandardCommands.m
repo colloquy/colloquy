@@ -1,6 +1,5 @@
 #import <Cocoa/Cocoa.h>
 #import "JVStandardCommands.h"
-#import "MVChatPluginManager.h"
 #import "MVChatPluginManagerAdditions.h"
 #import "MVConnectionsController.h"
 #import "MVChatConnection.h"

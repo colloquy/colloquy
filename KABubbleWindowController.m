@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "KABubbleWindowController.h"
 #import "KABubbleWindowView.h"
 

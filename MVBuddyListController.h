@@ -1,20 +1,7 @@
-#import <AppKit/NSWindowController.h>
-#import <AppKit/NSNibDeclarations.h>
 #import "JVInspectorController.h"
 
 @class MVTableView;
-@class NSWindow;
-@class NSView;
-@class NSMenu;
-@class NSButton;
-@class NSImageView;
-@class NSTextField;
-@class NSPopUpButton;
 @class JVBuddy;
-@class NSMutableSet;
-@class NSMutableArray;
-@class NSString;
-@class NSTimer;
 @class ABPeoplePickerController;
 @class MVChatConnection;
 

@@ -1,7 +1,4 @@
-#import <AppKit/NSNibDeclarations.h>
 #import "NSPreferences.h"
-
-@class NSButton;
 
 @interface JVBehaviorPreferences : NSPreferencesModule {
 	IBOutlet NSPopUpButton *newRooms;

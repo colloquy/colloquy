@@ -1,5 +1,3 @@
-#import <AppKit/NSTableColumn.h>
-
 @interface JVMixedTableColumn : NSTableColumn {
 	int delegateDataCellForRow:1;
 }

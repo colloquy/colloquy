@@ -1,9 +1,6 @@
-#import <Foundation/NSObject.h>
 #import "MVChatPluginManager.h"
 
-@class NSString;
 @class MVChatConnection;
-@class NSAttributedString;
 @class MVChatPluginManager;
 @protocol JVChatViewController;
 

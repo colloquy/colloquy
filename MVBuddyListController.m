@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <AddressBook/AddressBook.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/NSStringAdditions.h>
@@ -141,7 +140,6 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (void) windowDidLoad {
 	NSTableColumn *theColumn = nil;
-	id prototypeCell = nil;
 
 	[(NSPanel *)[self window] setFloatingPanel:NO];
 	[(NSPanel *)[self window] setHidesOnDeactivate:NO];
@@ -152,7 +150,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[buddies setDoubleAction:@selector( messageSelectedBuddy: )];
 
 	theColumn = [buddies tableColumnWithIdentifier:@"buddy"];
-	prototypeCell = [[JVDetailCell new] autorelease];
+	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
 	[theColumn setDataCell:prototypeCell];
 
@@ -278,7 +276,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	ABPerson *person = [[_picker selectedRecords] lastObject];
 
-	if( ! [[person valueForProperty:@"IRCNickname"] count] ) {
+	if( ! [(NSDictionary *)[person valueForProperty:@"IRCNickname"] count] ) {
 		[_addPerson autorelease];
 		_addPerson = [[person uniqueId] copy];
 		[self showNewPersonSheet:nil];

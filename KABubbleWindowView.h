@@ -1,5 +1,3 @@
-#import <AppKit/NSView.h>
-
 @interface KABubbleWindowView : NSView {
 	NSImage *_icon;
 	NSString *_title;

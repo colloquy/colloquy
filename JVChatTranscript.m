@@ -1,7 +1,5 @@
 #import "JVChatTranscript.h"
 
-#import <Cocoa/Cocoa.h>
-#import <WebKit/WebKit.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>

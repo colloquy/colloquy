@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "NSColorAdditions.h"
 
 @implementation NSColor (NSColorAdditions)

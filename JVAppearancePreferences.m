@@ -1,6 +1,3 @@
-#import <Cocoa/Cocoa.h>
-#import <WebKit/WebKit.h>
-#import <AGRegex/AGRegex.h>
 #import <ChatCore/NSColorAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 

@@ -1,17 +1,4 @@
-#import <Foundation/NSObject.h>
-#import <Foundation/NSGeometry.h>
-#import <AppKit/NSNibDeclarations.h>
-
 // Private classes from the AppKit framework; used by Safari and Mail.
-
-@class NSWindow;
-@class NSMatrix;
-@class NSBox;
-@class NSButtonCell;
-@class NSImage;
-@class NSView;
-@class NSMutableArray;
-@class NSMutableDictionary;
 
 @protocol NSPreferencesModule
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_3

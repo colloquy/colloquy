@@ -1,9 +1,6 @@
-#import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
 #import "JVBuddy.h"
 #import "JVInspectorController.h"
 
-@class NSView;
 
 @interface JVBuddy (JVBuddyInspection) <JVInspection>
 - (id <JVInspector>) inspector;

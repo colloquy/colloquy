@@ -1,5 +1,4 @@
 #import "JVGeneralPreferences.h"
-#import <Cocoa/Cocoa.h>
 #import "JVBuddy.h"
 
 @implementation JVGeneralPreferences

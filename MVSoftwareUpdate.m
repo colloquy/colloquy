@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <unistd.h>
 #import "MVSoftwareUpdate.h"
 

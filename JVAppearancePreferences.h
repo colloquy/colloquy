@@ -1,15 +1,6 @@
-#import <AppKit/NSNibDeclarations.h>
 #import "NSPreferences.h"
 
-@class WebView;
-@class NSPopUpButton;
-@class NSTextView;
 @class JVFontPreviewField;
-@class NSTextField;
-@class NSStepper;
-@class NSSet;
-@class NSDrawer;
-@class NSTableView;
 @class JVStyle;
 
 @interface JVAppearancePreferences : NSPreferencesModule {

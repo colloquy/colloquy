@@ -1,10 +1,4 @@
-#import <AppKit/NSNibDeclarations.h>
 #import "NSPreferences.h"
-
-@class NSPopUpButton;
-@class NSTextField;
-@class NSStepper;
-@class NSButton;
 
 @interface JVGeneralPreferences : NSPreferencesModule {
 	IBOutlet NSPopUpButton *encoding;

@@ -3,7 +3,6 @@
 // Copyright (c) 2001 Kyle Hammond. All rights reserved.
 // Original development by Dave Winer.
 
-#import <Foundation/Foundation.h>
 #import "NSDataAdditions.h"
 
 static char encodingTable[64] = {

@@ -1,12 +1,6 @@
 #import "JVDirectChat.h"
-#import <AppKit/NSNibDeclarations.h>
 
-@class NSTextView;
 @class WebView;
-@class NSMutableDictionary;
-@class NSMutableArray;
-@class NSData;
-@class NSString;
 @class JVChatRoomMember;
 
 extern NSString *MVChatRoomModeChangedNotification;

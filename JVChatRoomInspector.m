@@ -2,7 +2,6 @@
 #import "JVChatRoomMember.h"
 #import "JVDirectChat.h"
 #import "JVChatTranscript.h"
-#import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)

@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"

@@ -1,5 +1,3 @@
-#import <Cocoa/Cocoa.h>
-#import <WebKit/WebKit.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/MVChatScriptPlugin.h>
@@ -7,7 +5,6 @@
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSURLAdditions.h>
-#import <AGRegex/AGRegex.h>
 
 #import "JVChatController.h"
 #import "JVTabbedChatWindowController.h"

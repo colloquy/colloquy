@@ -1,5 +1,3 @@
-#import <Cocoa/Cocoa.h>
-
 @interface MVMenuButton : NSButton <NSCoding> {
 @protected
 	BOOL _drawsArrow;

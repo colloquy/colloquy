@@ -1,25 +1,8 @@
 #import "JVChatTranscript.h"
 #import "KAIgnoreRule.h"
-#import <AppKit/NSNibDeclarations.h>
-#import <Foundation/NSFileHandle.h>
 
-@class NSView;
 @class MVTextView;
-@class NSPopUpButton;
-@class NSString;
-@class NSPanel;
 @class MVChatConnection;
-@class NSDate;
-@class NSMutableData;
-@class NSMutableArray;
-@class NSMutableDictionary;
-@class NSMutableString;
-@class NSBundle;
-@class NSDictionary;
-@class NSToolbar;
-@class NSData;
-@class NSAttributedString;
-@class NSMutableAttributedString;
 @class JVMutableChatMessage;
 @class JVBuddy;
 

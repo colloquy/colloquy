@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import "JVNotificationController.h"

@@ -1,5 +1,4 @@
 #import "JVPreferencesController.h"
-#import <Cocoa/Cocoa.h>
 
 @implementation JVPreferencesController
 - (id) init {

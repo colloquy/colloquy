@@ -1,5 +1,4 @@
 #import "NSMethodSignatureAdditions.h"
-#import <Foundation/Foundation.h>
 
 @interface NSMethodSignature (NSMethodSignaturePrivate)
 + (id) signatureWithObjCTypes:(const char *) types;

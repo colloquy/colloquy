@@ -1,17 +1,11 @@
-#import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
 #import "KAIgnoreRule.h"
 
-@class NSMutableSet;
 @class MVChatConnection;
-@class NSSet;
 @class JVChatWindowController;
-@class NSString;
 @class JVChatRoom;
 @class JVDirectChat;
 @class JVChatTranscript;
 @class JVChatConsole;
-@class NSAttributedString;
 @class KAInternalIgnoreRule;
 
 @protocol JVChatViewController;

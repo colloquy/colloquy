@@ -1,15 +1,4 @@
-#import <AppKit/NSWindowController.h>
-#import <AppKit/NSNibDeclarations.h>
-
 @class MVChatConnection;
-@class NSTableView;
-@class NSTabView;
-@class NSPopUpButton;
-@class NSComboBox;
-@class NSTextField;
-@class NSButton;
-@class NSMutableArray;
-@class NSMutableDictionary;
 
 @interface JVChatRoomBrowser : NSWindowController {
 	IBOutlet NSTableView *roomsTable;

@@ -1,7 +1,3 @@
-#import <AppKit/NSTextField.h>
-
-@class NSFont;
-
 @interface JVFontPreviewField : NSTextField {
 	NSFont *_actualFont;
 	BOOL _showPointSize;

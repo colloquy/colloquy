@@ -1,11 +1,6 @@
-#import <Foundation/NSObject.h>
 #import "KAIgnoreRule.h"
 
 @class JVChatTranscript;
-@class NSString;
-@class NSTextStorage;
-@class NSDate;
-@class NSScriptObjectSpecifier;
 
 @interface JVChatMessage : NSObject <NSMutableCopying> {
 	@protected

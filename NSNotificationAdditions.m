@@ -1,5 +1,4 @@
 #import "NSNotificationAdditions.h"
-#import <Foundation/Foundation.h>
 
 @implementation NSNotificationCenter (NSNotificationAdditions)
 - (void) postNotificationOnMainThread:(NSNotification *) notification {

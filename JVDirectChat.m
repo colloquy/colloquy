@@ -1,5 +1,3 @@
-#import <Cocoa/Cocoa.h>
-#import <WebKit/WebKit.h>
 #import <AddressBook/AddressBook.h>
 
 #import <ChatCore/MVChatConnection.h>
@@ -16,7 +14,6 @@
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>
 
-#import <AGRegex/AGRegex.h>
 
 #import "JVChatController.h"
 #import "KAIgnoreRule.h"

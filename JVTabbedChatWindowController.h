@@ -1,8 +1,6 @@
 #import <JVChatWindowController.h>
 
 @class AICustomTabsView;
-@class NSTabView;
-@class NSImageView;
 
 @interface JVTabbedChatWindowController : JVChatWindowController {
 	IBOutlet AICustomTabsView *customTabsView;

@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "JVBehaviorPreferences.h"
 #import "JVChatController.h"
 #import "JVChatRoom.h"

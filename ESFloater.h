@@ -1,14 +1,6 @@
 //  Adium, ESFloater.h
 //  Created by Evan Schoenberg on Wed Oct 08 2003.
 
-#import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
-
-@class NSImageView;
-@class NSPanel;
-@class NSTimer;
-@class NSImage;
-
 @interface ESFloater : NSObject {
     NSImageView			*staticView;
     NSPanel				*panel;

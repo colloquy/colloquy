@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "JVTranscriptPreferences.h"
 
 @implementation JVTranscriptPreferences

@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "JVChatTabItem.h"
 #import "JVChatWindowController.h"
 

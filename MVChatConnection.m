@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <string.h>
 #import <IOKit/IOKitLib.h>
 #import <IOKit/IOTypes.h>

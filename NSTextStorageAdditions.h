@@ -1,7 +1,3 @@
-#import <AppKit/NSTextStorage.h>
-
-@class NSColor;
-
 @interface NSTextStorage (NSTextStorageAdditions)
 - (NSColor *) backgroundColor;
 - (void) setBackgroundColor:(NSColor *) color;

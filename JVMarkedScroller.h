@@ -1,7 +1,3 @@
-#import <AppKit/NSScroller.h>
-
-@class NSMutableSet;
-@class NSSet;
 
 @interface JVMarkedScroller : NSScroller {
 	NSMutableSet *_marks;

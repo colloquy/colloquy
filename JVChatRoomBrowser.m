@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 

@@ -1,5 +1,3 @@
-#import <Cocoa/Cocoa.h>
-
 #import "NSURLAdditions.h"
 
 @implementation NSURL (NSURLAdditions)

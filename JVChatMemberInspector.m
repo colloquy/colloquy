@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 #import "JVChatMemberInspector.h"
 #import "JVBuddy.h"

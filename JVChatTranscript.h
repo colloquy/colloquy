@@ -1,22 +1,9 @@
-#import <Foundation/NSString.h>
-#import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
 #import "JVChatWindowController.h"
 
 @class WebView;
 @class MVMenuButton;
-@class NSMutableSet;
-@class NSString;
 @class JVStyle;
-@class NSBundle;
-@class NSDictionary;
-@class NSMutableDictionary;
 @class JVChatMessage;
-@class NSLock;
-@class NSPanel;
-@class NSTextField;
-@class NSMatrix;
-@class NSPopUpButton;
 
 extern NSMutableSet *JVChatStyleBundles;
 extern NSMutableSet *JVChatEmoticonBundles;

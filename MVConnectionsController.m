@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSURLAdditions.h>
@@ -1239,7 +1238,7 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] preferredNickname] forKey:@"nickname"];
 			if( [[(MVChatConnection *)[info objectForKey:@"connection"] alternateNicknames] count] )
 				[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] alternateNicknames] forKey:@"alternateNicknames"];
-			if( [[info objectForKey:@"rooms"] count] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
+			if( [(NSArray *)[info objectForKey:@"rooms"] count] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 			if( [info objectForKey:@"commands"] ) [data setObject:[info objectForKey:@"commands"] forKey:@"commands"];
 			[data setObject:[info objectForKey:@"created"] forKey:@"created"];
 			[data setObject:[(MVChatConnection *)[info objectForKey:@"connection"] realName] forKey:@"realName"];
@@ -1329,7 +1328,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _validateToolbar {
 	NSEnumerator *enumerator = [[[[self window] toolbar] visibleItems] objectEnumerator];
-	id item = nil;
+	NSToolbarItem *item = nil;
 	BOOL noneSelected = YES;
 	MVChatConnectionStatus status = MVChatConnectionDisconnectedStatus;
 
@@ -1443,7 +1442,7 @@ static NSMenu *favoritesMenu = nil;
 
 	if( ! connection ) return;
 
-	if( [[info objectForKey:@"rooms"] count] )
+	if( [(NSArray *)[info objectForKey:@"rooms"] count] )
 		[connection joinChatRooms:[info objectForKey:@"rooms"]];
 
 	NSEnumerator *commands = [[[info objectForKey:@"commands"] componentsSeparatedByString:@"\n"] objectEnumerator];

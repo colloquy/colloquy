@@ -1,7 +1,4 @@
-#import <AppKit/NSNibDeclarations.h>
 #import "NSPreferences.h"
-
-@class NSButton;
 
 @interface JVTranscriptPreferences : NSPreferencesModule {
 	IBOutlet NSButton *logChatRooms;

@@ -1,6 +1,4 @@
-#import <Cocoa/Cocoa.h>
 #import "JVNotificationPreferences.h"
-#import <AGRegex/AGRegex.h>
 
 @implementation JVNotificationPreferences
 - (NSString *) preferencesNibName {

@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "NSBundleAdditions.h"
 
 @implementation NSBundle (NSBundleAdditions)

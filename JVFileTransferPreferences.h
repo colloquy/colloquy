@@ -1,4 +1,3 @@
-#import <AppKit/NSNibDeclarations.h>
 #import "NSPreferences.h"
 
 @interface JVFileTransferPreferences : NSPreferencesModule {

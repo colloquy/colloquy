@@ -1,5 +1,4 @@
 #import "NSSplitViewAdditions.h"
-#import <Cocoa/Cocoa.h>
 
 @implementation NSSplitView (NSSplitViewAdditions)
 - (NSString *) stringWithSavedPosition {

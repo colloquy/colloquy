@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "MVTextView.h"
 
 @interface MVTextView (MVTextViewPrivate)
@@ -186,7 +185,9 @@
 }
 
 - (void) changeBackgroundColor:(id) sender {
-	NSColor *color = [sender color];
+	NSParameterAssert( [sender respondsToSelector:@selector( color )] );
+
+	NSColor *color = [sender performSelector:@selector( color )];
 	NSRange range = [self selectedRange];
 	if( ! [self isEditable] ) return;
 	if( [color alphaComponent] == 0. ) color = nil;

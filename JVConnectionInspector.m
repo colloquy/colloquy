@@ -1,5 +1,4 @@
 #import "JVConnectionInspector.h"
-#import <Cocoa/Cocoa.h>
 #import "MVConnectionsController.h"
 #import "MVKeyChain.h"
 #import "KAIgnoreRule.h"

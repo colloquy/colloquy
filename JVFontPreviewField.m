@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "JVFontPreviewField.h"
 
 @implementation JVFontPreviewField

@@ -1,4 +1,3 @@
-#import <Foundation/Foundation.h>
 #import "NSImageAdditions.h"
 #import <ChatCore/NSDataAdditions.h>
 

@@ -1,10 +1,8 @@
-#import <Cocoa/Cocoa.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <libxml/xinclude.h>
 #import <libxml/debugXML.h>
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>
-#import <AGRegex/AGRegex.h>
 
 #import "JVChatMessage.h"
 #import "JVChatTranscript.h"

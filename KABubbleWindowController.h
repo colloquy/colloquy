@@ -1,7 +1,3 @@
-#import <AppKit/NSWindowController.h>
-
-@class NSTimer;
-
 @interface KABubbleWindowController : NSWindowController {
 	id _delegate;
 	NSTimer *_animationTimer;

@@ -1,5 +1,3 @@
-#import <AppKit/NSSplitView.h>
-
 @interface NSSplitView (NSSplitViewAdditions)
 - (NSString *) stringWithSavedPosition;
 - (void) setPositionFromString:(NSString *) string;

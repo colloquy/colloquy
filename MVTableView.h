@@ -1,5 +1,3 @@
-#import <Cocoa/Cocoa.h>
-
 @interface MVTableView : NSTableView {
 	int autosaveTableColumnHighlight:1;
 	int dataSourceDragImageForRows:1;

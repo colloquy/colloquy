@@ -6,12 +6,7 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/NSObject.h>
-#import <Foundation/NSGeometry.h>
-
-@class NSImage;
 @class ESFloater;
-@class NSWindow;
 @class AICustomTabsView;
 @class AICustomTabCell;
 

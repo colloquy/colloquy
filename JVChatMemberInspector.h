@@ -1,9 +1,5 @@
-#import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
 #import "JVChatRoomMember.h"
 #import "JVInspectorController.h"
-
-@class NSView;
 
 @interface JVChatRoomMember (JVChatRoomMemberInspection) <JVInspection>
 - (id <JVInspector>) inspector;

@@ -1,8 +1,3 @@
-#import <AppKit/NSWindowController.h>
-#import <AppKit/NSNibDeclarations.h>
-#import <Foundation/NSGeometry.h>
-
-@class NSView;
 @protocol JVInspection;
 
 @protocol JVInspector <NSObject>

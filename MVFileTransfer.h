@@ -1,11 +1,4 @@
-#import <Foundation/NSObject.h>
-#import <Foundation/NSRange.h>
-
 @class MVChatConnection;
-@class NSString;
-@class NSDate;
-@class NSHost;
-@class NSError;
 
 extern NSString *MVDownloadFileTransferOfferNotification;
 extern NSString *MVFileTransferStartedNotification;

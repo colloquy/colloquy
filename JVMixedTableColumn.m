@@ -1,6 +1,4 @@
 #import "JVMixedTableColumn.h"
-#import <AppKit/NSTableView.h>
-#import <Cocoa/Cocoa.h>
 
 @implementation JVMixedTableColumn
 - (void) awakeFromNib {

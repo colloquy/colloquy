@@ -1,5 +1,3 @@
-#import <Cocoa/Cocoa.h>
-
 #import "JVChatWindowController.h"
 #import "MVConnectionsController.h"
 #import "JVChatController.h"
@@ -56,13 +54,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) windowDidLoad {
-	NSTableColumn *column = nil;
-	id prototypeCell = nil;
-
 	_placeHolder = [[[self window] contentView] retain];
 
-	column = [chatViewsOutlineView outlineTableColumn];
-	prototypeCell = [[JVDetailCell new] autorelease];
+	NSTableColumn *column = [chatViewsOutlineView outlineTableColumn];
+	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
 	[column setDataCell:prototypeCell];
 
@@ -1119,7 +1114,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			if( startSpec ) {
 				id startObject = [startSpec objectsByEvaluatingSpecifier];
 				if( [startObject isKindOfClass:[NSArray class]] ) {
-					if( ! [startObject count] ) startObject = nil;
+					if( ! [(NSArray *)startObject count] ) startObject = nil;
 					else startObject = [startObject objectAtIndex:0];
 				}
 				if( ! startObject ) return nil;
@@ -1131,7 +1126,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			if( endSpec ) {
 				id endObject = [endSpec objectsByEvaluatingSpecifier];
 				if( [endObject isKindOfClass:[NSArray class]] ) {
-					if( ! [endObject count] ) endObject = nil;
+					if( ! [(NSArray *)endObject count] ) endObject = nil;
 					else endObject = [endObject lastObject];
 				}
 				if( ! endObject ) return nil;
@@ -1195,7 +1190,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			
 			id baseObject = [baseSpec objectsByEvaluatingWithContainers:self];
 			if( [baseObject isKindOfClass:[NSArray class]] ) {
-				int baseCount = [baseObject count];
+				int baseCount = [(NSArray *)baseObject count];
 				if( baseCount ) {
 					if( relPos == NSRelativeBefore ) baseObject = [baseObject objectAtIndex:0];
 					else baseObject = [baseObject objectAtIndex:( baseCount - 1 )];

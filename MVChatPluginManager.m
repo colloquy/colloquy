@@ -1,4 +1,3 @@
-#import <Foundation/Foundation.h>
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
 #import "NSNumberAdditions.h"

@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/NSStringAdditions.h>
 #import <AddressBook/AddressBook.h>

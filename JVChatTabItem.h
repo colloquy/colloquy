@@ -1,5 +1,3 @@
-#import <AppKit/NSTabViewItem.h>
-
 @protocol JVChatViewController;
 
 @interface JVChatTabItem : NSTabViewItem {

@@ -1,10 +1,4 @@
-#import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
 
-@class NSString;
-@class NSTextView;
-@class NSTextField;
-@class NSWindow;
 
 @interface MVCrashCatcher : NSObject {
 	IBOutlet NSTextView *comments;

@@ -1,17 +1,5 @@
-#import <Foundation/NSObject.h>
-#import <Foundation/NSDate.h>
-#import <AppKit/NSNibDeclarations.h>
-
 NSString *MVPrettyFileSize( unsigned long long size );
 NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
-
-@class NSPanel;
-@class NSProgressIndicator;
-@class NSTextField;
-@class NSTableView;
-@class NSMutableArray;
-@class NSRecursiveLock;
-@class NSTimer;
 
 @interface MVFileTransferController : NSWindowController {
 @private

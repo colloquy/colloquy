@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <ChatCore/NSColorAdditions.h>
 #import "JVColorWellCell.h"
 
@@ -181,8 +180,8 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 #pragma mark -
 
 - (void) takeColorFrom:(id) sender {
-	if( ! [sender respondsToSelector:@selector( color )] ) return;
-	[self setColor:[sender color]];
+	NSParameterAssert( [sender respondsToSelector:@selector( color )] );
+	[self setColor:[sender performSelector:@selector( color )]];
 }
 
 - (void) setColor:(NSColor *) color {

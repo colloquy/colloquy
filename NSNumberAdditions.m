@@ -1,5 +1,4 @@
 #import "NSNumberAdditions.h"
-#import <Foundation/Foundation.h>
 
 @implementation NSNumber (NSNumberAdditions)
 + (NSNumber *) numberWithBytes:(const void *) bytes objCType:(const char *) type {

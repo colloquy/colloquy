@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "JVChatController.h"
 #import "JVTabbedChatWindowController.h"
 #import "AICustomTabsView.h"

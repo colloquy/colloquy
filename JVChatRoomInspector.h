@@ -1,15 +1,6 @@
-#import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
 #import "JVChatRoom.h"
 #import "JVInspectorController.h"
 
-@class NSView;
-@class NSPopUpButton;
-@class NSButtonCell;
-@class NSButton;
-@class NSTextField;
-@class NSTextView;
-@class NSProgressIndicator;
 
 @interface JVChatRoom (JVChatRoomInspection) <JVInspection>
 - (id <JVInspector>) inspector;

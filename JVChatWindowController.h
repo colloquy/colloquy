@@ -1,20 +1,8 @@
-#import <AppKit/NSWindowController.h>
-#import <AppKit/NSNibDeclarations.h>
 #import "JVInspectorController.h"
 
-@class NSDrawer;
-@class NSOutlineView;
 @class MVMenuButton;
-@class NSMutableArray;
 @class MVChatConnection;
-@class NSArray;
-@class NSToolbarItem;
-@class NSString;
-@class NSView;
 @class JVChatWindowController;
-@class NSToolbar;
-@class NSImage;
-@class NSMenu;
 
 @protocol JVChatViewController;
 @protocol JVChatListItem;

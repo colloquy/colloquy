@@ -1,16 +1,7 @@
-#import <Foundation/NSObject.h>
-#import <AppKit/NSNibDeclarations.h>
 #import <ChatCore/MVChatConnection.h>
 #import "JVInspectorController.h"
 #import "JVChatConsole.h"
 
-@class NSTabView;
-@class NSTextField;
-@class NSPopUpButton;
-@class NSButton;
-@class NSTableView;
-@class NSTextView;
-@class NSPanel;
 
 @interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
 - (id <JVInspector>) inspector;

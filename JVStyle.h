@@ -1,11 +1,4 @@
-#import <Foundation/NSObject.h>
 
-@class NSBundle;
-@class NSDictionary;
-@class NSArray;
-@class NSSet;
-@class NSString;
-@class NSURL;
 
 extern NSString *JVStylesScannedNotification;
 extern NSString *JVDefaultStyleChangedNotification;

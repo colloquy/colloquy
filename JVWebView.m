@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "JVWebView.h"
 
 @implementation JVWebView

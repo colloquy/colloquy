@@ -1,8 +1,6 @@
-#import <Foundation/NSObject.h>
 #import "JVChatWindowController.h"
 
 @class JVChatRoom;
-@class NSString;
 @class MVChatConnection;
 @class JVBuddy;
 

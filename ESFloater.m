@@ -4,7 +4,6 @@
 //
 //  Created by Evan Schoenberg on Wed Oct 08 2003.//
 
-#import <Cocoa/Cocoa.h>
 #import "ESFloater.h"
 
 #define WINDOW_FADE_FPS                         24.0

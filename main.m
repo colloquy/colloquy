@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import <libxml/globals.h>
 #import <libxml/parser.h>
 #import <libxslt/xslt.h>

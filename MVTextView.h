@@ -1,5 +1,3 @@
-#import <AppKit/NSTextView.h>
-
 @interface MVTextView : NSTextView {
     NSDictionary *defaultTypingAttributes;
 	NSSize lastPostedSize;

@@ -1,4 +1,3 @@
-#import <Cocoa/Cocoa.h>
 #import "JVMarkedScroller.h"
 
 @implementation JVMarkedScroller

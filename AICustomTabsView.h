@@ -16,13 +16,6 @@
 #import "ESFloater.h"
 #define TAB_CELL_IDENTIFIER     @"Tab Cell Identifier"
 
-#include <AppKit/NSView.h>
-
-@class NSTabView;
-@class NSTabViewItem;
-@class NSTimer;
-@class NSArray;
-@class NSMutableArray;
 @class AICustomTabCell;
 @class AICustomTabsView;
 

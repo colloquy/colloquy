@@ -1,7 +1,3 @@
-#import <Foundation/NSObject.h>
-
-@class NSLock;
-
 @interface JVNotificationController : NSObject {
 	NSMutableDictionary *_bubbles;
 }
