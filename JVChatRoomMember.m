@@ -64,21 +64,21 @@
 }
 
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member {
-	NSComparisonResult retVal;
-	int myStatus, yourStatus = 0;
+	NSComparisonResult retVal = NSOrderedSame;
+	unsigned myStatus = 0, yourStatus = 0;
 
-	myStatus = (_serverOperator * 50) + (_operator * 10) + (_halfOperator * 5) + (_voice * 1);
-	yourStatus = ([member serverOperator] * 50) + ([member operator] * 10) + ([member halfOperator] * 5) + ([member voice] * 1);
-	
-	if ( myStatus > yourStatus ) {
+	myStatus = ( _serverOperator * 50 ) + ( _operator * 10 ) + ( _halfOperator * 5 ) + ( _voice * 1 );
+	yourStatus = ( [member serverOperator] * 50 ) + ( [member operator] * 10 ) + ( [member halfOperator] * 5 ) + ( [member voice] * 1 );
+
+	if( myStatus > yourStatus ) {
 		retVal = NSOrderedAscending;
-	} else if ( yourStatus > myStatus ) {
+	} else if( yourStatus > myStatus ) {
 		retVal = NSOrderedDescending;
 	} else {
 		// retVal = [self compareUsingBuddyStatus:member];
 		retVal = [[self title] caseInsensitiveCompare:[member title]];
 	}
-	
+
 	return retVal;
 }
 
@@ -150,7 +150,7 @@
 	NSComparisonResult retVal;
 
 	if( ( _buddy && [member buddy]) || ( ! _buddy && ! [member buddy]) ) {
-		if ( _buddy && [member buddy] ) {
+		if( _buddy && [member buddy] ) {
 			// if both are buddies, sort by availability
 			retVal = [_buddy availabilityCompare:[member buddy]];
 		} else {
@@ -220,11 +220,11 @@
 - (NSMenu *) menu {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
-	
+
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
 	[item setTarget:[_parent windowController]];
 	[menu addItem:item];
-	
+
 	if( ! [self isLocalUser] ) {
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
@@ -234,7 +234,7 @@
 		[item setTarget:self];
 		[menu addItem:item];
 	}
-	
+
 	if( ( [self isLocalUser] && _operator ) || [[_parent chatRoomMemberWithName:[[_parent connection] nickname]] operator] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 		
@@ -248,11 +248,15 @@
 		[item setTarget:self];
 		[menu addItem:item];
 		
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Make Half Operator", "make half-operator contextual menu - admin only" ) action:@selector( toggleHalfOperatorStatus: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" ) action:@selector( toggleVoiceStatus: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
 	}
-	
+
 	return [[menu retain] autorelease];
 }
 
@@ -269,6 +273,12 @@
 			[menuItem setTitle:NSLocalizedString( @"Demote Operator", "demote operator contextual menu - admin only" )];
 		} else {
 			[menuItem setTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" )];
+		}
+	} else if( [menuItem action] == @selector( toggleHalfOperatorStatus: ) ) {
+		if( _halfOperator ) {
+			[menuItem setTitle:NSLocalizedString( @"Demote Half Operator", "demote half-operator contextual menu - admin only" )];
+		} else {
+			[menuItem setTitle:NSLocalizedString( @"Make Half Operator", "make half-operator contextual menu - admin only" )];
 		}
 	}
 	if( ! [[self connection] isConnected] ) return NO;
@@ -307,6 +317,11 @@
 - (IBAction) toggleOperatorStatus:(id) sender {
 	if( _operator ) [[_parent connection] demoteMember:_nickname inRoom:[_parent target]];
 	else [[_parent connection] promoteMember:_nickname inRoom:[_parent target]];
+}
+
+- (IBAction) toggleHalfOperatorStatus:(id) sender {
+	if( _halfOperator ) [[_parent connection] sendRawMessageWithFormat:@"MODE %@ +h %@", [_parent target], _nickname];
+	else [[_parent connection] sendRawMessageWithFormat:@"MODE %@ -h %@", [_parent target], _nickname];
 }
 
 - (IBAction) toggleVoiceStatus:(id) sender {
