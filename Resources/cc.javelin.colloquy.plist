@@ -18,6 +18,14 @@
 	<true/>
 	<key>JVChatMaximumHistory</key>
 	<integer>15</integer>
+	<key>JVChatBuddyListShowIcons</key>
+	<true/>
+	<key>JVChatBuddyListShowFullNames</key>
+	<true/>
+	<key>JVChatBuddyListShowNicknameAndServer</key>
+	<true/>
+	<key>JVChatBuddyListShowOfflineBuddies</key>
+	<true/>
 	<key>MVChatSendOnReturn</key>
 	<true/>
 	<key>MVChatActionOnReturn</key>
@@ -26,6 +34,38 @@
 	<false/>
 	<key>MVChatActionOnEnter</key>
 	<true/>
+	<key>cc.javelin.colloquy.style.blandWebKitDefaultFixedFontSize</key>
+	<integer>9</integer>
+	<key>cc.javelin.colloquy.style.blandWebKitDefaultFontSize</key>
+	<integer>10</integer>
+	<key>cc.javelin.colloquy.style.blandWebKitFixedFont</key>
+	<string>Monaco</string>
+	<key>cc.javelin.colloquy.style.blandWebKitStandardFont</key>
+	<string>Times</string>
+	<key>cc.javelin.colloquy.style.bubblesWebKitDefaultFixedFontSize</key>
+	<integer>12</integer>
+	<key>cc.javelin.colloquy.style.bubblesWebKitDefaultFontSize</key>
+	<integer>11</integer>
+	<key>cc.javelin.colloquy.style.bubblesWebKitFixedFont</key>
+	<string>Courier</string>
+	<key>cc.javelin.colloquy.style.bubblesWebKitStandardFont</key>
+	<string>Lucida Grande</string>
+	<key>cc.javelin.colloquy.style.novelWebKitDefaultFixedFontSize</key>
+	<integer>13</integer>
+	<key>cc.javelin.colloquy.style.novelWebKitDefaultFontSize</key>
+	<integer>13</integer>
+	<key>cc.javelin.colloquy.style.novelWebKitFixedFont</key>
+	<string>Courier</string>
+	<key>cc.javelin.colloquy.style.novelWebKitStandardFont</key>
+	<string>Times</string>
+	<key>cc.javelin.colloquy.style.standardWebKitDefaultFontSize</key>
+	<integer>11</integer>
+	<key>cc.javelin.colloquy.style.standardWebKitDefaultFixedFontSize</key>
+	<integer>13</integer>
+	<key>cc.javelin.colloquy.style.standardWebKitSansSerifFont</key>
+	<string>Lucida Grande</string>
+	<key>cc.javelin.colloquy.style.standardWebKitStandardFont</key>
+	<string>Times</string>
 	<key>MVChatNaturalActions</key>
 	<false/>
 	<key>MVChatBounceIconOnMessage</key>
