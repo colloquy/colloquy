@@ -3,9 +3,11 @@
 @interface NSString (NSStringAdditions)
 + (NSString *) mimeCharsetTagFromStringEncoding:(NSStringEncoding) encoding;
 - (unsigned long) UTF8StringByteLength;
+- (NSString *) stringByEscapingCharactersInSet:(NSCharacterSet *) set;
 @end
 
 @interface NSMutableString (NSMutableStringAdditions)
 - (void) encodeXMLSpecialCharactersAsEntities;
 - (void) decodeXMLSpecialCharacterEntities;
+- (void) escapeCharactersInSet:(NSCharacterSet *) set;
 @end

@@ -58,6 +58,12 @@
 	const char *str = [self UTF8String];
 	return ( str ? strlen( str ) : 0 );
 }
+
+- (NSString *) stringByEscapingCharactersInSet:(NSCharacterSet *) set {
+	NSMutableString *result = [self mutableCopy];
+	[result escapeCharactersInSet:set];
+	return [NSString stringWithString:result];
+}
 @end
 
 #pragma mark -
@@ -77,5 +83,16 @@
 	[self replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
 	[self replaceOccurrencesOfString:@"&quot;" withString:@"\"" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
 	[self replaceOccurrencesOfString:@"&apos;" withString:@"'" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
+}
+
+- (void) escapeCharactersInSet:(NSCharacterSet *) set {
+	NSScanner *scanner = [NSScanner scannerWithString:self];
+	while( ! [scanner isAtEnd] ) {
+		[scanner scanUpToCharactersFromSet:set intoString:nil];
+		if( ! [scanner isAtEnd] ) {
+			[self insertString:@"\\"atIndex:[scanner scanLocation]];
+			[scanner setScanLocation:[scanner scanLocation] + 1];
+		}
+	}
 }
 @end
