@@ -1071,6 +1071,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
 	} else if( [identifier isEqual:JVToolbarClearItemIdentifier] ) {
+		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+
 		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear display toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Clear Display", "clear display toolbar customize palette name" )];
 
