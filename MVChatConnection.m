@@ -547,15 +547,8 @@ void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const cha
 		NSString *reply = [NSString stringWithFormat:@"%@ %@ - %@ %@ - http://www.javelin.cc?colloquy", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"]];
 		[self sendSubcodeReply:@"VERSION" toUser:[NSString stringWithUTF8String:from] withArguments:reply];
 		return;
-	} else 	if( ! strcasecmp( command, "USERINFO" ) ) {
-		[self sendSubcodeReply:@"USERINFO" toUser:[NSString stringWithUTF8String:from] withArguments:@"..."];
-		return;
-	} else 	if( ! strcasecmp( command, "URL" ) ) {
-		[self sendSubcodeReply:@"URL" toUser:[NSString stringWithUTF8String:from] withArguments:@"..."];
-		return;
 	}
 
-	NSLog( @"subcode request from '%s' for '%s' with args '%s'", from, command, args );
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionSubcodeRequestNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:from], @"from", [NSString stringWithUTF8String:command], @"command", (args ? (id) [NSString stringWithUTF8String:args] : (id) [NSNull null]), @"arguments", nil]];
 }
 
@@ -572,7 +565,6 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	while( ( item = [enumerator nextObject] ) )
 		if( [item processSubcodeReply:[NSString stringWithUTF8String:command] withArguments:[NSString stringWithUTF8String:args] fromUser:[NSString stringWithUTF8String:from] forConnection:self] ) return;
 
-	NSLog( @"subcode reply from '%s' for '%s' with args '%s'", from, command, args );
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:from], @"from", [NSString stringWithUTF8String:command], @"command", (args ? (id) [NSString stringWithUTF8String:args] : (id) [NSNull null]), @"arguments", nil]];
 }
 
