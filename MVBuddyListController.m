@@ -5,6 +5,7 @@
 #import "MVBuddyListController.h"
 #import "JVChatController.h"
 #import "MVConnectionsController.h"
+#import "JVInspectorController.h"
 #import "MVTableView.h"
 #import "JVDetailCell.h"
 
@@ -247,6 +248,22 @@ NSComparisonResult sortBuddiesByAvailability( ABPerson *buddy1, ABPerson *buddy2
 
 	[buddies reloadData];
 	[self _setBuddiesNeedSortAnimated];
+}
+
+#pragma mark -
+
+- (id <JVInspection>) objectToInspect {
+	if( [buddies selectedRow] == -1 ) return nil;
+	id item = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+	if( [item conformsToProtocol:@protocol( JVInspection )] ) return item;
+	else return nil;
+}
+
+- (IBAction) getInfo:(id) sender {
+	if( [buddies selectedRow] == -1 ) return;
+	id item = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+	if( [item conformsToProtocol:@protocol( JVInspection )] )
+		[[JVInspectorController inspectorOfObject:item] show:sender];
 }
 
 #pragma mark -

@@ -16,7 +16,7 @@ typedef enum {
 	MVServerSortOrder
 } MVBuddyListSortOrder;
 
-@interface MVBuddyListController : NSWindowController {
+@interface MVBuddyListController : NSWindowController <JVInspectionDelegator> {
 @private
 	IBOutlet MVTableView *buddies;
 	IBOutlet NSMenu *actionMenu;
@@ -56,6 +56,8 @@ typedef enum {
 	BOOL _animating;
 }
 + (MVBuddyListController *) sharedBuddyList;
+
+- (IBAction) getInfo:(id) sender;
 
 - (IBAction) showBuddyList:(id) sender;
 
