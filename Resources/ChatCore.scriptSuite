@@ -12,12 +12,19 @@
 			<string>conM</string>
 			<key>Attributes</key>
 			<dict>
+				<key>localUser</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>lcuA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatUser</string>
+				</dict>
 				<key>nickname</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>nicA</string>
-					<key>ReadOnly</key>
-					<string>NO</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
@@ -25,8 +32,6 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>ncpA</string>
-					<key>ReadOnly</key>
-					<string>NO</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
@@ -34,26 +39,27 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>pasA</string>
-					<key>ReadOnly</key>
-					<string>NO</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
-				<key>proxyType</key>
+				<key>proxy</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>pxyA</string>
-					<key>ReadOnly</key>
-					<string>NO</string>
 					<key>Type</key>
-					<string>NSNumber&lt;Proxy&gt;</string>
+					<string>NSNumber&lt;ChatCore.Proxy&gt;</string>
+				</dict>
+				<key>scriptTypedAwayMessage</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>aStA</string>
+					<key>Type</key>
+					<string>NSTextSuite.NSTextStorage</string>
 				</dict>
 				<key>server</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>sevA</string>
-					<key>ReadOnly</key>
-					<string>NO</string>
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
@@ -61,15 +67,264 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>prtA</string>
-					<key>ReadOnly</key>
-					<string>NO</string>
 					<key>Type</key>
-					<string>NSNumber&lt;Short&gt;</string>
+					<string>NSNumber</string>
+				</dict>
+				<key>status</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>stsA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;ChatCore.ConnectionStatus&gt;</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ID  </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber</string>
 				</dict>
 				<key>urlString</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>url </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+			<key>Superclass</key>
+			<string>NSCoreSuite.AbstractObject</string>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>ChatCore.Connect</key>
+				<string>connectScriptCommand:</string>
+				<key>ChatCore.Disconnect</key>
+				<string>disconnectScriptCommand:</string>
+				<key>ChatCore.ReturnFromAwayStatus</key>
+				<string>returnFromAwayStatusScriptCommand:</string>
+			</dict>
+			<key>ToManyRelationships</key>
+			<dict>
+				<key>joinedChatRoomsArray</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>chRm</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatRoom</string>
+				</dict>
+				<key>knownChatUsersArray</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>chUs</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatUser</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>MVChatRoom</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>chRm</string>
+			<key>Attributes</key>
+			<dict>
+				<key>attributes</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>atRA</string>
+					<key>Type</key>
+					<string>NSDictionary</string>
+				</dict>
+				<key>bannedUsersArray</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>bnSA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSArray</string>
+				</dict>
+				<key>dateJoined</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>daJA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSDate</string>
+				</dict>
+				<key>dateParted</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>daPA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSDate</string>
+				</dict>
+				<key>displayName</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>dNmA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>isJoined</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>joIA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>pnam</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>scriptTypedEncoding</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>enCA</string>
+					<key>Type</key>
+					<string>NSNumber&lt;ChatCore.Encoding&gt;</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ID  </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSObject</string>
+				</dict>
+				<key>urlString</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>url </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+			</dict>
+			<key>Superclass</key>
+			<string>NSCoreSuite.AbstractObject</string>
+			<key>ToManyRelationships</key>
+			<dict>
+				<key>memberUsersArray</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>chUs</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatUser</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>MVChatUser</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>chUs</string>
+			<key>Attributes</key>
+			<dict>
+				<key>address</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>adRA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>attributes</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>atRA</string>
+					<key>Type</key>
+					<string>NSDictionary</string>
+				</dict>
+				<key>dateConnected</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>dCoA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSDate</string>
+				</dict>
+				<key>dateDisconnected</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>dDcA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSDate</string>
+				</dict>
+				<key>displayName</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>dNmA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>nickname</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>pnam</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>realName</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>rElA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>scriptTypedAwayMessage</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>aStA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSTextSuite.NSTextStorage</string>
+				</dict>
+				<key>serverAddress</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sevA</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
@@ -82,16 +337,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSNumber&lt;ConnectionStatus&gt;</string>
-				</dict>
-				<key>scriptTypedAwayMessage</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>aStA</string>
-					<key>ReadOnly</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>NSTextSuite.NSTextStorage</string>
+					<string>NSNumber&lt;ChatCore.UserStatus&gt;</string>
 				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>
@@ -100,29 +346,25 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSNumber</string>
+					<string>NSObject</string>
+				</dict>
+				<key>username</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>uSnA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
 				</dict>
 			</dict>
 			<key>Superclass</key>
 			<string>NSCoreSuite.AbstractObject</string>
-			<key>SupportedCommands</key>
-			<dict>
-				<key>connect</key>
-				<string>connectScriptCommand:</string>
-				<key>disconnect</key>
-				<string>disconnectScriptCommand:</string>
-				<key>sendRawMessage</key>
-				<string>sendRawMessageScriptCommand:</string>
-				<key>returnFromAwayStatus</key>
-				<string>returnFromAwayStatusScriptCommand:</string>
-				<key>joinChatRoom</key>
-				<string>joinChatRoomScriptCommand:</string>
-			</dict>
 		</dict>
 	</dict>
 	<key>Commands</key>
 	<dict>
-		<key>connect</key>
+		<key>Connect</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>ccoR</string>
@@ -130,8 +372,13 @@
 			<string>conX</string>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>ChatCore.MVChatConnection</string>
+			</dict>
 		</dict>
-		<key>disconnect</key>
+		<key>Disconnect</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>ccoR</string>
@@ -139,36 +386,37 @@
 			<string>dscX</string>
 			<key>CommandClass</key>
 			<string>NSScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>ChatCore.MVChatConnection</string>
+			</dict>
 		</dict>
-		<key>sendRawMessage</key>
+		<key>JoinChatRoom</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>ccoR</string>
 			<key>AppleEventCode</key>
-			<string>srmX</string>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>MVChatConnection</string>
-			</dict>
+			<string>jCrX</string>
 			<key>Arguments</key>
 			<dict>
-				<key>message</key>
+				<key>connection</key>
 				<dict>
-					<key>Optional</key>
-					<string>NO</string>
 					<key>AppleEventCode</key>
-					<string>rMsA</string>
+					<string>jCr1</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>ChatCore.MVChatConnection</string>
 				</dict>
 			</dict>
+			<key>CommandClass</key>
+			<string>MVJoinChatRoomScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSObject</string>
+			</dict>
 		</dict>
-		<key>returnFromAwayStatus</key>
+		<key>ReturnFromAwayStatus</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>ccoR</string>
@@ -178,55 +426,88 @@
 			<string>NSScriptCommand</string>
 			<key>UnnamedArgument</key>
 			<dict>
-				<key>Optional</key>
-				<string>NO</string>
 				<key>Type</key>
-				<string>MVChatConnection</string>
+				<string>ChatCore.MVChatConnection</string>
 			</dict>
 		</dict>
-		<key>joinChatRoom</key>
+		<key>SendChatMessage</key>
 		<dict>
 			<key>AppleEventClassCode</key>
 			<string>ccoR</string>
 			<key>AppleEventCode</key>
-			<string>jCrX</string>
-			<key>CommandClass</key>
-			<string>NSScriptCommand</string>
-			<key>UnnamedArgument</key>
-			<dict>
-				<key>Optional</key>
-				<string>NO</string>
-				<key>Type</key>
-				<string>MVChatConnection</string>
-			</dict>
+			<string>sCmX</string>
 			<key>Arguments</key>
 			<dict>
-				<key>room</key>
+				<key>action</key>
 				<dict>
-					<key>Optional</key>
-					<string>NO</string>
 					<key>AppleEventCode</key>
-					<string>jCr1</string>
+					<string>sCm3</string>
+					<key>Optional</key>
+					<string>YES</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
+				<key>encoding</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sCm2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;ChatCore.Encoding&gt;</string>
+				</dict>
+				<key>target</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sCm1</string>
+					<key>Type</key>
+					<string>NSObject</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>MVSendMessageScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSString</string>
+			</dict>
+		</dict>
+		<key>SendRawCommand</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>ccoR</string>
+			<key>AppleEventCode</key>
+			<string>sRmX</string>
+			<key>Arguments</key>
+			<dict>
+				<key>connection</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sRm1</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatConnection</string>
+				</dict>
+				<key>priority</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sRm2</string>
+					<key>Optional</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>MVSendRawMessageScriptCommand</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Type</key>
+				<string>NSString</string>
 			</dict>
 		</dict>
 	</dict>
 	<key>Enumerations</key>
 	<dict>
-		<key>SubcodeType</key>
-		<dict>
-			<key>AppleEventCode</key>
-			<string>scTE</string>
-			<key>Enumerators</key>
-			<dict>
-				<key>Request</key>
-				<string>sreQ</string>
-				<key>Reply</key>
-				<string>srpL</string>
-			</dict>
-		</dict>
 		<key>ConnectionStatus</key>
 		<dict>
 			<key>AppleEventCode</key>
@@ -243,32 +524,22 @@
 				<string>susP</string>
 			</dict>
 		</dict>
-		<key>Proxy</key>
-		<dict>
-			<key>AppleEventCode</key>
-			<string>pxyE</string>
-			<key>Enumerators</key>
-			<dict>
-				<key>None</key>
-				<string>nonE</string>
-				<key>HTTPS</key>
-				<string>htpS</string>
-				<key>SOCKS</key>
-				<string>sokS</string>
-			</dict>
-		</dict>
 		<key>Encoding</key>
 		<dict>
 			<key>AppleEventCode</key>
 			<string>encE</string>
 			<key>Enumerators</key>
 			<dict>
-				<key>UTF8</key>
-				<string>utF8</string>
 				<key>ASCII</key>
 				<string>ascI</string>
-				<key>NonLossyASCII</key>
-				<string>nlAs</string>
+				<key>Big5</key>
+				<string>biG5</string>
+				<key>Big5HKSCS</key>
+				<string>bG5H</string>
+				<key>GB18030</key>
+				<string>gb30</string>
+				<key>GBK</key>
+				<string>gbKK</string>
 				<key>ISOLatin1</key>
 				<string>isL1</string>
 				<key>ISOLatin2</key>
@@ -281,60 +552,98 @@
 				<string>isL5</string>
 				<key>ISOLatin9</key>
 				<string>isL9</string>
-				<key>MacOSRoman</key>
-				<string>mcRo</string>
-				<key>MacOSEuropean</key>
-				<string>mcEu</string>
-				<key>MacOSCyrllic</key>
-				<string>mcCy</string>
-				<key>MacOSJapanese</key>
-				<string>mcJp</string>
-				<key>MacOSSimpChinese</key>
-				<string>mcSc</string>
-				<key>MacOSTradChinese</key>
-				<string>mcTc</string>
-				<key>MacOSKorean</key>
-				<string>mcKr</string>
-				<key>CP1250</key>
-				<string>cp50</string>
-				<key>CP1251</key>
-				<string>cp51</string>
-				<key>CP1252</key>
-				<string>cp52</string>
-				<key>SimpChineseWindows</key>
-				<string>wnSc</string>
-				<key>TradChineseWindows</key>
-				<string>wnTc</string>
-				<key>KoreanWindows</key>
-				<string>wnKr</string>
 				<key>JapaneseEUC</key>
 				<string>jpUC</string>
-				<key>SimpChineseEUC</key>
-				<string>scUC</string>
-				<key>TradChineseEUC</key>
-				<string>tcUC</string>
-				<key>KoreanEUC</key>
-				<string>krUC</string>
 				<key>KOI8R</key>
 				<string>ko8R</string>
+				<key>KoreanEUC</key>
+				<string>krUC</string>
+				<key>MacOSCyrllic</key>
+				<string>mcCy</string>
+				<key>MacOSEuropean</key>
+				<string>mcEu</string>
+				<key>MacOSJapanese</key>
+				<string>mcJp</string>
+				<key>MacOSKorean</key>
+				<string>mcKr</string>
+				<key>MacOSRoman</key>
+				<string>mcRo</string>
+				<key>MacOSSimp.Chinese</key>
+				<string>mcSc</string>
+				<key>MacOSTrad.Chinese</key>
+				<string>mcTc</string>
+				<key>NonlossyASCII</key>
+				<string>nlAs</string>
 				<key>ShiftJIS</key>
 				<string>sJiS</string>
-				<key>GB18030</key>
-				<string>gb30</string>
-				<key>GBK</key>
-				<string>gbKK</string>
-				<key>Big5</key>
-				<string>biG5</string>
-				<key>Big5HKSCS</key>
-				<string>bG5H</string>
+				<key>Simp.ChineseEUC</key>
+				<string>scUC</string>
+				<key>Trad.ChineseEUC</key>
+				<string>tcUC</string>
+				<key>UTF8</key>
+				<string>utF8</string>
+				<key>WindowsCyrllic</key>
+				<string>cp51</string>
+				<key>WindowsKorean</key>
+				<string>wnKr</string>
+				<key>WindowsLatin1</key>
+				<string>cp52</string>
+				<key>WindowsLatin2</key>
+				<string>cp50</string>
+				<key>WindowsSimp.Chinese</key>
+				<string>wnSc</string>
+				<key>WindowsTrad.Chinese</key>
+				<string>wnTc</string>
+			</dict>
+		</dict>
+		<key>Proxy</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>pxyE</string>
+			<key>Enumerators</key>
+			<dict>
+				<key>None</key>
+				<string>nonE</string>
+				<key>SOCKSFirewall</key>
+				<string>sokS</string>
+				<key>SecureHTTP</key>
+				<string>htpS</string>
+			</dict>
+		</dict>
+		<key>SubcodeType</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>scTE</string>
+			<key>Enumerators</key>
+			<dict>
+				<key>Reply</key>
+				<string>srpL</string>
+				<key>Request</key>
+				<string>sreQ</string>
+			</dict>
+		</dict>
+		<key>UserStatus</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>cusE</string>
+			<key>Enumerators</key>
+			<dict>
+				<key>Available</key>
+				<string>avaL</string>
+				<key>Away</key>
+				<string>awaY</string>
+				<key>Detached</key>
+				<string>detA</string>
+				<key>Offline</key>
+				<string>oflN</string>
 			</dict>
 		</dict>
 	</dict>
+	<key>Name</key>
+	<string>ChatCore</string>
 	<key>UsedFeatures</key>
 	<array>
 		<string>UnnamedArguments</string>
 	</array>
-	<key>Name</key>
-	<string>ChatCore</string>
 </dict>
 </plist>

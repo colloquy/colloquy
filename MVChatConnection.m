@@ -40,6 +40,56 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSASCIIStringEncoding, 0
 };
 
+static NSStringEncoding stringEncodingForScriptValue( unsigned int value ) {
+	switch( value ) {
+		default:
+		case 'utF8': return NSUTF8StringEncoding;
+		case 'ascI': return NSASCIIStringEncoding;
+		case 'nlAs': return NSNonLossyASCIIStringEncoding;
+
+		case 'isL1': return NSISOLatin1StringEncoding;
+		case 'isL2': return NSISOLatin2StringEncoding;
+		case 'isL3': return (NSStringEncoding) 0x80000203;
+		case 'isL4': return (NSStringEncoding) 0x80000204;
+		case 'isL5': return (NSStringEncoding) 0x80000205;
+		case 'isL9': return (NSStringEncoding) 0x8000020F;
+
+		case 'cp50': return NSWindowsCP1250StringEncoding;
+		case 'cp51': return NSWindowsCP1251StringEncoding;
+		case 'cp52': return NSWindowsCP1252StringEncoding;
+
+		case 'mcRo': return NSMacOSRomanStringEncoding;
+		case 'mcEu': return (NSStringEncoding) 0x8000001D;
+		case 'mcCy': return (NSStringEncoding) 0x80000007;
+		case 'mcJp': return (NSStringEncoding) 0x80000001;
+		case 'mcSc': return (NSStringEncoding) 0x80000019;
+		case 'mcTc': return (NSStringEncoding) 0x80000002;
+		case 'mcKr': return (NSStringEncoding) 0x80000003;
+
+		case 'ko8R': return (NSStringEncoding) 0x80000A02;
+
+		case 'wnSc': return (NSStringEncoding) 0x80000421;
+		case 'wnTc': return (NSStringEncoding) 0x80000423;
+		case 'wnKr': return (NSStringEncoding) 0x80000422;
+
+		case 'jpUC': return NSJapaneseEUCStringEncoding;
+		case 'sJiS': return (NSStringEncoding) 0x80000A01;
+
+		case 'krUC': return (NSStringEncoding) 0x80000940;
+
+		case 'scUC': return (NSStringEncoding) 0x80000930;
+		case 'tcUC': return (NSStringEncoding) 0x80000931;
+		case 'gb30': return (NSStringEncoding) 0x80000632;
+		case 'gbKK': return (NSStringEncoding) 0x80000631;
+		case 'biG5': return (NSStringEncoding) 0x80000A03;
+		case 'bG5H': return (NSStringEncoding) 0x80000A06;
+	}
+
+	return NSUTF8StringEncoding;
+}
+
+#pragma mark -
+
 @interface MVChatRoom (MVChatRoomPrivate)
 - (void) _setDateParted:(NSDate *) date;
 @end
@@ -828,5 +878,136 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) setScriptTypedAwayMessage:(NSString *) message {
 	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
 	[self setAwayStatusWithMessage:attributeMsg];
+}
+@end
+
+#pragma mark -
+
+@interface MVSendMessageScriptCommand : NSScriptCommand {}
+@end
+
+@interface MVSendRawMessageScriptCommand : NSScriptCommand {}
+@end
+
+@interface MVJoinChatRoomScriptCommand : NSScriptCommand {}
+@end
+
+#pragma mark -
+
+@implementation MVSendMessageScriptCommand
+- (id) performDefaultImplementation {
+	NSDictionary *args = [self evaluatedArguments];
+	id message = [self directParameter];
+	id target = [args objectForKey:@"target"];
+	id action = [args objectForKey:@"action"];
+	id encoding = [args objectForKey:@"encoding"];
+
+	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The message was missing or not a string value."];
+		return nil;
+	}
+
+	if( ! target || ( ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[MVChatRoom class]] ) ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The \"to\" parameter was missing or not a chat user or chat room object."];
+		return nil;
+	}
+
+	if( [target isKindOfClass:[MVChatUser class]] && [(MVChatUser *)target type] == MVChatWildcardUserType ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The \"to\" target cannot be a wildcard user."];
+		return nil;
+	}
+
+	if( action && ! [action isKindOfClass:[NSNumber class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The \"action tense\" was not a boolean value."];
+		return nil;
+	}
+
+	if( encoding && ! [encoding isKindOfClass:[NSNumber class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The \"encoding\" was an invalid type."];
+		return nil;
+	}
+
+	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
+	NSStringEncoding realEncoding = NSUTF8StringEncoding;
+	BOOL realAction = ( action ? [action boolValue] : NO );
+
+	if( encoding ) {
+		realEncoding = stringEncodingForScriptValue( [encoding unsignedIntValue] );
+	} else if( [target isKindOfClass:[MVChatRoom class]] ) {
+		realEncoding = [(MVChatRoom *)target encoding];
+	} else {
+		realEncoding = [[(MVChatRoom *)target connection] encoding];
+	}
+
+	[target sendMessage:realMessage withEncoding:realEncoding asAction:realAction];
+
+	return nil;
+}
+@end
+
+#pragma mark -
+
+@implementation MVSendRawMessageScriptCommand
+- (id) performDefaultImplementation {
+	NSDictionary *args = [self evaluatedArguments];
+	id message = [self directParameter];
+	id connection = [args objectForKey:@"connection"];
+	id priority = [args objectForKey:@"priority"];
+
+	if( ! message || ! [message isKindOfClass:[NSString class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The command was missing or not a string value."];
+		return nil;
+	}
+
+	if( ! connection || ! [connection isKindOfClass:[MVChatConnection class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The \"to\" parameter was missing or not a connection object."];
+		return nil;
+	}
+	
+	if( priority && ! [priority isKindOfClass:[NSNumber class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The \"priority\" was not a boolean value."];
+		return nil;
+	}
+
+	BOOL realPriority = ( priority ? [priority boolValue] : NO );
+
+	[connection sendRawMessage:message immediately:realPriority];
+
+	return nil;
+}
+@end
+
+#pragma mark -
+
+@implementation MVJoinChatRoomScriptCommand
+- (id) performDefaultImplementation {
+	NSDictionary *args = [self evaluatedArguments];
+	id room = [self directParameter];
+	id connection = [args objectForKey:@"connection"];
+
+	if( ! room || ( ! [room isKindOfClass:[NSString class]] && ! [room isKindOfClass:[NSArray class]] ) ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The room was missing, not a string value nor a list or strings."];
+		return nil;
+	}
+
+	if( ! connection || ! [connection isKindOfClass:[MVChatConnection class]] ) {
+		[self setScriptErrorNumber:1000];
+		[self setScriptErrorString:@"The \"on\" parameter was missing or not a connection object."];
+		return nil;
+	}
+
+	if( [room isKindOfClass:[NSArray class]] ) [connection joinChatRoomsNamed:room];
+	else [connection joinChatRoomNamed:room];
+
+	return nil;
 }
 @end

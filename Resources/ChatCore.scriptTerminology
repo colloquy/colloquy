@@ -8,12 +8,19 @@
 		<dict>
 			<key>Attributes</key>
 			<dict>
+				<key>localUser</key>
+				<dict>
+					<key>Description</key>
+					<string>Current local user when connected.</string>
+					<key>Name</key>
+					<string>local user</string>
+				</dict>
 				<key>nickname</key>
 				<dict>
 					<key>Description</key>
 					<string>Current nickname on the server.</string>
 					<key>Name</key>
-					<string>nickname</string>
+					<string>nickanme</string>
 				</dict>
 				<key>nicknamePassword</key>
 				<dict>
@@ -29,12 +36,19 @@
 					<key>Name</key>
 					<string>password</string>
 				</dict>
-				<key>proxyType</key>
+				<key>proxy</key>
 				<dict>
 					<key>Description</key>
 					<string>What system proxy server to use.</string>
 					<key>Name</key>
 					<string>proxy</string>
+				</dict>
+				<key>scriptTypedAwayMessage</key>
+				<dict>
+					<key>Description</key>
+					<string>Away message for other users to see that your not there.</string>
+					<key>Name</key>
+					<string>away message</string>
 				</dict>
 				<key>server</key>
 				<dict>
@@ -50,13 +64,6 @@
 					<key>Name</key>
 					<string>port number</string>
 				</dict>
-				<key>urlString</key>
-				<dict>
-					<key>Description</key>
-					<string>Chat URL containing nickname, server and port.</string>
-					<key>Name</key>
-					<string>URL</string>
-				</dict>
 				<key>status</key>
 				<dict>
 					<key>Description</key>
@@ -64,19 +71,19 @@
 					<key>Name</key>
 					<string>status</string>
 				</dict>
-				<key>scriptTypedAwayMessage</key>
-				<dict>
-					<key>Description</key>
-					<string>Away message for other users to see that your not there.</string>
-					<key>Name</key>
-					<string>away message</string>
-				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>
 					<key>Description</key>
 					<string>The unique identifier of the connection.</string>
 					<key>Name</key>
 					<string>id</string>
+				</dict>
+				<key>urlString</key>
+				<dict>
+					<key>Description</key>
+					<string>Chat URL containing nickname, server and port.</string>
+					<key>Name</key>
+					<string>URL</string>
 				</dict>
 			</dict>
 			<key>Description</key>
@@ -86,46 +93,234 @@
 			<key>PluralName</key>
 			<string>connections</string>
 		</dict>
+		<key>MVChatRoom</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>attributes</key>
+				<dict>
+					<key>Description</key>
+					<string>Room attributes containing various itmes.</string>
+					<key>Name</key>
+					<string>attributes</string>
+				</dict>
+				<key>bannedUsersArray</key>
+				<dict>
+					<key>Description</key>
+					<string>Current chat room members.</string>
+					<key>Name</key>
+					<string>banned users</string>
+				</dict>
+				<key>dateJoined</key>
+				<dict>
+					<key>Description</key>
+					<string>Date we joined the room. Missing value if we haven't joined yet.</string>
+					<key>Name</key>
+					<string>date joined</string>
+				</dict>
+				<key>dateParted</key>
+				<dict>
+					<key>Description</key>
+					<string>Date we parted the room. Missing value if we haven't parted yet.</string>
+					<key>Name</key>
+					<string>date parted</string>
+				</dict>
+				<key>displayName</key>
+				<dict>
+					<key>Description</key>
+					<string>Full room name without any prefixes.</string>
+					<key>Name</key>
+					<string>display name</string>
+				</dict>
+				<key>isJoined</key>
+				<dict>
+					<key>Description</key>
+					<string>Are we currently in the room?</string>
+					<key>Name</key>
+					<string>joined</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>Description</key>
+					<string>Full room name.</string>
+					<key>Name</key>
+					<string>name</string>
+				</dict>
+				<key>scriptTypedEncoding</key>
+				<dict>
+					<key>Description</key>
+					<string>Default encoding for outgoing messages.</string>
+					<key>Name</key>
+					<string>encoding</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the room.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
+				<key>urlString</key>
+				<dict>
+					<key>Description</key>
+					<string>The full room URL containing the server and room name.</string>
+					<key>Name</key>
+					<string>URL</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Represents a join chat room.</string>
+			<key>Name</key>
+			<string>chat room</string>
+			<key>PluralName</key>
+			<string>chat rooms</string>
+		</dict>
+		<key>MVChatUser</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>address</key>
+				<dict>
+					<key>Description</key>
+					<string>The address the user connected to the server from. Somtimes this is a fake (masked) address. This might require a "refresh information" command to be sent in advance.</string>
+					<key>Name</key>
+					<string>address</string>
+				</dict>
+				<key>attributes</key>
+				<dict>
+					<key>Description</key>
+					<string>User attributes containing various itmes.</string>
+					<key>Name</key>
+					<string>attributes</string>
+				</dict>
+				<key>dateConnected</key>
+				<dict>
+					<key>Description</key>
+					<string>The date the user connected to the server. This might require a "refresh information" command to be sent in advance.</string>
+					<key>Name</key>
+					<string>date connected</string>
+				</dict>
+				<key>dateDisconnected</key>
+				<dict>
+					<key>Description</key>
+					<string>The date the user disconnected from the server. This will not be available for all users.</string>
+					<key>Name</key>
+					<string>date disconnected</string>
+				</dict>
+				<key>displayName</key>
+				<dict>
+					<key>Description</key>
+					<string>Display name, almost always the nickname.</string>
+					<key>Name</key>
+					<string>display name</string>
+				</dict>
+				<key>nickname</key>
+				<dict>
+					<key>Description</key>
+					<string>Full room name.</string>
+					<key>Name</key>
+					<string>name</string>
+				</dict>
+				<key>realName</key>
+				<dict>
+					<key>Description</key>
+					<string>The real name supplied by the user, not always a person's name. This might require a "refresh information" command to be sent in advance.</string>
+					<key>Name</key>
+					<string>real name</string>
+				</dict>
+				<key>scriptTypedAwayMessage</key>
+				<dict>
+					<key>Description</key>
+					<string>The user's current away message. This might require a "refresh information" command to be sent in advance.</string>
+					<key>Name</key>
+					<string>away message</string>
+				</dict>
+				<key>serverAddress</key>
+				<dict>
+					<key>Description</key>
+					<string>The server address the user is connected to. This might be a different address than you are connected to, since servers are sometimes clustered. This might require a "refresh information" command to be sent in advance.</string>
+					<key>Name</key>
+					<string>server address</string>
+				</dict>
+				<key>status</key>
+				<dict>
+					<key>Description</key>
+					<string>The current status of the user. This isn't a live value and requires a "refresh information" command to be sent in advance.</string>
+					<key>Name</key>
+					<string>user status</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the room.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
+				<key>username</key>
+				<dict>
+					<key>Description</key>
+					<string>The user name supplied by the user. This might require a "refresh information" command to be sent in advance.</string>
+					<key>Name</key>
+					<string>user name</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Represents a user on a chat server.</string>
+			<key>Name</key>
+			<string>chat user</string>
+			<key>PluralName</key>
+			<string>chat users</string>
+		</dict>
 	</dict>
 	<key>Commands</key>
 	<dict>
-		<key>connect</key>
+		<key>Connect</key>
 		<dict>
 			<key>Description</key>
 			<string>Connect to the server.</string>
 			<key>Name</key>
 			<string>connect</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The conenction to connect.</string>
+			</dict>
 		</dict>
-		<key>disconnect</key>
+		<key>Disconnect</key>
 		<dict>
 			<key>Description</key>
 			<string>Disconnect from the server.</string>
 			<key>Name</key>
 			<string>disconnect</string>
-		</dict>
-		<key>sendRawMessage</key>
-		<dict>
-			<key>Description</key>
-			<string>Send raw message to server.</string>
-			<key>Name</key>
-			<string>send raw</string>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>Connection to send with.</string>
-			</dict>
-			<key>Arguments</key>
-			<dict>
-				<key>message</key>
-				<dict>
-					<key>Description</key>
-					<string>Raw message to send to server.</string>
-					<key>Name</key>
-					<string>message</string>
-				</dict>
+				<string>The conenction to disconnect.</string>
 			</dict>
 		</dict>
-		<key>returnFromAwayStatus</key>
+		<key>JoinChatRoom</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>connection</key>
+				<dict>
+					<key>Description</key>
+					<string>The connection to join on.</string>
+					<key>Name</key>
+					<string>on</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Join a chat room.</string>
+			<key>Name</key>
+			<string>join chat room</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>Room to join. (Can also be a list of rooms.)</string>
+			</dict>
+		</dict>
+		<key>ReturnFromAwayStatus</key>
 		<dict>
 			<key>Description</key>
 			<string>Removes any away message.</string>
@@ -137,103 +332,133 @@
 				<string>Connection to clear away status for.</string>
 			</dict>
 		</dict>
-		<key>joinChatRoom</key>
+		<key>SendChatMessage</key>
 		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>action</key>
+				<dict>
+					<key>Description</key>
+					<string>Send as an action?</string>
+					<key>Name</key>
+					<string>action tense</string>
+				</dict>
+				<key>encoding</key>
+				<dict>
+					<key>Description</key>
+					<string>The encoding to send the message as (will default to the room or connection encoding if omitted).</string>
+					<key>Name</key>
+					<string>encoded as</string>
+				</dict>
+				<key>target</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat user or chat room to send to.</string>
+					<key>Name</key>
+					<string>to</string>
+				</dict>
+			</dict>
 			<key>Description</key>
-			<string>Join a chat room on the connection.</string>
+			<string>Send a chat message to a room or user.</string>
 			<key>Name</key>
-			<string>join chat</string>
+			<string>send chat message</string>
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>Connection to join room on.</string>
+				<string>The message to send. (Plain text with HTML formatting. Must entity encode HTML special characters.)</string>
 			</dict>
+		</dict>
+		<key>SendRawCommand</key>
+		<dict>
 			<key>Arguments</key>
 			<dict>
-				<key>room</key>
+				<key>connection</key>
 				<dict>
 					<key>Description</key>
-					<string>Room to join. Can also be a list of rooms.</string>
+					<string>The conenction to send to.</string>
 					<key>Name</key>
-					<string>room</string>
+					<string>to</string>
 				</dict>
+				<key>priority</key>
+				<dict>
+					<key>Description</key>
+					<string>Send this command now? (This will bypass any queued commands.)</string>
+					<key>Name</key>
+					<string>priority</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Send raw server command (message) to server.</string>
+			<key>Name</key>
+			<string>send raw command</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The raw server command (message) to send. (This is protocol specific.)</string>
 			</dict>
 		</dict>
 	</dict>
 	<key>Description</key>
-	<string>commands and classes for Chat Core scripting.</string>
+	<string>Commands and classes for Chat Core scripting. Chat Core is the lowest level of Colloquy.</string>
 	<key>Enumerations</key>
 	<dict>
-		<key>SubcodeType</key>
-		<dict>
-			<key>Request</key>
-			<dict>
-				<key>Name</key>
-				<string>request</string>
-			</dict>
-			<key>Reply</key>
-			<dict>
-				<key>Name</key>
-				<string>reply</string>
-			</dict>
-		</dict>
 		<key>ConnectionStatus</key>
 		<dict>
 			<key>Connected</key>
 			<dict>
+				<key>Description</key>
+				<string>Connected status.</string>
 				<key>Name</key>
 				<string>connected</string>
 			</dict>
 			<key>Connecting</key>
 			<dict>
+				<key>Description</key>
+				<string>Connecting status.</string>
 				<key>Name</key>
 				<string>connecting</string>
 			</dict>
 			<key>Disconnected</key>
 			<dict>
+				<key>Description</key>
+				<string>Disconnected status.</string>
 				<key>Name</key>
 				<string>disconnected</string>
 			</dict>
 			<key>Suspended</key>
 			<dict>
+				<key>Description</key>
+				<string>Suspended status.</string>
 				<key>Name</key>
 				<string>suspended</string>
 			</dict>
 		</dict>
-		<key>Proxy</key>
-		<dict>
-			<key>None</key>
-			<dict>
-				<key>Name</key>
-				<string>none</string>
-			</dict>
-			<key>HTTPS</key>
-			<dict>
-				<key>Name</key>
-				<string>secure HTTP</string>
-			</dict>
-			<key>SOCKS</key>
-			<dict>
-				<key>Name</key>
-				<string>SOCKS firewall</string>
-			</dict>
-		</dict>
 		<key>Encoding</key>
 		<dict>
-			<key>UTF8</key>
-			<dict>
-				<key>Name</key>
-				<string>UTF8</string>
-			</dict>
 			<key>ASCII</key>
 			<dict>
 				<key>Name</key>
 				<string>ASCII</string>
 			</dict>
-			<key>NonLossyASCII</key>
+			<key>Big5</key>
 			<dict>
 				<key>Name</key>
-				<string>Nonlossy ASCII</string>
+				<string>Big 5</string>
+			</dict>
+			<key>Big5HKSCS</key>
+			<dict>
+				<key>Name</key>
+				<string>Big 5 HKSCS</string>
+			</dict>
+			<key>GB18030</key>
+			<dict>
+				<key>Name</key>
+				<string>GB 18030</string>
+			</dict>
+			<key>GBK</key>
+			<dict>
+				<key>Name</key>
+				<string>GBK</string>
 			</dict>
 			<key>ISOLatin1</key>
 			<dict>
@@ -265,95 +490,10 @@
 				<key>Name</key>
 				<string>ISO Latin 9</string>
 			</dict>
-			<key>MacOSRoman</key>
+			<key>JapaneseEUC</key>
 			<dict>
 				<key>Name</key>
-				<string>Mac OS Roman</string>
-			</dict>
-			<key>MacOSEuropean</key>
-			<dict>
-				<key>Name</key>
-				<string>Mac OS European</string>
-			</dict>
-			<key>MacOSCyrllic</key>
-			<dict>
-				<key>Name</key>
-				<string>Mac OS Cyrllic</string>
-			</dict>
-			<key>MacOSJapanese</key>
-			<dict>
-				<key>Name</key>
-				<string>Mac OS Japanese</string>
-			</dict>
-			<key>MacOSSimpChinese</key>
-			<dict>
-				<key>Name</key>
-				<string>Mac OS Simp. Chinese</string>
-			</dict>
-			<key>MacOSTradChinese</key>
-			<dict>
-				<key>Name</key>
-				<string>Mac OS Trad. Chinese</string>
-			</dict>
-			<key>MacOSKorean</key>
-			<dict>
-				<key>Name</key>
-				<string>Mac OS Korean</string>
-			</dict>
-			<key>CP1250</key>
-			<dict>
-				<key>Name</key>
-				<string>Windows Latin 2</string>
-			</dict>
-			<key>CP1251</key>
-			<dict>
-				<key>Name</key>
-				<string>Windows Cyrllic</string>
-			</dict>
-			<key>CP1252</key>
-			<dict>
-				<key>Name</key>
-				<string>Windows Latin 1</string>
-			</dict>
-			<key>SimpChineseWindows</key>
-			<dict>
-				<key>Name</key>
-				<string>Windows Simp. Chinese</string>
-			</dict>
-			<key>TradChineseWindows</key>
-			<dict>
-				<key>Name</key>
-				<string>Windows Trad. Chinese</string>
-			</dict>
-			<key>KoreanWindows</key>
-			<dict>
-				<key>Name</key>
-				<string>Windows Korean</string>
-			</dict>
-			<key>ShiftJIS</key>
-			<dict>
-				<key>Name</key>
-				<string>Shift JIS</string>
-			</dict>
-			<key>GB18030</key>
-			<dict>
-				<key>Name</key>
-				<string>GB 18030</string>
-			</dict>
-			<key>GBK</key>
-			<dict>
-				<key>Name</key>
-				<string>GBK</string>
-			</dict>
-			<key>Big5</key>
-			<dict>
-				<key>Name</key>
-				<string>Big 5</string>
-			</dict>
-			<key>Big5HKSCS</key>
-			<dict>
-				<key>Name</key>
-				<string>Big 5 HKSCS</string>
+				<string>Japanese EUC</string>
 			</dict>
 			<key>KOI8R</key>
 			<dict>
@@ -365,20 +505,167 @@
 				<key>Name</key>
 				<string>Korean EUC</string>
 			</dict>
-			<key>JapaneseEUC</key>
+			<key>MacOSCyrllic</key>
 			<dict>
 				<key>Name</key>
-				<string>Japanese EUC</string>
+				<string>Mac OS Cyrllic</string>
 			</dict>
-			<key>SimpChineseEUC</key>
+			<key>MacOSEuropean</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS European</string>
+			</dict>
+			<key>MacOSJapanese</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Japanese</string>
+			</dict>
+			<key>MacOSKorean</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Korean</string>
+			</dict>
+			<key>MacOSRoman</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Roman</string>
+			</dict>
+			<key>MacOSSimp.Chinese</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Simp. Chinese</string>
+			</dict>
+			<key>MacOSTrad.Chinese</key>
+			<dict>
+				<key>Name</key>
+				<string>Mac OS Trad. Chinese</string>
+			</dict>
+			<key>NonlossyASCII</key>
+			<dict>
+				<key>Name</key>
+				<string>Nonlossy ASCII</string>
+			</dict>
+			<key>ShiftJIS</key>
+			<dict>
+				<key>Name</key>
+				<string>Shift JIS</string>
+			</dict>
+			<key>Simp.ChineseEUC</key>
 			<dict>
 				<key>Name</key>
 				<string>Simp. Chinese EUC</string>
 			</dict>
-			<key>TradChineseEUC</key>
+			<key>Trad.ChineseEUC</key>
 			<dict>
 				<key>Name</key>
 				<string>Trad. Chinese EUC</string>
+			</dict>
+			<key>UTF8</key>
+			<dict>
+				<key>Name</key>
+				<string>UTF8</string>
+			</dict>
+			<key>WindowsCyrllic</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Cyrllic</string>
+			</dict>
+			<key>WindowsKorean</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Korean</string>
+			</dict>
+			<key>WindowsLatin1</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Latin 1</string>
+			</dict>
+			<key>WindowsLatin2</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Latin 2</string>
+			</dict>
+			<key>WindowsSimp.Chinese</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Simp. Chinese</string>
+			</dict>
+			<key>WindowsTrad.Chinese</key>
+			<dict>
+				<key>Name</key>
+				<string>Windows Trad. Chinese</string>
+			</dict>
+		</dict>
+		<key>Proxy</key>
+		<dict>
+			<key>None</key>
+			<dict>
+				<key>Description</key>
+				<string>No proxy.</string>
+				<key>Name</key>
+				<string>none</string>
+			</dict>
+			<key>SOCKSFirewall</key>
+			<dict>
+				<key>Description</key>
+				<string>SOCKS firewall proxy.</string>
+				<key>Name</key>
+				<string>SOCKS firewall</string>
+			</dict>
+			<key>SecureHTTP</key>
+			<dict>
+				<key>Description</key>
+				<string>Secure HTTP proxy.</string>
+				<key>Name</key>
+				<string>secure HTTP</string>
+			</dict>
+		</dict>
+		<key>SubcodeType</key>
+		<dict>
+			<key>Reply</key>
+			<dict>
+				<key>Description</key>
+				<string>A subcode command reply.</string>
+				<key>Name</key>
+				<string>reply</string>
+			</dict>
+			<key>Request</key>
+			<dict>
+				<key>Description</key>
+				<string>A subcode command request.</string>
+				<key>Name</key>
+				<string>request</string>
+			</dict>
+		</dict>
+		<key>UserStatus</key>
+		<dict>
+			<key>Available</key>
+			<dict>
+				<key>Description</key>
+				<string>Available status.</string>
+				<key>Name</key>
+				<string>available</string>
+			</dict>
+			<key>Away</key>
+			<dict>
+				<key>Description</key>
+				<string>Away status.</string>
+				<key>Name</key>
+				<string>away</string>
+			</dict>
+			<key>Detached</key>
+			<dict>
+				<key>Description</key>
+				<string>Detached status.</string>
+				<key>Name</key>
+				<string>detached</string>
+			</dict>
+			<key>Offline</key>
+			<dict>
+				<key>Description</key>
+				<string>Offline status.</string>
+				<key>Name</key>
+				<string>offline</string>
 			</dict>
 		</dict>
 	</dict>
