@@ -279,12 +279,7 @@
 	<string>Lucida Grande</string>
 	<key>WebKitJavaScriptEnabled</key>
 	<true/>
-	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
-	<dict>
-		<key>TB Is Shown</key>
-		<integer>0</integer>
-	</dict>
-	<key>NSColorPickerListDefaults</key>
-	<string>1Chat</string>
+	<key>NSColorPanelMode</key>
+	<string>5</string>
 </dict>
 </plist>
