@@ -55,6 +55,7 @@
 }
 
 - (unsigned long) UTF8StringByteLength {
-	return ( [self UTF8String] ? strlen( [self UTF8String] ) : 0 );
+	const char *str = [self UTF8String];
+	return ( str ? strlen( str ) : 0 );
 }
 @end
