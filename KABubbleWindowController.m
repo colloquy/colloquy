@@ -13,10 +13,23 @@ static unsigned int bubbleWindowDepth = 0;
 
 #pragma mark -
 
++ (KABubbleWindowController *) bubble {
+	return [[[self alloc] init] autorelease];
+}
+
++ (KABubbleWindowController *) bubbleWithTitle:(NSString *) title text:(id) text icon:(NSImage *) icon {
+	id ret = [[[self alloc] init] autorelease];
+	[ret setTitle:title];
+	if( [text isKindOfClass:[NSString class]] ) [ret setText:text];
+	else if( [text isKindOfClass:[NSAttributedString class]] ) [ret setAttributedText:text];
+	[ret setIcon:icon];
+	return ret;
+}
+
 - (id) init {
 	extern unsigned int bubbleWindowDepth;
 
-	NSPanel *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 0., 0., 250., 75. ) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO] autorelease];
+	NSPanel *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 0., 0., 270., 65. ) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO] autorelease];
 	[panel setBecomesKeyOnlyIfNeeded:YES];
 	[panel setHidesOnDeactivate:NO];
 	[panel setBackgroundColor:[NSColor clearColor]];
@@ -34,13 +47,9 @@ static unsigned int bubbleWindowDepth = 0;
 	NSRect screen = [[NSScreen mainScreen] visibleFrame];
 	[panel setFrameTopLeftPoint:NSMakePoint( NSWidth( screen ) - NSWidth( [panel frame] ) - KABubblePadding, NSMaxY( screen ) - KABubblePadding - ( NSHeight( [panel frame] ) * bubbleWindowDepth ) )];
 
-	self = [super initWithWindow:panel];
-
-	[self showWindow:nil];
 	_depth = ++bubbleWindowDepth;
 
-	[self startFadeIn];
-	return self;
+	return ( self = [super initWithWindow:panel] );
 }
 
 - (void) dealloc {
@@ -62,6 +71,8 @@ static unsigned int bubbleWindowDepth = 0;
 }
 
 - (void) startFadeIn {
+	[self retain]; // Retain, after fade out we relase.
+	[self showWindow:nil];
 	[self _stopTimer];
 	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector( _fadeIn: ) userInfo:nil repeats:YES] retain];
 }
@@ -87,7 +98,25 @@ static unsigned int bubbleWindowDepth = 0;
 		if( _depth == bubbleWindowDepth ) bubbleWindowDepth = 0;
 		[self _stopTimer];
 		[self close];
-		[self autorelease];
+		[self autorelease]; // Relase, we retained when we faded in.
 	}
+}
+
+- (BOOL) respondsToSelector:(SEL) selector {
+	if( [[[self window] contentView] respondsToSelector:selector] )
+		return [[[self window] contentView] respondsToSelector:selector];
+	else return [super respondsToSelector:selector];
+}
+
+- (void) forwardInvocation:(NSInvocation *) invocation {
+	if( [[[self window] contentView] respondsToSelector:[invocation selector]] )
+		[invocation invokeWithTarget:[[self window] contentView]];
+	else [super forwardInvocation:invocation];
+}
+
+- (NSMethodSignature *) methodSignatureForSelector:(SEL) selector {
+	if( [[[self window] contentView] respondsToSelector:selector] )
+		return [(NSObject *)[[self window] contentView] methodSignatureForSelector:selector];
+	else return [super methodSignatureForSelector:selector];
 }
 @end

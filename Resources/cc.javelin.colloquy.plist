@@ -73,15 +73,23 @@
 	<dict>
 		<key>playSound</key>
 		<false/>
+		<key>showBubble</key>
+		<true/>
 	</dict>
 	<key>JVNotificationSettings JVChatBuddyOnline</key>
 	<dict>
 		<key>playSound</key>
 		<false/>
+		<key>showBubble</key>
+		<true/>
 	</dict>
 	<key>JVNotificationSettings JVChatFisrtMessage</key>
 	<dict>
 		<key>bounceIcon</key>
+		<true/>
+		<key>showBubble</key>
+		<true/>
+		<key>showBubbleOnlyIfBackground</key>
 		<true/>
 		<key>playSound</key>
 		<true/>
@@ -149,6 +157,10 @@
 		<true/>
 		<key>soundPath</key>
 		<string>/System/Library/Sounds/Morse.aiff</string>
+		<key>showBubble</key>
+		<true/>
+		<key>showBubbleOnlyIfBackground</key>
+		<true/>
 	</dict>
 	<key>JVChatDefaultStyle</key>
 	<string>cc.javelin.colloquy.style.standard</string>

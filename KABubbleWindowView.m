@@ -56,6 +56,41 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 	[[NSColor colorWithCalibratedRed:0. green:0. blue:0. alpha:.5] set];
 	[path stroke];
 
+	[_title drawAtPoint:NSMakePoint( 55., 40. ) withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont boldSystemFontOfSize:13.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil]];
+	[_text drawInRect:NSMakeRect( 55., 10., 200., 30. )];
+
+	if( [_icon size].width > 32. || [_icon size].height > 32. ) { // Assume a square image.
+		NSImageRep *sourceImageRep = [_icon bestRepresentationForDevice:nil];
+		[_icon autorelease];
+		_icon = [[NSImage alloc] initWithSize:NSMakeSize( 32., 32. )];
+		[_icon lockFocus];
+		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+		[sourceImageRep drawInRect:NSMakeRect( 0., 0., 32., 32. )];
+		[_icon unlockFocus];
+	}
+
+	[_icon compositeToPoint:NSMakePoint( 15., 20. ) operation:NSCompositeSourceAtop fraction:1.];
+
 	[[self window] invalidateShadow];
+}
+
+- (void) setIcon:(NSImage *) icon {
+	[_icon autorelease];
+	_icon = [icon retain];
+}
+
+- (void) setTitle:(NSString *) title {
+	[_title autorelease];
+	_title = [title copy];
+}
+
+- (void) setAttributedText:(NSAttributedString *) text {
+	[_text autorelease];
+	_text = [text copy];
+}
+
+- (void) setText:(NSString *) text {
+	[_text autorelease];
+	_text = [[NSAttributedString alloc] initWithString:text attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont messageFontOfSize:11.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil]];
 }
 @end

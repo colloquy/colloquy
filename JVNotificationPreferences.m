@@ -41,6 +41,12 @@
 	[untilAttention setEnabled:boolValue];
 	if( ! boolValue ) [untilAttention setState:NSOffState];
 	else [untilAttention setState:[[_eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue]];	
+
+	boolValue = [[_eventPrefs objectForKey:@"showBubble"] boolValue];
+	[showBubble setState:boolValue];
+	[onlyIfBackground setEnabled:boolValue];
+	if( ! boolValue ) [onlyIfBackground setState:NSOffState];
+	else [onlyIfBackground setState:[[_eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue]];	
 }
 
 - (void) saveEventSettings {
@@ -148,6 +154,19 @@
 
 - (void) bounceIconUntilFront:(id) sender {
 	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"bounceIconUntilFront"];
+	[self saveEventSettings];
+}
+
+- (void) showBubble:(id) sender {
+	[onlyIfBackground setEnabled:(BOOL)[sender state]];
+	if( [sender state] == NSOffState ) [onlyIfBackground setState:NSOffState];
+	else [onlyIfBackground setState:[[_eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue]];	
+	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"showBubble"];
+	[self saveEventSettings];
+}
+
+- (void) showBubbleIfBackground:(id) sender {
+	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"showBubbleOnlyIfBackground"];
 	[self saveEventSettings];
 }
 @end

@@ -7,6 +7,8 @@
                 bounceIconUntilFront = id; 
                 playSound = id; 
                 saveHighlightWords = id; 
+                showBubble = id; 
+                showBubbleIfBackground = id; 
                 switchEvent = id; 
                 switchSound = id; 
             }; 

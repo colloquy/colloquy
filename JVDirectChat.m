@@ -715,17 +715,32 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		NSMutableArray *names = nil;
 		id item = nil;
 
-		if( [self isMemberOfClass:[JVDirectChat class]] && _firstMessage )
-			[[JVNotificationController defaultManager] performNotification:@"JVChatFisrtMessage" withContextInfo:nil];
-		if( [self isMemberOfClass:[JVDirectChat class]] && ! _firstMessage )
-			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:nil];
+		if( [self isMemberOfClass:[JVDirectChat class]] && _firstMessage ) {
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"bubbleTitle"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"bubbleText"];
+			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"bubbleIcon"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatFisrtMessage" withContextInfo:context];
+		}
+
+		if( [self isMemberOfClass:[JVDirectChat class]] && ! _firstMessage ) {
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"bubbleTitle"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ sent you another private message.", "new message bubble text" ), [self title]] forKey:@"bubbleText"];
+			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"bubbleIcon"];
+			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
+		}
 
 		names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
 		[names addObject:[[self connection] nickname]];
 		enumerator = [names objectEnumerator];
 		while( ( item = [enumerator nextObject] ) ) {
 			if( [[messageString lowercaseString] rangeOfString:item].length ) {
-				[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:nil];
+				NSMutableDictionary *context = [NSMutableDictionary dictionary];
+				[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"bubbleTitle"];
+				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "mentioned bubble text" ), [self title]] forKey:@"bubbleText"];
+				[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"bubbleIcon"];
+				[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
 				_newHighlightMessage = YES;
 				highlight = YES;
 				break;

@@ -1,12 +1,14 @@
 #import <Cocoa/Cocoa.h>
 #import "JVNotificationController.h"
 #import "MVApplicationController.h"
+#import "KABubbleWindowController.h"
 
 static JVNotificationController *sharedInstance = nil;
 
 @interface JVNotificationController (JVNotificationControllerPrivate)
 - (void) _bounceIconOnce;
 - (void) _bounceIconContinuously;
+- (void) _showBubbleWithContext:(NSDictionary *) context andPrefs:(NSDictionary *) eventPrefs;
 - (void) _playSound:(NSString *) path;
 - (void) _threadPlaySound:(NSString *) path;
 @end
@@ -46,6 +48,11 @@ static JVNotificationController *sharedInstance = nil;
 		[self _bounceIconContinuously];
 	else if( [[eventPrefs objectForKey:@"bounceIcon"] boolValue] )
 		[self _bounceIconOnce];
+
+	if( [[eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue] && ! [[NSApplication sharedApplication] isActive] )
+		[self _showBubbleWithContext:context andPrefs:eventPrefs];
+	else if( [[eventPrefs objectForKey:@"showBubble"] boolValue] )
+		[self _showBubbleWithContext:context andPrefs:eventPrefs];
 }
 @end
 
@@ -58,6 +65,12 @@ static JVNotificationController *sharedInstance = nil;
 
 - (void) _bounceIconContinuously {
 	[[NSApplication sharedApplication] requestUserAttention:NSCriticalRequest];
+}
+
+- (void) _showBubbleWithContext:(NSDictionary *) context andPrefs:(NSDictionary *) eventPrefs {
+	NSImage *icon = [context objectForKey:@"bubbleIcon"];
+	KABubbleWindowController *bubble = [KABubbleWindowController bubbleWithTitle:[context objectForKey:@"bubbleTitle"] text:[context objectForKey:@"bubbleText"] icon:( icon ? icon : [[NSApplication sharedApplication] applicationIconImage] )];
+	[bubble startFadeIn];
 }
 
 - (void) _playSound:(NSString *) path {

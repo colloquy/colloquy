@@ -868,7 +868,15 @@ static MVBuddyListController *sharedInstance = nil;
 	[self _setBuddiesNeedSortAnimated];
 	if( ! _animating ) [buddies reloadData];
 
-	[[JVNotificationController defaultManager] performNotification:@"JVChatBuddyOnline" withContextInfo:nil];
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"Buddy Available", "available buddy bubble title" ) forKey:@"bubbleTitle"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now online.", "available buddy bubble text" ), [buddy preferredName]] forKey:@"bubbleText"];
+
+	NSImage *icon = [buddy picture];
+	if( ! icon ) icon = [NSImage imageNamed:@"largePerson"];
+	[context setObject:icon forKey:@"bubbleIcon"];
+
+	[[JVNotificationController defaultManager] performNotification:@"JVChatBuddyOnline" withContextInfo:context];
 }
 
 - (void) _buddyOffline:(NSNotification *) notification {
@@ -884,7 +892,15 @@ static MVBuddyListController *sharedInstance = nil;
 	[self _setBuddiesNeedSortAnimated];
 	if( ! _animating ) [buddies reloadData];
 
-	[[JVNotificationController defaultManager] performNotification:@"JVChatBuddyOffline" withContextInfo:nil];
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"Buddy Unavailable", "unavailable buddy bubble title" ) forKey:@"bubbleTitle"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now offline.", "unavailable buddy bubble text" ), [buddy preferredName]] forKey:@"bubbleText"];
+
+	NSImage *icon = [buddy picture];
+	if( ! icon ) icon = [NSImage imageNamed:@"largePerson"];
+	[context setObject:icon forKey:@"bubbleIcon"];
+
+	[[JVNotificationController defaultManager] performNotification:@"JVChatBuddyOffline" withContextInfo:context];
 }
 
 - (void) _buddyChanged:(NSNotification *) notification {
