@@ -338,14 +338,17 @@
 	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
 	NSScanner *scanner = [NSScanner scannerWithString:arguments];
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:nil];
+	[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:nil];
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
-	if( [arguments length] >= [scanner scanLocation] + 1 ) {
-		[scanner setScanLocation:[scanner scanLocation] + 1];
-		path = [arguments substringFromIndex:[scanner scanLocation]];
-		if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) return NO;
-	}
+	[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:nil];
+	[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] intoString:&path];
 
 	if( ! [to length] ) return NO;
+
+	BOOL directory = NO;
+	path = [path stringByStandardizingPath];
+	if( [path length] && ! [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&directory] ) return YES;
+	if( directory ) return YES;
 
 	MVChatUser *user = [[connection chatUsersWithNickname:to] anyObject];
 
