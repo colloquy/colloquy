@@ -83,6 +83,12 @@ static char encodingTable[64] = {
 	return self;
 }
 
+#pragma mark -
+
+- (NSString *) base64Encoding {
+	return [self base64EncodingWithLineLength:0];
+}
+
 - (NSString *) base64EncodingWithLineLength:(unsigned int) lineLength {
 	const unsigned char	*bytes = [self bytes];
 	NSMutableString *result = [NSMutableString stringWithCapacity:[self length]];
