@@ -11,6 +11,28 @@
 #import "NSAttributedStringMoreAdditions.h"
 
 @implementation JVChatMessage
++ (void) initialize {
+	[super initialize];
+	static BOOL tooLate = NO;
+	if( ! tooLate ) {
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceValue:toClass: ) toConvertFromClass:[self class] toClass:[NSString class]];
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceValue:toClass: ) toConvertFromClass:[NSString class] toClass:[self class]];
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceValue:toClass: ) toConvertFromClass:[JVMutableChatMessage class] toClass:[NSString class]];
+		[[NSScriptCoercionHandler sharedCoercionHandler] registerCoercer:[self class] selector:@selector( coerceValue:toClass: ) toConvertFromClass:[NSString class] toClass:[JVMutableChatMessage class]];
+		tooLate = YES;
+	}
+}
+
++ (id) coerceValue:(id) value toClass:(Class) class {
+	if( class == [NSString class] && [value isKindOfClass:[self class]] ) {
+		return [value bodyAsPlainText];
+	} else if( ( class == [JVChatMessage class] || class == [JVMutableChatMessage class] ) && [value isKindOfClass:[NSString class]] ) {
+		return [[[JVMutableChatMessage alloc] initWithText:value sender:nil andTranscript:nil] autorelease];
+	} return nil;
+}
+
+#pragma mark -
+
 + (id) messageWithNode:(/* xmlNode */ void *) node messageIndex:(unsigned long long) messageNumber andTranscript:(JVChatTranscript *) transcript {
 	return [[[self alloc] initWithNode:node messageIndex:messageNumber andTranscript:transcript] autorelease];
 }
@@ -267,7 +289,7 @@
 }
 
 - (void) setBodyAsPlainText:(NSString *) message {
-	[self setBody:[[[NSAttributedString alloc] initWithString:message] autorelease]];
+	[self setBody:message];
 }
 
 - (void) setBodyAsHTML:(NSString *) message {
