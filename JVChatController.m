@@ -1,10 +1,11 @@
 #import <Cocoa/Cocoa.h>
+#import <ChatCore/MVChatConnection.h>
+
 #import "JVChatController.h"
 #import "JVChatWindowController.h"
 #import "JVChatTranscript.h"
 #import "JVDirectChat.h"
 #import "JVChatRoom.h"
-#import "MVChatConnection.h"
 
 #import <libxml/parser.h>
 

@@ -22,6 +22,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
+@interface NSOutlineView (ASEntendedOutlineView)
+- (void) redisplayItemEqualTo:(id) item;
+@end
+
+#pragma mark -
+
 @implementation JVChatWindowController
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"JVChatWindow"] ) ) {
@@ -284,10 +290,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (NSToolbarItem *) toggleChatDrawerToolbarItem {
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:JVToolbarToggleChatDrawerItemIdentifier] autorelease];
 
-	[toolbarItem setLabel:NSLocalizedString( @"Panes", "chat panes toolbar item name" )];
-	[toolbarItem setPaletteLabel:NSLocalizedString( @"Chat Panes", "chat Panes toolbar customize palette name" )];
+	[toolbarItem setLabel:NSLocalizedString( @"Drawer", "chat panes drawer toolbar item name" )];
+	[toolbarItem setPaletteLabel:NSLocalizedString( @"Panel Drawer", "chat panes drawer toolbar customize palette name" )];
 
-	[toolbarItem setToolTip:NSLocalizedString( @"Toggle Chat Panes Drawer", "chat Panes toolbar item tooltip" )];
+	[toolbarItem setToolTip:NSLocalizedString( @"Toggle Chat Panel Drawer", "chat panes drawer toolbar item tooltip" )];
 	[toolbarItem setImage:[NSImage imageNamed:@"showdrawer"]];
 
 	[toolbarItem setTarget:self];
@@ -312,6 +318,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (BOOL) validateMenuItem:(id <NSMenuItem>) menuItem {
 	if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
 		[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Close Panel %@", "close current panel menu title" ), [_activeViewController title]]];
+		return YES;
+	} else if( [menuItem action] == @selector( toggleViewsDrawer: ) ) {
+		if( [viewsDrawer state] == NSDrawerClosedState || [viewsDrawer state] == NSDrawerClosingState ) {
+			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Show Drawer", "show drawer menu title" )]];
+		} else {
+			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Hide Drawer", "hide drawer menu title" )]];
+		}
 		return YES;
 	} else return YES;
 }

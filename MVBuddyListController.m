@@ -1,7 +1,8 @@
 #import <Cocoa/Cocoa.h>
 #import <AddressBook/AddressBook.h>
+#import <ChatCore/MVChatConnection.h>
+
 #import "MVBuddyListController.h"
-#import "MVChatConnection.h"
 #import "MVImageTextCell.h"
 
 static MVBuddyListController *sharedInstance = nil;

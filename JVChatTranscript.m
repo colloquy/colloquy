@@ -40,6 +40,12 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 #pragma mark -
 
+@interface NSScrollView (NSScrollViewWebKitPrivate)
+- (void) setAllowsHorizontalScrolling:(BOOL) allow;
+@end
+
+#pragma mark -
+
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (void) _updateChatStylesMenu;
 - (void) _scanForChatStyles;
