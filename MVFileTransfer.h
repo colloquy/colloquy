@@ -36,6 +36,7 @@ typedef enum {
 	unsigned long long _transfered;
 	NSDate *_startDate;
 	NSHost *_host;
+	BOOL _passive;
 	unsigned short _port;
 	unsigned long long _startOffset;
 	MVChatConnection *_connection;
@@ -52,6 +53,7 @@ typedef enum {
 
 - (BOOL) isUpload;
 - (BOOL) isDownload;
+- (BOOL) isPassive;
 - (MVFileTransferStatus) status;
 - (NSError *) lastError;
 

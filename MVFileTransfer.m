@@ -233,6 +233,11 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	return NO;
 }
 
+- (BOOL) isPassive {
+	if( ! [self _DCCFileRecord] ) return _passive;
+	return dcc_is_passive( [self _DCCFileRecord] );
+}
+
 - (MVFileTransferStatus) status {
 	return _status;
 }
@@ -337,6 +342,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 }
 
 - (void) _destroying {
+	_passive = [self isPassive];
 	_finalSize = [self finalSize];
 	_transfered = [self transfered];
 	_startDate = [[self startDate] retain];
@@ -442,8 +448,6 @@ static void MVDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 }
 
 - (void) dealloc {
-	[self reject];
-
 	[_destination release];
 	[_originalFileName release];
 
