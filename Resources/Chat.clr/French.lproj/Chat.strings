@@ -1,0 +1,22 @@
+/* Name of color list which appears in the color panel */
+
+"Chat" = "Chat";
+
+/* Names of colors in the "Colloquy" color list */
+
+"White" = "Blanc";
+"Black" = "Noir";
+"Navy" = "Bleu marine";
+"Forest" = "Forêt";
+"Red" = "Rouge";
+"Maroon" = "Marron";
+"Purple" = "Violet";
+"Orange" = "Orange";
+"Yellow" = "Jaune";
+"Green" = "Vert";
+"Teal" = "Sarcelle";
+"Cyan" = "Cyan";
+"Blue" = "Bleu";
+"Magenta" = "Magenta";
+"Grey" = "Gris";
+"Ash" = "Cendre";
