@@ -134,6 +134,18 @@
 			return YES;
 		}
 		return NO;
+	} else if( [command isEqualToString:@"ctcp"] ) {
+		NSString *to = nil, *ctcpRequest = nil, *ctcpArgs = nil;
+		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
+
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&ctcpRequest];
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] intoString:&ctcpArgs];
+
+		if( ! to || ! ctcpRequest ) return NO;
+
+		[connection sendSubcodeRequest:ctcpRequest toUser:to withArguments:ctcpArgs];
+		return YES;
 	} else if( [command isEqualToString:@"topic"] ) {
 		if( ! [arguments length] ) return NO;
 		[connection setTopic:arguments withEncoding:encoding forRoom:room];
@@ -282,6 +294,18 @@
 
 			if( url ) [connectionsController handleURL:url andConnectIfPossible:YES];
 		} else [connectionsController newConnection:nil];
+		return YES;
+	} else if( [command isEqualToString:@"ctcp"] ) {
+		NSString *to = nil, *ctcpRequest = nil, *ctcpArgs = nil;
+		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
+		
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&ctcpRequest];
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] intoString:&ctcpArgs];
+		
+		if( ! to || ! ctcpRequest ) return NO;
+		
+		[connection sendSubcodeRequest:ctcpRequest toUser:to withArguments:ctcpArgs];
 		return YES;
 	} else if( [command isEqualToString:@"dcc"] ) {
 		NSString *subcmd = nil;
