@@ -479,6 +479,38 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
+		1C3D55A305A4CB2B00F25F5E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSNumberAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3D55A405A4CB2B00F25F5E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSNumberAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3D562105A4DCCD00F25F5E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = NSMethodSignatureAdditions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3D562205A4DCCD00F25F5E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = NSMethodSignatureAdditions.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		1C51B48A052DE0CB00BB459B = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist;
@@ -1068,6 +1100,7 @@
 				1CDEE4790583DC58000B9075,
 				1C8997E9058807C500F49617,
 				1CCA236E05956E7C0050EDE0,
+				1CD733CB05A0E2470080F952,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1782,6 +1815,7 @@
 				1CDEE47A0583DC58000B9075,
 				1C8997E8058807C400F49617,
 				1CCA236F05956E7C0050EDE0,
+				1CD733CC05A0E2470080F952,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2880,6 +2914,34 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
+		1CD733C905A0E2470080F952 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVChatMessage.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD733CA05A0E2470080F952 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVChatMessage.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CD733CB05A0E2470080F952 = {
+			fileRef = 1CD733C905A0E2470080F952;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CD733CC05A0E2470080F952 = {
+			fileRef = 1CD733CA05A0E2470080F952;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CDEE25505823C13000B9075 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3259,6 +3321,8 @@
 				1CE72A95052C745400A8FE6E,
 				1CD6C414051DFA1D00A8FE10,
 				1CD6C413051DFA1C00A8FE10,
+				1CD733CA05A0E2470080F952,
+				1CD733C905A0E2470080F952,
 				1CCB279E04FE93FE00A8FE6E,
 				1CCB279D04FE93FE00A8FE6E,
 				1CE2BC4A042F53AD00000102,
@@ -3726,6 +3790,10 @@
 				F5E98623018B412B01EE70DE,
 				F56CD5430191182601EE70DE,
 				F56CD5440191182601EE70DE,
+				1C3D55A405A4CB2B00F25F5E,
+				1C3D55A305A4CB2B00F25F5E,
+				1C3D562205A4DCCD00F25F5E,
+				1C3D562105A4DCCD00F25F5E,
 			);
 			isa = PBXGroup;
 			name = "Chat Core";
