@@ -606,9 +606,13 @@ static void MVChatUserLeftRoom( IRC_SERVER_REC *server, const char *data, const 
 	if( [[self nickname] isEqualToString:[NSString stringWithUTF8String:nick]] ) return;
 
 	char *channel = NULL;
-	char *params = event_get_params( data, 1, &channel );
+	char *reason = NULL;
+	char *params = event_get_params( data, 2, &channel, &reason );
+	
+	reason = MVChatIRCToXHTML(reason);
+	NSData *reasonData = [NSData dataWithBytes:reason length:strlen( reason )];
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel], @"room", [NSString stringWithUTF8String:nick], @"who", [NSString stringWithUTF8String:address], @"address", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel], @"room", [NSString stringWithUTF8String:nick], @"who", [NSString stringWithUTF8String:address], @"address", ( reasonData ? (id) reasonData : (id) [NSNull null] ), @"reason", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 
 	g_free( params );

@@ -1138,7 +1138,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		if( [value isMemberOfClass:[NSNull class]] ) {
 			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
 		} else {
-			value = [value stringByEncodingXMLSpecialCharactersAsEntities];
+			if( ! [key isEqualToString:@"reason"] ) // This is a quick hack
+				value = [value stringByEncodingXMLSpecialCharactersAsEntities];
 			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
 		}
 
