@@ -46,6 +46,8 @@
 - (NSString *) target;
 - (JVBuddy *) buddy;
 
+- (void) unavailable;
+
 - (void) showAlert:(NSPanel *) alert withName:(NSString *) name;
 
 - (void) setPreference:(id) value forKey:(NSString *) key;

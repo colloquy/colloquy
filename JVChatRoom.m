@@ -16,6 +16,7 @@
 - (NSString *) _selfStoredNickname;
 - (void) _makeHyperlinksInString:(NSMutableString *) string;
 - (void) _didConnect:(NSNotification *) notification;
+- (void) _didDisconnect:(NSNotification *) notification;
 @end
 
 #pragma mark -
@@ -155,6 +156,13 @@
 - (JVBuddy *) buddy {
 	NSAssert( YES, @"JVChatRoom does not implement buddy:" );
 	return nil;
+}
+
+#pragma mark -
+
+- (void) unavailable {
+	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You're offline", "title of the you're offline message sheet" ), NSLocalizedString( @"You are no longer connected to the server where you were chatting. No messages can be sent at this time. Reconnecting might be in progress.", "chat window error description for loosing connection" ), @"OK", nil, nil ) withName:@"disconnected"];
+	_cantSendMessages = YES;
 }
 
 #pragma mark -

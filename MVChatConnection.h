@@ -31,6 +31,49 @@ typedef enum {
 	MVChatRoomMemberLimitMode = 0x80
 } MVChatRoomMode;
 
+typedef enum {
+	MVChatNoError,
+	MVChatConnectingError,
+	MVChatNoMatchError,
+	MVChatPacketError,
+	MVChatBadUserPasswordError,
+	MVChatSequenceError,
+	MVChatFrameTypeError,
+	MVChatPacketSizeError,
+	MVChatServerError,
+	MVChatUnknownError,
+	MVChatBlockedError,
+	MVChatWiredPacketError,
+	MVChatCallbackNumberError,
+	MVChatBadTargetError,
+	MVChatNotFoundError,
+	MVChatDisconnectError,
+	MVChatSocketError,
+	MVChatDNSError,
+	MVChatVersionError,
+	MVChatUserUnavailableError,
+	MVChatUserInfoUnavailableError,
+	MVChatTooFastError,
+	MVChatRoomUnavailableError,
+	MVChatIncomingError,
+	MVChatUserDisconnectError,
+	MVChatInvalidFormatError,
+	MVChatIdleFastError,
+	MVChatBadRoomError,
+	MVChatBadMessageError,
+	MVChatBadPrototypeError,
+	MVChatNotConnectedError,
+	MVChatBadConnectionError,
+	MVChatNoPermissionsError,
+	MVChatNoChangePasswordError,
+	MVChatDuplicateUserError,
+	MVChatDuplicateRoomError,
+	MVChatIOError,
+	MVChatBadHandleError,
+	MVChatTimeoutError,
+	MVChatNotDoneError
+} MVChatError;
+
 extern NSString *MVChatConnectionGotRawMessageNotification;
 
 extern NSString *MVChatConnectionWillConnectNotification;
@@ -38,7 +81,7 @@ extern NSString *MVChatConnectionDidConnectNotification;
 extern NSString *MVChatConnectionDidNotConnectNotification;
 extern NSString *MVChatConnectionWillDisconnectNotification;
 extern NSString *MVChatConnectionDidDisconnectNotification;
-extern NSString *MVChatConnectionDidGetErrorNotification;
+extern NSString *MVChatConnectionErrorNotification;
 
 extern NSString *MVChatConnectionNeedPasswordNotification;
 
@@ -111,6 +154,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 }
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;
+
++ (NSString *) descriptionForError:(MVChatError) error;
 
 - (id) initWithURL:(NSURL *) url;
 - (id) initWithServer:(NSString *) server port:(unsigned short) port user:(NSString *) nickname;

@@ -6,6 +6,8 @@
 #import "MVApplicationController.h"
 #import "JVChatController.h"
 #import "MVKeyChain.h"
+#import "JVChatRoom.h"
+#import "JVDirectChat.h"
 
 static MVConnectionsController *sharedInstance = nil;
 
@@ -58,6 +60,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidDisconnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionNicknameAcceptedNotification object:nil];
 
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedPasswordNotification object:nil];
 
 		NSRange range = NSRangeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVFileTransferPortRange"] );
@@ -878,6 +881,66 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 - (void) _refreshRooms:(NSNotification *) notification {
 	[roomToJoin noteNumberOfItemsChanged];
+}
+
+- (void) _errorOccurred:(NSNotification *) notification {
+	MVChatConnection *connection = [notification object];
+	MVChatError error = (MVChatError) [[[notification userInfo] objectForKey:@"error"] intValue];
+	NSLog( @"error: %@ (%d)", [MVChatConnection descriptionForError:error], error );
+	if( [[[notification userInfo] objectForKey:@"disconnected"] boolValue] ) {
+		switch( error ) {
+			case MVChatUserDisconnectError:
+				break;
+			case MVChatDisconnectError:
+			case MVChatPacketError:
+			case MVChatPacketSizeError:
+				if( [connection status] == MVChatConnectionConnectedStatus ) {
+					if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), @"Cancel", nil ) == NSOKButton )
+						[connection connect];
+				} else {
+					if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
+						[connection connect];
+				}
+				break;
+			default:
+				NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), [NSString stringWithFormat:NSLocalizedString( @"The connection was terminated between your computer and the server. %s.", "unknown disconnection error dialog message" ), [MVChatConnection descriptionForError:error]], nil, nil, nil );
+				break;
+		}
+	} else if( [[[notification userInfo] objectForKey:@"whileConnecting"] boolValue] ) {
+		switch( error ) {
+			case MVChatSocketError:
+			case MVChatDNSError:
+				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are conencted to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
+					[connection connect];
+				break;
+			case MVChatBadUserPasswordError:
+				NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat password is invalid", "chat invalid password dialog title" ), NSLocalizedString( @"The password you specified is invalid or a connection could not be made without a proper password. Make sure you have access to the server.", "chat invalid password dialog message" ), nil, nil, nil );
+				break;
+			case MVChatBadTargetError:
+				NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.", "chat invalid nicknames dialog message" ), [connection nickname]], nil, nil, nil );
+				break;
+			default:
+				NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured while connecting", "chat connecting error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The connection could not be made. %s.", "unknown connection error dialog message" ), [NSString stringWithFormat:NSLocalizedString( @"The connection was terminated between your computer and the server. %s.", "unknown disconnection error dialog message" ), [MVChatConnection descriptionForError:error]]], nil, nil, nil );
+				break;
+		}
+	} else {
+		NSString *target = [[notification userInfo] objectForKey:@"target"];
+		if( [target isMemberOfClass:[NSNull class]] ) target = nil;
+		switch( error ) {
+			case MVChatBadTargetError:
+				if( [target hasPrefix:@"#"] || [target hasPrefix:@"&"] || [target hasPrefix:@"+"] ) {
+					[(JVChatRoom *)[[JVChatController defaultManager] chatViewControllerForRoom:target withConnection:connection ifExists:YES] unavailable];
+				} else if( target ) {
+					[(JVDirectChat *)[[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:YES] unavailable];
+				} else {
+					NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname you specified is in use or invalid on this server.", "chat invalid nickname dialog message" ), nil, nil, nil );
+				}
+				break;
+			default:
+				NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured", "unknown error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"An error occured when dealing with %@. %@", "unknown error dialog message" ), ( target ? target : NSLocalizedString( @"server", "singular server label" ) ), [MVChatConnection descriptionForError:error]], nil, nil, nil );
+				break;
+		}
+	}
 }
 
 - (void) _saveBookmarkList {

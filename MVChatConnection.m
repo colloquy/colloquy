@@ -22,7 +22,7 @@ NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectN
 NSString *MVChatConnectionDidNotConnectNotification = @"MVChatConnectionDidNotConnectNotification";
 NSString *MVChatConnectionWillDisconnectNotification = @"MVChatConnectionWillDisconnectNotification";
 NSString *MVChatConnectionDidDisconnectNotification = @"MVChatConnectionDidDisconnectNotification";
-NSString *MVChatConnectionDidGetErrorNotification = @"MVChatConnectionDidGetErrorNotification";
+NSString *MVChatConnectionErrorNotification = @"MVChatConnectionErrorNotification";
 
 NSString *MVChatConnectionNeedPasswordNotification = @"MVChatConnectionNeedPasswordNotification";
 NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotPrivateMessageNotification";
@@ -132,65 +132,18 @@ void MVChatConnected( void *c, void *cs ) {
 void MVChatConnectionFailed( void *c, void *cs, const int error, const char * const reason ) {
 	MVChatConnection *self = cs;
 	[self _didNotConnect];
-	switch( error ) {
-		case FE_SOCKET:
-		case FE_RESOLV:
-//			if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are conencted to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
-//				[self connect];
-			break;
-		case FE_BADUSERPASS:
-//			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat password is invalid", "chat invalid password dialog title" ), NSLocalizedString( @"The password you specified is invalid or a connection could not be made without a proper password. Make sure you have access to the server.", "chat invalid password dialog message" ), nil, nil, nil );
-			break;
-		case FE_BADUSER:
-//			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.", "chat invalid nicknames dialog message" ), [self nickname]], nil, nil, nil );
-			break;
-		default:
-//			NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured while connecting", "chat connecting error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The connection could not be made. %s.", "unknown connection error dialog message" ), reason], nil, nil, nil );
-			break;
-	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"whileConnecting", ( reason ? [NSString stringWithUTF8String:reason] : [NSNull null] ), @"reason", [NSNumber numberWithInt:error], @"error", nil]];
 }
 
 void MVChatDisconnect( void *c, void *cs, const int error ) {
 	MVChatConnection *self = cs;
-	MVChatConnectionStatus status = [self status];
 	[self _didDisconnect];
-	switch( error ) {
-		case FE_USERDISCONNECT:
-			break;
-		case FE_DISCONNECT:
-		case FE_PACKET:
-		case FE_PACKETSIZE:
-			if( status == MVChatConnectionConnectedStatus ) {
-//				if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), @"Cancel", nil ) == NSOKButton )
-//					[self connect];
-			} else {
-//				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
-//					[self connect];
-			}
-			break;
-		default:
-//			NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), [NSString stringWithFormat:NSLocalizedString( @"The connection was terminated between your computer and the server. %s.", "unknown disconnection error dialog message" ), firetalk_strerror( error )], nil, nil, nil );
-			break;
-	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"disconnected", [NSNumber numberWithInt:error], @"error", nil]];
 }
 
-void MVChatError( void *c, void *cs, const int error, const char * const roomoruser ) {
+void MVChatErrorOccurred( void *c, void *cs, const int error, const char * const roomoruser ) {
 	MVChatConnection *self = cs;
-	switch( error ) {
-		case FE_BADUSER:
-			/*if( roomoruser && strlen( roomoruser ) >= 1 && strchr( "#&+", roomoruser[0] ) )
-				[[MVChatWindowController chatWindowForRoom:[[NSString stringWithUTF8String:roomoruser] lowercaseString] withConnection:self ifExists:YES] disconnected];
-			else if( roomoruser ) [[MVChatWindowController chatWindowWithUser:[NSString stringWithUTF8String:roomoruser] withConnection:self ifExists:YES] unavailable];
-			else {
-				[MVChatWindowController changeSelfInChatWindowsTo:[self nickname] forConnection:self];
-				NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname you specified is in use or invalid on this server.", "chat invalid nickname dialog message" ), nil, nil, nil );
-			}*/
-			break;
-		default:
-//			NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured", "unknown error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"An error occured when dealing with %@. %s.", "unknown error dialog message" ), ( roomoruser ? [NSString stringWithUTF8String:roomoruser] : NSLocalizedString( @"server", "singular server label" ) ), firetalk_strerror( error )], nil, nil, nil );
-			break;
-	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidGetErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:( roomoruser ? [NSString stringWithUTF8String:roomoruser] : [NSNull null] ), @"target", [NSNumber numberWithInt:error], @"error", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:( roomoruser ? [NSString stringWithUTF8String:roomoruser] : [NSNull null] ), @"target", [NSNumber numberWithInt:error], @"error", nil]];
 }
 
 void MVChatBackLog( void *c, void *cs, const double backlog ) {
@@ -574,6 +527,12 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	unsigned short max = 1048;
 	firetalk_get_dcc_port_range( &min, &max );
 	return NSMakeRange( (unsigned int) min, (unsigned int)( max - min ) );
+}
+
+#pragma mark -
+
++ (NSString *) descriptionForError:(MVChatError) error {
+	return [NSString stringWithUTF8String:firetalk_strerror( (enum firetalk_error) error )];
 }
 
 #pragma mark -
@@ -1018,7 +977,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	firetalk_register_callback( _chatConnection, FC_CONNECTED, (firetalk_callback) MVChatConnected );
 	firetalk_register_callback( _chatConnection, FC_CONNECTFAILED, (firetalk_callback) MVChatConnectionFailed );
 	firetalk_register_callback( _chatConnection, FC_DISCONNECT, (firetalk_callback) MVChatDisconnect );
-	firetalk_register_callback( _chatConnection, FC_ERROR, (firetalk_callback) MVChatError );
+	firetalk_register_callback( _chatConnection, FC_ERROR, (firetalk_callback) MVChatErrorOccurred );
 	firetalk_register_callback( _chatConnection, FC_BACKLOG, (firetalk_callback) MVChatBackLog );
 	firetalk_register_callback( _chatConnection, FC_NEWNICK, (firetalk_callback) MVChatNewNickname );
 	firetalk_register_callback( _chatConnection, FC_NEEDPASS, (firetalk_callback) MVChatNeedPassword );

@@ -357,6 +357,13 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 #pragma mark -
 
+- (void) unavailable {
+	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"Message undeliverable", "title of the user offline message sheet" ), NSLocalizedString( @"This user is now offline or you have messaged an invalid user. Any messages sent will not be received by the other user.", "error description for messaging a user that went offline or invalid" ), @"OK", nil, nil ) withName:@"unavailable"];
+	_cantSendMessages = YES;
+}
+
+#pragma mark -
+
 - (void) showAlert:(NSPanel *) alert withName:(NSString *) name {
 	if( _isActive && ! [[_windowController window] attachedSheet] ) {
 		if( alert ) [[NSApplication sharedApplication] beginSheet:alert modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];

@@ -1026,8 +1026,17 @@ enum firetalk_error irc_got_data(client_t c, unsigned char * buffer, unsigned sh
 						if (strcmp(args[3],"SILENCE") == 0)
 							c->usesilence = 0;
 						break;
+					case 431: /* ERR_NONICKNAMEGIVEN */
+						firetalk_callback_error(c,FE_BADUSER,NULL,"No nickname given.");
+						break;
+					case 432: /* ERR_ERRONEUSNICKNAME */
+						firetalk_callback_error(c,FE_BADUSER,NULL,"Erroneus nickname.");
+						break;
 					case 433: /* ERR_NICKNAMEINUSE */
 						firetalk_callback_error(c,FE_BADUSER,NULL,"Nickname in use.");
+						break;
+					case 436: /* ERR_NICKCOLLISION */
+						firetalk_callback_error(c,FE_BADUSER,NULL,"Nickname collision.");
 						break;
 					case 466: /* ERR_YOUWILLBEBANNED */
 						break;
