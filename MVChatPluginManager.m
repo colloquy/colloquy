@@ -86,6 +86,10 @@ static MVChatPluginManager *sharedInstance = nil;
 }
 
 - (NSSet *) pluginsThatRespondToSelector:(SEL) selector {
+	return [self pluginsOfClass:NULL thatRespondToSelector:selector];
+}
+
+- (NSSet *) pluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector {
 	NSParameterAssert( selector != NULL );
 
 	NSEnumerator *enumerator = [_plugins objectEnumerator];
@@ -93,18 +97,48 @@ static MVChatPluginManager *sharedInstance = nil;
 	id plugin = nil;
 
 	while( ( plugin = [enumerator nextObject] ) )
-		if( [plugin respondsToSelector:selector] )
+		if( ( ! class || ( class && [plugin isKindOfClass:class] ) ) && [plugin respondsToSelector:selector] )
 			[qualified addObject:plugin];
 
 	return ( [qualified count] ? qualified : nil );
 }
+
+#pragma mark -
 
 - (NSEnumerator *) pluginEnumerator {
 	return [_plugins objectEnumerator];
 }
 
 - (NSEnumerator *) enumeratorOfPluginsThatRespondToSelector:(SEL) selector {
-	return [[self pluginsThatRespondToSelector:selector] objectEnumerator];
+	return [self enumeratorOfPluginsOfClass:NULL thatRespondToSelector:selector];
+}
+
+- (NSEnumerator *) enumeratorOfPluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector {
+	return [[self pluginsOfClass:class thatRespondToSelector:selector] objectEnumerator];
+}
+
+#pragma mark -
+
+- (unsigned int) numberOfPlugins {
+	return [_plugins count];
+}
+
+- (unsigned int) numberOfPluginsThatRespondToSelector:(SEL) selector {
+	return [self numberOfPluginsOfClass:NULL thatRespondToSelector:selector];
+}
+
+- (unsigned int) numberOfPluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector {
+	NSParameterAssert( selector != NULL );
+
+	unsigned int ret = 0;
+	NSEnumerator *enumerator = [_plugins objectEnumerator];
+	id plugin = nil;
+
+	while( ( plugin = [enumerator nextObject] ) )
+		if( ( ! class || ( class && [plugin isKindOfClass:class] ) ) && [plugin respondsToSelector:selector] )
+			ret++;
+
+	return ret;
 }
 
 #pragma mark -
@@ -114,10 +148,14 @@ static MVChatPluginManager *sharedInstance = nil;
 }
 
 - (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
+	return [self makePluginsOfClass:NULL performInvocation:invocation stoppingOnFirstSuccessfulReturn:stop];
+}
+
+- (NSArray *) makePluginsOfClass:(Class) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
 	NSParameterAssert( invocation != nil );	
 	NSParameterAssert( [invocation selector] != NULL );	
 
-	NSEnumerator *enumerator = [self enumeratorOfPluginsThatRespondToSelector:[invocation selector]];
+	NSEnumerator *enumerator = [self enumeratorOfPluginsOfClass:class thatRespondToSelector:[invocation selector]];
 	id plugin = nil;
 
 	if( ! enumerator ) return nil;
