@@ -2,12 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface KABubbleWindowController : NSWindowController
-{
-    IBOutlet NSImageView *icon;
-    IBOutlet NSTextField *msgText;
-    IBOutlet NSTextField *username;
-	
+@interface KABubbleWindowController : NSWindowController {
 	NSTimer *animationTimer;
 }
 

@@ -1,4 +1,5 @@
 #import "KABubbleWindowController.h"
+#import "KABubbleWindowView.h"
 
 @implementation KABubbleWindowController
 
@@ -9,12 +10,29 @@
 #pragma mark -
 
 - (id) init {
-	self = [super initWithWindowNibName:@"KABubbleWindows"];
+	NSWindow* window = [[[NSWindow alloc] initWithContentRect:NSMakeRect( 0., 0., 250., 50. ) 
+										styleMask:NSBorderlessWindowMask 
+										  backing:NSBackingStoreBuffered 
+											defer:NO] autorelease];
+
+	//set up our window
+	[window setBackgroundColor: [NSColor clearColor]];
+	[window setLevel: NSStatusWindowLevel];
+	[window setAlphaValue:0.15];
+	[window setOpaque:NO];
+	[window setHasShadow: YES];
+	[window setCanHide:NO ];
+
+	NSView *view = [[[KABubbleWindowView alloc] initWithFrame:NSMakeRect( 0., 0., 250., 50. )] autorelease];
+
+	[window setContentView:view];
+
+	self = [super initWithWindow:window];
 
 	[[self window] setTitle:@"Alert"];
 	[self showWindow:self];
 	[[self window] setDelegate:self];
-	
+
 	//set the timer
 	animationTimer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL
 													  target:self
