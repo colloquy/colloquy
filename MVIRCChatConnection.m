@@ -43,6 +43,7 @@ void irc_deinit( void );
 NSRecursiveLock *MVIRCChatConnectionThreadLock = nil;
 static unsigned int connectionCount = 0;
 static GMainLoop *glibMainLoop = NULL;
+static NSString *threadConnectionName = nil;
 
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
@@ -1004,6 +1005,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ! tooLate ) {
 		MVIRCChatConnectionThreadLock = [[NSRecursiveLock alloc] init];
 
+		extern NSString *threadConnectionName;
+		threadConnectionName = [[NSString stringWithFormat:@"Colloquy Irssi Thread %@", [NSString locallyUniqueString]] retain];
+
 		irssi_gui = IRSSI_GUI_NONE;
 
 		NSString *temp = NSTemporaryDirectory();
@@ -1066,7 +1070,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 		[MVIRCChatConnectionThreadLock unlock];
 
-		id threadHelper = [NSConnection rootProxyForConnectionWithRegisteredName:@"irssiThread" host:nil];
+		id threadHelper = [NSConnection rootProxyForConnectionWithRegisteredName:threadConnectionName host:nil];
 		_irssiThreadConnection = [[threadHelper vendChatConnection:self] retain];
 
 		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
@@ -1658,9 +1662,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	MVIRCConnectionThreadHelper *helper = [[MVIRCConnectionThreadHelper alloc] init];
 
+	extern NSString *threadConnectionName;
 	NSConnection *server = [[NSConnection defaultConnection] retain];
 	[server enableMultipleThreads];
-	[server registerName:@"irssiThread"];
+	[server registerName:threadConnectionName];
 	[server setRootObject:helper];
 
 	extern GMainLoop *glibMainLoop;
