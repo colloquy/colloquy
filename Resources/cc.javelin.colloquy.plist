@@ -6,6 +6,8 @@
 	<string>cc.javelin.colloquy.style.standard</string>
 	<key>JVChatDefaultEmoticons</key>
 	<string>cc.javelin.colloquy.emoticons.standard</string>
+	<key>JVChatEncoding</key>
+	<integer>5</integer>
 	<key>MVChatHighlightNames</key>
 	<array></array>
 	<key>MVChatBookmarks</key>
@@ -24,8 +26,6 @@
 	<true/>
 	<key>MVChatSpellChecking</key>
 	<true/>
-	<key>MVChatEncoding</key>
-	<integer>5</integer>
 	<key>MVChatIdleLimit</key>
 	<integer>5</integer>
 	<key>MVChatMaximumHistory</key>
