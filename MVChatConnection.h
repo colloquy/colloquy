@@ -156,8 +156,10 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSMutableDictionary *_roomsCache;
 	NSDate *_cachedDate;
 	NSAttributedString *_awayMessage;
+	NSArray *_alternateNicks;
 
 	BOOL _nickIdentified;
+	unsigned int _nextAltNickIndex;
 	unsigned int _sleepNotifier; /* io_object_t */
 	unsigned int _powerConnection; /* io_connect_t */
 }
@@ -187,6 +189,10 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) setNickname:(NSString *) nickname;
 - (NSString *) nickname;
 - (NSString *) preferredNickname;
+
+- (void) setAlternateNicknames:(NSArray *) nicknames;
+- (NSArray *) alternateNicknames;
+- (NSString *) nextAlternateNickname;
 
 - (void) setNicknamePassword:(NSString *) password;
 - (NSString *) nicknamePassword;

@@ -511,6 +511,86 @@ char *MVChatIRCToXHTML( const char * const string ) {
 
 #pragma mark -
 
+#define ERR_NOSUCHNICK       401 // <nickname> :No such nick/channel
+#define ERR_NOSUCHSERVER     402 // <server name> :No such server
+#define ERR_NOSUCHCHANNEL    403 // <channel name> :No such channel
+#define ERR_CANNOTSENDTOCHAN 404 // <channel name> :Cannot send to channel
+#define ERR_TOOMANYCHANNELS  405 // <channel name> :You have joined too many channels
+#define ERR_WASNOSUCHNICK    406 // <nickname> :There was no such nickname
+#define ERR_TOOMANYTARGETS   407 // <target> :Duplicate recipients. No message delivered
+#define ERR_NOSUCHSERVICE    408 
+#define	ERR_NOORIGIN         409 // :No origin specified
+#define ERR_CANNOTKNOCK      410 
+#define ERR_NORECIPIENT      411 // :No recipient given (<command>)
+#define ERR_NOTEXTTOSEND     412 // :No text to send
+#define ERR_NOTOPLEVEL       413 // <mask> :No toplevel domain specified
+#define ERR_WILDTOPLEVEL     414 // <mask> :Wildcard in toplevel domain
+#define ERR_SERVICESUP       415
+
+#define ERR_UNKNOWNCOMMAND   421 // <command> :Unknown command
+#define	ERR_NOMOTD           422 // :MOTD File is missing
+#define	ERR_NOADMININFO      423 // <server> :No administrative info available
+#define	ERR_FILEERROR        424 // :File error doing <file op> on <file>
+
+#define ERR_NONICKNAMEGIVEN  431 // :No nickname given
+#define ERR_ERRONEUSNICKNAME 432 // <nick> :Erroneus nickname
+#define ERR_NICKNAMEINUSE    433 // <nick> :Nickname is already in use
+#define ERR_SERVICENAMEINUSE 434 
+#define ERR_SERVICECONFUSED  435
+#define	ERR_NICKCOLLISION    436 // <nick> :Nickname collision KILL
+#define ERR_BANNICKCHANGE    437
+#define ERR_NCHANGETOOFAST   438
+#define ERR_TARGETTOOFAST    439
+#define ERR_SERVICESDOWN     440
+
+#define ERR_USERNOTINCHANNEL 441 // <nick> <channel> :They aren't on that channel
+#define ERR_NOTONCHANNEL     442 // <channel> :You're not on that channel
+#define	ERR_USERONCHANNEL    443 // <user> <channel> :is already on channel
+#define ERR_NOLOGIN          444 // <user> :User not logged in
+#define	ERR_SUMMONDISABLED   445 // :SUMMON has been disabled
+#define ERR_USERSDISABLED    446 // :USERS has been disabled
+
+#define ERR_NOTREGISTERED    451 // :You have not registered
+
+#define ERR_HOSTILENAME      455
+
+#define ERR_NEEDMOREPARAMS   461 // <command> :Not enough parameters
+#define ERR_ALREADYREGISTRED 462 // :You may not reregister
+#define ERR_NOPERMFORHOST    463 // :Your host isn't among the privileged
+#define ERR_PASSWDMISMATCH   464 // :Password incorrect
+#define ERR_YOUREBANNEDCREEP 465 // :You are banned from this server
+#define ERR_YOUWILLBEBANNED  466
+#define	ERR_KEYSET           467 // <channel> :Channel key already set
+#define ERR_ONLYSERVERSCANCHANGE 468
+
+#define ERR_CHANNELISFULL    471 // <channel> :Cannot join channel (+l)
+#define ERR_UNKNOWNMODE      472 // <char> :is unknown mode char to me
+#define ERR_INVITEONLYCHAN   473 // <channel> :Cannot join channel (+i)
+#define ERR_BANNEDFROMCHAN   474 // <channel> :Cannot join channel (+b)
+#define	ERR_BADCHANNELKEY    475 // <channel> :Cannot join channel (+k)
+#define	ERR_BADCHANMASK      476
+#define ERR_NEEDREGGEDNICK   477
+#define ERR_BANLISTFULL      478
+#define ERR_NOPRIVILEGES     481 // :Permission Denied- You're not an IRC operator
+#define ERR_CHANOPRIVSNEEDED 482 // <channel> :You're not channel operator
+#define	ERR_CANTKILLSERVER   483 // :You cant kill a server!
+#define ERR_CANTKICKOPER     484 // Undernet extension was ERR_ISCHANSERVICE
+#define ERR_CANTKICKADMIN	 485
+
+#define ERR_NOOPERHOST       491 // :No O-lines for your host
+#define ERR_NOSERVICEHOST    492
+
+#define ERR_UMODEUNKNOWNFLAG 501 // :Unknown MODE flag
+#define ERR_USERSDONTMATCH   502 // :Cant change mode for other users
+
+#define ERR_SILELISTFULL     511
+#define ERR_TOOMANYWATCH     512
+#define ERR_NEEDPONG         513
+
+#define ERR_LISTSYNTAX       521
+
+#pragma mark -
+
 static void MVChatConnected( SERVER_REC *server ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:YES];
@@ -537,6 +617,17 @@ static void MVChatRawOutgoingMessage( SERVER_REC *server, char *data ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:server];
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:data], @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+}
+
+#pragma mark -
+
+static void MVChatNickTaken( IRC_SERVER_REC *server, const char *data, const char *by, const char *address ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
+	NSString *nick = [self nextAlternateNickname];
+	if( nick ) {
+		[self sendRawMessageWithFormat:@"NICK %@", nick];
+		signal_stop();
+	}
 }
 
 #pragma mark -
@@ -1212,6 +1303,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ! [self _irssiConnection] ) return;
 	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
 
+	_nextAltNickIndex = 0;
+
 	[self _willConnect];
 	[self _removePendingIrssiReconnections];
 
@@ -1327,6 +1420,28 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (NSString *) preferredNickname {
 	if( ! [self _irssiConnection] ) return nil;
 	return [self stringWithEncodedBytes:[self _irssiConnection] -> connrec -> nick];
+}
+
+#pragma mark -
+
+- (void) setAlternateNicknames:(NSArray *) nicknames {
+	[_alternateNicks autorelease];
+	_alternateNicks = [nicknames retain];
+	_nextAltNickIndex = 0;
+}
+
+- (NSArray *) alternateNicknames {
+	return _alternateNicks;
+}
+
+- (NSString *) nextAlternateNickname {
+	if( [_alternateNicks count] && _nextAltNickIndex < [_alternateNicks count] ) {
+		NSString *nick = [_alternateNicks objectAtIndex:_nextAltNickIndex];
+		_nextAltNickIndex++;
+		return nick;
+	}
+
+	return nil;
 }
 
 #pragma mark -
@@ -1765,6 +1880,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_add_first( "ctcp reply", (SIGNAL_FUNC) MVChatSubcodeReply );
 
 	signal_add_last( "dcc request", (SIGNAL_FUNC) MVChatFileTransferRequest );
+
+	signal_add_first( "event 433", (SIGNAL_FUNC) MVChatNickTaken );
 }
 
 + (void) _deregisterCallbacks {
@@ -1819,6 +1936,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_remove( "ctcp reply", (SIGNAL_FUNC) MVChatSubcodeReply );
 
 	signal_remove( "dcc request", (SIGNAL_FUNC) MVChatFileTransferRequest );
+
+	signal_remove( "event 433", (SIGNAL_FUNC) MVChatNickTaken );
 }
 
 + (NSData *) _flattenedHTMLDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc {
