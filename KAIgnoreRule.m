@@ -92,9 +92,9 @@
 
 - (NSString *) friendlyName {
 	if( ! [_friendlyName length] ) {
-		if( _ignoredUser && _ignoredMessage ) return [NSString stringWithFormat:@"%@ - %@", _ignoredUser, _ignoredMessage];
-		else if( _ignoredUser ) return _ignoredUser;
-		else if( _ignoredMessage ) return _ignoredMessage;
+		if( [_ignoredUser length] && [_ignoredMessage length] ) return [NSString stringWithFormat:@"%@ - %@", _ignoredUser, _ignoredMessage];
+		else if( [_ignoredUser length] ) return _ignoredUser;
+		else if( [_ignoredMessage length] ) return _ignoredMessage;
 		else return NSLocalizedString( @"Blank Ignore", "blank ignore name" );
 	} else return _friendlyName;
 }
