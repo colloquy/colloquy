@@ -101,3 +101,20 @@
 .emoticon.rose:after {
 	content: url( "rose.tif" );
 }
+
+.emoticon.shocked:after {
+	content: url( "shocked.tif" );
+}
+
+.emoticon.shockedfrown:after {
+	content: url( "shockedfrown.tif" );
+}
+
+.emoticon.dead:after {
+	content: url( "dead.tif" );
+}
+
+.emoticon.dorkgrin:after {
+	content: url( "dorkgrin.tif" );
+}
+
