@@ -147,7 +147,7 @@
 	} else if( sender == editAltNicknames ) {
 		[_connection setAlternateNicknames:[[sender stringValue] componentsSeparatedByString:@" "]];
 	} else if( sender == editPassword ) {
-		[_connection setNicknamePassword:[sender stringValue]];
+		[_connection setNicknamePassword:nil];
 		[[MVKeyChain defaultKeyChain] setInternetPassword:[sender stringValue] forServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:[editNickname stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 	} else if( sender == editServerPassword ) {
 		[_connection setPassword:[sender stringValue]];

@@ -876,19 +876,15 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
 	if( view == connections ) {
-		MVChatConnection *connection = nil;
 		if( [[column identifier] isEqual:@"auto"] ) {
 			[[_bookmarks objectAtIndex:row] setObject:object forKey:@"automatic"];
 			if( [object boolValue] )
 				[[_bookmarks objectAtIndex:row] setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
 		} else if( [[column identifier] isEqual:@"nickname"] ) {
-			[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:object path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setNickname:object];
 		} else if( [[column identifier] isEqual:@"address"] ) {
-			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:object securityDomain:object account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServer:object];
 		} else if( [[column identifier] isEqual:@"port"] ) {
-			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[object unsignedShortValue] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:[object unsignedShortValue]];
 		}
 		[self _saveBookmarkList];
@@ -1142,10 +1138,6 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _refresh:(NSNotification *) notification {
 	[self _validateToolbar];
-	if( [[notification name] isEqualToString:MVChatConnectionNicknameAcceptedNotification] ) {
-		MVChatConnection *connection = [notification object];
-		[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-	}
 	[connections reloadData];
 	[connections noteNumberOfRowsChanged];
 }
@@ -1305,7 +1297,6 @@ static NSMenu *favoritesMenu = nil;
 				[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
 
 			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-			[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 
 			[connection connect];
 		}
@@ -1404,7 +1395,6 @@ static NSMenu *favoritesMenu = nil;
 	if( [connections selectedRow] == -1 ) return;
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
 	[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-	[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 		[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
 	[connection connect];
