@@ -455,6 +455,7 @@ static JVChatController *sharedInstance = nil;
 	id <JVChatViewController> viewController = nil;
 	Class modeClass = NULL;
 	NSEnumerator *enumerator = nil;
+	BOOL kindOfClass = NO;
 
 	NSParameterAssert( controller != nil );
 
@@ -486,9 +487,14 @@ static JVChatController *sharedInstance = nil;
 	case 5:
 		modeClass = [JVChatConsole class];
 		goto groupByClass;
+	case 6:
+		modeClass = [JVDirectChat class];
+		kindOfClass = YES;
+		goto groupByClass;
 	groupByClass:
 		if( groupByServer ) {
-			enumerator = [[self chatViewControllersOfClass:modeClass] objectEnumerator];
+			if( kindOfClass ) enumerator = [[self chatViewControllersKindOfClass:modeClass] objectEnumerator];
+			else enumerator = [[self chatViewControllersOfClass:modeClass] objectEnumerator];
 			while( ( viewController = [enumerator nextObject] ) ) {
 				if( [viewController connection] == [controller connection] ) {
 					windowController = [viewController windowController];
@@ -496,8 +502,11 @@ static JVChatController *sharedInstance = nil;
 				}
 			}
 		} else {
-		    if( [[self chatViewControllersOfClass:modeClass] count ] > 0 ) {
-				NSMutableSet *tempSet = [[[self chatViewControllersOfClass:modeClass] mutableCopy] autorelease];
+			NSSet *panels = nil;
+			if( kindOfClass ) panels = [self chatViewControllersKindOfClass:modeClass];
+			else panels = [self chatViewControllersOfClass:modeClass];
+		    if( [panels count] > 0 ) {
+				NSMutableSet *tempSet = [[panels mutableCopy] autorelease];
 				[tempSet removeObject:controller];
 				windowController = [[tempSet anyObject] windowController];
 		    }
