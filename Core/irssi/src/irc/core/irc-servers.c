@@ -368,6 +368,8 @@ static void sig_server_quit(IRC_SERVER_REC *server, const char *msg)
 
 void irc_server_send_data(IRC_SERVER_REC *server, const char *data, int len)
 {
+	if( server->disconnected ) return;
+
 	if (net_sendbuffer_send(server->handle, data, len) == -1) {
 		/* something bad happened */
 		server->connection_lost = TRUE;
