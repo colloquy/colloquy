@@ -109,6 +109,21 @@ static JVChatController *sharedInstance = nil;
 	return [[ret retain] autorelease];
 }
 
+- (NSSet *) chatViewControllersOfClass:(Class) class {
+	NSMutableSet *ret = [NSMutableSet set];
+	id <JVChatViewController> item = nil;
+	NSEnumerator *enumerator = nil;
+
+	NSParameterAssert( class != NULL );
+
+	enumerator = [_chatControllers objectEnumerator];
+	while( ( item = [enumerator nextObject] ) )
+		if( [item isMemberOfClass:class] )
+			[ret addObject:item];
+
+	return [[ret retain] autorelease];
+}
+
 - (id <JVChatViewController>) chatViewControllerForRoom:(NSString *) room withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
 	id <JVChatViewController> ret = nil;
 	NSEnumerator *enumerator = nil;
