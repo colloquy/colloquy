@@ -257,15 +257,6 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 			[newAttributes removeObjectForKey:@"XHTMLStart"];
 			[newAttributes removeObjectForKey:@"XHTMLEnd"];
 		}
-
-		xmlChar *value = xmlGetProp( node, "class" );
-		if( value ) {
-			NSMutableSet *classes = [newAttributes objectForKey:@"CSSClasses"];
-			if( ! classes ) classes = [NSMutableSet set];
-			[classes addObjectsFromArray:[[NSString stringWithUTF8String:value] componentsSeparatedByString:@" "]];
-			[newAttributes setObject:classes forKey:@"CSSClasses"];
-			xmlFree( value );
-		} else if( first ) [newAttributes removeObjectForKey:@"CSSClasses"];
 	}
 
 	if( content ) {
