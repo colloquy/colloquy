@@ -206,7 +206,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[invocation setArgument:&self atIndex:2];
 		[NSTimer scheduledTimerWithTimeInterval:0. invocation:invocation repeats:NO];
 		[[self window] orderOut:nil];
-//		[[JVChatController defaultManager] disposeChatWindowController:self];
 	}
 }
 
@@ -232,7 +231,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[invocation setArgument:&self atIndex:2];
 	[NSTimer scheduledTimerWithTimeInterval:0. invocation:invocation repeats:NO];
 	[[self window] orderOut:nil];
-//	[[JVChatController defaultManager] disposeChatWindowController:self];
 }
 
 #pragma mark -
@@ -371,19 +369,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[invocation setSelector:@selector( disposeChatWindowController: )];
 	[invocation setArgument:&self atIndex:2];
 	[NSTimer scheduledTimerWithTimeInterval:0. invocation:invocation repeats:NO];
-//	[[JVChatController defaultManager] disposeChatWindowController:self];
 }
 
 - (void) windowDidBecomeMain:(NSNotification *) notification {
-//	[window makeFirstResponder:sendText];
+	[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
 }
 
 - (void) windowDidBecomeKey:(NSNotification *) notification {
-//	[window makeFirstResponder:sendText];
-}
-
-- (void) windowDidResize:(NSNotification *) notification {
-//	[displayText scrollRangeToVisible:NSMakeRange( [[displayText textStorage] length], 0 )];
+	[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
 }
 
 #pragma mark -
@@ -453,9 +446,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	id item = [items lastObject];
 	NSData *data = [NSData dataWithBytes:&item length:sizeof( &item )];
 	if( ! [item conformsToProtocol:@protocol( JVChatViewController )] ) return NO;
-	[board declareTypes:[NSArray arrayWithObjects:JVChatViewPboardType/*, NSStringPboardType*/, nil] owner:self];
+	[board declareTypes:[NSArray arrayWithObjects:JVChatViewPboardType, nil] owner:self];
 	[board setData:data forType:JVChatViewPboardType];
-//	[board setString:string forType:NSStringPboardType];
 	return YES;
 }
 
@@ -479,48 +471,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[[dragedController windowController] removeChatViewController:dragedController];
 	}
 
-//	NSLog( @"%@ %d %@ %d", item, index, dragedController, [dragedController retainCount] );
-
 	if( index == NSOutlineViewDropOnItemIndex ) [self addChatViewController:dragedController];
 	else [self insertChatViewController:dragedController atIndex:index];
 
 	return YES;
 }
-
-/*- (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
-	NSEnumerator *enumerator = [rows objectEnumerator];
-	NSMutableArray *array = [NSMutableArray array];
-	NSMutableString *string = [NSMutableString string];
-	id row;
-	unsigned i = 0;
-	[board declareTypes:[NSArray arrayWithObjects:MVSongPboardType,NSStringPboardType,nil] owner:self];
-	while( ( row = [enumerator nextObject] ) ) {
-		i = [row unsignedIntValue];
-		[array addObject:[[sortedData objectAtIndex:i] report]];
-		[string appendFormat:NSLocalizedString( @"%@ by %@", song info text format - Song Title by Artist format ), [[sortedData objectAtIndex:i] title], [[sortedData objectAtIndex:i] artist]];
-		if( ! [[rows lastObject] isEqual:row] ) [string appendString:@"\n"];
-	}
-	[board setPropertyList:array forType:MVSongPboardType];
-	[board setString:string forType:NSStringPboardType];
-	return YES;
-}
-
-- (NSDragOperation) tableView:(NSTableView *) view validateDrop:(id <NSDraggingInfo>) info proposedRow:(int) row proposedDropOperation:(NSTableViewDropOperation) operation {
-	if( operation == NSTableViewDropAbove && ! [view isEqual:[info draggingSource]] ) return NSDragOperationEvery;
-	return NSDragOperationNone;
-}
-
-- (BOOL) tableView:(NSTableView *) view acceptDrop:(id <NSDraggingInfo>) info row:(int) row dropOperation:(NSTableViewDropOperation) operation {
-	NSArray *reports = [[info draggingPasteboard] propertyListForType:MVSongPboardType];
-	MVSong *song = [MVSong song];
-	NSEnumerator *enumerator = [reports objectEnumerator];
-	id report;
-	while( ( report = [enumerator nextObject] ) ) {
-		[song setReport:report];
-		if( ! [song hasPriorRequest] ) [data requestSong:song];
-	}
-	return YES;
-}*/
 @end
 
 #pragma mark -
