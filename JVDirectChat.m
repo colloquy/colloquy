@@ -7,6 +7,7 @@
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
+#import <ChatCore/NSDataAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSColorAdditions.h>
 
@@ -1223,25 +1224,29 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
 		msgStr = NULL;
 
-		if( [value isMemberOfClass:[NSNull class]] ) {
-			msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
-		} else if( [value isKindOfClass:[NSAttributedString class]] ) {
+		if( [value isKindOfClass:[NSAttributedString class]] ) {
 			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
 			value = [value HTMLFormatWithOptions:options];
 			value = [value stringByStrippingIllegalXMLCharacters];
-			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+			if( [(NSString *)value length] )
+				msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
 		} else if( [value isKindOfClass:[NSString class]] ) {
 			if( encode ) value = [value stringByEncodingXMLSpecialCharactersAsEntities];
 			value = [value stringByStrippingIllegalXMLCharacters];
-			msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+			if( [(NSString *)value length] )
+				msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+		} else if( [value isKindOfClass:[NSData class]] ) {
+			value = [value base64EncodingWithLineLength:0];
+			if( [(NSString *)value length] )
+				msgStr = [[NSString stringWithFormat:@"<%@ encoding=\"base64\">%@</%@>", key, value, key] UTF8String];
 		}
 
-		if( msgStr ) {
-			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
-			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
-			xmlAddChild( root, child );
-			xmlFreeDoc( msgDoc );
-		}
+		if( ! msgStr ) msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
+
+		msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+		child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), doc, 1 );
+		xmlAddChild( root, child );
+		xmlFreeDoc( msgDoc );
 	}
 
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
