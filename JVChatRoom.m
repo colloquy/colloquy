@@ -97,6 +97,10 @@
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
+	
+	[_toolbarItems release];
+	_toolbarItems = [[NSMutableDictionary dictionary] retain];
+	
 	return [toolbar autorelease];
 }
 

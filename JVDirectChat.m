@@ -267,6 +267,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
+	
+	[_toolbarItems release];
+	_toolbarItems = [[NSMutableDictionary dictionary] retain];
+	
 	return [toolbar autorelease];
 }
 
