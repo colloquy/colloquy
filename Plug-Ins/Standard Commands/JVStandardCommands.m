@@ -264,7 +264,8 @@
 		[[room connection] disconnect];
 		return YES;
 	} else if( [command isEqualToString:@"console"] ) {
-		[[_manager chatController] chatConsoleForConnection:[room connection] ifExists:NO];
+		id controller = [[_manager chatController] chatConsoleForConnection:[room connection] ifExists:NO];
+		[[controller windowController] showChatViewController:controller];
 		return YES;
 	} else if( [command isEqualToString:@"reload"] ) {
 		if( [[arguments string] isEqualToString:@"plugins"] ) {
@@ -351,7 +352,8 @@
 		[[chat connection] disconnect];
 		return YES;
 	} else if( [command isEqualToString:@"console"] ) {
-		[[_manager chatController] chatConsoleForConnection:[chat connection] ifExists:NO];
+		id controller = [[_manager chatController] chatConsoleForConnection:[chat connection] ifExists:NO];
+		[[controller windowController] showChatViewController:controller];
 		return YES;
 	} else if( [command isEqualToString:@"whois"] || [command isEqualToString:@"wi"] ) {
 		id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:(JVChatRoom *)chat andNickname:[arguments string]] autorelease];
