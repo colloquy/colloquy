@@ -19,7 +19,7 @@
 #import "MVChatConnection.h"
 #import "JVChatRoomBrowser.h"
 #import "NSBundleAdditions.h"
-#import "JVChatTranscriptPrivates.h"
+#import "JVStyle.h"
 
 #import <Foundation/NSDebug.h>
 
@@ -141,15 +141,17 @@ static BOOL applicationIsTerminating = NO;
 	if( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) {
 		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
 		return YES;
-	} else if( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) {
+	} else if( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[filename pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) {
 		if( [[NSFileManager defaultManager] movePath:filename toPath:[NSString stringWithFormat:@"%@/%@", [@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath], [filename lastPathComponent]] handler:nil] ) {
-			NSBundle *style = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", [@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath], [filename lastPathComponent]]];
+			NSBundle *bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", [@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath], [filename lastPathComponent]]];
+			JVStyle *style = [JVStyle newWithBundle:bundle];
+
 			[[NSNotificationCenter defaultCenter] postNotificationName:JVChatStyleInstalledNotification object:style]; 
 
 			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "style installed title" ), [style displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the style in the Appearance Preferences" ), [style displayName], [style displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil ) == NSOKButton ) {
 				[self setupPreferences];
 				[[JVPreferencesController sharedPreferences] showPreferencesPanelForOwner:[JVAppearancePreferences sharedInstance]];
-				[[JVAppearancePreferences sharedInstance] selectStyleWithIdentifier:[style bundleIdentifier]];
+				[[JVAppearancePreferences sharedInstance] selectStyleWithIdentifier:[style identifier]];
 			}
 
 			return YES;

@@ -86,7 +86,6 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 	[super initialize];
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( scanForStyles ) name:JVChatStyleInstalledNotification object:nil];
 		[self scanForStyles];
 		tooLate = YES;
 	}
@@ -119,6 +118,7 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 		_styleOptions = nil;
 		_variants = nil;
 		_userVariants = nil;
+
 		[self _setBundle:bundle];
 	}
 
