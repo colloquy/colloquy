@@ -27,8 +27,26 @@
 }
 
 - (void) drawLabel:(BOOL) shouldTruncateLabel inRect:(NSRect) labelRect {
-	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil];
-	[[self label] drawInRect:NSInsetRect( labelRect, 1., 0. ) withAttributes:attributes];
+	BOOL selected = ( [[self tabView] selectedTabViewItem] == self );
+	BOOL disabled = ! [(id)_controller isEnabled];
+	float alpha = 1.;
+
+	if( ! selected ) alpha = 0.8;
+	if( disabled ) alpha = 0.5;
+
+	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	[paraStyle setLineBreakMode:NSLineBreakByTruncatingTail];
+
+	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11.], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( alpha < 1. ? [[NSColor controlTextColor] colorWithAlphaComponent:alpha] : [NSColor controlTextColor] ), NSForegroundColorAttributeName, nil];
+
+	NSRect textRect = labelRect;
+
+	textRect.origin.x += 1.;
+
+	if( [_controller respondsToSelector:@selector( statusImage )] && [(id)_controller statusImage] )
+		textRect.size.width -= [[(id)_controller statusImage] size].width + 2.;
+
+	[[self label] drawInRect:textRect withAttributes:attributes];
 
 	if( [_controller respondsToSelector:@selector( statusImage )] ) {
 		NSImage *statusImage = [(id)_controller statusImage];
