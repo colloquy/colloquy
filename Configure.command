@@ -1,4 +1,6 @@
 #!/bin/sh
+cd "`echo $0 | sed 's/[^/]*$//'`"
+
 cd ./Core
 rm -rf ./irssi
 cvs update -dP irssi
