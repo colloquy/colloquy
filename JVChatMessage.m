@@ -256,8 +256,14 @@
 - (void) setBody:(NSAttributedString *) message {
 	if( ! _attributedMessage ) {
 		if( [message isKindOfClass:[NSTextStorage class]] ) _attributedMessage = [message retain];
-		else _attributedMessage = [[NSTextStorage alloc] initWithAttributedString:message];
-	} else [_attributedMessage setAttributedString:message];
+		else if( [message isKindOfClass:[NSAttributedString class]] ) _attributedMessage = [[NSTextStorage alloc] initWithAttributedString:message];
+		else if( [message isKindOfClass:[NSString class]] ) _attributedMessage = [[NSAttributedString alloc] initWithString:(NSString *)message];
+	} else if( _attributedMessage && [message isKindOfClass:[NSAttributedString class]] ) {
+		[_attributedMessage setAttributedString:message];
+	} else if( _attributedMessage && [message isKindOfClass:[NSString class]] ) {
+		id string = [[[NSAttributedString alloc] initWithString:(NSString *)message] autorelease];
+		[_attributedMessage setAttributedString:string];
+	}
 }
 
 - (void) setBodyAsPlainText:(NSString *) message {
