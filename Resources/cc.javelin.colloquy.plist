@@ -8,28 +8,6 @@
 	<string>cc.javelin.colloquy.emoticons.standard</string>
 	<key>JVChatEncoding</key>
 	<integer>5</integer>
-	<key>JVDisplayMinimumFontSize</key>
-	<integer>8</integer>
-	<key>JVDefaultFixedWidthFont</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAZOU0ZvbnQVhIQITlNPYmplY3QAhYQBaRiEBVsy
-	NGNdBgAAAA4AAAD+/wBNAG8AbgBhAGMAbwAAhAFmDYQBYwCYAZgAmACG
-	</data>
-	<key>JVDefaultSansSerifFont</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAZOU0ZvbnQVhIQITlNPYmplY3QAhYQBaRiEBVsy
-	NGNdBgAAABAAAAD+/wBWAGUAcgBkAGEAbgBhhAFmDIQBYwCYAZgAmACG
-	</data>
-	<key>JVDefaultSerifFont</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAZOU0ZvbnQVhIQITlNPYmplY3QAhYQBaSCEBVsz
-	MmNdBgAAABgAAAD+/wBUAGkAbQBlAHMALQBSAG8AbQBhAG6EAWYMhAFjAJgBmACYAIY=
-	</data>
-	<key>JVDefaultStandardFont</key>
-	<data>
-	BAt0eXBlZHN0cmVhbYED6IQBQISEhAZOU0ZvbnQVhIQITlNPYmplY3QAhYQBaSCEBVsz
-	MmNdBgAAABgAAAD+/wBUAGkAbQBlAHMALQBSAG8AbQBhAG6EAWYQhAFjAJgBmACYAIY=
-	</data>
 	<key>MVChatHighlightNames</key>
 	<array></array>
 	<key>MVChatBookmarks</key>
