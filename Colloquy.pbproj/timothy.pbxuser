@@ -1,7 +1,7 @@
 // !$*UTF8*$!
 {
 	089C1669FE841209C02AAC07 = {
-		activeBuildStyle = 014CEA420018CDE011CA2923;
+		activeBuildStyle = F52BA31C037C62E801A35792;
 		activeExecutable = 1C2D6A1804085B9E00000102;
 		activeTarget = F50B0AAB0170CB7101A84BDE;
 		addToTargets = (
@@ -15,7 +15,7 @@
 			1C2D6A1804085B9E00000102,
 		);
 		perUserDictionary = {
-			PBXPerProjectTemplateStateSaveDate = 86624248;
+			PBXPerProjectTemplateStateSaveDate = 86706798;
 			PBXWorkspaceContents = (
 				{
 					LeftSlideOut = {
@@ -2257,7 +2257,7 @@
 					WindowLocation = "{45, 83}";
 				},
 			);
-			PBXWorkspaceStateSaveDate = 86624248;
+			PBXWorkspaceStateSaveDate = 86706798;
 		};
 		perUserProjectItems = {
 			1C03648F0524BDD4000001C8 = 1C03648F0524BDD4000001C8;
@@ -4585,7 +4585,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatTranscript.m: 215";
 		rLen = 0;
-		rLoc = 6763;
+		rLoc = 6567;
 		rType = 0;
 		vrLen = 1541;
 		vrLoc = 5553;
@@ -4635,7 +4635,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 212";
 		rLen = 0;
-		rLoc = 12294;
+		rLoc = 12371;
 		rType = 0;
 		vrLen = 2126;
 		vrLoc = 11796;
@@ -4775,7 +4775,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 217";
 		rLen = 0;
-		rLoc = 12860;
+		rLoc = 12937;
 		rType = 0;
 		vrLen = 2126;
 		vrLoc = 11796;
@@ -4785,7 +4785,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 116";
 		rLen = 89;
-		rLoc = 4503;
+		rLoc = 4451;
 		rType = 0;
 		vrLen = 1708;
 		vrLoc = 3784;
@@ -4795,7 +4795,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 748";
 		rLen = 23;
-		rLoc = 40454;
+		rLoc = 40531;
 		rType = 0;
 		vrLen = 1220;
 		vrLoc = 40231;
@@ -4825,7 +4825,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 111";
 		rLen = 0;
-		rLoc = 4423;
+		rLoc = 4371;
 		rType = 0;
 		vrLen = 1715;
 		vrLoc = 96;
@@ -4835,7 +4835,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 751";
 		rLen = 0;
-		rLoc = 40544;
+		rLoc = 40621;
 		rType = 0;
 		vrLen = 1450;
 		vrLoc = 40287;
@@ -4855,7 +4855,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: MVChatConnectionSOCKSProxy";
 		rLen = 21;
-		rLoc = 810;
+		rLoc = 720;
 		rType = 0;
 		vrLen = 1654;
 		vrLoc = 96;
@@ -4895,7 +4895,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 580";
 		rLen = 0;
-		rLoc = 36129;
+		rLoc = 36206;
 		rType = 0;
 		vrLen = 1522;
 		vrLoc = 34955;
@@ -5025,7 +5025,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatTranscript.m: 194";
 		rLen = 0;
-		rLoc = 5809;
+		rLoc = 5613;
 		rType = 0;
 		vrLen = 551;
 		vrLoc = 5553;
@@ -5658,7 +5658,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatPluginManager.h: 4";
 		rLen = 19;
-		rLoc = 71;
+		rLoc = 46;
 		rType = 0;
 		vrLen = 311;
 		vrLoc = 0;
@@ -5712,7 +5712,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatPlugin.h: 20";
 		rLen = 0;
-		rLoc = 1537;
+		rLoc = 1624;
 		rType = 0;
 		vrLen = 1537;
 		vrLoc = 0;
@@ -5746,7 +5746,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 1063";
 		rLen = 0;
-		rLoc = 55341;
+		rLoc = 55418;
 		rType = 0;
 		vrLen = 802;
 		vrLoc = 55071;
@@ -5756,7 +5756,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 7";
 		rLen = 0;
-		rLoc = 212;
+		rLoc = 123;
 		rType = 0;
 		vrLen = 1189;
 		vrLoc = 0;
@@ -5916,7 +5916,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 29";
 		rLen = 0;
-		rLoc = 657;
+		rLoc = 754;
 		rType = 0;
 		vrLen = 568;
 		vrLoc = 261;
@@ -5960,7 +5960,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: _didConnect:";
 		rLen = 52;
-		rLoc = 35262;
+		rLoc = 43103;
 		rType = 0;
 		vrLen = 1124;
 		vrLoc = 34794;
@@ -5970,7 +5970,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: __LONG_LONG_MAX__";
 		rLen = 0;
-		rLoc = 308;
+		rLoc = 342;
 		rType = 0;
 		vrLen = 497;
 		vrLoc = 0;
@@ -5980,7 +5980,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatTranscript.m: 479";
 		rLen = 0;
-		rLoc = 16529;
+		rLoc = 16333;
 		rType = 0;
 		vrLen = 971;
 		vrLoc = 16060;
@@ -6120,7 +6120,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 1118";
 		rLen = 0;
-		rLoc = 57096;
+		rLoc = 57173;
 		rType = 0;
 		vrLen = 885;
 		vrLoc = 56605;
@@ -6170,7 +6170,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatTranscript.m: 194";
 		rLen = 0;
-		rLoc = 5809;
+		rLoc = 5613;
 		rType = 0;
 		vrLen = 1187;
 		vrLoc = 5449;
@@ -6180,7 +6180,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 103";
 		rLen = 0;
-		rLoc = 3836;
+		rLoc = 6452;
 		rType = 0;
 		vrLen = 1244;
 		vrLoc = 2845;
@@ -6220,7 +6220,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 103";
 		rLen = 0;
-		rLoc = 3836;
+		rLoc = 6452;
 		rType = 0;
 		vrLen = 1244;
 		vrLoc = 2845;
@@ -6250,7 +6250,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 1113";
 		rLen = 0;
-		rLoc = 56969;
+		rLoc = 57046;
 		rType = 0;
 		vrLen = 885;
 		vrLoc = 56605;
@@ -6260,7 +6260,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatTranscript.m: 194";
 		rLen = 0;
-		rLoc = 5809;
+		rLoc = 5613;
 		rType = 0;
 		vrLen = 1187;
 		vrLoc = 5449;
@@ -6270,7 +6270,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 400";
 		rLen = 0;
-		rLoc = 14714;
+		rLoc = 19550;
 		rType = 0;
 		vrLen = 1464;
 		vrLoc = 13747;
@@ -6300,7 +6300,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 382";
 		rLen = 0;
-		rLoc = 13953;
+		rLoc = 18789;
 		rType = 0;
 		vrLen = 1017;
 		vrLoc = 13379;
@@ -6320,7 +6320,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 383";
 		rLen = 0;
-		rLoc = 13954;
+		rLoc = 18790;
 		rType = 0;
 		vrLen = 1021;
 		vrLoc = 13509;
@@ -6360,7 +6360,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 387";
 		rLen = 0;
-		rLoc = 14195;
+		rLoc = 19031;
 		rType = 0;
 		vrLen = 1140;
 		vrLoc = 13509;
@@ -6400,7 +6400,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 387";
 		rLen = 0;
-		rLoc = 14195;
+		rLoc = 19031;
 		rType = 0;
 		vrLen = 1140;
 		vrLoc = 13509;
@@ -6420,7 +6420,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 387";
 		rLen = 0;
-		rLoc = 14195;
+		rLoc = 19031;
 		rType = 0;
 		vrLen = 1140;
 		vrLoc = 13509;
@@ -6516,7 +6516,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 9";
 		rLen = 0;
-		rLoc = 501;
+		rLoc = 411;
 		rType = 0;
 		vrLen = 1222;
 		vrLoc = 0;
@@ -6550,7 +6550,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatPluginManager.h: 4";
 		rLen = 19;
-		rLoc = 71;
+		rLoc = 46;
 		rType = 0;
 		vrLen = 311;
 		vrLoc = 0;
@@ -6560,7 +6560,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: __WINT_TYPE__";
 		rLen = 0;
-		rLoc = 161;
+		rLoc = 204;
 		rType = 0;
 		vrLen = 1825;
 		vrLoc = 0;
@@ -6638,7 +6638,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatPlugin.h: 4";
 		rLen = 0;
-		rLoc = 77;
+		rLoc = 164;
 		rType = 0;
 		vrLen = 1537;
 		vrLoc = 0;
@@ -6658,7 +6658,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: __WCHAR_TYPE__";
 		rLen = 0;
-		rLoc = 130;
+		rLoc = 164;
 		rType = 0;
 		vrLen = 454;
 		vrLoc = 0;
@@ -6678,7 +6678,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: __WCHAR_TYPE__";
 		rLen = 0;
-		rLoc = 130;
+		rLoc = 164;
 		rType = 0;
 		vrLen = 454;
 		vrLoc = 0;
@@ -6688,7 +6688,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: __PTRDIFF_TYPE__";
 		rLen = 0;
-		rLoc = 104;
+		rLoc = 138;
 		rType = 0;
 		vrLen = 509;
 		vrLoc = 0;
@@ -6738,7 +6738,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: __WCHAR_TYPE__";
 		rLen = 0;
-		rLoc = 115;
+		rLoc = 158;
 		rType = 0;
 		vrLen = 930;
 		vrLoc = 0;
@@ -6758,7 +6758,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatPlugin.h: 2";
 		rLen = 0;
-		rLoc = 38;
+		rLoc = 125;
 		rType = 0;
 		vrLen = 1537;
 		vrLoc = 0;
@@ -6778,7 +6778,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 83";
 		rLen = 32;
-		rLoc = 3598;
+		rLoc = 3508;
 		rType = 0;
 		vrLen = 622;
 		vrLoc = 3161;
@@ -6798,7 +6798,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 83";
 		rLen = 7;
-		rLoc = 3599;
+		rLoc = 3509;
 		rType = 0;
 		vrLen = 622;
 		vrLoc = 3161;
@@ -6828,7 +6828,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatPlugin.h: 20";
 		rLen = 0;
-		rLoc = 1537;
+		rLoc = 1624;
 		rType = 0;
 		vrLen = 1537;
 		vrLoc = 0;
@@ -6848,7 +6848,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: __WCHAR_TYPE__";
 		rLen = 0;
-		rLoc = 115;
+		rLoc = 158;
 		rType = 0;
 		vrLen = 1027;
 		vrLoc = 0;
@@ -6868,7 +6868,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: __INT_MAX__";
 		rLen = 0;
-		rLoc = 255;
+		rLoc = 332;
 		rType = 0;
 		vrLen = 1045;
 		vrLoc = 0;
@@ -6882,7 +6882,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: __WCHAR_MAX__";
 		rLen = 0;
-		rLoc = 439;
+		rLoc = 516;
 		rType = 0;
 		vrLen = 948;
 		vrLoc = 0;
@@ -6926,7 +6926,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 533";
 		rLen = 0;
-		rLoc = 21826;
+		rLoc = 26662;
 		rType = 0;
 		vrLen = 673;
 		vrLoc = 21405;
@@ -6936,7 +6936,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 1075";
 		rLen = 0;
-		rLoc = 55796;
+		rLoc = 55873;
 		rType = 0;
 		vrLen = 802;
 		vrLoc = 55071;
@@ -6946,7 +6946,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 11";
 		rLen = 0;
-		rLoc = 486;
+		rLoc = 396;
 		rType = 0;
 		vrLen = 1189;
 		vrLoc = 0;
@@ -6956,7 +6956,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 1065";
 		rLen = 0;
-		rLoc = 55450;
+		rLoc = 55527;
 		rType = 0;
 		vrLen = 802;
 		vrLoc = 55071;
@@ -6966,7 +6966,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 11";
 		rLen = 0;
-		rLoc = 486;
+		rLoc = 396;
 		rType = 0;
 		vrLen = 1189;
 		vrLoc = 0;
@@ -6976,7 +6976,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 1063";
 		rLen = 0;
-		rLoc = 55341;
+		rLoc = 55418;
 		rType = 0;
 		vrLen = 802;
 		vrLoc = 55071;
@@ -6986,7 +6986,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 7";
 		rLen = 0;
-		rLoc = 212;
+		rLoc = 123;
 		rType = 0;
 		vrLen = 1189;
 		vrLoc = 0;
@@ -7046,7 +7046,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: __PTRDIFF_TYPE__";
 		rLen = 0;
-		rLoc = 103;
+		rLoc = 137;
 		rType = 0;
 		vrLen = 685;
 		vrLoc = 0;
@@ -7056,7 +7056,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: __LONG_MAX__";
 		rLen = 0;
-		rLoc = 213;
+		rLoc = 247;
 		rType = 0;
 		vrLen = 857;
 		vrLoc = 0;
@@ -7066,7 +7066,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: __INT_MAX__";
 		rLen = 0;
-		rLoc = 330;
+		rLoc = 364;
 		rType = 0;
 		vrLen = 676;
 		vrLoc = 0;
@@ -7076,7 +7076,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: __FLT_EVAL_METHOD__";
 		rLen = 0;
-		rLoc = 331;
+		rLoc = 2166;
 		rType = 0;
 		vrLen = 857;
 		vrLoc = 0;
@@ -7086,7 +7086,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatTranscript.m: 194";
 		rLen = 0;
-		rLoc = 5809;
+		rLoc = 5613;
 		rType = 0;
 		vrLen = 965;
 		vrLoc = 0;
@@ -7128,7 +7128,7 @@
 		rLen = 0;
 		rLoc = 0;
 		rType = 0;
-		vrLen = 246;
+		vrLen = 106;
 		vrLoc = 0;
 	};
 	1C18CDCF0529A1E7000001C8 = {
@@ -7148,7 +7148,7 @@
 		rLen = 0;
 		rLoc = 0;
 		rType = 0;
-		vrLen = 117;
+		vrLen = 106;
 		vrLoc = 0;
 	};
 	1C18CDD10529A1E7000001C8 = {
@@ -7486,7 +7486,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 436";
 		rLen = 0;
-		rLoc = 16488;
+		rLoc = 21324;
 		rType = 0;
 		vrLen = 1264;
 		vrLoc = 15903;
@@ -7506,7 +7506,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 444";
 		rLen = 83;
-		rLoc = 16563;
+		rLoc = 21399;
 		rType = 0;
 		vrLen = 1202;
 		vrLoc = 16157;
@@ -7536,7 +7536,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 29";
 		rLen = 0;
-		rLoc = 657;
+		rLoc = 754;
 		rType = 0;
 		vrLen = 568;
 		vrLoc = 261;
@@ -7580,7 +7580,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: 470";
 		rLen = 0;
-		rLoc = 19054;
+		rLoc = 17138;
 		rType = 0;
 		vrLen = 683;
 		vrLoc = 18439;
@@ -7590,7 +7590,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: __DBL_MANT_DIG__";
 		rLen = 46;
-		rLoc = 598;
+		rLoc = 2764;
 		rType = 0;
 		vrLen = 549;
 		vrLoc = 389;
@@ -7600,7 +7600,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: __LONG_LONG_MAX__";
 		rLen = 0;
-		rLoc = 308;
+		rLoc = 342;
 		rType = 0;
 		vrLen = 444;
 		vrLoc = 0;
@@ -7610,7 +7610,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: _didConnect:";
 		rLen = 52;
-		rLoc = 35262;
+		rLoc = 43103;
 		rType = 0;
 		vrLen = 1124;
 		vrLoc = 34794;
@@ -7620,7 +7620,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: __LONG_LONG_MAX__";
 		rLen = 0;
-		rLoc = 308;
+		rLoc = 342;
 		rType = 0;
 		vrLen = 497;
 		vrLoc = 0;
@@ -7630,7 +7630,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatTranscript.m: 479";
 		rLen = 0;
-		rLoc = 16529;
+		rLoc = 16333;
 		rType = 0;
 		vrLen = 971;
 		vrLoc = 16060;
@@ -8266,7 +8266,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: changeChatMember:to:";
 		rLen = 4;
-		rLoc = 7547;
+		rLoc = 7613;
 		rType = 0;
 		vrLen = 1679;
 		vrLoc = 6433;
@@ -8306,7 +8306,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: changeChatMember:to:";
 		rLen = 0;
-		rLoc = 6658;
+		rLoc = 6724;
 		rType = 0;
 		vrLen = 1679;
 		vrLoc = 6433;
@@ -8555,7 +8555,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 0;
-		rLoc = 15607;
+		rLoc = 20443;
 		rType = 0;
 		vrLen = 1487;
 		vrLoc = 15318;
@@ -8565,7 +8565,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 32";
 		rLen = 0;
-		rLoc = 423;
+		rLoc = 462;
 		rType = 0;
 		vrLen = 798;
 		vrLoc = 359;
@@ -8575,7 +8575,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 13;
-		rLoc = 17412;
+		rLoc = 22248;
 		rType = 0;
 		vrLen = 1705;
 		vrLoc = 15961;
@@ -8585,7 +8585,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 41";
 		rLen = 13;
-		rLoc = 613;
+		rLoc = 710;
 		rType = 0;
 		vrLen = 980;
 		vrLoc = 295;
@@ -8595,7 +8595,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 0;
-		rLoc = 16421;
+		rLoc = 21257;
 		rType = 0;
 		vrLen = 1744;
 		vrLoc = 15961;
@@ -8615,7 +8615,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: awakeFromNib";
 		rLen = 0;
-		rLoc = 4097;
+		rLoc = 6713;
 		rType = 0;
 		vrLen = 1646;
 		vrLoc = 4323;
@@ -8655,7 +8655,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 0;
-		rLoc = 14261;
+		rLoc = 19097;
 		rType = 0;
 		vrLen = 1433;
 		vrLoc = 15399;
@@ -8675,7 +8675,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 0;
-		rLoc = 15511;
+		rLoc = 20347;
 		rType = 0;
 		vrLen = 1471;
 		vrLoc = 15399;
@@ -8685,7 +8685,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: MVChatGetRoomMessage";
 		rLen = 0;
-		rLoc = 19259;
+		rLoc = 19336;
 		rType = 0;
 		vrLen = 1981;
 		vrLoc = 18267;
@@ -8705,7 +8705,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: msgData";
 		rLen = 13;
-		rLoc = 19210;
+		rLoc = 19287;
 		rType = 0;
 		vrLen = 1981;
 		vrLoc = 18267;
@@ -8725,7 +8725,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 0;
-		rLoc = 14261;
+		rLoc = 19097;
 		rType = 0;
 		vrLen = 1003;
 		vrLoc = 15092;
@@ -8735,7 +8735,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: MVChatGetRoomMessage";
 		rLen = 0;
-		rLoc = 19260;
+		rLoc = 19337;
 		rType = 0;
 		vrLen = 1966;
 		vrLoc = 18267;
@@ -8755,7 +8755,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 41";
 		rLen = 13;
-		rLoc = 613;
+		rLoc = 710;
 		rType = 0;
 		vrLen = 905;
 		vrLoc = 295;
@@ -8765,7 +8765,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 0;
-		rLoc = 14261;
+		rLoc = 19097;
 		rType = 0;
 		vrLen = 1024;
 		vrLoc = 15045;
@@ -8775,7 +8775,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: MVChatGetMessage";
 		rLen = 0;
-		rLoc = 12294;
+		rLoc = 12371;
 		rType = 0;
 		vrLen = 2013;
 		vrLoc = 11919;
@@ -8915,7 +8915,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 16";
 		rLen = 0;
-		rLoc = 158;
+		rLoc = 192;
 		rType = 0;
 		vrLen = 1044;
 		vrLoc = 0;
@@ -8955,7 +8955,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: toolbar";
 		rLen = 0;
-		rLoc = 4967;
+		rLoc = 7583;
 		rType = 0;
 		vrLen = 895;
 		vrLoc = 8031;
@@ -9035,7 +9035,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: setWindowController:";
 		rLen = 0;
-		rLoc = 4797;
+		rLoc = 7413;
 		rType = 0;
 		vrLen = 566;
 		vrLoc = 7947;
@@ -9165,7 +9165,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: setWindowController:";
 		rLen = 0;
-		rLoc = 4797;
+		rLoc = 7413;
 		rType = 0;
 		vrLen = 474;
 		vrLoc = 7947;
@@ -9195,7 +9195,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: setWindowController:";
 		rLen = 0;
-		rLoc = 4797;
+		rLoc = 7413;
 		rType = 0;
 		vrLen = 772;
 		vrLoc = 7864;
@@ -9285,7 +9285,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: toolbar";
 		rLen = 1;
-		rLoc = 4966;
+		rLoc = 7582;
 		rType = 0;
 		vrLen = 772;
 		vrLoc = 7864;
@@ -9305,7 +9305,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: toolbar";
 		rLen = 0;
-		rLoc = 4967;
+		rLoc = 7583;
 		rType = 0;
 		vrLen = 781;
 		vrLoc = 7864;
@@ -9315,7 +9315,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: toolbar";
 		rLen = 0;
-		rLoc = 1211;
+		rLoc = 1277;
 		rType = 0;
 		vrLen = 718;
 		vrLoc = 537;
@@ -9325,7 +9325,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: toolbar";
 		rLen = 226;
-		rLoc = 4966;
+		rLoc = 7582;
 		rType = 0;
 		vrLen = 827;
 		vrLoc = 8148;
@@ -9335,7 +9335,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: toolbar";
 		rLen = 0;
-		rLoc = 1211;
+		rLoc = 1277;
 		rType = 0;
 		vrLen = 812;
 		vrLoc = 537;
@@ -9345,7 +9345,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: toolbar";
 		rLen = 0;
-		rLoc = 5161;
+		rLoc = 7777;
 		rType = 0;
 		vrLen = 813;
 		vrLoc = 8147;
@@ -9355,7 +9355,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 40";
 		rLen = 0;
-		rLoc = 581;
+		rLoc = 678;
 		rType = 0;
 		vrLen = 947;
 		vrLoc = 380;
@@ -9365,7 +9365,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: toolbar";
 		rLen = 0;
-		rLoc = 5161;
+		rLoc = 7777;
 		rType = 0;
 		vrLen = 812;
 		vrLoc = 8147;
@@ -9385,7 +9385,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 0;
-		rLoc = 17476;
+		rLoc = 22312;
 		rType = 0;
 		vrLen = 1436;
 		vrLoc = 16386;
@@ -9395,7 +9395,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: toolbar";
 		rLen = 0;
-		rLoc = 1211;
+		rLoc = 1277;
 		rType = 0;
 		vrLen = 812;
 		vrLoc = 537;
@@ -9425,7 +9425,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 243";
 		rLen = 0;
-		rLoc = 4647;
+		rLoc = 7263;
 		rType = 0;
 		vrLen = 757;
 		vrLoc = 7302;
@@ -9465,7 +9465,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 243";
 		rLen = 0;
-		rLoc = 4647;
+		rLoc = 7263;
 		rType = 0;
 		vrLen = 758;
 		vrLoc = 7301;
@@ -9505,7 +9505,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: setWindowController:";
 		rLen = 0;
-		rLoc = 4797;
+		rLoc = 7413;
 		rType = 0;
 		vrLen = 584;
 		vrLoc = 7858;
@@ -10131,7 +10131,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: changeTopic:by:";
 		rLen = 0;
-		rLoc = 13992;
+		rLoc = 14629;
 		rType = 0;
 		vrLen = 1615;
 		vrLoc = 11814;
@@ -10301,7 +10301,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: changeTopic:by:";
 		rLen = 0;
-		rLoc = 13992;
+		rLoc = 14629;
 		rType = 0;
 		vrLen = 1820;
 		vrLoc = 11756;
@@ -10756,7 +10756,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: nickname";
 		rLen = 0;
-		rLoc = 39173;
+		rLoc = 39250;
 		rType = 0;
 		vrLen = 685;
 		vrLoc = 39071;
@@ -11511,7 +11511,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: MVChatGetMessage";
 		rLen = 0;
-		rLoc = 12294;
+		rLoc = 12371;
 		rType = 0;
 		vrLen = 2013;
 		vrLoc = 11919;
@@ -11661,7 +11661,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: init";
 		rLen = 0;
-		rLoc = 1211;
+		rLoc = 3377;
 		rType = 0;
 		vrLen = 1101;
 		vrLoc = 2985;
@@ -11671,7 +11671,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: toolbar";
 		rLen = 0;
-		rLoc = 1211;
+		rLoc = 1277;
 		rType = 0;
 		vrLen = 812;
 		vrLoc = 537;
@@ -11863,7 +11863,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: init";
 		rLen = 0;
-		rLoc = 1211;
+		rLoc = 3377;
 		rType = 0;
 		vrLen = 1101;
 		vrLoc = 2985;
@@ -12078,7 +12078,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: __WCHAR_TYPE__";
 		rLen = 0;
-		rLoc = 130;
+		rLoc = 164;
 		rType = 0;
 		vrLen = 782;
 		vrLoc = 0;
@@ -12146,7 +12146,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 822";
 		rLen = 0;
-		rLoc = 29555;
+		rLoc = 37396;
 		rType = 0;
 		vrLen = 1968;
 		vrLoc = 30765;
@@ -12166,7 +12166,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 483";
 		rLen = 0;
-		rLoc = 14261;
+		rLoc = 19097;
 		rType = 0;
 		vrLen = 977;
 		vrLoc = 15229;
@@ -12256,7 +12256,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: toolbar";
 		rLen = 0;
-		rLoc = 1211;
+		rLoc = 1277;
 		rType = 0;
 		vrLen = 812;
 		vrLoc = 537;
@@ -12266,7 +12266,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 483";
 		rLen = 0;
-		rLoc = 14261;
+		rLoc = 19097;
 		rType = 0;
 		vrLen = 977;
 		vrLoc = 15229;
@@ -12328,7 +12328,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 483";
 		rLen = 0;
-		rLoc = 14261;
+		rLoc = 19097;
 		rType = 0;
 		vrLen = 1742;
 		vrLoc = 16117;
@@ -12358,7 +12358,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 511";
 		rLen = 0;
-		rLoc = 16573;
+		rLoc = 21409;
 		rType = 0;
 		vrLen = 1693;
 		vrLoc = 16117;
@@ -12514,7 +12514,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 39";
 		rLen = 0;
-		rLoc = 581;
+		rLoc = 678;
 		rType = 0;
 		vrLen = 1008;
 		vrLoc = 474;
@@ -12544,7 +12544,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 497";
 		rLen = 0;
-		rLoc = 15957;
+		rLoc = 20793;
 		rType = 0;
 		vrLen = 1693;
 		vrLoc = 16117;
@@ -12564,7 +12564,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 331";
 		rLen = 11;
-		rLoc = 6765;
+		rLoc = 9381;
 		rType = 0;
 		vrLen = 985;
 		vrLoc = 9406;
@@ -12584,7 +12584,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: statusImage";
 		rLen = 11;
-		rLoc = 6765;
+		rLoc = 9381;
 		rType = 0;
 		vrLen = 1170;
 		vrLoc = 9221;
@@ -12594,7 +12594,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 44";
 		rLen = 9;
-		rLoc = 634;
+		rLoc = 731;
 		rType = 0;
 		vrLen = 979;
 		vrLoc = 474;
@@ -12604,7 +12604,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 88";
 		rLen = 0;
-		rLoc = 969;
+		rLoc = 3135;
 		rType = 0;
 		vrLen = 992;
 		vrLoc = 2072;
@@ -12664,7 +12664,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 339";
 		rLen = 0;
-		rLoc = 7112;
+		rLoc = 9728;
 		rType = 0;
 		vrLen = 671;
 		vrLoc = 9723;
@@ -12674,7 +12674,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 44";
 		rLen = 9;
-		rLoc = 634;
+		rLoc = 731;
 		rType = 0;
 		vrLen = 818;
 		vrLoc = 474;
@@ -12684,7 +12684,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 333";
 		rLen = 0;
-		rLoc = 7005;
+		rLoc = 9621;
 		rType = 0;
 		vrLen = 656;
 		vrLoc = 9723;
@@ -12694,7 +12694,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 45";
 		rLen = 11;
-		rLoc = 651;
+		rLoc = 748;
 		rType = 0;
 		vrLen = 762;
 		vrLoc = 474;
@@ -12704,7 +12704,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 347";
 		rLen = 0;
-		rLoc = 7470;
+		rLoc = 10086;
 		rType = 0;
 		vrLen = 925;
 		vrLoc = 10118;
@@ -12714,7 +12714,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: devoiceChatMember:by:";
 		rLen = 43;
-		rLoc = 11033;
+		rLoc = 11099;
 		rType = 0;
 		vrLen = 1336;
 		vrLoc = 9914;
@@ -12724,7 +12724,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: ";
 		rLen = 1;
-		rLoc = 17824;
+		rLoc = 22660;
 		rType = 0;
 		vrLen = 1499;
 		vrLoc = 17256;
@@ -12744,7 +12744,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 549";
 		rLen = 0;
-		rLoc = 17825;
+		rLoc = 22661;
 		rType = 0;
 		vrLen = 1500;
 		vrLoc = 17255;
@@ -13650,7 +13650,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: 20";
 		rLen = 0;
-		rLoc = 619;
+		rLoc = 653;
 		rType = 0;
 		vrLen = 829;
 		vrLoc = 0;
@@ -13750,7 +13750,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: view";
 		rLen = 0;
-		rLoc = 941;
+		rLoc = 1007;
 		rType = 0;
 		vrLen = 689;
 		vrLoc = 0;
@@ -13780,7 +13780,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: view";
 		rLen = 0;
-		rLoc = 847;
+		rLoc = 913;
 		rType = 0;
 		vrLen = 684;
 		vrLoc = 0;
@@ -13870,7 +13870,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.h: 14";
 		rLen = 105;
-		rLoc = 252;
+		rLoc = 302;
 		rType = 0;
 		vrLen = 1223;
 		vrLoc = 0;
@@ -13880,7 +13880,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: title";
 		rLen = 0;
-		rLoc = 848;
+		rLoc = 914;
 		rType = 0;
 		vrLen = 677;
 		vrLoc = 166;
@@ -13890,7 +13890,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.h: 18";
 		rLen = 18;
-		rLoc = 363;
+		rLoc = 413;
 		rType = 0;
 		vrLen = 1223;
 		vrLoc = 0;
@@ -13900,7 +13900,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: addMemberToChat:asPreviousMember:";
 		rLen = 0;
-		rLoc = 4245;
+		rLoc = 4311;
 		rType = 0;
 		vrLen = 1517;
 		vrLoc = 3309;
@@ -13910,7 +13910,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.h: 19";
 		rLen = 0;
-		rLoc = 406;
+		rLoc = 456;
 		rType = 0;
 		vrLen = 1223;
 		vrLoc = 0;
@@ -13920,7 +13920,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: addMemberToChat:asPreviousMember:";
 		rLen = 0;
-		rLoc = 4245;
+		rLoc = 4311;
 		rType = 0;
 		vrLen = 1516;
 		vrLoc = 3309;
@@ -13930,7 +13930,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.h: 18";
 		rLen = 17;
-		rLoc = 364;
+		rLoc = 414;
 		rType = 0;
 		vrLen = 1223;
 		vrLoc = 0;
@@ -13970,7 +13970,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: view";
 		rLen = 0;
-		rLoc = 740;
+		rLoc = 806;
 		rType = 0;
 		vrLen = 629;
 		vrLoc = 257;
@@ -13980,7 +13980,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: partChatForRoom:";
 		rLen = 15;
-		rLoc = 44953;
+		rLoc = 45030;
 		rType = 0;
 		vrLen = 1365;
 		vrLoc = 44228;
@@ -13990,7 +13990,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: handled";
 		rLen = 0;
-		rLoc = 2916;
+		rLoc = 2982;
 		rType = 0;
 		vrLen = 952;
 		vrLoc = 2128;
@@ -14000,7 +14000,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.h: addMemberToChat:asPreviousMember:";
 		rLen = 1;
-		rLoc = 454;
+		rLoc = 504;
 		rType = 0;
 		vrLen = 1223;
 		vrLoc = 0;
@@ -14020,7 +14020,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: handled";
 		rLen = 0;
-		rLoc = 2916;
+		rLoc = 2982;
 		rType = 0;
 		vrLen = 969;
 		vrLoc = 2128;
@@ -14040,7 +14040,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: childAtIndex:";
 		rLen = 0;
-		rLoc = 1914;
+		rLoc = 1980;
 		rType = 0;
 		vrLen = 1206;
 		vrLoc = 940;
@@ -14260,7 +14260,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.h: addMemberToChat:asPreviousMember:";
 		rLen = 1;
-		rLoc = 454;
+		rLoc = 504;
 		rType = 0;
 		vrLen = 1223;
 		vrLoc = 0;
@@ -14270,7 +14270,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: 40";
 		rLen = 0;
-		rLoc = 944;
+		rLoc = 1010;
 		rType = 0;
 		vrLen = 756;
 		vrLoc = 517;
@@ -14320,7 +14320,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: leaveChat:";
 		rLen = 0;
-		rLoc = 2916;
+		rLoc = 2982;
 		rType = 0;
 		vrLen = 1006;
 		vrLoc = 2147;
@@ -14430,7 +14430,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: sendAttributedMessage:asAction:";
 		rLen = 0;
-		rLoc = 4109;
+		rLoc = 4175;
 		rType = 0;
 		vrLen = 1162;
 		vrLoc = 3264;
@@ -14636,7 +14636,7 @@
 		isa = PBXTextBookmark;
 		name = "JVStandardCommands.m: encoding";
 		rLen = 0;
-		rLoc = 9602;
+		rLoc = 9730;
 		rType = 0;
 		vrLen = 1554;
 		vrLoc = 9085;
@@ -14686,7 +14686,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatPlugin.h: processRoomMessage:fromUser:inRoom:asAction:forConnection:";
 		rLen = 0;
-		rLoc = 146;
+		rLoc = 233;
 		rType = 0;
 		vrLen = 1528;
 		vrLoc = 0;
@@ -14736,7 +14736,7 @@
 		isa = PBXTextBookmark;
 		name = "JVStandardCommands.m: processUserCommand:withArguments:toRoom:forConnection:";
 		rLen = 21;
-		rLoc = 862;
+		rLoc = 922;
 		rType = 0;
 		vrLen = 1857;
 		vrLoc = 0;
@@ -14816,7 +14816,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.h: 10";
 		rLen = 0;
-		rLoc = 166;
+		rLoc = 182;
 		rType = 0;
 		vrLen = 1223;
 		vrLoc = 0;
@@ -14960,7 +14960,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.h: 10";
 		rLen = 0;
-		rLoc = 166;
+		rLoc = 182;
 		rType = 0;
 		vrLen = 1024;
 		vrLoc = 0;
@@ -15070,7 +15070,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: changeTopic:by:";
 		rLen = 0;
-		rLoc = 13992;
+		rLoc = 14629;
 		rType = 0;
 		vrLen = 1229;
 		vrLoc = 11696;
@@ -15174,7 +15174,7 @@
 		isa = PBXTextBookmark;
 		name = "JVStandardCommands.m: encoding";
 		rLen = 0;
-		rLoc = 9602;
+		rLoc = 9730;
 		rType = 0;
 		vrLen = 1554;
 		vrLoc = 9085;
@@ -15334,7 +15334,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: setFloodControlIntervals:";
 		rLen = 0;
-		rLoc = 40770;
+		rLoc = 40847;
 		rType = 0;
 		vrLen = 1671;
 		vrLoc = 40792;
@@ -15566,7 +15566,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: leaveChat:";
 		rLen = 0;
-		rLoc = 10110;
+		rLoc = 12726;
 		rType = 0;
 		vrLen = 835;
 		vrLoc = 14780;
@@ -15586,7 +15586,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatTranscript.m: ";
 		rLen = 0;
-		rLoc = 6763;
+		rLoc = 6567;
 		rType = 0;
 		vrLen = 1345;
 		vrLoc = 5684;
@@ -16194,7 +16194,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: 97";
 		rLen = 0;
-		rLoc = 4118;
+		rLoc = 4193;
 		rType = 0;
 		vrLen = 1584;
 		vrLoc = 1981;
@@ -16798,7 +16798,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: url";
 		rLen = 0;
-		rLoc = 38834;
+		rLoc = 38911;
 		rType = 0;
 		vrLen = 833;
 		vrLoc = 38192;
@@ -16818,7 +16818,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: url";
 		rLen = 0;
-		rLoc = 38834;
+		rLoc = 38911;
 		rType = 0;
 		vrLen = 833;
 		vrLoc = 38192;
@@ -16838,7 +16838,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: url";
 		rLen = 0;
-		rLoc = 38834;
+		rLoc = 38911;
 		rType = 0;
 		vrLen = 833;
 		vrLoc = 38192;
@@ -16858,7 +16858,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: url";
 		rLen = 0;
-		rLoc = 38834;
+		rLoc = 38911;
 		rType = 0;
 		vrLen = 833;
 		vrLoc = 38192;
@@ -16958,7 +16958,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: _flattenedHTMLDataForMessage:withEncoding:";
 		rLen = 0;
-		rLoc = 54607;
+		rLoc = 54684;
 		rType = 0;
 		vrLen = 1725;
 		vrLoc = 53419;
@@ -17296,7 +17296,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: applicationDidFinishLaunching:";
 		rLen = 14;
-		rLoc = 4055;
+		rLoc = 4130;
 		rType = 0;
 		vrLen = 1293;
 		vrLoc = 2185;
@@ -17336,7 +17336,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: _flattenedHTMLDataForMessage:withEncoding:";
 		rLen = 0;
-		rLoc = 54607;
+		rLoc = 54684;
 		rType = 0;
 		vrLen = 1846;
 		vrLoc = 53298;
@@ -17346,7 +17346,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 72";
 		rLen = 0;
-		rLoc = 3477;
+		rLoc = 3387;
 		rType = 0;
 		vrLen = 815;
 		vrLoc = 2814;
@@ -17366,7 +17366,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: _flattenedHTMLDataForMessage:withEncoding:";
 		rLen = 0;
-		rLoc = 54607;
+		rLoc = 54684;
 		rType = 0;
 		vrLen = 1845;
 		vrLoc = 53298;
@@ -17570,7 +17570,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: applicationDidFinishLaunching:";
 		rLen = 0;
-		rLoc = 3842;
+		rLoc = 3917;
 		rType = 0;
 		vrLen = 1133;
 		vrLoc = 2625;
@@ -17790,7 +17790,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: applicationDidFinishLaunching:";
 		rLen = 36;
-		rLoc = 3052;
+		rLoc = 3127;
 		rType = 0;
 		vrLen = 1058;
 		vrLoc = 1910;
@@ -17810,7 +17810,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: applicationDidFinishLaunching:";
 		rLen = 0;
-		rLoc = 3376;
+		rLoc = 3451;
 		rType = 0;
 		vrLen = 1335;
 		vrLoc = 2199;
@@ -17890,7 +17890,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: _flattenedHTMLDataForMessage:withEncoding:";
 		rLen = 0;
-		rLoc = 49559;
+		rLoc = 49636;
 		rType = 0;
 		vrLen = 1358;
 		vrLoc = 48582;
@@ -17900,7 +17900,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 72";
 		rLen = 0;
-		rLoc = 3477;
+		rLoc = 3387;
 		rType = 0;
 		vrLen = 2048;
 		vrLoc = 0;
@@ -17910,7 +17910,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: __USER_LABEL_PREFIX__";
 		rLen = 0;
-		rLoc = 19;
+		rLoc = 43;
 		rType = 0;
 		vrLen = 1720;
 		vrLoc = 0;
@@ -17920,7 +17920,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.h: 72";
 		rLen = 0;
-		rLoc = 3477;
+		rLoc = 3387;
 		rType = 0;
 		vrLen = 1260;
 		vrLoc = 0;
@@ -17930,7 +17930,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: _powerConnection";
 		rLen = 0;
-		rLoc = 4629;
+		rLoc = 4706;
 		rType = 0;
 		vrLen = 2829;
 		vrLoc = 2522;
@@ -19006,7 +19006,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 93";
 		rLen = 0;
-		rLoc = 1124;
+		rLoc = 3290;
 		rType = 0;
 		vrLen = 990;
 		vrLoc = 2072;
@@ -19016,7 +19016,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 41";
 		rLen = 0;
-		rLoc = 612;
+		rLoc = 709;
 		rType = 0;
 		vrLen = 960;
 		vrLoc = 398;
@@ -19026,7 +19026,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 529";
 		rLen = 0;
-		rLoc = 16566;
+		rLoc = 21402;
 		rType = 0;
 		vrLen = 1717;
 		vrLoc = 16572;
@@ -19056,7 +19056,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 508";
 		rLen = 0;
-		rLoc = 15511;
+		rLoc = 20347;
 		rType = 0;
 		vrLen = 1437;
 		vrLoc = 15845;
@@ -19086,7 +19086,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 568";
 		rLen = 0;
-		rLoc = 17475;
+		rLoc = 22311;
 		rType = 0;
 		vrLen = 1460;
 		vrLoc = 18316;
@@ -19106,7 +19106,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 347";
 		rLen = 20;
-		rLoc = 7157;
+		rLoc = 9773;
 		rType = 0;
 		vrLen = 592;
 		vrLoc = 10188;
@@ -19116,7 +19116,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.h: 46";
 		rLen = 0;
-		rLoc = 690;
+		rLoc = 787;
 		rType = 0;
 		vrLen = 782;
 		vrLoc = 440;
@@ -19126,7 +19126,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 335";
 		rLen = 107;
-		rLoc = 6886;
+		rLoc = 9502;
 		rType = 0;
 		vrLen = 1040;
 		vrLoc = 9564;
@@ -19168,7 +19168,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: textView:tabHit:";
 		rLen = 6;
-		rLoc = 16606;
+		rLoc = 14690;
 		rType = 0;
 		vrLen = 1664;
 		vrLoc = 16004;
@@ -19234,7 +19234,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 354";
 		rLen = 0;
-		rLoc = 10110;
+		rLoc = 12726;
 		rType = 0;
 		vrLen = 1303;
 		vrLoc = 10204;
@@ -20048,7 +20048,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: init";
 		rLen = 12;
-		rLoc = 358;
+		rLoc = 392;
 		rType = 0;
 		vrLen = 793;
 		vrLoc = 0;
@@ -20398,7 +20398,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: init";
 		rLen = 0;
-		rLoc = 617;
+		rLoc = 651;
 		rType = 0;
 		vrLen = 646;
 		vrLoc = 0;
@@ -20488,7 +20488,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: sendAttributedMessage:asAction:";
 		rLen = 27;
-		rLoc = 3473;
+		rLoc = 3539;
 		rType = 0;
 		vrLen = 1859;
 		vrLoc = 2332;
@@ -20508,7 +20508,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: sendAttributedMessage:asAction:";
 		rLen = 115;
-		rLoc = 3470;
+		rLoc = 3536;
 		rType = 0;
 		vrLen = 1858;
 		vrLoc = 2332;
@@ -20538,7 +20538,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: options";
 		rLen = 490;
-		rLoc = 49023;
+		rLoc = 49100;
 		rType = 0;
 		vrLen = 1279;
 		vrLoc = 48420;
@@ -20598,7 +20598,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: sendAttributedMessage:asAction:";
 		rLen = 0;
-		rLoc = 4109;
+		rLoc = 4175;
 		rType = 0;
 		vrLen = 1541;
 		vrLoc = 2332;
@@ -20638,7 +20638,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.h: 19";
 		rLen = 0;
-		rLoc = 407;
+		rLoc = 457;
 		rType = 0;
 		vrLen = 1223;
 		vrLoc = 0;
@@ -20698,7 +20698,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: kickedFromChatBy:forReason:";
 		rLen = 0;
-		rLoc = 12972;
+		rLoc = 13038;
 		rType = 0;
 		vrLen = 1434;
 		vrLoc = 11558;
@@ -20718,7 +20718,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: kickedFromChatBy:forReason:";
 		rLen = 0;
-		rLoc = 12972;
+		rLoc = 13038;
 		rType = 0;
 		vrLen = 1434;
 		vrLoc = 11558;
@@ -20922,7 +20922,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: setChatStyle:withVariant:";
 		rLen = 0;
-		rLoc = 10110;
+		rLoc = 12726;
 		rType = 0;
 		vrLen = 1010;
 		vrLoc = 12367;
@@ -20942,7 +20942,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: setChatEmoticons:";
 		rLen = 0;
-		rLoc = 10110;
+		rLoc = 12726;
 		rType = 0;
 		vrLen = 1175;
 		vrLoc = 14222;
@@ -20962,7 +20962,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: setChatEmoticons:";
 		rLen = 0;
-		rLoc = 10110;
+		rLoc = 12726;
 		rType = 0;
 		vrLen = 871;
 		vrLoc = 14550;
@@ -20982,7 +20982,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 0;
-		rLoc = 17475;
+		rLoc = 22311;
 		rType = 0;
 		vrLen = 1676;
 		vrLoc = 16182;
@@ -21002,7 +21002,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 0;
-		rLoc = 17475;
+		rLoc = 22311;
 		rType = 0;
 		vrLen = 1678;
 		vrLoc = 16182;
@@ -21136,7 +21136,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: applicationDidFinishLaunching:";
 		rLen = 0;
-		rLoc = 3138;
+		rLoc = 3213;
 		rType = 0;
 		vrLen = 1470;
 		vrLoc = 2555;
@@ -21276,7 +21276,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: 121";
 		rLen = 0;
-		rLoc = 4603;
+		rLoc = 4694;
 		rType = 0;
 		vrLen = 1069;
 		vrLoc = 3182;
@@ -21306,7 +21306,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: validateMenuItem:";
 		rLen = 0;
-		rLoc = 4583;
+		rLoc = 4674;
 		rType = 0;
 		vrLen = 1142;
 		vrLoc = 3109;
@@ -21692,7 +21692,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: addMessageToDisplay:fromUser:asAction:";
 		rLen = 0;
-		rLoc = 17824;
+		rLoc = 22660;
 		rType = 0;
 		vrLen = 1544;
 		vrLoc = 16774;
@@ -21816,7 +21816,7 @@
 		isa = PBXTextBookmark;
 		name = "MVChatConnection.m: 1118";
 		rLen = 0;
-		rLoc = 57096;
+		rLoc = 57173;
 		rType = 0;
 		vrLen = 885;
 		vrLoc = 56605;
@@ -21957,7 +21957,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: menu";
 		rLen = 229;
-		rLoc = 2141;
+		rLoc = 2207;
 		rType = 0;
 		vrLen = 1149;
 		vrLoc = 1209;
@@ -21977,7 +21977,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: menu";
 		rLen = 0;
-		rLoc = 2371;
+		rLoc = 2437;
 		rType = 0;
 		vrLen = 1107;
 		vrLoc = 1209;
@@ -22007,7 +22007,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: setTarget:";
 		rLen = 0;
-		rLoc = 2916;
+		rLoc = 2982;
 		rType = 0;
 		vrLen = 1234;
 		vrLoc = 2102;
@@ -22317,7 +22317,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: 94";
 		rLen = 0;
-		rLoc = 2916;
+		rLoc = 2982;
 		rType = 0;
 		vrLen = 1189;
 		vrLoc = 2102;
@@ -22397,7 +22397,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: 94";
 		rLen = 0;
-		rLoc = 2916;
+		rLoc = 2982;
 		rType = 0;
 		vrLen = 1538;
 		vrLoc = 2038;
@@ -22507,7 +22507,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: 94";
 		rLen = 0;
-		rLoc = 2916;
+		rLoc = 2982;
 		rType = 0;
 		vrLen = 792;
 		vrLoc = 2038;
@@ -23887,7 +23887,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: 75";
 		rLen = 0;
-		rLoc = 2693;
+		rLoc = 2970;
 		rType = 0;
 		vrLen = 1460;
 		vrLoc = 2075;
@@ -23927,7 +23927,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: applicationWillTerminate:";
 		rLen = 0;
-		rLoc = 4241;
+		rLoc = 4316;
 		rType = 0;
 		vrLen = 1755;
 		vrLoc = 2157;
@@ -24237,7 +24237,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatRoom.m: match";
 		rLen = 0;
-		rLoc = 17668;
+		rLoc = 15752;
 		rType = 0;
 		vrLen = 1865;
 		vrLoc = 15703;
@@ -24247,7 +24247,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: ";
 		rLen = 0;
-		rLoc = 4321;
+		rLoc = 4396;
 		rType = 0;
 		vrLen = 998;
 		vrLoc = 3667;
@@ -24272,7 +24272,7 @@
 		isa = PBXTextBookmark;
 		name = "MVApplicationController.m: ";
 		rLen = 0;
-		rLoc = 4321;
+		rLoc = 4396;
 		rType = 0;
 		vrLen = 998;
 		vrLoc = 3667;
@@ -24400,7 +24400,7 @@
 		isa = PBXTextBookmark;
 		name = "JVChatTranscript.m: 194";
 		rLen = 0;
-		rLoc = 5809;
+		rLoc = 5613;
 		rType = 0;
 		vrLen = 1187;
 		vrLoc = 5449;
@@ -24410,7 +24410,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 388";
 		rLen = 0;
-		rLoc = 14195;
+		rLoc = 19031;
 		rType = 0;
 		vrLen = 1318;
 		vrLoc = 13707;
@@ -24430,7 +24430,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: 388";
 		rLen = 0;
-		rLoc = 14195;
+		rLoc = 19031;
 		rType = 0;
 		vrLen = 1413;
 		vrLoc = 13707;
@@ -24502,7 +24502,7 @@
 		isa = PBXTextBookmark;
 		name = "JVDirectChat.m: init";
 		rLen = 0;
-		rLoc = 1211;
+		rLoc = 3377;
 		rType = 0;
 		vrLen = 1101;
 		vrLoc = 2985;
@@ -24993,6 +24993,13 @@
 		executables = (
 			1C2D6A1804085B9E00000102,
 		);
+	};
+	F596A5F3038EBCCE01000102 = {
+		fileEncoding = 4;
+		isa = PBXFileReference;
+		name = HTMLDisplay.h;
+		path = /Users/Timothy/Projects/Colloquy/HTMLDisplay.h;
+		refType = 0;
 	};
 	F5DD3498038301FF01000102 = {
 		activeExec = 0;

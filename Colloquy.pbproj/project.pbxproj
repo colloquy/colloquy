@@ -2036,7 +2036,6 @@
 				F593E6A501A564F201A35792,
 				F52BDCC801A8472101A84BDE,
 				F52BDCC901A8472101A84BDE,
-				F596A5F3038EBCCE01000102,
 			);
 			isa = PBXGroup;
 			name = "Other Sources & Additions";
@@ -2211,7 +2210,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2B6</string>
+	<string>2B28</string>
 	<key>NSMainNibFile</key>
 	<string>Colloquy</string>
 	<key>NSPrincipalClass</key>
@@ -3264,12 +3263,6 @@
 			isa = PBXFileReference;
 			path = NSToolbarAdditions.h;
 			refType = 4;
-		};
-		F596A5F3038EBCCE01000102 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			path = HTMLDisplay.h;
-			refType = 2;
 		};
 		F596A5F5038EBD5601000102 = {
 			isa = PBXFrameworkReference;
