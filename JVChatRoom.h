@@ -26,12 +26,16 @@ extern NSString *MVChatRoomModeChangedNotification;
 
 	BOOL _kickedFromRoom;
 	BOOL _inRoom;
+	BOOL _keepAfterPart;
 }
 - (void) joined;
 - (void) parting;
 
 - (void) joinChat:(id) sender;
 - (void) partChat:(id) sender;
+
+- (BOOL) keepAfterPart;
+- (void) setKeepAfterPart:(BOOL) keep;
 
 - (void) addExistingMembersToChat:(NSArray *) members;
 - (void) addMemberToChat:(NSString *) member withInformation:(NSDictionary *) info;

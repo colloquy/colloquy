@@ -149,6 +149,11 @@
 		[[room windowController] openViewsDrawer:nil];
 		[[room windowController] expandListItem:room];
 		return YES;
+	} else if( ( [command isEqualToString:@"cycle"] || [command isEqualToString:@"hop"] ) && ! [[arguments string] length] ) {
+		[room setKeepAfterPart:YES];
+		[room partChat:nil];
+		[room joinChat:nil];
+		return YES;
 	} else if( [command isEqualToString:@"clear"] ) {
 		[room clearDisplay:nil];
 		return YES;

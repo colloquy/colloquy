@@ -57,6 +57,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		_members = [[NSMutableDictionary dictionary] retain];
 		_sortedMembers = [[NSMutableArray array] retain];
 		_kickedFromRoom = NO;
+		_keepAfterPart = NO;
 	}
 	return self;
 }
@@ -802,7 +803,7 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	if (_inRoom) {
 		_inRoom = NO;
 		_cantSendMessages = YES;
-		
+
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoom * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
@@ -813,6 +814,8 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 	}
 }
 
+#pragma mark -
+
 - (void) joinChat:(id) sender {
 	if( ! _inRoom ) [[self connection] joinChatRoom:_target];
 }
@@ -822,6 +825,16 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[self parting];
 		[[self connection] partChatRoom:_target];
 	}
+}
+
+#pragma mark -
+
+- (BOOL) keepAfterPart {
+	return _keepAfterPart;
+}
+
+- (void) setKeepAfterPart:(BOOL) keep {
+	_keepAfterPart = keep;
 }
 
 #pragma mark -
