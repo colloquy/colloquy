@@ -550,11 +550,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( [item respondsToSelector:@selector( isEnabled )] ) {
 		[cell setEnabled:[item isEnabled]];
 	} else [cell setEnabled:YES];
-
-	[chatViewsOutlineView sizeLastColumnToFit];
-
-	if( item == [self selectedListItem] )
-		[self _refreshSelectionMenu];
 }
 
 - (NSString *) outlineView:(NSOutlineView *) outlineView toolTipForItem:(id) item inTrackingRect:(NSRect) rect forCell:(id) cell {
@@ -597,7 +592,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldExpandItem:(id) item {
 	BOOL retVal = YES; 
-	if ( _currentlyDragging ) retVal = NO; // if we are dragging don't expand
+	if ( _currentlyDragging )retVal = NO; // if we are dragging don't expand
 	return retVal;
 }
 
@@ -689,6 +684,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	}
 
 	return NO;
+}
+
+- (void)outlineViewItemDidExpand:(NSNotification *)notification {
+	[chatViewsOutlineView sizeLastColumnToFit];
+}
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification {
+	[self _refreshSelectionMenu];
 }
 @end
 
