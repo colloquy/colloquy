@@ -15,12 +15,19 @@
 	BOOL _nibLoaded;
 	BOOL _verbose;
 	BOOL _ignorePRIVMSG;
+	BOOL _paused;
 	int _historyIndex;
 	NSMutableArray *_sendHistory;
 	JVChatWindowController *_windowController;
 	MVChatConnection *_connection;
 }
 - (id) initWithConnection:(MVChatConnection *) connection;
+
+
+- (void) pause;
+- (void) resume;
+- (BOOL) isPaused;
+	
 - (void) addMessageToDisplay:(NSData *) message asOutboundMessage:(BOOL) outbound;
 - (IBAction) send:(id) sender;
 @end

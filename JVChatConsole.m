@@ -18,10 +18,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[_sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
 
 		_historyIndex = 0;
+		_paused = NO;
 
 		_connection = [connection retain];
 		_verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatVerboseConsoleMessages"];
 		_ignorePRIVMSG = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatConsoleIgnoreUserChatMessages"];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRawMessage: ) name:MVChatConnectionGotRawMessageNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( clearConsole: ) name:MVChatConnectionWillConnectNotification object:connection];
 	}
@@ -171,6 +173,18 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
+- (void) pause {
+	_paused = YES;
+}
+
+- (void) resume {
+	_paused = NO;
+}
+
+- (BOOL) isPaused {
+	return _paused;
+}
+
 - (void) addMessageToDisplay:(NSData *) message asOutboundMessage:(BOOL) outbound {
 	NSAttributedString *msg = nil;
 	NSMutableString *strMsg = [[[NSMutableString alloc] initWithData:message encoding:NSUTF8StringEncoding] autorelease];
@@ -250,6 +264,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSRange range;
 
 	if( ! [[self connection] isConnected] ) return;
+
+	[self resume];
 
 	_historyIndex = 0;
 	if( ! [[send textStorage] length] ) return;
@@ -406,6 +422,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 @implementation JVChatConsole (JVChatConsolePrivate)
 - (void) _gotRawMessage:(NSNotification *) notification {
+	if( _paused ) return;
 	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] asOutboundMessage:[[[notification userInfo] objectForKey:@"outbound"] boolValue]];
 }
 @end
