@@ -5,6 +5,7 @@
 #import <ChatCore/MVChatScriptPlugin.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
+#import <AGRegex/AGRegex.h>
 
 #import "JVChatController.h"
 #import "MVConnectionsController.h"
@@ -308,12 +309,14 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 		[[JVNotificationController defaultManager] performNotification:@"JVChatRoomActivity" withContextInfo:context];
 	}
 
-//  FIX: This will break if a shorter nickname is also part of a longer nickname..
 	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+	AGRegex *regex = nil;
 	NSString *name = nil;
 
-	while( ( name = [[enumerator nextObject] nickname] ) )
-		[message replaceOccurrencesOfString:name withString:[NSString stringWithFormat:@"<span class=\"member\">%@</span>", name] options:NSLiteralSearch range:NSMakeRange( 0, [message length] )];
+	while( ( name = [[enumerator nextObject] nickname] ) ) {
+		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"\\b%@\\b", name]];
+		[message setString:[regex replaceWithString:@"<span class=\"member\">$0</span>" inString:message]];
+	}
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableString * ), @encode( BOOL ), @encode( JVChatRoomMember * ), @encode( JVChatRoom * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
