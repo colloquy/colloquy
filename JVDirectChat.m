@@ -173,8 +173,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusNotification object:connection];
 
-		_settings = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]] mutableCopy];
-		if( ! _settings ) _settings = [[NSMutableDictionary dictionary] retain];
+		_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]] retain];
 	}
 	return self;
 }
@@ -434,8 +433,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[_windowController reloadListItem:self andChildren:YES];
 
 	[_settings autorelease];
-	_settings = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]] mutableCopy];
-	if( ! _settings ) _settings = [[NSMutableDictionary dictionary] retain];
+	_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]] retain];
 
 	NSString *source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], _target];
 	xmlSetProp( xmlDocGetRootElement( _xmlLog ), "source", [source UTF8String] );
@@ -1139,9 +1137,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 	}
 
-	if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] )
-		[_styleParams removeObjectForKey:@"subsequent"];
-
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 	[self writeToLog:root withDoc:doc initializing:NO continuation:NO];
 
@@ -1272,17 +1267,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	if( ! _requiresFullMessage && result && result -> nodesetval -> nodeNr ) {
 		continuation = YES;
-		if( ! [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] )
-			[_styleParams setObject:@"'yes'" forKey:@"subsequent"];
-
 		parent = result -> nodesetval -> nodeTab[0];
 		root = xmlDocCopyNode( parent, doc, 1 );
 		xmlDocSetRootElement( doc, root );
 	} else {
 		continuation = NO;
-		if( [[_styleParams objectForKey:@"subsequent"] isEqualToString:@"'yes'"] )
-			[_styleParams removeObjectForKey:@"subsequent"];
-
 		root = xmlNewNode( NULL, "envelope" );
 		xmlSetProp( root, "id", [[NSString stringWithFormat:@"%d", _messageId++] UTF8String] );
 		xmlDocSetRootElement( doc, root );
@@ -1347,7 +1336,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( parent ) xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
 	else xmlAddChild( xmlDocGetRootElement( _xmlLog ), xmlDocCopyNode( root, _xmlLog, 1 ) );
 
-	messageString = [[[_chatStyle transformXMLDocument:doc withParameters:_styleParams] mutableCopy] autorelease];
+	NSMutableDictionary *params = _styleParams;
+	if( continuation ) {
+		params = [NSMutableDictionary dictionaryWithDictionary:_styleParams];
+		[params setObject:@"'yes'" forKey:@"subsequent"];
+	}
+
+	messageString = [[[_chatStyle transformXMLDocument:doc withParameters:params] mutableCopy] autorelease];
 	if( [messageString length] ) {
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
