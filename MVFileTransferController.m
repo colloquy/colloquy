@@ -149,12 +149,12 @@ finish:
 		_transferStorage = [[NSMutableArray array] retain];
 		_calculationItems = [[NSMutableArray array] retain];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _incomingFile: ) name:MVChatConnectionFileTransferAvailableNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _outgoingFile: ) name:MVChatConnectionFileTransferOfferedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferStarted: ) name:MVChatConnectionFileTransferStartedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferFinished: ) name:MVChatConnectionFileTransferFinishedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferError: ) name:MVChatConnectionFileTransferErrorNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferStatus: ) name:MVChatConnectionFileTransferStatusNotification object:nil];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _incomingFile: ) name:MVChatConnectionFileTransferAvailableNotification object:nil];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _outgoingFile: ) name:MVChatConnectionFileTransferOfferedNotification object:nil];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferStarted: ) name:MVChatConnectionFileTransferStartedNotification object:nil];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferFinished: ) name:MVChatConnectionFileTransferFinishedNotification object:nil];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferError: ) name:MVChatConnectionFileTransferErrorNotification object:nil];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _transferStatus: ) name:MVChatConnectionFileTransferStatusNotification object:nil];
 
 		_safeFileExtentions = [[NSSet setWithObjects:@"jpg",@"jpeg",@"gif",@"png",@"tif",@"tiff",@"psd",@"pdf",@"txt",@"rtf",@"html",@"htm",@"swf",@"mp3",@"wma",@"wmv",@"ogg",@"ogm",@"mov",@"mpg",@"mpeg",@"m1v",@"m2v",@"mp4",@"avi",@"vob",@"avi",@"asx",@"asf",@"pls",@"m3u",@"rmp",@"aif",@"aiff",@"aifc",@"wav",@"wave",@"m4a",@"m4p",@"m4b",@"dmg",@"udif",@"ndif",@"dart",@"sparseimage",@"cdr",@"dvdr",@"iso",@"img",@"toast",@"rar",@"sit",@"sitx",@"bin",@"hqx",@"zip",@"gz",@"tgz",@"tar",@"bz",@"bz2",@"tbz",@"z",@"taz",@"uu",@"uue",@"colloquytranscript",@"torrent",nil] retain];
 		_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];
@@ -355,9 +355,9 @@ finish:
 	NSMutableDictionary *info = nil;
 	if( [currentFiles selectedRow] != -1 ) {
 		info = [_transferStorage objectAtIndex:[currentFiles selectedRow]];
-		if( [info objectForKey:@"connection"] )
-			[[info objectForKey:@"connection"] cancelFileTransfer:[info objectForKey:@"identifier"]];
-		else if( [info objectForKey:@"controller"] )
+//		if( [info objectForKey:@"connection"] )
+//			[[info objectForKey:@"connection"] cancelFileTransfer:[info objectForKey:@"identifier"]];
+//		else if( [info objectForKey:@"controller"] )
 			[[info objectForKey:@"controller"] cancel];
 		[info setObject:[NSNumber numberWithUnsignedInt:MVTransferStopped] forKey:@"status"];
 		[self _updateProgress:nil];
@@ -719,8 +719,8 @@ finish:
 			[savePanel setDelegate:self];
 			[savePanel beginSheetForDirectory:[sheet directory] file:[filename lastPathComponent] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
 		} else {
-			BOOL resume = ( resumePossible && result == NSOKButton );
-			[[info objectForKey:@"connection"] acceptFileTransfer:[info objectForKey:@"identifier"] saveToPath:filename resume:resume];
+//			BOOL resume = ( resumePossible && result == NSOKButton );
+//			[[info objectForKey:@"connection"] acceptFileTransfer:[info objectForKey:@"identifier"] saveToPath:filename resume:resume];
 			[self addFileTransfer:[info objectForKey:@"identifier"] withUser:[info objectForKey:@"from"] forConnection:[info objectForKey:@"connection"] asType:MVDownloadTransfer withSize:[[info objectForKey:@"size"] unsignedLongValue] withLocalFile:filename];
 		}
 	}

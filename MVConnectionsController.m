@@ -1080,7 +1080,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
+/*	MVChatConnection *connection = [notification object];
 	MVChatError error = (MVChatError) [[[notification userInfo] objectForKey:@"error"] intValue];
 	NSLog( @"error: %@ (%d)", [MVChatConnection descriptionForError:error], error );
 	if( [[[notification userInfo] objectForKey:@"disconnected"] boolValue] ) {
@@ -1136,7 +1136,7 @@ static NSMenu *favoritesMenu = nil;
 				NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured", "unknown error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"An error occured when dealing with %@. %@", "unknown error dialog message" ), ( target ? target : NSLocalizedString( @"server", "singular server label" ) ), [MVChatConnection descriptionForError:error]], nil, nil, nil );
 				break;
 		}
-	}
+	}*/
 }
 
 - (void) _saveBookmarkList {

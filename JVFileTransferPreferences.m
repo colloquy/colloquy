@@ -21,9 +21,9 @@
 }
 
 - (void) initializeFromDefaults {
-	NSRange range = [MVChatConnection fileTransferPortRange];
-	[minRate setIntValue:range.location];
-	[maxRate setIntValue:( range.location + range.length )];
+//	NSRange range = [MVChatConnection fileTransferPortRange];
+//	[minRate setIntValue:range.location];
+//	[maxRate setIntValue:( range.location + range.length )];
 
 	NSString *path = [MVFileTransferController userPreferredDownloadFolder];
 	NSMenuItem *menuItem = [saveDownloads itemAtIndex:[saveDownloads indexOfItemWithTag:2]];
@@ -49,7 +49,7 @@
 - (IBAction) changePortRange:(id) sender {
 	NSRange range = NSMakeRange( [minRate intValue], ( [maxRate intValue] - [minRate intValue] ) );
 	[[NSUserDefaults standardUserDefaults] setObject:NSStringFromRange( range ) forKey:@"JVFileTransferPortRange"];
-	[MVChatConnection setFileTransferPortRange:range];
+//	[MVChatConnection setFileTransferPortRange:range];
 }
 
 - (IBAction) changeAutoAccept:(id) sender {

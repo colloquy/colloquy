@@ -1,6 +1,8 @@
 #import <Foundation/NSObject.h>
 #import <Foundation/NSRange.h>
 
+extern NSString *MVFileTransferOfferNotification;
+
 @interface MVFileTransfer : NSObject {
 	void *_dcc; /* FILE_DCC_REC */
 }
@@ -20,12 +22,18 @@
 
 - (NSHost *) host;
 - (unsigned short) port;
+
+- (void) cancel;
 @end
 
 @interface MVUploadFileTransfer : MVFileTransfer {}
 
 @end
 
-@interface MVDownloadFileTransfer : MVFileTransfer {}
-
+@interface MVDownloadFileTransfer : MVFileTransfer {
+	NSString *_destination;
+}
+- (void) setDestination:(NSString *) path allowOverwriteOrResume:(BOOL) allow;
+- (void) accept;
+- (void) acceptByResumingIfPossible:(BOOL) resume;
 @end

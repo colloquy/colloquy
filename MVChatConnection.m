@@ -5,6 +5,7 @@
 #import <IOKit/IOMessage.h>
 #import <IOKit/pwr_mgt/IOPMLib.h>
 #import "MVChatConnection.h"
+#import "MVFileTransfer.h"
 #import "MVChatPluginManager.h"
 #import "MVChatScriptPlugin.h"
 #import "NSAttributedStringAdditions.h"
@@ -24,8 +25,9 @@
 #import "channels.h"
 #import "nicklist.h"
 #import "notifylist.h"
+#import "dcc.h"
+#import "dcc-file.h"
 #import "mode-lists.h"
-
 #import "settings.h"
 
 #pragma mark -
@@ -83,13 +85,6 @@ NSString *MVChatConnectionInvitedToRoomNotification = @"MVChatConnectionInvitedT
 NSString *MVChatConnectionNicknameAcceptedNotification = @"MVChatConnectionNicknameAcceptedNotification";
 NSString *MVChatConnectionNicknameRejectedNotification = @"MVChatConnectionNicknameRejectedNotification";
 
-NSString *MVChatConnectionFileTransferAvailableNotification = @"MVChatConnectionFileTransferAvailableNotification";
-NSString *MVChatConnectionFileTransferOfferedNotification = @"MVChatConnectionFileTransferOfferedNotification";
-NSString *MVChatConnectionFileTransferStartedNotification = @"MVChatConnectionFileTransferStartedNotification";
-NSString *MVChatConnectionFileTransferFinishedNotification = @"MVChatConnectionFileTransferFinishedNotification";
-NSString *MVChatConnectionFileTransferErrorNotification = @"MVChatConnectionFileTransferErrorNotification";
-NSString *MVChatConnectionFileTransferStatusNotification = @"MVChatConnectionFileTransferStatusNotification";
-
 NSString *MVChatConnectionSubcodeRequestNotification = @"MVChatConnectionSubcodeRequestNotification";
 NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeReplyNotification";
 
@@ -101,6 +96,12 @@ void irc_deinit( void );
 static BOOL applicationQuitting = NO;
 static unsigned int connectionCount = 0;
 static GMainLoop *glibMainLoop = NULL;
+
+typedef struct {
+	MVChatConnection *connection;
+} MVChatConnectionModuleData;
+
+#pragma mark -
 
 @interface MVChatConnection (MVChatConnectionPrivate)
 + (MVChatConnection *) _connectionForServer:(SERVER_REC *) server;
@@ -596,9 +597,8 @@ static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, cons
 	[info setObject:[NSNumber numberWithBool:nickname -> op] forKey:@"operator"];
 	[info setObject:[NSNumber numberWithBool:nickname -> halfop] forKey:@"halfOperator"];
 	[info setObject:[NSNumber numberWithBool:nickname -> voice] forKey:@"voice"];
-	if( address ) [info setObject:[NSString stringWithUTF8String:address] forKey:@"address"];
-	if( nickname -> realname )
-		[info setObject:[NSString stringWithUTF8String:nickname -> realname] forKey:@"realName"];
+	if( nickname -> host ) [info setObject:[NSString stringWithUTF8String:nickname -> host] forKey:@"address"];
+	if( nickname -> realname ) [info setObject:[NSString stringWithUTF8String:nickname -> realname] forKey:@"realName"];
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel], @"room", [NSString stringWithUTF8String:nick], @"who", info, @"info", nil]];
 	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
@@ -612,8 +612,8 @@ static void MVChatUserLeftRoom( IRC_SERVER_REC *server, const char *data, const 
 
 	char *channel = NULL;
 	char *reason = NULL;
-	char *params = event_get_params( data, 2, &channel, &reason );
-	
+	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &channel, &reason );
+
 	reason = MVChatIRCToXHTML(reason);
 	NSData *reasonData = [NSData dataWithBytes:reason length:strlen( reason )];
 
@@ -972,14 +972,14 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 
     NSString *r = [NSString stringWithUTF8String:channel];
     NSData *t = [NSData dataWithBytes:topic length:strlen( topic )];
-    [self _addRoomToCache:r withUsers:strtoul( count, NULL, 0 ) andTopic:t];
+    [self _addRoomToCache:r withUsers:strtoul( count, NULL, 10 ) andTopic:t];
 
     g_free( params );
 }
 
 #pragma mark -
 
-void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
+static void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	char *command = NULL, *args = NULL;
@@ -997,6 +997,7 @@ void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, const char 
 	[invocation setArgument:&frm atIndex:4];
 	[invocation setArgument:&self atIndex:5];
 
+	// FIX!! Do this on the main thread.
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 	if( [[results lastObject] boolValue] ) {
 		signal_stop();
@@ -1012,12 +1013,13 @@ void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, const char 
 		return;
 	}
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionSubcodeRequestNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeRequestNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];		
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 
 	g_free( params );	
 }
 
-void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
+static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
 	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)server];
 
 	char *command = NULL, *args = NULL;
@@ -1035,39 +1037,39 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	[invocation setArgument:&frm atIndex:4];
 	[invocation setArgument:&self atIndex:5];
 
+	// FIX!! Do this on the main thread.
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
-	if( [[results lastObject] boolValue] ) return;
+	if( [[results lastObject] boolValue] ) {
+		signal_stop();
+		return;
+	}
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeReplyNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:frm, @"from", cmd, @"command", ( ags ? (id) ags : (id) [NSNull null] ), @"arguments", nil]];		
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
 
 	g_free( params );	
 }
 
 #pragma mark -
 
+static void MVChatFileTransferDebug( DCC_REC *dcc ) {
+	NSLog( @"rec: %x data: %x port: %d file: %s", dcc, dcc -> module_data, dcc -> port, dcc -> arg );
+}
+
+static void MVChatFileTransferRequest( DCC_REC *dcc ) {
+	MVChatConnection *self = [MVChatConnection _connectionForServer:(SERVER_REC *)dcc -> server];
+	MVDownloadFileTransfer *transfer = [[[MVDownloadFileTransfer alloc] initWithDCCFileRecord:dcc] autorelease];
+	NSNotification *note = [NSNotification notificationWithName:MVFileTransferOfferNotification object:transfer];		
+	[self performSelectorOnMainThread:@selector( _postNotification: ) withObject:note waitUntilDone:YES];
+
+	[transfer retain];
+	[transfer setDestination:@"~/Desktop/test.txt" allowOverwriteOrResume:NO];
+	[transfer acceptByResumingIfPossible:NO];
+}
+
+#pragma mark -
+
 @implementation MVChatConnection
-+ (void) setFileTransferPortRange:(NSRange) range {
-//	unsigned short min = (unsigned short)range.location;
-//	unsigned short max = (unsigned short)(range.location + range.length);
-//	firetalk_set_dcc_port_range( min, max );
-}
-
-+ (NSRange) fileTransferPortRange {
-	unsigned short min = 1024;
-	unsigned short max = 1048;
-//	firetalk_get_dcc_port_range( &min, &max );
-	return NSMakeRange( (unsigned int) min, (unsigned int)( max - min ) );
-}
-
-#pragma mark -
-
-+ (NSString *) descriptionForError:(MVChatError) error {
-	return @"";
-//	return [NSString stringWithUTF8String:firetalk_strerror( (enum firetalk_error) error )];
-}
-
-#pragma mark -
-
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_npassword = nil;
@@ -1106,7 +1108,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 		}
 
 		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
-		SERVER_CONNECT_REC *conn = server_create_conn( proto -> id, "irc.javelin.cc", 6667, [[NSString stringWithFormat:@"%x", self] UTF8String], NULL, [NSUserName() UTF8String] );
+		SERVER_CONNECT_REC *conn = server_create_conn( proto -> id, "irc.javelin.cc", 6667, [[NSString stringWithFormat:@"%8x", self] UTF8String], NULL, [NSUserName() UTF8String] );
 		server_connect_ref( conn );
 
 		[self _setIrssiConnection:proto -> server_init_connect( conn )];
@@ -1235,6 +1237,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) setNickname:(NSString *) nickname {
 	NSParameterAssert( nickname != nil );
+	NSParameterAssert( [nickname length] > 0 );
 	if( ! [self _irssiConnection] ) return;
 
 	if( [self isConnected] ) {
@@ -1302,8 +1305,9 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) setUsername:(NSString *) username {
 	NSParameterAssert( username != nil );
+	NSParameterAssert( [username length] > 0 );
 	if( ! [self _irssiConnection] ) return;
-	
+
 	g_free_not_null( [self _irssiConnection] -> connrec -> username );
 	[self _irssiConnection] -> connrec -> username = g_strdup( [username UTF8String] );		
 }
@@ -1317,6 +1321,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) setServer:(NSString *) server {
 	NSParameterAssert( server != nil );
+	NSParameterAssert( [server length] > 0 );
 	if( ! [self _irssiConnection] ) return;
 
 	g_free_not_null( [self _irssiConnection] -> connrec -> address );
@@ -1371,6 +1376,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action {
+	NSParameterAssert( message != nil );
+	NSParameterAssert( user != nil );
 	if( ! [self _irssiConnection] ) return;
 
 	NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
@@ -1381,6 +1388,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action {
+	NSParameterAssert( message != nil );
+	NSParameterAssert( room != nil );
 	if( ! [self _irssiConnection] ) return;
 
 	NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
@@ -1397,13 +1406,13 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
-	if( ! raw ) return;
+	NSParameterAssert( raw != nil );
 	if( ! [self _irssiConnection] ) return;
 	irc_send_cmd_full( (IRC_SERVER_REC *) [self _irssiConnection], [raw UTF8String], now, FALSE, FALSE);
 }
 
 - (void) sendRawMessageWithFormat:(NSString *) format, ... {
-	if( ! format ) return;
+	NSParameterAssert( format != nil );
 	va_list ap;
 	va_start( ap, format );
 	NSString *command = [[[NSString alloc] initWithFormat:format arguments:ap] autorelease];
@@ -1413,27 +1422,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 #pragma mark -
 
-- (void) sendFile:(NSString *) path toUser:(NSString *) user {
-	if( [user isEqualToString:[self nickname]] ) return;
-	if( ! [[NSFileManager defaultManager] isReadableFileAtPath:path] ) return;
-
-	NSNumber *size = [[[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES] objectForKey:@"NSFileSize"];
-	void *handle = NULL;
-//  firetalk_file_offer( _chatConnection, &handle, [user UTF8String], [path fileSystemRepresentation] );
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionFileTransferOfferedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%x", handle], @"identifier", user, @"to", path, @"path", size, @"size", nil]];
-}
-
-- (void) acceptFileTransfer:(NSString *) identifier saveToPath:(NSString *) path resume:(BOOL) resume  {
-	void *pointer = NULL;
-	sscanf( [identifier UTF8String], "%8lx", (unsigned long int *) &pointer );
-//  if( resume ) firetalk_file_resume( _chatConnection, pointer, NULL, [path fileSystemRepresentation] );
-//  else firetalk_file_accept( _chatConnection, pointer, NULL, [path fileSystemRepresentation] );
-}
-
-- (void) cancelFileTransfer:(NSString *) identifier {
-//  void *pointer = NULL;
-//  sscanf( [identifier UTF8String], "%8lx", (unsigned long int *) &pointer );
-//  firetalk_file_cancel( _chatConnection, pointer );
+- (MVUploadFileTransfer *) sendFile:(NSString *) path toUser:(NSString *) user {
+	return nil;
 }
 
 #pragma mark -
@@ -1455,6 +1445,8 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 #pragma mark -
 
 - (void) joinChatRooms:(NSArray *) rooms {
+	NSParameterAssert( rooms != nil );
+
 	if( ! [rooms count] ) return;
 
 	NSMutableArray *roomList = [NSMutableArray arrayWithCapacity:[rooms count]];
@@ -1470,16 +1462,21 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 }
 
 - (void) joinChatRoom:(NSString *) room {
-	if( [room length] ) [self sendRawMessageWithFormat:@"JOIN %@", [self _roomWithProperPrefix:room]];
+	NSParameterAssert( room != nil );
+	NSParameterAssert( [room length] > 0 );
+	[self sendRawMessageWithFormat:@"JOIN %@", [self _roomWithProperPrefix:room]];
 }
 
 - (void) partChatRoom:(NSString *) room {
-	if( [room length] ) [self sendRawMessageWithFormat:@"PART %@", [self _roomWithProperPrefix:room]];
+	NSParameterAssert( room != nil );
+	NSParameterAssert( [room length] > 0 );
+	[self sendRawMessageWithFormat:@"PART %@", [self _roomWithProperPrefix:room]];
 }
 
 #pragma mark -
 
 - (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room {
+	NSParameterAssert( topic != nil );
 	NSParameterAssert( room != nil );
 	if( ! [self _irssiConnection] ) return;
 
@@ -1550,7 +1547,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) addUserToNotificationList:(NSString *) user {
 	NSParameterAssert( user != nil );
-	notifylist_add( [[NSString stringWithFormat:@"%@!*@*", user] UTF8String], [self _irssiConnection] -> connrec -> chatnet, TRUE, 600 );
+	notifylist_add( [[NSString stringWithFormat:@"%@!*@*", user] UTF8String], NULL, TRUE, 600 );
 }
 
 - (void) removeUserFromNotificationList:(NSString *) user {
@@ -1635,6 +1632,9 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 @implementation MVChatConnection (MVChatConnectionPrivate)
 + (MVChatConnection *) _connectionForServer:(SERVER_REC *) server {
+	MVChatConnectionModuleData *data = MODULE_DATA( server );
+	if( data && data -> connection ) return data -> connection;
+
 	if( ! server -> tag ) return nil;
 
 	MVChatConnection *ret = NULL;
@@ -1675,21 +1675,21 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 	signal_add_last( "nicklist changed", (SIGNAL_FUNC) MVChatUserNicknameChanged );
 	signal_add_last( "nick mode changed", (SIGNAL_FUNC) MVChatGotUserMode );
-	
+
 	signal_add_last( "away mode changed", (SIGNAL_FUNC) MVChatSelfAwayChanged );
 
 	signal_add_last( "notifylist joined", (SIGNAL_FUNC) MVChatBuddyOnline );
 	signal_add_last( "notifylist left", (SIGNAL_FUNC) MVChatBuddyOffline );
 	signal_add_last( "notifylist away changed", (SIGNAL_FUNC) MVChatBuddyAway );
 	signal_add_last( "notifylist unidle", (SIGNAL_FUNC) MVChatBuddyUnidle );
-	
+
 	signal_add_last( "event 311", (SIGNAL_FUNC) MVChatUserWhois );
 	signal_add_last( "event 312", (SIGNAL_FUNC) MVChatUserServer );
 	signal_add_last( "event 313", (SIGNAL_FUNC) MVChatUserOperator );
 	signal_add_last( "event 317", (SIGNAL_FUNC) MVChatUserIdle );
 	signal_add_last( "event 318", (SIGNAL_FUNC) MVChatUserWhoisComplete );
 	signal_add_last( "event 319", (SIGNAL_FUNC) MVChatUserChannels );
-	
+
 	// And to catch the notifylist whois ones as well
 	signal_add_last( "notifylist event whois end", (SIGNAL_FUNC) MVChatUserWhoisComplete );
 	signal_add_last( "notifylist event whois away", (SIGNAL_FUNC) MVChatUserAway );
@@ -1701,16 +1701,12 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 	signal_add_first( "ctcp msg", (SIGNAL_FUNC) MVChatSubcodeRequest );
 	signal_add_first( "ctcp reply", (SIGNAL_FUNC) MVChatSubcodeReply );
 
-//	firetalk_register_callback( _chatConnection, FC_ERROR, (firetalk_callback) MVChatErrorOccurred );
-
-//	firetalk_register_callback( _chatConnection, FC_IM_GOTINFO, (firetalk_callback) MVChatGotInfo );
-//	firetalk_register_callback( _chatConnection, FC_CHAT_ROOM_MODE, (firetalk_callback) MVChatGotRoomMode );
-
-//	firetalk_register_callback( _chatConnection, FC_FILE_OFFER, (firetalk_callback) MVChatFileTransferAccept );
-//	firetalk_register_callback( _chatConnection, FC_FILE_START, (firetalk_callback) MVChatFileTransferStart );
-//	firetalk_register_callback( _chatConnection, FC_FILE_FINISH, (firetalk_callback) MVChatFileTransferFinish );
-//	firetalk_register_callback( _chatConnection, FC_FILE_ERROR, (firetalk_callback) MVChatFileTransferError );
-//	firetalk_register_callback( _chatConnection, FC_FILE_PROGRESS, (firetalk_callback) MVChatFileTransferStatus );
+	signal_add_last( "dcc created", (SIGNAL_FUNC) MVChatFileTransferDebug );
+	signal_add_last( "dcc connected", (SIGNAL_FUNC) MVChatFileTransferDebug );
+	signal_add_last( "dcc destroyed", (SIGNAL_FUNC) MVChatFileTransferDebug );
+	signal_add_last( "dcc transfer update", (SIGNAL_FUNC) MVChatFileTransferDebug );
+	signal_add_last( "dcc get receive", (SIGNAL_FUNC) MVChatFileTransferDebug );
+	signal_add_last( "dcc request", (SIGNAL_FUNC) MVChatFileTransferRequest );
 }
 
 + (void) _deregisterCallbacks {
@@ -1811,6 +1807,11 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 	_chatConnection = server;
 	if( _chatConnection ) {
+		MVChatConnectionModuleData *data = g_new0( MVChatConnectionModuleData, 1 );
+		data -> connection = self;
+
+		MODULE_DATA_SET( server, data );
+
 		((SERVER_REC *) _chatConnection) -> no_reconnect = 0;
 		server_ref( _chatConnection );
 	}
