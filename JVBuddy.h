@@ -65,6 +65,7 @@ typedef enum {
 - (void) replaceNickname:(NSURL *) old withNickname:(NSURL *) new;
 
 - (NSImage *) picture;
+- (void) setPicture:(NSImage *) picture;
 
 - (NSString *) preferredName;
 - (JVBuddyName) preferredNameWillReturn;
@@ -82,6 +83,7 @@ typedef enum {
 - (void) setGivenNickname:(NSString *) name;
 
 - (NSString *) uniqueIdentifier;
+- (ABPerson *) person;
 - (void) editInAddressBook;
 - (void) viewInAddressBook;
 

@@ -214,6 +214,12 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	return [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
 }
 
+- (void) setPicture:(NSImage *) picture {
+	[_person setImageData:[picture TIFFRepresentation]];
+}
+
+#pragma mark -
+
 - (NSString *) preferredName {
 	switch( [[self class] preferredName] ) {
 		default:
@@ -292,10 +298,12 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (void) setFirstName:(NSString *) name {
 	[_person setValue:name forProperty:kABFirstNameProperty];
+	[[ABAddressBook sharedAddressBook] save];
 }
 
 - (void) setLastName:(NSString *) name {
 	[_person setValue:name forProperty:kABLastNameProperty];
+	[[ABAddressBook sharedAddressBook] save];
 }
 
 - (void) setPrimaryEmail:(NSString *) email {
@@ -307,10 +315,12 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	} else [value replaceValueAtIndex:[value indexForIdentifier:[value primaryIdentifier]] withValue:email];
 
 	[_person setValue:value forProperty:kABEmailProperty];
+	[[ABAddressBook sharedAddressBook] save];
 }
 
 - (void) setGivenNickname:(NSString *) name {
 	[_person setValue:name forProperty:kABNicknameProperty];
+	[[ABAddressBook sharedAddressBook] save];
 }
 
 #pragma mark -

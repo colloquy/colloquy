@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatConnection.h>
+#import <AddressBook/AddressBook.h>
 
 #import "MVConnectionsController.h"
 #import "JVBuddyInspector.h"
@@ -117,6 +118,28 @@
 
 - (IBAction) editCard:(id) sender {
 	[_buddy editInAddressBook];
+}
+
+#pragma mark -
+
+- (IBAction) changeBuddyIcon:(id) sender {
+	[_buddy setPicture:[sender image]];
+}
+
+- (IBAction) changeFirstName:(id) sender {
+	[_buddy setFirstName:[sender objectValue]];
+}
+
+- (IBAction) changeLastName:(id) sender {
+	[_buddy setLastName:[sender objectValue]];
+}
+
+- (IBAction) changeNickname:(id) sender {
+	[_buddy setGivenNickname:[sender objectValue]];
+}
+
+- (IBAction) changeEmail:(id) sender {
+	[_buddy setPrimaryEmail:[sender objectValue]];
 }
 
 #pragma mark -

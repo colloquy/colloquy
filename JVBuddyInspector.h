@@ -26,6 +26,12 @@
 }
 - (id) initWithBuddy:(JVBuddy *) buddy;
 
+- (IBAction) changeBuddyIcon:(id) sender;
+- (IBAction) changeFirstName:(id) sender;
+- (IBAction) changeLastName:(id) sender;
+- (IBAction) changeNickname:(id) sender;
+- (IBAction) changeEmail:(id) sender;
+
 - (IBAction) changeServer:(id) sender;
 
 - (IBAction) addNickname:(id) sender;
