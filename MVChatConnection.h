@@ -66,7 +66,10 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 @interface MVChatConnection : NSObject {
 @private
-	NSString *_nickname, *_npassword, *_password, *_server;
+	NSString *_nickname;
+	NSString *_npassword;
+	NSString *_password;
+	NSString *_server;
 	unsigned short _port;
 	MVChatConnectionStatus _status;
 	void *_chatConnection;

@@ -1,9 +1,8 @@
 #import <string.h>
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import <IOKit/IOMessage.h>
 #import <IOKit/pwr_mgt/IOPMLib.h>
 #import "MVChatConnection.h"
-#import "MVChatWindowController.h"
 #import "MVChatPluginManager.h"
 #import "NSAttributedStringAdditions.h"
 #import "firetalk.h"
@@ -62,6 +61,7 @@ NSString *MVChatConnectionSubcodeRequestNotification = @"MVChatConnectionSubcode
 NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeReplyNotification";
 
 @interface MVChatConnection (MVChatConnectionPrivate)
++ (NSData *) _flattenedHTMLDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc;
 - (io_connect_t) _powerConnection;
 - (firetalk_t) _firetalkConnection;
 - (void) _executeRunLoopCheck:(NSTimer *) timer;
@@ -116,11 +116,11 @@ void MVChatLoad( void *c, void *cs, const char * const nickname ) {
 
 void MVChatConnected( void *c, void *cs ) {
 	MVChatConnection *self = cs;
-	NSEnumerator *enumerator = [[MVChatWindowController roomChatWindowsForConnection:self] keyEnumerator];
-	id key = nil;
 	[self _didConnect];
+/*	NSEnumerator *enumerator = [[MVChatWindowController roomChatWindowsForConnection:self] keyEnumerator];
+	id key = nil;
 	while( ( key = [enumerator nextObject] ) )
-		[self joinChatForRoom:key];
+		[self joinChatForRoom:key];*/
 }
 
 void MVChatConnectionFailed( void *c, void *cs, const int error, const char * const reason ) {
@@ -129,17 +129,17 @@ void MVChatConnectionFailed( void *c, void *cs, const int error, const char * co
 	switch( error ) {
 		case FE_SOCKET:
 		case FE_RESOLV:
-			if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are conencted to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
-				[self connect];
+//			if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are conencted to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
+//				[self connect];
 			break;
 		case FE_BADUSERPASS:
-			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat password is invalid", "chat invalid password dialog title" ), NSLocalizedString( @"The password you specified is invalid or a connection could not be made without a proper password. Make sure you have access to the server.", "chat invalid password dialog message" ), nil, nil, nil );
+//			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat password is invalid", "chat invalid password dialog title" ), NSLocalizedString( @"The password you specified is invalid or a connection could not be made without a proper password. Make sure you have access to the server.", "chat invalid password dialog message" ), nil, nil, nil );
 			break;
 		case FE_BADUSER:
-			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.", "chat invalid nicknames dialog message" ), [self nickname]], nil, nil, nil );
+//			NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.", "chat invalid nicknames dialog message" ), [self nickname]], nil, nil, nil );
 			break;
 		default:
-			NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured while connecting", "chat connecting error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The connection could not be made. %s.", "unknown connection error dialog message" ), reason], nil, nil, nil );
+//			NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured while connecting", "chat connecting error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The connection could not be made. %s.", "unknown connection error dialog message" ), reason], nil, nil, nil );
 			break;
 	}
 }
@@ -155,15 +155,15 @@ void MVChatDisconnect( void *c, void *cs, const int error ) {
 		case FE_PACKET:
 		case FE_PACKETSIZE:
 			if( status == MVChatConnectionConnectedStatus ) {
-				if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), @"Cancel", nil ) == NSOKButton )
-					[self connect];
+//				if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), @"Cancel", nil ) == NSOKButton )
+//					[self connect];
 			} else {
-				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
-					[self connect];
+//				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
+//					[self connect];
 			}
 			break;
 		default:
-			NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), [NSString stringWithFormat:NSLocalizedString( @"The connection was terminated between your computer and the server. %s.", "unknown disconnection error dialog message" ), firetalk_strerror( error )], nil, nil, nil );
+//			NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), [NSString stringWithFormat:NSLocalizedString( @"The connection was terminated between your computer and the server. %s.", "unknown disconnection error dialog message" ), firetalk_strerror( error )], nil, nil, nil );
 			break;
 	}
 }
@@ -172,16 +172,16 @@ void MVChatError( void *c, void *cs, const int error, const char * const roomoru
 	MVChatConnection *self = cs;
 	switch( error ) {
 		case FE_BADUSER:
-			if( roomoruser && strlen( roomoruser ) >= 1 && strchr( "#&+", roomoruser[0] ) )
+			/*if( roomoruser && strlen( roomoruser ) >= 1 && strchr( "#&+", roomoruser[0] ) )
 				[[MVChatWindowController chatWindowForRoom:[[NSString stringWithUTF8String:roomoruser] lowercaseString] withConnection:self ifExists:YES] disconnected];
 			else if( roomoruser ) [[MVChatWindowController chatWindowWithUser:[NSString stringWithUTF8String:roomoruser] withConnection:self ifExists:YES] unavailable];
 			else {
 				[MVChatWindowController changeSelfInChatWindowsTo:[self nickname] forConnection:self];
 				NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname you specified is in use or invalid on this server.", "chat invalid nickname dialog message" ), nil, nil, nil );
-			}
+			}*/
 			break;
 		default:
-			NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured", "unknown error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"An error occured when dealing with %@. %s.", "unknown error dialog message" ), ( roomoruser ? [NSString stringWithUTF8String:roomoruser] : NSLocalizedString( @"server", "singular server label" ) ), firetalk_strerror( error )], nil, nil, nil );
+//			NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured", "unknown error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"An error occured when dealing with %@. %s.", "unknown error dialog message" ), ( roomoruser ? [NSString stringWithUTF8String:roomoruser] : NSLocalizedString( @"server", "singular server label" ) ), firetalk_strerror( error )], nil, nil, nil );
 			break;
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidGetErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:( roomoruser ? [NSString stringWithUTF8String:roomoruser] : [NSNull null] ), @"target", [NSNumber numberWithInt:error], @"error", nil]];
@@ -208,7 +208,6 @@ void MVChatNeedPassword( void *c, void *cs, char *password, const int size ) {
 
 void MVChatGetMessage( void *c, void *cs, const char * const who, const int automessage, const char * const message ) {
 	MVChatConnection *self = cs;
-	MVChatWindowController *window = nil;
 	NSData *msgData = nil;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
@@ -216,11 +215,7 @@ void MVChatGetMessage( void *c, void *cs, const char * const who, const int auto
 
 	msgData = [NSData dataWithBytes:message length:strlen( message )];
 
-	window = [MVChatWindowController chatWindowWithUser:[NSString stringWithUTF8String:who] withConnection:self ifExists:YES];
-	if( ! automessage || window ) {
-		[[MVChatWindowController chatWindowWithUser:[NSString stringWithUTF8String:who] withConnection:self ifExists:NO] addHTMLMessageToDisplay:msgData fromUser:[NSString stringWithUTF8String:who] asAction:NO asAlert:NO];
-	} else NSLog( @"%@ notice: %@", [NSString stringWithUTF8String:who], [NSString stringWithUTF8String:message] );
-	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
+//	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"from", [NSNumber numberWithBool:automessage], @"auto", msgData, @"message", nil]];
 }
 
@@ -233,10 +228,7 @@ void MVChatGetAction( void *c, void *cs, const char * const who, const int autom
 
 	msgData = [NSData dataWithBytes:message length:strlen( message )];
 
-	if( ! automessage ) {
-		[[MVChatWindowController chatWindowWithUser:[NSString stringWithUTF8String:who] withConnection:self ifExists:NO] addHTMLMessageToDisplay:msgData fromUser:[NSString stringWithUTF8String:who] asAction:YES asAlert:NO];
-	} else NSLog( @"%@ notice: %@", [NSString stringWithUTF8String:who], [NSString stringWithUTF8String:message] );
-	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
+//	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"from", [NSNumber numberWithBool:automessage], @"auto", [NSNumber numberWithBool:YES], @"action", msgData, @"message", nil]];
 }
 
@@ -278,7 +270,7 @@ void MVChatBuddyGotIdle( void *c, void *cs, const char * const who, const long i
 	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
-	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:idletime] forKey:@"idle"] forConnection:self];
+//	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:idletime] forKey:@"idle"] forConnection:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionBuddyIsIdleNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", [NSNumber numberWithLong:idletime], @"idle", nil]];
 	NSLog( @"buddy idle: %s, %d minute(s)", who, idletime );
 }
@@ -297,7 +289,7 @@ void MVChatGotInfo( void *c, void *cs, const char * const who, const char * cons
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );
 	infoDic = [NSDictionary dictionaryWithObjectsAndKeys:( info ? [NSString stringWithUTF8String:info] : [NSNull null] ), @"info", [NSNumber numberWithUnsignedInt:warning], @"warning", [NSNumber numberWithUnsignedInt:idle], @"idle", [NSNumber numberWithUnsignedInt:flags], @"flags", nil];
-	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:infoDic forConnection:self];
+//	[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:who] withInfo:infoDic forConnection:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotUserInfoNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:who], @"who", infoDic, @"info", nil]];
 }
 
@@ -317,10 +309,8 @@ void MVChatListRoom( void *c, void *cs, const char * const room, const int users
 
 void MVChatJoinedRoom( void *c, void *cs, const char * const room ) {
 	MVChatConnection *self = cs;
-	MVChatWindowController *window = nil;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
-	window = [MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:NO];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", nil]];
 }
 
@@ -328,7 +318,6 @@ void MVChatLeftRoom( void *c, void *cs, const char * const room ) {
 	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
-	[MVChatWindowController disposeWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", nil]];
 }
 
@@ -339,11 +328,9 @@ void MVChatGetRoomMessage( void *c, void *cs, const char * const room, const cha
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( message != NULL );
 	{
-		MVChatWindowController *window = [MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES];
 		NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
-		[window addHTMLMessageToDisplay:msgData fromUser:[NSString stringWithUTF8String:from] asAction:NO asAlert:NO];
 
-		[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:from] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
+//		[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:from] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", [NSNumber numberWithBool:automessage], @"auto", msgData, @"message", nil]];
 	}
 }
@@ -355,11 +342,9 @@ void MVChatGetRoomAction( void *c, void *cs, const char * const room, const char
 	NSCParameterAssert( from != NULL );
 	NSCParameterAssert( message != NULL );
 	{
-		MVChatWindowController *window = [MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES];
 		NSData *msgData = [NSData dataWithBytes:message length:strlen(message)];
-		[window addHTMLMessageToDisplay:msgData fromUser:[NSString stringWithUTF8String:from] asAction:YES asAlert:NO];
 
-		[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:from] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
+//		[MVChatWindowController updateChatWindowsMember:[NSString stringWithUTF8String:from] withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", [NSNumber numberWithBool:automessage], @"auto", [NSNumber numberWithBool:YES], @"action", msgData, @"message", nil]];
 	}
 }
@@ -372,22 +357,19 @@ void MVChatKicked( void *c, void *cs, const char * const room, const char * cons
 	NSCParameterAssert( room != NULL );
 	{
 		NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
-		[[MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES] kickedFromChatBy:(by?[NSString stringWithUTF8String:by]:nil) forReason:( reason ? msgData : nil )];
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionKickedFromRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", ( by ? [NSString stringWithUTF8String:by] : [NSNull null] ), @"who", ( reason ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
 	}
 }
 
 void MVChatInvited( void *c, void *cs, const char * const room, const char * const from, const char * message ) {
-	NSWindow *win = nil;
 	MVChatConnection *self = cs;
 #pragma unused(message)
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( from != NULL );
-	win = [[MVChatWindowController chatWindowWithUser:[NSString stringWithUTF8String:from] withConnection:self ifExists:YES] window];
-	if( NSRunAlertPanelRelativeToWindow( NSLocalizedString( @"Invited to Chat", "invited to a chat room - sheet title" ), [NSString stringWithFormat:NSLocalizedString( @"You have been invited to chat in the %@ room by %@.", "invited to chat room description - sheet message" ), [NSString stringWithUTF8String:room], [NSString stringWithUTF8String:from]], nil, NSLocalizedString( @"Refuse", "refuse button name" ), nil, win ) == NSOKButton ) {
+/*	if( NSRunAlertPanelRelativeToWindow( NSLocalizedString( @"Invited to Chat", "invited to a chat room - sheet title" ), [NSString stringWithFormat:NSLocalizedString( @"You have been invited to chat in the %@ room by %@.", "invited to chat room description - sheet message" ), [NSString stringWithUTF8String:room], [NSString stringWithUTF8String:from]], nil, NSLocalizedString( @"Refuse", "refuse button name" ), nil, win ) == NSOKButton ) {
 		[self joinChatForRoom:[NSString stringWithUTF8String:room]];
-	}
+	}*/
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionInvitedToRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:from], @"from", nil]];
 }
 
@@ -397,7 +379,6 @@ void MVChatGotTopic( void *c, void *cs, const char * const room, const char * co
 	NSCParameterAssert( room != NULL );
 	{
 		NSData *msgData = [NSData dataWithBytes:topic length:(topic ? strlen(topic) : 0)];
-		[[MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES] changeTopic:( topic ? msgData : nil ) by:( author ? [NSString stringWithUTF8String:author] : nil )];
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRoomTopicNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", ( author ? (id) [NSString stringWithUTF8String:author] : (id) [NSNull null] ), @"author", ( topic ? (id) msgData : (id) [NSNull null] ), @"topic", nil]];
 	}
 }
@@ -410,7 +391,6 @@ void MVChatUserJoinedRoom( void *c, void *cs, const char * const room, const cha
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
 	firetalk_im_get_info( c, who, 0 );
-	[[MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES] addMemberToChat:[NSString stringWithUTF8String:who] asPreviousMember:(BOOL) previousmember];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", [NSNumber numberWithBool:previousmember], @"previousMember", nil]];
 }
 
@@ -421,7 +401,6 @@ void MVChatUserLeftRoom( void *c, void *cs, const char * const room, const char 
 	NSCParameterAssert( who != NULL );
 	{
 		NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
-		[[MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES] removeChatMember:[NSString stringWithUTF8String:who] withReason:( reason ? msgData : nil)];
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserLeftRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", ( reason ? (id) msgData : (id) [NSNull null] ), @"reason", nil]];
 	}
 }
@@ -433,7 +412,6 @@ void MVChatUserNicknameChanged( void *c, void *cs, const char * const room, cons
 	NSCParameterAssert( oldnick != NULL );
 	NSCParameterAssert( newnick != NULL );
 
-	[MVChatWindowController changeMemberInChatWindowsFrom:[NSString stringWithUTF8String:oldnick] to:[NSString stringWithUTF8String:newnick] forConnection:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserNicknameChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:oldnick], @"oldNickname", [NSString stringWithUTF8String:newnick], @"newNickname", nil]];
 }
 
@@ -443,7 +421,6 @@ void MVChatNewNickname( void *c, void *cs, const char * const newnick ) {
 	MVChatConnection *self = cs;
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( newnick != NULL );
-	[MVChatWindowController changeSelfInChatWindowsTo:[NSString stringWithUTF8String:newnick] forConnection:self];
 	[self _confirmNewNickname:[NSString stringWithUTF8String:newnick]];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNicknameAcceptedNotification object:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:newnick], @"nickname", nil]];
@@ -456,7 +433,6 @@ void MVChatUserOpped( void *c, void *cs, const char * const room, const char * c
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
-	[[MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES] promoteChatMember:[NSString stringWithUTF8String:who] by:(by?[NSString stringWithUTF8String:by]:nil)];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserOppedInRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", nil]];
 }
 
@@ -465,7 +441,6 @@ void MVChatUserDeopped( void *c, void *cs, const char * const room, const char *
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
-	[[MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES] demoteChatMember:[NSString stringWithUTF8String:who] by:(by?[NSString stringWithUTF8String:by]:nil)];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserDeoppedInRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", nil]];
 }
 
@@ -474,7 +449,6 @@ void MVChatUserVoiced( void *c, void *cs, const char * const room, const char * 
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
-	[[MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES] voiceChatMember:[NSString stringWithUTF8String:who] by:(by?[NSString stringWithUTF8String:by]:nil)];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserVoicedInRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", nil]];
 }
 
@@ -483,7 +457,6 @@ void MVChatUserDevoiced( void *c, void *cs, const char * const room, const char 
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( room != NULL );
 	NSCParameterAssert( who != NULL );
-	[[MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES] devoiceChatMember:[NSString stringWithUTF8String:who] by:(by?[NSString stringWithUTF8String:by]:nil)];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserDevoicedInRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", nil]];
 }
 
@@ -494,7 +467,6 @@ void MVChatUserKicked( void *c, void *cs, const char * const room, const char * 
 	NSCParameterAssert( who != NULL );
 	{
 		NSData *msgData = [NSData dataWithBytes:reason length:(reason ? strlen(reason) : 0)];
-		[[MVChatWindowController chatWindowForRoom:[NSString stringWithUTF8String:room] withConnection:self ifExists:YES] chatMemberKicked:[NSString stringWithUTF8String:who] by:(by?[NSString stringWithUTF8String:by]:nil) forReason:( reason ? msgData : nil )];
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionUserKickedFromRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:room], @"room", [NSString stringWithUTF8String:who], @"who", (by?[NSString stringWithUTF8String:by]:[NSNull null]), @"by", msgData, @"reason", nil]];
 	}
 }
@@ -629,20 +601,23 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 }
 
 - (void) release {
-	if( ( [self retainCount] - 1 ) == 1 ) {
+	if( ( [self retainCount] - 1 ) == 1 )
 		[_firetalkSelectTimer invalidate];
-	}
 	[super release];
 }
 
 - (void) dealloc {
+	[self disconnect];
 	[self _deregisterForSleepNotifications];
 
 	[_nickname autorelease];
+	[_npassword autorelease];
 	[_password autorelease];
 	[_server autorelease];
 	[_joinList autorelease];
 	[_roomsCache autorelease];
+	[_cachedDate autorelease];
+	[_floodIntervals autorelease];
 	[_firetalkSelectTimer autorelease];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -650,10 +625,13 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	firetalk_destroy_handle( _chatConnection );
 	_chatConnection = NULL;
 	_nickname = nil;
+	_npassword = nil;
 	_password = nil;
 	_server = nil;
 	_joinList = nil;
 	_roomsCache = nil;
+	_cachedDate = nil;
+	_floodIntervals = nil;
 	_firetalkSelectTimer = nil;
 
 	[super dealloc];
@@ -782,32 +760,26 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 
 - (void) sendMessageToUser:(NSString *) user attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	if( [self isConnected] ) {
-		MVChatWindowController *window = [MVChatWindowController chatWindowWithUser:user withConnection:self ifExists:YES];
-		NSMutableData *encodedData = [[[MVChatWindowController flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
-
-		[window addHTMLMessageToDisplay:encodedData fromUser:[self nickname] asAction:action asAlert:NO];
+		NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
 
 		[encodedData appendBytes:"\0" length:1];
 		if( action ) firetalk_im_send_action( _chatConnection, [user UTF8String], (char *) [encodedData bytes], 0 );
 		else firetalk_im_send_message( _chatConnection, [user UTF8String], (char *) [encodedData bytes], 0 );
-		
-		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
-	} else [[MVChatWindowController chatWindowWithUser:user withConnection:self ifExists:YES] disconnected];
+
+//		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
+	}
 }
 
 - (void) sendMessageToChatRoom:(NSString *) room attributedMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	if( [self isConnected] ) {
-		MVChatWindowController *window = [MVChatWindowController chatWindowForRoom:room withConnection:self ifExists:YES];
-		NSMutableData *encodedData = [[[MVChatWindowController flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
-
-		[window addHTMLMessageToDisplay:encodedData fromUser:[self nickname] asAction:action asAlert:NO];
+		NSMutableData *encodedData = [[[MVChatConnection _flattenedHTMLDataForMessage:message withEncoding:encoding] mutableCopy] autorelease];
 
 		[encodedData appendBytes:"\0" length:1];
 		if( action ) firetalk_chat_send_action( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes], 0 );
 		else firetalk_chat_send_message( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes], 0 );
 
-		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
-	} else [[MVChatWindowController chatWindowForRoom:[room lowercaseString] withConnection:self ifExists:YES] disconnected];
+//		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
+	}
 }
 
 #pragma mark -
@@ -873,9 +845,9 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 - (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room {
 	NSParameterAssert( room != nil );
 	if( [self isConnected] ) {
-		NSData *encodedData = [MVChatWindowController flattenedHTMLDataForMessage:topic withEncoding:encoding];
+		NSData *encodedData = [MVChatConnection _flattenedHTMLDataForMessage:topic withEncoding:encoding];
 		firetalk_chat_set_topic( _chatConnection, [[room lowercaseString] UTF8String], (char *) [encodedData bytes] );
-		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
+//		[MVChatWindowController updateChatWindowsMember:_nickname withInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:0] forKey:@"idle"] forConnection:self];
 	}
 }
 
@@ -986,6 +958,14 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 #pragma mark -
 
 @implementation MVChatConnection (MVChatConnectionPrivate)
++ (NSData *) _flattenedHTMLDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc {
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"NSHTMLIgnoreFontSizes", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreColors"]], @"NSHTMLIgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatIgnoreFormatting"]], @"NSHTMLIgnoreFontTraits", nil];
+	NSData *encodedData = [message HTMLWithOptions:options usingEncoding:enc allowLossyConversion:YES];
+	return [[encodedData retain] autorelease];
+}
+
+#pragma mark -
+
 - (io_connect_t) _powerConnection {
 	return _powerConnection;
 }
