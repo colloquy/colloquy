@@ -97,6 +97,98 @@
 			<key>Superclass</key>
 			<string>AbstractChatListItem</string>
 		</dict>
+		<key>JVChatMessage</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>cmsM</string>
+			<key>DefaultSubcontainerAttribute</key>
+			<string>message</string>
+			<key>ToOneRelationships</key>
+			<dict>
+				<key>transcript</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>chvC</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>AbstractChatViewController</string>
+				</dict>
+				<key>message</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>maPA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSTextSuite.NSTextStorage</string>
+				</dict>
+			</dict>
+			<key>InverseRelationships</key>
+			<dict>
+				<key>transcript</key>
+				<string>messages</string>
+			</dict>
+			<key>Attributes</key>
+			<dict>
+				<key>isAction</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>isAc</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>isHighlighted</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>iHlt</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+				</dict>
+				<key>messageAsHTML</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>maHA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>sender</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>sNdA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>date</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>dteA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSDate</string>
+				</dict>
+				<key>messageNumber</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ID  </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;UnsignedLong&gt;</string>
+				</dict>
+			</dict>
+			<key>Superclass</key>
+			<string>NSCoreSuite.AbstractObject</string>
+		</dict>
 		<key>JVBuddy</key>
 		<dict>
 			<key>AppleEventCode</key>
@@ -330,6 +422,8 @@
 					<string>budM</string>
 					<key>ReadOnly</key>
 					<string>NO</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
 					<key>Type</key>
 					<string>JVBuddy</string>
 				</dict>
@@ -353,6 +447,42 @@
 					<string>YES</string>
 					<key>Type</key>
 					<string>AbstractChatViewController</string>
+				</dict>
+				<key>chatRooms</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>crmM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>JVChatRoom</string>
+				</dict>
+				<key>directChats</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>dchM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>JVDirectChat</string>
+				</dict>
+				<key>chatTranscripts</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ctrM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>JVChatTranscript</string>
+				</dict>
+				<key>chatConsoles</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ccoM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>JVChatConsole</string>
 				</dict>
 				<key>chatWindows</key>
 				<dict>
@@ -478,6 +608,30 @@
 			<string>ctrM</string>
 			<key>Superclass</key>
 			<string>AbstractChatViewController</string>
+			<key>ToManyRelationships</key>
+			<dict>
+				<key>messages</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>cmsM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>JVChatMessage</string>
+				</dict>
+			</dict>
+			<key>Attributes</key>
+			<dict>
+				<key>numberOfMessages</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>nOmA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber</string>
+				</dict>
+			</dict>
 		</dict>
 		<key>JVChatWindowController</key>
 		<dict>
@@ -532,6 +686,42 @@
 					<string>NO</string>
 					<key>Type</key>
 					<string>AbstractChatViewController</string>
+				</dict>
+				<key>chatRooms</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>crmM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>JVChatRoom</string>
+				</dict>
+				<key>directChats</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>dchM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>JVDirectChat</string>
+				</dict>
+				<key>chatTranscripts</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ctrM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>JVChatTranscript</string>
+				</dict>
+				<key>chatConsoles</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ccoM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>JVChatConsole</string>
 				</dict>
 			</dict>
 		</dict>
@@ -953,6 +1143,11 @@
 	<array>
 		<string>UnnamedArguments</string>
 	</array>
+	<key>Synonyms</key>
+	<dict>
+		<key>maPA</key>
+		<string>NSTextSuite.NSTextStorage</string>
+	</dict>
 	<key>Name</key>
 	<string>Colloquy</string>
 </dict>

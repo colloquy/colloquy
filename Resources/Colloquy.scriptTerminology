@@ -80,6 +80,77 @@
 			<key>PluralName</key>
 			<string>chat views</string>
 		</dict>
+		<key>JVChatMessage</key>
+		<dict>
+			<key>ToOneRelationships</key>
+			<dict>
+				<key>transcript</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room, direct chat or transcript this message is from.</string>
+					<key>Name</key>
+					<string>chat view</string>
+				</dict>
+				<key>message</key>
+				<dict>
+					<key>Description</key>
+					<string>The body of the message.</string>
+					<key>Name</key>
+					<string>body</string>
+				</dict>
+			</dict>
+			<key>Attributes</key>
+			<dict>
+				<key>isAction</key>
+				<dict>
+					<key>Description</key>
+					<string>Does the message have action tense?</string>
+					<key>Name</key>
+					<string>action tense</string>
+				</dict>
+				<key>isHighlighted</key>
+				<dict>
+					<key>Description</key>
+					<string>Was the message highlighted for some reason?</string>
+					<key>Name</key>
+					<string>highlighted</string>
+				</dict>
+				<key>messageAsHTML</key>
+				<dict>
+					<key>Description</key>
+					<string>The message with posiable HTML formatting.</string>
+					<key>Name</key>
+					<string>HTML</string>
+				</dict>
+				<key>sender</key>
+				<dict>
+					<key>Description</key>
+					<string>The sender of this message</string>
+					<key>Name</key>
+					<string>sender</string>
+				</dict>
+				<key>date</key>
+				<dict>
+					<key>Description</key>
+					<string>The date and time this message occurred.</string>
+					<key>Name</key>
+					<string>timestamp</string>
+				</dict>
+				<key>messageNumber</key>
+				<dict>
+					<key>Description</key>
+					<string>The id of this message.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>A chat message.</string>
+			<key>Name</key>
+			<string>message</string>
+			<key>PluralName</key>
+			<string>messages</string>
+		</dict>
 		<key>JVBuddy</key>
 		<dict>
 			<key>Attributes</key>
@@ -338,6 +409,16 @@
 			<string>chat transcript</string>
 			<key>PluralName</key>
 			<string>chat transcripts</string>
+			<key>Attributes</key>
+			<dict>
+				<key>numberOfMessages</key>
+				<dict>
+					<key>Description</key>
+					<string>The number of messages currently in the transcript.</string>
+					<key>Name</key>
+					<string>message count</string>
+				</dict>
+			</dict>
 		</dict>
 		<key>JVChatWindowController</key>
 		<dict>
@@ -744,6 +825,16 @@
 				<key>Name</key>
 				<string>offline</string>
 			</dict>
+		</dict>
+	</dict>
+	<key>Synonyms</key>
+	<dict>
+		<key>maPA</key>
+		<dict>
+			<key>Name</key>
+			<string>body</string>
+			<key>Description</key>
+			<string>Body of a chat message. (Note: font and size are inaccurate and should be ignored.)</string>
 		</dict>
 	</dict>
 	<key>Name</key>
