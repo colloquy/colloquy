@@ -35,6 +35,9 @@
 	BOOL _scrollerIsAtBottom;
 	long _previousLogOffset;
 	BOOL _forceSplitViewPosition;
+
+	BOOL _loadingPersonImage;
+	NSData *_personImageData;
 }
 - (id) initWithTarget:(id) target;
 - (id) target;

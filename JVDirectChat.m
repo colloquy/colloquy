@@ -96,7 +96,7 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
-@interface JVDirectChat (JVDirectChatPrivate)
+@interface JVDirectChat (JVDirectChatPrivate) <ABImageClient>
 - (void) addEventMessageToLogAndDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes entityEncodeAttributes:(BOOL) encode;
 - (void) addMessageToLogAndDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action;
 - (void) processQueue;
@@ -748,7 +748,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSRange range;
 
 	// allow commands to be passed to plugins if we arn't connected, allow commands to pass to plugins and server if we are just out of the room
-	if( ( _cantSendMessages || ! [[self connection] isConnected] ) && ! [[[send textStorage] string] hasPrefix:@"/"] ) return;
+	if( ( _cantSendMessages || ! [[self connection] isConnected] ) && ( ! [[[send textStorage] string] hasPrefix:@"/"] || [[[send textStorage] string] hasPrefix:@"//"] ) ) return;
 
 	_historyIndex = 0;
 	if( ! [[send textStorage] length] ) return;
@@ -771,7 +771,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		subMsg = [[[[send textStorage] attributedSubstringFromRange:NSMakeRange( 0, range.location )] mutableCopy] autorelease];
 
 		if( ( [subMsg length] >= 1 && range.length ) || ( [subMsg length] && ! range.length ) ) {
-			if( [[subMsg string] hasPrefix:@"/"] ) {
+			if( [[subMsg string] hasPrefix:@"/"] && ! [[subMsg string] hasPrefix:@"//"] ) {
 				BOOL handled = NO;
 				NSScanner *scanner = [NSScanner scannerWithString:[subMsg string]];
 				NSString *command = nil;
@@ -787,6 +787,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				if( ! ( handled = [self processUserCommand:command withArguments:arguments] ) && [[self connection] isConnected] )
 					[[self connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
 			} else {
+				if( [[subMsg string] hasPrefix:@"//"] ) {
+					[subMsg deleteCharactersInRange:NSMakeRange(0,1)];
+				}
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
 					extern NSArray *JVAutoActionVerbs;
 					if( ! JVAutoActionVerbs ) JVAutoActionVerbs = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]] retain];
@@ -1128,18 +1131,35 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark WebKit Support
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
-	NSMutableArray *ret = (NSMutableArray *)[super webView:sender contextMenuItemsForElement:element defaultMenuItems:defaultMenuItems];
+	NSMutableArray *ret = [NSMutableArray array];
 
-	if( ! [defaultMenuItems count] && ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
-		NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
-		[item setSubmenu:_spillEncodingMenu];
-		[ret addObject:item];
+	NSMenuItem *item = nil;
+	unsigned i = 0;
+	BOOL found = NO;
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Display", "clear display contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
+	for( i = 0; i < [defaultMenuItems count]; i++ ) {
+		item = [defaultMenuItems objectAtIndex:i];
+		switch( [item tag] ) {
+			case WebMenuItemTagCopy:
+			case WebMenuItemTagDownloadLinkToDisk:
+			case WebMenuItemTagDownloadImageToDisk:
+				found = YES;
+				break;
+		}
+	}
+
+	if( ! found && ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
+		NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Display", "clear display contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[item setAction:@selector( clearDisplay: )];
 		[ret addObject:item];
+
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
+		[item setSubmenu:_spillEncodingMenu];
+		[ret addObject:item];
 	}
+
+	[ret addObjectsFromArray:[super webView:sender contextMenuItemsForElement:element defaultMenuItems:defaultMenuItems]];
 
 	return ret;
 }
@@ -1865,17 +1885,38 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return "normal";
 }
 
+- (void) consumeImageData:(NSData *) data forTag:(int) tag {
+	[_personImageData autorelease];
+	_personImageData = [data retain];
+	_loadingPersonImage = NO;
+}
+
 - (void) _saveSelfIcon {
-	ABPerson *_person = [[ABAddressBook sharedAddressBook] me];
-	NSImage *icon = [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
-	NSData *imageData = [icon TIFFRepresentation];
-	if( ! [imageData length] ) {
-		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]] handler:nil];
+	if( _loadingPersonImage ) return;
+	_loadingPersonImage = YES;
+
+	ABPerson *me = [[ABAddressBook sharedAddressBook] me];
+
+	@try {
+		[me beginLoadingImageDataForClient:self];
+	} @catch ( NSException *exception ) {
+		_loadingPersonImage = NO;
 		return;
 	}
-	if( [[NSFileManager defaultManager] isReadableFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]]] )
-		return;
-	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [_person uniqueId]] atomically:NO];
+
+	while( ! _personImageData && _loadingPersonImage ) // asynchronously load the image incase it is on the network
+		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+
+	if( ! [_personImageData length] ) {
+		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [me uniqueId]] handler:nil];
+	} else {
+		NSImage *icon = [[[NSImage alloc] initWithData:_personImageData] autorelease];
+		NSData *imageData = [icon TIFFRepresentation];
+		[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [me uniqueId]] atomically:NO];
+
+		[_personImageData autorelease];
+		_personImageData = nil;
+	}
 }
 
 - (void) _saveBuddyIcon:(JVBuddy *) buddy {
@@ -1884,8 +1925,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] handler:nil];
 		return;
 	}
-	if( [[NSFileManager defaultManager] isReadableFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]]] )
-		return;
+
 	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] atomically:NO];
 }
 
