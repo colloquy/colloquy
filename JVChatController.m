@@ -527,20 +527,20 @@ static JVChatController *sharedInstance = nil;
 			if( kindOfClass ) enumerator = [[self chatViewControllersKindOfClass:modeClass] objectEnumerator];
 			else enumerator = [[self chatViewControllersOfClass:modeClass] objectEnumerator];
 			while( ( viewController = [enumerator nextObject] ) ) {
-				if( [viewController connection] == [controller connection] ) {
+				if( controller != viewController && [viewController connection] == [controller connection] ) {
 					windowController = [viewController windowController];
-					break;
+					if( windowController ) break;
 				}
 			}
 		} else {
-			NSSet *panels = nil;
-			if( kindOfClass ) panels = [self chatViewControllersKindOfClass:modeClass];
-			else panels = [self chatViewControllersOfClass:modeClass];
-		    if( [panels count] > 0 ) {
-				NSMutableSet *tempSet = [[panels mutableCopy] autorelease];
-				[tempSet removeObject:controller];
-				windowController = [[tempSet anyObject] windowController];
-		    }
+			if( kindOfClass ) enumerator = [[self chatViewControllersKindOfClass:modeClass] objectEnumerator];
+			else enumerator = [[self chatViewControllersOfClass:modeClass] objectEnumerator];
+			while( ( viewController = [enumerator nextObject] ) ) {
+				if( controller != viewController ) {
+					windowController = [viewController windowController];
+					if( windowController ) break;
+				}
+			}
 		}
 		break;
 	}
