@@ -1,9 +1,69 @@
 #import <Cocoa/Cocoa.h>
+#import <WebKit/WebKit.h>
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
 #import "NSStringAdditions.h"
 
+static NSConditionLock *renderingFragmentLock = nil;
+static WebView *fragmentWebView = nil;
+
 @implementation NSAttributedString (NSAttributedStringHTMLAdditions)
++ (id) attributedStringWithHTMLFragment:(NSString *) fragment baseURL:(NSURL *) url {
+	extern NSConditionLock *renderingFragmentLock;
+	extern WebView *fragmentWebView;
+
+	NSParameterAssert( fragment != nil );
+
+	if( ! renderingFragmentLock )
+		renderingFragmentLock = [[NSConditionLock alloc] initWithCondition:2];
+	fragmentWebView = nil;
+
+	[renderingFragmentLock lockWhenCondition:2];
+	[renderingFragmentLock unlockWithCondition:0];
+
+	[NSThread detachNewThreadSelector:@selector( renderHTMLFragment: ) toTarget:self withObject:[NSDictionary dictionaryWithObjectsAndKeys:fragment, @"fragment", url, @"url", nil]];
+
+	[renderingFragmentLock lockWhenCondition:1];
+
+	id result = [[[self alloc] initWithAttributedString:[(id <WebDocumentText>)[[[fragmentWebView mainFrame] frameView] documentView] attributedString]] autorelease];
+
+	[renderingFragmentLock unlockWithCondition:2];
+
+	return result;
+}
+
++ (void) renderHTMLFragment:(NSDictionary *) info {
+	extern WebView *fragmentWebView;
+	extern NSConditionLock *renderingFragmentLock;
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+	[renderingFragmentLock lockWhenCondition:0];
+
+	[NSThread setThreadPriority:1.0];
+
+	NSString *fragment = [info objectForKey:@"fragment"];
+	NSURL *url = [info objectForKey:@"url"];
+
+	fragmentWebView = [[WebView alloc] initWithFrame:NSMakeRect( 0., 0., 300., 100. ) frameName:nil groupName:nil];
+	[fragmentWebView setFrameLoadDelegate:self];
+	[[fragmentWebView mainFrame] loadHTMLString:[NSString stringWithFormat:@"<font color=\"#01fe02\">%@</font>", fragment] baseURL:url];
+
+	[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.25]];
+
+	[renderingFragmentLock lockWhenCondition:2];
+	[renderingFragmentLock unlockWithCondition:2];
+
+	[fragmentWebView release];
+	fragmentWebView = nil;
+
+	[pool release];
+}
+
++ (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
+	extern NSConditionLock *renderingFragmentLock;
+	[renderingFragmentLock unlockWithCondition:1];
+}
+
 - (NSData *) HTMLWithOptions:(NSDictionary *) options usingEncoding:(NSStringEncoding) encoding allowLossyConversion:(BOOL) loss {
 	NSRange limitRange, effectiveRange;
 	NSMutableString *out = nil;
