@@ -237,7 +237,7 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 - (NSArray *) userVariantStyleSheetNames {
 	if( ! _userVariants ) {
 		NSMutableArray *ret = [NSMutableArray array];
-		NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [self identifier]] stringByExpandingTildeInPath]];
+		NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier]] stringByExpandingTildeInPath]];
 		NSEnumerator *enumerator = [files objectEnumerator];
 		NSString *file = nil;
 
@@ -252,7 +252,7 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 }
 
 - (BOOL) isUserVariantName:(NSString *) name {
-	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [self identifier], name] stringByExpandingTildeInPath];
+	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/%@.css", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier], name] stringByExpandingTildeInPath];
 	return [[NSFileManager defaultManager] isReadableFileAtPath:path];
 }
 
@@ -267,7 +267,7 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 	} else {
 		if( [self isUserVariantName:name] ) {
-			NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [self identifier], name] stringByExpandingTildeInPath];
+			NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/%@.css", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier], name] stringByExpandingTildeInPath];
 			[[NSUserDefaults standardUserDefaults] setObject:path forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 		} else {
 			[[NSUserDefaults standardUserDefaults] setObject:name forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
@@ -315,7 +315,7 @@ NSString *JVNewStyleVariantAddedNotification = @"JVNewStyleVariantAddedNotificat
 	NSString *path = [_bundle pathForResource:name ofType:@"css" inDirectory:@"Variants"];
 	if( path ) return [NSURL fileURLWithPath:path];
 
-	path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [self identifier], name] stringByExpandingTildeInPath];
+	path = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/%@.css", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier], name] stringByExpandingTildeInPath];
 	if( [[NSFileManager defaultManager] isReadableFileAtPath:path] )
 		return [NSURL fileURLWithPath:path];
 
