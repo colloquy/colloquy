@@ -1545,7 +1545,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[urlScanner scanUpToString:@"www." intoString:NULL];
 		// Skip them if they come immediately after an alphanumeric character
 		if( [urlScanner scanLocation] == 0 || ! [legalSchemeSet characterIsMember:[part characterAtIndex:[urlScanner scanLocation] - 1]] ) {
-			NSString *domain = nil, *path = nil;
+			NSString *domain = @"", *path = @"";
 			if( [urlScanner scanCharactersFromSet:legalDomainSet intoString:&domain] ) {
 				NSRange dotRange = [domain rangeOfString:@".."];
 				if( dotRange.location != NSNotFound )
