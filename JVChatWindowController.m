@@ -752,7 +752,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[menu addItem:menuItem];
 	}
 
-	[viewActionButton setMenu:menu];
+	if( [menu numberOfItems] ) {
+		[viewActionButton setEnabled:YES];
+		[viewActionButton setMenu:menu];
+	} else [viewActionButton setEnabled:NO];
 }
 
 - (void) _refreshWindow {
