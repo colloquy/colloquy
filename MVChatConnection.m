@@ -1426,7 +1426,7 @@ void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *n
 
 - (void) addUserToNotificationList:(NSString *) user {
 	NSParameterAssert( user != nil );
-	notifylist_add( [[NSString stringWithFormat:@"%@!*@*", user] UTF8String], NULL, TRUE, 600 );
+	notifylist_add( [[NSString stringWithFormat:@"%@!*@*", user] UTF8String], [self _irssiConnection] -> connrec -> chatnet, TRUE, 600 );
 }
 
 - (void) removeUserFromNotificationList:(NSString *) user {
