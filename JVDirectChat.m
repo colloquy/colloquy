@@ -1553,8 +1553,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		return [[element valueForKey:@"offsetTop"] intValue];
 	} else
 #endif
-	{
-		// old JavaScript method
+	{ // old JavaScript method
 		return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%d\" );", identifier]] intValue];
 	}
 }
@@ -1567,19 +1566,19 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		else return 0;
 	} else
 #endif
-	{
-		// old JavaScript method
+	{ // old JavaScript method
 		return [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", index]] intValue];
 	}
 }
 
 - (void) scrollToBottom {
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 #ifdef _WEB_SCRIPT_OBJECT_H_
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body];
 		[body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
+	} else
 #endif
-	} else {
+	{ // old JavaScript method
 		[display stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
 	}
 }
@@ -1589,11 +1588,14 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	unsigned int scrollbackLimit = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"];
 	NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
 
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 #ifdef _WEB_SCRIPT_OBJECT_H_
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
+	} else
 #endif
-	} else messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+	{ // old JavaScript method
+		messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+	}
 
 	if( ( messageCount + 1 ) > scrollbackLimit ) {
 		int loc = [self locationOfElementByIndex:( ( messageCount + 1 ) - scrollbackLimit )];
@@ -1601,8 +1603,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 			[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1 )];
 	}
 
-	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 #ifdef _WEB_SCRIPT_OBJECT_H_
+	if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 		DOMHTMLElement *element = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] createElement:@"span"];
 		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[[[display mainFrame] DOMDocument] getElementById:@"consecutiveInsert"];
 		if( ! replaceElement ) subsequent = NO;
@@ -1643,8 +1645,9 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 		// scroll down if we need to
 		if( [scrollNeeded boolValue] ) [self scrollToBottom];
+	} else
 #endif
-	} else { // old JavaScript method
+	{ // old JavaScript method
 		NSMutableString *transformedMessage = [html mutableCopy];
 		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[transformedMessage replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
@@ -1893,12 +1896,13 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		unsigned int messageCount = 0;
 		unsigned long loc = 0;
 
-		if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 #ifdef _WEB_SCRIPT_OBJECT_H_
+		if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 			messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
 			loc = [self locationOfElementByIndex:( messageCount - 1 )];
+		} else
 #endif
-		} else {
+		{ // old JavaScript method
 			messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
 			loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
 		}
@@ -1911,12 +1915,13 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		unsigned int messageCount = 0;
 		unsigned long loc = 0;
 
-		if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 #ifdef _WEB_SCRIPT_OBJECT_H_
+		if( [[display mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
 			messageCount = [[[(DOMHTMLDocument *)[[display mainFrame] DOMDocument] body] children] length];
 			loc = [self locationOfElementByIndex:( messageCount - 1 )];
+		} else
 #endif
-		} else {
+		{ // old JavaScript method
 			messageCount = [[display stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
 			loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
 		}
