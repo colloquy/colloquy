@@ -752,6 +752,8 @@ static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 	}
 }
 
+#undef WebMenuItemTagGoBack
+
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
 #ifdef WebMenuItemTagGoBack
 	if( [display respondsToSelector:@selector( setDrawsBackground: )] ) {
