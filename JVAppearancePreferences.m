@@ -35,7 +35,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( colorWellDidChangeColor: ) name:JVColorWellCellColorDidChangeNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVStylesScannedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVChatEmoticonsScannedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateVariant ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( reloadVariant: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
 
 		[JVChatTranscript _scanForEmoticons];
 
@@ -339,6 +339,12 @@
 }
 
 #pragma mark -
+
+- (void) reloadVariant:(NSNotification *) notification {
+	if( ! [_userStyle length] || ! [[preview window] isVisible] ) return;
+	[self parseStyleOptions];
+	[self updateVariant];
+}
 
 - (void) parseStyleOptions {
 	[self setUserStyle:[_style contentsOfVariantStyleSheetWithName:[_style defaultVariantName]]];
