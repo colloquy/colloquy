@@ -43,14 +43,14 @@
 	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:11.], NSFontAttributeName, ( highlighted ? [NSColor whiteColor] : [NSColor blackColor] ), NSForegroundColorAttributeName, nil];
 	NSImage *mainImage = nil;
 
-	if( highlighted ) {
+	if( highlighted && _altImage ) {
 		mainImage = [[self image] retain];
 		[self setImage:_altImage];
 	}
 
 	[super drawWithFrame:cellFrame inView:controlView];
 
-	if( highlighted ) {
+	if( highlighted && mainImage ) {
 		[self setImage:mainImage];
 		[mainImage autorelease];
 	}
