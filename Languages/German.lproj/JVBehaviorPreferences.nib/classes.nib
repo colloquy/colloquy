@@ -1,0 +1,60 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                changeMessageScrollback = id; 
+                changeNaturalActionDetection = id; 
+                changePreferredWindow = id; 
+                changeSendHistory = id; 
+                changeSendOnEnterAction = id; 
+                changeSendOnReturnAction = id; 
+                changeSortByStatus = id; 
+                changeSpellChecking = id; 
+                changeTabKeyComplete = id; 
+                changeTabbedWindows = id; 
+            }; 
+            CLASS = JVBehaviorPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                checkSpelling = NSButton; 
+                detectNaturalActions = NSButton; 
+                enterKeyAction = NSPopUpButton; 
+                messageScrollback = NSTextField; 
+                messageScrollbackStepper = NSStepper; 
+                newChats = NSPopUpButton; 
+                newConsoles = NSPopUpButton; 
+                newRooms = NSPopUpButton; 
+                newTranscripts = NSPopUpButton; 
+                returnKeyAction = NSPopUpButton; 
+                sendHistory = NSTextField; 
+                sendHistoryStepper = NSStepper; 
+                sortByStatus = NSButton; 
+                tabKeyComplete = NSButton; 
+                tabKeyCompleteLabel = NSTextField; 
+                tabbedWindows = NSButton; 
+            }; 
+            SUPERCLASS = NSPreferencesModule; 
+        }, 
+        {
+            ACTIONS = {apply = id; cancel = id; ok = id; selectModule = id; }; 
+            CLASS = NSPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                applyButton = id; 
+                cancelButton = id; 
+                moduleMatrix = id; 
+                okButton = id; 
+                preferencesPanel = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = NSPreferencesModule; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
