@@ -56,8 +56,11 @@
     <xsl:variable name="extension">
       <xsl:value-of select="substring(@href,string-length(@href) - 3, 4)" />
     </xsl:variable>
+    <xsl:variable name="extensionLong">
+      <xsl:value-of select="substring(@href,string-length(@href) - 4, 5)" />
+    </xsl:variable>
       <xsl:choose>
-        <xsl:when test="$extension = '.jpg' or $extension = '.jpeg' or $extension = '.JPG' or $extension = '.JPEG'">
+        <xsl:when test="$extension = '.jpg' or $extension = '.JPG' or $extensionLong = '.jpeg' or $extensionLong = '.JPEG'">
  			<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
         </xsl:when>
         <xsl:when test="$extension = '.gif' or $extension = '.GIF'">
@@ -66,7 +69,7 @@
         <xsl:when test="$extension = '.png' or $extension = '.PNG'">
  			<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
         </xsl:when>
-        <xsl:when test="$extension = '.tif' or $extension = '.TIF' or $extension = '.tiff' or $extension = '.TIFF'">
+        <xsl:when test="$extension = '.tif' or $extension = '.TIF' or $extensionLong = '.tiff' or $extensionLong = '.TIFF'">
  			<a href="{@href}"><img src="{@href}" onload="resizeIfNeeded( this )" /></a>
         </xsl:when>
         <xsl:when test="$extension = '.bmp' or $extension = '.BMP'">
