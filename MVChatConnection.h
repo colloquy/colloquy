@@ -250,6 +250,10 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 #pragma mark -
 
+- (NSString *) displayNameFromChatRoom:(NSString *) room;
+
+#pragma mark -
+
 - (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room;
 
 - (void) promoteMember:(NSString *) member inRoom:(NSString *) room;

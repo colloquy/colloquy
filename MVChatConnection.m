@@ -32,8 +32,6 @@
 #import "dcc-file.h"
 #import "dcc-get.h"
 
-#pragma mark -
-
 NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
@@ -1410,6 +1408,14 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
+- (NSString *) displayNameFromChatRoom:(NSString *) room {
+	if( ! [room length] ) return room;
+	NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"#&+!"];
+	return ( [set characterIsMember:[room characterAtIndex:0]] ? [room substringFromIndex:1] : room );
+}
+
+#pragma mark -
+
 - (void) setTopic:(NSAttributedString *) topic withEncoding:(NSStringEncoding) encoding forRoom:(NSString *) room {
 	NSParameterAssert( topic != nil );
 	NSParameterAssert( room != nil );
@@ -1567,7 +1573,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ! server ) return nil;
 
 	MVChatConnectionModuleData *data = MODULE_DATA( server );
-	if( data && data -> connection ) return data -> connection;
+	if( data ) return data -> connection;
 
 	return nil;
 }
