@@ -129,13 +129,15 @@
 		}
 		return handled;
 	} else if( [command isEqualToString:@"names"] ) {
-//		MVChatWindowController *window = [chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES];
-//		[window openMemberDrawer:nil];
-//		return YES;
+		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+		JVChatRoom *rm = [chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES];
+		[[rm windowController] openViewsDrawer:nil];
+		[[rm windowController] expandListItem:rm];
+		return YES;
 	} else if( [command isEqualToString:@"clear"] ) {
-//		MVChatWindowController *window = [chatWindowControllerClass chatWindowForRoom:room withConnection:connection ifExists:YES];
-//		[window clearDisplay:nil];
-//		return YES;
+		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+		[(JVChatRoom *)[chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES] clearDisplay:nil];
+		return YES;
 	} else if( [command isEqualToString:@"kick"] ) {
 		NSString *member = nil, *msg = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
@@ -198,9 +200,8 @@
 			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
 		return NO;
 	} else if( [command isEqualToString:@"clear"] ) {
-//		MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES];
-//		[window clearDisplay:nil];
-//		return YES;
+		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+		[(JVChatRoom *)[chatController chatViewControllerForUser:user withConnection:connection ifExists:YES] clearDisplay:nil];
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
