@@ -562,24 +562,19 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 @implementation MVFileTransferController (MVFileTransferControllerPrivate)
 - (void) _incomingFile:(NSNotification *) notification {
 	NSMutableDictionary *info = [[[notification userInfo] mutableCopy] autorelease];
-//	NSWindow *win = [[MVChatWindowController chatWindowWithUser:[info objectForKey:@"from"] withConnection:[notification object] ifExists:YES] window];
-	NSWindow *win = nil;
 
 	[info setObject:[notification object] forKey:@"connection"];
 
-	NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, win, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *) [info retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [info objectForKey:@"filename"], [info objectForKey:@"from"], MVPrettyFileSize( [[info objectForKey:@"size"] unsignedLongValue] ) );
+	NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *) [info retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [info objectForKey:@"filename"], [info objectForKey:@"from"], MVPrettyFileSize( [[info objectForKey:@"size"] unsignedLongValue] ) );
 }
 
 - (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	NSDictionary *info = [(NSDictionary *) contextInfo autorelease]; // for the previous retain in _incomingFile:
 	if( returnCode == NSOKButton ) {
-//		NSWindow *win = [[MVChatWindowController chatWindowWithUser:[info objectForKey:@"from"] withConnection:[info objectForKey:@"connection"] ifExists:YES] window];
-		NSWindow *win = nil;
 		NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
-		[[NSApplication sharedApplication] endSheet:sheet];
 		[sheet close];
 		[savePanel setDelegate:self];
-		[savePanel beginSheetForDirectory:NSHomeDirectory() file:[info objectForKey:@"filename"] modalForWindow:win modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
+		[savePanel beginSheetForDirectory:NSHomeDirectory() file:[info objectForKey:@"filename"] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
 	}
 }
 
@@ -597,13 +592,10 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		else if( fileExists ) result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists and can't be resumed. Replace it?", "replace transfer save dialog message" ), NSLocalizedString( @"Replace", "replace button name" ), @"Cancel", nil, [filename lastPathComponent], [filename stringByDeletingLastPathComponent] );
 
 		if( result == NSCancelButton ) {
-//			NSWindow *win = [[MVChatWindowController chatWindowWithUser:[info objectForKey:@"from"] withConnection:[info objectForKey:@"connection"] ifExists:YES] window];
-			NSWindow *win = nil;
 			NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
-			[[NSApplication sharedApplication] endSheet:sheet];
 			[sheet close];
 			[savePanel setDelegate:self];
-			[savePanel beginSheetForDirectory:[sheet directory] file:[filename lastPathComponent] modalForWindow:win modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
+			[savePanel beginSheetForDirectory:[sheet directory] file:[filename lastPathComponent] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *) [info retain]];
 		} else {
 			BOOL resume = ( resumePossible && result == NSOKButton );
 			[[info objectForKey:@"connection"] acceptFileTransfer:[info objectForKey:@"identifier"] saveToPath:filename resume:resume];
