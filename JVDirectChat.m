@@ -1260,10 +1260,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		if( ( messageCount + 1 ) > scrollbackLimit ) {
 			float loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( ( messageCount + 1 ) - scrollbackLimit )]] floatValue];
-			if( loc && [scroller isKindOfClass:[JVMarkedScroller class]] )
+			if( loc > 0. && [scroller isKindOfClass:[JVMarkedScroller class]] )
 				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1. )];
 		}
-
+		
 		[messageString escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[messageString replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [messageString length] )];
 		[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"appendMessage( \"%@\" );", messageString]];
@@ -1490,7 +1490,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		if( ( messageCount + 1 ) > scrollbackLimit ) {
 			float loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( ( messageCount + 1 ) - scrollbackLimit )]] floatValue];
-			if( loc && [scroller isKindOfClass:[JVMarkedScroller class]] )
+			if( loc > 0. && [scroller isKindOfClass:[JVMarkedScroller class]] )
 				[(JVMarkedScroller *)scroller shiftMarksAndShadedAreasBy:( loc * -1. )];
 		}
 
