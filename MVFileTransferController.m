@@ -249,11 +249,16 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	NSParameterAssert( identifier != nil );
 	BOOL ret = NO;
 
-	enumerator = [_transferStorage objectEnumerator];
+	enumerator = [[[_transferStorage copy] autorelease] objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [identifier isEqualToString:[info objectForKey:@"identifier"]] ) {
 			if( ! [info objectForKey:@"started"] ) [info setObject:[NSDate date] forKey:@"started"];
 			[info setObject:[NSNumber numberWithUnsignedInt:status] forKey:@"status"];
+			if( status == MVTransferDone && [[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2 ) {
+				[_calculationItems removeObject:info];
+				[_transferStorage removeObject:info];
+				[self _updateProgress:nil];
+			}
 			ret = YES;
 			break;
 		}
@@ -522,14 +527,19 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	NSEnumerator *enumerator = nil;
 	NSMutableDictionary *info = nil;
 	
-	enumerator = [_transferStorage objectEnumerator];
+	enumerator = [[[_transferStorage copy] autorelease] objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"controller"] == download ) {
 			[info setObject:[NSNumber numberWithUnsignedInt:MVTransferDone] forKey:@"status"];
+			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2 ) {
+				[_calculationItems removeObject:info];
+				[_transferStorage removeObject:info];
+				[self _updateProgress:nil];
+			}
 			break;
 		}
 	}
-	
+
 	[self _updateProgress:nil];
 }
 
