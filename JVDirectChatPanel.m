@@ -611,6 +611,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 	JVMutableChatEvent *event = [JVMutableChatEvent chatEventWithName:name andMessage:message];
 	[event setAttributes:attributes];
 
+	[display setScrollbackLimit:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
+
 	JVChatEvent *newEvent = [[self transcript] appendEvent:event];
 	[display appendChatTranscriptElement:newEvent];
 
@@ -734,6 +736,8 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
 		[[JVNotificationController defaultManager] performNotification:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
+
+	[display setScrollbackLimit:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
 
 	JVChatMessage *newMessage = [[self transcript] appendMessage:cmessage];
 
@@ -1371,7 +1375,7 @@ static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 
 	if( ! messageString ) {
 		[options setObject:[NSNumber numberWithUnsignedInt:[NSString defaultCStringEncoding]] forKey:@"StringEncoding"];
-		messageString = [NSMutableAttributedString attributedStringWithChatFormat		:message options:options];
+		messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 	}
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] ) {
