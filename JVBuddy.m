@@ -21,7 +21,19 @@ NSString *JVBuddyNicknameStatusChangedNotification = @"JVBuddyNicknameStatusChan
 
 NSString *JVBuddyActiveNicknameChangedNotification = @"JVBuddyActiveNicknameChangedNotification";
 
+static JVBuddyName _mainPreferredName = JVBuddyFullName;
+
 @implementation JVBuddy
++ (JVBuddyName) preferredName {
+	extern JVBuddyName _mainPreferredName;
+	return _mainPreferredName;
+}
+
++ (void) setPreferredName:(JVBuddyName) preferred {
+	extern JVBuddyName _mainPreferredName;
+	_mainPreferredName = preferred;
+}
+
 + (id) buddyWithPerson:(ABPerson *) person {
 	return [[[[self class] alloc] initWithPerson:person] autorelease];
 }
@@ -149,8 +161,61 @@ NSString *JVBuddyActiveNicknameChangedNotification = @"JVBuddyActiveNicknameChan
 	return [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
 }
 
+- (NSString *) preferredName {
+	switch( [[self class] preferredName] ) {
+		default:
+		case JVBuddyFullName:
+			return [self compositeName];
+		case JVBuddyStoredNickname:
+			if( [_person valueForProperty:kABNicknameProperty] )
+				return [_person valueForProperty:kABNicknameProperty];
+		case JVBuddyActiveNickname:
+			return [[self activeNickname] user];
+	}
+	return [[self activeNickname] user];
+}
+
+- (JVBuddyName) preferredNameWillReturn {
+	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
+	NSString *lastName = [_person valueForProperty:kABLastNameProperty];
+
+	if( [firstName length] || [lastName length] ) return JVBuddyFullName;
+	if( [(NSString *)[_person valueForProperty:kABNicknameProperty] length] ) return JVBuddyStoredNickname;
+
+	return JVBuddyActiveNickname;
+}
+
+- (unsigned int) availableNames {
+	unsigned int ret = JVBuddyActiveNickname;
+	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
+	NSString *lastName = [_person valueForProperty:kABLastNameProperty];
+
+	if( [firstName length] || [lastName length] ) ret |= JVBuddyFullName;
+	if( [(NSString *)[_person valueForProperty:kABNicknameProperty] length] ) ret |= JVBuddyStoredNickname;
+
+	return ret;
+}
+
 - (NSString *) compositeName {
-	return [_person compositeName];
+	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
+	NSString *lastName = [_person valueForProperty:kABLastNameProperty];
+
+	if( ! firstName && lastName ) return lastName;
+	else if( firstName && ! lastName ) return firstName;
+	else if( firstName && lastName ) {
+		switch( [[ABAddressBook sharedAddressBook] defaultNameOrdering] ) {
+		default:
+		case kABFirstNameFirst:
+			return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+		case kABLastNameFirst:
+			return [NSString stringWithFormat:@"%@ %@", lastName, firstName];
+		}
+	}
+
+	firstName = [_person valueForProperty:kABNicknameProperty];
+	if( firstName ) return firstName;
+
+	return [[self activeNickname] user];
 }
 
 - (NSString *) firstName {

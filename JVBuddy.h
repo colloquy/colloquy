@@ -25,6 +25,12 @@ typedef enum {
 	JVBuddyAwayStatus
 } JVBuddyStatus;
 
+typedef enum {
+	JVBuddyActiveNickname = 0x0,
+	JVBuddyStoredNickname = 0x1,
+	JVBuddyFullName = 0x2
+} JVBuddyName;
+
 @interface JVBuddy : NSObject {
 	ABPerson *_person;
 	NSMutableSet *_nicknames;
@@ -32,6 +38,9 @@ typedef enum {
 	NSMutableDictionary *_nicknameStatus;
 	NSURL *_activeNickname;
 }
++ (JVBuddyName) preferredName;
++ (void) setPreferredName:(JVBuddyName) preferred;
+
 + (id) buddyWithPerson:(ABPerson *) person;
 + (id) buddyWithUniqueIdentifier:(NSString *) identifier;
 
@@ -51,6 +60,11 @@ typedef enum {
 - (NSSet *) onlineNicknames;
 
 - (NSImage *) picture;
+
+- (NSString *) preferredName;
+- (JVBuddyName) preferredNameWillReturn;
+- (unsigned int) availableNames;
+
 - (NSString *) compositeName;
 - (NSString *) firstName;
 - (NSString *) lastName;
