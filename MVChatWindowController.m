@@ -1186,6 +1186,11 @@ void MVChatPlaySoundForAction( NSString *action ) {
 	_windowClosed = YES;
 }
 
+- (void) windowDidBecomeMain:(NSNotification *) notification {
+    [window makeFirstResponder:sendText];
+	[window setDocumentEdited:NO];
+}
+
 - (void) windowDidBecomeKey:(NSNotification *) notification {
     [window makeFirstResponder:sendText];
 	[window setDocumentEdited:NO];
@@ -1193,6 +1198,10 @@ void MVChatPlaySoundForAction( NSString *action ) {
 		[self openMemberDrawer:nil];
 		memberDrawerWasOpen = NO;
 	}
+}
+
+- (void) windowDidResize:(NSNotification *) notification {
+	[displayText scrollRangeToVisible:NSMakeRange( [[displayText textStorage] length], 0 )];
 }
 
 #pragma mark -
