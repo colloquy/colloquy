@@ -274,8 +274,43 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 #pragma mark -
 
+- (void) setFirstName:(NSString *) name {
+	[_person setValue:name forProperty:kABFirstNameProperty];
+}
+
+- (void) setLastName:(NSString *) name {
+	[_person setValue:name forProperty:kABLastNameProperty];
+}
+
+- (void) setPrimaryEmail:(NSString *) email {
+	ABMutableMultiValue *value = [[[_person valueForProperty:kABEmailProperty] mutableCopy] autorelease];
+
+	if( ! value ) {
+		value = [[[ABMutableMultiValue alloc] init] autorelease];
+		[value addValue:email withLabel:kABOtherLabel];
+	} else [value replaceValueAtIndex:[value indexForIdentifier:[value primaryIdentifier]] withValue:email];
+
+	[_person setValue:value forProperty:kABEmailProperty];
+}
+
+- (void) setGivenNickname:(NSString *) name {
+	[_person setValue:name forProperty:kABNicknameProperty];
+}
+
+#pragma mark -
+
 - (NSString *) uniqueIdentifier {
 	return [_person uniqueId];
+}
+
+- (void) editInAddressBook {
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"addressbook://%@?edit", [_person uniqueId]]];
+	[[NSWorkspace sharedWorkspace] openURL:url];
+}
+
+- (void) viewInAddressBook {
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"addressbook://%@", [_person uniqueId]]];
+	[[NSWorkspace sharedWorkspace] openURL:url];
 }
 
 #pragma mark -
@@ -373,7 +408,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		if( [self status] == JVBuddyOfflineStatus ) [self setActiveNickname:url];
 		if( cameOnline ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyNicknameCameOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:url, @"nickname", nil]];
-		NSLog( @"_buddyOnline" );
 	}
 }
 
@@ -387,7 +421,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		if( [_onlineNicknames count] ) [self setActiveNickname:[_onlineNicknames anyObject]];
 		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyNicknameWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:url, @"nickname", nil]];
 		if( ! [_onlineNicknames count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
-		NSLog( @"_buddyOffline" );
 	}
 }
 

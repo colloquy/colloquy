@@ -75,7 +75,14 @@ typedef enum {
 - (NSString *) primaryEmail;
 - (NSString *) givenNickname;
 
+- (void) setFirstName:(NSString *) name;
+- (void) setLastName:(NSString *) name;
+- (void) setPrimaryEmail:(NSString *) email;
+- (void) setGivenNickname:(NSString *) name;
+
 - (NSString *) uniqueIdentifier;
+- (void) editInAddressBook;
+- (void) viewInAddressBook;
 
 - (NSComparisonResult) availabilityCompare:(JVBuddy *) buddy;
 - (NSComparisonResult) firstNameCompare:(JVBuddy *) buddy;
