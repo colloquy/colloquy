@@ -341,6 +341,79 @@
 
 #pragma mark -
 
+- (void) buildFileMenuForCell:(NSPopUpButtonCell *) cell andOptions:(NSMutableDictionary *) options {
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"None", "no background image label" ) action:NULL keyEquivalent:@""] autorelease];
+	[menuItem setRepresentedObject:@"none"];
+	[menu addItem:menuItem];
+
+	NSArray *files = [[_style bundle] pathsForResourcesOfType:nil inDirectory:[options objectForKey:@"folder"]];
+	NSEnumerator *enumerator = [files objectEnumerator];
+	NSString *resourcePath = [[[_style bundle] resourcePath] stringByAppendingPathComponent:[options objectForKey:@"folder"]];
+	NSString *path = nil;
+	BOOL matched = NO;
+
+	if( [files count] ) [menu addItem:[NSMenuItem separatorItem]];
+
+	while( ( path = [enumerator nextObject] ) ) {
+		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		NSImageRep *sourceImageRep = [icon bestRepresentationForDevice:nil];
+		NSImage *smallImage = [[[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )] autorelease];
+		[smallImage lockFocus];
+		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationLow];
+		[sourceImageRep drawInRect:NSMakeRect( 0., 0., 12., 12. )];
+		[smallImage unlockFocus];
+
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[[[NSFileManager defaultManager] displayNameAtPath:path] stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
+		[menuItem setImage:smallImage];
+		[menuItem setRepresentedObject:path];
+		[menuItem setTag:5];
+		[menu addItem:menuItem];
+
+		NSString *fullPath = ( [[options objectForKey:@"path"] isAbsolutePath] ? [options objectForKey:@"path"] : [resourcePath stringByAppendingPathComponent:[options objectForKey:@"path"]] );
+		if( [path isEqualToString:fullPath] ) {
+			int index = [menu indexOfItemWithRepresentedObject:path];
+			[options setObject:[NSNumber numberWithInt:index] forKey:@"value"];
+			matched = YES;
+		}
+	}
+
+	path = [options objectForKey:@"path"];
+	if( [files count] && ( ! matched && [path length] ) ) [menu addItem:[NSMenuItem separatorItem]];
+
+	if( ! matched && [path length] ) {
+		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		NSImageRep *sourceImageRep = [icon bestRepresentationForDevice:nil];
+		NSImage *smallImage = [[[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )] autorelease];
+		[smallImage lockFocus];
+		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationLow];
+		[sourceImageRep drawInRect:NSMakeRect( 0., 0., 12., 12. )];
+		[smallImage unlockFocus];
+
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[[NSFileManager defaultManager] displayNameAtPath:path] action:NULL keyEquivalent:@""] autorelease];
+		[menuItem setImage:smallImage];
+		[menuItem setRepresentedObject:path];
+		[menuItem setTag:10];
+		[menu addItem:menuItem];
+
+		int index = [menu indexOfItemWithRepresentedObject:path];
+		[options setObject:[NSNumber numberWithInt:index] forKey:@"value"];
+	}
+
+	[menu addItem:[NSMenuItem separatorItem]];
+
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Other...", "other image label" ) action:@selector( selectImageFile: ) keyEquivalent:@""] autorelease];
+	[menuItem setTarget:self];
+	[menuItem setTag:10];
+	[menu addItem:menuItem];
+
+	[cell setMenu:menu];
+	[cell synchronizeTitleAndSelectedItem];
+	[optionsTable performSelector:@selector( reloadData ) withObject:nil afterDelay:0.];
+}
+
+#pragma mark -
+
 // Called when Colloquy reactivates.
 - (void) reloadStyles:(NSNotification *) notification {
 	if( ! [[preview window] isVisible] ) return;
@@ -431,6 +504,28 @@
 							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
 							AGRegexMatch *vmatch = [regex findInString:value];
 							if( [vmatch count] ) [info setObject:[vmatch groupAtIndex:1] forKey:@"value"];
+						}
+					} else if( [[info objectForKey:@"type"] isEqualToString:@"file"] ) {
+						if( value && [v rangeOfString:@"%@"].location != NSNotFound ) {
+							// Strip the "!important" flag to compare correctly.
+							regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
+
+							[info setObject:[NSNumber numberWithInt:0] forKey:@"value"];
+							[info setObject:[NSNumber numberWithInt:0] forKey:@"default"];
+
+							// Replace %@ with (.*) so we can pull the color value out.
+							NSString *expression = [regex replaceWithString:@"" inString:v];
+							expression = [expression stringByEscapingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"]];
+							expression = [NSString stringWithFormat:expression, @"(.*)"];
+
+							// Store the color value if we found one.
+							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
+							AGRegexMatch *vmatch = [regex findInString:value];
+							if( [vmatch count] ) {
+								[info setObject:[vmatch groupAtIndex:1] forKey:@"path"];
+								if( [info objectForKey:@"cell"] )
+									[self buildFileMenuForCell:[info objectForKey:@"cell"] andOptions:info];
+							}
 						}
 					}
 				}
@@ -531,21 +626,33 @@
 
 	if( [[column identifier] isEqualToString:@"value"] ) {
 		NSMutableDictionary *info = [_styleOptions objectAtIndex:row];
-		NSArray *style = nil;
-
 		if( [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
 			[info setObject:object forKey:@"value"];
-			style = [[info objectForKey:@"layouts"] objectAtIndex:[object intValue]];
+
+			NSEnumerator *enumerator = [[[info objectForKey:@"layouts"] objectAtIndex:[object intValue]] objectEnumerator];
+			NSDictionary *styleInfo = nil;
+			while( ( styleInfo = [enumerator nextObject] ) ) {
+				[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:[styleInfo objectForKey:@"value"]];
+			}
+
+			[self saveStyleOptions];
+		} else if( [[info objectForKey:@"type"] isEqualToString:@"file"] ) {
+			if( [object intValue] == -1 ) return;
+
+			NSString *path = [[[info objectForKey:@"cell"] itemAtIndex:[object intValue]] representedObject];
+			if( ! path ) return;
+
+			[info setObject:object forKey:@"value"];
+			
+			NSEnumerator *enumerator = [[[info objectForKey:@"layouts"] objectAtIndex:0] objectEnumerator];
+			NSDictionary *styleInfo = nil;
+			while( ( styleInfo = [enumerator nextObject] ) ) {
+				NSString *setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], path];
+				[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
+			}
+
+			[self saveStyleOptions];
 		} else return;
-
-		NSEnumerator *enumerator = [style objectEnumerator];
-		NSDictionary *styleInfo = nil;
-
-		while( ( styleInfo = [enumerator nextObject] ) ) {
-			[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:[styleInfo objectForKey:@"value"]];
-		}
-
-		[self saveStyleOptions];
 	}
 }
 
@@ -576,38 +683,34 @@
 
 - (IBAction) selectImageFile:(id) sender {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	int index = [sender selectedRow];
+	int index = [optionsTable selectedRow];
 	NSMutableDictionary *info = [_styleOptions objectAtIndex:index];
-
-	NSArray *style = nil;
-	NSString *value = nil;
-	NSEnumerator *enumerator = nil;
-	NSDictionary *styleInfo = nil;
-	NSString *setting = nil;
-
-	NSString *path = [info objectForKey:@"value"];
-	int result = NSCancelButton;
 
 	[openPanel setAllowsMultipleSelection:NO];
 	[openPanel setTreatsFilePackagesAsDirectories:NO];
 	[openPanel setCanChooseDirectories:NO];
 
 	NSArray *types = [NSArray arrayWithObjects:@"jpg",@"tif",@"tiff",@"jpeg",@"gif",@"png",@"pdf",nil];
+	NSString *value = [sender representedObject];
+	if( [openPanel runModalForDirectory:[value stringByDeletingLastPathComponent] file:[value lastPathComponent] types:types] != NSOKButton )
+		return;
 
-	if( ( result = [openPanel runModalForDirectory:[path stringByDeletingLastPathComponent] file:[path lastPathComponent] types:types] ) == NSOKButton) {
-		value = [openPanel filename];
-	} else value = @"";
+	value = [openPanel filename];
+	[info setObject:value forKey:@"path"];
 
-	[info setObject:value forKey:@"value"];
-	style = [[info objectForKey:@"layouts"] objectAtIndex:0];
-	enumerator = [style objectEnumerator];
+	NSArray *style = [[info objectForKey:@"layouts"] objectAtIndex:0];
+	NSEnumerator *enumerator = [style objectEnumerator];
+	NSDictionary *styleInfo = nil;
 
 	while( ( styleInfo = [enumerator nextObject] ) ) {
-		setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], value];
+		NSString *setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], value];
 		[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
 	}
 
 	[self saveStyleOptions];
+
+	NSMutableDictionary *options = [_styleOptions objectAtIndex:index];
+	[self buildFileMenuForCell:[options objectForKey:@"cell"] andOptions:options];
 }
 
 - (BOOL) tableView:(NSTableView *) view shouldSelectRow:(int) row {
@@ -638,15 +741,10 @@
 			[options setObject:cell forKey:@"cell"];
 			return cell;
         } else if( [[options objectForKey:@"type"] isEqualToString:@"file"] ) {
-			id cell = [[NSButtonCell new] autorelease];
+			id cell = [[NSPopUpButtonCell new] autorelease];
 			[cell setControlSize:NSSmallControlSize];
 			[cell setFont:[NSFont menuFontOfSize:[NSFont smallSystemFontSize]]];
-			[cell setButtonType:NSMomentaryPushInButton];
-			[cell setBezelStyle:NSRoundedBezelStyle];
-			[cell setBezeled:YES];
-			[cell setAction:@selector( selectImageFile: )];
-			[cell setTitle:NSLocalizedString( @"Set Image...", "set image customize button name" )];
-			[cell setTarget:self];
+			[self buildFileMenuForCell:cell andOptions:options];
 			[options setObject:cell forKey:@"cell"];
 			return cell;
 		}
