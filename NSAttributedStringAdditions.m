@@ -197,7 +197,7 @@ static WebView *fragmentWebView = nil;
 		if( underline ) [ret appendString:@"<u>"];
 		if( strikethrough ) [ret appendString:@"<s>"];
 		if( [htmlStart length] ) [ret appendString:htmlStart];
-		if( link ) [ret appendFormat:@"<a href=\"%@\">", [link stringByEncodingXMLSpecialCharactersAsEntities]];
+		if( link ) [ret appendFormat:@"<a href=\"%@\">", [[link description] stringByEncodingXMLSpecialCharactersAsEntities]];
 
 		[ret appendString:[[[self attributedSubstringFromRange:effectiveRange] string] stringByEncodingXMLSpecialCharactersAsEntities]];
 
