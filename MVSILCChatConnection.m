@@ -171,17 +171,23 @@ static void silc_say( SilcClient client, SilcClientConnection conn, SilcClientMe
 
 static void silc_channel_message( SilcClient client, SilcClientConnection conn, SilcClientEntry sender, SilcChannelEntry channel, SilcMessagePayload payload, SilcChannelPrivateKey key, SilcMessageFlags flags, const unsigned char *message, SilcUInt32 message_len) {
 	MVSILCChatConnection *self = conn -> context;
+	
+	BOOL action = NO;
+	if ( flags & SILC_MESSAGE_FLAG_ACTION ) action = YES;
 
 	NSData *msgData = [NSData dataWithBytes:message length:message_len];
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> channel_name], @"room", [NSString stringWithUTF8String:sender -> nickname], @"from", msgData, @"message", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRoomMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:channel -> channel_name], @"room", [NSString stringWithUTF8String:sender -> nickname], @"from", msgData, @"message", [NSNumber numberWithBool:action], @"action", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 static void silc_private_message( SilcClient client, SilcClientConnection conn, SilcClientEntry sender, SilcMessagePayload payload, SilcMessageFlags flags, const unsigned char *message, SilcUInt32 message_len ) {
 	MVSILCChatConnection *self = conn -> context;
+	
+	BOOL action = NO;
+	if ( flags & SILC_MESSAGE_FLAG_ACTION ) action = YES;
 
 	NSData *msgData = [NSData dataWithBytes:message length:message_len];
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:sender -> nickname], @"from", msgData, @"message", nil]];
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:sender -> nickname], @"from", msgData, @"message", [NSNumber numberWithBool:action], @"action", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -492,6 +498,10 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 	if ( ! rawCommand ) rawCommand = @"Unknown command";
 	
 	if ( ! success ) {
+		char *error_message = (char *)silc_get_status_message( status );
+		if ( error_message ) {
+			rawCommand = [rawCommand stringByAppendingFormat:@": %s", error_message];
+		}
 		[self _sendCommandFailedNotify:rawCommand];
 		return;
 	}
@@ -1615,13 +1625,12 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) _sendCommandSucceededNotify:(NSString *) message {
-	NSString *raw = [NSString stringWithFormat:@"Command succeeded: %@", message];
-	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
+	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:message, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];
 }
 
 - (void) _sendCommandFailedNotify:(NSString *) message {
-	NSString *raw = [NSString stringWithFormat:@"Command failure: %@", message];
+	NSString *raw = [NSString stringWithFormat:@"Command failed: %@", message];
 	NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];	
 }
