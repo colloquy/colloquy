@@ -20,6 +20,8 @@
 - (void) _refreshResults:(id) sender;
 - (void) _resortResults;
 - (void) _connectionChange:(NSNotification *) notification;
+- (void) _startFetch;
+- (void) _stopFetch;
 @end
 
 #pragma mark -
@@ -33,7 +35,7 @@
 		_currentFilter = nil;
 		_sortColumn = @"room";
 		_ascending = YES;
-		_collapsed = NO;
+		_collapsed = YES;
 		_needsRefresh = YES;
 
 		_encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
@@ -131,12 +133,7 @@
 	[[self window] orderOut:nil];
 	[[NSApplication sharedApplication] endSheet:[self window]];
 
-	if( _connection ) {
-		[_connection stopFetchingRoomList];
-
-		JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
-		[console resume];
-	}
+	if( _connection )[self _stopFetch];
 
 	[super close];
 
@@ -223,6 +220,7 @@
 		[searchArea selectTabViewItemAtIndex:1];
 		[[self window] setShowsResizeIndicator:YES];
 		_collapsed = NO;
+		[self _startFetch];
 	} else [searchArea selectTabViewItemAtIndex:0];
 
 	_needsRefresh = YES;
@@ -233,24 +231,16 @@
 
 - (void) setConnection:(MVChatConnection *) connection {
 	if( _connection ) {
-		[_connection stopFetchingRoomList];
-		
+		[self _stopFetch];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:_connection];
-
-		JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
-		[console resume];
 	}
 
 	[_connection autorelease];
 	_connection = [connection retain];
 
-	if( _connection ) {
-		JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
-		[console pause];
-
+	if( _connection && ! _collapsed ) {
+		[self _startFetch];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _needToFefreshResults: ) name:MVChatConnectionGotRoomInfoNotification object:_connection];
-
-		[_connection fetchRoomList];
 	}
 
 	[_roomResults autorelease];
@@ -446,12 +436,10 @@ NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *r
 	[connectionPopup setMenu:menu];
 
 	if( [[notification name] isEqualToString:MVChatConnectionDidConnectNotification] && [notification object] == _connection ) {
-		JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
-		[console pause];
-
-		[_connection fetchRoomList];
-	} else if( [[notification name] isEqualToString:MVChatConnectionDidDisconnectNotification] && [notification object] == _connection )
+		if( ! _collapsed ) [self _startFetch];
+	} else if( [[notification name] isEqualToString:MVChatConnectionDidDisconnectNotification] && [notification object] == _connection ) {
 		[self setConnection:nil];
+	}
 
 	if( ! _connection && [menu numberOfItems] ) [connectionPopup selectItemAtIndex:-1];
 
@@ -532,5 +520,17 @@ refresh:
 
 	if( ! _collapsed ) [roomsTable noteNumberOfRowsChanged];
 	[roomField noteNumberOfItemsChanged];
+}
+
+- (void) _startFetch {
+	JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
+	[console pause];
+	[_connection fetchRoomList];
+}
+
+- (void) _stopFetch {
+	[_connection stopFetchingRoomList];
+	JVChatConsole *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
+	[console resume];
 }
 @end
