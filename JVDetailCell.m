@@ -5,9 +5,8 @@
 - (id) init {
 	self = [super init];
 
-//	NSLog( @"init %@", self );
-	
 	_altImage = nil;
+	_statusImage = nil;
 	_mainText = nil;
 	_infoText = nil;
 
@@ -20,17 +19,16 @@
 
 - (id) copyWithZone:(NSZone *) zone {
 	JVDetailCell *cell = (JVDetailCell *)[super copyWithZone:zone];
+	cell -> _statusImage = [_statusImage retain];
 	cell -> _altImage = [_altImage retain];
 	cell -> _mainText = [_mainText copy];
 	cell -> _infoText = [_infoText copy];
-//	NSLog( @"copy %@", cell );
 	return cell;
 }
 
 - (void) dealloc {
-//	NSLog( @"dealloc %@", self );
-
-	[self setAlternateImage:nil];
+	[self setStatusImage:nil];
+	[self setHighlightedImage:nil];
 	[self setMainText:nil];
 	[self setInformationText:nil];
 
@@ -39,12 +37,23 @@
 
 #pragma mark -
 
-- (void) setAlternateImage:(NSImage *) image {
+- (void) setStatusImage:(NSImage *) image {
+	[_statusImage autorelease];
+	_statusImage = [image retain];
+}
+
+- (NSImage *) statusImage {
+	return [[_statusImage retain] autorelease];
+}
+
+#pragma mark -
+
+- (void) setHighlightedImage:(NSImage *) image {
 	[_altImage autorelease];
 	_altImage = [image retain];
 }
 
-- (NSImage *) alternateImage {
+- (NSImage *) highlightedImage {
 	return [[_altImage retain] autorelease];
 }
 
@@ -74,6 +83,7 @@
 
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	float imageWidth = 0.;
+	float longestStringWidth = 0.;
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[NSApplication sharedApplication] isActive] );
 	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ), NSForegroundColorAttributeName, nil];
 	NSImage *mainImage = nil;
@@ -106,14 +116,19 @@
 	}
 
 #define JVDetailCellImageLabelPadding 5.
+#define JVDetailCellTextLeading 2.
+#define JVDetailCellStatusImageLeftPadding 2.
+#define JVDetailCellStatusImageRightPadding JVDetailCellStatusImageLeftPadding
 
 	if( ! [_infoText length] && [_mainText length] ) {
 		float mainYLocation = 0.;
 		NSSize mainStringSize = [_mainText sizeWithAttributes:attributes];
 
+		longestStringWidth = mainStringSize.width;
+
 		if( NSHeight( cellFrame ) >= mainStringSize.height ) {
-			mainYLocation = cellFrame.origin.y + ( NSHeight( cellFrame ) / 2 ) - ( mainStringSize.height / 2 );
-			[_mainText drawAtPoint:NSMakePoint( cellFrame.origin.x + imageWidth + JVDetailCellImageLabelPadding, mainYLocation ) withAttributes:attributes];
+			mainYLocation = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2 ) - ( mainStringSize.height / 2 );
+			[_mainText drawAtPoint:NSMakePoint( NSMinX( cellFrame ) + imageWidth + JVDetailCellImageLabelPadding, mainYLocation ) withAttributes:attributes];
 		}
 	} else if( [_infoText length] && [_mainText length] ) {
 		float mainYLocation = 0., subYLocation = 0.;
@@ -121,13 +136,22 @@
 		NSSize mainStringSize = [_mainText sizeWithAttributes:attributes];
 		NSSize subStringSize = [_infoText sizeWithAttributes:subAttributes];
 
+		if( mainStringSize.width > subStringSize.width ) longestStringWidth = mainStringSize.width;
+		else longestStringWidth = subStringSize.width;
+
 		if( NSHeight( cellFrame ) >= mainStringSize.height ) {
-			mainYLocation = cellFrame.origin.y + ( NSHeight( cellFrame ) / 2 ) - mainStringSize.height + 1.;
+			mainYLocation = cellFrame.origin.y + ( NSHeight( cellFrame ) / 2 ) - mainStringSize.height + ( JVDetailCellTextLeading / 2. );
 			[_mainText drawAtPoint:NSMakePoint( cellFrame.origin.x + imageWidth + JVDetailCellImageLabelPadding, mainYLocation ) withAttributes:attributes];
 
-			subYLocation = cellFrame.origin.y + ( NSHeight( cellFrame ) / 2 ) + subStringSize.height - mainStringSize.height + 1.;
-			[_infoText drawAtPoint:NSMakePoint( cellFrame.origin.x + imageWidth + JVDetailCellImageLabelPadding, subYLocation ) withAttributes:subAttributes];
+			subYLocation = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2 ) + subStringSize.height - mainStringSize.height + ( JVDetailCellTextLeading / 2. );
+			[_infoText drawAtPoint:NSMakePoint( NSMinX( cellFrame ) + imageWidth + JVDetailCellImageLabelPadding, subYLocation ) withAttributes:subAttributes];
 		}
+	}
+
+	if( _statusImage && NSHeight( cellFrame ) >= [_statusImage size].height ) {
+		float finalWidth = imageWidth + JVDetailCellImageLabelPadding + longestStringWidth + JVDetailCellStatusImageLeftPadding + [_statusImage size].width + JVDetailCellStatusImageRightPadding;
+		if( finalWidth <= NSWidth( cellFrame ) )
+			[_statusImage compositeToPoint:NSMakePoint( NSMinX( cellFrame ) + NSWidth( cellFrame ) - [_statusImage size].width - JVDetailCellStatusImageRightPadding, NSMaxY( cellFrame ) - ( ( NSHeight( cellFrame ) / 2 ) - ( [_statusImage size].width / 2 ) ) ) operation:NSCompositeSourceAtop];
 	}
 }
 

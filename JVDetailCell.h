@@ -2,12 +2,16 @@
 
 @interface JVDetailCell : NSImageCell {
 	@private
+	NSImage *_statusImage;
 	NSImage *_altImage;
 	NSString *_mainText;
 	NSString *_infoText;
 }
-- (void) setAlternateImage:(NSImage *) image;
-- (NSImage *) alternateImage;
+- (void) setStatusImage:(NSImage *) image;
+- (NSImage *) statusImage;
+
+- (void) setHighlightedImage:(NSImage *) image;
+- (NSImage *) highlightedImage;
 
 - (void) setMainText:(NSString *) text;
 - (NSString *) mainText;
