@@ -1419,7 +1419,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSCharacterSet *legalSchemeSet = nil;
 	NSCharacterSet *legalAddressSet = nil;
 	NSCharacterSet *ircChannels = [NSCharacterSet characterSetWithCharactersInString:@"#&"];
-	NSCharacterSet *seperaters = [NSCharacterSet characterSetWithCharactersInString:@"<> \t\n\r"];
+	NSCharacterSet *seperaters = [NSCharacterSet characterSetWithCharactersInString:@"<> \t\n\r&"];
 	NSString *link = nil, *urlHandle = nil;
 	NSMutableString *mutableLink = nil;
 	BOOL inTag = NO;
@@ -1436,6 +1436,11 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 			inTag = ! inTag;
 		} else if( [string characterAtIndex:range.location] == ' ' && ! inTag ) {
 			[string insertString:@"\033" atIndex:range.location + 1];
+		} else if( [string characterAtIndex:range.location] == '&' && ! inTag &&
+				   ([string length] < range.location + 5 ||
+					![[string substringWithRange:NSMakeRange(range.location, 5)]
+						isEqualToString:@"&amp;"]) ) {
+			[string insertString:@"\033" atIndex:range.location];
 		}
 		if( range.location >= [string length] ) break;
 		srange = NSMakeRange( range.location + 2, [string length] - range.location - 2 );
