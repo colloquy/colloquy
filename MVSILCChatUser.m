@@ -58,7 +58,7 @@ finish:
 	if( ( self = [super init] ) ) {
 		_connection = connection; // prevent circular retain
 		_nickname = [nickname copyWithZone:[self zone]];
-		_uniqueIdentifier = [identifier retain];
+		_uniqueIdentifier = [identifier copyWithZone:[self zone]];
 		_type = MVChatRemoteUserType;
 	}
 
@@ -68,8 +68,8 @@ finish:
 #pragma mark -
 
 - (unsigned) hash {
-	// SILC users have a true unique identifier that wont change, so we can use it for the hash
-	return ( [self type] ^ [[self connection] hash] ^ [[self uniqueIdentifier] hash] );
+	// this hash assumes the MVSILCChatConnection will return the same instance for equal users
+	return ( [self type] ^ [[self connection] hash] ^ (unsigned int) self );
 }
 
 - (unsigned long) supportedModes {
