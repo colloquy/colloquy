@@ -29,7 +29,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when the user types an unhandled "/command".</string>
+			<string>Called when the user types an unhandled "/command". Return true to prevent other plugins from processing this command. If no plugins return true, the command is sent "raw" to the server.</string>
 			<key>Name</key>
 			<string>process user command</string>
 		</dict>
@@ -65,7 +65,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when an unhandled CTCP request gets set to us from another user.</string>
+			<string>Called when an unhandled CTCP request gets set to us from another user. Return true to prevent other plugins from processing this request.</string>
 			<key>Name</key>
 			<string>process subcode request</string>
 		</dict>
@@ -101,7 +101,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when an unhandled CTCP reply gets set to us from another user.</string>
+			<string>Called when an unhandled CTCP reply gets set to us from another user. Return true to prevent other plugins from processing this reply.</string>
 			<key>Name</key>
 			<string>process subcode reply</string>
 		</dict>
@@ -110,7 +110,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The incoming message. Can contain HTML formatting. Return a reformated message (if desired).</string>
+				<string>The incoming message. Can contain HTML formatting.</string>
 			</dict>
 			<key>Arguments</key>
 			<dict>
@@ -137,7 +137,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when an incoming message is set to us or a room we are in.</string>
+			<string>Called when an incoming message is set to us or a room we are in. Return a reformatted message (if desired).</string>
 			<key>Name</key>
 			<string>process incoming chat message</string>
 		</dict>
@@ -146,7 +146,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>The outgoing message. Can contain HTML formatting. Return a reformated message (if desired).</string>
+				<string>The outgoing message. Can contain HTML formatting.</string>
 			</dict>
 			<key>Arguments</key>
 			<dict>
@@ -166,7 +166,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when a message is set from us to user or a room we are in.</string>
+			<string>Called when a message is set from us to user or a room we are in. Return a reformatted message (if desired).</string>
 			<key>Name</key>
 			<string>process outgoing chat message</string>
 		</dict>
