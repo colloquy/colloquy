@@ -5,8 +5,8 @@
 
 @protocol JVChatViewController;
 
-typedef enum _JVIgnoreMatch {
-	JVUserMessageIgnored,
+typedef enum _JVIgnoreMatchResult {
+	JVUserIgnored,
 	JVMessageIgnored,
 	JVNotIgnored
 } JVIgnoreMatchResult;

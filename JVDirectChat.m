@@ -19,6 +19,7 @@
 #import <AGRegex/AGRegex.h>
 
 #import "JVChatController.h"
+#import "KAIgnoreRule.h"
 #import "JVTabbedChatWindowController.h"
 #import "JVStyle.h"
 #import "JVChatRoom.h"
@@ -1436,6 +1437,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	xmlXPathFreeObject( result );
 	xmlXPathFreeContext( ctx );
 
+	JVIgnoreMatchResult ignoreTest = [[JVChatController defaultManager] shouldIgnoreUser:user withMessage:[NSAttributedString attributedStringWithHTMLFragment:messageString baseURL:NULL] inView:self];
 	msgStr = [[NSString stringWithFormat:@"<message>%@</message>", messageString] UTF8String];
 
 	msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
@@ -1444,8 +1446,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	xmlSetProp( child, "received", [[[NSDate date] description] UTF8String] );
 	if( action ) xmlSetProp( child, "action", "yes" );
 	if( highlight ) xmlSetProp( child, "highlight", "yes" );
-	if( [[JVChatController defaultManager] shouldIgnoreUser:user withMessage:[NSAttributedString attributedStringWithHTMLFragment:messageString baseURL:NULL] inView:self] )
-		 xmlSetProp( child, "ignore", "yes" );
+	if( ignoreTest == JVMessageIgnored ) xmlSetProp( child, "ignored", "yes" );
+	else if( ignoreTest == JVUserIgnored ) xmlSetProp( root, "ignored", "yes" );
 	xmlAddChild( root, child );
 
     [self writeToLog:root withDoc:doc initializing:NO continuation:continuation];

@@ -17,7 +17,7 @@
 	if( ( self = [super init] ) ) {
 		_ignoredUser = [user copy];
 		_ignoredMessage = [message copy];
-		_inRooms	= [rooms copy];
+		_inRooms = [rooms copy];
 		_userRegex = nil;
 		_messageRegex = nil;
 
@@ -68,7 +68,7 @@
 
 		if( userRequired ) {
 			if( ! userFound || ( messageRequired && ! messageFound ) ) return JVNotIgnored;
-			else return JVUserMessageIgnored;
+			else return JVUserIgnored;
 		} else {
 			if( messageRequired && messageFound ) return JVMessageIgnored;
 			else return JVNotIgnored;

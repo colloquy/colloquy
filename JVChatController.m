@@ -275,7 +275,7 @@ static JVChatController *sharedInstance = nil;
 	[_ignoreRules addObject:[KAIgnoreRule ruleForUser:user message:message inRooms:rooms usesRegex:regex]];
 }
 
-- (BOOL) shouldIgnoreUser:(NSString *) name withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view {
+- (JVIgnoreMatchResult) shouldIgnoreUser:(NSString *) name withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view {
 	JVIgnoreMatchResult ignoreResult = JVNotIgnored;
 	NSEnumerator *renum = [_ignoreRules objectEnumerator];
 	KAIgnoreRule *rule = nil;
@@ -286,14 +286,14 @@ static JVChatController *sharedInstance = nil;
 	if( ignoreResult != JVNotIgnored ) {
 		// send an ignored Notificatoin
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:( ( ignoreResult == JVUserMessageIgnored ) ? NSLocalizedString( @"User Message Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
+		[context setObject:( ( ignoreResult == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];
 		if( [view isMemberOfClass:[JVChatRoom class]] ) [context setObject:[NSString stringWithFormat:@"%@'s message was ignored in %@.", name, [view title]] forKey:@"description"];
 		else [context setObject:[NSString stringWithFormat:@"%@'s message was ignored.", name] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-		[[JVNotificationController defaultManager] performNotification:( ( ignoreResult == JVUserMessageIgnored ) ? @"JVUserMessageIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
+		[[JVNotificationController defaultManager] performNotification:( ( ignoreResult == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
 
-	return ( ignoreResult != JVNotIgnored );
+	return ignoreResult;
 }
 @end
 

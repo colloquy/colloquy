@@ -1,5 +1,6 @@
 #import <Foundation/NSObject.h>
 #import <AppKit/NSNibDeclarations.h>
+#import "KAIgnoreRule.h"
 
 @class NSMutableSet;
 @class MVChatConnection;
@@ -43,5 +44,5 @@
 - (IBAction) detachView:(id) sender;
 
 - (void) addIgnoreForUser:(NSString *)user withMessage:(NSString *)message inRooms:(NSArray *)rooms usesRegex:(BOOL) regex;
-- (BOOL) shouldIgnoreUser:(NSString *) name withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view;
+- (JVIgnoreMatchResult) shouldIgnoreUser:(NSString *) name withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view;
 @end

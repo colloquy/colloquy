@@ -146,11 +146,11 @@
 		<key>title</key>
 		<string>Message Ignored</string>
 	</dict>
-		<dict>
+	<dict>
 		<key>identifier</key>
-		<string>JVUserMessageIgnored</string>
+		<string>JVUserIgnored</string>
 		<key>title</key>
-		<string>User Message Ignored</string>
+		<string>User Ignored</string>
 	</dict>
 </array>
 </plist>
