@@ -1199,7 +1199,6 @@ enum firetalk_error irc_got_data_connecting(client_t c, unsigned char * buffer, 
 				return FE_PACKET;
 			}
 		} else {
-			printf( "%s\n", args[1] );
 			switch (atoi(args[1])) {
 				case 001: // RPL_WELCOME
 				case 376: // RPL_ENDOFMOTD
