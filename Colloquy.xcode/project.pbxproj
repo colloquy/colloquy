@@ -9,14 +9,12 @@
 			buildRules = (
 			);
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "\U0001-DDEBUG";
+				PREBINDING = NO;
+				UNSTRIPPED_PRODUCT = YES;
 				ZERO_LINK = YES;
 			};
 			isa = PBXBuildStyle;
@@ -243,6 +241,86 @@
 			path = NSColorAdditions.m;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1C1ACE410533943900F71D4E = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVInspectorController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C1ACE420533943900F71D4E = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVInspectorController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C1ACE430533943900F71D4E = {
+			fileRef = 1C1ACE410533943900F71D4E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C1ACE440533943900F71D4E = {
+			fileRef = 1C1ACE420533943900F71D4E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C1ACFB505344FCC00F71D4E = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVConnectionInspector.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C1ACFB605344FCC00F71D4E = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = JVConnectionInspector.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C1ACFB705344FCC00F71D4E = {
+			fileRef = 1C1ACFB505344FCC00F71D4E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C1ACFB805344FCC00F71D4E = {
+			fileRef = 1C1ACFB605344FCC00F71D4E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C1AD009053487ED00F71D4E = {
+			children = (
+				1C1AD00A053487ED00F71D4E,
+			);
+			isa = PBXVariantGroup;
+			name = JVConnectionInspector.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C1AD00A053487ED00F71D4E = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = English;
+			path = Languages/English.lproj/JVConnectionInspector.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C1AD00B053487ED00F71D4E = {
+			fileRef = 1C1AD009053487ED00F71D4E;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C20B0940424A11100000102 = {
 			expectedFileType = wrapper.nib;
@@ -1185,6 +1263,8 @@
 				1CB2CD0C052DDC560094AAA4,
 				1CB2CD0D052DDC560094AAA4,
 				1CB2CD0E052DDC560094AAA4,
+				1C1ACE430533943900F71D4E,
+				1C1ACFB705344FCC00F71D4E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1411,6 +1491,7 @@
 				1CB2CD5D052DDC560094AAA4,
 				1CB2CD5E052DDC560094AAA4,
 				1CB2CD60052DDC560094AAA4,
+				1C1AD00B053487ED00F71D4E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1908,6 +1989,8 @@
 				1CB2CD75052DDC560094AAA4,
 				1CB2CD76052DDC560094AAA4,
 				1CB2CD77052DDC560094AAA4,
+				1C1ACE440533943900F71D4E,
+				1C1ACFB805344FCC00F71D4E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2525,6 +2608,8 @@
 				F5FF568201BB430A01B5034F,
 				F5F9AF410170EE4A01A84BDE,
 				F5F9AF420170EE4A01A84BDE,
+				1C1ACE420533943900F71D4E,
+				1C1ACE410533943900F71D4E,
 				F555208701F0DC2B01EE70DE,
 				F555208801F0DC2B01EE70DE,
 				F5BEC21401F2256301EE70DE,
@@ -2631,6 +2716,7 @@
 				1CD6C417051E0B3000A8FE10,
 				1CBECE3A0508D58F000001C8,
 				1CBECE380508D58F000001C8,
+				1C1AD009053487ED00F71D4E,
 			);
 			isa = PBXGroup;
 			name = Interfaces;
@@ -2853,10 +2939,12 @@
 			buildRules = (
 			);
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUGGING_SYMBOLS = NO;
+				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				OPTIMIZATION_CFLAGS = "-Os";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				PREBINDING = YES;
+				UNSTRIPPED_PRODUCT = NO;
 				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
@@ -2946,6 +3034,8 @@
 				F5FB4D1F0393F70E01000102,
 				F5C497750385713801000102,
 				F5C497740385713801000102,
+				1C1ACFB605344FCC00F71D4E,
+				1C1ACFB505344FCC00F71D4E,
 				F51A4F2B01C2DDD201EE70DE,
 				F51A4F2C01C2DDD201EE70DE,
 				F5F5A55A0188928D01EE70DE,
