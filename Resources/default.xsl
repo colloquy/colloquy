@@ -17,7 +17,7 @@
 	<xsl:template match="envelope | message">
 		<xsl:variable name="envelopeClasses">
 			<xsl:choose>
-				<xsl:when test="(message[1]/@highlight = 'yes' and message[1]/@action = 'yes') or (@highlight = 'yes' and /@action = 'yes')">
+				<xsl:when test="(message[1]/@highlight = 'yes' and message[1]/@action = 'yes') or (@highlight = 'yes' and @action = 'yes')">
 					<xsl:text>envelope highlight action</xsl:text>
 				</xsl:when>
 				<xsl:when test="message[1]/@action = 'yes' or @action = 'yes'">
