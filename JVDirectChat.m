@@ -177,6 +177,14 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		// Write the <log> element to the logfile
 		[self writeToLog:xmlDocGetRootElement( _xmlLog ) withDoc:_xmlLog initializing:YES continuation:NO];
 
+		[_filePath autorelease];
+		_filePath = [logs retain];
+
+		if( ! [[NSFileManager defaultManager] fileExistsAtPath:_filePath] ) {
+			[_filePath autorelease];
+			_filePath = nil;
+		}
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusNotification object:connection];
@@ -210,16 +218,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( [self isMemberOfClass:[JVDirectChat class]] ) {
 		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
 
-		[_filePath autorelease];
-		_filePath = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath] retain];
+		NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath];
 
-		[url writeToInternetLocationFile:_filePath];
-		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:_filePath];
-
-		if( ! [[NSFileManager defaultManager] fileExistsAtPath:_filePath] ) {
-			[_filePath autorelease];
-			_filePath = nil;
-		}
+		[url writeToInternetLocationFile:path];
+		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
 	}
 
 	[send setHorizontallyResizable:YES];
