@@ -1216,16 +1216,14 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 		NSEnumerator *enumerator = [names objectEnumerator];
 		AGRegex *regex = nil;
 		NSString *name = nil;
-		BOOL expression = NO;
 
 		while( ( name = [enumerator nextObject] ) ) {
 			if( ! [name length] ) continue;
 
 			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] && [name length] > 1 ) {
 				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
-				expression = YES;
 			} else {
-				NSString *pattern = [NSString stringWithFormat:@"(?:\\W|^)(%@)(?:\\W|$)", [name stringByEscapingCharactersInSet:escapeSet]];
+				NSString *pattern = [NSString stringWithFormat:@"(?:^|(?<=\\W))%@(?:$|(?=\\W))", [name stringByEscapingCharactersInSet:escapeSet]];
 				regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 			}
 
@@ -1234,7 +1232,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 			AGRegexMatch *match = [regex findInString:messageString range:searchRange];
 
 			while( match ) {
-				NSRange foundRange = ( [match count] > 1 && ! expression ? [match rangeAtIndex:1] : [match rangeAtIndex:0] );
+				NSRange foundRange = [match rangeAtIndex:0];
 				backSearchRange.length = foundRange.location - backSearchRange.location;
 
 				// Search to see if we're in a tag
@@ -1242,7 +1240,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 				NSRange rightRange = [messageString rangeOfString:@">" options:( NSBackwardsSearch | NSLiteralSearch ) range:backSearchRange];
 
 				if( leftRange.location == NSNotFound || ( rightRange.location != NSNotFound && rightRange.location > leftRange.location ) ) {
-					[messageString replaceCharactersInRange:foundRange withString:[NSString stringWithFormat:@"<span class=\"highlight\">%@</span>", ( [match count] > 1 && ! expression ? [match groupAtIndex:1] : [match groupAtIndex:0] )]];
+					[messageString replaceCharactersInRange:foundRange withString:[NSString stringWithFormat:@"<span class=\"highlight\">%@</span>", [match groupAtIndex:0]]];
 					searchRange.location = NSMaxRange( foundRange ) + 31;
 					searchRange.length = [messageString length] - searchRange.location;
 					backSearchRange.location = searchRange.location;
