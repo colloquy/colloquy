@@ -353,7 +353,8 @@ static JVChatController *sharedInstance = nil;
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Notice from %@", "notice message from user title" ), [user displayName]] forKey:@"title"];
 			[context setObject:messageString forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-			[[JVNotificationController defaultManager] performNotification:@"JVChatNoticeMessage" withContextInfo:context];
+			NSString *type = ( hideFromUser ? @"JVChatUnhandledNoticeMessage" : @"JVChatNoticeMessage" );
+			[[JVNotificationController defaultManager] performNotification:type withContextInfo:context];
 		}
 	}
 

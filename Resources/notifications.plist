@@ -146,6 +146,12 @@
 	</dict>
 	<dict>
 		<key>identifier</key>
+		<string>JVChatUnhandledNoticeMessage</string>
+		<key>title</key>
+		<string>Unhandled Notice Message</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
 		<string>JVChatMentioned</string>
 		<key>title</key>
 		<string>Someone Mentioned You</string>
