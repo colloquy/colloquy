@@ -560,7 +560,11 @@ static NSMenu *favoritesMenu = nil;
 		while( ( data = [enumerator nextObject] ) ) {
 			connection = [data objectForKey:@"connection"];
 			if( [[connection server] isEqualToString:[url host]] && ( ! [url user] || [[connection nickname] isEqualToString:[url user]] ) && ( ! [connection serverPort] || ! [[url port] unsignedShortValue] || [connection serverPort] == [[url port] unsignedShortValue] ) ) {
-				if( ! [connection isConnected] && connect ) [connection connect];
+				if( ! [connection isConnected] && connect ) {
+					if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+						[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+					[connection connect];
+				}
 				if( target && isRoom ) [connection joinChatRoom:target];
 				else if( target && ! isRoom ) [[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:NO];
 				else [[self window] orderFront:nil];
@@ -579,7 +583,11 @@ static NSMenu *favoritesMenu = nil;
 			connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
 			[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 
-			if( connect ) [connection connect];
+			if( connect ) {
+				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+					[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+				[connection connect];
+			}
 
 			[self addConnection:connection keepBookmark:NO];
 
@@ -1176,6 +1184,7 @@ static NSMenu *favoritesMenu = nil;
 			NSMutableDictionary *data = [NSMutableDictionary dictionary];
 			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"automatic"] boolValue]] forKey:@"automatic"];
 			[data setObject:[NSNumber numberWithInt:(int)[(MVChatConnection *)[info objectForKey:@"connection"] proxyType]] forKey:@"proxy"];
+			[data setObject:[NSNumber numberWithLong:(long)[(MVChatConnection *)[info objectForKey:@"connection"] encoding]] forKey:@"encoding"];
 			[data setObject:[[(MVChatConnection *)[info objectForKey:@"connection"] url] description] forKey:@"url"];
 			if( [info objectForKey:@"rooms"] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 			if( [info objectForKey:@"commands"] ) [data setObject:[info objectForKey:@"commands"] forKey:@"commands"];
@@ -1202,15 +1211,14 @@ static NSMenu *favoritesMenu = nil;
 		connection = [[[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]] autorelease];
 
 		[connection setProxyType:(MVChatConnectionProxy)[[info objectForKey:@"proxy"] unsignedIntValue]];
-		[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
+
+		if( [[info objectForKey:@"encoding"] longValue] ) [connection setEncoding:[[info objectForKey:@"encoding"] longValue]];
+		else [connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 
 		if( [info objectForKey:@"realName"] ) [connection setRealName:[info objectForKey:@"realName"]];
 		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
 
 		if( [[info objectForKey:@"automatic"] boolValue] ) {
-			//NSEnumerator *renumerator = nil;
-			//id item = nil;
-
 			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 				[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
 
@@ -1308,6 +1316,8 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
 	[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 	[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+		[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
 	[connection connect];
 }
 
