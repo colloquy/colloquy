@@ -535,8 +535,8 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( focus ) [[windowController window] makeKeyAndOrderFront:nil];
 	}
 
-	if( ! focus && [_chatWindows count] == 1 )
-		[[windowController window] makeKeyAndOrderFront:nil];
+	if( ! [[windowController window] isVisible] )
+		[[windowController window] orderFront:nil];
 }
 
 - (IBAction) _checkMemos:(id) sender {
