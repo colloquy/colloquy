@@ -134,12 +134,9 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 }
 
 - (void) awakeFromNib {
-	NSView *toolbarItemContainerView = nil;
 	NSBundle *style = nil;
 	NSString *variant = nil;
 	NSBundle *emoticon = nil;
-
-	[self changeEncoding:nil];
 
 	if( [self preferenceForKey:@"style"] ) {
 		style = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"style"]];
@@ -158,19 +155,15 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 	if( style ) [self setChatStyle:style withVariant:variant];
 	if( emoticon ) [self setChatEmoticons:emoticon];
 
-	if( ( toolbarItemContainerView = [chooseStyle superview] ) ) {
-		[chooseStyle retain];
-		[chooseStyle removeFromSuperview];
-	
+	[self changeEncoding:nil];
+	[[[encodingView menu] itemAtIndex:0] setImage:[NSImage imageNamed:@"encoding"]];	
+
+	if( [encodingView superview] ) {
 		[encodingView retain];
 		[encodingView removeFromSuperview];
-	
-		[toolbarItemContainerView autorelease];
 	}
 
 	[super awakeFromNib];
-
-	[[[encodingView menu] itemAtIndex:0] setImage:[NSImage imageNamed:@"encoding"]];	
 
 	[send setHorizontallyResizable:YES];
 	[send setVerticallyResizable:YES];
@@ -189,6 +182,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[encodingView release];
 	[_target release];
 	[_buddy release];
 	[_connection release];
@@ -204,6 +198,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 
 	[_waitingAlerts release];
 
+	encodingView = nil;
 	_target = nil;
 	_buddy = nil;
 	_sendHistory = nil;
@@ -922,10 +917,13 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 #pragma mark -
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+	if( [_toolbarItems objectForKey:identifier] ) return [_toolbarItems objectForKey:identifier];
+
 	NSToolbarItem *toolbarItem = nil;
+
 	if( [identifier isEqual:JVToolbarTextEncodingItemIdentifier] ) {
-		NSMenuItem *menuItem = nil;
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		[_toolbarItems setObject:toolbarItem forKey:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Encoding", "encoding menu toolbar item" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Text Encoding", "encoding menu toolbar customize palette name" )];
@@ -938,13 +936,14 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		[toolbarItem setMinSize:NSMakeSize( 60., 24. )];
 		[toolbarItem setMaxSize:NSMakeSize( 60., 32. )];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding menu toolbar item" ) action:NULL keyEquivalent:@""] autorelease];
+		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding menu toolbar item" ) action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setImage:[NSImage imageNamed:@"encoding"]];
 		[menuItem setSubmenu:_spillEncodingMenu];
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
 	} else if( [identifier isEqual:JVToolbarBoldFontItemIdentifier] ) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		[_toolbarItems setObject:toolbarItem forKey:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Bold", "bold font toolbar item" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Bold", "bold font toolbar item" )];
@@ -956,6 +955,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		[toolbarItem setAction:@selector( bold: )];
 	} else if( [identifier isEqual:JVToolbarItalicFontItemIdentifier] ) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		[_toolbarItems setObject:toolbarItem forKey:identifier];
 		
 		[toolbarItem setLabel:NSLocalizedString( @"Italic", "italic font style toolbar item" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Italic", "italic font style toolbar item" )];
@@ -967,6 +967,7 @@ static NSString *JVToolbarUnderlineFontItemIdentifier = @"JVToolbarUnderlineFont
 		[toolbarItem setAction:@selector( italic: )];
 	} else if( [identifier isEqual:JVToolbarUnderlineFontItemIdentifier] ) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		[_toolbarItems setObject:toolbarItem forKey:identifier];
 		
 		[toolbarItem setLabel:NSLocalizedString( @"Underline", "underline font style toolbar item" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Underline", "underline font style toolbar item" )];
