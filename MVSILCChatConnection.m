@@ -273,9 +273,6 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> channel_name]];
 			NSData *msgData = ( topic ? [NSData dataWithBytes:topic length:strlen( topic )] : nil );
 			[room _setTopic:msgData byAuthor:authorUser withDate:[NSDate date]];
-
-			NSNotification *note = [NSNotification notificationWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 		}	break;
 		case SILC_NOTIFY_TYPE_CMODE_CHANGE:
 			break;
