@@ -13,134 +13,33 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments forConnection:(MVChatConnection *) connection {
-	MVConnectionsController *connectionsController = (MVConnectionsController *)[NSClassFromString( @"MVConnectionsController" ) defaultManager];
-	JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
-	NSStringEncoding encoding = NSUTF8StringEncoding;
 	if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
-		NSString *to = nil;
-		NSAttributedString *msg = nil;
-		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&to];
-
-		if( ! to ) return NO;
-
-		if( [arguments length] >= [scanner scanLocation] + 1 ) {
-			[scanner setScanLocation:[scanner scanLocation] + 1];
-			msg = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [arguments length] - [scanner scanLocation] )];
-		}
-
-		if( [command isEqualToString:@"query"] ) {
-			JVDirectChat *chatView = [chatController chatViewControllerForUser:to withConnection:connection ifExists:NO];
-			if( [msg length] ) [chatView echoSentMessageToDisplay:msg asAction:NO];
-		}
-
-		if( [msg length] ) [connection sendMessageToUser:to attributedMessage:msg withEncoding:encoding asAction:NO];
-		return YES;
+		return [self handleMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
-		if( ! [arguments length] ) return NO;
-		NSEnumerator *enumerator = [[chatController chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
-		id item = nil;
-		while( ( item = [enumerator nextObject] ) ) {
-			[connection sendMessageToChatRoom:[item target] attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
-			[item echoSentMessageToDisplay:arguments asAction:[command isEqualToString:@"ame"]];
-		}
-		return YES;
-	} else if( [command isEqualToString:@"nick"] ) {
-		NSString *nick = nil;
-		if( ! [arguments length] ) return NO;
-		[[NSScanner scannerWithString:[arguments string]] scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&nick];
-		[connection setNickname:nick];
-		return YES;
+		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( [command isEqualToString:@"away"] ) {
 		[connection setAwayStatusWithMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"join"] ) {
-		NSArray *rooms = [[arguments string] componentsSeparatedByString:@" "];
-		NSEnumerator *enumerator = [rooms objectEnumerator];
-		id item = nil;
-		if( ! [rooms count] ) return NO;
-		while( ( item = [enumerator nextObject] ) )
-			[connection joinChatForRoom:item];
-		return YES;
+		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
 	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
-		if( [arguments length] ) {
-			NSArray *rooms = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *enumerator = [rooms objectEnumerator];
-			id item = nil;
-			if( ! [rooms count] ) return NO;
-			while( ( item = [enumerator nextObject] ) )
-				[connection partChatForRoom:item];
-			return YES;
-		}
+		if( [arguments length] )
+			return [self handlePartWithArguments:[arguments string] forConnection:connection];
 		return NO;
 	} else if( [command isEqualToString:@"server"] ) {
-		NSURL *url = nil;
-		if( [arguments string] && ( url = [NSURL URLWithString:[arguments string]] ) ) {
-			[connectionsController handleURL:url andConnectIfPossible:YES];
-		} else if( [arguments string] ) {
-			NSString *address = nil;
-			int port = 0;
-			NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&address];
-			if( [arguments length] >= [scanner scanLocation] + 1 ) {
-				[scanner setScanLocation:[scanner scanLocation] + 1];
-				[scanner scanInt:&port];
-			}
-
-			if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", MVURLEncodeString( address ), port]];
-			else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", MVURLEncodeString( address )]];
-			else [connectionsController newConnection:nil];
-
-			if( url ) [connectionsController handleURL:url andConnectIfPossible:YES];
-		} else [connectionsController newConnection:nil];
-		return YES;
+		return [self handleServerConnectWithArguments:[arguments string]];
 	} else if( [command isEqualToString:@"dcc"] ) {
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&subcmd];
-		if( [subcmd isEqualToString:@"send"] ) {
-			NSString *to = nil, *path = nil;
-
-			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
-			if( [arguments length] >= [scanner scanLocation] + 1 ) {
-				[scanner setScanLocation:[scanner scanLocation] + 1];
-				path = [[arguments string] substringFromIndex:[scanner scanLocation]];
-				if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) return NO;
-			}
-
-			if( ! to ) return NO;
-
-			if( ! [path length] ) {
-				NSOpenPanel *panel = [NSOpenPanel openPanel];
-				[panel setResolvesAliases:YES];
-				[panel setCanChooseFiles:YES];
-				[panel setCanChooseDirectories:NO];
-				[panel setAllowsMultipleSelection:YES];
-				if( [panel runModalForTypes:nil] == NSOKButton ) {
-					NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
-					while( ( path = [enumerator nextObject] ) )
-						[connection sendFileToUser:to withFilePath:path];
-				}
-			} else [connection sendFileToUser:to withFilePath:path];
-			return YES;
-		}
+		if( [subcmd isEqualToString:@"send"] )
+			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
 		return NO;
 	} else if( [command isEqualToString:@"raw"] ) {
 		[connection sendRawMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
-		NSString *to = nil, *ctcpRequest = nil, *ctcpArgs = nil;
-		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&ctcpRequest];
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] intoString:&ctcpArgs];
-
-		if( ! to || ! ctcpRequest ) return NO;
-
-		[connection sendSubcodeRequest:ctcpRequest toUser:to withArguments:ctcpArgs];
-		return YES;
+		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
 	} else if( [command isEqualToString:@"quit"] || [command isEqualToString:@"exit"] ) {
 		[[NSApplication sharedApplication] terminate:nil];
 		return YES;
@@ -152,10 +51,9 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toRoom:(NSString *) room forConnection:(MVChatConnection *) connection {
-	MVConnectionsController *connectionsController = (MVConnectionsController *)[NSClassFromString( @"MVConnectionsController" ) defaultManager];
-	JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
-	NSStringEncoding encoding = [(JVChatRoom *)[chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES] encoding];
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
+		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+		NSStringEncoding encoding = [(JVChatRoom *)[chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES] encoding];
 		if( [arguments length] ) {
 			JVChatRoom *chatView = [chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES];
 			[chatView echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
@@ -163,133 +61,37 @@
 		}
 		return YES;
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
-		NSString *to = nil;
-		NSAttributedString *msg = nil;
-		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&to];
-
-		if( ! to ) return NO;
-
-		if( [arguments length] >= [scanner scanLocation] + 1 ) {
-			[scanner setScanLocation:[scanner scanLocation] + 1];
-			msg = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [arguments length] - [scanner scanLocation] )];
-		}
-
-		if( [command isEqualToString:@"query"] ) {
-			JVDirectChat *chatView = [chatController chatViewControllerForUser:to withConnection:connection ifExists:NO];
-			if( [msg length] ) [chatView echoSentMessageToDisplay:msg asAction:NO];
-		}
-
-		if( [msg length] ) [connection sendMessageToUser:to attributedMessage:msg withEncoding:encoding asAction:NO];
-		return YES;
+		return [self handleMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
-		if( ! [arguments length] ) return NO;
-		NSEnumerator *enumerator = [[chatController chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
-		id item = nil;
-		while( ( item = [enumerator nextObject] ) ) {
-			[connection sendMessageToChatRoom:[item target] attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
-			[item echoSentMessageToDisplay:arguments asAction:[command isEqualToString:@"ame"]];
-		}
-		return YES;
-	} else if( [command isEqualToString:@"nick"] ) {
-		NSString *nick = nil;
-		if( ! [arguments length] ) return NO;
-		[[NSScanner scannerWithString:[arguments string]] scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&nick];
-		[connection setNickname:nick];
-		return YES;
+		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( [command isEqualToString:@"away"] ) {
 		[connection setAwayStatusWithMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"join"] ) {
-		NSArray *rooms = [[arguments string] componentsSeparatedByString:@" "];
-		NSEnumerator *enumerator = [rooms objectEnumerator];
-		id item = nil;
-		if( ! [rooms count] ) return NO;
-		while( ( item = [enumerator nextObject] ) )
-			[connection joinChatForRoom:item];
-		return YES;
+		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
 	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
-		if( ! [arguments length] ) {
-			[connection partChatForRoom:room];
-		} else {
-			NSArray *rooms = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *enumerator = [rooms objectEnumerator];
-			id item = nil;
-			if( ! [rooms count] ) return NO;
-			while( ( item = [enumerator nextObject] ) )
-				[connection partChatForRoom:item];
-		}
+		if( ! [arguments length] ) [connection partChatForRoom:room];
+		else return [self handlePartWithArguments:[arguments string] forConnection:connection];
 		return YES;
 	} else if( [command isEqualToString:@"server"] ) {
-		NSURL *url = nil;
-		if( [arguments string] && ( url = [NSURL URLWithString:[arguments string]] ) ) {
-			[connectionsController handleURL:url andConnectIfPossible:YES];
-		} else if( [arguments string] ) {
-			NSString *address = nil;
-			int port = 0;
-			NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&address];
-			if( [arguments length] >= [scanner scanLocation] + 1 ) {
-				[scanner setScanLocation:[scanner scanLocation] + 1];
-				[scanner scanInt:&port];
-			}
-			
-			if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", MVURLEncodeString( address ), port]];
-			else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", MVURLEncodeString( address )]];
-			else [connectionsController newConnection:nil];
-
-			if( url ) [connectionsController handleURL:url andConnectIfPossible:YES];
-		} else [connectionsController newConnection:nil];
-		return YES;
+		return [self handleServerConnectWithArguments:[arguments string]];
 	} else if( [command isEqualToString:@"dcc"] ) {
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&subcmd];
-		if( [subcmd isEqualToString:@"send"] ) {
-			NSString *to = nil, *path = nil;
-
-			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
-			if( [arguments length] >= [scanner scanLocation] + 1 ) {
-				[scanner setScanLocation:[scanner scanLocation] + 1];
-				path = [[arguments string] substringFromIndex:[scanner scanLocation]];
-				if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) return NO;
-			}
-
-			if( ! to ) return NO;
-
-			if( ! [path length] ) {
-				NSOpenPanel *panel = [NSOpenPanel openPanel];
-				[panel setResolvesAliases:YES];
-				[panel setCanChooseFiles:YES];
-				[panel setCanChooseDirectories:NO];
-				[panel setAllowsMultipleSelection:YES];
-				if( [panel runModalForTypes:nil] == NSOKButton ) {
-					NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
-					while( ( path = [enumerator nextObject] ) )
-						[connection sendFileToUser:to withFilePath:path];
-				}
-			} else [connection sendFileToUser:to withFilePath:path];
-			return YES;
-		}
+		if( [subcmd isEqualToString:@"send"] )
+			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
 		return NO;
 	} else if( [command isEqualToString:@"raw"] ) {
 		[connection sendRawMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
-		NSString *to = nil, *ctcpRequest = nil, *ctcpArgs = nil;
-		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&ctcpRequest];
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] intoString:&ctcpArgs];
-
-		if( ! to || ! ctcpRequest ) return NO;
-
-		[connection sendSubcodeRequest:ctcpRequest toUser:to withArguments:ctcpArgs];
-		return YES;
+		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
 	} else if( [command isEqualToString:@"topic"] ) {
 		if( ! [arguments length] ) return NO;
+		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+		NSStringEncoding encoding = [(JVChatRoom *)[chatController chatViewControllerForRoom:room withConnection:connection ifExists:YES] encoding];
+		if( ! encoding ) encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 		[connection setTopic:arguments withEncoding:encoding forRoom:room];
 		return YES;
 	} else if( [command isEqualToString:@"mode"] ) {
@@ -359,10 +161,9 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toUser:(NSString *) user forConnection:(MVChatConnection *) connection {
-	MVConnectionsController *connectionsController = (MVConnectionsController *)[NSClassFromString( @"MVConnectionsController" ) defaultManager];
-	JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
-	NSStringEncoding encoding = [(JVDirectChat *)[chatController chatViewControllerForUser:user withConnection:connection ifExists:YES] encoding];
 	if( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] || [command isEqualToString:@"say"] ) {
+		JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+		NSStringEncoding encoding = [(JVDirectChat *)[chatController chatViewControllerForUser:user withConnection:connection ifExists:YES] encoding];
 		if( [arguments length] ) {
 			JVDirectChat *chatView = [chatController chatViewControllerForUser:user withConnection:connection ifExists:YES];
 			[chatView echoSentMessageToDisplay:arguments asAction:( [command isEqualToString:@"me"] || [command isEqualToString:@"action"] )];
@@ -370,118 +171,31 @@
 		}
 		return YES;
 	} else if( [command isEqualToString:@"msg"] || [command isEqualToString:@"query"] ) {
-		NSString *to = nil;
-		NSAttributedString *msg = nil;
-		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&to];
-
-		if( ! to ) return NO;
-
-		if( [arguments length] >= [scanner scanLocation] + 1 ) {
-			[scanner setScanLocation:[scanner scanLocation] + 1];
-			msg = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [arguments length] - [scanner scanLocation] )];
-		}
-
-		if( [command isEqualToString:@"query"] ) {
-			JVDirectChat *chatView = [chatController chatViewControllerForUser:to withConnection:connection ifExists:NO];
-			if( [msg length] ) [chatView echoSentMessageToDisplay:msg asAction:NO];
-		}
-
-		if( [msg length] ) [connection sendMessageToUser:to attributedMessage:msg withEncoding:encoding asAction:NO];
-		return YES;
+		return [self handleMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( [command isEqualToString:@"amsg"] || [command isEqualToString:@"ame"] ) {
-		if( ! [arguments length] ) return NO;
-		NSEnumerator *enumerator = [[chatController chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
-		id item = nil;
-		while( ( item = [enumerator nextObject] ) ) {
-			[connection sendMessageToChatRoom:[item target] attributedMessage:arguments withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
-			[item echoSentMessageToDisplay:arguments asAction:[command isEqualToString:@"ame"]];
-		}
-		return YES;
-	} else if( [command isEqualToString:@"nick"] ) {
-		NSString *nick = nil;
-		if( ! [arguments length] ) return NO;
-		[[NSScanner scannerWithString:[arguments string]] scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&nick];
-		[connection setNickname:nick];
-		return YES;
+		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( [command isEqualToString:@"away"] ) {
 		[connection setAwayStatusWithMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"join"] ) {
-		NSArray *rooms = [[arguments string] componentsSeparatedByString:@" "];
-		NSEnumerator *enumerator = [rooms objectEnumerator];
-		id item = nil;
-		if( ! [rooms count] ) return NO;
-		while( ( item = [enumerator nextObject] ) )
-			[connection joinChatForRoom:item];
-		return YES;
+		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
+	} else if( [command isEqualToString:@"part"] || [command isEqualToString:@"leave"] ) {
+		if( [arguments length] )
+			return [self handlePartWithArguments:[arguments string] forConnection:connection];
+		return NO;
 	} else if( [command isEqualToString:@"server"] ) {
-		NSURL *url = nil;
-		if( [arguments string] && ( url = [NSURL URLWithString:[arguments string]] ) ) {
-			[connectionsController handleURL:url andConnectIfPossible:YES];
-		} else if( [arguments string] ) {
-			NSString *address = nil;
-			int port = 0;
-			NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&address];
-			if( [arguments length] >= [scanner scanLocation] + 1 ) {
-				[scanner setScanLocation:[scanner scanLocation] + 1];
-				[scanner scanInt:&port];
-			}
-
-			if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", MVURLEncodeString( address ), port]];
-			else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", MVURLEncodeString( address )]];
-			else [connectionsController newConnection:nil];
-
-			if( url ) [connectionsController handleURL:url andConnectIfPossible:YES];
-		} else [connectionsController newConnection:nil];
-		return YES;
+		return [self handleServerConnectWithArguments:[arguments string]];
 	} else if( [command isEqualToString:@"raw"] ) {
 		[connection sendRawMessage:[arguments string]];
 		return YES;
 	} else if( [command isEqualToString:@"ctcp"] ) {
-		NSString *to = nil, *ctcpRequest = nil, *ctcpArgs = nil;
-		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-		
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&ctcpRequest];
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] intoString:&ctcpArgs];
-		
-		if( ! to || ! ctcpRequest ) return NO;
-		
-		[connection sendSubcodeRequest:ctcpRequest toUser:to withArguments:ctcpArgs];
-		return YES;
+		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
 	} else if( [command isEqualToString:@"dcc"] ) {
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&subcmd];
-		if( [subcmd isEqualToString:@"send"] ) {
-			NSString *to = nil, *path = nil;
-
-			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
-			if( [arguments length] >= [scanner scanLocation] + 1 ) {
-				[scanner setScanLocation:[scanner scanLocation] + 1];
-				path = [[arguments string] substringFromIndex:[scanner scanLocation]];
-				if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) return NO;
-			}
-
-			if( ! to ) return NO;
-
-			if( ! [path length] ) {
-				NSOpenPanel *panel = [NSOpenPanel openPanel];
-				[panel setResolvesAliases:YES];
-				[panel setCanChooseFiles:YES];
-				[panel setCanChooseDirectories:NO];
-				[panel setAllowsMultipleSelection:YES];
-				if( [panel runModalForTypes:nil] == NSOKButton ) {
-					NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
-					while( ( path = [enumerator nextObject] ) )
-						[connection sendFileToUser:to withFilePath:path];
-				}
-			} else [connection sendFileToUser:to withFilePath:path];
-			return YES;
-		}
+		if( [subcmd isEqualToString:@"send"] )
+			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
 		return NO;
 	} else if( [command isEqualToString:@"clear"] ) {
 //		MVChatWindowController *window = [chatWindowControllerClass chatWindowWithUser:user withConnection:connection ifExists:YES];
@@ -495,5 +209,133 @@
 		return YES;
 	}
 	return NO;
+}
+
+#pragma mark -
+
+- (BOOL) handleFileSendWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
+	NSString *to = nil, *path = nil;
+	NSScanner *scanner = [NSScanner scannerWithString:arguments];
+	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:nil];
+	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
+	if( [arguments length] >= [scanner scanLocation] + 1 ) {
+		[scanner setScanLocation:[scanner scanLocation] + 1];
+		path = [arguments substringFromIndex:[scanner scanLocation]];
+		if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) return NO;
+	}
+
+	if( ! to ) return NO;
+
+	if( ! [path length] ) {
+		NSOpenPanel *panel = [NSOpenPanel openPanel];
+		[panel setResolvesAliases:YES];
+		[panel setCanChooseFiles:YES];
+		[panel setCanChooseDirectories:NO];
+		[panel setAllowsMultipleSelection:YES];
+		if( [panel runModalForTypes:nil] == NSOKButton ) {
+			NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
+			while( ( path = [enumerator nextObject] ) )
+				[connection sendFileToUser:to withFilePath:path];
+		}
+	} else [connection sendFileToUser:to withFilePath:path];
+	return YES;
+}
+
+- (BOOL) handleCTCPWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
+	NSString *to = nil, *ctcpRequest = nil, *ctcpArgs = nil;
+	NSScanner *scanner = [NSScanner scannerWithString:arguments];
+	
+	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&to];
+	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&ctcpRequest];
+	[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] intoString:&ctcpArgs];
+	
+	if( ! to || ! ctcpRequest ) return NO;
+	
+	[connection sendSubcodeRequest:ctcpRequest toUser:to withArguments:ctcpArgs];
+	return YES;
+}
+
+- (BOOL) handleServerConnectWithArguments:(NSString *) arguments {
+	MVConnectionsController *connectionsController = (MVConnectionsController *)[NSClassFromString( @"MVConnectionsController" ) defaultManager];
+	NSURL *url = nil;
+	if( arguments && ( url = [NSURL URLWithString:arguments] ) ) {
+		[connectionsController handleURL:url andConnectIfPossible:YES];
+	} else if( arguments ) {
+		NSString *address = nil;
+		int port = 0;
+		NSScanner *scanner = [NSScanner scannerWithString:arguments];
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&address];
+		if( [arguments length] >= [scanner scanLocation] + 1 ) {
+			[scanner setScanLocation:[scanner scanLocation] + 1];
+			[scanner scanInt:&port];
+		}
+
+		if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", MVURLEncodeString( address ), port]];
+		else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", MVURLEncodeString( address )]];
+		else [connectionsController newConnection:nil];
+
+		if( url ) [connectionsController handleURL:url andConnectIfPossible:YES];
+	} else [connectionsController newConnection:nil];
+	return YES;
+}
+
+- (BOOL) handleJoinWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
+	NSArray *rooms = [arguments componentsSeparatedByString:@" "];
+	NSEnumerator *enumerator = [rooms objectEnumerator];
+	id item = nil;
+	if( ! [rooms count] ) return NO;
+	while( ( item = [enumerator nextObject] ) )
+		[connection joinChatForRoom:item];
+	return YES;
+}
+
+- (BOOL) handlePartWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
+	NSArray *rooms = [arguments componentsSeparatedByString:@" "];
+	NSEnumerator *enumerator = [rooms objectEnumerator];
+	id item = nil;
+	if( ! [rooms count] ) return NO;
+	while( ( item = [enumerator nextObject] ) )
+		[connection partChatForRoom:item];
+	return YES;
+}
+
+- (BOOL) handleMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection {
+	JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+	NSString *to = nil;
+	NSAttributedString *msg = nil;
+	NSScanner *scanner = [NSScanner scannerWithString:[message string]];
+
+	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&to];
+
+	if( ! to ) return NO;
+
+	NSStringEncoding encoding = [(JVDirectChat *)[chatController chatViewControllerForUser:to withConnection:connection ifExists:YES] encoding];
+	if( ! encoding ) encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
+
+	if( [message length] >= [scanner scanLocation] + 1 ) {
+		[scanner setScanLocation:[scanner scanLocation] + 1];
+		msg = [message attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [message length] - [scanner scanLocation] )];
+	}
+
+	if( [command isEqualToString:@"query"] ) {
+		JVDirectChat *chatView = [chatController chatViewControllerForUser:to withConnection:connection ifExists:NO];
+		if( [msg length] ) [chatView echoSentMessageToDisplay:msg asAction:NO];
+	}
+
+	if( [msg length] ) [connection sendMessageToUser:to attributedMessage:msg withEncoding:encoding asAction:NO];
+	return YES;
+}
+
+- (BOOL) handleMassMessageCommand:(NSString *) command withMessage:(NSAttributedString *) message forConnection:(MVChatConnection *) connection {
+	JVChatController *chatController = (JVChatController *)[NSClassFromString( @"JVChatController" ) defaultManager];
+	NSStringEncoding encoding = (NSStringEncoding) [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
+	if( ! [message length] ) return NO;
+	NSEnumerator *enumerator = [[chatController chatViewControllersOfClass:NSClassFromString( @"JVChatRoom" )] objectEnumerator];
+	id item = nil;
+	while( ( item = [enumerator nextObject] ) ) {
+		[connection sendMessageToChatRoom:[item target] attributedMessage:message withEncoding:encoding asAction:[command isEqualToString:@"ame"]];
+		[item echoSentMessageToDisplay:message asAction:[command isEqualToString:@"ame"]];
+	}
+	return YES;
 }
 @end
