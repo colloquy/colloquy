@@ -28,7 +28,7 @@
 - (id) init {
 	if( ( self = [super init] ) ) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( colorWellDidChangeColor: ) name:JVColorWellCellColorDidChangeNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVChatStylesScannedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVStylesScannedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVChatEmoticonsScannedNotification object:nil];
 
 		[JVChatTranscript _scanForEmoticons];
@@ -74,13 +74,13 @@
 #pragma mark -
 
 - (void) selectStyleWithIdentifier:(NSString *) identifier {
-	[[NSUserDefaults standardUserDefaults] setObject:identifier forKey:@"JVChatDefaultStyle"];
+	[_style autorelease];
+	_style = [[JVStyle styleWithIdentifier:identifier] retain];
 	[self performSelector:@selector( changePreferences: ) withObject:nil afterDelay:0.];
 }
 
 - (void) selectEmoticonsWithIdentifier:(NSString *) identifier {
-	NSString *style = [_style identifier];
-	[[NSUserDefaults standardUserDefaults] setObject:identifier forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", style]];
+	[[NSUserDefaults standardUserDefaults] setObject:identifier forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [_style identifier]]];
 	[self updateEmoticonsMenu];
 	[self updatePreview];
 }
@@ -118,16 +118,12 @@
 }
 
 - (IBAction) changeDefaultChatStyle:(id) sender {
-	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
-
 	[_style autorelease];
 	_style = [[[sender representedObject] objectForKey:@"style"] retain];
 
 	[JVStyle setDefaultStyle:_style];
-
-	if( ! variant ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [_style identifier]]];
-	else [[NSUserDefaults standardUserDefaults] setObject:variant forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [_style identifier]]];
-
+	[_style setDefaultVariantName:[[sender representedObject] objectForKey:@"variant"]];
+	
 	[self performSelector:@selector( changePreferences: ) withObject:nil afterDelay:0.];
 }
 
