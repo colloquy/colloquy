@@ -879,7 +879,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	NSString *style = [_chatStyle bundleIdentifier];
 
 	while( ( menuItem = [enumerator nextObject] ) ) {
-		if( [menuItem tag] ) continue;
+		if( [menuItem tag] != 5 ) continue;
 		if( [style isEqualToString:[menuItem representedObject]] && hasPerRoomStyle ) [menuItem setState:NSOnState];
 		else if( ! [menuItem representedObject] && ! hasPerRoomStyle ) [menuItem setState:NSOnState];
 		else if( [style isEqualToString:[menuItem representedObject]] && ! hasPerRoomStyle ) [menuItem setState:NSMixedState];
@@ -910,15 +910,13 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		_styleMenu = menu;
 	} else {
 		NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
-
-		if( [menu numberOfItems] > ( [JVChatStyleBundles count] + 3 ) )
-			[enumerator nextObject];
-
 		while( ( menuItem = [enumerator nextObject] ) )
-			[menu removeItem:menuItem];
+			if( [menuItem tag] || [menuItem isSeparatorItem] )
+				[menu removeItem:menuItem];
 	}
 
 	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Default", "default style menu item title" ) action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
+	[menuItem setTag:5];
 	[menuItem setTarget:self];
 	[menu addItem:menuItem];
 
@@ -926,6 +924,7 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 
 	while( ( style = [enumerator nextObject] ) ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeChatStyle: ) keyEquivalent:@""] autorelease];
+		[menuItem setTag:5];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[style bundleIdentifier]];
 		[menu addItem:menuItem];
