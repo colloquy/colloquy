@@ -84,16 +84,17 @@
 }
 
 - (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
+	if( ! _script ) return nil;
+
 	int pid = [[NSProcessInfo processInfo] processIdentifier];
 	NSAppleEventDescriptor *targetAddress = [NSAppleEventDescriptor descriptorWithDescriptorType:typeKernelProcessID bytes:&pid length:sizeof( pid )];
 	NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:'cplG' eventID:handler targetDescriptor:targetAddress returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
+
 	NSEnumerator *enumerator = [arguments objectEnumerator];
 	NSEnumerator *kenumerator = [arguments keyEnumerator];
 	NSAppleEventDescriptor *descriptor = nil;
 	NSString *key = nil;
 	id value = nil;
-
-	if( ! _script ) return nil;
 
 	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
 		NSScriptObjectSpecifier *specifier = [value objectSpecifier];
