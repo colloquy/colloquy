@@ -6,6 +6,7 @@
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (NSMenu *) _stylesMenu;
+- (NSMenu *) _emoticonsMenu;
 @end
 
 #pragma mark -
