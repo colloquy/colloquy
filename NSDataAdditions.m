@@ -129,7 +129,7 @@ static char encodingTable[64] = {
 			[result appendFormat:@"%c", encodingTable[outbuf[i]]];
 
 		for( i = ctcopy; i < 4; i++ )
-			[result appendFormat:@"%c",'='];
+			[result appendString:@"="];
 
 		ixtext += 3;
 		charsonline += 4;
@@ -142,6 +142,6 @@ static char encodingTable[64] = {
 		}
 	}
 
-	return result;
+	return [NSString stringWithString:result];
 }
 @end
