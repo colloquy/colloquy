@@ -73,8 +73,20 @@
 						if( [[plugin scriptFilePath] isEqualToString:path] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
 							break;
 					
-					if( ! plugin && ! [subcmd caseInsensitiveCompare:@"load"] ) {
-						[self loadPluginNamed:path];
+					if( ! plugin ) {
+						if( ! [subcmd caseInsensitiveCompare:@"load"] ) {
+							[self loadPluginNamed:path];
+						}
+						if( ! [subcmd caseInsensitiveCompare:@"create"] ) {
+							NSFileManager *fm = [NSFileManager defaultManager];
+							BOOL dir;
+							path = [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"fscript"];
+							path = [[[[_manager class] pluginSearchPaths] objectAtIndex:0] stringByAppendingPathComponent:path];
+							if( [fm fileExistsAtPath:[path stringByDeletingLastPathComponent] isDirectory:&dir] && dir ) {
+								[fm createFileAtPath:path contents:[NSData data] attributes:nil];
+								[[NSWorkspace sharedWorkspace] openFile:path];
+							}
+						}
 					} else if( plugin ) {
 						if( ! [subcmd caseInsensitiveCompare:@"reload"] || ! [subcmd caseInsensitiveCompare:@"load"] ) {
 							[plugin reloadFromDisk];
