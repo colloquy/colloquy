@@ -296,7 +296,7 @@
 
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"ChatRoom Member Promoted", "member promoted title" ) 
+			[context setObject:NSLocalizedString( @"Room Member Promoted", "member promoted title" ) 
 						forKey:@"title"];
 			[context setObject:message forKey:@"description"];				
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberPromoted" 
@@ -348,7 +348,7 @@
 			
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"ChatRoom Member Demoted", "member demoted title" ) 
+			[context setObject:NSLocalizedString( @"Room Member Demoted", "member demoted title" ) 
 						forKey:@"title"];
 			[context setObject:message forKey:@"description"];
 
@@ -401,7 +401,7 @@
 
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"ChatRoom Member Voiced", "member voiced title" ) 
+			[context setObject:NSLocalizedString( @"Room Member Voiced", "member voiced title" ) 
 						forKey:@"title"];
 			[context setObject:message forKey:@"description"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberVoiced" 
@@ -453,7 +453,7 @@
 
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"ChatRoom Member Lost Voice", "member devoiced title" ) 
+			[context setObject:NSLocalizedString( @"Room Member Lost Voice", "member devoiced title" ) 
 						forKey:@"title"];
 			[context setObject:message forKey:@"description"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberDevoiced" withContextInfo:context];
@@ -509,7 +509,7 @@
 	
 	//create notification
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"ChatRoom Member Kicked", "member kicked title" ) 
+	[context setObject:NSLocalizedString( @"Room Member Kicked", "member kicked title" ) 
 				forKey:@"title"];
 	[context setObject:message forKey:@"description"];
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
@@ -553,7 +553,7 @@
 
 	//create notification
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"ChatRoom Member Kicked", "member kicked title" ) 
+	[context setObject:NSLocalizedString( @"You Were Kicked", "member kicked title" ) 
 				forKey:@"title"];
 	[context setObject:message forKey:@"description"];		
 	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
@@ -726,7 +726,7 @@
 
 			//create notification
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"ChatRoom Member Joined", "member joined title" ) 
+			[context setObject:NSLocalizedString( @"Room Member Joined", "member joined title" ) 
 						forKey:@"title"];
 			[context setObject:message forKey:@"description"];
 			[[JVNotificationController defaultManager] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
@@ -771,10 +771,10 @@
 		
 		//create notification
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:NSLocalizedString( @"ChatRoom Member Left", "member left title" ) 
+		[context setObject:NSLocalizedString( @"Room Member Left", "member left title" ) 
 					forKey:@"title"];
 		[context setObject:message forKey:@"description"];
-		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
+		[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
 	}
 }
 
