@@ -1147,6 +1147,7 @@
 		};
 		1CB2CCF5052DDC560094AAA4 = {
 			buildPhases = (
+				1CF038FF062F8DBB009774D8,
 				1CB2CCF9052DDC560094AAA4,
 				1CB2CD0F052DDC560094AAA4,
 				1CB2CD61052DDC560094AAA4,
@@ -3479,6 +3480,19 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		1CF038FF062F8DBB009774D8 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "touch Resources/Styles\ntouch Resources/Emoticons";
 		};
 		1CF9BB9A04FBE96D00A8FE6E = {
 			isa = PBXFileReference;
