@@ -118,6 +118,7 @@
 
 - (void) initializeFromDefaults {
 	[preview setPolicyDelegate:self];
+	[preview setUIDelegate:self];
 	[optionsTable setRefusesFirstResponder:YES];
 
 	NSTableColumn *column = [optionsTable tableColumnWithIdentifier:@"key"];
@@ -339,6 +340,10 @@
 	[[preview preferences] setSerifFontFamily:[font fontName]];
 	[[preview preferences] setSansSerifFontFamily:[font fontName]];
 	[self updatePreview];
+}
+
+- (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
+	return nil;
 }
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
