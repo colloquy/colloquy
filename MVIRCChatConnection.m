@@ -43,7 +43,7 @@ void irc_deinit( void );
 NSRecursiveLock *MVIRCChatConnectionThreadLock = nil;
 static unsigned int connectionCount = 0;
 static GMainLoop *glibMainLoop = NULL;
-static NSString *threadConnectionName = nil;
+static NSPort *threadConnectionPort = nil;
 
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
@@ -1005,9 +1005,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ! tooLate ) {
 		MVIRCChatConnectionThreadLock = [[NSRecursiveLock alloc] init];
 
-		extern NSString *threadConnectionName;
-		threadConnectionName = [[NSString alloc] initWithFormat:@"Colloquy Irssi Thread %d", [[NSProcessInfo processInfo] processIdentifier]];
-
 		irssi_gui = IRSSI_GUI_NONE;
 
 		NSString *temp = NSTemporaryDirectory();
@@ -1070,8 +1067,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 		[MVIRCChatConnectionThreadLock unlock];
 
-		id threadHelper = [NSConnection rootProxyForConnectionWithRegisteredName:threadConnectionName host:nil];
-		_irssiThreadConnection = [[threadHelper vendChatConnection:self] retain];
+		extern NSPort *threadConnectionPort;
+		NSConnection *threadConnection = [NSConnection connectionWithReceivePort:threadConnectionPort sendPort:threadConnectionPort];
+		_irssiThreadConnection = [[[threadConnection rootProxy] vendChatConnection:self] retain];
 
 		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
 		_irssiThreadProxy = [[connection rootProxy] retain];
@@ -1661,12 +1659,12 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	MVIRCConnectionThreadHelper *helper = [[MVIRCConnectionThreadHelper alloc] init];
-
-	extern NSString *threadConnectionName;
 	NSConnection *server = [[NSConnection defaultConnection] retain];
 	[server enableMultipleThreads];
-	[server registerName:threadConnectionName];
 	[server setRootObject:helper];
+
+	extern NSPort *threadConnectionPort;
+	threadConnectionPort = [[[NSConnection defaultConnection] sendPort] retain];
 
 	extern GMainLoop *glibMainLoop;
 	glibMainLoop = g_main_new( TRUE );
@@ -1697,6 +1695,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	core_deinit();
 
 	[MVIRCChatConnectionThreadLock unlock];
+
+	[threadConnectionPort release];
+	threadConnectionPort = nil;
 
 	[server release];
 	[helper release];
