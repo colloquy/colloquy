@@ -1476,6 +1476,8 @@
 				1C9982AE0604BA1F006C6417,
 				1C9982B00604BEAA006C6417,
 				1C2E98C406207AD0000715D8,
+				1CBA4E66062CCDA90082D1BF,
+				1CBA4E67062CCDA90082D1BF,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2288,6 +2290,34 @@
 		};
 		1CB4DCB10536282B0080D36F = {
 			fileRef = 1CB4DCAF0536282B0080D36F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CBA4E64062CCDA90082D1BF = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = infoWidget.png;
+			path = Resources/infoWidget.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBA4E65062CCDA90082D1BF = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = infoWidgetPressed.png;
+			path = Resources/infoWidgetPressed.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		1CBA4E66062CCDA90082D1BF = {
+			fileRef = 1CBA4E64062CCDA90082D1BF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1CBA4E67062CCDA90082D1BF = {
+			fileRef = 1CBA4E65062CCDA90082D1BF;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4377,6 +4407,8 @@
 				1CBB23D004EFE233000001C8,
 				1CD4BD9B05AA773800F72EE6,
 				1CD4BD9C05AA773800F72EE6,
+				1CBA4E64062CCDA90082D1BF,
+				1CBA4E65062CCDA90082D1BF,
 			);
 			isa = PBXGroup;
 			name = Widgets;

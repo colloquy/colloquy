@@ -56,6 +56,8 @@ extern NSString *JVChatViewPboardType;
 - (id <JVChatViewController>) activeChatViewController;
 - (id <JVChatListItem>) selectedListItem;
 
+- (IBAction) getInfo:(id) sender;
+
 - (NSToolbarItem *) toggleChatDrawerToolbarItem;
 - (NSToolbarItem *) chatActivityToolbarItem;
 - (IBAction) toggleViewsDrawer:(id) sender;
