@@ -263,6 +263,9 @@
 	} else if( [command isEqualToString:@"disconnect"] ) {
 		[[room connection] disconnect];
 		return YES;
+	} else if( [command isEqualToString:@"console"] ) {
+		[[_manager chatController] chatConsoleForConnection:[room connection] ifExists:NO];
+		return YES;
 	} else if( [command isEqualToString:@"reload"] ) {
 		if( [[arguments string] isEqualToString:@"plugins"] ) {
 			[_manager findAndLoadPlugins];
@@ -346,6 +349,9 @@
 		return YES;
 	} else if( [command isEqualToString:@"disconnect"] ) {
 		[[chat connection] disconnect];
+		return YES;
+	} else if( [command isEqualToString:@"console"] ) {
+		[[_manager chatController] chatConsoleForConnection:[chat connection] ifExists:NO];
 		return YES;
 	} else if( [command isEqualToString:@"whois"] || [command isEqualToString:@"wi"] ) {
 		id member = [[[NSClassFromString( @"JVChatRoomMember" ) alloc] initWithRoom:(JVChatRoom *)chat andNickname:[arguments string]] autorelease];
