@@ -65,9 +65,10 @@ NSString *MVChatRoomModeChangedNotification = @"MVChatRoomModeChangedNotificatio
 }
 
 - (void) awakeFromNib {
+	[super awakeFromNib];
+
 	[topicLine setDrawsBackground:NO];
 	[[topicLine enclosingScrollView] setDrawsBackground:NO];
-	[super awakeFromNib];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatConnectionGotRoomModeNotification object:[self connection]];
 

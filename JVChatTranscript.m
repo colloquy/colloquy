@@ -105,6 +105,7 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 		display = nil;
 		contents = nil;
 		_isArchive = NO;
+		_switchingStyles = NO;
 		_styleParams = nil;
 		_styleMenu = nil;
 		_chatStyle = nil;
@@ -151,17 +152,19 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 	[display setUIDelegate:self];
 	[display setPolicyDelegate:self];
 
-	if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
-		xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
-		JVStyle *style = [JVStyle styleWithIdentifier:[NSString stringWithUTF8String:styleProp]];
-		if( style ) [self setChatStyle:style withVariant:nil];
-		xmlFree( styleProp );
-	}
+	if( [self isMemberOfClass:[JVChatTranscript class]] ) {
+		if( ! _chatStyle && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "style" ) ) {
+			xmlChar *styleProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "style" );
+			JVStyle *style = [JVStyle styleWithIdentifier:[NSString stringWithUTF8String:styleProp]];
+			if( style ) [self setChatStyle:style withVariant:nil];
+			xmlFree( styleProp );
+		}
 
-	if( ! _chatEmoticons && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ) {
-		xmlChar *emoticonProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" );
-		[self setChatEmoticons:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:emoticonProp]]];
-		xmlFree( emoticonProp );
+		if( ! _chatEmoticons && xmlHasProp( xmlDocGetRootElement( _xmlLog ), "emoticon" ) ) {
+			xmlChar *emoticonProp = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "emoticon" );
+			[self setChatEmoticons:[NSBundle bundleWithIdentifier:[NSString stringWithUTF8String:emoticonProp]]];
+			xmlFree( emoticonProp );
+		}
 	}
 
 	if( ! _chatStyle ) {
@@ -181,6 +184,8 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	[self _updateChatStylesMenu];
 	[self _updateChatEmoticonsMenu];
+
+	[self performSelector:@selector( _reloadCurrentStyle: ) withObject:nil afterDelay:0.];
 }
 
 - (void) dealloc {
@@ -388,6 +393,8 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	if( ! [_logLock tryLock] ) return;
 
+	[display stopLoading:nil];
+
 	_switchingStyles = YES;
 
 	if( ! [self _usingSpecificEmoticons] ) {
@@ -422,9 +429,6 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 	[display setFrameLoadDelegate:self];
 	[[display mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
-
-	[display setPreferencesIdentifier:[_chatStyle identifier]];
-	[[display preferences] setJavaScriptEnabled:YES];
 }
 
 - (JVStyle *) chatStyle {
@@ -724,23 +728,25 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 #endif
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
-	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"about"] ) {
-		if( [[[actionInformation objectForKey:WebActionOriginalURLKey] standardizedURL] path] )
-			[listener ignore];
+	NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
+
+	if( [[url scheme] isEqualToString:@"about"] ) {
+		if( [[[url standardizedURL] path] length] ) [listener ignore];
 		else [listener use];
-	} else if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"self"] ) {
-		NSString *resource = [[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier];
+	} else if( [[url scheme] isEqualToString:@"self"] ) {
+		NSString *resource = [url resourceSpecifier];
 		NSRange range = [resource rangeOfString:@"?"];
 		NSString *command = [resource substringToIndex:( range.location != NSNotFound ? range.location : [resource length] )];
+
 		if( [self respondsToSelector:NSSelectorFromString( [command stringByAppendingString:@":"] )] ) {
 			NSString *arg = [resource substringFromIndex:( range.location != NSNotFound ? range.location : 0 )];
 			[self performSelector:NSSelectorFromString( [command stringByAppendingString:@":"] ) withObject:( range.location != NSNotFound ? arg : nil )];
 		}
+
 		[listener ignore];
 	} else {
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSURL * ), @encode( id ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
 
 		[invocation setSelector:@selector( handleClickedLink:inView: )];
 		[invocation setArgument:&url atIndex:2];
@@ -773,16 +779,19 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 		DOMCSSStyleDeclaration *style = [sender computedStyleForElement:[(DOMHTMLDocument *)[[sender mainFrame] DOMDocument] body] pseudoElement:nil];
 		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
 		DOMCSSValue *altvalue = [style getPropertyCSSValue:@"background"];
-		if( [[value cssText] rangeOfString:@"rgba"].location != NSNotFound || [[altvalue cssText] rangeOfString:@"rgba"].location != NSNotFound )
+		if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) || ( altvalue && [[altvalue cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
 			[display setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
 		else [display setDrawsBackground:YES];
 	}
 #endif
 
-	[display setFrameLoadDelegate:nil];
+	[display setPreferencesIdentifier:[_chatStyle identifier]];
+	[[display preferences] setJavaScriptEnabled:YES];
 
 	if( [[display window] isFlushWindowDisabled] )
 		[[display window] enableFlushWindow];
+
+	[display setFrameLoadDelegate:nil];
 
 	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
 	[scrollView setHasHorizontalScroller:NO];
@@ -805,7 +814,6 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 #pragma mark -
 
 @implementation JVChatTranscript (JVChatTranscriptPrivate)
-#pragma mark -
 #pragma mark Style Support
 
 - (void) _reloadCurrentStyle:(id) sender {
@@ -826,7 +834,6 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 - (void) _switchingStyleEnded:(id) sender {
 	_switchingStyles = NO;
 	[_logLock unlock];
-
 	return;
 
 	NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
@@ -861,11 +868,13 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 - (oneway void) _switchStyle:(id) sender {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *result = nil;
 
 	unsigned long elements = xmlChildElementCount( xmlDocGetRootElement( _xmlLog ) );
 	unsigned long i = elements;
 	xmlNodePtr startNode = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
+	NSString *result = nil;
+
+	usleep( 5000 ); // wait a little bit for WebKit since it just loaded
 
 	for( i = elements; i > ( elements - MIN( 600, elements ) ) && startNode; i -= MIN( 25, i ) ) {
 		unsigned int j = 25;
@@ -901,12 +910,12 @@ static unsigned long xmlChildElementCount( xmlNodePtr node ) {
 
 		if( result ) {
 			[self performSelectorOnMainThread:@selector( _prependMessages: ) withObject:result waitUntilDone:YES];
-			usleep( 100000 );
+			usleep( 100000 ); // wait for WebKit to render the chunk
 		} else goto finish;
 	}
 
 finish:
-	[self performSelectorOnMainThread:@selector( _switchingStyleEnded: ) withObject:result waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector( _switchingStyleEnded: ) withObject:nil waitUntilDone:YES];
 	[pool release];
 }
 

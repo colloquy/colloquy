@@ -264,13 +264,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	if( [(NSString *)[self preferenceForKey:@"emoticon"] length] ) {
 		emoticon = [NSBundle bundleWithIdentifier:[self preferenceForKey:@"emoticon"]];
-		if( ! emoticon ) [self setPreference:nil forKey:@"emoticon"];
-		[self setChatEmoticons:emoticon];
+		if( emoticon ) [self setChatEmoticons:emoticon];
 	}
 
-	[self changeEncoding:nil];
-
 	[super awakeFromNib];
+
+	[self changeEncoding:nil];
 
 	if( [self isMemberOfClass:[JVDirectChat class]] ) {
 		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
