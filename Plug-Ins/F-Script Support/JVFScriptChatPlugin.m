@@ -106,16 +106,19 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 
 #pragma mark -
 
+- (void) promptForReload {
+	if( NSRunInformationalAlertPanel( NSLocalizedString( @"F-Script Plugin Changed", "F-Script plugin file changed dialog title" ), NSLocalizedString( @"The F-Script plugin \"%@\" has changed on disk. Any script variables will reset if reloaded. All local block modifications will also be lost.", "F-Script plugin changed on disk message" ), NSLocalizedString( @"Reload", "reload button title" ), NSLocalizedString( @"Keep Previous Version", "keep previous version button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] ) == NSOKButton ) {
+		[self reloadFromDisk];
+	}
+}
+
 - (void) checkForModifications:(NSNotification *) notification {
 	if( [self scriptFilePath] && [[NSFileManager defaultManager] fileExistsAtPath:[self scriptFilePath]] ) {
 		NSDictionary *info = [[NSFileManager defaultManager] fileAttributesAtPath:[self scriptFilePath] traverseLink:YES];
 		if( [[info fileModificationDate] compare:_modDate] == NSOrderedDescending ) { // newer script file
 			[_modDate autorelease];
 			_modDate = [[NSDate date] retain];
-
-			if( NSRunInformationalAlertPanel( NSLocalizedString( @"F-Script Plugin Changed", "F-Script plugin file changed dialog title" ), NSLocalizedString( @"The F-Script plugin \"%@\" has changed on disk. Any script variables will reset if reloaded. All local block modifications will also be lost.", "F-Script plugin changed on disk message" ), NSLocalizedString( @"Reload", "reload button title" ), NSLocalizedString( @"Keep Previous Version", "keep previous version button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] ) == NSOKButton ) {
-				[self reloadFromDisk];
-			}
+			[self performSelector:@selector( promptForReload ) withObject:nil afterDelay:0.];
 		}
 	}
 }
