@@ -715,31 +715,39 @@ static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
 
 static void MVChatBanNew( CHANNEL_REC *channel, BAN_REC *ban ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
+	if( ! self || ! ban || ! ban -> ban ) return;
 
-//	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNewBanNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel -> name], @"room", [self stringWithEncodedBytes:ban -> ban], @"ban", ( ban -> setby ? (id)[self stringWithEncodedBytes:ban -> setby] : (id)[NSNull null] ), @"by", nil]];
-//	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	NSString *banString = [self stringWithEncodedBytes:ban -> ban];
+	NSArray *parts = [banString componentsSeparatedByString:@"!"];
+	NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
+	NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
+	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
+
+	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
+	MVChatUser *byMember = ( ban -> setby ? [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:ban -> setby]] : nil );
+
+	[room _addBanForUser:user];
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserBannedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", ( byMember ? (id) byMember : (id) [NSNull null] ), @"byUser", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 static void MVChatBanRemove( CHANNEL_REC *channel, BAN_REC *ban ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
+	if( ! self || ! ban || ! ban -> ban ) return;
 
-//	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionRemovedBanNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel -> name], @"room", [self stringWithEncodedBytes:ban -> ban], @"ban", ( ban -> setby ? (id)[self stringWithEncodedBytes:ban -> setby] : (id)[NSNull null] ), @"by", nil]];
-//	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
+	NSString *banString = [self stringWithEncodedBytes:ban -> ban];
+	NSArray *parts = [banString componentsSeparatedByString:@"!"];
+	NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
+	NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
+	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
 
-static void MVChatBanlistReceived( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
+	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
 
-	char *channel = NULL;
-	char *params = event_get_params( data, 2, NULL, &channel );
+	[room _removeBanForUser:user];
 
-//	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBanlistReceivedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel], @"room", nil]];
-//	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	g_free( params );
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 #pragma mark -
@@ -1563,7 +1571,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	signal_add_last( "ban new", (SIGNAL_FUNC) MVChatBanNew );
 	signal_add_last( "ban remove", (SIGNAL_FUNC) MVChatBanRemove );
-	signal_add_last( "chanquery ban end", (SIGNAL_FUNC) MVChatBanlistReceived );
 
 	signal_add_last( "event join", (SIGNAL_FUNC) MVChatUserJoinedRoom );
 	signal_add_last( "event part", (SIGNAL_FUNC) MVChatUserLeftRoom );
@@ -1626,7 +1633,6 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 	signal_remove( "ban new", (SIGNAL_FUNC) MVChatBanNew );
 	signal_remove( "ban remove", (SIGNAL_FUNC) MVChatBanRemove );
-	signal_remove( "chanquery ban end", (SIGNAL_FUNC) MVChatBanlistReceived );
 
 	signal_remove( "event join", (SIGNAL_FUNC) MVChatUserJoinedRoom );
 	signal_remove( "event part", (SIGNAL_FUNC) MVChatUserLeftRoom );
