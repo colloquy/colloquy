@@ -1886,7 +1886,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
 		}
 
-		[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] startShadedAreaAt:loc];
+		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+		if( [scroller isKindOfClass:[JVMarkedScroller class]] ) [(JVMarkedScroller *)scroller startShadedAreaAt:loc];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
 
@@ -1903,7 +1904,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			loc = [[display stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementByIndex( %d );", ( messageCount - 1 )]] intValue];
 		}
 
-		[(JVMarkedScroller *)[[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller] stopShadedAreaAt:loc];
+		NSScroller *scroller = [[[[[display mainFrame] frameView] documentView] enclosingScrollView] verticalScroller];
+		if( [scroller isKindOfClass:[JVMarkedScroller class]] ) [(JVMarkedScroller *)scroller stopShadedAreaAt:loc];
 	}
 }
 
