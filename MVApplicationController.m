@@ -204,9 +204,8 @@ static BOOL applicationIsTerminating = NO;
 	NSPipe *pipe = [NSPipe pipe];
 
 	NSString *stack = [[exception userInfo] objectForKey:NSStackTraceKey];
-	NSMutableArray *stackArray = [[[stack componentsSeparatedByString:@" "] mutableCopy] autorelease];
+	NSMutableArray *stackArray = [[[stack componentsSeparatedByString:@"  "] mutableCopy] autorelease];
 
-	[stackArray removeObject:@""];
 	if( [stackArray count] > 4 ) [stackArray removeObjectsInRange:NSMakeRange( 0, 4 )];
 
 #ifndef DEBUG
@@ -289,8 +288,8 @@ static BOOL applicationIsTerminating = NO;
 	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultManager];
 	[JVChatController defaultManager];
-	[MVFileTransferController defaultManager];
-	[MVBuddyListController sharedBuddyList];
+//	[MVFileTransferController defaultManager];
+//	[MVBuddyListController sharedBuddyList];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
 
