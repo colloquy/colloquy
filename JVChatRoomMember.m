@@ -31,6 +31,7 @@
 		_parent = nil;
 		_nickname = nil;
 		_realName = nil;
+		_username = nil;
 		_address = nil;
 		_buddy = nil;
 		_operator = NO;
@@ -46,12 +47,14 @@
 - (void) dealloc {
 	[_nickname release];
 	[_realName release];
+	[_username release];
 	[_address release];
 	[_buddy release];
 
 	_parent = nil;
 	_nickname = nil;
 	_realName = nil;
+	_username = nil;
 	_address = nil;
 	_buddy = nil;
 
@@ -588,7 +591,7 @@
 	if( [parts count] < 2 ) return;
 
 	[_username autorelease];
-	_username = [[parts objectAtIndex:0] retain];
+	_username = [[parts objectAtIndex:0] copy];
 
 	[_address autorelease];
 	_address = [[parts objectAtIndex:1] copy];

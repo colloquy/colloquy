@@ -107,6 +107,7 @@
 	[_htmlMessage release];
 	[_attributedMessage release];
 	[_date release];
+	[_objectSpecifier release];
 
 	_node = NULL;
 	_transcript = NULL;
@@ -114,6 +115,7 @@
 	_htmlMessage = nil;
 	_attributedMessage = nil;
 	_date = nil;
+	_objectSpecifier = nil;
 
 	[super dealloc];
 }

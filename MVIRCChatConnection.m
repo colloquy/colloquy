@@ -310,10 +310,10 @@ static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, cons
 	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) {
 		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel], @"room", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-		return;
+		goto finish;
 	}
 
-	if( ! nickname ) return;
+	if( ! nickname ) goto finish;
 
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	[info setObject:[self stringWithEncodedBytes:nickname -> nick] forKey:@"nickname"];
@@ -327,6 +327,7 @@ static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, cons
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserJoinedRoomNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:channel], @"room", [self stringWithEncodedBytes:nick], @"who", info, @"info", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
+finish:
 	g_free( params );
 }
 
