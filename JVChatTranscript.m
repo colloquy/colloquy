@@ -584,6 +584,9 @@
 			root = xmlNewNode( NULL, "envelope" );
 			root = xmlAddChild( xmlDocGetRootElement( _xmlLog ), root );
 
+			if( [message ignoreStatus] == JVUserIgnored )
+				xmlSetProp( root, "ignored", "yes" );
+
 			xmlNode *subNode = ((xmlNode *) [message node]) -> parent -> children;
 
 			do {
