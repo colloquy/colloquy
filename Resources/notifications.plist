@@ -21,11 +21,28 @@
 		<string>Member Kicked From Room</string>
 	</dict>
 	<dict>
+	<key>seperator</key>
+		<true />
+	</dict>
+	<dict>
 		<key>identifier</key>
 		<string>JVChatRoomInvite</string>
 		<key>title</key>
 		<string>Member Invited To Room</string>
-	</dict>	<dict>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVNickNameIdentifiedWithServer</string>
+		<key>title</key>
+		<string>Server Identified Nickname</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVNewMemosFromServer</string>
+		<key>title</key>
+		<string>New Memos On Server</string>
+	</dict>
+	<dict>
 		<key>seperator</key>
 		<true />
 	</dict>

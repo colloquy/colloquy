@@ -9,6 +9,7 @@
 #import "JVDirectChat.h"
 #import "JVChatRoom.h"
 #import "JVChatConsole.h"
+#import "KAConnectionHandler.h"
 
 #import <libxml/parser.h>
 
@@ -324,8 +325,15 @@ static JVChatController *sharedInstance = nil;
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
-	JVDirectChat *controller = [self chatViewControllerForUser:[[notification userInfo] objectForKey:@"from"] withConnection:[notification object] ifExists:NO];
-	[controller addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"from"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue]];
+	BOOL continueNotify = YES;
+	if ( [[[notification userInfo] objectForKey:@"auto"] boolValue] ) {
+		continueNotify = ! [[KAConnectionHandler defaultHandler] connection:[notification object] willPostMessage:[[notification userInfo] objectForKey:@"message"] from:[[notification userInfo] objectForKey:@"from"] toRoom:NO];
+	}
+	
+	if ( continueNotify ) {
+		JVDirectChat *controller = [self chatViewControllerForUser:[[notification userInfo] objectForKey:@"from"] withConnection:[notification object] ifExists:NO];
+		[controller addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"from"] asAction:[[[notification userInfo] objectForKey:@"action"] boolValue]];
+	}
 }
 
 - (void) _gotRoomMessage:(NSNotification *) notification {
