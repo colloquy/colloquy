@@ -1,3 +1,4 @@
+#import <ExceptionHandling/NSExceptionHandler.h>
 #import <ChatCore/MVFileTransfer.h>
 #import <ChatCore/NSURLAdditions.h>
 #import "MVColorPanel.h"
@@ -192,6 +193,56 @@ static BOOL applicationIsTerminating = NO;
 	else [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
+- (BOOL) exceptionHandler:(NSExceptionHandler *) sender shouldLogException:(NSException *) exception mask:(unsigned int) mask {
+	return NO;
+}
+
+- (BOOL) exceptionHandler:(NSExceptionHandler *) sender shouldHandleException:(NSException *) exception mask:(unsigned int) mask {
+	NSTask *ls = [[NSTask alloc] init];
+	NSString *pid = [[NSNumber numberWithInt:[[NSProcessInfo processInfo] processIdentifier]] stringValue];
+	NSMutableArray *args = [NSMutableArray arrayWithCapacity:20];
+	NSPipe *pipe = [NSPipe pipe];
+
+	NSString *stack = [[exception userInfo] objectForKey:NSStackTraceKey];
+	NSMutableArray *stackArray = [[[stack componentsSeparatedByString:@" "] mutableCopy] autorelease];
+
+	[stackArray removeObject:@""];
+	if( [stackArray count] > 4 ) [stackArray removeObjectsInRange:NSMakeRange( 0, 4 )];
+
+#ifndef DEBUG
+	[stackArray removeObjectsInRange:NSMakeRange( 1, [stackArray count] - 1 )];
+#endif
+
+	[args addObject:@"-p"];
+	[args addObject:pid];
+	[args addObjectsFromArray:stackArray];
+
+	[ls setStandardOutput:pipe];
+	[ls setLaunchPath:@"/usr/bin/atos"];
+	[ls setArguments:args];
+	[ls launch];
+	[ls waitUntilExit];
+
+	NSData *result = [[pipe fileHandleForReading] readDataToEndOfFile];
+	NSString *trace = [[[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding] autorelease];
+
+#ifdef DEBUG
+	NSLog( @"Exception Stack Trace:\n%@", trace );
+	NSRange loc = [trace rangeOfString:@"\n"];
+	if( loc.location != NSNotFound )
+		trace = [trace substringWithRange:[trace lineRangeForRange:NSMakeRange( 0, loc.location )]];
+#endif
+
+	NSString *reason = [exception reason];
+	if( [reason hasPrefix:@"*** "] ) reason = [reason substringFromIndex:4];
+
+	NSRunCriticalAlertPanel( NSLocalizedString( @"An unresolved error has occurred.", "exception error title" ), NSLocalizedString( @"Please report this message to the Colloquy development team with a brief synopsis of your actions leading to this message.\n\n%@\n\nThe error occurred in:\n%@", "exception error message" ), nil, nil, nil, reason, trace );
+
+	[ls release];
+
+	return YES;
+}
+
 #pragma mark -
 
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
@@ -206,6 +257,10 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
+	NSExceptionHandler *handler = [NSExceptionHandler defaultExceptionHandler];
+	[handler setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
+	[handler setDelegate:self];
+
 	[MVCrashCatcher check];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] )

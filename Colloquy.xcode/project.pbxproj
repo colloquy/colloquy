@@ -7,6 +7,7 @@
 	objects = {
 		014CEA420018CDE011CA2923 = {
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -186,6 +187,7 @@
 		1058C7ACFEA557BF11CA2CBB = {
 			children = (
 				1058C7ADFEA557BF11CA2CBB,
+				1CF8FC0E070A5BEF00C9B54C,
 				F51F91F103796FCD01A35792,
 				F555208B01F0DE0601EE70DE,
 				1C3C112E050265AE000001C8,
@@ -1945,9 +1947,13 @@
 				1CCB279D04FE93FE00A8FE6E,
 				1CE2BC4A042F53AD00000102,
 				1CE2BC49042F53AD00000102,
+				1C088A0F04FCFEE700A8FE6E,
+				1C088A0E04FCFEE700A8FE6E,
+				1C2391A80677E6B7000E89A7,
+				1C2391A70677E6B7000E89A7,
 			);
 			isa = PBXGroup;
-			name = Panels;
+			name = "Panels & List Items";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -1999,6 +2005,11 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" Frameworks build";
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
@@ -2009,7 +2020,7 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-fconstant-cfstrings -fobjc-exceptions";
+				OTHER_CFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = "-weak_framework GrowlAppBridge";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = Colloquy;
@@ -2785,6 +2796,7 @@
 				1C5A249306FA6AAA00A51F10,
 				1C5A249406FA6AAA00A51F10,
 				1C16362707021F240020D94D,
+				1CF8FC0F070A5BEF00C9B54C,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4036,6 +4048,20 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1CF8FC0E070A5BEF00C9B54C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = ExceptionHandling.framework;
+			path = /System/Library/Frameworks/ExceptionHandling.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		1CF8FC0F070A5BEF00C9B54C = {
+			fileRef = 1CF8FC0E070A5BEF00C9B54C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CF9BB9A04FBE96D00A8FE6E = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -4046,10 +4072,6 @@
 		};
 		1CFAFE9A053C1B3D00C702F9 = {
 			children = (
-				1C2391A80677E6B7000E89A7,
-				1C2391A70677E6B7000E89A7,
-				1C088A0F04FCFEE700A8FE6E,
-				1C088A0E04FCFEE700A8FE6E,
 				1CEE3F04057AEC0200AD6DE2,
 				1CEE3F03057AEC0200AD6DE2,
 				1CABFD0D0658629200801C15,
@@ -4504,6 +4526,8 @@
 		};
 		F52BA31C037C62E801A35792 = {
 			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
