@@ -886,6 +886,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		irc_init();
 
 		settings_set_bool( "override_coredump_limit", FALSE );
+		settings_set_bool( "settings_autosave", FALSE );
 		signal_emit( "setup changed", 0 );
 
 		signal_emit( "irssi init finished", 0 );	
