@@ -59,7 +59,13 @@ static void silc_channel_get_clients_per_list_callback( SilcClient client, SilcC
 static void silc_say( SilcClient client, SilcClientConnection conn, SilcClientMessageType type, char *msg, ... ) {
 	MVSILCChatConnection *self = conn -> context;
 	if( msg ) {
-		NSString *msgString = [NSString stringWithUTF8String:msg];
+	    va_list list;
+		va_start( list, msg );
+		
+		NSString *tmp = [NSString stringWithUTF8String:msg];
+		NSString *msgString = [[[NSString alloc] initWithFormat:tmp arguments:list] autorelease];
+		va_end( list );
+		
 		NSNotification *rawMessageNote = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:rawMessageNote];
 	}
@@ -847,7 +853,6 @@ static SilcClientOperations silcClientOps = {
 		silc_hash_register_default();
 		silc_cipher_register_default();
 		silc_hmac_register_default();
-
 		tooLate = YES;
 	}
 }
@@ -863,6 +868,7 @@ static SilcClientOperations silcClientOps = {
 		_encoding = NSUTF8StringEncoding; // the only encoding we support
 
 		memset( &_silcClientParams, 0, sizeof( _silcClientParams ) );
+		_silcClientParams.dont_register_crypto_library = TRUE;
 
 		_silcClientLock = [[NSRecursiveLock alloc] init];
 		_silcClient = silc_client_alloc( &silcClientOps, &_silcClientParams, self, NULL );
