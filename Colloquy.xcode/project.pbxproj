@@ -1547,6 +1547,7 @@
 				1CBA4E67062CCDA90082D1BF,
 				CB66DEA20631F8160034F76E,
 				CB66DEA30631F8160034F76E,
+				1CE95886063F3BF90071C9C3,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3456,6 +3457,20 @@
 			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
 			remoteInfo = "Chat Core (Framework)";
 		};
+		1CE95885063F3BF90071C9C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = inspector.tif;
+			path = Resources/inspector.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1CE95886063F3BF90071C9C3 = {
+			fileRef = 1CE95885063F3BF90071C9C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CEE3A4C0577E14500AD6DE2 = {
 			children = (
 				1CEE3AFE0578421400AD6DE2,
@@ -4784,6 +4799,7 @@
 				F5A6089901979C2C01A35792,
 				F5A6089B0197A3BB01A35792,
 				F5BC17DF019656E901A35792,
+				1CE95885063F3BF90071C9C3,
 				F5B425E9038C056701000102,
 				F5ED0F58017CD79801EE70DE,
 				F5C98A8101838CAD01EE70DE,
