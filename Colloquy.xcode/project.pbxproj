@@ -65,6 +65,7 @@
 				},
 			);
 			targets = (
+				1C9436A706399B1600618CD9,
 				1CB2CCF5052DDC560094AAA4,
 				1C51B4BB052DE14B00BB459B,
 			);
@@ -535,10 +536,8 @@
 		1C51B4BB052DE14B00BB459B = {
 			buildPhases = (
 				1C51B4BC052DE14B00BB459B,
-				1C51B4C5052DE14B00BB459B,
 				1C51B4C6052DE14B00BB459B,
 				1C51B4C8052DE14B00BB459B,
-				1C51B4CA052DE14B00BB459B,
 			);
 			buildRules = (
 			);
@@ -621,13 +620,6 @@
 			settings = {
 			};
 		};
-		1C51B4C5052DE14B00BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1C51B4C6052DE14B00BB459B = {
 			buildActionMask = 2147483647;
 			files = (
@@ -655,13 +647,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		1C51B4CA052DE14B00BB459B = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1C51B4CC052DE14B00BB459B = {
 			isa = PBXFileReference;
@@ -1001,6 +986,38 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		1C9436A606399B1600618CD9 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./Configure.command;
+		};
+		1C9436A706399B1600618CD9 = {
+			buildPhases = (
+				1C9436A606399B1600618CD9,
+			);
+			buildSettings = {
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Configure;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXAggregateTarget;
+			name = "Configure (Do First)";
+			productName = Configure;
 		};
 		1C95D5B6041FA02C00000102 = {
 			isa = PBXFileReference;
