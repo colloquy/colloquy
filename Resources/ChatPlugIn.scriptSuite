@@ -279,6 +279,38 @@
 			<key>Type</key>
 			<string>NSString</string>
 		</dict>
+		<key>handleClickedLink</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>cplG</string>
+			<key>AppleEventCode</key>
+			<string>hClX</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Optional</key>
+				<string>NO</string>
+				<key>Type</key>
+				<string>NSString</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>view</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>hCl1</string>
+					<key>Optional</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>Colloquy.AbstractChatViewController</string>
+				</dict>
+			</dict>
+			<key>CommandClass</key>
+			<string>NSScriptCommand</string>
+			<key>ResultAppleEventCode</key>
+			<string>bool</string>
+			<key>Type</key>
+			<string>NSNumber&lt;Bool&gt;</string>
+		</dict>
 		<key>joinedRoom</key>
 		<dict>
 			<key>AppleEventClassCode</key>

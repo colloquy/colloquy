@@ -64,3 +64,7 @@
 @interface JVChatTranscript (JVChatTranscriptScripting) <JVChatListItemScripting>
 - (NSNumber *) uniqueIdentifier;
 @end
+
+@interface NSObject (MVChatPluginLinkClickSupport)
+- (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view;
+@end

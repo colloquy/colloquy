@@ -199,6 +199,28 @@
 			<key>Name</key>
 			<string>process chat topic</string>
 		</dict>
+		<key>handleClickedLink</key>
+		<dict>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>The URL of the clicked link.</string>
+			</dict>
+			<key>Arguments</key>
+			<dict>
+				<key>view</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat room, direct chat or chat transcript this link was clicked in.</string>
+					<key>Name</key>
+					<string>in</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Called when a (currently unhandled) link is clicked in a conversation. Return true to prevent Colloquy and other plugins from handling this clicked link.</string>
+			<key>Name</key>
+			<string>handle clicked link</string>
+		</dict>
 		<key>joinedRoom</key>
 		<dict>
 			<key>UnnamedArgument</key>

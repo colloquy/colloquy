@@ -2,6 +2,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/MVChatScriptPlugin.h>
+#import <ChatCore/NSMethodSignatureAdditions.h>
 
 #import "JVChatController.h"
 #import "JVChatMessage.h"
@@ -695,11 +698,24 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 		[self performSelector:NSSelectorFromString( [command stringByAppendingString:@":"] ) withObject:nil];
 		[listener ignore];
 	} else {
-		if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
-			[[MVFileTransferController defaultManager] downloadFileAtURL:[actionInformation objectForKey:WebActionOriginalURLKey] toLocalFile:nil];
-		} else {
-			[[NSWorkspace sharedWorkspace] openURL:[actionInformation objectForKey:WebActionOriginalURLKey]];	
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSURL * ), @encode( id ), nil];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
+
+		[invocation setSelector:@selector( handleClickedLink:inView: )];
+		[invocation setArgument:&url atIndex:2];
+		[invocation setArgument:&self atIndex:3];
+
+		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+
+		if( ! [[results lastObject] boolValue] ) {
+			if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
+				[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
+			} else {
+				[[NSWorkspace sharedWorkspace] openURL:url];	
+			}
 		}
+
 		[listener ignore];
 	}
 }
@@ -1124,5 +1140,16 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context ) {
 	}
 
 	[self saveTranscriptTo:path];
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatScriptPlugin (MVChatScriptPluginLinkClickSupport)
+- (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view {
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[url absoluteString], @"----", view, @"hCl1", nil];
+	id result = [self callScriptHandler:'hClX' withArguments:args];
+	if( ! result ) [self doesNotRespondToSelector:_cmd];
+	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 @end
