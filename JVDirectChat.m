@@ -1799,8 +1799,8 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 	NSFont *baseFont = nil;
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputUsesStyleFont"] ) {
 		WebPreferences *preferences = [display preferences];
-		[[NSFontManager sharedFontManager] fontWithFamily:[preferences standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size: [preferences defaultFontSize]];
-	} else baseFont = [NSFont userFontOfSize:0.];
+		baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[preferences standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size: [preferences defaultFontSize]];
+	}
 	[send setBaseFont:baseFont];
 }
 
