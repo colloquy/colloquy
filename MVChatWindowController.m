@@ -1410,7 +1410,7 @@ void MVChatPlaySoundForAction( NSString *action ) {
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Add Emotions with Emoticons", emoticons toolbar button tooltip )];
 		[toolbarItem setView:button];
-		[toolbarItem setMinSize:NSMakeSize( 32., 32. )];
+		[toolbarItem setMinSize:NSMakeSize( 24., 24. )];
 		[toolbarItem setMaxSize:NSMakeSize( 32., 32. )];
 
 		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Smile", smile emoticon name ) action:@selector( addEmoticon: ) keyEquivalent:@""] autorelease];

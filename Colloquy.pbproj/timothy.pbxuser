@@ -1,0 +1,63 @@
+// !$*UTF8*$!
+{
+	089C1669FE841209C02AAC07 = {
+		activeBuildStyle = 014CEA420018CDE011CA2923;
+		activeExecutable = 1C2D6A1804085B9E00000102;
+		activeTarget = F50B0AAB0170CB7101A84BDE;
+		addToTargets = (
+			F50B0AAB0170CB7101A84BDE,
+		);
+		executables = (
+			1C2D6A1804085B9E00000102,
+		);
+		perUserDictionary = {
+			PBXPerProjectTemplateStateSaveDate = 69177753;
+			PBXWorkspaceStateSaveDate = 69177753;
+		};
+		projectwideBuildSettings = {
+		};
+		wantsIndex = 1;
+		wantsSCM = 1;
+	};
+	1C2D6A1804085B9E00000102 = {
+		activeArgIndex = 2147483647;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		configStateDict = {
+		};
+		debuggerPlugin = GDBDebugging;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		isa = PBXExecutable;
+		name = "Colloquy (Application)";
+		shlibInfoDictList = (
+		);
+		sourceDirectories = (
+		);
+	};
+	F50B0AAB0170CB7101A84BDE = {
+		activeExec = 0;
+		executables = (
+			1C2D6A1804085B9E00000102,
+		);
+	};
+	F5DD3498038301FF01000102 = {
+		activeExec = 0;
+	};
+	F5E3BCCF038361EF01000102 = {
+		activeExec = 0;
+	};
+	F5E3BCE50383640D01000102 = {
+		activeExec = 0;
+	};
+	F5E3BCFA038366F001000102 = {
+		activeExec = 0;
+	};
+	F5FEC88B038051BA01A35792 = {
+		activeExec = 0;
+	};
+}

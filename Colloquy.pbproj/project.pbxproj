@@ -166,6 +166,18 @@
 //1C2
 //1C3
 //1C4
+		1C95D5B6041FA02C00000102 = {
+			isa = PBXFileReference;
+			name = emoticonSmall.tif;
+			path = "Resources/Toolbar Icons/emoticonSmall.tif";
+			refType = 2;
+		};
+		1C95D5B7041FA02C00000102 = {
+			fileRef = 1C95D5B6041FA02C00000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1CC7CAAE03C48E8B001C0D62 = {
 			children = (
 				1CC7CAAF03C48E8B001C0D62,
@@ -537,6 +549,7 @@ Copyright © 2001, The Massinova Project</string>
 				F5C3D46B0398B5B401000102,
 				1CC7CAB203C48E8B001C0D62,
 				1CC7CAB303C48E8B001C0D62,
+				1C95D5B7041FA02C00000102,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3434,6 +3447,7 @@ Copyright © 2001, The Massinova Project</string>
 				F5ED0F58017CD79801EE70DE,
 				F5C98A8101838CAD01EE70DE,
 				F5E98659018CB25601EE70DE,
+				1C95D5B6041FA02C00000102,
 				F57D9685018CD26001EE70DE,
 				F57D9686018CD26001EE70DE,
 				F590EA180190A42101EE70DE,

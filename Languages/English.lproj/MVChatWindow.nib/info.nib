@@ -11,10 +11,10 @@
 		<key>43</key>
 		<string>569 511 142 342 0 0 1280 1002 </string>
 		<key>62</key>
-		<string>600 649 80 65 0 0 1280 1002 </string>
+		<string>600 525 89 76 0 0 1280 832 </string>
 	</dict>
 	<key>IBFramework Version</key>
-	<string>283.0</string>
+	<string>291.0</string>
 	<key>IBGroupedObjects</key>
 	<dict>
 		<key>0</key>
@@ -26,7 +26,11 @@
 	</dict>
 	<key>IBLastGroupID</key>
 	<string>1</string>
+	<key>IBOpenObjects</key>
+	<array>
+		<integer>62</integer>
+	</array>
 	<key>IBSystem Version</key>
-	<string>6F21</string>
+	<string>6I32</string>
 </dict>
 </plist>
