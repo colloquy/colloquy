@@ -40,9 +40,6 @@ td.icon {
 	width: 32px;
 	height: 32px;
 	margin-right: 5px;
-	background-image: url("person.tif");
-	background-repeat: no-repeat;
-	background-position: bottom;
 }
 
 td.sender {
