@@ -188,6 +188,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[[JVChatController defaultManager] disposeViewController:_activeViewController];
 }
 
+- (IBAction) detachCurrentPanel:(id) sender {
+	[[JVChatController defaultManager] detachViewController:_activeViewController];
+}
+
 - (IBAction) selectPreviousPanel:(id) sender {
 	int currentIndex = [_views indexOfObject:_activeViewController];
 	int index = 0;
@@ -202,19 +206,17 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	int currentIndex = [_views indexOfObject:_activeViewController];
 	int index = currentIndex;
 	BOOL done = NO;
-	
+
 	do {
-		if( [[_views objectAtIndex:index] respondsToSelector:@selector( newMessagesWaiting )] && [[_views objectAtIndex:index] newMessagesWaiting] > 0 ){
+		if( [[_views objectAtIndex:index] respondsToSelector:@selector( newMessagesWaiting )] && [[_views objectAtIndex:index] newMessagesWaiting] > 0 )
 			done = YES;
-		}
-			
-		if ( !done ) {
-			if ( index == 0 ) index = [_views count]-1;
+
+		if( ! done ) {
+			if( index == 0 ) index = [_views count] - 1;
 			else index--;
 		}
-	}while ( index != currentIndex && !done );
+	} while( index != currentIndex && ! done );
 
-	
 	[self showChatViewController:[_views objectAtIndex:index]];
 }
 
@@ -232,19 +234,17 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	int currentIndex = [_views indexOfObject:_activeViewController];
 	int index = currentIndex;
 	BOOL done = NO;
-	
+
 	do {
-		if( [[_views objectAtIndex:index] respondsToSelector:@selector( newMessagesWaiting )] && [[_views objectAtIndex:index] newMessagesWaiting] > 0 ){
+		if( [[_views objectAtIndex:index] respondsToSelector:@selector( newMessagesWaiting )] && [[_views objectAtIndex:index] newMessagesWaiting] > 0 )
 			done = YES;
-		}
-		
-		if ( !done ) {
-			if ( index == [_views count]-1 ) index = 0;
+
+		if( ! done ) {
+			if( index == [_views count] - 1 ) index = 0;
 			else index++;
 		}
-	}while ( index != currentIndex && !done );
-	
-	
+	} while( index != currentIndex && ! done );
+
 	[self showChatViewController:[_views objectAtIndex:index]];
 }
 

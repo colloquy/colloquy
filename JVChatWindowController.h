@@ -59,6 +59,13 @@ extern NSString *JVChatViewPboardType;
 
 - (IBAction) joinRoom:(id) sender;
 
+- (IBAction) closeCurrentPanel:(id) sender;
+- (IBAction) detachCurrentPanel:(id) sender;
+- (IBAction) selectPreviousPanel:(id) sender;
+- (IBAction) selectPreviousActivePanel:(id) sender;
+- (IBAction) selectNextPanel:(id) sender;
+- (IBAction) selectNextActivePanel:(id) sender;
+
 - (NSToolbarItem *) toggleChatDrawerToolbarItem;
 - (NSToolbarItem *) chatActivityToolbarItem;
 - (IBAction) toggleViewsDrawer:(id) sender;

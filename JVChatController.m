@@ -234,6 +234,8 @@ static JVChatController *sharedInstance = nil;
 	return [[ret retain] autorelease];
 }
 
+#pragma mark -
+
 - (void) disposeViewController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
 	NSAssert1( [_chatControllers containsObject:controller], @"%@ is not a member of chat controller.", controller );
@@ -243,14 +245,23 @@ static JVChatController *sharedInstance = nil;
 	[_chatControllers removeObject:controller];
 }
 
+- (void) detachViewController:(id <JVChatViewController>) controller {
+	NSParameterAssert( controller != nil );
+	NSAssert1( [_chatControllers containsObject:controller], @"%@ is not a member of chat controller.", controller );
+
+	[[controller retain] autorelease];
+
+	JVChatWindowController *windowController = [self newChatWindowController];
+	[[controller windowController] removeChatViewController:controller];
+	[windowController addChatViewController:controller];
+}
+
 #pragma mark -
 
 - (IBAction) detachView:(id) sender {
-	id <JVChatViewController> view = [[[sender representedObject] retain] autorelease];
-	JVChatWindowController *windowController = [self newChatWindowController];
-	[[view windowController] removeChatViewController:view];
-	[windowController addChatViewController:view];
-	[windowController showChatViewController:view];
+	id <JVChatViewController> view = [sender representedObject];
+	if( ! view ) return;
+	[self detachViewController:view];
 }
 
 #pragma mark -

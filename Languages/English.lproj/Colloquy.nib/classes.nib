@@ -4,6 +4,7 @@
             ACTIONS = {
                 bold = id; 
                 closeCurrentPanel = id; 
+                detachCurrentPanel = id; 
                 getInfo = id; 
                 italic = id; 
                 joinRoom = id; 

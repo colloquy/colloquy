@@ -34,7 +34,9 @@
 - (JVDirectChat *) chatViewControllerForUser:(NSString *) user withConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 - (JVChatTranscript *) chatViewControllerForTranscript:(NSString *) filename;
 - (JVChatConsole *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
+
 - (void) disposeViewController:(id <JVChatViewController>) controller;
+- (void) detachViewController:(id <JVChatViewController>) controller;
 
 - (IBAction) detachView:(id) sender;
 
