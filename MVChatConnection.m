@@ -152,19 +152,6 @@ void MVChatErrorOccurred( void *c, void *cs, const int error, const char * const
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:( roomoruser ? [NSString stringWithUTF8String:roomoruser] : [NSNull null] ), @"target", [NSNumber numberWithInt:error], @"error", nil]];
 }
 
-void MVChatNeedPassword( void *c, void *cs, char *password, const int size ) {
-	NSCParameterAssert( password != NULL );
-
-	MVChatConnection *self = cs;
-	const char *pass = [[self nicknamePassword] UTF8String];
-	if( ! pass ) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
-		return;
-	}
-
-	strncpy( password, pass, size );
-}
-
 void MVChatGotInfo( void *c, void *cs, const char * const who, const char * const username, const char * const hostname, const char * const server, const char * const realname, const int warning, const long idle, const long connected, const int flags ) {
 	NSCParameterAssert( c != NULL );
 	NSCParameterAssert( who != NULL );

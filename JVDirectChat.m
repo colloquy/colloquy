@@ -1455,10 +1455,10 @@ NSComparisonResult sortBundlesByName( id style1, id style2, void *context );
 
 			NSString *replacement = [NSString stringWithFormat:@"<span class=\"emoticon %@\"><samp>%@</samp></span>", key, str];
 
+			[string replaceOccurrencesOfString:[NSString stringWithFormat:@">%@<", str] withString:[NSString stringWithFormat:@">%@<", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
 			[string replaceOccurrencesOfString:[str stringByAppendingString:@" "] withString:[replacement stringByAppendingString:@" "] options:NSLiteralSearch | NSAnchoredSearch range:NSMakeRange( 0, [string length] )];
 			[string replaceOccurrencesOfString:[@" " stringByAppendingString:str] withString:[@" " stringByAppendingString:replacement] options:NSLiteralSearch | NSAnchoredSearch | NSBackwardsSearch range:NSMakeRange( 0, [string length] )];
 			[string replaceOccurrencesOfString:[NSString stringWithFormat:@" %@ ", str] withString:[NSString stringWithFormat:@" %@ ", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
-			[string replaceOccurrencesOfString:[NSString stringWithFormat:@">%@<", str] withString:[NSString stringWithFormat:@">%@<", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
 			[string replaceOccurrencesOfString:[NSString stringWithFormat:@">%@ ", str] withString:[NSString stringWithFormat:@">%@ ", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
 			[string replaceOccurrencesOfString:[NSString stringWithFormat:@" %@<", str] withString:[NSString stringWithFormat:@" %@<", replacement] options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
 			if( [string isEqualToString:str] ) [string setString:replacement];
