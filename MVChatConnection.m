@@ -486,7 +486,7 @@ void MVChatSubcodeRequest( void *c, void *cs, const char * const from, const cha
 	NSString *ags = ( args ? [NSString stringWithUTF8String:args] : nil );
 	NSString *frm = [NSString stringWithUTF8String:from];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser:forConnection: )];
 	[invocation setArgument:&cmd atIndex:2];
@@ -519,7 +519,7 @@ void MVChatSubcodeReply( void *c, void *cs, const char * const from, const char 
 	NSString *ags = ( args ? [NSString stringWithUTF8String:args] : nil );
 	NSString *frm = [NSString stringWithUTF8String:from];
 	
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureOfSelectorWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processSubcodeReply:withArguments:fromUser:forConnection: )];
 	[invocation setArgument:&cmd atIndex:2];
