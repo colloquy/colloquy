@@ -1811,10 +1811,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	MVChatConnectionModuleData *data = MODULE_DATA( server );
 	if( data && data -> connection ) return data -> connection;
 
-	if( ! server -> tag || ( server -> tag && ! strlen( server -> tag ) ) ) return nil;
+	if( ! server -> connrec || ! server -> connrec -> tag || ( server -> connrec -> tag && ! strlen( server -> connrec -> tag ) ) ) return nil;
 
 	MVChatConnection *ret = NULL;
-	sscanf( server -> tag, "%8lx", (unsigned long *) &ret );
+	sscanf( server -> connrec -> tag, "%8lx", (unsigned long *) &ret );
 
 	[ret _setIrssiConnection:server];
 
