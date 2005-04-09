@@ -653,7 +653,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
-	NSCharacterSet *nonASCIISet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 128 )] invertedSet];
+	NSCharacterSet *nonASCIISet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 127 )] invertedSet];
 
 	char *ctcpEncoding = NULL;
 	if( [[self string] rangeOfCharacterFromSet:nonASCIISet].location != NSNotFound ) {
@@ -792,7 +792,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 					[ret appendBytes:ctcpEncoding length:strlen( ctcpEncoding )];
 					[ret appendBytes:"\006" length:1];
 				}
-			} else if( ! data ) {
+			}
+			if( ! data ) {
 				if( currentEncoding == NSUTF8StringEncoding ) {
 					// It shouldn't have failed, but I want to cover all the bases
 					data = [text dataUsingEncoding:currentEncoding allowLossyConversion:YES];
@@ -802,7 +803,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 					data = [text dataUsingEncoding:currentEncoding allowLossyConversion:YES];
 					[ret appendBytes:"\006EU\006" length:4];
 				}
-			} else if( data ) [ret appendData:data];
+			}
+			if( data ) [ret appendData:data];
 
 			wasBold = bold; wasItalic = italic; wasUnderline = underline; wasStrikethrough = strikethrough;
 			oldForeground = foregroundColor; oldBackground = backgroundColor; oldLink = link;
