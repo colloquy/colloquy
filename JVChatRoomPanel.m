@@ -231,6 +231,17 @@
 }
 
 #pragma mark -
+
+- (IBAction) toggleTopic:(id) sender {
+	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic] withBaseFont:[NSFont systemFontOfSize:11.]];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSString *topicString = [topic HTMLFormatWithOptions:options];
+	
+#warning I have NO clue why the following warning is occurring
+	[display toggleTopic:topicString];
+}
+
+#pragma mark -
 #pragma mark Miscellaneous
 
 - (IBAction) addToFavorites:(id) sender {

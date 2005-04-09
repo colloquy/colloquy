@@ -16,6 +16,8 @@
 	BOOL _banListSynced;
 	unsigned _joinCount;
 }
+- (IBAction) toggleTopic:(id) sender;
+
 - (void) joined;
 - (void) parting;
 

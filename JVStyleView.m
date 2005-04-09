@@ -71,6 +71,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self setNextTextView:nil];
 	[super dealloc];
 }
@@ -166,7 +167,14 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_styleVariant autorelease];
 	_styleVariant = [variant copyWithZone:[self zone]];
 
-	if( _webViewReady ) [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString]]];
+	if( _webViewReady ) {
+#ifdef WebKitVersion146
+		if( [self respondsToSelector:@selector( windowScriptObject )] )
+			[[self windowScriptObject] callWebScriptMethod:@"setStylesheet" withArguments:[NSArray arrayWithObjects:@"variantStyle", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString], nil]];
+		else
+#endif
+		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString]]];
+	}
 }
 
 - (NSString *) styleVariant {
@@ -190,7 +198,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_emoticons autorelease];
 	_emoticons = [emoticons retain];
 
-	if( _webViewReady ) [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [[[self emoticons] styleSheetLocation] absoluteString]]];
+	if( _webViewReady )
+#ifdef WebKitVersion146
+		if( [self respondsToSelector:@selector( webScriptObject )] )
+			[[self windowScriptObject] callWebScriptMethod:@"setStylesheet" withArguments:[NSArray arrayWithObjects:@"emoticonStyle", [[[self emoticons] styleSheetLocation] absoluteString], nil]];
+		else
+#endif
+		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [[[self emoticons] styleSheetLocation] absoluteString]]];
 }
 
 - (JVEmoticonSet *) emoticons {
@@ -219,6 +233,56 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_switchingStyles = NO;
 	_requiresFullMessage = YES;
 	[self _resetDisplay];
+}
+
+#pragma mark -
+
+- (void) showTopic:(NSString *) topic {
+	if( _webViewReady ) {
+#ifdef WebKitVersion146
+		if( [self respondsToSelector:@selector( windowScriptObject )] ) {
+			[[self windowScriptObject] callWebScriptMethod:@"showTopic" withArguments:[NSArray arrayWithObject:topic]];
+		} else {
+#endif
+			NSMutableString *mutTopic = [topic mutableCopy];
+			[mutTopic replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange(0, [mutTopic length])];
+			[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"showTopic( \"%@\" );", mutTopic]];
+#ifdef WebKitVersion146
+		}
+#endif
+	}
+}
+
+- (void) hideTopic {
+	if( _webViewReady ) {
+#ifdef WebKitVersion146
+		if( [self respondsToSelector:@selector( windowScriptObject )] )
+			[[self windowScriptObject] callWebScriptMethod:@"hideTopic" withArguments:[NSArray array]];
+		else
+#endif
+			[self stringByEvaluatingJavaScriptFromString:@"hideTopic();"];
+	}
+}
+
+- (void) toggleTopic:(NSString *) topic {
+	if( _webViewReady ) {
+		BOOL topicShowing;
+#ifdef WebKitVersion146
+		if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+			DOMHTMLElement *topicElement = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:@"topic-floater"];
+			topicShowing = ( topicElement != nil );
+		} else {
+#endif
+			NSString *result = [self stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"topic-floater\") != null"];
+			topicShowing = [result isEqualToString:@"true"];
+#ifdef WebKitVersion146
+		}
+#endif
+		if( topicShowing )
+			[self hideTopic];
+		else
+			[self showTopic:topic];
+	}
 }
 
 #pragma mark -
@@ -385,7 +449,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _resetDisplay {
 	_webViewReady = NO;
 	[[self class] cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
-
+	
 	[self stopLoading:nil];
 	[self clearScrollbarMarks];
 

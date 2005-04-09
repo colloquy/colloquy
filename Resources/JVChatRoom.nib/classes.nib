@@ -7,7 +7,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {joinChat = id; partChat = id; }; 
+            ACTIONS = {joinChat = id; partChat = id; toggleTopic = id; }; 
             CLASS = JVChatRoom; 
             LANGUAGE = ObjC; 
             OUTLETS = {topicLine = NSTextView; }; 

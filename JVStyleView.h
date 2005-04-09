@@ -44,6 +44,10 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 - (void) reloadCurrentStyle;
 - (void) clear;
 
+- (void) showTopic:(NSString *) topic;
+- (void) hideTopic;
+- (void) toggleTopic:(NSString *) topic;
+
 - (BOOL) appendChatMessage:(JVChatMessage *) message;
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element;
 
