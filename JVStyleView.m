@@ -169,9 +169,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	if( _webViewReady ) {
 #ifdef WebKitVersion146
-		if( [self respondsToSelector:@selector( windowScriptObject )] )
-			[[self windowScriptObject] callWebScriptMethod:@"setStylesheet" withArguments:[NSArray arrayWithObjects:@"variantStyle", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString], nil]];
-		else
+		if( [self respondsToSelector:@selector( windowScriptObject )] ) {
+			NSString *styleSheetLocation = [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString];
+			if( ! styleSheetLocation ) styleSheetLocation = @"";
+			[[self windowScriptObject] callWebScriptMethod:@"setStylesheet" withArguments:[NSArray arrayWithObjects:@"variantStyle", styleSheetLocation, nil]];
+		} else
 #endif
 		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString]]];
 	}
@@ -200,9 +202,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	if( _webViewReady )
 #ifdef WebKitVersion146
-		if( [self respondsToSelector:@selector( webScriptObject )] )
-			[[self windowScriptObject] callWebScriptMethod:@"setStylesheet" withArguments:[NSArray arrayWithObjects:@"emoticonStyle", [[[self emoticons] styleSheetLocation] absoluteString], nil]];
-		else
+		if( [self respondsToSelector:@selector( webScriptObject )] ) {
+			NSString *styleSheetLocation = [[[self emoticons] styleSheetLocation] absoluteString];
+			if( ! styleSheetLocation ) styleSheetLocation = @"";
+			[[self windowScriptObject] callWebScriptMethod:@"setStylesheet" withArguments:[NSArray arrayWithObjects:@"emoticonStyle", styleSheetLocation, nil]];
+		} else
 #endif
 		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [[[self emoticons] styleSheetLocation] absoluteString]]];
 }
