@@ -674,7 +674,7 @@ static NSMenu *favoritesMenu = nil;
 			unsigned index = [newType indexOfItemWithTag:( [[url scheme] isEqualToString:@"silc"] ? 2 : 1 )];
 			[newType selectItemAtIndex:index];
 
-			[_joinRooms addObject:target];
+			if( target ) [_joinRooms addObject:target];
 			[self newConnection:nil withAutoConnect:YES];
 			
 			handled = YES;
@@ -686,7 +686,7 @@ static NSMenu *favoritesMenu = nil;
 			if( connect ) {
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 					[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
-				[_joinRooms addObject:target];
+				if( target ) [_joinRooms addObject:target];
 
 				[connection connect];
 				if( target ) [connection joinChatRoomNamed:target];
