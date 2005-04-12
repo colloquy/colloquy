@@ -1043,11 +1043,11 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	} else return NO;
 
 	// exclude device-dependent flags, caps-lock and fn key (necessary for pg up/pg dn/home/end on portables)
-	if( [event modifierFlags] & ~( NSFunctionKeyMask | NSNumericPadKeyMask | NSAlphaShiftKeyMask | 0xffff ) ) return NO;
+	if( [event modifierFlags] & ~( NSFunctionKeyMask | NSNumericPadKeyMask | NSAlphaShiftKeyMask | NSAlternateKeyMask | 0xffff ) ) return NO;
 
-	if( chr == NSUpArrowFunctionKey ) {
+	if( chr == NSUpArrowFunctionKey && [event modifierFlags] & NSAlternateKeyMask ) {
 		return [self upArrowKeyPressed];
-	} else if( chr == NSDownArrowFunctionKey ) {
+	} else if( chr == NSDownArrowFunctionKey && [event modifierFlags] & NSAlternateKeyMask ) {
 		return [self downArrowKeyPressed];
 	} else if( chr == NSPageUpFunctionKey || chr == NSPageDownFunctionKey || chr == NSHomeFunctionKey || chr == NSBeginFunctionKey || chr == NSEndFunctionKey ) {
 		[[[display mainFrame] frameView] keyDown:event];
