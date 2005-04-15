@@ -114,7 +114,7 @@
 		function showTopic( topic ) {
 			hideTopic(); // just in case
 
-			code = "<div id=\"topic-floater\"><div class=\"close\" onclick=\"hideTopic()\">X</div>" + topic + "</div>";
+			code = "<div id=\"topic-floater\"><div class=\"close\" onclick=\"hideTopic()\"></div>" + topic + "</div>";
 
 			bodyNode = document.getElementsByTagName( "body" ).item(0);
 			range = document.createRange();
@@ -146,13 +146,12 @@
 			float: right;
 			width: 12px;
 			height: 12px;
-			color: #999;
-			border: 1px solid #999;
-			background-color: #ddd;
-			font-size: 10px;
 			margin: 0 0 5px 5px;
-			text-align: center;
-			cursor: pointer;
+			background-image: url( "%@/aquaTabClose.tif" );
+		}
+
+		#topic-floater .close:hover {
+			background-image: url( "%@/aquaTabCloseRollover.tif" );
 		}
 	</style>
 	<style id="emoticonStyle" type="text/css" media="screen,print">@import url( "%@" );</style>

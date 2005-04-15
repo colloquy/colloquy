@@ -282,10 +282,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #ifdef WebKitVersion146
 		}
 #endif
-		if( topicShowing )
-			[self hideTopic];
-		else
-			[self showTopic:topic];
+		if( topicShowing ) [self hideTopic];
+		else [self showTopic:topic];
 	}
 }
 
@@ -635,8 +633,9 @@ quickEnd:
 #pragma mark -
 
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
+	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
-	return [NSString stringWithFormat:shell, @"", [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], [[[self style] variantStyleSheetLocationWithName:[self styleVariant]] absoluteString], [[[self style] baseLocation] absoluteString], [[self style] contentsOfHeaderFile], html];
+	return [NSString stringWithFormat:shell, @"", [resources absoluteString], [resources absoluteString], [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], [[[self style] variantStyleSheetLocationWithName:[self styleVariant]] absoluteString], [[[self style] baseLocation] absoluteString], [[self style] contentsOfHeaderFile], html];
 }
 
 #pragma mark -

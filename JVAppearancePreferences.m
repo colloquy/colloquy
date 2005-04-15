@@ -303,9 +303,10 @@
 - (void) updatePreview {
 	JVEmoticonSet *emoticon = [_style defaultEmoticonSet];
 
+	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	NSString *html = [_style transformXML:[NSString stringWithContentsOfFile:[_style previewTranscriptFilePath]] withParameters:nil];
-	html = [NSString stringWithFormat:shell, @"Preview", [[emoticon styleSheetLocation] absoluteString], [[_style mainStyleSheetLocation] absoluteString], [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString], [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
+	html = [NSString stringWithFormat:shell, @"Preview", [resources absoluteString], [resources absoluteString], [[emoticon styleSheetLocation] absoluteString], [[_style mainStyleSheetLocation] absoluteString], [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString], [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
 
 	[WebCoreCache empty];
 
