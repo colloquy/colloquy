@@ -110,62 +110,51 @@
 			head.removeChild( document.getElementById( id ) );
 			head.appendChild( documentFragment );
 		}
-		
+
 		function showTopic( topic ) {
 			hideTopic(); // just in case
-			div = document.createElement( "div" );
-			div.style.position = "fixed";
-			div.style.left = "16px";
-			div.style.right = "16px";
-			div.style.top = "8px";
-			div.style["background-color"] = "rgba(255, 255, 90, 0.84)";
-			div.style.color = "black";
-			div.style.border = "1px solid black";
-			div.style.padding = "5px";
-			div.style["padding-right"] = "16px";
-			div.style["font-family"] = "Lucida Grande";
-			div.style["font-size"] = "11px";
-			div.id = "topic-floater";
-			button = document.createElement( "div" );
-			button.style.position = "absolute";
-			button.style.top = "2px";
-			button.style.right = "2px";
-			button.style["font-size"] = "10px";
-			button.style.width = "12px";
-			button.style.height = button.style.width;
-			button.style.color = "#999999";
-			button.style["background-color" ] = "#DDDDDD";
-			button.style.border = "1px solid " + button.style.color;
-			button.style.margin = "0";
-			button.style.padding = "0";
-			button.style["text-align"] = "center";
-			//
-			button.style.cursor = "pointer";
-			button.setAttribute( "onclick", "hideTopic(); return false;" );
-			/*link = document.createElement( "a" );
-			link.style.color = "inherit";
-			link.style["text-decoration"] = "inherit";
-			link.setAttribute( "href", "#" );
-			link.setAttribute( "onclick", "hideTopic(); return false;" );*/
-			text = document.createTextNode( "X" );
-			/*link.appendChild( text );
-			button.appendChild( link );*/
-			button.appendChild( text );
-			div.appendChild( button );
-			body = document.getElementsByTagName( "body" ).item(0);
+
+			code = "<div id=\"topic-floater\"><div class=\"close\" onclick=\"hideTopic()\">X</div>" + topic + "</div>";
+
+			bodyNode = document.getElementsByTagName( "body" ).item(0);
 			range = document.createRange();
-			range.selectNode( body );
-			documentFragment = range.createContextualFragment( topic );
-			div.appendChild( documentFragment );
-			body.appendChild(div);
+			range.selectNode( bodyNode );
+			documentFragment = range.createContextualFragment( code );
+			bodyNode.appendChild( documentFragment );
 		}
-		
+
 		function hideTopic( topic ) {
-			div = document.getElementById("topic-floater");
-			if( div )
-				div.parentNode.removeChild(div);
+			div = document.getElementById( "topic-floater" );
+			if( div ) div.parentNode.removeChild( div );
 		}
 	</script>
+	<style type="text/css" media="screen,print">
+		#topic-floater {
+			position: fixed;
+			left: 16px;
+			right: 16px;
+			top: 8px;
+			background-color: rgba( 255, 255, 255, 0.9 );
+			color: black;
+			border: 1px solid black;
+			font-family: Lucida Grande;
+			font-size: 11px;
+			padding: 5px;
+		}
+
+		#topic-floater .close {
+			float: right;
+			width: 12px;
+			height: 12px;
+			color: #999;
+			border: 1px solid #999;
+			background-color: #ddd;
+			font-size: 10px;
+			margin: 0 0 5px 5px;
+			text-align: center;
+			cursor: pointer;
+		}
+	</style>
 	<style id="emoticonStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 	<style id="mainStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 	<style id="variantStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
