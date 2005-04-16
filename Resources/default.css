@@ -1,4 +1,4 @@
-// Generic items for all styles, these can be overridden
+/* Generic items for all styles, these can be overridden */
 .hidden {
 	position: fixed;
 	top: -900px;
@@ -21,7 +21,7 @@
 	content: "]";
 }
 
-// For the topic floater
+/* For the topic floater */
 #topic-floater {
 	z-index: 100;
 	position: fixed;
@@ -43,8 +43,8 @@
 	margin: 0 0 5px 5px;
 }
 
-// The rest of this file is for scripts, this will change in the future!
-// Having script specific things in Colloquy is bad, bad, bad!
+/* The rest of this file is for scripts, this will change in the future!
+ * Having script specific things in Colloquy is bad, bad, bad! */
 
 // For the iTunes script links
 .itunes > * {
