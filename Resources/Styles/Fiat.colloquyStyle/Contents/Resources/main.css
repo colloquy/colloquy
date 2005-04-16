@@ -8,12 +8,6 @@ body {
 	margin: 3px 3px;
 }
 
-.hidden {
-	position: fixed;
-	top: -900px;
-	left: -900px;
-}
-
 a img {
 	border: 0;
 }
@@ -31,10 +25,6 @@ a:hover {
 
 #consecutiveInsert {
 	display: none;
-}
-
-.error {
-	color: #aaa;
 }
 
 .error:before {
@@ -304,24 +294,4 @@ a:hover {
 .member:hover {
 	text-decoration: underline;
 	text-shadow: rgba( 0, 0, 0, .5 ) 0 1px 2px;
-}
-
-.itunes > * {
-	text-decoration: none !important;
-	color: inherit !important;
-}
-
-.itunes > a:hover {
-	text-decoration: underline !important;
-}
-
-.traclink :link, .traclink :visited {
-	text-decoration: none;
-	color: #b00;
-	border-bottom: 1px dotted #bbb;
-}
-
-.traclink :link:hover, .traclink :visited:hover {
-	background-color: #eee;
-	color: #555;
 }

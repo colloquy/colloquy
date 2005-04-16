@@ -5,18 +5,6 @@ body {
 	background-color: white !important;
 }
 
-.error {
-	color: #aaa;
-}
-
-.error:before {
-	content: "(";
-}
-
-.error:after {
-	content: ")";
-}
-
 .event {
 	font-size: 85%;
 	line-height: 1.1em;
@@ -27,6 +15,14 @@ body {
 
 .event .member {
 	color: inherit !important;
+}
+
+.error:before {
+	content: "(";
+}
+
+.error:after {
+	content: ")";
 }
 
 .member {
@@ -185,24 +181,4 @@ table.leftBubble td.center .text {
 
 table.rightBubble td.center .text {
 	margin-left: 2px;
-}
-
-.itunes > * {
-	text-decoration: none !important;
-	color: inherit !important;
-}
-
-.itunes > a:hover {
-	text-decoration: underline !important;
-}
-
-.traclink :link, .traclink :visited {
-	text-decoration: none;
-	color: #b00;
-	border-bottom: 1px dotted #bbb;
-}
-
-.traclink :link:hover, .traclink :visited:hover {
-	background-color: #eee;
-	color: #555;
 }

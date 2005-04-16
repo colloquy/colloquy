@@ -8,14 +8,10 @@ body {
 	background-image: url( "Backgrounds/colloquy.png" );
 }
 
-.hidden {
-	position: fixed;
-	top: -900px;
-	left: -900px;
-}
-
-.error {
+.event {
 	color: #aaa;
+	text-align: center;
+	padding: 0 5px 2px 5px;
 }
 
 .error:before {
@@ -26,20 +22,10 @@ body {
 	content: ")";
 }
 
-.event {
-	color: #aaa;
-	text-align: center;
-	padding: 0 5px 2px 5px;
-}
-
 .envelope {
 	overflow: hidden;
 	padding: 1px 5px 1px 5px;
 	margin-bottom: 3px;
-}
-
-.envelope.ignore {
-	display: none;
 }
 
 .envelope.highlight {
@@ -96,24 +82,4 @@ body {
 	float: right;
 	font-size: 80%;
 	color: #888;
-}
-
-.itunes > * {
-	text-decoration: none !important;
-	color: inherit !important;
-}
-
-.itunes > a:hover {
-	text-decoration: underline !important;
-}
-
-.traclink :link, .traclink :visited {
-	text-decoration: none;
-	color: #b00;
-	border-bottom: 1px dotted #bbb;
-}
-
-.traclink :link:hover, .traclink :visited:hover {
-	background-color: #eee;
-	color: #555;
 }

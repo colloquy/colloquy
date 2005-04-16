@@ -13,24 +13,6 @@ i {
 	font-style: normal;
 }
 
-.hidden {
-	position: fixed;
-	top: -900px;
-	left: -900px;
-}
-
-.error {
-	color: #aaa;
-}
-
-.error:before {
-	content: "[";
-}
-
-.error:after {
-	content: "]";
-}
-
 .event:before {
 	color: #c0c;
 	margin-right: 1ex;
@@ -40,10 +22,6 @@ i {
 
 .envelope {
 	overflow: hidden;
-}
-
-.envelope.ignore {
-	display: none;
 }
 
 .envelope.highlight {
@@ -109,24 +87,4 @@ i {
 	float: right;
 	margin-right: 1ex;
 	margin-left: 1ex;
-}
-
-.itunes > * {
-	text-decoration: none !important;
-	color: inherit !important;
-}
-
-.itunes > a:hover {
-	text-decoration: underline !important;
-}
-
-.traclink :link, .traclink :visited {
-	text-decoration: none;
-	color: #b00;
-	border-bottom: 1px dotted #bbb;
-}
-
-.traclink :link:hover, .traclink :visited:hover {
-	background-color: #eee;
-	color: #555;
 }

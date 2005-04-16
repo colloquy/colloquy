@@ -4,16 +4,6 @@ body {
   background-color: white;
 }
 
-.hidden {
-	position: fixed;
-	top: -900px;
-	left: -900px;
-}
-
-.ignore {
-	display: none;
-}
-
 .reason {
 	display: inline;
 }
@@ -33,18 +23,6 @@ body {
   margin-right: 1ex;
   margin-left: 1ex;
   color: #aaa;
-}
-
-.error {
-  color: #aaa;
-}
-
-.error:before {
-  content: "[";
-}
-
-.error:after {
-  content: "]";
 }
 
 .message {
@@ -126,26 +104,6 @@ a.member:hover   { text-decoration: underline; }
   color: inherit;
 }
 
-.itunes > * {
-	text-decoration: none !important;
-	color: inherit !important
-}
-
-.itunes > a:hover {
-	text-decoration: underline !important;
-}
-
-.traclink :link, .traclink :visited {
-	text-decoration: none;
-	color: #b00;
-	border-bottom: 1px dotted #bbb;
-}
-
-.traclink :link:hover, .traclink :visited:hover {
-	background-color: #eee;
-	color: #555;
-}
-
 .colorself        { color: #888; }
 
 .color0     { color: #cccc00; }
@@ -182,4 +140,3 @@ a.member:hover   { text-decoration: underline; }
 /* For the hell of it... */
 .colorNaN    { color: #08f; }
 .colormoreNaN{ color: #05c; }
-

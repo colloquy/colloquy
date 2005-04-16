@@ -634,8 +634,11 @@ quickEnd:
 
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
 	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
+	NSURL *defaultStyleSheetLocation = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"default" ofType:@"css"]];
+	NSString *variantStyleSheetLocation = [[[self style] variantStyleSheetLocationWithName:[self styleVariant]] absoluteString];
+	if( ! variantStyleSheetLocation ) variantStyleSheetLocation = @"";
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
-	return [NSString stringWithFormat:shell, @"", [resources absoluteString], [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], [[[self style] variantStyleSheetLocationWithName:[self styleVariant]] absoluteString], [[[self style] baseLocation] absoluteString], [[self style] contentsOfHeaderFile], html];
+	return [NSString stringWithFormat:shell, @"", [resources absoluteString], [defaultStyleSheetLocation absoluteString], [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], [[self style] contentsOfHeaderFile], html];
 }
 
 #pragma mark -

@@ -13,18 +13,6 @@ body {
 	left: -900px;
 }
 
-.error {
-	color: #aaa;
-}
-
-.error:before {
-	content: "[";
-}
-
-.error:after {
-	content: "]";
-}
-
 .message {
 	display: block;
 	background-color: rgba( 255, 255, 255, 0.6 );
@@ -135,24 +123,4 @@ a.member.action {
 
 #consecutiveInsert {
 	display: none;
-}
-
-.itunes > * {
-	text-decoration: none !important;
-	color: inherit !important;
-}
-
-.itunes > a:hover {
-	text-decoration: underline !important;
-}
-
-.traclink :link, .traclink :visited {
-	text-decoration: none;
-	color: #b00;
-	border-bottom: 1px dotted #bbb;
-}
-
-.traclink :link:hover, .traclink :visited:hover {
-	background-color: #eee;
-	color: #555;
 }

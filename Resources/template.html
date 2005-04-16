@@ -129,25 +129,7 @@
 		}
 	</script>
 	<style type="text/css" media="screen,print">
-		#topic-floater {
-			z-index: 100;
-			position: fixed;
-			left: 0;
-			right: 0;
-			top: 0;
-			background-color: rgba( 255, 255, 255, 0.9 );
-			color: black;
-			border-bottom: 1px solid rgba( 0, 0, 0, 0.6 );
-			font-family: Lucida Grande;
-			font-size: 11px;
-			padding: 5px 5px 10px 10px;
-		}
-
 		#topic-floater .close {
-			float: right;
-			width: 12px;
-			height: 12px;
-			margin: 0 0 5px 5px;
 			background-image: url( "%@/aquaTabClose.tif" );
 		}
 
@@ -159,6 +141,7 @@
 			background-image: url( "%2$@/aquaTabClosePressed.tif" );
 		}
 	</style>
+	<style id="defaultStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 	<style id="emoticonStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 	<style id="mainStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
 	<style id="variantStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
