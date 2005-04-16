@@ -324,6 +324,8 @@
 			[JVEmoticonSet scanForEmoticonSets];
 			return YES;
 		}
+	} else if( ! [command caseInsensitiveCompare:@"help"] ) {
+		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"globops"] ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"%@ :%@", command, [arguments string]]];
 		return YES;
