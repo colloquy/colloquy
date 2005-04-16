@@ -304,9 +304,12 @@
 	JVEmoticonSet *emoticon = [_style defaultEmoticonSet];
 
 	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
+	NSURL *defaultStyleSheetLocation = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"default" ofType:@"css"]];
+	NSString *variantStyleSheetLocation = [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString];
+	if( ! variantStyleSheetLocation ) variantStyleSheetLocation = @"";
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	NSString *html = [_style transformXML:[NSString stringWithContentsOfFile:[_style previewTranscriptFilePath]] withParameters:nil];
-	html = [NSString stringWithFormat:shell, @"Preview", [resources absoluteString], [[emoticon styleSheetLocation] absoluteString], [[_style mainStyleSheetLocation] absoluteString], [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString], [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
+	html = [NSString stringWithFormat:shell, @"Preview", [resources absoluteString], [defaultStyleSheetLocation absoluteString], [[emoticon styleSheetLocation] absoluteString], [[_style mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
 
 	[WebCoreCache empty];
 
