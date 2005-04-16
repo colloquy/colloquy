@@ -130,16 +130,17 @@
 	</script>
 	<style type="text/css" media="screen,print">
 		#topic-floater {
+			z-index: 100;
 			position: fixed;
-			left: 16px;
-			right: 16px;
-			top: 8px;
+			left: 0;
+			right: 0;
+			top: 0;
 			background-color: rgba( 255, 255, 255, 0.9 );
 			color: black;
-			border: 1px solid black;
+			border-bottom: 1px solid rgba( 0, 0, 0, 0.6 );
 			font-family: Lucida Grande;
 			font-size: 11px;
-			padding: 5px;
+			padding: 5px 5px 10px 10px;
 		}
 
 		#topic-floater .close {
@@ -152,6 +153,10 @@
 
 		#topic-floater .close:hover {
 			background-image: url( "%2$@/aquaTabCloseRollover.tif" );
+		}
+
+		#topic-floater .close:active {
+			background-image: url( "%2$@/aquaTabClosePressed.tif" );
 		}
 	</style>
 	<style id="emoticonStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
