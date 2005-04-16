@@ -133,10 +133,11 @@
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>com.apple.bundle</string>
+				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Colloquy View Style</string>
-			<key>UTTypeIconName</key>
+			<key>UTTypeIconFile</key>
 			<string>Generic.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>cc.javelin.colloquy.colloquystyle</string>
@@ -151,18 +152,17 @@
 					<string>colloquyStyle</string>
 					<string>colloquystyle</string>
 				</array>
-				<key>public.mime-type</key>
-				<string>application/data</string>
 			</dict>
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.bundle</string>
+				<string>com.apple.bundle</string>
+				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Colloquy Emoticon Set</string>
-			<key>UTTypeIconName</key>
+			<key>UTTypeIconFile</key>
 			<string>Generic.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>cc.javelin.colloquy.colloquyemoticons</string>
@@ -177,8 +177,6 @@
 					<string>colloquyEmoticons</string>
 					<string>colloquyemoticons</string>
 				</array>
-				<key>public.mime-type</key>
-				<string>application/data</string>
 			</dict>
 		</dict>
 		<dict>
@@ -188,7 +186,7 @@
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Colloquy Chat Transcript</string>
-			<key>UTTypeIconName</key>
+			<key>UTTypeIconFile</key>
 			<string>Generic.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>cc.javelin.colloquy.colloquytranscript</string>
@@ -203,8 +201,6 @@
 					<string>colloquyTranscript</string>
 					<string>colloquytranscript</string>
 				</array>
-				<key>public.mime-type</key>
-				<string>application/xml</string>
 			</dict>
 		</dict>
 	</array>

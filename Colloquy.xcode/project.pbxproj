@@ -1210,9 +1210,9 @@
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1C51B89D052DF91E00BB459B = {
+			explicitFileType = text.xml;
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
 			name = Info.plist;
 			path = Resources/Info.plist;
 			refType = 2;
