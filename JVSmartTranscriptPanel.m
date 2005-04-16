@@ -94,6 +94,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
+- (NSComparisonResult) compare:(JVSmartTranscriptPanel *) panel {
+	return [[self title] compare:[panel title]];
+}
+
+#pragma mark -
+
 - (NSString *) title {
 	return ( [_title length] ? _title : @"Smart Transcript" );
 }

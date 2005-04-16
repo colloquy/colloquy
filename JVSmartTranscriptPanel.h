@@ -18,6 +18,8 @@
 }
 - (id) initWithSettings:(NSDictionary *) settings;
 
+- (NSComparisonResult) compare:(JVSmartTranscriptPanel *) panel;
+
 - (NSMutableArray *) rules;
 
 - (unsigned int) newMessagesWaiting;
