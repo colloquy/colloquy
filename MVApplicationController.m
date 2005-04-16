@@ -93,6 +93,28 @@ static BOOL applicationIsTerminating = NO;
 	else [[MVBuddyListController sharedBuddyList] showBuddyList:nil];
 }
 
+- (IBAction) openDocument:(id) sender {
+	NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
+
+	NSOpenPanel *openPanel = [[NSOpenPanel openPanel] retain];
+	[openPanel setCanChooseDirectories:NO];
+	[openPanel setCanChooseFiles:YES];
+	[openPanel setAllowsMultipleSelection:NO];
+	[openPanel setAllowedFileTypes:[NSArray arrayWithObject:@"colloquyTranscript"]];
+	[openPanel setResolvesAliases:YES];
+	[openPanel beginSheetForDirectory:path file:nil types:nil modalForWindow:nil modalDelegate:self didEndSelector:@selector( openDocumentPanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+}
+
+- (void) openDocumentPanelDidEnd:(NSOpenPanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
+	[sheet autorelease];
+
+	NSString *filename = [sheet filename];
+	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES];
+	if( returnCode == NSOKButton && [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
+	}
+}
+
 #pragma mark -
 
 - (JVChatController *) chatController {
