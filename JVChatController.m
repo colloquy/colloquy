@@ -49,9 +49,11 @@ static NSMenu *smartTranscriptMenu = nil;
 	while( ( menuItem = [enumerator nextObject] ) )
 		[smartTranscriptMenu removeItem:menuItem];
 
-	NSSet *items = [[self defaultManager] smartTranscripts];
+	NSMutableArray *items = [NSMutableArray arrayWithArray:[[[self defaultManager] smartTranscripts] allObjects]];
+	[items sortUsingSelector:@selector( compare: )];
+
 	enumerator = [items objectEnumerator];
-	
+
 	JVSmartTranscriptPanel *panel = nil;
 
 	while( ( panel = [enumerator nextObject] ) ) {
