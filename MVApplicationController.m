@@ -95,20 +95,19 @@ static BOOL applicationIsTerminating = NO;
 
 - (IBAction) openDocument:(id) sender {
 	NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
-
+	
+	NSArray *fileTypes = [NSArray arrayWithObject:@"colloquyTranscript"];
 	NSOpenPanel *openPanel = [[NSOpenPanel openPanel] retain];
 	[openPanel setCanChooseDirectories:NO];
 	[openPanel setCanChooseFiles:YES];
 	[openPanel setAllowsMultipleSelection:NO];
-	[openPanel setAllowedFileTypes:[NSArray arrayWithObject:@"colloquyTranscript"]];
 	[openPanel setResolvesAliases:YES];
-	[openPanel beginSheetForDirectory:path file:nil types:nil modalForWindow:nil modalDelegate:self didEndSelector:@selector( openDocumentPanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+	[openPanel beginForDirectory:path file:nil types:fileTypes modelessDelegate:self didEndSelector:@selector( openDocumentPanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
 }
 
-- (void) openDocumentPanelDidEnd:(NSOpenPanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	[sheet autorelease];
-
-	NSString *filename = [sheet filename];
+- (void) openDocumentPanelDidEnd:(NSOpenPanel *) panel returnCode:(int) returnCode contextInfo:(void *) contextInfo {
+	[panel autorelease];
+	NSString *filename = [panel filename];
 	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES];
 	if( returnCode == NSOKButton && [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
 		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
