@@ -1,3 +1,4 @@
+// Generic items for all styles, these can be overridden
 .hidden {
 	position: fixed;
 	top: -900px;
@@ -20,32 +21,7 @@
 	content: "]";
 }
 
-/* == Style for iTunes == */
-
-.itunes > * {
-	text-decoration: none !important;
-	color: inherit !important
-}
-
-.itunes > a:hover {
-	text-decoration: underline !important;
-}
-
-/* == Style for TracLinks == */
-
-.traclink :link, .traclink :visited {
-	text-decoration: none;
-	color: #b00;
-	border-bottom: 1px dotted #bbb;
-}
-
-.traclink :link:hover, .traclink :visited:hover {
-	background-color: #eee;
-	color: #555;
-}
-
-/* == Styling for the topic floater == */
-
+// For the topic floater
 #topic-floater {
 	z-index: 100;
 	position: fixed;
@@ -66,4 +42,29 @@
 	height: 12px;
 	margin: 0 0 5px 5px;
 	background-image: url( "%@/aquaTabClose.tif" );
+}
+
+// The rest of this file is for scripts, this will change in the future!
+// Having script specific things in Colloquy is bad, bad, bad!
+
+// For the iTunes script links
+.itunes > * {
+	text-decoration: none !important;
+	color: inherit !important
+}
+
+.itunes > a:hover {
+	text-decoration: underline !important;
+}
+
+// For the TracLinks script links
+.traclink :link, .traclink :visited {
+	text-decoration: none;
+	color: #b00;
+	border-bottom: 1px dotted #bbb;
+}
+
+.traclink :link:hover, .traclink :visited:hover {
+	background-color: #eee;
+	color: #555;
 }
