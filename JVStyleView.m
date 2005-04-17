@@ -603,7 +603,7 @@ quickEnd:
 			for( i = 0; [[body childNodes] length] > scrollbackLimit && i < ( [[body childNodes] length] - scrollbackLimit ); i++ )
 				[body removeChild:[[body childNodes] item:0]];		
 
-		if( [scrollNeeded isMemberOfClass:[NSNumber class]] && [scrollNeeded boolValue] ) [self scrollToBottom];
+		if( [scrollNeeded respondsToSelector:@selector( boolValue )] && [scrollNeeded boolValue] ) [self scrollToBottom];
 	} else
 #endif
 	{ // old JavaScript method
