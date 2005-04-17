@@ -61,7 +61,7 @@ body {
 	text-decoration: underline !important;
 }
 
-// For the TracLinks script links
+/* For the TracLinks script links */
 .traclink :link, .traclink :visited {
 	text-decoration: none;
 	color: #b00;
