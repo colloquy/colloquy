@@ -40,6 +40,14 @@
             SUPERCLASS = NSTextField; 
         }, 
         {CLASS = JVMixedTableColumn; LANGUAGE = ObjC; SUPERCLASS = NSTableColumn; }, 
+        {CLASS = JVSplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
+        {
+            ACTIONS = {jumpToNextHighlight = id; jumpToPreviousHighlight = id; }; 
+            CLASS = JVStyleView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {nextTextView = NSTextView; }; 
+            SUPERCLASS = WebView; 
+        }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {
             CLASS = NSPreferencesModule; 
