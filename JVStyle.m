@@ -54,6 +54,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 				JVStyle *style = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) ) {
 					if( ( style = [[JVStyle newWithBundle:bundle] autorelease] ) ) [styles addObject:style];
+					if( [allStyles containsObject:style] && allStyles != styles ) [style reload];
 				}
 			}
 		}
