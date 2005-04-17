@@ -3,6 +3,7 @@
 
 #import "JVAppearancePreferences.h"
 #import "JVStyle.h"
+#import "JVStyleView.h"
 #import "JVEmoticonSet.h"
 #import "JVFontPreviewField.h"
 #import "JVColorWellCell.h"
@@ -80,7 +81,6 @@
 - (void) selectEmoticonsWithIdentifier:(NSString *) identifier {
 	[_style setDefaultEmoticonSet:[JVEmoticonSet emoticonSetWithIdentifier:identifier]];
 	[self updateEmoticonsMenu];
-	[self updatePreview];
 }
 
 #pragma mark -
@@ -89,20 +89,25 @@
 	[_style autorelease];
 	_style = [style retain];
 
+	JVChatTranscript *transcript = [JVChatTranscript chatTranscriptWithContentsOfFile:[_style previewTranscriptFilePath]];
+	[preview setTranscript:transcript];
+
+	[preview setEmoticons:[_style defaultEmoticonSet]];
+	[preview setStyle:_style];
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateVariant ) name:JVStyleVariantChangedNotification object:_style];
 }
 
 #pragma mark -
 
-- (void) willBeDisplayed {
-	if( [preview respondsToSelector:@selector( setDrawsBackground: )] )
-		[preview setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
+- (void) awakeFromNib {
+	[(NSClipView *)[preview superview] setBackgroundColor:[NSColor clearColor]]; // allows rgba backgrounds to see through to the Desktop
+	[(NSScrollView *)[(NSClipView *)[preview superview] superview] setBackgroundColor:[NSColor clearColor]];
 }
 
 - (void) initializeFromDefaults {
 	[preview setPolicyDelegate:self];
-	[preview setFrameLoadDelegate:self];
 	[preview setUIDelegate:self];
 	[optionsTable setRefusesFirstResponder:YES];
 
@@ -188,10 +193,8 @@
 
 	if( _variantLocked ) [optionsTable deselectAll:nil];
 
-	[self updatePreview];
 	[self parseStyleOptions];
 
-	[preview displayIfNeeded];
 	[[preview window] enableFlushWindow];
 }
 
@@ -300,26 +303,8 @@
 	[emoticons setMenu:menu];
 }
 
-- (void) updatePreview {
-	JVEmoticonSet *emoticon = [_style defaultEmoticonSet];
-
-	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
-	NSURL *defaultStyleSheetLocation = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"default" ofType:@"css"]];
-	NSString *variantStyleSheetLocation = [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString];
-	if( ! variantStyleSheetLocation ) variantStyleSheetLocation = @"";
-	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
-	NSString *html = [_style transformXML:[NSString stringWithContentsOfFile:[_style previewTranscriptFilePath]] withParameters:nil];
-	html = [NSString stringWithFormat:shell, @"Preview", [resources absoluteString], [defaultStyleSheetLocation absoluteString], [[emoticon styleSheetLocation] absoluteString], [[_style mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[_style baseLocation] absoluteString], [_style contentsOfHeaderFile], html];
-
-	[WebCoreCache empty];
-
-	[[preview window] disableFlushWindow];
-	[[preview mainFrame] loadHTMLString:html baseURL:nil];
-}
-
 - (void) updateVariant {
-	[WebCoreCache empty];
-	[preview stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] absoluteString]]];	
+	[preview setStyleVariant:[_style defaultVariantName]];
 }
 
 #pragma mark -
@@ -329,7 +314,6 @@
 	[[preview preferences] setFixedFontFamily:[font fontName]];
 	[[preview preferences] setSerifFontFamily:[font fontName]];
 	[[preview preferences] setSansSerifFontFamily:[font fontName]];
-	[self updatePreview];
 }
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
@@ -344,12 +328,6 @@
 		[[NSWorkspace sharedWorkspace] openURL:url];	
 		[listener ignore];
 	}
-}
-
-- (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
-	[preview displayIfNeeded];
-	if( [[preview window] isFlushWindowDisabled] )
-		[[preview window] enableFlushWindow];
 }
 
 #pragma mark -

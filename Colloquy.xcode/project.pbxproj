@@ -1537,6 +1537,12 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1C7B83370810A6D100B1C1E9 = {
+			fileRef = 1C7C77DF07DBD49F00FB5F83;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C7B83C50668D732004F1EFE = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1617,8 +1623,7 @@
 		1C7C770C07DBA1F700FB5F83 = {
 			buildActionMask = 2147483647;
 			files = (
-				1C7C77E307DBD4C300FB5F83,
-				1C7C77E507DBD4E600FB5F83,
+				1C7B83370810A6D100B1C1E9,
 			);
 			isa = PBXRezBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1661,18 +1666,6 @@
 			path = Resources/Colloquy.r;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		1C7C77E307DBD4C300FB5F83 = {
-			fileRef = 1C7C77DF07DBD49F00FB5F83;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C7C77E507DBD4E600FB5F83 = {
-			fileRef = 1C7C76ED07DBA1D000FB5F83;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1C7EF53D06B341890037F173 = {
 			isa = PBXFileReference;

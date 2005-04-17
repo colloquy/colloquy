@@ -1,7 +1,7 @@
 #include <Carbon/Carbon.r>
 
 resource 'scsz' (0, "Scripting Size", purgeable) {
-	dontLaunchToGetTerminology,
+	launchToGetTerminology,
 	findAppBySignature,
 	alwaysSendSubject,
 	reserved, reserved, reserved, reserved,

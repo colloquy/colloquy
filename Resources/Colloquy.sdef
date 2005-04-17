@@ -407,9 +407,6 @@
 					<property name="target" code="trgA" description="The user or room that we engaged in conversation with." type="chat user | chat room" access="r"/>
 				</properties>
 				<responds-to-commands>
-					<responds-to name="send" hidden="hidden">
-						<cocoa method="sendMessageScriptCommand:"/>
-					</responds-to>
 					<responds-to name="send message">
 						<cocoa method="sendMessageScriptCommand:"/>
 					</responds-to>
@@ -535,18 +532,6 @@
 			</class>
 		</classes>
 		<commands>
-			<command name="send" code="coRCsNdX" hidden="hidden" description="Send message to chat room or user that is represented by a panel. This command is deprecated, use send chat message defined in the Chat Core Suite.">
-				<direct-parameter type="chat room panel | direct chat panel" description="Chat room panel or direct chat panel to send through."/>
-				<parameter name="message" code="sNd1" description="Message to send. Can include HTML formatting." type="string">
-					<cocoa key="message"/>
-				</parameter>
-				<parameter name="action tense" code="sNd2" description="Send as an action?" type="boolean" optional="optional">
-					<cocoa key="action"/>
-				</parameter>
-				<parameter name="local echo" code="sNd3" description="Show message in conversation? (Defaults on.)" type="boolean" optional="optional">
-					<cocoa key="echo"/>
-				</parameter>
-			</command>
 			<command name="add event message" code="coRCaEvX" description="Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user. Defaults to the active panel of the front window if no other tell block specifies the target.">
 				<cocoa class="JVAddEventMessageScriptCommand"/>
 				<direct-parameter type="string" description="Message to add (visible to the user). (Plain text with HTML formatting. Must entity encode HTML special characters.)"/>
@@ -805,12 +790,6 @@
 					<responds-to name="disconnect">
 						<cocoa method="disconnectScriptCommand:"/>
 					</responds-to>
-					<responds-to name="send private" hidden="hidden">
-						<cocoa method=" "/>
-					</responds-to>
-					<responds-to name="send public" hidden="hidden">
-						<cocoa method=" "/>
-					</responds-to>
 				</responds-to-commands>
 			</class>
 			<class name="file transfer" code="flTx" description="Represents a file transfer with another chat user.">
@@ -862,15 +841,6 @@
 			<command name="disconnect" code="ccoRdscX" description="Disconnect from the server.">
 				<direct-parameter type="connection" description="The connection to disconnect."/>
 			</command>
-			<command name="transfer file" code="ccoRsFiX" hidden="hidden" description="Send a file to another user. This will use DCC or another connection specific protocol.">
-				<direct-parameter type="file" description="The file to send."/>
-				<parameter name="at" code="sFi1" hidden="hidden" description="Path of file to send the user. This parameter is depreciated." type="file" optional="optional">
-					<cocoa key="path"/>
-				</parameter>
-				<parameter name="to" code="sFi2" description="User to send the file to. Optional if the nearest enclosing tell block accepts this command." type="chat user" optional="optional">
-					<cocoa key="user"/>
-				</parameter>
-			</command>
 			<command name="send message" code="ccoRsCmX" description="Send a message to a room or user.">
 				<cocoa class="MVSendMessageScriptCommand"/>
 				<direct-parameter type="string" description="The message to send. (Plain text with HTML formatting. Must entity encode HTML special characters.)"/>
@@ -885,21 +855,6 @@
 				</parameter>
 				<parameter name="local echo" code="sCm4" description="Show the message locally on screen? (Defaults on.)" type="boolean" optional="optional">
 					<cocoa key="echo"/>
-				</parameter>
-			</command>
-			<command name="send subcode command" code="ccoRsSrX" hidden="hidden" description="Send a subcode (CTCP or other connection specific protocol) command to another user.">
-				<direct-parameter type="string" description="The name of the command to send."/>
-				<parameter name="command" code="sSr1" hidden="hidden" description="The name of the command to send. This parameter is depreciated." type="string" optional="optional">
-					<cocoa key="command"/>
-				</parameter>
-				<parameter name="as" code="sSr3" description="Type of subcode message to send. Defaults to a request." type="subcode type" optional="optional">
-					<cocoa key="type"/>
-				</parameter>
-				<parameter name="to" code="sSr4" description="The chat user or chat room to send to. Optional if the nearest enclosing tell block accepts this command." type="chat user | chat room" optional="optional">
-					<cocoa key="user"/>
-				</parameter>
-				<parameter name="with" code="sSr2" description="Command arguments to send. (Plain text with HTML formatting. Must entity encode HTML special characters.)" type="string" optional="optional">
-					<cocoa key="arguments"/>
 				</parameter>
 			</command>
 			<command name="send raw command" code="ccoRsRmX" description="Send raw server command (message) to server.">
@@ -924,38 +879,6 @@
 			</command>
 			<command name="reload plugins" code="ccoRrLdX" description="Reloads all plugins that are in the search paths. Plugins that have been deleted or moved will be unloaded.">
 				<cocoa class="MVReloadPluginsScriptCommand"/>
-			</command>
-			<command name="send public" code="ccoRsmrX" hidden="hidden" description="Send a message to a room you&apos;">
-				<cocoa name="sendMsgToRoom" class="MVSendMessageScriptCommand"/>
-				<direct-parameter type="connection" description="Connection to send from."/>
-				<parameter name="action tense" code="actA" description="Send as an action?" type="boolean" optional="optional">
-					<cocoa key="action"/>
-				</parameter>
-				<parameter name="to room" code="usRA" description="Name of room. (Doesn&apos;t need to have prefix &apos;#&apos;" type="string">
-					<cocoa key="target"/>
-				</parameter>
-				<parameter name="message" code="meSA" description="Message to send to room. Can include HTML formatting." type="string">
-					<cocoa key="message"/>
-				</parameter>
-				<parameter name="encoded as" code="encE" description="Encoding to use. (Default is UTF-8.)" type="encoding" optional="optional">
-					<cocoa key="encoding"/>
-				</parameter>
-			</command>
-			<command name="send private" code="ccoRsmuX" hidden="hidden" description="Send a message to another user. This message will not echo locally. This command is depreciated.">
-				<cocoa name="sendMsgToUser" class="MVSendMessageScriptCommand"/>
-				<direct-parameter type="connection" description="Connection to send from."/>
-				<parameter name="action tense" code="actA" description="Send as an action?" type="boolean" optional="optional">
-					<cocoa key="action"/>
-				</parameter>
-				<parameter name="message" code="meSA" description="Message to send to user. Can include HTML formatting." type="string">
-					<cocoa key="message"/>
-				</parameter>
-				<parameter name="to user" code="usRA" description="Name of user." type="string">
-					<cocoa key="target"/>
-				</parameter>
-				<parameter name="encoded as" code="encE" description="Encoding to use. (Default is UTF-8.)" type="encoding" optional="optional">
-					<cocoa key="encoding"/>
-				</parameter>
 			</command>
 		</commands>
 	</suite>

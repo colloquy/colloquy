@@ -228,6 +228,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	NSString *variant = nil;
 	JVEmoticonSet *emoticon = nil;
 
+	[(NSClipView *)[display superview] setBackgroundColor:[NSColor clearColor]]; // allows rgba backgrounds to see through to the Desktop
+	[(NSScrollView *)[(NSClipView *)[display superview] superview] setBackgroundColor:[NSColor clearColor]];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateInputFont: ) name:JVStyleViewDidChangeStylesNotification object:display];

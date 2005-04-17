@@ -1,4 +1,9 @@
 /* Generic items for all styles, these can be overridden */
+body {
+	background-color: white;
+	color: black;
+}
+
 .hidden {
 	position: fixed;
 	top: -900px;

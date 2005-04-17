@@ -67,8 +67,6 @@
 	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
 	NSAssert( index >= 0 && index <= [_tabItems count], @"Index is beyond bounds." );
 
-	[icon setImage:nil];
-
 	[super insertChatViewController:controller atIndex:index];
 
 	JVChatTabItem *newTab = [[[JVChatTabItem alloc] initWithChatViewController:controller] autorelease];
@@ -83,12 +81,10 @@
 	unsigned int index = [_views indexOfObjectIdenticalTo:controller];
 	[_tabItems removeObjectAtIndex:index];
 	[tabView removeTabViewItem:[tabView tabViewItemAtIndex:index]];
-	if( ! [_tabItems count] ) [icon setImage:[NSImage imageNamed:@"colloquy-alpha"]];
 	[super removeChatViewController:controller];
 }
 
 - (void) removeAllChatViewControllers {
-	[icon setImage:[NSImage imageNamed:@"colloquy-alpha"]];
 	[_tabItems removeAllObjects];
 	while( [tabView numberOfTabViewItems] > 0 )
         [tabView removeTabViewItem:[tabView tabViewItemAtIndex:0]];
@@ -530,7 +526,7 @@
 		if( [_activeViewController respondsToSelector:@selector( didSelect )] )
 			[(NSObject *)_activeViewController didSelect];
 	} else if( ! [_views count] || ! _activeViewController ) {
-		[[self window] setContentView:_placeHolder];
+		[[self window] setContentView:[[[NSView alloc] initWithFrame:[[[self window] contentView] frame]] autorelease]];
 		[[[self window] toolbar] setDelegate:nil];
 		[[self window] setToolbar:nil];
 		[[self window] makeFirstResponder:nil];

@@ -2,9 +2,10 @@
 
 @class JVFontPreviewField;
 @class JVStyle;
+@class JVStyleView;
 
 @interface JVAppearancePreferences : NSPreferencesModule {
-	IBOutlet WebView *preview;
+	IBOutlet JVStyleView *preview;
 	IBOutlet NSPopUpButton *styles;
 	IBOutlet NSPopUpButton *emoticons;
 	IBOutlet JVFontPreviewField *standardFont;

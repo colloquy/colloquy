@@ -12,6 +12,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 @interface WebCoreCache
 + (void) empty;
++ (id)statistics;
 @end
 
 #pragma mark -
@@ -168,11 +169,14 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_styleVariant = [variant copyWithZone:[self zone]];
 
 	if( _webViewReady ) {
+		[WebCoreCache empty];
+
 #ifdef WebKitVersion146
 		if( [self respondsToSelector:@selector( windowScriptObject )] ) {
 			NSString *styleSheetLocation = [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString];
-			if( ! styleSheetLocation ) styleSheetLocation = @"";
-			[[self windowScriptObject] callWebScriptMethod:@"setStylesheet" withArguments:[NSArray arrayWithObjects:@"variantStyle", styleSheetLocation, nil]];
+			DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[[[self mainFrame] DOMDocument] getElementById:@"variantStyle"];
+			if( ! styleSheetLocation ) [element setHref:@""];
+			else [element setHref:styleSheetLocation];
 		} else
 #endif
 		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString]]];
@@ -201,11 +205,15 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_emoticons = [emoticons retain];
 
 	if( _webViewReady )
+		[WebCoreCache empty];
+
 #ifdef WebKitVersion146
 		if( [self respondsToSelector:@selector( webScriptObject )] ) {
 			NSString *styleSheetLocation = [[[self emoticons] styleSheetLocation] absoluteString];
-			if( ! styleSheetLocation ) styleSheetLocation = @"";
-			[[self windowScriptObject] callWebScriptMethod:@"setStylesheet" withArguments:[NSArray arrayWithObjects:@"emoticonStyle", styleSheetLocation, nil]];
+			DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[[[self mainFrame] DOMDocument] getElementById:@"emoticonStyle"];
+			NSLog( @"%@", element );
+			if( ! styleSheetLocation ) [element setHref:@""];
+			else [element setHref:styleSheetLocation];
 		} else
 #endif
 		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [[[self emoticons] styleSheetLocation] absoluteString]]];
@@ -230,6 +238,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) reloadCurrentStyle {
 	_switchingStyles = YES;
 	_requiresFullMessage = YES;
+
+	[WebCoreCache empty];
+
 	[self _resetDisplay];
 }
 
@@ -451,7 +462,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _resetDisplay {
 	_webViewReady = NO;
 	[[self class] cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
-	
+
 	[self stopLoading:nil];
 	[self clearScrollbarMarks];
 

@@ -100,15 +100,8 @@
 		}
 
 		function setStylesheet( id, url ) {
-			code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
-			if( url.length ) code += "@import url( \"" + url + "\" );";
-			code += "</style>";
-			range = document.createRange();
-			head = document.getElementsByTagName( "head" ).item(0);
-			range.selectNode( head );
-			documentFragment = range.createContextualFragment( code );
-			head.removeChild( document.getElementById( id ) );
-			head.appendChild( documentFragment );
+			styleNode = document.getElementById( id );
+			styleNode.href = url;
 		}
 
 		function showTopic( topic ) {
@@ -141,10 +134,10 @@
 			background-image: url( "%2$@/aquaTabClosePressed.tif" );
 		}
 	</style>
-	<style id="defaultStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
-	<style id="emoticonStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
-	<style id="mainStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
-	<style id="variantStyle" type="text/css" media="screen,print">@import url( "%@" );</style>
+	<link id="defaultStyle" rel="stylesheet" type="text/css" media="screen,print" href="%@" />
+	<link id="emoticonStyle" rel="stylesheet" type="text/css" media="screen,print" href="%@" />
+	<link id="mainStyle" rel="stylesheet" type="text/css" media="screen,print" href="%@" />
+	<link id="variantStyle" rel="stylesheet" type="text/css" media="screen,print" href="%@" />
 	<base href="%@" />
 </head>
 <body onload="scrollToBottom()">

@@ -48,7 +48,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		chatViewsOutlineView = nil;
 		viewActionButton = nil;
 		favoritesButton = nil;
-		_activityToolbarItem = nil;
 		_activeViewController = nil;
 		_views = [[NSMutableArray array] retain];
 		_usesSmallIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowUseSmallDrawerIcons"];
@@ -57,8 +56,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) windowDidLoad {
-	_placeHolder = [[[self window] contentView] retain];
-
 	NSTableColumn *column = [chatViewsOutlineView outlineTableColumn];
 	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
@@ -89,7 +86,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) dealloc {
 	[[self window] setDelegate:nil];
 	[[self window] setToolbar:nil];
-	[[self window] setContentView:_placeHolder];
 
 	[viewsDrawer setDelegate:nil];
 	[chatViewsOutlineView setDelegate:nil];
@@ -103,13 +99,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	while( ( controller = [enumerator nextObject] ) )
 		[controller setWindowController:nil];
 
-	[_placeHolder release];
 	[_activeViewController release];
-	[_activityToolbarItem release];
 	[_views release];
 
-	_placeHolder = nil;
-	_activityToolbarItem = nil;
 	_activeViewController = nil;
 	_views = nil;
 
@@ -824,7 +816,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [_activeViewController respondsToSelector:@selector( didSelect )] )
 			[(NSObject *)_activeViewController didSelect];
 	} else if( ! [_views count] || ! _activeViewController ) {
-		[[self window] setContentView:_placeHolder];
+		[[self window] setContentView:[[[NSView alloc] initWithFrame:[[[self window] contentView] frame]] autorelease]];
 		[[[self window] toolbar] setDelegate:nil];
 		[[self window] setToolbar:nil];
 		[[self window] makeFirstResponder:nil];
