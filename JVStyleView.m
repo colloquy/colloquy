@@ -206,7 +206,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_emoticons autorelease];
 	_emoticons = [emoticons retain];
 
-	if( _webViewReady )
+	if( _webViewReady ) {
 		[WebCoreCache empty];
 
 #ifdef WebKitVersion146
@@ -218,6 +218,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		} else
 #endif
 		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [[[self emoticons] styleSheetLocation] absoluteString]]];
+	}
 }
 
 - (JVEmoticonSet *) emoticons {
