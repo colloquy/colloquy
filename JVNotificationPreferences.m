@@ -102,34 +102,67 @@
 	NSMenu *availableSounds = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
 	enumerator = [[[NSBundle mainBundle] pathsForResourcesOfType:@"aiff" inDirectory:@"Sounds"] objectEnumerator];
-	while( ( sound = [enumerator nextObject] ) ) {
+	while( sound = [enumerator nextObject] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[[sound lastPathComponent] stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:[sound lastPathComponent]];
 		[menuItem setImage:[NSImage imageNamed:@"sound"]];
 		[availableSounds addItem:menuItem];
 	}
-
-	enumerator = [[NSFileManager defaultManager] enumeratorAtPath:@"/System/Library/Sounds"];
-	while( ( sound = [enumerator nextObject] ) ) {
-		if( [[sound pathExtension] isEqualToString:@"aif"] || [[sound pathExtension] isEqualToString:@"aiff"] || [[sound pathExtension] isEqualToString:@"wav"] ) {
-			if( first ) [availableSounds addItem:[NSMenuItem separatorItem]];
-			first = NO;
-			menuItem = [[[NSMenuItem alloc] initWithTitle:[[sound lastPathComponent] stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
-			[menuItem setRepresentedObject:[NSString stringWithFormat:@"%@/%@", @"/System/Library/Sounds", sound]];
-			[menuItem setImage:[NSImage imageNamed:@"sound"]];
-			[availableSounds addItem:menuItem];
+	
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+	NSArray *paths = [NSArray arrayWithObjects:
+		[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Sounds", bundleName],
+		[NSString stringWithFormat:@"/Library/Application Support/%@/Sounds", bundleName],
+		[[NSString stringWithFormat:@"~/Library/Application Support/%@/Sounds", bundleName] stringByExpandingTildeInPath],
+		@"-", 
+		@"/System/Library/Sounds",
+		[@"~/Library/Sounds" stringByExpandingTildeInPath],
+		nil];
+	NSEnumerator *pathEnum = [paths objectEnumerator];
+	NSString *aPath;
+	while( aPath = [pathEnum nextObject] ) {
+		if( [aPath isEqualToString:@"-"] ) {
+			first = YES;
+			continue;
 		}
-	}
-
-	enumerator = [[NSFileManager defaultManager] enumeratorAtPath:[@"~/Library/Sounds" stringByExpandingTildeInPath]];
-	while( ( sound = [enumerator nextObject] ) ) {
-		if( [[sound pathExtension] isEqualToString:@"aif"] || [[sound pathExtension] isEqualToString:@"aiff"] || [[sound pathExtension] isEqualToString:@"wav"] ) {
-			if( first ) [availableSounds addItem:[NSMenuItem separatorItem]];
-			first = NO;
-			menuItem = [[[NSMenuItem alloc] initWithTitle:[[sound lastPathComponent] stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
-			[menuItem setRepresentedObject:[NSString stringWithFormat:@"%@/%@", [@"~/Library/Sounds" stringByExpandingTildeInPath], sound]];
-			[menuItem setImage:[NSImage imageNamed:@"sound"]];
-			[availableSounds addItem:menuItem];
+		enumerator = [[fm directoryContentsAtPath:aPath] objectEnumerator];
+		NSEnumerator *oldEnum = nil;
+		NSString *oldPath = nil;
+		int indentationLevel = 0;
+		while( ( sound = [enumerator nextObject] ) || oldEnum ) {
+			if( ! sound && oldEnum ) {
+				enumerator = oldEnum;
+				aPath = oldPath;
+				oldEnum = nil;
+				indentationLevel = 0;
+				continue;
+			}
+			NSString *newPath = [aPath stringByAppendingPathComponent:sound];
+			BOOL isDir;
+			if( ! oldEnum && [fm fileExistsAtPath:newPath isDirectory:&isDir] && isDir ) {
+				oldEnum = enumerator;
+				enumerator = [[fm directoryContentsAtPath:newPath] objectEnumerator];
+				oldPath = aPath;
+				aPath = newPath;
+				if( first ) [availableSounds addItem:[NSMenuItem separatorItem]];
+				first = NO;
+				menuItem = [[[NSMenuItem alloc] initWithTitle:sound action:@selector( aRandomSelector:of:no:consequence: ) keyEquivalent:@""] autorelease];
+				[menuItem setEnabled:NO];
+				[menuItem setImage:[NSImage imageNamed:@"folder"]];
+				[availableSounds addItem:menuItem];
+				indentationLevel = 1;
+				continue;
+			}
+			if( [[sound pathExtension] isEqualToString:@"aif"] || [[sound pathExtension] isEqualToString:@"aiff"] || [[sound pathExtension] isEqualToString:@"wav"] ) {
+				if( first ) [availableSounds addItem:[NSMenuItem separatorItem]];
+				first = NO;
+				menuItem = [[[NSMenuItem alloc] initWithTitle:[sound stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
+				[menuItem setRepresentedObject:newPath];
+				[menuItem setImage:[NSImage imageNamed:@"sound"]];
+				[menuItem setIndentationLevel:indentationLevel];
+				[availableSounds addItem:menuItem];
+			}
 		}
 	}
 

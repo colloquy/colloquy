@@ -139,7 +139,8 @@ static JVNotificationController *sharedInstance = nil;
 - (void) _playSound:(NSString *) path {
 	if( ! path ) return;
 
-	if( ! [path isAbsolutePath] ) path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
+	if( ! [path isAbsolutePath] )
+		path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
 
 	NSSound *sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
 	[sound setDelegate:self];
