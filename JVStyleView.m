@@ -182,6 +182,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString]]];
 
 		[self performSelector:@selector( _checkForTransparantVariant ) withObject:nil afterDelay:0.];
+	} else {
+		[self performSelector:_cmd withObject:variant afterDelay:0.];	
 	}
 }
 
@@ -218,6 +220,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		} else
 #endif
 		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [[[self emoticons] styleSheetLocation] absoluteString]]];
+	} else {
+		[self performSelector:_cmd withObject:emoticons afterDelay:0.];
 	}
 }
 
@@ -267,6 +271,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #ifdef WebKitVersion146
 		}
 #endif
+	} else {
+		[self performSelector:_cmd withObject:topic afterDelay:0.];
 	}
 }
 
@@ -278,6 +284,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		else
 #endif
 			[self stringByEvaluatingJavaScriptFromString:@"hideTopic();"];
+	} else {
+		[self performSelector:_cmd withObject:nil afterDelay:0.];
 	}
 }
 
@@ -297,13 +305,18 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #endif
 		if( topicShowing ) [self hideTopic];
 		else [self showTopic:topic];
+	} else {
+		[self performSelector:_cmd withObject:topic afterDelay:0.];		
 	}
 }
 
 #pragma mark -
 
 - (BOOL) appendChatMessage:(JVChatMessage *) message {
-	if( ! _webViewReady ) return;
+	if( ! _webViewReady ) {
+		[self performSelector:_cmd withObject:message afterDelay:0.];
+		return;
+	}
 
 	NSString *result = nil;
 
@@ -334,7 +347,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element {
-	if( ! _webViewReady ) return;
+	if( ! _webViewReady ) {
+		[self performSelector:_cmd withObject:element afterDelay:0.];
+		return;
+	}
 
 	NSString *result = nil;
 
@@ -360,7 +376,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) markScrollbarForMessages:(NSArray *) messages {
-	if( _switchingStyles || ! _webViewReady ) return;
+	if( _switchingStyles || ! _webViewReady ) {
+		[self performSelector:_cmd withObject:messages afterDelay:0.];
+		return;
+	}
 
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
 	NSEnumerator *enumerator = [messages objectEnumerator];
@@ -373,7 +392,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) clearScrollbarMarks {
-	if( ! _webViewReady ) return;
+	if( ! _webViewReady ) {
+		[self performSelector:_cmd withObject:nil afterDelay:0.];
+		return;
+	}
 
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
 	[scroller removeAllMarks];
@@ -444,7 +466,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) scrollToBottom {
-	if( ! _webViewReady ) return;
+	if( ! _webViewReady ) {
+		[self performSelector:_cmd withObject:nil afterDelay:0.];
+		return;
+	}
 
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
@@ -547,7 +572,10 @@ quickEnd:
 }
 
 - (void) _appendMessage:(NSString *) message {
-	if( ! _webViewReady ) return;
+	if( ! _webViewReady ) {
+		[self performSelector:_cmd withObject:message afterDelay:0.];
+		return;
+	}
 
 	unsigned int messageCount = [self _visibleMessageCount];
 	unsigned int scrollbackLimit = [self scrollbackLimit];
@@ -621,7 +649,10 @@ quickEnd:
 }
 
 - (void) _prependMessages:(NSString *) messages {
-	if( ! _webViewReady ) return;
+	if( ! _webViewReady ) {
+		[self performSelector:_cmd withObject:messages afterDelay:0.];
+		return;
+	}
 
 #ifdef WebKitVersion146
 	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
@@ -731,7 +762,10 @@ quickEnd:
 #pragma mark -
 
 - (void) _setupMarkedScroller {
-	if( ! _webViewReady ) return;
+	if( ! _webViewReady ) {
+		[self performSelector:_cmd withObject:nil afterDelay:0.];
+		return;
+	}
 
 	NSScrollView *scrollView = [[[[self mainFrame] frameView] documentView] enclosingScrollView];
 	[scrollView setHasHorizontalScroller:NO];
