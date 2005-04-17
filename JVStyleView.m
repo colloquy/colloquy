@@ -494,6 +494,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	[NSThread setThreadPriority:0.25];
 
+	while( ! _webViewReady ) usleep( 250 ); // wait, WebKit might not be ready.
+
 	JVStyle *style = [[self style] retain];
 	JVChatTranscript *transcript = [[self transcript] retain];
 	NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[self styleParameters]];
