@@ -180,6 +180,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		} else
 #endif
 		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString]]];
+
+		[self performSelector:@selector( _checkForTransparantVariant ) withObject:nil afterDelay:0.];
 	}
 }
 
@@ -211,7 +213,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		if( [self respondsToSelector:@selector( webScriptObject )] ) {
 			NSString *styleSheetLocation = [[[self emoticons] styleSheetLocation] absoluteString];
 			DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[[[self mainFrame] DOMDocument] getElementById:@"emoticonStyle"];
-			NSLog( @"%@", element );
 			if( ! styleSheetLocation ) [element setHref:@""];
 			else [element setHref:styleSheetLocation];
 		} else
@@ -381,10 +382,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
-	// Test for WebKit/Safari 1.3
 #ifdef WebKitVersion146
 	if( [self respondsToSelector:@selector( setDrawsBackground: )] ) {
-		DOMCSSStyleDeclaration *style = [sender computedStyleForElement:[(DOMHTMLDocument *)[[sender mainFrame] DOMDocument] body] pseudoElement:nil];
+		DOMCSSStyleDeclaration *style = [self computedStyleForElement:[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] pseudoElement:nil];
 		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
 		DOMCSSValue *altvalue = [style getPropertyCSSValue:@"background"];
 		if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) || ( altvalue && [[altvalue cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
@@ -403,7 +403,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( [[self window] isFlushWindowDisabled] )
 		[[self window] enableFlushWindow];
 
-	_webViewReady = YES;
+	[self performSelector:@selector( _webkitIsReady ) withObject:nil afterDelay:0.];
 
 	if( _switchingStyles ) [NSThread detachNewThreadSelector:@selector( _switchStyle ) toTarget:self withObject:nil];
 }
@@ -459,6 +459,24 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 @implementation JVStyleView (JVStyleViewPrivate)
+- (void) _checkForTransparantVariant {
+#ifdef WebKitVersion146
+	if( [self respondsToSelector:@selector( setDrawsBackground: )] ) {
+		DOMCSSStyleDeclaration *style = [self computedStyleForElement:[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] pseudoElement:nil];
+		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
+		DOMCSSValue *altvalue = [style getPropertyCSSValue:@"background"];
+		if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) || ( altvalue && [[altvalue cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
+			[self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
+		else [self setDrawsBackground:YES];
+		[self setNeedsDisplay:YES];
+	}
+#endif
+}
+
+- (void) _webkitIsReady {
+	_webViewReady = YES;	
+}
+
 - (void) _resetDisplay {
 	_webViewReady = NO;
 	[[self class] cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
@@ -560,15 +578,22 @@ quickEnd:
 		unsigned int i = 0;
 		if( ! subsequent ) { // append message normally
 			[[replaceElement parentNode] removeChild:replaceElement];
-			while( [[element childNodes] length] ) // append all children
-				[body appendChild:[element firstChild]];
+			while( [[element childNodes] length] ) { // append all children
+				DOMNode *node = [[element firstChild] retain];
+				[element removeChild:node];
+				[body appendChild:node];
+				[node release];
+			}
 		} else if( [[element childNodes] length] >= 1 ) { // append as a subsequent message
 			DOMNode *parent = [replaceElement parentNode];
 			DOMNode *nextSib = [replaceElement nextSibling];
 			[parent replaceChild:[element firstChild] :replaceElement]; // replaces the consecutiveInsert node
 			while( [[element childNodes] length] ) { // append all remaining children (in reverse order)
-				if( nextSib ) [parent insertBefore:[element firstChild] :nextSib];
-				else [parent appendChild:[element firstChild]];
+				DOMNode *node = [[element firstChild] retain];
+				[element removeChild:node];
+				if( nextSib ) [parent insertBefore:node :nextSib];
+				else [parent appendChild:node];
+				[node release];
 			}
 		}
 
@@ -577,7 +602,7 @@ quickEnd:
 			for( i = 0; [[body childNodes] length] > scrollbackLimit && i < ( [[body childNodes] length] - scrollbackLimit ); i++ )
 				[body removeChild:[[body childNodes] item:0]];		
 
-		if( [scrollNeeded boolValue] ) [self scrollToBottom];
+		if( [scrollNeeded isMemberOfClass:[NSNumber class]] && [scrollNeeded boolValue] ) [self scrollToBottom];
 	} else
 #endif
 	{ // old JavaScript method
