@@ -51,7 +51,7 @@ body {
 /* The rest of this file is for scripts, this will change in the future!
  * Having script specific things in Colloquy is bad, bad, bad! */
 
-// For the iTunes script links
+/* For the iTunes script links */
 .itunes > * {
 	text-decoration: none !important;
 	color: inherit !important
