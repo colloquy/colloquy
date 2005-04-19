@@ -259,6 +259,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) showTopic:(NSString *) topic {
+	if( ! topic ) {
+		topic = @"<span style=\"color: grey\">(no chat topic is set)</span>";
+	}
 	if( _webViewReady ) {
 #ifdef WebKitVersion146
 		if( [self respondsToSelector:@selector( windowScriptObject )] ) {

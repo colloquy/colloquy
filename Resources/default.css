@@ -39,6 +39,7 @@ body {
 	font-family: Lucida Grande;
 	font-size: 11px;
 	padding: 5px 5px 10px 10px;
+	text-align: center;
 }
 
 #topic-floater .close {
