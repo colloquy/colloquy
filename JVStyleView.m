@@ -259,9 +259,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) showTopic:(NSString *) topic {
-	if( ! topic ) {
-		topic = @"<span style=\"color: grey\">(no chat topic is set)</span>";
-	}
+	if( ! topic ) return; // don't show anything if there is no topic
+
 	if( _webViewReady ) {
 #ifdef WebKitVersion146
 		if( [self respondsToSelector:@selector( windowScriptObject )] ) {
@@ -307,7 +306,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		}
 #endif
 		if( topicShowing ) [self hideTopic];
-		else [self showTopic:topic];
+		else [self showTopic:topic]; 
 	} else {
 		[self performSelector:_cmd withObject:topic afterDelay:0.];		
 	}
@@ -316,10 +315,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (BOOL) appendChatMessage:(JVChatMessage *) message {
-	if( ! _webViewReady ) {
-		[self performSelector:_cmd withObject:message afterDelay:0.];
-		return;
-	}
+	if( ! _webViewReady ) return; // don't schedule this to fire later since the transcript will be processed
 
 	NSString *result = nil;
 
@@ -350,10 +346,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element {
-	if( ! _webViewReady ) {
-		[self performSelector:_cmd withObject:element afterDelay:0.];
-		return;
-	}
+	if( ! _webViewReady ) return; // don't schedule this to fire later since the transcript will be processed
 
 	NSString *result = nil;
 
