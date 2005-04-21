@@ -95,7 +95,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (IBAction) openDocument:(id) sender {
 	NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
-	
+
 	NSArray *fileTypes = [NSArray arrayWithObject:@"colloquyTranscript"];
 	NSOpenPanel *openPanel = [[NSOpenPanel openPanel] retain];
 	[openPanel setCanChooseDirectories:NO];
@@ -214,7 +214,7 @@ static BOOL applicationIsTerminating = NO;
 			NSBundle *bundle = [NSBundle bundleWithPath:newPath];
 			JVStyle *style = [JVStyle newWithBundle:bundle];
 
-			[[NSNotificationCenter defaultCenter] postNotificationName:JVChatStyleInstalledNotification object:style]; 
+			[[NSNotificationCenter defaultCenter] postNotificationName:JVChatStyleInstalledNotification object:style];
 
 			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "style installed title" ), [style displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the style in the Appearance Preferences" ), [style displayName], [style displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil ) == NSOKButton ) {
 				[self setupPreferences];
@@ -238,7 +238,7 @@ static BOOL applicationIsTerminating = NO;
 
 		if( [[NSFileManager defaultManager] movePath:filename toPath:newPath handler:nil] ) {
 			NSBundle *emoticon = [NSBundle bundleWithPath:newPath];
-			[[NSNotificationCenter defaultCenter] postNotificationName:JVChatEmoticonSetInstalledNotification object:emoticon]; 
+			[[NSNotificationCenter defaultCenter] postNotificationName:JVChatEmoticonSetInstalledNotification object:emoticon];
 
 			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "emoticon installed title" ), [emoticon displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the emoticons in the Appearance Preferences" ), [emoticon displayName], [emoticon displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil ) == NSOKButton ) {
 				[self setupPreferences];
@@ -367,7 +367,7 @@ static BOOL applicationIsTerminating = NO;
 	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc/Server Keys" stringByExpandingTildeInPath] attributes:nil];
 	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications" stringByExpandingTildeInPath] attributes:nil];
 	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications/Colloquy" stringByExpandingTildeInPath] attributes:nil];
-	
+
 	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultManager];
 	[JVChatController defaultManager];

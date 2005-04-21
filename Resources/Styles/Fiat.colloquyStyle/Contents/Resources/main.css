@@ -69,7 +69,7 @@ a:hover {
 	bottom: -4px;
 	background: url( "images/h_shadow_corner_left.png" );
 	width: 4px;
-	height: 4px;	
+	height: 4px;
 }
 
 .header .right {
@@ -79,7 +79,7 @@ a:hover {
 	bottom: -4px;
 	background: url( "images/h_shadow_corner_right.png" );
 	width: 4px;
-	height: 4px;	
+	height: 4px;
 }
 
 .header .sender {
@@ -240,7 +240,7 @@ a:hover {
 }
 
 .incoming .messages_bottom {
-	background: url( "images/m_shadow_bottom.png" ) repeat-x; 
+	background: url( "images/m_shadow_bottom.png" ) repeat-x;
 }
 
 .incoming .messages_bottom .left {
@@ -275,7 +275,7 @@ a:hover {
 }
 
 .outgoing .messages_bottom {
-	background: url( "images/m_shadow_bottom.png" ) repeat-x; 
+	background: url( "images/m_shadow_bottom.png" ) repeat-x;
 }
 
 .outgoing .messages_bottom .left {

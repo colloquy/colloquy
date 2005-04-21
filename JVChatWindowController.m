@@ -771,7 +771,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
-		
+
 		NSArray *items = nil;
 		enumerator = [results objectEnumerator];
 		while( ( items = [enumerator nextObject] ) ) {
@@ -783,7 +783,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 		if( [[[menu itemArray] lastObject] isSeparatorItem] )
 			[menu removeItem:[[menu itemArray] lastObject]];
-	}	
+	}
 
 	if( [menu numberOfItems] ) {
 		[viewActionButton setEnabled:YES];
@@ -1144,22 +1144,22 @@ end:
 
 - (NSArray *) indicesOfObjectsByEvaluatingRangeSpecifier:(NSRangeSpecifier *) specifier {
 	NSString *key = [specifier key];
-	
+
 	if( [key isEqualToString:@"chatViews"] || [key isEqualToString:@"chatRooms"] || [key isEqualToString:@"directChats"] || [key isEqualToString:@"chatConsoles"] || [key isEqualToString:@"chatTranscripts"] ) {
 		NSScriptObjectSpecifier *startSpec = [specifier startSpecifier];
 		NSScriptObjectSpecifier *endSpec = [specifier endSpecifier];
 		NSString *startKey = [startSpec key];
 		NSString *endKey = [endSpec key];
 		NSArray *chatViews = [self chatViews];
-		
+
 		if( ! startSpec && ! endSpec ) return nil;
-		
+
 		if( ! [chatViews count] ) [NSArray array];
-		
+
 		if( ( ! startSpec || [startKey isEqualToString:@"chatViews"] || [startKey isEqualToString:@"chatRooms"] || [startKey isEqualToString:@"directChats"] || [startKey isEqualToString:@"chatConsoles"] || [startKey isEqualToString:@"chatTranscripts"] ) && ( ! endSpec || [endKey isEqualToString:@"chatViews"] || [endKey isEqualToString:@"chatRooms"] || [endKey isEqualToString:@"directChats"] || [endKey isEqualToString:@"chatConsoles"] || [endKey isEqualToString:@"chatTranscripts"] ) ) {
 			int startIndex = 0;
 			int endIndex = 0;
-			
+
 			// The strategy here is going to be to find the index of the start and stop object in the full graphics array, regardless of what its key is.  Then we can find what we're looking for in that range of the graphics key (weeding out objects we don't want, if necessary).
 			// First find the index of the first start object in the graphics array
 			if( startSpec ) {
@@ -1172,7 +1172,7 @@ end:
 				startIndex = [chatViews indexOfObjectIdenticalTo:startObject];
 				if( startIndex == NSNotFound ) return nil;
 			}
-			
+
 			// Now find the index of the last end object in the graphics array
 			if( endSpec ) {
 				id endObject = [endSpec objectsByEvaluatingSpecifier];
@@ -1184,14 +1184,14 @@ end:
 				endIndex = [chatViews indexOfObjectIdenticalTo:endObject];
 				if( endIndex == NSNotFound ) return nil;
 			} else endIndex = ( [chatViews count] - 1 );
-			
+
 			// Accept backwards ranges gracefully
 			if( endIndex < startIndex ) {
 				int temp = endIndex;
 				endIndex = startIndex;
 				startIndex = temp;
 			}
-			
+
 			// Now startIndex and endIndex specify the end points of the range we want within the main array.
 			// We will traverse the range and pick the objects we want.
 			// We do this by getting each object and seeing if it actually appears in the real key that we are trying to evaluate in.
@@ -1200,7 +1200,7 @@ end:
 			NSArray *rangeKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
 			unsigned curKeyIndex = 0, i = 0;
 			id obj = nil;
-			
+
 			for( i = startIndex; i <= endIndex; i++ ) {
 				if( keyIsGeneric ) {
 					[result addObject:[NSNumber numberWithInt:i]];
@@ -1211,34 +1211,34 @@ end:
 						[result addObject:[NSNumber numberWithInt:curKeyIndex]];
 				}
 			}
-			
+
 			return result;
 		}
 	}
-	
+
 	return nil;
 }
 
 - (NSArray *) indicesOfObjectsByEvaluatingRelativeSpecifier:(NSRelativeSpecifier *) specifier {
 	NSString *key = [specifier key];
-	
+
 	if( [key isEqualToString:@"chatViews"] || [key isEqualToString:@"chatRooms"] || [key isEqualToString:@"directChats"] || [key isEqualToString:@"chatConsoles"] || [key isEqualToString:@"chatTranscripts"] ) {
 		NSScriptObjectSpecifier *baseSpec = [specifier baseSpecifier];
 		NSString *baseKey = [baseSpec key];
 		NSArray *chatViews = [self chatViews];
 		NSRelativePosition relPos = [specifier relativePosition];
-		
+
 		if( ! baseSpec ) return nil;
-		
+
 		if( ! [chatViews count] ) return [NSArray array];
-		
+
 		if( [baseKey isEqualToString:@"chatViews"] || [baseKey isEqualToString:@"chatRooms"] || [baseKey isEqualToString:@"directChats"] || [baseKey isEqualToString:@"chatConsoles"] || [baseKey isEqualToString:@"chatTranscripts"] ) {
 			int baseIndex = 0;
-			
+
 			// The strategy here is going to be to find the index of the base object in the full graphics array, regardless of what its key is.  Then we can find what we're looking for before or after it.
 			// First find the index of the first or last base object in the master array
 			// Base specifiers are to be evaluated within the same container as the relative specifier they are the base of. That's this container.
-			
+
 			id baseObject = [baseSpec objectsByEvaluatingWithContainers:self];
 			if( [baseObject isKindOfClass:[NSArray class]] ) {
 				int baseCount = [(NSArray *)baseObject count];
@@ -1247,12 +1247,12 @@ end:
 					else baseObject = [baseObject objectAtIndex:( baseCount - 1 )];
 				} else baseObject = nil;
 			}
-			
+
 			if( ! baseObject ) return nil;
-			
+
 			baseIndex = [chatViews indexOfObjectIdenticalTo:baseObject];
 			if( baseIndex == NSNotFound ) return nil;
-			
+
 			// Now baseIndex specifies the base object for the relative spec in the master array.
 			// We will start either right before or right after and look for an object that matches the type we want.
 			// We do this by getting each object and seeing if it actually appears in the real key that we are trying to evaluate in.
@@ -1261,10 +1261,10 @@ end:
 			NSArray *relKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
 			unsigned curKeyIndex = 0, viewCount = [chatViews count];
 			id obj = nil;
-			
+
 			if( relPos == NSRelativeBefore ) baseIndex--;
 			else baseIndex++;
-			
+
 			while( baseIndex >= 0 && baseIndex < viewCount ) {
 				if( keyIsGeneric ) {
 					[result addObject:[NSNumber numberWithInt:baseIndex]];
@@ -1277,15 +1277,15 @@ end:
 						break;
 					}
 				}
-				
+
 				if( relPos == NSRelativeBefore ) baseIndex--;
 				else baseIndex++;
 			}
-			
+
 			return result;
 		}
 	}
-	
+
 	return nil;
 }
 

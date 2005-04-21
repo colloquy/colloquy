@@ -29,7 +29,7 @@ static NSMutableSet *inspectors = nil;
 
 	while( ( inspector = [e nextObject] ) )
 		if( [inspector inspectedObject] == object )
-			return inspector; 
+			return inspector;
 
 	return [[self alloc] initWithObject:object lockedOn:YES];
 }

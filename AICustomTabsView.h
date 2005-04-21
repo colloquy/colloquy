@@ -39,18 +39,18 @@
 	BOOL				allowsTabRearranging;		//Allow tabs to be rearranged in the window
 	BOOL				trackingCursor;				//Tracking rects are installed
 	BOOL				ignoreTabNumberChange;		//Ignore tab count changes, used for re-arranging
-	
+
 	//Tab Dragging
     BOOL                removingLastTabHidesWindow;	//Removing the last tab hides our window
 	int 				tabGapWidth;				//Gap in our tabs
 	int 				tabGapIndex;				//Location of the gap
-    NSPoint				lastClickLocation;			//Last click location			
+    NSPoint				lastClickLocation;			//Last click location
     NSTimer             *arrangeCellTimer;			//Timer for tab animations
-	
+
 	//Guarded.  Access these using the internal accessors
     NSMutableArray		*tabCellArray;
     AICustomTabCell		*selectedCustomTabCell;
-	
+
 	//
 	AICustomTabCell     *dragCell;
 }

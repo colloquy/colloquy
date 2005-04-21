@@ -92,7 +92,7 @@ static MVBuddyListController *sharedInstance = nil;
 		_buddyList = [[NSMutableSet set] retain];
 		_buddyOrder = [[NSMutableArray array] retain];
 		_picker = nil;
-		
+
 		[self _loadBuddyList];
 
 		[JVBuddy setPreferredName:(JVBuddyName)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyNameStyle"]];
@@ -256,7 +256,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[firstName setObjectValue:@""];
 	[lastName setObjectValue:@""];
 	[email setObjectValue:@""];
-	[image setImage:nil];	
+	[image setImage:nil];
 
 	[[NSApplication sharedApplication] beginSheet:pickerWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
@@ -755,7 +755,7 @@ static MVBuddyListController *sharedInstance = nil;
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
-		
+
 		NSArray *items = nil;
 		NSMenuItem *item = nil;
 		NSEnumerator *enumerator = [results objectEnumerator];
@@ -926,7 +926,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[self _sortBuddies];
 
 	if( [oldOrder isEqualToArray:_buddyOrder] ) return;
-	
+
 	if( selectedObject ) {
 		[buddies deselectAll:nil];
 		[buddies selectRow:[_buddyOrder indexOfObjectIdenticalTo:selectedObject] byExtendingSelection:NO];

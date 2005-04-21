@@ -110,7 +110,7 @@
 - (id) initWithChatTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) )
 		[self appendChatTranscript:transcript];
-	
+
 	return self;
 }
 
@@ -208,7 +208,7 @@
 				do {
 					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) )
 						count++;
-				} while( subNode && ( subNode = subNode -> next ) ); 
+				} while( subNode && ( subNode = subNode -> next ) );
 			} else if( node && node -> type == XML_ELEMENT_NODE ) count++;
 		} while( node && ( node = node -> next ) );
 	}
@@ -241,7 +241,7 @@
 				do {
 					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) )
 						count++;
-				} while( subNode && ( subNode = subNode -> next ) ); 
+				} while( subNode && ( subNode = subNode -> next ) );
 			}
 		} while( node && ( node = node -> next ) );
 	}
@@ -300,7 +300,7 @@
 
 						if( ++i > ( range.location + range.length ) ) goto done;
 					}
-				} while( subNode && ( subNode = subNode -> next ) ); 
+				} while( subNode && ( subNode = subNode -> next ) );
 			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) ) {
 				if( NSLocationInRange( i, range ) ) {
 					JVChatSession *session = [JVChatSession sessionWithNode:node andTranscript:self];
@@ -426,7 +426,7 @@
 
 						if( ++i > ( range.location + range.length ) ) goto done;
 					}
-				} while( subNode && ( subNode = subNode -> next ) ); 
+				} while( subNode && ( subNode = subNode -> next ) );
 			}
 		} while( node && ( node = node -> next ) );
 
@@ -523,7 +523,7 @@
 - (BOOL) containsMessageWithIdentifier:(NSString *) identifier {
 	NSParameterAssert( identifier != nil );
 	NSParameterAssert( [identifier length] > 0 );
-	
+
 	@synchronized( self ) {
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		const char *ident = [identifier UTF8String];
@@ -539,7 +539,7 @@
 						if( prop ) xmlFree( prop );
 						if( found ) return YES;
 					}
-				} while( subNode && ( subNode = subNode -> next ) ); 
+				} while( subNode && ( subNode = subNode -> next ) );
 			}
 		} while( node && ( node = node -> next ) );
 
@@ -617,7 +617,7 @@
 
 			do {
 				if( ! strncmp( "sender", (char *) subNode -> name, 6 ) ) break;
-			} while( subNode && ( subNode = subNode -> next ) ); 
+			} while( subNode && ( subNode = subNode -> next ) );
 
 			child = xmlDocCopyNode( subNode, _xmlLog, 1 );
 			xmlAddChild( root, child );
@@ -955,7 +955,7 @@
 							break;
 						}
 					}
-				} while( subNode && ( subNode = subNode -> next ) ); 
+				} while( subNode && ( subNode = subNode -> next ) );
 
 				if( total > 0 || removedAllMessages ) { // remove the envelope since there are no messages in it
 					tmp = node -> prev;

@@ -4,7 +4,7 @@
 - (void) awakeFromNib {
 	delegateDataCellForRow = [[_tableView delegate] respondsToSelector:@selector( tableView:dataCellForRow:tableColumn: )];
 }
-	
+
 - (void) setTableView:(NSTableView *) tableView {
 	[super setTableView:tableView];
 	delegateDataCellForRow = [[_tableView delegate] respondsToSelector:@selector( tableView:dataCellForRow:tableColumn: )];

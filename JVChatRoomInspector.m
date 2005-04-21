@@ -139,7 +139,7 @@
 }
 
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
-	unichar zeroWidthSpaceChar = 0x200b;	
+	unichar zeroWidthSpaceChar = 0x200b;
 	[[[topic textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[topic textStorage] length] )];
 	[(MVChatRoom *)[_room target] setTopic:[topic textStorage]];
 	return YES;

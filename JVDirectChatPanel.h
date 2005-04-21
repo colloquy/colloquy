@@ -29,7 +29,7 @@ extern NSString *JVChatMessageWasProcessedNotification;
 	unsigned int _newHighlightMessageCount;
 	BOOL _cantSendMessages;
 
-	int _historyIndex;	
+	int _historyIndex;
 	float _sendHeight;
 	BOOL _scrollerIsAtBottom;
 	BOOL _forceSplitViewPosition;
@@ -49,7 +49,7 @@ extern NSString *JVChatMessageWasProcessedNotification;
 - (id) preferenceForKey:(NSString *) key;
 
 - (NSStringEncoding) encoding;
-- (IBAction) changeEncoding:(id) sender;	
+- (IBAction) changeEncoding:(id) sender;
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(JVChatMessageType) type;

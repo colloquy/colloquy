@@ -269,7 +269,7 @@
 
 	_ignoreRuleIsNew = NO;
 	[[NSApplication sharedApplication] beginSheet:ruleSheet modalForWindow:[view window] modalDelegate:self didEndSelector:@selector( ruleSheetDidEnd:returnCode:contextInfo: ) contextInfo:nil];
-	
+
 }
 
 - (IBAction) saveRule:(id) sender {

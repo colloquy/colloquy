@@ -2,7 +2,7 @@
 
 @implementation JVSplitView
 - (NSString *) stringWithSavedPosition {
-	NSMutableString *result = [NSMutableString string]; 
+	NSMutableString *result = [NSMutableString string];
 	NSEnumerator *subviews = [[self subviews] objectEnumerator];
 	NSView *subview = nil;
 

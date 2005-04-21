@@ -46,7 +46,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 	[allEmoticonSets intersectSet:styles];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets]; 
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
 }
 
 + (NSSet *) emoticonSets {
@@ -131,7 +131,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 - (void) unlink {
 	extern NSMutableSet *allEmoticonSets;
 	[allEmoticonSets removeObject:self];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets]; 
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
 }
 
 - (BOOL) isCompliant {

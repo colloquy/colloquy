@@ -550,7 +550,7 @@
 	// m is to specify a message
 	// n is to specify a nickname
 
-	// EXAMPLES: 
+	// EXAMPLES:
 	// /ignore - will open a GUI window to add and manage ignores
 	// /ignore Loser23094 - ignore Loser23094 in all rooms
 	// /ignore -m "is listening" - ignore any message that has "is listening" from everyone
@@ -569,7 +569,7 @@
 
 	if( ! [args length] ) {
 		id info = [JVInspectorController inspectorOfObject:[view connection]];
-		[info show:nil];		
+		[info show:nil];
 		[(id)[info inspector] performSelector:@selector(selectTabWithIdentifier:) withObject:@"Ignores"];
 		return YES;
 	}

@@ -75,7 +75,7 @@
 		if( prop ) {
 			NSString *sourceStr = [NSString stringWithUTF8String:(char *)prop];
 			if( sourceStr ) _source = [[NSURL allocWithZone:[self zone]] initWithString:sourceStr];
-			xmlFree( prop );			
+			xmlFree( prop );
 		}
 	}
 
@@ -549,7 +549,7 @@
 		else if( [(JVChatRoomMember *)[self sender] roomFounder] ) return @"room founder";
 		else if( [(JVChatRoomMember *)[self sender] operator] ) return @"operator";
 		else if( [(JVChatRoomMember *)[self sender] halfOperator] ) return @"half operator";
-		else if( [(JVChatRoomMember *)[self sender] voice] ) return @"voice";		
+		else if( [(JVChatRoomMember *)[self sender] voice] ) return @"voice";
 	} else if( [[self sender] isKindOfClass:[MVChatUser class]] ) {
 		if( [(MVChatUser *)[self sender] isServerOperator] ) return @"server operator";
 	}

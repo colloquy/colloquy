@@ -54,7 +54,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
+
 	[contents release];
 	[_sendHistory release];
 	[_connection release];
@@ -422,7 +422,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event {
 	[send reset:nil];
-	return YES;	
+	return YES;
 }
 
 - (void) textDidChange:(NSNotification *) notification {

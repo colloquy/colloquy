@@ -18,7 +18,7 @@ a.member   { color: #aaa; }
 .timestamp { color: #666; }
 
 .envelope > .member:before { color: #444; }
-.envelope > .member:after  { color: #444; } 
+.envelope > .member:after  { color: #444; }
 
 .colorself  { color: #444; }
 .color0     { color: #f40; }

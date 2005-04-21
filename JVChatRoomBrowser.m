@@ -179,13 +179,13 @@
 - (IBAction) hideRoomBrowser:(id) sender {
 	if( _collapsed ) return;
 	[showBroswer setState:NSOffState];
-	[self toggleRoomBrowser:showBroswer];	
+	[self toggleRoomBrowser:showBroswer];
 }
 
 - (IBAction) showRoomBrowser:(id) sender {
 	if( ! _collapsed ) return;
 	[showBroswer setState:NSOnState];
-	[self toggleRoomBrowser:showBroswer];	
+	[self toggleRoomBrowser:showBroswer];
 }
 
 - (IBAction) toggleRoomBrowser:(id) sender {

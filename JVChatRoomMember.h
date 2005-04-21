@@ -49,7 +49,7 @@
 
 - (NSString *) xmlDescription;
 - (NSString *) xmlDescriptionWithTagName:(NSString *) tag;
-	
+
 - (IBAction) startChat:(id) sender;
 - (IBAction) sendFile:(id) sender;
 - (IBAction) addBuddy:(id) sender;

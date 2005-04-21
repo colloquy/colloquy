@@ -300,7 +300,7 @@
 					msgStr = [[NSString stringWithFormat:@"<%@ encoding=\"base64\">%@</%@>", key, value, key] UTF8String];
 			}
 
-			if( ! msgStr ) msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];			
+			if( ! msgStr ) msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];
 
 			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );

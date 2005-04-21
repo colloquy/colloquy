@@ -211,7 +211,7 @@
 #pragma mark -
 
 - (void) updateChatStylesMenu {
-	NSString *variant = [_style defaultVariantName];		
+	NSString *variant = [_style defaultVariantName];
 
 	_variantLocked = ! [_style isUserVariantName:variant];
 
@@ -325,7 +325,7 @@
 		[listener use];
 	} else {
 		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
-		[[NSWorkspace sharedWorkspace] openURL:url];	
+		[[NSWorkspace sharedWorkspace] openURL:url];
 		[listener ignore];
 	}
 }
@@ -638,7 +638,7 @@
 			if( ! path ) return;
 
 			[info setObject:object forKey:@"value"];
-			
+
 			NSEnumerator *enumerator = [[[info objectForKey:@"layouts"] objectAtIndex:0] objectEnumerator];
 			NSDictionary *styleInfo = nil;
 			while( ( styleInfo = [enumerator nextObject] ) ) {
@@ -776,7 +776,7 @@
 
 	[_style setDefaultVariantName:name];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVNewStyleVariantAddedNotification object:_style]; 
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVNewStyleVariantAddedNotification object:_style];
 
 	[self updateChatStylesMenu];
 	[self updateVariant];

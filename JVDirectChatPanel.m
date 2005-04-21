@@ -42,7 +42,7 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	/* Universal */
 	NSUTF8StringEncoding,
 	NSNonLossyASCIIStringEncoding,
-	/* Western */	
+	/* Western */
 	(NSStringEncoding) -1,				// Divider
 	NSASCIIStringEncoding,
 	NSISOLatin1StringEncoding,			// ISO Latin 1
@@ -50,7 +50,7 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	(NSStringEncoding) 0x8000020F,		// ISO Latin 9
 	NSMacOSRomanStringEncoding,			// Mac
 	NSWindowsCP1252StringEncoding,		// Windows
-	/* European */	
+	/* European */
 	(NSStringEncoding) -1,
 	NSISOLatin2StringEncoding,			// ISO Latin 2
 	(NSStringEncoding) 0x80000204,		// ISO Latin 4
@@ -69,21 +69,21 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	NSJapaneseEUCStringEncoding,		// EUC
 	(NSStringEncoding) 0x80000001,		// Mac
 	NSShiftJISStringEncoding,			// Windows
-	/* Simplified Chinese */	
+	/* Simplified Chinese */
 	(NSStringEncoding) -1,				// Divider
 	(NSStringEncoding) 0x80000632,		// GB 18030
 	(NSStringEncoding) 0x80000631,		// GBK
 	(NSStringEncoding) 0x80000930,		// EUC
 	(NSStringEncoding) 0x80000019,		// Mac
 	(NSStringEncoding) 0x80000421,		// Windows
-	/* Traditional Chinese */	
+	/* Traditional Chinese */
 	(NSStringEncoding) -1,				// Divider
 	(NSStringEncoding) 0x80000A03,		// Big5
 	(NSStringEncoding) 0x80000A06,		// Big5 HKSCS
 	(NSStringEncoding) 0x80000931,		// EUC
 	(NSStringEncoding) 0x80000002,		// Mac
 	(NSStringEncoding) 0x80000423,		// Windows
-	/* Korean */	
+	/* Korean */
 	(NSStringEncoding) -1,				// Divider
 	(NSStringEncoding) 0x80000940,		// EUC
 	(NSStringEncoding) 0x80000003,		// Mac
@@ -758,7 +758,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	} else if( [cmessage ignoreStatus] == JVNotIgnored ) {
 		// the style decided to excluded this message, decrease the new message counts
 		if( [cmessage isHighlighted] ) _newHighlightMessageCount--;
-		_newMessageCount--;		
+		_newMessageCount--;
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatMessageWasProcessedNotification object:self userInfo:[NSDictionary dictionaryWithObject:newMessage forKey:@"message"]];
@@ -769,7 +769,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[_windowController reloadListItem:self andChildren:NO];
 
 	if( ! [[[_windowController window] representedFilename] length] )
-		[self _refreshWindowFileProxy];	
+		[self _refreshWindowFileProxy];
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message {
@@ -862,7 +862,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
 
-	unichar zeroWidthSpaceChar = 0x200b;	
+	unichar zeroWidthSpaceChar = 0x200b;
 	[[[send textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
 
 	while( [[send textStorage] length] ) {
@@ -1066,12 +1066,12 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	if( [[self title] rangeOfString:inFragment options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
 		retVal = [NSArray arrayWithObject:[self title]];
 
-	return retVal;	
+	return retVal;
 }
 
 - (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event {
 	[send reset:nil];
-	return YES;	
+	return YES;
 }
 
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
@@ -1372,7 +1372,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		NSRange foundRange = [match range];
 		id currentLink = [message attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
 		if( ! currentLink ) [message addAttribute:NSLinkAttributeName value:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [match group]] range:foundRange];
-	}	
+	}
 }
 
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message {
@@ -1569,7 +1569,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:fontFamily traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:fontSize];
 	}
 
-	[send setBaseFont:baseFont];	
+	[send setBaseFont:baseFont];
 }
 
 - (void) consumeImageData:(NSData *) data forTag:(int) tag {

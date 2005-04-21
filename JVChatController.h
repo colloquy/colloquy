@@ -20,7 +20,7 @@
 + (JVChatController *) defaultManager;
 + (NSMenu *) smartTranscriptMenu;
 + (void) refreshSmartTranscriptMenu;
-	
+
 - (NSSet *) allChatWindowControllers;
 - (JVChatWindowController *) newChatWindowController;
 - (void) disposeChatWindowController:(JVChatWindowController *) controller;

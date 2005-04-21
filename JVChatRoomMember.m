@@ -42,7 +42,7 @@
 		_user = nil;
 		_nibLoaded = NO;
 	}
-	
+
 	return self;
 }
 
@@ -340,7 +340,7 @@
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
-		
+
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFile: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];

@@ -83,7 +83,7 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 
 	if( ! [self style] ) {
 		JVStyle *style = [JVStyle defaultStyle];
-		NSString *variant = [style defaultVariantName];		
+		NSString *variant = [style defaultVariantName];
 		[self setStyle:style withVariant:variant];
 	}
 
@@ -206,7 +206,7 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 	[item setRepresentedObject:self];
 	[item setTarget:[JVChatController defaultManager]];
 	[menu addItem:item];
-	
+
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
@@ -438,16 +438,16 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, 
-		JVToolbarChooseStyleItemIdentifier, 
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier,
+		JVToolbarChooseStyleItemIdentifier,
 		JVToolbarEmoticonsItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects: JVToolbarToggleChatDrawerItemIdentifier, 
+	NSArray *list = [NSArray arrayWithObjects: JVToolbarToggleChatDrawerItemIdentifier,
 		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, JVToolbarFindItemIdentifier, NSToolbarShowColorsItemIdentifier,
-		NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, 
+		NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 
 	return [[list retain] autorelease];
@@ -652,7 +652,7 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 		while( ( subMenuItem = [senumerator nextObject] ) ) {
 			JVStyle *style = [[subMenuItem representedObject] objectForKey:@"style"];
 			NSString *variant = [[subMenuItem representedObject] objectForKey:@"variant"];
-			if( [subMenuItem action] == @selector( changeStyleVariant: ) && [[self style] isEqualTo:style] && ( [[self styleVariant] isEqualToString:variant] || ( ! [self styleVariant] && ! variant ) ) ) 
+			if( [subMenuItem action] == @selector( changeStyleVariant: ) && [[self style] isEqualTo:style] && ( [[self styleVariant] isEqualToString:variant] || ( ! [self styleVariant] && ! variant ) ) )
 				[subMenuItem setState:NSOnState];
 			else [subMenuItem setState:NSOffState];
 		}

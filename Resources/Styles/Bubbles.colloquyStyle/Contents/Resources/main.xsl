@@ -40,7 +40,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-	
+
 			<xsl:variable name="bubbleClass">
 				<xsl:choose>
 					<xsl:when test="sender/@self = 'yes'">
@@ -51,7 +51,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-	
+
 			<table class="{$messageClass}" cellpadding="0" cellspacing="0">
 			<tr>
 				<xsl:choose>

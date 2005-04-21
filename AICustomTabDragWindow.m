@@ -30,21 +30,21 @@
 
 {
 	[super init];
-	
+
 	floaterTabImage = [[self dragTabImageForTabCell:inTabCell inCustomTabsView:inTabView] retain];
 	floaterWindowImage = [[self dragWindowImageForWindow:[inTabView window] customTabsView:inTabView tabCell:inTabCell] retain];
 	useFancyAnimations = ( floaterWindowImage ? YES : NO );
-	
+
 	if(useFancyAnimations){
 		//Create a floating window for our tab
 		dragTabFloater = [ESFloater floaterWithImage:floaterTabImage styleMask:NSBorderlessWindowMask title:nil];
 		[dragTabFloater setMaxOpacity:1.0];
-		
+
 		//Create a floating window for the stand-alone window our tab would produce
 		dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:NSTitledWindowMask title:[[inTabView window] title]];
 		[dragWindowFloater setMaxOpacity:(transparent ? 0.75 : 1.00)];
 	}
-		
+
 	return(self);
 }
 
@@ -61,7 +61,7 @@
 	[floaterWindowImage release];
     [dragTabFloater close:nil];
     [dragWindowFloater close:nil];
-	
+
 	[super dealloc];
 }
 
@@ -84,22 +84,22 @@
 		if(fullWindow) [dragWindowFloater moveFloaterToPoint:NSMakePoint(inPoint.x - CUSTOM_TABS_INDENT, inPoint.y)];
 	}
 }
-	
-	
+
+
 //Tab Imaging ----------------------------------------------------------------------------------------------------------
 #pragma mark Drag Images
 //Returns a drag image for the passed tab cell
 - (NSImage *)dragTabImageForTabCell:(AICustomTabCell *)tabCell inCustomTabsView:(AICustomTabsView *)customTabsView
 {
     NSImage     *dragTabImage = nil;
-    
+
     if([customTabsView canDraw]){
         dragTabImage = [[[NSImage alloc] init] autorelease];
         [customTabsView lockFocus];
         [dragTabImage addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]] autorelease]];
-        [customTabsView unlockFocus];    
+        [customTabsView unlockFocus];
     }
-	
+
     return(dragTabImage);
 }
 
@@ -108,40 +108,40 @@
 {
     NSView      *contentView = [[tabCell tabViewItem]  view];
     NSImage     *dragWindowImage = nil;
-    NSImage     *contentImage, *tabImage;    
+    NSImage     *contentImage, *tabImage;
     NSPoint     insertPoint;
-	
+
     if([customTabsView canDraw] && [contentView canDraw]){
         //Get an image of the tab
         tabImage = [[[NSImage alloc] init] autorelease];
         [customTabsView lockFocus];
         [tabImage addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]] autorelease]];
         [customTabsView unlockFocus];
-        
+
         //Get an image of the tabView content view
         contentImage = [[[NSImage alloc] init] autorelease];
         [contentView lockFocus];
         [contentImage addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:[contentView frame]] autorelease]];
         [contentView unlockFocus];
-        
+
         //Create a drag image the size of the window
         dragWindowImage = [[[NSImage alloc] initWithSize:[[window contentView] frame].size] autorelease];
         [dragWindowImage setBackgroundColor:[NSColor clearColor]];
         [dragWindowImage lockFocus];
-        
+
         //Draw the tabbar and tab
         [customTabsView drawBackgroundInRect:[customTabsView frame] withFrame:[customTabsView frame] selectedTabRect:NSMakeRect(0,0,0,0)];
         insertPoint = [customTabsView frame].origin;
         insertPoint.x += CUSTOM_TABS_INDENT; //Line the tab up a bit more realistically
         [tabImage compositeToPoint:insertPoint operation:NSCompositeCopy];
-        
+
         //Draw the content
 		NSPoint	frameOrigin = [[[tabCell tabViewItem] tabView] frame].origin;
         [contentImage compositeToPoint:NSMakePoint(frameOrigin.x + CONTENT_OFFSET_X, frameOrigin.y) operation:NSCompositeCopy];
-        
+
         [dragWindowImage unlockFocus];
     }
-    
+
     return(dragWindowImage);
 }
 

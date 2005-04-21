@@ -45,12 +45,12 @@ body {
 }
 
 .submessage.highlight {
-	background-color: rgba( 255, 191, 78, 0.6 ); 
+	background-color: rgba( 255, 191, 78, 0.6 );
 }
 
 .shadow {
 	display: block;
-	background: url( "shadow.png" ) repeat-x; 
+	background: url( "shadow.png" ) repeat-x;
 	width: auto;
 	height: 15px;
 }

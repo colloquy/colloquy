@@ -379,7 +379,7 @@
 
 	if( _joinCount ) [self addEventMessageToDisplay:NSLocalizedString( @"You rejoined the room.", "rejoined the room status message" ) withName:@"rejoined" andAttributes:nil];
 	_joinCount++;
-}	
+}
 
 - (void) parting {
 	if( [[self target] isJoined] ) {

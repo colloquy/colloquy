@@ -188,7 +188,7 @@
 		[self _refreshList];
 
 		id controller = [(JVChatTabItem *)tabViewItem chatViewController];
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] && 
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] &&
 			[controller respondsToSelector:@selector( numberOfChildren )] && [controller numberOfChildren] ) {
 			[viewsDrawer open:nil];
 		} else if( ! [controller respondsToSelector:@selector( numberOfChildren )] ) [viewsDrawer close:nil];
@@ -375,7 +375,7 @@
 			if( animate ) [self _resizeTabBarTimer:nil];
 			else [self _resizeTabBarAbsolute:YES];
 		}
-	}    
+	}
 }
 
 // Drag entered, enable suppression
@@ -470,7 +470,7 @@
 }
 
 // Resize the tab bar towards it's desired height
-- (BOOL) _resizeTabBarAbsolute:(BOOL) absolute {   
+- (BOOL) _resizeTabBarAbsolute:(BOOL) absolute {
 	NSSize tabSize = [customTabsView frame].size;
 	double destHeight = 0.;
 	NSRect newFrame = NSZeroRect;

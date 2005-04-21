@@ -26,18 +26,18 @@
     BOOL								selected;
     BOOL								highlighted;
     BOOL								allowsInactiveTabClosing;
-    
+
     BOOL								trackingClose;
     BOOL								hoveringClose;
-    
+
     NSTrackingRectTag					trackingTag;
     NSTrackingRectTag					closeTrackingTag;
     NSTrackingRectTag					toolTipTag;
-    
+
 	NSAttributedString					*attributedLabel;
     NSTabViewItem<AICustomTabViewItem>	*tabViewItem;
     NSRect								frame;
-	
+
 	AICustomTabsView					*view;
 }
 

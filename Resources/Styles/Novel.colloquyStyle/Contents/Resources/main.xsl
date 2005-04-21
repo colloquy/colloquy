@@ -69,7 +69,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-	
+
 			<xsl:variable name="senderClass">
 				<xsl:choose>
 					<xsl:when test="sender/@self = 'yes'">
@@ -80,13 +80,13 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-	
+
 			<xsl:variable name="timestamp">
 				<xsl:call-template name="short-time">
 					<xsl:with-param name="date" select="message[not( @ignored = 'yes' )][1]/@received" />
 				</xsl:call-template>
 			</xsl:variable>
-	
+
 			<div id="{@id}" class="{$envelopeClass}">
 				<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
 				<xsl:choose>

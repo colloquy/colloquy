@@ -30,15 +30,15 @@
 - (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title
 {
     NSRect  frame;
-    
+
     //Init
     [super init];
     windowIsVisible = NO;
     visibilityTimer = nil;
     maxOpacity = WINDOW_FADE_MAX;
-    
+
     //Set up the panel
-    frame = NSMakeRect(0, 0, [inImage size].width, [inImage size].height);    
+    frame = NSMakeRect(0, 0, [inImage size].width, [inImage size].height);
     panel = [[NSPanel alloc] initWithContentRect:frame
                                        styleMask:styleMask
                                          backing:NSBackingStoreBuffered
@@ -54,7 +54,7 @@
 	[staticView setImage:inImage];
     [staticView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
     [[panel contentView] addSubview:[staticView autorelease]];
-    
+
     return(self);
 }
 
@@ -83,7 +83,7 @@
 //
 - (void)endFloater
 {
-    [self close:nil];   
+    [self close:nil];
 }
 
 //
@@ -106,10 +106,10 @@
 //Window Visibility --------------------------------------------------------------------------------------------------
 //Update the visibility of this window (Window is visible if there are any tabs present)
 - (void)setVisible:(BOOL)inVisible animate:(BOOL)animate
-{    
+{
     if(inVisible != windowIsVisible){
         windowIsVisible = inVisible;
-        
+
         if(animate){
             if(!visibilityTimer){
                 visibilityTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/WINDOW_FADE_FPS) target:self selector:@selector(_updateWindowVisiblityTimer:) userInfo:nil repeats:YES] retain];
@@ -120,11 +120,11 @@
     }
 }
 
-//Smoothly 
+//Smoothly
 - (void)_updateWindowVisiblityTimer:(NSTimer *)inTimer
 {
     float   alphaValue = [panel alphaValue];
-    
+
     if(windowIsVisible){
         alphaValue += (maxOpacity - alphaValue) * (( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ? WINDOW_FADE_SLOW_STEP : WINDOW_FADE_STEP);
         if(alphaValue > maxOpacity - WINDOW_FADE_SNAP) alphaValue = maxOpacity;
@@ -133,7 +133,7 @@
         if(alphaValue < WINDOW_FADE_MIN + WINDOW_FADE_SNAP) alphaValue = WINDOW_FADE_MIN;
     }
     [self _setWindowOpacity:alphaValue];
-    
+
     //
     if(alphaValue == maxOpacity || alphaValue == WINDOW_FADE_MIN){
         [visibilityTimer invalidate]; [visibilityTimer release]; visibilityTimer = nil;

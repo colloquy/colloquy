@@ -70,7 +70,7 @@
 			if( [_delegate tableView:self shouldSelectRow:row] )
 				[self selectRow:row byExtendingSelection:NO];
 		} else [self selectRow:row byExtendingSelection:NO];
-	
+
 		if( dataSourceMenuForTableColumn )
 			return [_dataSource tableView:self menuForTableColumn:column row:row];
 		else return [self menu];

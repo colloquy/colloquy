@@ -183,7 +183,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 		[self performSelector:@selector( _checkForTransparantVariant ) withObject:nil afterDelay:0.];
 	} else {
-		[self performSelector:_cmd withObject:variant afterDelay:0.];	
+		[self performSelector:_cmd withObject:variant afterDelay:0.];
 	}
 }
 
@@ -306,9 +306,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		}
 #endif
 		if( topicShowing ) [self hideTopic];
-		else [self showTopic:topic]; 
+		else [self showTopic:topic];
 	} else {
-		[self performSelector:_cmd withObject:topic afterDelay:0.];		
+		[self performSelector:_cmd withObject:topic afterDelay:0.];
 	}
 }
 
@@ -395,7 +395,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
 	[scroller removeAllMarks];
-	[scroller removeAllShadedAreas];	
+	[scroller removeAllShadedAreas];
 }
 
 #pragma mark -
@@ -496,7 +496,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) _webkitIsReady {
-	_webViewReady = YES;	
+	_webViewReady = YES;
 }
 
 - (void) _resetDisplay {
@@ -556,7 +556,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_switchingStyles = NO;
 	[self performSelectorOnMainThread:@selector( markScrollbarForMessages: ) withObject:highlightedMsgs waitUntilDone:YES];
 
-	NSNotification *note = [NSNotification notificationWithName:JVStyleViewDidChangeStylesNotification object:self userInfo:nil];		
+	NSNotification *note = [NSNotification notificationWithName:JVStyleViewDidChangeStylesNotification object:self userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 quickEnd:
@@ -627,7 +627,7 @@ quickEnd:
 		// enforce the scrollback limit
 		if( scrollbackLimit > 0 && [[body childNodes] length] > scrollbackLimit )
 			for( i = 0; [[body childNodes] length] > scrollbackLimit && i < ( [[body childNodes] length] - scrollbackLimit ); i++ )
-				[body removeChild:[[body childNodes] item:0]];		
+				[body removeChild:[[body childNodes] item:0]];
 
 		if( [scrollNeeded respondsToSelector:@selector( boolValue )] && [scrollNeeded boolValue] ) [self scrollToBottom];
 	} else

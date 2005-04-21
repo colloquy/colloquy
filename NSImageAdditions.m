@@ -91,7 +91,7 @@
 		if( imageRep ) [self addRepresentation:imageRep];
 	}
 
-	if( imageRep ) { 
+	if( imageRep ) {
 		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
 		[dict setObject:[NSNumber numberWithBool:NO] forKey:NSImageInterlaced];
 		imageData = [imageRep representationUsingType:fileType properties:dict];

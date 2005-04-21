@@ -21,7 +21,7 @@
 	IBOutlet NSTextField *certificateDescription;
 	IBOutlet NSTextField *certificatePassphrase;
 	IBOutlet NSButton *certificateKeychain;
-	
+
 	/* Public Key Verification */
 	IBOutlet NSTextField *publicKeyDescription;
 	IBOutlet NSTextField *publicKeyName;

@@ -24,7 +24,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	extern NSMutableSet *colorWellCells;
 	NSEnumerator *enumerator = [colorWellCells objectEnumerator];
 	JVColorWellCell *cell = nil;
-	
+
 	while( ( cell = [enumerator nextObject] ) )
 		if( [cell isActive] ) [cell deactivate];
 }
@@ -170,7 +170,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	[[NSColorPanel sharedColorPanel] setColor:_color];
 	[[NSApplication sharedApplication] orderFrontColorPanel:nil];
 
-	[[self controlView] setNeedsDisplay:YES];	
+	[[self controlView] setNeedsDisplay:YES];
 }
 
 - (BOOL) isActive {

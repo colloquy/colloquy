@@ -16,7 +16,7 @@
 	ESFloater			*dragTabFloater;
 	ESFloater			*dragWindowFloater;
 	BOOL				fullWindow;
-	
+
 	BOOL				useFancyAnimations;
 }
 

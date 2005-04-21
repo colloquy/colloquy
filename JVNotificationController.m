@@ -166,7 +166,7 @@ static JVNotificationController *sharedInstance = nil;
 	while( ( info = [enumerator nextObject] ) )
 		if( ! [info objectForKey:@"seperator"] )
 			[notifications addObject:[info objectForKey:@"identifier"]];
-	
+
 	return [NSDictionary dictionaryWithObjectsAndKeys:notifications, GROWL_NOTIFICATIONS_ALL, notifications, GROWL_NOTIFICATIONS_DEFAULT, nil];
 }
 @end

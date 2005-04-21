@@ -37,7 +37,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		_operation = [[settings objectForKey:@"operation"] intValue];
 		_ignoreCase = [[settings objectForKey:@"ignoreCase"] boolValue];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];
 	}
 
 	return self;
@@ -208,7 +208,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[settingsSheet setContentMinSize:frame.size];
 
 	frame.size.width = 800;
-	[settingsSheet setContentMaxSize:frame.size];	
+	[settingsSheet setContentMaxSize:frame.size];
 }
 
 - (void) reloadTableView {
@@ -240,7 +240,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	if( ! [[self editingRules] count] ) [self addRow:nil];
 
-	[self updateSettingsSheetSize];	
+	[self updateSettingsSheetSize];
 	[self reloadTableView];
 
 	[titleField setStringValue:[self title]];
@@ -309,7 +309,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[localMessage setIgnoreStatus:JVNotIgnored];
 
 	localMessage = (id) [[self transcript] appendMessage:localMessage];
-	[display appendChatMessage:localMessage];	
+	[display appendChatMessage:localMessage];
 
 	_newMessages++;
 	[_windowController reloadListItem:self andChildren:NO];
@@ -349,7 +349,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[settingsSheet setContentMinSize:frame.size];
 
 		frame.size.width = 800;
-		[settingsSheet setContentMaxSize:frame.size];	
+		[settingsSheet setContentMaxSize:frame.size];
 	}
 
 	[self updateKeyViewLoop];
@@ -368,7 +368,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[settingsSheet setContentMinSize:frame.size];
 
 		frame.size.width = 800;
-		[settingsSheet setContentMaxSize:frame.size];	
+		[settingsSheet setContentMaxSize:frame.size];
 	}
 
 	[self updateKeyViewLoop];

@@ -64,7 +64,7 @@ static unsigned int bubbleWindowDepth = 0;
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
+
 	[_target release];
 	[_representedObject release];
 	[_animationTimer invalidate];

@@ -62,7 +62,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	[allStyles intersectSet:styles];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles]; 
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
 }
 
 + (NSSet *) styles {
@@ -161,7 +161,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (void) unlink {
 	extern NSMutableSet *allStyles;
 	[allStyles removeObject:self];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles]; 
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
 }
 
 - (void) reload {
@@ -179,7 +179,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	if( ! [[self displayName] length] ) ret = NO;
 	if( ! [[_bundle pathForResource:@"main" ofType:@"css"] length] ) ret = NO;
 	if( ! [[_bundle bundleIdentifier] length] ) ret = NO;
-	
+
 	return ret;
 }
 
@@ -212,7 +212,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		xmlFreeDoc( doc );
 
 		return result;
-	}	
+	}
 }
 
 - (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {

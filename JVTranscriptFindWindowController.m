@@ -274,7 +274,7 @@ end:
 	if( foundMessage ) [[self focusedChatTranscriptPanel] jumpToMessage:foundMessage];
 	else NSBeep();
 
-	NSLog( @"%@ %u %@", NSStringFromRange( range ), _lastMessageIndex, foundMessage );	
+	NSLog( @"%@ %u %@", NSStringFromRange( range ), _lastMessageIndex, foundMessage );
 
 	[resultProgress setDoubleValue:[resultProgress maxValue]];
 	[resultProgress displayIfNeeded];

@@ -39,7 +39,7 @@
 	[bounceIcon setState:boolValue];
 	[untilAttention setEnabled:boolValue];
 	if( ! boolValue ) [untilAttention setState:NSOffState];
-	else [untilAttention setState:[[_eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue]];	
+	else [untilAttention setState:[[_eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue]];
 
 	boolValue = [[_eventPrefs objectForKey:@"showBubble"] boolValue];
 	[showBubble setState:boolValue];
@@ -108,14 +108,14 @@
 		[menuItem setImage:[NSImage imageNamed:@"sound"]];
 		[availableSounds addItem:menuItem];
 	}
-	
+
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSArray *paths = [NSArray arrayWithObjects:
 		[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Sounds", bundleName],
 		[NSString stringWithFormat:@"/Library/Application Support/%@/Sounds", bundleName],
 		[[NSString stringWithFormat:@"~/Library/Application Support/%@/Sounds", bundleName] stringByExpandingTildeInPath],
-		@"-", 
+		@"-",
 		@"/System/Library/Sounds",
 		[@"~/Library/Sounds" stringByExpandingTildeInPath],
 		nil];
@@ -198,7 +198,7 @@
 - (void) bounceIcon:(id) sender {
 	[untilAttention setEnabled:(BOOL)[sender state]];
 	if( [sender state] == NSOffState ) [untilAttention setState:NSOffState];
-	else [untilAttention setState:[[_eventPrefs objectForKey:@"bounceIconUntilAttention"] boolValue]];	
+	else [untilAttention setState:[[_eventPrefs objectForKey:@"bounceIconUntilAttention"] boolValue]];
 	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"bounceIcon"];
 	[self saveEventSettings];
 }

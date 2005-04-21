@@ -171,7 +171,7 @@ finish:
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
-	
+
 	[_transferStorage release];
 	[_safeFileExtentions release];
 	[_calculationItems release];
@@ -240,7 +240,7 @@ finish:
 	}
 
 	[self showTransferManager:nil];
-	
+
 	if( path ) [download setDestination:path allowOverwrite:NO];
 
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
@@ -553,7 +553,7 @@ finish:
 			[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"transfered"];
 
 			if( transfered > [[info objectForKey:@"size"] unsignedLongLongValue] )
-				[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"size"];				
+				[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"size"];
 
 			if( transfered != [[info objectForKey:@"size"] unsignedLongLongValue] )
 				[info setObject:[NSNumber numberWithDouble:( transfered / timeslice )] forKey:@"rate"];
@@ -575,7 +575,7 @@ finish:
 - (void) downloadDidFinish:(NSURLDownload *) download {
 	NSEnumerator *enumerator = nil;
 	NSMutableDictionary *info = nil;
-	
+
 	enumerator = [[[_transferStorage copy] autorelease] objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"controller"] == download ) {
@@ -674,7 +674,7 @@ finish:
 	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 2 ) {
 //		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:[transfer user] onServer:[(MVChatConnection *)[transfer connection] server]];
 //		if( buddy ) [self _incomingFileSheetDidEnd:nil returnCode:NSOKButton contextInfo:(void *)[transfer retain]];
-//		else 
+//		else
 		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)[transfer retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] ) );
 	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 1 ) {
 		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)[transfer retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] ) );

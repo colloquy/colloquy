@@ -310,12 +310,12 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (void) disposeViewController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
-	
+
 	if( [controller respondsToSelector:@selector( willDispose )] )
 		[(NSObject *)controller willDispose];
-	
+
 	[[controller windowController] removeChatViewController:controller];
-	
+
 	if( [controller isKindOfClass:[JVSmartTranscriptPanel class]] ) return;
 
 	[_chatControllers removeObject:controller];
@@ -412,7 +412,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( ! [self chatViewControllerForUser:user ifExists:YES] )
 			hideFromUser = YES;
 
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatAlwaysShowNotices"] ) 
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatAlwaysShowNotices"] )
 			hideFromUser = NO;
 
 		NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
@@ -441,7 +441,7 @@ static NSMenu *smartTranscriptMenu = nil;
 					[context setObject:NSStringFromSelector( @selector( _checkMemos: ) ) forKey:@"action"];
 					[context setObject:connection forKey:@"representedObject"];
 					[[JVNotificationController defaultManager] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
-				}	
+				}
 			}
 		} else {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];

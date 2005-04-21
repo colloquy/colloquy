@@ -30,5 +30,5 @@
 - (IBAction) saveSettings:(id) sender;
 
 - (IBAction) addRow:(id) sender;
-- (IBAction) removeRow:(id) sender;	
+- (IBAction) removeRow:(id) sender;
 @end

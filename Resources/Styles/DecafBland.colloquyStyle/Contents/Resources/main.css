@@ -43,7 +43,7 @@ body {
 .event {
   color: #800;
   overflow: hidden;
-  padding-bottom: 0;  
+  padding-bottom: 0;
 }
 
 .envelope {
@@ -51,9 +51,9 @@ body {
   padding-bottom: 0;
 }
 
-a.member         { text-decoration: none; } 
-a.member:link    { text-decoration: none; } 
-a.member:visited { text-decoration: none; } 
+a.member         { text-decoration: none; }
+a.member:link    { text-decoration: none; }
+a.member:visited { text-decoration: none; }
 a.member:active  { text-decoration: none; }
 a.member:hover   { text-decoration: underline; }
 

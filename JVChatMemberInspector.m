@@ -79,7 +79,7 @@
 #pragma mark -
 
 - (void) updateInformation {
-	[[_member user] refreshInformation];	
+	[[_member user] refreshInformation];
 	[progress startAnimation:nil];
 }
 

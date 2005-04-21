@@ -5,7 +5,7 @@
 	id ret = [super performDefaultImplementation];
 
 	NSAppleEventDescriptor *rtypDesc = [[self appleEvent] paramDescriptorForKeyword:'rtyp'];
-	if( rtypDesc ) { // the get command is requesting a coercion (requested type) 
+	if( rtypDesc ) { // the get command is requesting a coercion (requested type)
 		NSScriptClassDescription *classDesc = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] classDescriptionWithAppleEventCode:[rtypDesc typeCodeValue]];
 		Class class = NULL;
 

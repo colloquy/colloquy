@@ -90,7 +90,7 @@
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	float imageWidth = 0.;
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[controlView window] isKeyWindow] && [[NSApplication sharedApplication] isActive] );
-	
+
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 	[paraStyle setLineBreakMode:_lineBreakMode];
 	[paraStyle setAlignment:[self alignment]];

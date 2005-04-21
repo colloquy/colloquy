@@ -22,7 +22,7 @@
 		_query = @"";
 		_changed = NO;
 		_smartTranscriptCriterion = NO;
-		[self setKind:JVTranscriptMessageBodyCriterionKind];	
+		[self setKind:JVTranscriptMessageBodyCriterionKind];
 		[self setOperation:JVTranscriptTextContainCriterionOperation];
 		[self setQueryUnits:JVTranscriptNoCriterionQueryUnits];
 	}
@@ -370,7 +370,7 @@
 			index = [(NSNumber *)query intValue];
 		if( [listQuery numberOfItems] < index ) index = -1;
 		[listQuery selectItemAtIndex:index];
-	}	
+	}
 }
 
 #pragma mark -
@@ -434,7 +434,7 @@
 		[booleanKindButton selectItemAtIndex:[booleanKindButton indexOfItemWithTag:[self kind]]];
 	} else if( [self format] == JVTranscriptListCriterionFormat ) {
 		[listKindButton selectItemAtIndex:[listKindButton indexOfItemWithTag:[self kind]]];
-	}	
+	}
 }
 
 #pragma mark -

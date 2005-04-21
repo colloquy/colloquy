@@ -39,7 +39,7 @@
 		</xsl:variable>
 
 		<xsl:variable name="senderNick" select="sender | ../sender" />
-		
+
 		<xsl:variable name="memberLink">
 			<xsl:choose>
 				<xsl:when test="sender/@identifier or ../sender/@identifier">

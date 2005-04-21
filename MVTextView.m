@@ -3,7 +3,7 @@
 @interface MVTextView (MVTextViewPrivate)
 - (BOOL) checkKeyEvent:(NSEvent *) event;
 - (BOOL) triggerKeyEvent:(NSEvent *) event;
-@end 
+@end
 
 #pragma mark -
 
@@ -61,7 +61,7 @@
 	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
 		return YES;
 	}
-	
+
 	return NO;
 }
 
