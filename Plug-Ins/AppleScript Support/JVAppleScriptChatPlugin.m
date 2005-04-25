@@ -216,7 +216,7 @@
 		int code = [[error objectForKey:NSAppleScriptErrorNumber] intValue];
 		if( code == errAEEventNotHandled || code == errAEHandlerNotFound ) {
 			[self doesNotRespondToSelector:selector]; // disable for future calls
-		} else {
+		} else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAppleScriptDebugging"] ) {
 			NSString *errorDesc = [error objectForKey:NSAppleScriptErrorMessage];
 			NSScriptCommandDescription *commandDesc = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] commandDescriptionWithAppleEventClass:'cplG' andAppleEventCode:handler];
 			NSString *scriptSuiteName = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] suiteForAppleEventCode:'cplG'];
