@@ -90,6 +90,10 @@ static JVNotificationController *sharedInstance = nil;
 	[[NSApplication sharedApplication] requestUserAttention:NSCriticalRequest];
 }
 
+#ifndef GROWL_NOTIFICATION_IDENTIFIER
+#define GROWL_NOTIFICATION_IDENTIFIER @"GrowlNotificationIdentifier"
+#endif
+
 - (void) _showBubbleForIdentifier:(NSString *) identifier withContext:(NSDictionary *) context andPrefs:(NSDictionary *) eventPrefs {
 	KABubbleWindowController *bubble = nil;
 	NSImage *icon = [context objectForKey:@"image"];
@@ -102,7 +106,7 @@ static JVNotificationController *sharedInstance = nil;
 		NSString *desc = description;
 		if( [desc isKindOfClass:[NSAttributedString class]] ) desc = [description string];
 		NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-		NSDictionary *notification = [NSDictionary dictionaryWithObjectsAndKeys:programName, GROWL_APP_NAME, identifier, GROWL_NOTIFICATION_NAME, title, GROWL_NOTIFICATION_TITLE, desc, GROWL_NOTIFICATION_DESCRIPTION, [icon TIFFRepresentation], GROWL_NOTIFICATION_ICON, [eventPrefs objectForKey:@"keepBubbleOnScreen"], GROWL_NOTIFICATION_STICKY, nil];
+		NSDictionary *notification = [NSDictionary dictionaryWithObjectsAndKeys:programName, GROWL_APP_NAME, identifier, GROWL_NOTIFICATION_NAME, title, GROWL_NOTIFICATION_TITLE, desc, GROWL_NOTIFICATION_DESCRIPTION, [icon TIFFRepresentation], GROWL_NOTIFICATION_ICON, [eventPrefs objectForKey:@"keepBubbleOnScreen"], GROWL_NOTIFICATION_STICKY, [context objectForKey:@"coalesceKey"], GROWL_NOTIFICATION_IDENTIFIER, nil];
 		[GrowlApplicationBridge notifyWithDictionary:notification];
 	} else {
 		if( ( bubble = [_bubbles objectForKey:[context objectForKey:@"coalesceKey"]] ) ) {
