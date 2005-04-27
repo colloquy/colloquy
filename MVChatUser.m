@@ -326,6 +326,16 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
+- (void) startWatching {
+	[[self connection] startWatchingUser:self];
+}
+
+- (void) stopWatching {
+	[[self connection] stopWatchingUser:self];
+}
+
+#pragma mark -
+
 - (void) refreshInformation {
 // subclass this method, if needed	
 }

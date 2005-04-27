@@ -23,9 +23,12 @@ NSString *MVChatConnectionNeedPublicKeyVerificationNotification = @"MVChatConnec
 
 NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";
 NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotPrivateMessageNotification";
-NSString *MVChatConnectionChatRoomlistUpdatedNotification = @"MVChatConnectionChatRoomlistUpdatedNotification";
+NSString *MVChatConnectionChatRoomListUpdatedNotification = @"MVChatConnectionChatRoomListUpdatedNotification";
 
 NSString *MVChatConnectionSelfAwayStatusChangedNotification = @"MVChatConnectionSelfAwayStatusChangedNotification";
+
+NSString *MVChatConnectionWatchedUserOnlineNotification = @"MVChatConnectionWatchedUserOnlineNotification";
+NSString *MVChatConnectionWatchedUserOfflineNotification = @"MVChatConnectionWatchedUserOfflineNotification";
 
 NSString *MVChatConnectionNicknameAcceptedNotification = @"MVChatConnectionNicknameAcceptedNotification";
 NSString *MVChatConnectionNicknameRejectedNotification = @"MVChatConnectionNicknameRejectedNotification";
@@ -596,11 +599,11 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) addUserToNotificationList:(MVChatUser *) user {
+- (void) startWatchingUser:(MVChatUser *) user {
 // subclass this method, if needed
 }
 
-- (void) removeUserFromNotificationList:(MVChatUser *) user {
+- (void) stopWatchingUser:(MVChatUser *) user {
 // subclass this method, if needed
 }
 
@@ -759,7 +762,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_roomsCache setObject:info forKey:[info objectForKey:@"room"]];
 	[info removeObjectForKey:@"room"];
 
-	NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionChatRoomlistUpdatedNotification object:self];
+	NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionChatRoomListUpdatedNotification object:self];
 	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP];
 }
 

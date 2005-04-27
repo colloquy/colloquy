@@ -1265,14 +1265,6 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 #pragma mark -
 
-- (void) addUserToNotificationList:(MVChatUser *) user {
-}
-
-- (void) removeUserFromNotificationList:(MVChatUser *) user {
-}
-
-#pragma mark -
-
 - (void) fetchChatRoomList {
 	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 900. ) {
 		[self sendRawMessage:@"LIST"];

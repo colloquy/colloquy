@@ -47,9 +47,12 @@ extern NSString *MVChatConnectionNeedPublicKeyVerificationNotification;
 
 extern NSString *MVChatConnectionGotRawMessageNotification;
 extern NSString *MVChatConnectionGotPrivateMessageNotification;
-extern NSString *MVChatConnectionChatRoomlistUpdatedNotification;
+extern NSString *MVChatConnectionChatRoomListUpdatedNotification;
 
 extern NSString *MVChatConnectionSelfAwayStatusChangedNotification;
+
+extern NSString *MVChatConnectionWatchedUserOnlineNotification;
+extern NSString *MVChatConnectionWatchedUserOfflineNotification;
 
 extern NSString *MVChatConnectionNicknameAcceptedNotification;
 extern NSString *MVChatConnectionNicknameRejectedNotification;
@@ -211,8 +214,8 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 #pragma mark -
 
-- (void) addUserToNotificationList:(MVChatUser *) user;
-- (void) removeUserFromNotificationList:(MVChatUser *) user;
+- (void) startWatchingUser:(MVChatUser *) user;
+- (void) stopWatchingUser:(MVChatUser *) user;
 
 #pragma mark -
 

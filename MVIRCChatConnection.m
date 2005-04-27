@@ -771,21 +771,23 @@ static void MVChatBuddyOnline( IRC_SERVER_REC *server, const char *nick, const c
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( ! self ) return;
 
-//	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBuddyIsOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", nil]];
-//	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+	[user _setRealName:[self stringWithEncodedBytes:realname]];
+	[user _setUsername:[self stringWithEncodedBytes:username]];
+	[user _setAddress:[self stringWithEncodedBytes:host]];
 
-	if( awaymsg ) { // Mark the buddy as away
-//		note = [NSNotification notificationWithName:MVChatConnectionBuddyIsAwayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", [self stringWithEncodedBytes:awaymsg], @"msg", nil]];
-//		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-	}
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionWatchedUserOnlineNotification object:user userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 static void MVChatBuddyOffline( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( ! self ) return;
 
-//	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBuddyIsOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", nil]];
-//	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionWatchedUserOfflineNotification object:user userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 static void MVChatBuddyAway( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
@@ -1495,8 +1497,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
-- (void) addUserToNotificationList:(MVChatUser *) user {
+- (void) startWatchingUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
+	NSParameterAssert( [[user nickname] length] > 0 );
 
 	[MVIRCChatConnectionThreadLock lock];
 
@@ -1505,8 +1508,9 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	[MVIRCChatConnectionThreadLock unlock];
 }
 
-- (void) removeUserFromNotificationList:(MVChatUser *) user {
+- (void) stopWatchingUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
+	NSParameterAssert( [[user nickname] length] > 0 );
 
 	[MVIRCChatConnectionThreadLock lock];
 

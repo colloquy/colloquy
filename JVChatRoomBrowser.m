@@ -262,7 +262,7 @@
 	if( _connection && ! _collapsed )
 		[self _startFetch];
 
-	if( _connection ) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _needToRefreshResults: ) name:MVChatConnectionChatRoomlistUpdatedNotification object:_connection];
+	if( _connection ) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _needToRefreshResults: ) name:MVChatConnectionChatRoomListUpdatedNotification object:_connection];
 
 	[_roomResults autorelease];
 	_roomResults = [[_connection chatRoomListResults] retain];

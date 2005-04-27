@@ -116,6 +116,9 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (unsigned long) supportedModes;
 - (unsigned long) modes;
 
+- (void) startWatching;
+- (void) stopWatching;
+
 - (void) refreshInformation;
 
 - (void) refreshAttributes;
