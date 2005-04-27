@@ -102,11 +102,19 @@ static JVNotificationController *sharedInstance = nil;
 
 	if( ! icon ) icon = [[NSApplication sharedApplication] applicationIconImage];
 
-	if( [GrowlApplicationBridge isGrowlInstalled] ) {
+	if( [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
 		NSString *desc = description;
 		if( [desc isKindOfClass:[NSAttributedString class]] ) desc = [description string];
 		NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-		NSDictionary *notification = [NSDictionary dictionaryWithObjectsAndKeys:programName, GROWL_APP_NAME, identifier, GROWL_NOTIFICATION_NAME, title, GROWL_NOTIFICATION_TITLE, desc, GROWL_NOTIFICATION_DESCRIPTION, [icon TIFFRepresentation], GROWL_NOTIFICATION_ICON, [eventPrefs objectForKey:@"keepBubbleOnScreen"], GROWL_NOTIFICATION_STICKY, [context objectForKey:@"coalesceKey"], GROWL_NOTIFICATION_IDENTIFIER, nil];
+		NSDictionary *notification = [NSDictionary dictionaryWithObjectsAndKeys:
+			programName, GROWL_APP_NAME,
+			identifier, GROWL_NOTIFICATION_NAME,
+			title, GROWL_NOTIFICATION_TITLE,
+			desc, GROWL_NOTIFICATION_DESCRIPTION,
+			[icon TIFFRepresentation], GROWL_NOTIFICATION_ICON,
+			[eventPrefs objectForKey:@"keepBubbleOnScreen"], GROWL_NOTIFICATION_STICKY,
+			[context objectForKey:@"coalesceKey"], GROWL_NOTIFICATION_IDENTIFIER,
+			nil];
 		[GrowlApplicationBridge notifyWithDictionary:notification];
 	} else {
 		if( ( bubble = [_bubbles objectForKey:[context objectForKey:@"coalesceKey"]] ) ) {
