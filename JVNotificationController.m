@@ -112,8 +112,10 @@ static JVNotificationController *sharedInstance = nil;
 			title, GROWL_NOTIFICATION_TITLE,
 			desc, GROWL_NOTIFICATION_DESCRIPTION,
 			[icon TIFFRepresentation], GROWL_NOTIFICATION_ICON,
-			[eventPrefs objectForKey:@"keepBubbleOnScreen"], GROWL_NOTIFICATION_STICKY,
 			[context objectForKey:@"coalesceKey"], GROWL_NOTIFICATION_IDENTIFIER,
+			// this next key is not guaranteed to be non-nil
+			// make sure it stays last, unless you want to ensure it's non-nil
+			[eventPrefs objectForKey:@"keepBubbleOnScreen"], GROWL_NOTIFICATION_STICKY,
 			nil];
 		[GrowlApplicationBridge notifyWithDictionary:notification];
 	} else {
