@@ -58,6 +58,8 @@
 - (void) willLoad {
 	[self buildEncodingMenu];
 
+	[tabView removeTabViewItem:[tabView tabViewItemAtIndex:[tabView indexOfTabViewItemWithIdentifier:@"Proxy"]]];
+
 	[editAutomatic setState:[[MVConnectionsController defaultManager] autoConnectForConnection:_connection]];
 	[sslConnection setState:[_connection isSecure]];
 	[editAddress setObjectValue:[_connection server]];
