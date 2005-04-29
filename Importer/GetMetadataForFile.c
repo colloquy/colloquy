@@ -71,12 +71,17 @@ Boolean GetMetadataForFile(void* thisInterface,
 	[returnDict setObject:[NSNumber numberWithInt:logDuration] forKey:(NSString *)kMDItemDurationSeconds];
 	
 	// Get WhereFroms
-	NSString *fromURL = [[[transcriptDOM nodesForXPath:@"/log[1]@source" error:&error] objectAtIndex:0] stringValue];
-	if ( fromURL ) [returnDict setObject:fromURL forKey:(NSString *)kMDItemWhereFroms];
+	xpathResult = [transcriptDOM nodesForXPath:@"/log[1]@source" error:&error];
+	NSString *fromURL = nil;
+	if ( [xpathResult count] ) {
+		fromURL = [[xpathResult objectAtIndex:0] stringValue];
+		[returnDict setObject:fromURL forKey:(NSString *)kMDItemWhereFroms];
+	}
 	
 	// Set Title and Coverage
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] initWithDateFormat:@"%A, the %d of %B at %I:%M" allowNaturalLanguage:NO];
 	NSString *coverageWording = nil;
+	
 	// Set Coverage
 	if ( fromURL ) {
 		coverageWording = [NSString stringWithFormat:@"Conversation from %@ to %@ in %@", [formatter stringFromDate:dateStarted],
