@@ -1112,8 +1112,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		[_irssiThreadProxy release];
 		_irssiThreadProxy = nil;
 
-		[_irssiThreadConnection invalidate];
 		[_irssiThreadConnection release];
+		[_irssiThreadConnection invalidate];
 		_irssiThreadConnection = nil;
 
 		[MVIRCChatConnectionThreadLock unlock];
