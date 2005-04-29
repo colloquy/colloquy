@@ -1,20 +1,16 @@
+#import <ChatCore/MVChatUser.h>
+
 extern NSString *JVBuddyCameOnlineNotification;
 extern NSString *JVBuddyWentOfflineNotification;
 
-extern NSString *JVBuddyNicknameCameOnlineNotification;
-extern NSString *JVBuddyNicknameWentOfflineNotification;
-extern NSString *JVBuddyNicknameStatusChangedNotification;
+extern NSString *JVBuddyUserCameOnlineNotification;
+extern NSString *JVBuddyUserWentOfflineNotification;
+extern NSString *JVBuddyUserStatusChangedNotification;
+extern NSString *JVBuddyUserIdleTimeUpdatedNotification;
 
-extern NSString *JVBuddyActiveNicknameChangedNotification;
+extern NSString *JVBuddyActiveUserChangedNotification;
 
 @class ABPerson;
-
-typedef enum {
-	JVBuddyOfflineStatus = 'oflN',
-	JVBuddyAvailableStatus = 'avaL',
-	JVBuddyIdleStatus = 'idlE',
-	JVBuddyAwayStatus = 'awaY'
-} JVBuddyStatus;
 
 typedef enum {
 	JVBuddyActiveNickname = 0x0,
@@ -24,10 +20,9 @@ typedef enum {
 
 @interface JVBuddy : NSObject {
 	ABPerson *_person;
-	NSMutableSet *_nicknames;
-	NSMutableSet *_onlineNicknames;
-	NSMutableDictionary *_nicknameStatus;
-	NSURL *_activeNickname;
+	NSMutableArray *_users;
+	NSMutableArray *_onlineUsers;
+	MVChatUser *_activeUser;
 }
 + (JVBuddyName) preferredName;
 + (void) setPreferredName:(JVBuddyName) preferred;
@@ -40,27 +35,30 @@ typedef enum {
 - (void) registerWithApplicableConnections;
 - (void) unregisterWithApplicableConnections;
 
-- (NSURL *) activeNickname;
-- (void) setActiveNickname:(NSURL *) nickname;
+- (MVChatUser *) activeUser;
+- (void) setActiveUser:(MVChatUser *) user;
 
-- (JVBuddyStatus) status;
+- (MVChatUserStatus) status;
+- (NSAttributedString *) awayStatusMessage;
+
 - (BOOL) isOnline;
+- (NSDate *) dateConnected;
+- (NSDate *) dateDisconnected;
+
 - (NSTimeInterval) idleTime;
-- (NSString *) awayMessage;
 
-- (NSSet *) nicknames;
-- (NSSet *) onlineNicknames;
+- (NSString *) displayName;
+- (NSString *) nickname;
 
-- (void) addNickname:(NSURL *) nickname;
-- (void) removeNickname:(NSURL *) nickname;
-- (void) replaceNickname:(NSURL *) old withNickname:(NSURL *) new;
+- (NSArray *) users;
+- (NSArray *) onlineUsers;
+
+- (void) addUser:(MVChatUser *) user;
+- (void) removeUser:(MVChatUser *) user;
+- (void) replaceUser:(MVChatUser *) oldUser withUser:(MVChatUser *) newUser;
 
 - (NSImage *) picture;
 - (void) setPicture:(NSImage *) picture;
-
-- (NSString *) preferredName;
-- (JVBuddyName) preferredNameWillReturn;
-- (unsigned int) availableNames;
 
 - (NSString *) compositeName;
 - (NSString *) firstName;
@@ -75,6 +73,7 @@ typedef enum {
 
 - (NSString *) uniqueIdentifier;
 - (ABPerson *) person;
+
 - (void) editInAddressBook;
 - (void) viewInAddressBook;
 

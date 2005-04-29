@@ -9,11 +9,12 @@
 NSString *JVBuddyCameOnlineNotification = @"JVBuddyCameOnlineNotification";
 NSString *JVBuddyWentOfflineNotification = @"JVBuddyWentOfflineNotification";
 
-NSString *JVBuddyNicknameCameOnlineNotification = @"JVBuddyNicknameCameOnlineNotification";
-NSString *JVBuddyNicknameWentOfflineNotification = @"JVBuddyNicknameWentOfflineNotification";
-NSString *JVBuddyNicknameStatusChangedNotification = @"JVBuddyNicknameStatusChangedNotification";
+NSString *JVBuddyUserCameOnlineNotification = @"JVBuddyUserCameOnlineNotification";
+NSString *JVBuddyUserWentOfflineNotification = @"JVBuddyUserWentOfflineNotification";
+NSString *JVBuddyUserStatusChangedNotification = @"JVBuddyUserStatusChangedNotification";
+NSString *JVBuddyUserIdleTimeUpdatedNotification = @"JVBuddyUserIdleTimeUpdatedNotification";
 
-NSString *JVBuddyActiveNicknameChangedNotification = @"JVBuddyActiveNicknameChangedNotification";
+NSString *JVBuddyActiveUserChangedNotification = @"JVBuddyActiveUserChangedNotification";
 
 static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
@@ -45,29 +46,23 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( ( self = [super init] ) ) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _disconnected: ) name:MVChatConnectionDidDisconnectNotification object:nil];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _nicknameChange: ) name:MVChatConnectionUserNicknameChangedNotification object:nil];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOnline: ) name:MVChatConnectionBuddyIsOnlineNotification object:nil];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOffline: ) name:MVChatConnectionBuddyIsOfflineNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOnline: ) name:MVChatConnectionWatchedUserOnlineNotification object:nil];
 //		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyAwayStatusChange: ) name:MVChatConnectionBuddyIsAwayNotification object:nil];
 //		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyAwayStatusChange: ) name:MVChatConnectionBuddyIsUnawayNotification object:nil];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatConnectionBuddyIsIdleNotification object:nil];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatConnectionGotUserIdleNotification object:nil];
 
 		_person = [person retain];
-		_nicknames = [[NSMutableSet set] retain];
-		_onlineNicknames = [[NSMutableSet set] retain];
-		_nicknameStatus = [[NSMutableDictionary dictionary] retain];
-		_activeNickname = nil;
+		_users = [[NSMutableArray array] retain];
+		_onlineUsers = [[NSMutableArray array] retain];
+		_activeUser = nil;
 
 		ABMultiValue *value = [person valueForProperty:@"IRCNickname"];
 		unsigned int i = 0, count = [value count];
-		NSURL *url = nil;
+		MVChatUser *user = nil;
+
 		for( i = 0; i < count; i++ ) {
-			url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [[value valueAtIndex:i] stringByEncodingIllegalURLCharacters], [[value labelAtIndex:i] stringByEncodingIllegalURLCharacters]]];
-			[_nicknames addObject:url];
-			[_nicknameStatus setObject:[NSMutableDictionary dictionary] forKey:url];
-			[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyOfflineStatus] forKey:@"status"];
-			if( ! [self activeNickname] ) [self setActiveNickname:url];
+			user = [MVChatUser wildcardUserWithNicknameMask:[NSString stringWithFormat:@"%@@%@", [value valueAtIndex:i], [value labelAtIndex:i]] andHostMask:nil];
+			[_users addObject:user];
+			if( ! [self activeUser] ) [self setActiveUser:user];
 		}
 
 		[self registerWithApplicableConnections];
@@ -81,16 +76,14 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_person release];
-	[_nicknames release];
-	[_onlineNicknames release];
-	[_nicknameStatus release];
-	[_activeNickname release];
+	[_users release];
+	[_onlineUsers release];
+	[_activeUser release];
 
 	_person = nil;
-	_nicknames = nil;
-	_onlineNicknames = nil;
-	_nicknameStatus = nil;
-	_activeNickname = nil;
+	_users = nil;
+	_onlineUsers = nil;
+	_activeUser = nil;
 
 	[super dealloc];
 }
@@ -98,118 +91,147 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 - (void) registerWithApplicableConnections {
-	NSEnumerator *enumerator = [_nicknames objectEnumerator];
+	NSEnumerator *enumerator = [_users objectEnumerator];
 	NSEnumerator *connectionEnumerator = nil;
 	MVChatConnection *connection = nil;
-	NSURL *nick = nil;
-	while( ( nick = [enumerator nextObject] ) ) {
-		connectionEnumerator = [[[MVConnectionsController defaultManager] connectionsForServerAddress:[nick host]] objectEnumerator];
-		MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:[nick user] andHostMask:nil];
+	MVChatUser *user = nil;
+
+	while( ( user = [enumerator nextObject] ) ) {
+		connectionEnumerator = [[[MVConnectionsController defaultManager] connectionsForServerAddress:[user serverAddress]] objectEnumerator];
 		while( ( connection = [connectionEnumerator nextObject] ) )
-			[connection addUserToNotificationList:user];
+			[connection startWatchingUser:user];
 	}
 }
 
 - (void) unregisterWithApplicableConnections {
-	NSEnumerator *enumerator = [_nicknames objectEnumerator];
+	NSEnumerator *enumerator = [_users objectEnumerator];
 	NSEnumerator *connectionEnumerator = nil;
 	MVChatConnection *connection = nil;
-	NSURL *nick = nil;
-	while( ( nick = [enumerator nextObject] ) ) {
-		connectionEnumerator = [[[MVConnectionsController defaultManager] connectionsForServerAddress:[nick host]] objectEnumerator];
-		MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:[nick user] andHostMask:nil];
+	MVChatUser *user = nil;
+
+	while( ( user = [enumerator nextObject] ) ) {
+		connectionEnumerator = [[[MVConnectionsController defaultManager] connectionsForServerAddress:[user serverAddress]] objectEnumerator];
 		while( ( connection = [connectionEnumerator nextObject] ) )
-			[connection removeUserFromNotificationList:user];
+			[connection stopWatchingUser:user];
 	}
 }
 
 #pragma mark -
 
-- (NSURL *) activeNickname {
-	return [[_activeNickname retain] autorelease];
+- (MVChatUser *) activeUser {
+	return _activeUser;
 }
 
-- (void) setActiveNickname:(NSURL *) nickname {
-	[_activeNickname autorelease];
-	_activeNickname = [nickname retain];
+- (void) setActiveUser:(MVChatUser *) user {
+	[_activeUser autorelease];
+	_activeUser = [user retain];
 }
 
 #pragma mark -
 
-- (JVBuddyStatus) status {
-	if( [self activeNickname] )
-		return (JVBuddyStatus)[[[_nicknameStatus objectForKey:[self activeNickname]] objectForKey:@"status"] unsignedIntValue];
-	return JVBuddyOfflineStatus;
+- (MVChatUserStatus) status {
+	return [[self activeUser] status];	
 }
+
+- (NSAttributedString *) awayStatusMessage {
+	return [[self activeUser] awayStatusMessage];
+}
+
+#pragma mark -
 
 - (BOOL) isOnline {
-	return (BOOL)( [self status] != JVBuddyOfflineStatus );
+	return ( [_onlineUsers count] > 0 ? YES : NO );
 }
+
+- (NSDate *) dateConnected {
+	return [[self activeUser] dateConnected];	
+}
+
+- (NSDate *) dateDisconnected {
+	return [[self activeUser] dateDisconnected];	
+}
+
+#pragma mark -
 
 - (NSTimeInterval) idleTime {
-	if( [self activeNickname] )
-		return (NSTimeInterval)[[[_nicknameStatus objectForKey:[self activeNickname]] objectForKey:@"idle"] doubleValue];
-	return 0.;
-}
-
-- (NSString *) awayMessage {
-	if( [self activeNickname] )
-		return [[_nicknameStatus objectForKey:[self activeNickname]] objectForKey:@"awayMessage"];
-	return nil;
+	return [[self activeUser] idleTime];	
 }
 
 #pragma mark -
 
-- (NSSet *) nicknames {
-	return [[_nicknames retain] autorelease];
+- (NSString *) displayName {
+	switch( [[self class] preferredName] ) {
+		default:
+		case JVBuddyFullName:
+			return [self compositeName];
+		case JVBuddyGivenNickname:
+			if( [[self givenNickname] length] )
+				return [self givenNickname];
+		case JVBuddyActiveNickname:
+			return [self nickname];
+	}
+
+	return [self nickname];
 }
 
-- (NSSet *) onlineNicknames {
-	return [[_onlineNicknames retain] autorelease];
+- (NSString *) nickname {
+	return [[self activeUser] nickname];
 }
 
 #pragma mark -
 
-- (void) addNickname:(NSURL *) nickname {
-	if( [_nicknames containsObject:nickname] ) return;
+- (NSArray *) users {
+	return [[_users retain] autorelease];
+}
+
+- (NSArray *) onlineUsers {
+	return [[_onlineUsers retain] autorelease];
+}
+
+#pragma mark -
+
+- (void) addUser:(MVChatUser *) user {
+	if( [_users containsObject:user] ) return;
 
 	ABMutableMultiValue *value = [[[_person valueForProperty:@"IRCNickname"] mutableCopy] autorelease];
-	[value addValue:[nickname user] withLabel:[nickname host]];
+	[value addValue:[user nickname] withLabel:[user serverAddress]];
 	[_person setValue:value forProperty:@"IRCNickname"];
 
-	if( ! [_nicknames count] || ! [self activeNickname] )
-		[self setActiveNickname:nickname];
+	if( ! [_users count] || ! [self activeUser] )
+		[self setActiveUser:user];
 
-	[_nicknames addObject:nickname];
+	[_users addObject:user];
 
 	[[ABAddressBook sharedAddressBook] save];
 
 	[self registerWithApplicableConnections];
 }
 
-- (void) removeNickname:(NSURL *) nickname {
-	if( ! [_nicknames containsObject:nickname] ) return;
+- (void) removeUser:(MVChatUser *) user {
+	if( ! [_users containsObject:user] ) return;
 
 	ABMutableMultiValue *value = [[[_person valueForProperty:@"IRCNickname"] mutableCopy] autorelease];
 	int i = 0, count = [value count];
 
 	for( i = count - 1; i >= 0; i-- )
-		if( [[nickname user] caseInsensitiveCompare:[value valueAtIndex:i]] == NSOrderedSame && [[nickname host] caseInsensitiveCompare:[value labelAtIndex:i]] == NSOrderedSame )
+		if( [[user nickname] caseInsensitiveCompare:[value valueAtIndex:i]] == NSOrderedSame && [[user serverAddress] caseInsensitiveCompare:[value labelAtIndex:i]] == NSOrderedSame )
 			[value removeValueAndLabelAtIndex:i];
 
-	[_nicknames removeObject:nickname];
-	[_onlineNicknames removeObject:nickname];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:user];
+
+	[_users removeObject:user];
+	[_onlineUsers removeObject:user];
 	[_person setValue:value forProperty:@"IRCNickname"];
 
-	if( [[self activeNickname] isEqual:nickname] )
-		[self setActiveNickname:( [_onlineNicknames count] ? [_onlineNicknames anyObject] : [_nicknames anyObject] )];
+	if( [[self activeUser] isEqual:user] )
+		[self setActiveUser:( [_onlineUsers count] ? [_onlineUsers lastObject] : [_users lastObject] )];
 
 	[[ABAddressBook sharedAddressBook] save];
 }
 
-- (void) replaceNickname:(NSURL *) old withNickname:(NSURL *) new {
-	[self removeNickname:old];
-	[self addNickname:new];
+- (void) replaceUser:(MVChatUser *) oldUser withUser:(MVChatUser *) newUser {
+	[self removeUser:oldUser];
+	[self addUser:newUser];
 }
 
 #pragma mark -
@@ -224,41 +246,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 #pragma mark -
 
-- (NSString *) preferredName {
-	switch( [[self class] preferredName] ) {
-		default:
-		case JVBuddyFullName:
-			return [self compositeName];
-		case JVBuddyGivenNickname:
-			if( [[self givenNickname] length] )
-				return [self givenNickname];
-		case JVBuddyActiveNickname:
-			return [[self activeNickname] user];
-	}
-	return [[self activeNickname] user];
-}
-
-- (JVBuddyName) preferredNameWillReturn {
-	NSString *firstName = [self firstName];
-	NSString *lastName = [self lastName];
-
-	if( [firstName length] || [lastName length] ) return JVBuddyFullName;
-	if( [[self givenNickname] length] ) return JVBuddyGivenNickname;
-
-	return JVBuddyActiveNickname;
-}
-
-- (unsigned int) availableNames {
-	unsigned int ret = JVBuddyActiveNickname;
-	NSString *firstName = [self firstName];
-	NSString *lastName = [self lastName];
-
-	if( [firstName length] || [lastName length] ) ret |= JVBuddyFullName;
-	if( [[self givenNickname] length] ) ret |= JVBuddyGivenNickname;
-
-	return ret;
-}
-
 - (NSString *) compositeName {
 	NSString *firstName = [self firstName];
 	NSString *lastName = [self lastName];
@@ -272,7 +259,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	firstName = [self givenNickname];
 	if( [firstName length] ) return firstName;
 
-	return [[self activeNickname] user];
+	return [[self activeUser] nickname];
 }
 
 - (NSString *) firstName {
@@ -347,15 +334,17 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (NSComparisonResult) availabilityCompare:(JVBuddy *) buddy {
 	unsigned int b1 = 0, b2 = 0;
 
-	if( [self status] == JVBuddyAwayStatus ) b1 = 2;
-	else if( [self status] == JVBuddyIdleStatus ) b1 = 1;
-	else if( [self status] == JVBuddyAvailableStatus ) b1 = 0;
-	else b1 = 3;
+	if( [self status] == MVChatUserAwayStatus ) b1 = 2;
+	else if( [self status] == MVChatUserAvailableStatus ) {
+		if( [self idleTime] >= 600. ) b1 = 1;
+		else b1 = 0;
+	} else b1 = 3;
 
-	if( [buddy status] == JVBuddyAwayStatus ) b2 = 2;
-	else if( [buddy status] == JVBuddyIdleStatus ) b2 = 1;
-	else if( [buddy status] == JVBuddyAvailableStatus ) b2 = 0;
-	else b2 = 3;
+	if( [buddy status] == MVChatUserAwayStatus ) b2 = 2;
+	else if( [buddy status] == MVChatUserAvailableStatus ) {
+		if( [buddy idleTime] >= 600. ) b2 = 1;
+		else b2 = 0;
+	} else b2 = 3;
 
 	if( b1 > b2 ) return NSOrderedDescending;
 	else if( b1 < b2 ) return NSOrderedAscending;
@@ -409,15 +398,15 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (NSComparisonResult) serverCompare:(JVBuddy *) buddy {
-	NSString *name1 = [[self activeNickname] host];
-	NSString *name2 = [[buddy activeNickname] host];
+	NSString *name1 = [[self activeUser] serverAddress];
+	NSString *name2 = [[buddy activeUser] serverAddress];
 	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
 	return ( ret != NSOrderedSame ? ret : [self availabilityCompare:buddy] );
 }
 
 - (NSComparisonResult) nicknameCompare:(JVBuddy *) buddy {
-	NSString *name1 = [[self activeNickname] user];
-	NSString *name2 = [[buddy activeNickname] user];
+	NSString *name1 = [[self activeUser] nickname];
+	NSString *name2 = [[buddy activeUser] nickname];
 	return [name1 caseInsensitiveCompare:name2];
 }
 @end
@@ -426,84 +415,58 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 @implementation JVBuddy (JVBuddyPrivate)
 - (void) _buddyOnline:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [who stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
-	if( [_nicknames containsObject:url] ) {
-		BOOL cameOnline = ( ! [_onlineNicknames count] ? YES : NO );
-		[_onlineNicknames addObject:url];
-		[_nicknameStatus setObject:[NSMutableDictionary dictionary] forKey:url];
-		[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyAvailableStatus] forKey:@"status"];
-		if( [self status] == JVBuddyOfflineStatus ) [self setActiveNickname:url];
+	MVChatUser *user = [notification object];
+	if( [_users containsObject:user] ) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOffline: ) name:MVChatConnectionWatchedUserOfflineNotification object:user];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyStatusChanged: ) name:MVChatUserStatusChangedNotification object:user];
+
+		BOOL cameOnline = ( ! [_onlineUsers count] ? YES : NO );
+		if( [[self activeUser] isEqual:user] ) [self setActiveUser:user]; // will remove the placeholder (wildcard user)
+		[_users removeObject:user]; // will remove the placeholder (wildcard user)
+		[_users addObject:user];
+		[_onlineUsers addObject:user];
+
+		if( [self status] != MVChatUserAvailableStatus || [self status] != MVChatUserAwayStatus ) [self setActiveUser:user];
 		if( cameOnline ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
-		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyNicknameCameOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:url, @"nickname", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserCameOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
 	}
 }
 
 - (void) _buddyOffline:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [who stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
-	if( [_onlineNicknames containsObject:url] ) {
-		[_onlineNicknames removeObject:url];
-		[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyOfflineStatus] forKey:@"status"];
-		if( [_onlineNicknames count] ) [self setActiveNickname:[_onlineNicknames anyObject]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyNicknameWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:url, @"nickname", nil]];
-		if( ! [_onlineNicknames count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
-	}
+	MVChatUser *user = [notification object];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:user];
+
+	[_onlineUsers removeObject:user];
+
+	if( [_onlineUsers count] ) [self setActiveUser:[_onlineUsers lastObject]];
+	if( ! [_onlineUsers count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
 }
 
 - (void) _buddyIdleUpdate:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [who stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
-	if( [_onlineNicknames containsObject:url] ) {
-		NSNumber *idle = [[notification userInfo] objectForKey:@"idle"];
-		[[_nicknameStatus objectForKey:url] setObject:idle forKey:@"idle"];
-		if( [idle doubleValue] >= 600. && (JVBuddyStatus)[[[_nicknameStatus objectForKey:url] objectForKey:@"status"] unsignedIntValue] != JVBuddyAwayStatus ) {
-			[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyIdleStatus] forKey:@"status"];
-		} else if( [idle doubleValue] < 600. && (JVBuddyStatus)[[[_nicknameStatus objectForKey:url] objectForKey:@"status"] unsignedIntValue] == JVBuddyIdleStatus ) {
-			[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyAvailableStatus] forKey:@"status"];
-		}
-
-		NSNotification *notification = [NSNotification notificationWithName:JVBuddyNicknameStatusChangedNotification object:self];
-		[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
-	}
+	MVChatUser *user = [notification object];
+	NSNotification *note = [NSNotification notificationWithName:JVBuddyUserIdleTimeUpdatedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+	[[NSNotificationQueue defaultQueue] enqueueNotification:note postingStyle:NSPostASAP coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 }
 
-- (void) _buddyAwayStatusChange:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSString *who = [[notification userInfo] objectForKey:@"who"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [who stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
-	if( [_onlineNicknames containsObject:url] ) {
-		BOOL away = YES; //( [[notification name] isEqualToString:MVChatConnectionBuddyIsAwayNotification] ? YES : NO );
-		[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithBool:away] forKey:@"away"];
-		if( away ) {
-			[[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyAwayStatus] forKey:@"status"];
-			if( [[notification userInfo] objectForKey:@"msg"] )
-				[[_nicknameStatus objectForKey:url] setObject:[[[[notification userInfo] objectForKey:@"msg"] copy] autorelease] forKey:@"awayMessage"];
-		} else {
-			NSTimeInterval idle = [[[_nicknameStatus objectForKey:url] objectForKey:@"idle"] doubleValue];
-			if( idle >= 600. ) [[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyIdleStatus] forKey:@"status"];
-			else [[_nicknameStatus objectForKey:url] setObject:[NSNumber numberWithUnsignedInt:JVBuddyAvailableStatus] forKey:@"status"];
-			[[_nicknameStatus objectForKey:url] removeObjectForKey:@"awayMessage"];
-		}
-
-		NSNotification *notification = [NSNotification notificationWithName:JVBuddyNicknameStatusChangedNotification object:self];
-		[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
-	}
+- (void) _buddyStatusChanged:(NSNotification *) notification {
+	MVChatUser *user = [notification object];
+	NSNotification *note = [NSNotification notificationWithName:JVBuddyUserStatusChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+	[[NSNotificationQueue defaultQueue] enqueueNotification:note postingStyle:NSPostASAP coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 }
 
 - (void) _registerWithConnection:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
-	NSEnumerator *enumerator = [_nicknames objectEnumerator];
-	NSURL *nick = nil;
+	NSEnumerator *enumerator = [_users objectEnumerator];
+	MVChatUser *user = nil;
 
-	while( ( nick = [enumerator nextObject] ) )
-		if( [[nick host] caseInsensitiveCompare:[connection server]] == NSOrderedSame ) {
-			MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:[nick user] andHostMask:nil];
-			[connection addUserToNotificationList:user];
+	while( ( user = [enumerator nextObject] ) ) {
+		if( [[user connection] isEqual:connection] || [[user serverAddress] caseInsensitiveCompare:[connection server]] == NSOrderedSame ) {
+			[connection startWatchingUser:user];
 		}
+	}
 }
 
 - (void) _disconnected:(NSNotification *) notification {
@@ -518,42 +481,19 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( count >= 1 ) return;
 
 	connection = [notification object];
-	enumerator = [[[_onlineNicknames copy] autorelease] objectEnumerator];
-	NSURL *nick = nil;
-	while( ( nick = [enumerator nextObject] ) ) {
-		if( [[nick host] caseInsensitiveCompare:[connection server]] == NSOrderedSame ) {
-			[_onlineNicknames removeObject:nick];
-			[[_nicknameStatus objectForKey:nick] setObject:[NSNumber numberWithUnsignedInt:JVBuddyOfflineStatus] forKey:@"status"];
-			[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyNicknameWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:nick, @"nickname", nil]];
-			if( ! [_onlineNicknames count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
+	enumerator = [[[_onlineUsers copy] autorelease] objectEnumerator];
+	MVChatUser *user = nil;
+
+	while( ( user = [enumerator nextObject] ) ) {
+		if( [[user connection] isEqual:connection] || [[user serverAddress] caseInsensitiveCompare:[connection server]] == NSOrderedSame ) {
+			[_onlineUsers removeObject:user];
+//			[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyNicknameWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:nick, @"nickname", nil]];
+			if( ! [_onlineUsers count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 		}
 	}
 }
-
-- (void) _nicknameChange:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
-	NSString *who = [[notification userInfo] objectForKey:@"oldNickname"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [who stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
-
-	if( [_onlineNicknames containsObject:url] ) {
-		NSString *new = [[notification userInfo] objectForKey:@"newNickname"];
-		NSURL *urlNew = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [new stringByEncodingIllegalURLCharacters], [[connection server] stringByEncodingIllegalURLCharacters]]];
-
-		[_nicknames removeObject:url];
-		[_nicknames addObject:urlNew];
-
-		[_onlineNicknames removeObject:url];
-		[_onlineNicknames addObject:urlNew];
-
-		NSMutableDictionary *info = [[[_nicknameStatus objectForKey:url] retain] autorelease];
-		[_nicknameStatus removeObjectForKey:url];
-		[_nicknameStatus setObject:info forKey:urlNew];
-
-		if( [[self activeNickname] isEqual:url] ) [self setActiveNickname:urlNew];
-	}
-}
 @end
-
+/*
 #pragma mark -
 
 @implementation JVBuddy (JVBuddyScripting)
@@ -563,8 +503,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (NSArray *) nicknamesArray {
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_nicknames count]];
-	NSEnumerator *enumerator = [_nicknames objectEnumerator];
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_users count]];
+	NSEnumerator *enumerator = [_users objectEnumerator];
 	NSURL *nick = nil;
 
 	while( ( nick = [enumerator nextObject] ) ) {
@@ -578,8 +518,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (NSArray *) onlineNicknamesArray {
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_nicknames count]];
-	NSEnumerator *enumerator = [_onlineNicknames objectEnumerator];
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_users count]];
+	NSEnumerator *enumerator = [_onlineUsers objectEnumerator];
 	NSURL *nick = nil;
 
 	while( ( nick = [enumerator nextObject] ) ) {
@@ -599,4 +539,4 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (void) viewInAddressBookScriptCommand:(NSScriptCommand *) command {
 	[self viewInAddressBook];
 }
-@end
+@end */

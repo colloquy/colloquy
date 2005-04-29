@@ -21,6 +21,7 @@
 - (void) _setServerOperator:(BOOL) operator;
 - (void) _setIdentified:(BOOL) identified;
 - (void) _setIdleTime:(NSTimeInterval) time;
+- (void) _setStatus:(MVChatUserStatus) status;
 - (void) _setDateConnected:(NSDate *) date;
 - (void) _setDateDisconnected:(NSDate *) date;
 - (void) _setDateUpdated:(NSDate *) date;

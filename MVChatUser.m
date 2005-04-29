@@ -90,7 +90,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 		_dateDisconnected = nil;
 		_attributes = [[NSMutableDictionary dictionaryWithCapacity:5] retain];
 		_type = MVChatRemoteUserType;
-		_status = MVChatUserOfflineStatus;
+		_status = MVChatUserUnknownStatus;
 		_modes = 0;
 		_idleTime = 0.;
 		_lag = 0.;
@@ -172,28 +172,32 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (BOOL) isEqual:(id) object {
 	if( object == self ) return YES;
-	if( ! object || ! [object isKindOfClass:[self class]] ) return NO;
+	if( ! object || ! [object isKindOfClass:[MVChatUser class]] ) return NO;
+	if( [self type] == MVChatWildcardUserType || [(MVChatUser *)object type] == MVChatWildcardUserType )
+		return [self isEqualToChatUser:object];
+	if( ! [object isKindOfClass:[self class]] ) return NO;
 	return [self isEqualToChatUser:object];
 }
 
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser {
-	if( ! anotherUser ) return NO;
 	if( anotherUser == self ) return YES;
+	if( ! anotherUser || ! [anotherUser isKindOfClass:[MVChatUser class]] ) return NO;
+
+	if( [self type] == MVChatWildcardUserType || [anotherUser type] == MVChatWildcardUserType ) {
+		if( ( [self fingerprint] && [anotherUser fingerprint] ) && ! [[self fingerprint] isEqualToString:[anotherUser fingerprint]] )
+			return NO;
+		if( ( [self nickname] && [anotherUser nickname] ) && ! [[self nickname] isEqualToString:[anotherUser nickname]] )
+			return NO;
+		if( ( [self username] && [anotherUser username] ) && ! [[self username] isEqualToString:[anotherUser username]] )
+			return NO;
+		if( ( [self address] && [anotherUser address] ) && ! [[self address] isEqualToString:[anotherUser address]] )
+			return NO;
+		if( ( [self serverAddress] && [anotherUser serverAddress] ) && ! [[self serverAddress] isEqualToString:[anotherUser serverAddress]] )
+			return NO;
+		return YES;
+	}
 
 	if( [self type] != [anotherUser type] ) return NO;
-	if( [self type] == MVChatWildcardUserType ) {
-		if( ! [[self nickname] isEqualToString:[anotherUser nickname]] )
-			return NO;			
-		if( ! [[self username] isEqualToString:[anotherUser username]] )
-			return NO;			
-		if( ! [[self address] isEqualToString:[anotherUser address]] )
-			return NO;			
-		if( ! [[self serverAddress] isEqualToString:[anotherUser serverAddress]] )
-			return NO;			
-		if( ! [[self fingerprint] isEqualToString:[anotherUser fingerprint]] )
-			return NO;			
-		return YES;			
-	}
 
 	if( ! [[self connection] isEqual:[anotherUser connection]] )
 		return NO;
@@ -296,6 +300,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (NSString *) serverAddress {
+	if( ! _serverAddress ) return [[self connection] server];
 	return [[_serverAddress retain] autorelease];
 }
 
@@ -466,6 +471,14 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	_idleTime = time;
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];		
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+}
+
+- (void) _setStatus:(MVChatUserStatus) status {
+	if( _status == status ) return;
+	_status = status;
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatUserStatusChangedNotification object:self userInfo:nil];		
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 

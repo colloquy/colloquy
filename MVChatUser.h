@@ -5,6 +5,7 @@ typedef enum {
 } MVChatUserType;
 
 typedef enum {
+	MVChatUserUnknownStatus = 'uKnw',
 	MVChatUserOfflineStatus = 'oflN',
 	MVChatUserDetachedStatus = 'detA',
 	MVChatUserAvailableStatus = 'avaL',

@@ -50,17 +50,15 @@
 }
 
 - (void) willLoad {
-	NSMutableSet *addresses = [NSMutableSet set];
 	NSEnumerator *enumerator = [[[MVConnectionsController defaultManager] connections] objectEnumerator];
 	MVChatConnection *connection = nil;
-	NSString *address = nil;
 
 	while( ( connection = [enumerator nextObject] ) )
-		[addresses addObject:[connection server]];
+		if( [connection type] == MVChatConnectionIRCType )
+			[servers addItemWithTitle:[connection server]];
 
-	enumerator = [addresses objectEnumerator];
-	while( ( address = [enumerator nextObject] ) )
-		[servers addItemWithTitle:address];
+	[removeNickname setTransparent:NO];
+	[removeNickname setHidden:YES];
 
 	[picture setImage:[_buddy picture]];
 	[firstName setObjectValue:[_buddy firstName]];
@@ -75,20 +73,20 @@
 
 - (IBAction) changeServer:(id) sender {
 	if( [[sender selectedItem] tag] ) {
-		[_activeNicknames autorelease];
-		_activeNicknames = [[NSMutableArray arrayWithArray:[[_buddy nicknames] allObjects]] retain];
+		[_activeUsers autorelease];
+		_activeUsers = [[NSMutableArray arrayWithArray:[_buddy users]] retain];
 		[[nicknames tableColumnWithIdentifier:@"nickname"] setEditable:NO];
 		[addNickname setEnabled:NO];
 	} else {
-		[_activeNicknames autorelease];
-		_activeNicknames = [[NSMutableArray array] retain];
+		[_activeUsers autorelease];
+		_activeUsers = [[NSMutableArray array] retain];
 
-		NSEnumerator *enumerator = [[_buddy nicknames] objectEnumerator];
-		NSURL *url = nil;
+		NSEnumerator *enumerator = [[_buddy users] objectEnumerator];
+		MVChatUser *user = nil;
 
-		while( ( url = [enumerator nextObject] ) )
-			if( [[servers titleOfSelectedItem] caseInsensitiveCompare:[url host]] == NSOrderedSame )
-				[_activeNicknames addObject:url];
+		while( ( user = [enumerator nextObject] ) )
+			if( [[servers titleOfSelectedItem] caseInsensitiveCompare:[user serverAddress]] == NSOrderedSame )
+				[_activeUsers addObject:user];
 
 		[[nicknames tableColumnWithIdentifier:@"nickname"] setEditable:YES];
 		[addNickname setEnabled:YES];
@@ -101,16 +99,16 @@
 #pragma mark -
 
 - (IBAction) addNickname:(id) sender {
-	[_activeNicknames addObject:[NSNull null]];
+	[_activeUsers addObject:[NSNull null]];
 	[nicknames noteNumberOfRowsChanged];
-	[nicknames selectRow:([_activeNicknames count] - 1) byExtendingSelection:NO];
-	[nicknames editColumn:0 row:([_activeNicknames count] - 1) withEvent:nil select:NO];
+	[nicknames selectRow:([_activeUsers count] - 1) byExtendingSelection:NO];
+	[nicknames editColumn:0 row:([_activeUsers count] - 1) withEvent:nil select:NO];
 }
 
 - (IBAction) removeNickname:(id) sender {
 	if( [nicknames selectedRow] == -1 || [nicknames editedRow] != -1 ) return;
-	[_buddy removeNickname:[_activeNicknames objectAtIndex:[nicknames selectedRow]]];
-	[_activeNicknames removeObjectAtIndex:[nicknames selectedRow]];
+	[_buddy removeUser:[_activeUsers objectAtIndex:[nicknames selectedRow]]];
+	[_activeUsers removeObjectAtIndex:[nicknames selectedRow]];
 	[nicknames noteNumberOfRowsChanged];
 }
 
@@ -145,37 +143,37 @@
 #pragma mark -
 
 - (int) numberOfRowsInTableView:(NSTableView *) view {
-	return [_activeNicknames count];
+	return [_activeUsers count];
 }
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
-	if( [[_activeNicknames objectAtIndex:row] isMemberOfClass:[NSNull class]] ) return @"";
+	if( [[_activeUsers objectAtIndex:row] isMemberOfClass:[NSNull class]] ) return @"";
 	if( [[servers selectedItem] tag] )
-		return [NSString stringWithFormat:@"%@ (%@)", [[_activeNicknames objectAtIndex:row] user], [[_activeNicknames objectAtIndex:row] host]];
-	return [[_activeNicknames objectAtIndex:row] user];
+		return [NSString stringWithFormat:@"%@ (%@)", [[_activeUsers objectAtIndex:row] nickname], [[_activeUsers objectAtIndex:row] serverAddress]];
+	return [[_activeUsers objectAtIndex:row] nickname];
 }
 
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
 	if( ! [(NSString *)object length] ) {
-		[_activeNicknames removeObjectAtIndex:row];
+		[_activeUsers removeObjectAtIndex:row];
 		[nicknames noteNumberOfRowsChanged];
 		return;
 	}
 
 	NSString *server = [servers titleOfSelectedItem];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@@%@", [object stringByEncodingIllegalURLCharacters], [server stringByEncodingIllegalURLCharacters]]];
+	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:[NSString stringWithFormat:@"%@@%@", object, server] andHostMask:nil];
 
-	if( [[_activeNicknames objectAtIndex:row] isMemberOfClass:[NSNull class]] ) {
-		[_buddy addNickname:url];
-		[_activeNicknames replaceObjectAtIndex:row withObject:url];
+	if( [[_activeUsers objectAtIndex:row] isMemberOfClass:[NSNull class]] ) {
+		[_buddy addUser:user];
+		[_activeUsers replaceObjectAtIndex:row withObject:user];
 	} else {
-		[_buddy replaceNickname:[_activeNicknames objectAtIndex:row] withNickname:url];
-		[_activeNicknames replaceObjectAtIndex:row withObject:url];
+		[_buddy replaceUser:[_activeUsers objectAtIndex:row] withUser:user];
+		[_activeUsers replaceObjectAtIndex:row withObject:user];
 	}
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
-	[removeNickname setTransparent:( [nicknames selectedRow] == -1 )];
+	[removeNickname setHidden:( [nicknames selectedRow] == -1 )];
 	[removeNickname highlight:NO];
 }
 @end

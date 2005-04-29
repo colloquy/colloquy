@@ -277,10 +277,11 @@
 
 - (NSImage *) statusImage {
 	if( [self buddy] ) switch( [[self buddy] status] ) {
-		case JVBuddyAwayStatus: return [NSImage imageNamed:@"statusAway"];
-		case JVBuddyIdleStatus: return [NSImage imageNamed:@"statusIdle"];
-		case JVBuddyAvailableStatus: return [NSImage imageNamed:@"statusAvailable"];
-		case JVBuddyOfflineStatus:
+		case MVChatUserAwayStatus: return [NSImage imageNamed:@"statusAway"];
+		case MVChatUserAvailableStatus:
+			if( [[self buddy] idleTime] >= 600. ) return [NSImage imageNamed:@"statusIdle"];
+			else return [NSImage imageNamed:@"statusAvailable"];
+		case MVChatUserOfflineStatus:
 		default: return nil;
 	}
 
@@ -289,12 +290,10 @@
 
 - (NSString *) title {
 	if( [self isLocalUser] ) {
-		if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyFullName )
-			return [self _selfCompositeName];
-		else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"] == (int)JVBuddyGivenNickname )
-			return [self _selfStoredNickname];
-	} else if( [self buddy] && [[self buddy] preferredNameWillReturn] != JVBuddyActiveNickname )
-		return [[self buddy] preferredName];
+		JVBuddyName nameStyle = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"];
+		if( nameStyle == JVBuddyFullName ) return [self _selfCompositeName];
+		else if( nameStyle == JVBuddyGivenNickname ) return [self _selfStoredNickname];
+	} else if( [self buddy] ) return [[self buddy] displayName];
 	return [self nickname];
 }
 

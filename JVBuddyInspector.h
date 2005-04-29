@@ -18,7 +18,7 @@
 	IBOutlet NSButton *removeNickname;
 	IBOutlet NSButton *addNickname;
 	JVBuddy *_buddy;
-	NSMutableArray *_activeNicknames;
+	NSMutableArray *_activeUsers;
 	BOOL _nibLoaded;
 }
 - (id) initWithBuddy:(JVBuddy *) buddy;

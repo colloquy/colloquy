@@ -377,6 +377,7 @@ static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, cons
 
 	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
 	MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+	if( [member status] != MVChatUserAwayStatus ) [member _setStatus:MVChatUserAvailableStatus];
 
 	[room _addMemberUser:member];
 
@@ -415,6 +416,7 @@ static void MVChatUserLeftRoom( IRC_SERVER_REC *server, const char *data, const 
 
 	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
 	MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+
 	[room _removeMemberUser:member];
 
 	NSData *reasonData = [NSData dataWithBytes:reason length:strlen( reason )];
@@ -438,6 +440,7 @@ static void MVChatUserQuit( IRC_SERVER_REC *server, const char *data, const char
 	MVChatRoom *room = nil;
 
 	[member _setDateDisconnected:[NSDate date]];
+	[member _setStatus:MVChatUserOfflineStatus];
 
 	while( ( room = [enumerator nextObject] ) ) {
 		if( ! [room isJoined] || ! [room hasUser:member] ) continue;
@@ -482,6 +485,8 @@ static void MVChatInvited( IRC_SERVER_REC *server, const char *data, const char 
 	char *params = event_get_params( data, 2, NULL, &channel );
 
 	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:by]];
+	if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
+
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", [self stringWithEncodedBytes:channel], @"room", nil]];		
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
@@ -494,6 +499,9 @@ static void MVChatUserAway( IRC_SERVER_REC *server, const char *data ) {
 
 	char *nick = NULL, *message = NULL;
 	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, NULL, &nick, &message );
+
+	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+	[user _setStatus:MVChatUserAwayStatus];
 
 //	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
 
@@ -532,9 +540,13 @@ static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const ch
 	if( ischannel( *target ) ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
+		[user _setIdleTime:0.];
 		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", nil]];
 	} else {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
+		[user _setIdleTime:0.];
 		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", nil]];
 	}
 
@@ -558,10 +570,11 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 	if( ischannel( *target ) ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		if( ! user ) user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
 		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", nil]];
 	} else {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
 		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", nil]];
 		if( ! strncasecmp( nick, "NickServ", 8 ) && message ) {
 			if( strstr( message, nick ) && strstr( message, "IDENTIFY" ) ) {
@@ -594,10 +607,13 @@ static void MVChatGetActionMessage( IRC_SERVER_REC *server, const char *data, co
 	if( ischannel( *target ) ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		if( ! user ) user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
+		[user _setIdleTime:0.];
 		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
 	} else {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
+		[user _setIdleTime:0.];
 		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
 	}
 
@@ -623,6 +639,9 @@ static void MVChatUserNicknameChanged( IRC_SERVER_REC *server, const char *data,
 
 	NSString *nickname = [self stringWithEncodedBytes:newNick];
 	NSString *oldNickname = [self stringWithEncodedBytes:nick];
+
+	if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
+	[user _setIdleTime:0.];
 
 	if( [user isLocalUser] ) {
 		[user _setIdentified:NO];
@@ -775,6 +794,7 @@ static void MVChatBuddyOnline( IRC_SERVER_REC *server, const char *nick, const c
 	[user _setRealName:[self stringWithEncodedBytes:realname]];
 	[user _setUsername:[self stringWithEncodedBytes:username]];
 	[user _setAddress:[self stringWithEncodedBytes:host]];
+	if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionWatchedUserOnlineNotification object:user userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -785,6 +805,7 @@ static void MVChatBuddyOffline( IRC_SERVER_REC *server, const char *nick, const 
 	if( ! self ) return;
 
 	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
+	[user _setStatus:MVChatUserOfflineStatus];
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionWatchedUserOfflineNotification object:user userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -919,6 +940,8 @@ static void MVChatUserWhoisComplete( IRC_SERVER_REC *server, const char *data ) 
 
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 		[user _setDateUpdated:[NSDate date]];
+
+		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
 
 		NSNotification *note = [NSNotification notificationWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];		
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -1540,6 +1563,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	_awayMessage = nil;
 
 	if( [[message string] length] ) {
+		[[self localUser] _setStatus:MVChatUserAwayStatus];
+
 		_awayMessage = [message copyWithZone:[self zone]];
 		const char *msg = [[self class] _flattenedIRCStringForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 
@@ -1548,7 +1573,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		irc_send_cmdv( (IRC_SERVER_REC *) _chatConnection, "AWAY :%s", msg );
 
 		[MVIRCChatConnectionThreadLock unlock];
-	} else [self sendRawMessage:@"AWAY"];
+	} else {
+		[[self localUser] _setStatus:MVChatUserAvailableStatus];
+		[self sendRawMessage:@"AWAY"];
+	}
 }
 
 #pragma mark -
@@ -1787,6 +1815,7 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 - (void) _didConnect {
 	[_localUser release];
 	_localUser = [[MVIRCChatUser allocWithZone:[self zone]] initLocalUserWithConnection:self];
+	[[self localUser] _setStatus:MVChatUserAvailableStatus];
 	[super _didConnect];
 }
 
@@ -1796,6 +1825,8 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 }
 
 - (void) _didDisconnect {
+	[[self localUser] _setStatus:MVChatUserOfflineStatus];
+
 	if( _chatConnection -> connection_lost ) {
 		if( _status != MVChatConnectionSuspendedStatus )
 			_status = MVChatConnectionServerDisconnectedStatus;
