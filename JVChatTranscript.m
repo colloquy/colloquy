@@ -1024,7 +1024,7 @@
 	if( cont && _previousLogOffset ) {
 		[_logFile seekToFileOffset:_previousLogOffset];
 		NSData *check = [_logFile readDataOfLength:9]; // check to see if there is an <envelope> here
-		if( strncmp( "<envelope", [check bytes], 9 ) ) { // this is a bad offset!
+		if( [check length] != 9 || strncmp( "<envelope", [check bytes], 9 ) ) { // this is a bad offset!
 			_requiresNewEnvelope = YES;
 			_previousLogOffset = 0;
 			return;
@@ -1033,11 +1033,11 @@
 		unsigned int offset = 6;
 		[_logFile seekToFileOffset:[_logFile seekToEndOfFile] - 1];
 		NSData *check = [_logFile readDataOfLength:1]; // check to see if there is an trailing newline and correct
-		if( ! strncmp( "\n", [check bytes], 1 ) ) offset++; // we need to eat the newline also
+		if( [check length] == 1 && ! strncmp( "\n", [check bytes], 1 ) ) offset++; // we need to eat the newline also
 
 		[_logFile seekToFileOffset:[_logFile offsetInFile] - offset];
 		check = [_logFile readDataOfLength:offset]; // check to see if there is a </log> here
-		if( strncmp( ( offset == 7 ? "</log>\n" : "</log>" ), [check bytes], offset ) ) { // this is a bad file!
+		if( [check length] != offset || strncmp( ( offset == 7 ? "</log>\n" : "</log>" ), [check bytes], offset ) ) { // this is a bad file!
 			[self setAutomaticallyWritesChangesToFile:NO];
 			return;
 		} else [_logFile seekToFileOffset:[_logFile offsetInFile] - offset]; // the check was fine, go back
