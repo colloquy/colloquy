@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<schema version="1.0" xmlns="http://www.apple.com/metadata"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://www.apple.com/metadata file:///System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Resources/MetadataSchema.xsd">
+    <note>
+        Custom attributes that this metadata importer supports.  Below
+	is an example of a multivalued string attribute.  Other types
+	are CFNumber, CFDate, CFBoolean and CFData.		      
+    </note>
+    <attributes>
+        <attribute name="com_internet_messaging_Service" multivalued="true" type="CFString"/>
+    </attributes>
+
+    <types>
+        <type name="cc.javelin.colloquy.colloquytranscript">
+            <note>
+		The keys that this metadata importer handles.
+            </note>
+            <allattrs>
+			kMDItemTitle
+			kMDItemContributors
+			kMDItemCoverage
+			kMDItemDurationSeconds
+			kMDItemWhereFroms
+			kMDItemEncodingApplications
+			com_internet_messaging_Service
+            </allattrs>
+            <displayattrs>
+			kMDItemTitle
+			kMDItemContributors
+			kMDItemCoverage
+			kMDItemDurationSeconds
+			kMDItemWhereFroms
+			kMDItemEncodingApplications
+			com_internet_messaging_Service
+            </displayattrs>
+        </type>
+    </types>
+</schema>
+

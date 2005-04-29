@@ -72,6 +72,7 @@
 			targets = (
 				1CB2CCF5052DDC560094AAA4,
 				1C51B4BB052DE14B00BB459B,
+				CBF685140820186F00F498FB,
 			);
 		};
 		089C166AFE841209C02AAC07 = {
@@ -84,6 +85,7 @@
 				F50B0AA00170C89301A84BDE,
 				F5185C82018626F701EE70DE,
 				F50B0AA10170C89301A84BDE,
+				CBF684F00820174000F498FB,
 				089C1671FE841209C02AAC07,
 				1CB2C8CC052DDA360094AAA4,
 			);
@@ -239,6 +241,8 @@
 		};
 		1058C7AEFEA557BF11CA2CBB = {
 			children = (
+				CBF6876508202F2100F498FB,
+				CBF687A508202F3F00F498FB,
 				089C1672FE841209C02AAC07,
 				089C167FFE841241C02AAC07,
 			);
@@ -2237,6 +2241,7 @@
 			children = (
 				1CB2CD8C052DDC570094AAA4,
 				1C51B4CD052DE14B00BB459B,
+				CBF685150820186F00F498FB,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -2251,6 +2256,7 @@
 				1C7C770C07DBA1F700FB5F83,
 				1CB2CD82052DDC560094AAA4,
 				1CB2CD88052DDC560094AAA4,
+				CBC5DC490822816200F0A94F,
 				1CF038FF062F8DBB009774D8,
 				1C91DEAC06972EC0007C1638,
 			);
@@ -2281,6 +2287,7 @@
 				1C09DFF7052DFF6600D748CF,
 				1C04394C07CAFCA500304949,
 				1CE3F9C307C7C2B30049A366,
+				CBC5DC480822815A00F0A94F,
 			);
 			isa = PBXNativeTarget;
 			name = "Colloquy (Application)";
@@ -2442,6 +2449,10 @@
 				1CF4D38907E54C0C00DB421A,
 				1CF4D76607E6AD4400DB421A,
 				0A5B683F0810EC9700398D5A,
+				CBF685370820190D00F498FB,
+				CBF685380820190D00F498FB,
+				CBF6853A0820190D00F498FB,
+				CBF6853C0820190D00F498FB,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2925,6 +2936,8 @@
 				1C66913A07BFA76D008400F7,
 				1CE3C4F807E13F4C004931E6,
 				1C70377F07E49F25005CEA40,
+				CBF685390820190D00F498FB,
+				CBF6853B0820190D00F498FB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5109,6 +5122,323 @@
 		};
 		CB742C020630E08200CF2B0E = {
 			fileRef = CB742C000630E08200CF2B0E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBC5DC470822815A00F0A94F = {
+			containerPortal = 089C1669FE841209C02AAC07;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = CBF685140820186F00F498FB;
+			remoteInfo = Colloquy;
+		};
+		CBC5DC480822815A00F0A94F = {
+			isa = PBXTargetDependency;
+			target = CBF685140820186F00F498FB;
+			targetProxy = CBC5DC470822815A00F0A94F;
+		};
+		CBC5DC490822816200F0A94F = {
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/Spotlight;
+			dstSubfolderSpec = 1;
+			files = (
+				CBC5DC4D082281A600F0A94F,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBC5DC4D082281A600F0A94F = {
+			fileRef = CBF685150820186F00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF684F00820174000F498FB = {
+			children = (
+				CBF6852C0820190D00F498FB,
+				CBF685310820190D00F498FB,
+				CBF685320820190D00F498FB,
+				CBF685330820190D00F498FB,
+				CBF685340820190D00F498FB,
+			);
+			isa = PBXGroup;
+			name = Importer;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CBF685110820186F00F498FB = {
+			buildActionMask = 2147483647;
+			files = (
+				CBF6855D08201B7300F498FB,
+				CBF6855E08201B7300F498FB,
+				CBF6855F08201B7300F498FB,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBF685120820186F00F498FB = {
+			buildActionMask = 2147483647;
+			files = (
+				CBF6856208201B7A00F498FB,
+				CBF6856308201B7A00F498FB,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBF685130820186F00F498FB = {
+			buildActionMask = 2147483647;
+			files = (
+				CBF6883708202F4400F498FB,
+				CBF6857708201C4C00F498FB,
+				CBF687A608202F3F00F498FB,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBF685140820186F00F498FB = {
+			buildPhases = (
+				CBF685110820186F00F498FB,
+				CBF685120820186F00F498FB,
+				CBF685130820186F00F498FB,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = Importer/Info.plist;
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_STYLE = BUNDLE;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = Colloquy;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = mdimporter;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = Colloquy;
+			productName = Importer;
+			productReference = CBF685150820186F00F498FB;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Importer</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.yourcompany.Importer</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		CBF685150820186F00F498FB = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = Colloquy.mdimporter;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CBF6852C0820190D00F498FB = {
+			children = (
+				CBF6852D0820190D00F498FB,
+				CBF6852F0820190D00F498FB,
+			);
+			isa = PBXGroup;
+			name = English.lproj;
+			path = Importer/English.lproj;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CBF6852D0820190D00F498FB = {
+			children = (
+				CBF6852E0820190D00F498FB,
+			);
+			isa = PBXVariantGroup;
+			name = InfoPlist.strings;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CBF6852E0820190D00F498FB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CBF6852F0820190D00F498FB = {
+			children = (
+				CBF685300820190D00F498FB,
+			);
+			isa = PBXVariantGroup;
+			name = schema.strings;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CBF685300820190D00F498FB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = schema.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CBF685310820190D00F498FB = {
+			explicitFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = GetMetadataForFile.c;
+			path = Importer/GetMetadataForFile.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CBF685320820190D00F498FB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = Info.plist;
+			path = Importer/Info.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CBF685330820190D00F498FB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
+			name = main.c;
+			path = Importer/main.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CBF685340820190D00F498FB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = schema.xml;
+			path = Importer/schema.xml;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CBF685370820190D00F498FB = {
+			fileRef = CBF6852D0820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF685380820190D00F498FB = {
+			fileRef = CBF6852F0820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF685390820190D00F498FB = {
+			fileRef = CBF685310820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6853A0820190D00F498FB = {
+			fileRef = CBF685320820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6853B0820190D00F498FB = {
+			fileRef = CBF685330820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6853C0820190D00F498FB = {
+			fileRef = CBF685340820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6855D08201B7300F498FB = {
+			fileRef = CBF6852D0820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6855E08201B7300F498FB = {
+			fileRef = CBF6852F0820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6855F08201B7300F498FB = {
+			fileRef = CBF685340820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6856208201B7A00F498FB = {
+			fileRef = CBF685310820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6856308201B7A00F498FB = {
+			fileRef = CBF685330820190D00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6857708201C4C00F498FB = {
+			fileRef = 089C1672FE841209C02AAC07;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6876508202F2100F498FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = CoreFoundation.framework;
+			path = /System/Library/Frameworks/CoreFoundation.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		CBF687A508202F3F00F498FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = CoreServices.framework;
+			path = /System/Library/Frameworks/CoreServices.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		CBF687A608202F3F00F498FB = {
+			fileRef = CBF687A508202F3F00F498FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CBF6883708202F4400F498FB = {
+			fileRef = CBF6876508202F2100F498FB;
 			isa = PBXBuildFile;
 			settings = {
 			};
