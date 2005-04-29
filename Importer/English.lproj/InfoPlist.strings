@@ -1,6 +1,6 @@
 /* Localized versions of Info.plist keys */
 
-CFBundleName = "ProjectXImporter";
+CFBundleName = "Colloquy";
 CFBundleShortVersionString = "1.0";
-CFBundleGetInfoString = "ProjectXImporter version 1.0, Copyright (c) 2005 Karl Adam.";
+CFBundleGetInfoString = "ColloquyImporter version 1.0, Copyright (c) 2005 Karl Adam.";
 NSHumanReadableCopyright = "Copyright (c) 2005 Karl Adam.";
