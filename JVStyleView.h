@@ -13,6 +13,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	BOOL _forwarding;
 	BOOL _switchingStyles;
 	BOOL _ready;
+	BOOL _newWebKit;
 	BOOL _webViewReady;
 	JVChatTranscript *_transcript;
 	JVStyle *_style;

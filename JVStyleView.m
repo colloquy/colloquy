@@ -67,6 +67,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) awakeFromNib {
 	_ready = YES;
+	_newWebKit = [[self mainFrame] respondsToSelector:@selector( DOMDocument )];
 	[self setFrameLoadDelegate:self];
 	[self performSelector:@selector( _resetDisplay ) withObject:nil afterDelay:0.];
 }
@@ -172,7 +173,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[WebCoreCache empty];
 
 #ifdef WebKitVersion146
-		if( [self respondsToSelector:@selector( windowScriptObject )] ) {
+		if( _newWebKit ) {
 			NSString *styleSheetLocation = [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString];
 			DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[[[self mainFrame] DOMDocument] getElementById:@"variantStyle"];
 			if( ! styleSheetLocation ) [element setHref:@""];
@@ -181,7 +182,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #endif
 		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString]]];
 
-		[self performSelector:@selector( _checkForTransparantVariant ) withObject:nil afterDelay:0.];
+		[self performSelector:@selector( _checkForTransparantStyle ) withObject:nil afterDelay:0.];
 	} else {
 		[self performSelector:_cmd withObject:variant afterDelay:0.];
 	}
@@ -212,7 +213,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[WebCoreCache empty];
 
 #ifdef WebKitVersion146
-		if( [self respondsToSelector:@selector( webScriptObject )] ) {
+		if( _newWebKit ) {
 			NSString *styleSheetLocation = [[[self emoticons] styleSheetLocation] absoluteString];
 			DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[[[self mainFrame] DOMDocument] getElementById:@"emoticonStyle"];
 			if( ! styleSheetLocation ) [element setHref:@""];
@@ -263,7 +264,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	if( _webViewReady ) {
 #ifdef WebKitVersion146
-		if( [self respondsToSelector:@selector( windowScriptObject )] ) {
+		if( _newWebKit ) {
 			[[self windowScriptObject] callWebScriptMethod:@"showTopic" withArguments:[NSArray arrayWithObject:topic]];
 		} else {
 #endif
@@ -281,7 +282,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) hideTopic {
 	if( _webViewReady ) {
 #ifdef WebKitVersion146
-		if( [self respondsToSelector:@selector( windowScriptObject )] )
+		if( _newWebKit )
 			[[self windowScriptObject] callWebScriptMethod:@"hideTopic" withArguments:[NSArray array]];
 		else
 #endif
@@ -295,7 +296,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( _webViewReady ) {
 		BOOL topicShowing;
 #ifdef WebKitVersion146
-		if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+		if( _newWebKit ) {
 			DOMHTMLElement *topicElement = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:@"topic-floater"];
 			topicShowing = ( topicElement != nil );
 		} else {
@@ -320,7 +321,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	NSString *result = nil;
 
 #ifdef WebKitVersion146
-	if( _requiresFullMessage && [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+	if( _requiresFullMessage && _newWebKit ) {
 		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:@"consecutiveInsert"];
 		if( replaceElement ) _requiresFullMessage = NO; // a full message was assumed, but we can do a consecutive one
 	}
@@ -366,7 +367,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) markScrollbarForMessage:(JVChatMessage *) message {
-	if( _switchingStyles || ! _webViewReady ) return;
+	if( _switchingStyles || ! _webViewReady ) {
+		[self performSelector:_cmd withObject:message afterDelay:0.];
+		return;
+	}
+
 	long loc = [self _locationOfMessage:message];
 	if( loc ) [[self verticalMarkedScroller] addMarkAt:loc];
 }
@@ -401,16 +406,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
-#ifdef WebKitVersion146
-	if( [self respondsToSelector:@selector( setDrawsBackground: )] ) {
-		DOMCSSStyleDeclaration *style = [self computedStyleForElement:[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] pseudoElement:nil];
-		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
-		DOMCSSValue *altvalue = [style getPropertyCSSValue:@"background"];
-		if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) || ( altvalue && [[altvalue cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
-			[self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
-		else [self setDrawsBackground:YES];
-	}
-#endif
+	[self performSelector:@selector( _checkForTransparantStyle )];
 
 	[self setPreferencesIdentifier:[[self style] identifier]];
 	[[self preferences] setJavaScriptEnabled:YES];
@@ -423,8 +419,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[[self window] enableFlushWindow];
 
 	[self performSelector:@selector( _webkitIsReady ) withObject:nil afterDelay:0.];
-
-	if( _switchingStyles ) [NSThread detachNewThreadSelector:@selector( _switchStyle ) toTarget:self withObject:nil];
 }
 
 #pragma mark -
@@ -468,7 +462,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	}
 
 #ifdef WebKitVersion146
-	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+	if( _newWebKit ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
 		[body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
 	} else
@@ -481,9 +475,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 @implementation JVStyleView (JVStyleViewPrivate)
-- (void) _checkForTransparantVariant {
+- (void) _checkForTransparantStyle {
 #ifdef WebKitVersion146
-	if( [self respondsToSelector:@selector( setDrawsBackground: )] ) {
+	if( _newWebKit ) {
 		DOMCSSStyleDeclaration *style = [self computedStyleForElement:[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] pseudoElement:nil];
 		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
 		DOMCSSValue *altvalue = [style getPropertyCSSValue:@"background"];
@@ -497,6 +491,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) _webkitIsReady {
 	_webViewReady = YES;
+	if( _switchingStyles ) [NSThread detachNewThreadSelector:@selector( _switchStyle ) toTarget:self withObject:nil];
 }
 
 - (void) _resetDisplay {
@@ -583,7 +578,7 @@ quickEnd:
 	}
 
 #ifdef WebKitVersion146
-	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+	if( _newWebKit ) {
 		DOMHTMLElement *element = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] createElement:@"span"];
 		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:@"consecutiveInsert"];
 		if( ! replaceElement ) subsequent = NO;
@@ -629,7 +624,8 @@ quickEnd:
 			for( i = 0; [[body childNodes] length] > scrollbackLimit && i < ( [[body childNodes] length] - scrollbackLimit ); i++ )
 				[body removeChild:[[body childNodes] item:0]];
 
-		if( [scrollNeeded respondsToSelector:@selector( boolValue )] && [scrollNeeded boolValue] ) [self scrollToBottom];
+		if( [scrollNeeded respondsToSelector:@selector( boolValue )] && [scrollNeeded boolValue] )
+			[self scrollToBottom];
 	} else
 #endif
 	{ // old JavaScript method
@@ -651,7 +647,7 @@ quickEnd:
 	}
 
 #ifdef WebKitVersion146
-	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+	if( _newWebKit ) {
 		NSMutableString *result = [messages mutableCopy];
 		[result replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
 
@@ -713,7 +709,7 @@ quickEnd:
 	if( ! _webViewReady ) return 0;
 	if( ! [identifier length] ) return 0;
 #ifdef WebKitVersion146
-	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+	if( _newWebKit ) {
 		DOMElement *element = [[[self mainFrame] DOMDocument] getElementById:identifier];
 		id value = [element valueForKey:@"offsetTop"];
 		if( [value respondsToSelector:@selector( intValue )] )
@@ -732,7 +728,7 @@ quickEnd:
 - (long) _locationOfElementAtIndex:(unsigned long) index {
 	if( ! _webViewReady ) return 0;
 #ifdef WebKitVersion146
-	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+	if( _newWebKit ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
 		id value = [[[body childNodes] item:index] valueForKey:@"offsetTop"];
 		if( index < [[body childNodes] length] && [value respondsToSelector:@selector( intValue )] )
@@ -747,7 +743,7 @@ quickEnd:
 - (unsigned long) _visibleMessageCount {
 	if( ! _webViewReady ) return 0;
 #ifdef WebKitVersion146
-	if( [[self mainFrame] respondsToSelector:@selector( DOMDocument )] ) {
+	if( _newWebKit ) {
 		return [[[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] childNodes] length];
 	} else
 #endif
