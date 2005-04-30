@@ -2449,10 +2449,6 @@
 				1CF4D38907E54C0C00DB421A,
 				1CF4D76607E6AD4400DB421A,
 				0A5B683F0810EC9700398D5A,
-				CBF685370820190D00F498FB,
-				CBF685380820190D00F498FB,
-				CBF6853A0820190D00F498FB,
-				CBF6853C0820190D00F498FB,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2936,8 +2932,6 @@
 				1C66913A07BFA76D008400F7,
 				1CE3C4F807E13F4C004931E6,
 				1C70377F07E49F25005CEA40,
-				CBF685390820190D00F498FB,
-				CBF6853B0820190D00F498FB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5156,14 +5150,14 @@
 		};
 		CBF684F00820174000F498FB = {
 			children = (
-				CBF6852C0820190D00F498FB,
-				CBF685310820190D00F498FB,
 				CBF685320820190D00F498FB,
-				CBF685330820190D00F498FB,
 				CBF685340820190D00F498FB,
+				CBF6852C0820190D00F498FB,
+				CBF685330820190D00F498FB,
+				CBF685310820190D00F498FB,
 			);
 			isa = PBXGroup;
-			name = Importer;
+			name = "Metadata Importer";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5224,7 +5218,7 @@
 			dependencies = (
 			);
 			isa = PBXNativeTarget;
-			name = Colloquy;
+			name = "Colloquy (Metadata Importer)";
 			productName = Importer;
 			productReference = CBF685150820186F00F498FB;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -5342,42 +5336,6 @@
 			path = Importer/schema.xml;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		CBF685370820190D00F498FB = {
-			fileRef = CBF6852D0820190D00F498FB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CBF685380820190D00F498FB = {
-			fileRef = CBF6852F0820190D00F498FB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CBF685390820190D00F498FB = {
-			fileRef = CBF685310820190D00F498FB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CBF6853A0820190D00F498FB = {
-			fileRef = CBF685320820190D00F498FB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CBF6853B0820190D00F498FB = {
-			fileRef = CBF685330820190D00F498FB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CBF6853C0820190D00F498FB = {
-			fileRef = CBF685340820190D00F498FB;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		CBF6855D08201B7300F498FB = {
 			fileRef = CBF6852D0820190D00F498FB;

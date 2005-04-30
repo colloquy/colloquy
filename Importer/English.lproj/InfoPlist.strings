@@ -1,6 +1,4 @@
 /* Localized versions of Info.plist keys */
 
-CFBundleName = "Colloquy";
-CFBundleShortVersionString = "1.0";
-CFBundleGetInfoString = "ColloquyImporter version 1.0, Copyright (c) 2005 Karl Adam.";
-NSHumanReadableCopyright = "Copyright (c) 2005 Karl Adam.";
+CFBundleGetInfoString = "Colloquy Metadata Importer 1.0; Copyright © 2005, Karl Adam";
+NSHumanReadableCopyright = "Copyright © 2005, Karl Adam";
