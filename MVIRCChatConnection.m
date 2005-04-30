@@ -1094,18 +1094,22 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 		while( ! irssiThreadReady ) usleep( 50 );
 
-		extern NSPort *threadConnectionPort;
+/*		extern NSPort *threadConnectionPort;
 		NSConnection *threadConnection = [NSConnection connectionWithReceivePort:nil sendPort:threadConnectionPort];
 		_irssiThreadConnection = [[(MVIRCConnectionThreadHelper *)[threadConnection rootProxy] vendChatConnection:self] retain];
+
 		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
+		[connection setRequestTimeout:2.];
+		[connection setReplyTimeout:2.];
+
 		_irssiThreadProxy = [[connection rootProxy] retain];
-		[(NSDistantObject *)_irssiThreadProxy setProtocolForProxy:@protocol( MVIRCChatConnectionIrssiThread )];
+		[(NSDistantObject *)_irssiThreadProxy setProtocolForProxy:@protocol( MVIRCChatConnectionIrssiThread )]; */
 	}
 
 	return self;
 }
 
-- (void) release {
+/* - (void) release {
 	if( ( [self retainCount] - 2 ) == 1 ) {
 		[MVIRCChatConnectionThreadLock lock];
 
@@ -1120,7 +1124,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	}
 
 	[super release];
-}
+} */
 
 - (void) dealloc {
 	[self disconnect];
@@ -1449,7 +1453,8 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
 	if( ! _chatConnection ) return;
-	[_irssiThreadProxy _sendRawMessage:raw immediately:now];
+//	[_irssiThreadProxy _sendRawMessage:raw immediately:now];
+	[self _sendRawMessage:raw immediately:now];
 }
 
 #pragma mark -
@@ -1702,13 +1707,14 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 + (void) _irssiRunLoop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	MVIRCConnectionThreadHelper *helper = [[MVIRCConnectionThreadHelper alloc] init];
+/*	MVIRCConnectionThreadHelper *helper = [[MVIRCConnectionThreadHelper alloc] init];
+
 	NSConnection *server = [[NSConnection defaultConnection] retain];
 	[server enableMultipleThreads];
 	[server setRootObject:helper];
 
 	extern NSPort *threadConnectionPort;
-	threadConnectionPort = [[[NSConnection defaultConnection] receivePort] retain];
+	threadConnectionPort = [[[NSConnection defaultConnection] receivePort] retain]; */
 
 	GMainLoop *glibMainLoop = g_main_new( TRUE );
 
@@ -1736,11 +1742,11 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	irc_deinit();
 	core_deinit();
 
-	[threadConnectionPort release];
+/*	[threadConnectionPort release];
 	threadConnectionPort = nil;
 
 	[server release];
-	[helper release];
+	[helper release]; */
 
 	[MVIRCChatConnectionThreadLock unlock];
 
@@ -1957,6 +1963,8 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 @implementation MVIRCConnectionThreadHelper
 - (NSConnection *) vendChatConnection:(MVIRCChatConnection *) connection {
 	NSConnection *server = [[[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:[NSPort port]] autorelease];
+	[server setRequestTimeout:2.];
+	[server setReplyTimeout:2.];
 	[server setRootObject:connection];
 	[server enableMultipleThreads];
 	return server;
