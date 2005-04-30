@@ -43,7 +43,6 @@
 
 - (void) updateChatStylesMenu;
 - (void) updateEmoticonsMenu;
-- (void) updatePreview;
 - (void) updateVariant;
 
 - (void) parseStyleOptions;
