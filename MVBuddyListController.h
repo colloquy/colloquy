@@ -2,6 +2,7 @@
 
 @class MVTableView;
 @class JVBuddy;
+@class MVChatUser;
 @class ABPeoplePickerController;
 @class MVChatConnection;
 

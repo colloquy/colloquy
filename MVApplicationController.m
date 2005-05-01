@@ -1,5 +1,4 @@
 #import <ExceptionHandling/NSExceptionHandler.h>
-#import <ChatCore/MVFileTransfer.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSColorAdditions.h>
@@ -376,9 +375,6 @@ static BOOL applicationIsTerminating = NO;
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:30] setSubmenu:[JVChatController smartTranscriptMenu]];
-
-	NSRange range = NSRangeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVFileTransferPortRange"] );
-	[MVFileTransfer setFileTransferPortRange:range];
 }
 
 - (void) applicationWillBecomeActive:(NSNotification *) notification {

@@ -1033,7 +1033,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 		irssi_gui = IRSSI_GUI_NONE;
 
 		NSString *temp = NSTemporaryDirectory();
-		temp = [temp stringByAppendingPathComponent:@"Colloquy/irssi"];
+		temp = [temp stringByAppendingPathComponent:@"Colloquy/Irssi"];
 		temp = [@"--home=" stringByAppendingString:temp];
 		char *args[] = { "Chat Core", (char *)[temp cString] };
 		core_init_paths( sizeof( args ) / sizeof( char * ), args );
@@ -1043,9 +1043,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 		settings_set_bool( "override_coredump_limit", FALSE );
 		settings_set_bool( "settings_autosave", FALSE );
+		settings_set_str( "dcc_port", "1024 1048" );
 		signal_emit( "setup changed", 0 );
 
-		signal_emit( "irssi init finished", 0 );	
+		signal_emit( "irssi init finished", 0 );
 
 		[self _registerCallbacks];
 
