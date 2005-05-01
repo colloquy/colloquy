@@ -152,10 +152,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _styleVariantChanged: ) name:JVStyleVariantChangedNotification object:style];
 
-	if( ! _ready ) return;
-
 	_switchingStyles = YES;
 	_requiresFullMessage = YES;
+
+	if( ! _ready ) return;
+
 	[self _resetDisplay];
 }
 
