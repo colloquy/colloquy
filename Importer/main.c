@@ -1,8 +1,6 @@
-#ifndef MAC_OS_X_VERSION_10_4
-#define MAC_OS_X_VERSION_10_4 1040
-#endif
+#include <AvailabilityMacros.h>
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4
+#ifdef MAC_OS_X_VERSION_10_4
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreFoundation/CFPlugInCOM.h>

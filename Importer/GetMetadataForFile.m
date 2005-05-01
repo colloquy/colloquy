@@ -1,14 +1,14 @@
-#ifndef MAC_OS_X_VERSION_10_4
-#define MAC_OS_X_VERSION_10_4 1040
-#endif
+#include <AvailabilityMacros.h>
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4
+#ifdef MAC_OS_X_VERSION_10_4
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreServices/CoreServices.h> 
-#include <Foundation/Foundation.h>
+#import <Foundation/Foundation.h>
 
 Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile ) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
 	NSMutableDictionary *returnDict = (NSMutableDictionary *) attributes;
 	NSURL *file = [NSURL fileURLWithPath:(NSString *) pathToFile];
 	NSString *title = [[(NSString *) pathToFile lastPathComponent] stringByDeletingPathExtension];
@@ -22,7 +22,7 @@ Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attribut
 	// Get date started
     NSDate *dateStarted = nil;
 	NSArray *xpathResult = [transcript nodesForXPath:@"/log[1]/@began" error:&error];
-	
+
 	if( ! [xpathResult count] )
 		xpathResult = [transcript nodesForXPath:@"/log[1]/envelope[1]/message[1]/@received" error:&error];
 
@@ -52,7 +52,7 @@ Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attribut
 		[formatter setDateStyle:NSDateFormatterShortStyle];
 		[formatter setTimeStyle:NSDateFormatterShortStyle];
 
-		NSString *coverageWording = [NSString stringWithFormat:@"%@ to %@", [formatter stringFromDate:dateStarted], [formatter stringFromDate:lastMessageDate]];
+		NSString *coverageWording = [NSString stringWithFormat:@"%@ - %@", [formatter stringFromDate:dateStarted], [formatter stringFromDate:lastMessageDate]];
 		[returnDict setObject:coverageWording forKey:(NSString *) kMDItemCoverage];
 	}
 
@@ -81,6 +81,8 @@ Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attribut
 	// Now the stuff that doesn't change
 	[returnDict setObject:[NSArray arrayWithObject:@"Chat transcript"] forKey:(NSString *) kMDItemKind];
 	[returnDict setObject:[NSArray arrayWithObject:@"Colloquy"] forKey:(NSString *) kMDItemCreator];
+
+	[pool release];
 
     return TRUE;
 }
