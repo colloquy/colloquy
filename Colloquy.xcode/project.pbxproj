@@ -5305,8 +5305,8 @@
 			explicitFileType = sourcecode.c.objc;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = GetMetadataForFile.c;
-			path = Importer/GetMetadataForFile.c;
+			name = GetMetadataForFile.m;
+			path = Importer/GetMetadataForFile.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
