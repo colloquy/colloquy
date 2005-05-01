@@ -478,28 +478,28 @@ static NSMenu *smartTranscriptMenu = nil;
 	mode &= ~32;
 
 	switch( mode ) {
+	case 0: break; // open in new window
+	case 1: // open in existing window
 	default:
-	case 0:
-	case 1:
 		enumerator = [_chatWindows objectEnumerator];
 		while( ( windowController = [enumerator nextObject] ) )
 			if( [[windowController window] isMainWindow] || ! [[NSApplication sharedApplication] isActive] )
 				break;
 		if( ! windowController ) windowController = [_chatWindows lastObject];
 		break;
-	case 2:
+	case 2: // group with other rooms
 		modeClass = [JVChatRoomPanel class];
 		goto groupByClass;
-	case 3:
+	case 3: // group with other direct chats
 		modeClass = [JVDirectChatPanel class];
 		goto groupByClass;
-	case 4:
+	case 4: // group with other transcripts
 		modeClass = [JVChatTranscriptPanel class];
 		goto groupByClass;
-	case 5:
+	case 5: // group with other consoles
 		modeClass = [JVChatConsolePanel class];
 		goto groupByClass;
-	case 6:
+	case 6: // group with other chats
 		modeClass = [JVDirectChatPanel class];
 		kindOfClass = YES;
 		goto groupByClass;
