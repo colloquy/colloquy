@@ -132,7 +132,6 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>com.apple.bundle</string>
 				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -156,8 +155,7 @@
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
-			<array>
-				<string>com.apple.bundle</string>
+			<array>	
 				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
