@@ -3,5 +3,7 @@
 #import <WebKit/WebKit.h>
 #import <AGRegex/AGRegex.h>
 
-//#define WebKitVersion146 1
+#ifdef MAC_OS_X_VERSION_10_4
+#define WebKitVersion146 1
+#endif
 #endif
