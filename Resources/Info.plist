@@ -15,7 +15,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>Generic.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>Chat style</string>
+			<string>Chat Style</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>coSt</string>
@@ -38,7 +38,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>Generic.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>Chat emoticons</string>
+			<string>Chat Emoticons</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>coEm</string>
@@ -116,11 +116,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2D10 source</string>
+	<string>2D11 source</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
 	<string>http://colloquy.info</string>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
+	<key>OSAScriptingDefinition</key>
+	<string>Colloquy.sdef</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2003-2005, Timothy Hatcher</string>
 	<key>NSMainNibFile</key>
@@ -136,7 +138,7 @@
 				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Colloquy View Style</string>
+			<string>Chat Style</string>
 			<key>UTTypeIconFile</key>
 			<string>Generic.icns</string>
 			<key>UTTypeIdentifier</key>
@@ -161,7 +163,7 @@
 				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Colloquy Emoticon Set</string>
+			<string>Chat Emoticons</string>
 			<key>UTTypeIconFile</key>
 			<string>Generic.icns</string>
 			<key>UTTypeIdentifier</key>
@@ -185,7 +187,7 @@
 				<string>public.xml</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Colloquy Chat Transcript</string>
+			<string>Chat Transcript</string>
 			<key>UTTypeIconFile</key>
 			<string>Generic.icns</string>
 			<key>UTTypeIdentifier</key>

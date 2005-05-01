@@ -85,7 +85,6 @@
 				F50B0AA00170C89301A84BDE,
 				F5185C82018626F701EE70DE,
 				F50B0AA10170C89301A84BDE,
-				CBF684F00820174000F498FB,
 				089C1671FE841209C02AAC07,
 				1CB2C8CC052DDA360094AAA4,
 			);
@@ -1021,6 +1020,12 @@
 			path = MVChatPluginManager.h;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		1C3AB21A0825481C000E2F87 = {
+			fileRef = 1CD9DF6507D934F70006BB99;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		1C3B290706529E720066197C = {
 			isa = PBXFileReference;
@@ -2449,6 +2454,7 @@
 				1CF4D38907E54C0C00DB421A,
 				1CF4D76607E6AD4400DB421A,
 				0A5B683F0810EC9700398D5A,
+				1C3AB21A0825481C000E2F87,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5158,6 +5164,7 @@
 			);
 			isa = PBXGroup;
 			name = "Metadata Importer";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5419,6 +5426,7 @@
 				1CFAFED5053C1BA500C702F9,
 				1CBC62F405488D5A009E59E1,
 				1CC478470427BB2C00000102,
+				CBF684F00820174000F498FB,
 			);
 			isa = PBXGroup;
 			name = "Sources & Headers";
