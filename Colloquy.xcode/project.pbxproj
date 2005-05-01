@@ -1021,12 +1021,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		1C3AB21A0825481C000E2F87 = {
-			fileRef = 1CD9DF6507D934F70006BB99;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1C3B290706529E720066197C = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -2454,7 +2448,6 @@
 				1CF4D38907E54C0C00DB421A,
 				1CF4D76607E6AD4400DB421A,
 				0A5B683F0810EC9700398D5A,
-				1C3AB21A0825481C000E2F87,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
