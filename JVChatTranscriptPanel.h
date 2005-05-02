@@ -7,6 +7,10 @@
 @class JVChatMessage;
 @class JVChatTranscript;
 
+extern NSString *JVToolbarChooseStyleItemIdentifier;
+extern NSString *JVToolbarEmoticonsItemIdentifier;
+extern NSString *JVToolbarFindItemIdentifier;
+
 @interface JVChatTranscriptPanel : NSObject <JVChatViewController, JVChatViewControllerScripting> {
 	@protected
 	IBOutlet NSView *contents;

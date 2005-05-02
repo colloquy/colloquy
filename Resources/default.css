@@ -26,6 +26,12 @@ body {
 	content: "]";
 }
 
+/* For the display mark */
+hr#mark {
+	width: 80%;
+	color: #222222;
+}
+
 /* For the topic floater */
 #topic-floater {
 	z-index: 100;

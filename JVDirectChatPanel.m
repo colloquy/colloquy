@@ -95,9 +95,10 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	(NSStringEncoding) 0x80000505,		// Windows
 	/* End */ 0 };
 
-static NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
-static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
-static NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
+NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
+NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
+NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
+NSString *JVToolbarMarkItemIdentifier = @"JVToolbarMarkItem";
 
 NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNotification";
 
@@ -967,6 +968,10 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[display clear];
 }
 
+- (IBAction) markDisplay:(id) sender {
+	[display mark];
+}
+
 #pragma mark -
 #pragma mark TextView Support
 
@@ -1237,6 +1242,17 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( clearDisplay: )];
+	} else if( [identifier isEqual:JVToolbarMarkItemIdentifier] ) {
+		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		
+		[toolbarItem setLabel:NSLocalizedString( @"Mark", "mark display toolbar button name" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Mark Display", "mark display toolbar customize palette name" )];
+		
+		[toolbarItem setToolTip:NSLocalizedString( @"Mark Display", "mark display tooltip" )];
+		[toolbarItem setImage:[NSImage imageNamed:@"mark"]];
+		
+		[toolbarItem setTarget:self];
+		[toolbarItem setAction:@selector( markDisplay: )];
 	} else if( [identifier isEqual:JVToolbarSendFileItemIdentifier] ) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
 
@@ -1254,9 +1270,14 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
-	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) [list addObject:JVToolbarSendFileItemIdentifier];
-	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
-	[list addObject:JVToolbarTextEncodingItemIdentifier];
+	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) {
+		[list addObject:JVToolbarMarkItemIdentifier];
+		[list addObject:JVToolbarSendFileItemIdentifier];
+		[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
+		[list addObject:NSToolbarSeparatorItemIdentifier];
+		[list addObject:JVToolbarTextEncodingItemIdentifier];
+		[list addObject:JVToolbarClearItemIdentifier];
+	}
 	return list;
 }
 
@@ -1265,6 +1286,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) [list addObject:JVToolbarSendFileItemIdentifier];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	[list addObject:JVToolbarClearItemIdentifier];
+	[list addObject:JVToolbarMarkItemIdentifier];
 	return list;
 }
 

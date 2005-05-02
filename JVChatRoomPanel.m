@@ -632,7 +632,14 @@
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
+	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
+	[list addObject:JVToolbarMarkItemIdentifier];
+	[list addObject:JVToolbarFindItemIdentifier];
+	[list addObject:NSToolbarShowColorsItemIdentifier];
+	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
+	[list addObject:NSToolbarSeparatorItemIdentifier];
+	[list addObject:JVToolbarTextEncodingItemIdentifier];
+	[list addObject:JVToolbarClearItemIdentifier];
 	return list;
 }
 

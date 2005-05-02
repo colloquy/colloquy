@@ -10,7 +10,6 @@
 #import "JVViewCell.h"
 
 static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsItem";
-static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 @implementation JVSmartTranscriptPanel
 - (id) init {

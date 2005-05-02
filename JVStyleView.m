@@ -258,6 +258,29 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[self _resetDisplay];
 }
 
+- (void) mark {
+	if( _webViewReady ) {
+#ifdef WebKitVersion146
+		if( _newWebKit ) {
+			DOMDocument *doc = [[self mainFrame] DOMDocument];
+			DOMElement *elt = [doc getElementById:@"mark"];
+			if( elt ) {
+				[[elt parentNode] removeChild:elt];
+			}
+			elt = [doc createElement:@"hr"];
+			[elt setAttribute:@"id" :@"mark"];
+			[[[doc getElementsByTagName:@"body"] item:0] appendChild:elt];
+		} else {
+#endif
+			[self stringByEvaluatingJavaScriptFromString:@"mark();"];
+#ifdef WebKitVersion146
+		}
+#endif
+	} else {
+		[self performSelector:_cmd withObject:nil afterDelay:0.];
+	}
+}
+
 #pragma mark -
 
 - (void) showTopic:(NSString *) topic {

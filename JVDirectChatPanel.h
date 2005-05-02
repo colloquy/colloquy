@@ -7,6 +7,11 @@
 @class JVMutableChatMessage;
 @class JVBuddy;
 
+extern NSString *JVToolbarTextEncodingItemIdentifier;
+extern NSString *JVToolbarClearItemIdentifier;
+extern NSString *JVToolbarSendFileItemIdentifier;
+extern NSString *JVToolbarMarkItemIdentifier;
+
 extern NSString *JVChatMessageWasProcessedNotification;
 
 @interface JVDirectChatPanel : JVChatTranscriptPanel {
@@ -66,6 +71,7 @@ extern NSString *JVChatMessageWasProcessedNotification;
 
 - (IBAction) clear:(id) sender;
 - (IBAction) clearDisplay:(id) sender;
+- (IBAction) markDisplay:(id) sender;
 @end
 
 @interface NSObject (MVChatPluginDirectChatSupport)

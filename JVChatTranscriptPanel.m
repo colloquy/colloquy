@@ -22,9 +22,9 @@
 #import "NSBundleAdditions.h"
 #import "NSURLAdditions.h"
 
-static NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
-static NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
-static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
+NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
+NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
+NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 
 @interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
 - (void) _refreshWindowFileProxy;
@@ -441,16 +441,17 @@ static NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier,
 		JVToolbarChooseStyleItemIdentifier,
 		JVToolbarEmoticonsItemIdentifier, nil];
-	return [[list retain] autorelease];
+	return list;
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSArray *list = [NSArray arrayWithObjects: JVToolbarToggleChatDrawerItemIdentifier,
-		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, JVToolbarFindItemIdentifier, NSToolbarShowColorsItemIdentifier,
+		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier,
+		JVToolbarFindItemIdentifier, NSToolbarShowColorsItemIdentifier,
 		NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 
-	return [[list retain] autorelease];
+	return list;
 }
 
 - (BOOL) validateToolbarItem:(NSToolbarItem *) toolbarItem {

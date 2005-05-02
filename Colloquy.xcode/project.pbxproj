@@ -198,6 +198,21 @@
 			name = "Chat Core (Framework) (from Chat Core.xcode)";
 			targetProxy = 0A60C2B70630DA2C00DC6280;
 		};
+		0AA811220826DB8800A3BF2D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.javascript;
+			name = default.js;
+			path = Resources/default.js;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0AA8117B0826E08000A3BF2D = {
+			fileRef = 0AA811220826DB8800A3BF2D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //0A0
 //0A1
 //0A2
@@ -2451,6 +2466,7 @@
 				1CF4D38907E54C0C00DB421A,
 				1CF4D76607E6AD4400DB421A,
 				0A5B683F0810EC9700398D5A,
+				0AA8117B0826E08000A3BF2D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5480,6 +5496,7 @@
 				F5BC17DD019655DC01A35792,
 				1CBECDCF0508C8AB000001C8,
 				0A5B683E0810EC9700398D5A,
+				0AA811220826DB8800A3BF2D,
 				1C3C116005029DE1000001C8,
 				1C746A95050CF86B000001C8,
 				F5675B8601DB767601EE70DE,

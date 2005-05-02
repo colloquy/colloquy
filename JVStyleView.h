@@ -44,6 +44,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 
 - (void) reloadCurrentStyle;
 - (void) clear;
+- (void) mark;
 
 - (void) showTopic:(NSString *) topic;
 - (void) hideTopic;
