@@ -237,6 +237,7 @@
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "Core/irssi/src/irc Core/irssi/src/irc/core Core/irssi/src/irc/dcc Core/irssi/src/irc/flood Core/irssi/src/irc/notifylist Core/irssi/src/core Core/irssi/glib/.libs Core/irssi/src/lib-config Core/irssi/src/lib-popt Core/irssi/src/fe-common/core Core/irssi/src/fe-common/irc Core/irssi/src/fe-common/irc/dcc Core/irssi/src/fe-common/irc/notifylist";
+				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16 -DHAVE_CONFIG_H";
 				OTHER_LDFLAGS = "-seg1addr 0xa10000 -lssl -lcrypto";

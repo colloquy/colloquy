@@ -1142,6 +1142,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
 				GCC_CW_ASM_SYNTAX = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
@@ -1152,6 +1153,7 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				HEADER_SEARCH_PATHS = ". \"Plug-Ins/Standard Commands\"";
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
+				LIBRARY_STYLE = BUNDLE;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
 				OTHER_LDFLAGS = "-undefined dynamic_lookup";
@@ -2275,6 +2277,7 @@
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
+				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
 				PRODUCT_NAME = Colloquy;
@@ -5199,18 +5202,21 @@
 			buildRules = (
 			);
 			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				INFOPLIST_FILE = Importer/Info.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				LIBRARY_STYLE = BUNDLE;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
+				OTHER_LDFLAGS = "-framework Foundation";
 				PRODUCT_NAME = Colloquy;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 				WRAPPER_EXTENSION = mdimporter;
 			};
 			dependencies = (
