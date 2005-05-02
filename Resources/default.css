@@ -42,6 +42,19 @@ body {
 	text-align: center;
 }
 
+#topic-floater a {
+	color: blue;
+	text-decoration: underline;
+}
+
+#topic-floater a:active {
+	color: red;
+}
+
+#topic-floater a:visited {
+	color: blue;
+}
+
 #topic-floater .close {
 	float: right;
 	width: 12px;
