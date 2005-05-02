@@ -34,7 +34,11 @@ changes\
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Fixes a deadlock when sending 6 or more lines of text at once. However, some minor delay might occur when sending. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/102"}}{\fldrslt #102}}
+\fs20 Fixed a deadlock when sending 6 or more lines of text at once. However, some minor delay might occur when sending. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/102"}}{\fldrslt #102}}\
+
+\f2 \'b7
+\f3\fs24  
+\fs20 Also fixed another deadlock that sometimes occurred when waking from sleep. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/123"}}{\fldrslt #123}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
@@ -50,6 +54,11 @@ changes\
 \f2\b0\fs20 \'b7
 \f3\fs24  
 \fs20 Fixed the chat display not showing the first message, not reloading the style and not showing a preview in the preferences. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/155"}}{\fldrslt #155}}
+\f1\b\fs28 \
+
+\f2\b0\fs20 \'b7
+\f3\fs24  
+\fs20 The file transfer port range is now properly remembered, and wont keep reverting to zeros.
 \f1\b\fs28 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 

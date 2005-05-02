@@ -496,11 +496,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) _resetDisplay {
-	_webViewReady = NO;
 	[[self class] cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 
 	[self stopLoading:nil];
 	[self clearScrollbarMarks];
+
+	_webViewReady = NO;
 
 	[[self window] disableFlushWindow];
 	[[self mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
@@ -511,7 +512,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	[NSThread setThreadPriority:0.25];
 
-	while( ! _webViewReady ) usleep( 250 ); // wait, WebKit might not be ready.
+	usleep( 250 ); // wait, WebKit might not be ready.
 
 	JVStyle *style = [[self style] retain];
 	JVChatTranscript *transcript = [[self transcript] retain];
@@ -564,11 +565,6 @@ quickEnd:
 }
 
 - (void) _appendMessage:(NSString *) message {
-	if( ! _webViewReady ) {
-		[self performSelector:_cmd withObject:message afterDelay:0.];
-		return;
-	}
-
 	unsigned int messageCount = [self _visibleMessageCount];
 	unsigned int scrollbackLimit = [self scrollbackLimit];
 	BOOL subsequent = ( [message rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
@@ -642,11 +638,6 @@ quickEnd:
 }
 
 - (void) _prependMessages:(NSString *) messages {
-	if( ! _webViewReady ) {
-		[self performSelector:_cmd withObject:messages afterDelay:0.];
-		return;
-	}
-
 #ifdef WebKitVersion146
 	if( _newWebKit ) {
 		NSMutableString *result = [messages mutableCopy];
