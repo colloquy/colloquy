@@ -970,7 +970,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( ! icon ) icon = [NSImage imageNamed:@"largePerson"];
 	[context setObject:icon forKey:@"image"];
 
-	[[JVNotificationController defaultManager] performNotification:@"JVChatBuddyOnline" withContextInfo:context];
+	[[JVNotificationController defaultController] performNotification:@"JVChatBuddyOnline" withContextInfo:context];
 }
 
 - (void) _buddyOffline:(NSNotification *) notification {
@@ -993,7 +993,7 @@ static MVBuddyListController *sharedInstance = nil;
 		if( ! icon ) icon = [NSImage imageNamed:@"largePerson"];
 		[context setObject:icon forKey:@"image"];
 
-		[[JVNotificationController defaultManager] performNotification:@"JVChatBuddyOffline" withContextInfo:context];
+		[[JVNotificationController defaultController] performNotification:@"JVChatBuddyOffline" withContextInfo:context];
 	}
 }
 

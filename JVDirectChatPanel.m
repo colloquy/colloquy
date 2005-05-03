@@ -735,7 +735,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatMentioned"] forKey:@"coalesceKey"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-		[[JVNotificationController defaultManager] performNotification:@"JVChatMentioned" withContextInfo:context];
+		[[JVNotificationController defaultController] performNotification:@"JVChatMentioned" withContextInfo:context];
 	}
 
 	if( [cmessage ignoreStatus] != JVNotIgnored ) {
@@ -744,7 +744,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@'s message was ignored in %@.", "chat room user ignored bubble text" ), user, [self title]] forKey:@"description"];
 		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@'s message was ignored.", "direct chat user ignored bubble text" ), user] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-		[[JVNotificationController defaultManager] performNotification:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
+		[[JVNotificationController defaultController] performNotification:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
 
 	[display setScrollbackLimit:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
@@ -783,7 +783,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 			[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-			[[JVNotificationController defaultManager] performNotification:@"JVChatFirstMessage" withContextInfo:context];
+			[[JVNotificationController defaultController] performNotification:@"JVChatFirstMessage" withContextInfo:context];
 		} else if( [message ignoreStatus] == JVNotIgnored ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
@@ -793,7 +793,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 			[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-			[[JVNotificationController defaultManager] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
+			[[JVNotificationController defaultController] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
 		}
 	}
 

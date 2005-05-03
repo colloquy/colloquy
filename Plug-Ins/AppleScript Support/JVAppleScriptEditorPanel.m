@@ -95,7 +95,7 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 #pragma mark -
 
 - (IBAction) close:(id) sender {
-	[[JVChatController defaultManager] disposeViewController:self];
+	[[JVChatController defaultController] disposeViewController:self];
 }
 
 #pragma mark -
@@ -245,7 +245,7 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
-	[item setTarget:[JVChatController defaultManager]];
+	[item setTarget:[JVChatController defaultController]];
 	[menu addItem:item];
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];

@@ -44,7 +44,7 @@
 #pragma mark -
 
 - (IBAction) close:(id) sender {
-	[[JVChatController defaultManager] disposeViewController:self];
+	[[JVChatController defaultController] disposeViewController:self];
 }
 
 #pragma mark -
@@ -193,7 +193,7 @@
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle( @"Detach From Window", nil, [NSBundle bundleForClass:[self class]], "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
-	[item setTarget:[JVChatController defaultManager]];
+	[item setTarget:[JVChatController defaultController]];
 	[menu addItem:item];
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle( @"Close", nil, [NSBundle bundleForClass:[self class]], "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];

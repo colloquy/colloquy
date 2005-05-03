@@ -17,7 +17,7 @@ static JVNotificationController *sharedInstance = nil;
 #pragma mark -
 
 @implementation JVNotificationController
-+ (JVNotificationController *) defaultManager {
++ (JVNotificationController *) defaultController {
 	extern JVNotificationController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
 }

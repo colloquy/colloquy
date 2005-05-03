@@ -277,7 +277,7 @@
 		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatRoomActivity"] forKey:@"coalesceKey"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-		[[JVNotificationController defaultManager] performNotification:@"JVChatRoomActivity" withContextInfo:context];
+		[[JVNotificationController defaultController] performNotification:@"JVChatRoomActivity" withContextInfo:context];
 	}
 
 	if( [message ignoreStatus] == JVNotIgnored && [_nextMessageAlertMembers containsObject:[message sender]] ) {
@@ -287,7 +287,7 @@
 		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-		[[JVNotificationController defaultManager] performNotification:@"JVChatReplyAfterAddressing" withContextInfo:context];
+		[[JVNotificationController defaultController] performNotification:@"JVChatReplyAfterAddressing" withContextInfo:context];
 
 		[_nextMessageAlertMembers removeObject:[message sender]];
 	}
@@ -890,7 +890,7 @@
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room %@.", "bubble message member joined string" ), name, _target] forKey:@"description"];
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
+	[[JVNotificationController defaultController] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
 }
 
 - (void) _memberParted:(NSNotification *) notification {
@@ -923,7 +923,7 @@
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room %@.", "bubble message member left string" ), name, _target] forKey:@"description"];
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
+	[[JVNotificationController defaultController] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
 
 	[_sortedMembers removeObjectIdenticalTo:mbr];
 	[_windowController reloadListItem:self andChildren:YES];
@@ -962,7 +962,7 @@
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were kicked from %@ by %@.", "bubble message member kicked string" ), [self title], ( byMbr ? [byMbr title] : [byUser nickname] )] forKey:@"description"];
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
+	[[JVNotificationController defaultController] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 
 	[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You have been kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You have been kicked from the chat room by %@ with the reason \"%@\" and cannot send further messages without rejoining.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, ( byMbr ? [byMbr title] : [byUser nickname] ), ( rstring ? [rstring string] : @"" ) ) withName:nil];
 }
@@ -1007,7 +1007,7 @@
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from %@ by %@.", "bubble message member kicked string" ), ( mbr ? [mbr title] : [user nickname] ), [self title], ( byMbr ? [byMbr title] : [byUser nickname] )] forKey:@"description"];
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-	[[JVNotificationController defaultManager] performNotification:@"JVChatMemberKicked" withContextInfo:context];
+	[[JVNotificationController defaultController] performNotification:@"JVChatMemberKicked" withContextInfo:context];
 }
 
 - (void) _memberBanned:(NSNotification *) notification {
@@ -1229,7 +1229,7 @@
 		[context setObject:description forKey:@"description"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-		[[JVNotificationController defaultManager] performNotification:notificationKey withContextInfo:context];
+		[[JVNotificationController defaultController] performNotification:notificationKey withContextInfo:context];
 	}
 }
 

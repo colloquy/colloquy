@@ -398,7 +398,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Invited to Chat", "bubble title invited to room" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]] forKey:@"description"];
-	[[JVNotificationController defaultManager] performNotification:@"JVChatRoomInvite" withContextInfo:context];
+	[[JVNotificationController defaultController] performNotification:@"JVChatRoomInvite" withContextInfo:context];
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
@@ -431,7 +431,7 @@ static NSMenu *smartTranscriptMenu = nil;
 					[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
 					[context setObject:[NSString stringWithFormat:@"%@ on %@", [messageString string], [connection server]] forKey:@"description"];
 					[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
-					[[JVNotificationController defaultManager] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+					[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
 				}
 			} else if( [[user nickname] isEqualToString:@"MemoServ"] ) {
 				if( [[messageString string] rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [[messageString string] rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
@@ -442,7 +442,7 @@ static NSMenu *smartTranscriptMenu = nil;
 					[context setObject:self forKey:@"target"];
 					[context setObject:NSStringFromSelector( @selector( _checkMemos: ) ) forKey:@"action"];
 					[context setObject:connection forKey:@"representedObject"];
-					[[JVNotificationController defaultManager] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
+					[[JVNotificationController defaultController] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
 				}
 			}
 		} else {
@@ -451,7 +451,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			[context setObject:messageString forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
 			NSString *type = ( hideFromUser ? @"JVChatUnhandledNoticeMessage" : @"JVChatNoticeMessage" );
-			[[JVNotificationController defaultManager] performNotification:type withContextInfo:context];
+			[[JVNotificationController defaultController] performNotification:type withContextInfo:context];
 		}
 	}
 

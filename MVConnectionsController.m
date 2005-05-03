@@ -1709,7 +1709,7 @@ static NSMenu *favoritesMenu = nil;
 	[context setObject:NSLocalizedString( @"Connected", "connected bubble title" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You're now connected to %@ as %@.", "you are now connected bubble text" ), [connection server], [connection nickname]] forKey:@"description"];
 	[context setObject:[NSImage imageNamed:@"connect"] forKey:@"image"];
-	[[JVNotificationController defaultManager] performNotification:@"JVChatConnected" withContextInfo:context];
+	[[JVNotificationController defaultController] performNotification:@"JVChatConnected" withContextInfo:context];
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
@@ -1719,7 +1719,7 @@ static NSMenu *favoritesMenu = nil;
 		[context setObject:NSLocalizedString( @"Disconnected", "disconnected bubble title" ) forKey:@"title"];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You're were disconnected from %@.", "you were disconnected bubble text" ), [connection server]] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"disconnect"] forKey:@"image"];
-		[[JVNotificationController defaultManager] performNotification:@"JVChatDisconnected" withContextInfo:context];
+		[[JVNotificationController defaultController] performNotification:@"JVChatDisconnected" withContextInfo:context];
 	}
 }
 
@@ -1730,6 +1730,15 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _delete:(id) sender {
+	unsigned int row = [connections selectedRow];
+	if( row == -1 ) return;
+
+	MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
+	NSBeginCriticalAlertSheet( NSLocalizedString( @"Are you sure you want to delete?", "delete confirm dialog title" ), @"Cancel", @"OK", nil, [self window], self, @selector( _deleteConnectionSheetDidEnd:returnCode:contextInfo: ), NULL, NULL, NSLocalizedString( @"Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted.", "confirm the delete of a connection" ), [connection server] );
+}
+
+- (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
+	if( returnCode != NSCancelButton ) return; // the cancel button because we have them flipped above
 	unsigned int row = [connections selectedRow];
 	if( row == -1 ) return;
 	[connections deselectAll:nil];
