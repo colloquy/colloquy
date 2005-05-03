@@ -52,7 +52,7 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) connectToSupportRoom:(id) sender {
-	[[MVConnectionsController defaultManager] handleURL:[NSURL URLWithString:@"irc://irc.freenode.net/#colloquy"] andConnectIfPossible:YES];
+	[[MVConnectionsController defaultController] handleURL:[NSURL URLWithString:@"irc://irc.freenode.net/#colloquy"] andConnectIfPossible:YES];
 }
 
 - (IBAction) emailDeveloper:(id) sender {
@@ -76,15 +76,15 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) showTransferManager:(id) sender {
-	if( [[[MVFileTransferController defaultManager] window] isKeyWindow] )
-		[[MVFileTransferController defaultManager] hideTransferManager:nil];
-	else [[MVFileTransferController defaultManager] showTransferManager:nil];
+	if( [[[MVFileTransferController defaultController] window] isKeyWindow] )
+		[[MVFileTransferController defaultController] hideTransferManager:nil];
+	else [[MVFileTransferController defaultController] showTransferManager:nil];
 }
 
 - (IBAction) showConnectionManager:(id) sender {
-	if( [[[MVConnectionsController defaultManager] window] isKeyWindow] )
-		[[MVConnectionsController defaultManager] hideConnectionManager:nil];
-	else [[MVConnectionsController defaultManager] showConnectionManager:nil];
+	if( [[[MVConnectionsController defaultController] window] isKeyWindow] )
+		[[MVConnectionsController defaultController] hideConnectionManager:nil];
+	else [[MVConnectionsController defaultController] showConnectionManager:nil];
 }
 
 - (IBAction) showBuddyList:(id) sender {
@@ -110,22 +110,22 @@ static BOOL applicationIsTerminating = NO;
 	NSString *filename = [panel filename];
 	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES];
 	if( returnCode == NSOKButton && [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
-		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
+		[[JVChatController defaultController] chatViewControllerForTranscript:filename];
 	}
 }
 
 #pragma mark -
 
 - (JVChatController *) chatController {
-	return [JVChatController defaultManager];
+	return [JVChatController defaultController];
 }
 
 - (MVConnectionsController *) connectionsController {
-	return [MVConnectionsController defaultManager];
+	return [MVConnectionsController defaultController];
 }
 
 - (MVFileTransferController *) transferManager {
-	return [MVFileTransferController defaultManager];
+	return [MVFileTransferController defaultController];
 }
 
 - (MVBuddyListController *) buddyList {
@@ -135,7 +135,7 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (IBAction) newConnection:(id) sender {
-	[[MVConnectionsController defaultManager] newConnection:nil];
+	[[MVConnectionsController defaultController] newConnection:nil];
 }
 
 - (IBAction) joinRoom:(id) sender {
@@ -177,7 +177,7 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (IBAction) markAllDisplays:(id) sender {
-	JVChatController *chatController = [JVChatController defaultManager];
+	JVChatController *chatController = [JVChatController defaultController];
 	Class controllerClass = [JVDirectChatPanel class];
 	NSSet *viewControllers = [chatController chatViewControllersKindOfClass:controllerClass];
 	[viewControllers makeObjectsPerformSelector:@selector( markDisplay: ) withObject:sender];
@@ -207,7 +207,7 @@ static BOOL applicationIsTerminating = NO;
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
 	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES];
 	if( [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
-		[[JVChatController defaultManager] chatViewControllerForTranscript:filename];
+		[[JVChatController defaultController] chatViewControllerForTranscript:filename];
 		return YES;
 	} else if( [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[filename pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
 		NSString *newPath = [[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
@@ -269,7 +269,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) handleURLEvent:(NSAppleEventDescriptor *) event withReplyEvent:(NSAppleEventDescriptor *) replyEvent {
 	NSURL *url = [NSURL URLWithString:[[event descriptorAtIndex:1] stringValue]];
-	if( [MVChatConnection supportsURLScheme:[url scheme]] ) [[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
+	if( [MVChatConnection supportsURLScheme:[url scheme]] ) [[MVConnectionsController defaultController] handleURL:url andConnectIfPossible:YES];
 	else [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
@@ -378,9 +378,9 @@ static BOOL applicationIsTerminating = NO;
 	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications/Colloquy" stringByExpandingTildeInPath] attributes:nil];
 
 	[MVChatPluginManager defaultManager];
-	[MVConnectionsController defaultManager];
-	[JVChatController defaultManager];
-	[MVFileTransferController defaultManager];
+	[MVConnectionsController defaultController];
+	[JVChatController defaultController];
+	[MVFileTransferController defaultController];
 	[MVBuddyListController sharedBuddyList];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
@@ -433,13 +433,13 @@ static BOOL applicationIsTerminating = NO;
 
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( joinRoom: ) ) {
-		if( [[[MVConnectionsController defaultManager] connections] count] ) {
+		if( [[[MVConnectionsController defaultController] connections] count] ) {
 			return YES;
 		} else {
 			return NO;
 		}
 	} else if( [menuItem action] == @selector( markAllDisplays: ) ) {
-		JVChatController *chatController = [JVChatController defaultManager];
+		JVChatController *chatController = [JVChatController defaultController];
 		Class controllerClass = [JVDirectChatPanel class];
 		NSSet *viewControllers = [chatController chatViewControllersKindOfClass:controllerClass];
 		return ( [viewControllers count] > 0 );

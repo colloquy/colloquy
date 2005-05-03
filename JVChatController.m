@@ -29,7 +29,7 @@ static NSMenu *smartTranscriptMenu = nil;
 #pragma mark -
 
 @implementation JVChatController
-+ (JVChatController *) defaultManager {
++ (JVChatController *) defaultController {
 	extern JVChatController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
 }
@@ -49,7 +49,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	while( ( menuItem = [enumerator nextObject] ) )
 		[smartTranscriptMenu removeItem:menuItem];
 
-	NSMutableArray *items = [NSMutableArray arrayWithArray:[[[self defaultManager] smartTranscripts] allObjects]];
+	NSMutableArray *items = [NSMutableArray arrayWithArray:[[[self defaultController] smartTranscripts] allObjects]];
 	[items sortUsingSelector:@selector( compare: )];
 
 	enumerator = [items objectEnumerator];
@@ -60,7 +60,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[panel title] action:@selector( showView: ) keyEquivalent:@""] autorelease];
 		if( [panel newMessagesWaiting] ) [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTabActivity"]];
 		else [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTab"]];
-		[menuItem setTarget:[self defaultManager]];
+		[menuItem setTarget:[self defaultController]];
 		[menuItem setRepresentedObject:panel];
 		[smartTranscriptMenu addItem:menuItem];
 	}
@@ -74,7 +74,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Smart Transcript...", "new smart transcript menu title" ) action:@selector( _newSmartTranscript: ) keyEquivalent:@"n"] autorelease];
 	[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
-	[menuItem setTarget:[JVChatController defaultManager]];
+	[menuItem setTarget:[JVChatController defaultController]];
 	[smartTranscriptMenu addItem:menuItem];
 }
 
@@ -362,7 +362,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (JVIgnoreMatchResult) shouldIgnoreUser:(MVChatUser *) user withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view {
 	JVIgnoreMatchResult ignoreResult = JVNotIgnored;
-	NSEnumerator *renum = [[[MVConnectionsController defaultManager] ignoreRulesForConnection:[view connection]] objectEnumerator];
+	NSEnumerator *renum = [[[MVConnectionsController defaultController] ignoreRulesForConnection:[view connection]] objectEnumerator];
 	KAIgnoreRule *rule = nil;
 
 	while( ( ignoreResult == JVNotIgnored ) && ( ( rule = [renum nextObject] ) ) )
@@ -377,7 +377,7 @@ static NSMenu *smartTranscriptMenu = nil;
 @implementation JVChatController (JVChatControllerPrivate)
 - (void) _joinedRoom:(NSNotification *) notification {
 	MVChatRoom *rm = [notification object];
-	if( ! [[MVConnectionsController defaultManager] managesConnection:[rm connection]] ) return;
+	if( ! [[MVConnectionsController defaultController] managesConnection:[rm connection]] ) return;
 	JVChatRoomPanel *room = [self chatViewControllerForRoom:rm ifExists:NO];
 	[room joined];
 }
@@ -387,7 +387,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatConnection *connection = [notification object];
 
-	if( ! [[MVConnectionsController defaultManager] managesConnection:connection] ) return;
+	if( ! [[MVConnectionsController defaultController] managesConnection:connection] ) return;
 
 	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, [user nickname]];
@@ -406,7 +406,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	MVChatUser *user = [notification object];
 	NSData *message = [[notification userInfo] objectForKey:@"message"];
 
-	if( ! [[MVConnectionsController defaultManager] managesConnection:[user connection]] ) return;
+	if( ! [[MVConnectionsController defaultController] managesConnection:[user connection]] ) return;
 
 	if( [[[notification userInfo] objectForKey:@"notice"] boolValue] ) {
 		MVChatConnection *connection = [user connection];
@@ -552,7 +552,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (IBAction) _newSmartTranscript:(id) sender {
-	[[JVChatController defaultManager] newSmartTranscript];
+	[[JVChatController defaultController] newSmartTranscript];
 }
 @end
 
@@ -647,7 +647,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	if( [target isKindOfClass:[JVChatRoomMember class]] )
 		target = [(JVChatRoomMember *)target user];
 
-	JVDirectChatPanel *panel = [[JVChatController defaultManager] chatViewControllerForUser:target ifExists:NO];
+	JVDirectChatPanel *panel = [[JVChatController defaultController] chatViewControllerForUser:target ifExists:NO];
 	[[panel windowController] showChatViewController:panel];
 
 	return panel;
@@ -665,7 +665,7 @@ static NSMenu *smartTranscriptMenu = nil;
 #pragma mark -
 
 - (NSArray *) chatViews {
-	return [[[JVChatController defaultManager] allChatViewControllers] allObjects];
+	return [[[JVChatController defaultController] allChatViewControllers] allObjects];
 }
 
 - (id <JVChatViewController>) valueInChatViewsAtIndex:(unsigned) index {
@@ -673,7 +673,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (id <JVChatViewController>) valueInChatViewsWithUniqueID:(id) identifier {
-	NSEnumerator *enumerator = [[[JVChatController defaultManager] allChatViewControllers] objectEnumerator];
+	NSEnumerator *enumerator = [[[JVChatController defaultController] allChatViewControllers] objectEnumerator];
 	id <JVChatViewController, JVChatListItemScripting> view = nil;
 
 	while( ( view = [enumerator nextObject] ) )
@@ -684,7 +684,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (id <JVChatViewController>) valueInChatViewsWithName:(NSString *) name {
-	NSEnumerator *enumerator = [[[JVChatController defaultManager] allChatViewControllers] objectEnumerator];
+	NSEnumerator *enumerator = [[[JVChatController defaultController] allChatViewControllers] objectEnumerator];
 	id <JVChatViewController> view = nil;
 
 	while( ( view = [enumerator nextObject] ) )
@@ -708,7 +708,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (void) removeFromChatViewsAtIndex:(unsigned) index {
 	id <JVChatViewController> view = [[self chatViews] objectAtIndex:index];
-	if( view ) [[JVChatController defaultManager] disposeViewController:view];
+	if( view ) [[JVChatController defaultController] disposeViewController:view];
 }
 
 - (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index {
@@ -718,7 +718,7 @@ static NSMenu *smartTranscriptMenu = nil;
 #pragma mark -
 
 - (NSArray *) chatViewsWithClass:(Class) class {
-	return [[[JVChatController defaultManager] chatViewControllersOfClass:class] allObjects];
+	return [[[JVChatController defaultController] chatViewControllersOfClass:class] allObjects];
 }
 
 - (id <JVChatViewController>) valueInChatViewsAtIndex:(unsigned) index withClass:(Class) class {
@@ -742,7 +742,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (void) removeFromChatViewsAtIndex:(unsigned) index withClass:(Class) class {
 	id <JVChatViewController> view = [[self chatViewsWithClass:class] objectAtIndex:index];
-	if( view ) [[JVChatController defaultManager] disposeViewController:view];
+	if( view ) [[JVChatController defaultController] disposeViewController:view];
 }
 
 #pragma mark -

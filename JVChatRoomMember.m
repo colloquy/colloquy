@@ -318,7 +318,7 @@
 
 - (void) handleDraggedFile:(NSString *) path {
 	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
-	[[MVFileTransferController defaultManager] addFileTransfer:[[self user] sendFile:path passively:passive]];
+	[[MVFileTransferController defaultController] addFileTransfer:[[self user] sendFile:path passively:passive]];
 }
 
 #pragma mark -
@@ -465,7 +465,7 @@
 
 - (IBAction) startChat:(id) sender {
 	if( [self isLocalUser] ) return;
-	[[JVChatController defaultManager] chatViewControllerForUser:[self user] ifExists:NO];
+	[[JVChatController defaultController] chatViewControllerForUser:[self user] ifExists:NO];
 }
 
 - (IBAction) sendFile:(id) sender {
@@ -498,7 +498,7 @@
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		passive = [passiveButton state];
 		while( ( path = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultManager] addFileTransfer:[[self user] sendFile:path passively:passive]];
+			[[MVFileTransferController defaultController] addFileTransfer:[[self user] sendFile:path passively:passive]];
 	}
 }
 

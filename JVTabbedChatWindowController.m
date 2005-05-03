@@ -210,7 +210,7 @@
 }
 
 - (void) customTabView:(AICustomTabsView *) view closeTabViewItem:(NSTabViewItem *) tabViewItem {
-	[[JVChatController defaultManager] disposeViewController:[(JVChatTabItem *)tabViewItem chatViewController]];
+	[[JVChatController defaultController] disposeViewController:[(JVChatTabItem *)tabViewItem chatViewController]];
 }
 
 - (void) customTabView:(AICustomTabsView *) view didMoveTabViewItem:(NSTabViewItem *) tabViewItem toCustomTabView:(AICustomTabsView *) destTabView index:(int) index screenPoint:(NSPoint) screenPoint {
@@ -221,7 +221,7 @@
 	if( oldWindowController != newWindowController ) {
 		if( ! newWindowController ) {
 			NSRect newFrame;
-			newWindowController = [[JVChatController defaultManager] newChatWindowController];
+			newWindowController = [[JVChatController defaultController] newChatWindowController];
 			newFrame.origin = screenPoint;
 			newFrame.size = [[oldWindowController window] frame].size;
 

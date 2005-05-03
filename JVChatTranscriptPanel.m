@@ -162,7 +162,7 @@ NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 }
 
 - (IBAction) close:(id) sender {
-	[[JVChatController defaultManager] disposeViewController:self];
+	[[JVChatController defaultController] disposeViewController:self];
 }
 
 - (IBAction) activate:(id) sender {
@@ -204,7 +204,7 @@ NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
-	[item setTarget:[JVChatController defaultManager]];
+	[item setTarget:[JVChatController defaultController]];
 	[menu addItem:item];
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( leaveChat: ) keyEquivalent:@""] autorelease];
@@ -277,7 +277,7 @@ NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 
 - (void) downloadLinkToDisk:(id) sender {
 	NSURL *url = [[sender representedObject] objectForKey:@"WebElementLinkURL"];
-	[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
+	[[MVFileTransferController defaultController] downloadFileAtURL:url toLocalFile:nil];
 }
 
 #pragma mark -
@@ -595,9 +595,9 @@ NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 
 		if( ! [[results lastObject] boolValue] ) {
 			if( [MVChatConnection supportsURLScheme:[url scheme]] ) {
-				[[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
+				[[MVConnectionsController defaultController] handleURL:url andConnectIfPossible:YES];
 			} else if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
-				[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
+				[[MVFileTransferController defaultController] downloadFileAtURL:url toLocalFile:nil];
 			} else {
 				if( ( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSCommandKeyMask ) && [[NSWorkspace sharedWorkspace] respondsToSelector:@selector( openURLs:withAppBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifiers: )] ) {
 					[[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:url] withAppBundleIdentifier:nil options:NSWorkspaceLaunchWithoutActivation additionalEventParamDescriptor:nil launchIdentifiers:nil];

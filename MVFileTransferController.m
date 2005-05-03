@@ -137,7 +137,7 @@ finish:
 
 #pragma mark -
 
-+ (MVFileTransferController *) defaultManager {
++ (MVFileTransferController *) defaultController {
 	extern MVFileTransferController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }

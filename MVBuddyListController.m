@@ -239,7 +239,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[_addPerson autorelease];
 	_addPerson = nil;
 
-	NSEnumerator *enumerator = [[[MVConnectionsController defaultManager] connections] objectEnumerator];
+	NSEnumerator *enumerator = [[[MVConnectionsController defaultController] connections] objectEnumerator];
 	MVChatConnection *connection = nil;
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
@@ -433,7 +433,7 @@ static MVBuddyListController *sharedInstance = nil;
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
 	MVChatUser *user = [buddy activeUser];
 	if( [user type] != MVChatRemoteUserType ) return;
-	[[JVChatController defaultManager] chatViewControllerForUser:user ifExists:NO];
+	[[JVChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 }
 
 - (IBAction) sendFileToSelectedBuddy:(id) sender {
@@ -471,7 +471,7 @@ static MVBuddyListController *sharedInstance = nil;
 		passive = [passiveButton state];
 		NSString *path = nil;
 		while( ( path = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultManager] addFileTransfer:[user sendFile:path passively:passive]];
+			[[MVFileTransferController defaultController] addFileTransfer:[user sendFile:path passively:passive]];
 	}
 }
 
@@ -820,7 +820,7 @@ static MVBuddyListController *sharedInstance = nil;
 		id file = nil;
 
 		while( ( file = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultManager] addFileTransfer:[user sendFile:file passively:passive]];
+			[[MVFileTransferController defaultController] addFileTransfer:[user sendFile:file passively:passive]];
 
 		return YES;
 	}

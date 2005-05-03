@@ -454,7 +454,7 @@ NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *r
 
 @implementation JVChatRoomBrowser (JVChatRoomBrowserPrivate)
 - (void) _connectionChange:(NSNotification *) notification {
-	NSEnumerator *enumerator = [[[MVConnectionsController defaultManager] connections] objectEnumerator];
+	NSEnumerator *enumerator = [[[MVConnectionsController defaultController] connections] objectEnumerator];
 	MVChatConnection *connection = nil;
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
@@ -562,14 +562,14 @@ refresh:
 }
 
 - (void) _startFetch {
-	JVChatConsolePanel *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
+	JVChatConsolePanel *console = [[JVChatController defaultController] chatConsoleForConnection:_connection ifExists:YES];
 	[console pause];
 	[_connection fetchChatRoomList];
 }
 
 - (void) _stopFetch {
 	[_connection stopFetchingChatRoomList];
-	JVChatConsolePanel *console = [[JVChatController defaultManager] chatConsoleForConnection:_connection ifExists:YES];
+	JVChatConsolePanel *console = [[JVChatController defaultController] chatConsoleForConnection:_connection ifExists:YES];
 	[console resume];
 }
 @end

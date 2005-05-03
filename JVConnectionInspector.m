@@ -60,7 +60,7 @@
 
 	[tabView removeTabViewItem:[tabView tabViewItemAtIndex:[tabView indexOfTabViewItemWithIdentifier:@"Proxy"]]];
 
-	[editAutomatic setState:[[MVConnectionsController defaultManager] autoConnectForConnection:_connection]];
+	[editAutomatic setState:[[MVConnectionsController defaultController] autoConnectForConnection:_connection]];
 	[sslConnection setState:[_connection isSecure]];
 	[editAddress setObjectValue:[_connection server]];
 	[editProxy selectItemAtIndex:[editProxy indexOfItemWithTag:(int)[_connection proxyType]]];
@@ -72,11 +72,11 @@
 	[editRealName setObjectValue:[_connection realName]];
 	[editUsername setObjectValue:[_connection username]];
 
-	NSString *commands = [[MVConnectionsController defaultManager] connectCommandsForConnection:_connection];
+	NSString *commands = [[MVConnectionsController defaultController] connectCommandsForConnection:_connection];
 	if( commands) [connectCommands setString:commands];
 
 	[_editingRooms autorelease];
-	_editingRooms = [[NSMutableArray arrayWithArray:[[MVConnectionsController defaultManager] joinRoomsForConnection:_connection]] retain];
+	_editingRooms = [[NSMutableArray arrayWithArray:[[MVConnectionsController defaultController] joinRoomsForConnection:_connection]] retain];
 
 	[editRooms reloadData];
 
@@ -90,12 +90,12 @@
 	[editRules setTarget:self];
 	[editRules setDoubleAction:@selector( configureRule: )];
 
-	_ignoreRules = [[MVConnectionsController defaultManager] ignoreRulesForConnection:_connection];
+	_ignoreRules = [[MVConnectionsController defaultController] ignoreRulesForConnection:_connection];
 }
 
 - (void) didUnload {
-	[[MVConnectionsController defaultManager] setJoinRooms:_editingRooms forConnection:_connection];
-	[[MVConnectionsController defaultManager] setConnectCommands:[connectCommands string] forConnection:_connection];
+	[[MVConnectionsController defaultController] setJoinRooms:_editingRooms forConnection:_connection];
+	[[MVConnectionsController defaultController] setConnectCommands:[connectCommands string] forConnection:_connection];
 }
 
 #pragma mark -
@@ -171,7 +171,7 @@
 }
 
 - (IBAction) toggleAutoConnect:(id) sender {
-	[[MVConnectionsController defaultManager] setAutoConnect:[sender state] forConnection:_connection];
+	[[MVConnectionsController defaultController] setAutoConnect:[sender state] forConnection:_connection];
 }
 
 - (IBAction) toggleSSLConnection:(id) sender {

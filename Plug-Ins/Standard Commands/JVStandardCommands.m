@@ -64,7 +64,7 @@
 			[chat clearDisplay:nil];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"console"] ) {
-			id controller = [[JVChatController defaultManager] chatConsoleForConnection:[chat connection] ifExists:NO];
+			id controller = [[JVChatController defaultController] chatConsoleForConnection:[chat connection] ifExists:NO];
 			[[controller windowController] showChatViewController:controller];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
@@ -374,9 +374,9 @@
 		if( [panel runModalForTypes:nil] == NSOKButton ) {
 			NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 			while( ( path = [enumerator nextObject] ) )
-				[[MVFileTransferController defaultManager] addFileTransfer:[user sendFile:path passively:passive]];
+				[[MVFileTransferController defaultController] addFileTransfer:[user sendFile:path passively:passive]];
 		}
-	} else [[MVFileTransferController defaultManager] addFileTransfer:[user sendFile:path passively:passive]];
+	} else [[MVFileTransferController defaultController] addFileTransfer:[user sendFile:path passively:passive]];
 	return YES;
 }
 
@@ -399,7 +399,7 @@
 - (BOOL) handleServerConnectWithArguments:(NSString *) arguments {
 	NSURL *url = nil;
 	if( arguments && ( url = [NSURL URLWithString:arguments] ) ) {
-		[[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
+		[[MVConnectionsController defaultController] handleURL:url andConnectIfPossible:YES];
 	} else if( arguments ) {
 		NSString *address = nil;
 		int port = 0;
@@ -412,10 +412,10 @@
 
 		if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", [address stringByEncodingIllegalURLCharacters], port]];
 		else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", [address stringByEncodingIllegalURLCharacters]]];
-		else [[MVConnectionsController defaultManager] newConnection:nil];
+		else [[MVConnectionsController defaultController] newConnection:nil];
 
-		if( url ) [[MVConnectionsController defaultManager] handleURL:url andConnectIfPossible:YES];
-	} else [[MVConnectionsController defaultManager] newConnection:nil];
+		if( url ) [[MVConnectionsController defaultController] handleURL:url andConnectIfPossible:YES];
+	} else [[MVConnectionsController defaultController] newConnection:nil];
 	return YES;
 }
 
@@ -494,13 +494,13 @@
 	MVChatRoom *room = nil;
 	if( ! [command caseInsensitiveCompare:@"msg"] && ( ! chanSet || [chanSet characterIsMember:[to characterAtIndex:0]] ) ) {
 		room = [connection joinedChatRoomWithName:to];
-		if( room ) chatView = [[JVChatController defaultManager] chatViewControllerForRoom:room ifExists:YES];
+		if( room ) chatView = [[JVChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
 	}
 
 	MVChatUser *user = nil;
 	if( ! chatView ) {
 		user = [[connection chatUsersWithNickname:to] anyObject];
-		if( user ) chatView = [[JVChatController defaultManager] chatViewControllerForUser:user ifExists:( ! show )];
+		if( user ) chatView = [[JVChatController defaultController] chatViewControllerForUser:user ifExists:( ! show )];
 	}
 
 	if( chatView && [msg length] ) {
@@ -523,7 +523,7 @@
 
 	BOOL action = ( ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"bract"] );
 
-	NSEnumerator *enumerator = [[[JVChatController defaultManager] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
+	NSEnumerator *enumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
 	JVChatRoomPanel *room = nil;
 
 	while( ( room = [enumerator nextObject] ) ) {
@@ -537,7 +537,7 @@
 }
 
 - (BOOL) handleMassAwayWithMessage:(NSAttributedString *) message {
-	NSEnumerator *enumerator = [[[MVConnectionsController defaultManager] connectedConnections] objectEnumerator];
+	NSEnumerator *enumerator = [[[MVConnectionsController defaultController] connectedConnections] objectEnumerator];
 	id item = nil;
 	while( ( item = [enumerator nextObject] ) )
 		[item setAwayStatusWithMessage:message];
@@ -610,7 +610,7 @@
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 
 	KAIgnoreRule *rule = [KAIgnoreRule ruleForUser:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];
-	NSMutableArray *rules = [[MVConnectionsController defaultManager] ignoreRulesForConnection:[view connection]];
+	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[view connection]];
 	[rules addObject:rule];
 
 	return YES;

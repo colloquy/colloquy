@@ -17,7 +17,7 @@
 	NSMutableArray *_chatWindows;
 	NSMutableArray *_chatControllers;
 }
-+ (JVChatController *) defaultManager;
++ (JVChatController *) defaultController;
 + (NSMenu *) smartTranscriptMenu;
 + (void) refreshSmartTranscriptMenu;
 

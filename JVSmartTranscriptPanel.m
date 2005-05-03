@@ -129,7 +129,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
-	[item setTarget:[JVChatController defaultManager]];
+	[item setTarget:[JVChatController defaultController]];
 	[menu addItem:item];
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
@@ -166,7 +166,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 #pragma mark -
 
 - (IBAction) dispose:(id) sender {
-	[[JVChatController defaultManager] disposeSmartTranscript:self];
+	[[JVChatController defaultController] disposeSmartTranscript:self];
 }
 
 #pragma mark -
@@ -272,7 +272,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 	[_windowController reloadListItem:self andChildren:NO];
 
-	[[JVChatController defaultManager] saveSmartTranscripts];
+	[[JVChatController defaultController] saveSmartTranscripts];
 }
 
 #pragma mark -

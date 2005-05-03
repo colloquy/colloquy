@@ -50,7 +50,7 @@
 }
 
 - (void) willLoad {
-	NSEnumerator *enumerator = [[[MVConnectionsController defaultManager] connections] objectEnumerator];
+	NSEnumerator *enumerator = [[[MVConnectionsController defaultController] connections] objectEnumerator];
 	MVChatConnection *connection = nil;
 
 	while( ( connection = [enumerator nextObject] ) )

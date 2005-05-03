@@ -49,7 +49,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 @implementation MVConnectionsController
-+ (MVConnectionsController *) defaultManager {
++ (MVConnectionsController *) defaultController {
 	extern MVConnectionsController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
@@ -387,7 +387,7 @@ static NSMenu *favoritesMenu = nil;
 	if( [_joinRooms count] ) [connection joinChatRoomsNamed:_joinRooms];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
-		[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+		[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 
 	[connection connectToServer:[newAddress stringValue] onPort:[newPort intValue] asUser:[newNickname stringValue]];
 
@@ -407,7 +407,7 @@ static NSMenu *favoritesMenu = nil;
 
 	if( [sender tag] ) {
 		MVChatUser *user = [[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] chatUserWithUniqueIdentifier:[userToMessage stringValue]];
-		[[JVChatController defaultManager] chatViewControllerForUser:user ifExists:NO];
+		[[JVChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 	}
 }
 
@@ -654,7 +654,7 @@ static NSMenu *favoritesMenu = nil;
 
 				if( ! [connection isConnected] && connect ) {
 					if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
-						[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+						[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 					[connection connect];
 				}
 
@@ -685,7 +685,7 @@ static NSMenu *favoritesMenu = nil;
 
 			if( connect ) {
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
-					[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+					[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 				if( target ) [_joinRooms addObject:target];
 
 				[connection connect];
@@ -1372,9 +1372,9 @@ static NSMenu *favoritesMenu = nil;
 		switch( error ) {
 			case MVChatBadTargetError:
 				if( [target hasPrefix:@"#"] || [target hasPrefix:@"&"] || [target hasPrefix:@"+"] || [target hasPrefix:@"!"] ) {
-					[(JVChatRoomPanel *)[[JVChatController defaultManager] chatViewControllerForRoom:target withConnection:connection ifExists:YES] unavailable];
+					[(JVChatRoomPanel *)[[JVChatController defaultController] chatViewControllerForRoom:target withConnection:connection ifExists:YES] unavailable];
 				} else if( target ) {
-					[(JVDirectChatPanel *)[[JVChatController defaultManager] chatViewControllerForUser:target withConnection:connection ifExists:YES] unavailable];
+					[(JVDirectChatPanel *)[[JVChatController defaultController] chatViewControllerForUser:target withConnection:connection ifExists:YES] unavailable];
 				} else {
 					NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname you specified is in use or invalid on this server.", "chat invalid nickname dialog message" ), nil, nil, nil );
 				}
@@ -1486,7 +1486,7 @@ static NSMenu *favoritesMenu = nil;
 
 		if( [[info objectForKey:@"automatic"] boolValue] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ) {
 			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
-				[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+				[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 
 			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 
@@ -1647,14 +1647,14 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
 	[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
-		[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+		[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 	[connection connect];
 }
 
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
-		[[JVChatController defaultManager] chatConsoleForConnection:connection ifExists:NO];
+		[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 }
 
 - (void) _didConnect:(NSNotification *) notification {
@@ -1744,7 +1744,7 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) _openConsole:(id) sender {
 	unsigned int row = [connections selectedRow];
 	if( row == -1 ) return;
-	[[JVChatController defaultManager] chatConsoleForConnection:[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] ifExists:NO];
+	[[JVChatController defaultController] chatConsoleForConnection:[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] ifExists:NO];
 }
 
 + (IBAction) _openFavoritesFolder:(id) sender {
@@ -1753,7 +1753,7 @@ static NSMenu *favoritesMenu = nil;
 
 + (IBAction) _connectToFavorite:(id) sender {
 	if( ! [sender representedObject] ) return;
-	[[MVConnectionsController defaultManager] handleURL:[sender representedObject] andConnectIfPossible:YES];
+	[[MVConnectionsController defaultController] handleURL:[sender representedObject] andConnectIfPossible:YES];
 }
 @end
 
@@ -1771,13 +1771,13 @@ static NSMenu *favoritesMenu = nil;
 
 @implementation NSApplication (MVConnectionsControllerScripting)
 - (void) newConnection:(NSScriptCommand *) command {
-	[[MVConnectionsController defaultManager] newConnection:nil];
+	[[MVConnectionsController defaultController] newConnection:nil];
 }
 
 #pragma mark -
 
 - (NSArray *) chatConnections {
-	return [[MVConnectionsController defaultManager] connections];
+	return [[MVConnectionsController defaultController] connections];
 }
 
 - (MVChatConnection *) valueInChatConnectionsAtIndex:(unsigned) index {
@@ -1797,22 +1797,22 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) addInChatConnections:(MVChatConnection *) connection {
-	[[MVConnectionsController defaultManager] addConnection:connection];
+	[[MVConnectionsController defaultController] addConnection:connection];
 }
 
 - (void) insertInChatConnections:(MVChatConnection *) connection {
-	[[MVConnectionsController defaultManager] addConnection:connection];
+	[[MVConnectionsController defaultController] addConnection:connection];
 }
 
 - (void) insertInChatConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
-	[[MVConnectionsController defaultManager] insertConnection:connection atIndex:index];
+	[[MVConnectionsController defaultController] insertConnection:connection atIndex:index];
 }
 
 - (void) removeFromChatConnectionsAtIndex:(unsigned) index {
-	[[MVConnectionsController defaultManager] removeConnectionAtIndex:index];
+	[[MVConnectionsController defaultController] removeConnectionAtIndex:index];
 }
 
 - (void) replaceInChatConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
-	[[MVConnectionsController defaultManager] replaceConnectionAtIndex:index withConnection:connection];
+	[[MVConnectionsController defaultController] replaceConnectionAtIndex:index withConnection:connection];
 }
 @end

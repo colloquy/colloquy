@@ -16,7 +16,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 + (NSString *) userPreferredDownloadFolder;
 + (void) setUserPreferredDownloadFolder:(NSString *) path;
 
-+ (MVFileTransferController *) defaultManager;
++ (MVFileTransferController *) defaultController;
 
 - (IBAction) showTransferManager:(id) sender;
 - (IBAction) hideTransferManager:(id) sender;

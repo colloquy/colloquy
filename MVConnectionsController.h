@@ -56,7 +56,7 @@
 	NSDictionary *_publicKeyDictionary;
 	NSMutableSet *_publicKeyRequestQueue;
 }
-+ (MVConnectionsController *) defaultManager;
++ (MVConnectionsController *) defaultController;
 
 + (NSMenu *) favoritesMenu;
 + (void) refreshFavoritesMenu;

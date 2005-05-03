@@ -82,7 +82,7 @@
 - (IBAction) changeSortByStatus:(id) sender {
 	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVSortRoomMembersByStatus"];
 
-	NSEnumerator *enumerator = [[[JVChatController defaultManager] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
+	NSEnumerator *enumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
 	JVChatRoomPanel *room = nil;
 	while( ( room = [enumerator nextObject] ) )
 		[room resortMembers];

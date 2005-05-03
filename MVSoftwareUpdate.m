@@ -87,7 +87,7 @@ static void MVSoftwareUpdateClearTimeout() {
 
 - (IBAction) download:(id) sender {
 	NSURL *url = [NSURL URLWithString:[updateInfo objectForKey:@"MVLatestDownloadURL"]];
-	[[MVFileTransferController defaultManager] downloadFileAtURL:url toLocalFile:nil];
+	[[MVFileTransferController defaultController] downloadFileAtURL:url toLocalFile:nil];
 //	[[NSWorkspace sharedWorkspace] openURL:url];
 	[self autorelease];
 }

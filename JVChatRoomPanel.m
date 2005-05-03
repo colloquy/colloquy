@@ -123,7 +123,7 @@
 	if( ! [_sortedMembers count] )
 		return NSLocalizedString( @"joining...", "joining status info line in drawer" );
 	if( [[self connection] isConnected] ) {
-		if( [[[MVConnectionsController defaultManager] connectedConnections] count] == 1 )
+		if( [[[MVConnectionsController defaultController] connectedConnections] count] == 1 )
 			return [NSString stringWithFormat:NSLocalizedString( @"%d members", "number of room members information line" ), [_sortedMembers count]];
 		else return [[self connection] server];
 	}
@@ -205,7 +205,7 @@
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
-	[item setTarget:[JVChatController defaultManager]];
+	[item setTarget:[JVChatController defaultController]];
 	[menu addItem:item];
 
 	if( [[self target] isJoined] ) {
@@ -573,7 +573,7 @@
 		if( ! user ) user = [[[self connection] chatUsersWithNickname:nick] anyObject];
 
 		if( user && ! [user isLocalUser] )
-			[[JVChatController defaultManager] chatViewControllerForUser:user ifExists:NO];
+			[[JVChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 
 		[listener ignore];
 	} else {
@@ -1288,7 +1288,7 @@
 }
 
 - (void) _startChatWithNonMember:(id) sender {
-	[[JVChatController defaultManager] chatViewControllerForUser:[sender representedObject] ifExists:NO];
+	[[JVChatController defaultController] chatViewControllerForUser:[sender representedObject] ifExists:NO];
 }
 @end
 

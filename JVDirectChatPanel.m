@@ -267,7 +267,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[send setEditable:YES];
 	[send setRichText:YES];
 	[send setImportsGraphics:NO];
-	[send setUsesFindPanel:NO];
 	[send setUsesFontPanel:YES];
 	[send setAllowsUndo:YES];
 	[send setUsesRuler:NO];
@@ -395,7 +394,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
 	[item setRepresentedObject:self];
-	[item setTarget:[JVChatController defaultManager]];
+	[item setTarget:[JVChatController defaultController]];
 	[menu addItem:item];
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
@@ -668,7 +667,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[self _setCurrentMessage:cmessage];
 
 	if( ! [user isLocalUser] )
-		[cmessage setIgnoreStatus:[[JVChatController defaultManager] shouldIgnoreUser:user withMessage:messageString inView:self]];
+		[cmessage setIgnoreStatus:[[JVChatController defaultController] shouldIgnoreUser:user withMessage:messageString inView:self]];
 
 	if( ! [user isLocalUser] && [cmessage ignoreStatus] == JVNotIgnored )
 		_newMessageCount++;
@@ -1054,11 +1053,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	// exclude device-dependent flags, caps-lock and fn key (necessary for pg up/pg dn/home/end on portables)
 	if( [event modifierFlags] & ~( NSFunctionKeyMask | NSNumericPadKeyMask | NSAlphaShiftKeyMask | NSAlternateKeyMask | 0xffff ) ) return NO;
 
-	BOOL usesOnlyArrows = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendHistoryUsesOnlyArrows"];
-
-	if( chr == NSUpArrowFunctionKey && ( usesOnlyArrows || [event modifierFlags] & NSAlternateKeyMask ) ) {
+	if( chr == NSUpArrowFunctionKey && [event modifierFlags] & NSAlternateKeyMask ) {
 		return [self upArrowKeyPressed];
-	} else if( chr == NSDownArrowFunctionKey && ( usesOnlyArrows || [event modifierFlags] & NSAlternateKeyMask ) ) {
+	} else if( chr == NSDownArrowFunctionKey && [event modifierFlags] & NSAlternateKeyMask ) {
 		return [self downArrowKeyPressed];
 	} else if( chr == NSPageUpFunctionKey || chr == NSPageDownFunctionKey || chr == NSHomeFunctionKey || chr == NSBeginFunctionKey || chr == NSEndFunctionKey ) {
 		[[[display mainFrame] frameView] keyDown:event];
@@ -1675,7 +1672,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		passive = [passiveButton state];
 		while( ( path = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultManager] addFileTransfer:[[self target] sendFile:path passively:passive]];
+			[[MVFileTransferController defaultController] addFileTransfer:[[self target] sendFile:path passively:passive]];
 	}
 }
 
