@@ -186,6 +186,7 @@
 	if( tabViewItem ) {
 		[self _refreshWindow];
 		[self _refreshList];
+		[self _refreshSelectionMenu];
 
 		id controller = [(JVChatTabItem *)tabViewItem chatViewController];
 		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] &&
