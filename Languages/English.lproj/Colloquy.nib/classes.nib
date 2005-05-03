@@ -34,7 +34,9 @@
             ACTIONS = {
                 checkForUpdate = id; 
                 connectToSupportRoom = id; 
+                copyStripped = id; 
                 emailDeveloper = id; 
+                markAllDisplays = id; 
                 productWebsite = id; 
                 showBuddyList = id; 
                 showConnectionManager = id; 
@@ -59,7 +61,8 @@
             OUTLETS = {currentMessage = id; }; 
             SUPERCLASS = NSView; 
         }, 
-        {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }
+        {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

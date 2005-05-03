@@ -25,6 +25,7 @@
 #import "NSBundleAdditions.h"
 #import "JVStyle.h"
 #import "JVGetCommand.h"
+#import "JVDirectChatPanel.h"
 
 #import <Foundation/NSDebug.h>
 
@@ -171,6 +172,15 @@ static BOOL applicationIsTerminating = NO;
 			}
 		}
 	}
+}
+
+#pragma mark -
+
+- (IBAction) markAllDisplays:(id) sender {
+	JVChatController *chatController = [JVChatController defaultManager];
+	Class controllerClass = [JVDirectChatPanel class];
+	NSSet *viewControllers = [chatController chatViewControllersKindOfClass:controllerClass];
+	[viewControllers makeObjectsPerformSelector:@selector( markDisplay: ) withObject:sender];
 }
 
 #pragma mark -
@@ -423,8 +433,16 @@ static BOOL applicationIsTerminating = NO;
 
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( joinRoom: ) ) {
-		if( [[[MVConnectionsController defaultManager] connections] count] ) return YES;
-		else return NO;
+		if( [[[MVConnectionsController defaultManager] connections] count] ) {
+			return YES;
+		} else {
+			return NO;
+		}
+	} else if( [menuItem action] == @selector( markAllDisplays: ) ) {
+		JVChatController *chatController = [JVChatController defaultManager];
+		Class controllerClass = [JVDirectChatPanel class];
+		NSSet *viewControllers = [chatController chatViewControllersKindOfClass:controllerClass];
+		return ( [viewControllers count] > 0 );
 	}
 	return YES;
 }

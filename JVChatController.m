@@ -303,7 +303,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		}
 	}
 
-	return ret;
+	return (JVChatConsolePanel *)ret;
 }
 
 #pragma mark -

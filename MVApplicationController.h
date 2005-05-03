@@ -14,6 +14,8 @@ extern NSString *JVChatEmoticonSetInstalledNotification;
 
 - (IBAction) copyStripped:(id) sender;
 
+- (IBAction) markAllDisplays:(id) sender;
+
 + (BOOL) isTerminating;
 @end
 
