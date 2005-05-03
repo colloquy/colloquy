@@ -262,11 +262,6 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 	if( ! self ) return;
 
 	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	if( ! room ) {
-		room = [[[MVIRCChatRoom allocWithZone:[self zone]] initWithName:[self stringWithEncodedBytes:channel -> name] andConnection:self] autorelease];
-		[self _addJoinedRoom:room];
-	}
-
 	[room _setDateJoined:[NSDate date]];
 	[room _setDateParted:nil];
 	[room _clearMemberUsers];
@@ -365,10 +360,19 @@ static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, cons
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( ! self ) return;
 
-	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) return;
-
 	char *channel = NULL;
 	char *params = event_get_params( data, 1, &channel );
+
+	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) {
+		// this is the local user, create the room object now as early as possible
+		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
+		if( ! room ) {
+			room = [[[MVIRCChatRoom allocWithZone:[self zone]] initWithName:[self stringWithEncodedBytes:channel] andConnection:self] autorelease];
+			[self _addJoinedRoom:room];
+		}
+
+		goto finish; // the rest of this function doesn't apply since it is just the local user
+	}
 
 	CHANNEL_REC *chan = channel_find( (SERVER_REC *) server, channel );
 	NICK_REC *nickname = nicklist_find( chan, nick );
