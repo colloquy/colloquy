@@ -264,12 +264,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		if( _newWebKit ) {
 			DOMDocument *doc = [[self mainFrame] DOMDocument];
 			DOMElement *elt = [doc getElementById:@"mark"];
-			if( elt ) {
-				[[elt parentNode] removeChild:elt];
-			}
+			if( elt ) [[elt parentNode] removeChild:elt];
 			elt = [doc createElement:@"hr"];
 			[elt setAttribute:@"id" :@"mark"];
 			[[[doc getElementsByTagName:@"body"] item:0] appendChild:elt];
+			[self scrollToBottom];
 		} else {
 #endif
 			[self stringByEvaluatingJavaScriptFromString:@"mark();"];
