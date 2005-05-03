@@ -93,6 +93,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatRoomJoinedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToRoom: ) name:MVChatRoomInvitedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotPrivateMessage: ) name:MVChatConnectionGotPrivateMessageNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatRoomGotMessageNotification object:nil];
 	}
 	return self;
 }
@@ -460,6 +461,13 @@ static NSMenu *smartTranscriptMenu = nil;
 		JVChatMessageType type = ( [[[notification userInfo] objectForKey:@"notice"] boolValue] ? JVChatMessageNoticeType : JVChatMessageNormalType );
 		[controller addMessageToDisplay:message fromUser:user asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] andType:type];
 	}
+}
+
+- (void) _gotRoomMessage:(NSNotification *) notification {
+	// we do this here to make sure we catch early messages right when we join (this includes dircproxy's dump)
+	MVChatRoom *room = [notification object];
+	JVChatRoomPanel *controller = [self chatViewControllerForRoom:room ifExists:NO];
+	[controller handleRoomMessageNotification:notification];
 }
 
 - (void) _addWindowController:(JVChatWindowController *) windowController {

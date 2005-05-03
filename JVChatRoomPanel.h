@@ -32,6 +32,8 @@
 - (JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user;
 - (JVChatRoomMember *) localChatRoomMember;
 - (void) resortMembers;
+
+- (void) handleRoomMessageNotification:(NSNotification *) notification;
 @end
 
 @interface NSObject (MVChatPluginRoomSupport)
