@@ -119,4 +119,5 @@ function mark() {
 	elt.id = "mark";
 	document.getElementsByTagName( "body" ).item(0).appendChild( elt );
 	scrollToBottom();
+	return elt.offsetTop;
 }
