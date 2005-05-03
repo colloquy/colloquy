@@ -115,7 +115,7 @@ static NSMenu *smartTranscriptMenu = nil;
 #pragma mark -
 
 - (NSSet *) allChatWindowControllers {
-	return [[[NSSet setWithArray:_chatWindows] retain] autorelease];
+	return [NSSet setWithArray:_chatWindows];
 }
 
 - (JVChatWindowController *) newChatWindowController {
@@ -124,7 +124,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		windowController = [[[JVTabbedChatWindowController alloc] init] autorelease];
 	else windowController = [[[JVChatWindowController alloc] init] autorelease];
 	[self _addWindowController:windowController];
-	return [[windowController retain] autorelease];
+	return windowController;
 }
 
 - (void) disposeChatWindowController:(JVChatWindowController *) controller {
@@ -141,7 +141,7 @@ static NSMenu *smartTranscriptMenu = nil;
 #pragma mark -
 
 - (NSSet *) allChatViewControllers {
-	return [[[NSSet setWithArray:_chatControllers] retain] autorelease];
+	return [NSSet setWithArray:_chatControllers];
 }
 
 - (NSSet *) chatViewControllersWithConnection:(MVChatConnection *) connection {
@@ -156,7 +156,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( [item connection] == connection )
 			[ret addObject:item];
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 - (NSSet *) chatViewControllersOfClass:(Class) class {
@@ -171,7 +171,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( [item isMemberOfClass:class] )
 			[ret addObject:item];
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 - (NSSet *) chatViewControllersKindOfClass:(Class) class {
@@ -186,7 +186,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( [item isKindOfClass:class] )
 			[ret addObject:item];
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 #pragma mark -
@@ -208,7 +208,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		}
 	}
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 - (JVDirectChatPanel *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists {
@@ -232,7 +232,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		}
 	}
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 - (JVChatTranscriptPanel *) chatViewControllerForTranscript:(NSString *) filename {
@@ -241,7 +241,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		[_chatControllers addObject:ret];
 		[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
 	}
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 #pragma mark -
@@ -253,7 +253,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
 		[ret editSettings:nil];
 	}
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 - (NSSet *) smartTranscripts {
@@ -303,7 +303,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		}
 	}
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 #pragma mark -
@@ -324,7 +324,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (void) detachViewController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
 
-	[[controller retain] autorelease];
+	[controller retain];
 
 	JVChatWindowController *windowController = [self newChatWindowController];
 	[[controller windowController] removeChatViewController:controller];
@@ -338,6 +338,8 @@ static NSMenu *smartTranscriptMenu = nil;
 	[[windowController window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
 
 	[windowController addChatViewController:controller];
+	
+	[controller release];
 }
 
 #pragma mark -
