@@ -118,4 +118,5 @@ function mark() {
 	elt = document.createElement( "hr" );
 	elt.id = "mark";
 	document.getElementsByTagName( "body" ).item(0).appendChild( elt );
+	scrollToBottom();
 }
