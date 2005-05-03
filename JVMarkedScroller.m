@@ -1,5 +1,11 @@
 #import "JVMarkedScroller.h"
 
+struct _mark {
+	unsigned long long location;
+	NSString *identifier;
+	NSColor *color;
+};
+
 @implementation JVMarkedScroller
 - (id) initWithFrame:(NSRect) frame {
 	if( ( self = [super initWithFrame:frame] ) ) {
@@ -77,14 +83,18 @@
 	NSRectClip( NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 4. : 3. ), ( sFlags.isHoriz ? 3. : 4. ) ) );
 
 	NSBezierPath *lines = [NSBezierPath bezierPath];
+	NSMutableArray *lineArray = [NSMutableArray array];
 	enumerator = [_marks objectEnumerator];
+	NSValue *currentMark;
 
 	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * ( NSHeight( [self frame] ) / [self knobProportion] ) );
 	BOOL foundNext = NO, foundPrevious = NO;
 	NSRect knobRect = [self rectForPart:NSScrollerKnob];
 
-	while( ( startNum = [enumerator nextObject] ) ) {
-		unsigned long long value = [startNum unsignedLongLongValue];
+	while( ( currentMark = [enumerator nextObject] ) ) {
+		struct _mark mark;
+		[currentMark getValue:&mark];
+		unsigned long long value = mark.location;
 
 		if( value < currentPosition && ( ! foundPrevious || value > _nearestPreviousMark ) ) {
 			_nearestPreviousMark = value;
@@ -100,12 +110,22 @@
 		point = [transform transformPoint:point];
 		point.x = ( sFlags.isHoriz ? roundf( point.x ) + 0.5 : point.x );
 		point.y = ( sFlags.isHoriz ? point.y : roundf( point.y ) + 0.5 );
-
+		
 		if( ! NSPointInRect( point, knobRect ) ) {
-			[lines moveToPoint:point];
+			if( mark.color != nil ) {
+				NSBezierPath *line = [NSBezierPath bezierPath];
+				[line moveToPoint:point];
+				
+				point = NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) );
+				[line relativeLineToPoint:point];
+				[lineArray addObject:mark.color];
+				[lineArray addObject:line];
+			} else {
+				[lines moveToPoint:point];
 
-			point = NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) );
-			[lines relativeLineToPoint:point];
+				point = NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) );
+				[lines relativeLineToPoint:point];
+			}
 		}
 	}
 
@@ -114,6 +134,14 @@
 
 	[[NSColor selectedKnobColor] set];
 	[lines stroke];
+	
+	// This is so we can draw the colored lines after the regular lines
+	enumerator = [lineArray objectEnumerator];
+	NSColor *lineColor;
+	while( lineColor = [enumerator nextObject] ) {
+		[lineColor set];
+		[[enumerator nextObject] stroke];
+	}
 }
 
 - (void) setFloatValue:(float) position knobProportion:(float) percent {
@@ -187,7 +215,7 @@
 		_jumpingToMark = YES;
 		float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
 		float shift = ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
-		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _nearestPreviousMark - shift )];
+		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
 	}
 }
@@ -198,9 +226,31 @@
 		_jumpingToMark = YES;
 		float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
 		float shift = ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
-		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _nearestNextMark - shift )];
+		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
 	}
+}
+
+- (void) jumpToMarkWithIdentifier:(NSString *) identifier {
+	_jumpingToMark = YES;
+	NSEnumerator *e = [_marks objectEnumerator];
+	NSValue *obj;
+	BOOL foundMark = NO;
+	while( obj = [e nextObject] ) {
+		struct _mark mark;
+		[obj getValue:&mark];
+		if( [mark.identifier isEqualToString:identifier] ) {
+			_currentMark = mark.location;
+			foundMark = YES;
+			break;
+		}
+	}
+	if( foundMark ) {
+		float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+		float shift = ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
+		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];		
+	}
+	_jumpingToMark = NO;
 }
 
 #pragma mark -
@@ -208,7 +258,7 @@
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement {
 	BOOL negative = ( displacement >= 0 ? NO : YES );
 	NSMutableSet *shiftedMarks = [NSMutableSet set];
-	NSNumber *location = nil;
+	NSValue *location = nil;
 
 	if( ! ( negative && _nearestPreviousMark < ABS( displacement ) ) ) _nearestPreviousMark += displacement;
 	else _nearestPreviousMark = NSNotFound;
@@ -221,9 +271,12 @@
 
 	NSEnumerator *enumerator = [_marks objectEnumerator];
 	while( ( location = [enumerator nextObject] ) ) {
-		unsigned long long shifted = [location unsignedLongLongValue];
-		if( ! ( negative && shifted < ABS( displacement ) ) )
-			[shiftedMarks addObject:[NSNumber numberWithUnsignedLongLong:( shifted + displacement )]];
+		struct _mark mark;
+		[location getValue:&mark];
+		if( ! ( negative && mark.location < ABS( displacement ) ) ) {
+			mark.location += displacement;
+			[shiftedMarks addObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
+		}
 	}
 
 	[_marks setSet:shiftedMarks];
@@ -255,44 +308,95 @@
 #pragma mark -
 
 - (void) addMarkAt:(unsigned long long) location {
-	[_marks addObject:[NSNumber numberWithUnsignedLongLong:location]];
+	[self addMarkAt:location withIdentifier:nil withColor:nil];
+}
+
+- (void) addMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier {
+	[self addMarkAt:location withIdentifier:identifier withColor:nil];
+}
+
+- (void) addMarkAt:(unsigned long long) location withColor:(NSColor *) color {
+	[self addMarkAt:location withIdentifier:nil withColor:color];
+}
+
+- (void) addMarkAt:(unsigned long long) location
+	withIdentifier:(NSString *) identifier
+		 withColor:(NSColor *) color {
+	struct _mark mark = {location, identifier, color};
+	[_marks addObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
 - (void) removeMarkAt:(unsigned long long) location {
-	[_marks removeObject:[NSNumber numberWithUnsignedLongLong:location]];
+	[self removeMarkAt:location withIdentifier:nil withColor:nil];
+}
+
+- (void) removeMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier {
+	[self removeMarkAt:location withIdentifier:identifier withColor:nil];
+}
+
+- (void) removeMarkAt:(unsigned long long) location withColor:(NSColor *) color {
+	[self removeMarkAt:location withIdentifier:nil withColor:color];
+}
+
+- (void) removeMarkAt:(unsigned long long) location
+	   withIdentifier:(NSString *) identifier
+			withColor:(NSColor *) color {
+	struct _mark mark = {location, identifier, color};
+	[_marks removeObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
+}
+
+- (void) removeMarkWithIdentifier:(NSString *) identifier {
+	NSEnumerator *e = [[[_marks copy] autorelease] objectEnumerator];
+	NSValue *obj;
+	while( obj = [e nextObject] ) {
+		struct _mark mark;
+		[obj getValue:&mark];
+		if( [mark.identifier isEqualToString:identifier] ) {
+			[_marks removeObject:obj];
+		}
+	}
 }
 
 - (void) removeMarksGreaterThan:(unsigned long long) location {
 	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
-	NSNumber *number = nil;
+	NSValue *obj;
 
-	while( ( number = [enumerator nextObject] ) )
-		if( [number unsignedIntValue] > location )
-			[_marks removeObject:number];
+	while( obj = [enumerator nextObject] ) {
+		struct _mark mark;
+		[obj getValue:&mark];
+		if( mark.location > location )
+			[_marks removeObject:obj];
+	}
 
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
 - (void) removeMarksLessThan:(unsigned long long) location {
 	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
-	NSNumber *number = nil;
+	NSValue *obj;
 
-	while( ( number = [enumerator nextObject] ) )
-		if( [number unsignedIntValue] < location )
-			[_marks removeObject:number];
+	while( obj = [enumerator nextObject] ) {
+		struct _mark mark;
+		[obj getValue:&mark];
+		if( mark.location < location )
+			[_marks removeObject:obj];
+	}
 
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
 - (void) removeMarksInRange:(NSRange) range {
 	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
-	NSNumber *number = nil;
+	NSValue *obj;
 
-	while( ( number = [enumerator nextObject] ) )
-		if( NSLocationInRange( [number unsignedIntValue], range ) )
-			[_marks removeObject:number];
+	while( obj = [enumerator nextObject] ) {
+		struct _mark mark;
+		[obj getValue:&mark];
+		if( NSLocationInRange( (unsigned int)mark.location, range ) )
+			[_marks removeObject:obj];
+	}
 
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
@@ -305,8 +409,7 @@
 #pragma mark -
 
 - (void) setMarks:(NSSet *) marks {
-	[_marks autorelease];
-	_marks = [[NSMutableSet setWithSet:marks] retain];
+	[_marks setSet:marks];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 

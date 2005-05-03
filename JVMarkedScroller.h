@@ -9,11 +9,23 @@
 }
 - (IBAction) jumpToPreviousMark:(id) sender;
 - (IBAction) jumpToNextMark:(id) sender;
+- (void) jumpToMarkWithIdentifier:(NSString *) identifier;
 
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement;
 
 - (void) addMarkAt:(unsigned long long) location;
+- (void) addMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier;
+- (void) addMarkAt:(unsigned long long) location withColor:(NSColor *) color;
+- (void) addMarkAt:(unsigned long long) location
+	withIdentifier:(NSString *) identifier
+		 withColor:(NSColor *) color;
 - (void) removeMarkAt:(unsigned long long) location;
+- (void) removeMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier;
+- (void) removeMarkAt:(unsigned long long) location withColor:(NSColor *) color;
+- (void) removeMarkAt:(unsigned long long) location
+	   withIdentifier:(NSString *) identifier
+			withColor:(NSColor *) color;
+- (void) removeMarkWithIdentifier:(NSString *) identifier;
 - (void) removeMarksGreaterThan:(unsigned long long) location;
 - (void) removeMarksLessThan:(unsigned long long) location;
 - (void) removeMarksInRange:(NSRange) range;

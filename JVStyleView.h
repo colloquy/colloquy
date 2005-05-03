@@ -58,6 +58,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 - (void) clearScrollbarMarks;
 
 - (JVMarkedScroller *) verticalMarkedScroller;
+- (IBAction) jumpToMark:(id) sender;
 - (IBAction) jumpToPreviousHighlight:(id) sender;
 - (IBAction) jumpToNextHighlight:(id) sender;
 - (void) jumpToMessage:(JVChatMessage *) message;

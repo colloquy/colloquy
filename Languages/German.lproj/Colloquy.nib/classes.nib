@@ -12,6 +12,7 @@
                 getInfo = id; 
                 italic = id; 
                 joinRoom = id; 
+                jumpToMark = id; 
                 jumpToNextHighlight = id; 
                 jumpToPreviousHighlight = id; 
                 markDisplay = id; 

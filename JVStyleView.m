@@ -260,6 +260,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) mark {
 	if( _webViewReady ) {
+		int location;
 #ifdef WebKitVersion146
 		if( _newWebKit ) {
 			DOMDocument *doc = [[self mainFrame] DOMDocument];
@@ -269,11 +270,16 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 			[elt setAttribute:@"id" :@"mark"];
 			[[[doc getElementsByTagName:@"body"] item:0] appendChild:elt];
 			[self scrollToBottom];
+			location = [[elt valueForKey:@"offsetTop"] intValue];
 		} else {
 #endif
-			[self stringByEvaluatingJavaScriptFromString:@"mark();"];
+			location = [[self stringByEvaluatingJavaScriptFromString:@"mark();"] intValue];
 #ifdef WebKitVersion146
 		}
+		[[self verticalMarkedScroller] removeMarkWithIdentifier:@"mark"];
+		[[self verticalMarkedScroller] addMarkAt:location
+								  withIdentifier:@"mark"
+									   withColor:[NSColor redColor]];
 #endif
 	} else {
 		[self performSelector:_cmd withObject:nil afterDelay:0.];
@@ -458,6 +464,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	}
 
 	return scroller;
+}
+
+- (IBAction) jumpToMark:(id) sender {
+	[[self verticalMarkedScroller] jumpToMarkWithIdentifier:@"mark"];
 }
 
 - (IBAction) jumpToPreviousHighlight:(id) sender {

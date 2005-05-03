@@ -463,12 +463,16 @@ NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 #pragma mark -
 #pragma mark Highlight/Message Jumping
 
+- (IBAction) jumpToMark:(id) sender {
+	[display jumpToMark:sender];
+}
+
 - (IBAction) jumpToPreviousHighlight:(id) sender {
-	[[display verticalMarkedScroller] jumpToPreviousMark:sender];
+	[display jumpToPreviousHighlight:sender];
 }
 
 - (IBAction) jumpToNextHighlight:(id) sender {
-	[[display verticalMarkedScroller] jumpToNextMark:sender];
+	[display jumpToNextHighlight:sender];
 }
 
 - (void) jumpToMessage:(JVChatMessage *) message {
