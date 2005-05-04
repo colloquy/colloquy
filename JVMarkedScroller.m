@@ -110,12 +110,12 @@ struct _mark {
 		point = [transform transformPoint:point];
 		point.x = ( sFlags.isHoriz ? roundf( point.x ) + 0.5 : point.x );
 		point.y = ( sFlags.isHoriz ? point.y : roundf( point.y ) + 0.5 );
-		
+
 		if( ! NSPointInRect( point, knobRect ) ) {
 			if( mark.color != nil ) {
 				NSBezierPath *line = [NSBezierPath bezierPath];
 				[line moveToPoint:point];
-				
+
 				point = NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) );
 				[line relativeLineToPoint:point];
 				[lineArray addObject:mark.color];
@@ -134,7 +134,7 @@ struct _mark {
 
 	[[NSColor selectedKnobColor] set];
 	[lines stroke];
-	
+
 	// This is so we can draw the colored lines after the regular lines
 	enumerator = [lineArray objectEnumerator];
 	NSColor *lineColor;

@@ -1033,11 +1033,11 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		[xml writeToFile:[self filePath] atomically:NO];
 
 #ifdef MAC_OS_X_VERSION_10_4
-		if( NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5 )
+		if( floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3 )
 			setxattr( [[self filePath] fileSystemRepresentation], "dateStarted", [dateString UTF8String], [dateString length], 0, 0 );
 #endif
 
-		[self _chnageFileAttributesAtPath:[self filePath]];
+		[self _changeFileAttributesAtPath:[self filePath]];
 
 		if( ! _logFile && [self automaticallyWritesChangesToFile] ) {
 			_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:[self filePath]] retain];
@@ -1088,13 +1088,13 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 	xmlBufferFree( buf );
 }
 
-- (void) _chnageFileAttributesAtPath:(NSString *) path {
+- (void) _changeFileAttributesAtPath:(NSString *) path {
 	NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
 
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
 
 #ifdef MAC_OS_X_VERSION_10_4
-	if( NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5 ) {	
+	if( NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5 ) {
 		FILE *logs = fopen( [path fileSystemRepresentation], "w+" );
 		if( logs ) {
 			int logsFd = fileno( logs );
