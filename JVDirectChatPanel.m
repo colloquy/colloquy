@@ -1246,13 +1246,13 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[toolbarItem setAction:@selector( clearDisplay: )];
 	} else if( [identifier isEqual:JVToolbarMarkItemIdentifier] ) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
-		
+
 		[toolbarItem setLabel:NSLocalizedString( @"Mark", "mark display toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Mark Display", "mark display toolbar customize palette name" )];
-		
+
 		[toolbarItem setToolTip:NSLocalizedString( @"Mark Display", "mark display tooltip" )];
-		[toolbarItem setImage:[NSImage imageNamed:@"mark"]];
-		
+		[toolbarItem setImage:[NSImage imageNamed:@"markDisplay"]];
+
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( markDisplay: )];
 	} else if( [identifier isEqual:JVToolbarSendFileItemIdentifier] ) {

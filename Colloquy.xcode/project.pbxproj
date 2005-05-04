@@ -329,6 +329,20 @@
 			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
 			remoteInfo = "AppleScript Support Plugin";
 		};
+		1C05F4550828727D006FCB72 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = markDisplay.png;
+			path = Resources/markDisplay.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C05F4560828727D006FCB72 = {
+			fileRef = 1C05F4550828727D006FCB72;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C06052306471FFB002438AF = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -2467,6 +2481,7 @@
 				1CF4D76607E6AD4400DB421A,
 				0A5B683F0810EC9700398D5A,
 				0AA8117B0826E08000A3BF2D,
+				1C05F4560828727D006FCB72,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6430,6 +6445,7 @@
 				1CA7CA6305FEC88500887614,
 				1CA7CA6405FEC88500887614,
 				1CA7CA6505FEC88500887614,
+				1C05F4550828727D006FCB72,
 				1CBECE5D050A8D21000001C8,
 				F5E0640A038D703901000102,
 				F5E06408038D6DEB01000102,
