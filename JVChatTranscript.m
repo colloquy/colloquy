@@ -67,7 +67,7 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (void) _enforceElementLimit;
 - (void) _incrementalWriteToLog:(xmlNodePtr) node continuation:(BOOL) cont;
-- (void) _chnageFileAttributesAtPath:(NSString *) path;
+- (void) _changeFileAttributesAtPath:(NSString *) path;
 @end
 
 #pragma mark -
@@ -906,7 +906,7 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		[xmlData release];
 	}
 
-	[self _chnageFileAttributesAtPath:path];
+	[self _changeFileAttributesAtPath:path];
 
 	return ret;
 }
@@ -925,7 +925,7 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		ret = [xmlData writeToURL:url atomically:atomically];
 		[xmlData release];
 
-		if( [url isFileURL] ) [self _chnageFileAttributesAtPath:[url path]];
+		if( [url isFileURL] ) [self _changeFileAttributesAtPath:[url path]];
 	}
 
 	return ret;
@@ -1033,7 +1033,7 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		[xml writeToFile:[self filePath] atomically:NO];
 
 #ifdef MAC_OS_X_VERSION_10_4
-		if( floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3 )
+		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && setxattr != NULL )
 			setxattr( [[self filePath] fileSystemRepresentation], "dateStarted", [dateString UTF8String], [dateString length], 0, 0 );
 #endif
 
@@ -1094,7 +1094,7 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
 
 #ifdef MAC_OS_X_VERSION_10_4
-	if( NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5 ) {
+	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && fsetxattr != NULL ) {
 		FILE *logs = fopen( [path fileSystemRepresentation], "w+" );
 		if( logs ) {
 			int logsFd = fileno( logs );
