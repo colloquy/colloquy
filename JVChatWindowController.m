@@ -171,7 +171,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) closeCurrentPanel:(id) sender {
-	[[JVChatController defaultController] disposeViewController:_activeViewController];
+	if( [[self allChatViewControllers] count] == 1 ) [[self window] performClose:sender];
+	else [[JVChatController defaultController] disposeViewController:_activeViewController];
 }
 
 - (IBAction) detachCurrentPanel:(id) sender {
@@ -528,6 +529,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self _resignMenuCommands];
     if( [[self window] isVisible] )
 		[self close];
+}
+
+- (BOOL) windowShouldClose:(id) sender {
+	if( [[self chatViewControllersWithControllerClass:[JVChatRoomPanel class]] count] <= 1 ) return YES; // no rooms, close without a prompt
+	if( NSRunCriticalAlertPanelRelativeToWindow( NSLocalizedString( @"Are you sure you want to part from all chat rooms and close this window?", "are you sure you want to part all chat rooms dialog title" ), NSLocalizedString( @"You will exit all chat rooms and loose any unsaved chat transcripts. Do you want to proceed?", "confirm close of window message" ), @"Close", @"Cancel", nil, [self window] ) == NSOKButton )
+		return YES;
+	return NO;
 }
 
 - (void) windowDidResignKey:(NSNotification *) notification {

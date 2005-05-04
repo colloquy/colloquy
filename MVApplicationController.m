@@ -344,9 +344,10 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableExceptionOccurredDialog"] ) {
+	// this does weird things on Tiger, disable for now on that system
+	if( NSAppKitVersionNumber <= NSAppKitVersionNumber10_3_5 && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableExceptionOccurredDialog"] ) {
 		NSExceptionHandler *handler = [NSExceptionHandler defaultExceptionHandler];
-		[handler setExceptionHandlingMask:( NSLogUncaughtExceptionMask | NSLogUncaughtSystemExceptionMask | NSLogUncaughtRuntimeErrorMask | NSHandleUncaughtExceptionMask|NSHandleUncaughtSystemExceptionMask | NSHandleUncaughtRuntimeErrorMask )];
+		[handler setExceptionHandlingMask:( NSLogUncaughtExceptionMask | NSLogUncaughtSystemExceptionMask | NSLogUncaughtRuntimeErrorMask | NSHandleUncaughtExceptionMask | NSHandleUncaughtSystemExceptionMask | NSHandleUncaughtRuntimeErrorMask )];
 		[handler setDelegate:self];
 	}
 
@@ -399,6 +400,16 @@ static BOOL applicationIsTerminating = NO;
 
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
+}
+
+- (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *) sender {
+	if( ! [[[MVConnectionsController defaultController] connectedConnections] count] )
+		return NSTerminateNow; // no active connections, we can just quit now
+	if( ! [[[JVChatController defaultController] chatViewControllersKindOfClass:[JVDirectChatPanel class]] count] )
+		return NSTerminateNow; // no active chats, we can just quit now
+	if( NSRunCriticalAlertPanel( NSLocalizedString( @"Are you sure you want to quit?", "are you sure you want to quit title" ), NSLocalizedString( @"Are you sure you want to quit Colloquy and part from all active conversations?", "are you sure you want to quit message" ), @"Quit", @"Cancel", nil ) == NSCancelButton )
+		return NSTerminateCancel;
+	return NSTerminateNow;
 }
 
 - (NSMenu *) applicationDockMenu:(NSApplication *) sender {
