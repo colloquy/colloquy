@@ -1005,6 +1005,9 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 - (void) _incrementalWriteToLog:(xmlNode *) node continuation:(BOOL) cont {
 	if( ! [self automaticallyWritesChangesToFile] ) return;
 
+	if( [[NSFileManager defaultManager] fileExistsAtPath:[self filePath]] &&
+		! [[NSFileManager defaultManager] isWritableFileAtPath:[self filePath]] ) return;
+
 	BOOL format = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"];
 
 	if( ! [[NSFileManager defaultManager] fileExistsAtPath:[self filePath]] ) {
@@ -1030,7 +1033,7 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		[logElement appendString:@"</log>"];
 
 		NSData *xml = [logElement dataUsingEncoding:NSUTF8StringEncoding];
-		[xml writeToFile:[self filePath] atomically:NO];
+		if( ! [xml writeToFile:[self filePath] atomically:NO] ) return;
 
 #ifdef MAC_OS_X_VERSION_10_4
 		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && setxattr != NULL )
