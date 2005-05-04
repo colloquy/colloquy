@@ -9,6 +9,8 @@
 #import <ChatCore/NSDataAdditions.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 
+#import "AvailabilityMacros.h"
+
 #import <libxml/xinclude.h>
 
 /* Future method ideas (implement when needed):
@@ -842,6 +844,18 @@
 	}
 }
 
+-(NSURL *)source
+{
+	return _source;
+}
+
+-(void)setSource:(NSURL *)aSource
+{
+	[_source autorelease];
+	_source = [aSource copyWithZone:[self zone]];
+	xmlSetProp( xmlDocGetRootElement(_xmlLog), (xmlChar *) "source", (xmlChar *) [[_source absoluteString] UTF8String] );
+}
+
 #pragma mark -
 
 - (BOOL) automaticallyWritesChangesToFile {
@@ -1001,6 +1015,8 @@
 			}
 		}
 
+		NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
+
 		[logElement appendString:@">"];
 		if( format ) [logElement appendString:@"\n"];
 		[logElement appendString:@"</log>"];
@@ -1008,6 +1024,13 @@
 		NSData *xml = [logElement dataUsingEncoding:NSUTF8StringEncoding];
 		[xml writeToFile:[self filePath] atomically:NO];
 
+#ifdef MAC_OS_X_VERSION_10_4
+		if (NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5)
+		{
+			setxattr([[self filePath] fileSystemRepresentation], "dateStarted", [dateString UTF8String], [dateString length],0,NULL);
+		}
+#endif
+		
 		[self _chnageFileAttributesAtPath:[self filePath]];
 
 		if( ! _logFile && [self automaticallyWritesChangesToFile] ) {
@@ -1060,7 +1083,26 @@
 }
 
 - (void) _chnageFileAttributesAtPath:(NSString *) path {
+	
+	NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
+
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
+
+#ifdef MAC_OS_X_VERSION_10_4
+	if (NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5)
+	{	
+		FILE* logs = fopen([path fileSystemRepresentation],"w+");
+		if (logs)
+		{
+			int logsFd = fileno(logs);			
+			fsetxattr(logsFd, "server", [[[self source] host] UTF8String], [[[self source] host] length],0,NULL);
+			fsetxattr(logsFd, "target", [[[self source] path] UTF8String], [[[self source] path] length],0,NULL);
+			fsetxattr(logsFd, "lastDate", [dateString UTF8String], [dateString length],0,NULL);
+			fclose(logs);
+		}
+	}	
+#endif
+	
 }
 @end
 

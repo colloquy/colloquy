@@ -18,6 +18,8 @@
 	BOOL _requiresNewEnvelope;
 	unsigned long long _previousLogOffset;
 	unsigned long _elementLimit;
+	
+	NSURL *_source;
 }
 + (id) chatTranscript;
 + (id) chatTranscriptWithChatTranscript:(JVChatTranscript *) transcript;
@@ -83,6 +85,8 @@
 
 - (NSString *) filePath;
 - (void) setFilePath:(NSString *) filePath;
+- (void)setSource:(NSURL *)aSource;
+- (NSURL *)source;
 
 - (BOOL) automaticallyWritesChangesToFile;
 - (BOOL) setAutomaticallyWritesChangesToFile:(BOOL) option;

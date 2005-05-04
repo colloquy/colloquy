@@ -154,7 +154,15 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	if( ( self = [self init] ) ) {
 		_target = [target retain];
 
-		NSString *source = [NSString stringWithFormat:@"%@/%@", [[[self connection] url] absoluteString], [self target]];
+		NSURL *connURL = [[self connection] url];
+		NSString *targetName;
+		
+		if ([target respondsToSelector:@selector(name)]) targetName=[target name];
+		else targetName=[target nickname];
+		
+		NSURL *source = [[NSURL alloc] initWithScheme:[connURL scheme] 
+													host:[connURL host] 
+													path:[[connURL path] stringByAppendingFormat:@"/%@",targetName]];
 
 		if( ( [self isMemberOfClass:[JVDirectChatPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"] ) ||
 			( [self isMemberOfClass:[JVChatRoomPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"] ) ) {
@@ -179,6 +187,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 			}
 
 			NSString *logName = nil;
+			NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
+			
 			int session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
 
 			if( ! session ) {
@@ -198,18 +208,20 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 				if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
 				else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self connection] server]];
 			} else if( session == 2 ) {
-				if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", [self target], [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
-				else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", [self target], [[self connection] server], [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]]];
+				if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", [self target], dateString];
+				else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", [self target], [[self connection] server], dateString];
 				[(NSMutableString *)logName replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
 				[(NSMutableString *)logName replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
 			}
 
 			logs = [logs stringByAppendingPathComponent:logName];
-
+			
 			if( [fileManager fileExistsAtPath:logs] )
 				[[self transcript] startNewSession];
-
+			
 			[[self transcript] setFilePath:logs];
+			[[self transcript] setSource:source];
+			[source release];
 			[[self transcript] setAutomaticallyWritesChangesToFile:YES];
 		}
 
