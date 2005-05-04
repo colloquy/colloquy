@@ -9,9 +9,17 @@
 #import <ChatCore/NSDataAdditions.h>
 #import <ChatCore/NSAttributedStringAdditions.h>
 
-#import "AvailabilityMacros.h"
-
 #import <libxml/xinclude.h>
+
+#ifdef MAC_OS_X_VERSION_10_4
+#include <sys/xattr.h>
+#endif
+
+// define these here so they weak link for Panther letting the binary will load
+extern int setxattr(const char *path, const char *name, const void *value, size_t size, u_int32_t position, int options) __attribute__((weak_import));
+extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u_int32_t position, int options) __attribute__((weak_import));
+
+#pragma mark -
 
 /* Future method ideas (implement when needed):
 - (void) prependMessage:(JVChatMessage *) message;
@@ -844,16 +852,16 @@
 	}
 }
 
--(NSURL *)source
-{
+#pragma mark -
+
+- (NSURL *) source {
 	return _source;
 }
 
--(void)setSource:(NSURL *)aSource
-{
+- (void) setSource:(NSURL *) source {
 	[_source autorelease];
-	_source = [aSource copyWithZone:[self zone]];
-	xmlSetProp( xmlDocGetRootElement(_xmlLog), (xmlChar *) "source", (xmlChar *) [[_source absoluteString] UTF8String] );
+	_source = [source copyWithZone:[self zone]];
+	xmlSetProp( xmlDocGetRootElement( _xmlLog ), (xmlChar *) "source", (xmlChar *) [[_source absoluteString] UTF8String] );
 }
 
 #pragma mark -
@@ -1025,12 +1033,10 @@
 		[xml writeToFile:[self filePath] atomically:NO];
 
 #ifdef MAC_OS_X_VERSION_10_4
-		if (NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5)
-		{
-			setxattr([[self filePath] fileSystemRepresentation], "dateStarted", [dateString UTF8String], [dateString length],0,NULL);
-		}
+		if( NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5 )
+			setxattr( [[self filePath] fileSystemRepresentation], "dateStarted", [dateString UTF8String], [dateString length], 0, 0 );
 #endif
-		
+
 		[self _chnageFileAttributesAtPath:[self filePath]];
 
 		if( ! _logFile && [self automaticallyWritesChangesToFile] ) {
@@ -1083,26 +1089,22 @@
 }
 
 - (void) _chnageFileAttributesAtPath:(NSString *) path {
-	
 	NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
 
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
 
 #ifdef MAC_OS_X_VERSION_10_4
-	if (NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5)
-	{	
-		FILE* logs = fopen([path fileSystemRepresentation],"w+");
-		if (logs)
-		{
-			int logsFd = fileno(logs);			
-			fsetxattr(logsFd, "server", [[[self source] host] UTF8String], [[[self source] host] length],0,NULL);
-			fsetxattr(logsFd, "target", [[[self source] path] UTF8String], [[[self source] path] length],0,NULL);
-			fsetxattr(logsFd, "lastDate", [dateString UTF8String], [dateString length],0,NULL);
-			fclose(logs);
+	if( NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5 ) {	
+		FILE *logs = fopen( [path fileSystemRepresentation], "w+" );
+		if( logs ) {
+			int logsFd = fileno( logs );
+			fsetxattr( logsFd, "server", [[[self source] host] UTF8String], [[[self source] host] length], 0, 0 );
+			fsetxattr( logsFd, "target", [[[self source] path] UTF8String], [[[self source] path] length], 0, 0 );
+			fsetxattr( logsFd, "lastDate", [dateString UTF8String], [dateString length], 0, 0 );
+			fclose( logs );
 		}
-	}	
+	}
 #endif
-	
 }
 @end
 

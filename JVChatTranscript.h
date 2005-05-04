@@ -85,8 +85,9 @@
 
 - (NSString *) filePath;
 - (void) setFilePath:(NSString *) filePath;
-- (void)setSource:(NSURL *)aSource;
-- (NSURL *)source;
+
+- (NSURL *) source;
+- (void) setSource:(NSURL *) source;
 
 - (BOOL) automaticallyWritesChangesToFile;
 - (BOOL) setAutomaticallyWritesChangesToFile:(BOOL) option;
