@@ -306,8 +306,6 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/Frameworks /Library/Frameworks";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
