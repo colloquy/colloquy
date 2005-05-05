@@ -1041,9 +1041,6 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		NSData *xml = [logElement dataUsingEncoding:NSUTF8StringEncoding];
 		if( ! [xml writeToFile:[self filePath] atomically:YES] ) return;
 
-		fileSize = [[fm fileAttributesAtPath:[self filePath] traverseLink:YES] fileSize];
-		if( ! fileSize ) return;
-
 #ifdef MAC_OS_X_VERSION_10_4
 		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && setxattr != NULL )
 			setxattr( [[self filePath] fileSystemRepresentation], "dateStarted", [dateString UTF8String], [dateString length], 0, 0 );
@@ -1052,7 +1049,7 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		[self _changeFileAttributesAtPath:[self filePath]];
 
 		if( ! _logFile && [self automaticallyWritesChangesToFile] ) {
-			_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:[self filePath]] retain];
+			_logFile = [[NSFileHandle fileHandleForWritingAtPath:[self filePath]] retain];
 			_requiresNewEnvelope = YES;
 			_previousLogOffset = 0;
 		}
@@ -1072,9 +1069,20 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		} else [_logFile seekToFileOffset:_previousLogOffset]; // the check was fine, go back
 	} else {
 		unsigned int offset = 6;
-		[_logFile seekToFileOffset:[_logFile seekToEndOfFile] - 1];
+		unsigned int eof = [_logFile seekToEndOfFile];
+		if( eof < 1 ) {
+			[self setAutomaticallyWritesChangesToFile:NO];
+			return;
+		}
+
+		[_logFile seekToFileOffset:( eof - 1 )];
 		NSData *check = [_logFile readDataOfLength:1]; // check to see if there is an trailing newline and correct
 		if( [check length] == 1 && ! strncmp( "\n", [check bytes], 1 ) ) offset++; // we need to eat the newline also
+
+		if( [_logFile offsetInFile] <= offset ) {
+			[self setAutomaticallyWritesChangesToFile:NO];
+			return;
+		}
 
 		[_logFile seekToFileOffset:[_logFile offsetInFile] - offset];
 		check = [_logFile readDataOfLength:offset]; // check to see if there is a </log> here
