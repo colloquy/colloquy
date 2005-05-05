@@ -206,8 +206,19 @@ static BOOL applicationIsTerminating = NO;
 
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
 	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES];
+	
 	if( [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
-		[[JVChatController defaultController] chatViewControllerForTranscript:filename];
+		NSAppleEventManager *sam = [NSAppleEventManager sharedAppleEventManager];
+		
+		NSAppleEventDescriptor *lastEvent = [sam currentAppleEvent];
+		NSString *searchString = [[lastEvent descriptorForKeyword:keyAESearchText] stringValue];
+	
+		JVChatTranscriptPanel *transcript = [[JVChatController defaultController] chatViewControllerForTranscript:filename];
+
+		if ( searchString ) {
+			// Insert code to actually look up the string in the opened controller
+		}
+
 		return YES;
 	} else if( [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[filename pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
 		NSString *newPath = [[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
@@ -335,6 +346,7 @@ static BOOL applicationIsTerminating = NO;
 	[JVGetCommand poseAsClass:[NSGetCommand class]];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
+	
 #ifdef DEBUG
 	NSDebugEnabled = YES;
 //	NSZombieEnabled = YES;
