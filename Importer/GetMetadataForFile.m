@@ -78,6 +78,11 @@ Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attribut
 
 	[returnDict setObject:participants forKey:(NSString *) kMDItemContributors];
 
+	// Set a more useful Content Summary
+	xpathResult = [transcript nodesForXPath:@"/log[1]/envelope/message/text()" error:&error];
+	NSString *textSummaryClipping = [xpathResult componentsJoinedByString:@" "];
+	[returnDict setObject:textSummaryClipping forKey:(NSString *) kMDItemTextContent];
+
 	// Now the stuff that doesn't change
 	[returnDict setObject:[NSArray arrayWithObject:@"Chat transcript"] forKey:(NSString *) kMDItemKind];
 	[returnDict setObject:[NSArray arrayWithObject:@"Colloquy"] forKey:(NSString *) kMDItemCreator];
