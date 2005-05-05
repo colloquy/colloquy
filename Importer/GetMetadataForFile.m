@@ -84,7 +84,7 @@ Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attribut
 	[returnDict setObject:textSummaryClipping forKey:(NSString *) kMDItemTextContent];
 
 	// Now the stuff that doesn't change
-	[returnDict setObject:[NSArray arrayWithObject:@"Chat transcript"] forKey:(NSString *) kMDItemKind];
+	[returnDict setObject:[NSArray arrayWithObject:@"transcript"] forKey:(NSString *) kMDItemKind];
 	[returnDict setObject:[NSArray arrayWithObject:@"Colloquy"] forKey:(NSString *) kMDItemCreator];
 
 	[pool release];
