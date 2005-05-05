@@ -1008,8 +1008,8 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 	NSFileManager *fm = [NSFileManager defaultManager];
 	if( [fm fileExistsAtPath:[self filePath]] && ! [fm isWritableFileAtPath:[self filePath]] ) return;
 
-	unsigned long long fileSize = [[fm fileAttributesAtPath:[self filePath] traverseLink:YES] objectForKey:NSFileSize];
-	if( fileSize != nil && [fileSize intValue] < 6 ) { // the file is too small to be a viable log file, return now
+	unsigned long long fileSize = [[fm fileAttributesAtPath:[self filePath] traverseLink:YES] fileSize];
+	if( fileSize > 0 && fileSize < 6 ) { // the file is too small to be a viable log file, return now
 		[self setAutomaticallyWritesChangesToFile:NO];
 		return;
 	}
@@ -1039,7 +1039,10 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		[logElement appendString:@"</log>"];
 
 		NSData *xml = [logElement dataUsingEncoding:NSUTF8StringEncoding];
-		if( ! [xml writeToFile:[self filePath] atomically:NO] ) return;
+		if( ! [xml writeToFile:[self filePath] atomically:YES] ) return;
+
+		fileSize = [[fm fileAttributesAtPath:[self filePath] traverseLink:YES] fileSize];
+		if( ! fileSize ) return;
 
 #ifdef MAC_OS_X_VERSION_10_4
 		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && setxattr != NULL )
