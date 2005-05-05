@@ -407,7 +407,7 @@ static BOOL applicationIsTerminating = NO;
 		return NSTerminateNow; // no active connections, we can just quit now
 	if( ! [[[JVChatController defaultController] chatViewControllersKindOfClass:[JVDirectChatPanel class]] count] )
 		return NSTerminateNow; // no active chats, we can just quit now
-	if( NSRunCriticalAlertPanel( NSLocalizedString( @"Are you sure you want to quit?", "are you sure you want to quit title" ), NSLocalizedString( @"Are you sure you want to quit Colloquy and part from all active conversations?", "are you sure you want to quit message" ), @"Quit", @"Cancel", nil ) == NSCancelButton )
+	if( NSRunCriticalAlertPanel( NSLocalizedString( @"Are you sure you want to quit?", "are you sure you want to quit title" ), NSLocalizedString( @"Are you sure you want to quit Colloquy and disconnect from all active connections?", "are you sure you want to quit message" ), @"Quit", @"Cancel", nil ) == NSCancelButton )
 		return NSTerminateCancel;
 	return NSTerminateNow;
 }
