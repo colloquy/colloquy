@@ -15,8 +15,7 @@
 #include <sys/xattr.h>
 #endif
 
-// define these here so they weak link for Panther letting the binary will load
-extern int setxattr(const char *path, const char *name, const void *value, size_t size, u_int32_t position, int options) __attribute__((weak_import));
+// define this here so they weak link for Panther letting the binary will load
 extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u_int32_t position, int options) __attribute__((weak_import));
 
 #pragma mark -
@@ -643,6 +642,13 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		[self _enforceElementLimit];
 		[self _incrementalWriteToLog:root continuation:( parent ? YES : NO )];
 
+#ifdef MAC_OS_X_VERSION_10_4
+		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && _logFile && fsetxattr != NULL ) {
+			NSString *lastDateString = [[message date] description];
+			fsetxattr( [_logFile fileDescriptor], "lastMessageDate", [lastDateString UTF8String], [lastDateString length], 0, 0 );
+		}
+#endif
+
 		_requiresNewEnvelope = NO;
 
 		return [JVChatMessage messageWithNode:child andTranscript:self];
@@ -854,14 +860,45 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 
 #pragma mark -
 
+- (NSCalendarDate *) dateBegan {
+	if( ! _xmlLog ) return nil;
+
+	xmlNode *node = xmlDocGetRootElement( _xmlLog );
+	if( ! node ) return nil;
+
+	xmlChar *prop = xmlGetProp( node, (xmlChar *) "began" );
+	if( prop ) {
+		NSString *dateString = [NSString stringWithUTF8String:(char *) prop];
+		NSCalendarDate *ret = [NSCalendarDate dateWithNaturalLanguageString:dateString];
+		xmlFree( prop );
+		return ret;
+	}
+
+	return nil;
+}
+
+#pragma mark -
+
 - (NSURL *) source {
-	return _source;
+	if( ! _xmlLog ) return nil;
+
+	xmlNode *node = xmlDocGetRootElement( _xmlLog );
+	if( ! node ) return nil;
+
+	xmlChar *prop = xmlGetProp( node, (xmlChar *) "source" );
+	if( prop ) {
+		NSString *urlString = [NSString stringWithUTF8String:(char *) prop];
+		NSURL *ret = [NSURL URLWithString:urlString];
+		xmlFree( prop );
+		return ret;
+	}
+
+	return nil;
 }
 
 - (void) setSource:(NSURL *) source {
-	[_source autorelease];
-	_source = [source copyWithZone:[self zone]];
-	xmlSetProp( xmlDocGetRootElement( _xmlLog ), (xmlChar *) "source", (xmlChar *) [[_source absoluteString] UTF8String] );
+	NSParameterAssert( source != nil );
+	xmlSetProp( xmlDocGetRootElement( _xmlLog ), (xmlChar *) "source", (xmlChar *) [[source absoluteString] UTF8String] );
 }
 
 #pragma mark -
@@ -1041,21 +1078,16 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		NSData *xml = [logElement dataUsingEncoding:NSUTF8StringEncoding];
 		if( ! [xml writeToFile:[self filePath] atomically:YES] ) return;
 
-#ifdef MAC_OS_X_VERSION_10_4
-		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && setxattr != NULL )
-			setxattr( [[self filePath] fileSystemRepresentation], "dateStarted", [dateString UTF8String], [dateString length], 0, 0 );
-#endif
-
-		[self _changeFileAttributesAtPath:[self filePath]];
-
-		if( ! _logFile && [self automaticallyWritesChangesToFile] ) {
-			_logFile = [[NSFileHandle fileHandleForWritingAtPath:[self filePath]] retain];
+		if( ! _logFile ) {
+			_logFile = [[NSFileHandle fileHandleForUpdatingAtPath:[self filePath]] retain];
 			_requiresNewEnvelope = YES;
 			_previousLogOffset = 0;
 		}
+
+		[self _changeFileAttributesAtPath:[self filePath]];
 	}
 
-	if( ! node || ! _logFile ) return;
+	if( ! node ) return;
 
 	// To keep the XML valid at all times, we need to preserve a </log> close tag at the end of
 	// the file at all times. So, we seek to the end of the file minus 6 or 7 characters.
@@ -1109,20 +1141,20 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 }
 
 - (void) _changeFileAttributesAtPath:(NSString *) path {
-	NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
-
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
 
 #ifdef MAC_OS_X_VERSION_10_4
-	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && fsetxattr != NULL ) {
-		FILE *logs = fopen( [path fileSystemRepresentation], "w+" );
-		if( logs ) {
-			int logsFd = fileno( logs );
-			fsetxattr( logsFd, "server", [[[self source] host] UTF8String], [[[self source] host] length], 0, 0 );
-			fsetxattr( logsFd, "target", [[[self source] path] UTF8String], [[[self source] path] length], 0, 0 );
-			fsetxattr( logsFd, "lastDate", [dateString UTF8String], [dateString length], 0, 0 );
-			fclose( logs );
-		}
+	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && _logFile && fsetxattr != NULL ) {
+		NSString *beganDateString = [[self dateBegan] description];
+		NSString *lastDateString = [[[self lastMessage] date] description];
+		NSString *target = [[self source] path];
+		if( [target length] > 1 ) target = [target substringFromIndex:1];
+
+		fsetxattr( [_logFile fileDescriptor], "sourceAddress", [[[self source] absoluteString] UTF8String], [[[self source] absoluteString] length], 0, 0 );
+		fsetxattr( [_logFile fileDescriptor], "server", [[[self source] host] UTF8String], [[[self source] host] length], 0, 0 );
+		fsetxattr( [_logFile fileDescriptor], "target", [target UTF8String], [target length], 0, 0 );
+		fsetxattr( [_logFile fileDescriptor], "dateBegan", [beganDateString UTF8String], [beganDateString length], 0, 0 );
+		if( [lastDateString length] ) fsetxattr( [_logFile fileDescriptor], "lastMessageDate", [lastDateString UTF8String], [lastDateString length], 0, 0 );
 	}
 #endif
 }
