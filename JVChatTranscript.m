@@ -1005,12 +1005,18 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 - (void) _incrementalWriteToLog:(xmlNode *) node continuation:(BOOL) cont {
 	if( ! [self automaticallyWritesChangesToFile] ) return;
 
-	if( [[NSFileManager defaultManager] fileExistsAtPath:[self filePath]] &&
-		! [[NSFileManager defaultManager] isWritableFileAtPath:[self filePath]] ) return;
+	NSFileManager *fm = [NSFileManager defaultManager];
+	if( [fm fileExistsAtPath:[self filePath]] && ! [fm isWritableFileAtPath:[self filePath]] ) return;
+
+	unsigned long long fileSize = [[fm fileAttributesAtPath:[self filePath] traverseLink:YES] fileSize];
+	if( fileSize > 0 && fileSize < 6 ) { // the file is too small to be a viable log file, return now
+		[self setAutomaticallyWritesChangesToFile:NO];
+		return;
+	}
 
 	BOOL format = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"];
 
-	if( ! [[NSFileManager defaultManager] fileExistsAtPath:[self filePath]] ) {
+	if( ! fileSize || ! [fm fileExistsAtPath:[self filePath]] ) {
 		xmlNode *root = xmlDocGetRootElement( _xmlLog );
 
 		// Save out the <log> element since this is a new file. build it by hand
