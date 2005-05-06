@@ -124,7 +124,7 @@
 				reason = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation] + 1, ( [arguments length] - [scanner scanLocation] - 1 ) )];
 
 			MVChatUser *user = [[[room target] memberUsersWithNickname:member] anyObject];
-			[[room target] kickOutMemberUser:user forReason:reason];
+			if( user ) [[room target] kickOutMemberUser:user forReason:reason];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"op"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
@@ -133,7 +133,7 @@
 			while( arg = [e nextObject] ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
-					[[room target] setMode:MVChatRoomMemberOperatorMode forMemberUser:user];
+					if( user ) [[room target] setMode:MVChatRoomMemberOperatorMode forMemberUser:user];
 				}
 			}
 			return YES;
@@ -144,7 +144,7 @@
 			while( arg = [e nextObject] ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
-					[[room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:user];
+					if( user ) [[room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:user];
 				}
 			}
 			return YES;
@@ -155,7 +155,7 @@
 			while( arg = [e nextObject] ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
-					[[room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
+					if( user ) [[room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
 				}
 			}
 			return YES;
@@ -166,7 +166,7 @@
 			while( arg = [e nextObject] ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
-					[[room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
+					if( user ) [[room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
 				}
 			}
 			return YES;
@@ -177,7 +177,7 @@
 			while( arg = [e nextObject] ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
-					[[room target] setMode:MVChatRoomMemberVoicedMode forMemberUser:user];
+					if( user ) [[room target] setMode:MVChatRoomMemberVoicedMode forMemberUser:user];
 				}
 			}
 			return YES;
@@ -188,7 +188,7 @@
 			while( arg = [e nextObject] ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
-					[[room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:user];
+					if( user ) [[room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:user];
 				}
 			}
 			return YES;
@@ -199,7 +199,7 @@
 			while( arg = [e nextObject] ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
-					[[room target] setMode:MVChatRoomMemberQuietedMode forMemberUser:user];
+					if( user ) [[room target] setMode:MVChatRoomMemberQuietedMode forMemberUser:user];
 				}
 			}
 			return YES;
@@ -210,7 +210,7 @@
 			while( arg = [e nextObject] ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
-					[[room target] removeMode:MVChatRoomMemberQuietedMode forMemberUser:user];
+					if( user ) [[room target] removeMode:MVChatRoomMemberQuietedMode forMemberUser:user];
 				}
 			}
 			return YES;
