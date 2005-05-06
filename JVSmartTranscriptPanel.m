@@ -310,6 +310,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	localMessage = (id) [[self transcript] appendMessage:localMessage];
 	[display appendChatMessage:localMessage];
 
+	[self quickSearchMatchMessage:localMessage];
+
 	_newMessages++;
 	[_windowController reloadListItem:self andChildren:NO];
 	if( ! _isActive ) [JVChatController refreshSmartTranscriptMenu];

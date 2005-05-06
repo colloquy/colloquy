@@ -48,6 +48,9 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 - (IBAction) close:(id) sender;
 - (IBAction) activate:(id) sender;
 
+- (IBAction) performQuickSearch:(id) sender;
+- (void) quickSearchMatchMessage:(JVChatMessage *) message;
+
 - (void) setSearchQuery:(NSString *) query;
 - (NSString *) searchQuery;
 @end

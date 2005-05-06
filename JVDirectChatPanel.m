@@ -767,6 +767,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	if( [display appendChatMessage:newMessage] ) {
 		if( [cmessage isHighlighted] ) [display markScrollbarForMessage:newMessage];
+		[self quickSearchMatchMessage:newMessage];
 		_firstMessage = NO; // not the first message anymore
 	} else if( [cmessage ignoreStatus] == JVNotIgnored ) {
 		// the style decided to excluded this message, decrease the new message counts

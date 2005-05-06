@@ -228,6 +228,20 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 - (IBAction) performQuickSearch:(id) sender {
 	if( [sender isKindOfClass:[NSTextField class]] ) {
 		[self setSearchQuery:[sender stringValue]];
+	} else {
+		// this is for text mode users, and is what Apple does in Tiger's Mail
+		if( [[[self window] toolbar] displayMode] == NSToolbarDisplayModeLabelOnly ) 
+			[[[self window] toolbar] setDisplayMode:NSToolbarDisplayModeIconOnly];
+	}
+}
+
+- (void) quickSearchMatchMessage:(JVChatMessage *) message {
+	if( ! message || ! _searchQueryRegex ) return;
+	NSColor *markColor = [NSColor orangeColor];
+	AGRegexMatch *match = [_searchQueryRegex findInString:[message bodyAsPlainText]];
+	if( match ) {
+		[display markScrollbarForMessage:message usingMarkIdentifier:@"quick find" andColor:markColor];
+		[display highlightString:[match group] inMessage:message];
 	}
 }
 
@@ -417,8 +431,15 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Search", "search patlette label" )];
 
 		NSSearchField *field = [[[NSSearchField alloc] initWithFrame:NSMakeRect( 0., 0., 150., 22. )] autorelease];
-		[field setTarget:self];
+		[[field cell] setSendsWholeSearchString:NO];
+#ifdef MAC_OS_X_VERSION_10_4
+		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
+			[[field cell] setSendsSearchStringImmediately:NO];
+#endif
+		[field setRecentsAutosaveName:@"message quick search"];
+		[field setStringValue:( [self searchQuery] ? [self searchQuery] : @"" )];
 		[field setAction:@selector( performQuickSearch: )];
+		[field setTarget:self];
 
 		[toolbarItem setView:field];
 		[toolbarItem setMinSize:NSMakeSize( 100., 22. )];
@@ -686,15 +707,9 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 	NSEnumerator *messages = [[[self transcript] messages] objectEnumerator];
 	JVChatMessage *message = nil;
-	NSColor *markColor = [NSColor orangeColor];
 
-	while( ( message = [messages nextObject] ) ) {
-		AGRegexMatch *match = [_searchQueryRegex findInString:[message bodyAsPlainText]];
-		if( match ) {
-			[display markScrollbarForMessage:message usingMarkIdentifier:@"quick find" andColor:markColor];
-			[display highlightString:[match group] inMessage:message];
-		}
-	}
+	while( ( message = [messages nextObject] ) )
+		[self quickSearchMatchMessage:message];
 }
 
 #pragma mark -
