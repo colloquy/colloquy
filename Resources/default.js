@@ -127,23 +127,18 @@ function resetSearchHighlight( id ) {
 	if( ! div ) div = document.getElementsByTagName( "body" ).item(0);
 
 	function resetHighlight(node) {
-		if( node.nodeType == 3 ) { // Node.TEXT_NODE
-			if( node.parentNode.className == "searchHighlight" ) {
-				var text = node.nodeValue;
-				var newNode = document.createTextNode( text );
-				var par = node.parentNode.parentNode;
-				node.parentNode.parentNode.replaceChild( newNode, node.parentNode );
-				par.innerHTML = par.innerHTML; // this will merge text nodes
-				return true;
-			}
+		if( node.nodeType == 1 && node.className == "searchHighlight" ) {
+			var text = node.firstChild.nodeValue;
+			var newNode = document.createTextNode( text );
+			var par = node.parentNode;
+			node.parentNode.replaceChild( newNode, node );
+			par.innerHTML = par.innerHTML; // this will merge text nodes
 		} else if( ! node.nodeName.match( /button|select|textarea/i ) ) {
 			// Recurse into child nodes
-			for( var i = 0; i < node.childNodes.length; i++ ) {
-				if( resetHighlight( node.childNodes[i] ) ) i++;
-			}
+			if( ! node.childNodes.length ) return;
+			for( var i = ( node.childNodes.length - 1 ); i >= 0; i-- )
+				resetHighlight( node.childNodes[i] );
 		}
-
-		return false;
 	}
 
 	resetHighlight( div );
