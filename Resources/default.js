@@ -121,3 +121,62 @@ function mark() {
 	scrollToBottom();
 	return elt.offsetTop;
 }
+
+function resetSearchHighlight( id ) {
+	var div = document.getElementById( id );
+	if( ! div ) div = document.getElementsByTagName( "body" ).item(0);
+
+	function resetHighlight(node) {
+		if( node.nodeType == 3 ) { // Node.TEXT_NODE
+			if( node.parentNode.className == "searchHighlight" ) {
+				var text = node.nodeValue;
+				var newNode = document.createTextNode( text );
+				var par = node.parentNode.parentNode;
+				node.parentNode.parentNode.replaceChild( newNode, node.parentNode );
+				par.innerHTML = par.innerHTML; // this will merge text nodes
+				return true;
+			}
+		} else if( ! node.nodeName.match( /button|select|textarea/i ) ) {
+			// Recurse into child nodes
+			for( var i = 0; i < node.childNodes.length; i++ ) {
+				if( resetHighlight( node.childNodes[i] ) ) i++;
+			}
+		}
+
+		return false;
+	}
+
+	resetHighlight( div );
+}
+
+function searchHighlight( id, words ) {
+	var div = document.getElementById( id );
+	if( ! div ) div = document.getElementsByTagName( "body" ).item(0);
+
+	function highlightWord( node, word ) {
+		// If this node is a text node and contains the search word, highlight it by
+		// surrounding it with a span element
+
+		if( node.nodeType == 3 ) { // Node.TEXT_NODE
+			var pos = node.nodeValue.toLowerCase().indexOf( word.toLowerCase() );
+			if( pos >= 0 ) {
+				var span = document.createElement( "span" );
+				span.className = "searchHighlight";
+				span.appendChild( document.createTextNode( node.nodeValue.substr( pos, word.length ) ) );
+				var newNode = node.splitText( pos );
+				newNode.nodeValue = newNode.nodeValue.substr( word.length );
+				node.parentNode.insertBefore( span, newNode );
+				return true;
+			}
+		} else if( ! node.nodeName.match( /button|select|textarea/i )) {
+			// Recurse into child nodes
+			for( var i = 0; i < node.childNodes.length; i++ ) {
+				if( highlightWord( node.childNodes[i], word ) ) i++;
+			}
+		}
+
+		return false;
+	}
+
+	highlightWord( div, words );
+}

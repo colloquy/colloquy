@@ -394,6 +394,38 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
+- (void) highlightString:(NSString *) string inMessage:(JVChatMessage *) message {
+#ifdef WebKitVersion146
+	if( _newWebKit ) {
+		[[self windowScriptObject] callWebScriptMethod:@"searchHighlight" withArguments:[NSArray arrayWithObjects:[message messageIdentifier], string, nil]];
+	} else
+#endif
+	// old JavaScript method
+	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"searchHighlight('%@','%@');", [message messageIdentifier], string]];
+}
+
+- (void) clearStringHighlightsForMessage:(JVChatMessage *) message {
+#ifdef WebKitVersion146
+	if( _newWebKit ) {
+		[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[message messageIdentifier]]];
+	} else
+#endif
+	// old JavaScript method
+	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetSearchHighlight('%@');", [message messageIdentifier]]];
+}
+
+- (void) clearAllStringHighlights {
+#ifdef WebKitVersion146
+	if( _newWebKit ) {
+		[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[NSNull null]]];
+	} else
+#endif
+	// old JavaScript method
+	[self stringByEvaluatingJavaScriptFromString:@"resetSearchHighlight(null);"];
+}
+
+#pragma mark -
+
 - (void) markScrollbarForMessage:(JVChatMessage *) message {
 	if( _switchingStyles || ! _webViewReady ) {
 		[self performSelector:_cmd withObject:message afterDelay:0.];
@@ -402,6 +434,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	long loc = [self _locationOfMessage:message];
 	if( loc ) [[self verticalMarkedScroller] addMarkAt:loc];
+}
+
+- (void) markScrollbarForMessage:(JVChatMessage *) message usingMarkIdentifier:(NSString *) identifier andColor:(NSColor *) color {
+	if( _switchingStyles || ! _webViewReady ) return; // can't queue, too many args. NSInvocation?
+
+	long loc = [self _locationOfMessage:message];
+	if( loc ) [[self verticalMarkedScroller] addMarkAt:loc withIdentifier:identifier withColor:color];
 }
 
 - (void) markScrollbarForMessages:(NSArray *) messages {
@@ -420,15 +459,17 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	}
 }
 
-- (void) clearScrollbarMarks {
-	if( ! _webViewReady ) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.];
-		return;
-	}
+#pragma mark -
 
+- (void) clearScrollbarMarks {
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
 	[scroller removeAllMarks];
 	[scroller removeAllShadedAreas];
+}
+
+- (void) clearScrollbarMarksWithIdentifier:(NSString *) identifier {
+	JVMarkedScroller *scroller = [self verticalMarkedScroller];
+	[scroller removeMarkWithIdentifier:identifier];
 }
 
 #pragma mark -

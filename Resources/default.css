@@ -26,6 +26,10 @@ body {
 	content: "]";
 }
 
+.searchHighlight {
+	background-color: rgba( 255, 128, 0, 0.75 );
+}
+
 /* For the display mark */
 hr#mark {
 	width: 80%;

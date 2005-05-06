@@ -25,9 +25,11 @@
 NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
+NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 @interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
 - (void) _refreshWindowFileProxy;
+- (void) _refreshSearch;
 
 - (void) _changeStyleMenuSelection;
 - (void) _updateStylesMenu;
@@ -221,6 +223,36 @@ NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 }
 
 #pragma mark -
+#pragma mark Search Support
+
+- (IBAction) performQuickSearch:(id) sender {
+	if( [sender isKindOfClass:[NSTextField class]] ) {
+		[self setSearchQuery:[sender stringValue]];
+	}
+}
+
+- (void) setSearchQuery:(NSString *) query {
+	[_searchQueryRegex autorelease];
+	_searchQueryRegex = nil;
+
+	[_searchQuery autorelease];
+	_searchQuery = ( [query length] ? [query copyWithZone:[self zone]] : nil );
+
+	if( [_searchQuery length] ) {
+		// we simply convert this to a regex and not allow patterns. later we will allow user supplied patterns
+		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+		NSString *pattern = [_searchQuery stringByEscapingCharactersInSet:escapeSet];
+		_searchQueryRegex = [[AGRegex allocWithZone:[self zone]] initWithPattern:pattern options:AGRegexCaseInsensitive];
+	}
+
+	[self _refreshSearch];
+}
+
+- (NSString *) searchQuery {
+	return _searchQuery;
+}
+
+#pragma mark -
 #pragma mark Scripting Support
 
 - (NSNumber *) uniqueIdentifier {
@@ -380,6 +412,23 @@ NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( orderFrontFindPanel: )];
+	} else if( [identifier isEqualToString:JVToolbarQuickSearchItemIdentifier] ) {
+		[toolbarItem setLabel:NSLocalizedString( @"Search", "search toolbar item label" )];
+		[toolbarItem setPaletteLabel:NSLocalizedString( @"Search", "search patlette label" )];
+
+		NSSearchField *field = [[[NSSearchField alloc] initWithFrame:NSMakeRect( 0., 0., 150., 22. )] autorelease];
+		[field setTarget:self];
+		[field setAction:@selector( performQuickSearch: )];
+
+		[toolbarItem setView:field];
+		[toolbarItem setMinSize:NSMakeSize( 100., 22. )];
+		[toolbarItem setMaxSize:NSMakeSize( 150., 22. )];
+
+		[toolbarItem setToolTip:NSLocalizedString( @"Search messages", "search toolbar item tooltip" )];
+		[toolbarItem setTarget:self];
+
+		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Search", "search toolbar item menu representation title" ) action:@selector( performQuickSearch: ) keyEquivalent:@""] autorelease];
+		[toolbarItem setMenuFormRepresentation:menuItem];
 	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] && ! willBeInserted ) {
 		[toolbarItem setLabel:NSLocalizedString( @"Style", "choose style toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Style", "choose style toolbar item patlette label" )];
@@ -447,7 +496,7 @@ NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSArray *list = [NSArray arrayWithObjects: JVToolbarToggleChatDrawerItemIdentifier,
 		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier,
-		JVToolbarFindItemIdentifier, NSToolbarShowColorsItemIdentifier,
+		JVToolbarFindItemIdentifier, JVToolbarQuickSearchItemIdentifier, NSToolbarShowColorsItemIdentifier,
 		NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 
@@ -626,6 +675,25 @@ NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 		[[_windowController window] setRepresentedFilename:@""];
 	} else {
 		[[_windowController window] setRepresentedFilename:[[self transcript] filePath]];
+	}
+}
+
+- (void) _refreshSearch {
+	[display clearScrollbarMarksWithIdentifier:@"quick find"];
+	[display clearAllStringHighlights];
+
+	if( ! [_searchQuery length] ) return;
+
+	NSEnumerator *messages = [[[self transcript] messages] objectEnumerator];
+	JVChatMessage *message = nil;
+	NSColor *markColor = [NSColor orangeColor];
+
+	while( ( message = [messages nextObject] ) ) {
+		AGRegexMatch *match = [_searchQueryRegex findInString:[message bodyAsPlainText]];
+		if( match ) {
+			[display markScrollbarForMessage:message usingMarkIdentifier:@"quick find" andColor:markColor];
+			[display highlightString:[match group] inMessage:message];
+		}
 	}
 }
 

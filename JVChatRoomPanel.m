@@ -641,9 +641,9 @@
 	[list addObject:JVToolbarFindItemIdentifier];
 	[list addObject:NSToolbarShowColorsItemIdentifier];
 	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
-	[list addObject:NSToolbarSeparatorItemIdentifier];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	[list addObject:JVToolbarClearItemIdentifier];
+	[list addObject:JVToolbarQuickSearchItemIdentifier];
 	return list;
 }
 

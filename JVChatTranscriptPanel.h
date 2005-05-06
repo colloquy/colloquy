@@ -10,6 +10,7 @@
 extern NSString *JVToolbarChooseStyleItemIdentifier;
 extern NSString *JVToolbarEmoticonsItemIdentifier;
 extern NSString *JVToolbarFindItemIdentifier;
+extern NSString *JVToolbarQuickSearchItemIdentifier;
 
 @interface JVChatTranscriptPanel : NSObject <JVChatViewController, JVChatViewControllerScripting> {
 	@protected
@@ -23,6 +24,9 @@ extern NSString *JVToolbarFindItemIdentifier;
 
 	NSMenu *_styleMenu;
 	NSMenu *_emoticonMenu;
+
+	NSString *_searchQuery;
+	AGRegex *_searchQueryRegex;
 }
 - (id) initWithTranscript:(NSString *) filename;
 
@@ -43,6 +47,9 @@ extern NSString *JVToolbarFindItemIdentifier;
 
 - (IBAction) close:(id) sender;
 - (IBAction) activate:(id) sender;
+
+- (void) setSearchQuery:(NSString *) query;
+- (NSString *) searchQuery;
 @end
 
 #pragma mark -

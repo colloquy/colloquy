@@ -1288,9 +1288,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[list addObject:JVToolbarMarkItemIdentifier];
 		[list addObject:JVToolbarSendFileItemIdentifier];
 		[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
-		[list addObject:NSToolbarSeparatorItemIdentifier];
 		[list addObject:JVToolbarTextEncodingItemIdentifier];
 		[list addObject:JVToolbarClearItemIdentifier];
+		[list addObject:JVToolbarQuickSearchItemIdentifier];
 	}
 	return list;
 }

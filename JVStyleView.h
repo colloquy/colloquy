@@ -53,9 +53,16 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 - (BOOL) appendChatMessage:(JVChatMessage *) message;
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element;
 
+- (void) highlightString:(NSString *) string inMessage:(JVChatMessage *) message;
+- (void) clearStringHighlightsForMessage:(JVChatMessage *) message;
+- (void) clearAllStringHighlights;
+	
 - (void) markScrollbarForMessage:(JVChatMessage *) message;
+- (void) markScrollbarForMessage:(JVChatMessage *) message usingMarkIdentifier:(NSString *) identifier andColor:(NSColor *) color;
 - (void) markScrollbarForMessages:(NSArray *) messages;
+
 - (void) clearScrollbarMarks;
+- (void) clearScrollbarMarksWithIdentifier:(NSString *) identifier;
 
 - (JVMarkedScroller *) verticalMarkedScroller;
 - (IBAction) jumpToMark:(id) sender;
