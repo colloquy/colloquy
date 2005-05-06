@@ -5240,7 +5240,6 @@
 				INFOPLIST_FILE = Importer/Info.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
 				OTHER_LDFLAGS = "-framework Foundation";
 				PRODUCT_NAME = Colloquy;
