@@ -137,7 +137,7 @@ struct _mark {
 
 	// This is so we can draw the colored lines after the regular lines
 	enumerator = [lineArray objectEnumerator];
-	NSColor *lineColor;
+	NSColor *lineColor = nil;
 	while( lineColor = [enumerator nextObject] ) {
 		[lineColor set];
 		[[enumerator nextObject] stroke];
@@ -319,9 +319,7 @@ struct _mark {
 	[self addMarkAt:location withIdentifier:nil withColor:color];
 }
 
-- (void) addMarkAt:(unsigned long long) location
-	withIdentifier:(NSString *) identifier
-		 withColor:(NSColor *) color {
+- (void) addMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color {
 	struct _mark mark = {location, identifier, color};
 	[_marks addObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
@@ -339,9 +337,7 @@ struct _mark {
 	[self removeMarkAt:location withIdentifier:nil withColor:color];
 }
 
-- (void) removeMarkAt:(unsigned long long) location
-	   withIdentifier:(NSString *) identifier
-			withColor:(NSColor *) color {
+- (void) removeMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color {
 	struct _mark mark = {location, identifier, color};
 	[_marks removeObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
@@ -357,6 +353,8 @@ struct _mark {
 			[_marks removeObject:obj];
 		}
 	}
+
+	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
 - (void) removeMarksGreaterThan:(unsigned long long) location {
