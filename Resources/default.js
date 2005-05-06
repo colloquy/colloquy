@@ -143,6 +143,7 @@ function resetSearchHighlight( id ) {
 						for( ; i >= node.childNodes.length; i-- ) ;
 			}
 		}
+
 		return false;
 	}
 
@@ -151,7 +152,7 @@ function resetSearchHighlight( id ) {
 
 function searchHighlight( id, words ) {
 	var div = document.getElementById( id );
-	if( ! div ) div = document.getElementsByTagName( "body" ).item(0);
+	if( ! div ) return;
 
 	function highlightWord( node, word ) {
 		// If this node is a text node and contains the search word, highlight it by
