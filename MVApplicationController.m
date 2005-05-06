@@ -208,14 +208,17 @@ static BOOL applicationIsTerminating = NO;
 	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES];
 	
 	if( [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+		NSString *searchString = nil;
+
+#ifdef MAC_OS_X_VERSION_10_4
 		NSAppleEventManager *sam = [NSAppleEventManager sharedAppleEventManager];
-		
 		NSAppleEventDescriptor *lastEvent = [sam currentAppleEvent];
-		NSString *searchString = [[lastEvent descriptorForKeyword:keyAESearchText] stringValue];
-	
+		searchString = [[lastEvent descriptorForKeyword:keyAESearchText] stringValue];
+#endif
+
 		JVChatTranscriptPanel *transcript = [[JVChatController defaultController] chatViewControllerForTranscript:filename];
 
-		if ( searchString ) {
+		if( searchString ) {
 			// Insert code to actually look up the string in the opened controller
 		}
 
@@ -357,7 +360,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
 	// this does weird things on Tiger, disable for now on that system
-	if( NSAppKitVersionNumber <= NSAppKitVersionNumber10_3_5 && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableExceptionOccurredDialog"] ) {
+	if( floor( NSAppKitVersionNumber ) == NSAppKitVersionNumber10_3 && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableExceptionOccurredDialog"] ) {
 		NSExceptionHandler *handler = [NSExceptionHandler defaultExceptionHandler];
 		[handler setExceptionHandlingMask:( NSLogUncaughtExceptionMask | NSLogUncaughtSystemExceptionMask | NSLogUncaughtRuntimeErrorMask | NSHandleUncaughtExceptionMask | NSHandleUncaughtSystemExceptionMask | NSHandleUncaughtRuntimeErrorMask )];
 		[handler setDelegate:self];
