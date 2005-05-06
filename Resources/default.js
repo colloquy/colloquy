@@ -126,25 +126,25 @@ function resetSearchHighlight( id ) {
 	var div = document.getElementById( id );
 	if( ! div ) div = document.getElementsByTagName( "body" ).item(0);
 
-		function resetHighlight(node) {
-			if( node.nodeType == 1 ) {
-				if( node.className == "searchHighlight" ) {
-					var text = node.firstChild.nodeValue;
-					var newNode = document.createTextNode( text );
-					var par = node.parentNode;
-					node.parentNode.replaceChild( newNode, node );
-					par.innerHTML = par.innerHTML; // this will merge text nodes
-					return true;
-				} else if( ! node.nodeName.match( /button|select|textarea/i ) ) {
-					// Recurse into child nodes
-					if( ! node.childNodes.length ) return;
-					for( var i = ( node.childNodes.length - 1 ); i >= 0; i-- )
-						if( resetHighlight( node.childNodes[i] ) )
-							for( ; i >= node.childNodes.length; i-- ) ;
-				}
+	function resetHighlight(node) {
+		if( node.nodeType == 1 ) {
+			if( node.className == "searchHighlight" ) {
+				var text = node.firstChild.nodeValue;
+				var newNode = document.createTextNode( text );
+				var par = node.parentNode;
+				node.parentNode.replaceChild( newNode, node );
+				par.innerHTML = par.innerHTML; // this will merge text nodes
+				return true;
+			} else if( ! node.nodeName.match( /button|select|textarea/i ) ) {
+				// Recurse into child nodes
+				if( ! node.childNodes.length ) return;
+				for( var i = ( node.childNodes.length - 1 ); i >= 0; i-- )
+					if( resetHighlight( node.childNodes[i] ) )
+						for( ; i >= node.childNodes.length; i-- ) ;
 			}
-			return false;
 		}
+		return false;
+	}
 
 	resetHighlight( div );
 }
