@@ -74,10 +74,6 @@
 		<integer>212</integer>
 		<integer>9</integer>
 	</array>
-	<key>IBOpenObjects</key>
-	<array>
-		<integer>9</integer>
-	</array>
 	<key>IBSystem Version</key>
 	<string>8A428</string>
 </dict>
