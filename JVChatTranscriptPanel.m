@@ -83,6 +83,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[display setTranscript:[self transcript]];
 	[display setScrollbackLimit:1000];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshSearch ) name:JVStyleViewDidChangeStylesNotification object:display];
+
 	if( ! [self style] ) {
 		JVStyle *style = [JVStyle defaultStyle];
 		NSString *variant = [style defaultVariantName];
@@ -227,7 +229,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (IBAction) performQuickSearch:(id) sender {
 	if( [sender isKindOfClass:[NSTextField class]] ) {
-		[self setSearchQuery:[sender stringValue]];
+		if( [[sender stringValue] length] >= 3 ) [self setSearchQuery:[sender stringValue]];
+		else [self setSearchQuery:nil];
 	} else {
 		// this is for text mode users, and is what Apple does in Tiger's Mail
 		if( [[[self window] toolbar] displayMode] == NSToolbarDisplayModeLabelOnly ) 

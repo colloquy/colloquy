@@ -213,14 +213,11 @@ static BOOL applicationIsTerminating = NO;
 #ifdef MAC_OS_X_VERSION_10_4
 		NSAppleEventManager *sam = [NSAppleEventManager sharedAppleEventManager];
 		NSAppleEventDescriptor *lastEvent = [sam currentAppleEvent];
-		searchString = [[lastEvent descriptorForKeyword:keyAESearchText] stringValue];
+		searchString = [[lastEvent descriptorForKeyword:'stxt'] stringValue]; // keyAESearchText
 #endif
 
 		JVChatTranscriptPanel *transcript = [[JVChatController defaultController] chatViewControllerForTranscript:filename];
-
-		if( searchString ) {
-			// Insert code to actually look up the string in the opened controller
-		}
+		if( searchString ) [transcript setSearchQuery:searchString];
 
 		return YES;
 	} else if( [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[filename pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
