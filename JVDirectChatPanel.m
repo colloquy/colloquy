@@ -280,6 +280,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[send setRichText:YES];
 	[send setImportsGraphics:NO];
 	[send setUsesFontPanel:YES];
+	[send setUsesFindPanel:NO];
 	[send setAllowsUndo:YES];
 	[send setUsesRuler:NO];
 	[send setDelegate:self];
