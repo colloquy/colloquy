@@ -191,6 +191,28 @@
 
 #pragma mark -
 
+- (NSSet *) memberUsersWithNickname:(NSString *) nickname {
+	return [NSSet setWithObject:[self memberUserWithUniqueIdentifier:nickname]];
+}
+
+- (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier {
+	if( ! [identifier isKindOfClass:[NSString class]] ) return nil;
+
+	NSString *uniqueIdentfier = [identifier lowercaseString];
+
+	@synchronized( _memberUsers ) {
+		MVChatUser *user = nil;
+		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
+		while( ( user = [enumerator nextObject] ) )
+			if( [[user uniqueIdentifier] isEqualToString:uniqueIdentfier] )
+				return [[user retain] autorelease];
+	}
+
+	return nil;
+}
+
+#pragma mark -
+
 - (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
 	[super kickOutMemberUser:user forReason:reason];
 
