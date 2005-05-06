@@ -155,6 +155,19 @@
 			settings = {
 			};
 		};
+		0A330E76082B1A9900A9B20E = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd `dirname \"$PROJECT_FILE_PATH\"`\n/usr/bin/xcodebuild -project `basename \"$PROJECT_FILE_PATH\"` -target \"Colloquy (Metadata Importer)\" -buildstyle \"$BUILD_STYLE\" build\nRESULT=$?\nif [[ $RESULT == 0 ]]; then\n\t/usr/bin/ditto \"$BUILD_DIR/Colloquy.mdimporter\" \"$BUILD_DIR/$CONTENTS_FOLDER_PATH/Library/Spotlight/Colloquy.mdimporter\"\nelse\n\tfalse\nfi";
+		};
 		0A5B683E0810EC9700398D5A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -2286,7 +2299,7 @@
 				1C7C770C07DBA1F700FB5F83,
 				1CB2CD82052DDC560094AAA4,
 				1CB2CD88052DDC560094AAA4,
-				CBC5DC490822816200F0A94F,
+				0A330E76082B1A9900A9B20E,
 				1CF038FF062F8DBB009774D8,
 				1C91DEAC06972EC0007C1638,
 			);
@@ -2316,7 +2329,6 @@
 				1C09DFF7052DFF6600D748CF,
 				1C04394C07CAFCA500304949,
 				1CE3F9C307C7C2B30049A366,
-				CBC5DC480822815A00F0A94F,
 			);
 			isa = PBXNativeTarget;
 			name = "Colloquy (Application)";
@@ -5147,34 +5159,6 @@
 		};
 		CB742C020630E08200CF2B0E = {
 			fileRef = CB742C000630E08200CF2B0E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		CBC5DC470822815A00F0A94F = {
-			containerPortal = 089C1669FE841209C02AAC07;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = CBF685140820186F00F498FB;
-			remoteInfo = Colloquy;
-		};
-		CBC5DC480822815A00F0A94F = {
-			isa = PBXTargetDependency;
-			target = CBF685140820186F00F498FB;
-			targetProxy = CBC5DC470822815A00F0A94F;
-		};
-		CBC5DC490822816200F0A94F = {
-			buildActionMask = 2147483647;
-			dstPath = Contents/Library/Spotlight;
-			dstSubfolderSpec = 1;
-			files = (
-				CBC5DC4D082281A600F0A94F,
-			);
-			isa = PBXCopyFilesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CBC5DC4D082281A600F0A94F = {
-			fileRef = CBF685150820186F00F498FB;
 			isa = PBXBuildFile;
 			settings = {
 			};
