@@ -151,8 +151,13 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+	[_parameters release];
+	_parameters = nil;
+
 	[self _setBundle:nil]; // this will dealloc all other dependant objects
 	[self unlink];
+
 	[super dealloc];
 }
 

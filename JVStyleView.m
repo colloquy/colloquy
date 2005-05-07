@@ -204,7 +204,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) setStyleParameters:(NSDictionary *) parameters {
 	[_styleParameters autorelease];
-	_styleParameters = [parameters copyWithZone:[self zone]];
+	_styleParameters = [parameters mutableCopyWithZone:[self zone]];
 }
 
 - (NSDictionary *) styleParameters {

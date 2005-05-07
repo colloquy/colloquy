@@ -18,7 +18,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	JVChatTranscript *_transcript;
 	JVStyle *_style;
 	NSString *_styleVariant;
-	NSDictionary *_styleParameters;
+	NSMutableDictionary *_styleParameters;
 	JVEmoticonSet *_emoticons;
 	unsigned int _scrollbackLimit;
 	BOOL _requiresFullMessage;
