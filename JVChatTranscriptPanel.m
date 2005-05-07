@@ -249,6 +249,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) setSearchQuery:(NSString *) query {
+	if( _searchQuery == query || [_searchQuery caseInsensitiveCompare:query] == NSOrderedSame ) return;
+
 	[_searchQueryRegex autorelease];
 	_searchQueryRegex = nil;
 
