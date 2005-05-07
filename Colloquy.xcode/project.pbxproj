@@ -1063,6 +1063,34 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		1C3972DB082D30D200DCF3CF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = JVChatTranscriptBrowserPanel.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3972DC082D30D200DCF3CF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = JVChatTranscriptBrowserPanel.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		1C3972DD082D30D200DCF3CF = {
+			fileRef = 1C3972DB082D30D200DCF3CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1C3972DE082D30D200DCF3CF = {
+			fileRef = 1C3972DC082D30D200DCF3CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		1C3B290706529E720066197C = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -2241,6 +2269,8 @@
 				1CD6C413051DFA1C00A8FE10,
 				1C70377D07E49F25005CEA40,
 				1C70377C07E49F25005CEA40,
+				1C3972DC082D30D200DCF3CF,
+				1C3972DB082D30D200DCF3CF,
 				1CCB279E04FE93FE00A8FE6E,
 				1CCB279D04FE93FE00A8FE6E,
 				1CE2BC4A042F53AD00000102,
@@ -2975,6 +3005,7 @@
 				1C66913A07BFA76D008400F7,
 				1CE3C4F807E13F4C004931E6,
 				1C70377F07E49F25005CEA40,
+				1C3972DE082D30D200DCF3CF,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3163,6 +3194,7 @@
 				1CB2CD85052DDC560094AAA4,
 				1CB2CD86052DDC560094AAA4,
 				1CF5F8DD07D537F70019DC13,
+				1C3972DD082D30D200DCF3CF,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
