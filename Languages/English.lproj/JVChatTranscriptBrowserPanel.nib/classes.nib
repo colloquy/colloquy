@@ -5,7 +5,12 @@
             ACTIONS = {changeCriterion = id; search = id; showBrowser = id; }; 
             CLASS = JVChatTranscriptBrowserPanel; 
             LANGUAGE = ObjC; 
-            OUTLETS = {searchField = NSSearchField; tableView = NSTableView; window = NSWindow; }; 
+            OUTLETS = {
+                searchField = NSSearchField; 
+                statusText = NSTextField; 
+                tableView = NSTableView; 
+                window = NSWindow; 
+            }; 
             SUPERCLASS = JVChatTranscriptPanel; 
         }, 
         {

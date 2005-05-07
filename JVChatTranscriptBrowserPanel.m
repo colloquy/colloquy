@@ -131,6 +131,7 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 									target,@"target",
 									session,@"session",
 									path,@"path",NULL];
+				
 				[tempDictionary setObject:d forKey:path];
 				if (_shouldIndex) [_dirtyLogs addObject:path];
 			}
@@ -205,7 +206,25 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 -(void)awakeFromNib
 {
 	[super awakeFromNib];
+	[self updateStatus];
 	_nibLoaded=YES;
+}
+
+-(void)updateStatus
+{
+	int c = [_dirtyLogs count];
+	if (c>1)
+	{
+		[statusText setStringValue:[NSString stringWithFormat:@"%d logs still have to be indexed",c]];
+	}
+	else if (c==1)
+	{
+		[statusText setStringValue:@"One log still has to be indexed"];
+	}
+	else
+	{
+		[statusText setStringValue:@"Indexing is complete"];
+	}
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
@@ -350,7 +369,6 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 		[_dirtyLogs removeObject:path];
 		[_logLock unlock];
 		
-				//NSLog(@"Indexing:%@",path);
 		SKDocumentRef document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:path]);
 		NSString *toIndex = [[NSString alloc] initWithContentsOfFile:path]; // FIXME strip xml (w/o NSXMLDocument...) ?
 		SKIndexAddDocumentWithText(_logsIndex,document,(CFStringRef)toIndex,YES);
@@ -358,7 +376,7 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 		[toIndex release];
 		[path release];
 		
-		//NSLog(@"I have indexed:%@",path);
+		[self updateStatus];
 	}
 	
 	SKIndexFlush(_logsIndex);
@@ -381,6 +399,7 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 	//NSLog(@"Marking %@ as dirty", log);
 	[_logLock lock]; // might be used from multiple threads
 	[_dirtyLogs addObject:log];
+	[self updateStatus];
 	[_logLock unlock];
 }
 

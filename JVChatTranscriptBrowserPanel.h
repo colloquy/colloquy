@@ -9,6 +9,7 @@
 	IBOutlet NSTableView *tableView;
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSWindow *window;
+	IBOutlet NSTextField *statusText;
 	
 	int _selectedTag;
 	
@@ -29,5 +30,6 @@
 -(IBAction)changeCriterion:(id)sender;
 
 -(void)markDirty:(id)log;
+-(void)updateStatus;
 
 @end
