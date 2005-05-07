@@ -95,7 +95,7 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 				NSString *path = [logs stringByAppendingPathComponent:logPath];
 				
 #ifdef MAC_OS_X_VERSION_10_4
-				if( floor( NSAppKitVersionNumber ) == NSAppKitVersionNumber10_3 ) {
+				if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 ) {
 					FILE* logsFile = fopen([path fileSystemRepresentation],"r");
 					if (logsFile)
 					{
