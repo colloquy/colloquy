@@ -57,7 +57,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		_transcript = nil;
 		_style = nil;
 		_styleVariant = nil;
-		_styleParameters = nil;
+		_styleParameters = [[NSMutableDictionary dictionary] retain];
 		_emoticons = nil;
 		[self setNextTextView:nil];
 	}
@@ -148,6 +148,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	[_styleVariant autorelease];
 	_styleVariant = [variant copyWithZone:[self zone]];
+
+	// add single-quotes so that these are not interpreted as XPath expressions  
+	[_styleParameters setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];  
+	[_styleParameters setObject:@"'.tif'" forKey:@"buddyIconExtension"];
+
+	NSString *timeFormatParameter = [NSString stringWithFormat:@"'%@'", [[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString]];
+	[_styleParameters setObject:timeFormatParameter forKey:@"timeFormat"];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _styleVariantChanged: ) name:JVStyleVariantChangedNotification object:style];
