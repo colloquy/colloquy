@@ -27,12 +27,12 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 
 -(NSString *)indexPath
 {
-	return [[self logsPath] stringByAppendingPathComponent:@"Logs Index"];
+	return [[@"~/Library/Application Support/Colloquy" stringByExpandingTildeInPath] stringByAppendingPathComponent:@"Transcript Search Index"];
 }
 
 -(NSString *)dirtyPath
 {
-	return [[self logsPath] stringByAppendingPathComponent:@"Dirty Logs"];
+	return [[@"~/Library/Application Support/Colloquy" stringByExpandingTildeInPath] stringByAppendingPathComponent:@"Dirty Transcripts"];
 }
 
 -(id)init
@@ -95,8 +95,7 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 				NSString *path = [logs stringByAppendingPathComponent:logPath];
 				
 #ifdef MAC_OS_X_VERSION_10_4
-				if (NSAppKitVersionNumber > NSAppKitVersionNumber10_3_5)
-				{
+				if( floor( NSAppKitVersionNumber ) == NSAppKitVersionNumber10_3 ) {
 					FILE* logsFile = fopen([path fileSystemRepresentation],"r");
 					if (logsFile)
 					{
@@ -105,19 +104,19 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 						char buffer[1024];
 						ssize_t size;
 						
-						if ((size=fgetxattr(fd,"server",buffer,1023,0,NULL))>0)
+						if ((size=fgetxattr(fd,"server",buffer,1023,0,0))>0)
 						{
 							buffer[size]=0;
 							server = [NSString stringWithUTF8String:buffer];
 						}
 						
-						if ((size=fgetxattr(fd,"target",buffer,1023,0,NULL))>0)
+						if ((size=fgetxattr(fd,"target",buffer,1023,0,0))>0)
 						{
 							buffer[size]=0;
 							target = [NSString stringWithUTF8String:buffer];
 						}
 						
-						if ((size=fgetxattr(fd,"dateBegan",buffer,1023,0,NULL))>0)
+						if ((size=fgetxattr(fd,"dateBegan",buffer,1023,0,0))>0)
 						{
 							buffer[size]=0;
 							session = [NSString stringWithUTF8String:buffer];
@@ -273,7 +272,6 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 			float		*outScoresArray = malloc(sizeof(float) * resultCount);
 			CFRange		resultRange = CFRangeMake(0, resultCount);
 			
-			//Read the results in LOG_RESULT_CLUMP_SIZE at a time
 			SKSearchResultsGetInfoInRange(results,resultRange,outDocumentsArray,NULL,outScoresArray);
 			int i;
 			

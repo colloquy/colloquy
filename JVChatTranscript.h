@@ -3,6 +3,8 @@
 @class JVChatEvent;
 @class JVChatSession;
 
+extern NSString *JVChatTranscriptUpdatedNotification;
+
 @protocol JVChatTranscriptElement
 - (/* xmlNode */ void *) node;
 - (JVChatTranscript *) transcript;

@@ -26,6 +26,7 @@
 #import "JVStyle.h"
 #import "JVGetCommand.h"
 #import "JVDirectChatPanel.h"
+#import "JVChatTranscriptBrowserPanel.h"
 
 #import <Foundation/NSDebug.h>
 
@@ -37,12 +38,98 @@
 
 NSString *JVChatStyleInstalledNotification = @"JVChatStyleInstalledNotification";
 NSString *JVChatEmoticonSetInstalledNotification = @"JVChatEmoticonSetInstalledNotification";
+NSString *JVMachineBecameIdleNotification = @"JVMachineBecameIdleNotification";
+NSString *JVMachineStoppedIdlingNotification = @"JVMachineStoppedIdlingNotification";
+
 static BOOL applicationIsTerminating = NO;
 
 @implementation MVApplicationController
+- (id) init {
+	if( ( self = [super init] ) ) {
+		mach_port_t masterPort = 0;
+		kern_return_t err = IOMasterPort( MACH_PORT_NULL, &masterPort );
+
+		io_iterator_t hidIter = 0;
+		err = IOServiceGetMatchingServices( masterPort, IOServiceMatching( "IOHIDSystem" ), &hidIter );
+
+		_hidEntry = IOIteratorNext( hidIter );
+		IOObjectRelease( hidIter );
+
+		_isIdle = NO;
+		_lastIdle = 0.;
+		_idleCheck = [[NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES] retain];
+	}
+
+	return self;
+}
+
+- (void) dealloc {
+	if( _hidEntry ) {
+		IOObjectRelease( _hidEntry );
+		_hidEntry = nil;
+	}
+
+	[super dealloc];
+}
+
+#pragma mark -
+
 + (BOOL) isTerminating {
 	extern BOOL applicationIsTerminating;
 	return applicationIsTerminating;
+}
+
+#pragma mark -
+
+// idle stuff adapted from a post by Jonathan 'Wolf' Rentzsch on the cocoa-dev mailing list.
+
+- (NSTimeInterval) idleTime {
+	NSMutableDictionary *hidProperties = nil;
+	kern_return_t err = IORegistryEntryCreateCFProperties( _hidEntry, (CFMutableDictionaryRef *) &hidProperties, kCFAllocatorDefault, 0 );
+
+	id hidIdleTimeObj = [hidProperties objectForKey:@"HIDIdleTime"];
+	unsigned long long result;
+
+	if( [hidIdleTimeObj isKindOfClass:[NSData class]] ) [hidIdleTimeObj getBytes:&result];
+	else result = [hidIdleTimeObj longLongValue];
+
+	[hidProperties release];
+
+	return ( result / 1000000000. );
+}
+
+- (void) checkIdle:(id) sender {
+	NSTimeInterval idle = [self idleTime];
+
+	if( _isIdle ) {
+		if( idle < _lastIdle ) {
+			// no longer idle
+
+			_isIdle = NO;
+			[[NSNotificationCenter defaultCenter] postNotificationName:JVMachineStoppedIdlingNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:idle] forKey:@"idleTime"]];
+
+			// reschedule the timer, to check for idle every 30 seconds
+			[_idleCheck invalidate];
+			[_idleCheck autorelease];
+
+			_idleCheck = [[NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES] retain];
+		}
+	} else {
+		if( idle > [[NSUserDefaults standardUserDefaults] integerForKey:@"JVIdleTime"] ) {
+			// we're now idle
+
+			_isIdle = YES;
+			[[NSNotificationCenter defaultCenter] postNotificationName:JVMachineBecameIdleNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:idle] forKey:@"idleTime"]];
+
+			// reschedule the timer, we will check every second to catch the user's return quickly
+			[_idleCheck invalidate];
+			[_idleCheck autorelease];
+
+			_idleCheck = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES] retain];
+		}
+	}
+
+	_lastIdle = idle;
 }
 
 #pragma mark -
@@ -85,6 +172,10 @@ static BOOL applicationIsTerminating = NO;
 	if( [[[MVConnectionsController defaultController] window] isKeyWindow] )
 		[[MVConnectionsController defaultController] hideConnectionManager:nil];
 	else [[MVConnectionsController defaultController] showConnectionManager:nil];
+}
+
+- (IBAction) showTranscriptBrowser:(id) sender {
+	[[JVChatTranscriptBrowserPanel sharedBrowser] showBrowser:self];
 }
 
 - (IBAction) showBuddyList:(id) sender {
@@ -346,7 +437,6 @@ static BOOL applicationIsTerminating = NO;
 	[JVGetCommand poseAsClass:[NSGetCommand class]];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
-	
 #ifdef DEBUG
 	NSDebugEnabled = YES;
 //	NSZombieEnabled = YES;
@@ -395,6 +485,7 @@ static BOOL applicationIsTerminating = NO;
 	[JVChatController defaultController];
 	[MVFileTransferController defaultController];
 	[MVBuddyListController sharedBuddyList];
+	[JVChatTranscriptBrowserPanel sharedBrowser];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:30] setSubmenu:[JVChatController smartTranscriptMenu]];

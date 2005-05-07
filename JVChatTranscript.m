@@ -11,12 +11,7 @@
 
 #import <libxml/xinclude.h>
 
-#ifdef MAC_OS_X_VERSION_10_4
-#include <sys/xattr.h>
-#endif
-
-// define this here so they weak link for Panther letting the binary will load
-extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u_int32_t position, int options) __attribute__((weak_import));
+NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotification";
 
 #pragma mark -
 
@@ -945,6 +940,8 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 
 	[self _changeFileAttributesAtPath:path];
 
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatTranscriptUpdatedNotification object:self];
+
 	return ret;
 }
 
@@ -962,7 +959,10 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 		ret = [xmlData writeToURL:url atomically:atomically];
 		[xmlData release];
 
-		if( [url isFileURL] ) [self _changeFileAttributesAtPath:[url path]];
+		if( [url isFileURL] ) {
+			[self _changeFileAttributesAtPath:[url path]];
+			[[NSNotificationCenter defaultCenter] postNotificationName:JVChatTranscriptUpdatedNotification object:self];
+		}
 	}
 
 	return ret;
@@ -1136,6 +1136,8 @@ extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u
 
 	if( format ) [_logFile writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
 	[_logFile writeData:[@"</log>" dataUsingEncoding:NSUTF8StringEncoding]];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatTranscriptUpdatedNotification object:self];
 
 	xmlBufferFree( buf );
 }

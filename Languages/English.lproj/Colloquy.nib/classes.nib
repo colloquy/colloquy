@@ -42,6 +42,7 @@
                 showBuddyList = id; 
                 showConnectionManager = id; 
                 showPreferences = id; 
+                showTranscriptBrowser = id; 
                 showTransferManager = id; 
             }; 
             CLASS = MVApplicationController; 

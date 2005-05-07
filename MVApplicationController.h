@@ -1,7 +1,17 @@
 extern NSString *JVChatStyleInstalledNotification;
 extern NSString *JVChatEmoticonSetInstalledNotification;
+extern NSString *JVMachineBecameIdleNotification;
+extern NSString *JVMachineStoppedIdlingNotification;
 
-@interface MVApplicationController : NSObject {}
+@class JVChatTranscriptBrowserPanel;
+
+@interface MVApplicationController : NSObject {
+	io_registry_entry_t _hidEntry;
+	NSTimer *_idleCheck;
+	NSTimeInterval _lastIdle;
+	BOOL _isIdle;
+}
+
 - (IBAction) checkForUpdate:(id) sender;
 - (IBAction) connectToSupportRoom:(id) sender;
 - (IBAction) emailDeveloper:(id) sender;
@@ -9,6 +19,7 @@ extern NSString *JVChatEmoticonSetInstalledNotification;
 
 - (IBAction) showPreferences:(id) sender;
 - (IBAction) showTransferManager:(id) sender;
+- (IBAction) showTranscriptBrowser:(id) sender;
 - (IBAction) showConnectionManager:(id) sender;
 - (IBAction) showBuddyList:(id) sender;
 
@@ -17,6 +28,8 @@ extern NSString *JVChatEmoticonSetInstalledNotification;
 - (IBAction) markAllDisplays:(id) sender;
 
 + (BOOL) isTerminating;
+
+- (NSTimeInterval) idleTime;
 @end
 
 @protocol JVChatViewController;
