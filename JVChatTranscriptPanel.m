@@ -249,7 +249,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) setSearchQuery:(NSString *) query {
-	if( _searchQuery == query || [_searchQuery caseInsensitiveCompare:query] == NSOrderedSame ) return;
+	if( query == _searchQuery || [query isEqualToString:_searchQuery] ) return;
 
 	[_searchQueryRegex autorelease];
 	_searchQueryRegex = nil;
@@ -564,6 +564,10 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #define WebMenuItemTagStop 11
 #define WebMenuItemTagReload 12
 #endif
+
+- (JVStyleView *) display {
+	return display;
+}
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
 	NSMutableArray *ret = [[defaultMenuItems mutableCopy] autorelease];

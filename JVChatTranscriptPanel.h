@@ -53,6 +53,8 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 
 - (void) setSearchQuery:(NSString *) query;
 - (NSString *) searchQuery;
+
+- (JVStyleView *) display;
 @end
 
 #pragma mark -
