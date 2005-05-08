@@ -2,34 +2,30 @@
 
 #import "JVChatTranscriptPanel.h"
 
+@class JVChatTranscript;
+
 @interface JVChatTranscriptBrowserPanel : JVChatTranscriptPanel {
 	NSDictionary *_transcripts;
 	NSArray *_filteredTranscripts;
-	
+	NSMutableSet *_dirtyLogs;
+
 	IBOutlet NSTableView *tableView;
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSWindow *window;
 	IBOutlet NSTextField *statusText;
 	
 	int _selectedTag;
-	
+
 	BOOL _shouldIndex;
-	
-	NSMutableSet *_dirtyLogs;
-	NSLock *_logLock;
-	
+
 	SKIndexRef _logsIndex;
 	SKSearchGroupRef _searchGroup;
-	
 }
++ (JVChatTranscriptBrowserPanel *) sharedBrowser;
 
-+(JVChatTranscriptBrowserPanel *)sharedBrowser;
+- (IBAction) search:(id) sender;
+- (IBAction) showBrowser:(id) sender;
+- (IBAction) changeCriterion:(id) sender;
 
--(IBAction)search:(id)sender;
--(IBAction)showBrowser:(id)sender;
--(IBAction)changeCriterion:(id)sender;
-
--(void)markDirty:(id)log;
--(void)updateStatus;
-
+- (void) markDirty:(JVChatTranscript *) transcript;
 @end

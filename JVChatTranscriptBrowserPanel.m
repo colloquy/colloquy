@@ -5,261 +5,206 @@
 #import "JVChatTranscript.h"
 #import "JVStyle.h"
 #import "JVStyleView.h"
-#import "AvailabilityMacros.h"
 #import "MVApplicationController.h"
-#import <AGRegex/AGRegex.h>
 
-id sharedBrowser=nil;
-NSString *criteria[4]={@"server",@"target",@"session",nil};
+id sharedBrowser = nil;
+NSString *criteria[4] = { @"server", @"target", @"session", nil };
 
 @implementation JVChatTranscriptBrowserPanel
-
-+(JVChatTranscriptBrowserPanel *) sharedBrowser
-{
-	if (sharedBrowser) return sharedBrowser;
++ (JVChatTranscriptBrowserPanel *) sharedBrowser {
+	if( sharedBrowser ) return sharedBrowser;
 	else return [[self alloc] init];
 }
 
--(NSString *)logsPath
-{
+- (NSString *) logsPath {
 	return [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
 }
 
--(NSString *)indexPath
-{
+- (NSString *) indexPath {
 	return [[@"~/Library/Application Support/Colloquy" stringByExpandingTildeInPath] stringByAppendingPathComponent:@"Transcript Search Index"];
 }
 
--(NSString *)dirtyPath
-{
+- (NSString *) dirtyPath {
 	return [[@"~/Library/Application Support/Colloquy" stringByExpandingTildeInPath] stringByAppendingPathComponent:@"Dirty Transcripts"];
 }
 
--(id)init
-{
-	if (! sharedBrowser && (self = [super init]))
-	{
-		NSMutableDictionary *tempDictionary=[NSMutableDictionary dictionary];
-		NSString *logs = [self logsPath];
+- (void) updateStatus {
+	unsigned int c = 0;
+	@synchronized( _dirtyLogs ) {
+		c = [_dirtyLogs count];
+	}
+
+	if( c > 1 ) [statusText setStringValue:[NSString stringWithFormat:@"%d logs still have to be indexed",c]];
+	else if( c == 1 ) [statusText setStringValue:@"One log still has to be indexed"];
+	else [statusText setStringValue:@"Indexing is complete"];
+}
+
+- (id) init {
+	if( ! sharedBrowser && ( self = [super init] ) ) {
+		NSMutableDictionary *tempDictionary = [NSMutableDictionary dictionary];
 		int org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
 		int session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
-		AGRegex *regex;
-		NSString *logPath;
-		NSDirectoryEnumerator *logsEnum = [[NSFileManager defaultManager] enumeratorAtPath: logs];
-	
-		switch(org)
-		{
-			case 0: // all in the same folder, w/server
-				regex = [[AGRegex alloc] initWithPattern:@"(?P<target>.*) \\((?P<server>.*\\)) ?(?P<session>.*).colloquyTranscript"]; 
-				break;
-			case 1: //a folder for each server
-				regex = [[AGRegex alloc] initWithPattern:@"(?P<server>.*)/(?P<target>.*) ?(?P<session>.*).colloquyTranscript"];
-				break;
-			case 2: // a folder for each (server,target)
-				regex = [[AGRegex alloc] initWithPattern:@"(?P<target>.*) \\((?P<server>.*)\\)/(.* )?(?P<session>.*).colloquyTranscript"];
-				break;
-			case 3: // a folder for each server, then for each target
-				regex = [[AGRegex alloc] initWithPattern:@"(?P<server>.*)/(?P<target>.*)/(.* )?(?P<session>.*).colloquyTranscript"];
-				break;
+
+		AGRegex *regex = nil;
+		switch( org ) {
+		case 0: // all in the same folder, w/server
+			regex = [[AGRegex alloc] initWithPattern:@"(?P<target>.*) \\((?P<server>.*)\\) ?(?P<session>.*)\\.colloquyTranscript"]; 
+			break;
+		case 1: // a folder for each server
+			regex = [[AGRegex alloc] initWithPattern:@"(?P<server>.*)/(?P<target>.*) ?(?P<session>.*)\\.colloquyTranscript"];
+			break;
+		case 2: // a folder for each (server,target)
+			regex = [[AGRegex alloc] initWithPattern:@"(?P<target>.*) \\((?P<server>.*)\\)/(.* )?(?P<session>.*)\\.colloquyTranscript"];
+			break;
+		case 3: // a folder for each server, then for each target
+			regex = [[AGRegex alloc] initWithPattern:@"(?P<server>.*)/(?P<target>.*)/(.* )?(?P<session>.*)\\.colloquyTranscript"];
+			break;
 		}
 
-		if ([[NSFileManager defaultManager] fileExistsAtPath:[self dirtyPath]])
+		if( [[NSFileManager defaultManager] fileExistsAtPath:[self dirtyPath]] )
 			_dirtyLogs = [[NSKeyedUnarchiver unarchiveObjectWithFile:[self dirtyPath]] retain];
 		else _dirtyLogs = [[NSMutableSet alloc] init];
-		
-		if ([[NSFileManager defaultManager] fileExistsAtPath:[self indexPath]])
-		{
+
+		if( [[NSFileManager defaultManager] fileExistsAtPath:[self indexPath]] ) {
 			_shouldIndex = NO;
-			_logsIndex = SKIndexOpenWithURL((CFURLRef)[NSURL fileURLWithPath:[self indexPath]],NULL,YES);
-		}
-		else
-		{
+			_logsIndex = SKIndexOpenWithURL( (CFURLRef) [NSURL fileURLWithPath:[self indexPath]], NULL, YES );
+		} else {
 			_shouldIndex = YES;
-			_logsIndex = SKIndexCreateWithURL((CFURLRef)[NSURL fileURLWithPath:[self indexPath]],NULL,kSKIndexInverted,NULL);
+			_logsIndex = SKIndexCreateWithURL( (CFURLRef) [NSURL fileURLWithPath:[self indexPath]], NULL, kSKIndexInverted, NULL );
 		}
-		
-		CFArrayRef indexes = CFArrayCreate(kCFAllocatorDefault,(void*)&_logsIndex,1,&kCFTypeArrayCallBacks);
-		_searchGroup = SKSearchGroupCreate(indexes);
-		CFRelease(indexes);
-		
-		while (logPath = [logsEnum nextObject]) 
-		{
-			if ([[logPath pathExtension] isEqualToString:@"colloquyTranscript"])
-			{
+
+		CFArrayRef indexes = CFArrayCreate( kCFAllocatorDefault, (void *) &_logsIndex, 1, &kCFTypeArrayCallBacks );
+		_searchGroup = SKSearchGroupCreate( indexes );
+		CFRelease( indexes );
+
+		NSDirectoryEnumerator *logsEnum = [[NSFileManager defaultManager] enumeratorAtPath:[self logsPath]];
+		NSString *logPath = nil;
+
+		while( ( logPath = [logsEnum nextObject] ) ) {
+			if( [[logPath pathExtension] isEqualToString:@"colloquyTranscript"] ) {
 				// analyze the path
-				AGRegexMatch *match=[regex findInString:logPath];
-				
+				AGRegexMatch *match = [regex findInString:logPath];
+
 				NSString *server = [match groupNamed:@"server"];
 				NSString *target = [match groupNamed:@"target"];
 				NSString *session = [match groupNamed:@"session"];
-				NSString *path = [logs stringByAppendingPathComponent:logPath];
-				
+				NSString *path = [[self logsPath] stringByAppendingPathComponent:logPath];
+
 #ifdef MAC_OS_X_VERSION_10_4
 				if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 ) {
-					FILE* logsFile = fopen([path fileSystemRepresentation],"r");
-					if (logsFile)
-					{
-						int fd = fileno(logsFile);			
-						
+					FILE *logsFile = fopen( [path fileSystemRepresentation], "r" );
+					if( logsFile ) {
+						int fd = fileno( logsFile );			
+
 						char buffer[1024];
-						ssize_t size;
-						
-						if ((size=fgetxattr(fd,"server",buffer,1023,0,0))>0)
-						{
-							buffer[size]=0;
+						ssize_t size = 0;
+
+						if( ( size = fgetxattr( fd, "server", buffer, 1023, 0, 0 ) ) > 0 ) {
+							buffer[size] = 0;
 							server = [NSString stringWithUTF8String:buffer];
 						}
-						
-						if ((size=fgetxattr(fd,"target",buffer,1023,0,0))>0)
-						{
-							buffer[size]=0;
+
+						if( ( size = fgetxattr( fd, "target", buffer, 1023, 0, 0 ) ) > 0 ) {
+							buffer[size] = 0;
 							target = [NSString stringWithUTF8String:buffer];
 						}
-						
-						if ((size=fgetxattr(fd,"dateBegan",buffer,1023,0,0))>0)
-						{
-							buffer[size]=0;
+
+						if( ( size = fgetxattr( fd, "dateBegan", buffer, 1023, 0, 0 ) ) > 0 ) {
+							buffer[size] = 0;
 							session = [NSString stringWithUTF8String:buffer];
 						}
-						
-						fclose(logsFile);
+
+						fclose( logsFile );
 					}
 				}
 #endif
-				NSDictionary *d=[NSDictionary dictionaryWithObjectsAndKeys:
-									server,@"server",
-									target,@"target",
-									session,@"session",
-									path,@"path",NULL];
-				
+
+				NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:server, @"server", target, @"target", session, @"session", path, @"path", nil];
 				[tempDictionary setObject:d forKey:path];
-				if (_shouldIndex) [_dirtyLogs addObject:path];
+				if( _shouldIndex ) [_dirtyLogs addObject:path];
 			}
 		}
+
 		_shouldIndex = NO;
 		[regex release];
-		
-		_transcripts = [tempDictionary copy];
-		_filteredTranscripts = [[_transcripts allValues] copy];
-		_selectedTag=1;
-		_nibLoaded=FALSE;
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(beginIndexing:) 
-													 name:JVMachineBecameIdleNotification object:nil];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(stopIndexing:) 
-													 name:JVMachineStoppedIdlingNotification object:nil];
-		
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(markDirty:) 
-													 name:JVChatTranscriptUpdatedNotification object:nil];
-		
-		
-		_logLock = [[NSLock alloc] init];
-		
 
-		
+		_transcripts = [tempDictionary copyWithZone:[self zone]];
+		_filteredTranscripts = [[_transcripts allValues] copyWithZone:[self zone]];
+		_selectedTag = 1;
+		_nibLoaded = NO;
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( beginIndexing: ) name:JVMachineBecameIdleNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( stopIndexing: ) name:JVMachineStoppedIdlingNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( markDirty: ) name:JVChatTranscriptUpdatedNotification object:nil];
+
+		if( [_dirtyLogs count] ) [self performSelector:@selector( beginIndexing: ) withObject:nil afterDelay:0.];
+
 		sharedBrowser = self;
-
-	}
-	else [super dealloc];
+	} else [super dealloc];
 
 	return sharedBrowser;
 }
 
--(void)dealloc
-{
-	[NSKeyedArchiver archiveRootObject:_dirtyLogs 
-								toFile:[self dirtyPath]];
-		
-	[_logLock release];
-	[_dirtyLogs release];
-	
-	SKIndexClose(_logsIndex);
-	CFRelease(_searchGroup);
-	
+- (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+	_shouldIndex = NO;
+	[NSKeyedArchiver archiveRootObject:_dirtyLogs toFile:[self dirtyPath]];
+
+	SKIndexClose( _logsIndex );
+	CFRelease( _searchGroup );
+
+	[_dirtyLogs release];
 	[_filteredTranscripts release];
 	[_transcripts release];
-	
+
+	_dirtyLogs = nil;
+	_filteredTranscripts = nil;
+	_transcripts = nil;
+
 	[super dealloc];
 }
 
--(IBAction)showBrowser:(id)sender
-{
-	if (! _nibLoaded) 
-	{
-		[NSBundle loadNibNamed:@"JVChatTranscriptBrowserPanel" owner:self];
-	}
+- (IBAction) showBrowser:(id) sender {
+	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatTranscriptBrowserPanel" owner:self];
 	[window makeKeyAndOrderFront:self];
 }
 
--(NSView *)view
-{
-	if (! _nibLoaded) [NSBundle loadNibNamed:@"JVChatTranscriptBrowserPanel" owner:self];
+- (NSView *) view {
+	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatTranscriptBrowserPanel" owner:self];
 	return [window contentView];
 }
 
--(void)awakeFromNib
-{
+- (void) awakeFromNib {
 	[super awakeFromNib];
 	[self updateStatus];
-	_nibLoaded=YES;
 }
 
--(void)updateStatus
-{
-	int c = [_dirtyLogs count];
-	if (c>1)
-	{
-		[statusText setStringValue:[NSString stringWithFormat:@"%d logs still have to be indexed",c]];
-	}
-	else if (c==1)
-	{
-		[statusText setStringValue:@"One log still has to be indexed"];
-	}
-	else
-	{
-		[statusText setStringValue:@"Indexing is complete"];
-	}
-}
-
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
-{
+- (int) numberOfRowsInTableView:(NSTableView *) tableview {
 	return [_filteredTranscripts count];
 }
 
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
-{	
-	return [[_filteredTranscripts objectAtIndex:rowIndex] objectForKey:[aTableColumn identifier]];
+- (id) tableView:(NSTableView *) tableview objectValueForTableColumn:(NSTableColumn *) column row:(int) row {	
+	return [[_filteredTranscripts objectAtIndex:row] objectForKey:[column identifier]];
 }
 
-- (void)tableView:(NSTableView *)aTableView sortDescriptorsDidChange:(NSArray *)oldDescriptors
-{
+- (void) tableView:(NSTableView *) tableview sortDescriptorsDidChange:(NSArray *) oldDescriptors {
 	NSArray *sorted = [_filteredTranscripts sortedArrayUsingDescriptors:[tableView sortDescriptors]];
-	
+
 	int selectedRow = [tableView selectedRow];
-	NSDictionary *selected=nil;
-	if (selectedRow != -1)
-		selected = [_filteredTranscripts objectAtIndex:selectedRow]; 
-	
+	NSDictionary *selected = nil;
+	if( selectedRow != -1 ) selected = [_filteredTranscripts objectAtIndex:selectedRow]; 
+
 	[_filteredTranscripts release];
 	_filteredTranscripts = [sorted retain];
-	
+
 	[tableView reloadData];
-	if (selected) [tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:[sorted indexOfObject:selected]]
-										 byExtendingSelection:NO];
+	if( selected ) [tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:[sorted indexOfObject:selected]] byExtendingSelection:NO];
 }
 
--(IBAction)search:(id)sender
-{
-	if ([[searchField stringValue] length])
-	{
-		if (criteria[_selectedTag])
-		{
+- (IBAction) search:(id) sender {
+	if( [[searchField stringValue] length] ) {
+		if( criteria[_selectedTag] ) {
 			NSMutableArray *filtered=[NSMutableArray arrayWithCapacity:[_transcripts count]];
 			NSEnumerator *tEnum=[_transcripts objectEnumerator];
 			NSDictionary *d;
@@ -272,10 +217,7 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 			}
 			[_filteredTranscripts release];
 			_filteredTranscripts = [filtered copy];
-
-		}
-		else
-		{
+		} else {
 			NSMutableArray *tempArray = [[NSMutableArray alloc] init];
 			
 			SKIndexFlush(_logsIndex);
@@ -315,93 +257,96 @@ NSString *criteria[4]={@"server",@"target",@"session",nil};
 			//NSLog(@"%@",_filteredTranscripts);
 			[tempArray release];
 		}
-	}
-	else 
-	{
+	} else {
 		[_filteredTranscripts release];
-		_filteredTranscripts=[[_transcripts allValues] copy];
+		_filteredTranscripts = [[_transcripts allValues] copy];
 	}
 
 	[tableView reloadData];
 }
 
--(IBAction)changeCriterion:(id)sender
-{
-	int i;
+- (IBAction) changeCriterion:(id) sender {
 	[[searchField cell] setPlaceholderString:[sender title]];
 	_selectedTag = [sender tag];
-	for (i=0;i<4;i++)
-	{
-		[[[searchField menu] itemWithTag:i] setState:(i==_selectedTag)?NSOnState:NSOffState];
-	}
+
+	int i = 0;
+	for( i = 0; i < 4; i++ )
+		[[[searchField menu] itemWithTag:i] setState:( i == _selectedTag ? NSOnState : NSOffState )];
+
 	[self search:self];
 }
 
--(void)tableViewSelectionDidChange:(NSNotification *)n
-{
-	int selectedRow=[tableView selectedRow];
-	if (selectedRow != -1)
-	{
+- (void) tableViewSelectionDidChange:(NSNotification *) notification {
+	int selectedRow = [tableView selectedRow];
+	if( selectedRow != -1 ) {
 		[_transcript release];
-		_transcript=[[JVChatTranscript alloc] initWithContentsOfFile:[[_filteredTranscripts objectAtIndex:selectedRow] objectForKey:@"path"]];
+		_transcript = [[JVChatTranscript alloc] initWithContentsOfFile:[[_filteredTranscripts objectAtIndex:selectedRow] objectForKey:@"path"]];
 		[display setTranscript:_transcript];
 		[self setSearchQuery:[searchField stringValue]];
 		[display reloadCurrentStyle];
 	}
 }
 
--(void)beginIndexing:(NSNotification *)n
-{
-	//NSLog(@"oooh good time to index");
+- (void) beginIndexing:(NSNotification *) notification {
 	_shouldIndex = YES;
-	[NSThread detachNewThreadSelector:@selector(indexingThread) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector( indexingThread ) toTarget:self withObject:nil];
 }
 
--(void)indexingThread
-{
+- (void) indexingThread {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *path;
-	
-	while (_shouldIndex && (path=[_dirtyLogs anyObject]))
-	{
+	NSString *path = nil;
+
+	[NSThread setThreadPriority:0.25];
+
+	while( _shouldIndex && ( path = [_dirtyLogs anyObject] ) ) {
 		[path retain];
-		[_logLock lock];
-		[_dirtyLogs removeObject:path];
-		[_logLock unlock];
-		
-		SKDocumentRef document = SKDocumentCreateWithURL((CFURLRef)[NSURL fileURLWithPath:path]);
+
+		@synchronized( _dirtyLogs ) {
+			[_dirtyLogs removeObject:path];
+		}
+
+		SKDocumentRef document = SKDocumentCreateWithURL( (CFURLRef) [NSURL fileURLWithPath:path] );
 		NSString *toIndex = [[NSString alloc] initWithContentsOfFile:path]; // FIXME strip xml (w/o NSXMLDocument...) ?
-		SKIndexAddDocumentWithText(_logsIndex,document,(CFStringRef)toIndex,YES);
-		CFRelease(document);
+		SKIndexAddDocumentWithText( _logsIndex, document, (CFStringRef) toIndex, YES );
+		CFRelease( document );
+
 		[toIndex release];
 		[path release];
-		
-		[self updateStatus];
+
+		[self performSelectorOnMainThread:@selector( updateStatus ) withObject:nil waitUntilDone:NO];
 	}
-	
-	SKIndexFlush(_logsIndex);
-	
-//	NSLog(@"Index finished or stopped.");
-	
+
+	[self performSelectorOnMainThread:@selector( syncDirtyLogsList ) withObject:nil waitUntilDone:NO];
+
+	SKIndexFlush( _logsIndex );
+
 	[pool release];
 }
 
--(void)stopIndexing:(NSNotification *)n
-{
-	//NSLog(@"STOP IT");
+- (void) stopIndexing:(NSNotification *) notification {
 	_shouldIndex = NO;
 }
 
--(void)markDirty:(id)log
-{
-	if ([log isKindOfClass:[NSNotification class]]) log=[[log object] filePath];
-	
-	//NSLog(@"Marking %@ as dirty", log);
-	[_logLock lock]; // might be used from multiple threads
-	[_dirtyLogs addObject:log];
+- (void) markDirty:(JVChatTranscript *) transcript {
+	NSString *path = nil;
+	if( [transcript isKindOfClass:[NSNotification class]] )
+		path = [(JVChatTranscript *)[(NSNotification *)transcript object] filePath];
+	else if( [transcript isKindOfClass:[JVChatTranscript class]] )
+		path = [transcript filePath];
+	else return;
+
+	@synchronized( _dirtyLogs ) {
+		[_dirtyLogs addObject:path];
+		[NSKeyedArchiver archiveRootObject:_dirtyLogs toFile:[self dirtyPath]];
+	}
+
 	[self updateStatus];
-	[_logLock unlock];
 }
 
-
+- (void) syncDirtyLogsList {
+	@synchronized( _dirtyLogs ) {
+		if( [_dirtyLogs count] ) [NSKeyedArchiver archiveRootObject:_dirtyLogs toFile:[self dirtyPath]];
+		else [[NSFileManager defaultManager] removeFileAtPath:[self dirtyPath] handler:nil];
+	}
+}
 @end
