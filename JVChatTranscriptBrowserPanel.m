@@ -205,57 +205,47 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 - (IBAction) search:(id) sender {
 	if( [[searchField stringValue] length] ) {
 		if( criteria[_selectedTag] ) {
-			NSMutableArray *filtered=[NSMutableArray arrayWithCapacity:[_transcripts count]];
-			NSEnumerator *tEnum=[_transcripts objectEnumerator];
-			NSDictionary *d;
-			while (d=[tEnum nextObject])
-			{
-				if ([[d objectForKey:criteria[_selectedTag]] rangeOfString:[searchField stringValue]].location != NSNotFound)
-				{
+			NSMutableArray *filtered = [NSMutableArray arrayWithCapacity:[_transcripts count]];
+			NSEnumerator *enumerator = [_transcripts objectEnumerator];
+			NSDictionary *d = nil;
+
+			while( ( d = [enumerator nextObject] ) ) {
+				if( [[d objectForKey:criteria[_selectedTag]] rangeOfString:[searchField stringValue]].location != NSNotFound ) {
 					[filtered addObject:d];
 				}
 			}
+
 			[_filteredTranscripts release];
-			_filteredTranscripts = [filtered copy];
+			_filteredTranscripts = [filtered retain];
 		} else {
 			NSMutableArray *tempArray = [[NSMutableArray alloc] init];
-			
-			SKIndexFlush(_logsIndex);
-			SKSearchResultsRef results = SKSearchResultsCreateWithQuery(_searchGroup,
-																		(CFStringRef)[searchField stringValue],
-																		kSKSearchPrefixRanked,
-																		[_transcripts count],
-																		NULL,NULL);
-			
-			CFIndex resultCount = SKSearchResultsGetCount(results);
-			
-			SKDocumentRef   *outDocumentsArray = malloc(sizeof(SKDocumentRef) * resultCount);
-			float		*outScoresArray = malloc(sizeof(float) * resultCount);
-			CFRange		resultRange = CFRangeMake(0, resultCount);
-			
-			SKSearchResultsGetInfoInRange(results,resultRange,outDocumentsArray,NULL,outScoresArray);
-			int i;
-			
-			//Process the results
-			for(i = 0; i < resultCount; i++)
-			{
-				CFURLRef url=SKDocumentCopyURL(outDocumentsArray[i]);
-				NSString *path=[(NSURL*)url path];
-				CFRelease(url);
-				
-				NSDictionary *theLog = [_transcripts objectForKey:path];
-				//NSLog(@"path %@ -> %@",path,theLog);
-				[tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-					[theLog objectForKey:@"server"],@"server",
-					[theLog objectForKey:@"target"],@"target",
-					[theLog objectForKey:@"session"],@"session",
-					path,@"path",[NSNumber numberWithFloat:outScoresArray[i]],@"relevancy",NULL]];
+
+			SKIndexFlush( _logsIndex );
+			SKSearchResultsRef results = SKSearchResultsCreateWithQuery( _searchGroup, (CFStringRef) [searchField stringValue], kSKSearchPrefixRanked, [_transcripts count], NULL, NULL );
+
+			CFIndex resultCount = SKSearchResultsGetCount( results );
+
+			SKDocumentRef *outDocumentsArray = malloc( sizeof( SKDocumentRef ) * resultCount );
+			float *outScoresArray = malloc( sizeof( float ) * resultCount );
+			CFRange resultRange = CFRangeMake( 0, resultCount );
+
+			SKSearchResultsGetInfoInRange( results, resultRange, outDocumentsArray, NULL, outScoresArray );
+			int i = 0;
+
+			for( i = 0; i < resultCount; i++ ) {
+				CFURLRef url = SKDocumentCopyURL( outDocumentsArray[i] );
+				NSString *path = [(NSURL*)url path];
+				CFRelease( url );
+
+				NSMutableDictionary *theLog = [[[_transcripts objectForKey:path] mutableCopy] autorelease];
+				[theLog setObject:[NSNumber numberWithFloat:outScoresArray[i]] forKey:@"relevancy"];
+				[theLog setObject:path forKey:@"path"];
+
+				[tempArray addObject:theLog];
 			}	 
-				
+
 			[_filteredTranscripts release];
-			_filteredTranscripts = [tempArray copy];
-			//NSLog(@"%@",_filteredTranscripts);
-			[tempArray release];
+			_filteredTranscripts = tempArray;
 		}
 	} else {
 		[_filteredTranscripts release];
