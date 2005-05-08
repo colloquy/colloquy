@@ -288,12 +288,14 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 
 	[NSThread setThreadPriority:0.25];
 
-	while( _shouldIndex && ( path = [_dirtyLogs anyObject] ) ) {
-		[path retain];
-
+	while( _shouldIndex ) {
 		@synchronized( _dirtyLogs ) {
-			[_dirtyLogs removeObject:path];
+			path = [_dirtyLogs anyObject];
+			[path retain];
+			if( path ) [_dirtyLogs removeObject:path];
 		}
+
+		if( ! path ) break;
 
 		SKDocumentRef document = SKDocumentCreateWithURL( (CFURLRef) [NSURL fileURLWithPath:path] );
 		NSString *toIndex = [[NSString alloc] initWithContentsOfFile:path]; // FIXME strip xml (w/o NSXMLDocument...) ?
