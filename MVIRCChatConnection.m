@@ -99,6 +99,7 @@ typedef struct {
 	MVIRCChatConnection *connection;
 } MVIRCChatConnectionModuleData;
 
+// IRC error codes for most servers (some codes are not supported by all servers)
 #define ERR_NOSUCHNICK       401 // <nickname> :No such nick/channel
 #define ERR_NOSUCHSERVER     402 // <server name> :No such server
 #define ERR_NOSUCHCHANNEL    403 // <channel name> :No such channel
@@ -1027,6 +1028,36 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 
 #pragma mark -
 
+static void MVChatErrorNoSuchUser( IRC_SERVER_REC *server, const char *data ) {
+	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
+	if( ! self ) return;
+
+	g_return_if_fail( data != NULL );
+
+	char *nick = NULL;
+	char *params = event_get_params( data, 2, NULL, &nick );
+
+	[self _processErrorCode:ERR_NOSUCHNICK withContext:nick];
+
+	g_free( params );
+}
+
+static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data ) {
+	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
+	if( ! self ) return;
+
+	g_return_if_fail( data != NULL );
+
+	char *command = NULL;
+	char *params = event_get_params( data, 2, NULL, &command );
+
+	[self _processErrorCode:ERR_UNKNOWNCOMMAND withContext:command];
+
+	g_free( params );
+}
+
+#pragma mark -
+
 @implementation MVIRCChatConnection
 + (void) initialize {
 	[super initialize];
@@ -1662,7 +1693,11 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	signal_add_first( "event 433", (SIGNAL_FUNC) MVChatNickTaken );
 	signal_add_last( "event 001", (SIGNAL_FUNC) MVChatNickFinal );
 
-	// And to catch the notifylist whois ones as well
+	// add all error codes we want to handle
+	signal_add_last( "event 401", (SIGNAL_FUNC) MVChatErrorNoSuchUser );
+	signal_add_last( "event 421", (SIGNAL_FUNC) MVChatErrorUnknownCommand );
+
+	// catch the notifylist whois ones as well
 	signal_add_last( "notifylist event whois end", (SIGNAL_FUNC) MVChatUserWhoisComplete );
 	signal_add_last( "notifylist event whois away", (SIGNAL_FUNC) MVChatUserAway );
 	signal_add_last( "notifylist event whois", (SIGNAL_FUNC) MVChatUserWhois );
@@ -1874,6 +1909,35 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	[self _setIrssiConnection:NULL];
 
 	[MVIRCChatConnectionThreadLock unlock];
+}
+
+#pragma mark -
+
+- (void) _processErrorCode:(int) errorCode withContext:(char *) context {
+	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+	NSError *error = nil;
+
+	[userInfo setObject:self forKey:@"connection"];
+
+	switch( errorCode ) {
+		case ERR_NOSUCHNICK: {
+			MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:context]];
+			[user _setStatus:MVChatUserOfflineStatus];
+			[userInfo setObject:user forKey:@"user"];
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The user \"%@\" is no longer connected (or never was connected) to the \"%@\" server.", "user not on the server" ), [user nickname], [self server]] forKey:NSLocalizedDescriptionKey];
+			error = [NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionNoSuchUserError userInfo:userInfo];
+			break;
+		}
+		case ERR_UNKNOWNCOMMAND: {
+			NSString *command = [self stringWithEncodedBytes:context];
+			[userInfo setObject:command forKey:@"command"];
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The command \"%@\" is not a valid command on the \"%@\" server.", "user not on the server" ), command, [self server]] forKey:NSLocalizedDescriptionKey];
+			error = [NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionUnknownCommandError userInfo:userInfo];
+			break;
+		}
+	}
+
+	if( error ) [self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 }
 
 #pragma mark -

@@ -30,6 +30,23 @@ typedef enum {
 	MVChatCTCPTwoMessageFormat = 'ct2F'
 } MVChatMessageFormat;
 
+typedef enum {
+	MVChatConnectionNoSuchUserError = -1,
+	MVChatConnectionNoSuchRoomError = -2,
+	MVChatConnectionNoSuchServerError = -3,
+	MVChatConnectionCantSendToRoomError = -4,
+	MVChatConnectionNotInRoomError = -5,
+	MVChatConnectionUserNotInRoomError = -6,
+	MVChatConnectionRoomIsFullError = -7,
+	MVChatConnectionInviteOnlyRoomError = -8,
+	MVChatConnectionRoomPasswordIncorrectError = -9,
+	MVChatConnectionBannedFromRoomError = -10,
+	MVChatConnectionUnknownCommandError = -11,
+	MVChatConnectionErroneusNicknameError = -12,
+	MVChatConnectionBannedFromServerError = -13,
+	MVChatConnectionServerPasswordIncorrectError = -14
+} MVChatConnectionError;
+
 @class MVChatRoom;
 @class MVChatUser;
 @class MVUploadFileTransfer;
@@ -60,6 +77,8 @@ extern NSString *MVChatConnectionNicknameRejectedNotification;
 extern NSString *MVChatConnectionSubcodeRequestNotification;
 extern NSString *MVChatConnectionSubcodeReplyNotification;
 
+extern NSString *MVChatConnectionErrorDomain;
+
 @interface MVChatConnection : NSObject {
 @protected
 	MVChatConnectionStatus _status;
@@ -76,6 +95,7 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 	NSTimer *_reconnectTimer;
 	NSAttributedString *_awayMessage;
 	NSMutableDictionary *_persistentInformation;
+	NSError *_lastError;
 
 	NSArray *_alternateNicks;
 	unsigned int _nextAltNickIndex;
@@ -109,6 +129,10 @@ extern NSString *MVChatConnectionSubcodeReplyNotification;
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname;
 - (void) disconnect;
 - (void) disconnectWithReason:(NSAttributedString *) reason;
+
+#pragma mark -
+
+- (NSError *) lastError;
 
 #pragma mark -
 

@@ -49,6 +49,8 @@ extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 
 - (void) _forceDisconnect;
 
+- (void) _processErrorCode:(int) errorCode withContext:(char *) context;
+
 - (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname;
 
 - (oneway void) _sendRawMessage:(NSString *) raw immediately:(BOOL) now;
@@ -62,6 +64,7 @@ extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 - (void) _didNotConnect;
 - (void) _willDisconnect;
 - (void) _didDisconnect;
+- (void) _postError:(NSError *) error;
 
 - (void) _addJoinedRoom:(MVChatRoom *) room;
 - (void) _removeJoinedRoom:(MVChatRoom *) room;

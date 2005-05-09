@@ -36,6 +36,8 @@ NSString *MVChatConnectionNicknameRejectedNotification = @"MVChatConnectionNickn
 NSString *MVChatConnectionSubcodeRequestNotification = @"MVChatConnectionSubcodeRequestNotification";
 NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeReplyNotification";
 
+NSString *MVChatConnectionErrorDomain = @"MVChatConnectionErrorDomain";
+
 BOOL MVChatApplicationQuitting = NO;
 
 static const NSStringEncoding supportedEncodings[] = {
@@ -217,6 +219,12 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) disconnectWithReason:(NSAttributedString *) reason {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark -
+
+- (NSError *) lastError {
+	return _lastError;
 }
 
 #pragma mark -
@@ -754,6 +762,13 @@ static const NSStringEncoding supportedEncodings[] = {
 	_localUser = nil;
 
 	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
+}
+
+- (void) _postError:(NSError *) error {
+	[_lastError autorelease];
+	_lastError = [error copyWithZone:[self zone]];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
 }
 
 #pragma mark -
