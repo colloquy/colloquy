@@ -74,6 +74,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[[self window] setFrameAutosaveName:@""];
 	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
+#ifdef NSAppKitVersionNumber10_3
+	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
+		[[self window] _setContentHasShadow:NO]; // this is new in Tiger
+#endif
+
 	NSSize drawerSize = NSSizeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatWindowDrawerSize"] );
 	if( drawerSize.width ) [viewsDrawer setContentSize:drawerSize];
 

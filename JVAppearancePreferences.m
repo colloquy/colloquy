@@ -104,6 +104,11 @@
 - (void) awakeFromNib {
 	[(NSClipView *)[preview superview] setBackgroundColor:[NSColor clearColor]]; // allows rgba backgrounds to see through to the Desktop
 	[(NSScrollView *)[(NSClipView *)[preview superview] superview] setBackgroundColor:[NSColor clearColor]];
+
+#ifdef NSAppKitVersionNumber10_3
+	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
+		[[preview window] _setContentHasShadow:NO]; // this is new in Tiger
+#endif
 }
 
 - (void) initializeFromDefaults {
