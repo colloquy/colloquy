@@ -4,18 +4,13 @@
 #import <WebKit/WebKit.h>
 #import <AGRegex/AGRegex.h>
 
-#ifdef MAC_OS_X_VERSION_10_4
+#ifdef NSAppKitVersionNumber10_3
 #define WebKitVersion146 1
 #endif
 
-// for Panther users to build
-#ifndef NSAppKitVersionNumber10_3
-#define NSAppKitVersionNumber10_3 743
 #endif
 
-#endif
-
-#ifdef MAC_OS_X_VERSION_10_4
+#ifdef NSAppKitVersionNumber10_3
 #include <sys/xattr.h>
 #endif
 
