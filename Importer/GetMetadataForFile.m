@@ -1,7 +1,5 @@
 #include <AvailabilityMacros.h>
 
-#ifdef MAC_OS_X_VERSION_10_4
-
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreServices/CoreServices.h> 
 #import <Foundation/Foundation.h>
@@ -91,5 +89,3 @@ Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attribut
 
     return TRUE;
 }
-
-#endif

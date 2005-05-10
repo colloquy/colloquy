@@ -68,6 +68,7 @@
 - (void) willLoad {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( infoUpdated: ) name:MVChatUserInformationUpdatedNotification object:[_member user]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( attributeUpdated: ) name:MVChatUserAttributeUpdatedNotification object:[_member user]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( errorOccurred: ) name:MVChatConnectionErrorNotification object:[[_member user] connection]];
 
 	[[_member user] refreshInformation];
 	[progress startAnimation:nil];
@@ -135,6 +136,15 @@
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
 		[clientInfo setObjectValue:[[_member user] attributeForKey:key]];
 		[clientInfo setToolTip:[[_member user] attributeForKey:key]];
+	}
+}
+
+- (void) errorOccurred:(NSNotification *) notification {
+	NSError *error = [[notification userInfo] objectForKey:@"error"];
+	if( [error code] == MVChatConnectionNoSuchUserError ) {
+		MVChatUser *user = [[error userInfo] objectForKey:@"user"];
+		if( [user isEqualTo:[_member user]] )
+			[self gotAddress:nil];
 	}
 }
 

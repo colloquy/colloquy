@@ -1,12 +1,11 @@
 #include <AvailabilityMacros.h>
 
-#ifdef MAC_OS_X_VERSION_10_4
-
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreFoundation/CFPlugInCOM.h>
 #include <CoreServices/CoreServices.h>
 
-#define PLUGIN_ID "04A856E0-880E-41BA-ABFA-35F147710AFC"
+#define PLUGIN_ID "BEB8A52D-7759-4331-9C3D-088295CF7E97"
+//#define PLUGIN_ID "04A856E0-880E-41BA-ABFA-35F147710AFC"
 
 // The import function to be implemented in GetMetadataForFile.c
 Boolean GetMetadataForFile(void *thisInterface, 
@@ -134,5 +133,3 @@ void *MetadataImporterPluginFactory(CFAllocatorRef allocator,CFUUIDRef typeID)
 		/* If the requested type is incorrect, return NULL. */
 	return NULL;
 }
-
-#endif

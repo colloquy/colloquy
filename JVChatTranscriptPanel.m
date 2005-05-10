@@ -711,7 +711,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 - (void) _refreshSearch {
 	[display clearScrollbarMarksWithIdentifier:@"quick find"];
 	[display clearAllStringHighlights];
-
+	
 	if( ! [_searchQuery length] ) return;
 
 	NSEnumerator *messages = [[[self transcript] messages] objectEnumerator];

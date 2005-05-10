@@ -33,14 +33,14 @@
 	<string>NO</string>
 	<key>CFPlugInFactories</key>
 	<dict>
-		<key>04A856E0-880E-41BA-ABFA-35F147710AFC</key>
+		<key>BEB8A52D-7759-4331-9C3D-088295CF7E97</key>
 		<string>MetadataImporterPluginFactory</string>
 	</dict>
 	<key>CFPlugInTypes</key>
 	<dict>
 		<key>8B08C4BF-415B-11D8-B3F9-0003936726FC</key>
 		<array>
-			<string>04A856E0-880E-41BA-ABFA-35F147710AFC</string>
+			<string>BEB8A52D-7759-4331-9C3D-088295CF7E97</string>
 		</array>
 	</dict>
 	<key>CFPlugInUnloadFunction</key>

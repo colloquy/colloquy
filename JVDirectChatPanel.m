@@ -155,14 +155,12 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		_target = [target retain];
 
 		NSURL *connURL = [[self connection] url];
-		NSString *targetName;
-		
-		if ([target respondsToSelector:@selector(name)]) targetName=[target name];
-		else targetName=[target nickname];
-		
-		NSURL *source = [[NSURL alloc] initWithScheme:[connURL scheme] 
-													host:[connURL host] 
-													path:[[connURL path] stringByAppendingFormat:@"/%@",targetName]];
+		NSString *targetName = nil;
+
+		if( [target respondsToSelector:@selector( name )] ) targetName = [target name];
+		else targetName = [target nickname];
+
+		NSURL *source = [[NSURL alloc] initWithScheme:[connURL scheme] host:[connURL host] path:[[connURL path] stringByAppendingString:[NSString stringWithFormat:@"/%@",targetName]]];
 
 		if( ( [self isMemberOfClass:[JVDirectChatPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"] ) ||
 			( [self isMemberOfClass:[JVChatRoomPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"] ) ) {
@@ -230,9 +228,11 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusChangedNotification object:[self connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:[self connection]];
 
 		_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]] retain];
 	}
+
 	return self;
 }
 
@@ -1471,6 +1471,15 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 - (void) _didDisconnect:(NSNotification *) notification {
 	[self addEventMessageToDisplay:NSLocalizedString( @"You left the chat by being disconnected from the server.", "disconnect from the server status message" ) withName:@"disconnected" andAttributes:nil];
 	_cantSendMessages = YES;
+}
+
+- (void) _errorOccurred:(NSNotification *) notification {
+	NSError *error = [[notification userInfo] objectForKey:@"error"];
+	if( [error code] == MVChatConnectionNoSuchUserError ) {
+		MVChatUser *user = [[error userInfo] objectForKey:@"user"];
+		if( [user isEqualTo:[self target]] )
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is not online. Any messages sent will not be received.", "user not online" ), [self target]] withName:@"offline" andAttributes:nil];
+	}
 }
 
 - (void) _awayStatusChanged:(NSNotification *) notification {
