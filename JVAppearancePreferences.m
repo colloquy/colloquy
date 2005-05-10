@@ -27,6 +27,12 @@
 
 #pragma mark -
 
+@interface NSWindow (NSWindowPrivate) // new Tiger private method
+- (void) _setContentHasShadow:(BOOL) shadow;
+@end
+
+#pragma mark -
+
 @implementation JVAppearancePreferences
 - (id) init {
 	if( ( self = [super init] ) ) {

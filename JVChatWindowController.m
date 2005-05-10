@@ -19,6 +19,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
+@interface NSWindow (NSWindowPrivate) // new Tiger private method
+- (void) _setContentHasShadow:(BOOL) shadow;
+@end
+
+#pragma mark -
+
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
 - (void) _claimMenuCommands;
 - (void) _resignMenuCommands;
