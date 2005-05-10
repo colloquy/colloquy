@@ -96,7 +96,9 @@ static NSMenu *smartTranscriptMenu = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToRoom: ) name:MVChatRoomInvitedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotPrivateMessage: ) name:MVChatConnectionGotPrivateMessageNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatRoomGotMessageNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:nil];
 	}
+
 	return self;
 }
 
@@ -470,6 +472,21 @@ static NSMenu *smartTranscriptMenu = nil;
 	MVChatRoom *room = [notification object];
 	JVChatRoomPanel *controller = [self chatViewControllerForRoom:room ifExists:NO];
 	[controller handleRoomMessageNotification:notification];
+}
+
+- (void) _errorOccurred:(NSNotification *) notification {
+	NSError *error = [[notification userInfo] objectForKey:@"error"];
+	if( [error code] == MVChatConnectionNoSuchUserError ) {
+		MVChatUser *user = [[error userInfo] objectForKey:@"user"];
+		JVDirectChatPanel *panel = [self chatViewControllerForUser:user ifExists:YES];
+		if( ! panel || ( panel && [[panel windowController] activeChatViewController] != panel ) ) {
+			NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+			[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"User \"%@\" is not online", "user not online alert dialog title" ), [user displayName]]];
+			[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"The user \"%@\" is not online and is unavailable until they reconnect.", "user not online alert dialog message" ), [user displayName]]];
+			[alert setAlertStyle:NSInformationalAlertStyle];
+			[alert runModal];
+		}
+	}
 }
 
 - (void) _addWindowController:(JVChatWindowController *) windowController {
