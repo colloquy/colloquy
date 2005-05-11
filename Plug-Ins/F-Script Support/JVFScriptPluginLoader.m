@@ -30,7 +30,7 @@
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
-	if( ! [command caseInsensitiveCompare:@"fscript"] ) {
+	if( ! [command caseInsensitiveCompare:@"fscript"] || ! [command caseInsensitiveCompare:@"fs"] ) {
 		if( ! _fscriptInstalled ) {
 			[self displayInstallationWarning];
 			return YES;
