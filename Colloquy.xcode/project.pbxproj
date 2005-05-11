@@ -166,7 +166,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ `sw_vers -productVersion` > 10.3 ]]; then\n\tcd `dirname \"$PROJECT_FILE_PATH\"`\n\t/usr/bin/xcodebuild -project Colloquy.xcode -target \"Colloquy (Metadata Importer)\" -buildstyle \"$BUILD_STYLE\" build\n\tRESULT=$?\n\tif [[ $RESULT == 0 ]]; then\n\t\t/usr/bin/ditto \"$BUILD_DIR/Colloquy.mdimporter\" \"$BUILD_DIR/$CONTENTS_FOLDER_PATH/Library/Spotlight/Colloquy.mdimporter\"\n\telse\n\t\tfalse\n\tfi\nfi";
+			shellScript = "VERS=`sw_vers -productVersion`\nif [[ $VERS == 1.4 || $VERS > 10.4 ]]; then\n\tcd `dirname \"$PROJECT_FILE_PATH\"`\n\t/usr/bin/xcodebuild -project Colloquy.xcode -target \"Colloquy (Metadata Importer)\" -buildstyle \"$BUILD_STYLE\" build\n\tRESULT=$?\n\tif [[ $RESULT == 0 ]]; then\n\t\t/usr/bin/ditto \"$BUILD_DIR/Colloquy.mdimporter\" \"$BUILD_DIR/$CONTENTS_FOLDER_PATH/Library/Spotlight/Colloquy.mdimporter\"\n\telse\n\t\tfalse\n\tfi\nfi";
 		};
 		0A5B683E0810EC9700398D5A = {
 			fileEncoding = 4;
