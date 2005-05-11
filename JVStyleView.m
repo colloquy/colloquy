@@ -401,6 +401,45 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
+- (void) highlightMessage:(JVChatMessage *) message {
+#ifdef WebKitVersion146
+	if( _newWebKit ) {
+		DOMHTMLElement *element = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:[message messageIdentifier]];
+		NSString *class = [element className];
+		if( [[element className] rangeOfString:@"searchHighlight"].location != NSNotFound ) return;
+		if( [class length] ) [element setClassName:[class stringByAppendingString:@" searchHighlight"]];
+		else [element setClassName:@"searchHighlight"];
+	} else
+#endif
+	// old JavaScript method
+	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"highlightMessage('%@');", [message messageIdentifier]]];
+}
+
+- (void) clearHighlightForMessage:(JVChatMessage *) message {
+#ifdef WebKitVersion146
+	if( _newWebKit ) {
+		DOMHTMLElement *element = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:[message messageIdentifier]];
+		NSMutableString *class = [[[element className] mutableCopy] autorelease];
+		[class replaceOccurrencesOfString:@"searchHighlight" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [class length] )];
+		[element setClassName:class];
+	} else
+#endif
+	// old JavaScript method
+	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetHighlightMessage('%@');", [message messageIdentifier]]];
+}
+
+- (void) clearAllMessageHighlights {
+#ifdef WebKitVersion146
+	if( _newWebKit ) {
+		[[self windowScriptObject] callWebScriptMethod:@"resetHighlightMessage" withArguments:[NSArray arrayWithObject:[NSNull null]]];
+	} else
+#endif
+	// old JavaScript method
+	[self stringByEvaluatingJavaScriptFromString:@"resetHighlightMessage(null);"];
+}
+
+#pragma mark -
+
 - (void) highlightString:(NSString *) string inMessage:(JVChatMessage *) message {
 #ifdef WebKitVersion146
 	if( _newWebKit ) {

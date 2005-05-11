@@ -16,6 +16,8 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	else return [[self alloc] init];
 }
 
+#pragma mark -
+
 - (NSString *) logsPath {
 	return [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
 }
@@ -38,6 +40,8 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	else if( c == 1 ) [statusText setStringValue:@"One log still has to be indexed"];
 	else [statusText setStringValue:@"Indexing is complete"];
 }
+
+#pragma mark -
 
 - (id) init {
 	if( ! sharedBrowser && ( self = [super init] ) ) {
@@ -90,7 +94,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 				NSString *session = [match groupNamed:@"session"];
 				NSString *path = [[self logsPath] stringByAppendingPathComponent:logPath];
 
-#ifdef MAC_OS_X_VERSION_10_4
+#ifdef NSAppKitVersionNumber10_3
 				if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 ) {
 					FILE *logsFile = fopen( [path fileSystemRepresentation], "r" );
 					if( logsFile ) {
@@ -165,6 +169,8 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	[super dealloc];
 }
 
+#pragma mark -
+
 - (IBAction) showBrowser:(id) sender {
 	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatTranscriptBrowserPanel" owner:self];
 	[window makeKeyAndOrderFront:self];
@@ -179,6 +185,8 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	[super awakeFromNib];
 	[self updateStatus];
 }
+
+#pragma mark -
 
 - (int) numberOfRowsInTableView:(NSTableView *) tableview {
 	return [_filteredTranscripts count];
@@ -201,6 +209,8 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	[tableView reloadData];
 	if( selected ) [tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:[sorted indexOfObject:selected]] byExtendingSelection:NO];
 }
+
+#pragma mark -
 
 - (IBAction) search:(id) sender {
 	if( [[searchField stringValue] length] ) {
@@ -266,6 +276,8 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	[self search:self];
 }
 
+#pragma mark -
+
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
 	int selectedRow = [tableView selectedRow];
 	if( selectedRow != -1 ) {
@@ -276,6 +288,8 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 		[display reloadCurrentStyle];
 	}
 }
+
+#pragma mark -
 
 - (void) beginIndexing:(NSNotification *) notification {
 	_shouldIndex = YES;
@@ -290,8 +304,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 
 	while( _shouldIndex ) {
 		@synchronized( _dirtyLogs ) {
-			path = [_dirtyLogs anyObject];
-			[path retain];
+			path = [[_dirtyLogs anyObject] retain];
 			if( path ) [_dirtyLogs removeObject:path];
 		}
 
@@ -318,6 +331,8 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 - (void) stopIndexing:(NSNotification *) notification {
 	_shouldIndex = NO;
 }
+
+#pragma mark -
 
 - (void) markDirty:(JVChatTranscript *) transcript {
 	NSString *path = nil;

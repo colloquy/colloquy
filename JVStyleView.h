@@ -53,6 +53,10 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 - (BOOL) appendChatMessage:(JVChatMessage *) message;
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element;
 
+- (void) highlightMessage:(JVChatMessage *) message;
+- (void) clearHighlightForMessage:(JVChatMessage *) message;
+- (void) clearAllMessageHighlights;
+
 - (void) highlightString:(NSString *) string inMessage:(JVChatMessage *) message;
 - (void) clearStringHighlightsForMessage:(JVChatMessage *) message;
 - (void) clearAllStringHighlights;

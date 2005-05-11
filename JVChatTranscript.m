@@ -637,7 +637,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		[self _enforceElementLimit];
 		[self _incrementalWriteToLog:root continuation:( parent ? YES : NO )];
 
-#ifdef MAC_OS_X_VERSION_10_4
+#ifdef NSAppKitVersionNumber10_3
 		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && _logFile && fsetxattr != NULL ) {
 			NSString *lastDateString = [[message date] description];
 			fsetxattr( [_logFile fileDescriptor], "lastMessageDate", [lastDateString UTF8String], [lastDateString length], 0, 0 );
@@ -1145,7 +1145,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 - (void) _changeFileAttributesAtPath:(NSString *) path {
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
 
-#ifdef MAC_OS_X_VERSION_10_4
+#ifdef NSAppKitVersionNumber10_3
 	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 && _logFile && fsetxattr != NULL ) {
 		NSString *beganDateString = [[self dateBegan] description];
 		NSString *lastDateString = [[[self lastMessage] date] description];

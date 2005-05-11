@@ -133,6 +133,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) didUnselect {
+	if( [[[JVTranscriptFindWindowController sharedController] window] isVisible] )
+		[display clearAllMessageHighlights];
 	[[_windowController window] setRepresentedFilename:@""];
 }
 
@@ -437,7 +439,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 		NSSearchField *field = [[[NSSearchField alloc] initWithFrame:NSMakeRect( 0., 0., 150., 22. )] autorelease];
 		[[field cell] setSendsWholeSearchString:NO];
-#ifdef MAC_OS_X_VERSION_10_4
+#ifdef NSAppKitVersionNumber10_3
 		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
 			[[field cell] setSendsSearchStringImmediately:NO];
 #endif

@@ -30,6 +30,10 @@ body {
 	background-color: rgba( 255, 191, 78, 0.6 );
 }
 
+span.message.searchHighlight {
+	background-color: rgba( 255, 128, 0, 0.6 ) !important;
+}
+
 .submessage {
 	display: block;
 	border-top: 1px dashed rgba( 0, 0, 0, 0.2 );
@@ -46,6 +50,10 @@ body {
 
 .submessage.highlight {
 	background-color: rgba( 255, 191, 78, 0.6 );
+}
+
+span.submessage.searchHighlight {
+	background-color: rgba( 255, 128, 0, 0.6 ) !important;
 }
 
 .shadow {

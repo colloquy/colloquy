@@ -27,7 +27,7 @@ body {
 }
 
 .searchHighlight {
-	background-color: rgba( 255, 128, 0, 0.75 );
+	background-color: rgba( 255, 128, 0, 0.75 ) !important;
 }
 
 /* For the display mark */

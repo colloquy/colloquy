@@ -8,6 +8,7 @@
 #import "JVTranscriptFindWindowController.h"
 #import "JVTranscriptCriterionController.h"
 #import "JVViewCell.h"
+#import "JVStyleView.h"
 
 static JVTranscriptFindWindowController *sharedInstance = nil;
 
@@ -183,10 +184,17 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 }
 
 - (IBAction) findNext:(id) sender {
-	JVChatTranscript *transcript = [[self focusedChatTranscriptPanel] transcript];
+	JVChatTranscriptPanel *panel = [self focusedChatTranscriptPanel];
+	JVChatTranscript *transcript = [panel transcript];
 	if( ! transcript ) return;
 
 	JVChatMessage *foundMessage = nil;
+	NSEnumerator *enumerator = [[self results] objectEnumerator];
+
+	while( ( foundMessage = [enumerator nextObject] ) )
+		[[panel display] clearHighlightForMessage:foundMessage];
+
+	foundMessage = nil;
 
 	if( _lastMessageIndex < ( [[self results] count] - 1 ) && ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
 		_lastMessageIndex++;
@@ -271,21 +279,28 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 end:
 
-	if( foundMessage ) [[self focusedChatTranscriptPanel] jumpToMessage:foundMessage];
-	else NSBeep();
-
-	NSLog( @"%@ %u %@", NSStringFromRange( range ), _lastMessageIndex, foundMessage );
+	if( foundMessage ) {
+		[[panel display] highlightMessage:foundMessage];
+		[panel jumpToMessage:foundMessage];
+	} else NSBeep();
 
 	[resultProgress setDoubleValue:[resultProgress maxValue]];
 	[resultProgress displayIfNeeded];
-	[self performSelector:@selector( hideProgress ) withObject:nil afterDelay:0.75];
+	[self performSelector:@selector( hideProgress ) withObject:nil afterDelay:0.125];
 }
 
 - (IBAction) findPrevious:(id) sender {
-	JVChatTranscript *transcript = [[self focusedChatTranscriptPanel] transcript];
+	JVChatTranscriptPanel *panel = [self focusedChatTranscriptPanel];
+	JVChatTranscript *transcript = [panel transcript];
 	if( ! transcript ) return;
 
 	JVChatMessage *foundMessage = nil;
+	NSEnumerator *enumerator = [[self results] objectEnumerator];
+
+	while( ( foundMessage = [enumerator nextObject] ) )
+		[[panel display] clearHighlightForMessage:foundMessage];
+
+	foundMessage = nil;
 
 	if( [[self results] count] && _lastMessageIndex > 0 && ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
 		_lastMessageIndex--;
@@ -369,14 +384,14 @@ end:
 
 end:
 
-	if( foundMessage ) [[self focusedChatTranscriptPanel] jumpToMessage:foundMessage];
-	else NSBeep();
-
-	NSLog( @"{0, *} %u %@", _lastMessageIndex, foundMessage );
+	if( foundMessage ) {
+		[[panel display] highlightMessage:foundMessage];
+		[panel jumpToMessage:foundMessage];
+	} else NSBeep();
 
 	[resultProgress setDoubleValue:[resultProgress maxValue]];
 	[resultProgress displayIfNeeded];
-	[self performSelector:@selector( hideProgress ) withObject:nil afterDelay:0.75];
+	[self performSelector:@selector( hideProgress ) withObject:nil afterDelay:0.125];
 }
 
 - (IBAction) findAll:(id) sender {
@@ -470,5 +485,18 @@ end:
 
 - (void) applicationWillDeactivate:(NSNotification *) notification {
 	if( _findPasteboardNeedsUpdated ) [self loadFindStringToPasteboard];
+}
+
+#pragma mark -
+
+- (void) windowWillClose:(NSNotification *) notification {
+	JVChatTranscriptPanel *panel = [self focusedChatTranscriptPanel];
+	NSEnumerator *enumerator = [[self results] objectEnumerator];
+	JVChatMessage *foundMessage = nil;
+
+	while( ( foundMessage = [enumerator nextObject] ) )
+		[[panel display] clearHighlightForMessage:foundMessage];
+
+	[_results removeAllObjects];
 }
 @end

@@ -181,3 +181,36 @@ function searchHighlight( id, words ) {
 
 	highlightWord( div, words );
 }
+
+function resetHighlightMessage( id ) {
+	var div = document.getElementById( id );
+	if( ! div ) div = document.getElementsByTagName( "body" ).item(0);
+
+	function resetMessageHighlight( node ) {
+		if( node.nodeType == 1 ) {
+			if( node.className.indexOf( "searchHighlight" ) >= 0 ) {
+				var cls = node.className;
+				cls.replace( /searchHighlight/g, "" );
+				node.className = cls;
+			}
+
+			if( ! node.childNodes.length ) return;
+			for( var i = 0; i < node.childNodes.length; i++ )
+				resetMessageHighlight( node.childNodes[i] );
+		}
+	}
+
+	resetMessageHighlight( div );
+}
+
+function highlightMessage( id ) {
+	var node = document.getElementById( id );
+	if( ! node ) return;
+
+	var cls = node.className;
+	if( cls.indexOf( "searchHighlight" ) >= 0 ) return;
+
+	if( cls.length ) cls = cls + " searchHighlight";
+	else cls = "searchHighlight";
+	node.className = cls;
+}

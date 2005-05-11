@@ -108,5 +108,15 @@
 			<string>No</string>
 		</array>
 	</dict>
+	<dict>
+		<key>style</key>
+		<string>.searchHighlight { color: %@ !important; }</string>
+		<key>default</key>
+		<string>rgba( 255, 128, 0, 0.75 )</string>
+		<key>description</key>
+		<string>Search highlight</string>
+		<key>type</key>
+		<string>color</string>
+	</dict>
 </array>
 </plist>
