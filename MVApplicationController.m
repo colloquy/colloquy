@@ -447,11 +447,13 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
 	// this does weird things on Tiger, disable for now on that system
+#ifdef NSAppKitVersionNumber10_3
 	if( floor( NSAppKitVersionNumber ) == NSAppKitVersionNumber10_3 && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableExceptionOccurredDialog"] ) {
 		NSExceptionHandler *handler = [NSExceptionHandler defaultExceptionHandler];
 		[handler setExceptionHandlingMask:( NSLogUncaughtExceptionMask | NSLogUncaughtSystemExceptionMask | NSLogUncaughtRuntimeErrorMask | NSHandleUncaughtExceptionMask | NSHandleUncaughtSystemExceptionMask | NSHandleUncaughtRuntimeErrorMask )];
 		[handler setDelegate:self];
 	}
+#endif
 
 	[MVCrashCatcher check];
 
