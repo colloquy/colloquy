@@ -155,7 +155,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	_shouldIndex = NO;
 	[NSKeyedArchiver archiveRootObject:_dirtyLogs toFile:[self dirtyPath]];
 
-	SKIndexClose( _logsIndex );
+	CFRelease( _logsIndex ); // was SKIndexClose, functionally equivalent
 	CFRelease( _searchGroup );
 
 	[_dirtyLogs release];
