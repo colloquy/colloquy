@@ -21,7 +21,7 @@ static const int mIRCColors[][3] = {
 	{ 0x00, 0x00, 0xff },  /* 12) bright blue */
 	{ 0xff, 0x00, 0xff },  /* 13) bright purple */
 	{ 0x7b, 0x7b, 0x7b },  /* 14) gray */
-	{ 0xd6, 0xd6, 0xd6 }   /* 15) light grey */
+	{ 0xd6, 0xd6, 0xd6 }   /* 15) light gray */
 };
 
 static const int CTCPColors[][3] = {
