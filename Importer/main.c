@@ -12,7 +12,7 @@ Boolean GetMetadataForFile(void *thisInterface,
 			   CFMutableDictionaryRef attributes, 
 			   CFStringRef contentTypeUTI,
 			   CFStringRef pathToFile);
-			   
+
 // The layout for an instance of MetaDataImporterPlugIn 
 typedef struct __MetadataImporterPluginType
 {

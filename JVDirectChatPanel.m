@@ -186,7 +186,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 			NSString *logName = nil;
 			NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
-			
+
 			int session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
 
 			if( ! session ) {
@@ -213,10 +213,10 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 			}
 
 			logs = [logs stringByAppendingPathComponent:logName];
-			
+
 			if( [fileManager fileExistsAtPath:logs] )
 				[[self transcript] startNewSession];
-			
+
 			[[self transcript] setFilePath:logs];
 			[[self transcript] setSource:source];
 			[source release];

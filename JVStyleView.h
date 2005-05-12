@@ -60,7 +60,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 - (void) highlightString:(NSString *) string inMessage:(JVChatMessage *) message;
 - (void) clearStringHighlightsForMessage:(JVChatMessage *) message;
 - (void) clearAllStringHighlights;
-	
+
 - (void) markScrollbarForMessage:(JVChatMessage *) message;
 - (void) markScrollbarForMessage:(JVChatMessage *) message usingMarkIdentifier:(NSString *) identifier andColor:(NSColor *) color;
 - (void) markScrollbarForMessages:(NSArray *) messages;

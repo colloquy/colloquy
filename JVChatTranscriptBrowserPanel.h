@@ -13,7 +13,7 @@
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSWindow *window;
 	IBOutlet NSTextField *statusText;
-	
+
 	int _selectedTag;
 
 	BOOL _shouldIndex;

@@ -343,7 +343,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	[[windowController window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
 
 	[windowController addChatViewController:controller];
-	
+
 	[controller release];
 }
 

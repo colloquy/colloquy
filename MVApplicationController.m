@@ -297,7 +297,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
 	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES];
-	
+
 	if( [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
 		NSString *searchString = nil;
 
