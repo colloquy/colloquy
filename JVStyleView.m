@@ -253,6 +253,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) reloadCurrentStyle {
 	_switchingStyles = YES;
 	_requiresFullMessage = YES;
+	_rememberScrollPosition = YES;
 
 	[WebCoreCache empty];
 
@@ -411,7 +412,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		else [element setClassName:@"searchHighlight"];
 	} else
 #endif
-	// old JavaScript method
 	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"highlightMessage('%@');", [message messageIdentifier]]];
 }
 
@@ -424,7 +424,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[element setClassName:class];
 	} else
 #endif
-	// old JavaScript method
 	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetHighlightMessage('%@');", [message messageIdentifier]]];
 }
 
@@ -434,7 +433,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[[self windowScriptObject] callWebScriptMethod:@"resetHighlightMessage" withArguments:[NSArray arrayWithObject:[NSNull null]]];
 	} else
 #endif
-	// old JavaScript method
 	[self stringByEvaluatingJavaScriptFromString:@"resetHighlightMessage(null);"];
 }
 
@@ -446,7 +444,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[[self windowScriptObject] callWebScriptMethod:@"searchHighlight" withArguments:[NSArray arrayWithObjects:[message messageIdentifier], string, nil]];
 	} else
 #endif
-	// old JavaScript method
 	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"searchHighlight('%@','%@');", [message messageIdentifier], string]];
 }
 
@@ -456,7 +453,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[message messageIdentifier]]];
 	} else
 #endif
-	// old JavaScript method
 	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetSearchHighlight('%@');", [message messageIdentifier]]];
 }
 
@@ -466,7 +462,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[NSNull null]]];
 	} else
 #endif
-	// old JavaScript method
 	[self stringByEvaluatingJavaScriptFromString:@"resetSearchHighlight(null);"];
 }
 
@@ -530,8 +525,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[[self verticalMarkedScroller] removeAllShadedAreas];
 
 	[[self window] displayIfNeeded];
-	if( [[self window] isFlushWindowDisabled] )
-		[[self window] enableFlushWindow];
+	if( [[self window] isFlushWindowDisabled] ) [[self window] enableFlushWindow];
 
 	[self performSelector:@selector( _webkitIsReady ) withObject:nil afterDelay:0.];
 }
@@ -586,7 +580,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
 	} else
 #endif
-	// old JavaScript method
 	[self stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
 }
 @end
@@ -610,7 +603,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) _webkitIsReady {
 	_webViewReady = YES;
-	if( _switchingStyles ) [NSThread detachNewThreadSelector:@selector( _switchStyle ) toTarget:self withObject:nil];
+	if( _switchingStyles )
+		[NSThread detachNewThreadSelector:@selector( _switchStyle ) toTarget:self withObject:nil];
 }
 
 - (void) _resetDisplay {
@@ -620,6 +614,15 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[self clearScrollbarMarks];
 
 	_webViewReady = NO;
+	if( _rememberScrollPosition ) {
+#ifdef WebKitVersion146
+		if( _newWebKit ) {
+			DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
+			_lastScrollPosition = [[body valueForKey:@"scrollTop"] intValue];
+		} else
+#endif
+		_lastScrollPosition = [[self stringByEvaluatingJavaScriptFromString:@"document.body.scrollTop"] intValue];
+	} else _lastScrollPosition = 0;
 
 	[[self window] disableFlushWindow];
 	[[self mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
@@ -675,11 +678,26 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 quickEnd:
-	_switchingStyles = NO;
+	[self performSelectorOnMainThread:@selector( _switchingStyleFinished: ) withObject:nil waitUntilDone:YES];
 
 	[style release];
 	[transcript release];
 	[pool release];
+}
+
+- (void) _switchingStyleFinished:(id) sender {
+	_switchingStyles = NO;
+
+	if( _rememberScrollPosition ) {
+		_rememberScrollPosition = NO;
+#ifdef WebKitVersion146
+		if( _newWebKit ) {
+			DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
+			[body setValue:[NSNumber numberWithUnsignedInt:_lastScrollPosition] forKey:@"scrollTop"];
+		} else
+#endif
+		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.body.scrollTop = %d", _lastScrollPosition]];
+	}
 }
 
 - (void) _appendMessage:(NSString *) message {
@@ -827,7 +845,6 @@ quickEnd:
 		return 0;
 	} else
 #endif
-	// old JavaScript method
 	return [[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%@\" );", identifier]] intValue];
 }
 
@@ -846,7 +863,6 @@ quickEnd:
 		return 0;
 	} else
 #endif
-	// old JavaScript method
 	return [[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementAtIndex( %d );", index]] intValue];
 }
 
@@ -857,7 +873,6 @@ quickEnd:
 		return [[[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] childNodes] length];
 	} else
 #endif
-	// old JavaScript method
 	return [[self stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
 }
 

@@ -110,6 +110,7 @@
 - (void) awakeFromNib {
 	[(NSClipView *)[preview superview] setBackgroundColor:[NSColor clearColor]]; // allows rgba backgrounds to see through to the Desktop
 	[(NSScrollView *)[(NSClipView *)[preview superview] superview] setBackgroundColor:[NSColor clearColor]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( styleDidReload: ) name:JVStyleViewDidChangeStylesNotification object:preview];
 
 #ifdef NSAppKitVersionNumber10_3
 	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
@@ -183,8 +184,6 @@
 	[_styleOptions autorelease];
 	_styleOptions = [[_style styleSheetOptions] mutableCopy];
 
-	[[preview window] disableFlushWindow];
-
 	[preview setPreferencesIdentifier:[_style identifier]];
 
 	WebPreferences *prefs = [preview preferences];
@@ -205,8 +204,6 @@
 	if( _variantLocked ) [optionsTable deselectAll:nil];
 
 	[self parseStyleOptions];
-
-	[[preview window] enableFlushWindow];
 }
 
 - (IBAction) changeDefaultEmoticons:(id) sender {
@@ -315,7 +312,19 @@
 }
 
 - (void) updateVariant {
+	[NSObject cancelPreviousPerformRequestsWithTarget:preview selector:@selector( reloadCurrentStyle ) object:nil];
+
 	[preview setStyleVariant:[_style defaultVariantName]];
+
+	if( [[preview window] isFlushWindowDisabled] ) [[preview window] enableFlushWindow];
+
+	[[preview window] disableFlushWindow];
+	[preview performSelector:@selector( reloadCurrentStyle ) withObject:nil afterDelay:0.25];
+}
+
+- (void) styleDidReload:(NSNotification *) notification {
+	[preview display];
+	if( [[preview window] isFlushWindowDisabled] ) [[preview window] enableFlushWindow];
 }
 
 #pragma mark -

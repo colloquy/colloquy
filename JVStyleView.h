@@ -22,6 +22,8 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	JVEmoticonSet *_emoticons;
 	unsigned int _scrollbackLimit;
 	BOOL _requiresFullMessage;
+	BOOL _rememberScrollPosition;
+	unsigned int _lastScrollPosition;
 }
 - (void) setTranscript:(JVChatTranscript *) transcript;
 - (JVChatTranscript *) transcript;
