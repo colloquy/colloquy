@@ -406,9 +406,9 @@
 		[item setTarget:self];
 		[menu addItem:item];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Force Quiet", "force quiet contextual menu - admin only" ) action:@selector( toggleQuietedStatus: ) keyEquivalent:@""] autorelease];
+/*		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Force Quiet", "force quiet contextual menu - admin only" ) action:@selector( toggleQuietedStatus: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
-		[menu addItem:item];
+		[menu addItem:item]; */
 	}
 
 	return menu;

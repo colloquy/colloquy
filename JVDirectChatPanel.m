@@ -1287,11 +1287,12 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
 	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) {
-		[list addObject:JVToolbarMarkItemIdentifier];
 		[list addObject:JVToolbarSendFileItemIdentifier];
-		[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
 		[list addObject:JVToolbarTextEncodingItemIdentifier];
+		[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
+		[list addObject:JVToolbarMarkItemIdentifier];
 		[list addObject:JVToolbarClearItemIdentifier];
+		[list addObject:NSToolbarSeparatorItemIdentifier];
 		[list addObject:JVToolbarQuickSearchItemIdentifier];
 	}
 	return list;

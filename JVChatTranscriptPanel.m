@@ -516,8 +516,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
 	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier,
-		JVToolbarChooseStyleItemIdentifier,
-		JVToolbarEmoticonsItemIdentifier, nil];
+		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, nil];
 	return list;
 }
 

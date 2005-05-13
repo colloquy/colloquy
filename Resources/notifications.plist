@@ -98,7 +98,7 @@
 		<key>title</key>
 		<string>Member Devoiced</string>
 	</dict>
-	<dict>
+<!--	<dict>
 		<key>identifier</key>
 		<string>JVChatMemberQuieted</string>
 		<key>title</key>
@@ -109,7 +109,7 @@
 		<string>JVChatMemberDequieted</string>
 		<key>title</key>
 		<string>Quieted Member Annulled</string>
-	</dict>
+	</dict> -->
 	<dict>
 		<key>seperator</key>
 		<true />
