@@ -1,4 +1,5 @@
 #import "MVTextView.h"
+#import "JVTranscriptFindWindowController.h"
 
 @interface MVTextView (MVTextViewPrivate)
 - (BOOL) checkKeyEvent:(NSEvent *) event;
@@ -213,6 +214,21 @@
 		[attributes setObject:color forKey:NSBackgroundColorAttributeName];
 		[self setTypingAttributes:attributes];
 	} else [[self textStorage] addAttribute:NSBackgroundColorAttributeName value:color range:range];
+}
+
+#pragma mark -
+#pragma mark Find Support
+
+- (IBAction) orderFrontFindPanel:(id) sender {
+	[[JVTranscriptFindWindowController sharedController] showWindow:sender];
+}
+
+- (IBAction) findNext:(id) sender {
+	[[JVTranscriptFindWindowController sharedController] findNext:sender];
+}
+
+- (IBAction) findPrevious:(id) sender {
+	[[JVTranscriptFindWindowController sharedController] findPrevious:sender];
 }
 
 #pragma mark -
