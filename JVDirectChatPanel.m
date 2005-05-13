@@ -1148,9 +1148,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[scrollView reflectScrolledClipView:[scrollView contentView]];
 	}
 
-	[display displayIfNeeded]; // makes the WebView draw correctly
 	[splitView setNeedsDisplay:YES]; // makes the divider redraw correctly later
 	[[display window] enableFlushWindow]; // flush everything we have drawn
+	[[display window] displayIfNeeded];
 }
 
 #pragma mark -

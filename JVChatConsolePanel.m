@@ -471,9 +471,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( _scrollerIsAtBottom )
 		[display scrollRangeToVisible:NSMakeRange( [[display textStorage] length], 0 )];
 
-	[display displayIfNeeded]; // makes the WebView draw correctly
 	[splitView setNeedsDisplay:YES]; // makes the divider redraw correctly later
 	[[display window] enableFlushWindow]; // flush everything we have drawn
+	[[display window] displayIfNeeded];
 }
 
 #pragma mark -

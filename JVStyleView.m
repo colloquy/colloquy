@@ -524,8 +524,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[[self verticalMarkedScroller] removeAllMarks];
 	[[self verticalMarkedScroller] removeAllShadedAreas];
 
-	[[self window] displayIfNeeded];
 	if( [[self window] isFlushWindowDisabled] ) [[self window] enableFlushWindow];
+	[[self window] displayIfNeeded];
 
 	[self performSelector:@selector( _webkitIsReady ) withObject:nil afterDelay:0.];
 }
@@ -674,12 +674,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_switchingStyles = NO;
 	[self performSelectorOnMainThread:@selector( markScrollbarForMessages: ) withObject:highlightedMsgs waitUntilDone:YES];
 
-	NSNotification *note = [NSNotification notificationWithName:JVStyleViewDidChangeStylesNotification object:self userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
 quickEnd:
 	[self performSelectorOnMainThread:@selector( _switchingStyleFinished: ) withObject:nil waitUntilDone:YES];
 
+	NSNotification *note = [NSNotification notificationWithName:JVStyleViewDidChangeStylesNotification object:self userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	
 	[style release];
 	[transcript release];
 	[pool release];

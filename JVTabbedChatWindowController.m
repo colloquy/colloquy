@@ -496,8 +496,8 @@
 	[tabView setFrame:newFrame];
 	[tabView setNeedsDisplay:YES];
 
-	[[self window] displayIfNeeded];
 	[[self window] enableFlushWindow];
+	[[self window] displayIfNeeded];
 
 	// return YES when the desired height is reached
 	return ( tabSize.height == destHeight );
@@ -536,7 +536,7 @@
 	[self _refreshWindowTitle];
 
 end:
-	[[self window] displayIfNeeded];
 	[[self window] enableFlushWindow];
+	[[self window] displayIfNeeded];
 }
 @end

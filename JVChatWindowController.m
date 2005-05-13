@@ -844,8 +844,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self _refreshWindowTitle];
 
 end:
-	[[self window] displayIfNeeded];
 	[[self window] enableFlushWindow];
+	[[self window] displayIfNeeded];
 }
 
 - (void) _refreshWindowTitle {

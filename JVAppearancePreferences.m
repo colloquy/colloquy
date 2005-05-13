@@ -312,19 +312,17 @@
 }
 
 - (void) updateVariant {
-	[NSObject cancelPreviousPerformRequestsWithTarget:preview selector:@selector( reloadCurrentStyle ) object:nil];
-
 	[preview setStyleVariant:[_style defaultVariantName]];
 
 	if( [[preview window] isFlushWindowDisabled] ) [[preview window] enableFlushWindow];
 
 	[[preview window] disableFlushWindow];
-	[preview performSelector:@selector( reloadCurrentStyle ) withObject:nil afterDelay:0.25];
+	[preview reloadCurrentStyle];
 }
 
 - (void) styleDidReload:(NSNotification *) notification {
-	[preview display];
 	if( [[preview window] isFlushWindowDisabled] ) [[preview window] enableFlushWindow];
+	[[preview window] displayIfNeeded];
 }
 
 #pragma mark -
