@@ -192,7 +192,7 @@
 #pragma mark -
 
 - (NSSet *) memberUsersWithNickname:(NSString *) nickname {
-	MVChatUser = [self memberUseWithUniqueIdentifier:nickname];
+	MVChatUser *user = [self memberUseWithUniqueIdentifier:nickname];
 	if( user != nil )
 		return [NSSet setWithObject:user];
 	return [NSSet set];
