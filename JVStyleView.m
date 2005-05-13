@@ -403,7 +403,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) highlightMessage:(JVChatMessage *) message {
-#ifdef WebKitVersion146
+/*#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		DOMHTMLElement *element = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:[message messageIdentifier]];
 		NSString *class = [element className];
@@ -413,10 +413,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	} else
 #endif
 	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"highlightMessage('%@');", [message messageIdentifier]]];
-}
+*/}
 
 - (void) clearHighlightForMessage:(JVChatMessage *) message {
-#ifdef WebKitVersion146
+/*#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		DOMHTMLElement *element = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:[message messageIdentifier]];
 		NSMutableString *class = [[[element className] mutableCopy] autorelease];
@@ -425,16 +425,16 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	} else
 #endif
 	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetHighlightMessage('%@');", [message messageIdentifier]]];
-}
+*/}
 
 - (void) clearAllMessageHighlights {
-#ifdef WebKitVersion146
+/*#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		[[self windowScriptObject] callWebScriptMethod:@"resetHighlightMessage" withArguments:[NSArray arrayWithObject:[NSNull null]]];
 	} else
 #endif
 	[self stringByEvaluatingJavaScriptFromString:@"resetHighlightMessage(null);"];
-}
+*/}
 
 #pragma mark -
 
