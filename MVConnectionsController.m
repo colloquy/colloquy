@@ -173,7 +173,7 @@ static NSMenu *favoritesMenu = nil;
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
 	[[self window] setToolbar:toolbar];
-
+	
 	[showDetails setCell:[[NSDisclosureButtonCell alloc] initWithCell:[showDetails cell]]];
 
 	[self setWindowFrameAutosaveName:@"Connections"];
@@ -288,6 +288,10 @@ static NSMenu *favoritesMenu = nil;
 	if( ! [sender state] ) [detailsTabView selectTabViewItemAtIndex:0];
 	[openConnection setFrame:newWindowFrame display:YES animate:YES];
 	if( [sender state] ) [detailsTabView selectTabViewItemAtIndex:1];
+#ifdef NSAppKitVersionNumber10_3
+	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
+		[openConnection recalculateKeyViewLoop];
+#endif
 }
 
 - (IBAction) addRoom:(id) sender {
