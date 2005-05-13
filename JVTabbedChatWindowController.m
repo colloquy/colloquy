@@ -234,6 +234,9 @@
 
 			[[newWindowController window] setFrame:newFrame display:NO];
 			[[newWindowController window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [chatController identifier]]];
+
+			if( [newWindowController isMemberOfClass:[JVTabbedChatWindowController class]] )
+				[(JVTabbedChatWindowController *)newWindowController toggleTabBarVisible:nil];
 		}
 
 		[chatController retain];
