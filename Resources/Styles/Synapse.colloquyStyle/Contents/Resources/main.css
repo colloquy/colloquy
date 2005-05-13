@@ -3,7 +3,7 @@ body {
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: top left;
-	background-color: #344c7c;
+	background-color: rgba( 32, 80, 110, 0.870 );
 	margin: 0;
 }
 
