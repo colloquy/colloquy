@@ -1401,6 +1401,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message {
+	if( ! message || ! [message string] ) return;
+
 	// catch IRC rooms like "#room" but not HTML colors like "#ab12ef" nor HTML entities like "&#135;" or "&amp;"
 	AGRegex *regex = [AGRegex regexWithPattern:@"\\B(?<!&)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&#]{2,}\\b" options:AGRegexCaseInsensitive];
 	NSArray *matches = [regex findAllInString:[message string]];
