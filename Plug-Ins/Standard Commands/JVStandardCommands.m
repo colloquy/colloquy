@@ -330,14 +330,40 @@
 		[connection sendRawMessage:[NSString stringWithFormat:@"%@ :%@", command, [arguments string]]];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"notice"] ) {
-        NSString *nick = nil;
+        NSString *target = nil;
         NSString *message = nil;
         NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-		[scanner scanUpToCharactersFromSet:whitespace intoString:&nick];
+		[scanner scanUpToCharactersFromSet:whitespace intoString:&target];
 		[scanner scanCharactersFromSet:whitespace intoString:NULL];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"] intoString:&message];
-		[connection sendRawMessage:[NSString stringWithFormat:@"%@ %@ :%@", command, nick, message]];
+		[connection sendRawMessage:[NSString stringWithFormat:@"%@ %@ :%@", command, target, message]];
+
+		if( ! [target length] || ! [message length] ) return YES;
+
+		NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
+		JVDirectChatPanel *chatView = nil;
+
+		// this is an IRC specific command for sending to room operators only.
+		if( [connection type] == MVChatConnectionIRCType && [target hasPrefix:@"@"] && [target length] > 1 )
+			target = [target substringFromIndex:1];
+
+		if( ! chanSet || [chanSet characterIsMember:[target characterAtIndex:0]] ) {
+			MVChatRoom *room = [connection joinedChatRoomWithName:target];
+			if( room ) chatView = [[JVChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
+		}
+
+		if( ! chatView ) {
+			MVChatUser *user = [[connection chatUsersWithNickname:target] anyObject];
+			if( user ) chatView = [[JVChatController defaultController] chatViewControllerForUser:user ifExists:YES];
+		}
+
+		if( chatView ) {
+			JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:message sender:[connection localUser]];
+			[cmessage setType:JVChatMessageNoticeType];
+			[chatView echoSentMessageToDisplay:cmessage];
+		}
+
 		return YES;
 	}
 
@@ -490,6 +516,22 @@
 
 	NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
 	JVDirectChatPanel *chatView = nil;
+
+	// this is an IRC specific command for sending to room operators only.
+	if( [connection type] == MVChatConnectionIRCType && [to hasPrefix:@"@"] && [to length] > 1 ) {
+		[connection sendRawMessage:[NSString stringWithFormat:@"PRIVMSG %@ :%@", to, [msg string]]];
+
+		to = [to substringFromIndex:1];
+
+		MVChatRoom *room = [connection joinedChatRoomWithName:to];
+		if( room ) chatView = [[JVChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
+
+		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:msg sender:[connection localUser]];
+		[chatView echoSentMessageToDisplay:cmessage];
+		[chatView sendMessage:cmessage];
+
+		return YES;
+	}
 
 	MVChatRoom *room = nil;
 	if( ! [command caseInsensitiveCompare:@"msg"] && ( ! chanSet || [chanSet characterIsMember:[to characterAtIndex:0]] ) ) {

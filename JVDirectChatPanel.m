@@ -839,7 +839,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[self encoding]], @"StringEncoding", cformat, @"FormatType", nil];
 	NSData *msgData = [[message body] chatFormatWithOptions:options]; // we could save this back to the message object before sending
-	[self addMessageToDisplay:msgData fromUser:[message sender] asAction:[message isAction] withIdentifier:[message messageIdentifier] andType:JVChatMessageNormalType];
+	[self addMessageToDisplay:msgData fromUser:[message sender] asAction:[message isAction] withIdentifier:[message messageIdentifier] andType:[message type]];
 }
 
 - (unsigned int) newMessagesWaiting {

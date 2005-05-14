@@ -149,6 +149,7 @@
 		_highlighted = NO;
 		_senderIsLocalUser = NO;
 		_ignoreStatus = JVNotIgnored;
+		_type = JVChatMessageNormalType;
 	}
 
 	return self;
