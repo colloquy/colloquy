@@ -443,6 +443,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
 			[[field cell] setSendsSearchStringImmediately:NO];
 #endif
+		[[field cell] setPlaceholderString:NSLocalizedString( @"Search Messages", "search field placeholder string" )];
+		[[field cell] setMaximumRecents:10];
 		[field setRecentsAutosaveName:@"message quick search"];
 		[field setStringValue:( [self searchQuery] ? [self searchQuery] : @"" )];
 		[field setAction:@selector( performQuickSearch: )];
