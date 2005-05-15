@@ -100,7 +100,7 @@
 			[room partChat:nil];
 			[room joinChat:nil];
 			return YES;
-		} else if( ! [command caseInsensitiveCompare:@"invite"] ) {
+		} else if( ! [command caseInsensitiveCompare:@"invite"] && [connection type] == MVChatConnectionIRCType ) {
 			NSString *nick = nil;
 			NSString *roomName = nil;
 			NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
@@ -270,10 +270,10 @@
 	} else if( ! [command caseInsensitiveCompare:@"raw"] || ! [command caseInsensitiveCompare:@"quote"] ) {
 		[connection sendRawMessage:[arguments string] immediately:YES];
 		return YES;
-	} else if( ! [command caseInsensitiveCompare:@"umode"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"umode"] && [connection type] == MVChatConnectionIRCType ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [connection nickname], [arguments string]]];
 		return YES;
-	} else if( ! [command caseInsensitiveCompare:@"ctcp"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"ctcp"] && [connection type] == MVChatConnectionIRCType ) {
 		return [self handleCTCPWithArguments:[arguments string] forConnection:connection];
 	} else if( ! [command caseInsensitiveCompare:@"wi"] ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"WHOIS %@", [arguments string]]];
@@ -301,7 +301,7 @@
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"ignore"] ) {
 		return [self handleIgnoreWithArguments:[arguments string] inView:room];
-	} else if( ! [command caseInsensitiveCompare:@"invite"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"invite"] && [connection type] == MVChatConnectionIRCType ) {
         NSString *nick = nil;
 		NSString *roomName = nil;
         NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
@@ -326,10 +326,10 @@
 		}
 	} else if( ! [command caseInsensitiveCompare:@"help"] ) {
 		return YES;
-	} else if( ! [command caseInsensitiveCompare:@"globops"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"globops"] && [connection type] == MVChatConnectionIRCType ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"%@ :%@", command, [arguments string]]];
 		return YES;
-	} else if( ! [command caseInsensitiveCompare:@"notice"] ) {
+	} else if( ! [command caseInsensitiveCompare:@"notice"] && [connection type] == MVChatConnectionIRCType ) {
         NSString *target = nil;
         NSString *message = nil;
         NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
