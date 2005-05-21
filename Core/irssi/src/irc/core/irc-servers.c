@@ -104,6 +104,7 @@ static void server_init(IRC_SERVER_REC *server)
 {
 	IRC_SERVER_CONNECT_REC *conn;
 	char hostname[100], *address, *ptr, *username, *cmd;
+	GTimeVal now;
 
 	g_return_if_fail(server != NULL);
 
@@ -192,7 +193,6 @@ static void server_init(IRC_SERVER_REC *server)
 
 	/* prevent the queue from sending too early, we have a max cut off of 120 secs */
 	/* this will reset to 1 sec after we get the 001 event */
-	GTimeVal now;
 	g_get_current_time(&now);
 	memcpy(&((IRC_SERVER_REC *)server)->wait_cmd, &now, sizeof(GTimeVal));
 	((IRC_SERVER_REC *)server)->wait_cmd.tv_sec += 120;
@@ -368,8 +368,6 @@ static void sig_server_quit(IRC_SERVER_REC *server, const char *msg)
 
 void irc_server_send_data(IRC_SERVER_REC *server, const char *data, int len)
 {
-	if( server->disconnected ) return;
-
 	if (net_sendbuffer_send(server->handle, data, len) == -1) {
 		/* something bad happened */
 		server->connection_lost = TRUE;
@@ -519,7 +517,8 @@ static int sig_set_user_mode(IRC_SERVER_REC *server)
 		   more trouble than worth. (eg. we don't want to remove
 		   some good default server modes, but we don't want to
 		   set back +r, etc..) */
-		args = g_strdup_printf("%s %s", server->nick, mode);
+		args = g_strdup_printf((*mode == '+' || *mode == '-') ? "%s %s" : 
+				       "%s +%s", server->nick, mode);
 		signal_emit("command mode", 3, args, server, NULL);
 		g_free(args);
 	}
@@ -528,20 +527,10 @@ static int sig_set_user_mode(IRC_SERVER_REC *server)
 	return 0;
 }
 
-/* Bugfix: http://bugs.irssi.org/?do=details&id=121
- * Author: Geert Hauwaerts <geert@irssi.org>
- * Date:   Wed Sep 15 23:25:30 CEST 2004
- */
-
-static void real_connected(IRC_SERVER_REC *server)
-{
-	if (server->connrec->usermode != NULL)
-		sig_set_user_mode(server);
-}
-
 static void event_connected(IRC_SERVER_REC *server, const char *data, const char *from)
 {
 	char *params, *nick;
+	GTimeVal now;
 
 	g_return_if_fail(server != NULL);
 
@@ -564,9 +553,13 @@ static void event_connected(IRC_SERVER_REC *server, const char *data, const char
 	server->real_connect_time = time(NULL);
 
 	/* let the queue send now that we are identified */
-	GTimeVal now;
 	g_get_current_time(&now);
 	memcpy(&server->wait_cmd, &now, sizeof(GTimeVal));
+
+	if (server->connrec->usermode != NULL) {
+		/* wait a second and then send the user mode */
+		g_timeout_add(1000, (GSourceFunc) sig_set_user_mode, server);
+	}
 
 	signal_emit("event connected", 1, server);
 	g_free(params);
@@ -808,7 +801,6 @@ void irc_servers_init(void)
 	signal_add_first("server connected", (SIGNAL_FUNC) sig_connected);
 	signal_add_last("server disconnected", (SIGNAL_FUNC) sig_disconnected);
 	signal_add_last("server quit", (SIGNAL_FUNC) sig_server_quit);
-	signal_add_first("event connected", (SIGNAL_FUNC) real_connected);
 	signal_add("event 001", (SIGNAL_FUNC) event_connected);
 	signal_add("event 004", (SIGNAL_FUNC) event_server_info);
 	signal_add("event 005", (SIGNAL_FUNC) event_isupport);
@@ -835,8 +827,7 @@ void irc_servers_deinit(void)
 
 	signal_remove("server connected", (SIGNAL_FUNC) sig_connected);
 	signal_remove("server disconnected", (SIGNAL_FUNC) sig_disconnected);
-	signal_remove("server quit", (SIGNAL_FUNC) sig_server_quit);
-	signal_remove("event connected", (SIGNAL_FUNC) real_connected);
+        signal_remove("server quit", (SIGNAL_FUNC) sig_server_quit);
 	signal_remove("event 001", (SIGNAL_FUNC) event_connected);
 	signal_remove("event 004", (SIGNAL_FUNC) event_server_info);
 	signal_remove("event 005", (SIGNAL_FUNC) event_isupport);
