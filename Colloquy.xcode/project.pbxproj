@@ -240,7 +240,6 @@
 			children = (
 				1058C7ADFEA557BF11CA2CBB,
 				1C397390082D4ADA00DCF3CF,
-				1CF8FC0E070A5BEF00C9B54C,
 				F51F91F103796FCD01A35792,
 				F555208B01F0DE0601EE70DE,
 				1C3C112E050265AE000001C8,
@@ -249,9 +248,6 @@
 				1C3B290706529E720066197C,
 				1CF8030C070C893500C9B54C,
 				1CF8030D070C893500C9B54C,
-				1C7055C80519E56300A8FE6E,
-				1C7055CA0519E56C00A8FE6E,
-				1C7055C40519E54C00A8FE6E,
 				1CF5F8D107D537E50019DC13,
 			);
 			isa = PBXGroup;
@@ -1602,30 +1598,6 @@
 			settings = {
 			};
 		};
-		1C7055C40519E54C00A8FE6E = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = libexslt.framework;
-			path = Frameworks/libexslt.framework;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		1C7055C80519E56300A8FE6E = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = libxml.framework;
-			path = Frameworks/libxml.framework;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		1C7055CA0519E56C00A8FE6E = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = libxslt.framework;
-			path = Frameworks/libxslt.framework;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
 		1C705701051A830200A8FE6E = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -2377,10 +2349,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Resources/Info.plist;
 				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
+				OTHER_LDFLAGS = "-lxml -lxslt";
 				PRODUCT_NAME = Colloquy;
 				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
@@ -3162,14 +3136,10 @@
 				1CB2CD79052DDC560094AAA4,
 				1CB2CD7B052DDC560094AAA4,
 				1CB2CD7C052DDC560094AAA4,
-				1CB2CD7D052DDC560094AAA4,
-				1CB2CD7F052DDC560094AAA4,
-				1CB2CD80052DDC560094AAA4,
 				1CD0201F05758F26000F93B4,
 				1C6C75460630AD5300698F55,
 				1C3B290806529E720066197C,
 				1C8D2E72065D0BB600AC28C5,
-				1CF8FC0F070A5BEF00C9B54C,
 				1CF8030E070C893500C9B54C,
 				1CF8030F070C893500C9B54C,
 				1CF5F8D207D537E50019DC13,
@@ -3196,24 +3166,6 @@
 			settings = {
 			};
 		};
-		1CB2CD7D052DDC560094AAA4 = {
-			fileRef = 1C7055C40519E54C00A8FE6E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CB2CD7F052DDC560094AAA4 = {
-			fileRef = 1C7055C80519E56300A8FE6E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CB2CD80052DDC560094AAA4 = {
-			fileRef = 1C7055CA0519E56C00A8FE6E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		1CB2CD82052DDC560094AAA4 = {
 			buildActionMask = 2147483647;
 			dstPath = "";
@@ -3223,31 +3175,10 @@
 				1CF80310070C894100C9B54C,
 				1CF80311070C894100C9B54C,
 				1C6C75490630AD9500698F55,
-				1CB2CD84052DDC560094AAA4,
-				1CB2CD85052DDC560094AAA4,
-				1CB2CD86052DDC560094AAA4,
 				1CF5F8DD07D537F70019DC13,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1CB2CD84052DDC560094AAA4 = {
-			fileRef = 1C7055C80519E56300A8FE6E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CB2CD85052DDC560094AAA4 = {
-			fileRef = 1C7055CA0519E56C00A8FE6E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CB2CD86052DDC560094AAA4 = {
-			fileRef = 1C7055C40519E54C00A8FE6E;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		1CB2CD88052DDC560094AAA4 = {
 			buildActionMask = 2147483647;
@@ -5058,20 +4989,6 @@
 		};
 		1CF803F1070C948000C9B54C = {
 			fileRef = 1CD4BD9405AA309A00F72EE6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1CF8FC0E070A5BEF00C9B54C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = ExceptionHandling.framework;
-			path = /System/Library/Frameworks/ExceptionHandling.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		1CF8FC0F070A5BEF00C9B54C = {
-			fileRef = 1CF8FC0E070A5BEF00C9B54C;
 			isa = PBXBuildFile;
 			settings = {
 			};
