@@ -101,7 +101,7 @@
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
 				xmlChar *prop = xmlNodeGetContent( subNode );
-				_senderName = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				if( prop ) _senderName = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
