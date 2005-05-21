@@ -1,4 +1,3 @@
-#import <ExceptionHandling/NSExceptionHandler.h>
 #import <ChatCore/MVChatPluginManager.h>
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSColorAdditions.h>
@@ -375,62 +374,6 @@ static BOOL applicationIsTerminating = NO;
 	else [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
-- (BOOL) exceptionHandler:(NSExceptionHandler *) sender shouldLogException:(NSException *) exception mask:(unsigned int) mask {
-	return NO;
-}
-
-- (BOOL) exceptionHandler:(NSExceptionHandler *) sender shouldHandleException:(NSException *) exception mask:(unsigned int) mask {
-	static BOOL _exceptionHandlerLoop = NO;
-	if( _exceptionHandlerLoop ) return NO;
-	_exceptionHandlerLoop = YES;
-
-	NSTask *ls = [[NSTask alloc] init];
-	NSString *pid = [[NSNumber numberWithInt:[[NSProcessInfo processInfo] processIdentifier]] stringValue];
-	NSMutableArray *args = [NSMutableArray arrayWithCapacity:20];
-	NSPipe *pipe = [NSPipe pipe];
-
-	NSString *stack = [[exception userInfo] objectForKey:NSStackTraceKey];
-	NSMutableArray *stackArray = [[[stack componentsSeparatedByString:@"  "] mutableCopy] autorelease];
-
-	if( [stackArray count] > 4 ) [stackArray removeObjectsInRange:NSMakeRange( 0, 4 )];
-
-#ifndef DEBUG
-	[stackArray removeObjectsInRange:NSMakeRange( 1, [stackArray count] - 1 )];
-#endif
-
-	[args addObject:@"-p"];
-	[args addObject:pid];
-	[args addObjectsFromArray:stackArray];
-
-	[ls setStandardOutput:pipe];
-	[ls setLaunchPath:@"/usr/bin/atos"];
-	[ls setArguments:args];
-	[ls launch];
-	[ls waitUntilExit];
-
-	NSData *result = [[pipe fileHandleForReading] readDataToEndOfFile];
-	NSString *trace = [[[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding] autorelease];
-
-#ifdef DEBUG
-	NSLog( @"Exception Stack Trace:\n%@", trace );
-	NSRange loc = [trace rangeOfString:@"\n"];
-	if( loc.location != NSNotFound )
-		trace = [trace substringWithRange:[trace lineRangeForRange:NSMakeRange( 0, loc.location )]];
-#endif
-
-	NSString *reason = [exception reason];
-	if( [reason hasPrefix:@"*** "] ) reason = [reason substringFromIndex:4];
-
-	if( NSRunCriticalAlertPanel( NSLocalizedString( @"An unresolved error has occurred.", "exception error title" ), NSLocalizedString( @"Please report this message to the Colloquy development team with a brief synopsis of your actions leading to this message. Areas of Colloquy may fail to function normally until you relaunch.\n\n%@\n\nThe error occurred in:\n%@", "exception error message" ), NSLocalizedString( @"Continue", "continue button title" ), NSLocalizedString( @"Quit", "quit button title" ), nil, reason, trace ) == NSCancelButton ) {
-		[[NSApplication sharedApplication] terminate:nil];
-	}
-
-	[ls release];
-
-	_exceptionHandlerLoop = NO;
-	return YES;
-}
-
 #pragma mark -
 
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
@@ -446,15 +389,6 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
-	// this does weird things on Tiger, disable for now on that system
-#ifdef NSAppKitVersionNumber10_3
-	if( floor( NSAppKitVersionNumber ) == NSAppKitVersionNumber10_3 && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableExceptionOccurredDialog"] ) {
-		NSExceptionHandler *handler = [NSExceptionHandler defaultExceptionHandler];
-		[handler setExceptionHandlingMask:( NSLogUncaughtExceptionMask | NSLogUncaughtSystemExceptionMask | NSLogUncaughtRuntimeErrorMask | NSHandleUncaughtExceptionMask | NSHandleUncaughtSystemExceptionMask | NSHandleUncaughtRuntimeErrorMask )];
-		[handler setDelegate:self];
-	}
-#endif
-
 	[MVCrashCatcher check];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] )
