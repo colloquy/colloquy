@@ -48,6 +48,7 @@
 
 	@synchronized( [self transcript] ) {
 		xmlChar *prop = xmlGetProp( _node, (xmlChar *) "received" );
+		[_date autorelease];
 		_date = ( prop ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
 		xmlFree( prop );
 
@@ -72,11 +73,9 @@
 		xmlFree( prop );
 
 		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "source" );
-		if( prop ) {
-			NSString *sourceStr = [NSString stringWithUTF8String:(char *)prop];
-			if( sourceStr ) _source = [[NSURL allocWithZone:[self zone]] initWithString:sourceStr];
-			xmlFree( prop );
-		}
+		[_source autorelease];
+		_source = ( prop ? [[NSURL allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
+		xmlFree( prop );
 	}
 
 	_loaded = YES;
@@ -86,6 +85,7 @@
 	if( _bodyLoaded || ! _node ) return;
 
 	@synchronized( [self transcript] ) {
+		[_attributedMessage autorelease];
 		_attributedMessage = [[NSTextStorage allocWithZone:[self zone]] initWithXHTMLTree:_node baseURL:nil defaultAttributes:nil];
 	}
 
@@ -101,23 +101,33 @@
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
 				xmlChar *prop = xmlNodeGetContent( subNode );
+				[_senderName autorelease];
 				if( prop ) _senderName = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				else _senderName = nil;
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
+				[_senderNickname autorelease];
 				if( prop ) _senderNickname = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				else _senderNickname = nil;
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
+				[_senderIdentifier autorelease];
 				if( prop ) _senderIdentifier = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				else _senderIdentifier = nil;
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "hostmask" );
+				[_senderHostmask autorelease];
 				if( prop ) _senderHostmask = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				else _senderHostmask = nil;
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "class" );
+				[_senderClass autorelease];
 				if( prop ) _senderClass = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				else _senderClass = nil;
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "self" );
@@ -201,6 +211,13 @@
 	[_source release];
 	[_objectSpecifier release];
 
+	[_senderIdentifier release];
+	[_senderName release];
+	[_senderNickname release];
+	[_senderHostmask release];
+	[_senderClass release];
+	[_senderBuddyIdentifier release];
+
 	_node = NULL;
 	_transcript = nil;
 	_messageIdentifier = nil;
@@ -209,6 +226,13 @@
 	_date = nil;
 	_source = nil;
 	_objectSpecifier = nil;
+
+	_senderIdentifier = nil;
+	_senderName = nil;
+	_senderNickname = nil;
+	_senderHostmask = nil;
+	_senderClass = nil;
+	_senderBuddyIdentifier = nil;
 
 	[super dealloc];
 }
