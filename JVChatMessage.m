@@ -100,9 +100,11 @@
 
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
-				_senderName = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) xmlNodeGetContent( subNode )];
+				xmlChar *prop = xmlNodeGetContent( subNode );
+				_senderName = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				xmlFree( prop );
 
-				xmlChar *prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
+				prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
 				if( prop ) _senderNickname = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				xmlFree( prop );
 
