@@ -2354,7 +2354,7 @@
 				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
-				OTHER_LDFLAGS = "-lxml -lxslt";
+				OTHER_LDFLAGS = "-lxml2 -lxslt";
 				PRODUCT_NAME = Colloquy;
 				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
