@@ -255,7 +255,7 @@ static void sig_dcc_destroyed(SEND_DCC_REC *dcc)
 /* input function: DCC SEND - we're ready to send more data */
 static void dcc_send_data(SEND_DCC_REC *dcc)
 {
-        char buffer[512];
+        char buffer[4096];
 	int ret;
 
 	ret = read(dcc->fhandle, buffer, sizeof(buffer));
