@@ -84,7 +84,7 @@
 	NSString *chars = [event charactersIgnoringModifiers];
 	if( [chars length] && [chars characterAtIndex:0] == NSDeleteCharacter ) {
 		if( [_delegate respondsToSelector:@selector( clear: )] ) {
-			[_delegate clear:nil];
+			[_delegate clear:self];
 			return;
 		}
 	}
