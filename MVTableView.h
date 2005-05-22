@@ -9,8 +9,6 @@
 + (NSImage *) ascendingSortIndicator;
 + (NSImage *) descendingSortIndicator;
 
-- (NSImage *) dragImageForRows:(NSArray *) dragRows event:(NSEvent *) dragEvent dragImageOffset:(NSPointPointer) dragImageOffset;
-
 - (BOOL) autosaveTableColumnHighlight;
 - (void) setAutosaveTableColumnHighlight:(BOOL) flag;
 
@@ -18,7 +16,6 @@
 @end
 
 @interface NSObject (MVTableViewDataSource)
-- (NSImage *) tableView:(MVTableView *) tableView dragImageForRows:(NSArray *) rows dragImageOffset:(NSPointPointer) dragImageOffset;
 - (NSMenu *) tableView:(MVTableView *) view menuForTableColumn:(NSTableColumn *) column row:(int) row;
 - (NSString *) tableView:(MVTableView *) view toolTipForTableColumn:(NSTableColumn *) column row:(int) row;
 @end

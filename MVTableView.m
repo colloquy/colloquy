@@ -23,17 +23,8 @@
 
 - (void) setDataSource:(id) source {
 	[super setDataSource:source];
-	dataSourceDragImageForRows = [_dataSource respondsToSelector:@selector( tableView:dragImageForRows:dragImageOffset: )];
 	dataSourceMenuForTableColumn = [_dataSource respondsToSelector:@selector( tableView:menuForTableColumn:row: )];
 	dataSourceToolTipForTableColumn = [_dataSource respondsToSelector:@selector( tableView:toolTipForTableColumn:row: )];
-}
-
-- (NSImage *) dragImageForRows:(NSArray *) dragRows event:(NSEvent *) dragEvent dragImageOffset:(NSPointPointer) dragImageOffset {
-	NSImage *ret = nil;
-	if( dataSourceDragImageForRows )
-		ret = [_dataSource tableView:self dragImageForRows:dragRows dragImageOffset:dragImageOffset];
-	if( ! ret ) ret = [super dragImageForRows:dragRows event:dragEvent dragImageOffset:dragImageOffset];
-	return ret;
 }
 
 - (BOOL) autosaveTableColumnHighlight {
