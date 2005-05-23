@@ -123,12 +123,6 @@ typedef enum JVTranscriptCriterionQueryUnits { // corresponds to the nib menu ta
 - (BOOL) usesSmartTranscriptCriterion;
 - (void) setUsesSmartTranscriptCriterion:(BOOL) use;
 
-- (JVTranscriptCriterionOperation) operation;
-- (void) setOperation:(JVTranscriptCriterionOperation) operation;
-
-- (JVTranscriptCriterionQueryUnits) queryUnits;
-- (void) setQueryUnits:(JVTranscriptCriterionQueryUnits) units;
-
 - (NSView *) firstKeyView;
 - (NSView *) lastKeyView;
 @end
