@@ -23,7 +23,7 @@
 		_changed = NO;
 		_smartTranscriptCriterion = NO;
 		[self setKind:JVTranscriptMessageBodyCriterionKind];
-		[self setOperation:JVTranscriptTextContainCriterionOperation];
+		[self setOperation:JVTranscriptTextContainsCriterionOperation];
 		[self setQueryUnits:JVTranscriptNoCriterionQueryUnits];
 	}
 
@@ -198,7 +198,7 @@
 	[self setKind:[[sender selectedItem] tag]];
 
 	if( [self format] == JVTranscriptTextCriterionFormat ) {
-		[self setOperation:JVTranscriptTextContainCriterionOperation];
+		[self setOperation:JVTranscriptTextContainsCriterionOperation];
 		[self setQueryUnits:JVTranscriptNoCriterionQueryUnits];
 	} else if( [self format] == JVTranscriptDateCriterionFormat ) {
 		[self setOperation:JVTranscriptIsLessThanCriterionOperation];
@@ -271,7 +271,7 @@
 			else if( oper == JVTranscriptTextEndsWithCriterionOperation ) options = ( NSAnchoredSearch | NSBackwardsSearch );
 			NSRange range = [value rangeOfString:[self query] options:options];
 			match = ( range.location != NSNotFound );
-			if( oper == JVTranscriptTextDoesNotContainsCriterionOperation ) match = ! match;
+			if( oper == JVTranscriptTextDoesNotContainCriterionOperation ) match = ! match;
 		} else if( oper == JVTranscriptIsEqualCriterionOperation ) {
 			if( ! ignoreCase ) match = [value isEqualToString:[self query]];
 			else match = ! [value caseInsensitiveCompare:[self query]];
