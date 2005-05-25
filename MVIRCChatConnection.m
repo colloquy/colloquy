@@ -591,8 +591,6 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 				} else irc_send_cmdv( server, "PRIVMSG %s :IDENTIFY %s", nick, [self encodedBytesWithString:[self nicknamePassword]] );
 			} else if( strstr( message, "Password accepted" ) ) {
 				[[self localUser] _setIdentified:YES];
-				NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNicknameIdentifiedNotification object:self userInfo:nil];
-				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			} else if( strstr( message, "authentication required" ) ) {
 				[[self localUser] _setIdentified:NO];
 			}
