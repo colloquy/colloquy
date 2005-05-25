@@ -47,7 +47,7 @@ static NSMutableSet *inspectors = nil;
 		[(NSPanel *)panel setFloatingPanel:YES];
 		[(NSPanel *)panel setHidesOnDeactivate:YES];
 	} else {
-		[panel saveFrameUsingName:@"inspector"];
+		[panel setFrameUsingName:@"inspector"];
 		[panel setFrameAutosaveName:@"inspector"];
 	}
 	[panel setDelegate:self];
