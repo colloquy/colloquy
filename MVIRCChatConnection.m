@@ -1872,9 +1872,6 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	NSString *userPassword = [self nicknamePassword];
 	if ( userPassword ) {
 		irc_send_cmdv( [self _irrsiConnection], "PRIVMSG %s :IDENTIFY %s", [[self nickname] UTF8String], [self encodedBytesWithString:userPassword] );
-		// since we have a password, move the connectionsController to handle our idented notification
-		[[NSNotificationCenter defaultCenter] removeObserver:[MVConnectionsController defaultController] name:MVChatConnectionNicknameIdentifiedNotification object:self];
-		[[NSNotificationCenter defaultCenter] addObserver:[MVConnectionsController defaultController] selector:@selector( _didConnect: ) name:MVChatConnectionNicknameIdentifiedNotification object:self];
 	}
 	
 	[super _didConnect];
