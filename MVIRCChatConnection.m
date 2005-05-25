@@ -591,6 +591,8 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 				} else irc_send_cmdv( server, "PRIVMSG %s :IDENTIFY %s", nick, [self encodedBytesWithString:[self nicknamePassword]] );
 			} else if( strstr( message, "Password accepted" ) ) {
 				[[self localUser] _setIdentified:YES];
+				NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNicknameIdentifiedNotification object:self userInfo:nil];
+				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			} else if( strstr( message, "authentication required" ) ) {
 				[[self localUser] _setIdentified:NO];
 			}
@@ -1865,6 +1867,16 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	[_localUser release];
 	_localUser = [[MVIRCChatUser allocWithZone:[self zone]] initLocalUserWithConnection:self];
 	[[self localUser] _setStatus:MVChatUserAvailableStatus];
+	
+	// Ident if possible
+	NSString *userPassword = [self nicknamePassword];
+	if ( userPassword ) {
+		irc_send_cmdv( [self _irrsiConnection], "PRIVMSG %s :IDENTIFY %s", [[self nickname] UTF8String], [self encodedBytesWithString:userPassword] );
+		// since we have a password, move the connectionsController to handle our idented notification
+		[[NSNotificationCenter defaultCenter] removeObserver:[MVConnectionsController defaultController] name:MVChatConnectionNicknameIdentifiedNotification object:self];
+		[[NSNotificationCenter defaultCenter] addObserver:[MVConnectionsController defaultController] selector:@selector( _didConnect: ) name:MVChatConnectionNicknameIdentifiedNotification object:self];
+	}
+	
 	[super _didConnect];
 }
 
