@@ -1865,13 +1865,11 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	[_localUser release];
 	_localUser = [[MVIRCChatUser allocWithZone:[self zone]] initLocalUserWithConnection:self];
 	[[self localUser] _setStatus:MVChatUserAvailableStatus];
-	
-	// Ident if possible
-	NSString *userPassword = [self nicknamePassword];
-	if ( userPassword ) {
-		irc_send_cmdv( [self _irrsiConnection], "PRIVMSG %s :IDENTIFY %s", [[self nickname] UTF8String], [self encodedBytesWithString:userPassword] );
-	}
-	
+
+	// Identify if we have a user password
+	if( [[self nicknamePassword] length] )
+		[self sendRawMessageWithFormat:@"PRIVMSG NickServ :IDENTIFY %@", [self nicknamePassword]];
+
 	[super _didConnect];
 }
 
