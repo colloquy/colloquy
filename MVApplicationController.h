@@ -10,6 +10,7 @@ extern NSString *JVMachineStoppedIdlingNotification;
 	NSTimer *_idleCheck;
 	NSTimeInterval _lastIdle;
 	BOOL _isIdle;
+	BOOL _terminateWithoutConfirm;
 }
 
 - (IBAction) checkForUpdate:(id) sender;
@@ -30,6 +31,8 @@ extern NSString *JVMachineStoppedIdlingNotification;
 + (BOOL) isTerminating;
 
 - (NSTimeInterval) idleTime;
+
+- (IBAction) terminateWithoutConfirm:(id) sender;
 @end
 
 @protocol JVChatViewController;

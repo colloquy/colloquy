@@ -378,6 +378,11 @@ static BOOL applicationIsTerminating = NO;
 
 #pragma mark -
 
+- (IBAction) terminateWithoutConfirm:(id) sender {
+	_terminateWithoutConfirm = YES;
+	[[NSApplication sharedApplication] terminate:sender];
+}
+
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
 	[JVGetCommand poseAsClass:[NSGetCommand class]];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
@@ -444,6 +449,7 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *) sender {
+	if( _terminateWithoutConfirm ) return NSTerminateNow; // special command key used, quit asap
 	if( ! [[[MVConnectionsController defaultController] connectedConnections] count] )
 		return NSTerminateNow; // no active connections, we can just quit now
 	if( ! [[[JVChatController defaultController] chatViewControllersKindOfClass:[JVDirectChatPanel class]] count] )
