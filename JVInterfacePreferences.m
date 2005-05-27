@@ -105,7 +105,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	BOOL multipleType = NO;
 
 	while( ( rule = [enumerator nextObject] ) ) {
-		if( ! multipleType && [rule kind] == JVChatViewTypeCriterionKind ) {
+		if( ! multipleType && [rule kind] == JVChatViewTypeCriterionKind && [rule operation] == JVChatViewIsEqualCriterionOperation ) {
 			if( [[rule query] intValue] == 1 ) icon = [NSImage imageNamed:@"roomTab"];
 			else if( [[rule query] intValue] == 2 ) icon = [NSImage imageNamed:@"privateChatTabNewMessage"];
 			else if( [[rule query] intValue] == 12 ) icon = [NSImage imageNamed:@"smartTranscriptTab"];
