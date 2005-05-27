@@ -1,5 +1,10 @@
 #import <ChatCore/MVChatConnection.h>
 #import "JVChatViewCriterionController.h"
+#import "JVChatRoomPanel.h"
+#import "JVDirectChatPanel.h"
+#import "JVChatTranscriptPanel.h"
+#import "JVSmartTranscriptPanel.h"
+#import "JVChatConsolePanel.h"
 
 @implementation JVChatViewCriterionController
 + (id) controller {
@@ -259,6 +264,35 @@
 		}
 
 		return match;
+	} else if( [self kind] == JVChatViewTypeCriterionKind ) {
+		Class cls = Nil;
+
+		if( [[self query] intValue] == 1 ) cls = [JVChatRoomPanel class];
+		else if( [[self query] intValue] == 2 ) cls = [JVDirectChatPanel class];
+		else if( [[self query] intValue] == 11 ) cls = [JVChatTranscriptPanel class];
+		else if( [[self query] intValue] == 12 ) cls = [JVSmartTranscriptPanel class];
+		else if( [[self query] intValue] == 21 ) cls = [JVChatConsolePanel class];
+		else return NO;
+
+		BOOL match = [chatView isMemberOfClass:cls];
+		if( [self operation] == JVChatViewIsNotEqualCriterionOperation ) match = ! match;
+		return match;
+	} else if( [self kind] == JVChatViewConnectionTypeCriterionKind ) {
+		if( ! [chatView connection] ) return NO;
+
+		MVChatConnectionType typ = MVChatConnectionIRCType;
+
+		if( [[self query] intValue] == 1 ) typ = MVChatConnectionIRCType;
+		else if( [[self query] intValue] == 2 ) typ = MVChatConnectionSILCType;
+		else return NO;
+
+		BOOL match = ( typ == [[chatView connection] type] );
+		if( [self operation] == JVChatViewIsNotEqualCriterionOperation ) match = ! match;
+		return match;
+	} else if( [self kind] == JVChatViewOpenMethodCriterionKind ) {
+		return NO;
+	} else if( [self kind] == JVChatViewEveryPanelCriterionKind ) {
+		return YES;
 	}
 
 	return NO;
