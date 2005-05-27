@@ -1506,8 +1506,16 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSEnumerator *enumerator = [rooms objectEnumerator];
 	NSString *room = nil;
 
-	while( ( room = [enumerator nextObject] ) )
-		if( [room length] ) [roomList addObject:[self properNameForChatRoomNamed:room]];
+	while( ( room = [enumerator nextObject] ) ) {
+		if( [room length] && [room rangeOfString:@" "].location == NSNotFound ) { // join non-password room in bulk
+			[roomList addObject:[self properNameForChatRoomNamed:room]];
+		} else if( [room length] && [room rangeOfString:@" "].location != NSNotFound ) { // has a password, join separately
+			// join all requested rooms before this one so we do things in order
+			if( [roomList count] ) [self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
+			[self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
+			[roomList removeAllObjects]; // clear list since we joined them
+		}
+	}
 
 	if( ! [roomList count] ) return;
 
@@ -1796,11 +1804,11 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	[pool release];
 }
 
-#pragma mark -
+/* #pragma mark -
 
 - (MVIRCChatConnection *) _irssiThreadProxy {
 	return _irssiThreadProxy;
-}
+} */
 
 #pragma mark -
 
@@ -2034,7 +2042,7 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	}
 }
 @end
-
+/*
 #pragma mark -
 
 @implementation MVIRCConnectionThreadHelper
@@ -2046,4 +2054,4 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	[server enableMultipleThreads];
 	return server;
 }
-@end
+@end */

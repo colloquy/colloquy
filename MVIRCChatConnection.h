@@ -10,13 +10,13 @@ extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 	NSString *_proxyPassword;
 	SERVER_REC *_chatConnection;
 	SERVER_CONNECT_REC *_chatConnectionSettings;
-	NSConnection *_irssiThreadConnection;
-	MVIRCChatConnection *_irssiThreadProxy;
+//	NSConnection *_irssiThreadConnection;
+//	MVIRCChatConnection *_irssiThreadProxy;
 }
 + (NSArray *) defaultServerPorts;
 @end
 
-#pragma mark -
+/* #pragma mark -
 
 @interface MVIRCConnectionThreadHelper : NSObject {}
 - (NSConnection *) vendChatConnection:(MVIRCChatConnection *) connection;
@@ -27,11 +27,11 @@ extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 @protocol MVIRCChatConnectionIrssiThread
 - (oneway void) _sendRawMessage:(NSString *) raw immediately:(BOOL) now;
 - (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action;
-@end
+@end */
 
 #pragma mark -
 
-@interface MVChatConnection (MVIRCChatConnectionPrivate) <MVIRCChatConnectionIrssiThread>
+@interface MVChatConnection (MVIRCChatConnectionPrivate) /* <MVIRCChatConnectionIrssiThread> */
 + (MVIRCChatConnection *) _connectionForServer:(SERVER_REC *) server;
 
 + (void) _registerCallbacks;
@@ -54,6 +54,7 @@ extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 - (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname;
 
 - (oneway void) _sendRawMessage:(NSString *) raw immediately:(BOOL) now;
+- (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action;
 @end
 
 #pragma mark -
