@@ -74,12 +74,15 @@
 	} else if( [self format] == JVChatViewBooleanCriterionFormat ) {
 		[booleanKindButton selectItemAtIndex:[booleanKindButton indexOfItemWithTag:[self kind]]];
 	} else if( [self format] == JVChatViewListCriterionFormat ) {
+		if( [self kind] == JVChatViewTypeCriterionKind ) [listQuery setMenu:viewTypesMenu];
+		else if( [self kind] == JVChatViewConnectionTypeCriterionKind ) [listQuery setMenu:serverTypesMenu];
+		else if( [self kind] == JVChatViewOpenMethodCriterionKind ) [listQuery setMenu:openMethodsMenu];
+
 		[listKindButton selectItemAtIndex:[listKindButton indexOfItemWithTag:[self kind]]];
 		[listOperationButton selectItemAtIndex:[listOperationButton indexOfItemWithTag:[self operation]]];
 		int index = [listQuery indexOfItemWithRepresentedObject:[self query]];
 		if( index == -1 && [[self query] isKindOfClass:[NSNumber class]] )
-			index = [(NSNumber *)[self query] intValue];
-		if( [listQuery numberOfItems] < index ) index = -1;
+			index = [listQuery indexOfItemWithTag:[(NSNumber *)[self query] intValue]];
 		[listQuery selectItemAtIndex:index];
 	}
 }
@@ -129,9 +132,16 @@
 			[self setFormat:JVChatViewTextCriterionFormat];
 			break;
 		case JVChatViewTypeCriterionKind:
+			[self setFormat:JVChatViewListCriterionFormat];
+			[listQuery setMenu:viewTypesMenu];
+			break;
 		case JVChatViewConnectionTypeCriterionKind:
+			[self setFormat:JVChatViewListCriterionFormat];
+			[listQuery setMenu:serverTypesMenu];
+			break;
 		case JVChatViewOpenMethodCriterionKind:
 			[self setFormat:JVChatViewListCriterionFormat];
+			[listQuery setMenu:openMethodsMenu];
 			break;
 		default:
 		case JVChatViewEveryPanelCriterionKind:
@@ -171,8 +181,7 @@
 	} else if( [self format] == JVChatViewListCriterionFormat ) {
 		int index = [listQuery indexOfItemWithRepresentedObject:query];
 		if( index == -1 && [query isKindOfClass:[NSNumber class]] )
-			index = [(NSNumber *)query intValue];
-		if( [listQuery numberOfItems] < index ) index = -1;
+			index = [listQuery indexOfItemWithTag:[(NSNumber *)query intValue]];
 		[listQuery selectItemAtIndex:index];
 	}
 }
@@ -204,7 +213,7 @@
 	} else if( [self format] == JVChatViewListCriterionFormat ) {
 		NSMenuItem *mitem = [listQuery selectedItem];
 		if( [mitem representedObject] ) [self setQuery:[mitem representedObject]];
-		else [self setQuery:[NSNumber numberWithInt:[listQuery indexOfSelectedItem]]];
+		else [self setQuery:[NSNumber numberWithInt:[mitem tag]]];
 	}
 }
 
@@ -275,5 +284,18 @@
 	} else if( [self format] == JVChatViewListCriterionFormat ) {
 		return listQuery;
 	} else return nil;
+}
+
+#pragma mark -
+
+- (NSString *) description {
+	[self view];
+	if( [self format] == JVChatViewTextCriterionFormat ) {
+		return [NSString stringWithFormat:@"%@ %@ \"%@\"", [textKindButton titleOfSelectedItem], [textOperationButton titleOfSelectedItem], [self query]];
+	} else if( [self format] == JVChatViewBooleanCriterionFormat ) {
+		return [booleanKindButton titleOfSelectedItem];
+	} else if( [self format] == JVChatViewListCriterionFormat ) {
+		return [NSString stringWithFormat:@"%@ %@ %@", [listKindButton titleOfSelectedItem], [listOperationButton titleOfSelectedItem], [listQuery titleOfSelectedItem]];
+	}
 }
 @end

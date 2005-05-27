@@ -35,7 +35,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[column setDataCell:prototypeCell];
 
 	[rulesTable setIntercellSpacing:NSMakeSize( 6., 2. )];
-	
+
 	[windowSetsTable setTarget:self];
 	[windowSetsTable setDoubleAction:@selector( editWindowSet: )];
 	[windowSetsTable registerForDraggedTypes:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType]];
@@ -82,6 +82,45 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 #pragma mark -
 
+- (NSString *) titleForRules:(NSArray *) rules booleanAndOperation:(BOOL) operation {
+	NSMutableString *title = [NSMutableString string];
+	NSEnumerator *enumerator = [rules objectEnumerator];
+	id rule = nil;
+	BOOL first = YES;
+
+	while( ( rule = [enumerator nextObject] ) ) {
+		if( ! first && operation ) [title appendString:@" and "];
+		else if( ! first && ! operation ) [title appendString:@" or "];
+		[title appendString:[rule description]];
+		first = NO;
+	}
+
+	return title;
+}
+
+- (NSImage *) iconForRules:(NSArray *) rules {
+	NSImage *icon = [NSImage imageNamed:@"gearSmall"];
+	NSEnumerator *enumerator = [rules objectEnumerator];
+	JVChatViewCriterionController *rule = nil;
+	BOOL multipleType = NO;
+
+	while( ( rule = [enumerator nextObject] ) ) {
+		if( ! multipleType && [rule kind] == JVChatViewTypeCriterionKind ) {
+			if( [[rule query] intValue] == 1 ) icon = [NSImage imageNamed:@"roomTab"];
+			else if( [[rule query] intValue] == 2 ) icon = [NSImage imageNamed:@"privateChatTabNewMessage"];
+			else if( [[rule query] intValue] == 12 ) icon = [NSImage imageNamed:@"smartTranscriptTab"];
+			multipleType = YES;
+		} else if( multipleType && [rule kind] == JVChatViewTypeCriterionKind ) {
+			icon = [NSImage imageNamed:@"gearSmall"];
+			break;
+		}
+	}
+
+	return icon;
+}
+
+#pragma mark -
+
 - (int) numberOfRowsInTableView:(NSTableView *) view {
 	if( view == windowSetsTable ) return [_windowSets count];
 	else if( view == rulesTable ) {
@@ -101,7 +140,9 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		if( [[info objectForKey:@"currentWindow"] boolValue] ) return [NSImage imageNamed:@"targetWindow"];
 		else return [NSImage imageNamed:@"window"];
 	} else if( view == rulesTable ) {
-		return [NSImage imageNamed:@"roomTab"];
+		NSArray *ruleSets = [self selectedRules];
+		NSDictionary *info = [ruleSets objectAtIndex:row];
+		return [self iconForRules:[info objectForKey:@"criterion"]];
 	} else return nil;
 }
 
@@ -117,7 +158,9 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		else if( c == 1 ) [(JVDetailCell *) cell setInformationText:NSLocalizedString( @"1 rule", "one rule info label" )];
 		else [(JVDetailCell *) cell setInformationText:[NSString stringWithFormat:NSLocalizedString( @"%d rules", "number of rules info label" ), c]];
 	} else if( view == rulesTable ) {
-		[(JVDetailCell *) cell setMainText:@"Test rule"];
+		NSArray *ruleSets = [self selectedRules];
+		NSDictionary *info = [ruleSets objectAtIndex:row];
+		[(JVDetailCell *) cell setMainText:[self titleForRules:[info objectForKey:@"criterion"] booleanAndOperation:( [[info objectForKey:@"operation"] intValue] == 2 )]];
 	} else if( view == ruleEditTable ) {
 		if( [[column identifier] isEqualToString:@"criteria"] ) {
 			[(JVViewCell *)cell setView:[(JVChatViewCriterionController *)[[self editingCriterion] objectAtIndex:row] view]];
@@ -125,6 +168,16 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 			[cell setEnabled:( [self numberOfRowsInTableView:view] > 1 )];
 		}
 	}
+}
+
+- (NSString *) tableView:(NSTableView *) view toolTipForTableColumn:(NSTableColumn *) column row:(int) row {
+	if( view == rulesTable ) {
+		NSArray *ruleSets = [self selectedRules];
+		NSDictionary *info = [ruleSets objectAtIndex:row];
+		return [self titleForRules:[info objectForKey:@"criterion"] booleanAndOperation:( [[info objectForKey:@"operation"] intValue] == 2 )];
+	}
+
+	return nil;
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
@@ -395,6 +448,8 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (IBAction) editRuleSet:(id) sender {
+	if( _selectedRuleSet == NSNotFound ) return;
+
 	_makingNewRuleSet = NO;
 
 	NSMutableDictionary *info = [[self selectedRules] objectAtIndex:_selectedRuleSet];

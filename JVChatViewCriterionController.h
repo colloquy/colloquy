@@ -35,14 +35,17 @@ typedef enum JVChatViewCriterionOperation { // corresponds to the nib menu tags
 	IBOutlet NSTabView *tabView;
 
 	IBOutlet NSMenu *kindMenu;
+	IBOutlet NSMenu *viewTypesMenu;
+	IBOutlet NSMenu *serverTypesMenu;
+	IBOutlet NSMenu *openMethodsMenu;
 
 	IBOutlet NSPopUpButton *textKindButton;
 	IBOutlet NSPopUpButton *booleanKindButton;
 	IBOutlet NSPopUpButton *listKindButton;
-	
+
 	IBOutlet NSPopUpButton *textOperationButton;
 	IBOutlet NSPopUpButton *listOperationButton;
-	
+
 	IBOutlet NSTextField *textQuery;
 	IBOutlet NSPopUpButton *listQuery;
 	

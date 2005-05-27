@@ -16,11 +16,14 @@
                 listKindButton = NSPopUpButton; 
                 listOperationButton = NSPopUpButton; 
                 listQuery = NSPopUpButton; 
+                openMethodsMenu = NSMenu; 
+                serverTypesMenu = NSMenu; 
                 subview = NSView; 
                 tabView = NSTabView; 
                 textKindButton = NSPopUpButton; 
                 textOperationButton = NSPopUpButton; 
                 textQuery = NSTextField; 
+                viewTypesMenu = NSMenu; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
