@@ -135,18 +135,22 @@
 		case JVChatViewTitleCriterionKind:
 		case JVChatViewConnectionAddressCriterionKind:
 			[self setFormat:JVChatViewTextCriterionFormat];
+			[self setQuery:@""];
 			break;
 		case JVChatViewTypeCriterionKind:
 			[self setFormat:JVChatViewListCriterionFormat];
 			[listQuery setMenu:viewTypesMenu];
+			[self changeQuery:nil];
 			break;
 		case JVChatViewConnectionTypeCriterionKind:
 			[self setFormat:JVChatViewListCriterionFormat];
 			[listQuery setMenu:serverTypesMenu];
+			[self changeQuery:nil];
 			break;
 		case JVChatViewOpenMethodCriterionKind:
 			[self setFormat:JVChatViewListCriterionFormat];
 			[listQuery setMenu:openMethodsMenu];
+			[self changeQuery:nil];
 			break;
 		default:
 		case JVChatViewEveryPanelCriterionKind:
