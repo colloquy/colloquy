@@ -16,10 +16,14 @@ extern NSString *JVChatViewPboardType;
 	IBOutlet NSOutlineView *chatViewsOutlineView;
 	IBOutlet MVMenuButton *viewActionButton;
 	IBOutlet MVMenuButton *favoritesButton;
+	NSString *_identifier;
 	NSMutableArray *_views;
 	id <JVChatViewController> _activeViewController;
 	BOOL _usesSmallIcons;
 }
+- (NSString *) identifier;
+- (void) setIdentifier:(NSString *) identifier;
+
 - (void) showChatViewController:(id <JVChatViewController>) controller;
 
 - (void) addChatViewController:(id <JVChatViewController>) controller;

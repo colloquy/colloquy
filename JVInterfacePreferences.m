@@ -1,6 +1,7 @@
 #import <ChatCore/NSStringAdditions.h>
 #import "JVInterfacePreferences.h"
 #import "JVChatViewCriterionController.h"
+#import "JVChatController.h"
 #import "JVDetailCell.h"
 #import "JVViewCell.h"
 
@@ -78,6 +79,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (void) saveWindowRules {
 	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_windowSets];
 	[[NSUserDefaults standardUserDefaults] setObject:data forKey:@"JVChatWindowRuleSets"];
+	[[JVChatController defaultController] reloadPreferedWindowRuleSets];
 }
 
 #pragma mark -

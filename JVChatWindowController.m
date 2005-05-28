@@ -55,6 +55,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		viewActionButton = nil;
 		favoritesButton = nil;
 		_activeViewController = nil;
+		_identifier = nil;
 		_views = [[NSMutableArray array] retain];
 		_usesSmallIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowUseSmallDrawerIcons"];
 	}
@@ -77,7 +78,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[self setShouldCascadeWindows:NO];
 	[[self window] setFrameUsingName:@"Chat Window"];
-	[[self window] setFrameAutosaveName:@""];
+
+	if( [[self identifier] length] )
+		[[self window] setFrameAutosaveName:[NSString stringWithFormat:@"Chat Window %@", [self identifier]]];
+	else [[self window] setFrameAutosaveName:@""];
+
 	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
 #ifdef NSAppKitVersionNumber10_3
@@ -112,9 +117,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[_activeViewController release];
 	[_views release];
+	[_identifier release];
 
 	_activeViewController = nil;
 	_views = nil;
+	_identifier = nil;
 
 	[super dealloc];
 }
@@ -141,6 +148,21 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
+- (NSString *) identifier {
+	return _identifier;
+}
+
+- (void) setIdentifier:(NSString *) identifier {
+	[_identifier autorelease];
+	_identifier = [identifier copyWithZone:[self zone]];
+
+	if( [identifier length] )
+		[[self window] setFrameAutosaveName:[NSString stringWithFormat:@"Chat Window %@", identifier]];
+	else [[self window] setFrameAutosaveName:@""];
+}
+
+#pragma mark -
+
 - (void) showChatViewController:(id <JVChatViewController>) controller {
 	NSAssert1( [_views containsObject:controller], @"%@ is not a member of this window controller.", controller );
 
@@ -161,10 +183,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (IBAction) getInfo:(id) sender {
 	id item = [self selectedListItem];
-	if( [item conformsToProtocol:@protocol( JVInspection )] )
+	if( [item conformsToProtocol:@protocol( JVInspection )] ) {
 		if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSAlternateKeyMask )
 			[JVInspectorController showInspector:sender];
 		else [[JVInspectorController inspectorOfObject:item] show:sender];
+	}
 }
 
 #pragma mark -
@@ -271,13 +294,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
 
 	if( ! [_views count] ) {
-		[[self window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
 		[[self  window] orderWindow:NSWindowBelow relativeTo:[[[NSApplication sharedApplication] keyWindow] windowNumber]];
-	} else [[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
+	}
 
 	[_views insertObject:controller atIndex:index];
 	[controller setWindowController:self];
 
+	[self _saveWindowFrame];
 	[self _refreshList];
 	[self _refreshWindow];
 
@@ -867,11 +890,13 @@ end:
 }
 
 - (void) _saveWindowFrame {
-	NSEnumerator *enumerator = [[self allChatViewControllers] objectEnumerator];
-	id <JVChatViewController> controller = nil;
+	if( ! [[[self window] frameAutosaveName] length] ) {
+		NSEnumerator *enumerator = [[self allChatViewControllers] objectEnumerator];
+		id <JVChatViewController> controller = nil;
 
-	while( ( controller = [enumerator nextObject] ) )
-		[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
+		while( ( controller = [enumerator nextObject] ) )
+			[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
+	}
 }
 
 - (void) _switchViews:(id) sender {

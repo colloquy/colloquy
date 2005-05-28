@@ -7,6 +7,7 @@
 #import "MVConnectionsController.h"
 #import "JVChatWindowController.h"
 #import "JVTabbedChatWindowController.h"
+#import "JVChatViewCriterionController.h"
 #import "JVNotificationController.h"
 #import "JVChatTranscriptPanel.h"
 #import "JVSmartTranscriptPanel.h"
@@ -20,13 +21,6 @@
 
 static JVChatController *sharedInstance = nil;
 static NSMenu *smartTranscriptMenu = nil;
-
-@interface JVChatController (JVChatControllerPrivate)
-- (void) _addWindowController:(JVChatWindowController *) windowController;
-- (void) _addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller andFocus:(BOOL) focus;
-@end
-
-#pragma mark -
 
 @implementation JVChatController
 + (JVChatController *) defaultController {
@@ -87,6 +81,9 @@ static NSMenu *smartTranscriptMenu = nil;
 		_chatWindows = [[NSMutableArray array] retain];
 		_chatControllers = [[NSMutableArray array] retain];
 
+		_windowRuleSets = nil;
+		[self reloadPreferedWindowRuleSets];
+
 		NSEnumerator *smartTranscriptsEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVSmartTranscripts"] objectEnumerator];
 		NSData *archivedSmartTranscript = nil;
 		while( ( archivedSmartTranscript = [smartTranscriptsEnumerator nextObject] ) )
@@ -110,11 +107,83 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	[_chatWindows release];
 	[_chatControllers release];
+	[_windowRuleSets release];
 
 	_chatWindows = nil;
 	_chatControllers = nil;
+	_windowRuleSets = nil;
 
 	[super dealloc];
+}
+
+#pragma mark -
+
+- (void) addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller userInitiated:(BOOL) initiated {
+	JVChatWindowController *windowController = nil;
+
+	NSEnumerator *wenumerator = [_windowRuleSets objectEnumerator];
+	NSDictionary *windowSet = nil;
+	BOOL finalMatch = NO;
+
+	while( ( windowSet = [wenumerator nextObject] ) ) {
+		NSEnumerator *renumerator = [[windowSet objectForKey:@"rules"] objectEnumerator];
+		NSDictionary *ruleSet = nil;
+
+		while( ( ruleSet = [renumerator nextObject] ) ) {
+			BOOL andOperation = ( [[ruleSet objectForKey:@"operation"] intValue] == 2 );
+			BOOL ignore = [[ruleSet objectForKey:@"ignoreCase"] boolValue];
+			BOOL match = ( andOperation ? YES : NO );
+
+			NSEnumerator *cenumerator = [[ruleSet objectForKey:@"criterion"] objectEnumerator];
+			JVChatViewCriterionController *criterion = nil;
+
+			while( ( criterion = [cenumerator nextObject] ) ) {
+				BOOL localMatch = [criterion matchChatView:controller ignoringCase:ignore];
+				match = ( andOperation ? ( match & localMatch ) : ( match | localMatch ) );
+				if( ! localMatch && andOperation ) break; // fails, this wont match with all rules
+				else if( localMatch && ! andOperation ) break; // passes one, this is enough to match under "any rules"
+			}
+
+			if( match ) {
+				finalMatch = YES;
+				break;
+			}
+		}
+
+		if( finalMatch ) break;
+	}
+
+	if( finalMatch && windowSet ) {
+		if( [[windowSet objectForKey:@"currentWindow"] boolValue] ) {
+			wenumerator = [_chatWindows objectEnumerator];
+			while( ( windowController = [wenumerator nextObject] ) )
+				if( [[windowController window] isMainWindow] ) break;
+			if( ! windowController ) windowController = [_chatWindows lastObject];
+		} else if( [[windowSet objectForKey:@"identifier"] length] ) {
+			windowController = [self chatWindowControllerWithIdentifier:[windowSet objectForKey:@"identifier"]];
+		}
+	}
+
+	if( ! windowController ) windowController = [self newChatWindowController];
+
+	if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) initiated = NO;
+	if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) initiated = NO;
+
+	[windowController addChatViewController:controller];
+	if( initiated || [[windowController allChatViewControllers] count] == 1 ) {
+		[windowController showChatViewController:controller];
+		if( initiated ) [[windowController window] makeKeyAndOrderFront:nil];
+	}
+
+	if( ! [[windowController window] isVisible] )
+		[[windowController window] orderFront:nil];	
+}
+
+- (void) reloadPreferedWindowRuleSets {
+	NSData *data = [[NSUserDefaults standardUserDefaults] dataForKey:@"JVChatWindowRuleSets"];
+
+	[_windowRuleSets autorelease];
+	_windowRuleSets = ( [data length] ? [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain] : nil );
 }
 
 #pragma mark -
@@ -128,7 +197,23 @@ static NSMenu *smartTranscriptMenu = nil;
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUseTabbedWindows"] )
 		windowController = [[[JVTabbedChatWindowController alloc] init] autorelease];
 	else windowController = [[[JVChatWindowController alloc] init] autorelease];
-	[self _addWindowController:windowController];
+	[_chatWindows addObject:windowController];
+	return windowController;
+}
+
+- (JVChatWindowController *) chatWindowControllerWithIdentifier:(NSString *) identifier {
+	NSEnumerator *enumerator = [_chatWindows objectEnumerator];
+	JVChatWindowController *windowController = nil;
+
+	while( ( windowController = [enumerator nextObject] ) )
+		if( [[windowController identifier] isEqualToString:identifier] )
+			break;
+
+	if( ! windowController ) {
+		windowController = [self newChatWindowController];
+		[windowController setIdentifier:identifier];
+	}
+
 	return windowController;
 }
 
@@ -209,7 +294,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	if( ! ret && ! exists ) {
 		if( ( ret = [[[JVChatRoomPanel alloc] initWithTarget:room] autorelease] ) ) {
 			[_chatControllers addObject:ret];
-			[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
+			[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 		}
 	}
 
@@ -233,7 +318,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	if( ! ret && ! exists ) {
 		if( ( ret = [[[JVDirectChatPanel alloc] initWithTarget:user] autorelease] ) ) {
 			[_chatControllers addObject:ret];
-			[self _addViewControllerToPreferedWindowController:ret andFocus:initiated];
+			[self addViewControllerToPreferedWindowController:ret userInitiated:initiated];
 		}
 	}
 
@@ -244,7 +329,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	id ret = nil;
 	if( ( ret = [[[JVChatTranscriptPanel alloc] initWithTranscript:filename] autorelease] ) ) {
 		[_chatControllers addObject:ret];
-		[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
+		[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 	}
 	return ret;
 }
@@ -255,7 +340,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	JVSmartTranscriptPanel *ret = nil;
 	if( ( ret = [[[JVSmartTranscriptPanel alloc] initWithSettings:nil] autorelease] ) ) {
 		[_chatControllers addObject:ret];
-		[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
+		[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 		[ret editSettings:nil];
 	}
 	return ret;
@@ -304,7 +389,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	if( ! ret && ! exists ) {
 		if( ( ret = [[[JVChatConsolePanel alloc] initWithConnection:connection] autorelease] ) ) {
 			[_chatControllers addObject:ret];
-			[self _addViewControllerToPreferedWindowController:ret andFocus:YES];
+			[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 		}
 	}
 
@@ -353,7 +438,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	id <JVChatViewController> view = [sender representedObject];
 	if( ! view ) return;
 	if( [view windowController] ) [[view windowController] showChatViewController:view];
-	else [self _addViewControllerToPreferedWindowController:view andFocus:YES];
+	else [self addViewControllerToPreferedWindowController:view userInitiated:YES];
 }
 
 - (IBAction) detachView:(id) sender {
@@ -487,87 +572,6 @@ static NSMenu *smartTranscriptMenu = nil;
 			[alert runModal];
 		}
 	}
-}
-
-- (void) _addWindowController:(JVChatWindowController *) windowController {
-	[_chatWindows addObject:windowController];
-}
-
-- (void) _addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller andFocus:(BOOL) focus {
-	JVChatWindowController *windowController = nil;
-	id <JVChatViewController> viewController = nil;
-	Class modeClass = NULL;
-	NSEnumerator *enumerator = nil;
-	BOOL kindOfClass = NO;
-
-	NSParameterAssert( controller != nil );
-
-	int mode = [[NSUserDefaults standardUserDefaults] integerForKey:[NSStringFromClass( [controller class] ) stringByAppendingString:@"PreferredOpenMode"]];
-	BOOL groupByServer = (BOOL) mode & 32;
-	mode &= ~32;
-
-	switch( mode ) {
-	case 0: break; // open in new window
-	case 1: // open in existing window
-	default:
-		enumerator = [_chatWindows objectEnumerator];
-		while( ( windowController = [enumerator nextObject] ) )
-			if( [[windowController window] isMainWindow] || ! [[NSApplication sharedApplication] isActive] )
-				break;
-		if( ! windowController ) windowController = [_chatWindows lastObject];
-		break;
-	case 2: // group with other rooms
-		modeClass = [JVChatRoomPanel class];
-		goto groupByClass;
-	case 3: // group with other direct chats
-		modeClass = [JVDirectChatPanel class];
-		goto groupByClass;
-	case 4: // group with other transcripts
-		modeClass = [JVChatTranscriptPanel class];
-		goto groupByClass;
-	case 5: // group with other consoles
-		modeClass = [JVChatConsolePanel class];
-		goto groupByClass;
-	case 6: // group with other chats
-		modeClass = [JVDirectChatPanel class];
-		kindOfClass = YES;
-		goto groupByClass;
-	groupByClass:
-		if( groupByServer ) {
-			if( kindOfClass ) enumerator = [[self chatViewControllersKindOfClass:modeClass] objectEnumerator];
-			else enumerator = [[self chatViewControllersOfClass:modeClass] objectEnumerator];
-			while( ( viewController = [enumerator nextObject] ) ) {
-				if( controller != viewController && [viewController connection] == [controller connection] ) {
-					windowController = [viewController windowController];
-					if( windowController ) break;
-				}
-			}
-		} else {
-			if( kindOfClass ) enumerator = [[self chatViewControllersKindOfClass:modeClass] objectEnumerator];
-			else enumerator = [[self chatViewControllersOfClass:modeClass] objectEnumerator];
-			while( ( viewController = [enumerator nextObject] ) ) {
-				if( controller != viewController ) {
-					windowController = [viewController windowController];
-					if( windowController ) break;
-				}
-			}
-		}
-		break;
-	}
-
-	if( ! windowController ) windowController = [self newChatWindowController];
-
-	if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) focus = NO;
-	if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) focus = NO;
-
-	[windowController addChatViewController:controller];
-	if( focus || [[windowController allChatViewControllers] count] == 1 ) {
-		[windowController showChatViewController:controller];
-		if( focus ) [[windowController window] makeKeyAndOrderFront:nil];
-	}
-
-	if( ! [[windowController window] isVisible] )
-		[[windowController window] orderFront:nil];
 }
 
 - (IBAction) _checkMemos:(id) sender {
