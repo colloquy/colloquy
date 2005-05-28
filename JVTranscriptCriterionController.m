@@ -109,8 +109,7 @@
 		[listOperationButton selectItemAtIndex:[listOperationButton indexOfItemWithTag:[self operation]]];
 		int index = [listQuery indexOfItemWithRepresentedObject:[self query]];
 		if( index == -1 && [[self query] isKindOfClass:[NSNumber class]] )
-			index = [(NSNumber *)[self query] intValue];
-		if( [listQuery numberOfItems] < index ) index = -1;
+			index = [listQuery indexOfItemWithTag:[(NSNumber *)[self query] intValue]];
 		[listQuery selectItemAtIndex:index];
 	}
 }
@@ -231,7 +230,7 @@
 	} else if( [self format] == JVTranscriptListCriterionFormat ) {
 		NSMenuItem *mitem = [listQuery selectedItem];
 		if( [mitem representedObject] ) [self setQuery:[mitem representedObject]];
-		else [self setQuery:[NSNumber numberWithInt:[listQuery indexOfSelectedItem]]];
+		else [self setQuery:[NSNumber numberWithInt:[mitem tag]]];
 	}
 }
 
@@ -367,8 +366,7 @@
 	} else if( [self format] == JVTranscriptListCriterionFormat ) {
 		int index = [listQuery indexOfItemWithRepresentedObject:query];
 		if( index == -1 && [query isKindOfClass:[NSNumber class]] )
-			index = [(NSNumber *)query intValue];
-		if( [listQuery numberOfItems] < index ) index = -1;
+			index = [listQuery indexOfItemWithTag:[(NSNumber *)query intValue]];
 		[listQuery selectItemAtIndex:index];
 	}
 }
@@ -461,5 +459,20 @@
 	} else if( [self format] == JVTranscriptListCriterionFormat ) {
 		return listQuery;
 	} else return nil;
+}
+
+#pragma mark -
+
+- (NSString *) description {
+	[self view];
+	if( [self format] == JVTranscriptTextCriterionFormat ) {
+		return [NSString stringWithFormat:@"%@ %@ \"%@\"", [textKindButton titleOfSelectedItem], [textOperationButton titleOfSelectedItem], [self query]];
+	} else if( [self format] == JVTranscriptDateCriterionFormat ) {
+		return [NSString stringWithFormat:@"%@ %@ %@ %@", [dateKindButton titleOfSelectedItem], [dateOperationButton titleOfSelectedItem], [self query], [dateUnitsButton titleOfSelectedItem]];
+	} else if( [self format] == JVTranscriptBooleanCriterionFormat ) {
+		return [booleanKindButton titleOfSelectedItem];
+	} else if( [self format] == JVTranscriptListCriterionFormat ) {
+		return [NSString stringWithFormat:@"%@ %@ %@", [listKindButton titleOfSelectedItem], [listOperationButton titleOfSelectedItem], [listQuery titleOfSelectedItem]];
+	}
 }
 @end
