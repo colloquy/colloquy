@@ -10,7 +10,7 @@
 }
 
 - (NSImage *) imageForPreferenceNamed:(NSString *) name {
-	return [[[NSImage imageNamed:@"TranscriptPreferences"] retain] autorelease];
+	return [NSImage imageNamed:@"TranscriptPreferences"];
 }
 
 - (BOOL) isResizable {
@@ -33,24 +33,9 @@
 	[menuItem setRepresentedObject:path];
 
 	[transcriptFolder selectItem:menuItem];
-
-	[folderOrganization selectItemAtIndex:[folderOrganization indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"]]];
-	[sessionHandling selectItemAtIndex:[sessionHandling indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"]]];
-
-	[logChatRooms setState:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"]];
-	[logPrivateChats setState:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"]];
-	[humanReadable setState:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatFormatXMLLogs"]];
 }
 
 #pragma mark -
-
-- (IBAction) changeLogChatRooms:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVLogChatRooms"];
-}
-
-- (IBAction) changeLogPrivateChats:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVLogPrivateChats"];
-}
 
 - (IBAction) changeTranscriptFolder:(id) sender {
 	if( [sender tag] == 3 ) {
@@ -80,17 +65,5 @@
 	}
 
 	[transcriptFolder selectItemAtIndex:[transcriptFolder indexOfItemWithTag:2]];
-}
-
-- (IBAction) changeFolderOrganization:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setInteger:[[sender selectedItem] tag] forKey:@"JVChatTranscriptFolderOrganization"];
-}
-
-- (IBAction) changeSessionHandling:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setInteger:[[sender selectedItem] tag] forKey:@"JVChatTranscriptSessionHandling"];
-}
-
-- (IBAction) changeHumanReadable:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVChatFormatXMLLogs"];
 }
 @end

@@ -12,7 +12,7 @@
 }
 
 - (NSImage *) imageForPreferenceNamed:(NSString *) name {
-	return [[[NSImage imageNamed:@"BehaviorPreferences"] retain] autorelease];
+	return [NSImage imageNamed:@"BehaviorPreferences"];
 }
 
 - (BOOL) isResizable {
@@ -20,37 +20,6 @@
 }
 
 - (void) initializeFromDefaults {
-	[[newRooms menu] setAutoenablesItems:NO];
-	[[newChats menu] setAutoenablesItems:NO];
-	[[newTranscripts menu] setAutoenablesItems:NO];
-	[[newConsoles menu] setAutoenablesItems:NO];
-
-	int value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatRoomPanelPreferredOpenMode"] & ~32;
-	int index = [newRooms indexOfItemWithTag:value];
-	if( index >= 0 ) [newRooms selectItemAtIndex:index];
-	[self changePreferredWindow:newRooms];
-
-	value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVDirectChatPanelPreferredOpenMode"] & ~32;
-	index = [newChats indexOfItemWithTag:value];
-	if( index >= 0 ) [newChats selectItemAtIndex:index];
-	[self changePreferredWindow:newChats];
-
-	value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptPanelPreferredOpenMode"] & ~32;
-	index = [newTranscripts indexOfItemWithTag:value];
-	if( index >= 0 ) [newTranscripts selectItemAtIndex:index];
-	[self changePreferredWindow:newTranscripts];
-
-	value = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatConsolePanelPreferredOpenMode"] & ~32;
-	index = [newConsoles indexOfItemWithTag:value];
-	if( index >= 0 ) [newConsoles selectItemAtIndex:index];
-	[self changePreferredWindow:newConsoles];
-
-	[sortByStatus setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"]];
-	[tabbedWindows setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUseTabbedWindows"]];
-
-	[checkSpelling setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatSpellChecking"]];
-	[detectNaturalActions setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"]];
-
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnReturn"] )
 		[returnKeyAction selectItemAtIndex:[returnKeyAction indexOfItemWithTag:0]];
 	else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatActionOnReturn"] )
@@ -68,73 +37,9 @@
 
 	[messageScrollback setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
 	[messageScrollbackStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
-
-	if( NSAppKitVersionNumber >= 700. ) {
-		[tabKeyComplete setEnabled:YES];
-		[tabKeyComplete setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
-	} else {
-		[tabKeyCompleteLabel setObjectValue:@""];
-	}
 }
 
 #pragma mark -
-
-- (IBAction) changeSortByStatus:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVSortRoomMembersByStatus"];
-
-	NSEnumerator *enumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
-	JVChatRoomPanel *room = nil;
-	while( ( room = [enumerator nextObject] ) )
-		[room resortMembers];
-}
-
-- (IBAction) changeTabbedWindows:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVUseTabbedWindows"];
-}
-
-- (IBAction) changePreferredWindow:(id) sender {
-	NSString *key = nil;
-
-	if( sender == newRooms ) key = @"JVChatRoomPanelPreferredOpenMode";
-	else if( sender == newChats ) key = @"JVDirectChatPanelPreferredOpenMode";
-	else if( sender == newTranscripts ) key = @"JVChatTranscriptPanelPreferredOpenMode";
-	else if( sender == newConsoles ) key = @"JVChatConsolePanelPreferredOpenMode";
-	else return;
-
-	int new = [[sender selectedItem] tag];
-	BOOL groupByServer = (BOOL) [[NSUserDefaults standardUserDefaults] integerForKey:key] & 32;
-
-	if( [[sender selectedItem] tag] == 32 ) {
-		NSMenuItem *item = [sender selectedItem];
-		new = [[NSUserDefaults standardUserDefaults] integerForKey:key] & ~32;
-		groupByServer = ! groupByServer;
-		[sender selectItemAtIndex:[sender indexOfItemWithTag:new]];
-		[item setState:( groupByServer ? NSOnState : NSOffState )];
-	} else if( [[sender selectedItem] tag] == 0 || [[sender selectedItem] tag] == 1 || [[sender selectedItem] tag] == 4 ) {
-		NSMenuItem *item = ( [sender indexOfItemWithTag:32] >= 0 ? [sender itemAtIndex:[sender indexOfItemWithTag:32]] : nil );
-		[item setState:NSOffState];
-		[item setEnabled:NO];
-		groupByServer = NO;
-	} else {
-		NSMenuItem *item = ( [sender indexOfItemWithTag:32] >= 0 ? [sender itemAtIndex:[sender indexOfItemWithTag:32]] : nil );
-		[item setState:( groupByServer ? NSOnState : NSOffState )];
-		[item setEnabled:YES];
-	}
-
-	if( groupByServer ) new |= 32;
-
-	[[NSUserDefaults standardUserDefaults] setInteger:new forKey:key];
-}
-
-#pragma mark -
-
-- (IBAction) changeSpellChecking:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVChatSpellChecking"];
-}
-
-- (IBAction) changeNaturalActionDetection:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"MVChatNaturalActions"];
-}
 
 - (IBAction) changeSendOnReturnAction:(id) sender {
 	if( [[sender selectedItem] tag] == 0 ) {
@@ -166,17 +71,13 @@
 	int size = [sender intValue];
 	[sendHistory setIntValue:size];
 	[sendHistoryStepper setIntValue:size];
-	[[NSUserDefaults standardUserDefaults] setInteger:[sendHistory intValue] forKey:@"JVChatMaximumHistory"];
+	[[NSUserDefaults standardUserDefaults] setInteger:size forKey:@"JVChatMaximumHistory"];
 }
 
 - (IBAction) changeMessageScrollback:(id) sender {
 	int size = [sender intValue];
 	[messageScrollback setIntValue:size];
 	[messageScrollbackStepper setIntValue:size];
-	[[NSUserDefaults standardUserDefaults] setInteger:[messageScrollback intValue] forKey:@"JVChatScrollbackLimit"];
-}
-
-- (IBAction) changeTabKeyComplete:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVUsePantherTextCompleteOnTab"];
+	[[NSUserDefaults standardUserDefaults] setInteger:size forKey:@"JVChatScrollbackLimit"];
 }
 @end

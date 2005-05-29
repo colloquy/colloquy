@@ -2,25 +2,10 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {
-                changeAutoAccept = id; 
-                changePortRange = id; 
-                changeRemoveTransfers = id; 
-                changeSaveDownloads = id; 
-                toggleOpenSafeFiles = id; 
-                toggleSendPassive = id; 
-            }; 
+            ACTIONS = {changePortRange = id; changeSaveDownloads = id; }; 
             CLASS = JVFileTransferPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                autoAccept = NSPopUpButton; 
-                maxRate = NSTextField; 
-                minRate = NSTextField; 
-                openSafe = NSButton; 
-                removeTransfers = NSPopUpButton; 
-                saveDownloads = NSPopUpButton; 
-                sendPassive = NSButton; 
-            }; 
+            OUTLETS = {maxRate = NSTextField; minRate = NSTextField; saveDownloads = NSPopUpButton; }; 
             SUPERCLASS = NSPreferencesModule; 
         }, 
         {

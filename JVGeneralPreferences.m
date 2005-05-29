@@ -11,7 +11,7 @@
 }
 
 - (NSImage *) imageForPreferenceNamed:(NSString *) name {
-	return [[[NSImage imageNamed:@"GeneralPreferences"] retain] autorelease];
+	return [NSImage imageNamed:@"GeneralPreferences"];
 }
 
 - (BOOL) isResizable {
@@ -20,11 +20,6 @@
 
 - (void) initializeFromDefaults {
 	[self buildEncodingMenu];
-
-	[yourName selectItemAtIndex:[yourName indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"]]];
-	[buddyNames selectItemAtIndex:[yourName indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyNameStyle"]]];
-
-	[autoCheckVersion setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"]];
 }
 
 - (void) buildEncodingMenu {
@@ -40,30 +35,13 @@
 			continue;
 		}
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:NULL keyEquivalent:@""] autorelease];
 		if( defaultEncoding == JVAllowedTextEncodings[i] ) [menuItem setState:NSOnState];
 		[menuItem setTag:JVAllowedTextEncodings[i]];
-		[menuItem setTarget:self];
 		[menu addItem:menuItem];
 	}
 
+	[menu setAutoenablesItems:NO];
 	[encoding setMenu:menu];
-}
-
-- (IBAction) changeEncoding:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:@"JVChatEncoding"];
-}
-
-- (IBAction) changeSelfPreferredName:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setInteger:[[sender selectedItem] tag] forKey:@"JVChatSelfNameStyle"];
-}
-
-- (IBAction) changeBuddyPreferredName:(id) sender {
-	[JVBuddy setPreferredName:(JVBuddyName)[[sender selectedItem] tag]];
-	[[NSUserDefaults standardUserDefaults] setInteger:[[sender selectedItem] tag] forKey:@"JVChatBuddyNameStyle"];
-}
-
-- (IBAction) changeAutomaticVersionCheck:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVEnableAutomaticSoftwareUpdateCheck"];
 }
 @end

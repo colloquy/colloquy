@@ -12,7 +12,7 @@
 }
 
 - (NSImage *) imageForPreferenceNamed:(NSString *) name {
-	return [[[NSImage imageNamed:@"FileTransferPreferences"] retain] autorelease];
+	return [NSImage imageNamed:@"FileTransferPreferences"];
 }
 
 - (BOOL) isResizable {
@@ -39,21 +39,12 @@
 	} else {
 		[saveDownloads selectItem:menuItem];
 	}
-
-	[autoAccept selectItemAtIndex:[autoAccept indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"]]];
-	[removeTransfers selectItemAtIndex:[removeTransfers indexOfItemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"]]];
-	[openSafe setState:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVOpenSafeFiles"]];
-	[sendPassive setState:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"]];
 }
 
 - (IBAction) changePortRange:(id) sender {
 	NSRange range = NSMakeRange( [minRate intValue], ( [maxRate intValue] - [minRate intValue] ) );
 	[[NSUserDefaults standardUserDefaults] setObject:NSStringFromRange( range ) forKey:@"JVFileTransferPortRange"];
 	[MVFileTransfer setFileTransferPortRange:range];
-}
-
-- (IBAction) changeAutoAccept:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:@"JVAutoAcceptFilesFrom"];
 }
 
 - (IBAction) changeSaveDownloads:(id) sender {
@@ -90,17 +81,5 @@
 		[saveDownloads selectItemAtIndex:[saveDownloads indexOfItemWithTag:1]];
 		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVAskForTransferSaveLocation"];
 	}
-}
-
-- (IBAction) changeRemoveTransfers:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:@"JVRemoveTransferedItems"];
-}
-
-- (IBAction) toggleOpenSafeFiles:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVOpenSafeFiles"];
-}
-
-- (IBAction) toggleSendPassive:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVSendFilesPassively"];
 }
 @end

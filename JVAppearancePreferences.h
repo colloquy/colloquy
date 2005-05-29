@@ -13,7 +13,6 @@
 	IBOutlet NSStepper *minimumFontSizeStepper;
 	IBOutlet NSTextField *baseFontSize;
 	IBOutlet NSStepper *baseFontSizeStepper;
-	IBOutlet NSButton *useStyleFont;
 	IBOutlet NSDrawer *optionsDrawer;
 	IBOutlet NSTableView *optionsTable;
 	IBOutlet NSPanel *newVariantPanel;
@@ -36,8 +35,6 @@
 
 - (IBAction) changeDefaultChatStyle:(id) sender;
 - (IBAction) changeDefaultEmoticons:(id) sender;
-
-- (IBAction) changeUseStyleFont:(id) sender;
 
 - (IBAction) showOptions:(id) sender;
 

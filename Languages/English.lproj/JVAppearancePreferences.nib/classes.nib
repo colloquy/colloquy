@@ -8,10 +8,8 @@
                 changeDefaultChatStyle = id; 
                 changeDefaultEmoticons = id; 
                 changeMinimumFontSize = id; 
-                changeUseStyleFont = id; 
                 closeNewVariantSheet = id; 
                 createNewVariant = id; 
-                noGraphicEmoticons = id; 
                 showOptions = id; 
             }; 
             CLASS = JVAppearancePreferences; 
@@ -26,10 +24,9 @@
                 newVariantPanel = NSPanel; 
                 optionsDrawer = NSDrawer; 
                 optionsTable = NSTableView; 
-                preview = WebView; 
+                preview = JVStyleView; 
                 standardFont = JVFontPreviewField; 
                 styles = NSPopUpButton; 
-                useStyleFont = NSButton; 
             }; 
             SUPERCLASS = NSPreferencesModule; 
         }, 

@@ -9,10 +9,10 @@
 		<key>209</key>
 		<string>505 398 270 342 0 0 1280 832 </string>
 		<key>5</key>
-		<string>405 370 470 399 0 0 1280 832 </string>
+		<string>367 370 545 399 0 0 1280 832 </string>
 	</dict>
 	<key>IBFramework Version</key>
-	<string>364.0</string>
+	<string>437.0</string>
 	<key>IBGroupedObjects</key>
 	<dict>
 		<key>0</key>
@@ -33,11 +33,16 @@
 	</dict>
 	<key>IBLastGroupID</key>
 	<string>15</string>
+	<key>IBLockedObjects</key>
+	<array>
+		<integer>6</integer>
+		<integer>5</integer>
+	</array>
 	<key>IBOpenObjects</key>
 	<array>
 		<integer>5</integer>
 	</array>
 	<key>IBSystem Version</key>
-	<string>7W77</string>
+	<string>8B15</string>
 </dict>
 </plist>

@@ -66,7 +66,7 @@
 }
 
 - (NSImage *) imageForPreferenceNamed:(NSString *) name {
-	return [[[NSImage imageNamed:@"AppearancePreferences"] retain] autorelease];
+	return [NSImage imageNamed:@"AppearancePreferences"];
 }
 
 - (BOOL) isResizable {
@@ -122,8 +122,6 @@
 	[preview setPolicyDelegate:self];
 	[preview setUIDelegate:self];
 	[optionsTable setRefusesFirstResponder:YES];
-
-	[useStyleFont setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputUsesStyleFont"]];
 
 	NSTableColumn *column = [optionsTable tableColumnWithIdentifier:@"key"];
 	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
@@ -208,12 +206,6 @@
 
 - (IBAction) changeDefaultEmoticons:(id) sender {
 	[self selectEmoticonsWithIdentifier:[sender representedObject]];
-}
-
-#pragma mark -
-
-- (IBAction) changeUseStyleFont:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVChatInputUsesStyleFont"];
 }
 
 #pragma mark -

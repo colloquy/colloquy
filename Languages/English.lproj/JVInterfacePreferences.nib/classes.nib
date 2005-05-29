@@ -19,7 +19,6 @@
             CLASS = JVInterfacePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                alwaysShowTabs = NSButton; 
                 drawerSide = NSPopUpButton; 
                 editRuleButton = NSButton; 
                 editWindowButton = NSButton; 
@@ -30,8 +29,6 @@
                 ruleEditTable = NSTableView; 
                 ruleOperation = NSPopUpButton; 
                 rulesTable = NSTableView; 
-                showRoomPrefixes = NSButton; 
-                sortByStatus = NSButton; 
                 windowEditPanel = NSPanel; 
                 windowEditSaveButton = NSButton; 
                 windowSetsTable = NSTableView; 
