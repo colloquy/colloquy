@@ -5,8 +5,10 @@
 	IBOutlet NSTableView *rulesTable;
 	IBOutlet NSButton *editWindowButton;
 	IBOutlet NSButton *editRuleButton;
+	IBOutlet NSPopUpButton *drawerSide;
 	IBOutlet NSPopUpButton *interfaceStyle;
 	IBOutlet NSButton *sortByStatus;
+	IBOutlet NSButton *showRoomPrefixes;
 	IBOutlet NSButton *alwaysShowTabs;
 
 	IBOutlet NSPanel *windowEditPanel;
@@ -44,6 +46,5 @@
 - (IBAction) cancelRuleSet:(id) sender;
 
 - (IBAction) changeSortByStatus:(id) sender;
-- (IBAction) changeWindowInterfaceStyle:(id) sender;
-- (IBAction) changeTabBarAlwaysVisible:(id) sender;
+- (IBAction) changeShowFullRoomName:(id) sender;
 @end

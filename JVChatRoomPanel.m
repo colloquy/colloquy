@@ -109,6 +109,8 @@
 #pragma mark -
 
 - (NSString *) title {
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"] )
+		return [[self target] name];
 	return [[self target] displayName];
 }
 

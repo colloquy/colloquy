@@ -8,6 +8,8 @@
                 addWindowSet = id; 
                 cancelRuleSet = id; 
                 cancelWindowSet = id; 
+                changeShowFullRoomName = id; 
+                changeSortByStatus = id; 
                 editRuleSet = id; 
                 editWindowSet = id; 
                 removeRuleCriterionRow = id; 
@@ -18,6 +20,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 alwaysShowTabs = NSButton; 
+                drawerSide = NSPopUpButton; 
                 editRuleButton = NSButton; 
                 editWindowButton = NSButton; 
                 ignoreCase = NSButton; 
@@ -27,6 +30,7 @@
                 ruleEditTable = NSTableView; 
                 ruleOperation = NSPopUpButton; 
                 rulesTable = NSTableView; 
+                showRoomPrefixes = NSButton; 
                 sortByStatus = NSButton; 
                 windowEditPanel = NSPanel; 
                 windowEditSaveButton = NSButton; 

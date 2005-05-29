@@ -73,11 +73,6 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	[windowSetsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
 	[windowSetsTable reloadData];
-
-	[interfaceStyle selectItemAtIndex:[interfaceStyle indexOfItemWithTag:(int)[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUseTabbedWindows"]]];
-	[sortByStatus setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"]];
-	[alwaysShowTabs setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"]];
-	[alwaysShowTabs setHidden:( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUseTabbedWindows"] )];
 }
 
 #pragma mark -
@@ -519,20 +514,16 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 #pragma mark -
 
 - (IBAction) changeSortByStatus:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVSortRoomMembersByStatus"];
-
 	NSEnumerator *enumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
 	JVChatRoomPanel *room = nil;
 	while( ( room = [enumerator nextObject] ) )
 		[room resortMembers];
 }
 
-- (IBAction) changeWindowInterfaceStyle:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[[sender selectedItem] tag] forKey:@"JVUseTabbedWindows"];
-	[alwaysShowTabs setHidden:( ! [[sender selectedItem] tag] )];
-}
-
-- (IBAction) changeTabBarAlwaysVisible:(id) sender {
-	[[NSUserDefaults standardUserDefaults] setBool:(BOOL)[sender state] forKey:@"JVTabBarAlwaysVisible"];
+- (IBAction) changeShowFullRoomName:(id) sender {
+	NSEnumerator *enumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
+	JVChatRoomPanel *room = nil;
+	while( ( room = [enumerator nextObject] ) )
+		[[room windowController] reloadListItem:room andChildren:NO];
 }
 @end

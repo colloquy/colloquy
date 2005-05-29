@@ -94,7 +94,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( drawerSize.width ) [viewsDrawer setContentSize:drawerSize];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] )
-		[viewsDrawer performSelector:@selector( open: ) withObject:nil afterDelay:0.0];
+		[self performSelector:@selector( openViewsDrawer: ) withObject:nil afterDelay:0.0];
 
 	[self _refreshList];
 }
@@ -443,21 +443,26 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) toggleViewsDrawer:(id) sender {
-	[viewsDrawer toggle:sender];
-
-	if( [viewsDrawer state] == NSDrawerClosedState || [viewsDrawer state] == NSDrawerClosingState )
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVChatWindowDrawerOpen"];
-	else if( [viewsDrawer state] == NSDrawerOpenState || [viewsDrawer state] == NSDrawerOpeningState )
+	if( [viewsDrawer state] == NSDrawerClosedState || [viewsDrawer state] == NSDrawerClosingState ) {
+		[self openViewsDrawer:sender];
 		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVChatWindowDrawerOpen"];
+	} else if( [viewsDrawer state] == NSDrawerOpenState || [viewsDrawer state] == NSDrawerOpeningState ) {
+		[self closeViewsDrawer:sender];
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVChatWindowDrawerOpen"];
+	}
 }
 
 - (IBAction) openViewsDrawer:(id) sender {
-	[viewsDrawer open:sender];
+	int side = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatWindowDrawerSide"];
+	if( side == -1 ) [viewsDrawer openOnEdge:NSMinXEdge];
+	else if( side == 1 ) [viewsDrawer openOnEdge:NSMaxXEdge];
+	else [viewsDrawer open];
+
 	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVChatWindowDrawerOpen"];
 }
 
 - (IBAction) closeViewsDrawer:(id) sender {
-	[viewsDrawer close:sender];
+	[viewsDrawer close];
 	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVChatWindowDrawerOpen"];
 }
 
