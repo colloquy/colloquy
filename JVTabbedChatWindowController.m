@@ -54,6 +54,7 @@
 
 	[[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER, nil]];
 
+	_forceTabBarVisible = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"];
 	[self updateTabBarVisibilityAndAnimate:NO];
 
 	[[self window] useOptimizedDrawing:YES];

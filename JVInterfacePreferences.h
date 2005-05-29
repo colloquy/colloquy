@@ -42,4 +42,8 @@
 - (IBAction) editRuleSet:(id) sender;
 - (IBAction) saveRuleSet:(id) sender;
 - (IBAction) cancelRuleSet:(id) sender;
+
+- (IBAction) changeSortByStatus:(id) sender;
+- (IBAction) changeWindowInterfaceStyle:(id) sender;
+- (IBAction) changeTabBarAlwaysVisible:(id) sender;
 @end
