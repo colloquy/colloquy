@@ -934,7 +934,13 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[[send textStorage] deleteCharactersInRange:NSMakeRange( 0, range.location )];
 	}
 
+	NSDictionary *typingAttributes = [[[send typingAttributes] retain] autorelease];
+
 	[send reset:nil];
+
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputRetainsFormatting"] )
+		[send setTypingAttributes:typingAttributes];
+
 	[self textDidChange:nil];
 	[display scrollToBottom];
 }
@@ -1091,7 +1097,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event {
-	[send reset:nil];
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputRetainsFormatting"] || ! [[send textStorage] length] )
+		[send reset:nil];
+	else [send setString:@""];
 	return YES;
 }
 
