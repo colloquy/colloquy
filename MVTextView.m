@@ -41,9 +41,6 @@
 
 	if( [newArray count] > 0 )
 		[super interpretKeyEvents:newArray];
-
-	if( ! [[self textStorage] length] )
-		[self reset:nil];
 }
 
 - (BOOL) checkKeyEvent:(NSEvent *) event {
