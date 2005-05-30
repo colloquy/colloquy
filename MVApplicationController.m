@@ -286,7 +286,7 @@ static BOOL applicationIsTerminating = NO;
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"General", "general preference pane name" ) owner:[JVGeneralPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Interface", "interface preference pane name" ) owner:[JVInterfacePreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Appearance", "appearance preference pane name" ) owner:[JVAppearancePreferences sharedInstance]];
-	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Notification", "notification preference pane name" ) owner:[JVNotificationPreferences sharedInstance]];
+	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Alerts", "alerts preference pane name" ) owner:[JVNotificationPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transcripts", "chat transcript preference pane name" ) owner:[JVTranscriptPreferences sharedInstance]];
 	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Behavior", "behavior preference pane name" ) owner:[JVBehaviorPreferences sharedInstance]];
@@ -389,9 +389,9 @@ static BOOL applicationIsTerminating = NO;
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 #ifdef DEBUG
 	NSDebugEnabled = YES;
-//	NSZombieEnabled = YES;
-//	NSDeallocateZombies = NO;
-//	[NSAutoreleasePool enableFreedObjectCheck:YES];
+	NSZombieEnabled = YES;
+	NSDeallocateZombies = NO;
+	[NSAutoreleasePool enableFreedObjectCheck:YES];
 #endif
 }
 
