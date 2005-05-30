@@ -42,7 +42,9 @@
                 showBuddyList = id; 
                 showConnectionManager = id; 
                 showPreferences = id; 
+                showTranscriptBrowser = id; 
                 showTransferManager = id; 
+                terminateWithoutConfirm = id; 
             }; 
             CLASS = MVApplicationController; 
             LANGUAGE = ObjC; 

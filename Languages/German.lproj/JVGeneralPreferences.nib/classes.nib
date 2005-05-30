@@ -2,20 +2,9 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {
-                changeAutomaticVersionCheck = id; 
-                changeBuddyPreferredName = id; 
-                changeEncoding = id; 
-                changeSelfPreferredName = id; 
-            }; 
             CLASS = JVGeneralPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                autoCheckVersion = NSButton; 
-                buddyNames = NSPopUpButton; 
-                encoding = NSPopUpButton; 
-                yourName = NSPopUpButton; 
-            }; 
+            OUTLETS = {encoding = NSPopUpButton; }; 
             SUPERCLASS = NSPreferencesModule; 
         }, 
         {
