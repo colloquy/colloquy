@@ -59,6 +59,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		_views = [[NSMutableArray array] retain];
 		_usesSmallIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowUseSmallDrawerIcons"];
 	}
+
 	return self;
 }
 
@@ -277,8 +278,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (id <JVChatListItem>) selectedListItem {
 	long index = -1;
-	if( ( index = [chatViewsOutlineView selectedRow] ) == -1 )
-		return nil;
+	if( ( index = [chatViewsOutlineView selectedRow] ) == -1 ) return nil;
 	return [chatViewsOutlineView itemAtRow:index];
 }
 
@@ -317,7 +317,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSAssert1( [_views containsObject:controller], @"%@ is not a member of this window controller.", controller );
 
 	if( _activeViewController == controller ) {
-		[_activeViewController autorelease];
+		[_activeViewController release];
 		_activeViewController = nil;
 	}
 
@@ -337,7 +337,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) removeAllChatViewControllers {
-	[_activeViewController autorelease];
+	[_activeViewController release];
 	_activeViewController = nil;
 
 	NSEnumerator *enumerator = [_views objectEnumerator];
@@ -367,17 +367,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) replaceChatViewControllerAtIndex:(unsigned int) index withController:(id <JVChatViewController>) controller {
-	id <JVChatViewController> oldController = nil;
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ is already a member of this window controller.", controller );
 	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
 
-	[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
-
-	oldController = [_views objectAtIndex:index];
+	id <JVChatViewController> oldController = [_views objectAtIndex:index];
 
 	if( _activeViewController == oldController ) {
-		[_activeViewController autorelease];
+		[_activeViewController release];
 		_activeViewController = nil;
 	}
 
@@ -385,6 +382,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[_views replaceObjectAtIndex:index withObject:controller];
 	[controller setWindowController:self];
 
+	[self _saveWindowFrame];
 	[self _refreshList];
 	[self _refreshWindow];
 }
@@ -392,37 +390,36 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection {
+	NSParameterAssert( connection != nil );
+
 	NSMutableArray *ret = [NSMutableArray array];
 	NSEnumerator *enumerator = [_views objectEnumerator];
 	id <JVChatViewController> controller = nil;
-
-	NSParameterAssert( connection != nil );
 
 	while( ( controller = [enumerator nextObject] ) )
 		if( [controller connection] == connection )
 			[ret addObject:controller];
 
-	return [[ret retain] autorelease];
+	return [NSArray arrayWithArray:ret];
 }
 
 - (NSArray *) chatViewControllersWithControllerClass:(Class) class {
+	NSParameterAssert( class != NULL );
+	NSAssert( [class conformsToProtocol:@protocol( JVChatViewController )], @"The tab controller class must conform to the JVChatViewController protocol." );
+
 	NSMutableArray *ret = [NSMutableArray array];
 	NSEnumerator *enumerator = [_views objectEnumerator];
 	id <JVChatViewController> controller = nil;
 
-	NSParameterAssert( class != NULL );
-	NSAssert( [class conformsToProtocol:@protocol( JVChatViewController )], @"The tab controller class must conform to the JVChatViewController protocol." );
-
-	ret = [NSMutableArray array];
 	while( ( controller = [enumerator nextObject] ) )
 		if( [controller isMemberOfClass:class] )
 			[ret addObject:controller];
 
-	return [[ret retain] autorelease];
+	return [NSArray arrayWithArray:ret];
 }
 
 - (NSArray *) allChatViewControllers {
-	return [[_views retain] autorelease];
+	return [NSArray arrayWithArray:_views];
 }
 
 #pragma mark -
@@ -549,6 +546,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [[menuItem keyEquivalent] length] ) return YES;
 		else return NO;
 	}
+
 	return YES;
 }
 @end

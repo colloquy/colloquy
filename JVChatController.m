@@ -297,7 +297,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 		}
 	}
-
+	
 	return ret;
 }
 
@@ -331,6 +331,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		[_chatControllers addObject:ret];
 		[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 	}
+
 	return ret;
 }
 
@@ -343,6 +344,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 		[ret editSettings:nil];
 	}
+
 	return ret;
 }
 
