@@ -40,7 +40,8 @@
 
 - (void) partWithReason:(NSAttributedString *) reason {
 	if( ! [self isJoined] ) return;
-	[[self connection] sendRawMessageWithFormat:@"PART %@", [self name]];
+	[[self connection] sendRawMessage:[NSString stringWithFormat:@"PART %@", [self name]] immediately:YES];
+//	[[self connection] sendRawMessageWithFormat:@"PART %@", [self name]];
 	[self _setDateParted:[NSDate date]];
 }
 
