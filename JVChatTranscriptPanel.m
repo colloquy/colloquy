@@ -155,16 +155,12 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSString *) windowTitle {
-//	xmlChar *began = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "began" );
-	NSCalendarDate *date = [NSCalendarDate date];
-//	xmlFree( began );
+	NSCalendarDate *date = [[self transcript] dateBegan];
 	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [self title], ( date ? [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]] : @"" )];
 }
 
 - (NSString *) information {
-//	xmlChar *began = xmlGetProp( xmlDocGetRootElement( _xmlLog ), "began" );
-	NSCalendarDate *date = [NSCalendarDate date];
-//	xmlFree( began );
+	NSCalendarDate *date = [[self transcript] dateBegan];
 	return [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
 }
 
