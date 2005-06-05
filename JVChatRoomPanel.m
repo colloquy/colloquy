@@ -48,8 +48,8 @@
 - (id) initWithTarget:(id) target {
 	if( ( self = [super initWithTarget:target] ) ) {
 		topicLine = nil;
-		_sortedMembers = [[NSMutableArray array] retain];
-		_nextMessageAlertMembers = [[NSMutableSet set] retain];
+		_sortedMembers = [[NSMutableArray arrayWithCapacity:50] retain];
+		_nextMessageAlertMembers = [[NSMutableSet setWithCapacity:5] retain];
 		_kickedFromRoom = NO;
 		_keepAfterPart = NO;
 		_banListSynced = NO;
@@ -103,6 +103,7 @@
 #pragma mark Chat View Protocol Support
 
 - (void) willDispose {
+	[super willDispose];
 	[self partChat:nil];
 }
 
@@ -662,7 +663,7 @@
 
 @implementation JVChatRoomPanel (JVChatRoomPrivate)
 - (void) _didConnect:(NSNotification *) notification {
-	[[self target] join];
+	if( ! _disposed ) [[self target] join];
 	_cantSendMessages = YES;
 }
 

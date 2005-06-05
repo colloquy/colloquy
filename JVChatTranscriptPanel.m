@@ -52,6 +52,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		_styleMenu = nil;
 		_emoticonMenu = nil;
 		_windowController = nil;
+		_disposed = NO;
 
 		_transcript = [[JVChatTranscript allocWithZone:[self zone]] init];
 
@@ -140,6 +141,10 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (void) didSelect {
 	[self _refreshWindowFileProxy];
+}
+
+- (void) willDispose {
+	_disposed = YES;
 }
 
 #pragma mark -

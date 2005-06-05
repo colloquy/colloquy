@@ -17,6 +17,7 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 	IBOutlet NSView *contents;
 	IBOutlet JVStyleView *display;
 	BOOL _nibLoaded;
+	BOOL _disposed;
 
 	JVChatWindowController *_windowController;
 
