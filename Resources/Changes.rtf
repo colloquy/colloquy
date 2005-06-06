@@ -2,8 +2,8 @@
 {\fonttbl\f0\fswiss\fcharset77 Arial-Black;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\ftech\fcharset2 Symbol;
 \f3\fswiss\fcharset77 Helvetica;\f4\fnil\fcharset77 Monaco;\f5\fswiss\fcharset77 Helvetica-Oblique;
 \f6\fnil\fcharset77 LucidaGrande;\f7\fnil\fcharset78 HiraKakuPro-W3;}
-{\colortbl;\red255\green255\blue255;\red255\green128\blue0;\red99\green99\blue99;\red128\green0\blue128;
-\red85\green85\blue85;}
+{\colortbl;\red255\green255\blue255;\red255\green128\blue0;\red99\green99\blue99;\red85\green85\blue85;
+\red128\green0\blue128;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
 \f0\b\fs48 \cf0 colloquy\cf2 .\cf3 app
@@ -17,14 +17,17 @@
 
 \f2 \'b7
 \f3  SOCKS and HTTP proxies don't function still.\
+
+\f2 \'b7
+\f3  Window grouping preferences switched to the Interface preferences. You will need to redo your groupings using the new rule based system.\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
 \f1\b\fs28 \cf0 \
 changes\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\fs20 \cf0 Build 2D17 
-\f3\b0 (May, 2005) \'d1\
+\fs20 \cf0 Build 2D18 
+\f3\b0 (June, 2005) \'d1\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
 \f2 \cf0 \'b7
@@ -54,6 +57,40 @@ changes\
 \f2\b0\fs20 \'b7
 \f3\fs24  
 \fs20 Changed the DCC send packet size from 512 to 4096 (the largest possible, and usually the most efficient). This greatly improves transfer speeds.\
+
+\f2 \'b7
+\f3  Colloquy will now correctly remember what rooms were joined when the computer sleeps. You will no longer be joined to rooms that you have had closed prior to sleeping.\
+
+\f2 \'b7
+\f3  We now send an identify message to NickServ before any auto-joins or commands (if the nickname password is stored for the connection.)\
+
+\f2 \'b7
+\f3  The bundled Growl framework is now 0.7, please update your Growl preference pane to take full advantage of new features.\
+
+\f2 \'b7
+\f3  New rule based Interface preferences panel. Colloquy defaults to a single window interface with Smart Transcripts grouping in another window. Previous grouping preferences from the Behavior panel wont carry over to the new rule system. You will need to make new rules to restore any desired behaviors.\
+
+\f2 \'b7
+\f3  The /part (and /leave) command now accepts a reason. Note that this means that a room list given may not include spaces; previously, you could do 
+\f4\fs18 \cf4 \CocoaLigature0 /part #foobar, #barfoo
+\f3\fs20 \cf0 \CocoaLigature1  but this is no longer valid. Use 
+\f4\fs18 \cf4 \CocoaLigature0 /part #foobar,#barfoo
+\f3\fs20 \cf0 \CocoaLigature1  to do this.\
+
+\f2 \'b7
+\f3  Added Command-Option-Q to quit immediately without a confirm dialog.\
+
+\f2 \'b7
+\f3  New preferences to always show the tab bar and what side to open the window drawer.\
+
+\f2 \'b7
+\f3  New preferences to show full room names. This will show any IRC room prefixes in the interface.\
+
+\f2 \'b7
+\f3  New preferences to strip incoming colors and/or formatting.\
+
+\f2 \'b7
+\f3  New preference to retain any input box colors and formatting between sent messages.\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
 \f1\b \cf0 \
@@ -133,7 +170,7 @@ Build 2D14
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Colloquy again honors the "Open in new window" behavior preference for panels. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/154"}}{\fldrslt \cf4 #154}}
+\fs20 Colloquy again honors the "Open in new window" behavior preference for panels. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/154"}}{\fldrslt \cf5 #154}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
@@ -348,14 +385,14 @@ Build 2C11
 
 \f2 \'b7
 \f3  Updated iTunes script that has the option to show a progress bar, current and duration time and save the preferences. To see all the preference keys, type: 
-\f4\fs18 \cf5 \CocoaLigature0 /itunes prefs 
+\f4\fs18 \cf4 \CocoaLigature0 /itunes prefs 
 \f3\fs20 \cf0 \CocoaLigature1 To toggle a preference, type: 
-\f4\fs18 \cf5 \CocoaLigature0 /itunes prefs <key> [on|off]
+\f4\fs18 \cf4 \CocoaLigature0 /itunes prefs <key> [on|off]
 \f3\fs20 \cf0 \CocoaLigature1 \
 
 \f2 \'b7
 \f3  Added a multi-search script that lets you search any of 11 search engines from Yahoo!, Google, ADC, VersionTracker, PHP, Google Image Search and more. For a list of all the commands type: 
-\f4\fs18 \cf5 \CocoaLigature0 /search help
+\f4\fs18 \cf4 \CocoaLigature0 /search help
 \f3\fs20 \cf0 \CocoaLigature1 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
@@ -422,13 +459,13 @@ Build 2C9
 
 \f2 \'b7
 \f3  User and Message Ignore support added. You can mange ignores on a per connection basis through the Connection's Info panel. The command syntax is: 
-\f4\fs18 \cf5 \CocoaLigature0 /ignore -[p|m|n] [nickname|/regex/] ["message"|/regex/|word] [#rooms ...]
+\f4\fs18 \cf4 \CocoaLigature0 /ignore -[p|m|n] [nickname|/regex/] ["message"|/regex/|word] [#rooms ...]
 \f3\fs20 \cf0 \CocoaLigature1 . The -p flag will keep the ignore rule permantly until deleted, the -m flag is to specify a message ignore, the -n flag is to specify a nickname ignore. Nickname ignore is the default, so 
 \f5\i /ignore moron 
 \f3\i0 would ignore that person in all rooms and private chats on this server. This 
 \f5\i /ignore -mn /moron.*/ /is listening \\w*/ #adium #colloquy
 \f3\i0  would ignore users that start with "moron" and use the /itunes script in the Colloquy or Adium chat room. Ignore requires custom styles to support it first before messages are hidden.
-\f2\fs18 \cf5 \
+\f2\fs18 \cf4 \
 
 \fs20 \cf0 \'b7
 \f3  New Message Scrollback setting in the Chatting tab of the Behavior preferences. A good low scrollback message count will improve Colloquy's performance and resource usage over time.
@@ -1184,9 +1221,8 @@ Build 2B91
  
 \f2 \'b7
 \f3  Some perferences will not carry over from version 1.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f2 \cf0  \'b7
+\f2  \'b7
 \f3  No longer crashes when you don't have an outside internet connection and/or the host-name can't be resolved.\
  
 \f2 \'b7
@@ -1247,9 +1283,8 @@ Build 1B20
  
 \f2 \'b7
 \f3  Windows that are miniaturized into the Dock will not keep popping out when either "Show hidden \'c9 on \'c9 activity" preferences are on.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f2 \cf0  \'b7
+\f2  \'b7
 \f3  All windows remember their position on screen better, and chat windows remember the member drawer size and state.\
 
 \f2  \'b7
@@ -1280,9 +1315,8 @@ Build 1B12
 \f3\i0 . Contact me for the plug-in software development kit. Try 
 \f5\i /itunes
 \f3\i0  in a room to test the basic iTunes plugin.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f2 \cf0  \'b7
+\f2  \'b7
 \f3  Added the French localization.\
  
 \f2 \'b7
@@ -1333,9 +1367,8 @@ Build 1B3
 \f3\b0\fs20 \cf0  
 \f2 \'b7
 \f3  NickServ password authorization enabled with password prompts and saving passwords in your keychain.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f2 \cf0  \'b7
+\f2  \'b7
 \f3  Connections are stored different now, old bookmarks will not load and may show up as blank lines in the connection manager.\
  
 \f2 \'b7
@@ -1434,9 +1467,8 @@ Build 1A21
  
 \f2 \'b7
 \f3  IRC URLs are now handled from the system and internally in chat dialog (was only rooms before, now allows new server connections). Here is an example URL that will connect to 'javelin.cc' as user 'test' on port '6669' and will join the room 'colloquy' when connected: \ul irc://test@javelin.cc:6669/#colloquy\ulnone . Note that only the scheme and host part of the URL need to be present. Valid room paths a begin with '#', '&' or '+'; if the path of the URL is not a valid room then a new message to that user is made. Mozilla's Chatzilla handles IRC URLs in this manner also.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f2 \cf0  \'b7
+\f2  \'b7
 \f3  Nickname changes were not being reported due to a Firetalk API change \'d1 now fixed.\
  
 \f2 \'b7
@@ -1467,9 +1499,8 @@ Build 1A21
 Build 1A8 
 \f3\b0 (Wednesday November 13, 2002) \'d1
 \f1\b\fs28 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f3\b0\fs20 \cf0  
+\f3\b0\fs20  
 \f2 \'b7
 \f3  Enabled the Software Update check.\
  
