@@ -141,12 +141,13 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		_encodingMenu = nil;
 		_spillEncodingMenu = nil;
 
-		_sendHistory = [[NSMutableArray array] retain];
+		_sendHistory = [[NSMutableArray arrayWithCapacity:30] retain];
 		[_sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
 
-		_waitingAlerts = [[NSMutableArray array] retain];
-		_waitingAlertNames = [[NSMutableDictionary dictionary] retain];
+		_waitingAlerts = [[NSMutableArray arrayWithCapacity:5] retain];
+		_waitingAlertNames = [[NSMutableDictionary dictionaryWithCapacity:5] retain];
 	}
+
 	return self;
 }
 
