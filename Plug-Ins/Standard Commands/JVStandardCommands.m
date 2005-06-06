@@ -475,18 +475,21 @@
 }
 
 - (BOOL) handlePartWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
-	NSArray *channels = [arguments componentsSeparatedByString:@","];
+	NSArray *args = [arguments componentsSeparatedByString:@" "];
+	NSArray *channels = [[args objectAtIndex:0] componentsSeparatedByString:@","];
 
-	if( [arguments length] && [channels count] == 1 ) {
-		[[connection joinedChatRoomWithName:arguments] part];
+	if( [channels count] == 1 ) {
+		[[connection joinedChatRoomWithName:[channels lastObject]] part];
 		return YES;
-	} else if( [arguments length] && [channels count] > 1 ) {
+	} else if( [channels count] > 1 ) {
+		NSString *message = [[args subarrayWithRange:NSMakeRange(1, [args count] - 1)] componentsJoinedByString:@" "];
+		NSAttributedString *reason = [[[NSAttributedString alloc] initWithString:message] autorelease];
 		NSEnumerator *chanEnum = [channels objectEnumerator];
 		NSString *channel = nil;
 
-		while( ( channel = [chanEnum nextObject] ) ) {
-			channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-			if( [channel length] ) [[connection joinedChatRoomWithName:channel] part];
+		while( channel = [chanEnum nextObject] ) {
+			//channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			if( [channel length] ) [[connection joinedChatRoomWithName:channel] partWithReason:reason];
 		}
 
 		return YES;
