@@ -389,9 +389,9 @@ static BOOL applicationIsTerminating = NO;
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 #ifdef DEBUG
 	NSDebugEnabled = YES;
-	NSZombieEnabled = YES;
-	NSDeallocateZombies = NO;
-	[NSAutoreleasePool enableFreedObjectCheck:YES];
+//	NSZombieEnabled = YES;
+//	NSDeallocateZombies = NO;
+//	[NSAutoreleasePool enableFreedObjectCheck:YES];
 #endif
 }
 
