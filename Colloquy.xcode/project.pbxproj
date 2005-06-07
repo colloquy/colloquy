@@ -342,7 +342,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = CBF685140820186F00F498FB /* Colloquy (Metadata Importer) */;
+			remoteGlobalIDString = CBF685140820186F00F498FB;
 			remoteInfo = "Colloquy (Metadata Importer)";
 		};
 		1CE3F9C207C7C2B30049A366 /* PBXContainerItemProxy */ = {
@@ -2649,10 +2649,6 @@
 		1C041DCA0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2711,6 +2707,10 @@
 		1C041DCC0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
 			};
 			name = "Release (Universal)";
 		};
