@@ -3,9 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 39;
+	objectVersion = 42;
 	objects = {
-		014CEA420018CDE011CA2923 = {
+
+/* Begin PBXBuildFile section */
+		1C0431BC07CAEC1700304949 /* JVAppleScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0431BA07CAEC1700304949 /* JVAppleScriptChatPlugin.m */; };
+		1C4FD36807C6BC25000EA451 /* JVAppleScriptPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVAppleScriptPluginLoader.m */; };
+		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		014CEA420018CDE011CA2923 /* Development */ = {
+			isa = PBXBuildStyle;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -13,299 +22,141 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				ZERO_LINK = YES;
 			};
-			isa = PBXBuildStyle;
 			name = Development;
 		};
-		014CEA430018CDE011CA2923 = {
+		014CEA430018CDE011CA2923 /* Deployment */ = {
+			isa = PBXBuildStyle;
 			buildSettings = {
 			};
-			isa = PBXBuildStyle;
 			name = Deployment;
 		};
-//010
-//011
-//012
-//013
-//014
-//080
-//081
-//082
-//083
-//084
-		089C1669FE841209C02AAC07 = {
-			buildSettings = {
-			};
-			buildStyles = (
-				014CEA420018CDE011CA2923,
-				014CEA430018CDE011CA2923,
+/* End PBXBuildStyle section */
+
+/* Begin PBXFileReference section */
+		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1C04316407CADBE100304949 /* scriptEditor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scriptEditor.png; sourceTree = "<group>"; };
+		1C0431B907CAEC1700304949 /* JVAppleScriptChatPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppleScriptChatPlugin.h; sourceTree = "<group>"; };
+		1C0431BA07CAEC1700304949 /* JVAppleScriptChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppleScriptChatPlugin.m; sourceTree = "<group>"; };
+		1C4FD36507C6BC25000EA451 /* JVAppleScriptPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppleScriptPluginLoader.h; sourceTree = "<group>"; };
+		1C4FD36607C6BC25000EA451 /* JVAppleScriptPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppleScriptPluginLoader.m; sourceTree = "<group>"; };
+		1C4FD3CC07C6BF1B000EA451 /* JVAppleScriptEditorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppleScriptEditorPanel.h; sourceTree = "<group>"; };
+		1C4FD3CD07C6BF1B000EA451 /* JVAppleScriptEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppleScriptEditorPanel.m; sourceTree = "<group>"; };
+		1CE3FB5407C7DFD50049A366 /* AppleScriptPanel.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = AppleScriptPanel.nib; sourceTree = "<group>"; };
+		1CF7A61407CD661200965F52 /* compile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compile.png; sourceTree = "<group>"; };
+		32DBCF630370AF2F00C91783 /* AppleScript Support.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppleScript Support.pch"; sourceTree = "<group>"; };
+		8D5B49B6048680CD000E48DA /* AppleScript Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AppleScript Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D5B49B3048680CD000E48DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
 			);
-			hasScannedForEncodings = 1;
-			isa = PBXProject;
-			mainGroup = 089C166AFE841209C02AAC07;
-			projectDirPath = "";
-			targets = (
-				8D5B49AC048680CD000E48DA,
-			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-		089C166AFE841209C02AAC07 = {
-			children = (
-				08FB77AFFE84173DC02AAC07,
-				32C88E010371C26100C91783,
-				089C167CFE841241C02AAC07,
-				089C1671FE841209C02AAC07,
-				19C28FB8FE9D52D311CA2CBB,
-			);
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* FScript Plugin */ = {
 			isa = PBXGroup;
+			children = (
+				08FB77AFFE84173DC02AAC07 /* Classes */,
+				32C88E010371C26100C91783 /* Other Sources */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				19C28FB8FE9D52D311CA2CBB /* Products */,
+			);
 			name = "FScript Plugin";
-			refType = 4;
 			sourceTree = "<group>";
 		};
-		089C1671FE841209C02AAC07 = {
-			children = (
-				1058C7ACFEA557BF11CA2CBB,
-				1058C7AEFEA557BF11CA2CBB,
-			);
+		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
 			isa = PBXGroup;
+			children = (
+				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
+				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
+			);
 			name = "Frameworks and Libraries";
-			refType = 4;
 			sourceTree = "<group>";
 		};
-		089C1672FE841209C02AAC07 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = Foundation.framework;
-			path = /System/Library/Frameworks/Foundation.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		089C167CFE841241C02AAC07 = {
-			children = (
-				1C04316407CADBE100304949,
-				1CF7A61407CD661200965F52,
-				1CE3FB5407C7DFD50049A366,
-				8D5B49B7048680CD000E48DA,
-			);
+		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
+			children = (
+				1C04316407CADBE100304949 /* scriptEditor.png */,
+				1CF7A61407CD661200965F52 /* compile.png */,
+				1CE3FB5407C7DFD50049A366 /* AppleScriptPanel.nib */,
+				8D5B49B7048680CD000E48DA /* Info.plist */,
+			);
 			name = Resources;
-			refType = 4;
 			sourceTree = "<group>";
 		};
-		089C167FFE841241C02AAC07 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = AppKit.framework;
-			path = /System/Library/Frameworks/AppKit.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		08FB77AFFE84173DC02AAC07 = {
-			children = (
-				1C0431BA07CAEC1700304949,
-				1C0431B907CAEC1700304949,
-				1C4FD3CD07C6BF1B000EA451,
-				1C4FD3CC07C6BF1B000EA451,
-				1C4FD36607C6BC25000EA451,
-				1C4FD36507C6BC25000EA451,
-			);
+		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
+			children = (
+				1C0431BA07CAEC1700304949 /* JVAppleScriptChatPlugin.m */,
+				1C0431B907CAEC1700304949 /* JVAppleScriptChatPlugin.h */,
+				1C4FD3CD07C6BF1B000EA451 /* JVAppleScriptEditorPanel.m */,
+				1C4FD3CC07C6BF1B000EA451 /* JVAppleScriptEditorPanel.h */,
+				1C4FD36607C6BC25000EA451 /* JVAppleScriptPluginLoader.m */,
+				1C4FD36507C6BC25000EA451 /* JVAppleScriptPluginLoader.h */,
+			);
 			name = Classes;
-			refType = 4;
 			sourceTree = "<group>";
 		};
-//080
-//081
-//082
-//083
-//084
-//100
-//101
-//102
-//103
-//104
-		1058C7ACFEA557BF11CA2CBB = {
-			children = (
-				1058C7ADFEA557BF11CA2CBB,
-			);
+		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
+			children = (
+				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
+			);
 			name = "Linked Frameworks";
-			refType = 4;
 			sourceTree = "<group>";
 		};
-		1058C7ADFEA557BF11CA2CBB = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = Cocoa.framework;
-			path = /System/Library/Frameworks/Cocoa.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		1058C7AEFEA557BF11CA2CBB = {
-			children = (
-				089C1672FE841209C02AAC07,
-				089C167FFE841241C02AAC07,
-			);
+		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
+			children = (
+				089C1672FE841209C02AAC07 /* Foundation.framework */,
+				089C167FFE841241C02AAC07 /* AppKit.framework */,
+			);
 			name = "Other Frameworks";
-			refType = 4;
 			sourceTree = "<group>";
 		};
-//100
-//101
-//102
-//103
-//104
-//190
-//191
-//192
-//193
-//194
-		19C28FB8FE9D52D311CA2CBB = {
-			children = (
-				8D5B49B6048680CD000E48DA,
-			);
+		19C28FB8FE9D52D311CA2CBB /* Products */ = {
 			isa = PBXGroup;
+			children = (
+				8D5B49B6048680CD000E48DA /* AppleScript Support.plugin */,
+			);
 			name = Products;
-			refType = 4;
 			sourceTree = "<group>";
 		};
-//190
-//191
-//192
-//193
-//194
-//1C0
-//1C1
-//1C2
-//1C3
-//1C4
-		1C04316407CADBE100304949 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			path = scriptEditor.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C0431B907CAEC1700304949 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = JVAppleScriptChatPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C0431BA07CAEC1700304949 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = JVAppleScriptChatPlugin.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C0431BC07CAEC1700304949 = {
-			fileRef = 1C0431BA07CAEC1700304949;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C4FD36507C6BC25000EA451 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = JVAppleScriptPluginLoader.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C4FD36607C6BC25000EA451 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = JVAppleScriptPluginLoader.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C4FD36807C6BC25000EA451 = {
-			fileRef = 1C4FD36607C6BC25000EA451;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		1C4FD3CC07C6BF1B000EA451 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = JVAppleScriptEditorPanel.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1C4FD3CD07C6BF1B000EA451 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = JVAppleScriptEditorPanel.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CE3FB5407C7DFD50049A366 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			path = AppleScriptPanel.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		1CF7A61407CD661200965F52 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			path = compile.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-//1C0
-//1C1
-//1C2
-//1C3
-//1C4
-//320
-//321
-//322
-//323
-//324
-		32C88E010371C26100C91783 = {
-			children = (
-				32DBCF630370AF2F00C91783,
-			);
+		32C88E010371C26100C91783 /* Other Sources */ = {
 			isa = PBXGroup;
+			children = (
+				32DBCF630370AF2F00C91783 /* AppleScript Support.pch */,
+			);
 			name = "Other Sources";
-			refType = 4;
 			sourceTree = "<group>";
 		};
-		32DBCF630370AF2F00C91783 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = "AppleScript Support.pch";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-//320
-//321
-//322
-//323
-//324
-//8D0
-//8D1
-//8D2
-//8D3
-//8D4
-		8D5B49AC048680CD000E48DA = {
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D5B49AC048680CD000E48DA /* AppleScript Support Plugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C7F303E0855482D00D41FB0 /* Build configuration list for PBXNativeTarget "AppleScript Support Plugin" */;
 			buildPhases = (
-				8D5B49AF048680CD000E48DA,
-				8D5B49B1048680CD000E48DA,
-				8D5B49B3048680CD000E48DA,
+				8D5B49B1048680CD000E48DA /* Sources */,
+				8D5B49B3048680CD000E48DA /* Frameworks */,
 			);
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/Frameworks /Library/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks",
+					/Library/Frameworks,
+				);
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -318,8 +169,14 @@
 				LIBRARY_STYLE = BUNDLE;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OBJROOT = ../../build;
-				OTHER_CFLAGS = "-fconstant-cfstrings -falign-loops=16";
-				OTHER_LDFLAGS = "-undefined dynamic_lookup";
+				OTHER_CFLAGS = (
+					"-fconstant-cfstrings",
+					"-falign-loops=16",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
 				PRODUCT_NAME = "AppleScript Support";
 				SYMROOT = ../../build;
 				UNSTRIPPED_PRODUCT = YES;
@@ -327,59 +184,199 @@
 			};
 			dependencies = (
 			);
-			isa = PBXNativeTarget;
 			name = "AppleScript Support Plugin";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = "FScript Plugin";
-			productReference = 8D5B49B6048680CD000E48DA;
+			productReference = 8D5B49B6048680CD000E48DA /* AppleScript Support.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
-		8D5B49AF048680CD000E48DA = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8D5B49B1048680CD000E48DA = {
-			buildActionMask = 2147483647;
-			files = (
-				1C4FD36807C6BC25000EA451,
-				1C0431BC07CAEC1700304949,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8D5B49B3048680CD000E48DA = {
-			buildActionMask = 2147483647;
-			files = (
-				8D5B49B4048680CD000E48DA,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8D5B49B4048680CD000E48DA = {
-			fileRef = 1058C7ADFEA557BF11CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1C7F30420855482D00D41FB0 /* Build configuration list for PBXProject "AppleScript Support" */;
+			buildSettings = {
 			};
+			buildStyles = (
+				014CEA420018CDE011CA2923 /* Development */,
+				014CEA430018CDE011CA2923 /* Deployment */,
+			);
+			hasScannedForEncodings = 1;
+			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
+			projectDirPath = "";
+			targets = (
+				8D5B49AC048680CD000E48DA /* AppleScript Support Plugin */,
+			);
 		};
-		8D5B49B6048680CD000E48DA = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "AppleScript Support.plugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D5B49B1048680CD000E48DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C4FD36807C6BC25000EA451 /* JVAppleScriptPluginLoader.m in Sources */,
+				1C0431BC07CAEC1700304949 /* JVAppleScriptChatPlugin.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8D5B49B7048680CD000E48DA = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			path = Info.plist;
-			refType = 4;
-			sourceTree = "<group>";
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1C7F303F0855482D00D41FB0 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks",
+					/Library/Frameworks,
+				);
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppleScript Support.pch";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				HEADER_SEARCH_PATHS = ../..;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				LIBRARY_STYLE = BUNDLE;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OBJROOT = ../../build;
+				OTHER_CFLAGS = (
+					"-fconstant-cfstrings",
+					"-falign-loops=16",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "AppleScript Support";
+				SYMROOT = ../../build;
+				UNSTRIPPED_PRODUCT = YES;
+				WRAPPER_EXTENSION = plugin;
+				ZERO_LINK = YES;
+			};
+			name = Development;
 		};
+		1C7F30410855482D00D41FB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks",
+					/Library/Frameworks,
+				);
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppleScript Support.pch";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				HEADER_SEARCH_PATHS = ../..;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				LIBRARY_STYLE = BUNDLE;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OBJROOT = ../../build;
+				OTHER_CFLAGS = (
+					"-fconstant-cfstrings",
+					"-falign-loops=16",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "AppleScript Support";
+				SYMROOT = ../../build;
+				UNSTRIPPED_PRODUCT = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		1C7F30430855482D00D41FB0 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Development;
+		};
+		1C7F30450855482D00D41FB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		1C7F307A085548E700D41FB0 /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks",
+					/Library/Frameworks,
+				);
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppleScript Support.pch";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				HEADER_SEARCH_PATHS = ../..;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				LIBRARY_STYLE = BUNDLE;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OBJROOT = ../../build;
+				OTHER_CFLAGS = (
+					"-fconstant-cfstrings",
+					"-falign-loops=16",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "AppleScript Support";
+				SYMROOT = ../../build;
+				UNSTRIPPED_PRODUCT = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = "Release (Universal)";
+		};
+		1C7F307B085548E700D41FB0 /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+			};
+			name = "Release (Universal)";
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C7F303E0855482D00D41FB0 /* Build configuration list for PBXNativeTarget "AppleScript Support Plugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C7F303F0855482D00D41FB0 /* Development */,
+				1C7F30410855482D00D41FB0 /* Release */,
+				1C7F307A085548E700D41FB0 /* Release (Universal) */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1C7F30420855482D00D41FB0 /* Build configuration list for PBXProject "AppleScript Support" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C7F30430855482D00D41FB0 /* Development */,
+				1C7F30450855482D00D41FB0 /* Release */,
+				1C7F307B085548E700D41FB0 /* Release (Universal) */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
 	};
-	rootObject = 089C1669FE841209C02AAC07;
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
 }

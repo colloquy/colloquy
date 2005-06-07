@@ -6,10 +6,13 @@ CP=ditto --rsrc
 RM=rm
 
 all:
-	xcodebuild -project Colloquy.xcode -target 'Colloquy (Application)' -buildstyle Deployment build
+	xcodebuild -project Colloquy.xcode -target 'Colloquy (Application)' -configuration Release build
+
+universal:
+	xcodebuild -project Colloquy.xcode -target 'Colloquy (Application)' -configuration 'Release (Universal)' build
 
 development:
-	xcodebuild -project Colloquy.xcode -target 'Colloquy (Application)' -buildstyle Development build
+	xcodebuild -project Colloquy.xcode -target 'Colloquy (Application)' -configuration Development build
 
 clean:
 	xcodebuild -project Colloquy.xcode -alltargets clean
