@@ -305,21 +305,21 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B /* ChatCore.framework */;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
 			remoteInfo = "Chat Core (Framework)";
 		};
 		0A7F240E08556A9B00FA3D9B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8D5B49B6048680CD000E48DA /* AppleScript Support.plugin */;
+			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
 			remoteInfo = "AppleScript Support Plugin";
 		};
 		0A7F243008556AC100FA3D9B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8D5B49B6048680CD000E48DA /* F-Script Support.plugin */;
+			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
 			remoteInfo = "F-Script Support Plugin";
 		};
 		1C09DFF6052DFF6600D748CF /* PBXContainerItemProxy */ = {
