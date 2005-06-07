@@ -6,16 +6,16 @@ CP=ditto --rsrc
 RM=rm
 
 all:
-	xcodebuild -project Colloquy.xcode -target 'Colloquy (Application)' -configuration Release build
+	xcodebuild -project Colloquy.xcodeproj -target 'Colloquy (Application)' -configuration Release build
 
 universal:
-	xcodebuild -project Colloquy.xcode -target 'Colloquy (Application)' -configuration 'Release (Universal)' build
+	xcodebuild -project Colloquy.xcodeproj -target 'Colloquy (Application)' -configuration 'Release (Universal)' build
 
 development:
-	xcodebuild -project Colloquy.xcode -target 'Colloquy (Application)' -configuration Development build
+	xcodebuild -project Colloquy.xcodeproj -target 'Colloquy (Application)' -configuration Development build
 
 clean:
-	xcodebuild -project Colloquy.xcode -alltargets clean
+	xcodebuild -project Colloquy.xcodeproj -alltargets clean
 
 install:
 	-$(RM) -rf $(INSTALL_DIR)/$(PRODUCT_NAME)
