@@ -322,6 +322,13 @@
 			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
 			remoteInfo = "F-Script Support Plugin";
 		};
+		0A7F27690856906100FA3D9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B /* Chat Core (Framework) */;
+			remoteInfo = "Chat Core (Framework)";
+		};
 		1C09DFF6052DFF6600D748CF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -1594,6 +1601,7 @@
 			dependencies = (
 				1C09DFF7052DFF6600D748CF /* PBXTargetDependency */,
 				1C7F30010855456D00D41FB0 /* PBXTargetDependency */,
+				0A7F276A0856906100FA3D9B /* PBXTargetDependency */,
 			);
 			name = "Colloquy (Application)";
 			productName = "Massinova (Application)";
@@ -2062,6 +2070,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0A7F276A0856906100FA3D9B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Chat Core (Framework)";
+			targetProxy = 0A7F27690856906100FA3D9B /* PBXContainerItemProxy */;
+		};
 		1C09DFF7052DFF6600D748CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1C51B4BB052DE14B00BB459B /* Standard Commands (Plug-In) */;
