@@ -1,5 +1,5 @@
 INSTALL_DIR:=$(shell if [[ -d $(HOME)/Applications/Colloquy.app ]]; then echo $(HOME)/Applications; else echo /Applications; fi)
-BUILD_DIR=build
+BUILD_DIR=build/Release
 PRODUCT_NAME=Colloquy.app
 
 CP=ditto --rsrc
