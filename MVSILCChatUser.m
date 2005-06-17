@@ -114,6 +114,17 @@
 #pragma mark -
 
 - (void) refreshInformation {
-	[[self connection] sendRawMessageWithFormat:@"WHOIS %@", [self nickname]];
+	SilcBuffer userBuffer;
+	
+	userBuffer = silc_id_payload_encode( [self _getClientEntry] -> id, SILC_ID_CLIENT );
+	if ( ! userBuffer ) {
+		return;
+	}
+	
+	silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_WHOIS, [[self connection] _silcConn] -> cmd_ident, 1,
+	                          4, userBuffer -> data, userBuffer -> len );
+	[[self connection] _silcConn] -> cmd_ident++;
+	
+	silc_buffer_free( userBuffer );
 }
 @end
