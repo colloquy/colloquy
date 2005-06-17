@@ -199,6 +199,9 @@
 								  1, roomBuffer -> data, roomBuffer -> len,
 								  2, userBuffer -> data, userBuffer -> len );
 	}
+	
+	silc_buffer_free( roomBuffer );
+	silc_buffer_free( userBuffer );
 }
 
 /*
@@ -243,6 +246,9 @@
 							  2, modebuf, 4,
 							  3, userBuffer -> data, userBuffer -> len);
 	[[self connection] _silcConn] -> cmd_ident++;
+	
+	silc_buffer_free( roomBuffer );
+	silc_buffer_free( userBuffer );
 }
 
 - (void) _setChannelUserMode:(unsigned int) SilcMode forUser:(MVChatUser *) user {
