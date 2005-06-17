@@ -14,7 +14,9 @@
 		unsigned char *identifier = silc_id_id2str( channelEntry -> id, SILC_ID_CHANNEL );
 		unsigned len = silc_id_get_len( channelEntry -> id, SILC_ID_CHANNEL );
 		_uniqueIdentifier = [[NSData allocWithZone:[self zone]] initWithBytes:identifier length:len];
-
+		
+		_channelEntry = channelEntry;
+		
 		[[connection _silcClientLock] unlock];
 	}
 
@@ -143,10 +145,10 @@
 	
 	switch( mode ) {
 	case MVChatRoomMemberOperatorMode:
-		[[self connection] sendRawMessageWithFormat:@"CUMODE %@ +o %@", [self name], [user nickname]];
+		[self _setChannelUserMode:SILC_CHANNEL_UMODE_CHANOP forUser:user];
 		break;
 	case MVChatRoomMemberQuietedMode:
-		[[self connection] sendRawMessageWithFormat:@"CUMODE %@ +q %@", [self name], [user nickname]];
+		[self _setChannelUserMode:SILC_CHANNEL_UMODE_QUIET forUser:user];
 	default:
 		break;
 	}
@@ -157,10 +159,10 @@
 	
 	switch( mode ) {
 	case MVChatRoomMemberOperatorMode:
-		[[self connection] sendRawMessageWithFormat:@"CUMODE %@ -o %@", [self name], [user nickname]];
+		[self _removeChannelUserMode:SILC_CHANNEL_UMODE_CHANOP forUser:user];
 		break;
 	case MVChatRoomMemberQuietedMode:
-		[[self connection] sendRawMessageWithFormat:@"CUMODE %@ -q %@", [self name], [user nickname]];
+		[self _removeChannelUserMode:SILC_CHANNEL_UMODE_QUIET forUser:user];
 	default:
 		break;
 	}
@@ -188,4 +190,65 @@
 	[[self connection] sendRawMessageWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 }
 */
+
+#pragma mark -
+
+- (SilcChannelEntry) _getChannelEntry {
+	return _channelEntry;
+}
+
+#pragma mark -
+
+- (void) _silcSetChannelUserMode:(unsigned int) SilcMode forUser:(MVSILCChatUser *) user {
+	SilcBuffer roomBuffer, userBuffer;
+	unsigned char modebuf[4];
+
+	roomBuffer = silc_id_payload_encode( [self _getChannelEntry] -> id, SILC_ID_CHANNEL );
+	if ( ! roomBuffer ) {
+		return;
+	}
+	
+	userBuffer = silc_id_payload_encode( [user _getClientEntry] -> id, SILC_ID_CLIENT );
+	if ( ! userBuffer ) {
+		silc_buffer_free( roomBuffer );
+		return;
+	}
+	
+	SILC_PUT32_MSB(SilcMode, modebuf);
+	
+	silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_CUMODE, [[self connection] _silcConn] -> cmd_ident, 3,
+	                          1, roomBuffer -> data, roomBuffer -> len,
+							  2, modebuf, 4,
+							  3, userBuffer -> data, userBuffer -> len);
+	[[self connection] _silcConn] -> cmd_ident++;
+}
+
+- (void) _setChannelUserMode:(unsigned int) SilcMode forUser:(MVChatUser *) user {
+	SilcChannelUser chu;
+	SilcUInt32 mode = 0;
+	MVSILCChatUser *silcUser = (MVSILCChatUser *)user;
+
+	chu = silc_client_on_channel( [self _getChannelEntry] , [silcUser _getClientEntry] );
+	if ( chu )
+		mode = chu -> mode;
+		
+	mode |= SilcMode;
+	
+	[self _silcSetChannelUserMode:mode forUser:silcUser];
+}
+
+- (void) _removeChannelUserMode:(unsigned int)SilcMode forUser:(MVChatUser *) user {
+	SilcChannelUser chu;
+	SilcUInt32 mode = 0;
+	MVSILCChatUser *silcUser = (MVSILCChatUser *)user;
+
+	chu = silc_client_on_channel( [self _getChannelEntry] , [silcUser _getClientEntry] );
+	if ( chu )
+		mode = chu -> mode;
+		
+	mode &= ~SilcMode;
+	
+	[self _silcSetChannelUserMode:mode forUser:silcUser];
+}
+
 @end

@@ -63,8 +63,16 @@
 	unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
 	unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
 	[self _setUniqueIdentifier:[NSData dataWithBytes:identifier length:len]];
+	
+	self -> _clientEntry = clientEntry;
 
 	[[[self connection] _silcClientLock] unlock];
+}
+
+#pragma mark -
+
+- (SilcClientEntry) _getClientEntry {
+	return _clientEntry;
 }
 
 #pragma mark -
