@@ -503,6 +503,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		[user _setIdleTime:idletime];
 		[user _setDateDisconnected:nil];
 		[user _setDateUpdated:[NSDate date]];
+		[user _setDateConnected:[NSDate date]];
 
 		if( channels ) {
 			NSMutableArray *chanArray = [NSMutableArray array];
