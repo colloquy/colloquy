@@ -171,12 +171,34 @@
 #pragma mark -
 
 - (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
-	[super kickOutMemberUser:user forReason:reason];
+	SilcBuffer roomBuffer, userBuffer;
+	MVSILCChatUser *silcUser = (MVSILCChatUser *) user;
 
-	if( reason ) {
+	roomBuffer = silc_id_payload_encode( [self _getChannelEntry] -> id, SILC_ID_CHANNEL );
+	if ( ! roomBuffer ) {
+		return;
+	}
+	
+	userBuffer = silc_id_payload_encode( [silcUser _getClientEntry] -> id, SILC_ID_CLIENT );
+	if ( ! userBuffer ) {
+		silc_buffer_free( roomBuffer );
+		return;
+	}
+	
+	[super kickOutMemberUser:user forReason:reason];
+	
+	if ( reason ) {
 		const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:reason andChatFormat:[[self connection] outgoingChatFormat]];
-		[[self connection] sendRawMessageWithFormat:@"KICK %@ %@ %s", [self name], [user nickname], msg];
-	} else [[self connection] sendRawMessageWithFormat:@"KICK %@ %@", [self name], [user nickname]];
+		
+		silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_KICK, [[self connection] _silcConn] -> cmd_ident, 3,
+								  1, roomBuffer -> data, roomBuffer -> len,
+								  2, userBuffer -> data, userBuffer -> len,
+								  3, msg, strlen(msg) );
+	} else {
+		silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_KICK, [[self connection] _silcConn] -> cmd_ident, 2,
+								  1, roomBuffer -> data, roomBuffer -> len,
+								  2, userBuffer -> data, userBuffer -> len );
+	}
 }
 
 /*
