@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		0A3187FC067ECEB600271E42 /* TSCustomBan.nib in Resources */ = {isa = PBXBuildFile; fileRef = 0A3187FA067ECEB600271E42 /* TSCustomBan.nib */; };
 		0A5B683F0810EC9700398D5A /* default.css in Resources */ = {isa = PBXBuildFile; fileRef = 0A5B683E0810EC9700398D5A /* default.css */; };
+		0A6571B508687F86001FF007 /* AppleScript Support.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0A7F240F08556A9B00FA3D9B /* AppleScript Support.plugin */; };
+		0A6571BD0868800D001FF007 /* F-Script Support.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0A7F243108556AC100FA3D9B /* F-Script Support.plugin */; };
+		0A6571D40868816B001FF007 /* Standard Commands.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */; };
+		0A6571DD086881A6001FF007 /* ChatCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0A7F23F808556A6C00FA3D9B /* ChatCore.framework */; };
 		0AA8117B0826E08000A3BF2D /* default.js in Resources */ = {isa = PBXBuildFile; fileRef = 0AA811220826DB8800A3BF2D /* default.js */; };
 		1C05F4560828727D006FCB72 /* markDisplay.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C05F4550828727D006FCB72 /* markDisplay.png */; };
 		1C06052606471FFB002438AF /* JVMixedTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C06052406471FFB002438AF /* JVMixedTableColumn.m */; };
@@ -45,7 +49,6 @@
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */; };
 		1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C397390082D4ADA00DCF3CF /* IOKit.framework */; };
 		1C3B290806529E720066197C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
-		1C3B293406529E900066197C /* ChatCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
 		1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */; };
 		1C51B4C7052DE14B00BB459B /* JVStandardCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3B4D570427BD5200000102 /* JVStandardCommands.m */; };
 		1C51B4C9052DE14B00BB459B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
@@ -75,7 +78,6 @@
 		1C7C76EC07DBA1C100FB5F83 /* NSTextSuite.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */; };
 		1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* WebSearch.scpt */; };
 		1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
-		1C7C773F07DBAAE900FB5F83 /* Standard Commands.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */; };
 		1C7EF54006B341890037F173 /* roomTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53D06B341890037F173 /* roomTab.png */; };
 		1C7EF54106B341890037F173 /* roomTabNewHighlightMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53E06B341890037F173 /* roomTabNewHighlightMessage.png */; };
 		1C7EF54206B341890037F173 /* roomTabNewMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53F06B341890037F173 /* roomTabNewMessage.png */; };
@@ -301,6 +303,20 @@
 /* End PBXBuildStyle section */
 
 /* Begin PBXContainerItemProxy section */
+		0A6571A808687EF9001FF007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
+			remoteInfo = "AppleScript Support Plugin";
+		};
+		0A6571AA08687F01001FF007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
+			remoteInfo = "F-Script Support Plugin";
+		};
 		0A7F23F708556A6C00FA3D9B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
@@ -326,7 +342,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B /* Chat Core (Framework) */;
+			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B;
 			remoteInfo = "Chat Core (Framework)";
 		};
 		1C09DFF6052DFF6600D748CF /* PBXContainerItemProxy */ = {
@@ -362,7 +378,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1C3B293406529E900066197C /* ChatCore.framework in CopyFiles */,
+				0A6571DD086881A6001FF007 /* ChatCore.framework in CopyFiles */,
 				1CF80310070C894100C9B54C /* libsilc.framework in CopyFiles */,
 				1CF80311070C894100C9B54C /* libsilcclient.framework in CopyFiles */,
 				1C6C75490630AD9500698F55 /* AGRegex.framework in CopyFiles */,
@@ -376,7 +392,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				1C7C773F07DBAAE900FB5F83 /* Standard Commands.plugin in CopyFiles */,
+				0A6571D40868816B001FF007 /* Standard Commands.plugin in CopyFiles */,
+				0A6571B508687F86001FF007 /* AppleScript Support.plugin in CopyFiles */,
+				0A6571BD0868800D001FF007 /* F-Script Support.plugin in CopyFiles */,
 				1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in CopyFiles */,
 				1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in CopyFiles */,
 			);
@@ -1602,6 +1620,8 @@
 				1C09DFF7052DFF6600D748CF /* PBXTargetDependency */,
 				1C7F30010855456D00D41FB0 /* PBXTargetDependency */,
 				0A7F276A0856906100FA3D9B /* PBXTargetDependency */,
+				0A6571A908687EF9001FF007 /* PBXTargetDependency */,
+				0A6571AB08687F01001FF007 /* PBXTargetDependency */,
 			);
 			name = "Colloquy (Application)";
 			productName = "Massinova (Application)";
@@ -2070,6 +2090,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0A6571A908687EF9001FF007 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "AppleScript Support Plugin";
+			targetProxy = 0A6571A808687EF9001FF007 /* PBXContainerItemProxy */;
+		};
+		0A6571AB08687F01001FF007 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "F-Script Support Plugin";
+			targetProxy = 0A6571AA08687F01001FF007 /* PBXContainerItemProxy */;
+		};
 		0A7F276A0856906100FA3D9B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Chat Core (Framework)";
