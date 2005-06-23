@@ -43,6 +43,7 @@
 		1C4FD36607C6BC25000EA451 /* JVAppleScriptPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppleScriptPluginLoader.m; sourceTree = "<group>"; };
 		1C4FD3CC07C6BF1B000EA451 /* JVAppleScriptEditorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppleScriptEditorPanel.h; sourceTree = "<group>"; };
 		1C4FD3CD07C6BF1B000EA451 /* JVAppleScriptEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppleScriptEditorPanel.m; sourceTree = "<group>"; };
+		1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		1CE3FB5407C7DFD50049A366 /* AppleScriptPanel.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = AppleScriptPanel.nib; sourceTree = "<group>"; };
 		1CF7A61407CD661200965F52 /* compile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compile.png; sourceTree = "<group>"; };
 		32DBCF630370AF2F00C91783 /* AppleScript Support.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppleScript Support.pch"; sourceTree = "<group>"; };
@@ -68,6 +69,7 @@
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32C88E010371C26100C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
+				1C9AE8FA086A552A008ED7AD /* Configurations */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 			);
@@ -130,6 +132,14 @@
 				8D5B49B6048680CD000E48DA /* AppleScript Support.plugin */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1C9AE8FA086A552A008ED7AD /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */,
+			);
+			name = Configurations;
 			sourceTree = "<group>";
 		};
 		32C88E010371C26100C91783 /* Other Sources */ = {
@@ -227,84 +237,55 @@
 		1C7F303F0855482D00D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(HOME)/Library/Frameworks",
-					/Library/Frameworks,
-				);
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREFIX_HEADER = "AppleScript Support.pch";
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
-				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OBJROOT = ../../build;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "AppleScript Support";
 				SYMROOT = ../../build;
-				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = plugin;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		1C7F30410855482D00D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(HOME)/Library/Frameworks",
-					/Library/Frameworks,
-				);
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREFIX_HEADER = "AppleScript Support.pch";
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
-				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OBJROOT = ../../build;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "AppleScript Support";
 				SYMROOT = ../../build;
-				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
 		};
 		1C7F30430855482D00D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		1C7F30450855482D00D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
@@ -312,44 +293,31 @@
 		1C7F307A085548E700D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(HOME)/Library/Frameworks",
-					/Library/Frameworks,
-				);
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREFIX_HEADER = "AppleScript Support.pch";
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
-				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OBJROOT = ../../build;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "AppleScript Support";
 				SYMROOT = ../../build;
-				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = "Release (Universal)";
 		};
 		1C7F307B085548E700D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				ARCHS = (
 					ppc,
 					i386,
 				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = "Release (Universal)";
 		};

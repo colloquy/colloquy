@@ -499,6 +499,7 @@
 		1C66913807BFA76D008400F7 /* JVEmoticonSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVEmoticonSet.m; sourceTree = "<group>"; };
 		1C6A112806BC0C9E00A66340 /* NSAttributedStringMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAttributedStringMoreAdditions.h; sourceTree = "<group>"; };
 		1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAttributedStringMoreAdditions.m; sourceTree = "<group>"; };
+		1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		1C6A40C7083FF6C600572AB6 /* JVInterfacePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferences.h; sourceTree = "<group>"; };
 		1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInterfacePreferences.m; sourceTree = "<group>"; };
 		1C6A429508400BEA00572AB6 /* window.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = window.png; path = Resources/window.png; sourceTree = "<group>"; };
@@ -875,6 +876,7 @@
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
 				F5185C82018626F701EE70DE /* Interfaces */,
 				F50B0AA10170C89301A84BDE /* Resources */,
+				1C6A13E608666DDC009EE6D2 /* Configurations */,
 				089C1671FE841209C02AAC07 /* Frameworks & Libraries */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
 			);
@@ -972,6 +974,14 @@
 				1CF4D30207E5497400DB421A /* smartTranscriptTabActivity.png */,
 			);
 			name = Tabs;
+			sourceTree = "<group>";
+		};
+		1C6A13E608666DDC009EE6D2 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */,
+			);
+			name = Configurations;
 			sourceTree = "<group>";
 		};
 		1CA56CCD042A713E00000102 /* iTunes */ = {
@@ -2398,33 +2408,13 @@
 		1C041A650854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_PASCAL_STRINGS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				HEADER_SEARCH_PATHS = (
-					.,
-					"Plug-Ins/Standard Commands",
-				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
-				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "Standard Commands";
-				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -2432,73 +2422,28 @@
 		1C041A660854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_PASCAL_STRINGS = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				HEADER_SEARCH_PATHS = (
-					.,
-					"Plug-Ins/Standard Commands",
-				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
-				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-					"-DDEBUG",
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "Standard Commands";
-				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = plugin;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		1C041A690854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(HOME)/Library/Frameworks",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-					Frameworks,
-					build,
-				);
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Resources/Info.plist;
-				LIBRARY_STYLE = DYNAMIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
 				);
 				PRODUCT_NAME = Colloquy;
-				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -2506,59 +2451,22 @@
 		1C041A6A0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(HOME)/Library/Frameworks",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-					Frameworks,
-					build,
-				);
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Resources/Info.plist;
-				LIBRARY_STYLE = DYNAMIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DDEBUG",
-					"-fconstant-cfstrings",
-				);
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = Colloquy;
-				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		1C041A6D0854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				INFOPLIST_FILE = Importer/Info.plist;
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_STYLE = BUNDLE;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -2571,77 +2479,44 @@
 		1C041A6E0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				INFOPLIST_FILE = Importer/Info.plist;
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_STYLE = BUNDLE;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-					"-DDEBUG",
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		1C041A710854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		1C041A720854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		1C041DC90855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_PASCAL_STRINGS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				HEADER_SEARCH_PATHS = (
-					.,
-					"Plug-Ins/Standard Commands",
-				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
-				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "Standard Commands";
-				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = "Release (Universal)";
@@ -2649,32 +2524,14 @@
 		1C041DCA0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(HOME)/Library/Frameworks",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-					Frameworks,
-					build,
-				);
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Resources/Info.plist;
-				LIBRARY_STYLE = DYNAMIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
 				);
 				PRODUCT_NAME = Colloquy;
-				UNSTRIPPED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release (Universal)";
@@ -2682,19 +2539,7 @@
 		1C041DCB0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				INFOPLIST_FILE = Importer/Info.plist;
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_STYLE = BUNDLE;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -2706,11 +2551,13 @@
 		};
 		1C041DCC0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				ARCHS = (
 					ppc,
 					i386,
 				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = "Release (Universal)";
 		};
