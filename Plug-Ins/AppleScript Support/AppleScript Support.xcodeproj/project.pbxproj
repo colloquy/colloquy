@@ -242,13 +242,11 @@
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
-				OBJROOT = ../../build;
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "AppleScript Support";
-				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Development;
@@ -261,13 +259,11 @@
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
-				OBJROOT = ../../build;
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "AppleScript Support";
-				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -298,13 +294,11 @@
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
-				OBJROOT = ../../build;
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "AppleScript Support";
-				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = "Release (Universal)";
