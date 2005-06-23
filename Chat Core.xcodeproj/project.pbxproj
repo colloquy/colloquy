@@ -1159,6 +1159,7 @@
 				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = ChatCore.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = "Core/irssi/**";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
@@ -1172,10 +1173,6 @@
 					Core/irssi/src/irc/flood,
 					Core/irssi/src/irc/notifylist,
 					Core/irssi/glib/.libs,
-				);
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-DHAVE_CONFIG_H",
 				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -1196,6 +1193,10 @@
 				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = ChatCore.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					DEBUG,
+				);
 				HEADER_SEARCH_PATHS = "Core/irssi/**";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
@@ -1209,10 +1210,6 @@
 					Core/irssi/src/irc/flood,
 					Core/irssi/src/irc/notifylist,
 					Core/irssi/glib/.libs,
-				);
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-DHAVE_CONFIG_H",
 				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -1267,6 +1264,7 @@
 				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = ChatCore.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = "Core/irssi/**";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
@@ -1280,10 +1278,6 @@
 					Core/irssi/src/irc/flood,
 					Core/irssi/src/irc/notifylist,
 					Core/irssi/glib/.libs,
-				);
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-DHAVE_CONFIG_H",
 				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
