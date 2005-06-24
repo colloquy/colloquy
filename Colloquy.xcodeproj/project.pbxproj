@@ -2407,6 +2407,7 @@
 /* Begin XCBuildConfiguration section */
 		1C041A650854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
@@ -2421,6 +2422,7 @@
 		};
 		1C041A660854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
@@ -2435,6 +2437,7 @@
 		};
 		1C041A690854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -2450,6 +2453,7 @@
 		};
 		1C041A6A0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -2465,6 +2469,7 @@
 		};
 		1C041A6D0854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = Importer/Info.plist;
 				OTHER_LDFLAGS = (
@@ -2478,6 +2483,7 @@
 		};
 		1C041A6E0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = Importer/Info.plist;
 				OTHER_LDFLAGS = (
@@ -2491,14 +2497,12 @@
 		};
 		1C041A710854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		1C041A720854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2510,6 +2514,7 @@
 		};
 		1C041DC90855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
@@ -2524,6 +2529,7 @@
 		};
 		1C041DCA0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -2539,6 +2545,7 @@
 		};
 		1C041DCB0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = Importer/Info.plist;
 				OTHER_LDFLAGS = (
@@ -2552,7 +2559,6 @@
 		};
 		1C041DCC0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				ARCHS = (
 					ppc,

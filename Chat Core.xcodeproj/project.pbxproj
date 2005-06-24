@@ -1177,6 +1177,7 @@
 /* Begin XCBuildConfiguration section */
 		1C041DDB08553AD200A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -1208,6 +1209,7 @@
 		};
 		1C041DDC08553AD200A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -1239,14 +1241,12 @@
 		};
 		1C041DDF08553AD200A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		1C041DE008553AD200A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1257,6 +1257,7 @@
 		};
 		1C7F2DB408553C1900D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -1288,7 +1289,6 @@
 		};
 		1C7F2DB508553C1900D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				ARCHS = (
 					ppc,
