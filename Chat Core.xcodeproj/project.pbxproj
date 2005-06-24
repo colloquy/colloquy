@@ -1186,8 +1186,6 @@
 					HAVE_CONFIG_H,
 					"G_LOG_DOMAIN=g_log_domain_glib",
 					_REENTRANT,
-					"SYSCONFDIR=\"/usr/local/etc\"",
-					"MODULEDIR=\"/usr/local/lib/irssi/modules\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					Core/irssi,
@@ -1219,8 +1217,6 @@
 					HAVE_CONFIG_H,
 					"G_LOG_DOMAIN=g_log_domain_glib",
 					_REENTRANT,
-					"SYSCONFDIR=\"/usr/local/etc\"",
-					"MODULEDIR=\"/usr/local/lib/irssi/modules\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					Core/irssi,
@@ -1270,8 +1266,6 @@
 					HAVE_CONFIG_H,
 					"G_LOG_DOMAIN=g_log_domain_glib",
 					_REENTRANT,
-					"SYSCONFDIR=\"/usr/local/etc\"",
-					"MODULEDIR=\"/usr/local/lib/irssi/modules\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					Core/irssi,

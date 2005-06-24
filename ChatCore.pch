@@ -1,3 +1,6 @@
+#define SYSCONFDIR "/usr/local/etc"
+#define MODULEDIR "/usr/local/lib/irssi/modules"
+
 #ifdef __OBJC__
 #import <Cocoa/Cocoa.h>
 #endif
