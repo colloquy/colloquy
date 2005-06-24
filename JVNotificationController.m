@@ -5,6 +5,8 @@
 #import "KABubbleWindowController.h"
 #import "KABubbleWindowView.h"
 
+#define GrowlApplicationBridge NSClassFromString( @"GrowlApplicationBridge" )
+
 static JVNotificationController *sharedInstance = nil;
 
 @interface JVNotificationController (JVNotificationControllerPrivate) <GrowlApplicationBridgeDelegate>
@@ -27,7 +29,7 @@ static JVNotificationController *sharedInstance = nil;
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_bubbles = [[NSMutableDictionary dictionary] retain];
-		if( [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
+		if( GrowlApplicationBridge && [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
 			[GrowlApplicationBridge setGrowlDelegate:self];
 		}
 	}
@@ -102,7 +104,7 @@ static JVNotificationController *sharedInstance = nil;
 
 	if( ! icon ) icon = [[NSApplication sharedApplication] applicationIconImage];
 
-	if( [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
+	if( GrowlApplicationBridge && [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
 		NSString *desc = description;
 		if( [desc isKindOfClass:[NSAttributedString class]] ) desc = [description string];
 		NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];

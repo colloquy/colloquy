@@ -1984,7 +1984,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find $TARGET_BUILD_DIR/$WRAPPER_NAME -name 'Headers' -print0 | xargs -0 rm -rf\n";
+			shellScript = "find \"$TARGET_BUILD_DIR/$WRAPPER_NAME\" -name 'Headers' -print0 | xargs -0 rm -rf\n";
 		};
 		1CF038FF062F8DBB009774D8 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2445,6 +2445,8 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
+					"-weak_framework",
+					Growl,
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -2461,6 +2463,8 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
+					"-weak_framework",
+					Growl,
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -2537,6 +2541,8 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
+					"-weak_framework",
+					Growl,
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;

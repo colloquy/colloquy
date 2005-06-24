@@ -275,9 +275,8 @@
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
 					"$(HOME)/Library/Frameworks",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-					"$(TARGET_BUILD_DIR)",
 				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
 				HEADER_SEARCH_PATHS = ../..;
@@ -299,9 +298,8 @@
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
 					"$(HOME)/Library/Frameworks",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-					"$(TARGET_BUILD_DIR)",
 				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
 				HEADER_SEARCH_PATHS = ../..;
@@ -323,9 +321,8 @@
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
 					"$(HOME)/Library/Frameworks",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-					"$(TARGET_BUILD_DIR)",
 				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
 				HEADER_SEARCH_PATHS = ../..;
