@@ -10,7 +10,7 @@ else
 fi
 
 if (( $? != 0 )); then
-	echo "ERROR! Make sure svn or svk is in you path. Can't proceed until this is done."
+	echo "ERROR! Make sure svn or svk is in your path. Can't proceed until this is done."
 	exit 2
 fi
 
