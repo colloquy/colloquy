@@ -36,18 +36,122 @@
 		1C914D360706148800CBA5F1 /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C914D340706148800CBA5F1 /* MVIRCChatRoom.m */; };
 		1C943AAB063C260800618CD9 /* MVFileTransfer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C943AA9063C260800618CD9 /* MVFileTransfer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C943AAC063C260800618CD9 /* MVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C943AAA063C260800618CD9 /* MVFileTransfer.m */; };
+		1C9AEE67086BA366008ED7AD /* write-buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373EC060E47CB00F6A81F /* write-buffer.c */; };
+		1C9AEE68086BA369008ED7AD /* special-vars.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373F0060E47CB00F6A81F /* special-vars.c */; };
+		1C9AEE69086BA36A008ED7AD /* signals.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373F2060E47CB00F6A81F /* signals.c */; };
+		1C9AEE6B086BA36E008ED7AD /* settings.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373F4060E47CB00F6A81F /* settings.c */; };
+		1C9AEE6C086BA36F008ED7AD /* session.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373F6060E47CB00F6A81F /* session.c */; };
+		1C9AEE6D086BA36F008ED7AD /* servers.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373F8060E47CB00F6A81F /* servers.c */; };
+		1C9AEE6E086BA370008ED7AD /* servers-setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373FA060E47CB00F6A81F /* servers-setup.c */; };
+		1C9AEE6F086BA372008ED7AD /* servers-reconnect.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373FC060E47CB00F6A81F /* servers-reconnect.c */; };
+		1C9AEE70086BA374008ED7AD /* rawlog.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37401060E47CB00F6A81F /* rawlog.c */; };
+		1C9AEE71086BA376008ED7AD /* queries.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37404060E47CB00F6A81F /* queries.c */; };
+		1C9AEE72086BA377008ED7AD /* pidwait.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37406060E47CB00F6A81F /* pidwait.c */; };
+		1C9AEE73086BA378008ED7AD /* nickmatch-cache.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37408060E47CB00F6A81F /* nickmatch-cache.c */; };
+		1C9AEE74086BA379008ED7AD /* nicklist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3740A060E47CB00F6A81F /* nicklist.c */; };
+		1C9AEE75086BA381008ED7AD /* network.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3740D060E47CB00F6A81F /* network.c */; };
+		1C9AEE76086BA381008ED7AD /* network-openssl.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3740E060E47CB00F6A81F /* network-openssl.c */; };
+		1C9AEE77086BA382008ED7AD /* net-sendbuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37410060E47CB00F6A81F /* net-sendbuffer.c */; };
+		1C9AEE78086BA384008ED7AD /* chat-protocols.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37413060E47CB00F6A81F /* chat-protocols.c */; };
+		1C9AEE79086BA385008ED7AD /* chat-commands.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37414060E47CB00F6A81F /* chat-commands.c */; };
+		1C9AEE7A086BA386008ED7AD /* channels.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37416060E47CB00F6A81F /* channels.c */; };
+		1C9AEE7B086BA387008ED7AD /* channels-setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37418060E47CB00F6A81F /* channels-setup.c */; };
+		1C9AEE7C086BA389008ED7AD /* args.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3741C060E47CB00F6A81F /* args.c */; };
+		1C9AEE7D086BA38A008ED7AD /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3741E060E47CB00F6A81F /* core.c */; };
+		1C9AEE7E086BA38C008ED7AD /* commands.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37420060E47CB00F6A81F /* commands.c */; };
+		1C9AEE7F086BA38D008ED7AD /* chatnets.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37422060E47CB00F6A81F /* chatnets.c */; };
+		1C9AEE80086BA38F008ED7AD /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37425060E47CB00F6A81F /* misc.c */; };
+		1C9AEE81086BA390008ED7AD /* masks.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37427060E47CB00F6A81F /* masks.c */; };
+		1C9AEE82086BA395008ED7AD /* log.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37429060E47CB00F6A81F /* log.c */; };
+		1C9AEE83086BA397008ED7AD /* log-away.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3742A060E47CB00F6A81F /* log-away.c */; };
+		1C9AEE84086BA398008ED7AD /* line-split.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3742C060E47CB00F6A81F /* line-split.c */; };
+		1C9AEE85086BA399008ED7AD /* levels.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3742E060E47CB00F6A81F /* levels.c */; };
+		1C9AEE86086BA39A008ED7AD /* ignore.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37430060E47CB00F6A81F /* ignore.c */; };
+		1C9AEE87086BA39B008ED7AD /* expandos.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37432060E47CB00F6A81F /* expandos.c */; };
+		1C9AEE88086BA39C008ED7AD /* modules.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37434060E47CB00F6A81F /* modules.c */; };
+		1C9AEE89086BA39D008ED7AD /* modules-load.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37436060E47CB00F6A81F /* modules-load.c */; };
+		1C9AEE8A086BA39F008ED7AD /* net-nonblock.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37438060E47CB00F6A81F /* net-nonblock.c */; };
+		1C9AEE8B086BA3A0008ED7AD /* net-disconnect.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3743A060E47CB00F6A81F /* net-disconnect.c */; };
+		1C9AEE8C086BA3A7008ED7AD /* servers-redirect.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373BD060E47A500F6A81F /* servers-redirect.c */; };
+		1C9AEE8E086BA3A8008ED7AD /* servers-idle.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373BF060E47A500F6A81F /* servers-idle.c */; };
+		1C9AEE8F086BA3AA008ED7AD /* modes.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373C3060E47A500F6A81F /* modes.c */; };
+		1C9AEE90086BA3AB008ED7AD /* mode-lists.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373C5060E47A500F6A81F /* mode-lists.c */; };
+		1C9AEE91086BA3AC008ED7AD /* massjoin.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373C6060E47A500F6A81F /* massjoin.c */; };
+		1C9AEE92086BA3AD008ED7AD /* lag.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373C7060E47A500F6A81F /* lag.c */; };
+		1C9AEE93086BA3AF008ED7AD /* irc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373C9060E47A500F6A81F /* irc.c */; };
+		1C9AEE94086BA3B0008ED7AD /* irc-session.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373CA060E47A500F6A81F /* irc-session.c */; };
+		1C9AEE95086BA3B1008ED7AD /* irc-servers.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373CC060E47A500F6A81F /* irc-servers.c */; };
+		1C9AEE96086BA3B2008ED7AD /* irc-servers-setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373CE060E47A500F6A81F /* irc-servers-setup.c */; };
+		1C9AEE97086BA3B3008ED7AD /* irc-servers-reconnect.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373CF060E47A500F6A81F /* irc-servers-reconnect.c */; };
+		1C9AEE98086BA3B4008ED7AD /* irc-queries.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D1060E47A500F6A81F /* irc-queries.c */; };
+		1C9AEE99086BA3B5008ED7AD /* netsplit.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D2060E47A500F6A81F /* netsplit.c */; };
+		1C9AEE9A086BA3B6008ED7AD /* irc-nicklist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D4060E47A500F6A81F /* irc-nicklist.c */; };
+		1C9AEE9B086BA3B7008ED7AD /* irc-masks.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D6060E47A500F6A81F /* irc-masks.c */; };
+		1C9AEE9C086BA3B8008ED7AD /* irc-expandos.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D7060E47A500F6A81F /* irc-expandos.c */; };
+		1C9AEE9D086BA3B9008ED7AD /* irc-core.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D8060E47A500F6A81F /* irc-core.c */; };
+		1C9AEE9E086BA3BE008ED7AD /* irc-commands.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373DA060E47A500F6A81F /* irc-commands.c */; };
+		1C9AEE9F086BA3BF008ED7AD /* irc-chatnets.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373DC060E47A500F6A81F /* irc-chatnets.c */; };
+		1C9AEEA0086BA3C0008ED7AD /* irc-channels.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373DE060E47A500F6A81F /* irc-channels.c */; };
+		1C9AEEA1086BA3C1008ED7AD /* irc-channels-setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373DF060E47A500F6A81F /* irc-channels-setup.c */; };
+		1C9AEEA2086BA3C2008ED7AD /* ctcp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373E1060E47A500F6A81F /* ctcp.c */; };
+		1C9AEEA3086BA3C3008ED7AD /* channels-query.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373E2060E47A500F6A81F /* channels-query.c */; };
+		1C9AEEA4086BA3C4008ED7AD /* channel-rejoin.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373E4060E47A500F6A81F /* channel-rejoin.c */; };
+		1C9AEEA5086BA3C5008ED7AD /* channel-events.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373E5060E47A500F6A81F /* channel-events.c */; };
+		1C9AEEA6086BA3C6008ED7AD /* bans.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373E7060E47A500F6A81F /* bans.c */; };
+		1C9AEEA7086BA3CE008ED7AD /* dcc-autoget.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3744D060E480400F6A81F /* dcc-autoget.c */; };
+		1C9AEEA8086BA3CE008ED7AD /* dcc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37440060E480400F6A81F /* dcc.c */; };
+		1C9AEEA9086BA3D1008ED7AD /* dcc-server.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37442060E480400F6A81F /* dcc-server.c */; };
+		1C9AEEAA086BA3D3008ED7AD /* dcc-send.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37444060E480400F6A81F /* dcc-send.c */; };
+		1C9AEEAB086BA3D5008ED7AD /* dcc-resume.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37445060E480400F6A81F /* dcc-resume.c */; };
+		1C9AEEAC086BA3D6008ED7AD /* dcc-queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37448060E480400F6A81F /* dcc-queue.c */; };
+		1C9AEEAD086BA3D8008ED7AD /* dcc-get.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3744E060E480400F6A81F /* dcc-get.c */; };
+		1C9AEEAE086BA3D9008ED7AD /* dcc-chat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3744B060E480400F6A81F /* dcc-chat.c */; };
+		1C9AEEAF086BA3DF008ED7AD /* autoignore.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37453060E485500F6A81F /* autoignore.c */; };
+		1C9AEEB1086BA3E1008ED7AD /* flood.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37454060E485500F6A81F /* flood.c */; };
+		1C9AEEB2086BA3E4008ED7AD /* notify-commands.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3745A060E487600F6A81F /* notify-commands.c */; };
+		1C9AEEB3086BA3E5008ED7AD /* notify-ison.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3745B060E487600F6A81F /* notify-ison.c */; };
+		1C9AEEB4086BA3E6008ED7AD /* notify-setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3745C060E487600F6A81F /* notify-setup.c */; };
+		1C9AEEB5086BA3E7008ED7AD /* notify-whois.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3745E060E487600F6A81F /* notify-whois.c */; };
+		1C9AEEB6086BA3E8008ED7AD /* notifylist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3745F060E487600F6A81F /* notifylist.c */; };
+		1C9AF036086BB565008ED7AD /* garray.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01A086BB565008ED7AD /* garray.c */; };
+		1C9AF037086BB565008ED7AD /* gcache.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01B086BB565008ED7AD /* gcache.c */; };
+		1C9AF038086BB565008ED7AD /* gcompletion.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01C086BB565008ED7AD /* gcompletion.c */; };
+		1C9AF039086BB565008ED7AD /* gdataset.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01D086BB565008ED7AD /* gdataset.c */; };
+		1C9AF03A086BB565008ED7AD /* gdate.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01E086BB565008ED7AD /* gdate.c */; };
+		1C9AF03B086BB565008ED7AD /* gerror.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01F086BB565008ED7AD /* gerror.c */; };
+		1C9AF03C086BB565008ED7AD /* ghash.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF020086BB565008ED7AD /* ghash.c */; };
+		1C9AF03D086BB565008ED7AD /* ghook.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF021086BB565008ED7AD /* ghook.c */; };
+		1C9AF03E086BB565008ED7AD /* giochannel.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF022086BB565008ED7AD /* giochannel.c */; };
+		1C9AF03F086BB565008ED7AD /* giounix.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF023086BB565008ED7AD /* giounix.c */; };
+		1C9AF042086BB565008ED7AD /* glist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF026086BB565008ED7AD /* glist.c */; };
+		1C9AF043086BB565008ED7AD /* gmain.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF027086BB565008ED7AD /* gmain.c */; };
+		1C9AF044086BB565008ED7AD /* gmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF028086BB565008ED7AD /* gmem.c */; };
+		1C9AF045086BB565008ED7AD /* gmessages.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF029086BB565008ED7AD /* gmessages.c */; };
+		1C9AF046086BB565008ED7AD /* gmutex.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02A086BB565008ED7AD /* gmutex.c */; };
+		1C9AF047086BB565008ED7AD /* gnode.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02B086BB565008ED7AD /* gnode.c */; };
+		1C9AF048086BB565008ED7AD /* gprimes.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02C086BB565008ED7AD /* gprimes.c */; };
+		1C9AF049086BB565008ED7AD /* grel.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02D086BB565008ED7AD /* grel.c */; };
+		1C9AF04A086BB565008ED7AD /* gscanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02E086BB565008ED7AD /* gscanner.c */; };
+		1C9AF04B086BB565008ED7AD /* gslist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02F086BB565008ED7AD /* gslist.c */; };
+		1C9AF04C086BB565008ED7AD /* gstrfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF030086BB565008ED7AD /* gstrfuncs.c */; };
+		1C9AF04D086BB565008ED7AD /* gstring.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF031086BB565008ED7AD /* gstring.c */; };
+		1C9AF04E086BB565008ED7AD /* gtimer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF032086BB565008ED7AD /* gtimer.c */; };
+		1C9AF04F086BB565008ED7AD /* gtree.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF033086BB565008ED7AD /* gtree.c */; };
+		1C9AF050086BB565008ED7AD /* gutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF034086BB565008ED7AD /* gutils.c */; };
+		1C9AF063086BB5C1008ED7AD /* findme.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF05B086BB5C1008ED7AD /* findme.c */; };
+		1C9AF065086BB5C1008ED7AD /* popt.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF05D086BB5C1008ED7AD /* popt.c */; };
+		1C9AF067086BB5C1008ED7AD /* poptconfig.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF05F086BB5C1008ED7AD /* poptconfig.c */; };
+		1C9AF068086BB5C1008ED7AD /* popthelp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF060086BB5C1008ED7AD /* popthelp.c */; };
+		1C9AF06A086BB5C1008ED7AD /* poptparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF062086BB5C1008ED7AD /* poptparse.c */; };
+		1C9AF071086BB5E5008ED7AD /* get.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF06B086BB5E5008ED7AD /* get.c */; };
+		1C9AF074086BB5E5008ED7AD /* parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF06E086BB5E5008ED7AD /* parse.c */; };
+		1C9AF075086BB5E5008ED7AD /* set.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF06F086BB5E5008ED7AD /* set.c */; };
+		1C9AF076086BB5E5008ED7AD /* write.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF070086BB5E5008ED7AD /* write.c */; };
+		1C9AF07A086BB638008ED7AD /* irc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF079086BB638008ED7AD /* irc.c */; };
+		1C9AF0A5086BBA2E008ED7AD /* recode.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF0A3086BBA2E008ED7AD /* recode.c */; };
 		1C9CF4FE0615091400330D8D /* MVChatPluginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C9CF4FF0615091500330D8D /* MVChatPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */; };
 		1C9CF5010615091700330D8D /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F52D043001873FC401EE70DE /* MVChatConnection.m */; };
-		1CA66041060EAEBF008FCC95 /* libglib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CA66040060EAEBF008FCC95 /* libglib.a */; };
-		1CA66045060EAEF3008FCC95 /* libirssi_config.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CA66044060EAEF3008FCC95 /* libirssi_config.a */; };
-		1CA66049060EAF05008FCC95 /* libpopt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CA66048060EAF05008FCC95 /* libpopt.a */; };
-		1CB37348060E315400F6A81F /* libirc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CB37347060E315400F6A81F /* libirc.a */; };
-		1CB3734C060E317700F6A81F /* libirc_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CB3734B060E317700F6A81F /* libirc_core.a */; };
-		1CB3734E060E31B200F6A81F /* libirc_dcc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CB3734D060E31B200F6A81F /* libirc_dcc.a */; };
-		1CB37351060E31C700F6A81F /* libirc_flood.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CB37350060E31C700F6A81F /* libirc_flood.a */; };
-		1CB37353060E31D000F6A81F /* libirc_notifylist.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CB37352060E31D000F6A81F /* libirc_notifylist.a */; };
-		1CB37355060E31EC00F6A81F /* libcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CB37354060E31EC00F6A81F /* libcore.a */; };
 		1CCA51800598AFBA00F0A4CD /* ChatCore.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */; };
 		1CCA51810598AFBA00F0A4CD /* ChatCore.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */; };
 		1CD020B505759347000F93B4 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD020B305759347000F93B4 /* NSStringAdditions.m */; };
@@ -78,16 +182,6 @@
 			name = Deployment;
 		};
 /* End PBXBuildStyle section */
-
-/* Begin PBXContainerItemProxy section */
-		1CB3748A060E4F4D00F6A81F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1CB37489060E4F1900F6A81F;
-			remoteInfo = "Irssi (Static Libraries)";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -126,92 +220,63 @@
 		1C943AA9063C260800618CD9 /* MVFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVFileTransfer.h; sourceTree = "<group>"; };
 		1C943AAA063C260800618CD9 /* MVFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVFileTransfer.m; sourceTree = "<group>"; };
 		1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
-		1C9CF46D0615085300330D8D /* windows-layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "windows-layout.h"; path = "Core/irssi/src/fe-common/core/windows-layout.h"; sourceTree = "<group>"; };
-		1C9CF46E0615085300330D8D /* windows-layout.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "windows-layout.c"; path = "Core/irssi/src/fe-common/core/windows-layout.c"; sourceTree = "<group>"; };
-		1C9CF46F0615085300330D8D /* window-items.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "window-items.h"; path = "Core/irssi/src/fe-common/core/window-items.h"; sourceTree = "<group>"; };
-		1C9CF4700615085300330D8D /* window-items.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "window-items.c"; path = "Core/irssi/src/fe-common/core/window-items.c"; sourceTree = "<group>"; };
-		1C9CF4710615085300330D8D /* window-commands.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "window-commands.c"; path = "Core/irssi/src/fe-common/core/window-commands.c"; sourceTree = "<group>"; };
-		1C9CF4720615085300330D8D /* window-activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "window-activity.h"; path = "Core/irssi/src/fe-common/core/window-activity.h"; sourceTree = "<group>"; };
-		1C9CF4730615085300330D8D /* window-activity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "window-activity.c"; path = "Core/irssi/src/fe-common/core/window-activity.c"; sourceTree = "<group>"; };
-		1C9CF4740615085300330D8D /* translation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = translation.h; path = "Core/irssi/src/fe-common/core/translation.h"; sourceTree = "<group>"; };
-		1C9CF4750615085300330D8D /* translation.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = translation.c; path = "Core/irssi/src/fe-common/core/translation.c"; sourceTree = "<group>"; };
-		1C9CF4760615085300330D8D /* themes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = themes.h; path = "Core/irssi/src/fe-common/core/themes.h"; sourceTree = "<group>"; };
-		1C9CF4770615085300330D8D /* themes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = themes.c; path = "Core/irssi/src/fe-common/core/themes.c"; sourceTree = "<group>"; };
-		1C9CF4780615085300330D8D /* printtext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = printtext.h; path = "Core/irssi/src/fe-common/core/printtext.h"; sourceTree = "<group>"; };
-		1C9CF4790615085300330D8D /* printtext.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = printtext.c; path = "Core/irssi/src/fe-common/core/printtext.c"; sourceTree = "<group>"; };
-		1C9CF47A0615085300330D8D /* module-formats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "module-formats.h"; path = "Core/irssi/src/fe-common/core/module-formats.h"; sourceTree = "<group>"; };
-		1C9CF47B0615085300330D8D /* module-formats.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "module-formats.c"; path = "Core/irssi/src/fe-common/core/module-formats.c"; sourceTree = "<group>"; };
-		1C9CF47C0615085300330D8D /* keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keyboard.h; path = "Core/irssi/src/fe-common/core/keyboard.h"; sourceTree = "<group>"; };
-		1C9CF47D0615085300330D8D /* keyboard.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = keyboard.c; path = "Core/irssi/src/fe-common/core/keyboard.c"; sourceTree = "<group>"; };
-		1C9CF47E0615085300330D8D /* hilight-text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "hilight-text.h"; path = "Core/irssi/src/fe-common/core/hilight-text.h"; sourceTree = "<group>"; };
-		1C9CF47F0615085300330D8D /* hilight-text.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "hilight-text.c"; path = "Core/irssi/src/fe-common/core/hilight-text.c"; sourceTree = "<group>"; };
-		1C9CF4800615085300330D8D /* formats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = formats.h; path = "Core/irssi/src/fe-common/core/formats.h"; sourceTree = "<group>"; };
-		1C9CF4810615085300330D8D /* formats.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = formats.c; path = "Core/irssi/src/fe-common/core/formats.c"; sourceTree = "<group>"; };
-		1C9CF4830615085300330D8D /* Global - windows */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Global - windows"; path = "Core/irssi/src/fe-common/core/fe-windows.h"; sourceTree = "<group>"; };
-		1C9CF4850615085300330D8D /* Global - windows */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "Global - windows"; path = "Core/irssi/src/fe-common/core/fe-windows.c"; sourceTree = "<group>"; };
-		1C9CF4860615085300330D8D /* fe-settings.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-settings.c"; path = "Core/irssi/src/fe-common/core/fe-settings.c"; sourceTree = "<group>"; };
-		1C9CF4870615085300330D8D /* fe-server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-server.c"; path = "Core/irssi/src/fe-common/core/fe-server.c"; sourceTree = "<group>"; };
-		1C9CF4880615085300330D8D /* completion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = completion.h; path = "Core/irssi/src/fe-common/core/completion.h"; sourceTree = "<group>"; };
-		1C9CF4890615085300330D8D /* completion.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = completion.c; path = "Core/irssi/src/fe-common/core/completion.c"; sourceTree = "<group>"; };
-		1C9CF48A0615085300330D8D /* chat-completion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "chat-completion.h"; path = "Core/irssi/src/fe-common/core/chat-completion.h"; sourceTree = "<group>"; };
-		1C9CF48B0615085300330D8D /* chat-completion.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "chat-completion.c"; path = "Core/irssi/src/fe-common/core/chat-completion.c"; sourceTree = "<group>"; };
-		1C9CF48C0615085300330D8D /* fe-queries.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "fe-queries.h"; path = "Core/irssi/src/fe-common/core/fe-queries.h"; sourceTree = "<group>"; };
-		1C9CF48D0615085300330D8D /* fe-queries.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-queries.c"; path = "Core/irssi/src/fe-common/core/fe-queries.c"; sourceTree = "<group>"; };
-		1C9CF48E0615085300330D8D /* fe-modules.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-modules.c"; path = "Core/irssi/src/fe-common/core/fe-modules.c"; sourceTree = "<group>"; };
-		1C9CF48F0615085300330D8D /* command-history.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "command-history.h"; path = "Core/irssi/src/fe-common/core/command-history.h"; sourceTree = "<group>"; };
-		1C9CF4900615085300330D8D /* command-history.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "command-history.c"; path = "Core/irssi/src/fe-common/core/command-history.c"; sourceTree = "<group>"; };
-		1C9CF4910615085300330D8D /* fe-common-core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "fe-common-core.h"; path = "Core/irssi/src/fe-common/core/fe-common-core.h"; sourceTree = "<group>"; };
-		1C9CF4920615085300330D8D /* fe-common-core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-common-core.c"; path = "Core/irssi/src/fe-common/core/fe-common-core.c"; sourceTree = "<group>"; };
-		1C9CF4930615085300330D8D /* fe-channels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "fe-channels.h"; path = "Core/irssi/src/fe-common/core/fe-channels.h"; sourceTree = "<group>"; };
-		1C9CF4940615085300330D8D /* fe-channels.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-channels.c"; path = "Core/irssi/src/fe-common/core/fe-channels.c"; sourceTree = "<group>"; };
-		1C9CF4950615085300330D8D /* autorun.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = autorun.c; path = "Core/irssi/src/fe-common/core/autorun.c"; sourceTree = "<group>"; };
-		1C9CF4960615085300330D8D /* autorun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = autorun.h; path = "Core/irssi/src/fe-common/core/autorun.h"; sourceTree = "<group>"; };
-		1C9CF4970615085300330D8D /* fe-messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "fe-messages.h"; path = "Core/irssi/src/fe-common/core/fe-messages.h"; sourceTree = "<group>"; };
-		1C9CF4980615085300330D8D /* fe-messages.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-messages.c"; path = "Core/irssi/src/fe-common/core/fe-messages.c"; sourceTree = "<group>"; };
-		1C9CF4990615085300330D8D /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = "Core/irssi/src/fe-common/core/module.h"; sourceTree = "<group>"; };
-		1C9CF49A0615085300330D8D /* fe-log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-log.c"; path = "Core/irssi/src/fe-common/core/fe-log.c"; sourceTree = "<group>"; };
-		1C9CF49B0615085300330D8D /* fe-ignore.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-ignore.c"; path = "Core/irssi/src/fe-common/core/fe-ignore.c"; sourceTree = "<group>"; };
-		1C9CF49C0615085300330D8D /* fe-ignore-messages.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-ignore-messages.c"; path = "Core/irssi/src/fe-common/core/fe-ignore-messages.c"; sourceTree = "<group>"; };
-		1C9CF49D0615085300330D8D /* fe-help.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-help.c"; path = "Core/irssi/src/fe-common/core/fe-help.c"; sourceTree = "<group>"; };
-		1C9CF49E0615085300330D8D /* fe-expandos.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-expandos.c"; path = "Core/irssi/src/fe-common/core/fe-expandos.c"; sourceTree = "<group>"; };
-		1C9CF49F0615085300330D8D /* fe-exec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "fe-exec.h"; path = "Core/irssi/src/fe-common/core/fe-exec.h"; sourceTree = "<group>"; };
-		1C9CF4A00615085300330D8D /* fe-exec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-exec.c"; path = "Core/irssi/src/fe-common/core/fe-exec.c"; sourceTree = "<group>"; };
-		1C9CF4A10615085300330D8D /* fe-core-commands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "fe-core-commands.h"; path = "Core/irssi/src/fe-common/core/fe-core-commands.h"; sourceTree = "<group>"; };
-		1C9CF4A20615085300330D8D /* fe-core-commands.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-core-commands.c"; path = "Core/irssi/src/fe-common/core/fe-core-commands.c"; sourceTree = "<group>"; };
-		1C9CF4D70615086A00330D8D /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = "Core/irssi/src/fe-common/irc/module.h"; sourceTree = "<group>"; };
-		1C9CF4D80615086A00330D8D /* module-formats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "module-formats.h"; path = "Core/irssi/src/fe-common/irc/module-formats.h"; sourceTree = "<group>"; };
-		1C9CF4D90615086A00330D8D /* module-formats.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "module-formats.c"; path = "Core/irssi/src/fe-common/irc/module-formats.c"; sourceTree = "<group>"; };
-		1C9CF4DA0615086A00330D8D /* irc-modules.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "irc-modules.c"; path = "Core/irssi/src/fe-common/irc/irc-modules.c"; sourceTree = "<group>"; };
-		1C9CF4DB0615086A00330D8D /* irc-completion.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "irc-completion.c"; path = "Core/irssi/src/fe-common/irc/irc-completion.c"; sourceTree = "<group>"; };
-		1C9CF4DC0615086A00330D8D /* fe-netsplit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-netsplit.c"; path = "Core/irssi/src/fe-common/irc/fe-netsplit.c"; sourceTree = "<group>"; };
-		1C9CF4DD0615086A00330D8D /* fe-netjoin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-netjoin.c"; path = "Core/irssi/src/fe-common/irc/fe-netjoin.c"; sourceTree = "<group>"; };
-		1C9CF4DE0615086A00330D8D /* fe-modes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-modes.c"; path = "Core/irssi/src/fe-common/irc/fe-modes.c"; sourceTree = "<group>"; };
-		1C9CF4DF0615086A00330D8D /* fe-ircnet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-ircnet.c"; path = "Core/irssi/src/fe-common/irc/fe-ircnet.c"; sourceTree = "<group>"; };
-		1C9CF4E00615086A00330D8D /* fe-irc-server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "fe-irc-server.h"; path = "Core/irssi/src/fe-common/irc/fe-irc-server.h"; sourceTree = "<group>"; };
-		1C9CF4E10615086A00330D8D /* fe-irc-server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-irc-server.c"; path = "Core/irssi/src/fe-common/irc/fe-irc-server.c"; sourceTree = "<group>"; };
-		1C9CF4E20615086A00330D8D /* fe-irc-queries.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-irc-queries.c"; path = "Core/irssi/src/fe-common/irc/fe-irc-queries.c"; sourceTree = "<group>"; };
-		1C9CF4E30615086A00330D8D /* fe-irc-messages.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-irc-messages.c"; path = "Core/irssi/src/fe-common/irc/fe-irc-messages.c"; sourceTree = "<group>"; };
-		1C9CF4E40615086A00330D8D /* fe-irc-commands.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-irc-commands.c"; path = "Core/irssi/src/fe-common/irc/fe-irc-commands.c"; sourceTree = "<group>"; };
-		1C9CF4E50615086A00330D8D /* fe-irc-channels.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-irc-channels.c"; path = "Core/irssi/src/fe-common/irc/fe-irc-channels.c"; sourceTree = "<group>"; };
-		1C9CF4E60615086A00330D8D /* fe-events.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-events.c"; path = "Core/irssi/src/fe-common/irc/fe-events.c"; sourceTree = "<group>"; };
-		1C9CF4E70615086A00330D8D /* fe-events-numeric.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-events-numeric.c"; path = "Core/irssi/src/fe-common/irc/fe-events-numeric.c"; sourceTree = "<group>"; };
-		1C9CF4E80615086A00330D8D /* fe-ctcp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-ctcp.c"; path = "Core/irssi/src/fe-common/irc/fe-ctcp.c"; sourceTree = "<group>"; };
-		1C9CF4E90615086A00330D8D /* fe-common-irc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "fe-common-irc.c"; path = "Core/irssi/src/fe-common/irc/fe-common-irc.c"; sourceTree = "<group>"; };
-		1CA66040060EAEBF008FCC95 /* libglib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglib.a; path = Core/irssi/glib/.libs/libglib.a; sourceTree = "<group>"; };
-		1CA66044060EAEF3008FCC95 /* libirssi_config.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirssi_config.a; path = "Core/irssi/src/lib-config/libirssi_config.a"; sourceTree = "<group>"; };
-		1CA66048060EAF05008FCC95 /* libpopt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpopt.a; path = "Core/irssi/src/lib-popt/libpopt.a"; sourceTree = "<group>"; };
-		1CB37347060E315400F6A81F /* libirc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc.a; path = Core/irssi/src/irc/libirc.a; sourceTree = "<group>"; };
-		1CB3734B060E317700F6A81F /* libirc_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc_core.a; path = Core/irssi/src/irc/core/libirc_core.a; sourceTree = "<group>"; };
-		1CB3734D060E31B200F6A81F /* libirc_dcc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc_dcc.a; path = Core/irssi/src/irc/dcc/libirc_dcc.a; sourceTree = "<group>"; };
-		1CB37350060E31C700F6A81F /* libirc_flood.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc_flood.a; path = Core/irssi/src/irc/flood/libirc_flood.a; sourceTree = "<group>"; };
-		1CB37352060E31D000F6A81F /* libirc_notifylist.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc_notifylist.a; path = Core/irssi/src/irc/notifylist/libirc_notifylist.a; sourceTree = "<group>"; };
-		1CB37354060E31EC00F6A81F /* libcore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcore.a; path = Core/irssi/src/core/libcore.a; sourceTree = "<group>"; };
+		1C9AF019086BB565008ED7AD /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = Core/irssi/glib/config.h; sourceTree = "<group>"; };
+		1C9AF01A086BB565008ED7AD /* garray.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = garray.c; path = Core/irssi/glib/garray.c; sourceTree = "<group>"; };
+		1C9AF01B086BB565008ED7AD /* gcache.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gcache.c; path = Core/irssi/glib/gcache.c; sourceTree = "<group>"; };
+		1C9AF01C086BB565008ED7AD /* gcompletion.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gcompletion.c; path = Core/irssi/glib/gcompletion.c; sourceTree = "<group>"; };
+		1C9AF01D086BB565008ED7AD /* gdataset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gdataset.c; path = Core/irssi/glib/gdataset.c; sourceTree = "<group>"; };
+		1C9AF01E086BB565008ED7AD /* gdate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gdate.c; path = Core/irssi/glib/gdate.c; sourceTree = "<group>"; };
+		1C9AF01F086BB565008ED7AD /* gerror.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gerror.c; path = Core/irssi/glib/gerror.c; sourceTree = "<group>"; };
+		1C9AF020086BB565008ED7AD /* ghash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ghash.c; path = Core/irssi/glib/ghash.c; sourceTree = "<group>"; };
+		1C9AF021086BB565008ED7AD /* ghook.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ghook.c; path = Core/irssi/glib/ghook.c; sourceTree = "<group>"; };
+		1C9AF022086BB565008ED7AD /* giochannel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = giochannel.c; path = Core/irssi/glib/giochannel.c; sourceTree = "<group>"; };
+		1C9AF023086BB565008ED7AD /* giounix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = giounix.c; path = Core/irssi/glib/giounix.c; sourceTree = "<group>"; };
+		1C9AF024086BB565008ED7AD /* glib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glib.h; path = Core/irssi/glib/glib.h; sourceTree = "<group>"; };
+		1C9AF025086BB565008ED7AD /* glibconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glibconfig.h; path = Core/irssi/glib/glibconfig.h; sourceTree = "<group>"; };
+		1C9AF026086BB565008ED7AD /* glist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glist.c; path = Core/irssi/glib/glist.c; sourceTree = "<group>"; };
+		1C9AF027086BB565008ED7AD /* gmain.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gmain.c; path = Core/irssi/glib/gmain.c; sourceTree = "<group>"; };
+		1C9AF028086BB565008ED7AD /* gmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gmem.c; path = Core/irssi/glib/gmem.c; sourceTree = "<group>"; };
+		1C9AF029086BB565008ED7AD /* gmessages.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gmessages.c; path = Core/irssi/glib/gmessages.c; sourceTree = "<group>"; };
+		1C9AF02A086BB565008ED7AD /* gmutex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gmutex.c; path = Core/irssi/glib/gmutex.c; sourceTree = "<group>"; };
+		1C9AF02B086BB565008ED7AD /* gnode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gnode.c; path = Core/irssi/glib/gnode.c; sourceTree = "<group>"; };
+		1C9AF02C086BB565008ED7AD /* gprimes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gprimes.c; path = Core/irssi/glib/gprimes.c; sourceTree = "<group>"; };
+		1C9AF02D086BB565008ED7AD /* grel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = grel.c; path = Core/irssi/glib/grel.c; sourceTree = "<group>"; };
+		1C9AF02E086BB565008ED7AD /* gscanner.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gscanner.c; path = Core/irssi/glib/gscanner.c; sourceTree = "<group>"; };
+		1C9AF02F086BB565008ED7AD /* gslist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gslist.c; path = Core/irssi/glib/gslist.c; sourceTree = "<group>"; };
+		1C9AF030086BB565008ED7AD /* gstrfuncs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gstrfuncs.c; path = Core/irssi/glib/gstrfuncs.c; sourceTree = "<group>"; };
+		1C9AF031086BB565008ED7AD /* gstring.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gstring.c; path = Core/irssi/glib/gstring.c; sourceTree = "<group>"; };
+		1C9AF032086BB565008ED7AD /* gtimer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gtimer.c; path = Core/irssi/glib/gtimer.c; sourceTree = "<group>"; };
+		1C9AF033086BB565008ED7AD /* gtree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gtree.c; path = Core/irssi/glib/gtree.c; sourceTree = "<group>"; };
+		1C9AF034086BB565008ED7AD /* gutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gutils.c; path = Core/irssi/glib/gutils.c; sourceTree = "<group>"; };
+		1C9AF05B086BB5C1008ED7AD /* findme.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = findme.c; path = "Core/irssi/src/lib-popt/findme.c"; sourceTree = "<group>"; };
+		1C9AF05C086BB5C1008ED7AD /* findme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = findme.h; path = "Core/irssi/src/lib-popt/findme.h"; sourceTree = "<group>"; };
+		1C9AF05D086BB5C1008ED7AD /* popt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = popt.c; path = "Core/irssi/src/lib-popt/popt.c"; sourceTree = "<group>"; };
+		1C9AF05E086BB5C1008ED7AD /* popt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = popt.h; path = "Core/irssi/src/lib-popt/popt.h"; sourceTree = "<group>"; };
+		1C9AF05F086BB5C1008ED7AD /* poptconfig.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = poptconfig.c; path = "Core/irssi/src/lib-popt/poptconfig.c"; sourceTree = "<group>"; };
+		1C9AF060086BB5C1008ED7AD /* popthelp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = popthelp.c; path = "Core/irssi/src/lib-popt/popthelp.c"; sourceTree = "<group>"; };
+		1C9AF061086BB5C1008ED7AD /* poptint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = poptint.h; path = "Core/irssi/src/lib-popt/poptint.h"; sourceTree = "<group>"; };
+		1C9AF062086BB5C1008ED7AD /* poptparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = poptparse.c; path = "Core/irssi/src/lib-popt/poptparse.c"; sourceTree = "<group>"; };
+		1C9AF06B086BB5E5008ED7AD /* get.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = get.c; path = "Core/irssi/src/lib-config/get.c"; sourceTree = "<group>"; };
+		1C9AF06C086BB5E5008ED7AD /* iconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iconfig.h; path = "Core/irssi/src/lib-config/iconfig.h"; sourceTree = "<group>"; };
+		1C9AF06D086BB5E5008ED7AD /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = "Core/irssi/src/lib-config/module.h"; sourceTree = "<group>"; };
+		1C9AF06E086BB5E5008ED7AD /* parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parse.c; path = "Core/irssi/src/lib-config/parse.c"; sourceTree = "<group>"; };
+		1C9AF06F086BB5E5008ED7AD /* set.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = set.c; path = "Core/irssi/src/lib-config/set.c"; sourceTree = "<group>"; };
+		1C9AF070086BB5E5008ED7AD /* write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = write.c; path = "Core/irssi/src/lib-config/write.c"; sourceTree = "<group>"; };
+		1C9AF077086BB60A008ED7AD /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = Core/irssi/src/core/module.h; sourceTree = "<group>"; };
+		1C9AF079086BB638008ED7AD /* irc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = irc.c; path = Core/irssi/src/irc/irc.c; sourceTree = "<group>"; };
+		1C9AF07B086BB69F008ED7AD /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = Core/irssi/src/irc/core/module.h; sourceTree = "<group>"; };
+		1C9AF07D086BB6C2008ED7AD /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = Core/irssi/src/irc/notifylist/module.h; sourceTree = "<group>"; };
+		1C9AF080086BB6E3008ED7AD /* autoignore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = autoignore.h; path = Core/irssi/src/irc/flood/autoignore.h; sourceTree = "<group>"; };
+		1C9AF081086BB6E3008ED7AD /* flood.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = flood.h; path = Core/irssi/src/irc/flood/flood.h; sourceTree = "<group>"; };
+		1C9AF082086BB6E3008ED7AD /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = Core/irssi/src/irc/flood/module.h; sourceTree = "<group>"; };
+		1C9AF086086BB700008ED7AD /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = Core/irssi/src/irc/dcc/module.h; sourceTree = "<group>"; };
+		1C9AF0A3086BBA2E008ED7AD /* recode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = recode.c; path = Core/irssi/src/core/recode.c; sourceTree = "<group>"; };
+		1C9AF0A4086BBA2E008ED7AD /* recode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = recode.h; path = Core/irssi/src/core/recode.h; sourceTree = "<group>"; };
 		1CB373BC060E47A500F6A81F /* servers-redirect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "servers-redirect.h"; path = "Core/irssi/src/irc/core/servers-redirect.h"; sourceTree = "<group>"; };
 		1CB373BD060E47A500F6A81F /* servers-redirect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "servers-redirect.c"; path = "Core/irssi/src/irc/core/servers-redirect.c"; sourceTree = "<group>"; };
 		1CB373BE060E47A500F6A81F /* servers-idle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "servers-idle.h"; path = "Core/irssi/src/irc/core/servers-idle.h"; sourceTree = "<group>"; };
 		1CB373BF060E47A500F6A81F /* servers-idle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "servers-idle.c"; path = "Core/irssi/src/irc/core/servers-idle.c"; sourceTree = "<group>"; };
 		1CB373C0060E47A500F6A81F /* netsplit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = netsplit.h; path = Core/irssi/src/irc/core/netsplit.h; sourceTree = "<group>"; };
-		1CB373C1060E47A500F6A81F /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = Core/irssi/src/irc/core/module.h; sourceTree = "<group>"; };
 		1CB373C2060E47A500F6A81F /* modes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = modes.h; path = Core/irssi/src/irc/core/modes.h; sourceTree = "<group>"; };
 		1CB373C3060E47A500F6A81F /* modes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = modes.c; path = Core/irssi/src/irc/core/modes.c; sourceTree = "<group>"; };
 		1CB373C4060E47A500F6A81F /* mode-lists.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "mode-lists.h"; path = "Core/irssi/src/irc/core/mode-lists.h"; sourceTree = "<group>"; };
@@ -326,11 +391,9 @@
 		1CB37434060E47CB00F6A81F /* modules.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = modules.c; path = Core/irssi/src/core/modules.c; sourceTree = "<group>"; };
 		1CB37435060E47CB00F6A81F /* modules-load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "modules-load.h"; path = "Core/irssi/src/core/modules-load.h"; sourceTree = "<group>"; };
 		1CB37436060E47CB00F6A81F /* modules-load.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "modules-load.c"; path = "Core/irssi/src/core/modules-load.c"; sourceTree = "<group>"; };
-		1CB37437060E47CB00F6A81F /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = Core/irssi/src/core/module.h; sourceTree = "<group>"; };
 		1CB37438060E47CB00F6A81F /* net-nonblock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "net-nonblock.c"; path = "Core/irssi/src/core/net-nonblock.c"; sourceTree = "<group>"; };
 		1CB37439060E47CB00F6A81F /* net-disconnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "net-disconnect.h"; path = "Core/irssi/src/core/net-disconnect.h"; sourceTree = "<group>"; };
 		1CB3743A060E47CB00F6A81F /* net-disconnect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "net-disconnect.c"; path = "Core/irssi/src/core/net-disconnect.c"; sourceTree = "<group>"; };
-		1CB3743E060E480400F6A81F /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = Core/irssi/src/irc/dcc/module.h; sourceTree = "<group>"; };
 		1CB3743F060E480400F6A81F /* dcc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dcc.h; path = Core/irssi/src/irc/dcc/dcc.h; sourceTree = "<group>"; };
 		1CB37440060E480400F6A81F /* dcc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dcc.c; path = Core/irssi/src/irc/dcc/dcc.c; sourceTree = "<group>"; };
 		1CB37441060E480400F6A81F /* dcc-server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "dcc-server.h"; path = "Core/irssi/src/irc/dcc/dcc-server.h"; sourceTree = "<group>"; };
@@ -350,8 +413,6 @@
 		1CB3744F060E480400F6A81F /* dcc-file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "dcc-file.h"; path = "Core/irssi/src/irc/dcc/dcc-file.h"; sourceTree = "<group>"; };
 		1CB37453060E485500F6A81F /* autoignore.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = autoignore.c; path = Core/irssi/src/irc/flood/autoignore.c; sourceTree = "<group>"; };
 		1CB37454060E485500F6A81F /* flood.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = flood.c; path = Core/irssi/src/irc/flood/flood.c; sourceTree = "<group>"; };
-		1CB37455060E485500F6A81F /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = Core/irssi/src/irc/flood/module.h; sourceTree = "<group>"; };
-		1CB37459060E487600F6A81F /* module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = module.h; path = Core/irssi/src/irc/notifylist/module.h; sourceTree = "<group>"; };
 		1CB3745A060E487600F6A81F /* notify-commands.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "notify-commands.c"; path = "Core/irssi/src/irc/notifylist/notify-commands.c"; sourceTree = "<group>"; };
 		1CB3745B060E487600F6A81F /* notify-ison.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "notify-ison.c"; path = "Core/irssi/src/irc/notifylist/notify-ison.c"; sourceTree = "<group>"; };
 		1CB3745C060E487600F6A81F /* notify-setup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "notify-setup.c"; path = "Core/irssi/src/irc/notifylist/notify-setup.c"; sourceTree = "<group>"; };
@@ -389,15 +450,6 @@
 			files = (
 				1C51B485052DE0CB00BB459B /* SystemConfiguration.framework in Frameworks */,
 				1C51B487052DE0CB00BB459B /* Cocoa.framework in Frameworks */,
-				1CB37348060E315400F6A81F /* libirc.a in Frameworks */,
-				1CB3734C060E317700F6A81F /* libirc_core.a in Frameworks */,
-				1CB3734E060E31B200F6A81F /* libirc_dcc.a in Frameworks */,
-				1CB37351060E31C700F6A81F /* libirc_flood.a in Frameworks */,
-				1CB37353060E31D000F6A81F /* libirc_notifylist.a in Frameworks */,
-				1CB37355060E31EC00F6A81F /* libcore.a in Frameworks */,
-				1CA66041060EAEBF008FCC95 /* libglib.a in Frameworks */,
-				1CA66045060EAEF3008FCC95 /* libirssi_config.a in Frameworks */,
-				1CA66049060EAF05008FCC95 /* libpopt.a in Frameworks */,
 				1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */,
 				1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */,
 			);
@@ -422,7 +474,6 @@
 		089C1671FE841209C02AAC07 /* Frameworks & Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1CB37344060E311900F6A81F /* Static Libraries */,
 				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
 				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
 			);
@@ -452,9 +503,11 @@
 		1C5CBF2D06FF92C90006C5B1 /* IRC Support */ = {
 			isa = PBXGroup;
 			children = (
+				1C9AEF28086BAC74008ED7AD /* Config Library */,
+				1C9AEF25086BAC4E008ED7AD /* POPT Library */,
+				1C9AEDC4086B9998008ED7AD /* GLIB Core */,
 				1CB373EA060E47B300F6A81F /* Irssi Core */,
 				1CB37361060E470600F6A81F /* Irssi IRC Core */,
-				1C9CF42B061507CE00330D8D /* Irssi Front End Common */,
 				1C5A1A2306F8F4A000A51F10 /* MVIRCChatConnection.m */,
 				1C5A1A2206F8F4A000A51F10 /* MVIRCChatConnection.h */,
 				1C914D340706148800CBA5F1 /* MVIRCChatRoom.m */,
@@ -490,98 +543,67 @@
 			name = Configurations;
 			sourceTree = "<group>";
 		};
-		1C9CF42B061507CE00330D8D /* Irssi Front End Common */ = {
+		1C9AEDC4086B9998008ED7AD /* GLIB Core */ = {
 			isa = PBXGroup;
 			children = (
-				1C9CF42E061507E900330D8D /* Core */,
-				1C9CF4660615080700330D8D /* IRC */,
+				1C9AF019086BB565008ED7AD /* config.h */,
+				1C9AF024086BB565008ED7AD /* glib.h */,
+				1C9AF025086BB565008ED7AD /* glibconfig.h */,
+				1C9AF01A086BB565008ED7AD /* garray.c */,
+				1C9AF01B086BB565008ED7AD /* gcache.c */,
+				1C9AF01C086BB565008ED7AD /* gcompletion.c */,
+				1C9AF01D086BB565008ED7AD /* gdataset.c */,
+				1C9AF01E086BB565008ED7AD /* gdate.c */,
+				1C9AF01F086BB565008ED7AD /* gerror.c */,
+				1C9AF020086BB565008ED7AD /* ghash.c */,
+				1C9AF021086BB565008ED7AD /* ghook.c */,
+				1C9AF022086BB565008ED7AD /* giochannel.c */,
+				1C9AF023086BB565008ED7AD /* giounix.c */,
+				1C9AF026086BB565008ED7AD /* glist.c */,
+				1C9AF027086BB565008ED7AD /* gmain.c */,
+				1C9AF028086BB565008ED7AD /* gmem.c */,
+				1C9AF029086BB565008ED7AD /* gmessages.c */,
+				1C9AF02A086BB565008ED7AD /* gmutex.c */,
+				1C9AF02B086BB565008ED7AD /* gnode.c */,
+				1C9AF02C086BB565008ED7AD /* gprimes.c */,
+				1C9AF02D086BB565008ED7AD /* grel.c */,
+				1C9AF02E086BB565008ED7AD /* gscanner.c */,
+				1C9AF02F086BB565008ED7AD /* gslist.c */,
+				1C9AF030086BB565008ED7AD /* gstrfuncs.c */,
+				1C9AF031086BB565008ED7AD /* gstring.c */,
+				1C9AF032086BB565008ED7AD /* gtimer.c */,
+				1C9AF033086BB565008ED7AD /* gtree.c */,
+				1C9AF034086BB565008ED7AD /* gutils.c */,
 			);
-			name = "Irssi Front End Common";
+			name = "GLIB Core";
 			sourceTree = "<group>";
 		};
-		1C9CF42E061507E900330D8D /* Core */ = {
+		1C9AEF25086BAC4E008ED7AD /* POPT Library */ = {
 			isa = PBXGroup;
 			children = (
-				1C9CF46D0615085300330D8D /* windows-layout.h */,
-				1C9CF46E0615085300330D8D /* windows-layout.c */,
-				1C9CF46F0615085300330D8D /* window-items.h */,
-				1C9CF4700615085300330D8D /* window-items.c */,
-				1C9CF4710615085300330D8D /* window-commands.c */,
-				1C9CF4720615085300330D8D /* window-activity.h */,
-				1C9CF4730615085300330D8D /* window-activity.c */,
-				1C9CF4740615085300330D8D /* translation.h */,
-				1C9CF4750615085300330D8D /* translation.c */,
-				1C9CF4760615085300330D8D /* themes.h */,
-				1C9CF4770615085300330D8D /* themes.c */,
-				1C9CF4780615085300330D8D /* printtext.h */,
-				1C9CF4790615085300330D8D /* printtext.c */,
-				1C9CF47A0615085300330D8D /* module-formats.h */,
-				1C9CF47B0615085300330D8D /* module-formats.c */,
-				1C9CF47C0615085300330D8D /* keyboard.h */,
-				1C9CF47D0615085300330D8D /* keyboard.c */,
-				1C9CF47E0615085300330D8D /* hilight-text.h */,
-				1C9CF47F0615085300330D8D /* hilight-text.c */,
-				1C9CF4800615085300330D8D /* formats.h */,
-				1C9CF4810615085300330D8D /* formats.c */,
-				1C9CF4820615085300330D8D /* fe.h */,
-				1C9CF4840615085300330D8D /* fe.c */,
-				1C9CF4860615085300330D8D /* fe-settings.c */,
-				1C9CF4870615085300330D8D /* fe-server.c */,
-				1C9CF4880615085300330D8D /* completion.h */,
-				1C9CF4890615085300330D8D /* completion.c */,
-				1C9CF48A0615085300330D8D /* chat-completion.h */,
-				1C9CF48B0615085300330D8D /* chat-completion.c */,
-				1C9CF48C0615085300330D8D /* fe-queries.h */,
-				1C9CF48D0615085300330D8D /* fe-queries.c */,
-				1C9CF48E0615085300330D8D /* fe-modules.c */,
-				1C9CF48F0615085300330D8D /* command-history.h */,
-				1C9CF4900615085300330D8D /* command-history.c */,
-				1C9CF4910615085300330D8D /* fe-common-core.h */,
-				1C9CF4920615085300330D8D /* fe-common-core.c */,
-				1C9CF4930615085300330D8D /* fe-channels.h */,
-				1C9CF4940615085300330D8D /* fe-channels.c */,
-				1C9CF4950615085300330D8D /* autorun.c */,
-				1C9CF4960615085300330D8D /* autorun.h */,
-				1C9CF4970615085300330D8D /* fe-messages.h */,
-				1C9CF4980615085300330D8D /* fe-messages.c */,
-				1C9CF4990615085300330D8D /* module.h */,
-				1C9CF49A0615085300330D8D /* fe-log.c */,
-				1C9CF49B0615085300330D8D /* fe-ignore.c */,
-				1C9CF49C0615085300330D8D /* fe-ignore-messages.c */,
-				1C9CF49D0615085300330D8D /* fe-help.c */,
-				1C9CF49E0615085300330D8D /* fe-expandos.c */,
-				1C9CF49F0615085300330D8D /* fe-exec.h */,
-				1C9CF4A00615085300330D8D /* fe-exec.c */,
-				1C9CF4A10615085300330D8D /* fe-core-commands.h */,
-				1C9CF4A20615085300330D8D /* fe-core-commands.c */,
+				1C9AF05B086BB5C1008ED7AD /* findme.c */,
+				1C9AF05C086BB5C1008ED7AD /* findme.h */,
+				1C9AF05D086BB5C1008ED7AD /* popt.c */,
+				1C9AF05E086BB5C1008ED7AD /* popt.h */,
+				1C9AF05F086BB5C1008ED7AD /* poptconfig.c */,
+				1C9AF060086BB5C1008ED7AD /* popthelp.c */,
+				1C9AF061086BB5C1008ED7AD /* poptint.h */,
+				1C9AF062086BB5C1008ED7AD /* poptparse.c */,
 			);
-			name = Core;
+			name = "POPT Library";
 			sourceTree = "<group>";
 		};
-		1C9CF4660615080700330D8D /* IRC */ = {
+		1C9AEF28086BAC74008ED7AD /* Config Library */ = {
 			isa = PBXGroup;
 			children = (
-				1C9CF4D70615086A00330D8D /* module.h */,
-				1C9CF4D80615086A00330D8D /* module-formats.h */,
-				1C9CF4D90615086A00330D8D /* module-formats.c */,
-				1C9CF4DA0615086A00330D8D /* irc-modules.c */,
-				1C9CF4DB0615086A00330D8D /* irc-completion.c */,
-				1C9CF4DC0615086A00330D8D /* fe-netsplit.c */,
-				1C9CF4DD0615086A00330D8D /* fe-netjoin.c */,
-				1C9CF4DE0615086A00330D8D /* fe-modes.c */,
-				1C9CF4DF0615086A00330D8D /* fe-ircnet.c */,
-				1C9CF4E00615086A00330D8D /* fe-irc-server.h */,
-				1C9CF4E10615086A00330D8D /* fe-irc-server.c */,
-				1C9CF4E20615086A00330D8D /* fe-irc-queries.c */,
-				1C9CF4E30615086A00330D8D /* fe-irc-messages.c */,
-				1C9CF4E40615086A00330D8D /* fe-irc-commands.c */,
-				1C9CF4E50615086A00330D8D /* fe-irc-channels.c */,
-				1C9CF4E60615086A00330D8D /* fe-events.c */,
-				1C9CF4E70615086A00330D8D /* fe-events-numeric.c */,
-				1C9CF4E80615086A00330D8D /* fe-ctcp.c */,
-				1C9CF4E90615086A00330D8D /* fe-common-irc.c */,
+				1C9AF06B086BB5E5008ED7AD /* get.c */,
+				1C9AF06C086BB5E5008ED7AD /* iconfig.h */,
+				1C9AF06D086BB5E5008ED7AD /* module.h */,
+				1C9AF06E086BB5E5008ED7AD /* parse.c */,
+				1C9AF06F086BB5E5008ED7AD /* set.c */,
+				1C9AF070086BB5E5008ED7AD /* write.c */,
 			);
-			name = IRC;
+			name = "Config Library";
 			sourceTree = "<group>";
 		};
 		1CB2C8CC052DDA360094AAA4 /* Products */ = {
@@ -592,37 +614,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1CB37341060E310A00F6A81F /* Irssi */ = {
-			isa = PBXGroup;
-			children = (
-				1CA66044060EAEF3008FCC95 /* libirssi_config.a */,
-				1CA66048060EAF05008FCC95 /* libpopt.a */,
-				1CB37354060E31EC00F6A81F /* libcore.a */,
-				1CB37347060E315400F6A81F /* libirc.a */,
-				1CB3734B060E317700F6A81F /* libirc_core.a */,
-				1CB3734D060E31B200F6A81F /* libirc_dcc.a */,
-				1CB37350060E31C700F6A81F /* libirc_flood.a */,
-				1CB37352060E31D000F6A81F /* libirc_notifylist.a */,
-			);
-			name = Irssi;
-			sourceTree = "<group>";
-		};
-		1CB37344060E311900F6A81F /* Static Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				1CA66040060EAEBF008FCC95 /* libglib.a */,
-				1CB37341060E310A00F6A81F /* Irssi */,
-			);
-			name = "Static Libraries";
-			sourceTree = "<group>";
-		};
 		1CB37361060E470600F6A81F /* Irssi IRC Core */ = {
 			isa = PBXGroup;
 			children = (
 				1CB37458060E486200F6A81F /* Notify List */,
 				1CB37452060E484800F6A81F /* Flood */,
 				1CB3743D060E47DF00F6A81F /* DCC */,
-				1CB373C1060E47A500F6A81F /* module.h */,
+				1C9AF079086BB638008ED7AD /* irc.c */,
+				1C9AF07B086BB69F008ED7AD /* module.h */,
 				1CB373BD060E47A500F6A81F /* servers-redirect.c */,
 				1CB373BC060E47A500F6A81F /* servers-redirect.h */,
 				1CB373BF060E47A500F6A81F /* servers-idle.c */,
@@ -673,6 +672,9 @@
 		1CB373EA060E47B300F6A81F /* Irssi Core */ = {
 			isa = PBXGroup;
 			children = (
+				1C9AF077086BB60A008ED7AD /* module.h */,
+				1C9AF0A3086BBA2E008ED7AD /* recode.c */,
+				1C9AF0A4086BBA2E008ED7AD /* recode.h */,
 				1CB373EB060E47CB00F6A81F /* write-buffer.h */,
 				1CB373EC060E47CB00F6A81F /* write-buffer.c */,
 				1CB373ED060E47CB00F6A81F /* window-item-rec.h */,
@@ -749,7 +751,6 @@
 				1CB37434060E47CB00F6A81F /* modules.c */,
 				1CB37435060E47CB00F6A81F /* modules-load.h */,
 				1CB37436060E47CB00F6A81F /* modules-load.c */,
-				1CB37437060E47CB00F6A81F /* module.h */,
 				1CB37438060E47CB00F6A81F /* net-nonblock.c */,
 				1CB37439060E47CB00F6A81F /* net-disconnect.h */,
 				1CB3743A060E47CB00F6A81F /* net-disconnect.c */,
@@ -760,7 +761,7 @@
 		1CB3743D060E47DF00F6A81F /* DCC */ = {
 			isa = PBXGroup;
 			children = (
-				1CB3743E060E480400F6A81F /* module.h */,
+				1C9AF086086BB700008ED7AD /* module.h */,
 				1CB37446060E480400F6A81F /* dcc-rec.h */,
 				1CB3744F060E480400F6A81F /* dcc-file.h */,
 				1CB3744A060E480400F6A81F /* dcc-file-rec.h */,
@@ -785,9 +786,11 @@
 		1CB37452060E484800F6A81F /* Flood */ = {
 			isa = PBXGroup;
 			children = (
+				1C9AF080086BB6E3008ED7AD /* autoignore.h */,
+				1C9AF081086BB6E3008ED7AD /* flood.h */,
+				1C9AF082086BB6E3008ED7AD /* module.h */,
 				1CB37453060E485500F6A81F /* autoignore.c */,
 				1CB37454060E485500F6A81F /* flood.c */,
-				1CB37455060E485500F6A81F /* module.h */,
 			);
 			name = Flood;
 			sourceTree = "<group>";
@@ -795,7 +798,7 @@
 		1CB37458060E486200F6A81F /* Notify List */ = {
 			isa = PBXGroup;
 			children = (
-				1CB37459060E487600F6A81F /* module.h */,
+				1C9AF07D086BB6C2008ED7AD /* module.h */,
 				1CB3745A060E487600F6A81F /* notify-commands.c */,
 				1CB3745B060E487600F6A81F /* notify-ison.c */,
 				1CB3745C060E487600F6A81F /* notify-setup.c */,
@@ -889,35 +892,6 @@
 		};
 /* End PBXHeadersBuildPhase section */
 
-/* Begin PBXLegacyTarget section */
-		1CB37489060E4F1900F6A81F /* Irssi (Static Libraries) */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = "$(ACTION)";
-			buildConfigurationList = 1C041DD608553AD200A5A5BA /* Build configuration list for PBXLegacyTarget "Irssi (Static Libraries)" */;
-			buildPhases = (
-			);
-			buildSettings = {
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "Irssi (Static Libraries)";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = Core/irssi;
-			dependencies = (
-			);
-			name = "Irssi (Static Libraries)";
-			passBuildSettingsInEnvironment = 1;
-			productName = "Irssi (Static Libraries)";
-		};
-/* End PBXLegacyTarget section */
-
 /* Begin PBXNativeTarget section */
 		1C51B46E052DE0CB00BB459B /* Chat Core (Framework) */ = {
 			isa = PBXNativeTarget;
@@ -997,7 +971,6 @@
 				WRAPPER_EXTENSION = framework;
 			};
 			dependencies = (
-				1CB3748B060E4F4D00F6A81F /* PBXTargetDependency */,
 			);
 			name = "Chat Core (Framework)";
 			productInstallPath = "@executable_path/../Frameworks";
@@ -1039,7 +1012,6 @@
 			projectDirPath = "";
 			targets = (
 				1C51B46E052DE0CB00BB459B /* Chat Core (Framework) */,
-				1CB37489060E4F1900F6A81F /* Irssi (Static Libraries) */,
 			);
 		};
 /* End PBXProject section */
@@ -1084,74 +1056,125 @@
 				431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */,
 				1C668DBA07BF9C4C008400F7 /* NSScannerAdditions.m in Sources */,
 				1C7C776A07DBBA4500FB5F83 /* NSScriptCommandAdditions.m in Sources */,
+				1C9AEE67086BA366008ED7AD /* write-buffer.c in Sources */,
+				1C9AEE68086BA369008ED7AD /* special-vars.c in Sources */,
+				1C9AEE69086BA36A008ED7AD /* signals.c in Sources */,
+				1C9AEE6B086BA36E008ED7AD /* settings.c in Sources */,
+				1C9AEE6C086BA36F008ED7AD /* session.c in Sources */,
+				1C9AEE6D086BA36F008ED7AD /* servers.c in Sources */,
+				1C9AEE6E086BA370008ED7AD /* servers-setup.c in Sources */,
+				1C9AEE6F086BA372008ED7AD /* servers-reconnect.c in Sources */,
+				1C9AEE70086BA374008ED7AD /* rawlog.c in Sources */,
+				1C9AEE71086BA376008ED7AD /* queries.c in Sources */,
+				1C9AEE72086BA377008ED7AD /* pidwait.c in Sources */,
+				1C9AEE73086BA378008ED7AD /* nickmatch-cache.c in Sources */,
+				1C9AEE74086BA379008ED7AD /* nicklist.c in Sources */,
+				1C9AEE75086BA381008ED7AD /* network.c in Sources */,
+				1C9AEE76086BA381008ED7AD /* network-openssl.c in Sources */,
+				1C9AEE77086BA382008ED7AD /* net-sendbuffer.c in Sources */,
+				1C9AEE78086BA384008ED7AD /* chat-protocols.c in Sources */,
+				1C9AEE79086BA385008ED7AD /* chat-commands.c in Sources */,
+				1C9AEE7A086BA386008ED7AD /* channels.c in Sources */,
+				1C9AEE7B086BA387008ED7AD /* channels-setup.c in Sources */,
+				1C9AEE7C086BA389008ED7AD /* args.c in Sources */,
+				1C9AEE7D086BA38A008ED7AD /* core.c in Sources */,
+				1C9AEE7E086BA38C008ED7AD /* commands.c in Sources */,
+				1C9AEE7F086BA38D008ED7AD /* chatnets.c in Sources */,
+				1C9AEE80086BA38F008ED7AD /* misc.c in Sources */,
+				1C9AEE81086BA390008ED7AD /* masks.c in Sources */,
+				1C9AEE82086BA395008ED7AD /* log.c in Sources */,
+				1C9AEE83086BA397008ED7AD /* log-away.c in Sources */,
+				1C9AEE84086BA398008ED7AD /* line-split.c in Sources */,
+				1C9AEE85086BA399008ED7AD /* levels.c in Sources */,
+				1C9AEE86086BA39A008ED7AD /* ignore.c in Sources */,
+				1C9AEE87086BA39B008ED7AD /* expandos.c in Sources */,
+				1C9AEE88086BA39C008ED7AD /* modules.c in Sources */,
+				1C9AEE89086BA39D008ED7AD /* modules-load.c in Sources */,
+				1C9AEE8A086BA39F008ED7AD /* net-nonblock.c in Sources */,
+				1C9AEE8B086BA3A0008ED7AD /* net-disconnect.c in Sources */,
+				1C9AEE8C086BA3A7008ED7AD /* servers-redirect.c in Sources */,
+				1C9AEE8E086BA3A8008ED7AD /* servers-idle.c in Sources */,
+				1C9AEE8F086BA3AA008ED7AD /* modes.c in Sources */,
+				1C9AEE90086BA3AB008ED7AD /* mode-lists.c in Sources */,
+				1C9AEE91086BA3AC008ED7AD /* massjoin.c in Sources */,
+				1C9AEE92086BA3AD008ED7AD /* lag.c in Sources */,
+				1C9AEE93086BA3AF008ED7AD /* irc.c in Sources */,
+				1C9AEE94086BA3B0008ED7AD /* irc-session.c in Sources */,
+				1C9AEE95086BA3B1008ED7AD /* irc-servers.c in Sources */,
+				1C9AEE96086BA3B2008ED7AD /* irc-servers-setup.c in Sources */,
+				1C9AEE97086BA3B3008ED7AD /* irc-servers-reconnect.c in Sources */,
+				1C9AEE98086BA3B4008ED7AD /* irc-queries.c in Sources */,
+				1C9AEE99086BA3B5008ED7AD /* netsplit.c in Sources */,
+				1C9AEE9A086BA3B6008ED7AD /* irc-nicklist.c in Sources */,
+				1C9AEE9B086BA3B7008ED7AD /* irc-masks.c in Sources */,
+				1C9AEE9C086BA3B8008ED7AD /* irc-expandos.c in Sources */,
+				1C9AEE9D086BA3B9008ED7AD /* irc-core.c in Sources */,
+				1C9AEE9E086BA3BE008ED7AD /* irc-commands.c in Sources */,
+				1C9AEE9F086BA3BF008ED7AD /* irc-chatnets.c in Sources */,
+				1C9AEEA0086BA3C0008ED7AD /* irc-channels.c in Sources */,
+				1C9AEEA1086BA3C1008ED7AD /* irc-channels-setup.c in Sources */,
+				1C9AEEA2086BA3C2008ED7AD /* ctcp.c in Sources */,
+				1C9AEEA3086BA3C3008ED7AD /* channels-query.c in Sources */,
+				1C9AEEA4086BA3C4008ED7AD /* channel-rejoin.c in Sources */,
+				1C9AEEA5086BA3C5008ED7AD /* channel-events.c in Sources */,
+				1C9AEEA6086BA3C6008ED7AD /* bans.c in Sources */,
+				1C9AEEA7086BA3CE008ED7AD /* dcc-autoget.c in Sources */,
+				1C9AEEA8086BA3CE008ED7AD /* dcc.c in Sources */,
+				1C9AEEA9086BA3D1008ED7AD /* dcc-server.c in Sources */,
+				1C9AEEAA086BA3D3008ED7AD /* dcc-send.c in Sources */,
+				1C9AEEAB086BA3D5008ED7AD /* dcc-resume.c in Sources */,
+				1C9AEEAC086BA3D6008ED7AD /* dcc-queue.c in Sources */,
+				1C9AEEAD086BA3D8008ED7AD /* dcc-get.c in Sources */,
+				1C9AEEAE086BA3D9008ED7AD /* dcc-chat.c in Sources */,
+				1C9AEEAF086BA3DF008ED7AD /* autoignore.c in Sources */,
+				1C9AEEB1086BA3E1008ED7AD /* flood.c in Sources */,
+				1C9AEEB2086BA3E4008ED7AD /* notify-commands.c in Sources */,
+				1C9AEEB3086BA3E5008ED7AD /* notify-ison.c in Sources */,
+				1C9AEEB4086BA3E6008ED7AD /* notify-setup.c in Sources */,
+				1C9AEEB5086BA3E7008ED7AD /* notify-whois.c in Sources */,
+				1C9AEEB6086BA3E8008ED7AD /* notifylist.c in Sources */,
+				1C9AF036086BB565008ED7AD /* garray.c in Sources */,
+				1C9AF037086BB565008ED7AD /* gcache.c in Sources */,
+				1C9AF038086BB565008ED7AD /* gcompletion.c in Sources */,
+				1C9AF039086BB565008ED7AD /* gdataset.c in Sources */,
+				1C9AF03A086BB565008ED7AD /* gdate.c in Sources */,
+				1C9AF03B086BB565008ED7AD /* gerror.c in Sources */,
+				1C9AF03C086BB565008ED7AD /* ghash.c in Sources */,
+				1C9AF03D086BB565008ED7AD /* ghook.c in Sources */,
+				1C9AF03E086BB565008ED7AD /* giochannel.c in Sources */,
+				1C9AF03F086BB565008ED7AD /* giounix.c in Sources */,
+				1C9AF042086BB565008ED7AD /* glist.c in Sources */,
+				1C9AF043086BB565008ED7AD /* gmain.c in Sources */,
+				1C9AF044086BB565008ED7AD /* gmem.c in Sources */,
+				1C9AF045086BB565008ED7AD /* gmessages.c in Sources */,
+				1C9AF046086BB565008ED7AD /* gmutex.c in Sources */,
+				1C9AF047086BB565008ED7AD /* gnode.c in Sources */,
+				1C9AF048086BB565008ED7AD /* gprimes.c in Sources */,
+				1C9AF049086BB565008ED7AD /* grel.c in Sources */,
+				1C9AF04A086BB565008ED7AD /* gscanner.c in Sources */,
+				1C9AF04B086BB565008ED7AD /* gslist.c in Sources */,
+				1C9AF04C086BB565008ED7AD /* gstrfuncs.c in Sources */,
+				1C9AF04D086BB565008ED7AD /* gstring.c in Sources */,
+				1C9AF04E086BB565008ED7AD /* gtimer.c in Sources */,
+				1C9AF04F086BB565008ED7AD /* gtree.c in Sources */,
+				1C9AF050086BB565008ED7AD /* gutils.c in Sources */,
+				1C9AF063086BB5C1008ED7AD /* findme.c in Sources */,
+				1C9AF065086BB5C1008ED7AD /* popt.c in Sources */,
+				1C9AF067086BB5C1008ED7AD /* poptconfig.c in Sources */,
+				1C9AF068086BB5C1008ED7AD /* popthelp.c in Sources */,
+				1C9AF06A086BB5C1008ED7AD /* poptparse.c in Sources */,
+				1C9AF071086BB5E5008ED7AD /* get.c in Sources */,
+				1C9AF074086BB5E5008ED7AD /* parse.c in Sources */,
+				1C9AF075086BB5E5008ED7AD /* set.c in Sources */,
+				1C9AF076086BB5E5008ED7AD /* write.c in Sources */,
+				1C9AF07A086BB638008ED7AD /* irc.c in Sources */,
+				1C9AF0A5086BBA2E008ED7AD /* recode.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		1CB3748B060E4F4D00F6A81F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1CB37489060E4F1900F6A81F /* Irssi (Static Libraries) */;
-			targetProxy = 1CB3748A060E4F4D00F6A81F /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		1C9CF4820615085300330D8D /* fe.h */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1C9CF4830615085300330D8D /* Global - windows */,
-			);
-			name = fe.h;
-			sourceTree = "<group>";
-		};
-		1C9CF4840615085300330D8D /* fe.c */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1C9CF4850615085300330D8D /* Global - windows */,
-			);
-			name = fe.c;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
-		1C041DD708553AD200A5A5BA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "Irssi (Static Libraries)";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
-		1C041DD808553AD200A5A5BA /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
-				PRODUCT_NAME = "Irssi (Static Libraries)";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Development;
-		};
 		1C041DDB08553AD200A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1159,21 +1182,20 @@
 				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = ChatCore.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				HEADER_SEARCH_PATHS = "Core/irssi/**";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					"G_LOG_DOMAIN=g_log_domain_glib",
+					_REENTRANT,
+					"SYSCONFDIR=\"/usr/local/etc\"",
+					"MODULEDIR=\"/usr/local/lib/irssi/modules\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					Core/irssi,
+					Core/irssi/glib,
+					Core/irssi/src,
+				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"Core/irssi/src/lib-popt",
-					"Core/irssi/src/lib-config",
-					Core/irssi/src/core,
-					Core/irssi/src/irc,
-					Core/irssi/src/irc/core,
-					Core/irssi/src/irc/dcc,
-					Core/irssi/src/irc/flood,
-					Core/irssi/src/irc/notifylist,
-					Core/irssi/glib/.libs,
-				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
@@ -1195,22 +1217,18 @@
 				GCC_PREFIX_HEADER = ChatCore.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
-					DEBUG,
+					"G_LOG_DOMAIN=g_log_domain_glib",
+					_REENTRANT,
+					"SYSCONFDIR=\"/usr/local/etc\"",
+					"MODULEDIR=\"/usr/local/lib/irssi/modules\"",
 				);
-				HEADER_SEARCH_PATHS = "Core/irssi/**";
+				HEADER_SEARCH_PATHS = (
+					Core/irssi,
+					Core/irssi/glib,
+					Core/irssi/src,
+				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"Core/irssi/src/lib-popt",
-					"Core/irssi/src/lib-config",
-					Core/irssi/src/core,
-					Core/irssi/src/irc,
-					Core/irssi/src/irc/core,
-					Core/irssi/src/irc/dcc,
-					Core/irssi/src/irc/flood,
-					Core/irssi/src/irc/notifylist,
-					Core/irssi/glib/.libs,
-				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
@@ -1241,22 +1259,6 @@
 			};
 			name = Development;
 		};
-		1C7F2DB308553C1900D41FB0 /* Release (Universal) */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "Irssi (Static Libraries)";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = "Release (Universal)";
-		};
 		1C7F2DB408553C1900D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1264,21 +1266,20 @@
 				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = ChatCore.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				HEADER_SEARCH_PATHS = "Core/irssi/**";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					"G_LOG_DOMAIN=g_log_domain_glib",
+					_REENTRANT,
+					"SYSCONFDIR=\"/usr/local/etc\"",
+					"MODULEDIR=\"/usr/local/lib/irssi/modules\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					Core/irssi,
+					Core/irssi/glib,
+					Core/irssi/src,
+				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"Core/irssi/src/lib-popt",
-					"Core/irssi/src/lib-config",
-					Core/irssi/src/core,
-					Core/irssi/src/irc,
-					Core/irssi/src/irc/core,
-					Core/irssi/src/irc/dcc,
-					Core/irssi/src/irc/flood,
-					Core/irssi/src/irc/notifylist,
-					Core/irssi/glib/.libs,
-				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
@@ -1306,16 +1307,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1C041DD608553AD200A5A5BA /* Build configuration list for PBXLegacyTarget "Irssi (Static Libraries)" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1C041DD708553AD200A5A5BA /* Release */,
-				1C7F2DB308553C1900D41FB0 /* Release (Universal) */,
-				1C041DD808553AD200A5A5BA /* Development */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		1C041DDA08553AD200A5A5BA /* Build configuration list for PBXNativeTarget "Chat Core (Framework)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
