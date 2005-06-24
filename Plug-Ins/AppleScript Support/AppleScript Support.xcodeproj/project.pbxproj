@@ -238,6 +238,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+					"$(TARGET_BUILD_DIR)",
+				);
 				GCC_PREFIX_HEADER = "AppleScript Support.pch";
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
@@ -255,6 +260,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+					"$(TARGET_BUILD_DIR)",
+				);
 				GCC_PREFIX_HEADER = "AppleScript Support.pch";
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
@@ -288,6 +298,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+					"$(TARGET_BUILD_DIR)",
+				);
 				GCC_PREFIX_HEADER = "AppleScript Support.pch";
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
