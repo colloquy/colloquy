@@ -273,7 +273,10 @@
 		1C7F306C0855489300D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					$HOME/Library/Frameworks,
+				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
@@ -292,7 +295,10 @@
 		1C7F306D0855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					$HOME/Library/Frameworks,
+				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
@@ -311,7 +317,10 @@
 		1C7F306E0855489300D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					$HOME/Library/Frameworks,
+				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
