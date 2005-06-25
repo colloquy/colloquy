@@ -1,10 +1,10 @@
 @interface MVTableView : NSTableView {
-	int autosaveTableColumnHighlight:1;
-	int dataSourceDragImageForRows:1;
-	int dataSourceMenuForTableColumn:1;
-	int dataSourceToolTipForTableColumn:1;
-	int delegateRectOfRow:1;
-	int delegateRowsInRect:1;
+	unsigned int autosaveTableColumnHighlight:1;
+	unsigned int dataSourceDragImageForRows:1;
+	unsigned int dataSourceMenuForTableColumn:1;
+	unsigned int dataSourceToolTipForTableColumn:1;
+	unsigned int delegateRectOfRow:1;
+	unsigned int delegateRowsInRect:1;
 }
 + (NSImage *) ascendingSortIndicator;
 + (NSImage *) descendingSortIndicator;
