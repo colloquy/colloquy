@@ -92,10 +92,6 @@ static JVNotificationController *sharedInstance = nil;
 	[[NSApplication sharedApplication] requestUserAttention:NSCriticalRequest];
 }
 
-#ifndef GROWL_NOTIFICATION_IDENTIFIER
-#define GROWL_NOTIFICATION_IDENTIFIER @"GrowlNotificationIdentifier"
-#endif
-
 - (void) _showBubbleForIdentifier:(NSString *) identifier withContext:(NSDictionary *) context andPrefs:(NSDictionary *) eventPrefs {
 	KABubbleWindowController *bubble = nil;
 	NSImage *icon = [context objectForKey:@"image"];
