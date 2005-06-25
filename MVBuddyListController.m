@@ -833,7 +833,7 @@ static MVBuddyListController *sharedInstance = nil;
 	else return defaultRange;
 }
 
-#define curveFunction(t,p) ( pow( 1 - pow( ( 1 - t ), p ), ( 1 / p ) ) )
+#define curveFunction(t,p) ( pow( 1 - pow( ( 1 - t ), p ), ( p ? ( 1 / p ) : 0. ) ) )
 #define easeFunction(t) ( ( sin( ( t * M_PI ) - M_PI_2 ) + 1. ) / 2. )
 
 - (NSRect) tableView:(MVTableView *) tableView rectOfRow:(int) row defaultRect:(NSRect) defaultRect {
@@ -844,7 +844,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 		float t = _animationPosition;
 
-		float rowPos = ( (float) row / [_buddyOrder count] );
+		float rowPos = ( (float) row / (float) [_buddyOrder count] );
 		float rowPosAdjusted = _viewingTop ? ( 1. - rowPos ) : rowPos;
 		float curve = 0.3;
 		float p = rowPosAdjusted * ( curve * 2. ) + 1. - curve;

@@ -43,13 +43,13 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	if( i > 0 ) i--;
 	stop = [[breaks objectAtIndex:i] unsignedIntValue];
 
-	val = (unsigned int) ( secs / stop );
+	val = (unsigned int) ( secs / (float) stop );
 	use = ( val > 1 ? plural : desc );
 	retval = [NSString stringWithFormat:@"%d %@", val, [use objectForKey:[NSNumber numberWithUnsignedInt:stop]]];
 	if( longFormat && i > 0 ) {
 		unsigned int rest = (unsigned int) ( (unsigned int) secs % stop );
 		stop = [[breaks objectAtIndex:--i] unsignedIntValue];
-		rest = (unsigned int) ( rest / stop );
+		rest = (unsigned int) ( rest / (float) stop );
 		if( rest > 0 ) {
 			use = ( rest > 1 ? plural : desc );
 			retval = [retval stringByAppendingFormat:@" %d %@", rest, [use objectForKey:[breaks objectAtIndex:i]]];

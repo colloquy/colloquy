@@ -454,7 +454,7 @@ static  NSImage			*tabDivider = nil;
 			if(tabCell != dragCell){
 				tabCount++;
 				totalTabWidthForShrinking += [tabCell size].width;
-				reducedWidth = (totalTabWidthForShrinking - tabExtraWidth) / tabCount;
+				reducedWidth = ( tabCount ? ( (totalTabWidthForShrinking - tabExtraWidth) / tabCount ) : 0 );
 			}
 
         }while((tabCell = [enumerator nextObject]) && (reducedWidth <= [tabCell size].width));
