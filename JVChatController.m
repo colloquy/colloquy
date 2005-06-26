@@ -149,11 +149,13 @@ static NSMenu *smartTranscriptMenu = nil;
 	}
 
 	if( finalMatch && windowSet ) {
-		if( [[windowSet objectForKey:@"currentWindow"] boolValue] ) {
+		if( [[windowSet objectForKey:@"special"] isEqualToString:@"currentWindow"] || [[windowSet objectForKey:@"currentWindow"] boolValue] ) {
 			wenumerator = [_chatWindows objectEnumerator];
 			while( ( windowController = [wenumerator nextObject] ) )
 				if( [[windowController window] isMainWindow] ) break;
 			if( ! windowController ) windowController = [_chatWindows lastObject];
+		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"newWindow"] ) {
+			windowController = [self newChatWindowController];
 		} else if( [[windowSet objectForKey:@"identifier"] length] ) {
 			windowController = [self chatWindowControllerWithIdentifier:[windowSet objectForKey:@"identifier"]];
 		}
