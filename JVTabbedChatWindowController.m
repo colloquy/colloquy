@@ -191,7 +191,7 @@
 		[self _refreshSelectionMenu];
 
 		id controller = [(JVChatTabItem *)tabViewItem chatViewController];
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] &&
+		if( [[self preferenceForKey:@"JVChatWindowDrawerOpen"] boolValue] &&
 			[controller respondsToSelector:@selector( numberOfChildren )] && [controller numberOfChildren] ) {
 			[viewsDrawer open:nil];
 		} else if( ! [controller respondsToSelector:@selector( numberOfChildren )] ) [viewsDrawer close:nil];
