@@ -55,7 +55,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		_activeViewController = nil;
 		_identifier = nil;
 		_views = [[NSMutableArray array] retain];
-		_usesSmallIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowUseSmallDrawerIcons"];
+		_usesSmallIcons = [[self preferenceForKey:@"JVChatWindowUseSmallDrawerIcons"] boolValue];
 	}
 
 	return self;
@@ -89,10 +89,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[[self window] _setContentHasShadow:NO]; // this is new in Tiger
 #endif
 
-	NSSize drawerSize = NSSizeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatWindowDrawerSize"] );
+	NSSize drawerSize = NSSizeFromString( [self preferenceForKey:@"JVChatWindowDrawerSize"] );
 	if( drawerSize.width ) [viewsDrawer setContentSize:drawerSize];
 
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatWindowDrawerOpen"] )
+	if( [[self preferenceForKey:@"JVChatWindowDrawerOpen"] boolValue] )
 		[self performSelector:@selector( openViewsDrawer: ) withObject:nil afterDelay:0.0];
 
 	[self _refreshList];
@@ -117,10 +117,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[_activeViewController release];
 	[_views release];
 	[_identifier release];
+	[_settings release];
 
 	_activeViewController = nil;
 	_views = nil;
 	_identifier = nil;
+	_settings = nil;
 
 	[super dealloc];
 }
@@ -155,9 +157,38 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[_identifier autorelease];
 	_identifier = [identifier copyWithZone:[self zone]];
 
+	[_settings autorelease];
+	_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]] retain];
+
 	if( [identifier length] )
 		[[self window] setFrameAutosaveName:[NSString stringWithFormat:@"Chat Window %@", identifier]];
 	else [[self window] setFrameAutosaveName:@""];
+}
+
+#pragma mark -
+
+- (NSString *) userDefaultsPreferencesKey {
+	if( [[self identifier] length] )
+		return [NSString stringWithFormat:@"Chat Window %@ Settings", [self identifier]];
+	return @"Chat Window Settings";
+}
+
+- (void) setPreference:(id) value forKey:(NSString *) key {
+	NSParameterAssert( key != nil );
+	NSParameterAssert( [key length] );
+
+	if( value ) [_settings setObject:value forKey:key];
+	else [_settings removeObjectForKey:key];
+
+	if( [_settings count] ) [[NSUserDefaults standardUserDefaults] setObject:_settings forKey:[self userDefaultsPreferencesKey]];
+	else [[NSUserDefaults standardUserDefaults] removeObjectForKey:[self userDefaultsPreferencesKey]];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (id) preferenceForKey:(NSString *) key {
+	NSParameterAssert( key != nil );
+	NSParameterAssert( [key length] );
+	return [_settings objectForKey:key];
 }
 
 #pragma mark -
@@ -440,10 +471,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (IBAction) toggleViewsDrawer:(id) sender {
 	if( [viewsDrawer state] == NSDrawerClosedState || [viewsDrawer state] == NSDrawerClosingState ) {
 		[self openViewsDrawer:sender];
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVChatWindowDrawerOpen"];
+		[self setPreference:[NSNumber numberWithBool:YES] forKey:@"JVChatWindowDrawerOpen"];
 	} else if( [viewsDrawer state] == NSDrawerOpenState || [viewsDrawer state] == NSDrawerOpeningState ) {
 		[self closeViewsDrawer:sender];
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVChatWindowDrawerOpen"];
+		[self setPreference:[NSNumber numberWithBool:NO] forKey:@"JVChatWindowDrawerOpen"];
 	}
 }
 
@@ -453,17 +484,17 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	else if( side == 1 ) [viewsDrawer openOnEdge:NSMaxXEdge];
 	else [viewsDrawer open];
 
-	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVChatWindowDrawerOpen"];
+	[self setPreference:[NSNumber numberWithBool:YES] forKey:@"JVChatWindowDrawerOpen"];
 }
 
 - (IBAction) closeViewsDrawer:(id) sender {
 	[viewsDrawer close];
-	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVChatWindowDrawerOpen"];
+	[self setPreference:[NSNumber numberWithBool:NO] forKey:@"JVChatWindowDrawerOpen"];
 }
 
 - (IBAction) toggleSmallDrawerIcons:(id) sender {
 	_usesSmallIcons = ! _usesSmallIcons;
-	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:_usesSmallIcons] forKey:@"JVChatWindowUseSmallDrawerIcons"];
+	[self setPreference:[NSNumber numberWithBool:_usesSmallIcons] forKey:@"JVChatWindowUseSmallDrawerIcons"];
 	[self _refreshList];
 }
 
@@ -553,7 +584,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 @implementation JVChatWindowController (JVChatWindowControllerDelegate)
 - (NSSize) drawerWillResizeContents:(NSDrawer *) drawer toSize:(NSSize) contentSize {
-	[[NSUserDefaults standardUserDefaults] setObject:NSStringFromSize( contentSize ) forKey:@"JVChatWindowDrawerSize"];
+	[self setPreference:NSStringFromSize( contentSize ) forKey:@"JVChatWindowDrawerSize"];
 	return contentSize;
 }
 

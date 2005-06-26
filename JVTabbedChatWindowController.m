@@ -164,7 +164,10 @@
 #pragma mark -
 
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
-	if( [menuItem action] == @selector( toggleTabBarVisible: ) ) {
+	if( [menuItem action] == @selector( toggleSmallDrawerIcons: ) ) {
+		[menuItem setState:NSOnState];
+		return NO;
+	} else if( [menuItem action] == @selector( toggleTabBarVisible: ) ) {
 		if( ! _tabIsShowing ) {
 			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Show Tab Bar", "show tab bar menu title" )]];
 		} else {

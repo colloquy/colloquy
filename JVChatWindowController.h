@@ -17,12 +17,17 @@ extern NSString *JVChatViewPboardType;
 	IBOutlet MVMenuButton *viewActionButton;
 	IBOutlet MVMenuButton *favoritesButton;
 	NSString *_identifier;
+	NSMutableDictionary *_settings;
 	NSMutableArray *_views;
 	id <JVChatViewController> _activeViewController;
 	BOOL _usesSmallIcons;
 }
 - (NSString *) identifier;
 - (void) setIdentifier:(NSString *) identifier;
+
+- (NSString *) userDefaultsPreferencesKey;
+- (void) setPreference:(id) value forKey:(NSString *) key;
+- (id) preferenceForKey:(NSString *) key;
 
 - (void) showChatViewController:(id <JVChatViewController>) controller;
 
