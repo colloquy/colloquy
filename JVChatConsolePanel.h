@@ -16,6 +16,7 @@
 	BOOL _scrollerIsAtBottom;
 	BOOL _forceSplitViewPosition;
 	int _historyIndex;
+	unsigned int _lastDisplayTextLength;
 	NSMutableArray *_sendHistory;
 	JVChatWindowController *_windowController;
 	MVChatConnection *_connection;

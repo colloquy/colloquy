@@ -47,6 +47,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[display setUsesRuler:NO];
 	[display setImportsGraphics:NO];
 
+	[[display layoutManager] setDelegate:self];
+
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
 		[(JVSplitView *)[[[send superview] superview] superview] setIsPaneSplitter:YES];
 }
@@ -289,8 +291,19 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[display replaceCharactersInRange:NSMakeRange( [[display textStorage] length], 0 ) withString:@"\n"];
 	[[display textStorage] appendAttributedString:msg];
 	[[display textStorage] endEditing];
-	if( NSMinY( [display visibleRect] ) >= ( NSHeight( [display bounds] ) - ( NSHeight( [display visibleRect] ) * 1.1 ) ) )
-		[display scrollRangeToVisible:NSMakeRange( [[display textStorage] length], 0 )];
+}
+
+- (void) performScrollToBottom {
+	NSScrollView *scrollView = [display enclosingScrollView];
+	NSClipView *clipView = [scrollView contentView];
+	[scrollView scrollClipView:clipView toPoint:[clipView constrainScrollPoint:NSMakePoint( 0, [[scrollView documentView] bounds].size.height )]];
+	[scrollView reflectScrolledClipView:clipView];
+}
+
+- (void) layoutManager:(NSLayoutManager *) layoutManager didCompleteLayoutForTextContainer:(NSTextContainer *) textContainer atEnd:(BOOL) atEnd {
+	unsigned int length = [[display textStorage] length];
+	if( atEnd && length != _lastDisplayTextLength ) [self performScrollToBottom];
+	_lastDisplayTextLength = length;
 }
 
 #pragma mark -
