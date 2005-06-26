@@ -19,11 +19,15 @@
 	[super showPreferencesPanel];
 	// let us poke transparant holes in the window
 	if( NSAppKitVersionNumber >= 700. ) [_preferencesPanel setOpaque:NO];
+	if( [_preferencesPanel respondsToSelector:@selector( setShowsToolbarButton: )] )
+		[_preferencesPanel setShowsToolbarButton:NO];
 }
 
 - (void) showPreferencesPanelForOwner:(id) owner {
 	[super showPreferencesPanelForOwner:owner];
 	// let us poke transparant holes in the window
 	if( NSAppKitVersionNumber >= 700. ) [_preferencesPanel setOpaque:NO];
+	if( [_preferencesPanel respondsToSelector:@selector( setShowsToolbarButton: )] )
+		[_preferencesPanel setShowsToolbarButton:NO];
 }
 @end
