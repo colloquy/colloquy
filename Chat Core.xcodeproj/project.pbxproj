@@ -15,6 +15,7 @@
 		1C5A1A2506F8F4A000A51F10 /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5A1A2306F8F4A000A51F10 /* MVIRCChatConnection.m */; };
 		1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C5A233D06FA4FEE00A51F10 /* libsilc.framework */; };
 		1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */; };
+		1C63E9ED086E59D700A40DD4 /* ChatCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C63E9EC086E59D700A40DD4 /* ChatCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C668DBA07BF9C4C008400F7 /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C668DB807BF9C4C008400F7 /* NSScannerAdditions.m */; };
 		1C668DBC07BF9C66008400F7 /* NSAttributedStringAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = F5E98623018B412B01EE70DE /* NSAttributedStringAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C668DBD07BF9C67008400F7 /* NSStringAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CD020B205759347000F93B4 /* NSStringAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -205,6 +206,7 @@
 		1C5CBF3406FF986E0006C5B1 /* MVChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVChatUser.m; sourceTree = "<group>"; };
 		1C5CC07A06FFCB0B0006C5B1 /* MVChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatRoom.h; sourceTree = "<group>"; };
 		1C5CC07B06FFCB0B0006C5B1 /* MVChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVChatRoom.m; sourceTree = "<group>"; };
+		1C63E9EC086E59D700A40DD4 /* ChatCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCore.h; sourceTree = "<group>"; };
 		1C668DB707BF9C4C008400F7 /* NSScannerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSScannerAdditions.h; sourceTree = "<group>"; };
 		1C668DB807BF9C4C008400F7 /* NSScannerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSScannerAdditions.m; sourceTree = "<group>"; };
 		1C74433A06FE3AB3009AA696 /* MVIRCFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVIRCFileTransfer.h; sourceTree = "<group>"; };
@@ -816,6 +818,7 @@
 				1C5CBF2D06FF92C90006C5B1 /* IRC Support */,
 				1C5CBF3006FF93550006C5B1 /* SILC Support */,
 				1CF6512A06EA22C40073DEA8 /* ChatCore.pch */,
+				1C63E9EC086E59D700A40DD4 /* ChatCore.h */,
 				F52D043001873FC401EE70DE /* MVChatConnection.m */,
 				F52D043101873FC401EE70DE /* MVChatConnection.h */,
 				1C5CC07B06FFCB0B0006C5B1 /* MVChatRoom.m */,
@@ -887,6 +890,7 @@
 				1C668DC207BF9C6A008400F7 /* NSMethodSignatureAdditions.h in Headers */,
 				1C668DC307BF9C6B008400F7 /* NSNotificationAdditions.h in Headers */,
 				1C7C776907DBBA4500FB5F83 /* NSScriptCommandAdditions.h in Headers */,
+				1C63E9ED086E59D700A40DD4 /* ChatCore.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

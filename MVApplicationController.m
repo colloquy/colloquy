@@ -1,6 +1,3 @@
-#import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/NSMethodSignatureAdditions.h>
-#import <ChatCore/NSColorAdditions.h>
 #import "NSURLAdditions.h"
 #import "MVColorPanel.h"
 #import "MVApplicationController.h"
@@ -20,7 +17,6 @@
 #import "JVTranscriptPreferences.h"
 #import "MVBuddyListController.h"
 #import "JVChatController.h"
-#import "MVChatConnection.h"
 #import "JVChatRoomBrowser.h"
 #import "NSBundleAdditions.h"
 #import "JVStyle.h"

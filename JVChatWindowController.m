@@ -1,5 +1,3 @@
-#import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/NSMethodSignatureAdditions.h>
 #import "JVChatWindowController.h"
 #import "MVConnectionsController.h"
 #import "JVChatController.h"

@@ -418,7 +418,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( editSettings: )];
-	} else if( [identifier isEqual:JVToolbarClearItemIdentifier] ) {
+	} else if( [identifier isEqual:JVToolbarClearScrollbackItemIdentifier] ) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear display toolbar button name" )];
@@ -443,7 +443,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
 	[list addObject:JVToolbarRuleSettingsItemIdentifier];
-	[list addObject:JVToolbarClearItemIdentifier];
+	[list addObject:JVToolbarClearScrollbackItemIdentifier];
 	return list;
 }
 @end

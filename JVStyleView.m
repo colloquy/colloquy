@@ -5,9 +5,6 @@
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
 
-#import <ChatCore/NSStringAdditions.h>
-#import <ChatCore/NSNotificationAdditions.h>
-
 NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesNotification";
 
 @interface WebCoreCache

@@ -2,9 +2,6 @@
 // Changes by Timothy Hatcher for Colloquy.
 // Copyright Graham Booker and Timothy Hatcher. All rights reserved.
 
-#import <ChatCore/NSAttributedStringAdditions.h>
-#import <ChatCore/NSStringAdditions.h>
-#import <ChatCore/NSColorAdditions.h>
 #import <libxml/xinclude.h>
 #import "NSAttributedStringMoreAdditions.h"
 

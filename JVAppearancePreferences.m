@@ -1,6 +1,3 @@
-#import <ChatCore/NSColorAdditions.h>
-#import <ChatCore/NSStringAdditions.h>
-
 #import "JVAppearancePreferences.h"
 #import "JVStyle.h"
 #import "JVStyleView.h"

@@ -1,5 +1,3 @@
-#import <ChatCore/MVChatUser.h>
-
 extern NSString *JVBuddyCameOnlineNotification;
 extern NSString *JVBuddyWentOfflineNotification;
 

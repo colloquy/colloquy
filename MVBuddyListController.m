@@ -1,9 +1,3 @@
-#import <AddressBook/AddressBook.h>
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/NSStringAdditions.h>
-#import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/NSMethodSignatureAdditions.h>
-
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"
 #import "JVChatController.h"

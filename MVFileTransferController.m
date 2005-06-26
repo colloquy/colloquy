@@ -1,7 +1,3 @@
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVFileTransfer.h>
-#import <WebKit/WebDownload.h>
-
 #import "MVFileTransferController.h"
 #import "MVBuddyListController.h"
 #import "JVBuddy.h"

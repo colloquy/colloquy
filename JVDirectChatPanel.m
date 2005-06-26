@@ -1,16 +1,3 @@
-#import <AddressBook/AddressBook.h>
-
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatUser.h>
-#import <ChatCore/MVChatRoom.h>
-#import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/NSAttributedStringAdditions.h>
-#import <ChatCore/NSStringAdditions.h>
-#import <ChatCore/NSDataAdditions.h>
-#import <ChatCore/NSMethodSignatureAdditions.h>
-#import <ChatCore/NSColorAdditions.h>
-#import <ChatCore/NSScriptCommandAdditions.h>
-
 #import "JVChatController.h"
 #import "KAIgnoreRule.h"
 #import "JVTabbedChatWindowController.h"
@@ -96,7 +83,7 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	/* End */ 0 };
 
 NSString *JVToolbarTextEncodingItemIdentifier = @"JVToolbarTextEncodingItem";
-NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
+NSString *JVToolbarClearScrollbackItemIdentifier = @"JVToolbarClearScrollbackItem";
 NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 NSString *JVToolbarMarkItemIdentifier = @"JVToolbarMarkItem";
 
@@ -1256,7 +1243,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[menuItem setSubmenu:_spillEncodingMenu];
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
-	} else if( [identifier isEqual:JVToolbarClearItemIdentifier] ) {
+	} else if( [identifier isEqual:JVToolbarClearScrollbackItemIdentifier] ) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear display toolbar button name" )];
@@ -1300,7 +1287,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[list addObject:JVToolbarTextEncodingItemIdentifier];
 		[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
 		[list addObject:JVToolbarMarkItemIdentifier];
-		[list addObject:JVToolbarClearItemIdentifier];
+		[list addObject:JVToolbarClearScrollbackItemIdentifier];
 		[list addObject:NSToolbarSeparatorItemIdentifier];
 		[list addObject:JVToolbarQuickSearchItemIdentifier];
 	}
@@ -1311,7 +1298,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
 	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) [list addObject:JVToolbarSendFileItemIdentifier];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
-	[list addObject:JVToolbarClearItemIdentifier];
+	[list addObject:JVToolbarClearScrollbackItemIdentifier];
 	[list addObject:JVToolbarMarkItemIdentifier];
 	return list;
 }

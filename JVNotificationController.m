@@ -1,5 +1,3 @@
-#import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/NSMethodSignatureAdditions.h>
 #import <Growl/GrowlApplicationBridge.h>
 #import "JVNotificationController.h"
 #import "KABubbleWindowController.h"

@@ -10,6 +10,7 @@
                 cancelWindowSet = id; 
                 changeShowFullRoomName = id; 
                 changeSortByStatus = id; 
+                clear = id; 
                 editRuleSet = id; 
                 editWindowSet = id; 
                 removeRuleCriterionRow = id; 
@@ -19,6 +20,8 @@
             CLASS = JVInterfacePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                deleteRuleButton = NSButton; 
+                deleteWindowButton = NSButton; 
                 drawerSide = NSPopUpButton; 
                 editRuleButton = NSButton; 
                 editWindowButton = NSButton; 

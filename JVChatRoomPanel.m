@@ -1,11 +1,3 @@
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatRoom.h>
-#import <ChatCore/MVChatUser.h>
-#import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/NSStringAdditions.h>
-#import <ChatCore/NSAttributedStringAdditions.h>
-#import <ChatCore/NSMethodSignatureAdditions.h>
-
 #import "JVChatController.h"
 #import "JVTabbedChatWindowController.h"
 #import "MVConnectionsController.h"
@@ -643,7 +635,7 @@
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
 	[list addObject:JVToolbarMarkItemIdentifier];
-	[list addObject:JVToolbarClearItemIdentifier];
+	[list addObject:JVToolbarClearScrollbackItemIdentifier];
 	[list addObject:NSToolbarSeparatorItemIdentifier];
 	[list addObject:JVToolbarQuickSearchItemIdentifier];
 	return list;

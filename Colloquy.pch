@@ -2,7 +2,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
+#import <AddressBook/AddressBook.h>
 #import <AGRegex/AGRegex.h>
+#import <ChatCore/ChatCore.h>
 
 #ifdef NSAppKitVersionNumber10_3
 #define WebKitVersion146 1

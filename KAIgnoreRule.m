@@ -3,8 +3,6 @@
 //  Created by Karl Adam on Thu Apr 15 2004.
 
 #import "KAIgnoreRule.h"
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatUser.h>
 #import "JVChatWindowController.h"
 #import "JVDirectChatPanel.h"
 

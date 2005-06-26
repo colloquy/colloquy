@@ -1,6 +1,3 @@
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatUser.h>
-#import <ChatCore/MVChatRoom.h>
 #import "JVChatMemberInspector.h"
 #import "JVChatRoomPanel.h"
 #import "JVBuddy.h"

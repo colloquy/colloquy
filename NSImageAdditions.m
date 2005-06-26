@@ -1,5 +1,4 @@
 #import "NSImageAdditions.h"
-#import <ChatCore/NSDataAdditions.h>
 
 @implementation NSImage (NSImageAdditions)
 // Created for Adium by Evan Schoenberg on Tue Dec 02 2003 under the GPL.

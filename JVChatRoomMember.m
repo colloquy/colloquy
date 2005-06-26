@@ -1,10 +1,3 @@
-#import <AddressBook/AddressBook.h>
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatRoom.h>
-#import <ChatCore/MVChatUser.h>
-#import <ChatCore/NSDataAdditions.h>
-#import <ChatCore/NSStringAdditions.h>
-
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "JVChatController.h"

@@ -1,7 +1,3 @@
-#import <ChatCore/MVChatUser.h>
-#import <ChatCore/NSAttributedStringAdditions.h>
-#import <ChatCore/NSStringAdditions.h>
-#import <ChatCore/NSDataAdditions.h>
 #import <libxml/xinclude.h>
 
 #import "JVChatMessage.h"

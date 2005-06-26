@@ -1,4 +1,3 @@
-#import <ChatCore/MVFileTransfer.h>
 #import "JVFileTransferPreferences.h"
 #import "MVFileTransferController.h"
 

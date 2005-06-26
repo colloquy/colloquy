@@ -2,7 +2,6 @@
 #import "JVInspectorController.h"
 #import "JVChatConsolePanel.h"
 
-
 @interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
 - (id <JVInspector>) inspector;
 @end

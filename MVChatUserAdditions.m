@@ -1,6 +1,4 @@
 #import "MVChatUserAdditions.h"
-#import <ChatCore/NSDataAdditions.h>
-#import <ChatCore/NSStringAdditions.h>
 
 @implementation MVChatUser (MVChatUserAdditions)
 - (NSString *) xmlDescription {

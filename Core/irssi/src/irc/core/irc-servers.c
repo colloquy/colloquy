@@ -598,7 +598,7 @@ static void parse_chanmodes(IRC_SERVER_REC *server, const char *sptr)
 	chanmodes = g_strsplit(sptr, ",", 5); /* ignore extras */
 
 	for (i = 0, item = chanmodes; *item != NULL && i < 4; item++, i++) {
-		unsigned char *p = *item;
+		char *p = *item;
 		while (*p != '\0') {
 			server->modes[(int)*p].func = modefuncs[i];
 			p++;

@@ -1,4 +1,3 @@
-#import <ChatCore/NSStringAdditions.h>
 #import "JVInterfacePreferences.h"
 #import "JVChatViewCriterionController.h"
 #import "JVChatController.h"
@@ -189,10 +188,12 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		_selectedWindowSet = [[windowSetsTable selectedRowIndexes] firstIndex];
 		NSDictionary *info = [_windowSets objectAtIndex:_selectedWindowSet];
 		[editWindowButton setEnabled:( ! [[info objectForKey:@"currentWindow"] boolValue] )];
+		[deleteWindowButton setEnabled:( ! [[info objectForKey:@"currentWindow"] boolValue] )];
 		[rulesTable reloadData];
 	} else if( view == rulesTable ) {
 		_selectedRuleSet = [[rulesTable selectedRowIndexes] firstIndex];
 		[editRuleButton setEnabled:( _selectedRuleSet != NSNotFound )];
+		[deleteRuleButton setEnabled:( _selectedRuleSet != NSNotFound )];
 	} else if( view == ruleEditTable ) {
 		[ruleEditTable deselectAll:nil];	
 	}
@@ -250,7 +251,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (void) clear:(id) sender {
-	if( sender == windowSetsTable ) {
+	if( sender == windowSetsTable || sender == deleteWindowButton ) {
 		NSDictionary *info = [_windowSets objectAtIndex:_selectedWindowSet];
 		if( [[info objectForKey:@"currentWindow"] boolValue] ) {
 			NSBeep();
@@ -265,9 +266,10 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 		info = [_windowSets objectAtIndex:_selectedWindowSet];
 		[editWindowButton setEnabled:( ! [[info objectForKey:@"currentWindow"] boolValue] )];
+		[deleteWindowButton setEnabled:( ! [[info objectForKey:@"currentWindow"] boolValue] )];
 
 		[self saveWindowRules];
-	} else if( sender == rulesTable ) {
+	} else if( sender == rulesTable || sender == deleteRuleButton ) {
 		[[self selectedRules] removeObjectAtIndex:_selectedRuleSet];
 
 		[rulesTable reloadData];
@@ -275,6 +277,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 		_selectedRuleSet = [[rulesTable selectedRowIndexes] firstIndex];
 		[editRuleButton setEnabled:( _selectedRuleSet != NSNotFound )];
+		[deleteRuleButton setEnabled:( _selectedRuleSet != NSNotFound )];
 
 		[self saveWindowRules];
 	}

@@ -1,4 +1,3 @@
-#import <ChatCore/MVChatConnection.h>
 #import "JVChatViewCriterionController.h"
 #import "JVChatRoomPanel.h"
 #import "JVDirectChatPanel.h"

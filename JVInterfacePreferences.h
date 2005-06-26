@@ -3,7 +3,9 @@
 @interface JVInterfacePreferences : NSPreferencesModule {
 	IBOutlet NSTableView *windowSetsTable;
 	IBOutlet NSTableView *rulesTable;
+	IBOutlet NSButton *deleteWindowButton;
 	IBOutlet NSButton *editWindowButton;
+	IBOutlet NSButton *deleteRuleButton;
 	IBOutlet NSButton *editRuleButton;
 	IBOutlet NSPopUpButton *drawerSide;
 	IBOutlet NSPopUpButton *interfaceStyle;
@@ -44,4 +46,6 @@
 
 - (IBAction) changeSortByStatus:(id) sender;
 - (IBAction) changeShowFullRoomName:(id) sender;
+
+- (void) clear:(id) sender;
 @end

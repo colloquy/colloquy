@@ -1,4 +1,3 @@
-#import <ChatCore/NSColorAdditions.h>
 #import "JVColorWellCell.h"
 
 static NSMutableSet *colorWellCells = nil;

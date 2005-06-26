@@ -4,11 +4,6 @@
 #import "JVChatEvent.h"
 #import "KAIgnoreRule.h"
 
-#import <ChatCore/MVChatUser.h>
-#import <ChatCore/NSStringAdditions.h>
-#import <ChatCore/NSDataAdditions.h>
-#import <ChatCore/NSAttributedStringAdditions.h>
-
 #import <libxml/xinclude.h>
 
 NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotification";

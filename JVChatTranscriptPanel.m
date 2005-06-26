@@ -1,10 +1,5 @@
 #import "JVChatTranscriptPanel.h"
 
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatPluginManager.h>
-#import <ChatCore/NSMethodSignatureAdditions.h>
-#import <ChatCore/NSStringAdditions.h>
-
 #import "JVTranscriptFindWindowController.h"
 #import "MVApplicationController.h"
 #import "JVChatController.h"

@@ -1,8 +1,3 @@
-#import <AddressBook/AddressBook.h>
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/NSStringAdditions.h>
-#import <ChatCore/MVChatUser.h>
-
 #import "JVBuddy.h"
 #import "MVConnectionsController.h"
 

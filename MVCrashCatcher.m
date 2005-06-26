@@ -1,5 +1,3 @@
-#import <AddressBook/AddressBook.h>
-#import <ChatCore/NSStringAdditions.h>
 #import "MVCrashCatcher.h"
 
 @implementation MVCrashCatcher

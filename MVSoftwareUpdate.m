@@ -1,11 +1,7 @@
-#import <unistd.h>
 #import "MVSoftwareUpdate.h"
 #import "MVFileTransferController.h"
-#import <ChatCore/NSStringAdditions.h>
 
 #define MVSoftwareUpdateURLFormat @"http://colloquy.info/update.php?MVApplicationBuild=%@&MVApplicationName=%@"
-
-#pragma mark -
 
 static jmp_buf timeoutJump;
 static sig_t oldTimeoutHandler;
@@ -27,6 +23,8 @@ static void MVSoftwareUpdateClearTimeout() {
 	alarm( 0 );
 	signal( SIGALRM, oldTimeoutHandler );
 }
+
+#pragma mark -
 
 @implementation MVSoftwareUpdate
 - (id) initAutomatically:(BOOL) flag {

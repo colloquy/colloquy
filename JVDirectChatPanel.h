@@ -8,7 +8,7 @@
 @class JVBuddy;
 
 extern NSString *JVToolbarTextEncodingItemIdentifier;
-extern NSString *JVToolbarClearItemIdentifier;
+extern NSString *JVToolbarClearScrollbackItemIdentifier;
 extern NSString *JVToolbarSendFileItemIdentifier;
 extern NSString *JVToolbarMarkItemIdentifier;
 

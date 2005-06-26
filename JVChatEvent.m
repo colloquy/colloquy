@@ -1,9 +1,6 @@
 #import "JVChatEvent.h"
 #import "NSAttributedStringMoreAdditions.h"
 
-#import <ChatCore/NSAttributedStringAdditions.h>
-#import <ChatCore/NSStringAdditions.h>
-#import <ChatCore/NSDataAdditions.h>
 #import <libxml/xinclude.h>
 
 @implementation JVChatEvent

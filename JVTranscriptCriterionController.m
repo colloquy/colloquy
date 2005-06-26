@@ -2,9 +2,6 @@
 // Created by Timothy Hatcher for Colloquy.
 // Copyright Joar Wingfors and Timothy Hatcher. All rights reserved.
 
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatUser.h>
-
 #import "JVTranscriptCriterionController.h"
 #import "JVChatMessage.h"
 #import "JVDirectChatPanel.h"
