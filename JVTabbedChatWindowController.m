@@ -52,7 +52,9 @@
 
 	[[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER, nil]];
 
-	_forceTabBarVisible = ( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"] ? 1 : -1 );
+	_autoHideTabBar = ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"];
+	_forceTabBarVisible = ( [self preferenceForKey:@"tab bar visible"] ? [[self preferenceForKey:@"tab bar visible"] intValue] : -1 );
+
 	[self updateTabBarVisibilityAndAnimate:NO];
 
 	[[self window] useOptimizedDrawing:YES];
@@ -191,7 +193,7 @@
 		[self _refreshSelectionMenu];
 
 		id controller = [(JVChatTabItem *)tabViewItem chatViewController];
-		if( [[self preferenceForKey:@"JVChatWindowDrawerOpen"] boolValue] &&
+		if( [[self preferenceForKey:@"drawer open"] boolValue] &&
 			[controller respondsToSelector:@selector( numberOfChildren )] && [controller numberOfChildren] ) {
 			[viewsDrawer open:nil];
 		} else if( ! [controller respondsToSelector:@selector( numberOfChildren )] ) [viewsDrawer close:nil];
@@ -364,6 +366,10 @@
 		else _forceTabBarVisible = 1;
 	} else if( ! _forceTabBarVisible ) _forceTabBarVisible = 1;
 	else if( _forceTabBarVisible > 0 ) _forceTabBarVisible = 0;
+
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"] ) 
+		[self setPreference:( _forceTabBarVisible == 1 ? [NSNumber numberWithInt:1] : nil ) forKey:@"tab bar visible"];
+	else [self setPreference:[NSNumber numberWithInt:_forceTabBarVisible] forKey:@"tab bar visible"];
 
 	[self updateTabBarVisibilityAndAnimate:NO];
 }

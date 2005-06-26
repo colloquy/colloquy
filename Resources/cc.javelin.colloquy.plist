@@ -20,8 +20,6 @@
 	<integer>0</integer>
 	<key>JVDirectChatPanelPreferredOpenMode</key>
 	<integer>3</integer>
-	<key>JVChatWindowDrawerOpen</key>
-	<true/>
 	<key>JVChatSelfNameStyle</key>
 	<integer>1</integer>
 	<key>JVChatBuddyNameStyle</key>
