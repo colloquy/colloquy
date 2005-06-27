@@ -1,4 +1,4 @@
 /* Localized versions of Info.plist keys */
 
-CFBundleGetInfoString = "Colloquy 2.0; Copyright © 2003-2004, Timothy Hatcher";
+CFBundleGetInfoString = "Colloquy 2.0.1; Copyright © 2003-2004, Timothy Hatcher";
 NSHumanReadableCopyright = "Copyright © 2003-2004, Timothy Hatcher";
