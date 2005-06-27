@@ -276,6 +276,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
 					"$(HOME)/Library/Frameworks",
 				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
@@ -289,6 +290,7 @@
 					FScript,
 				);
 				PRODUCT_NAME = "F-Script Support";
+				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Development;
@@ -299,6 +301,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
 					"$(HOME)/Library/Frameworks",
 				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
@@ -312,6 +315,7 @@
 					FScript,
 				);
 				PRODUCT_NAME = "F-Script Support";
+				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -322,6 +326,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
 					"$(HOME)/Library/Frameworks",
 				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
@@ -335,6 +340,7 @@
 					FScript,
 				);
 				PRODUCT_NAME = "F-Script Support";
+				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = "Release (Universal)";
