@@ -329,7 +329,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 @implementation NSMutableAttributedString (NSMutableAttributedStringHTMLAdditions)
 - (void) makeLinkAttributesAutomatically {
 	// catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc"
-	AGRegex *regex = [AGRegex regexWithPattern:@"(?:[a-zA-Z][a-zA-Z0-9+.-]*://|www\\.)(?:[\\w-:]+@)?(?:(?:[\\p{L}\\p{N}-]+\\.)+\\w{2,4}\\.?|localhost)(?:\\:\\d+)?(?:[/?][\\p{L}\\p{N}$\\-_.+!*',=:\\|/\\\\()%@&;#?~]*)*(?=[>}\\]):;,.!?'\"](?:\\s|$))" options:AGRegexCaseInsensitive];
+	AGRegex *regex = [AGRegex regexWithPattern:@"(?:[a-zA-Z][a-zA-Z0-9+.-]*://|www\\.)(?:[\\w-:]+@)?(?:(?:[\\p{L}\\p{N}-]+\\.)+\\w{2,4}\\.?|localhost)(?:\\:\\d+)?(?:[/?][\\p{L}\\p{N}$\\-_.+!*',=:\\|/\\\\()%@&;#?~]*)*(?=[>}\\]):;,.!?'\"]|\\b)" options:AGRegexCaseInsensitive];
 	NSArray *matches = [regex findAllInString:[self string]];
 	NSEnumerator *enumerator = [matches objectEnumerator];
 	AGRegexMatch *match = nil;
