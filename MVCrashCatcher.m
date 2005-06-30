@@ -32,7 +32,7 @@
 - (void) awakeFromNib {
 	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	[description setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@.", "crash message" ), programName, programName]];
-	[log replaceCharactersInRange:NSMakeRange( 0, 0 ) withString:[NSString stringWithContentsOfFile:logPath]];
+	[log replaceCharactersInRange:NSMakeRange( 0, 0 ) withString:[NSString stringWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:NULL]];
 
 	[window center];
 	[[NSApplication sharedApplication] runModalForWindow:window];
@@ -54,7 +54,7 @@
 #pragma mark -
 
 - (IBAction) sendCrashLog:(id) sender {
-	NSString *llog = [NSString stringWithContentsOfFile:logPath];
+	NSString *llog = [NSString stringWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:NULL];
 	NSString *shortDesc = @"Colloquy Crash - No Description";
 	if( [[[comments textStorage] string] length] > 48 ) {
 		shortDesc = [[[[comments textStorage] string] substringToIndex:48] stringByAppendingString:@"..."];

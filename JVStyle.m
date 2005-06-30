@@ -472,7 +472,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (NSString *) contentsOfHeaderFile {
-	NSString *contents = [NSString stringWithContentsOfFile:[self headerFilePath]];
+	NSString *contents = [NSString stringWithContentsOfFile:[self headerFilePath] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
 

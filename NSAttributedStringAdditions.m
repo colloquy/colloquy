@@ -104,7 +104,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 + (id) attributedStringWithHTMLFragment:(NSString *) fragment baseURL:(NSURL *) url {
 	NSParameterAssert( fragment != nil );
 
-	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", nil];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", [NSNumber numberWithUnsignedInt:NSUTF8StringEncoding], NSCharacterEncodingDocumentOption, nil];
 	if( url ) [options setObject:url forKey:@"BaseURL"];
 
 	// we suround the fragment in the #01FE02 green color so we can later key it out and strip it
