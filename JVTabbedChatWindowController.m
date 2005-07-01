@@ -4,12 +4,13 @@
 #import "JVChatTabItem.h"
 
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
-- (void) _refreshList;
 - (void) _claimMenuCommands;
 - (void) _resignMenuCommands;
 - (void) _refreshSelectionMenu;
 - (void) _refreshWindow;
 - (void) _refreshWindowTitle;
+- (void) _refreshList;
+- (void) _refreshPreferences;
 @end
 
 #pragma mark -
@@ -41,23 +42,16 @@
 - (void) windowDidLoad {
 	_tabHeight = NSHeight( [customTabsView frame] );
 
-	[super windowDidLoad];
+	// Remove any tabs from our tab view, it needs to start out empty
+	while( [tabView numberOfTabViewItems] > 0 )
+		[tabView removeTabViewItem:[tabView tabViewItemAtIndex:0]];
 
-    // Remove any tabs from our tab view, it needs to start out empty
-    while( [tabView numberOfTabViewItems] > 0 )
-        [tabView removeTabViewItem:[tabView tabViewItemAtIndex:0]];
+	[super windowDidLoad];
 
 	[chatViewsOutlineView setRefusesFirstResponder:NO];
 	[chatViewsOutlineView setAllowsEmptySelection:YES];
 
 	[[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER, nil]];
-
-	_autoHideTabBar = ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"];
-	_forceTabBarVisible = ( [self preferenceForKey:@"tab bar visible"] ? [[self preferenceForKey:@"tab bar visible"] intValue] : -1 );
-
-	[self updateTabBarVisibilityAndAnimate:NO];
-
-	[[self window] useOptimizedDrawing:YES];
 }
 
 #pragma mark -
@@ -548,5 +542,14 @@
 end:
 	[[self window] enableFlushWindow];
 	[[self window] displayIfNeeded];
+}
+
+- (void) _refreshPreferences {
+	[super _refreshPreferences];
+
+	_autoHideTabBar = ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"];
+	_forceTabBarVisible = ( [self preferenceForKey:@"tab bar visible"] ? [[self preferenceForKey:@"tab bar visible"] intValue] : -1 );
+
+	[self updateTabBarVisibilityAndAnimate:NO];
 }
 @end

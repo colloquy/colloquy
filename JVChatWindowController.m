@@ -30,6 +30,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) _refreshWindow;
 - (void) _refreshWindowTitle;
 - (void) _refreshList;
+- (void) _refreshPreferences;
 - (void) _saveWindowFrame;
 @end
 
@@ -55,7 +56,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		_activeViewController = nil;
 		_identifier = nil;
 		_views = [[NSMutableArray array] retain];
-		_usesSmallIcons = [[self preferenceForKey:@"small drawer icons"] boolValue];
+		_usesSmallIcons = NO;
+		_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]] retain];
 	}
 
 	return self;
@@ -75,13 +77,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 
-	[self setShouldCascadeWindows:NO];
-	[[self window] setFrameUsingName:@"Chat Window"];
+	if( [[self identifier] length] ) {
+		NSString *frameName = [NSString stringWithFormat:@"Chat Window %@", [self identifier]];
+		[self setShouldCascadeWindows:NO];
+		[[self window] setFrameUsingName:frameName];
+		[[self window] setFrameAutosaveName:frameName];
+	} else {
+		[self setShouldCascadeWindows:YES];
+		[[self window] setFrameUsingName:@"Chat Window"];
+		[[self window] setFrameAutosaveName:@"Chat Window"];
+	}
 
-	if( [[self identifier] length] )
-		[[self window] setFrameAutosaveName:[NSString stringWithFormat:@"Chat Window %@", [self identifier]]];
-	else [[self window] setFrameAutosaveName:@""];
-
+	[[self window] useOptimizedDrawing:YES];
 	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
 #ifdef NSAppKitVersionNumber10_3
@@ -89,11 +96,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[[self window] _setContentHasShadow:NO]; // this is new in Tiger
 #endif
 
-	NSSize drawerSize = NSSizeFromString( [self preferenceForKey:@"drawer size"] );
-	if( drawerSize.width ) [viewsDrawer setContentSize:drawerSize];
-
-	if( [[self preferenceForKey:@"drawer open"] boolValue] )
-		[self performSelector:@selector( openViewsDrawer: ) withObject:nil afterDelay:0.0];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _refreshPreferences ) object:nil];
+	[self _refreshPreferences];
 
 	[self _refreshList];
 }
@@ -162,7 +166,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if( [identifier length] )
 		[[self window] setFrameAutosaveName:[NSString stringWithFormat:@"Chat Window %@", identifier]];
-	else [[self window] setFrameAutosaveName:@""];
+	else [[self window] setFrameAutosaveName:@"Chat Window"];
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _refreshPreferences ) object:nil];
+	[self performSelector:@selector( _refreshPreferences ) withObject:nil afterDelay:0.];
 }
 
 #pragma mark -
@@ -919,6 +926,16 @@ end:
 		int selectedRow = [chatViewsOutlineView rowForItem:selectItem];
 		[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
 	}
+}
+
+- (void) _refreshPreferences {
+	NSSize drawerSize = NSSizeFromString( [self preferenceForKey:@"drawer size"] );
+	if( drawerSize.width ) [viewsDrawer setContentSize:drawerSize];
+
+	if( [[self preferenceForKey:@"drawer open"] boolValue] )
+		[self performSelector:@selector( openViewsDrawer: ) withObject:nil afterDelay:0.0];
+
+	_usesSmallIcons = [[self preferenceForKey:@"small drawer icons"] boolValue];	
 }
 
 - (void) _saveWindowFrame {
