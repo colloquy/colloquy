@@ -5,10 +5,12 @@
 #import "MVFileTransferController.h"
 #import "JVBuddy.h"
 #import "JVChatMemberInspector.h"
+#import "MVConnectionsController.h"
 
 @interface JVChatRoomMember (JVChatMemberPrivate)
 - (NSString *) _selfStoredNickname;
 - (NSString *) _selfCompositeName;
+- (KAIgnoreRule *) _tempIgnoreRule;
 @end
 
 #pragma mark -
@@ -344,6 +346,14 @@
 		[menu addItem:item];
 	}
 
+	if( ! [self isLocalUser] ) {
+		[menu addItem:[NSMenuItem separatorItem]];
+
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ignored", "ignore user contextual menu") action:@selector( toggleIgnore: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	}
+
 	if( [[[self room] localChatRoomMember] operator] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
@@ -434,6 +444,10 @@
 		} else {
 			[menuItem setTitle:NSLocalizedString( @"Make Half Operator", "make half-operator contextual menu - admin only" )];
 		}
+	} else if( [menuItem action] == @selector( toggleIgnore: ) ) {
+		KAIgnoreRule *rule = [self _tempIgnoreRule];
+		if( rule ) [menuItem setState:NSOnState];
+		else [menuItem setState:NSOffState];
 	}
 	return YES;
 }
@@ -500,6 +514,13 @@
 	[[MVBuddyListController sharedBuddyList] setNewBuddyNickname:[self nickname]];
 	[[MVBuddyListController sharedBuddyList] setNewBuddyFullname:[self realName]];
 	[[MVBuddyListController sharedBuddyList] setNewBuddyServer:[self connection]];
+}
+
+- (IBAction) toggleIgnore:(id) sender {
+	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[self connection]];
+	KAIgnoreRule *rule = [self _tempIgnoreRule];
+	if( rule ) [rules removeObjectIdenticalTo:rule];
+	else [rules addObject:[KAIgnoreRule ruleForUser:[self nickname] message:nil inRooms:nil isPermanent:NO friendlyName:[NSString stringWithFormat:@"%@ %@", [self displayName], NSLocalizedString( @" (Temporary)", "temporary ignore title suffix" )]]];
 }
 
 #pragma mark -
@@ -715,6 +736,19 @@
 #pragma mark -
 
 @implementation JVChatRoomMember (JVChatMemberPrivate)
+- (KAIgnoreRule *) _tempIgnoreRule {
+	NSString *ignoreSuffix = NSLocalizedString( @" (Temporary)", "temporary ignore title suffix" );
+	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[self connection]];
+	NSEnumerator *enumerator = [rules objectEnumerator];
+	KAIgnoreRule *rule = nil;
+
+	while( ( rule = [enumerator nextObject] ) )
+		if( ! [rule isPermanent] && [[rule friendlyName] hasSuffix:ignoreSuffix]
+			&& [rule matchUser:[self user] message:nil inView:[self room]] != JVNotIgnored ) break;
+
+	return rule;
+}
+
 - (void) _refreshIcon:(NSNotification *) notification {
 	[[[self room] windowController] reloadListItem:self andChildren:NO];
 }
