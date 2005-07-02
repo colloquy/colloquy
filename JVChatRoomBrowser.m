@@ -118,6 +118,9 @@
 	_needsRefresh = YES;
 	[self _refreshResults:nil];
 
+	if( [[self window] respondsToSelector:@selector( recalculateKeyViewLoop )] )
+		[[self window] recalculateKeyViewLoop];
+
 	if( [connectionPopup indexOfSelectedItem] != -1 )
 		[[self window] makeFirstResponder:roomField];
 }
@@ -231,6 +234,9 @@
 
 	_needsRefresh = YES;
 	[self _refreshResults:nil];
+
+	if( [[self window] respondsToSelector:@selector( recalculateKeyViewLoop )] )
+		[[self window] recalculateKeyViewLoop];
 }
 
 #pragma mark -
