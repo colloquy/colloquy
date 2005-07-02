@@ -177,15 +177,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( _webViewReady ) {
 		[WebCoreCache empty];
 
-#ifdef WebKitVersion146
 		if( _newWebKit ) {
 			NSString *styleSheetLocation = [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString];
 			DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[[[self mainFrame] DOMDocument] getElementById:@"variantStyle"];
 			if( ! styleSheetLocation ) [element setHref:@""];
 			else [element setHref:styleSheetLocation];
-		} else
-#endif
-		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString]]];
+		} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString]]];
 
 		[self performSelector:@selector( _checkForTransparantStyle ) withObject:nil afterDelay:0.];
 	} else {
@@ -217,15 +214,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( _webViewReady ) {
 		[WebCoreCache empty];
 
-#ifdef WebKitVersion146
 		if( _newWebKit ) {
 			NSString *styleSheetLocation = [[[self emoticons] styleSheetLocation] absoluteString];
 			DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[[[self mainFrame] DOMDocument] getElementById:@"emoticonStyle"];
 			if( ! styleSheetLocation ) [element setHref:@""];
 			else [element setHref:styleSheetLocation];
-		} else
-#endif
-		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [[[self emoticons] styleSheetLocation] absoluteString]]];
+		} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [[[self emoticons] styleSheetLocation] absoluteString]]];
 	} else {
 		[self performSelector:_cmd withObject:emoticons afterDelay:0.];
 	}
@@ -267,7 +261,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( _webViewReady ) {
 		unsigned int location = 0;
 
-#ifdef WebKitVersion146
 		if( _newWebKit ) {
 			DOMDocument *doc = [[self mainFrame] DOMDocument];
 			DOMElement *elt = [doc getElementById:@"mark"];
@@ -277,9 +270,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 			[[[doc getElementsByTagName:@"body"] item:0] appendChild:elt];
 			[self scrollToBottom];
 			location = [[elt valueForKey:@"offsetTop"] intValue];
-		} else
-#endif
-		location = [[self stringByEvaluatingJavaScriptFromString:@"mark();"] intValue];
+		} else location = [[self stringByEvaluatingJavaScriptFromString:@"mark();"] intValue];
 
 		[[self verticalMarkedScroller] removeMarkWithIdentifier:@"mark"];
 		[[self verticalMarkedScroller] addMarkAt:location withIdentifier:@"mark" withColor:[NSColor redColor]];
@@ -296,17 +287,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( ! topic ) return; // don't show anything if there is no topic
 
 	if( _webViewReady ) {
-#ifdef WebKitVersion146
 		if( _newWebKit ) {
 			[[self windowScriptObject] callWebScriptMethod:@"showTopic" withArguments:[NSArray arrayWithObject:topic]];
 		} else {
-#endif
 			NSMutableString *mutTopic = [topic mutableCopy];
 			[mutTopic replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange(0, [mutTopic length])];
 			[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"showTopic( \"%@\" );", mutTopic]];
-#ifdef WebKitVersion146
 		}
-#endif
 	} else {
 		[self performSelector:_cmd withObject:topic afterDelay:0.];
 	}
@@ -314,12 +301,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) hideTopic {
 	if( _webViewReady ) {
-#ifdef WebKitVersion146
-		if( _newWebKit )
-			[[self windowScriptObject] callWebScriptMethod:@"hideTopic" withArguments:[NSArray array]];
-		else
-#endif
-			[self stringByEvaluatingJavaScriptFromString:@"hideTopic();"];
+		if( _newWebKit ) [[self windowScriptObject] callWebScriptMethod:@"hideTopic" withArguments:[NSArray array]];
+		else [self stringByEvaluatingJavaScriptFromString:@"hideTopic();"];
 	} else {
 		[self performSelector:_cmd withObject:nil afterDelay:0.];
 	}
@@ -327,18 +310,15 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) toggleTopic:(NSString *) topic {
 	if( _webViewReady ) {
-		BOOL topicShowing;
-#ifdef WebKitVersion146
+		BOOL topicShowing = NO;
 		if( _newWebKit ) {
 			DOMHTMLElement *topicElement = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:@"topic-floater"];
 			topicShowing = ( topicElement != nil );
 		} else {
-#endif
 			NSString *result = [self stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"topic-floater\") != null"];
 			topicShowing = [result isEqualToString:@"true"];
-#ifdef WebKitVersion146
 		}
-#endif
+
 		if( topicShowing ) [self hideTopic];
 		else [self showTopic:topic];
 	} else {
@@ -353,12 +333,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	NSString *result = nil;
 
-#ifdef WebKitVersion146
 	if( _requiresFullMessage && _newWebKit ) {
 		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:@"consecutiveInsert"];
 		if( replaceElement ) _requiresFullMessage = NO; // a full message was assumed, but we can do a consecutive one
 	}
-#endif
 
 	@try {
 		if( _requiresFullMessage ) {
@@ -400,66 +378,48 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) highlightMessage:(JVChatMessage *) message {
-/*#ifdef WebKitVersion146
-	if( _newWebKit ) {
+/*	if( _newWebKit ) {
 		DOMHTMLElement *element = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:[message messageIdentifier]];
 		NSString *class = [element className];
 		if( [[element className] rangeOfString:@"searchHighlight"].location != NSNotFound ) return;
 		if( [class length] ) [element setClassName:[class stringByAppendingString:@" searchHighlight"]];
 		else [element setClassName:@"searchHighlight"];
-	} else
-#endif
-	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"highlightMessage('%@');", [message messageIdentifier]]];
+	} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"highlightMessage('%@');", [message messageIdentifier]]];
 */}
 
 - (void) clearHighlightForMessage:(JVChatMessage *) message {
-/*#ifdef WebKitVersion146
-	if( _newWebKit ) {
+/*	if( _newWebKit ) {
 		DOMHTMLElement *element = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:[message messageIdentifier]];
 		NSMutableString *class = [[[element className] mutableCopy] autorelease];
 		[class replaceOccurrencesOfString:@"searchHighlight" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [class length] )];
 		[element setClassName:class];
-	} else
-#endif
-	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetHighlightMessage('%@');", [message messageIdentifier]]];
+	} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetHighlightMessage('%@');", [message messageIdentifier]]];
 */}
 
 - (void) clearAllMessageHighlights {
-/*#ifdef WebKitVersion146
-	if( _newWebKit ) {
+/*	if( _newWebKit ) {
 		[[self windowScriptObject] callWebScriptMethod:@"resetHighlightMessage" withArguments:[NSArray arrayWithObject:[NSNull null]]];
-	} else
-#endif
-	[self stringByEvaluatingJavaScriptFromString:@"resetHighlightMessage(null);"];
+	} else [self stringByEvaluatingJavaScriptFromString:@"resetHighlightMessage(null);"];
 */}
 
 #pragma mark -
 
 - (void) highlightString:(NSString *) string inMessage:(JVChatMessage *) message {
-#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		[[self windowScriptObject] callWebScriptMethod:@"searchHighlight" withArguments:[NSArray arrayWithObjects:[message messageIdentifier], string, nil]];
-	} else
-#endif
-	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"searchHighlight('%@','%@');", [message messageIdentifier], string]];
+	} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"searchHighlight('%@','%@');", [message messageIdentifier], string]];
 }
 
 - (void) clearStringHighlightsForMessage:(JVChatMessage *) message {
-#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[message messageIdentifier]]];
-	} else
-#endif
-	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetSearchHighlight('%@');", [message messageIdentifier]]];
+	} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetSearchHighlight('%@');", [message messageIdentifier]]];
 }
 
 - (void) clearAllStringHighlights {
-#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[NSNull null]]];
-	} else
-#endif
-	[self stringByEvaluatingJavaScriptFromString:@"resetSearchHighlight(null);"];
+	} else [self stringByEvaluatingJavaScriptFromString:@"resetSearchHighlight(null);"];
 }
 
 #pragma mark -
@@ -527,6 +487,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[self performSelector:@selector( _webkitIsReady ) withObject:nil afterDelay:0.];
 }
 
+- (void) drawRect:(NSRect) rect {
+	[[NSColor clearColor] set];
+	NSRectFill( rect ); // allows poking holes in the window with rgba background colors
+	[super drawRect:rect];
+}
+
 #pragma mark -
 #pragma mark Highlight/Message Jumping
 
@@ -571,13 +537,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		return;
 	}
 
-#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
 		[body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
-	} else
-#endif
-	[self stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
+	} else [self stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
 }
 @end
 
@@ -585,7 +548,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 @implementation JVStyleView (JVStyleViewPrivate)
 - (void) _checkForTransparantStyle {
-#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		DOMCSSStyleDeclaration *style = [self computedStyleForElement:[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] pseudoElement:nil];
 		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
@@ -595,7 +557,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		else [self setDrawsBackground:YES];
 		[self setNeedsDisplay:YES];
 	}
-#endif
 }
 
 - (void) _webkitIsReady {
@@ -612,13 +573,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	_webViewReady = NO;
 	if( _rememberScrollPosition ) {
-#ifdef WebKitVersion146
 		if( _newWebKit ) {
 			DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
 			_lastScrollPosition = [[body valueForKey:@"scrollTop"] intValue];
-		} else
-#endif
-		_lastScrollPosition = [[self stringByEvaluatingJavaScriptFromString:@"document.body.scrollTop"] intValue];
+		} else _lastScrollPosition = [[self stringByEvaluatingJavaScriptFromString:@"document.body.scrollTop"] intValue];
 	} else _lastScrollPosition = 0;
 
 	[[self window] disableFlushWindow];
@@ -687,13 +645,10 @@ quickEnd:
 
 	if( _rememberScrollPosition ) {
 		_rememberScrollPosition = NO;
-#ifdef WebKitVersion146
 		if( _newWebKit ) {
 			DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
 			[body setValue:[NSNumber numberWithUnsignedInt:_lastScrollPosition] forKey:@"scrollTop"];
-		} else
-#endif
-		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.body.scrollTop = %d", _lastScrollPosition]];
+		} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.body.scrollTop = %d", _lastScrollPosition]];
 	}
 }
 
@@ -707,7 +662,6 @@ quickEnd:
 		if( loc > 0 ) [[self verticalMarkedScroller] shiftMarksAndShadedAreasBy:( loc * -1 )];
 	}
 
-#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		DOMHTMLElement *element = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] createElement:@"span"];
 		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] getElementById:@"consecutiveInsert"];
@@ -756,9 +710,7 @@ quickEnd:
 
 		if( [scrollNeeded respondsToSelector:@selector( boolValue )] && [scrollNeeded boolValue] )
 			[self scrollToBottom];
-	} else
-#endif
-	{ // old JavaScript method
+	} else {
 		NSMutableString *transformedMessage = [message mutableCopy];
 		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[transformedMessage replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
@@ -771,7 +723,6 @@ quickEnd:
 }
 
 - (void) _prependMessages:(NSString *) messages {
-#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		NSMutableString *result = [messages mutableCopy];
 		[result replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
@@ -795,9 +746,7 @@ quickEnd:
 		}
 
 		if( [scrollNeeded boolValue] ) [self scrollToBottom];
-	} else
-#endif
-	{ // old JavaScript method
+	} else {
 		NSMutableString *result = [messages mutableCopy];
 		[result escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
 		[result replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
@@ -833,16 +782,13 @@ quickEnd:
 - (long) _locationOfMessageWithIdentifier:(NSString *) identifier {
 	if( ! _webViewReady ) return 0;
 	if( ! [identifier length] ) return 0;
-#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		DOMElement *element = [[[self mainFrame] DOMDocument] getElementById:identifier];
 		id value = [element valueForKey:@"offsetTop"];
 		if( [value respondsToSelector:@selector( intValue )] )
 			return [value intValue];
 		return 0;
-	} else
-#endif
-	return [[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%@\" );", identifier]] intValue];
+	} else return [[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%@\" );", identifier]] intValue];
 }
 
 - (long) _locationOfMessage:(JVChatMessage *) message {
@@ -851,26 +797,20 @@ quickEnd:
 
 - (long) _locationOfElementAtIndex:(unsigned long) index {
 	if( ! _webViewReady ) return 0;
-#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
 		id value = [[[body childNodes] item:index] valueForKey:@"offsetTop"];
 		if( index < [[body childNodes] length] && [value respondsToSelector:@selector( intValue )] )
 			return [value intValue];
 		return 0;
-	} else
-#endif
-	return [[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementAtIndex( %d );", index]] intValue];
+	} else return [[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementAtIndex( %d );", index]] intValue];
 }
 
 - (unsigned long) _visibleMessageCount {
 	if( ! _webViewReady ) return 0;
-#ifdef WebKitVersion146
 	if( _newWebKit ) {
 		return [[[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] childNodes] length];
-	} else
-#endif
-	return [[self stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+	} else return [[self stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
 }
 
 #pragma mark -

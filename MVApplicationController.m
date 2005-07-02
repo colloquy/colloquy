@@ -298,11 +298,9 @@ static BOOL applicationIsTerminating = NO;
 	if( [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
 		NSString *searchString = nil;
 
-#ifdef NSAppKitVersionNumber10_3
 		NSAppleEventManager *sam = [NSAppleEventManager sharedAppleEventManager];
 		NSAppleEventDescriptor *lastEvent = [sam currentAppleEvent];
-		searchString = [[lastEvent descriptorForKeyword:'stxt'] stringValue]; // keyAESearchText
-#endif
+		searchString = [[lastEvent descriptorForKeyword:keyAESearchText] stringValue];
 
 		JVChatTranscriptPanel *transcript = [[JVChatController defaultController] chatViewControllerForTranscript:filename];
 		if( searchString ) [transcript setSearchQuery:searchString];

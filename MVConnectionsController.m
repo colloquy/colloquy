@@ -283,10 +283,8 @@ static NSMenu *favoritesMenu = nil;
 	if( ! [sender state] ) [detailsTabView selectTabViewItemAtIndex:0];
 	[openConnection setFrame:newWindowFrame display:YES animate:YES];
 	if( [sender state] ) [detailsTabView selectTabViewItemAtIndex:1];
-#ifdef NSAppKitVersionNumber10_3
-	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
+	if( [openConnection respondsToSelector:@selector( recalculateKeyViewLoop )] )
 		[openConnection recalculateKeyViewLoop];
-#endif
 }
 
 - (IBAction) addRoom:(id) sender {

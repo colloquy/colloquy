@@ -435,10 +435,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 		NSSearchField *field = [[[NSSearchField alloc] initWithFrame:NSMakeRect( 0., 0., 150., 22. )] autorelease];
 		[[field cell] setSendsWholeSearchString:NO];
-#ifdef NSAppKitVersionNumber10_3
-		if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
+		if( [[field cell] respondsToSelector:@selector( setSendsSearchStringImmediately: )] )
 			[[field cell] setSendsSearchStringImmediately:NO];
-#endif
 		[[field cell] setPlaceholderString:NSLocalizedString( @"Search Messages", "search field placeholder string" )];
 		[[field cell] setMaximumRecents:10];
 		[field setRecentsAutosaveName:@"message quick search"];
@@ -555,14 +553,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 #pragma mark -
 #pragma mark WebView
-
-// Allows some simple code to work when not built with WebKit/Safari 1.3
-#ifndef WebKitVersion146
-#define WebMenuItemTagGoBack 9
-#define WebMenuItemTagGoForward 10
-#define WebMenuItemTagStop 11
-#define WebMenuItemTagReload 12
-#endif
 
 - (JVStyleView *) display {
 	return display;

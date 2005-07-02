@@ -167,13 +167,11 @@ static NSMenu *smartTranscriptMenu = nil;
 	if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) initiated = NO;
 
 	[windowController addChatViewController:controller];
-	if( initiated || [[windowController allChatViewControllers] count] == 1 ) {
-		[windowController showChatViewController:controller];
-		if( initiated ) [[windowController window] makeKeyAndOrderFront:nil];
-	}
 
-	if( ! [[windowController window] isVisible] )
-		[[windowController window] orderFront:nil];	
+	if( initiated || [[windowController allChatViewControllers] count] == 1 )
+		[windowController showChatViewController:controller];
+
+	if( initiated ) [windowController showWindow:nil];
 }
 
 - (void) reloadPreferedWindowRuleSets {

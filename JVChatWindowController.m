@@ -77,24 +77,23 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 
-	if( [[self identifier] length] ) {
-		NSString *frameName = [NSString stringWithFormat:@"Chat Window %@", [self identifier]];
-		[self setShouldCascadeWindows:NO];
-		[[self window] setFrameUsingName:frameName];
-		[[self window] setFrameAutosaveName:frameName];
-	} else {
-		[self setShouldCascadeWindows:YES];
-		[[self window] setFrameUsingName:@"Chat Window"];
-		[[self window] setFrameAutosaveName:@"Chat Window"];
-	}
+	[self setShouldCascadeWindows:NO];
+	[self setWindowFrameAutosaveName:@""];
+
+	[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
+	[[self window] setFrameUsingName:@"Chat Window"];
+
+	NSRect frame = [[self window] frame];
+	NSPoint point = [[self window] cascadeTopLeftFromPoint:NSMakePoint( NSMinX( frame ), NSMaxY( frame ) )];
+	[[self window] setFrameTopLeftPoint:point];
+
+	[[self window] setDelegate:self];
 
 	[[self window] useOptimizedDrawing:YES];
 	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
-#ifdef NSAppKitVersionNumber10_3
-	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
+	if( [[self window] respondsToSelector:@selector( _setContentHasShadow: )] )
 		[[self window] _setContentHasShadow:NO]; // this is new in Tiger
-#endif
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _refreshPreferences ) object:nil];
 	[self _refreshPreferences];
@@ -127,6 +126,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	_views = nil;
 	_identifier = nil;
 	_settings = nil;
+	_showDelayed = NO;
 
 	[super dealloc];
 }
@@ -164,9 +164,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[_settings autorelease];
 	_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]] retain];
 
-	if( [identifier length] )
-		[[self window] setFrameAutosaveName:[NSString stringWithFormat:@"Chat Window %@", identifier]];
-	else [[self window] setFrameAutosaveName:@"Chat Window"];
+	if( [[self identifier] length] ) {
+		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
+		[[self window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [self identifier]]];
+		[[self window] setDelegate:self];
+	}
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _refreshPreferences ) object:nil];
 	[self performSelector:@selector( _refreshPreferences ) withObject:nil afterDelay:0.];
@@ -199,6 +201,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 #pragma mark -
+
+- (void) showWindow:(id) sender {
+	if( [_views count] ) {
+		[[self window] makeKeyAndOrderFront:nil];
+		_showDelayed = NO;
+	} else _showDelayed = YES;
+}
 
 - (void) showChatViewController:(id <JVChatViewController>) controller {
 	NSAssert1( [_views containsObject:controller], @"%@ is not a member of this window controller.", controller );
@@ -329,12 +338,21 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSAssert1( ! [_views containsObject:controller], @"%@ already added.", controller );
 	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
 
-	if( ! [_views count] ) {
-		[[self  window] orderWindow:NSWindowBelow relativeTo:[[[NSApplication sharedApplication] keyWindow] windowNumber]];
-	}
+	BOOL needShow = ( ! [_views count] );
 
 	[_views insertObject:controller atIndex:index];
 	[controller setWindowController:self];
+
+	if( ! [[self identifier] length] && [_views count] == 1 ) {
+		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
+		[[self window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
+		[[self window] setDelegate:self];
+	}
+
+	if( needShow && ! _showDelayed )
+		[[self  window] orderWindow:NSWindowBelow relativeTo:[[[NSApplication sharedApplication] keyWindow] windowNumber]];
+
+	if( _showDelayed ) [self showWindow:nil];
 
 	[self _saveWindowFrame];
 	[self _refreshList];
@@ -939,9 +957,14 @@ end:
 }
 
 - (void) _saveWindowFrame {
-	if( ! [[[self window] frameAutosaveName] length] ) {
+	if( [[self identifier] length] ) {
+		[[self window] saveFrameUsingName:@"Chat Window"];
+		[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [self identifier]]];
+	} else {
 		NSEnumerator *enumerator = [[self allChatViewControllers] objectEnumerator];
 		id <JVChatViewController> controller = nil;
+
+		[[self window] saveFrameUsingName:@"Chat Window"];
 
 		while( ( controller = [enumerator nextObject] ) )
 			[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];

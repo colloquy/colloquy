@@ -105,14 +105,10 @@
 #pragma mark -
 
 - (void) awakeFromNib {
-	[(NSClipView *)[preview superview] setBackgroundColor:[NSColor clearColor]]; // allows rgba backgrounds to see through to the Desktop
-	[(NSScrollView *)[(NSClipView *)[preview superview] superview] setBackgroundColor:[NSColor clearColor]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( styleDidReload: ) name:JVStyleViewDidChangeStylesNotification object:preview];
 
-#ifdef NSAppKitVersionNumber10_3
-	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 )
+	if( [[preview window] respondsToSelector:@selector( _setContentHasShadow: )] )
 		[[preview window] _setContentHasShadow:NO]; // this is new in Tiger
-#endif
 }
 
 - (void) initializeFromDefaults {

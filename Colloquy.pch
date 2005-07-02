@@ -6,15 +6,9 @@
 #import <AGRegex/AGRegex.h>
 #import <ChatCore/ChatCore.h>
 
-#ifdef NSAppKitVersionNumber10_3
-#define WebKitVersion146 1
 #endif
 
-#endif
-
-#ifdef NSAppKitVersionNumber10_3
 #include <sys/xattr.h>
-#endif
 
 // define these here so they weak link for Panther letting the binary be backwards compatible
 extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u_int32_t position, int options) WEAK_IMPORT_ATTRIBUTE;

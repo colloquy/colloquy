@@ -216,8 +216,18 @@
 	id oldWindowController = [chatController windowController];
 	id newWindowController = [[destTabView window] windowController];
 
+	// check if we are dragging the only view from a window, if so just move the original window
+	if( ! newWindowController && [[oldWindowController allChatViewControllers] count] == 1 ) {
+		NSRect newFrame = [[oldWindowController window] frame];
+		newFrame.origin = screenPoint;
+		[[oldWindowController window] setFrame:newFrame display:NO];
+		[[oldWindowController window] setAlphaValue:1.];
+		[self _supressTabBarHiding:NO];
+		return;
+	}
+
 	if( oldWindowController != newWindowController ) {
-		if( ! newWindowController ) {
+		if( ! newWindowController ) { // need to make a new window
 			NSRect newFrame;
 			newWindowController = [[JVChatController defaultController] newChatWindowController];
 			newFrame.origin = screenPoint;
@@ -231,9 +241,7 @@
 			}
 
 			[[newWindowController window] setFrame:newFrame display:NO];
-
-			if( [newWindowController isMemberOfClass:[JVTabbedChatWindowController class]] )
-				[(JVTabbedChatWindowController *)newWindowController toggleTabBarVisible:nil];
+			[[newWindowController window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [chatController identifier]]];
 		}
 
 		[chatController retain];

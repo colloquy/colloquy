@@ -94,8 +94,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 				NSString *session = [match groupNamed:@"session"];
 				NSString *path = [[self logsPath] stringByAppendingPathComponent:logPath];
 
-#ifdef NSAppKitVersionNumber10_3
-				if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_3 ) {
+				if( fgetxattr ) {
 					FILE *logsFile = fopen( [path fileSystemRepresentation], "r" );
 					if( logsFile ) {
 						int fd = fileno( logsFile );			
@@ -121,7 +120,6 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 						fclose( logsFile );
 					}
 				}
-#endif
 
 				NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:server, @"server", target, @"target", session, @"session", path, @"path", nil];
 				[tempDictionary setObject:d forKey:path];
