@@ -2,6 +2,7 @@
 #import "MVIRCFileTransfer.h"
 #import "MVSILCFileTransfer.h"
 #import "MVChatConnection.h"
+#import "MVIRCChatConnection.h"
 #import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
 
@@ -17,19 +18,17 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 @implementation MVFileTransfer
 + (void) setFileTransferPortRange:(NSRange) range {
-	extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 	unsigned short min = (unsigned short)range.location;
 	unsigned short max = (unsigned short)(range.location + range.length);
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 	settings_set_str( "dcc_port", [[NSString stringWithFormat:@"%uh %uh", min, max] UTF8String] );
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 + (NSRange) fileTransferPortRange {
-	extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 	const char *range = settings_get_str( "dcc_port" );
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 
 	unsigned short min = 1024;
 	unsigned short max = 1048;

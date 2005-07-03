@@ -1335,7 +1335,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 - (void) _silcRunloop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	while( [self isConnected] || [self status] == MVChatConnectionConnectingStatus ) {
+	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
 		if( [_silcClientLock tryLock] ) { // prevents some deadlocks
 			if( _silcClient && _silcClient -> schedule )
 				silc_schedule_one( _silcClient -> schedule, 100000 );

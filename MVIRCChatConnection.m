@@ -40,10 +40,10 @@ void irc_deinit( void );
 
 #pragma mark -
 
-NSRecursiveLock *MVIRCChatConnectionThreadLock = nil;
 static NSPort *threadConnectionPort = nil;
 static BOOL irssiThreadReady = NO;
 static unsigned int connectionCount = 0;
+pthread_mutex_t irssiLock;
 
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
@@ -192,9 +192,9 @@ static void MVChatDisconnect( SERVER_REC *server ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
 
 	if( ! pthread_main_np() ) { // if not main thread
-		[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+		pthread_mutex_unlock( &irssiLock ); // prevents a deadlock, since waitUntilDone is required. threads synced
 		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
-		[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+		pthread_mutex_lock( &irssiLock ); // lock back up like nothing happened
 	} else [self performSelector:@selector( _didDisconnect )];
 }
 
@@ -205,9 +205,9 @@ static void MVChatConnectFailed( SERVER_REC *server ) {
 	server_ref( server );
 
 	if( ! pthread_main_np() ) { // if not main thread
-		[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+		pthread_mutex_unlock( &irssiLock ); // prevents a deadlock, since waitUntilDone is required. threads synced
 		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:YES];
-		[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+		pthread_mutex_lock( &irssiLock ); // lock back up like nothing happened
 	} else [self performSelector:@selector( _didNotConnect )];
 }
 
@@ -991,9 +991,9 @@ static void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, cons
 	g_free( params );
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:cmd, @"command", user, @"user", ags, @"arguments", nil];
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+	pthread_mutex_unlock( &irssiLock ); // prevents a deadlock, since waitUntilDone is required. threads synced
 	[self performSelectorOnMainThread:@selector( _processSubcodeRequest: ) withObject:info waitUntilDone:YES];
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	pthread_mutex_lock( &irssiLock ); // lock back up like nothing happened
 }
 
 static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
@@ -1010,9 +1010,9 @@ static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const 
 	g_free( params );
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:cmd, @"command", user, @"user", ags, @"arguments", nil];
-	[MVIRCChatConnectionThreadLock unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
+	pthread_mutex_unlock( &irssiLock ); // prevents a deadlock, since waitUntilDone is required. threads synced
 	[self performSelectorOnMainThread:@selector( _processSubcodeReply: ) withObject:info waitUntilDone:YES];
-	[MVIRCChatConnectionThreadLock lock]; // lock back up like nothing happened
+	pthread_mutex_lock( &irssiLock ); // lock back up like nothing happened
 }
 
 #pragma mark -
@@ -1063,9 +1063,11 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 @implementation MVIRCChatConnection
 + (void) initialize {
 	[super initialize];
+
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
-		MVIRCChatConnectionThreadLock = [[NSRecursiveLock alloc] init];
+		extern pthread_mutex_t irssiLock;
+		pthread_mutex_init( &irssiLock, NULL );
 
 		irssi_gui = IRSSI_GUI_NONE;
 
@@ -1106,31 +1108,31 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		_chatConnectionSettings = NULL;
 
 		_knownUsers = [[NSMutableDictionary dictionaryWithCapacity:200] retain];
-		
+
 		extern unsigned int connectionCount;
 		connectionCount++;
-		
-		[MVIRCChatConnectionThreadLock lock];
+
+		while( ! irssiThreadReady ) usleep( 50 );
+
+		pthread_mutex_lock( &irssiLock );
 
 		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
 		if( ! proto ) {
-			[MVIRCChatConnectionThreadLock unlock];
+			pthread_mutex_unlock( &irssiLock );
 			[self release];
 			return nil;
 		}
 
 		SERVER_CONNECT_REC *settings = server_create_conn( proto -> id, "irc.freenode.net", 6667, NULL, NULL, [self encodedBytesWithString:NSUserName()] );
 		if( ! settings ) {
-			[MVIRCChatConnectionThreadLock unlock];
+			pthread_mutex_unlock( &irssiLock );
 			[self release];
 			return nil;
 		}
 
 		[self _setIrssiConnectSettings:settings];
 
-		[MVIRCChatConnectionThreadLock unlock];
-
-		while( ! irssiThreadReady ) usleep( 50 );
+		pthread_mutex_unlock( &irssiLock );
 	}
 
 	return self;
@@ -1193,7 +1195,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( _chatConnectionSettings -> chat_type );
 
@@ -1226,7 +1228,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	proto -> server_connect( _chatConnection );
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
@@ -1243,14 +1245,14 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		[self sendRawMessage:[NSString stringWithFormat:@"QUIT :%s", msg] immediately:YES];
 	} else [self sendRawMessage:@"QUIT" immediately:YES];
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	_chatConnection -> connection_lost = NO;
 	_chatConnection -> no_reconnect = YES;
 
 	server_disconnect( _chatConnection );
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 #pragma mark -
@@ -1259,12 +1261,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( name != nil );
 	if( ! _chatConnectionSettings ) return;
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	g_free_not_null( _chatConnectionSettings -> realname );
 	_chatConnectionSettings -> realname = g_strdup( [self encodedBytesWithString:name] );		
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 - (NSString *) realName {
@@ -1279,12 +1281,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( [nickname length] > 0 );
 	if( ! _chatConnectionSettings ) return;
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	g_free_not_null( _chatConnectionSettings -> nick );
 	_chatConnectionSettings -> nick = g_strdup( [self encodedBytesWithString:nickname] );		
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 
 	if( [self isConnected] && ! [nickname isEqualToString:[self nickname]] )
 		[self sendRawMessageWithFormat:@"NICK %@", nickname];
@@ -1315,13 +1317,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) setPassword:(NSString *) password {
 	if( ! _chatConnectionSettings ) return;
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	g_free_not_null( _chatConnectionSettings -> password );
 	if( [password length] ) _chatConnectionSettings -> password = g_strdup( [self encodedBytesWithString:password] );		
 	else _chatConnectionSettings -> password = NULL;		
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 - (NSString *) password {
@@ -1338,12 +1340,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( [username length] > 0 );
 	if( ! _chatConnectionSettings ) return;
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	g_free_not_null( _chatConnectionSettings -> username );
 	_chatConnectionSettings -> username = g_strdup( [self encodedBytesWithString:username] );		
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 - (NSString *) username {
@@ -1358,12 +1360,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( [server length] > 0 );
 	if( ! _chatConnectionSettings ) return;
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	g_free_not_null( _chatConnectionSettings -> address );
 	_chatConnectionSettings -> address = g_strdup( [self encodedBytesWithString:server] );		
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 - (NSString *) server {
@@ -1376,11 +1378,11 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) setServerPort:(unsigned short) port {
 	if( ! _chatConnectionSettings ) return;
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	_chatConnectionSettings -> port = ( port ? port : 6667 );
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 - (unsigned short) serverPort {
@@ -1406,12 +1408,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) setProxyServer:(NSString *) address {
 	if( ! _chatConnectionSettings ) return;
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	g_free_not_null( _chatConnectionSettings -> proxy );
 	_chatConnectionSettings -> proxy = g_strdup( [self encodedBytesWithString:address] );
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 - (NSString *) proxyServer {
@@ -1424,11 +1426,11 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) setProxyServerPort:(unsigned short) port {
 	if( ! _chatConnectionSettings ) return;
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	_chatConnectionSettings -> proxy_port = port;
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 - (unsigned short) proxyServerPort {
@@ -1547,22 +1549,22 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( user != nil );
 	NSParameterAssert( [[user nickname] length] > 0 );
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	notifylist_add( [self encodedBytesWithString:[NSString stringWithFormat:@"%@!*@*", [user nickname]]], NULL, TRUE, 600 );
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 - (void) stopWatchingUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
 	NSParameterAssert( [[user nickname] length] > 0 );
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	notifylist_remove( [self encodedBytesWithString:[NSString stringWithFormat:@"%@!*@*", [user nickname]]] );
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 #pragma mark -
@@ -1592,11 +1594,11 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		_awayMessage = [message copyWithZone:[self zone]];
 		const char *msg = [[self class] _flattenedIRCStringForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 
-		[MVIRCChatConnectionThreadLock lock];
+		pthread_mutex_lock( &irssiLock );
 
 		irc_send_cmdv( (IRC_SERVER_REC *) _chatConnection, "AWAY :%s", msg );
 
-		[MVIRCChatConnectionThreadLock unlock];
+		pthread_mutex_unlock( &irssiLock );
 	} else {
 		[[self localUser] _setStatus:MVChatUserAvailableStatus];
 		[self sendRawMessage:@"AWAY"];
@@ -1729,15 +1731,10 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
 
-	while( ! MVChatApplicationQuitting || connectionCount ) {
-		if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
-			g_main_iteration( TRUE ); // this will block until one event occurs
-			[MVIRCChatConnectionThreadLock unlock];
-		}
-		usleep( 10000 ); // give time to other threads
-	}
+	while( ! MVChatApplicationQuitting || connectionCount )
+		g_main_iteration( TRUE, &irssiLock ); // this will block until one event occurs
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	[self _deregisterCallbacks];
 
@@ -1749,7 +1746,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	irc_deinit();
 	core_deinit();
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
+	pthread_mutex_destroy( &irssiLock );
 
 	[pool release];
 }
@@ -1761,8 +1759,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 }
 
 - (void) _setIrssiConnection:(SERVER_REC *) server {
-	[MVIRCChatConnectionThreadLock lock];
-
 	SERVER_REC *old = _chatConnection;
 
 	if( old ) {
@@ -1785,8 +1781,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	}
 
 	if( old ) server_unref( old );
-
-	[MVIRCChatConnectionThreadLock unlock];
 }
 
 #pragma mark -
@@ -1796,8 +1790,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 }
 
 - (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings {
-	[MVIRCChatConnectionThreadLock lock];
-
 	SERVER_CONNECT_REC *old = _chatConnectionSettings;
 	_chatConnectionSettings = settings;
 
@@ -1807,8 +1799,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	}
 
 	if( old ) server_connect_unref( old );
-
-	[MVIRCChatConnectionThreadLock unlock];
 }
 
 #pragma mark -
@@ -1850,7 +1840,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	[self _willDisconnect];
 
-	[MVIRCChatConnectionThreadLock lock];
+	pthread_mutex_lock( &irssiLock );
 
 	if( _chatConnection -> handle ) {
 		g_io_channel_unref( net_sendbuffer_handle( _chatConnection -> handle ) );
@@ -1867,7 +1857,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	[self _setIrssiConnection:NULL];
 
-	[MVIRCChatConnectionThreadLock unlock];
+	pthread_mutex_unlock( &irssiLock );
 }
 
 #pragma mark -
@@ -1971,18 +1961,18 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 - (oneway void) _sendRawMessage:(NSString *) raw immediately:(BOOL) now {
 	if( [self _irssiConnection] ) {
-		[MVIRCChatConnectionThreadLock lock];
+		pthread_mutex_lock( &irssiLock );
 		irc_send_cmd_full( (IRC_SERVER_REC *) [self _irssiConnection], [self encodedBytesWithString:raw], now, now, FALSE);
-		[MVIRCChatConnectionThreadLock unlock];
+		pthread_mutex_unlock( &irssiLock );
 	}
 }
 
 - (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action {
 	if( [self _irssiConnection] ) {
-		[MVIRCChatConnectionThreadLock lock];
+		pthread_mutex_lock( &irssiLock );
 		if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:target], msg, 0 );
 		else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:target], msg );
-		[MVIRCChatConnectionThreadLock unlock];
+		pthread_mutex_unlock( &irssiLock );
 	}
 }
 @end

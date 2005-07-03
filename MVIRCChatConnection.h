@@ -1,7 +1,7 @@
 #import "MVChatConnection.h"
 #import "common.h"
 
-extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
+extern pthread_mutex_t irssiLock;
 
 @interface MVIRCChatConnection : MVChatConnection {
 @private
