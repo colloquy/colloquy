@@ -10,28 +10,13 @@ extern NSRecursiveLock *MVIRCChatConnectionThreadLock;
 	NSString *_proxyPassword;
 	SERVER_REC *_chatConnection;
 	SERVER_CONNECT_REC *_chatConnectionSettings;
-//	NSConnection *_irssiThreadConnection;
-//	MVIRCChatConnection *_irssiThreadProxy;
 }
 + (NSArray *) defaultServerPorts;
 @end
 
-/* #pragma mark -
-
-@interface MVIRCConnectionThreadHelper : NSObject {}
-- (NSConnection *) vendChatConnection:(MVIRCChatConnection *) connection;
-@end
-
 #pragma mark -
 
-@protocol MVIRCChatConnectionIrssiThread
-- (oneway void) _sendRawMessage:(NSString *) raw immediately:(BOOL) now;
-- (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action;
-@end */
-
-#pragma mark -
-
-@interface MVChatConnection (MVIRCChatConnectionPrivate) /* <MVIRCChatConnectionIrssiThread> */
+@interface MVChatConnection (MVIRCChatConnectionPrivate)
 + (MVIRCChatConnection *) _connectionForServer:(SERVER_REC *) server;
 
 + (void) _registerCallbacks;

@@ -1131,38 +1131,10 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		[MVIRCChatConnectionThreadLock unlock];
 
 		while( ! irssiThreadReady ) usleep( 50 );
-
-/*		extern NSPort *threadConnectionPort;
-		NSConnection *threadConnection = [NSConnection connectionWithReceivePort:nil sendPort:threadConnectionPort];
-		_irssiThreadConnection = [[(MVIRCConnectionThreadHelper *)[threadConnection rootProxy] vendChatConnection:self] retain];
-
-		NSConnection *connection = [NSConnection connectionWithReceivePort:[_irssiThreadConnection sendPort] sendPort:[_irssiThreadConnection receivePort]];
-		[connection setRequestTimeout:2.];
-		[connection setReplyTimeout:2.];
-
-		_irssiThreadProxy = [[connection rootProxy] retain];
-		[(NSDistantObject *)_irssiThreadProxy setProtocolForProxy:@protocol( MVIRCChatConnectionIrssiThread )]; */
 	}
 
 	return self;
 }
-
-/* - (void) release {
-	if( ( [self retainCount] - 2 ) == 1 ) {
-		[MVIRCChatConnectionThreadLock lock];
-
-		[_irssiThreadProxy release];
-		_irssiThreadProxy = nil;
-
-		[_irssiThreadConnection release];
-		[_irssiThreadConnection invalidate];
-		_irssiThreadConnection = nil;
-
-		[MVIRCChatConnectionThreadLock unlock];
-	}
-
-	[super release];
-} */
 
 - (void) dealloc {
 	[self disconnect];
@@ -1746,31 +1718,10 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 #pragma mark -
 
-static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
-	if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
-		g_main_iteration( FALSE ); // this will not block and return quickly so we wont keep the lock long
-		[MVIRCChatConnectionThreadLock unlock];
-	}
-}
-
-#pragma mark -
-
 + (void) _irssiRunLoop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-/*	MVIRCConnectionThreadHelper *helper = [[MVIRCConnectionThreadHelper alloc] init];
-
-	NSConnection *server = [[NSConnection defaultConnection] retain];
-	[server enableMultipleThreads];
-	[server setRootObject:helper];
-
-	extern NSPort *threadConnectionPort;
-	threadConnectionPort = [[[NSConnection defaultConnection] receivePort] retain]; */
-
 	GMainLoop *glibMainLoop = g_main_new( TRUE );
-
-	CFRunLoopTimerRef timer = CFRunLoopTimerCreate( NULL, 0., 0.05, 0, 0, irssiRunCallback, NULL );
-    CFRunLoopAddTimer( [[NSRunLoop currentRunLoop] getCFRunLoop], timer, kCFRunLoopDefaultMode );
 
 	extern BOOL irssiThreadReady;
 	irssiThreadReady = YES;
@@ -1778,8 +1729,13 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
 
-	while( ! MVChatApplicationQuitting || connectionCount ) // run until the app quits and there are no more connections
-		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+	while( ! MVChatApplicationQuitting || connectionCount ) {
+		if( [MVIRCChatConnectionThreadLock tryLock] ) { // prevents some deadlocks
+			g_main_iteration( TRUE ); // this will block until one event occurs
+			[MVIRCChatConnectionThreadLock unlock];
+		}
+		usleep( 10000 ); // give time to other threads
+	}
 
 	[MVIRCChatConnectionThreadLock lock];
 
@@ -1793,22 +1749,10 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	irc_deinit();
 	core_deinit();
 
-/*	[threadConnectionPort release];
-	threadConnectionPort = nil;
-
-	[server release];
-	[helper release]; */
-
 	[MVIRCChatConnectionThreadLock unlock];
 
 	[pool release];
 }
-
-/* #pragma mark -
-
-- (MVIRCChatConnection *) _irssiThreadProxy {
-	return _irssiThreadProxy;
-} */
 
 #pragma mark -
 
@@ -2042,16 +1986,3 @@ static void irssiRunCallback( CFRunLoopTimerRef timer, void *info ) {
 	}
 }
 @end
-/*
-#pragma mark -
-
-@implementation MVIRCConnectionThreadHelper
-- (NSConnection *) vendChatConnection:(MVIRCChatConnection *) connection {
-	NSConnection *server = [[[NSConnection alloc] initWithReceivePort:[NSPort port] sendPort:[NSPort port]] autorelease];
-	[server setRequestTimeout:2.];
-	[server setReplyTimeout:2.];
-	[server setRootObject:connection];
-	[server enableMultipleThreads];
-	return server;
-}
-@end */
