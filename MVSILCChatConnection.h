@@ -2,11 +2,13 @@
 #include <libsilcclient/silcclient.h>
 #import "MVChatConnection.h"
 
+#define SilcLock(client) silc_mutex_lock(silc_schedule_get_callback_lock((client)->schedule))
+#define SilcUnlock(client) silc_mutex_unlock(silc_schedule_get_callback_lock((client)->schedule))
+
 @interface MVSILCChatConnection : MVChatConnection {
 @private
 	SilcClient _silcClient;
     SilcClientParams _silcClientParams;
-	NSRecursiveLock *_silcClientLock;
 
 	SilcClientConnection _silcConn;
 
@@ -33,9 +35,10 @@
 @interface MVChatConnection (MVSILCChatConnectionPrivate)
 + (const char *) _flattenedSILCStringForMessage:(NSAttributedString *) message andChatFormat:(MVChatMessageFormat) format;
 
+- (void) _initLocalUser;
+
 - (SilcClient) _silcClient;
 - (SilcClientParams *) _silcClientParams;
-- (NSRecursiveLock *) _silcClientLock;
 
 - (SilcClientConnection) _silcConn;
 - (void) _setSilcConn:(SilcClientConnection) aSilcConn;

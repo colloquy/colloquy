@@ -55,11 +55,11 @@
 
 	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:topic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 
 	irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "TOPIC %s :%s", [[self connection] encodedBytesWithString:[self name]], msg );
 
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 }
 
 #pragma mark -
@@ -223,14 +223,14 @@
 - (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
 	[super kickOutMemberUser:user forReason:reason];
 
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 
 	if( reason ) {
 		const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 		irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "KICK %s %s :%s", [[self connection] encodedBytesWithString:[self name]], [[self connection] encodedBytesWithString:[user nickname]], msg );
 	} else irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "KICK %s %s", [[self connection] encodedBytesWithString:[self name]], [[self connection] encodedBytesWithString:[user nickname]] );
 
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 }
 
 - (void) addBanForUser:(MVChatUser *) user {

@@ -1,11 +1,7 @@
-#define MODULE_NAME "MVSILCFileTransfer"
-
 #import "MVSILCFileTransfer.h"
 #import "MVSILCChatConnection.h"
 #import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
-
-#pragma mark -
 
 @interface MVFileTransfer (MVFileTransferSilcPrivate)
 - (void) _silcPostError:(SilcClientFileError) error;
@@ -13,12 +9,9 @@
 
 #pragma mark -
 
-void silc_client_file_monitor ( SilcClient client, SilcClientConnection conn, SilcClientMonitorStatus status,
-								SilcClientFileError error, SilcUInt64 offset, SilcUInt64 filesize,
-								SilcClientEntry client_entry, SilcUInt32 session_id, const char *filepath,
-								void *context ) {
+void silc_client_file_monitor( SilcClient client, SilcClientConnection conn, SilcClientMonitorStatus status, SilcClientFileError error, SilcUInt64 offset, SilcUInt64 filesize, SilcClientEntry client_entry, SilcUInt32 session_id, const char *filepath, void *context ) {
 	MVFileTransfer *transfer = context;
-	
+
 	switch ( status ) {
 		case SILC_CLIENT_FILE_MONITOR_KEY_AGREEMENT:
 			[transfer _setStatus:MVFileTransferNormalStatus];
@@ -34,11 +27,12 @@ void silc_client_file_monitor ( SilcClient client, SilcClientConnection conn, Si
 			[transfer setFinalSize:filesize];
 			[transfer setTransfered:offset];
 			
-			if ( filesize == offset ) {
+			if( filesize == offset ) {
 				 [transfer _setStatus:MVFileTransferDoneStatus];
 				 NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:transfer];		
 				 [[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			}
+
 			break;
 
 		case SILC_CLIENT_FILE_MONITOR_CLOSED:
@@ -106,26 +100,26 @@ void silc_client_file_monitor ( SilcClient client, SilcClientConnection conn, Si
 
 	MVSILCUploadFileTransfer *transfer = [[MVSILCUploadFileTransfer alloc] initWithSessionID:0 toUser:user];
 	transfer -> _source = [[path stringByStandardizingPath] copyWithZone:[self zone]];
-	
+
 	SilcClientID *clientID = silc_id_str2id( [(NSData *)[user uniqueIdentifier] bytes], [(NSData *)[user uniqueIdentifier] length], SILC_ID_CLIENT );
 	if( clientID ) {
-		[[[user connection] _silcClientLock] lock];
+		SilcLock( [[user connection] _silcClient] );
+
 		SilcClientEntry client = silc_client_get_client_by_id( [[user connection] _silcClient], [[user connection] _silcConn], clientID );
 		if( client ) {
 			SilcUInt32 sessionid;
 			SilcClientFileError error = silc_client_file_send( [[user connection] _silcClient], [[user connection] _silcConn], silc_client_file_monitor, transfer, [result bytes], 0, passive, client, [path fileSystemRepresentation], &sessionid);
-			if (error != SILC_CLIENT_FILE_OK) {
+			if( error != SILC_CLIENT_FILE_OK ) {
 				[transfer _silcPostError:error];
-				[[[user connection] _silcClientLock] unlock];
+				SilcUnlock( [[user connection] _silcClient] );
 				return nil;
 			}
-			
+
 			[transfer _setSessionID:sessionid];
 		}
-		[[[user connection] _silcClientLock] unlock];
-	} else {
-		return nil;
-	}
+
+		SilcUnlock( [[user connection] _silcClient] );
+	} else return nil;
 
 	return transfer;
 }
@@ -133,10 +127,8 @@ void silc_client_file_monitor ( SilcClient client, SilcClientConnection conn, Si
 #pragma mark -
 
 - (id) initWithSessionID:(SilcUInt32) sessionID toUser:(MVChatUser *) user {
-	if ( ( self = [self initWithUser:user] ) ) {
+	if( ( self = [self initWithUser:user] ) )
 		[self _setSessionID:sessionID];
-	}
-	
 	return self;
 }
 
@@ -144,10 +136,10 @@ void silc_client_file_monitor ( SilcClient client, SilcClientConnection conn, Si
 
 - (void) cancel {
 	[self _setStatus:MVFileTransferStoppedStatus];
-	
-	[[[[self user] connection] _silcClientLock] lock];
+
+	SilcLock( [[[self user] connection] _silcClient] );
 	silc_client_file_close( [[[self user] connection] _silcClient], [[[self user] connection] _silcConn], [self _sessionID] );
-	[[[[self user] connection] _silcClientLock] unlock];
+	SilcUnlock( [[[self user] connection] _silcClient] );
 }
 @end
 
@@ -174,25 +166,23 @@ void silc_client_file_monitor ( SilcClient client, SilcClientConnection conn, Si
 #pragma mark -
 
 - (id) initWithSessionID:(SilcUInt32) sessionID toUser:(MVChatUser *) user {
-	if ( ( self = [self initWithUser:user] ) ) {
+	if( ( self = [self initWithUser:user] ) )
 		[self _setSessionID:sessionID];
-	}
-
 	return self;
 }
 
 #pragma mark -
 
 - (void) reject {
-	[[[[self user] connection] _silcClientLock] lock];
+	SilcLock( [[[self user] connection] _silcClient] );
 	silc_client_file_close( [[[self user] connection] _silcClient], [[[self user] connection] _silcConn], [self _sessionID] );
-	[[[[self user] connection] _silcClientLock] unlock];
+	SilcUnlock( [[[self user] connection] _silcClient] );
 }
 
 - (void) cancel {
-	[[[[self user] connection] _silcClientLock] lock];
+	SilcLock( [[[self user] connection] _silcClient] );
 	silc_client_file_close( [[[self user] connection] _silcClient], [[[self user] connection] _silcConn], [self _sessionID] );
-	[[[[self user] connection] _silcClientLock] unlock];
+	SilcUnlock( [[[self user] connection] _silcClient] );
 }
 
 #pragma mark -
@@ -217,5 +207,4 @@ void silc_client_file_monitor ( SilcClient client, SilcClientConnection conn, Si
 - (void) _setSessionID:(SilcUInt32) sessionID {
 	_sessionID = sessionID;
 }
-
 @end

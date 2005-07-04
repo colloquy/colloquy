@@ -2,6 +2,8 @@
 #import "common.h"
 
 extern pthread_mutex_t irssiLock;
+#define IrssiLock() pthread_mutex_lock( &irssiLock )
+#define IrssiUnlock() pthread_mutex_unlock( &irssiLock )
 
 @interface MVIRCChatConnection : MVChatConnection {
 @private

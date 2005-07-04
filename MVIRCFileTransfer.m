@@ -38,9 +38,9 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	if( ! self ) return;
 
 	if( ! pthread_main_np() ) { // if not main thread
-		pthread_mutex_unlock( &irssiLock ); // prevents a deadlock, since waitUntilDone is required. threads synced
+		IrssiUnlock(); // prevents a deadlock, since waitUntilDone is required. threads synced
 		[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-		pthread_mutex_lock( &irssiLock ); // lock back up like nothing happened
+		IrssiLock(); // lock back up like nothing happened
 	} else [self performSelector:@selector( _destroying )];
 
 	if( dcc -> size != dcc -> transfd ) {
@@ -59,9 +59,9 @@ static void MVFileTransferErrorConnect( FILE_DCC_REC *dcc ) {
 	if( ! self ) return;
 
 	if( ! pthread_main_np() ) { // if not main thread
-		pthread_mutex_unlock( &irssiLock ); // prevents a deadlock, since waitUntilDone is required. threads synced
+		IrssiUnlock(); // prevents a deadlock, since waitUntilDone is required. threads synced
 		[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-		pthread_mutex_lock( &irssiLock ); // lock back up like nothing happened
+		IrssiLock(); // lock back up like nothing happened
 	} else [self performSelector:@selector( _destroying )];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer connection could not be made.", NSLocalizedDescriptionKey, nil];
@@ -74,9 +74,9 @@ static void MVFileTransferErrorFileCreate( FILE_DCC_REC *dcc, char *filename ) {
 	if( ! self ) return;
 
 	if( ! pthread_main_np() ) { // if not main thread
-		pthread_mutex_unlock( &irssiLock ); // prevents a deadlock, since waitUntilDone is required. threads synced
+		IrssiUnlock(); // prevents a deadlock, since waitUntilDone is required. threads synced
 		[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-		pthread_mutex_lock( &irssiLock ); // lock back up like nothing happened
+		IrssiLock(); // lock back up like nothing happened
 	} else [self performSelector:@selector( _destroying )];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
@@ -89,9 +89,9 @@ static void MVFileTransferErrorFileOpen( FILE_DCC_REC *dcc, char *filename, int 
 	if( ! self ) return;
 
 	if( ! pthread_main_np() ) { // if not main thread
-		pthread_mutex_unlock( &irssiLock ); // prevents a deadlock, since waitUntilDone is required. threads synced
+		IrssiUnlock(); // prevents a deadlock, since waitUntilDone is required. threads synced
 		[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-		pthread_mutex_lock( &irssiLock ); // lock back up like nothing happened
+		IrssiLock(); // lock back up like nothing happened
 	} else [self performSelector:@selector( _destroying )];
 	
 	NSError *ferror = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
@@ -105,9 +105,9 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	if( ! self ) return;
 
 	if( ! pthread_main_np() ) { // if not main thread
-		pthread_mutex_unlock( &irssiLock ); // prevents a deadlock, since waitUntilDone is required. threads synced
+		IrssiUnlock(); // prevents a deadlock, since waitUntilDone is required. threads synced
 		[self performSelectorOnMainThread:@selector( _destroying ) withObject:nil waitUntilDone:YES];
-		pthread_mutex_lock( &irssiLock ); // lock back up like nothing happened
+		IrssiLock(); // lock back up like nothing happened
 	} else [self performSelector:@selector( _destroying )];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
@@ -136,14 +136,14 @@ static BOOL fileTransferSignalsRegistered = NO;
 + (void) initialize {
 	[super initialize];
 	if( ! fileTransferSignalsRegistered ) {
-		pthread_mutex_lock( &irssiLock );
+		IrssiLock();
 		signal_add_last( "dcc connected", (SIGNAL_FUNC) MVFileTransferConnected );
 		signal_add_last( "dcc closed", (SIGNAL_FUNC) MVFileTransferClosed );
 		signal_add_last( "dcc error connect", (SIGNAL_FUNC) MVFileTransferErrorConnect );
 		signal_add_last( "dcc error file create", (SIGNAL_FUNC) MVFileTransferErrorFileCreate );
 		signal_add_last( "dcc error file open", (SIGNAL_FUNC) MVFileTransferErrorFileOpen );
 		signal_add_last( "dcc error send exists", (SIGNAL_FUNC) MVFileTransferErrorSendExists );
-		pthread_mutex_unlock( &irssiLock );
+		IrssiUnlock();
 		fileTransferSignalsRegistered = YES;
 	}
 }
@@ -155,12 +155,12 @@ static BOOL fileTransferSignalsRegistered = NO;
 	[result appendBytes:"\0" length:1];
 
 	if( [result length] > 1 ) {
-		pthread_mutex_lock( &irssiLock );
+		IrssiLock();
 		settings_set_str( "dcc_own_ip", [result bytes] );
-		pthread_mutex_unlock( &irssiLock );
+		IrssiUnlock();
 	}
 
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 
 	int queue = dcc_queue_new();
 	NSString *source = [[path stringByStandardizingPath] copyWithZone:[self zone]];
@@ -178,7 +178,7 @@ static BOOL fileTransferSignalsRegistered = NO;
 	ret -> _source = [[source stringByStandardizingPath] copyWithZone:[self zone]];
 	ret -> _transferQueue = queue;
 
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 
 	return ret;
 }
@@ -202,10 +202,10 @@ static BOOL fileTransferSignalsRegistered = NO;
 
 - (BOOL) isPassive {
 	if( ! [self _DCCFileRecord] ) return _passive;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_passive = dcc_is_passive( [self _DCCFileRecord] );
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _passive;
 }
 
@@ -213,19 +213,19 @@ static BOOL fileTransferSignalsRegistered = NO;
 
 - (unsigned long long) finalSize {
 	if( ! [self _DCCFileRecord] ) return _finalSize;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_finalSize = [self _DCCFileRecord] -> size;
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _finalSize;
 }
 
 - (unsigned long long) transfered {
 	if( ! [self _DCCFileRecord] ) return _transfered;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_transfered = [self _DCCFileRecord] -> transfd;
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _transfered;
 }
 
@@ -234,19 +234,19 @@ static BOOL fileTransferSignalsRegistered = NO;
 - (NSDate *) startDate {
 	if( _startDate || ! [self _DCCFileRecord] )
 		return [[_startDate retain] autorelease];
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] && [self _DCCFileRecord] -> starttime )
 		_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return [[_startDate retain] autorelease];
 }
 
 - (unsigned long long) startOffset {
 	if( ! [self _DCCFileRecord] ) return _startOffset;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_startOffset = [self _DCCFileRecord] -> skipped;
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _startOffset;
 }
 
@@ -255,19 +255,19 @@ static BOOL fileTransferSignalsRegistered = NO;
 - (NSHost *) host {
 	if( _host || ! [self _DCCFileRecord] )
 		return [[_host retain] autorelease];
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _host;
 }
 
 - (unsigned short) port {
 	if( _port || ! [self _DCCFileRecord] ) return _port;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_port = [self _DCCFileRecord] -> port;
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _port;
 }
 
@@ -275,10 +275,10 @@ static BOOL fileTransferSignalsRegistered = NO;
 
 - (void) cancel {
 	if( ! [self _DCCFileRecord] ) return;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		dcc_close( (DCC_REC *)[self _DCCFileRecord] );
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	[self _setStatus:MVFileTransferStoppedStatus];
 }
 @end
@@ -291,7 +291,7 @@ static BOOL fileTransferSignalsRegistered = NO;
 }
 
 - (void) _setDCCFileRecord:(FILE_DCC_REC *) record {
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 
 	if( _dcc ) {
 		MVFileTransferModuleData *data = MODULE_DATA( (FILE_DCC_REC *)_dcc );
@@ -307,7 +307,7 @@ static BOOL fileTransferSignalsRegistered = NO;
 		MODULE_DATA_SET( ((DCC_REC *)record), data );
 	}
 
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 }
 
 - (void) _destroying {
@@ -341,21 +341,21 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	[super initialize];
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
-		pthread_mutex_lock( &irssiLock );
+		IrssiLock();
 		signal_add_last( "dcc get receive", (SIGNAL_FUNC) MVIRCDownloadFileTransferSpecifyPath );
-		pthread_mutex_unlock( &irssiLock );
+		IrssiUnlock();
 		tooLate = YES;
 	}
 
 	if( ! fileTransferSignalsRegistered ) {
-		pthread_mutex_lock( &irssiLock );
+		IrssiLock();
 		signal_add_last( "dcc connected", (SIGNAL_FUNC) MVFileTransferConnected );
 		signal_add_last( "dcc closed", (SIGNAL_FUNC) MVFileTransferClosed );
 		signal_add_last( "dcc error connect", (SIGNAL_FUNC) MVFileTransferErrorConnect );
 		signal_add_last( "dcc error file create", (SIGNAL_FUNC) MVFileTransferErrorFileCreate );
 		signal_add_last( "dcc error file open", (SIGNAL_FUNC) MVFileTransferErrorFileOpen );
 		signal_add_last( "dcc error send exists", (SIGNAL_FUNC) MVFileTransferErrorSendExists );
-		pthread_mutex_unlock( &irssiLock );
+		IrssiUnlock();
 		fileTransferSignalsRegistered = YES;
 	}
 }
@@ -379,10 +379,10 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 - (BOOL) isPassive {
 	if( ! [self _DCCFileRecord] ) return _passive;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_passive = dcc_is_passive( [self _DCCFileRecord] );
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _passive;
 }
 
@@ -390,19 +390,19 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 - (unsigned long long) finalSize {
 	if( ! [self _DCCFileRecord] ) return _finalSize;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_finalSize = [self _DCCFileRecord] -> size;
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _finalSize;
 }
 
 - (unsigned long long) transfered {
 	if( ! [self _DCCFileRecord] ) return _transfered;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_transfered = [self _DCCFileRecord] -> transfd;
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _transfered;
 }
 
@@ -411,19 +411,19 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (NSDate *) startDate {
 	if( _startDate || ! [self _DCCFileRecord] )
 		return [[_startDate retain] autorelease];
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] && [self _DCCFileRecord] -> starttime )
 		_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _startDate;
 }
 
 - (unsigned long long) startOffset {
 	if( ! [self _DCCFileRecord] ) return _startOffset;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_startOffset = [self _DCCFileRecord] -> skipped;
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _startOffset;
 }
 
@@ -432,19 +432,19 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (NSHost *) host {
 	if( _host || ! [self _DCCFileRecord] )
 		return [[_host retain] autorelease];
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _host;
 }
 
 - (unsigned short) port {
 	if( _port || ! [self _DCCFileRecord] ) return _port;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_port = [self _DCCFileRecord] -> port;
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _port;
 }
 
@@ -453,10 +453,10 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (NSString *) originalFileName {
 	if( _originalFileName || ! [self _DCCFileRecord] )
 		return [[_originalFileName retain] autorelease];
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		_originalFileName = [[[[self user] connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg] retain];
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	return _originalFileName;
 }
 
@@ -467,28 +467,28 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	_destination = [[path stringByStandardizingPath] copyWithZone:[self zone]];
 
 	if( ! [self _DCCFileRecord] ) return;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		[self _DCCFileRecord] -> get_type = ( rename ? DCC_GET_RENAME : DCC_GET_OVERWRITE );
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 }
 
 #pragma mark -
 
 - (void) reject {
 	if( ! [self _DCCFileRecord] ) return;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		dcc_reject( (DCC_REC *)[self _DCCFileRecord], [self _DCCFileRecord] -> server );
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 }
 
 - (void) cancel {
 	if( ! [self _DCCFileRecord] ) return;
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	if( [self _DCCFileRecord] )
 		dcc_close( (DCC_REC *)[self _DCCFileRecord] );
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 	[self _setStatus:MVFileTransferStoppedStatus];
 }
 
@@ -504,7 +504,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	if( ! [[NSFileManager defaultManager] isReadableFileAtPath:[self destination]] )
 		resume = NO;
 
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 
 	if( [self _DCCFileRecord] ) {
 		if( resume ) dcc_send_resume( [self _DCCFileRecord] );
@@ -512,7 +512,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 		else dcc_get_connect( [self _DCCFileRecord] );
 	}
 
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 }
 @end
 
@@ -524,7 +524,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 }
 
 - (void) _setDCCFileRecord:(FILE_DCC_REC *) record {
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 
 	if( _dcc ) {
 		MVFileTransferModuleData *data = MODULE_DATA( (FILE_DCC_REC *)_dcc );
@@ -540,7 +540,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 		MODULE_DATA_SET( ((DCC_REC *)record), data );
 	}
 
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 }
 
 - (void) _destroying {

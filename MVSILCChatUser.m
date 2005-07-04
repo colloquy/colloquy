@@ -33,9 +33,10 @@
 #pragma mark -
 
 - (void) updateWithClientEntry:(SilcClientEntry) clientEntry {
-	[[[self connection] _silcClientLock] lock];
+	SilcLock( [[self connection] _silcClient] );
 
-	[self _setNickname:[NSString stringWithUTF8String:clientEntry -> nickname]];
+	if( clientEntry -> nickname )
+		[self _setNickname:[NSString stringWithUTF8String:clientEntry -> nickname]];
 
 	if( clientEntry -> username )
 		[self _setUsername:[NSString stringWithUTF8String:clientEntry -> username]];
@@ -66,7 +67,7 @@
 	
 	self -> _clientEntry = clientEntry;
 
-	[[[self connection] _silcClientLock] unlock];
+	SilcUnlock( [[self connection] _silcClient] );
 }
 
 #pragma mark -
@@ -104,10 +105,10 @@
 	// we might want to keep a duplicate of the SilcClientID struct as a instance variable
 	SilcClientID *clientID = silc_id_str2id( [(NSData *)[self uniqueIdentifier] bytes], [(NSData *)[self uniqueIdentifier] length], SILC_ID_CLIENT );
 	if( clientID ) {
-		[[[self connection] _silcClientLock] lock];
+		SilcLock( [[self connection] _silcClient] );
 		SilcClientEntry client = silc_client_get_client_by_id( [[self connection] _silcClient], [[self connection] _silcConn], clientID );
 		if( client ) silc_client_send_private_message( [[self connection] _silcClient], [[self connection] _silcConn], client, flags, (unsigned char *) msg, strlen( msg ), false );	
-		[[[self connection] _silcClientLock] unlock];
+		SilcUnlock( [[self connection] _silcClient] );
 	}
 }
 

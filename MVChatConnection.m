@@ -52,6 +52,14 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+@interface MVChatUser (MVChatUserPrivate)
+- (void) _setStatus:(MVChatUserStatus) status;
+- (void) _setDateConnected:(NSDate *) date;
+- (void) _setDateDisconnected:(NSDate *) date;
+@end
+
+#pragma mark -
+
 @implementation MVChatConnection
 + (BOOL) supportsURLScheme:(NSString *) scheme {
 	if( ! scheme ) return NO;
@@ -699,8 +707,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) _applicationWillTerminate:(NSNotification *) notification {
 	extern BOOL MVChatApplicationQuitting;
 	MVChatApplicationQuitting = YES;
-	if ( [self isConnected] )
-		[self disconnect];
+	if( [self isConnected] ) [self disconnect];
 }
 
 #pragma mark -
@@ -713,6 +720,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _didConnect {
 	[self cancelPendingReconnectAttempts];
+
+	[[self localUser] _setStatus:MVChatUserAvailableStatus];
+	[[self localUser] _setDateConnected:[NSDate date]];
+	[[self localUser] _setDateDisconnected:nil];
 
 	_status = MVChatConnectionConnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidConnectNotification object:self];
@@ -747,6 +758,8 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) _didDisconnect {
 	BOOL wasConnected = ( _status == MVChatConnectionConnectedStatus );
 
+	[[self localUser] _setStatus:MVChatUserOfflineStatus];
+
 	if( _status != MVChatConnectionSuspendedStatus && _status != MVChatConnectionServerDisconnectedStatus )
 		_status = MVChatConnectionDisconnectedStatus;
 
@@ -758,7 +771,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		[room _setDateParted:[NSDate date]];	
 	}
 
-	[_localUser release];
+	[_localUser autorelease];
 	_localUser = nil;
 
 	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];

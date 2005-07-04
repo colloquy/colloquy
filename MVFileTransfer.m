@@ -20,15 +20,15 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 + (void) setFileTransferPortRange:(NSRange) range {
 	unsigned short min = (unsigned short)range.location;
 	unsigned short max = (unsigned short)(range.location + range.length);
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	settings_set_str( "dcc_port", [[NSString stringWithFormat:@"%uh %uh", min, max] UTF8String] );
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 }
 
 + (NSRange) fileTransferPortRange {
-	pthread_mutex_lock( &irssiLock );
+	IrssiLock();
 	const char *range = settings_get_str( "dcc_port" );
-	pthread_mutex_unlock( &irssiLock );
+	IrssiUnlock();
 
 	unsigned short min = 1024;
 	unsigned short max = 1048;

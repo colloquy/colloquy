@@ -638,10 +638,9 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 	[self _setSilcConn:conn];
 
 	if( status == SILC_CLIENT_CONN_SUCCESS || status == SILC_CLIENT_CONN_SUCCESS_RESUME ) {
-		[[self _silcClientLock] unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:YES];
-		[[self _silcClientLock] lock]; // lock back up like nothing happened
-		
+		[self _initLocalUser];
+		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
+
 		@synchronized( [self _queuedCommands] ) {
 			NSEnumerator *enumerator = [[self _queuedCommands] objectEnumerator];
 			NSString *command = nil;
@@ -653,17 +652,13 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 		}
 	} else {
 		silc_client_close_connection( client, conn );
-		[[self _silcClientLock] unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:YES];
-		[[self _silcClientLock] lock]; // lock back up like nothing happened
+		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	}
 }
 
 static void silc_disconnected( SilcClient client, SilcClientConnection conn, SilcStatus status, const char *message ) {
 	MVSILCChatConnection *self = conn -> context;
-	[[self _silcClientLock] unlock]; // prevents a deadlock, since waitUntilDone is required. threads synced
-	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
-	[[self _silcClientLock] lock]; // lock back up like nothing happened
+	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
 }
 
 static void silc_get_auth_method_callback( SilcClient client, SilcClientConnection conn, SilcAuthMethod auth_method, void *context ) {
@@ -671,97 +666,92 @@ static void silc_get_auth_method_callback( SilcClient client, SilcClientConnecti
 	NSDictionary *dict = context;
 	SilcGetAuthMeth completion = SILC_32_TO_PTR( [(NSNumber *)[dict objectForKey:@"completion"] unsignedIntValue] );
 	void *completionContext = SILC_32_TO_PTR( [(NSNumber *)[dict objectForKey:@"context"] unsignedIntValue] );
-	
-	switch (auth_method) {
-		case SILC_AUTH_NONE:
+
+	switch( auth_method ) {
+	case SILC_AUTH_NONE:
+		completion( TRUE, auth_method, NULL, 0, completionContext );
+		break;
+	case SILC_AUTH_PASSWORD:
+		if ( ! [self password] ) {
 			completion( TRUE, auth_method, NULL, 0, completionContext );
 			break;
-		case SILC_AUTH_PASSWORD:
-			if ( ! [self password] ) {
-				completion( TRUE, auth_method, NULL, 0, completionContext );
-				break;
-			}
-			
-			completion( TRUE, auth_method, (unsigned char *)[[self password] UTF8String], [[self password] length], completionContext );
-			break;
-		case SILC_AUTH_PUBLIC_KEY:
-			completion( TRUE, auth_method, NULL, 0, completionContext );
-			break;
+		}
+
+		completion( TRUE, auth_method, (unsigned char *)[[self password] UTF8String], [[self password] length], completionContext );
+		break;
+	case SILC_AUTH_PUBLIC_KEY:
+		completion( TRUE, auth_method, NULL, 0, completionContext );
+		break;
 	}
 }
 
 static void silc_get_auth_method( SilcClient client, SilcClientConnection conn, char *hostname, SilcUInt16 port, SilcGetAuthMeth completion, void *context ) {
-	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(completion)], @"completion", [NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(context)], @"context", nil];
-
+	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(completion)], @"completion", [NSNumber numberWithUnsignedInt:SILC_PTR_TO_32( context )], @"context", nil];
 	silc_client_request_authentication_method( client, conn, silc_get_auth_method_callback, dict );
 }
 
 static void silc_verify_public_key( SilcClient client, SilcClientConnection conn, SilcSocketType conn_type, unsigned char *pk, SilcUInt32 pk_len, SilcSKEPKType pk_type, SilcVerifyPublicKey completion, void *context ) {
 	MVSILCChatConnection *self = conn -> context;
 
-	char *tmp;
-	
-	tmp = silc_hash_fingerprint( NULL, pk, pk_len );
+	char *tmp = silc_hash_fingerprint( NULL, pk, pk_len );
 	NSString *asciiFingerprint = [NSString stringWithUTF8String:tmp];
 	silc_free( tmp );
-	
+
 	tmp = silc_hash_babbleprint( NULL, pk, pk_len );
 	NSString *asciiBabbleprint = [NSString stringWithUTF8String:tmp];
 	silc_free(tmp);
-	
+
 	NSString *filename = NULL;
 	MVChatConnectionPublicKeyType publicKeyType = MVChatConnectionClientPublicKeyType;
-	
-	switch ( conn_type ) {
-		case SILC_SOCKET_TYPE_UNKNOWN:
-			completion( FALSE, context );
-			return;
-			
-		case SILC_SOCKET_TYPE_CLIENT:
-			publicKeyType = MVChatConnectionClientPublicKeyType;
-			break;
-			
-		case SILC_SOCKET_TYPE_SERVER:
-		case SILC_SOCKET_TYPE_ROUTER:
-			publicKeyType = MVChatConnectionServerPublicKeyType;
-			break;
+
+	switch( conn_type ) {
+	case SILC_SOCKET_TYPE_UNKNOWN:
+		completion( FALSE, context );
+		return;
+		
+	case SILC_SOCKET_TYPE_CLIENT:
+		publicKeyType = MVChatConnectionClientPublicKeyType;
+		break;
+		
+	case SILC_SOCKET_TYPE_SERVER:
+	case SILC_SOCKET_TYPE_ROUTER:
+		publicKeyType = MVChatConnectionServerPublicKeyType;
+		break;
 	}
-	
+
 	filename = [self _publicKeyFilename:conn_type andPublicKey:pk withLen:pk_len usingSilcConn:conn];
-	
+
 	BOOL needVerify = YES;
-	
-	if ( [[NSFileManager defaultManager] fileExistsAtPath:filename] ) {
+
+	if( [[NSFileManager defaultManager] fileExistsAtPath:filename] ) {
 		SilcPublicKey publicKey = NULL;
 		unsigned char *encodedPublicKey;
 		SilcUInt32 encodedPublicKeyLen;
-		
-		if ( silc_pkcs_load_public_key( [filename fileSystemRepresentation], &publicKey, SILC_PKCS_FILE_PEM ) ||
+
+		if( silc_pkcs_load_public_key( [filename fileSystemRepresentation], &publicKey, SILC_PKCS_FILE_PEM ) ||
 			 silc_pkcs_load_public_key( [filename fileSystemRepresentation], &publicKey, SILC_PKCS_FILE_BIN ) ) {
 			encodedPublicKey = silc_pkcs_public_key_encode( publicKey, &encodedPublicKeyLen );
-			if ( encodedPublicKey ) {
-				if ( ! memcmp( encodedPublicKey, pk, encodedPublicKeyLen ) ) {
+			if( encodedPublicKey ) {
+				if( ! memcmp( encodedPublicKey, pk, encodedPublicKeyLen ) )
 					needVerify = NO;
-				}
-				
 				silc_free( encodedPublicKey );
 			}
-			
+
 			silc_pkcs_public_key_free( publicKey );
 		}
 	}
 
-	if ( ! needVerify ) {
+	if( ! needVerify ) {
 		completion( TRUE, context );
 		return;
 	}
-	
+
 	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 	[dict setObject:[NSNumber numberWithUnsignedInt:publicKeyType] forKey:@"publicKeyType"];
 	[dict setObject:asciiFingerprint forKey:@"fingerprint"];
 	[dict setObject:asciiBabbleprint forKey:@"babbleprint"];
-	
-	if ( conn_type == SILC_SOCKET_TYPE_SERVER || conn_type == SILC_SOCKET_TYPE_ROUTER ) {
+
+	if( conn_type == SILC_SOCKET_TYPE_SERVER || conn_type == SILC_SOCKET_TYPE_ROUTER ) {
 		if ( conn -> sock -> hostname && strlen( conn -> sock -> hostname ) ) {
 			[dict setObject:[NSString stringWithUTF8String:conn -> sock -> hostname] forKey:@"name"];
 		} else if ( conn -> sock -> ip && strlen( conn -> sock -> ip ) ) {
@@ -772,17 +762,17 @@ static void silc_verify_public_key( SilcClient client, SilcClientConnection conn
 	} else if ( conn_type == SILC_SOCKET_TYPE_CLIENT ) {
 		[dict setObject:@"unknown user" forKey:@"name"];
 	}
-	
+
 	[dict setObject:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(completion)] forKey:@"completition"];
 	[dict setObject:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(context)] forKey:@"completitionContext"];
 	[dict setObject:self forKey:@"connection"];
 	[dict setObject:[NSData dataWithBytes:pk length:pk_len] forKey:@"pk"];
 	[dict setObject:[NSNumber numberWithUnsignedInt:conn_type] forKey:@"connType"];
 	[dict setObject:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(conn)] forKey:@"silcConn"];
-	
+
 	// we release it in the verfied callback
 	[dict retain];
-	
+
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedPublicKeyVerificationNotification object:self userInfo:dict];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
@@ -795,7 +785,7 @@ static void silc_failure( SilcClient client, SilcClientConnection conn, SilcProt
 
 static bool silc_key_agreement( SilcClient client, SilcClientConnection conn, SilcClientEntry client_entry, const char *hostname, SilcUInt16 port, SilcKeyAgreementCallback *completion, void **context) {
 #if 0
-	if ( hostname ) {
+	if( hostname ) {
 		silc_client_perform_key_agreement( client, conn, client_entry, hostname, port, silcgaim_buddy_keyagr_cb, ai );
 	} else {
 		// other user didn't supply hostname - we need to make the connection
@@ -807,13 +797,13 @@ static bool silc_key_agreement( SilcClient client, SilcClientConnection conn, Si
 		silc_client_send_key_agreement( client, conn, client_entry, [result bytes], NULL, 0, 60, silcgaim_buddy_keyagr_cb, a );
 	}
 #endif
-	
+
 	return FALSE;
 }
 
 static void silc_ftp( SilcClient client, SilcClientConnection conn, SilcClientEntry client_entry, SilcUInt32 session_id, const char *hostname, SilcUInt16 port ) {
 /*	MVSILCChatConnection *self = conn -> context;
-	
+
 	MVChatUser *user = [self _chatUserWithClientEntry:client_entry];
 	MVSILCDownloadFileTransfer *transfer = [[[MVSILCDownloadFileTransfer alloc] initWithSessionID:session_id toUser:user]
 	NSNotification *note = [NSNotification notificationWithName:MVDownloadFileTransferOfferNotification object:transfer];		
@@ -871,7 +861,6 @@ static SilcClientOperations silcClientOps = {
 		memset( &_silcClientParams, 0, sizeof( _silcClientParams ) );
 		_silcClientParams.dont_register_crypto_library = TRUE;
 
-		_silcClientLock = [[NSRecursiveLock alloc] init];
 		_silcClient = silc_client_alloc( &silcClientOps, &_silcClientParams, self, NULL );
 		if( ! _silcClient) {
 			// we need some error handling here.. silc connection CAN'T work without silc client
@@ -893,18 +882,15 @@ static SilcClientOperations silcClientOps = {
 - (void) dealloc {
 	[self disconnect];
 
-	[_silcClientLock lock];
+	SilcLock( _silcClient );
 	if( _silcClient -> realname ) free( _silcClient -> realname );
 	if( _silcClient -> username ) free( _silcClient -> username );
 	if( _silcClient -> hostname ) free( _silcClient -> hostname );
 	if( _silcClient -> nickname ) free( _silcClient -> nickname );
 
 	silc_client_free( _silcClient );
-	[_silcClientLock unlock];
 	_silcClient = NULL;
-
-	[_silcClientLock release];
-	_silcClientLock = nil;
+	SilcUnlock( _silcClient );
 
 	[_silcPassword release];
 	_silcPassword = nil;
@@ -983,10 +969,10 @@ static SilcClientOperations silcClientOps = {
 	params.detach_data = ( detachInfo ? (unsigned char *)[detachInfo bytes] : NULL );
 	params.detach_data_len = ( detachInfo ? [detachInfo length] : 0 );
 
-	[_silcClientLock lock];
+	SilcLock( _silcClient );
 	if( silc_client_connect_to_server( [self _silcClient], &params, [self serverPort], (char *) [[self server] UTF8String], self ) == -1 )
 		errorOnConnect = YES;
-	[_silcClientLock unlock];
+	SilcUnlock( _silcClient );
 
 	if( errorOnConnect) [self _didNotConnect];
 	else [NSThread detachNewThreadSelector:@selector( _silcRunloop ) toTarget:self withObject:nil];
@@ -1169,10 +1155,10 @@ static SilcClientOperations silcClientOps = {
 		} return;
 	}
 
-	[[self _silcClientLock] lock];
+	SilcLock( [self _silcClient] );
 	bool b = silc_client_command_call( [self _silcClient], [self _silcConn], [raw UTF8String] );
 	if( b ) [self _addCommand:raw forNumber:[self _silcConn] -> cmd_ident];
-	[[self _silcClientLock] unlock];
+	SilcUnlock( [self _silcClient] );
 
 	if( ! b ) [self _sendCommandFailedNotify:raw];
 }
@@ -1206,9 +1192,9 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 }
 
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
-	[[self _silcClientLock] lock];
+	SilcLock( [self _silcClient] );
 	silc_client_get_clients_whois( [self _silcClient], [self _silcConn], [nickname UTF8String], NULL, NULL, usersFoundCallback, self );
-	[[self _silcClientLock] unlock];
+	SilcUnlock( [self _silcClient] );
 
 	_lookingUpUsers = YES;
 
@@ -1216,7 +1202,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	while( _lookingUpUsers && [timeout timeIntervalSinceNow] >= 0 ) // asynchronously look up the users
 		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 
-	[[self _silcClientLock] lock];
+	SilcLock( [self _silcClient] );
 
 	SilcUInt32 clientsCount = 0;
 	SilcClientEntry *clients = silc_client_get_clients_local( [self _silcClient], [self _silcConn], [nickname UTF8String], NULL, &clientsCount );
@@ -1228,7 +1214,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 		[results addObject:user];
 	}
 
-	[[self _silcClientLock] unlock];
+	SilcUnlock( [self _silcClient] );
 
 	return ( [results count] ? [NSSet setWithSet:results] : nil );
 }
@@ -1251,9 +1237,9 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 		SilcClientID *clientID = silc_id_str2id( [(NSData *)data bytes], [(NSData *)data length], SILC_ID_CLIENT );
 		if( clientID ) {
-			[[self _silcClientLock] lock];
+			SilcLock( [self _silcClient] );
 			SilcClientEntry client = silc_client_get_client_by_id( [self _silcClient], [self _silcConn], clientID );
-			[[self _silcClientLock] unlock];
+			SilcUnlock( [self _silcClient] );
 			if( client ) {
 				user = [[[MVSILCChatUser allocWithZone:[self zone]] initWithClientEntry:client andConnection:self] autorelease];
 				[_knownUsers setObject:user forKey:data];
@@ -1283,18 +1269,18 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 		[self sendRawMessage:@"UMODE +g"];
 
-		[[self _silcClientLock] lock];
+		SilcLock( [self _silcClient] );
 		silc_client_set_away_message( [self _silcClient], [self _silcConn], (char *) [MVSILCChatConnection _flattenedSILCStringForMessage:message andChatFormat:[self outgoingChatFormat]] );
-		[[self _silcClientLock] unlock];
+		SilcUnlock( [self _silcClient] );
 
 		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	} else {
 		[self sendRawMessage:@"UMODE -g"];
 
-		[[self _silcClientLock] lock];
+		SilcLock( [self _silcClient] );
 		silc_client_set_away_message( [self _silcClient], [self _silcConn], NULL );
-		[[self _silcClientLock] unlock];
+		SilcUnlock( [self _silcClient] );
 		
 		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -1335,18 +1321,20 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 - (void) _silcRunloop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
-		if( [_silcClientLock tryLock] ) { // prevents some deadlocks
-			if( _silcClient && _silcClient -> schedule )
-				silc_schedule_one( _silcClient -> schedule, 100000 );
-				// use silc_schedule_one over silc_client_run_one since we want to block a bit inside the locks
-			[_silcClientLock unlock];
-		}
-
-		usleep( 500 ); // give time to other threads
-	}
+	silc_client_run( _silcClient ); // blocks until disconnected or application quit
 
 	[pool release];
+}
+
+- (void) _stopSilcRunloop {
+	silc_client_stop( _silcClient );
+}
+
+#pragma mark -
+
+- (void) _initLocalUser {
+	[_localUser autorelease];
+	_localUser = [[MVSILCChatUser allocWithZone:[self zone]] initLocalUserWithConnection:self];	
 }
 
 #pragma mark -
@@ -1355,16 +1343,10 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	return _silcClient;
 }
 
-- (NSRecursiveLock *) _silcClientLock {
-	return _silcClientLock;
-}
-
 #pragma mark -
 
 - (void) _setSilcConn:(SilcClientConnection) aSilcConn {
-	[[self _silcClientLock] lock];
 	_silcConn = aSilcConn;
-	[[self _silcClientLock] unlock];
 }
 
 - (SilcClientConnection) _silcConn {
@@ -1478,23 +1460,21 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 #pragma mark -
 
 - (void) _didConnect {
-	[_localUser release];
-	_localUser = [[MVSILCChatUser allocWithZone:[self zone]] initLocalUserWithConnection:self];
-
 	[self _setDetachInfo:nil];
-
 	[super _didConnect];
 }
 
 - (void) _didNotConnect {
 	[self _setSilcConn:NULL];
+	[self _stopSilcRunloop];
 	[self _setDetachInfo:nil];
 	[super _didNotConnect];
 }
 
 - (void) _didDisconnect {
-	// xenon: why did you add the check for detachData here? thats the cause of the reconnect
-	//        on manually disconnect
+	[self _setSilcConn:NULL];
+	[self _stopSilcRunloop];
+
 	if( ! _sentQuitCommand /* || ! [[self persistentInformation] objectForKey:@"detachData"] */ ) {
 		if( _status != MVChatConnectionSuspendedStatus )
 			_status = MVChatConnectionServerDisconnectedStatus;
@@ -1504,8 +1484,6 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	}
 
 	[super _didDisconnect];
-
-	[self _setSilcConn:NULL];
 }
 
 - (void) _systemWillSleep:(NSNotification *) notification {

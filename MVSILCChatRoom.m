@@ -7,7 +7,7 @@
 	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
 
-		[[connection _silcClientLock] lock];
+		SilcLock( [connection _silcClient] );
 
 		_name = [[NSString allocWithZone:[self zone]] initWithUTF8String:channelEntry -> channel_name];
 
@@ -17,7 +17,7 @@
 		
 		_channelEntry = channelEntry;
 		
-		[[connection _silcClientLock] unlock];
+		SilcUnlock( [connection _silcClient] );
 	}
 
 	return self;
@@ -64,18 +64,18 @@
 
 	if( action ) flags |= SILC_MESSAGE_FLAG_ACTION;
 
-	[[[self connection] _silcClientLock] lock];
+	SilcLock( [[self connection] _silcClient] );
 
 	SilcChannelEntry channel = silc_client_get_channel( [[self connection] _silcClient], [[self connection] _silcConn], (char *) [[self name] UTF8String] );
 
 	if( ! channel) {
-		[[[self connection] _silcClientLock] unlock];
+		SilcUnlock( [[self connection] _silcClient] );
 		return;
 	}
 
 	silc_client_send_channel_message( [[self connection] _silcClient], [[self connection] _silcConn], channel, NULL, flags, (unsigned char *) msg, strlen( msg ), false );
 
-	[[[self connection] _silcClientLock] unlock];
+	SilcUnlock( [[self connection] _silcClient] );
 }
 
 #pragma mark -
