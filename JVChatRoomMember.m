@@ -349,7 +349,7 @@
 	if( ! [self isLocalUser] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ignored", "ignore user contextual menu") action:@selector( toggleIgnore: ) keyEquivalent:@""] autorelease];
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ignore", "ignore user contextual menu") action:@selector( toggleIgnore: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[menu addItem:item];
 	}
