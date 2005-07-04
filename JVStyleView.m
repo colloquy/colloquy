@@ -551,8 +551,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( _newWebKit ) {
 		DOMCSSStyleDeclaration *style = [self computedStyleForElement:[(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body] pseudoElement:nil];
 		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
-		DOMCSSValue *altvalue = [style getPropertyCSSValue:@"background"];
-		if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) || ( altvalue && [[altvalue cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
+		if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
 			[self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
 		else [self setDrawsBackground:YES];
 		[self setNeedsDisplay:YES];
