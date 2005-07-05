@@ -1,0 +1,228 @@
+diff -ur /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcmath/tma.h ./lib/silcmath/tma.h
+--- /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcmath/tma.h	2005-05-10 11:02:57.000000000 -0400
++++ ./lib/silcmath/tma.h	2005-07-03 15:31:51.000000000 -0400
+@@ -21,7 +21,7 @@
+ #include <ctype.h>
+ #include <limits.h>
+ 
+-#include <tma_class.h>
++#include "tma_class.h"
+ 
+ /* Assure these -Pekka */
+ #undef MP_8BIT
+diff -ur /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcmath/tma_class.h ./lib/silcmath/tma_class.h
+--- /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcmath/tma_class.h	2005-05-10 11:02:57.000000000 -0400
++++ ./lib/silcmath/tma_class.h	2005-07-03 15:32:43.000000000 -0400
+@@ -987,8 +987,8 @@
+ #ifdef LTM3
+ #define LTM_LAST
+ #endif
+-#include <tma_superclass.h>
+-#include <tma_class.h>
++#include "tma_superclass.h"
++#include "tma_class.h"
+ #else
+ #define LTM_LAST
+ #endif
+diff -ur /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcutil/silcmutex.h ./lib/silcutil/silcmutex.h
+--- /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcutil/silcmutex.h	2005-05-10 11:02:49.000000000 -0400
++++ ./lib/silcutil/silcmutex.h	2005-07-03 19:04:16.000000000 -0400
+@@ -78,6 +78,22 @@
+  ***/
+ bool silc_mutex_alloc(SilcMutex *mutex);
+ 
++/****f* silcutil/SilcMutexAPI/silc_mutex_recursive_alloc
++ *
++ * SYNOPSIS
++ *
++ *    bool silc_mutex_recursive_alloc(SilcMutex *mutex);
++ *
++ * DESCRIPTION
++ *
++ *    Allocates SILC Mutex object.  The mutex object must be allocated
++ *    before it can be used.  It is freed by the silc_mutex_free function.
++ *    This returns TRUE and allocated mutex in to the `mutex' and FALSE
++ *    on error. This allocates a recursive mutex.
++ *
++ ***/
++bool silc_mutex_recursive_alloc(SilcMutex *mutex);
++
+ /****f* silcutil/SilcMutexAPI/silc_mutex_free
+  *
+  * SYNOPSIS
+diff -ur /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcutil/silcschedule.c ./lib/silcutil/silcschedule.c
+--- /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcutil/silcschedule.c	2005-05-10 11:02:51.000000000 -0400
++++ ./lib/silcutil/silcschedule.c	2005-07-03 20:42:22.000000000 -0400
+@@ -200,6 +200,11 @@
+ 
+        Scheduler lock.
+ 
++   SILC_MUTEX_DEFINE(callback_lock)
++
++       Lock used to blanket the dispatched callbacks making anything
++       scheduled thread safe. This lock can be used externally in other threads.
++
+    bool signal_tasks
+ 
+        TRUE when tasks has been registered from signals.  Next round in
+@@ -218,6 +223,7 @@
+   bool valid;
+   void *internal;
+   SILC_MUTEX_DEFINE(lock);
++  SILC_MUTEX_DEFINE(callback_lock);
+   bool is_locked;
+   bool signal_tasks;
+ };
+@@ -255,6 +261,9 @@
+   /* Allocate scheduler lock */
+   silc_mutex_alloc(&schedule->lock);
+ 
++  /* Allocate dispatch callback lock */
++  silc_mutex_recursive_alloc(&schedule->callback_lock);
++
+   /* Initialize the platform specific scheduler. */
+   schedule->internal = silc_schedule_internal_init(schedule, app_context);
+ 
+@@ -302,6 +311,7 @@
+   silc_schedule_internal_uninit(schedule->internal);
+ 
+   silc_mutex_free(schedule->lock);
++  silc_mutex_free(schedule->callback_lock);
+   silc_free(schedule);
+ 
+   return TRUE;
+@@ -367,8 +377,10 @@
+       if (task->valid && revents & SILC_TASK_READ) {
+ 	silc_mutex_unlock(schedule->fd_queue->lock);
+ 	SILC_SCHEDULE_UNLOCK(schedule);
++	silc_mutex_lock(schedule->callback_lock);
+ 	task->callback(schedule, schedule->app_context,
+ 		       SILC_TASK_READ, task->fd, task->context);
++	silc_mutex_unlock(schedule->callback_lock);
+ 	SILC_SCHEDULE_LOCK(schedule);
+ 	silc_mutex_lock(schedule->fd_queue->lock);
+       }
+@@ -377,8 +389,10 @@
+       if (task->valid && revents & SILC_TASK_WRITE) {
+ 	silc_mutex_unlock(schedule->fd_queue->lock);
+ 	SILC_SCHEDULE_UNLOCK(schedule);
++	silc_mutex_lock(schedule->callback_lock);
+ 	task->callback(schedule, schedule->app_context,
+ 		       SILC_TASK_WRITE, task->fd, task->context);
++	silc_mutex_unlock(schedule->callback_lock);
+ 	SILC_SCHEDULE_LOCK(schedule);
+ 	silc_mutex_lock(schedule->fd_queue->lock);
+       }
+@@ -409,8 +423,10 @@
+ 	    fd == schedule->fd_list[i].fd) {
+ 	  silc_mutex_unlock(schedule->generic_queue->lock);
+ 	  SILC_SCHEDULE_UNLOCK(schedule);
++	  silc_mutex_lock(schedule->callback_lock);
+ 	  task->callback(schedule, schedule->app_context,
+ 			 SILC_TASK_READ, fd, task->context);
++	  silc_mutex_unlock(schedule->callback_lock);
+ 	  SILC_SCHEDULE_LOCK(schedule);
+ 	  silc_mutex_lock(schedule->generic_queue->lock);
+ 	}
+@@ -420,8 +436,10 @@
+ 	    fd == schedule->fd_list[i].fd) {
+ 	  silc_mutex_unlock(schedule->generic_queue->lock);
+ 	  SILC_SCHEDULE_UNLOCK(schedule);
++	  silc_mutex_lock(schedule->callback_lock);
+ 	  task->callback(schedule, schedule->app_context,
+ 			 SILC_TASK_WRITE, fd, task->context);
++	  silc_mutex_unlock(schedule->callback_lock);
+ 	  SILC_SCHEDULE_LOCK(schedule);
+ 	  silc_mutex_lock(schedule->generic_queue->lock);
+ 	}
+@@ -483,8 +501,10 @@
+         if (task->valid) {
+ 	  silc_mutex_unlock(queue->lock);
+ 	  SILC_SCHEDULE_UNLOCK(schedule);
++	  silc_mutex_lock(schedule->callback_lock);
+ 	  task->callback(schedule, schedule->app_context,
+ 			 SILC_TASK_EXPIRE, task->fd, task->context);
++	  silc_mutex_unlock(schedule->callback_lock);
+ 	  SILC_SCHEDULE_LOCK(schedule);
+ 	  silc_mutex_lock(queue->lock);
+ 	}
+@@ -716,6 +736,14 @@
+   return schedule->app_context;
+ }
+ 
++/* Returns the callback lock to allow other threads to lock
++   around Silc function calls. */
++
++SilcMutex silc_schedule_get_callback_lock(SilcSchedule schedule)
++{
++  return schedule->callback_lock;
++}
++
+ /* Add new task to the scheduler */
+ 
+ SilcTask silc_schedule_task_add(SilcSchedule schedule, SilcUInt32 fd,
+diff -ur /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcutil/silcschedule.h ./lib/silcutil/silcschedule.h
+--- /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcutil/silcschedule.h	2005-05-10 11:02:47.000000000 -0400
++++ ./lib/silcutil/silcschedule.h	2005-07-03 14:42:02.000000000 -0400
+@@ -428,6 +428,20 @@
+  ***/
+ void *silc_schedule_get_context(SilcSchedule schedule);
+ 
++/****f* silcutil/SilcScheduleAPI/silc_schedule_get_context
++ *
++ * SYNOPSIS
++ *
++ *    SilcMutex silc_schedule_get_callback_lock(SilcSchedule schedule);
++ *
++ * DESCRIPTION
++ *
++ *    Returns the callback lock to allow other threads to lock
++ *    around Silc function calls.
++ *
++ ***/
++SilcMutex silc_schedule_get_callback_lock(SilcSchedule schedule);
++
+ /****f* silcutil/SilcScheduleAPI/silc_schedule_task_add
+  *
+  * SYNOPSIS
+diff -ur /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcutil/unix/silcunixmutex.c ./lib/silcutil/unix/silcunixmutex.c
+--- /Users/Timothy/Desktop/silc-toolkit-1.0/lib/silcutil/unix/silcunixmutex.c	2005-05-10 11:02:48.000000000 -0400
++++ ./lib/silcutil/unix/silcunixmutex.c	2005-07-03 20:17:02.000000000 -0400
+@@ -41,6 +41,21 @@
+   return TRUE;
+ }
+ 
++bool silc_mutex_recursive_alloc(SilcMutex *mutex)
++{
++#ifdef SILC_THREADS
++  *mutex = silc_calloc(1, sizeof(**mutex));
++  if (*mutex == NULL)
++    return FALSE;
++  pthread_mutexattr_t lockAttr;
++  pthread_mutexattr_init( &lockAttr );
++  pthread_mutexattr_settype( &lockAttr, PTHREAD_MUTEX_RECURSIVE );
++  pthread_mutex_init(&(*mutex)->mutex, &lockAttr);
++  pthread_mutexattr_destroy( &lockAttr );
++#endif /* SILC_THREADS */
++  return TRUE;
++}
++
+ void silc_mutex_free(SilcMutex mutex)
+ {
+ #ifdef SILC_THREADS
+@@ -57,7 +72,6 @@
+   if (mutex) {
+     if (pthread_mutex_lock(&mutex->mutex))
+       assert(FALSE);
+-    assert(mutex->locked == 0);
+     mutex->locked = 1;
+   }
+ #endif /* SILC_THREADS */
+@@ -67,7 +81,6 @@
+ {
+ #ifdef SILC_THREADS
+   if (mutex) {
+-    assert(mutex->locked == 1);
+     mutex->locked = 0;
+     if (pthread_mutex_unlock(&mutex->mutex))
+       assert(FALSE);
