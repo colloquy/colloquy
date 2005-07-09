@@ -180,22 +180,25 @@ typedef struct {
 
 static void MVChatConnecting( SERVER_REC *server ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
+	if( ! self ) return;
 	[self performSelectorOnMainThread:@selector( _willConnect ) withObject:nil waitUntilDone:NO];
 }
 
 static void MVChatConnected( SERVER_REC *server ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
+	if( ! self ) return;
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 }
 
 static void MVChatDisconnect( SERVER_REC *server ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
+	if( ! self ) return;
 
-	if( ! pthread_main_np() ) { // if not main thread
-		IrssiUnlock(); // prevents a deadlock, since waitUntilDone is required. threads synced
-		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:YES];
-		IrssiLock(); // lock back up like nothing happened
-	} else [self performSelector:@selector( _didDisconnect )];
+	if( server -> connection_lost )
+		[self _setStatus:MVChatConnectionServerDisconnectedStatus];
+
+	[self _setIrssiConnection:NULL];
+	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
 }
 
 static void MVChatConnectFailed( SERVER_REC *server ) {
@@ -204,11 +207,8 @@ static void MVChatConnectFailed( SERVER_REC *server ) {
 
 	server_ref( server );
 
-	if( ! pthread_main_np() ) { // if not main thread
-		IrssiUnlock(); // prevents a deadlock, since waitUntilDone is required. threads synced
-		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:YES];
-		IrssiLock(); // lock back up like nothing happened
-	} else [self performSelector:@selector( _didNotConnect )];
+	[self _setIrssiConnection:NULL];
+	[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 }
 
 static void MVChatRawIncomingMessage( SERVER_REC *server, char *data ) {
@@ -1826,7 +1826,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 }
 
 - (void) _didDisconnect {
-	if( _chatConnection -> connection_lost ) {
+	if( _status == MVChatConnectionServerDisconnectedStatus ||
+		( _chatConnection && _chatConnection -> connection_lost ) ) {
 		if( _status != MVChatConnectionSuspendedStatus )
 			_status = MVChatConnectionServerDisconnectedStatus;
 		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )

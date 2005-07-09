@@ -784,6 +784,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
 }
 
+- (void) _setStatus:(MVChatConnectionStatus) status {
+	_status = status;
+}
+
 #pragma mark -
 
 - (void) _addRoomToCache:(NSMutableDictionary *) info {

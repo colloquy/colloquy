@@ -74,6 +74,7 @@
 - (void) _willDisconnect;
 - (void) _didDisconnect;
 - (void) _postError:(NSError *) error;
+- (void) _setStatus:(MVChatConnectionStatus) status;
 
 - (void) _addJoinedRoom:(MVChatRoom *) room;
 - (void) _removeJoinedRoom:(MVChatRoom *) room;
