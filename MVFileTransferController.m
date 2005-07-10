@@ -63,6 +63,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 - (void) _downloadFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 - (NSMutableDictionary *) _infoForTransferAtIndex:(unsigned int) index;
+- (void) _startUpdateTimerIfNeeded;
+- (void) _stopUpdateTimerIfFinished;
 @end
 
 #pragma mark -
@@ -158,7 +160,7 @@ finish:
 		[[self class] performSelector:@selector( _setFileTransferPortRange ) withObject:nil afterDelay:2.];
 
 		_safeFileExtentions = [[NSSet setWithObjects:@"jpg",@"jpeg",@"gif",@"png",@"tif",@"tiff",@"psd",@"pdf",@"txt",@"rtf",@"html",@"htm",@"swf",@"mp3",@"wma",@"wmv",@"ogg",@"ogm",@"mov",@"mpg",@"mpeg",@"m1v",@"m2v",@"mp4",@"avi",@"vob",@"avi",@"asx",@"asf",@"pls",@"m3u",@"rmp",@"aif",@"aiff",@"aifc",@"wav",@"wave",@"m4a",@"m4p",@"m4b",@"dmg",@"udif",@"ndif",@"dart",@"sparseimage",@"cdr",@"dvdr",@"iso",@"img",@"toast",@"rar",@"sit",@"sitx",@"bin",@"hqx",@"zip",@"gz",@"tgz",@"tar",@"bz",@"bz2",@"tbz",@"z",@"taz",@"uu",@"uue",@"colloquytranscript",@"torrent",nil] retain];
-		_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];
+		_updateTimer = nil;
 	}
 	return self;
 }
@@ -259,6 +261,7 @@ finish:
 	[_transferStorage addObject:info];
 	[currentFiles reloadData];
 	[self showTransferManager:nil];
+	[self _startUpdateTimerIfNeeded];
 }
 
 - (void) addFileTransfer:(id) transfer {
@@ -282,6 +285,7 @@ finish:
 	[_transferStorage addObject:info];
 	[currentFiles reloadData];
 	[self showTransferManager:nil];
+	[self _startUpdateTimerIfNeeded];
 }
 
 #pragma mark -
@@ -308,7 +312,6 @@ finish:
 			if( status == MVFileTransferDoneStatus || status == MVFileTransferErrorStatus || status == MVFileTransferStoppedStatus ) {
 				[_calculationItems removeObject:info];
 				[_transferStorage removeObject:info];
-				[currentFiles reloadData];
 			} else i++;
 		}
 	} else if( [currentFiles numberOfSelectedRows] == 1 ) {
@@ -317,11 +320,12 @@ finish:
 		if( status == MVFileTransferDoneStatus || status == MVFileTransferErrorStatus || status == MVFileTransferStoppedStatus ) {
 			[_calculationItems removeObject:info];
 			[_transferStorage removeObject:info];
-			[currentFiles reloadData];
 		}
 	}
 
+	[currentFiles reloadData];
 	[self _updateProgress:nil];
+	[self _stopUpdateTimerIfFinished];
 }
 
 - (IBAction) revealSelectedFile:(id) sender {
@@ -592,6 +596,7 @@ finish:
 			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2 ) {
 				[_calculationItems removeObject:info];
 				[_transferStorage removeObject:info];
+				[self _stopUpdateTimerIfFinished];
 			}
 
 			[currentFiles reloadData];
@@ -659,14 +664,13 @@ finish:
 			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2 ) {
 				[_calculationItems removeObject:info];
 				[_transferStorage removeObject:info];
-				[currentFiles reloadData];
+				[self _stopUpdateTimerIfFinished];
 			}
 
+			[currentFiles reloadData];
 			break;
 		}
 	}
-
-	[currentFiles reloadData];
 }
 
 - (void) _incomingFile:(NSNotification *) notification {
@@ -896,5 +900,17 @@ finish:
 	}
 
 	return info;
+}
+
+- (void) _startUpdateTimerIfNeeded {
+	if( _updateTimer ) return;
+	_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];	
+}
+
+- (void) _stopUpdateTimerIfFinished {
+	if( ! _updateTimer || [_calculationItems count] ) return;
+	[_updateTimer invalidate];
+	[_updateTimer autorelease];
+	_updateTimer = nil;
 }
 @end
