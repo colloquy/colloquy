@@ -84,10 +84,11 @@ static const NSStringEncoding supportedEncodings[] = {
 		_encoding = NSUTF8StringEncoding;
 		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
 		_nextAltNickIndex = 0;
+		_roomListDirty = NO;
 
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
-		_roomsCache = [[NSMutableDictionary dictionaryWithCapacity:250] retain];
+		_roomsCache = [[NSMutableDictionary dictionaryWithCapacity:500] retain];
 		_persistentInformation = [[NSMutableDictionary dictionaryWithCapacity:2] retain];
 		_joinedRooms = [[NSMutableSet setWithCapacity:5] retain];
 		_localUser = nil;
@@ -794,8 +795,15 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_roomsCache setObject:info forKey:[info objectForKey:@"room"]];
 	[info removeObjectForKey:@"room"];
 
-	NSNotification *notification = [NSNotification notificationWithName:MVChatConnectionChatRoomListUpdatedNotification object:self];
-	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP];
+	if( _roomListDirty ) return; // already queued to send notification
+	_roomListDirty = YES;
+
+	[self performSelector:@selector( _sendRoomListUpdatedNotification ) withObject:nil afterDelay:( 1. / 3. )];
+}
+
+- (void) _sendRoomListUpdatedNotification {
+	_roomListDirty = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionChatRoomListUpdatedNotification object:self];
 }
 
 #pragma mark -

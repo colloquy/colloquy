@@ -6,7 +6,7 @@
 	IBOutlet NSTabView *searchArea;
 	IBOutlet NSPopUpButton *connectionPopup;
 	IBOutlet NSComboBox *roomField;
-	IBOutlet NSTextField *searchField;
+	IBOutlet NSSearchField *searchField;
 	IBOutlet NSTextField *indexResults;
 	IBOutlet NSTextField *indexAndFindResults;
 	IBOutlet NSButton *showBroswer;
@@ -19,7 +19,6 @@
 	NSMutableDictionary *_roomResults;
 	NSMutableArray *_roomOrder;
 	NSString *_currentFilter;
-	NSTimer *_refreshTimer;
 }
 + (id) chatRoomBrowserForConnection:(MVChatConnection *) connection;
 

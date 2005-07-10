@@ -32,9 +32,7 @@
 		_sortColumn = @"room";
 		_ascending = YES;
 		_collapsed = YES;
-		_needsRefresh = YES;
-
-		_refreshTimer = [[NSTimer scheduledTimerWithTimeInterval:( 2. ) target:self selector:@selector( _refreshResults: ) userInfo:nil repeats:YES] retain];
+		_needsRefresh = NO;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _connectionChange: ) name:MVChatConnectionDidConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _connectionChange: ) name:MVChatConnectionDidDisconnectNotification object:nil];
@@ -55,7 +53,7 @@
 
 - (void) release {
 	if( ( [self retainCount] - 1 ) == 1 )
-		[_refreshTimer invalidate];
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _refreshResults: ) object:nil];
 	[super release];
 }
 
@@ -68,14 +66,12 @@
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_refreshTimer release];
 	[_connection release];
 	[_currentFilter release];
 	[_roomResults release];
 	[_roomOrder release];
 	[_sortColumn release];
 
-	_refreshTimer = nil;
 	_connection = nil;
 	_currentFilter = nil;
 	_roomResults = nil;
@@ -97,15 +93,6 @@
 
 	[showBroswer setCell:[[[NSDisclosureButtonCell alloc] initWithCell:[showBroswer cell]] autorelease]];
 
-	if( NSAppKitVersionNumber >= 700. ) {
-		[searchField setCell:[[[NSClassFromString( @"NSSearchFieldCell" ) alloc] initTextCell:@""] autorelease]];
-		[searchField setBezelStyle:NSTextFieldRoundedBezel];
-		[searchField setBezeled:YES];
-		[searchField setEditable:YES];
-		[searchField setEditable:YES];
-		[[searchField cell] performSelector:@selector( setPlaceholderString: ) withObject:@"Filter Rooms"];
-	}
-
 	[searchField setAction:@selector( filterResults: )];
 	[searchField setTarget:self];
 
@@ -115,7 +102,6 @@
 
 	[self _connectionChange:nil];
 
-	_needsRefresh = YES;
 	[self _refreshResults:nil];
 
 	if( [[self window] respondsToSelector:@selector( recalculateKeyViewLoop )] )
@@ -158,7 +144,6 @@
 
 - (IBAction) filterResults:(id) sender {
 	[self setFilter:[searchField stringValue]];
-	_needsRefresh = YES;
 	[self _refreshResults:nil];
 }
 
@@ -232,7 +217,6 @@
 		[self _startFetch];
 	} else [searchArea selectTabViewItemAtIndex:0];
 
-	_needsRefresh = YES;
 	[self _refreshResults:nil];
 
 	if( [[self window] respondsToSelector:@selector( recalculateKeyViewLoop )] )
@@ -273,7 +257,6 @@
 	[_roomOrder autorelease];
 	_roomOrder = [[NSMutableArray array] retain];
 
-	_needsRefresh = YES;
 	[self _refreshResults:nil];
 
 	[showBroswer setEnabled:( _connection ? YES : NO )];
@@ -500,13 +483,18 @@ NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *r
 }
 
 - (void) _needToRefreshResults:(id) sender {
+	if( ! [_roomOrder count] ) { // first refresh, do immediately
+		[self _refreshResults:nil];
+		return;
+	}
+
+	if( _needsRefresh ) return; // already queued to refresh
 	_needsRefresh = YES;
+
+	[self performSelector:@selector( _refreshResults: ) withObject:nil afterDelay:1.];
 }
 
 - (void) _refreshResults:(id) sender {
-	if( ! _needsRefresh ) return;
-	_needsRefresh = NO;
-
 	unsigned int index = [roomsTable selectedRow];
 	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [[[_roomOrder objectAtIndex:index] copy] autorelease] : nil );
 
@@ -518,14 +506,33 @@ NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *r
 	NSEnumerator *enumerator = [_roomResults keyEnumerator];
 	NSEnumerator *venumerator = [_roomResults objectEnumerator];
 	NSString *room = nil;
-	NSDictionary *info = nil;
+	NSMutableDictionary *info = nil;
 
 	[_roomOrder removeAllObjects]; // this is far more efficient than doing a containsObject: and a removeObject: during the while
 
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[_connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+
 	while( ( room = [enumerator nextObject] ) && ( info = [venumerator nextObject] ) ) {
-		if( [room rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound || [[[info objectForKey:@"topicAttributed"] string] rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound ) {
+		if( [room rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound ) {
 			[_roomOrder addObject:room];
+			continue;
 		}
+
+		NSAttributedString *t = [info objectForKey:@"topicAttributed"];
+
+		if( ! t ) {
+			NSData *topic = [info objectForKey:@"topic"];
+			[options setObject:[NSNumber numberWithUnsignedInt:[_connection encoding]] forKey:@"StringEncoding"];
+			if( ! ( t = [NSAttributedString attributedStringWithChatFormat:topic options:options] ) ) {
+				[options setObject:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
+				t = [NSAttributedString attributedStringWithChatFormat:topic options:options];
+			}
+
+			if( t ) [info setObject:t forKey:@"topicAttributed"];
+		}
+
+		if( t && [[t string] rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound )
+			[_roomOrder addObject:room];
 	}
 
 refresh:
@@ -552,6 +559,8 @@ refresh:
 		[roomsTable selectRow:index byExtendingSelection:NO];
 		[roomsTable scrollRowToVisible:index];
 	}
+
+	_needsRefresh = NO;
 }
 
 - (void) _resortResults {
