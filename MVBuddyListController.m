@@ -57,7 +57,7 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) _sortBuddies;
 - (void) _manuallySortAndUpdate;
 - (void) _setBuddiesNeedSortAnimated;
-- (void) _sortBuddiesAnimatedIfNeeded:(id) sender;
+- (void) _sortBuddiesAnimated:(id) sender;
 - (void) _addBuddyToList:(JVBuddy *) buddy;
 @end
 
@@ -81,8 +81,6 @@ static MVBuddyListController *sharedInstance = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserStatusChangedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserIdleTimeUpdatedNotification object:nil];
 
-		_sortTimer = [[NSTimer scheduledTimerWithTimeInterval:( .5 ) target:self selector:@selector( _sortBuddiesAnimatedIfNeeded: ) userInfo:nil repeats:YES] retain];
-
 		_onlineBuddies = [[NSMutableSet set] retain];
 		_buddyList = [[NSMutableSet set] retain];
 		_buddyOrder = [[NSMutableArray array] retain];
@@ -103,7 +101,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (void) release {
 	if( ( [self retainCount] - 1 ) == 1 )
-		[_sortTimer invalidate];
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _sortBuddiesAnimated: ) object:nil];
 	[super release];
 }
 
@@ -119,7 +117,6 @@ static MVBuddyListController *sharedInstance = nil;
 	[_buddyOrder release];
 	[_picker release];
 	[_oldPositions release];
-	[_sortTimer release];
 	[_addPerson release];
 
 	_onlineBuddies = nil;
@@ -127,7 +124,6 @@ static MVBuddyListController *sharedInstance = nil;
 	_buddyOrder = nil;
 	_picker = nil;
 	_oldPositions = nil;
-	_sortTimer = nil;
 	_addPerson = nil;
 
 	[super dealloc];
@@ -474,8 +470,7 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) setShowFullNames:(BOOL) flag {
 	_showFullNames = flag;
 	[buddies reloadData];
-	[self _setBuddiesNeedSortAnimated];
-	[self _sortBuddiesAnimatedIfNeeded:nil];
+	[self _sortBuddiesAnimated:nil];
 	[[NSUserDefaults standardUserDefaults] setBool:flag forKey:@"JVChatBuddyListShowFullNames"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -551,8 +546,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (void) setSortOrder:(MVBuddyListSortOrder) order {
 	_sortOrder = order;
-	[self _setBuddiesNeedSortAnimated];
-	[self _sortBuddiesAnimatedIfNeeded:nil];
+	[self _sortBuddiesAnimated:nil];
 	[[NSUserDefaults standardUserDefaults] setInteger:order forKey:@"JVChatBuddyListSortOrder"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -729,8 +723,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[buddy setActiveUser:[users objectAtIndex:[object unsignedIntValue]]];
 
 	[buddies reloadData];
-	[self _setBuddiesNeedSortAnimated];
-	[self _sortBuddiesAnimatedIfNeeded:nil];
+	[self _sortBuddiesAnimated:nil];
 }
 
 - (NSMenu *) tableView:(MVTableView *) tableView menuForTableColumn:(NSTableColumn *) tableColumn row:(int) row {
@@ -899,12 +892,15 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) _setBuddiesNeedSortAnimated {
+	if( _needsToAnimate ) return; // already queued to animate
 	_needsToAnimate = YES;
+
+	[self performSelector:@selector( _sortBuddiesAnimated: ) withObject:nil afterDelay:0.5];
 }
 
-- (void) _sortBuddiesAnimatedIfNeeded:(id) sender {
-	if( ! _needsToAnimate || _animating ) return;
+- (void) _sortBuddiesAnimated:(id) sender {
 	_needsToAnimate = NO;
+	if( _animating ) return;
 
 	NSRange visibleRows;
 	NSArray *oldOrder = [[_buddyOrder copy] autorelease];
