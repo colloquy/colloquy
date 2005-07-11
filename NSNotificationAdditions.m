@@ -22,7 +22,7 @@
 	[info setObject:[NSNumber numberWithUnsignedInt:coalesceMask] forKey:@"coalesceMask"];
 	if( modes ) [info setObject:modes forKey:@"modes"];
 
-	[self performSelectorOnMainThread:@selector( _enqueueNotification: ) withObject:info waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector( _enqueueNotification: ) withObject:info waitUntilDone:NO];
 }
 
 - (void) _enqueueNotification:(NSDictionary *) info {
