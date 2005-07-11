@@ -299,7 +299,6 @@ static BOOL fileTransferSignalsRegistered = NO;
 		if( [self _DCCFileRecord] ) {
 			SEND_DCC_REC *dcc = [self _DCCFileRecord];
 			[self _destroying];
-			[self _setDCCFileRecord:NULL];
 			dcc_close( (DCC_REC *) dcc );
 		}
 		IrssiUnlock();
@@ -321,9 +320,9 @@ static BOOL fileTransferSignalsRegistered = NO;
 		IrssiLock();
 
 		if( _dcc ) {
-			MVFileTransferModuleData *data = MODULE_DATA( (FILE_DCC_REC *)_dcc );
+			MVFileTransferModuleData *data = MODULE_DATA( (DCC_REC *)_dcc );
 			if( data ) data -> transfer = nil;
-			g_free_not_null( data );
+			MODULE_DATA_UNSET( (DCC_REC *)_dcc );
 		}
 
 		_dcc = record;
@@ -548,8 +547,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 		if( [self _DCCFileRecord] ) {
 			GET_DCC_REC *dcc = [self _DCCFileRecord];
 			[self _destroying];
-			[self _setDCCFileRecord:NULL];
-			dcc_reject( (DCC_REC *) dcc, [self _DCCFileRecord] -> server );
+			dcc_reject( (DCC_REC *) dcc, dcc -> server );
 		}
 		IrssiUnlock();
 	}
@@ -563,7 +561,6 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 		if( [self _DCCFileRecord] ) {
 			GET_DCC_REC *dcc = [self _DCCFileRecord];
 			[self _destroying];
-			[self _setDCCFileRecord:NULL];
 			dcc_close( (DCC_REC *) dcc );
 		}
 		IrssiUnlock();
@@ -610,9 +607,9 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 		IrssiLock();
 
 		if( _dcc ) {
-			MVFileTransferModuleData *data = MODULE_DATA( (FILE_DCC_REC *)_dcc );
+			MVFileTransferModuleData *data = MODULE_DATA( (DCC_REC *)_dcc );
 			if( data ) data -> transfer = nil;
-			g_free_not_null( data );
+			MODULE_DATA_UNSET( (DCC_REC *)_dcc );
 		}
 
 		_dcc = record;
