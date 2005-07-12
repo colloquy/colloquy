@@ -1770,7 +1770,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	if( old ) {
 		MVIRCChatConnectionModuleData *data = MODULE_DATA( old );
 		if( data ) data -> connection = nil;
-		MODULE_DATA_UNSET( server );
+		MODULE_DATA_UNSET( old );
 	}
 
 	_chatConnection = server;
