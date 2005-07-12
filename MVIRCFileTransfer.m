@@ -27,39 +27,34 @@ static void MVFileTransferConnected( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	@synchronized( self ) {
-		[self _setStatus:MVFileTransferNormalStatus];
+	[self _setStatus:MVFileTransferNormalStatus];
 
-		NSNotification *note = [NSNotification notificationWithName:MVFileTransferStartedNotification object:self];		
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-	}
+	NSNotification *note = [NSNotification notificationWithName:MVFileTransferStartedNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 static void MVFileTransferUpdate( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	if( [self status] == MVFileTransferStoppedStatus ) {
+	if( [self status] == MVFileTransferStoppedStatus )
 		dcc_close( (DCC_REC *) dcc );
-	}
 }
 
 static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	@synchronized( self ) {
-		if( [self status] == MVFileTransferStoppedStatus ) {
-			// nothing to do
-		} else if( [self finalSize] != [self transfered] ) {
-			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];
-			NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
-			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
-		} else {
-			[self _setStatus:MVFileTransferDoneStatus];
-			NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:self];		
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-		}
+	if( [self status] == MVFileTransferStoppedStatus ) {
+		// nothing to do
+	} else if( [self finalSize] != [self transfered] ) {
+		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];
+		NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
+		[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
+	} else {
+		[self _setStatus:MVFileTransferDoneStatus];
+		NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:self];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
 }
 
@@ -67,62 +62,52 @@ static void MVFileTransferDestroyed( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	@synchronized( self ) {
-		[self performSelector:@selector( _destroying )];
-	}
+	[self performSelector:@selector( _destroying )];
 }
 
 static void MVFileTransferErrorConnect( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	@synchronized( self ) {
-		[self performSelector:@selector( _destroying )];
+	[self performSelector:@selector( _destroying )];
 
-		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer connection could not be made.", NSLocalizedDescriptionKey, nil];
-		NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferConnectionError userInfo:info];
-		[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
-	}
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer connection could not be made.", NSLocalizedDescriptionKey, nil];
+	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferConnectionError userInfo:info];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 }
 
 static void MVFileTransferErrorFileCreate( FILE_DCC_REC *dcc, char *filename ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	@synchronized( self ) {
-		[self performSelector:@selector( _destroying )];
+	[self performSelector:@selector( _destroying )];
 
-		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
-		NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
-		[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
-	}
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
+	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 }
 
 static void MVFileTransferErrorFileOpen( FILE_DCC_REC *dcc, char *filename, int errno ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	@synchronized( self ) {
-		[self performSelector:@selector( _destroying )];
+	[self performSelector:@selector( _destroying )];
 
-		NSError *ferror = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
-		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be opened, please make sure you have read permissions for this file.", NSLocalizedDescriptionKey, ferror, @"NSUnderlyingErrorKey", nil];
-		NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileOpenError userInfo:info];
-		[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
-	}
+	NSError *ferror = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be opened, please make sure you have read permissions for this file.", NSLocalizedDescriptionKey, ferror, @"NSUnderlyingErrorKey", nil];
+	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileOpenError userInfo:info];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 }
 
 static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *filename ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
-	@synchronized( self ) {
-		[self performSelector:@selector( _destroying )];
+	[self performSelector:@selector( _destroying )];
 
-		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
-		NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
-		[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
-	}
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
+	NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
+	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 }
 
 #pragma mark -
@@ -422,12 +407,12 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (BOOL) isPassive {
 	@synchronized( self ) {
 		if( _passive || ! [self _DCCFileRecord] ) return _passive;
-		
+
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_passive = dcc_is_passive( [self _DCCFileRecord] );
 		IrssiUnlock();
-		
+
 		return _passive;
 	}
 }
@@ -437,12 +422,12 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (unsigned long long) finalSize {
 	@synchronized( self ) {
 		if( _finalSize || ! [self _DCCFileRecord] ) return _finalSize;
-		
+
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_finalSize = [self _DCCFileRecord] -> size;
 		IrssiUnlock();
-		
+
 		return _finalSize;
 	}
 }
@@ -450,12 +435,12 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (unsigned long long) transfered {
 	@synchronized( self ) {
 		if( ! [self _DCCFileRecord] ) return _transfered;
-		
+
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_transfered = [self _DCCFileRecord] -> transfd;
 		IrssiUnlock();
-		
+
 		return _transfered;
 	}
 }
@@ -466,12 +451,12 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	@synchronized( self ) {
 		if( _startDate || ! [self _DCCFileRecord] )
 			return [[_startDate retain] autorelease];
-		
+
 		IrssiLock();
 		if( [self _DCCFileRecord] && [self _DCCFileRecord] -> starttime )
 			_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
 		IrssiUnlock();
-		
+
 		return _startDate;
 	}
 }
@@ -479,12 +464,12 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 - (unsigned long long) startOffset {
 	@synchronized( self ) {
 		if( _startOffset || ! [self _DCCFileRecord] ) return _startOffset;
-		
+
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_startOffset = [self _DCCFileRecord] -> skipped;
 		IrssiUnlock();
-		
+
 		return _startOffset;
 	}
 }
@@ -495,12 +480,12 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	@synchronized( self ) {
 		if( _host || ! [self _DCCFileRecord] )
 			return [[_host retain] autorelease];
-		
+
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
 		IrssiUnlock();
-		
+
 		return _host;
 	}
 }

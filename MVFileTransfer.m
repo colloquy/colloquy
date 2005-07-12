@@ -141,18 +141,22 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 #pragma mark -
 
 - (void) setFinalSize:(unsigned long long) finalSize {
-	_finalSize = finalSize;
+	@synchronized( self ) {
+		_finalSize = finalSize;
+	}
 }
 
 - (void) setTransfered:(unsigned long long) transfered {
-	_transfered = transfered;
+	@synchronized( self ) {
+		_transfered = transfered;
+	}
 }
 
 - (void) setStartDate:(NSDate *) startDate {
-	if ( _startDate ) 
-		[_startDate release];
-	
-	_startDate = [startDate retain];
+	@synchronized( self ) {
+		[_startDate autorelease];
+		_startDate = [startDate retain];
+	}
 }
 
 #pragma mark -
@@ -173,14 +177,18 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 @implementation MVFileTransfer (MVFileTransferPrivate)
 - (void) _setStatus:(MVFileTransferStatus) status {
-	_status = status;
+	@synchronized( self ) {
+		_status = status;
+	}
 }
 
 - (void) _postError:(NSError *) error {
 	[self _setStatus:MVFileTransferErrorStatus];
 
-	[_lastError autorelease];
-	_lastError = [error retain];
+	@synchronized( self ) {
+		[_lastError autorelease];
+		_lastError = [error retain];
+	}
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:error, @"error", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
@@ -203,16 +211,15 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 #pragma mark -
 
 - (id) initWithUser:(MVChatUser *) user {
-	if( ( self = [super initWithUser:user] ) ) {
+	if( ( self = [super initWithUser:user] ) )
 		_source = nil;
-	}
 
 	return self;
 }
 
 - (void) dealloc {
-	[_source release];	
-	_source = nil;	
+	[_source release];
+	_source = nil;
 	[super dealloc];
 }
 

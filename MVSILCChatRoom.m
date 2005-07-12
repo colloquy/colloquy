@@ -14,9 +14,9 @@
 		unsigned char *identifier = silc_id_id2str( channelEntry -> id, SILC_ID_CHANNEL );
 		unsigned len = silc_id_get_len( channelEntry -> id, SILC_ID_CHANNEL );
 		_uniqueIdentifier = [[NSData allocWithZone:[self zone]] initWithBytes:identifier length:len];
-		
+
 		_channelEntry = channelEntry;
-		
+
 		SilcUnlock( [connection _silcClient] );
 	}
 
@@ -111,7 +111,7 @@
 
 - (void) removeMode:(MVChatRoomMode) mode {
 	[super removeMode:mode];
-	
+
 	switch( mode ) {
 	case MVChatRoomPrivateMode:
 		[[self connection] sendRawMessageWithFormat:@"CMODE %@ -p", [self name]];
@@ -142,7 +142,7 @@
 
 - (void) setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
 	[super setMode:mode forMemberUser:user];
-	
+
 	switch( mode ) {
 	case MVChatRoomMemberOperatorMode:
 		[self _setChannelUserMode:SILC_CHANNEL_UMODE_CHANOP forUser:user];
@@ -156,7 +156,7 @@
 
 - (void) removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
 	[super removeMode:mode forMemberUser:user];
-	
+
 	switch( mode ) {
 	case MVChatRoomMemberOperatorMode:
 		[self _removeChannelUserMode:SILC_CHANNEL_UMODE_CHANOP forUser:user];
@@ -178,18 +178,18 @@
 	if ( ! roomBuffer ) {
 		return;
 	}
-	
+
 	userBuffer = silc_id_payload_encode( [silcUser _getClientEntry] -> id, SILC_ID_CLIENT );
 	if ( ! userBuffer ) {
 		silc_buffer_free( roomBuffer );
 		return;
 	}
-	
+
 	[super kickOutMemberUser:user forReason:reason];
-	
+
 	if ( reason ) {
 		const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:reason andChatFormat:[[self connection] outgoingChatFormat]];
-		
+
 		silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_KICK, [[self connection] _silcConn] -> cmd_ident, 3,
 								  1, roomBuffer -> data, roomBuffer -> len,
 								  2, userBuffer -> data, userBuffer -> len,
@@ -199,9 +199,9 @@
 								  1, roomBuffer -> data, roomBuffer -> len,
 								  2, userBuffer -> data, userBuffer -> len );
 	}
-	
+
 	[[self connection] _silcConn] -> cmd_ident++;
-	
+
 	silc_buffer_free( roomBuffer );
 	silc_buffer_free( userBuffer );
 }
@@ -234,21 +234,21 @@
 	if ( ! roomBuffer ) {
 		return;
 	}
-	
+
 	userBuffer = silc_id_payload_encode( [user _getClientEntry] -> id, SILC_ID_CLIENT );
 	if ( ! userBuffer ) {
 		silc_buffer_free( roomBuffer );
 		return;
 	}
-	
+
 	SILC_PUT32_MSB(SilcMode, modebuf);
-	
+
 	silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_CUMODE, [[self connection] _silcConn] -> cmd_ident, 3,
 	                          1, roomBuffer -> data, roomBuffer -> len,
 							  2, modebuf, 4,
 							  3, userBuffer -> data, userBuffer -> len);
 	[[self connection] _silcConn] -> cmd_ident++;
-	
+
 	silc_buffer_free( roomBuffer );
 	silc_buffer_free( userBuffer );
 }
@@ -261,9 +261,9 @@
 	chu = silc_client_on_channel( [self _getChannelEntry] , [silcUser _getClientEntry] );
 	if ( chu )
 		mode = chu -> mode;
-		
+
 	mode |= SilcMode;
-	
+
 	[self _silcSetChannelUserMode:mode forUser:silcUser];
 }
 
@@ -275,9 +275,9 @@
 	chu = silc_client_on_channel( [self _getChannelEntry] , [silcUser _getClientEntry] );
 	if ( chu )
 		mode = chu -> mode;
-		
+
 	mode &= ~SilcMode;
-	
+
 	[self _silcSetChannelUserMode:mode forUser:silcUser];
 }
 

@@ -13,7 +13,7 @@
 
 		_nickname = nil;
 		_realName = nil;
-		_username = nil;		
+		_username = nil;
 	}
 
 	return self;
@@ -64,7 +64,7 @@
 	unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
 	unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
 	[self _setUniqueIdentifier:[NSData dataWithBytes:identifier length:len]];
-	
+
 	self -> _clientEntry = clientEntry;
 
 	SilcUnlock( [[self connection] _silcClient] );
@@ -107,7 +107,7 @@
 	if( clientID ) {
 		SilcLock( [[self connection] _silcClient] );
 		SilcClientEntry client = silc_client_get_client_by_id( [[self connection] _silcClient], [[self connection] _silcConn], clientID );
-		if( client ) silc_client_send_private_message( [[self connection] _silcClient], [[self connection] _silcConn], client, flags, (unsigned char *) msg, strlen( msg ), false );	
+		if( client ) silc_client_send_private_message( [[self connection] _silcClient], [[self connection] _silcConn], client, flags, (unsigned char *) msg, strlen( msg ), false );
 		SilcUnlock( [[self connection] _silcClient] );
 	}
 }
@@ -116,16 +116,16 @@
 
 - (void) refreshInformation {
 	SilcBuffer userBuffer;
-	
+
 	userBuffer = silc_id_payload_encode( [self _getClientEntry] -> id, SILC_ID_CLIENT );
 	if ( ! userBuffer ) {
 		return;
 	}
-	
+
 	silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_WHOIS, [[self connection] _silcConn] -> cmd_ident, 1,
 	                          4, userBuffer -> data, userBuffer -> len );
 	[[self connection] _silcConn] -> cmd_ident++;
-	
+
 	silc_buffer_free( userBuffer );
 }
 @end

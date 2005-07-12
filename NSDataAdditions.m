@@ -48,8 +48,8 @@ static char encodingTable[64] = {
 			else if( ch == '+' ) ch = 62;
 			else if( ch == '=' ) flendtext = YES;
 			else if( ch == '/' ) ch = 63;
-			else flignore = YES; 
-   
+			else flignore = YES;
+
 			if( ! flignore ) {
 				short ctcharsinbuf = 3;
 				BOOL flbreak = NO;
@@ -70,7 +70,7 @@ static char encodingTable[64] = {
 					outbuf [1] = ( ( inbuf[1] & 0x0F ) << 4 ) | ( ( inbuf[2] & 0x3C ) >> 2 );
 					outbuf [2] = ( ( inbuf[2] & 0x03 ) << 6 ) | ( inbuf[3] & 0x3F );
 
-					for( i = 0; i < ctcharsinbuf; i++ ) 
+					for( i = 0; i < ctcharsinbuf; i++ )
 						[mutableData appendBytes:&outbuf[i] length:1];
 				}
 
@@ -117,11 +117,11 @@ static char encodingTable[64] = {
 		ctcopy = 4;
 
 		switch( ctremaining ) {
-		case 1: 
-			ctcopy = 2; 
+		case 1:
+			ctcopy = 2;
 			break;
-		case 2: 
-			ctcopy = 3; 
+		case 2:
+			ctcopy = 3;
 			break;
 		}
 

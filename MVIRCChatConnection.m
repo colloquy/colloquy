@@ -107,9 +107,9 @@ typedef struct {
 #define ERR_TOOMANYCHANNELS  405 // <channel name> :You have joined too many channels
 #define ERR_WASNOSUCHNICK    406 // <nickname> :There was no such nickname
 #define ERR_TOOMANYTARGETS   407 // <target> :Duplicate recipients. No message delivered
-#define ERR_NOSUCHSERVICE    408 
+#define ERR_NOSUCHSERVICE    408
 #define	ERR_NOORIGIN         409 // :No origin specified
-#define ERR_CANNOTKNOCK      410 
+#define ERR_CANNOTKNOCK      410
 #define ERR_NORECIPIENT      411 // :No recipient given (<command>)
 #define ERR_NOTEXTTOSEND     412 // :No text to send
 #define ERR_NOTOPLEVEL       413 // <mask> :No toplevel domain specified
@@ -124,7 +124,7 @@ typedef struct {
 #define ERR_NONICKNAMEGIVEN  431 // :No nickname given
 #define ERR_ERRONEUSNICKNAME 432 // <nick> :Erroneus nickname
 #define ERR_NICKNAMEINUSE    433 // <nick> :Nickname is already in use
-#define ERR_SERVICENAMEINUSE 434 
+#define ERR_SERVICENAMEINUSE 434
 #define ERR_SERVICECONFUSED  435
 #define	ERR_NICKCOLLISION    436 // <nick> :Nickname collision KILL
 #define ERR_BANNICKCHANGE    437
@@ -472,14 +472,14 @@ static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const ch
 
 	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) {
 		[room _setDateParted:[NSDate date]];
-		note = [NSNotification notificationWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:byMember, @"byUser", msgData, @"reason", nil]];		
+		note = [NSNotification notificationWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:byMember, @"byUser", msgData, @"reason", nil]];
 	} else {
 		note = [NSNotification notificationWithName:MVChatRoomUserKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", byMember, @"byUser", msgData, @"reason", nil]];
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
-	g_free( params );	
+	g_free( params );
 }
 
 static void MVChatInvited( IRC_SERVER_REC *server, const char *data, const char *by, const char *address ) {
@@ -492,10 +492,10 @@ static void MVChatInvited( IRC_SERVER_REC *server, const char *data, const char 
 	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:by]];
 	if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", [self stringWithEncodedBytes:channel], @"room", nil]];		
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", [self stringWithEncodedBytes:channel], @"room", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
-	g_free( params );	
+	g_free( params );
 }
 
 static void MVChatUserAway( IRC_SERVER_REC *server, const char *data ) {
@@ -510,10 +510,10 @@ static void MVChatUserAway( IRC_SERVER_REC *server, const char *data ) {
 
 //	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
 
-//	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", msgData, @"message", nil]];		
+//	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", msgData, @"message", nil]];
 //	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
-	g_free( params );	
+	g_free( params );
 }
 
 #pragma mark -
@@ -788,7 +788,7 @@ static void MVChatBanListFinished( IRC_SERVER_REC *server, const char *data ) {
 	if( ! room ) return;
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomBannedUsersSyncedNotification object:room userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];	
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 #pragma mark -
@@ -950,7 +950,7 @@ static void MVChatUserWhoisComplete( IRC_SERVER_REC *server, const char *data ) 
 
 		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
 
-		NSNotification *note = [NSNotification notificationWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];		
+		NSNotification *note = [NSNotification notificationWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 		g_free( params );
@@ -1023,7 +1023,7 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( IS_DCC_GET( dcc ) ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:dcc -> nick]];
 		MVIRCDownloadFileTransfer *transfer = [[[MVIRCDownloadFileTransfer alloc] initWithDCCFileRecord:dcc fromUser:user] autorelease];
-		NSNotification *note = [NSNotification notificationWithName:MVDownloadFileTransferOfferNotification object:transfer];		
+		NSNotification *note = [NSNotification notificationWithName:MVDownloadFileTransferOfferNotification object:transfer];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
 }
@@ -1270,7 +1270,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	IrssiLock();
 
 	g_free_not_null( _chatConnectionSettings -> realname );
-	_chatConnectionSettings -> realname = g_strdup( [self encodedBytesWithString:name] );		
+	_chatConnectionSettings -> realname = g_strdup( [self encodedBytesWithString:name] );
 
 	IrssiUnlock();
 }
@@ -1290,7 +1290,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	IrssiLock();
 
 	g_free_not_null( _chatConnectionSettings -> nick );
-	_chatConnectionSettings -> nick = g_strdup( [self encodedBytesWithString:nickname] );		
+	_chatConnectionSettings -> nick = g_strdup( [self encodedBytesWithString:nickname] );
 
 	IrssiUnlock();
 
@@ -1326,8 +1326,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	IrssiLock();
 
 	g_free_not_null( _chatConnectionSettings -> password );
-	if( [password length] ) _chatConnectionSettings -> password = g_strdup( [self encodedBytesWithString:password] );		
-	else _chatConnectionSettings -> password = NULL;		
+	if( [password length] ) _chatConnectionSettings -> password = g_strdup( [self encodedBytesWithString:password] );
+	else _chatConnectionSettings -> password = NULL;
 
 	IrssiUnlock();
 }
@@ -1349,7 +1349,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	IrssiLock();
 
 	g_free_not_null( _chatConnectionSettings -> username );
-	_chatConnectionSettings -> username = g_strdup( [self encodedBytesWithString:username] );		
+	_chatConnectionSettings -> username = g_strdup( [self encodedBytesWithString:username] );
 
 	IrssiUnlock();
 }
@@ -1369,7 +1369,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	IrssiLock();
 
 	g_free_not_null( _chatConnectionSettings -> address );
-	_chatConnectionSettings -> address = g_strdup( [self encodedBytesWithString:server] );		
+	_chatConnectionSettings -> address = g_strdup( [self encodedBytesWithString:server] );
 
 	IrssiUnlock();
 }
@@ -1471,7 +1471,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
 	if( ! _chatConnection ) return;
-//	[_irssiThreadProxy _sendRawMessage:raw immediately:now];
 	[self _sendRawMessage:raw immediately:now];
 }
 
@@ -1932,7 +1931,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	MVChatUser *user = [info objectForKey:@"user"];
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeReplyNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];	
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];

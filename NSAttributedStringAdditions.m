@@ -227,7 +227,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 - (id) initWithChatFormat:(NSData *) data options:(NSDictionary *) options {
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
-	
+
 	// Search for CTCP/2 encoding tags and act on them
 	NSMutableData *newData = [NSMutableData dataWithCapacity:[data length]];
 	const char *bytes = [data bytes];
@@ -505,7 +505,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 							// Ok, no foreground color
 							foundForeground = NO;
 						}
-						
+
 						if( foundForeground ) {
 							// scan for background color
 							if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
@@ -693,7 +693,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			break;
 		}
 	}
-	
+
 	NSStringEncoding currentEncoding = NSASCIIStringEncoding;
 	BOOL wasBold = NO, wasItalic = NO, wasUnderline = NO, wasStrikethrough = NO;
 	NSColor *oldForeground = nil, *oldBackground = nil;
@@ -781,7 +781,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				text = [[self string] substringWithRange:effectiveRange];
 				link = nil;
 			}
-			
+
 			NSData *data = [text dataUsingEncoding:currentEncoding allowLossyConversion:NO];
 			if( ! data && currentEncoding == NSASCIIStringEncoding && encoding != NSASCIIStringEncoding ) {
 				// Ok, upgrade to declared encoding
@@ -808,7 +808,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 			wasBold = bold; wasItalic = italic; wasUnderline = underline; wasStrikethrough = strikethrough;
 			oldForeground = foregroundColor; oldBackground = backgroundColor; oldLink = link;
-			
+
 		} // ![link isEqual:oldLink]
 
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );

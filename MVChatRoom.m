@@ -213,11 +213,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 #pragma mark -
 
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments {
-// subclass this method, if needed	
+// subclass this method, if needed
 }
 
 - (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments {
-// subclass this method, if needed	
+// subclass this method, if needed
 }
 
 #pragma mark -
@@ -241,18 +241,18 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 #pragma mark -
 
 - (void) refreshAttributes {
-// subclass this method, if needed	
+// subclass this method, if needed
 }
 
 - (void) refreshAttributeForKey:(NSString *) key {
 	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
-// subclass this method, call super first	
+// subclass this method, call super first
 }
 
 #pragma mark -
 
 - (NSSet *) supportedAttributes {
-// subclass this method, if needed	
+// subclass this method, if needed
 	return nil;
 }
 
@@ -281,7 +281,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 #pragma mark -
 
 - (unsigned long) supportedModes {
-// subclass this method, if needed	
+// subclass this method, if needed
 	return 0;
 }
 
@@ -321,12 +321,12 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute {
 	NSParameterAssert( [self supportedModes] & mode );
-// subclass this method, call super first	
+// subclass this method, call super first
 }
 
 - (void) removeMode:(MVChatRoomMode) mode {
 	NSParameterAssert( [self supportedModes] & mode );
-// subclass this method, call super first	
+// subclass this method, call super first
 }
 
 #pragma mark -
@@ -402,7 +402,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
 	NSParameterAssert( user != nil );
-// subclass this method, call super first	
+// subclass this method, call super first
 }
 
 #pragma mark -
@@ -415,18 +415,18 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (void) addBanForUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
-// subclass this method, call super first	
+// subclass this method, call super first
 }
 
 - (void) removeBanForUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
-// subclass this method, call super first	
+// subclass this method, call super first
 }
 
 #pragma mark -
 
 - (unsigned long) supportedMemberUserModes {
-// subclass this method, if needed	
+// subclass this method, if needed
 	return 0;
 }
 
@@ -460,13 +460,13 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (void) setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
 	NSParameterAssert( [self supportedMemberUserModes] & mode );
-// subclass this method, call super first	
+// subclass this method, call super first
 }
 
 - (void) removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
 	NSParameterAssert( [self supportedMemberUserModes] & mode );
-// subclass this method, call super first	
+// subclass this method, call super first
 }
 
 #pragma mark -
@@ -571,7 +571,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 	[_topicAuthor autorelease];
 	_topicAuthor = [author retain];
-	
+
 	[_dateTopicChanged autorelease];
 	_dateTopicChanged = [date copyWithZone:[self zone]];
 
@@ -587,7 +587,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];		
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 @end

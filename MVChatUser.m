@@ -241,7 +241,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (NSAttributedString *) awayStatusMessage {
-// subclass this method, if needed	
+// subclass this method, if needed
 	return nil;
 }
 
@@ -321,7 +321,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #pragma mark -
 
 - (unsigned long) supportedModes {
-// subclass this method, if needed	
+// subclass this method, if needed
 	return 0;
 }
 
@@ -342,7 +342,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #pragma mark -
 
 - (void) refreshInformation {
-// subclass this method, if needed	
+// subclass this method, if needed
 }
 
 #pragma mark -
@@ -356,13 +356,13 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (void) refreshAttributeForKey:(NSString *) key {
 	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
-// subclass this method, call super first	
+// subclass this method, call super first
 }
 
 #pragma mark -
 
 - (NSSet *) supportedAttributes {
-// subclass this method, if needed	
+// subclass this method, if needed
 	return nil;
 }
 
@@ -402,11 +402,11 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #pragma mark -
 
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments {
-// subclass this method, if needed	
+// subclass this method, if needed
 }
 
 - (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments {
-// subclass this method, if needed	
+// subclass this method, if needed
 }
 
 #pragma mark -
@@ -470,7 +470,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (void) _setIdleTime:(NSTimeInterval) time {
 	_idleTime = time;
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];		
+	NSNotification *note = [NSNotification notificationWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -478,7 +478,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	if( _status == status ) return;
 	_status = status;
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatUserStatusChangedNotification object:self userInfo:nil];		
+	NSNotification *note = [NSNotification notificationWithName:MVChatUserStatusChangedNotification object:self userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
@@ -505,7 +505,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	}
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
-	NSNotification *note = [NSNotification notificationWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];		
+	NSNotification *note = [NSNotification notificationWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 @end

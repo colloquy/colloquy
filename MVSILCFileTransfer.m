@@ -15,21 +15,21 @@ void silc_client_file_monitor( SilcClient client, SilcClientConnection conn, Sil
 	switch ( status ) {
 		case SILC_CLIENT_FILE_MONITOR_KEY_AGREEMENT:
 			[transfer _setStatus:MVFileTransferNormalStatus];
-			
-			NSNotification *note = [NSNotification notificationWithName:MVFileTransferStartedNotification object:transfer];		
+
+			NSNotification *note = [NSNotification notificationWithName:MVFileTransferStartedNotification object:transfer];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-			
+
 			[transfer setStartDate:[NSDate date]];
 			break;
-			
+
 		case SILC_CLIENT_FILE_MONITOR_SEND:
 		case SILC_CLIENT_FILE_MONITOR_RECEIVE:
 			[transfer setFinalSize:filesize];
 			[transfer setTransfered:offset];
-			
+
 			if( filesize == offset ) {
 				 [transfer _setStatus:MVFileTransferDoneStatus];
-				 NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:transfer];		
+				 NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:transfer];
 				 [[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 			}
 
@@ -37,11 +37,11 @@ void silc_client_file_monitor( SilcClient client, SilcClientConnection conn, Sil
 
 		case SILC_CLIENT_FILE_MONITOR_CLOSED:
 			break;
-			
+
 		case SILC_CLIENT_FILE_MONITOR_ERROR:
 			[transfer _silcPostError:error];
 			break;
-			
+
 		case SILC_CLIENT_FILE_MONITOR_GET:
 		case SILC_CLIENT_FILE_MONITOR_PUT:
 			break;
@@ -59,26 +59,26 @@ void silc_client_file_monitor( SilcClient client, SilcClientConnection conn, Sil
 			NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
 			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 		}	break;
-			
+
 		case SILC_CLIENT_FILE_ALREADY_STARTED: {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
 			NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
 			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 		}	break;
-			
+
 		case SILC_CLIENT_FILE_NO_SUCH_FILE:
 		case SILC_CLIENT_FILE_PERMISSION_DENIED: {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
 			NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
 			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 		}	break;
-			
+
 		case SILC_CLIENT_FILE_KEY_AGREEMENT_FAILED: {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"Key agreement failed. Either your key was rejected by the other user or some other error happend during key negotiation.", NSLocalizedDescriptionKey, nil];
 			NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferKeyAgreementError userInfo:info];
 			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 		}	break;
-			
+
 		case SILC_CLIENT_FILE_OK:
 			break;
 	}

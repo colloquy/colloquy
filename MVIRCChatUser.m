@@ -94,7 +94,7 @@
 		if( localThere ) {
 			NSTimeInterval diff = [localThere timeIntervalSinceDate:[NSDate date]];
 			[self _setAttribute:[NSNumber numberWithDouble:diff] forKey:MVChatUserLocalTimeDifferenceAttribute];
-		} else [self _setAttribute:nil forKey:MVChatUserLocalTimeDifferenceAttribute]; 
+		} else [self _setAttribute:nil forKey:MVChatUserLocalTimeDifferenceAttribute];
 	}
 }
 @end

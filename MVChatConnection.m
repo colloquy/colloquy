@@ -769,7 +769,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	while( ( room = [enumerator nextObject] ) ) {
 		if( ! [room isJoined] ) continue;
-		[room _setDateParted:[NSDate date]];	
+		[room _setDateParted:[NSDate date]];
 	}
 
 	[_localUser autorelease];
@@ -1102,7 +1102,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (id) performDefaultImplementation {
 	// check if the subject responds to the command directly, if so execute that implementation
 	if( [self subjectSupportsCommand] ) return [self executeCommandOnSubject];
-	
+
 	// the subject didn't respond to the command, so do our default implementation
 	NSDictionary *args = [self evaluatedArguments];
 	id message = [self evaluatedDirectParameter];

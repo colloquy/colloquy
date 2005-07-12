@@ -169,8 +169,8 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 }
 
 - (NSArray *) makePluginsOfClass:(Class) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
-	NSParameterAssert( invocation != nil );	
-	NSParameterAssert( [invocation selector] != NULL );	
+	NSParameterAssert( invocation != nil );
+	NSParameterAssert( [invocation selector] != NULL );
 
 	NSEnumerator *enumerator = [self enumeratorOfPluginsOfClass:class thatRespondToSelector:[invocation selector]];
 	id plugin = nil;
