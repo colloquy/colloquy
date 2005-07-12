@@ -35,14 +35,23 @@ static void MVFileTransferConnected( FILE_DCC_REC *dcc ) {
 	}
 }
 
+static void MVFileTransferUpdate( FILE_DCC_REC *dcc ) {
+	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
+	if( ! self ) return;
+
+	if( [self status] == MVFileTransferStoppedStatus ) {
+		dcc_close( (DCC_REC *) dcc );
+	}
+}
+
 static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
 	@synchronized( self ) {
-		[self performSelector:@selector( _destroying )];
-
-		if( [self finalSize] != [self transfered] ) {
+		if( [self status] == MVFileTransferStoppedStatus ) {
+			// nothing to do
+		} else if( [self finalSize] != [self transfered] ) {
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];
 			NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
 			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
@@ -51,6 +60,15 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 			NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:self];		
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 		}
+	}
+}
+
+static void MVFileTransferDestroyed( FILE_DCC_REC *dcc ) {
+	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
+	if( ! self ) return;
+
+	@synchronized( self ) {
+		[self performSelector:@selector( _destroying )];
 	}
 }
 
@@ -130,7 +148,9 @@ static BOOL fileTransferSignalsRegistered = NO;
 	if( ! fileTransferSignalsRegistered ) {
 		IrssiLock();
 		signal_add_last( "dcc connected", (SIGNAL_FUNC) MVFileTransferConnected );
+		signal_add_last( "dcc transfer update", (SIGNAL_FUNC) MVFileTransferUpdate );
 		signal_add_last( "dcc closed", (SIGNAL_FUNC) MVFileTransferClosed );
+		signal_add_last( "dcc destroyed", (SIGNAL_FUNC) MVFileTransferDestroyed );
 		signal_add_last( "dcc error connect", (SIGNAL_FUNC) MVFileTransferErrorConnect );
 		signal_add_last( "dcc error file create", (SIGNAL_FUNC) MVFileTransferErrorFileCreate );
 		signal_add_last( "dcc error file open", (SIGNAL_FUNC) MVFileTransferErrorFileOpen );
@@ -293,16 +313,7 @@ static BOOL fileTransferSignalsRegistered = NO;
 
 - (void) cancel {
 	@synchronized( self ) {
-		if( ! [self _DCCFileRecord] ) return;
-
-		IrssiLock();
-		if( [self _DCCFileRecord] ) {
-			SEND_DCC_REC *dcc = [self _DCCFileRecord];
-			[self _destroying];
-			dcc_close( (DCC_REC *) dcc );
-		}
-		IrssiUnlock();
-
+		// the Irssi thread callbacks check for this and call dcc_close then
 		[self _setStatus:MVFileTransferStoppedStatus];
 	}
 }
@@ -320,9 +331,9 @@ static BOOL fileTransferSignalsRegistered = NO;
 		IrssiLock();
 
 		if( _dcc ) {
-			MVFileTransferModuleData *data = MODULE_DATA( (DCC_REC *)_dcc );
+			MVFileTransferModuleData *data = MODULE_DATA( (DCC_REC *) _dcc );
 			if( data ) data -> transfer = nil;
-			MODULE_DATA_UNSET( (DCC_REC *)_dcc );
+			MODULE_DATA_UNSET( (DCC_REC *) _dcc );
 		}
 
 		_dcc = record;
@@ -330,7 +341,7 @@ static BOOL fileTransferSignalsRegistered = NO;
 		if( record ) {
 			MVFileTransferModuleData *data = g_new0( MVFileTransferModuleData, 1 );
 			data -> transfer = self;
-			MODULE_DATA_SET( ((DCC_REC *)record), data );
+			MODULE_DATA_SET( (DCC_REC *) record, data );
 		}
 
 		IrssiUnlock();
@@ -381,7 +392,9 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	if( ! fileTransferSignalsRegistered ) {
 		IrssiLock();
 		signal_add_last( "dcc connected", (SIGNAL_FUNC) MVFileTransferConnected );
+		signal_add_last( "dcc transfer update", (SIGNAL_FUNC) MVFileTransferUpdate );
 		signal_add_last( "dcc closed", (SIGNAL_FUNC) MVFileTransferClosed );
+		signal_add_last( "dcc destroyed", (SIGNAL_FUNC) MVFileTransferDestroyed );
 		signal_add_last( "dcc error connect", (SIGNAL_FUNC) MVFileTransferErrorConnect );
 		signal_add_last( "dcc error file create", (SIGNAL_FUNC) MVFileTransferErrorFileCreate );
 		signal_add_last( "dcc error file open", (SIGNAL_FUNC) MVFileTransferErrorFileOpen );
@@ -555,16 +568,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 - (void) cancel {
 	@synchronized( self ) {
-		if( ! [self _DCCFileRecord] ) return;
-
-		IrssiLock();
-		if( [self _DCCFileRecord] ) {
-			GET_DCC_REC *dcc = [self _DCCFileRecord];
-			[self _destroying];
-			dcc_close( (DCC_REC *) dcc );
-		}
-		IrssiUnlock();
-
+		// the Irssi thread callbacks check for this and call dcc_close then
 		[self _setStatus:MVFileTransferStoppedStatus];
 	}
 }
@@ -609,7 +613,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 		if( _dcc ) {
 			MVFileTransferModuleData *data = MODULE_DATA( (DCC_REC *)_dcc );
 			if( data ) data -> transfer = nil;
-			MODULE_DATA_UNSET( (DCC_REC *)_dcc );
+			MODULE_DATA_UNSET( (DCC_REC *) _dcc );
 		}
 
 		_dcc = record;
@@ -617,7 +621,7 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 		if( record ) {
 			MVFileTransferModuleData *data = g_new0( MVFileTransferModuleData, 1 );
 			data -> transfer = self;
-			MODULE_DATA_SET( ((DCC_REC *)record), data );
+			MODULE_DATA_SET( (DCC_REC *) record, data );
 		}
 
 		IrssiUnlock();
