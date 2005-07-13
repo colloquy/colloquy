@@ -205,6 +205,7 @@
 		1CBA4E66062CCDA90082D1BF /* infoWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBA4E64062CCDA90082D1BF /* infoWidget.png */; };
 		1CBA4E67062CCDA90082D1BF /* infoWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBA4E65062CCDA90082D1BF /* infoWidgetPressed.png */; };
 		1CBA56ED058D202200257832 /* emoticon.tif in Resources */ = {isa = PBXBuildFile; fileRef = F5E98659018CB25601EE70DE /* emoticon.tif */; };
+		1CBAB8B00884BF49005D1CDD /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF687A508202F3F00F498FB /* CoreServices.framework */; };
 		1CBC62E505488C73009E59E1 /* JVPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC62E305488C73009E59E1 /* JVPreferencesController.m */; };
 		1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */; };
 		1CBC63190548975E009E59E1 /* GeneralPreferences.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC63180548975E009E59E1 /* GeneralPreferences.tif */; };
@@ -275,8 +276,6 @@
 		CBF6856208201B7A00F498FB /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF685310820190D00F498FB /* GetMetadataForFile.m */; };
 		CBF6856308201B7A00F498FB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CBF685330820190D00F498FB /* main.c */; };
 		CBF6857708201C4C00F498FB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089C1672FE841209C02AAC07 /* Foundation.framework */; };
-		CBF687A608202F3F00F498FB /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF687A508202F3F00F498FB /* CoreServices.framework */; };
-		CBF6883708202F4400F498FB /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF6876508202F2100F498FB /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -728,7 +727,6 @@
 		CBF685320820190D00F498FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = Info.plist; path = Importer/Info.plist; sourceTree = "<group>"; };
 		CBF685330820190D00F498FB /* main.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = main.c; path = Importer/main.c; sourceTree = "<group>"; };
 		CBF685340820190D00F498FB /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = schema.xml; path = Importer/schema.xml; sourceTree = "<group>"; };
-		CBF6876508202F2100F498FB /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		CBF687A508202F3F00F498FB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		F50B0AA20170CAD701A84BDE /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F51A4F2B01C2DDD201EE70DE /* MVFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVFileTransferController.m; sourceTree = "<group>"; };
@@ -860,9 +858,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBF6883708202F4400F498FB /* CoreFoundation.framework in Frameworks */,
 				CBF6857708201C4C00F498FB /* Foundation.framework in Frameworks */,
-				CBF687A608202F3F00F498FB /* CoreServices.framework in Frameworks */,
+				1CBAB8B00884BF49005D1CDD /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -939,7 +936,6 @@
 		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CBF6876508202F2100F498FB /* CoreFoundation.framework */,
 				CBF687A508202F3F00F498FB /* CoreServices.framework */,
 				089C1672FE841209C02AAC07 /* Foundation.framework */,
 				089C167FFE841241C02AAC07 /* AppKit.framework */,
@@ -2480,10 +2476,6 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = Importer/Info.plist;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
 			};
