@@ -462,17 +462,26 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 - (NSString *) contentsOfMainStyleSheet {
-	NSString *contents = [NSString stringWithContentsOfURL:[self mainStyleSheetLocation]];
+	NSString *contents = nil;
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+		contents = [NSString stringWithContentsOfURL:[self mainStyleSheetLocation]];
+	else contents = [NSString stringWithContentsOfURL:[self mainStyleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
 
 - (NSString *) contentsOfVariantStyleSheetWithName:(NSString *) name {
-	NSString *contents = [NSString stringWithContentsOfURL:[self variantStyleSheetLocationWithName:name]];
+	NSString *contents = nil;
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+		contents = [NSString stringWithContentsOfURL:[self variantStyleSheetLocationWithName:name]];
+	else contents = [NSString stringWithContentsOfURL:[self variantStyleSheetLocationWithName:name] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
 
 - (NSString *) contentsOfHeaderFile {
-	NSString *contents = [NSString stringWithContentsOfFile:[self headerFilePath] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *contents = nil;
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+		contents = [NSString stringWithContentsOfFile:[self headerFilePath]];
+	else contents = [NSString stringWithContentsOfFile:[self headerFilePath] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
 

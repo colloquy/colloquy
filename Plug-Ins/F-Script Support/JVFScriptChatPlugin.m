@@ -36,7 +36,11 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 			return nil;
 		}
 
-		NSString *contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
+		NSString *contents = nil;
+		if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+			contents = [NSString stringWithContentsOfFile:path];
+		else contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
+
 		FSInterpreterResult *result = [[self scriptInterpreter] execute:contents];
 		if( ! [result isOk] ) {
 			NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"F-Script Plugin Error", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error title" ), NSLocalizedStringFromTableInBundle( @"The F-Script plugin \"%@\" had an error while loading. The error occured near character %d.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, nil, nil, [[path lastPathComponent] stringByDeletingPathExtension], [result errorRange].location, [result errorMessage] );
@@ -100,7 +104,11 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 		if( ! [identifier isEqualToString:@"sys"] )
 			[[self scriptInterpreter] setObject:nil forIdentifier:identifier];
 
-	NSString *contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *contents = nil;
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+		contents = [NSString stringWithContentsOfFile:[self scriptFilePath]];
+	else contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
+
 	FSInterpreterResult *result = [[self scriptInterpreter] execute:contents];
 
 	[self performSelector:@selector( load )];
