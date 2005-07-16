@@ -239,7 +239,7 @@ static void MVChatNickTaken( IRC_SERVER_REC *server, const char *data, const cha
 	} else {
 		NSString *nick = [self nextAlternateNickname];
 		if( nick ) {
-			[self _sendRawMessage:[NSString stringWithFormat:@"NICK %@", nick] immediately:YES];
+			[self sendRawMessage:[NSString stringWithFormat:@"NICK %@", nick] immediately:YES];
 			signal_stop();
 		}
 	}
@@ -1470,8 +1470,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
-	if( ! _chatConnection ) return;
-	[self _sendRawMessage:raw immediately:now];
+
+	if( [self _irssiConnection] ) {
+		IrssiLock();
+		irc_send_cmd_full( (IRC_SERVER_REC *) [self _irssiConnection], [self encodedBytesWithString:raw], now, now, FALSE);
+		IrssiUnlock();
+	}
 }
 
 #pragma mark -
@@ -1963,14 +1967,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 }
 
 #pragma mark -
-
-- (oneway void) _sendRawMessage:(NSString *) raw immediately:(BOOL) now {
-	if( [self _irssiConnection] ) {
-		IrssiLock();
-		irc_send_cmd_full( (IRC_SERVER_REC *) [self _irssiConnection], [self encodedBytesWithString:raw], now, now, FALSE);
-		IrssiUnlock();
-	}
-}
 
 - (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action {
 	if( [self _irssiConnection] ) {

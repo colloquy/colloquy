@@ -40,7 +40,6 @@ extern pthread_mutex_t irssiLock;
 
 - (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname;
 
-- (oneway void) _sendRawMessage:(NSString *) raw immediately:(BOOL) now;
 - (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action;
 @end
 

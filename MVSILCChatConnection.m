@@ -667,12 +667,15 @@ static void silc_get_auth_method_callback( SilcClient client, SilcClientConnecti
 	SilcGetAuthMeth completion = SILC_32_TO_PTR( [(NSNumber *)[dict objectForKey:@"completion"] unsignedIntValue] );
 	void *completionContext = SILC_32_TO_PTR( [(NSNumber *)[dict objectForKey:@"context"] unsignedIntValue] );
 
+	[dict release]; // was retained earlier in silc_get_auth_method
+	dict = nil;
+
 	switch( auth_method ) {
 	case SILC_AUTH_NONE:
 		completion( TRUE, auth_method, NULL, 0, completionContext );
 		break;
 	case SILC_AUTH_PASSWORD:
-		if ( ! [self password] ) {
+		if( ! [self password] ) {
 			completion( TRUE, auth_method, NULL, 0, completionContext );
 			break;
 		}
@@ -686,7 +689,7 @@ static void silc_get_auth_method_callback( SilcClient client, SilcClientConnecti
 }
 
 static void silc_get_auth_method( SilcClient client, SilcClientConnection conn, char *hostname, SilcUInt16 port, SilcGetAuthMeth completion, void *context ) {
-	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(completion)], @"completion", [NSNumber numberWithUnsignedInt:SILC_PTR_TO_32( context )], @"context", nil];
+	NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32( completion )], @"completion", [NSNumber numberWithUnsignedInt:SILC_PTR_TO_32( context )], @"context", nil];
 	silc_client_request_authentication_method( client, conn, silc_get_auth_method_callback, dict );
 }
 
@@ -752,14 +755,14 @@ static void silc_verify_public_key( SilcClient client, SilcClientConnection conn
 	[dict setObject:asciiBabbleprint forKey:@"babbleprint"];
 
 	if( conn_type == SILC_SOCKET_TYPE_SERVER || conn_type == SILC_SOCKET_TYPE_ROUTER ) {
-		if ( conn -> sock -> hostname && strlen( conn -> sock -> hostname ) ) {
+		if( conn -> sock -> hostname && strlen( conn -> sock -> hostname ) ) {
 			[dict setObject:[NSString stringWithUTF8String:conn -> sock -> hostname] forKey:@"name"];
-		} else if ( conn -> sock -> ip && strlen( conn -> sock -> ip ) ) {
+		} else if( conn -> sock -> ip && strlen( conn -> sock -> ip ) ) {
 			[dict setObject:[NSString stringWithUTF8String:conn -> sock -> ip] forKey:@"name"];
 		} else {
 			[dict setObject:@"unknown server" forKey:@"name"];
 		}
-	} else if ( conn_type == SILC_SOCKET_TYPE_CLIENT ) {
+	} else if( conn_type == SILC_SOCKET_TYPE_CLIENT ) {
 		[dict setObject:@"unknown user" forKey:@"name"];
 	}
 
@@ -1129,13 +1132,10 @@ static SilcClientOperations silcClientOps = {
 	context = SILC_32_TO_PTR([[dictionary objectForKey:@"completitionContext"] unsignedIntValue]);
 	conn = SILC_32_TO_PTR([[dictionary objectForKey:@"silcConn"] unsignedIntValue]);
 
-	if ( accepted ) {
-		completition( TRUE, context );
-	} else {
-		completition( FALSE, context );
-	}
+	if( accepted ) completition( TRUE, context );
+	else completition( FALSE, context );
 
-	if ( alwaysAccept ) {
+	if( alwaysAccept ) {
 		NSData *pk = [dictionary objectForKey:@"pk"];
 		NSString *filename = [self _publicKeyFilename:[[dictionary objectForKey:@"connType"] unsignedIntValue] andPublicKey:(unsigned char *)[pk bytes] withLen:[pk length] usingSilcConn:conn];
 		silc_pkcs_save_public_key_data( [filename fileSystemRepresentation], (unsigned char *)[pk bytes], [pk length], SILC_PKCS_FILE_PEM);
@@ -1322,7 +1322,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	NSAutoreleasePool *pool = nil;
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
 		pool = [[NSAutoreleasePool alloc] init];
-		silc_schedule_one( _silcClient -> schedule, 10000 ); // blocks until disconnected
+		silc_schedule_one( _silcClient -> schedule, 500000 ); // blocks until activity or timeout
 		[pool release];
 	}
 }
@@ -1551,9 +1551,9 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 		case SILC_SOCKET_TYPE_ROUTER: {
 			NSString *host;
 
-			if ( conn -> sock -> hostname && strlen( conn -> sock -> hostname ) ) {
+			if( conn -> sock -> hostname && strlen( conn -> sock -> hostname ) ) {
 				host = [NSString stringWithUTF8String:conn -> sock -> hostname];
-			} else if ( conn -> sock -> ip && strlen( conn -> sock -> ip ) ) {
+			} else if( conn -> sock -> ip && strlen( conn -> sock -> ip ) ) {
 				host = [NSString stringWithUTF8String:conn -> sock -> ip];
 			} else {
 				char *tmp;

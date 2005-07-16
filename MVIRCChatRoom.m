@@ -40,11 +40,8 @@
 
 - (void) partWithReason:(NSAttributedString *) reason {
 	if( ! [self isJoined] ) return;
-	if( reason == nil )
-		[[self connection] sendRawMessage:[NSString stringWithFormat:@"PART %@", [self name]] immediately:YES];
-	else
-		[[self connection] sendRawMessage:[NSString stringWithFormat:@"PART %@ :%@", [self name], [reason string]] immediately:YES];
-//	[[self connection] sendRawMessageWithFormat:@"PART %@", [self name]];
+	if( ! [reason length] ) [[self connection] sendRawMessage:[NSString stringWithFormat:@"PART %@", [self name]] immediately:YES];
+	else [[self connection] sendRawMessage:[NSString stringWithFormat:@"PART %@ :%@", [self name], [reason string]] immediately:YES];
 	[self _setDateParted:[NSDate date]];
 }
 
@@ -56,9 +53,7 @@
 	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:topic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 
 	IrssiLock();
-
 	irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "TOPIC %s :%s", [[self connection] encodedBytesWithString:[self name]], msg );
-
 	IrssiUnlock();
 }
 

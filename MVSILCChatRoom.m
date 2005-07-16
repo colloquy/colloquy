@@ -175,29 +175,27 @@
 	MVSILCChatUser *silcUser = (MVSILCChatUser *) user;
 
 	roomBuffer = silc_id_payload_encode( [self _getChannelEntry] -> id, SILC_ID_CHANNEL );
-	if ( ! roomBuffer ) {
-		return;
-	}
+	if( ! roomBuffer ) return;
 
 	userBuffer = silc_id_payload_encode( [silcUser _getClientEntry] -> id, SILC_ID_CLIENT );
-	if ( ! userBuffer ) {
+	if( ! userBuffer ) {
 		silc_buffer_free( roomBuffer );
 		return;
 	}
 
 	[super kickOutMemberUser:user forReason:reason];
 
-	if ( reason ) {
+	if( reason ) {
 		const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:reason andChatFormat:[[self connection] outgoingChatFormat]];
 
 		silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_KICK, [[self connection] _silcConn] -> cmd_ident, 3,
-								  1, roomBuffer -> data, roomBuffer -> len,
-								  2, userBuffer -> data, userBuffer -> len,
-								  3, msg, strlen(msg) );
+									1, roomBuffer -> data, roomBuffer -> len,
+									2, userBuffer -> data, userBuffer -> len,
+									3, msg, strlen(msg) );
 	} else {
 		silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_KICK, [[self connection] _silcConn] -> cmd_ident, 2,
-								  1, roomBuffer -> data, roomBuffer -> len,
-								  2, userBuffer -> data, userBuffer -> len );
+									1, roomBuffer -> data, roomBuffer -> len,
+									2, userBuffer -> data, userBuffer -> len );
 	}
 
 	[[self connection] _silcConn] -> cmd_ident++;
@@ -231,22 +229,20 @@
 	unsigned char modebuf[4];
 
 	roomBuffer = silc_id_payload_encode( [self _getChannelEntry] -> id, SILC_ID_CHANNEL );
-	if ( ! roomBuffer ) {
-		return;
-	}
+	if( ! roomBuffer ) return;
 
 	userBuffer = silc_id_payload_encode( [user _getClientEntry] -> id, SILC_ID_CLIENT );
-	if ( ! userBuffer ) {
+	if( ! userBuffer ) {
 		silc_buffer_free( roomBuffer );
 		return;
 	}
 
-	SILC_PUT32_MSB(SilcMode, modebuf);
+	SILC_PUT32_MSB( SilcMode, modebuf );
 
 	silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_CUMODE, [[self connection] _silcConn] -> cmd_ident, 3,
-	                          1, roomBuffer -> data, roomBuffer -> len,
-							  2, modebuf, 4,
-							  3, userBuffer -> data, userBuffer -> len);
+								1, roomBuffer -> data, roomBuffer -> len,
+								2, modebuf, 4,
+								3, userBuffer -> data, userBuffer -> len);
 	[[self connection] _silcConn] -> cmd_ident++;
 
 	silc_buffer_free( roomBuffer );

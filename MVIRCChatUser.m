@@ -49,7 +49,6 @@
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
 	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding andChatFormat:[[self connection] outgoingChatFormat]];
-//	[[[self connection] _irssiThreadProxy] _sendMessage:msg toTarget:[self nickname] asAction:action];
 	[[self connection] _sendMessage:msg toTarget:[self nickname] asAction:action];
 }
 
