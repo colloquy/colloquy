@@ -87,9 +87,14 @@
 			if( ! [arguments length] ) return [self handlePartWithArguments:[[room target] name] forConnection:[room connection]];
 			else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		} else if( ! [command caseInsensitiveCompare:@"topic"] || ! [command caseInsensitiveCompare:@"t"] ) {
-			if( ! [arguments length] ) return NO;
-			[[room target] setTopic:arguments];
-			return YES;
+			if( ! [arguments length] && [connection type] == MVChatConnectionIRCType ) {
+				// request the current topic, this is handy if you connect with a proxy that doesn't forward the current topic
+				[connection sendRawMessage:[NSString stringWithFormat:@"TOPIC %@", [[room target] name]]];
+				return YES;
+			} else if( [arguments length] ) {
+				[[room target] setTopic:arguments];
+				return YES;
+			} else return NO;
 		} else if( ! [command caseInsensitiveCompare:@"names"] && ! [[arguments string] length] ) {
 			[[room windowController] openViewsDrawer:nil];
 			if( [[room windowController] isListItemExpanded:room] ) [[room windowController] collapseListItem:room];

@@ -1,4 +1,4 @@
-{\rtf1\mac\ansicpg10005\cocoartf824\cocoasubrtf100
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf100
 {\fonttbl\f0\fswiss\fcharset77 Arial-Black;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\ftech\fcharset2 Symbol;
 \f3\fswiss\fcharset77 Helvetica;\f4\fnil\fcharset77 Monaco;\f5\fswiss\fcharset77 Helvetica-Oblique;
 \f6\fnil\fcharset77 LucidaGrande;\f7\fnil\fcharset78 HiraKakuPro-W3;}
@@ -37,11 +37,11 @@ changes\
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Improved our URL parser to highlight more international addresses. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/189"}}{\fldrslt #189}}
+\fs20 Improved our URL parser to highlight more international addresses. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/189"}}{\fldrslt #189}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
-\f3  Colloquy now handles /msg @#room and /notice @#room correctly. We will echo all notices to the correct panel, if it already exists. Incoming @#room notices are now correctly displayed in the panel also. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/179"}}{\fldrslt #179}}
+\f3  Colloquy now handles /msg @#room and /notice @#room correctly. We will echo all notices to the correct panel, if it already exists. Incoming @#room notices are now correctly displayed in the panel also. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/179"}}{\fldrslt #179}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
@@ -70,6 +70,9 @@ changes\
 
 \f2 \'b7
 \f3  Colloquy will now correctly remember what rooms were joined when the computer sleeps. You will no longer be joined to rooms that you have had closed prior to sleeping.\
+
+\f2 \'b7
+\f3  If you simply type /topic in a room we will request the current topic, this is handy if you connect with a proxy that doesn't forward the current topic.\
 
 \f2 \'b7
 \f3  We now send an identify message to NickServ before any auto-joins or commands (if the nickname password is stored for the connection.)\
@@ -174,26 +177,26 @@ Build 2D14
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Fixed a deadlock when sending 6 or more lines of text at once. However, some minor delay might occur when sending. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/102"}}{\fldrslt #102}}\
+\fs20 Fixed a deadlock when sending 6 or more lines of text at once. However, some minor delay might occur when sending. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/102"}}{\fldrslt #102}}\
 
 \f2 \'b7
 \f3\fs24  
-\fs20 Also fixed a couple related deadlocks that sometimes occurred when waking from sleep and changing IP addresses. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/119"}}{\fldrslt #119}} {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/123"}}{\fldrslt #123}}
+\fs20 Also fixed a couple related deadlocks that sometimes occurred when waking from sleep and changing IP addresses. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/119"}}{\fldrslt #119}} {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/123"}}{\fldrslt #123}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Colloquy again honors the "Open in new window" behavior preference for panels. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/154"}}{\fldrslt \cf5 #154}}
+\fs20 Colloquy again honors the "Open in new window" behavior preference for panels. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/154"}}{\fldrslt \cf5 #154}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Fixed some Irssi warnings that showed up in the system console during each launch. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/100"}}{\fldrslt #100}}
+\fs20 Fixed some Irssi warnings that showed up in the system console during each launch. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/100"}}{\fldrslt #100}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Fixed the chat display not showing the first message, not reloading the style and not showing a preview in the preferences. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/155"}}{\fldrslt #155}}
+\fs20 Fixed the chat display not showing the first message, not reloading the style and not showing a preview in the preferences. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/155"}}{\fldrslt #155}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
@@ -208,17 +211,17 @@ Build 2D14
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Fixed the action button in the drawer when using tabs, it will now give you a menu of the current room if there is no member selected. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/153"}}{\fldrslt #153}}
+\fs20 Fixed the action button in the drawer when using tabs, it will now give you a menu of the current room if there is no member selected. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/153"}}{\fldrslt #153}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Added a confirm delete dialog when deleting a connection from the connections window. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/51"}}{\fldrslt #51}}
+\fs20 Added a confirm delete dialog when deleting a connection from the connections window. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/51"}}{\fldrslt #51}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Using a dircproxy with chat history enabled will again show the history when you join the rooms. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/165"}}{\fldrslt #165}}
+\fs20 Using a dircproxy with chat history enabled will again show the history when you join the rooms. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/165"}}{\fldrslt #165}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
@@ -228,12 +231,12 @@ Build 2D14
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Added an "Are you sure you want to quit?" dialog when quitting while there are active chat panels open. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/98"}}{\fldrslt #98}}
+\fs20 Added an "Are you sure you want to quit?" dialog when quitting while there are active chat panels open. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/98"}}{\fldrslt #98}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
-\fs20 Added an "Are you sure you want to part from all chat rooms and close this window?" dialog when closing a window that has multiple active chat rooms. {\field{\*\fldinst{HYPERLINK "http://project.colloquy.info/trac/ticket/98"}}{\fldrslt #98}}
+\fs20 Added an "Are you sure you want to part from all chat rooms and close this window?" dialog when closing a window that has multiple active chat rooms. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/98"}}{\fldrslt #98}}
 \f1\b\fs28 \
 
 \f2\b0\fs20 \'b7
