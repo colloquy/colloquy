@@ -1319,12 +1319,12 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 }
 
 - (void) _silcRunloop {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus )
-		silc_schedule_one( _silcClient -> schedule, 200 ); // blocks until disconnected
-
-	[pool release];
+	NSAutoreleasePool *pool = nil;
+	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
+		pool = [[NSAutoreleasePool alloc] init];
+		silc_schedule_one( _silcClient -> schedule, 10000 ); // blocks until disconnected
+		[pool release];
+	}
 }
 
 #pragma mark -

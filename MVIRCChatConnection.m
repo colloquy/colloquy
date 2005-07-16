@@ -1625,7 +1625,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	if( ! server ) return nil;
 
 	MVIRCChatConnectionModuleData *data = MODULE_DATA( server );
-	if( data ) return data -> connection;
+	if( data ) return [[(data -> connection) retain] autorelease];
 
 	return nil;
 }
@@ -1726,8 +1726,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 + (void) _irssiRunLoop {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
 	GMainLoop *glibMainLoop = g_main_new( TRUE );
 
 	extern BOOL irssiThreadReady;
@@ -1736,8 +1734,14 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	extern BOOL MVChatApplicationQuitting;
 	extern unsigned int connectionCount;
 
-	while( ! MVChatApplicationQuitting || connectionCount )
+	NSAutoreleasePool *pool = nil;
+	while( ! MVChatApplicationQuitting || connectionCount ) {
+		pool = [[NSAutoreleasePool alloc] init];
 		g_main_iteration( TRUE, &irssiLock ); // this will block until one event occurs
+		[pool release];
+	}
+
+	pool = nil;
 
 	IrssiLock();
 
@@ -1753,8 +1757,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	IrssiUnlock();
 	pthread_mutex_destroy( &irssiLock );
-
-	[pool release];
 }
 
 #pragma mark -

@@ -119,7 +119,7 @@ static BOOL fileTransferSignalsRegistered = NO;
 	if( ! record ) return nil;
 
 	MVFileTransferModuleData *data = MODULE_DATA( record );
-	if( data ) return data -> transfer;
+	if( data ) return [[(data -> transfer) retain] autorelease];
 
 	return nil;
 }
