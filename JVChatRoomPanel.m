@@ -1268,7 +1268,7 @@
 
 	if( ! [topic length] ) {
 		NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor], NSForegroundColorAttributeName, [NSFont systemFontOfSize:11.], NSFontAttributeName, nil];
-		topic = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" ) attributes:attributes];
+		topic = [[[NSMutableAttributedString alloc] initWithString:NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" ) attributes:attributes] autorelease];
 	}
 
 	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
