@@ -1321,13 +1321,10 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 - (void) _silcRunloop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	silc_client_run( _silcClient ); // blocks until disconnected or application quit
+	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus )
+		silc_schedule_one( _silcClient -> schedule, 200 ); // blocks until disconnected
 
 	[pool release];
-}
-
-- (void) _stopSilcRunloop {
-	silc_client_stop( _silcClient );
 }
 
 #pragma mark -
@@ -1466,14 +1463,12 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 - (void) _didNotConnect {
 	[self _setSilcConn:NULL];
-	[self _stopSilcRunloop];
 	[self _setDetachInfo:nil];
 	[super _didNotConnect];
 }
 
 - (void) _didDisconnect {
 	[self _setSilcConn:NULL];
-	[self _stopSilcRunloop];
 
 	if( ! _sentQuitCommand /* || ! [[self persistentInformation] objectForKey:@"detachData"] */ ) {
 		if( _status != MVChatConnectionSuspendedStatus )
