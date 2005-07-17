@@ -75,6 +75,8 @@
 
 	silc_client_send_channel_message( [[self connection] _silcClient], [[self connection] _silcConn], channel, NULL, flags, (unsigned char *) msg, strlen( msg ), false );
 
+	silc_schedule_wakeup( [[self connection] _silcClient] -> schedule );
+
 	SilcUnlock( [[self connection] _silcClient] );
 }
 
@@ -198,6 +200,8 @@
 									2, userBuffer -> data, userBuffer -> len );
 	}
 
+	silc_schedule_wakeup( [[self connection] _silcClient] -> schedule );
+
 	[[self connection] _silcConn] -> cmd_ident++;
 
 	silc_buffer_free( roomBuffer );
@@ -244,6 +248,8 @@
 								2, modebuf, 4,
 								3, userBuffer -> data, userBuffer -> len);
 	[[self connection] _silcConn] -> cmd_ident++;
+	
+	silc_schedule_wakeup( [[self connection] _silcClient] -> schedule );
 
 	silc_buffer_free( roomBuffer );
 	silc_buffer_free( userBuffer );

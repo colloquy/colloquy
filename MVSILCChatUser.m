@@ -107,7 +107,10 @@
 	if( clientID ) {
 		SilcLock( [[self connection] _silcClient] );
 		SilcClientEntry client = silc_client_get_client_by_id( [[self connection] _silcClient], [[self connection] _silcConn], clientID );
-		if( client ) silc_client_send_private_message( [[self connection] _silcClient], [[self connection] _silcConn], client, flags, (unsigned char *) msg, strlen( msg ), false );
+		if( client ) { 
+			silc_client_send_private_message( [[self connection] _silcClient], [[self connection] _silcConn], client, flags, (unsigned char *) msg, strlen( msg ), false );
+			silc_schedule_wakeup( [[self connection] _silcClient] -> schedule );
+		}
 		SilcUnlock( [[self connection] _silcClient] );
 	}
 }
@@ -122,6 +125,8 @@
 
 	silc_client_command_send( [[self connection] _silcClient], [[self connection] _silcConn], SILC_COMMAND_WHOIS, [[self connection] _silcConn] -> cmd_ident, 1, 4, userBuffer -> data, userBuffer -> len );
 	[[self connection] _silcConn] -> cmd_ident++;
+
+	silc_schedule_wakeup( [[self connection] _silcClient] -> schedule );
 
 	silc_buffer_free( userBuffer );
 }

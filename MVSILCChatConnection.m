@@ -1158,6 +1158,9 @@ static SilcClientOperations silcClientOps = {
 	SilcLock( [self _silcClient] );
 	bool b = silc_client_command_call( [self _silcClient], [self _silcConn], [raw UTF8String] );
 	if( b ) [self _addCommand:raw forNumber:[self _silcConn] -> cmd_ident];
+	
+	silc_schedule_wakeup( [self _silcClient] -> schedule );
+	
 	SilcUnlock( [self _silcClient] );
 
 	if( ! b ) [self _sendCommandFailedNotify:raw];
@@ -1194,6 +1197,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
 	SilcLock( [self _silcClient] );
 	silc_client_get_clients_whois( [self _silcClient], [self _silcConn], [nickname UTF8String], NULL, NULL, usersFoundCallback, self );
+	silc_schedule_wakeup( [self _silcClient] -> schedule );
 	SilcUnlock( [self _silcClient] );
 
 	_lookingUpUsers = YES;
@@ -1320,11 +1324,16 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 - (void) _silcRunloop {
 	NSAutoreleasePool *pool = nil;
-	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
-		pool = [[NSAutoreleasePool alloc] init];
-		silc_schedule_one( _silcClient -> schedule, 500000 ); // blocks until activity or timeout
-		[pool release];
-	}
+	
+	pool = [[NSAutoreleasePool alloc] init];
+	
+	silc_client_run( _silcClient );
+	
+	[pool release];
+}
+
+- (void) _stopSilcRunloop {
+	silc_client_stop( _silcClient );
 }
 
 #pragma mark -
@@ -1462,6 +1471,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 }
 
 - (void) _didNotConnect {
+	[self _stopSilcRunloop];
 	[self _setSilcConn:NULL];
 	[self _setDetachInfo:nil];
 	[super _didNotConnect];
@@ -1469,6 +1479,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 - (void) _didDisconnect {
 	[self _setSilcConn:NULL];
+	[self _stopSilcRunloop];
 
 	if( ! _sentQuitCommand /* || ! [[self persistentInformation] objectForKey:@"detachData"] */ ) {
 		if( _status != MVChatConnectionSuspendedStatus )
