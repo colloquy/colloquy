@@ -537,7 +537,7 @@ static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const ch
 	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &target, &message );
 	if( ! address ) address = "";
 
-	if( *target == '@' && ischannel( target[1] ) ) target = target + 1;
+	if( *target == '@' && ischannel( target[1] ) ) target++;
 
 	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
 	NSNotification *note = nil;
@@ -569,7 +569,7 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &target, &message );
 	if( ! address ) address = "";
 
-	if( *target == '@' && ischannel( target[1] ) ) target = target + 1;
+	if( *target == '@' && ischannel( target[1] ) ) target++;
 
 	NSNotification *note = nil;
 	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];

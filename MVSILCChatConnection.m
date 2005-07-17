@@ -890,10 +890,11 @@ static SilcClientOperations silcClientOps = {
 	if( _silcClient -> username ) free( _silcClient -> username );
 	if( _silcClient -> hostname ) free( _silcClient -> hostname );
 	if( _silcClient -> nickname ) free( _silcClient -> nickname );
+	SilcUnlock( _silcClient );
 
+	silc_client_stop( _silcClient );
 	silc_client_free( _silcClient );
 	_silcClient = NULL;
-	SilcUnlock( _silcClient );
 
 	[_silcPassword release];
 	_silcPassword = nil;
@@ -1324,16 +1325,16 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 - (void) _silcRunloop {
 	NSAutoreleasePool *pool = nil;
-	
-	pool = [[NSAutoreleasePool alloc] init];
-	
-	silc_client_run( _silcClient );
-	
-	[pool release];
+
+	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
+		pool = [[NSAutoreleasePool alloc] init];
+		silc_schedule_one( _silcClient -> schedule, -1 );
+		[pool release];
+	}
 }
 
 - (void) _stopSilcRunloop {
-	silc_client_stop( _silcClient );
+	silc_schedule_wakeup( _silcClient -> schedule );
 }
 
 #pragma mark -
@@ -1478,8 +1479,8 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 }
 
 - (void) _didDisconnect {
-	[self _setSilcConn:NULL];
 	[self _stopSilcRunloop];
+	[self _setSilcConn:NULL];
 
 	if( ! _sentQuitCommand /* || ! [[self persistentInformation] objectForKey:@"detachData"] */ ) {
 		if( _status != MVChatConnectionSuspendedStatus )
@@ -1550,7 +1551,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 			return nil;
 
 		case SILC_SOCKET_TYPE_CLIENT: {
-			char *tmp;
+			char *tmp = NULL;
 			tmp = silc_hash_fingerprint( NULL, pk, pkLen );
 			NSString *asciiFingerprint = [NSString stringWithUTF8String:tmp];
 			silc_free( tmp );
@@ -1560,14 +1561,14 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 		case SILC_SOCKET_TYPE_SERVER:
 		case SILC_SOCKET_TYPE_ROUTER: {
-			NSString *host;
+			NSString *host = nil;
 
 			if( conn -> sock -> hostname && strlen( conn -> sock -> hostname ) ) {
 				host = [NSString stringWithUTF8String:conn -> sock -> hostname];
 			} else if( conn -> sock -> ip && strlen( conn -> sock -> ip ) ) {
 				host = [NSString stringWithUTF8String:conn -> sock -> ip];
 			} else {
-				char *tmp;
+				char *tmp = NULL;
 				tmp = silc_hash_fingerprint( NULL, pk, pkLen );
 				host = [NSString stringWithUTF8String:tmp];
 				silc_free( tmp );
