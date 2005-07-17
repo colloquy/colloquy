@@ -41,6 +41,7 @@
 	if( ( self = [super initWithTarget:target] ) ) {
 		topicLine = nil;
 		_sortedMembers = [[NSMutableArray arrayWithCapacity:50] retain];
+		_preferredTabCompleteNicknames = [[NSMutableArray arrayWithCapacity:10] retain];
 		_nextMessageAlertMembers = [[NSMutableSet setWithCapacity:5] retain];
 		_kickedFromRoom = NO;
 		_keepAfterPart = NO;
@@ -83,9 +84,11 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_sortedMembers release];
+	[_preferredTabCompleteNicknames release];
 	[_nextMessageAlertMembers release];
 
 	_sortedMembers = nil;
+	_preferredTabCompleteNicknames = nil;
 	_nextMessageAlertMembers = nil;
 
 	[super dealloc];
@@ -267,6 +270,11 @@
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[message sender]];
 	if( member ) [message setSender:member];
 
+	if( [message isHighlighted] && [message ignoreStatus] == JVNotIgnored ) {
+		[_preferredTabCompleteNicknames removeObject:[[message sender] nickname]];
+		[_preferredTabCompleteNicknames insertObject:[[message sender] nickname] atIndex:0];
+	}
+
 	if( [message ignoreStatus] == JVNotIgnored && [[message sender] respondsToSelector:@selector( isLocalUser )] && ! [[message sender] isLocalUser] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]] forKey:@"title"];
@@ -346,6 +354,8 @@
 - (void) joined {
 	_banListSynced = NO;
 	[_sortedMembers removeAllObjects];
+	[_preferredTabCompleteNicknames removeAllObjects];
+	[_nextMessageAlertMembers removeAllObjects];
 
 	NSEnumerator *enumerator = [[[self target] memberUsers] objectEnumerator];
 	MVChatUser *member = nil;
@@ -583,16 +593,28 @@
 #pragma mark -
 #pragma mark TextView/Input Support
 
-- (NSArray *) completionsFor:(NSString *) inFragment {
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
+- (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
+	NSEnumerator *enumerator = nil;
 	NSMutableArray *possibleNicks = [NSMutableArray array];
 	NSString *name = nil;
 
-	while( ( name = [[enumerator nextObject] nickname] ) )
-		if( [name rangeOfString:inFragment options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
+	enumerator = [_preferredTabCompleteNicknames objectEnumerator];
+	while( ( name = [enumerator nextObject] ) )
+		if( [name rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == NSOrderedSame )
 			[possibleNicks addObject:name];
 
+	enumerator = [_sortedMembers objectEnumerator];
+	while( ( name = [[enumerator nextObject] nickname] ) )
+		if( ! [possibleNicks containsObject:name]
+			&& [name rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == NSOrderedSame )
+				[possibleNicks addObject:name];
+
 	return possibleNicks;
+}
+
+- (void) textView:(NSTextView *) textView selectedCompletion:(NSString *) completion fromPrefix:(NSString *) prefix {
+	[_preferredTabCompleteNicknames removeObject:completion];
+	[_preferredTabCompleteNicknames insertObject:completion atIndex:0];
 }
 
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
@@ -924,7 +946,9 @@
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
 
+	[_preferredTabCompleteNicknames removeObject:[mbr nickname]];
 	[_sortedMembers removeObjectIdenticalTo:mbr];
+	[_nextMessageAlertMembers removeObject:mbr];
 	[_windowController reloadListItem:self andChildren:YES];
 }
 
@@ -950,7 +974,9 @@
 	if( [_windowController selectedListItem] == mbr )
 		[_windowController showChatViewController:[_windowController activeChatViewController]];
 
+	[_preferredTabCompleteNicknames removeObject:[mbr nickname]];
 	[_sortedMembers removeObjectIdenticalTo:mbr];
+	[_nextMessageAlertMembers removeObject:mbr];
 	[_windowController reloadListItem:self andChildren:YES];
 
 	_kickedFromRoom = YES;
@@ -989,7 +1015,9 @@
 	if( [_windowController selectedListItem] == mbr )
 		[_windowController showChatViewController:[_windowController activeChatViewController]];
 
+	[_preferredTabCompleteNicknames removeObject:[mbr nickname]];
 	[_sortedMembers removeObjectIdenticalTo:mbr];
+	[_nextMessageAlertMembers removeObject:mbr];
 	[_windowController reloadListItem:self andChildren:YES];
 
 	NSString *message = nil;

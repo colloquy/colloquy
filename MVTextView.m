@@ -10,11 +10,25 @@
 
 @implementation MVTextView
 - (id)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer {
-	if (self = [super initWithFrame:frameRect textContainer:aTextContainer]) {
+	if( (self = [super initWithFrame:frameRect textContainer:aTextContainer] ) )
 		defaultTypingAttributes = [[NSDictionary alloc] init];
-	}
 	return self;
 }
+
+- (void) dealloc {
+	[defaultTypingAttributes release];
+	defaultTypingAttributes = nil;
+
+	[_lastCompletionMatch release];
+	_lastCompletionMatch = nil;
+
+	[_lastCompletionPrefix release];
+	_lastCompletionPrefix = nil;
+
+	[super dealloc];
+}
+
+#pragma mark -
 
 - (void) interpretKeyEvents:(NSArray *) eventArray {
 	NSMutableArray *newArray = [NSMutableArray array];
@@ -49,10 +63,8 @@
 		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
 
 	if( chr == NSCarriageReturnCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
-		_tabCompletting = NO;
 		return YES;
 	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
-		_tabCompletting = NO;
 		return YES;
 	} else if( chr == NSTabCharacter ) {
 		return YES;
@@ -60,7 +72,6 @@
 		_tabCompletting = NO;
 		return YES;
 	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
-		_tabCompletting = NO;
 		return YES;
 	} else if( chr == NSDeleteCharacter || chr == NSBackspaceCharacter ) {
 		_tabCompletting = NO;
@@ -79,26 +90,28 @@
 	if( _tabCompletting && chr == ' ' ) {
 		NSRange curPos = [self selectedRange];
 		[self setSelectedRange:NSMakeRange( curPos.location + curPos.length, 0 )];
-		_tabCompletting = NO;
 		return YES;
 	} else if( chr == NSCarriageReturnCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
-		if( [[self delegate] textView:self returnKeyPressed:event] ) return YES;
+		return [[self delegate] textView:self returnKeyPressed:event];
 	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
-		if( [[self delegate] textView:self enterKeyPressed:event] ) return YES;
+		return [[self delegate] textView:self enterKeyPressed:event];
 	} else if( chr == NSTabCharacter ) {
 		if( ! _tabCompletting ) {
-			_complettingWithSuffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) );
+			NSRange curPos = [self selectedRange];
+			_complettingWithSuffix = ( curPos.location == [[self string] length] && ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ) );
 			_firstTabComplettingBeep = NO;
 		}
 
 		_tabCompletting = YES;
 		return [self autocompleteWithSuffix:_complettingWithSuffix];
 	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
-		if( [[self delegate] textView:self escapeKeyPressed:event] ) return YES;
+		return [[self delegate] textView:self escapeKeyPressed:event];
 	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
-		if( [[self delegate] textView:self functionKeyPressed:event] ) return YES;
+		return [[self delegate] textView:self functionKeyPressed:event];
 	} else if( _tabCompletting && chr != NSDeleteCharacter && chr != NSBackspaceCharacter ) {
+		_ignoreSelectionChanges = YES;
 		[self replaceCharactersInRange:[self selectedRange] withString:[event charactersIgnoringModifiers]];
+		_ignoreSelectionChanges = NO;
 		return [self autocompleteWithSuffix:_complettingWithSuffix];
 	}
 
@@ -124,6 +137,23 @@
 	[self resetCursorRects];
 	[[self undoManager] removeAllActionsWithTarget:[self textStorage]];
 	_tabCompletting = NO;
+}
+
+- (void) setSelectedRange:(NSRange) charRange affinity:(NSSelectionAffinity) affinity stillSelecting:(BOOL) stillSelectingFlag {
+	if( ! _ignoreSelectionChanges && _tabCompletting && ! stillSelectingFlag && charRange.length == 0 ) {
+		_tabCompletting = NO;
+
+		if( _lastCompletionMatch && _lastCompletionPrefix && [[self delegate] respondsToSelector:@selector( textView:selectedCompletion:fromPrefix: )] )
+			[[self delegate] textView:self selectedCompletion:_lastCompletionMatch fromPrefix:_lastCompletionPrefix];
+
+		[_lastCompletionMatch release];
+		_lastCompletionMatch = nil;
+
+		[_lastCompletionPrefix release];
+		_lastCompletionPrefix = nil;
+	}
+
+	[super setSelectedRange:charRange affinity:affinity stillSelecting:stillSelectingFlag];
 }
 
 - (void) resetCursorRects {
@@ -286,7 +316,7 @@
 	// continue if necessary
 	if( ! [partialCompletion isEqualToString:@""] ) {
 		// compile list of possible completions
-		NSArray *possibleNicks = [[self delegate] completionsFor:partialCompletion];
+		NSArray *possibleNicks = [[self delegate] textView:self stringCompletionsForPrefix:partialCompletion];
 		NSString *name = nil;
 
 		// insert word or suggestion
@@ -294,51 +324,71 @@
 			name = [possibleNicks objectAtIndex:0];
 			NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
 
+			_ignoreSelectionChanges = YES;
 			[self replaceCharactersInRange:replacementRange withString:name];
+
 			if( suffix && replacementRange.location == 0 ) [self insertText:@": "];
 			else if( suffix ) [self insertText:@" "];
 			_tabCompletting = NO;
+			_ignoreSelectionChanges = NO;
+
+			if( [[self delegate] respondsToSelector:@selector( textView:selectedCompletion:fromPrefix: )] )
+				[[self delegate] textView:self selectedCompletion:name fromPrefix:partialCompletion];
 		} else if( [possibleNicks count] > 1 ) {
 			// since several are available, we highlight the modified text
 			NSRange wordRange;
-			BOOL keepSearching = YES;
-			int count = 0;
+			BOOL full = YES;
 
-			wordRange = [[self string] rangeOfCharacterFromSet:illegalCharacters options:0 range:NSMakeRange( curPos.location, [[self string] length] - curPos.location )];
-			if( wordRange.location == NSNotFound )
-				wordRange = NSMakeRange( NSMaxRange( wordStart ), [[self string] length] - NSMaxRange( wordStart )) ;
-			else wordRange = NSMakeRange( NSMaxRange( wordStart ), wordRange.location - NSMaxRange( wordStart ));
+			[_lastCompletionPrefix release];
+			_lastCompletionPrefix = [partialCompletion retain];
 
-			NSString *tempWord = [[self string] substringWithRange:wordRange];
-
-			do {
-				keepSearching = ! [[possibleNicks objectAtIndex:count] isEqualToString:tempWord];
-			} while ( ++count < [possibleNicks count] && keepSearching );
-
-			if( count == [possibleNicks count] ) count = 0;
-
-			if( ! keepSearching ) {
-				name = [possibleNicks objectAtIndex:count];
-				if( suffix && wordRange.location == 0 ) name = [name stringByAppendingString:@": "];
-				else if( suffix ) name = [name stringByAppendingString:@" "];
-				[self replaceCharactersInRange:wordRange withString:[possibleNicks objectAtIndex:count]];
-				[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
-			} else if( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) {
-				NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
+			if( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) {
+				wordRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
 				name = [possibleNicks objectAtIndex:0];
-				if( suffix && replacementRange.location == 0 ) name = [name stringByAppendingString:@": "];
-				else if( suffix ) name = [name stringByAppendingString:@" "];
-				[self replaceCharactersInRange:replacementRange withString:name];
-				[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
-				if( ! _firstTabComplettingBeep )
-					NSBeep(); // beep to signal that this is an ambigious completion, and there are more matches
-				_firstTabComplettingBeep = YES;
+			} else {
+				wordRange = [[self string] rangeOfCharacterFromSet:illegalCharacters options:0 range:NSMakeRange( curPos.location, [[self string] length] - curPos.location )];
+				if( wordRange.location == NSNotFound )
+					wordRange = NSMakeRange( NSMaxRange( wordStart ), [[self string] length] - NSMaxRange( wordStart )) ;
+				else wordRange = NSMakeRange( NSMaxRange( wordStart ), wordRange.location - NSMaxRange( wordStart ));
+
+				NSString *tempWord = [[self string] substringWithRange:wordRange];
+				BOOL keepSearching = YES;
+				int count = 0;
+
+				do {
+					keepSearching = ! [[possibleNicks objectAtIndex:count] isEqualToString:tempWord];
+				} while ( ++count < [possibleNicks count] && keepSearching );
+
+				if( count == [possibleNicks count] ) count = 0;
+
+				name = [possibleNicks objectAtIndex:count];
+				full = NO;
 			}
-		} else {
+
+			[_lastCompletionMatch release];
+			_lastCompletionMatch = [name retain];
+
+			if( suffix && wordRange.location == 0 ) name = [name stringByAppendingString:@": "];
+			else if( suffix ) name = [name stringByAppendingString:@" "];
+
+			_ignoreSelectionChanges = YES;
+			[self replaceCharactersInRange:wordRange withString:( full ? name : _lastCompletionMatch )];
+			[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
+			_ignoreSelectionChanges = NO;
+
 			if( ! _firstTabComplettingBeep )
-				NSBeep(); // no matches
+				NSBeep(); // beep to signal that this is an ambigious completion, and there are more matches
 			_firstTabComplettingBeep = YES;
+		} else {
+			NSBeep(); // no matches
+			_tabCompletting = NO;
 		}
+	} else {
+		[_lastCompletionMatch release];
+		_lastCompletionMatch = nil;
+
+		[_lastCompletionPrefix release];
+		_lastCompletionPrefix = nil;
 	}
 
 	return YES;

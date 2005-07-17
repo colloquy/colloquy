@@ -1072,20 +1072,20 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	return NO;
 }
 
-- (NSArray *) completionsFor:(NSString *) inFragment {
-	NSArray *retVal = nil;
-
-	if( [[self title] rangeOfString:inFragment options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
-		retVal = [NSArray arrayWithObject:[self title]];
-
-	return retVal;
-}
-
 - (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event {
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputRetainsFormatting"] || ! [[send textStorage] length] )
 		[send reset:nil];
 	else [send setString:@""];
 	return YES;
+}
+
+- (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
+	NSArray *retVal = nil;
+
+	if( [[self title] rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
+		retVal = [NSArray arrayWithObject:[self title]];
+
+	return retVal;
 }
 
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {

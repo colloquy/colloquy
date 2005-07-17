@@ -430,7 +430,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return NO;
 }
 
-- (NSArray *) completionsFor:(NSString *) inFragment {
+- (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
 	return nil;
 }
 

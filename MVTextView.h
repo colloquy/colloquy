@@ -4,8 +4,11 @@
 	NSSize _desiredSizeCached;
 	BOOL _usesSystemCompleteOnTab;
 	BOOL _tabCompletting;
+	BOOL _ignoreSelectionChanges;
 	BOOL _complettingWithSuffix;
 	BOOL _firstTabComplettingBeep;
+	NSString *_lastCompletionMatch;
+	NSString *_lastCompletionPrefix;
 }
 - (BOOL) checkKeyEvent:(NSEvent *) event;
 
@@ -29,5 +32,6 @@
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event;
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event;
 - (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event;
-- (NSArray *) completionsFor:(NSString *) inFragment;
+- (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix;
+- (void) textView:(NSTextView *) textView selectedCompletion:(NSString *) completion fromPrefix:(NSString *) prefix;
 @end

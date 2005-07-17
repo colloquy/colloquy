@@ -8,6 +8,7 @@
 	IBOutlet NSTextView *topicLine;
 
 	NSMutableArray *_sortedMembers;
+	NSMutableArray *_preferredTabCompleteNicknames;
 	NSMutableSet *_nextMessageAlertMembers;
 
 	BOOL _kickedFromRoom;
