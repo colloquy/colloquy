@@ -1471,11 +1471,10 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
 
-	if( [self _irssiConnection] ) {
-		IrssiLock();
-		irc_send_cmd_full( (IRC_SERVER_REC *) [self _irssiConnection], [self encodedBytesWithString:raw], now, now, FALSE);
-		IrssiUnlock();
-	}
+	IrssiLock();
+	if( _chatConnection )
+		irc_send_cmd_full( (IRC_SERVER_REC *) _chatConnection, [self encodedBytesWithString:raw], now, now, FALSE);
+	IrssiUnlock();
 }
 
 #pragma mark -
@@ -1559,9 +1558,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( [[user nickname] length] > 0 );
 
 	IrssiLock();
-
 	notifylist_add( [self encodedBytesWithString:[NSString stringWithFormat:@"%@!*@*", [user nickname]]], NULL, TRUE, 600 );
-
 	IrssiUnlock();
 }
 
@@ -1570,9 +1567,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( [[user nickname] length] > 0 );
 
 	IrssiLock();
-
 	notifylist_remove( [self encodedBytesWithString:[NSString stringWithFormat:@"%@!*@*", [user nickname]]] );
-
 	IrssiUnlock();
 }
 
@@ -1604,9 +1599,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		const char *msg = [[self class] _flattenedIRCStringForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 
 		IrssiLock();
-
-		irc_send_cmdv( (IRC_SERVER_REC *) _chatConnection, "AWAY :%s", msg );
-
+		if( _chatConnection )
+			irc_send_cmdv( (IRC_SERVER_REC *) _chatConnection, "AWAY :%s", msg );
 		IrssiUnlock();
 	} else {
 		[[self localUser] _setStatus:MVChatUserAvailableStatus];
@@ -1617,8 +1611,14 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (unsigned int) lag {
-	if( ! _chatConnection ) return 0;
-	return _chatConnection -> lag;
+	unsigned int lag = 0;
+
+	IrssiLock();
+	if( _chatConnection )
+		lag = _chatConnection -> lag;
+	IrssiUnlock();
+
+	return lag;
 }
 @end
 
@@ -1760,6 +1760,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	core_deinit();
 
 	IrssiUnlock();
+
 	pthread_mutex_destroy( &irssiLock );
 }
 
@@ -1788,7 +1789,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 		MODULE_DATA_SET( server, data );
 
-		((SERVER_REC *) _chatConnection) -> no_reconnect = 1;
+		_chatConnection -> no_reconnect = 1;
 	}
 
 	if( old ) server_unref( old );
@@ -1805,8 +1806,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	_chatConnectionSettings = settings;
 
 	if( _chatConnectionSettings ) {
-		server_connect_ref( (SERVER_CONNECT_REC *) _chatConnectionSettings );
-		((SERVER_CONNECT_REC *) _chatConnectionSettings) -> no_autojoin_channels = TRUE;
+		server_connect_ref( _chatConnectionSettings );
+		_chatConnectionSettings -> no_autojoin_channels = TRUE;
 	}
 
 	if( old ) server_connect_unref( old );
@@ -1969,11 +1970,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action {
-	if( [self _irssiConnection] ) {
-		IrssiLock();
-		if( ! action ) [self _irssiConnection] -> send_message( [self _irssiConnection], [self encodedBytesWithString:target], msg, 0 );
-		else irc_send_cmdv( (IRC_SERVER_REC *) [self _irssiConnection], "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:target], msg );
-		IrssiUnlock();
+	IrssiLock();
+
+	if( _chatConnection ) {
+		if( ! action ) _chatConnection -> send_message( _chatConnection, [self encodedBytesWithString:target], msg, 0 );
+		else irc_send_cmdv( (IRC_SERVER_REC *) _chatConnection, "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:target], msg );
 	}
+
+	IrssiUnlock();
 }
 @end
