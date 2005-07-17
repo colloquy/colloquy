@@ -1,6 +1,6 @@
 #import "NSNotificationAdditions.h"
 
-@implementation NSNotificationCenter (NSNotificationAdditions)
+@implementation NSNotificationCenter (NSNotificationCenterAdditions)
 - (void) postNotificationOnMainThread:(NSNotification *) notification {
 	[self postNotificationOnMainThread:notification waitUntilDone:NO];
 }
@@ -10,7 +10,7 @@
 }
 @end
 
-@implementation NSNotificationQueue (NSNotificationAdditions)
+@implementation NSNotificationQueue (NSNotificationQueueAdditions)
 - (void) enqueueNotificationOnMainThread:(NSNotification *) notification postingStyle:(NSPostingStyle) postingStyle {
 	[self enqueueNotificationOnMainThread:notification postingStyle:postingStyle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 }
