@@ -1089,11 +1089,19 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
+	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
 	NSMutableArray *ret = [NSMutableArray array];
+	NSString *suffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ? ( charRange.location == 0 ? @": " : @" " ) : @"" );
+
 	if( [search length] <= [[self title] length] && [search caseInsensitiveCompare:[[[self target] description] substringToIndex:[search length]]] == NSOrderedSame )
-		[ret addObject:[self title]];
-	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) [ret addObjectsFromArray:words];
+		[ret addObject:[[self title] stringByAppendingString:suffix]];
+
+	unichar chr = 0;
+	if( [[event charactersIgnoringModifiers] length] )
+		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
+
+	if( chr != NSTabCharacter ) [ret addObjectsFromArray:words];
 	return ret;
 }
 

@@ -37,6 +37,16 @@ changes\
 
 \f2\b0\fs20 \'b7
 \f3\fs24  
+\fs20 Improved built-in tab completion to be quicker and more intuitive. Typing tab will enter nickname completion mode. Any characters typed after tab will keep looking for matches. The first time there is a multiple match, the system will beep letting you know the prefix you typed was ambiguous (the beep will only happen once per completion session). Hitting the space key while you have a ambiguous prefix will accept the current nickname and jump to the end of the selection.
+\f1\b\fs28 \
+
+\f2\b0\fs20 \'b7
+\f3\fs24  
+\fs20 Improved nickname completion when using the system word complete. We will now append a space or a colin and space if the nickname is at the beginning of the line. Additional words no longer show up in the list, only nicknames. To get a complete list (nicknames and words) use the F5 key.
+\f1\b\fs28 \
+
+\f2\b0\fs20 \'b7
+\f3\fs24  
 \fs20 Improved our URL parser to highlight more international addresses. {\field{\*\fldinst{HYPERLINK "http%E2%80%AD://%E2%80%ACproject.colloquy.info/trac/ticket/189"}}{\fldrslt #189}}
 \f1\b\fs28 \
 

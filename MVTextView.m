@@ -49,14 +49,22 @@
 		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
 
 	if( chr == NSCarriageReturnCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
+		_tabCompletting = NO;
 		return YES;
 	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
+		_tabCompletting = NO;
 		return YES;
 	} else if( chr == NSTabCharacter ) {
 		return YES;
 	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
+		_tabCompletting = NO;
 		return YES;
 	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
+		_tabCompletting = NO;
+		return YES;
+	} else if( chr == NSDeleteCharacter || chr == NSBackspaceCharacter ) {
+		_tabCompletting = NO;
+	} else if( _tabCompletting && chr != NSDeleteCharacter && chr != NSBackspaceCharacter ) {
 		return YES;
 	}
 
@@ -68,16 +76,30 @@
 	if( [[event charactersIgnoringModifiers] length] )
 		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
 
-	if( chr == NSCarriageReturnCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
+	if( _tabCompletting && chr == ' ' ) {
+		NSRange curPos = [self selectedRange];
+		[self setSelectedRange:NSMakeRange( curPos.location + curPos.length, 0 )];
+		_tabCompletting = NO;
+		return YES;
+	} else if( chr == NSCarriageReturnCharacter && [[self delegate] respondsToSelector:@selector( textView:returnKeyPressed: )] ) {
 		if( [[self delegate] textView:self returnKeyPressed:event] ) return YES;
 	} else if( chr == NSEnterCharacter && [[self delegate] respondsToSelector:@selector( textView:enterKeyPressed: )] ) {
 		if( [[self delegate] textView:self enterKeyPressed:event] ) return YES;
 	} else if( chr == NSTabCharacter ) {
-		return [self autocompleteWithSuffix:( ! ( [event modifierFlags] & NSAlternateKeyMask ) )];
+		if( ! _tabCompletting ) {
+			_complettingWithSuffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) );
+			_firstTabComplettingBeep = NO;
+		}
+
+		_tabCompletting = YES;
+		return [self autocompleteWithSuffix:_complettingWithSuffix];
 	} else if( chr == 0x1B && [[self delegate] respondsToSelector:@selector( textView:escapeKeyPressed: )] ) {
 		if( [[self delegate] textView:self escapeKeyPressed:event] ) return YES;
 	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
 		if( [[self delegate] textView:self functionKeyPressed:event] ) return YES;
+	} else if( _tabCompletting && chr != NSDeleteCharacter && chr != NSBackspaceCharacter ) {
+		[self replaceCharactersInRange:[self selectedRange] withString:[event charactersIgnoringModifiers]];
+		return [self autocompleteWithSuffix:_complettingWithSuffix];
 	}
 
 	return NO;
@@ -87,12 +109,10 @@
 
 - (void) setBaseFont:(NSFont *) font {
 	[defaultTypingAttributes release];
-	if( font == nil ) {
+	if( ! font ) {
 		font = [NSFont userFontOfSize:0.];
 		defaultTypingAttributes = [[NSDictionary alloc] init];
-	} else {
-		defaultTypingAttributes = [[NSDictionary dictionaryWithObject: font forKey: NSFontAttributeName] retain];
-	}
+	} else defaultTypingAttributes = [[NSDictionary dictionaryWithObject: font forKey: NSFontAttributeName] retain];
 	[self setTypingAttributes:defaultTypingAttributes];
 	[self setFont:font];
 }
@@ -103,6 +123,7 @@
 	[self setTypingAttributes:defaultTypingAttributes];
 	[self resetCursorRects];
 	[[self undoManager] removeAllActionsWithTarget:[self textStorage]];
+	_tabCompletting = NO;
 }
 
 - (void) resetCursorRects {
@@ -276,9 +297,9 @@
 			[self replaceCharactersInRange:replacementRange withString:name];
 			if( suffix && replacementRange.location == 0 ) [self insertText:@": "];
 			else if( suffix ) [self insertText:@" "];
-		} else if ( [possibleNicks count] > 1 ) {
+			_tabCompletting = NO;
+		} else if( [possibleNicks count] > 1 ) {
 			// since several are available, we highlight the modified text
-
 			NSRange wordRange;
 			BOOL keepSearching = YES;
 			int count = 0;
@@ -309,12 +330,18 @@
 				else if( suffix ) name = [name stringByAppendingString:@" "];
 				[self replaceCharactersInRange:replacementRange withString:name];
 				[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
+				if( ! _firstTabComplettingBeep )
+					NSBeep(); // beep to signal that this is an ambigious completion, and there are more matches
+				_firstTabComplettingBeep = YES;
 			}
+		} else {
+			if( ! _firstTabComplettingBeep )
+				NSBeep(); // no matches
+			_firstTabComplettingBeep = YES;
 		}
 	}
 
 	return YES;
-
 }
 
 #pragma mark -

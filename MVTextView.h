@@ -3,6 +3,9 @@
 	NSSize lastPostedSize;
 	NSSize _desiredSizeCached;
 	BOOL _usesSystemCompleteOnTab;
+	BOOL _tabCompletting;
+	BOOL _complettingWithSuffix;
+	BOOL _firstTabComplettingBeep;
 }
 - (BOOL) checkKeyEvent:(NSEvent *) event;
 

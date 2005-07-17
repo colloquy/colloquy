@@ -596,17 +596,23 @@
 }
 
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
+	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
 	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	NSMutableArray *ret = [NSMutableArray array];
 	NSString *name = nil;
+	NSString *suffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ? ( charRange.location == 0 ? @": " : @" " ) : @"" );
 	unsigned int length = [search length];
-	while( length && ( name = [[enumerator nextObject] nickname] ) ) {
-		if( length <= [name length] && [search caseInsensitiveCompare:[name substringToIndex:length]] == NSOrderedSame ) {
-			[ret addObject:name];
-		}
-	}
-	[ret addObjectsFromArray:words];
+
+	while( length && ( name = [[enumerator nextObject] nickname] ) )
+		if( length <= [name length] && [search caseInsensitiveCompare:[name substringToIndex:length]] == NSOrderedSame )
+			[ret addObject:[name stringByAppendingString:suffix]];
+
+	unichar chr = 0;
+	if( [[event charactersIgnoringModifiers] length] )
+		chr = [[event charactersIgnoringModifiers] characterAtIndex:0];
+
+	if( chr != NSTabCharacter ) [ret addObjectsFromArray:words];
 	return ret;
 }
 
