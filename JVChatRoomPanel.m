@@ -613,6 +613,7 @@
 }
 
 - (void) textView:(NSTextView *) textView selectedCompletion:(NSString *) completion fromPrefix:(NSString *) prefix {
+	if( [completion isEqualToString:[[[self connection] localUser] nickname]] ) return;
 	[_preferredTabCompleteNicknames removeObject:completion];
 	[_preferredTabCompleteNicknames insertObject:completion atIndex:0];
 }
@@ -882,6 +883,9 @@
 
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[notification object]];
 	NSString *oldNickname = [[notification userInfo] objectForKey:@"oldNickname"];
+
+	unsigned int index = [_preferredTabCompleteNicknames indexOfObject:oldNickname];
+	if( index != NSNotFound ) [_preferredTabCompleteNicknames replaceObjectAtIndex:index withObject:[member nickname]];
 
 	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), oldNickname, [member nickname]] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"old", member, @"who", nil]];
 }
