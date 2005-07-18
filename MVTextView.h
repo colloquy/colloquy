@@ -6,7 +6,6 @@
 	BOOL _tabCompletting;
 	BOOL _ignoreSelectionChanges;
 	BOOL _complettingWithSuffix;
-	BOOL _firstTabComplettingBeep;
 	NSString *_lastCompletionMatch;
 	NSString *_lastCompletionPrefix;
 }

@@ -99,7 +99,6 @@
 		if( ! _tabCompletting ) {
 			NSRange curPos = [self selectedRange];
 			_complettingWithSuffix = ( curPos.location == [[self string] length] && ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ) );
-			_firstTabComplettingBeep = NO;
 		}
 
 		_tabCompletting = YES;
@@ -375,10 +374,6 @@
 			[self replaceCharactersInRange:wordRange withString:( full ? name : _lastCompletionMatch )];
 			[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
 			_ignoreSelectionChanges = NO;
-
-			if( ! _firstTabComplettingBeep )
-				NSBeep(); // beep to signal that this is an ambigious completion, and there are more matches
-			_firstTabComplettingBeep = YES;
 		} else {
 			NSBeep(); // no matches
 			_tabCompletting = NO;
