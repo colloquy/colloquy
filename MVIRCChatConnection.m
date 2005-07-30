@@ -1234,6 +1234,9 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	proto -> server_connect( _chatConnection );
 
+	rawlog_destroy( _chatConnection -> rawlog );
+	_chatConnection -> rawlog = NULL;
+
 	IrssiUnlock();
 }
 
