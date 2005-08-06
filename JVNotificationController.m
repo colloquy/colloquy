@@ -27,6 +27,7 @@ static JVNotificationController *sharedInstance = nil;
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_bubbles = [[NSMutableDictionary dictionary] retain];
+		_sounds = [[NSMutableDictionary alloc] init];
 		if( GrowlApplicationBridge && [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
 			[GrowlApplicationBridge setGrowlDelegate:self];
 		}
@@ -39,11 +40,13 @@ static JVNotificationController *sharedInstance = nil;
 	extern JVNotificationController *sharedInstance;
 
 	[_bubbles release];
+	[_sounds release];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
 	_bubbles = nil;
+	_sounds = nil;
 
 	[super dealloc];
 }
@@ -152,8 +155,12 @@ static JVNotificationController *sharedInstance = nil;
 	if( ! [path isAbsolutePath] )
 		path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
 
-	NSSound *sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
-	[sound setDelegate:self];
+	NSSound *sound;
+	if( ! (sound = [_sounds objectForKey:path]) ) {
+		sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
+		[_sounds setObject:sound forKey:path];
+		[sound autorelease];
+	}
 
 	// When run on a laptop using battery power, the play method may block while the audio
 	// hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
@@ -162,10 +169,6 @@ static JVNotificationController *sharedInstance = nil;
 
 	[sound play];
 	if( ! [sound isPlaying] ) [sound play];
-}
-
-- (void) sound:(NSSound *) sound didFinishPlaying:(BOOL) finish {
-	[sound autorelease];
 }
 
 - (NSDictionary *) registrationDictionaryForGrowl {

@@ -1,5 +1,6 @@
 @interface JVNotificationController : NSObject {
 	NSMutableDictionary *_bubbles;
+	NSMutableDictionary *_sounds;
 }
 + (JVNotificationController *) defaultController;
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context;
