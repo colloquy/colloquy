@@ -72,6 +72,19 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self setNextTextView:nil];
+
+	[_transcript release];
+	[_style release];
+	[_styleVariant release];
+	[_styleParameters release];
+	[_emoticons release];
+
+	_transcript = nil;
+	_style = nil;
+	_styleVariant = nil;
+	_styleParameters = nil;
+	_emoticons = nil;
+
 	[super dealloc];
 }
 
