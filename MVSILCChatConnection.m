@@ -885,14 +885,17 @@ static SilcClientOperations silcClientOps = {
 - (void) dealloc {
 	[self disconnect];
 
-	SilcLock( _silcClient );
+	// if we don't have a scheduler, we don't have a lock. but we don't need to
+	// lock anything anyway, because silc can't be connected without scheduler ...
+	if( _silcClient -> schedule ) SilcLock( _silcClient );
 	if( _silcClient -> realname ) free( _silcClient -> realname );
 	if( _silcClient -> username ) free( _silcClient -> username );
 	if( _silcClient -> hostname ) free( _silcClient -> hostname );
 	if( _silcClient -> nickname ) free( _silcClient -> nickname );
-	SilcUnlock( _silcClient );
+	if( _silcClient -> schedule ) SilcUnlock( _silcClient );
 
-	silc_client_stop( _silcClient );
+	// we only stop if we have an scheduler - silc client is actually running
+	if( _silcClient -> schedule ) silc_client_stop( _silcClient );
 	silc_client_free( _silcClient );
 	_silcClient = NULL;
 
