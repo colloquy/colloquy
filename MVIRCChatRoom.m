@@ -237,16 +237,3 @@
 	[[self connection] sendRawMessageWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 }
 @end
-
-#pragma mark -
-
-@implementation MVIRCChatRoom (MVIRCChatRoomPrivate)
-- (void) _updateMemberUser:(MVChatUser *) user fromOldNickname:(NSString *) oldNickname {
-	NSNumber *modes = [[[_memberModes objectForKey:[oldNickname lowercaseString]] retain] autorelease];
-	if( ! modes ) return;
-	@synchronized( _memberModes ) {
-		[_memberModes removeObjectForKey:[oldNickname lowercaseString]];
-		[_memberModes setObject:modes forKey:[user uniqueIdentifier]];
-	}
-}
-@end

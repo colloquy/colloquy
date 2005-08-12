@@ -664,7 +664,7 @@ static void MVChatUserNicknameChanged( IRC_SERVER_REC *server, const char *data,
 
 	while( ( room = [enumerator nextObject] ) ) {
 		if( ! [room isJoined] || ! [room hasUser:user] ) continue;
-		[room _updateMemberUser:user fromOldNickname:oldNickname];
+		[room _updateMemberUser:user fromOldUniqueIdentifier:[oldNickname lowercaseString]];
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];

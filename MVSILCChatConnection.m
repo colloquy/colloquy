@@ -184,8 +184,18 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			NSString *oldNickname = [NSString stringWithUTF8String:oldclient -> nickname];
 			MVChatUser *user = [self _chatUserWithClientEntry:oldclient];
 			if( ! user ) break;
+			
+			NSData *oldIdentifier = [user uniqueIdentifier];
 
 			[self _updateKnownUser:user withClientEntry:newclient];
+
+			NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
+			MVChatRoom *room = nil;
+
+			while( ( room = [enumerator nextObject] ) ) {
+				if( ! [room isJoined] || ! [room hasUser:user] ) continue;
+				[room _updateMemberUser:user fromOldUniqueIdentifier:oldIdentifier];
+			}
 
 			NSNotification *note = [NSNotification notificationWithName:MVChatUserNicknameChangedNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"oldNickname", nil]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -535,8 +545,18 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		SilcClientEntry local_entry = va_arg( list, SilcClientEntry );
 		char *nickname = va_arg( list, char * );
 		/*const SilcClientID *old_client_id =*/ va_arg( list, SilcClientID * );
+		
+		NSData *oldIdentifier = [[self localUser] uniqueIdentifier];
 
-		[(MVSILCChatUser *)[self localUser] updateWithClientEntry:local_entry];
+		[(MVSILCChatUser *)[self localUser] updateWithClientEntry:[self _silcConn] -> local_entry];
+
+		NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
+		MVChatRoom *room = nil;
+
+		while( ( room = [enumerator nextObject] ) ) {
+			if( ! [room isJoined] || ! [room hasUser:[self localUser]] ) continue;
+			[room _updateMemberUser:[self localUser] fromOldUniqueIdentifier:oldIdentifier];
+		}
 
 		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nickname], @"nickname", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];

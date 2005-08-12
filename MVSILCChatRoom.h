@@ -18,7 +18,7 @@
 #pragma mark -
 
 @interface MVChatRoom (MVChatRoomPrivate)
-- (void) _updateMemberUser:(MVChatUser *) user fromOldNickname:(NSString *) oldNickname;
+- (void) _updateMemberUser:(MVChatUser *) user fromOldUniqueIdentifier:(id) identifier;
 - (void) _clearMemberUsers;
 - (void) _clearBannedUsers;
 - (void) _addMemberUser:(MVChatUser *) user;

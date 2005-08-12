@@ -590,6 +590,15 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
+
+- (void) _updateMemberUser:(MVChatUser *) user fromOldUniqueIdentifier:(id) identifier {
+	NSNumber *modes = [[[_memberModes objectForKey:identifier] retain] autorelease];
+	if( ! modes ) return;
+	@synchronized( _memberModes ) {
+		[_memberModes removeObjectForKey:identifier];
+		[_memberModes setObject:modes forKey:[user uniqueIdentifier]];
+	}
+}
 @end
 
 #pragma mark -
