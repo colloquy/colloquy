@@ -532,9 +532,11 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 	case SILC_COMMAND_IDENTIFY:
 		break;
 	case SILC_COMMAND_NICK: {
-		/*SilcClientEntry local_entry =*/ va_arg( list, SilcClientEntry );
+		SilcClientEntry local_entry = va_arg( list, SilcClientEntry );
 		char *nickname = va_arg( list, char * );
 		/*const SilcClientID *old_client_id =*/ va_arg( list, SilcClientID * );
+
+		[(MVSILCChatUser *)[self localUser] updateWithClientEntry:local_entry];
 
 		NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nickname], @"nickname", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
