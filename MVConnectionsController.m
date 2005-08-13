@@ -403,7 +403,7 @@ static NSMenu *favoritesMenu = nil;
 	if( [connections selectedRow] == -1 ) return;
 
 	if( [sender tag] ) {
-		MVChatUser *user = [[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] chatUserWithUniqueIdentifier:[userToMessage stringValue]];
+		MVChatUser *user = [[[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] chatUsersWithNickname:[userToMessage stringValue]] anyObject];
 		[[JVChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 	}
 }
