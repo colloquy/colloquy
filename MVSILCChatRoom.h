@@ -13,6 +13,8 @@
 
 - (void) _setChannelUserMode:(unsigned int)SilcMode forUser:(MVChatUser *) user;
 - (void) _removeChannelUserMode:(unsigned int)SilcMode forUser:(MVChatUser *) user;
+
+- (void) updateWithChannelEntry:(SilcChannelEntry) channelEntry;
 @end
 
 #pragma mark -

@@ -6,21 +6,31 @@
 - (id) initWithChannelEntry:(SilcChannelEntry) channelEntry andConnection:(MVSILCChatConnection *) connection {
 	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
-
-		SilcLock( [connection _silcClient] );
-
-		_name = [[NSString allocWithZone:[self zone]] initWithUTF8String:channelEntry -> channel_name];
-
-		unsigned char *identifier = silc_id_id2str( channelEntry -> id, SILC_ID_CHANNEL );
-		unsigned len = silc_id_get_len( channelEntry -> id, SILC_ID_CHANNEL );
-		_uniqueIdentifier = [[NSData allocWithZone:[self zone]] initWithBytes:identifier length:len];
-
-		_channelEntry = channelEntry;
-
-		SilcUnlock( [connection _silcClient] );
+		
+		[self updateWithChannelEntry:channelEntry];
 	}
 
 	return self;
+}
+
+#pragma mark -
+
+- (void) updateWithChannelEntry:(SilcChannelEntry) channelEntry {
+	MVSILCChatConnection *connection = [self connection];
+
+	SilcLock( [connection _silcClient] );
+	
+	[_name release];
+	_name = [[NSString allocWithZone:[self zone]] initWithUTF8String:channelEntry -> channel_name];
+
+	[_uniqueIdentifier release];
+	unsigned char *identifier = silc_id_id2str( channelEntry -> id, SILC_ID_CHANNEL );
+	unsigned len = silc_id_get_len( channelEntry -> id, SILC_ID_CHANNEL );
+	_uniqueIdentifier = [[NSData allocWithZone:[self zone]] initWithBytes:identifier length:len];
+	
+	_channelEntry = channelEntry;
+	
+	SilcUnlock( [connection _silcClient] );
 }
 
 #pragma mark -
