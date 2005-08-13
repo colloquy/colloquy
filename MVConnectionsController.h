@@ -10,6 +10,7 @@
 	IBOutlet NSPanel *nicknameAuth;
 	IBOutlet NSPanel *certificateAuth;
 	IBOutlet NSPanel *publicKeyVerification;
+	IBOutlet NSPanel *userSelectionPanel;
 
 	/* Nick Auth */
 	IBOutlet NSTextField *authNickname;
@@ -48,6 +49,11 @@
 
 	/* Message User */
 	IBOutlet NSTextField *userToMessage;
+	
+	/* User selection dialog */
+	IBOutlet NSTextField *userSelectionDescription;
+	IBOutlet NSTableView *userSelectionTable;
+	NSArray *_userSelectionPossibleUsers;
 
 	NSMutableArray *_bookmarks;
 	NSMutableArray *_joinRooms;
@@ -80,6 +86,8 @@
 - (IBAction) sendCertificatePassword:(id) sender;
 
 - (IBAction) verifiedPublicKey:(id) sender;
+
+- (IBAction) userSelectionSelected:(id) sender;
 
 - (NSArray *) connections;
 - (NSArray *) connectedConnections;

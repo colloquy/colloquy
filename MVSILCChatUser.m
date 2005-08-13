@@ -50,8 +50,11 @@
 	if( clientEntry -> realname )
 		[self _setRealName:[NSString stringWithUTF8String:clientEntry -> realname]];
 
-	if( clientEntry -> fingerprint )
-		[self _setFingerprint:[NSString stringWithUTF8String:(char *)clientEntry -> fingerprint]];
+	if( clientEntry -> fingerprint ) {
+		char *tmp = silc_fingerprint( clientEntry -> fingerprint, clientEntry -> fingerprint_len);
+		[self _setFingerprint:[NSString stringWithUTF8String:tmp]];
+		silc_free( tmp );
+	}
 
 	if( clientEntry -> public_key ) {
 		unsigned long len = 0;

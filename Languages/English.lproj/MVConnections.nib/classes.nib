@@ -15,6 +15,7 @@
                 sendPassword = id; 
                 showConnectionManager = id; 
                 toggleNewConnectionDetails = id; 
+                userSelectionSelected = id; 
                 verifiedPublicKey = id; 
             }; 
             CLASS = MVConnectionsController; 
@@ -53,6 +54,9 @@
                 publicKeyVerification = NSPanel; 
                 showDetails = NSButton; 
                 sslConnection = NSButton; 
+                userSelectionDescription = NSTextField; 
+                userSelectionPanel = NSPanel; 
+                userSelectionTable = NSTableView; 
                 userToMessage = NSTextField; 
             }; 
             SUPERCLASS = NSWindowController; 

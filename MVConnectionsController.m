@@ -163,6 +163,9 @@ static NSMenu *favoritesMenu = nil;
 	[connections registerForDraggedTypes:[NSArray arrayWithObjects:MVConnectionPboardType,NSURLPboardType,@"CorePasteboardFlavorType 0x75726C20",nil]];
 	[connections setTarget:self];
 	[connections setDoubleAction:@selector( _connect: )];
+	
+	[userSelectionTable setTarget:self];
+	[userSelectionTable setDoubleAction:@selector( userSelectionSelected: )];
 
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
@@ -403,7 +406,25 @@ static NSMenu *favoritesMenu = nil;
 	if( [connections selectedRow] == -1 ) return;
 
 	if( [sender tag] ) {
-		MVChatUser *user = [[[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] chatUsersWithNickname:[userToMessage stringValue]] anyObject];
+		NSSet *users = [[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] chatUsersWithNickname:[userToMessage stringValue]];
+		MVChatUser *user;
+		
+		if ( [users count] == 0 ) return;
+		else if ( [users count] == 1 ) user = [users anyObject];
+		else {
+			[self _validateToolbar];
+		
+			_userSelectionPossibleUsers = [[users allObjects] retain];
+			[userSelectionDescription setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Multiple users with the name '%@' have been found.", "multiple user same nickname, user selection description"), [userToMessage stringValue]]];
+			
+			[userSelectionTable reloadData];
+			[userSelectionTable selectRow:0 byExtendingSelection:NO];
+			
+			[[NSApplication sharedApplication] beginSheet:userSelectionPanel modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+
+			return;
+		}
+		
 		[[JVChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 	}
 }
@@ -476,6 +497,28 @@ static NSMenu *favoritesMenu = nil;
 			[[NSNotificationCenter defaultCenter] postNotification:note];
 		}
 	}
+}
+
+#pragma mark -
+#pragma mark User Selection
+
+- (IBAction) userSelectionSelected:(id) sender {
+	[userSelectionPanel orderOut:nil];
+	[[NSApplication sharedApplication] endSheet:userSelectionPanel];
+	
+	int row = [userSelectionTable selectedRow];
+	
+	if ( [sender tag] || row == -1 ) { 
+		[_userSelectionPossibleUsers release];
+		_userSelectionPossibleUsers = nil;
+		return;
+	}
+	
+	[[JVChatController defaultController] chatViewControllerForUser:[_userSelectionPossibleUsers objectAtIndex:row] ifExists:NO];
+	[userSelectionPanel orderOut:nil];
+	
+	[_userSelectionPossibleUsers release];
+	_userSelectionPossibleUsers = nil;
 }
 
 #pragma mark -
@@ -890,6 +933,7 @@ static NSMenu *favoritesMenu = nil;
 - (int) numberOfRowsInTableView:(NSTableView *) view {
 	if( view == connections ) return [_bookmarks count];
 	else if( view == newJoinRooms ) return [_joinRooms count];
+	else if( view == userSelectionTable ) return [_userSelectionPossibleUsers count];
 	return 0;
 }
 
@@ -906,6 +950,14 @@ static NSMenu *favoritesMenu = nil;
 		}
 	} else if( view == newJoinRooms ) {
 		return [_joinRooms objectAtIndex:row];
+	} else if ( view == userSelectionTable ) {
+		MVChatUser *user = [_userSelectionPossibleUsers objectAtIndex:row];
+		
+		if( [[column identifier] isEqualToString:@"hostname"] ) {
+			return [user address];
+		} else if( [[column identifier] isEqualToString:@"fingerprint"] ) {
+			return [user fingerprint];
+		}
 	}
 
 	return nil;
