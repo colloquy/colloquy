@@ -661,7 +661,9 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 
 	if( status == SILC_CLIENT_CONN_SUCCESS || status == SILC_CLIENT_CONN_SUCCESS_RESUME ) {
 		[self _initLocalUser];
-		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
+		
+		// we need to wait for this to complete, otherwise sendRawMessage will queue the commands again
+		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:YES];
 
 		@synchronized( [self _queuedCommands] ) {
 			NSEnumerator *enumerator = [[self _queuedCommands] objectEnumerator];
