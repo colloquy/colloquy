@@ -1,0 +1,37 @@
+diff -ur silc-toolkit-1.0.orig copy/lib/silcclient/client_notify.c silc-toolkit-1.0/lib/silcclient/client_notify.c
+--- silc-toolkit-1.0.orig copy/lib/silcclient/client_notify.c	2005-05-10 17:02:55.000000000 +0200
++++ silc-toolkit-1.0/lib/silcclient/client_notify.c	2005-08-14 17:48:02.000000000 +0200
+@@ -627,33 +627,6 @@
+     if (!tmp)
+       goto out;
+ 
+-    /* Check whether nickname changed at all.  It is possible that nick
+-       change notify is received but nickname didn't change, only the
+-       ID changes.  Check whether the hashes in the Client ID match, if
+-       they do nickname didn't change. */
+-    if (SILC_ID_COMPARE_HASH(client_entry->id, client_id) &&
+-	silc_utf8_strcasecmp(tmp, client_entry->nickname)) {
+-      /* Nickname didn't change.  Update only Client ID. */
+-
+-      /* Normalize nickname */
+-      tmp = silc_identifier_check(tmp, strlen(tmp),
+-				  SILC_STRING_UTF8, 128, NULL);
+-      if (!tmp)
+-	goto out;
+-
+-      silc_idcache_del_by_context(conn->internal->client_cache,
+-				  client_entry);
+-      silc_free(client_entry->id);
+-      client_entry->id = silc_id_dup(client_id, SILC_ID_CLIENT);
+-      silc_idcache_add(conn->internal->client_cache, tmp,
+-		       client_entry->id, client_entry, 0, NULL);
+-
+-      /* Notify application */
+-      client->internal->ops->notify(client, conn, type,
+-				    client_entry, client_entry);
+-      break;
+-    }
+-
+     /* Create new client entry, and save all old information with the
+        new nickname and client ID */
+     client_entry2 = silc_client_add_client(client, conn, NULL, NULL,

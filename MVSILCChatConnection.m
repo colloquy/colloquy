@@ -196,6 +196,10 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 				if( ! [room isJoined] || ! [room hasUser:user] ) continue;
 				[room _updateMemberUser:user fromOldUniqueIdentifier:oldIdentifier];
 			}
+			
+			// only client id changed, don't display nick change to user
+			if ( [oldNickname isEqualToString:[NSString stringWithUTF8String:newclient -> nickname]] )
+				break;
 
 			NSNotification *note = [NSNotification notificationWithName:MVChatUserNicknameChangedNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"oldNickname", nil]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
