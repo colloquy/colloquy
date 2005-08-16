@@ -3,6 +3,25 @@
 #import "JVChatMessage.h"
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
+#import "NSStringAdditions.h"
+
+static PyObject *LoadArbitraryPythonModule( const char *name, const char *directory, const char *newname ) {
+	if( ! name || ! directory ) return NULL;
+	if( ! newname ) newname = name;
+
+	PyObject *impModule = PyImport_ImportModule( "imp" );
+	if( ! impModule ) return NULL;
+
+	PyObject *result = PyObject_CallMethod( impModule, "find_module", "s[s]", name, directory );
+	if( ! result || PyTuple_GET_SIZE( result ) != 3 ) return NULL;
+
+	PyObject *ret = PyObject_CallMethod( impModule, "load_module", "sOOO", newname, PyTuple_GetItem( result, 0 ), PyTuple_GetItem( result, 1 ), PyTuple_GetItem( result, 2 ) );
+
+	Py_DECREF( result );
+	Py_DECREF( impModule );
+
+	return ret;
+}
 
 NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 
@@ -30,13 +49,12 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	if( self = [self initWithManager:manager] ) {
 		_path = [path copyWithZone:[self zone]];
 
-		PyObject *pth = PySys_GetObject( "path" );
-		PyObject *pwd = PyString_FromString( [[[path stringByStandardizingPath] stringByDeletingLastPathComponent] fileSystemRepresentation] );
+		NSString *moduleName = [[path lastPathComponent] stringByDeletingPathExtension];
+		NSString *moduleFolder = [path stringByDeletingLastPathComponent];
+		_uniqueModuleName = [[NSString locallyUniqueString] retain];
 
-		PyList_Insert( pth, 0, pwd );
-        Py_DECREF( pwd );
+		_scriptModule = LoadArbitraryPythonModule( [moduleName fileSystemRepresentation], [moduleFolder fileSystemRepresentation], [_uniqueModuleName UTF8String] );
 
-		_scriptModule = PyImport_ImportModule( (char *)[[[path lastPathComponent] stringByDeletingPathExtension] UTF8String] );
 		if( ! _scriptModule ) {
 			PyErr_Print();
 			PyErr_Clear();
@@ -54,10 +72,15 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	Py_XDECREF( _scriptModule );
+	_scriptModule = NULL;
+
 	[_path release];
+	[_uniqueModuleName release];
 	[_modDate release];
 
 	_path = nil;
+	_uniqueModuleName = nil;
 	_manager = nil;
 	_modDate = nil;
 
@@ -77,8 +100,11 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 - (void) reloadFromDisk {
 	[self performSelector:@selector( unload )];
 
-	if( _scriptModule ) _scriptModule = PyImport_ReloadModule( _scriptModule );
-	else _scriptModule = PyImport_ImportModule( (char *)[[[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] UTF8String] );
+	NSString *moduleName = [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension];
+	NSString *moduleFolder = [[self scriptFilePath] stringByDeletingLastPathComponent];
+
+	Py_XDECREF( _scriptModule );
+	_scriptModule = LoadArbitraryPythonModule( [moduleName fileSystemRepresentation], [moduleFolder fileSystemRepresentation], [_uniqueModuleName UTF8String] );
 
 	if( ! _scriptModule ) {
 		PyErr_Print();
@@ -126,7 +152,11 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 #pragma mark -
 
 - (id) callScriptFunctionNamed:(NSString *) functionName withArguments:(NSArray *) arguments forSelector:(SEL) selector {
+	if( ! _scriptModule ) return nil;
+
 	PyObject *dict = PyModule_GetDict( _scriptModule );
+	if( ! dict ) return nil;
+
 	PyObject *func = PyDict_GetItemString( dict, [functionName UTF8String] );
 
 	if( func && PyCallable_Check( func ) ) {

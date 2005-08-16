@@ -6,6 +6,7 @@ extern NSString *JVPythonErrorDomain;
 	MVChatPluginManager *_manager;
 	NSString *_path;
 	NSDate *_modDate;
+	NSString *_uniqueModuleName;
 	PyObject *_scriptModule;
 }
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
