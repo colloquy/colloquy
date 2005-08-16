@@ -196,9 +196,10 @@ static BOOL fileTransferSignalsRegistered = NO;
 #pragma mark -
 
 - (BOOL) isPassive {
-	@synchronized( self ) {
-		if( _passive || ! [self _DCCFileRecord] ) return _passive;
+	if( _passive || ! [self _DCCFileRecord] )
+		return _passive;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_passive = dcc_is_passive( [self _DCCFileRecord] );
@@ -211,9 +212,10 @@ static BOOL fileTransferSignalsRegistered = NO;
 #pragma mark -
 
 - (unsigned long long) finalSize {
-	@synchronized( self ) {
-		if( _finalSize || ! [self _DCCFileRecord] ) return _finalSize;
+	if( _finalSize || ! [self _DCCFileRecord] )
+		return _finalSize;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_finalSize = [self _DCCFileRecord] -> size;
@@ -224,9 +226,10 @@ static BOOL fileTransferSignalsRegistered = NO;
 }
 
 - (unsigned long long) transfered {
-	@synchronized( self ) {
-		if( ! [self _DCCFileRecord] ) return _transfered;
+	if( ! [self _DCCFileRecord] )
+		return _transfered;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_transfered = [self _DCCFileRecord] -> transfd;
@@ -253,9 +256,10 @@ static BOOL fileTransferSignalsRegistered = NO;
 }
 
 - (unsigned long long) startOffset {
-	@synchronized( self ) {
-		if( _startOffset || ! [self _DCCFileRecord] ) return _startOffset;
+	if( _startOffset || ! [self _DCCFileRecord] )
+		return _startOffset;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_startOffset = [self _DCCFileRecord] -> skipped;
@@ -282,9 +286,10 @@ static BOOL fileTransferSignalsRegistered = NO;
 }
 
 - (unsigned short) port {
-	@synchronized( self ) {
-		if( _port || ! [self _DCCFileRecord] ) return _port;
+	if( _port || ! [self _DCCFileRecord] )
+		return _port;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_port = [self _DCCFileRecord] -> port;
@@ -405,9 +410,10 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (BOOL) isPassive {
-	@synchronized( self ) {
-		if( _passive || ! [self _DCCFileRecord] ) return _passive;
+	if( _passive || ! [self _DCCFileRecord] )
+		return _passive;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_passive = dcc_is_passive( [self _DCCFileRecord] );
@@ -420,9 +426,10 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (unsigned long long) finalSize {
-	@synchronized( self ) {
-		if( _finalSize || ! [self _DCCFileRecord] ) return _finalSize;
+	if( _finalSize || ! [self _DCCFileRecord] )
+		return _finalSize;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_finalSize = [self _DCCFileRecord] -> size;
@@ -433,9 +440,9 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 }
 
 - (unsigned long long) transfered {
-	@synchronized( self ) {
-		if( ! [self _DCCFileRecord] ) return _transfered;
+	if( ! [self _DCCFileRecord] ) return _transfered;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_transfered = [self _DCCFileRecord] -> transfd;
@@ -462,9 +469,10 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 }
 
 - (unsigned long long) startOffset {
-	@synchronized( self ) {
-		if( _startOffset || ! [self _DCCFileRecord] ) return _startOffset;
+	if( _startOffset || ! [self _DCCFileRecord] )
+		return _startOffset;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_startOffset = [self _DCCFileRecord] -> skipped;
@@ -491,9 +499,10 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 }
 
 - (unsigned short) port {
-	@synchronized( self ) {
-		if( _port || ! [self _DCCFileRecord] ) return _port;
+	if( _port || ! [self _DCCFileRecord] )
+		return _port;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] )
 			_port = [self _DCCFileRecord] -> port;
@@ -538,9 +547,9 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 #pragma mark -
 
 - (void) reject {
-	@synchronized( self ) {
-		if( ! [self _DCCFileRecord] ) return;
+	if( ! [self _DCCFileRecord] ) return;
 
+	@synchronized( self ) {
 		IrssiLock();
 		if( [self _DCCFileRecord] ) {
 			GET_DCC_REC *dcc = [self _DCCFileRecord];
@@ -565,9 +574,9 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 }
 
 - (void) acceptByResumingIfPossible:(BOOL) resume {
-	@synchronized( self ) {
-		if( ! [self _DCCFileRecord] ) return;
+	if( ! [self _DCCFileRecord] ) return;
 
+	@synchronized( self ) {
 		if( ! [[NSFileManager defaultManager] isReadableFileAtPath:[self destination]] )
 			resume = NO;
 
