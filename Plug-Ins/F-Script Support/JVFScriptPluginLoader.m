@@ -151,7 +151,7 @@
 					return;
 				}
 
-				JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:[NSString stringWithFormat:@"%@/%@", path, file] withManager:_manager] autorelease];
+				JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:[path stringByAppendingPathComponent:file] withManager:_manager] autorelease];
 				if( plugin ) [_manager addPlugin:plugin];
 			}
 		}
