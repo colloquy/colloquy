@@ -45,10 +45,10 @@
 				path = [path stringByStandardizingPath];
 
 				NSEnumerator *pluginEnum = [_manager enumeratorOfPluginsOfClass:[JVPythonChatPlugin class] thatRespondToSelector:@selector( init )];
-				JVPythonChatPlugin *plugin;
+				JVPythonChatPlugin *plugin = nil;
 
 				while( plugin = [pluginEnum nextObject] )
-					if( [[plugin scriptFilePath] isEqualToString:path] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
+					if( [[[plugin scriptFilePath] stringByDeletingPathExtension] isEqualToString:[path stringByDeletingPathExtension]] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
 						break;
 
 				if( ! plugin ) {
@@ -81,7 +81,7 @@
 
 		return YES;
 	}
-	
+
 	return NO;
 }
 
@@ -96,10 +96,10 @@
 		NSEnumerator *enumerator = [paths objectEnumerator];
 		NSString *path = nil;
 		while( path = [enumerator nextObject] ) {
-			path = [path stringByAppendingPathComponent:name];
-			NSString *pathExt = [path stringByAppendingPathExtension:@"pyo"];
+			path = [path stringByAppendingPathComponent:[name stringByDeletingPathExtension]];
+			NSString *pathExt = [path stringByAppendingPathExtension:@"py"];
+			if( ! [fm fileExistsAtPath:pathExt] ) pathExt = [path stringByAppendingPathExtension:@"pyo"];
 			if( ! [fm fileExistsAtPath:pathExt] ) pathExt = [path stringByAppendingPathExtension:@"pyc"];
-			if( ! [fm fileExistsAtPath:pathExt] ) pathExt = [path stringByAppendingPathExtension:@"py"];
 
 			if( [fm fileExistsAtPath:pathExt] ) {
 				if( ! _pyobjcInstalled ) {
@@ -125,12 +125,13 @@
 	NSString *file = nil, *path = nil;
 
 	NSMutableSet *foundModules = [NSMutableSet set];
+	NSFileManager *fm = [NSFileManager defaultManager];
 
 	NSEnumerator *enumerator = [paths objectEnumerator];
 	while( path = [enumerator nextObject] ) {
-		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
+		NSEnumerator *denumerator = [[fm directoryContentsAtPath:path] objectEnumerator];
 		while( ( file = [denumerator nextObject] ) ) {
-			if( [[file pathExtension] isEqualToString:@"py"] || [[file pathExtension] isEqualToString:@"pyc"] || [[file pathExtension] isEqualToString:@"pyo"] ) {
+			if( [[file pathExtension] isEqualToString:@"pyc"] || [[file pathExtension] isEqualToString:@"py"] || [[file pathExtension] isEqualToString:@"pyo"] ) {
 				if( ! _pyobjcInstalled ) {
 					[self displayInstallationWarning];
 					return;
@@ -140,7 +141,13 @@
 				if( [foundModules containsObject:moduleName] ) continue;
 				[foundModules addObject:moduleName];
 
-				JVPythonChatPlugin *plugin = [[[JVPythonChatPlugin alloc] initWithScriptAtPath:[NSString stringWithFormat:@"%@/%@", path, file] withManager:_manager] autorelease];
+				// try to find the human editable version and use it's path
+				file = [[path stringByAppendingPathComponent:file] stringByDeletingPathExtension];
+				NSString *pathExt = [file stringByAppendingPathExtension:@"py"];
+				if( ! [fm fileExistsAtPath:pathExt] ) pathExt = [file stringByAppendingPathExtension:@"pyo"];
+				if( ! [fm fileExistsAtPath:pathExt] ) pathExt = [file stringByAppendingPathExtension:@"pyc"];
+
+				JVPythonChatPlugin *plugin = [[[JVPythonChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager] autorelease];
 				if( plugin ) [_manager addPlugin:plugin];
 			}
 		}

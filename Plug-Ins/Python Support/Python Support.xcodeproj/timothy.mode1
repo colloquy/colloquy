@@ -287,7 +287,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>2</integer>
+									<integer>4</integer>
 									<integer>1</integer>
 									<integer>0</integer>
 								</array>
@@ -334,7 +334,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>JVPythonChatPlugin.m</string>
+								<string>JVPythonPluginLoader.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -342,27 +342,27 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>JVPythonChatPlugin.m</string>
+										<string>JVPythonPluginLoader.m</string>
 										<key>_historyCapacity</key>
 										<integer>10</integer>
 										<key>bookmark</key>
-										<string>1CE6921008B19E5B006D9CA0</string>
+										<string>1CE695CB08B201F4006D9CA0</string>
 										<key>history</key>
 										<array>
-											<string>1C0A1A4508B05D1900324E25</string>
 											<string>1CE6918C08B1843F006D9CA0</string>
 											<string>1CE691BE08B1898D006D9CA0</string>
-											<string>1CE691CC08B18D9E006D9CA0</string>
-											<string>1CE691D508B1967C006D9CA0</string>
-											<string>1CE691E508B199C2006D9CA0</string>
 											<string>1CE691F208B19B9F006D9CA0</string>
 											<string>1CE691FF08B19C18006D9CA0</string>
 											<string>1CE6920008B19C18006D9CA0</string>
-											<string>1CE6920108B19C18006D9CA0</string>
+											<string>1CE6955908B1ED8A006D9CA0</string>
+											<string>1CE695AD08B1FB91006D9CA0</string>
+											<string>1CE695AE08B1FB91006D9CA0</string>
+											<string>1CE695AF08B1FB91006D9CA0</string>
+											<string>1CE695B008B1FB91006D9CA0</string>
 										</array>
 										<key>nextStack</key>
 										<array>
-											<string>1CE6920208B19C18006D9CA0</string>
+											<string>1CE695B508B1FB91006D9CA0</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -370,8 +370,13 @@
 											<string>1C0A146808B03B3700324E25</string>
 											<string>1CE691AF08B1885F006D9CA0</string>
 											<string>1CE691B108B1885F006D9CA0</string>
-											<string>1CE691D708B1967C006D9CA0</string>
 											<string>1CE691E808B199C2006D9CA0</string>
+											<string>1CE6955C08B1ED8A006D9CA0</string>
+											<string>1CE6958C08B1F75D006D9CA0</string>
+											<string>1CE695B108B1FB91006D9CA0</string>
+											<string>1CE695B208B1FB91006D9CA0</string>
+											<string>1CE695B308B1FB91006D9CA0</string>
+											<string>1CE695B408B1FB91006D9CA0</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -550,7 +555,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>145858139.651602</real>
+	<real>145883636.31015301</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>2</integer>
 	<key>ToolbarIsVisible</key>
@@ -592,7 +597,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>JVPythonChatPlugin.m</string>
+								<string>JVPythonPluginLoader.m</string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>

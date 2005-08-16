@@ -62,7 +62,7 @@
 					path = [path stringByStandardizingPath];
 
 					NSEnumerator *pluginEnum = [_manager enumeratorOfPluginsOfClass:[JVFScriptChatPlugin class] thatRespondToSelector:@selector( init )];
-					JVFScriptChatPlugin *plugin;
+					JVFScriptChatPlugin *plugin = nil;
 
 					while( plugin = [pluginEnum nextObject] )
 						if( [[plugin scriptFilePath] isEqualToString:path] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
@@ -116,7 +116,7 @@
 		NSEnumerator *enumerator = [paths objectEnumerator];
 		NSString *path = nil;
 		while( path = [enumerator nextObject] ) {
-			path = [path stringByAppendingPathComponent:name];
+			path = [path stringByAppendingPathComponent:[name stringByDeletingPathExtension]];
 			path = [path stringByAppendingPathExtension:@"fscript"];
 			if( [fm fileExistsAtPath:path] ) {
 				if( ! _fscriptInstalled ) {
