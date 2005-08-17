@@ -120,7 +120,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 			else errorDesc = NSLocalizedStringFromTableInBundle( @"Unknown Error", nil, [NSBundle bundleForClass:[self class]], "unknown error" );
 
 			PyObject *info = PyTuple_GetItem( errValue, 1 );
-			if( PyTuple_Size( info ) >= 2 ) {
+			if( info && PyTuple_Size( info ) >= 2 ) {
 				char *lineNum = PyString_AsString( PyObject_Str( PyTuple_GetItem( info, 1 ) ) );
 				if( lineNum ) errorDesc = [errorDesc stringByAppendingFormat:@" near line %s.", lineNum];
 			}
