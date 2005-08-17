@@ -52,13 +52,13 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		NSString *moduleName = [[path lastPathComponent] stringByDeletingPathExtension];
 		NSString *moduleFolder = [path stringByDeletingLastPathComponent];
 		_uniqueModuleName = [[NSString locallyUniqueString] retain];
+		_firstLoad = YES;
 
-		_scriptModule = LoadArbitraryPythonModule( [moduleName fileSystemRepresentation], [moduleFolder fileSystemRepresentation], [_uniqueModuleName UTF8String] );
+		[self reloadFromDisk];
+
+		_firstLoad = NO;
 
 		if( ! _scriptModule ) {
-			PyErr_Print();
-			PyErr_Clear();
-			NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python plugin error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while loading.", nil, [NSBundle bundleForClass:[self class]], "Python plugin error message" ), nil, nil, nil, [[path lastPathComponent] stringByDeletingPathExtension] );
 			[self release];
 			return nil;
 		}
@@ -107,19 +107,40 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	_scriptModule = LoadArbitraryPythonModule( [moduleName fileSystemRepresentation], [moduleFolder fileSystemRepresentation], [_uniqueModuleName UTF8String] );
 
 	if( ! _scriptModule ) {
-		PyErr_Print();
-		PyErr_Clear();
-		NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python plugin error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while loading.", nil, [NSBundle bundleForClass:[self class]], "Python plugin error message" ), nil, nil, nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] );
+		PyObject *errType, *errValue, *errTrace;
+		PyErr_Fetch( &errType, &errValue, &errTrace );
+
+		NSString *errorDesc = nil;
+
+		if( errValue && PyTuple_Size( errValue ) >= 2 ) {
+			errorDesc = @"Reason: ";
+
+			char *errStr = PyString_AsString( PyTuple_GetItem( errValue, 0 ) );
+			if( errStr ) errorDesc = [errorDesc stringByAppendingString:[NSString stringWithUTF8String:errStr]];
+			else errorDesc = NSLocalizedStringFromTableInBundle( @"Unknown Error", nil, [NSBundle bundleForClass:[self class]], "unknown error" );
+
+			PyObject *info = PyTuple_GetItem( errValue, 1 );
+			if( PyTuple_Size( info ) >= 2 ) {
+				char *lineNum = PyString_AsString( PyObject_Str( PyTuple_GetItem( info, 1 ) ) );
+				if( lineNum ) errorDesc = [errorDesc stringByAppendingFormat:@" near line %s.", lineNum];
+			}
+
+			PyErr_Print();
+			PyErr_Clear();
+		} else errorDesc = NSLocalizedStringFromTableInBundle( @"Unknown Error", nil, [NSBundle bundleForClass:[self class]], "unknown error" );
+
+		int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], errorDesc );
+		if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
 		return;
 	}
 
-	[self performSelector:@selector( load )];
+	if( ! _firstLoad ) [self performSelector:@selector( load )];
 }
 
 #pragma mark -
 
 - (void) promptForReload {
-	if( NSRunInformationalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Changed", nil, [NSBundle bundleForClass:[self class]], "Python script file changed dialog title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" has changed on disk. Any script variables will reset if reloaded.", nil, [NSBundle bundleForClass:[self class]], "Python plugin changed on disk message" ), NSLocalizedStringFromTableInBundle( @"Reload", nil, [NSBundle bundleForClass:[self class]], "reload button title" ), NSLocalizedStringFromTableInBundle( @"Keep Previous Version", nil, [NSBundle bundleForClass:[self class]], "keep previous version button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] ) == NSOKButton ) {
+	if( NSRunInformationalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Changed", nil, [NSBundle bundleForClass:[self class]], "Python script file changed dialog title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" has changed on disk. Any script variables will reset if reloaded.", nil, [NSBundle bundleForClass:[self class]], "Python script changed on disk message" ), NSLocalizedStringFromTableInBundle( @"Reload", nil, [NSBundle bundleForClass:[self class]], "reload button title" ), NSLocalizedStringFromTableInBundle( @"Keep Previous Version", nil, [NSBundle bundleForClass:[self class]], "keep previous version button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] ) == NSOKButton ) {
 		[self reloadFromDisk];
 	}
 }
@@ -173,6 +194,22 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 
         Py_XDECREF( ret );
         Py_DECREF( args );
+
+		PyObject *errType, *errValue, *errTrace;
+		PyErr_Fetch( &errType, &errValue, &errTrace );
+
+		if( errValue ) {
+			PyObject *errorString = PyObject_Str( errValue );
+			NSString *errorDesc = nil;
+
+			if( errorString ) {
+				char *errStr = PyString_AsString( errorString );
+				if( errStr ) errorDesc = [NSString stringWithUTF8String:errStr];
+			} else errorDesc = NSLocalizedStringFromTableInBundle( @"Unknown Error", nil, [NSBundle bundleForClass:[self class]], "unknown error" );
+
+			int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], functionName, errorDesc );
+			if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
+		}
 
 		return realRet;
 	}
