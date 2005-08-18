@@ -13,7 +13,7 @@ static PyObject *LoadArbitraryPythonModule( const char *name, const char *direct
 	if( ! impModule ) return NULL;
 
 	PyObject *result = PyObject_CallMethod( impModule, "find_module", "s[s]", name, directory );
-	if( ! result || PyTuple_GET_SIZE( result ) != 3 ) return NULL;
+	if( ! result || PyTuple_Size( result ) != 3 ) return NULL;
 
 	PyObject *ret = PyObject_CallMethod( impModule, "load_module", "sOOO", newname, PyTuple_GetItem( result, 0 ), PyTuple_GetItem( result, 1 ), PyTuple_GetItem( result, 2 ) );
 
@@ -183,6 +183,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	if( func && PyCallable_Check( func ) ) {
 		unsigned i = 0, count = [arguments count];
 		PyObject *args = PyTuple_New( count );
+		if( ! args ) return nil;
 
 		for( i = 0; i < count; i++ )
 			PyTuple_SetItem( args, i, PyObjC_IdToPython( [arguments objectAtIndex:i] ) );
@@ -192,8 +193,8 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		id realRet = nil;
 		if( ret ) realRet = PyObjC_PythonToId( ret );
 
-        Py_XDECREF( ret );
-        Py_DECREF( args );
+		Py_XDECREF( ret );
+		Py_DECREF( args );
 
 		PyObject *errType, *errValue, *errTrace;
 		PyErr_Fetch( &errType, &errValue, &errTrace );
