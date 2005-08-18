@@ -1928,7 +1928,16 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	if( ! [command caseInsensitiveCompare:@"version"] ) {
 		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 		NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
-		NSString *reply = [NSString stringWithFormat:@"%@ %@ (%@) - %@ %@ - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
+
+#if __ppc__
+		NSString *processor = @"PowerPC";
+#elif __i386__
+		NSString *processor = @"Intel";
+#else
+		NSString *processor = @"Unknown Architecture";
+#endif
+
+		NSString *reply = [NSString stringWithFormat:@"%@ %@ (%@) - %@ %@ (%@) - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], processor, [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
 		[user sendSubcodeReply:@"VERSION" withArguments:reply];
 		signal_stop();
 		return;
