@@ -1220,6 +1220,44 @@ end:
 
 #pragma mark -
 
+- (NSArray *) smartTranscripts {
+	return [self chatViewsWithClass:[JVSmartTranscriptPanel class]];
+}
+
+- (id <JVChatViewController>) valueInSmartTranscriptsAtIndex:(unsigned) index {
+	return [self valueInChatViewsAtIndex:index withClass:[JVSmartTranscriptPanel class]];
+}
+
+- (id <JVChatViewController>) valueInSmartTranscriptsWithUniqueID:(id) identifier {
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVSmartTranscriptPanel class]];
+}
+
+- (id <JVChatViewController>) valueInSmartTranscriptsWithName:(NSString *) name {
+	return [self valueInChatViewsWithName:name andClass:[JVSmartTranscriptPanel class]];
+}
+
+- (void) addInSmartTranscripts:(id <JVChatViewController>) view {
+	[self addInChatViews:view withClass:[JVSmartTranscriptPanel class]];
+}
+
+- (void) insertInSmartTranscripts:(id <JVChatViewController>) view {
+	[self addInChatViews:view withClass:[JVSmartTranscriptPanel class]];
+}
+
+- (void) insertInSmartTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self insertInChatViews:view atIndex:index withClass:[JVSmartTranscriptPanel class]];
+}
+
+- (void) removeFromSmartTranscriptsAtIndex:(unsigned) index {
+	[self removeFromChatViewsAtIndex:index withClass:[JVSmartTranscriptPanel class]];
+}
+
+- (void) replaceInSmartTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self replaceInChatViews:view atIndex:index withClass:[JVSmartTranscriptPanel class]];
+}
+
+#pragma mark -
+
 - (NSArray *) chatConsoles {
 	return [self chatViewsWithClass:[JVChatConsolePanel class]];
 }

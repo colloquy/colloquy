@@ -596,6 +596,16 @@ static NSMenu *smartTranscriptMenu = nil;
 
 #pragma mark -
 
+@implementation JVSmartTranscriptPanel (JVSmartTranscriptPanelObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
+	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"smartTranscripts" uniqueID:[self uniqueIdentifier]] autorelease];
+}
+@end
+
+#pragma mark -
+
 @implementation JVDirectChatPanel (JVDirectChatPanelObjectSpecifier)
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
@@ -884,6 +894,45 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (void) replaceInChatTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self scriptErrorChantAddToChatViews];
+}
+
+
+#pragma mark -
+
+- (NSArray *) smartTranscripts {
+	return [self chatViewsWithClass:[JVSmartTranscriptPanel class]];
+}
+
+- (id <JVChatViewController>) valueInSmartTranscriptsAtIndex:(unsigned) index {
+	return [self valueInChatViewsAtIndex:index withClass:[JVSmartTranscriptPanel class]];
+}
+
+- (id <JVChatViewController>) valueInSmartTranscriptsWithUniqueID:(id) identifier {
+	return [self valueInChatViewsWithUniqueID:identifier andClass:[JVSmartTranscriptPanel class]];
+}
+
+- (id <JVChatViewController>) valueInSmartTranscriptsWithName:(NSString *) name {
+	return [self valueInChatViewsWithName:name andClass:[JVSmartTranscriptPanel class]];
+}
+
+- (void) addInSmartTranscripts:(id <JVChatViewController>) view {
+	[self scriptErrorChantAddToChatViews];
+}
+
+- (void) insertInSmartTranscripts:(id <JVChatViewController>) view {
+	[self scriptErrorChantAddToChatViews];
+}
+
+- (void) insertInSmartTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+	[self scriptErrorChantAddToChatViews];
+}
+
+- (void) removeFromSmartTranscriptsAtIndex:(unsigned) index {
+	[self removeFromChatViewsAtIndex:index withClass:[JVSmartTranscriptPanel class]];
+}
+
+- (void) replaceInSmartTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
