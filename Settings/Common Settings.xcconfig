@@ -1,4 +1,4 @@
-FRAMEWORK_SEARCH_PATHS = $(SYSTEM_LIBRARY_DIR)/Frameworks $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks "$(HOME)/Library/Frameworks" /Library/Frameworks "$(SRCROOT)/Frameworks" "$(TARGET_BUILD_DIR)"
+FRAMEWORK_SEARCH_PATHS = "$(TARGET_BUILD_DIR)" "$(SRCROOT)/Frameworks" "$(HOME)/Library/Frameworks" /Library/Frameworks $(SYSTEM_LIBRARY_DIR)/Frameworks $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks
 LIBRARY_STYLE = DYNAMIC
 MACOSX_DEPLOYMENT_TARGET = 10.3
 DEPLOYMENT_POSTPROCESSING = YES
