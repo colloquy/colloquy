@@ -386,6 +386,8 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _selfNicknameChanged: ) name:MVChatConnectionNicknameAcceptedNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatRoomTopicChangedNotification object:[self target]];
 
+	[self _topicChanged:nil];
+
 	if( _joinCount ) [self addEventMessageToDisplay:NSLocalizedString( @"You rejoined the room.", "rejoined the room status message" ) withName:@"rejoined" andAttributes:nil];
 	_joinCount++;
 }
