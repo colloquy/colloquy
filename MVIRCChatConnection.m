@@ -337,22 +337,25 @@ static void MVChatLeftRoom( CHANNEL_REC *channel ) {
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
-static void MVChatRoomTopicChanged( CHANNEL_REC *channel ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
-	if( ! channel -> topic ) return;
+static void MVChatRoomTopicChanged( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
+	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
+	if( ! self || ! data ) return;
 
-	NSData *msgData = [NSData dataWithBytes:channel -> topic length:strlen( channel -> topic )];
+	char *channel = NULL;
+	char *topic = NULL;
+	char *params = event_get_params( data, 2, &channel, &topic );
 
-	NSString *author = ( channel -> topic_by ? [self stringWithEncodedBytes:channel -> topic_by] : nil );
-	NSArray *parts = [author componentsSeparatedByString:@"!"];
-	author = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
+	if( ! topic || ! channel ) return;
 
+	NSData *msgData = [NSData dataWithBytes:topic length:strlen( topic )];
+
+	NSString *author = ( nick ? [self stringWithEncodedBytes:nick] : nil );
 	MVChatUser *authorUser = ( author ? [self chatUserWithUniqueIdentifier:author] : nil );
-	NSDate *time = ( channel -> topic_time ? [NSDate dateWithTimeIntervalSince1970:channel -> topic_time] : nil );
 
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	[room _setTopic:msgData byAuthor:authorUser withDate:time];
+	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
+	[room _setTopic:msgData byAuthor:authorUser withDate:[NSDate date]];
+
+	g_free( params );
 }
 
 #pragma mark -
@@ -1648,7 +1651,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	signal_add_last( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
 	signal_add_last( "channel wholist", (SIGNAL_FUNC) MVChatJoinedWhoList );
-	signal_add_last( "channel topic changed", (SIGNAL_FUNC) MVChatRoomTopicChanged );
+	signal_add_last( "event topic", (SIGNAL_FUNC) MVChatRoomTopicChanged );
 	signal_add_last( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
 	signal_add_last( "channel mode changed", (SIGNAL_FUNC) MVChatGotRoomMode );
 
