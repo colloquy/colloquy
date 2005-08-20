@@ -199,8 +199,7 @@ static unsigned int bubbleWindowDepth = 0;
 #pragma mark -
 
 - (BOOL) respondsToSelector:(SEL) selector {
-	if( [[[self window] contentView] respondsToSelector:selector] )
-		return [[[self window] contentView] respondsToSelector:selector];
+	if( [[[self window] contentView] respondsToSelector:selector] ) return YES;
 	else return [super respondsToSelector:selector];
 }
 

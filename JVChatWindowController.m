@@ -134,8 +134,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (BOOL) respondsToSelector:(SEL) selector {
-	if( [_activeViewController respondsToSelector:selector] )
-		return [_activeViewController respondsToSelector:selector];
+	if( [_activeViewController respondsToSelector:selector] ) return YES;
 	else return [super respondsToSelector:selector];
 }
 
