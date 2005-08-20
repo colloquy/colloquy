@@ -153,6 +153,7 @@ NSString *JVRubyErrorDomain = @"JVRubyErrorDomain";
 #pragma mark -
 
 - (void) load { // call loadFromPath instead
-	[_script performSelector:@selector( loadFromPath: ) withObject:[self scriptFilePath]];
+	if( [_script respondsToSelector:@selector( loadFromPath: )] )
+		[_script performSelector:@selector( loadFromPath: ) withObject:[self scriptFilePath]];
 }
 @end
