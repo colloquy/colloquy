@@ -50,6 +50,7 @@
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */; };
 		1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C397390082D4ADA00DCF3CF /* IOKit.framework */; };
 		1C3B290806529E720066197C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
+		1C44088B08BB583A00DC111F /* Colloquy.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1CD9DF6507D934F70006BB99 /* Colloquy.sdef */; };
 		1C45BFA5086F4BD80079E014 /* newWindow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C45BFA4086F4BD80079E014 /* newWindow.png */; };
 		1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */; };
 		1C51B4C7052DE14B00BB459B /* JVStandardCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3B4D570427BD5200000102 /* JVStandardCommands.m */; };
@@ -71,7 +72,6 @@
 		1C6EA66205A76038006A559F /* personHeader.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1C6EA66105A76038006A559F /* personHeader.tif */; };
 		1C70377F07E49F25005CEA40 /* JVSmartTranscriptPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C70377D07E49F25005CEA40 /* JVSmartTranscriptPanel.m */; };
 		1C703EF507E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C703EF307E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib */; };
-		1C7AC54E08A4517500F4E798 /* Colloquy.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1CD9DF6507D934F70006BB99 /* Colloquy.sdef */; };
 		1C7B83370810A6D100B1C1E9 /* Colloquy.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */; };
 		1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* WebSearch.scpt */; };
 		1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
@@ -382,14 +382,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8D5B49B6048680CD000E48DA /* Ruby Support.plugin */;
+			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
 			remoteInfo = "Python Support Plugin";
 		};
 		1CBBDF8608B6EAC3002A8BA6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8D5B49AC048680CD000E48DA /* Python Support Plugin */;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
 			remoteInfo = "Python Support Plugin";
 		};
 /* End PBXContainerItemProxy section */
@@ -2032,7 +2032,6 @@
 				1C6A455908417C5300572AB6 /* JVChatViewCriterion.nib in Resources */,
 				1C6A46A60841951200572AB6 /* gearSmall.png in Resources */,
 				1C45BFA5086F4BD80079E014 /* newWindow.png in Resources */,
-				1C7AC54E08A4517500F4E798 /* Colloquy.sdef in Resources */,
 				1CE6916808B183C2006D9CA0 /* Styles in Resources */,
 				1CE6916908B183C2006D9CA0 /* ChatCore.scriptTerminology in Resources */,
 				1CE6916A08B183C3006D9CA0 /* ChatCore.scriptSuite in Resources */,
@@ -2044,6 +2043,7 @@
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
 				1CE6917108B183C9006D9CA0 /* NSCoreSuite.scriptTerminology in Resources */,
 				1CE6917208B183CA006D9CA0 /* NSCoreSuite.scriptSuite in Resources */,
+				1C44088B08BB583A00DC111F /* Colloquy.sdef in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
