@@ -11,7 +11,7 @@
 				<key>view</key>
 				<dict>
 					<key>Description</key>
-					<string>The chat room or direct chat this context menu is assocated with, if any.</string>
+					<string>The chat panel this context menu is assocated with, if any.</string>
 					<key>Name</key>
 					<string>in</string>
 				</dict>
@@ -23,7 +23,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, chat connection, etc.</string>
+				<string>Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, connection, text, etc.</string>
 			</dict>
 		</dict>
 		<key>Connected</key>
@@ -70,7 +70,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Called when the user clicks on one of the supplied menu item titles you returned from the "build contextual menu for item"</string>
+			<string>Called when the user clicks on one of the supplied menu item titles you returned from the "build contextual menu for item".</string>
 			<key>Name</key>
 			<string>handle clicked contextual menu item</string>
 			<key>UnnamedArgument</key>
@@ -86,7 +86,7 @@
 				<key>view</key>
 				<dict>
 					<key>Description</key>
-					<string>The chat room, direct chat or chat transcript this link was clicked in.</string>
+					<string>The chat panel this link was clicked in.</string>
 					<key>Name</key>
 					<string>in</string>
 				</dict>
@@ -298,13 +298,6 @@
 		<dict>
 			<key>Arguments</key>
 			<dict>
-				<key>action</key>
-				<dict>
-					<key>Description</key>
-					<string>Is this message an action?</string>
-					<key>Name</key>
-					<string>as</string>
-				</dict>
 				<key>user</key>
 				<dict>
 					<key>Description</key>
@@ -334,13 +327,6 @@
 		<dict>
 			<key>Arguments</key>
 			<dict>
-				<key>action</key>
-				<dict>
-					<key>Description</key>
-					<string>Is this message an action?</string>
-					<key>Name</key>
-					<string>as</string>
-				</dict>
 				<key>view</key>
 				<dict>
 					<key>Description</key>
@@ -445,7 +431,7 @@
 				<key>view</key>
 				<dict>
 					<key>Description</key>
-					<string>The view the command was entered in.</string>
+					<string>The panel the command was entered in.</string>
 					<key>Name</key>
 					<string>for</string>
 				</dict>

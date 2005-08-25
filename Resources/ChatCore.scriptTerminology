@@ -25,7 +25,7 @@
 				<key>nicknamePassword</key>
 				<dict>
 					<key>Description</key>
-					<string>The nickname'</string>
+					<string>The nickname's password.</string>
 					<key>Name</key>
 					<string>nickname password</string>
 				</dict>
@@ -252,7 +252,7 @@
 				<key>scriptTypedAwayMessage</key>
 				<dict>
 					<key>Description</key>
-					<string>The user'</string>
+					<string>The user's away message.</string>
 					<key>Name</key>
 					<string>away message</string>
 				</dict>
@@ -422,7 +422,7 @@
 				<key>connection</key>
 				<dict>
 					<key>Description</key>
-					<string>The connection to join on. Optional if the nearest enclosing tell block accepts this command.</string>
+					<string>The connection to join on. Optional if the nearest enclosing tell block responds to this command.</string>
 					<key>Name</key>
 					<string>on</string>
 				</dict>
@@ -434,7 +434,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Description</key>
-				<string>Room to join. (Can also be a list of rooms.)</string>
+				<string>Chat room(s) to join.</string>
 			</dict>
 		</dict>
 		<key>RefreshInformation</key>
@@ -484,7 +484,7 @@
 				<key>target</key>
 				<dict>
 					<key>Description</key>
-					<string>The chat user or chat room to send to. Optional if the nearest enclosing tell block accepts this command.</string>
+					<string>The chat user or chat room to send to. Optional if the nearest enclosing tell block responds to this command.</string>
 					<key>Name</key>
 					<string>to</string>
 				</dict>
@@ -506,7 +506,7 @@
 				<key>connection</key>
 				<dict>
 					<key>Description</key>
-					<string>The connection to send to. Optional if the nearest enclosing tell block accepts this command.</string>
+					<string>The connection to send to. Optional if the nearest enclosing tell block responds to this command.</string>
 					<key>Name</key>
 					<string>to</string>
 				</dict>
@@ -530,7 +530,7 @@
 		</dict>
 	</dict>
 	<key>Description</key>
-	<string>Classes and commands for Chat Core scripting. Chat Core is the lowest level of Colloquy and has user visible representation.</string>
+	<string>Classes and commands for Chat Core scripting. Chat Core is the the lowest level of Colloquy.</string>
 	<key>Enumerations</key>
 	<dict>
 		<key>ConnectionStatus</key>

@@ -339,7 +339,40 @@
 			<key>PluralName</key>
 			<string>direct chat panels</string>
 		</dict>
-		<key>ListItem</key>
+		<key>NSApplication</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>isActive</key>
+				<dict>
+					<key>Description</key>
+					<string>Is this the frontmost (active) application?</string>
+					<key>Name</key>
+					<string>frontmost</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>Description</key>
+					<string>The name of the application.</string>
+					<key>Name</key>
+					<string>name</string>
+				</dict>
+				<key>version</key>
+				<dict>
+					<key>Description</key>
+					<string>The version of the application.</string>
+					<key>Name</key>
+					<string>version</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>The Colloquy application'</string>
+			<key>Name</key>
+			<string>application</string>
+			<key>PluralName</key>
+			<string>applications</string>
+		</dict>
+		<key>NSObject</key>
 		<dict>
 			<key>Attributes</key>
 			<dict>
@@ -385,39 +418,6 @@
 			<string>list item</string>
 			<key>PluralName</key>
 			<string>list items</string>
-		</dict>
-		<key>NSApplication</key>
-		<dict>
-			<key>Attributes</key>
-			<dict>
-				<key>isActive</key>
-				<dict>
-					<key>Description</key>
-					<string>Is this the frontmost (active) application?</string>
-					<key>Name</key>
-					<string>frontmost</string>
-				</dict>
-				<key>name</key>
-				<dict>
-					<key>Description</key>
-					<string>The name of the application.</string>
-					<key>Name</key>
-					<string>name</string>
-				</dict>
-				<key>version</key>
-				<dict>
-					<key>Description</key>
-					<string>The version of the application.</string>
-					<key>Name</key>
-					<string>version</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>The Colloquy application'</string>
-			<key>Name</key>
-			<string>application</string>
-			<key>PluralName</key>
-			<string>applications</string>
 		</dict>
 		<key>NSWindow</key>
 		<dict>
@@ -542,46 +542,6 @@
 			<string>window</string>
 			<key>PluralName</key>
 			<string>windows</string>
-		</dict>
-		<key>Panel</key>
-		<dict>
-			<key>Attributes</key>
-			<dict>
-				<key>connection</key>
-				<dict>
-					<key>Description</key>
-					<string>Connection this view uses.</string>
-					<key>Name</key>
-					<string>connection</string>
-				</dict>
-				<key>identifier</key>
-				<dict>
-					<key>Description</key>
-					<string>Consicse description of the chat view and what it represents.</string>
-					<key>Name</key>
-					<string>description</string>
-				</dict>
-				<key>uniqueIdentifier</key>
-				<dict>
-					<key>Description</key>
-					<string>The unique identifier of the chat view controler.</string>
-					<key>Name</key>
-					<string>id</string>
-				</dict>
-				<key>window</key>
-				<dict>
-					<key>Description</key>
-					<string>Parent window.</string>
-					<key>Name</key>
-					<string>window</string>
-				</dict>
-			</dict>
-			<key>Description</key>
-			<string>Generic window panel that all panels inherit from (e.g. direct chat panel, chat room panel, etc.)</string>
-			<key>Name</key>
-			<string>panel</string>
-			<key>PluralName</key>
-			<string>panels</string>
 		</dict>
 	</dict>
 	<key>Commands</key>
@@ -726,5 +686,17 @@
 	</dict>
 	<key>Name</key>
 	<string>Colloquy Suite</string>
+	<key>Synonyms</key>
+	<dict>
+		<key>chvC</key>
+		<dict>
+			<key>Description</key>
+			<string>Generic window panel that all panels inherit from (e.g. direct chat panel, chat room panel, etc.)</string>
+			<key>Name</key>
+			<string>panel</string>
+			<key>PluralName</key>
+			<string>panels</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

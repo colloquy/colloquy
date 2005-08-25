@@ -32,9 +32,9 @@
 			<key>SupportedCommands</key>
 			<dict>
 				<key>ChatCore.SendMessage</key>
-				<string> </string>
+				<string></string>
 				<key>Colloquy.AddEventMessage</key>
-				<string> </string>
+				<string></string>
 				<key>NSCoreSuite.Copy</key>
 				<string></string>
 				<key>NSCoreSuite.Count</key>

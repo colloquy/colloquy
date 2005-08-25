@@ -75,7 +75,7 @@
 					<key>AppleEventCode</key>
 					<string>prtA</string>
 					<key>Type</key>
-					<string>NSNumber</string>
+					<string>NSNumber&lt;Int&gt;</string>
 				</dict>
 				<key>status</key>
 				<dict>
@@ -93,7 +93,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSNumber</string>
+					<string>NSNumber&lt;Int&gt;</string>
 				</dict>
 				<key>urlString</key>
 				<dict>
@@ -113,6 +113,10 @@
 				<string>connectScriptCommand:</string>
 				<key>ChatCore.Disconnect</key>
 				<string>disconnectScriptCommand:</string>
+				<key>ChatCore.JoinChatRoom</key>
+				<string></string>
+				<key>ChatCore.SendRawCommand</key>
+				<string></string>
 			</dict>
 			<key>ToManyRelationships</key>
 			<dict>
@@ -235,6 +239,11 @@
 			</dict>
 			<key>Superclass</key>
 			<string>NSCoreSuite.AbstractObject</string>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>ChatCore.SendMessage</key>
+				<string></string>
+			</dict>
 			<key>ToManyRelationships</key>
 			<dict>
 				<key>memberUsersArray</key>
@@ -387,6 +396,8 @@
 			<dict>
 				<key>ChatCore.RefreshInformation</key>
 				<string>refreshInformationScriptCommand:</string>
+				<key>ChatCore.SendMessage</key>
+				<string></string>
 			</dict>
 		</dict>
 		<key>MVFileTransfer</key>
@@ -402,7 +413,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSNumber</string>
+					<string>NSNumber&lt;Int&gt;</string>
 				</dict>
 				<key>hostString</key>
 				<dict>
@@ -429,7 +440,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSNumber</string>
+					<string>NSNumber&lt;Int&gt;</string>
 				</dict>
 				<key>scriptFilePath</key>
 				<dict>
@@ -465,7 +476,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSNumber</string>
+					<string>NSNumber&lt;Int&gt;</string>
 				</dict>
 				<key>status</key>
 				<dict>
@@ -483,7 +494,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSNumber</string>
+					<string>NSNumber&lt;Int&gt;</string>
 				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>
@@ -492,7 +503,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSNumber</string>
+					<string>NSNumber&lt;Int&gt;</string>
 				</dict>
 				<key>user</key>
 				<dict>
@@ -561,7 +572,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Type</key>
-				<string>NSString</string>
+				<string>NSArray</string>
 			</dict>
 		</dict>
 		<key>RefreshInformation</key>

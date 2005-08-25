@@ -267,7 +267,7 @@
 		</dict>
 	</dict>
 	<key>Description</key>
-	<string>Common classes and commands for most applications.</string>
+	<string>Common classes and commands.</string>
 	<key>Enumerations</key>
 	<dict>
 		<key>SaveOptions</key>

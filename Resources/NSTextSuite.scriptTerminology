@@ -17,7 +17,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Represents an inline text attachment.  This class is used mainly for make commands.</string>
+			<string>Represents an inline text attachment. This class is used mainly for make commands.</string>
 			<key>Name</key>
 			<string>attachment</string>
 			<key>PluralName</key>
@@ -108,9 +108,9 @@
 			<key>Description</key>
 			<string>Rich (styled) text</string>
 			<key>Name</key>
-			<string>text</string>
+			<string>rich text</string>
 			<key>PluralName</key>
-			<string>text</string>
+			<string>rich text</string>
 		</dict>
 	</dict>
 	<key>Description</key>

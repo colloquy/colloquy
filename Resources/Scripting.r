@@ -22,29 +22,6 @@ resource 'aete' (0, "Colloquy Terminology") {
 		{
 			/* Events */
 
-			"send",
-			"Send message to chat room or user that is represented by a panel. This command is deprecated, use send chat message defined in the Chat Core Suite.",
-			'coRC', 'sNdX',
-			reply_none__,
-			't001',
-			"Chat room panel or direct chat panel to send through.",
-			directParamRequired,
-			singleItem, notEnumerated, Reserved13,
-			{
-				"message", 'sNd1', 'TEXT',
-				"Message to send. Can include HTML formatting.",
-				required,
-				singleItem, notEnumerated, Reserved13,
-				"action tense", 'sNd2', 'bool',
-				"Send as an action?",
-				optional,
-				singleItem, notEnumerated, Reserved13,
-				"local echo", 'sNd3', 'bool',
-				"Show message in conversation? (Defaults on.)",
-				optional,
-				singleItem, notEnumerated, Reserved13
-			},
-
 			"add event message",
 			"Add an event message to a chat room panel or direct chat panel. This will add a line to the display that is only visible to the local user. Defaults to the active panel of the front window if no other tell block specifies the target.",
 			'coRC', 'aEvX',
@@ -60,104 +37,34 @@ resource 'aete' (0, "Colloquy Terminology") {
 				singleItem, notEnumerated, Reserved13
 			},
 
-			"transfer file",
-			"Send a file to another user. This will use DCC or another connection specific protocol.",
-			'ccoR', 'sFiX',
+			"process incoming chat message",
+			"Called when an incoming message is sent to us or a room we are in. (Any messages echoed to the screen that are sent from the local user will also be passed through this handler.)",
+			'cplG', 'piMX',
 			reply_none__,
-			'file',
-			"The file to send.",
+			'cmsM',
+			"The incoming message. Message and properties are modifiable.",
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"at", 'sFi1', 'file',
-				"Path of file to send the user. This parameter is depreciated.",
-				optional,
-				singleItem, notEnumerated, Reserved13,
-				"to", 'sFi2', 'chUs',
-				"User to send the file to. Optional if the nearest enclosing tell block accepts this command.",
+				"as", 'piM1', 'bool',
+				"Is this message an action?",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			},
 
-			"send subcode command",
-			"Send a subcode (CTCP or other connection specific protocol) command to another user.",
-			'ccoR', 'sSrX',
+			"process outgoing chat message",
+			"Called when a message is sent from us to a user or room we are in.",
+			'cplG', 'poMX',
 			reply_none__,
-			'TEXT',
-			"The name of the command to send.",
+			'cmsM',
+			"The outgoing message. Message and properties are modifiable.",
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"command", 'sSr1', 'TEXT',
-				"The name of the command to send. This parameter is depreciated.",
-				optional,
-				singleItem, notEnumerated, Reserved13,
-				"as", 'sSr3', 'scTE',
-				"Type of subcode message to send. Defaults to a request.",
-				optional,
-				singleItem, enumerated, Reserved13,
-				"to", 'sSr4', 't000',
-				"The chat user or chat room to send to. Optional if the nearest enclosing tell block accepts this command.",
-				optional,
-				singleItem, notEnumerated, Reserved13,
-				"with", 'sSr2', 'TEXT',
-				"Command arguments to send. (Plain text with HTML formatting. Must entity encode HTML special characters.)",
+				"as", 'poM1', 'bool',
+				"Is this message an action?",
 				optional,
 				singleItem, notEnumerated, Reserved13
-			},
-
-			"send public",
-			"Send a message to a room you'",
-			'ccoR', 'smrX',
-			reply_none__,
-			'conM',
-			"Connection to send from.",
-			directParamRequired,
-			singleItem, notEnumerated, Reserved13,
-			{
-				"action tense", 'actA', 'bool',
-				"Send as an action?",
-				optional,
-				singleItem, notEnumerated, Reserved13,
-				"to room", 'usRA', 'TEXT',
-				"Name of room. (Doesn't need to have prefix '#'",
-				required,
-				singleItem, notEnumerated, Reserved13,
-				"message", 'meSA', 'TEXT',
-				"Message to send to room. Can include HTML formatting.",
-				required,
-				singleItem, notEnumerated, Reserved13,
-				"encoded as", 'encE', 'encE',
-				"Encoding to use. (Default is UTF-8.)",
-				optional,
-				singleItem, enumerated, Reserved13
-			},
-
-			"send private",
-			"Send a message to another user. This message will not echo locally. This command is depreciated.",
-			'ccoR', 'smuX',
-			reply_none__,
-			'conM',
-			"Connection to send from.",
-			directParamRequired,
-			singleItem, notEnumerated, Reserved13,
-			{
-				"action tense", 'actA', 'bool',
-				"Send as an action?",
-				optional,
-				singleItem, notEnumerated, Reserved13,
-				"message", 'meSA', 'TEXT',
-				"Message to send to user. Can include HTML formatting.",
-				required,
-				singleItem, notEnumerated, Reserved13,
-				"to user", 'usRA', 'TEXT',
-				"Name of user.",
-				required,
-				singleItem, notEnumerated, Reserved13,
-				"encoded as", 'encE', 'encE',
-				"Encoding to use. (Default is UTF-8.)",
-				optional,
-				singleItem, enumerated, Reserved13
 			}
 		},
 		{
@@ -187,30 +94,21 @@ resource 'aete' (0, "Colloquy Terminology") {
 			{
 			},
 
-			"direct chat panel", 'dchM',
-			"Direct (private) chat panel with another user.",
-			{
-				"<Inheritance>", pInherits, 'ctrM',
-				"inherits elements and properties of the transcript panel class.",
-				reserved, singleItem, notEnumerated, readOnly, Reserved12
-			},
-			{
-			},
+			"chat room panel, console panel, direct chat panel or panel", 't004', "", { }, { },
 
-			"connection", 'conM',
-			"Manages all chat communication with a chat server.",
-			{
-			},
-			{
-			},
+			"list of text or text", '****', "", { }, { },
 
-			"chat room or chat user", 't000', "", { }, { },
+			"chat user, member or text", 't001', "", { }, { },
 
-			"chat user, member or string", 't002', "", { }, { },
+			"chat room panel, console panel, direct chat panel, panel or transcript panel", 't008', "", { }, { },
 
-			"chat user or member", 't005', "", { }, { },
+			"chat room panel, direct chat panel, panel or transcript panel", 't009', "", { }, { },
 
-			"chat room panel or direct chat panel", 't001', "", { }, { }
+			"chat user or member", 't012', "", { }, { },
+
+			"chat room or chat user", 't002', "", { }, { },
+
+			"chat room panel or direct chat panel", 't007', "", { }, { }
 		},
 		{
 			/* Comparisons */
@@ -220,7 +118,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 		},
 
 		"Standard Suite",
-		"Common classes and commands for most applications.",
+		"Common classes and commands.",
 		'????',
 		1,
 		1,
@@ -516,7 +414,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			replyRequired, singleItem, notEnumerated, Reserved13,
 			dp_none__,
 			{
-				"for", 'sCh1', 't002',
+				"for", 'sCh1', 't001',
 				"The member or chat user. You may also pass a string nickname if you also provide the connection.",
 				required,
 				singleItem, notEnumerated, Reserved13,
@@ -584,7 +482,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The full title of the window.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
-				"id", 'ID  ', 'nmbr',
+				"id", 'ID  ', 'long',
 				"The unique identifier of the window.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
@@ -600,7 +498,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"Whether the window has a title bar.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"index", 'pidx', 'nmbr',
+				"index", 'pidx', 'long',
 				"The index of the window in the back-to-front window ordering.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
@@ -688,7 +586,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"inherits elements and properties of the list item class.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"id", 'ID  ', 'nmbr',
+				"id", 'ID  ', 'long',
 				"The unique identifier of the chat view controler.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
@@ -749,11 +647,11 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The current emssage that is being passed to plugins to process.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"new messages waiting", 'nemA', 'nmbr',
+				"new messages waiting", 'nemA', 'long',
 				"The number of new messages since the panel was last active.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"new highlight messages waiting", 'nhmA', 'nmbr',
+				"new highlight messages waiting", 'nhmA', 'long',
 				"The number of new highlight messages since the panel was last active.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
@@ -765,7 +663,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"Is the active (visible) view?",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"target", 'trgA', 't000',
+				"target", 'trgA', 't002',
 				"The user or room that we engaged in conversation with.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12
 			},
@@ -796,7 +694,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The chat user for this member. (Default subcontainer.)",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
-				"id", 'ID  ', 'nmbr',
+				"id", 'ID  ', 'long',
 				"The unique identifier of the member. Unique even if member changes nicknames.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
@@ -866,7 +764,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			"transcript", 'traM',
 			"A log of a previous conversation.",
 			{
-				"id", 'ID  ', 'nmbr',
+				"id", 'ID  ', 'long',
 				"The unique identifier of the transcript.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
@@ -948,7 +846,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 		},
 
 		"Chat Core Suite",
-		"Classes and commands for Chat Core scripting. Chat Core is the lowest level of Colloquy and has user visible representation.",
+		"Classes and commands for Chat Core scripting. Chat Core is the the lowest level of Colloquy.",
 		'ccoR',
 		1,
 		1,
@@ -988,8 +886,8 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"to", 'sCm1', 't000',
-				"The chat user or chat room to send to. Optional if the nearest enclosing tell block accepts this command.",
+				"to", 'sCm1', 't002',
+				"The chat user or chat room to send to. Optional if the nearest enclosing tell block responds to this command.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
 				"encoded as", 'sCm2', 'encE',
@@ -1016,7 +914,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			singleItem, notEnumerated, Reserved13,
 			{
 				"to", 'sRm1', 'conM',
-				"The connection to send to. Optional if the nearest enclosing tell block accepts this command.",
+				"The connection to send to. Optional if the nearest enclosing tell block responds to this command.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
 				"priority", 'sRm2', 'bool',
@@ -1029,13 +927,13 @@ resource 'aete' (0, "Colloquy Terminology") {
 			"Join a chat room.",
 			'ccoR', 'jCrX',
 			reply_none__,
-			'TEXT',
-			"Room to join. (Can also be a list of rooms.)",
+			'****',
+			"Chat room(s) to join.",
 			directParamRequired,
-			singleItem, notEnumerated, Reserved13,
+			listOfItems, notEnumerated, Reserved13,
 			{
 				"on", 'jCr1', 'conM',
-				"The connection to join on. Optional if the nearest enclosing tell block accepts this command.",
+				"The connection to join on. Optional if the nearest enclosing tell block responds to this command.",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			},
@@ -1116,7 +1014,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, enumerated, readOnly, Reserved12,
 
 				"away message", 'aStA', 'ctxt',
-				"The user'",
+				"The user's away message.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"attributes", 'atRA', 'reco',
@@ -1178,7 +1076,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			"connection", 'conM',
 			"Manages all chat communication with a chat server.",
 			{
-				"id", 'ID  ', 'nmbr',
+				"id", 'ID  ', 'long',
 				"The unique identifier of the connection.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
@@ -1190,7 +1088,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"Server IP address or domain name.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
-				"port number", 'prtA', 'nmbr',
+				"port number", 'prtA', 'long',
 				"Port to connect on.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
@@ -1203,7 +1101,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
 				"nickname password", 'ncpA', 'TEXT',
-				"The nickname'",
+				"The nickname's password.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
 				"password", 'pasA', 'TEXT',
@@ -1235,7 +1133,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			"file transfer", 'flTx',
 			"Represents a file transfer with another chat user.",
 			{
-				"id", 'ID  ', 'nmbr',
+				"id", 'ID  ', 'long',
 				"The unique identifier of the file transfer.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
@@ -1255,7 +1153,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The date and time this file transfer started.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"start offset", 'sOfA', 'nmbr',
+				"start offset", 'sOfA', 'long',
 				"The location (offset) in the file where transfer was resumed.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
@@ -1267,7 +1165,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The address of the other user engaged in the transfer.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"port", 'pOrA', 'nmbr',
+				"port", 'pOrA', 'long',
 				"The port this the transfer is using.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
@@ -1275,11 +1173,11 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"Is the transfer using passive mode?",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"final size", 'fSzA', 'nmbr',
+				"final size", 'fSzA', 'long',
 				"The final expected size (in bytes) of the file.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"transfered size", 'TrzA', 'nmbr',
+				"transfered size", 'TrzA', 'long',
 				"The current size (in bytes) this file has transfered.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12
 			},
@@ -1396,8 +1294,8 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"Any arguments given with the command.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"for", 'pcC2', 'chvC',
-				"The view the command was entered in.",
+				"for", 'pcC2', 't004',
+				"The panel the command was entered in.",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			},
@@ -1411,15 +1309,11 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"as", 'piM1', 'bool',
-				"Is this message an action?",
-				optional,
-				singleItem, notEnumerated, Reserved13,
-				"from", 'piM2', 't005',
+				"from", 'piM2', 't012',
 				"The user this message came from.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"in", 'piM3', 'dchM',
+				"in", 'piM3', 't007',
 				"The chat room or direct chat this message is in.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1434,11 +1328,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"as", 'poM1', 'bool',
-				"Is this message an action?",
-				optional,
-				singleItem, notEnumerated, Reserved13,
-				"in", 'poM2', 'dchM',
+				"in", 'poM2', 't007',
 				"The chat room or direct chat this message is in.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1499,18 +1389,18 @@ resource 'aete' (0, "Colloquy Terminology") {
 			'cplG', 'cMiX',
 			reply_none__,
 			'****',
-			"Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, chat connection, etc.",
+			"Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, connection, text, etc.",
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"in", 'cMi1', 'chvC',
-				"The chat room or direct chat this context menu is assocated with, if any.",
+				"in", 'cMi1', 't008',
+				"The chat panel this context menu is assocated with, if any.",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			},
 
 			"handle clicked contextual menu item",
-			"Called when the user clicks on one of the supplied menu item titles you returned from the \"build contextual menu for item\"",
+			"Called when the user clicks on one of the supplied menu item titles you returned from the \"build contextual menu for item\".",
 			'cplG', 'pcMX',
 			reply_none__,
 			'TEXT',
@@ -1522,7 +1412,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"Item the menu item was built for, can be a member, chat room, direct chat, transcript, chat connection, etc.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"within", 'pcM2', '****',
+				"within", 'pcM2', 'TEXT',
 				"A list of parent menu item titles the clicked menu item was when displayed. You only need to reference this when you use multiple items with the same name in different sub-menus.",
 				optional,
 				listOfItems, notEnumerated, Reserved13
@@ -1539,8 +1429,8 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"in", 'hCl1', 'chvC',
-				"The chat room, direct chat or chat transcript this link was clicked in.",
+				"in", 'hCl1', 't009',
+				"The chat panel this link was clicked in.",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			},
@@ -1621,11 +1511,11 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"by", 'kRm1', 't005',
+				"by", 'kRm1', 't012',
 				"The member who kicked us out.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"for", 'kRm2', 'TEXT',
+				"for", 'kRm2', 'ctxt',
 				"The reason given for kicking us out.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1659,7 +1549,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The chat room.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"for", 'mPr2', 'TEXT',
+				"for", 'mPr2', 'ctxt',
 				"The reason the member left.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1678,11 +1568,11 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The chat room.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"by", 'mKr2', 't005',
+				"by", 'mKr2', 't012',
 				"The member who kicked the other member out.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"for", 'mKr3', 'TEXT',
+				"for", 'mKr3', 'ctxt',
 				"The reason the member was kicked.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1698,11 +1588,11 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The chat room.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"by", 'rTc2', 't005',
+				"by", 'rTc2', 't012',
 				"The member who changed the topic.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"to", 'rTc1', 'TEXT',
+				"to", 'rTc1', 'ctxt',
 				"The new room topic.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1725,7 +1615,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			reply_none__,
 			dp_none__,
 			{
-				"from", 'lOd1', 'TEXT',
+				"from", 'lOd1', 'file',
 				"The path the script was loaded from.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1763,7 +1653,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 		{
 			/* Classes */
 
-			"text", 'ctxt',
+			"rich text", 'ctxt',
 			"Rich (styled) text",
 			{
 				"color", 'colr', 'colr',
@@ -1778,7 +1668,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The name of the font of the first character.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
-				"size", 'ptsz', 'nmbr',
+				"size", 'ptsz', 'long',
 				"The size in points of the first character.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
@@ -1790,7 +1680,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The HTML that directly follows the first character or end of the attribute run. This would include end tags.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
-				"style classes", 'stYc', '****',
+				"style classes", 'stYc', 'TEXT',
 				"The stylesheet classes of the first character.",
 				reserved, listOfItems, notEnumerated, readWrite, Reserved12,
 
@@ -1817,16 +1707,16 @@ resource 'aete' (0, "Colloquy Terminology") {
 				'catr', { },
 				'atts', { }
 			},
-			"text", 'ctxt', plural__,
+			"rich text", 'ctxt', plural__,
 
 			"attachment", 'atts',
-			"Represents an inline text attachment.  This class is used mainly for make commands.",
+			"Represents an inline text attachment. This class is used mainly for make commands.",
 			{
 				"<Inheritance>", pInherits, 'ctxt',
-				"inherits elements and properties of the text class.",
+				"inherits elements and properties of the rich text class.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"file name", 'atfn', 'TEXT',
+				"file name", 'atfn', 'ctxt',
 				"The path to the file for the attachment",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12
 			},
@@ -1838,7 +1728,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			"This subdivides the text into paragraphs.",
 			{
 				"<Inheritance>", pInherits, 'ctxt',
-				"inherits elements and properties of the text class.",
+				"inherits elements and properties of the rich text class.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12
 			},
 			{
@@ -1849,7 +1739,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			"This subdivides the text into words.",
 			{
 				"<Inheritance>", pInherits, 'ctxt',
-				"inherits elements and properties of the text class.",
+				"inherits elements and properties of the rich text class.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12
 			},
 			{
@@ -1860,7 +1750,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			"This subdivides the text into characters.",
 			{
 				"<Inheritance>", pInherits, 'ctxt',
-				"inherits elements and properties of the text class.",
+				"inherits elements and properties of the rich text class.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12
 			},
 			{
@@ -1871,7 +1761,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			"This subdivides the text into chunks that all have the same attributes.",
 			{
 				"<Inheritance>", pInherits, 'ctxt',
-				"inherits elements and properties of the text class.",
+				"inherits elements and properties of the rich text class.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12
 			},
 			{

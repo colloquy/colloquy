@@ -21,7 +21,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.Panel</string>
+					<string>NSObject</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
@@ -110,7 +110,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.Panel</string>
+					<string>NSObject</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
@@ -176,7 +176,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>NSTextSuite.NSTextStorage</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
@@ -202,7 +202,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>NSString&lt;FilePath&gt;</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
@@ -258,7 +258,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>NSTextSuite.NSTextStorage</string>
 				</dict>
 				<key>room</key>
 				<dict>
@@ -293,7 +293,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>NSTextSuite.NSTextStorage</string>
 				</dict>
 				<key>room</key>
 				<dict>
@@ -395,7 +395,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.JVDirectChatPanel</string>
+					<string>NSObject</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
@@ -430,7 +430,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.JVDirectChatPanel</string>
+					<string>NSObject</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
@@ -561,7 +561,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.Panel</string>
+					<string>NSObject</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
@@ -609,7 +609,7 @@
 					<key>Optional</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>NSString</string>
+					<string>NSTextSuite.NSTextStorage</string>
 				</dict>
 			</dict>
 			<key>CommandClass</key>
