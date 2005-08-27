@@ -582,18 +582,20 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		new = YES;
 	}
 
-	for( i = 0; JVAllowedTextEncodings[i]; i++ ) {
-		if( JVAllowedTextEncodings[i] == (NSStringEncoding) -1 ) {
+	const NSStringEncoding *supportedEncodings = [[self connection] supportedStringEncodings];
+
+	for( i = 0; supportedEncodings[i]; i++ ) {
+		/* if( supportedEncodings[i] == (NSStringEncoding) -1 ) {
 			if( new ) [_encodingMenu addItem:[NSMenuItem separatorItem]];
 			continue;
-		}
-		if( new ) menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
+		} */
+		if( new ) menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:supportedEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
 		else menuItem = (NSMenuItem *)[_encodingMenu itemAtIndex:i + 1];
-		if( _encoding == JVAllowedTextEncodings[i] ) {
+		if( _encoding == supportedEncodings[i] ) {
 			[menuItem setState:NSOnState];
 		} else [menuItem setState:NSOffState];
 		if( new ) {
-			[menuItem setTag:JVAllowedTextEncodings[i]];
+			[menuItem setTag:supportedEncodings[i]];
 			[_encodingMenu addItem:menuItem];
 		}
 	}
