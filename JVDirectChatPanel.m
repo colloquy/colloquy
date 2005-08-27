@@ -37,7 +37,11 @@ const NSStringEncoding JVAllowedTextEncodings[] = {
 	(NSStringEncoding) 0x8000020F,		// ISO Latin 9
 	NSMacOSRomanStringEncoding,			// Mac
 	NSWindowsCP1252StringEncoding,		// Windows
-	/* European */
+	/* Baltic */
+	(NSStringEncoding) -1,
+	(NSStringEncoding) 0x8000020D,		// ISO Latin 7
+	(NSStringEncoding) 0x80000507,		// Windows
+	/* Central European */
 	(NSStringEncoding) -1,
 	NSISOLatin2StringEncoding,			// ISO Latin 2
 	(NSStringEncoding) 0x80000204,		// ISO Latin 4

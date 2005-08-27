@@ -107,7 +107,6 @@
 #pragma mark -
 
 - (void) buildEncodingMenu {
-	extern const NSStringEncoding JVAllowedTextEncodings[];
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *menuItem = nil;
 	unsigned int i = 0;
@@ -122,7 +121,7 @@
 			continue;
 		} */
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:supportedEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
 		if( defaultEncoding == supportedEncodings[i] ) [menuItem setState:NSOnState];
 		[menuItem setTag:supportedEncodings[i]];
 		[menuItem setTarget:self];
