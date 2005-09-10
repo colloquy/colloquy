@@ -287,8 +287,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	msg = [[[NSAttributedString alloc] initWithString:strMsg attributes:attrs] autorelease];
 	[[display textStorage] beginEditing];
-	if( [[display textStorage] length] )
-		[display replaceCharactersInRange:NSMakeRange( [[display textStorage] length], 0 ) withString:@"\n"];
+	if( [[display string] length] )
+		[display replaceCharactersInRange:NSMakeRange( [[display string] length], 0 ) withString:@"\n"];
 	[[display textStorage] appendAttributedString:msg];
 	[[display textStorage] endEditing];
 }
@@ -301,7 +301,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) layoutManager:(NSLayoutManager *) layoutManager didCompleteLayoutForTextContainer:(NSTextContainer *) textContainer atEnd:(BOOL) atEnd {
-	unsigned int length = [[display textStorage] length];
+	unsigned int length = [[display string] length];
 	if( atEnd && length != _lastDisplayTextLength ) [self performScrollToBottom];
 	_lastDisplayTextLength = length;
 }
@@ -317,16 +317,16 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[self resume];
 
 	_historyIndex = 0;
-	if( ! [[send textStorage] length] ) return;
+	if( ! [[send string] length] ) return;
 	if( [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[NSAttributedString alloc] initWithString:@""] autorelease]];
 	[_sendHistory insertObject:[[[send textStorage] copy] autorelease] atIndex:1];
 	if( [_sendHistory count] > [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatMaximumHistory"] unsignedIntValue] )
 		[_sendHistory removeObjectAtIndex:[_sendHistory count] - 1];
 
-	while( [[send textStorage] length] ) {
+	while( [[send string] length] ) {
 		range = [[[send textStorage] string] rangeOfString:@"\n"];
-		if( ! range.length ) range.location = [[send textStorage] length];
+		if( ! range.length ) range.location = [[send string] length];
 		subMsg = [[[[send textStorage] attributedSubstringFromRange:NSMakeRange( 0, range.location )] mutableCopy] autorelease];
 
 		if( ( [subMsg length] >= 1 && range.length ) || ( [subMsg length] && ! range.length ) ) {
@@ -365,7 +365,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[send reset:nil];
 	[self textDidChange:nil];
-	[display scrollRangeToVisible:NSMakeRange( [[display textStorage] length], 0 )];
+	[display scrollRangeToVisible:NSMakeRange( [[display string] length], 0 )];
 }
 
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event {
@@ -395,7 +395,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (BOOL) downArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
-	if( [[send textStorage] length] ) _historyIndex--;
+	if( [[send string] length] ) _historyIndex--;
 	if( _historyIndex < 0 ) {
 		[send reset:nil];
 		_historyIndex = -1;
@@ -478,7 +478,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[[[display superview] superview] setFrame:displayFrame];
 
 	if( _scrollerIsAtBottom )
-		[display scrollRangeToVisible:NSMakeRange( [[display textStorage] length], 0 )];
+		[display scrollRangeToVisible:NSMakeRange( [[display string] length], 0 )];
 
 	[splitView setNeedsDisplay:YES]; // makes the divider redraw correctly later
 	[[display window] enableFlushWindow]; // flush everything we have drawn
@@ -579,7 +579,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	_sendHeight = sendFrame.size.height;
 
 	if( _scrollerIsAtBottom )
-		[display scrollRangeToVisible:NSMakeRange( [[display textStorage] length], 0 )];
+		[display scrollRangeToVisible:NSMakeRange( [[display string] length], 0 )];
 
 	if( ! _forceSplitViewPosition && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
 		[(JVSplitView *)[notification object] savePositionUsingName:@"JVChatSplitViewPosition"];

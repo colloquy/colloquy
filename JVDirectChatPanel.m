@@ -857,7 +857,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	if( ( _cantSendMessages || ! [[self connection] isConnected] ) && ( ! [[[send textStorage] string] hasPrefix:@"/"] || [[[send textStorage] string] hasPrefix:@"//"] ) ) return;
 
 	_historyIndex = 0;
-	if( ! [[send textStorage] length] ) return;
+	if( ! [[send string] length] ) return;
 	if( [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[NSAttributedString alloc] initWithString:@""] autorelease]];
 	[_sendHistory insertObject:[[[send textStorage] copy] autorelease] atIndex:1];
@@ -866,14 +866,14 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	if( [sender isKindOfClass:[NSNumber class]] && [sender boolValue] ) action = YES;
 
-	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
+	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange( 0, [[send string] length] )];
 
 	unichar zeroWidthSpaceChar = 0x200b;
-	[[[send textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[send textStorage] length] )];
+	[[[send textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[send string] length] )];
 
-	while( [[send textStorage] length] ) {
+	while( [[send string] length] ) {
 		range = [[[send textStorage] string] rangeOfString:@"\n"];
-		if( ! range.length ) range.location = [[send textStorage] length];
+		if( ! range.length ) range.location = [[send string] length];
 		subMsg = [[[[send textStorage] attributedSubstringFromRange:NSMakeRange( 0, range.location )] mutableCopy] autorelease];
 
 		if( ( [subMsg length] >= 1 && range.length ) || ( [subMsg length] && ! range.length ) ) {
@@ -1040,7 +1040,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 - (BOOL) downArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
-	if( [[send textStorage] length] ) _historyIndex--;
+	if( [[send string] length] ) _historyIndex--;
 	if( _historyIndex < 0 ) {
 		[send reset:nil];
 		_historyIndex = -1;
@@ -1079,7 +1079,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event {
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputRetainsFormatting"] || ! [[send textStorage] length] )
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputRetainsFormatting"] || ! [[send string] length] )
 		[send reset:nil];
 	else [send setString:@""];
 	return YES;
@@ -1113,6 +1113,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (void) textDidChange:(NSNotification *) notification {
 	_historyIndex = 0;
+
+	if( ! [[send string] length] && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputRetainsFormatting"] )
+		[send reset:nil];
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
 		return;
@@ -1602,9 +1605,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (IBAction) _insertEmoticon:(id) sender {
-	if( [[send textStorage] length] )
-		[send replaceCharactersInRange:NSMakeRange( [[send textStorage] length], 0 ) withString:@" "];
-	[send replaceCharactersInRange:NSMakeRange( [[send textStorage] length], 0 ) withString:[NSString stringWithFormat:@"%@ ", [sender representedObject]]];
+	if( [[send string] length] )
+		[send replaceCharactersInRange:NSMakeRange( [[send string] length], 0 ) withString:@" "];
+	[send replaceCharactersInRange:NSMakeRange( [[send string] length], 0 ) withString:[NSString stringWithFormat:@"%@ ", [sender representedObject]]];
 }
 
 - (BOOL) _usingSpecificStyle {
