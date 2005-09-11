@@ -634,7 +634,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		if( [self style] != style ) goto quickEnd;
 		if( result ) {
 			[self performSelectorOnMainThread:@selector( _prependMessages: ) withObject:result waitUntilDone:YES];
-			usleep( 100000 ); // give time to other threads
+			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.]]; // give time to other threads
 		}
 	}
 
