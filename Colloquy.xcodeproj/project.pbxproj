@@ -1804,12 +1804,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1CBBDF5708B6EA92002A8BA6 /* Products */;
-					ProjectRef = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
-				},
-				{
 					ProductGroup = 0A7F242D08556AC100FA3D9B /* Products */;
 					ProjectRef = 1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */;
+				},
+				{
+					ProductGroup = 1CBBDF5708B6EA92002A8BA6 /* Products */;
+					ProjectRef = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
 				},
 				{
 					ProductGroup = 0A7F240B08556A9B00FA3D9B /* Products */;
@@ -2565,6 +2565,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Resources/Info.plist;
