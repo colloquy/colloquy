@@ -225,11 +225,8 @@
 			NSString *arg = nil;
 			while( arg = [e nextObject] ) {
 				if( [arg length] ) {
-					NSArray *parts = [arg componentsSeparatedByString:@"!"];
-					NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
-					NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
-					MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
-					[[room target] addBanForUser:user];
+					MVChatUser *user = [MVChatUser wildcardUserFromString:arg];
+					if( user ) [[room target] addBanForUser:user];
 				}
 			}
 			return YES;
@@ -239,11 +236,8 @@
 			NSString *arg = nil;
 			while( arg = [e nextObject] ) {
 				if( [arg length] ) {
-					NSArray *parts = [arg componentsSeparatedByString:@"!"];
-					NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
-					NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
-					MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
-					[[room target] removeBanForUser:user];
+					MVChatUser *user = [MVChatUser wildcardUserFromString:arg];
+					if( user ) [[room target] removeBanForUser:user];
 				}
 			}
 			return YES;

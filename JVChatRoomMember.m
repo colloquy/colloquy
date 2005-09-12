@@ -682,11 +682,7 @@
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 
-	NSArray *parts = [[firstField stringValue] componentsSeparatedByString:@"!"];
-	NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
-	NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
-
-	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
+	MVChatUser *user = [MVChatUser wildcardUserFromString:[firstField stringValue]];
 	[[[self room] target] addBanForUser:user];
 }
 
@@ -694,11 +690,7 @@
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 
-	NSArray *parts = [[firstField stringValue] componentsSeparatedByString:@"!"];
-	NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
-	NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
-
-	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
+	MVChatUser *user = [MVChatUser wildcardUserFromString:[firstField stringValue]];
 	[[[self room] target] addBanForUser:user];
 
 	NSAttributedString *reason = [[[NSAttributedString alloc] initWithString:[secondField stringValue]] autorelease];

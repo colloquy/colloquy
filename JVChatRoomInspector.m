@@ -18,6 +18,7 @@
 
 @interface JVChatRoomInspector (JVChatRoomInspectorPrivate)
 - (void) _topicChanged:(NSNotification *) notification;
+- (void) _reloadTopic;
 - (void) _refreshEditStatus:(NSNotification *) notification;
 - (void) _roomModeChanged:(NSNotification *)notification;
 @end
@@ -43,7 +44,10 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_room release];
+	[_latestBanList release];
+
 	_room = nil;
+	_latestBanList = nil;
 
 	[super dealloc];
 }
@@ -56,7 +60,7 @@
 }
 
 - (NSSize) minSize {
-	return NSMakeSize( 275., 390. );
+	return NSMakeSize( 275., 340. );
 }
 
 - (NSString *) title {
@@ -74,13 +78,33 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatRoomUserModeChangedNotification object:[_room target]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatRoomModesChangedNotification object:[_room target]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatRoomKickedNotification object:[_room target]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( refreshBanList: ) name:MVChatRoomBannedUsersSyncedNotification object:[_room target]];
+
+	[nameField setStringValue:[_room title]];
+
+	NSDateFormatter *formatter = nil;
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) {
+		formatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%1m/%1d/%Y %1I:%M%p" allowNaturalLanguage:YES] autorelease];
+		[saveTopic setBezelStyle:NSShadowlessSquareBezelStyle];
+		[resetTopic setBezelStyle:NSShadowlessSquareBezelStyle];
+	} else {
+		formatter = [[[NSDateFormatter alloc] init] autorelease];
+		[formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+		[formatter setDateStyle:NSDateFormatterShortStyle];
+		[formatter setTimeStyle:NSDateFormatterShortStyle];
+	}
+
+	if( [[_room target] isJoined] )
+		[infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Joined: %@", "chat room joined date label" ), [formatter stringFromDate:[[_room target] dateJoined]]]];
+	else [infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Parted: %@", "chat room parted date label" ), [formatter stringFromDate:[[_room target] dateParted]]]];
 
 	[encodingSelection setMenu:[_room _encodingMenu]];
 	[styleSelection setMenu:[_room _stylesMenu]];
 	[emoticonSelection setMenu:[_room _emoticonsMenu]];
 
-	[self _topicChanged:nil];
+	[self _reloadTopic];
 	[self _roomModeChanged:nil];
+	[self refreshBanList:nil];
 }
 
 #pragma mark -
@@ -129,26 +153,118 @@
 	}
 }
 
+- (IBAction) refreshBanList:(id) sender {
+	[_latestBanList autorelease];
+	_latestBanList = [[[[_room target] bannedUsers] allObjects] mutableCopy];
+
+	SEL sortSelector = NULL;
+	int sortKey = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatRoomInspectorBanListSort"];
+	switch( sortKey ) {
+		default:
+		case 1: sortSelector = @selector( compareByNickname: ); break;
+		case 2: sortSelector = @selector( compareByUsername: ); break;
+		case 3: sortSelector = @selector( compareByAddress: );
+	}
+
+	[_latestBanList sortUsingSelector:sortSelector];
+	[banRules reloadData];	
+}
+
 #pragma mark -
 
+- (IBAction) saveTopic:(id) sender {
+	unichar zeroWidthSpaceChar = 0x200b;
+	[[[topic textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[topic string] length] )];
+	[(MVChatRoom *)[_room target] setTopic:[topic textStorage]];
+}
+
+- (IBAction) resetTopic:(id) sender {
+	[self _reloadTopic];
+}
+
 - (BOOL) textView:(NSTextView *) textView clickedOnLink:(id) link atIndex:(unsigned) charIndex {
+	// do nothing, ignore clicked links
 	return YES;
 }
 
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event {
-	unichar zeroWidthSpaceChar = 0x200b;
-	[[[topic textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[topic string] length] )];
-	[(MVChatRoom *)[_room target] setTopic:[topic textStorage]];
+	// do nothing, don't insert line returns
 	return YES;
 }
 
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event {
-	[self textView:textView returnKeyPressed:event];
+	// do nothing, don't insert line returns
 	return YES;
 }
 
-- (void) textDidEndEditing:(NSNotification *) notification {
-	[self textView:topic returnKeyPressed:nil];
+#pragma mark -
+
+- (IBAction) newBanRule:(id) sender {
+	[_latestBanList addObject:@""];
+	[banRules noteNumberOfRowsChanged];
+	[banRules selectRow:( [_latestBanList count] - 1 ) byExtendingSelection:NO];
+	[banRules editColumn:0 row:( [_latestBanList count] - 1 ) withEvent:nil select:NO];
+}
+
+- (IBAction) deleteBanRule:(id) sender {
+	if( ! [banRules numberOfSelectedRows] || [banRules editedRow] != -1 ) return;
+
+	NSIndexSet *selection = [banRules selectedRowIndexes];
+
+	[banRules deselectAll:nil];
+
+	unsigned int count = [selection count];
+	unsigned int buffer[count];
+	count = [selection getIndexes:buffer maxCount:( count + 1 ) inIndexRange:NULL];
+
+	int i = 0;
+	for( i = ( count - 1 ); i >= 0; i-- ) {
+		unsigned int index = buffer[i];
+		if( index < 0 || index >= [_latestBanList count] ) continue;
+		MVChatUser *ban = [_latestBanList objectAtIndex:index];
+		[[_room target] removeBanForUser:ban];
+		[_latestBanList removeObjectAtIndex:index];
+	}
+
+	[banRules reloadData];
+}
+
+- (IBAction) editBanRule:(id) sender {
+	int row = [banRules selectedRow];
+	if( row == -1 || [banRules numberOfSelectedRows] > 1 ) return;
+	[banRules editColumn:0 row:row withEvent:nil select:YES];
+}
+
+#pragma mark -
+
+- (int) numberOfRowsInTableView:(NSTableView *) tableView {
+	return [_latestBanList count];
+}
+
+- (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+	return [[_latestBanList objectAtIndex:row] description];
+}
+
+- (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
+	MVChatUser *newBan = [MVChatUser wildcardUserFromString:object];
+	id ban = [_latestBanList objectAtIndex:row];
+	if( [ban isEqual:newBan] ) return;
+
+	if( [ban isKindOfClass:[MVChatUser class]] )
+		[[_room target] removeBanForUser:ban];
+
+	if( newBan && [object length] ) {
+		[[_room target] addBanForUser:newBan];
+		[_latestBanList replaceObjectAtIndex:row withObject:newBan];
+	} else [_latestBanList removeObjectAtIndex:row];
+
+	[banRules reloadData];
+}
+
+- (void) tableViewSelectionDidChange:(NSNotification *) notification {
+	unsigned int localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
+	[deleteBanButton setEnabled:( ( localUserModes & MVChatRoomMemberOperatorMode ) && [banRules selectedRow] != -1 )];
+	[editBanButton setEnabled:( ( localUserModes & MVChatRoomMemberOperatorMode ) && [banRules selectedRow] != -1 && [banRules numberOfSelectedRows] == 1 )];
 }
 @end
 
@@ -157,7 +273,10 @@
 @implementation JVChatRoomInspector (JVChatRoomInspectorPrivate)
 - (void) _topicChanged:(NSNotification *) notification {
 	if( [[topic window] firstResponder] == topic && [topic isEditable] ) return;
+	[self _reloadTopic];
+}
 
+- (void) _reloadTopic {
 	NSFont *baseFont = [NSFont userFontOfSize:12.];
 	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[_room encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
 	NSAttributedString *messageString = [NSAttributedString attributedStringWithChatFormat:[(MVChatRoom *)[_room target] topic] options:options];
@@ -173,7 +292,15 @@
 - (void) _refreshEditStatus:(NSNotification *) notification {
 	if( notification && ! [[[notification userInfo] objectForKey:@"who"] isLocalUser] ) return;
 
-	BOOL canEdit = [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] & MVChatRoomMemberOperatorMode;
+	unsigned int localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
+	BOOL canEdit = ( localUserModes & MVChatRoomMemberOperatorMode );
+
+	[newBanButton setEnabled:canEdit];
+	[deleteBanButton setEnabled:( canEdit && [banRules selectedRow] != -1 )];
+	[editBanButton setEnabled:( canEdit && [banRules selectedRow] != -1 )];
+
+	NSTableColumn *column = [banRules tableColumnWithIdentifier:@"rule"];
+	[column setEditable:canEdit];
 
 	[topicChangeable setEnabled:canEdit];
 	[privateRoom setEnabled:canEdit];
@@ -196,6 +323,7 @@
 - (void) _roomModeChanged:(NSNotification *) notification {
 	unsigned int changedModes = ( notification ? [[[notification userInfo] objectForKey:@"changedModes"] unsignedIntValue] : [(MVChatRoom *)[_room target] modes] );
 	unsigned int newModes = [(MVChatRoom *)[_room target] modes];
+	unsigned int localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
 
 	if( changedModes & MVChatRoomPrivateMode )
 		[privateRoom setState:( newModes & MVChatRoomPrivateMode ? NSOnState : NSOffState )];
@@ -211,8 +339,8 @@
 
 	if( changedModes & MVChatRoomOperatorsOnlySetTopicMode ) {
 		BOOL enabled = ( newModes & MVChatRoomOperatorsOnlySetTopicMode ? YES : NO );
-		if( enabled ) [self _topicChanged:nil];
-		if( [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] & MVChatRoomMemberOperatorMode ) [topic setEditable:YES];
+		if( enabled ) [self _reloadTopic];
+		if( localUserModes & MVChatRoomMemberOperatorMode ) [topic setEditable:YES];
 		else [topic setEditable:( ! enabled )];
 		[topicChangeable setState:( enabled ? NSOnState : NSOffState )];
 	}

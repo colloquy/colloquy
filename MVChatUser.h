@@ -70,6 +70,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 	BOOL _identified;
 	BOOL _serverOperator;
 }
++ (id) wildcardUserFromString:(NSString *) mask;
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host;
 + (id) wildcardUserWithFingerprint:(NSString *) fingerprint;
 
@@ -90,6 +91,8 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 - (NSComparisonResult) compare:(MVChatUser *) otherUser;
 - (NSComparisonResult) compareByNickname:(MVChatUser *) otherUser;
+- (NSComparisonResult) compareByUsername:(MVChatUser *) otherUser;
+- (NSComparisonResult) compareByAddress:(MVChatUser *) otherUser;
 - (NSComparisonResult) compareByRealName:(MVChatUser *) otherUser;
 - (NSComparisonResult) compareByIdleTime:(MVChatUser *) otherUser;
 

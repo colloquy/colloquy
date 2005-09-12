@@ -47,6 +47,17 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
++ (id) wildcardUserFromString:(NSString *) mask {
+	NSArray *parts = [mask componentsSeparatedByString:@"!"];
+	if( [parts count] == 1 ) {
+		return [self wildcardUserWithNicknameMask:[parts objectAtIndex:0] andHostMask:nil];
+	} else if( [parts count] >= 2 ) {
+		return [self wildcardUserWithNicknameMask:[parts objectAtIndex:0] andHostMask:[parts objectAtIndex:1]];
+	}
+
+	return [self wildcardUserWithNicknameMask:mask andHostMask:nil];
+}
+
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host {
 	MVChatUser *ret = [[[self alloc] init] autorelease];
 	ret -> _type = MVChatWildcardUserType;
@@ -222,6 +233,14 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (NSComparisonResult) compareByNickname:(MVChatUser *) otherUser {
 	return [[self nickname] compare:[otherUser nickname]];
+}
+
+- (NSComparisonResult) compareByUsername:(MVChatUser *) otherUser {
+	return [[self username] compare:[otherUser username]];
+}
+
+- (NSComparisonResult) compareByAddress:(MVChatUser *) otherUser {
+	return [[self address] compare:[otherUser address]];
 }
 
 - (NSComparisonResult) compareByRealName:(MVChatUser *) otherUser {
