@@ -378,6 +378,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[_views removeObjectIdenticalTo:controller];
 
 	[self _refreshList];
+	[self _refreshSelectionMenu];
 	[self _refreshWindow];
 
 	if( ! [_views count] && [[self window] isVisible] )
