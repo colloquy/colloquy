@@ -16,6 +16,7 @@ development:
 
 clean:
 	xcodebuild -project Colloquy.xcodeproj -alltargets clean
+	./Configure.command
 
 install:
 	-$(RM) -rf $(INSTALL_DIR)/$(PRODUCT_NAME)
