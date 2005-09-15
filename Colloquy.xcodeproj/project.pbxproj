@@ -50,7 +50,6 @@
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */; };
 		1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C397390082D4ADA00DCF3CF /* IOKit.framework */; };
 		1C3B290806529E720066197C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
-		1C44088B08BB583A00DC111F /* Colloquy.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1CD9DF6507D934F70006BB99 /* Colloquy.sdef */; };
 		1C45BFA5086F4BD80079E014 /* newWindow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C45BFA4086F4BD80079E014 /* newWindow.png */; };
 		1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */; };
 		1C51B4C7052DE14B00BB459B /* JVStandardCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3B4D570427BD5200000102 /* JVStandardCommands.m */; };
@@ -1804,12 +1803,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 0A7F242D08556AC100FA3D9B /* Products */;
-					ProjectRef = 1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */;
-				},
-				{
 					ProductGroup = 1CBBDF5708B6EA92002A8BA6 /* Products */;
 					ProjectRef = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
+				},
+				{
+					ProductGroup = 0A7F242D08556AC100FA3D9B /* Products */;
+					ProjectRef = 1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */;
 				},
 				{
 					ProductGroup = 0A7F240B08556A9B00FA3D9B /* Products */;
@@ -2043,7 +2042,6 @@
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
 				1CE6917108B183C9006D9CA0 /* NSCoreSuite.scriptTerminology in Resources */,
 				1CE6917208B183CA006D9CA0 /* NSCoreSuite.scriptSuite in Resources */,
-				1C44088B08BB583A00DC111F /* Colloquy.sdef in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
