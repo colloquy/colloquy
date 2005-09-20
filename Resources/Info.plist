@@ -121,8 +121,6 @@
 	<string>http://colloquy.info</string>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
- 	<key>OSAScriptingDefinition</key>
- 	<string>Colloquy.sdef</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2003-2005, Timothy Hatcher</string>
 	<key>NSMainNibFile</key>
