@@ -202,5 +202,9 @@
 			</dict>
 		</dict>
 	</array>
+	<key>SmartCrashReports_CompanyName</key>
+	<string>Colloquy</string>
+	<key>SmartCrashReports_URL</key>
+	<string>http://www.colloquy.info/crash.php</string>
 </dict>
 </plist>
