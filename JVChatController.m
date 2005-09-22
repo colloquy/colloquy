@@ -449,7 +449,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (JVIgnoreMatchResult) shouldIgnoreUser:(MVChatUser *) user withMessage:(NSAttributedString *) message inView:(id <JVChatViewController>) view {
 	JVIgnoreMatchResult ignoreResult = JVNotIgnored;
-	NSEnumerator *renum = [[[MVConnectionsController defaultController] ignoreRulesForConnection:[view connection]] objectEnumerator];
+	NSEnumerator *renum = [[[MVConnectionsController defaultController] ignoreRulesForConnection:[user connection]] objectEnumerator];
 	KAIgnoreRule *rule = nil;
 
 	while( ( ignoreResult == JVNotIgnored ) && ( ( rule = [renum nextObject] ) ) )
