@@ -226,7 +226,9 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) joinRoom:(id) sender {
-	[[JVChatRoomBrowser chatRoomBrowserForConnection:nil] showWindow:nil];
+	NSArray *connections = [[MVConnectionsController defaultController] connections];
+	MVChatConnection *connection = ( [connections count] ? [connections objectAtIndex:1] : nil );
+	[[JVChatRoomBrowser chatRoomBrowserForConnection:connection] showWindow:nil];
 }
 
 #pragma mark -
