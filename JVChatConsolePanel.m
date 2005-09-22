@@ -285,6 +285,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	else [attrs setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Monaco" traits:0 weight:5 size:9.] forKey:NSFontAttributeName];
 	[attrs setObject:para forKey:NSParagraphStyleAttributeName];
 
+	NSScroller *scroller = [(NSScrollView *)[[display superview] superview] verticalScroller];
+	if( ! scroller || [scroller floatValue] == 1. ) _scrollerIsAtBottom = YES;
+	else _scrollerIsAtBottom = NO;
+
 	msg = [[[NSAttributedString alloc] initWithString:strMsg attributes:attrs] autorelease];
 	[[display textStorage] beginEditing];
 	if( [[display string] length] )
@@ -302,7 +306,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) layoutManager:(NSLayoutManager *) layoutManager didCompleteLayoutForTextContainer:(NSTextContainer *) textContainer atEnd:(BOOL) atEnd {
 	unsigned int length = [[display string] length];
-	if( atEnd && length != _lastDisplayTextLength ) [self performScrollToBottom];
+	if( _scrollerIsAtBottom && atEnd && length != _lastDisplayTextLength )
+		[self performScrollToBottom];
 	_lastDisplayTextLength = length;
 }
 
