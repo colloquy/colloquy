@@ -80,9 +80,23 @@
 					<xsl:with-param name="date" select="message[1]/@received | @received" />
 				</xsl:call-template>
 			</span>
-			<span class="timestamp hidden">] &lt;</span>
+			<xsl:choose>
+				<xsl:when test="message[1]/@action = 'yes' or @action = 'yes'">
+					<span class="timestamp hidden">] <xsl:text disable-output-escaping="yes">&amp;raquo; </xsl:text></span>
+				</xsl:when>
+				<xsl:otherwise>
+					<span class="timestamp hidden">] &lt;</span>
+				</xsl:otherwise>
+			</xsl:choose>
 			<a href="{$memberLink}" class="{$senderClasses}"><span class="{$senderColor}"><xsl:value-of select="$senderNick" /></span></a>
-			<span class="hidden">&gt; </span>
+			<xsl:choose>
+				<xsl:when test="message[1]/@action = 'yes' or @action = 'yes'">
+					<span class="hidden"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
+				</xsl:when>
+				<xsl:otherwise>
+					<span class="hidden">&gt; </span>
+				</xsl:otherwise>
+			</xsl:choose>
 			<span class="message">
 				<xsl:choose>
 					<xsl:when test="message[1]">
