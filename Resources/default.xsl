@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='iso-8859-1'?>
+<?xml version='1.0' encoding='utf-8'?>
 <xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 	<xsl:output omit-xml-declaration="yes" indent="no" />
 	<xsl:param name="bulkTransform" />
@@ -61,8 +61,18 @@
 				</xsl:call-template>
 			</span>
 			<span class="timestamp hidden">] </span>
+			<xsl:if test="message[1]/@action = 'yes' or @action = 'yes'">
+				<span class="hidden">• </span>
+			</xsl:if>
 			<a href="{$memberLink}" class="{$senderClasses}"><xsl:value-of select="sender | ../sender" /></a>
-			<span class="hidden">: </span>
+			<xsl:choose>
+				<xsl:when test="message[1]/@action = 'yes' or @action = 'yes'">
+					<span class="hidden"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
+				</xsl:when>
+				<xsl:otherwise>	
+					<span class="hidden">: </span>
+				</xsl:otherwise>
+			</xsl:choose>
 			<span class="message">
 				<xsl:choose>
 					<xsl:when test="message[1]">
