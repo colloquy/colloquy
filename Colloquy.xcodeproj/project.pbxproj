@@ -200,7 +200,6 @@
 		1CBA4E67062CCDA90082D1BF /* infoWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBA4E65062CCDA90082D1BF /* infoWidgetPressed.png */; };
 		1CBA56ED058D202200257832 /* emoticon.tif in Resources */ = {isa = PBXBuildFile; fileRef = F5E98659018CB25601EE70DE /* emoticon.tif */; };
 		1CBAB8B00884BF49005D1CDD /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF687A508202F3F00F498FB /* CoreServices.framework */; };
-		1CBBDF6508B6EAB2002A8BA6 /* Ruby Support.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CBBDF5C08B6EA92002A8BA6 /* Ruby Support.plugin */; };
 		1CBC62E505488C73009E59E1 /* JVPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC62E305488C73009E59E1 /* JVPreferencesController.m */; };
 		1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */; };
 		1CBC63190548975E009E59E1 /* GeneralPreferences.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC63180548975E009E59E1 /* GeneralPreferences.tif */; };
@@ -384,13 +383,6 @@
 			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
 			remoteInfo = "Python Support Plugin";
 		};
-		1CBBDF8608B6EAC3002A8BA6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
-			remoteInfo = "Python Support Plugin";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -428,7 +420,6 @@
 				0A6571B508687F86001FF007 /* AppleScript Support.plugin in CopyFiles */,
 				0A6571BD0868800D001FF007 /* F-Script Support.plugin in CopyFiles */,
 				1C0A19B008B041C200324E25 /* Python Support.plugin in CopyFiles */,
-				1CBBDF6508B6EAB2002A8BA6 /* Ruby Support.plugin in CopyFiles */,
 				1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in CopyFiles */,
 				1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in CopyFiles */,
 			);
@@ -1702,7 +1693,6 @@
 				0A6571A908687EF9001FF007 /* PBXTargetDependency */,
 				0A6571AB08687F01001FF007 /* PBXTargetDependency */,
 				1C0A19AF08B041A800324E25 /* PBXTargetDependency */,
-				1CBBDF8708B6EAC3002A8BA6 /* PBXTargetDependency */,
 			);
 			name = "Colloquy (Application)";
 			productName = "Massinova (Application)";
@@ -1803,24 +1793,24 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1CBBDF5708B6EA92002A8BA6 /* Products */;
-					ProjectRef = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
+					ProductGroup = 0A7F240B08556A9B00FA3D9B /* Products */;
+					ProjectRef = 1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */;
+				},
+				{
+					ProductGroup = 0A7F23F308556A6C00FA3D9B /* Products */;
+					ProjectRef = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
 				},
 				{
 					ProductGroup = 0A7F242D08556AC100FA3D9B /* Products */;
 					ProjectRef = 1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */;
 				},
 				{
-					ProductGroup = 0A7F240B08556A9B00FA3D9B /* Products */;
-					ProjectRef = 1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */;
-				},
-				{
 					ProductGroup = 1C0A19A308B0418600324E25 /* Products */;
 					ProjectRef = 1C0A19A208B0418600324E25 /* Python Support.xcodeproj */;
 				},
 				{
-					ProductGroup = 0A7F23F308556A6C00FA3D9B /* Products */;
-					ProjectRef = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
+					ProductGroup = 1CBBDF5708B6EA92002A8BA6 /* Products */;
+					ProjectRef = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
 				},
 			);
 			targets = (
@@ -2225,11 +2215,6 @@
 			isa = PBXTargetDependency;
 			target = CBF685140820186F00F498FB /* Colloquy (Metadata Importer) */;
 			targetProxy = 1C7F30000855456D00D41FB0 /* PBXContainerItemProxy */;
-		};
-		1CBBDF8708B6EAC3002A8BA6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Python Support Plugin";
-			targetProxy = 1CBBDF8608B6EAC3002A8BA6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
