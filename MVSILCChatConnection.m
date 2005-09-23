@@ -571,6 +571,8 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		char *channel_topic = va_arg( list, char * );
 		SilcUInt32 user_count = va_arg( list, SilcUInt32 );
 
+		if( ! channel_name ) break;
+
 		NSString *r = [NSString stringWithUTF8String:channel_name];
 		if( ! channel_topic ) channel_topic = "";
 		NSData *t = [NSData dataWithBytes:channel_topic length:strlen( channel_topic )];
