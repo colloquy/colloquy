@@ -115,6 +115,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.3.9</string>
 	<key>CFBundleVersion</key>
 	<string>2D27 source</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
