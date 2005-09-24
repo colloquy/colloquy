@@ -1,7 +1,9 @@
 #import "MVCrashCatcher.h"
+#import <sys/sysctl.h>
 
 @implementation MVCrashCatcher
 + (void) check {
+	NSLog( @"%@", [NSBundle bundleWithIdentifier:@"com.unsanity.smartcrashreports"] );
 	if( [[NSBundle bundleWithIdentifier:@"com.unsanity.smartcrashreports"] isLoaded] )
 		return; // user has Unsanity Smart Crash Reports installed, don't use our own reporter
 	[[MVCrashCatcher alloc] init];
@@ -37,9 +39,13 @@
 		logContent = [NSString stringWithContentsOfFile:logPath];
 	else logContent = [NSString stringWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:NULL];
 
+	// get only the last crash trace, there is hardly ever more than one since we delete the file. it can still happen
+	logContent = [[logContent componentsSeparatedByString:@"**********"] lastObject];
+	logContent = [logContent stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
 	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	[description setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@.", "crash message" ), programName, programName]];
-	[log replaceCharactersInRange:NSMakeRange( 0, 0 ) withString:logContent];
+	[log setString:logContent];
 
 	[window center];
 	[[NSApplication sharedApplication] runModalForWindow:window];
@@ -61,24 +67,32 @@
 #pragma mark -
 
 - (IBAction) sendCrashLog:(id) sender {
-	NSString *llog = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		llog = [NSString stringWithContentsOfFile:logPath];
-	else llog = [NSString stringWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:NULL];
+	NSMutableString *body = [NSMutableString stringWithCapacity:40960];
 
-	NSString *shortDesc = @"Colloquy Crash - No Description";
-	if( [[[comments textStorage] string] length] > 48 ) {
-		shortDesc = [[[[comments textStorage] string] substringToIndex:48] stringByAppendingString:@"..."];
-	} else if( [[[comments textStorage] string] length] ) shortDesc = [[comments textStorage] string];
+	NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+	NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
 
-	ABPerson *me = [[ABAddressBook sharedAddressBook] me];
-	ABMultiValue *value = [me valueForProperty:kABEmailProperty];
-	NSString *email = [value valueAtIndex:[value indexForIdentifier:[value primaryIdentifier]]];
-	NSString *name = [NSString stringWithFormat:@"%@ %@", [me valueForProperty:kABFirstNameProperty], [me valueForProperty:kABLastNameProperty]];
+	[body appendFormat:@"app_version=%@%%20(%@)&", [[clientVersion objectForKey:@"CFBundleShortVersionString"] stringByEncodingIllegalURLCharacters], [[clientVersion objectForKey:@"CFBundleVersion"] stringByEncodingIllegalURLCharacters]];
+	[body appendFormat:@"os_version=%@:%@&", [[systemVersion objectForKey:@"ProductUserVisibleVersion"] stringByEncodingIllegalURLCharacters], [[systemVersion objectForKey:@"ProductBuildVersion"] stringByEncodingIllegalURLCharacters]];
 
-	NSString *body = [NSString stringWithFormat:@"build=%@&email=%@&service_name=%@&short_desc=%@&desc=%@&log=%@", [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] stringByEncodingIllegalURLCharacters], [email stringByEncodingIllegalURLCharacters], [name stringByEncodingIllegalURLCharacters], [shortDesc stringByEncodingIllegalURLCharacters], [[[comments textStorage] string] stringByEncodingIllegalURLCharacters], [llog stringByEncodingIllegalURLCharacters]];
+	int selector[2] = { CTL_HW, HW_MODEL };
+	char model[64] = "";
+	size_t length = sizeof( model );
+	sysctl( selector, 2, &model, &length, NULL, 0 );
 
-	NSURL *url = [NSURL URLWithString:@"http://www.visualdistortion.org/colloquy/post.jsp"];
+	selector[0] = CTL_HW;
+	selector[1] = HW_MEMSIZE;
+	uint64_t memory = 0;
+	length = sizeof( memory );
+	sysctl( selector, 2, &memory, &length, NULL, 0 );
+
+	[body appendFormat:@"machine_config=%s%%20(%d%%20MB)&", model, (int) ( memory / (uint64_t) 1024 / (uint64_t) 1024 )];
+	[body appendFormat:@"feedback_comments=%@&", [[[comments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByEncodingIllegalURLCharacters]];
+
+	NSData *trace = [[log string] dataUsingEncoding:NSUTF8StringEncoding];
+	[body appendFormat:@"page_source=%@", ( trace ? [trace base64Encoding] : @"" )];
+
+	NSURL *url = [NSURL URLWithString:@"http://www.colloquy.info/crash.php"];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.];
 	[request setHTTPMethod:@"POST"];
 	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
