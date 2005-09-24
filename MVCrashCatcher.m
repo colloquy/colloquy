@@ -3,7 +3,6 @@
 
 @implementation MVCrashCatcher
 + (void) check {
-	NSLog( @"%@", [NSBundle bundleWithIdentifier:@"com.unsanity.smartcrashreports"] );
 	if( [[NSBundle bundleWithIdentifier:@"com.unsanity.smartcrashreports"] isLoaded] )
 		return; // user has Unsanity Smart Crash Reports installed, don't use our own reporter
 	[[MVCrashCatcher alloc] init];
