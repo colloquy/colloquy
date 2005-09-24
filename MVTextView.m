@@ -107,12 +107,12 @@
 		return [[self delegate] textView:self escapeKeyPressed:event];
 	} else if( chr >= 0xF700 && chr <= 0xF8FF && [[self delegate] respondsToSelector:@selector( textView:functionKeyPressed: )] ) {
 		return [[self delegate] textView:self functionKeyPressed:event];
-	} else if( _tabCompletting && chr != NSDeleteCharacter && chr != NSBackspaceCharacter ) {
+	}/* else if( _tabCompletting && chr != NSDeleteCharacter && chr != NSBackspaceCharacter ) {
 		_ignoreSelectionChanges = YES;
 		[self replaceCharactersInRange:[self selectedRange] withString:[event charactersIgnoringModifiers]];
 		_ignoreSelectionChanges = NO;
 		return [self autocompleteWithSuffix:_complettingWithSuffix];
-	}
+	} */
 
 	return NO;
 }
