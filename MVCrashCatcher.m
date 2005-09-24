@@ -68,7 +68,9 @@
 - (IBAction) sendCrashLog:(id) sender {
 	NSMutableString *body = [NSMutableString stringWithCapacity:40960];
 
-	NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+	NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
+	if( ! [systemVersion count] ) systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+
 	NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
 
 	[body appendFormat:@"app_version=%@%%20(%@)&", [[clientVersion objectForKey:@"CFBundleShortVersionString"] stringByEncodingIllegalURLCharacters], [[clientVersion objectForKey:@"CFBundleVersion"] stringByEncodingIllegalURLCharacters]];
