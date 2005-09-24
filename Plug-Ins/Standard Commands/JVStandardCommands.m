@@ -39,8 +39,8 @@
 	BOOL isChatRoom = [view isKindOfClass:[JVChatRoomPanel class]];
 	BOOL isDirectChat = [view isKindOfClass:[JVDirectChatPanel class]];
 
-	JVDirectChatPanel *chat = view;
-	JVChatRoomPanel *room = view;
+	JVDirectChatPanel *chat = (JVDirectChatPanel *) view;
+	JVChatRoomPanel *room = (JVChatRoomPanel *) view;
 
 	if( isChatRoom || isDirectChat ) {
 		if( ! [command caseInsensitiveCompare:@"me"] || ! [command caseInsensitiveCompare:@"action"] || ! [command caseInsensitiveCompare:@"say"] ) {

@@ -16,7 +16,7 @@
 #pragma mark -
 
 - (void) updateWithChannelEntry:(SilcChannelEntry) channelEntry {
-	MVSILCChatConnection *connection = [self connection];
+	MVSILCChatConnection *connection = (MVSILCChatConnection *)[self connection];
 
 	SilcLock( [connection _silcClient] );
 	

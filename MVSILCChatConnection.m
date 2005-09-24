@@ -611,7 +611,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		/* SilcBuffer channel_pubkeys = */ va_arg( list, SilcBuffer );
 		/* SilcUInt32 user_limit = */ va_arg( list, SilcUInt32 );
 
-		MVSILCChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> channel_name]];
+		MVSILCChatRoom *room = (MVSILCChatRoom *)[self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> channel_name]];
 		if( ! room ) {
 			room = [[[MVSILCChatRoom allocWithZone:[self zone]] initWithChannelEntry:channel andConnection:self] autorelease];
 			[self _addJoinedRoom:room];
