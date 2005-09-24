@@ -1932,7 +1932,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	}
 
 	if( ! [command caseInsensitiveCompare:@"version"] ) {
-		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
+		if( ! [systemVersion count] ) systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 		NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
 
 #if __ppc__
