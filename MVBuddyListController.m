@@ -166,6 +166,9 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[buddies registerForDraggedTypes:[NSArray arrayWithObject:NSFilenamesPboardType]];
 
+	if( _showIcons || _showNicknameAndServer ) [buddies setRowHeight:36.];
+	else [buddies setRowHeight:18.];
+
 	[buddies reloadData];
 	[self _setBuddiesNeedSortAnimated];
 }
