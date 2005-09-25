@@ -482,7 +482,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	while( ( user = [enumerator nextObject] ) ) {
 		if( [[user connection] isEqual:connection] || [[user serverAddress] caseInsensitiveCompare:[connection server]] == NSOrderedSame ) {
 			[_onlineUsers removeObject:user];
-//			[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyNicknameWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:nick, @"nickname", nil]];
 			if( ! [_onlineUsers count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 		}
 	}
