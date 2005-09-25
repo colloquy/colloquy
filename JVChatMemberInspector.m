@@ -133,6 +133,10 @@
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
 		[clientInfo setObjectValue:[[_member user] attributeForKey:key]];
 		[clientInfo setToolTip:[[_member user] attributeForKey:key]];
+	} else if( [key isEqualToString:MVChatUserKnownRoomsAttribute] ) {
+		NSString *rms = [[[_member user] attributeForKey:key] componentsJoinedByString:NSLocalizedString( @", ", "room list separator" )];
+		[rooms setObjectValue:rms];
+		[rooms setToolTip:rms];
 	}
 }
 

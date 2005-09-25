@@ -887,7 +887,7 @@ static void MVChatUserChannels( IRC_SERVER_REC *server, const char *data ) {
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) ) {
-		room = [[self stringWithEncodedBytes:chanlist] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"@\%+"]];
+		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"@\%+ "]];
 		if( room ) [results addObject:room];
 	}
 
