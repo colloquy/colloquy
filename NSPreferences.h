@@ -13,7 +13,7 @@
 - (void) saveChanges;
 - (BOOL) hasChangesPending;
 - (NSImage *) imageForPreferenceNamed:(NSString *) name;
-- (NSView *) viewForPreferenceNamed:(NSString *) name;
+- (NSBox *) viewForPreferenceNamed:(NSString *) name;
 @end
 
 @interface NSPreferences : NSObject {
@@ -52,8 +52,6 @@
 + (void) setDefaultPreferencesClass:(Class) class;
 + (Class) defaultPreferencesClass;
 
-- (id) init;
-- (void) dealloc;
 - (void) addPreferenceNamed:(NSString *) name owner:(id) owner;
 
 - (NSSize) preferencesContentSize;
@@ -87,7 +85,6 @@
 #endif
 }
 + (id) sharedInstance;
-- (id) init;
 - (NSString *) preferencesNibName;
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_3
 - (void) setPreferencesView:(NSView *) view;
@@ -105,10 +102,6 @@
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_3
 - (NSSize) minSize;
 - (void) setMinSize:(NSSize) size;
-- (void) moduleWillBeRemoved;
-- (void) moduleWasInstalled;
-- (BOOL) moduleCanBeRemoved;
-- (BOOL) preferencesWindowShouldClose;
 - (BOOL) isResizable;
 #endif
 @end
