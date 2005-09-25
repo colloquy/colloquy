@@ -1567,7 +1567,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( [[user nickname] length] > 0 );
 
 	IrssiLock();
-	notifylist_add( [self encodedBytesWithString:[NSString stringWithFormat:@"%@!*@*", [user nickname]]], NULL, TRUE, 600 );
+	const char *mask = [self encodedBytesWithString:[NSString stringWithFormat:@"%@!*@*", [user nickname]]];
+	if( ! notifylist_find( mask, NULL ) ) notifylist_add( mask, NULL, TRUE, 600 );
 	IrssiUnlock();
 }
 
