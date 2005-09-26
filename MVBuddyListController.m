@@ -10,40 +10,6 @@
 
 static MVBuddyListController *sharedInstance = nil;
 
-@class ABUIController;
-@class ABRoundedTextField;
-@class ABSplitView;
-@class ABTableView;
-@class ABScrollView;
-
-@interface ABPeoplePickerController : NSObject {
-	@public
-    NSView *_peoplePicker;
-    ABUIController *_uiController;
-    NSWindow *_window;
-    ABSplitView *_mainSplit;
-    NSTextField *_label;
-    ABRoundedTextField *_searchField;
-}
-- (id) initWithWindow:(NSWindow *) window;
-- (NSView *) peoplePickerView;
-- (NSArray *) selectedGroups;
-- (NSArray *) selectedRecords;
-- (NSArray *) stringsFromSelectionExpanding:(BOOL) expand;
-- (void) addColumnFilter:(NSDictionary *) filter forColumnTitle:(NSString *) title;
-- (void) removeAllColumnFilters;
-- (void) removeColumnFilter:(NSDictionary *) filter;
-- (void) selectColumnTitle:(NSString *) title;
-- (void) setAllowSubrowSelection:(BOOL) allow;
-- (void) setAllowGroupSelection:(BOOL) allow;
-- (NSArray *) displayedColumns;
-- (void) editInAddressBook:(id) sender;
-- (void) setGroupDoubleClickTarget:(id) target andAction:(SEL) action;
-- (void) setPeopleDoubleClickTarget:(id) target andAction:(SEL) action;
-@end
-
-#pragma mark -
-
 @interface ABPerson (ABPersonPrivate)
 + (ABPerson *) personFromDictionary:(NSDictionary *) dictionary;
 - (NSDictionary *) dictionaryRepresentation;
@@ -84,7 +50,6 @@ static MVBuddyListController *sharedInstance = nil;
 		_onlineBuddies = [[NSMutableSet set] retain];
 		_buddyList = [[NSMutableSet set] retain];
 		_buddyOrder = [[NSMutableArray array] retain];
-		_picker = nil;
 
 		[self _loadBuddyList];
 
@@ -115,14 +80,12 @@ static MVBuddyListController *sharedInstance = nil;
 	[_onlineBuddies release];
 	[_buddyList release];
 	[_buddyOrder release];
-	[_picker release];
 	[_oldPositions release];
 	[_addPerson release];
 
 	_onlineBuddies = nil;
 	_buddyList = nil;
 	_buddyOrder = nil;
-	_picker = nil;
 	_oldPositions = nil;
 	_addPerson = nil;
 
@@ -145,24 +108,13 @@ static MVBuddyListController *sharedInstance = nil;
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
 	[theColumn setDataCell:prototypeCell];
 
-	_picker = [[[ABPeoplePickerController alloc] initWithWindow:pickerWindow] retain];
+	[pickerView addProperty:@"IRCNickname"];
+	[pickerView setColumnTitle:NSLocalizedString( @"IRC Nickname", "irc nickname buddy picker column title" ) forProperty:@"IRCNickname"];
 
-	[_picker setAllowSubrowSelection:NO];
-	[_picker setAllowGroupSelection:NO];
-	[_picker addColumnFilter:[NSDictionary dictionaryWithObject:@"" forKey:@"IRCNickname"] forColumnTitle:@"IRC Nickname"];
-	[_picker setPeopleDoubleClickTarget:self andAction:@selector( confirmBuddySelection: )];
-
-	[[_picker peoplePickerView] setFrame:[pickerView frame]];
-	[[pickerWindow contentView] replaceSubview:pickerView with:[_picker peoplePickerView]];
-	[[_picker peoplePickerView] setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-
-	NSTableView *table = [[[[[[[[(NSView *)_picker -> _mainSplit subviews] objectAtIndex:0] subviews] objectAtIndex:0] subviews] objectAtIndex:0] subviews] objectAtIndex:0];
-	[table setAllowsMultipleSelection:NO];
-	[table setAllowsEmptySelection:NO];
-
-	table = [[[[[[[[(NSView *)_picker -> _mainSplit subviews] objectAtIndex:1] subviews] objectAtIndex:0] subviews] objectAtIndex:0] subviews] objectAtIndex:0];
-	[table setAllowsMultipleSelection:NO];
-	[table setAllowsEmptySelection:NO];
+	[pickerView setAllowsMultipleSelection:NO];
+	[pickerView setAllowsGroupSelection:NO];
+	[pickerView setTarget:self];
+	[pickerView setNameDoubleAction:@selector( confirmBuddySelection: )];
 
 	[buddies registerForDraggedTypes:[NSArray arrayWithObject:NSFilenamesPboardType]];
 
@@ -265,7 +217,7 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	ABPerson *person = [[_picker selectedRecords] lastObject];
+	ABPerson *person = [[pickerView selectedRecords] lastObject];
 
 	if( ! [(NSDictionary *)[person valueForProperty:@"IRCNickname"] count] ) {
 		[_addPerson autorelease];

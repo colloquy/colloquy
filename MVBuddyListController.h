@@ -1,4 +1,5 @@
 #import "JVInspectorController.h"
+#import <AddressBook/ABPeoplePickerView.h>
 
 @class MVTableView;
 @class JVBuddy;
@@ -21,7 +22,7 @@ typedef enum {
 	IBOutlet NSButton *infoButton;
 
 	IBOutlet NSWindow *pickerWindow;
-	IBOutlet NSView *pickerView;
+	IBOutlet ABPeoplePickerView *pickerView;
 
 	IBOutlet NSWindow *newPersonWindow;
 	IBOutlet NSTextField *nickname;
@@ -35,7 +36,6 @@ typedef enum {
 	NSMutableSet *_buddyList;
 	NSMutableSet *_onlineBuddies;
 	NSMutableArray *_buddyOrder;
-	ABPeoplePickerController* _picker;
 	NSString *_addPerson;
 
 	BOOL _showFullNames;
