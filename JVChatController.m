@@ -17,6 +17,10 @@
 static JVChatController *sharedInstance = nil;
 static NSMenu *smartTranscriptMenu = nil;
 
+@interface JVChatController (JVChatControllerPrivate)
+- (void) _reloadPreferedWindowRuleSets;
+@end
+
 @implementation JVChatController
 + (JVChatController *) defaultController {
 	extern JVChatController *sharedInstance;
@@ -77,7 +81,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		_chatControllers = [[NSMutableArray array] retain];
 
 		_windowRuleSets = nil;
-		[self reloadPreferedWindowRuleSets];
+		[self _reloadPreferedWindowRuleSets];
 
 		NSEnumerator *smartTranscriptsEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVSmartTranscripts"] objectEnumerator];
 		NSData *archivedSmartTranscript = nil;
@@ -89,6 +93,8 @@ static NSMenu *smartTranscriptMenu = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotPrivateMessage: ) name:MVChatConnectionGotPrivateMessageNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatRoomGotMessageNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:nil];
+
+		[[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeyPath:@"values.JVChatWindowRuleSets" options:NSKeyValueObservingOptionNew context:NULL];
 	}
 
 	return self;
@@ -97,6 +103,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (void) dealloc {
 	extern JVChatController *sharedInstance;
 
+	[[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeyPath:@"JVChatWindowRuleSets"];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
@@ -172,13 +179,6 @@ static NSMenu *smartTranscriptMenu = nil;
 		[windowController showChatViewController:controller];
 
 	if( initiated ) [windowController showWindow:nil];
-}
-
-- (void) reloadPreferedWindowRuleSets {
-	NSData *data = [[NSUserDefaults standardUserDefaults] dataForKey:@"JVChatWindowRuleSets"];
-
-	[_windowRuleSets autorelease];
-	_windowRuleSets = ( [data length] ? [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain] : nil );
 }
 
 #pragma mark -
@@ -581,6 +581,12 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (IBAction) _newSmartTranscript:(id) sender {
 	[[JVChatController defaultController] newSmartTranscript];
+}
+
+- (void) _reloadPreferedWindowRuleSets {
+	NSData *data = [[NSUserDefaults standardUserDefaults] dataForKey:@"JVChatWindowRuleSets"];
+	[_windowRuleSets autorelease];
+	_windowRuleSets = ( [data length] ? [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain] : nil );
 }
 @end
 

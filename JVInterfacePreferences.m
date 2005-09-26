@@ -102,7 +102,6 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (void) saveWindowRules {
 	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_windowSets];
 	[[NSUserDefaults standardUserDefaults] setObject:data forKey:@"JVChatWindowRuleSets"];
-	[[JVChatController defaultController] reloadPreferedWindowRuleSets];
 }
 
 #pragma mark -

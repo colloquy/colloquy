@@ -23,7 +23,6 @@
 + (void) refreshSmartTranscriptMenu;
 
 - (void) addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller userInitiated:(BOOL) initiated;
-- (void) reloadPreferedWindowRuleSets;
 
 - (NSSet *) allChatWindowControllers;
 - (JVChatWindowController *) newChatWindowController;
