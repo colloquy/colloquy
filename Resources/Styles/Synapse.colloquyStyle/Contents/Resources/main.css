@@ -20,6 +20,7 @@ body {
 	padding-top: 4px;
 	padding-bottom: 2px;
 	margin-bottom: 0;
+	word-wrap: break-word;
 }
 
 .message.self {
@@ -42,6 +43,7 @@ span.message.searchHighlight {
 	padding-bottom: 2px;
 	padding-top: 2px;
 	margin-bottom: 0;
+	word-wrap: break-word;
 }
 
 .submessage.self {
@@ -104,6 +106,7 @@ span.submessage.searchHighlight {
 	font-weight: bold;
 	font-size: smaller;
 	color: white;
+	word-wrap: break-word;
 }
 
 .event .reason:before {

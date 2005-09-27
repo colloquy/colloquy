@@ -74,6 +74,7 @@ i {
 	text-align: left;
 	margin-left: 14ex;
 	margin-right: 0;
+	word-wrap: break-word;
 }
 
 .message {
@@ -81,6 +82,7 @@ i {
 	text-align: left;
 	margin-left: 16ex;
 	margin-right: 9ex;
+	word-wrap: break-word;
 }
 
 .timestamp {

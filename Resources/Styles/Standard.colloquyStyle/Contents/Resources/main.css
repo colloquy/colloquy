@@ -12,6 +12,7 @@ body {
 	color: #aaa;
 	text-align: center;
 	padding: 0 5px 2px 5px;
+	word-wrap: break-word;
 }
 
 .error:before {
@@ -26,6 +27,7 @@ body {
 	overflow: hidden;
 	padding: 1px 5px 1px 5px;
 	margin-bottom: 3px;
+	word-wrap: break-word;
 }
 
 .envelope.highlight {

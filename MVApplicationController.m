@@ -233,38 +233,6 @@ static BOOL applicationIsTerminating = NO;
 
 #pragma mark -
 
-- (IBAction) copyStripped:(id) sender {
-	if( [[NSApplication sharedApplication] sendAction:@selector( copy: ) to:nil from:sender] ) {
-		unichar chr = 0x200b;
-		NSString *space = [NSString stringWithCharacters:&chr length:1];
-		NSPasteboard *pb = [NSPasteboard generalPasteboard];
-
-		if( [[pb types] containsObject:NSStringPboardType] ) {
-			NSMutableString *text = [[pb stringForType:NSStringPboardType] mutableCopy];
-			if( text ) {
-				[text replaceOccurrencesOfString:space withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [text length] )];
-				[pb setString:text forType:NSStringPboardType];
-				[text release];
-			}
-		}
-
-		if( [[pb types] containsObject:NSRTFPboardType] ) {
-			NSData *rtfData = [pb dataForType:NSRTFPboardType];
-			if( rtfData ) {
-				NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithRTF:rtfData documentAttributes:NULL];
-				if( string ) {
-					[[string mutableString] replaceOccurrencesOfString:space withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [string length] )];
-					rtfData = [string RTFFromRange:NSMakeRange( 0, [string length] ) documentAttributes:nil];
-					[pb setData:rtfData forType:NSRTFPboardType];
-					[string release];
-				}
-			}
-		}
-	}
-}
-
-#pragma mark -
-
 - (IBAction) markAllDisplays:(id) sender {
 	JVChatController *chatController = [JVChatController defaultController];
 	Class controllerClass = [JVDirectChatPanel class];

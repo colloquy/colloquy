@@ -146,6 +146,7 @@ a:hover {
 	margin: 1px 4px 0;
 	padding: 0;
 	overflow: hidden;
+	word-wrap: break-word;
 }
 
 .messages_bottom {
@@ -204,6 +205,7 @@ a:hover {
 	padding: 0;
 	overflow: hidden;
 	color: #303030;
+	word-wrap: break-word;
 }
 
 .event a {

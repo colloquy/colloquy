@@ -173,8 +173,6 @@
 #pragma mark -
 
 - (IBAction) saveTopic:(id) sender {
-	unichar zeroWidthSpaceChar = 0x200b;
-	[[[topic textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[topic string] length] )];
 	[(MVChatRoom *)[_room target] setTopic:[topic textStorage]];
 }
 

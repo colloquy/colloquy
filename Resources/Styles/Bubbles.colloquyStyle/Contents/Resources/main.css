@@ -11,6 +11,7 @@ body {
 	text-align: center;
 	margin-top: 6px;
 	margin-bottom: 6px;
+	word-wrap: break-word;
 }
 
 .event .member {
@@ -79,6 +80,7 @@ table {
 
 table td {
 	background-repeat: no-repeat;
+	word-wrap: break-word;
 }
 
 table td.topRight {

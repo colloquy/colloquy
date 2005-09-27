@@ -30,6 +30,7 @@ body {
   text-align: left;
   margin-left: 16ex;
   margin-right: 9ex;
+  word-wrap: break-word;
 }
 
 .event .message:before {
@@ -44,11 +45,13 @@ body {
   color: #800;
   overflow: hidden;
   padding-bottom: 0;
+  word-wrap: break-word;
 }
 
 .envelope {
   overflow: hidden;
   padding-bottom: 0;
+  word-wrap: break-word;
 }
 
 a.member         { text-decoration: none; }

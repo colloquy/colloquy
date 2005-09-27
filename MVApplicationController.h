@@ -12,7 +12,6 @@ extern NSString *JVMachineStoppedIdlingNotification;
 	BOOL _isIdle;
 	BOOL _terminateWithoutConfirm;
 }
-
 - (IBAction) checkForUpdate:(id) sender;
 - (IBAction) connectToSupportRoom:(id) sender;
 - (IBAction) emailDeveloper:(id) sender;
@@ -23,8 +22,6 @@ extern NSString *JVMachineStoppedIdlingNotification;
 - (IBAction) showTranscriptBrowser:(id) sender;
 - (IBAction) showConnectionManager:(id) sender;
 - (IBAction) showBuddyList:(id) sender;
-
-- (IBAction) copyStripped:(id) sender;
 
 - (IBAction) markAllDisplays:(id) sender;
 

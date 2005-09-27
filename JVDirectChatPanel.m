@@ -96,7 +96,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 @interface JVDirectChatPanel (JVDirectChatPrivate) <ABImageClient>
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
-- (void) _breakLongLinesInString:(NSMutableAttributedString *) message;
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
@@ -727,8 +726,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		return;
 	}
 
-	[self _breakLongLinesInString:messageString];
-
 	if( [cmessage isHighlighted] && [cmessage ignoreStatus] == JVNotIgnored ) {
 		_newHighlightMessageCount++;
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -867,9 +864,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	if( [sender isKindOfClass:[NSNumber class]] && [sender boolValue] ) action = YES;
 
 	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange( 0, [[send string] length] )];
-
-	unichar zeroWidthSpaceChar = 0x200b;
-	[[[send textStorage] mutableString] replaceOccurrencesOfString:[NSString stringWithCharacters:&zeroWidthSpaceChar length:1] withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [[send string] length] )];
 
 	while( [[send string] length] ) {
 		range = [[[send textStorage] string] rangeOfString:@"\n"];
@@ -1388,26 +1382,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 - (NSMenu *) _encodingMenu {
 	if( ! _nibLoaded ) [self view];
 	return [[_encodingMenu retain] autorelease];
-}
-
-- (void) _breakLongLinesInString:(NSMutableAttributedString *) message { // Not good on strings that have prior HTML or HTML entities
-	NSScanner *scanner = [NSScanner scannerWithString:[message string]];
-	NSCharacterSet *stopSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-	unsigned int lastLoc = 0;
-	unichar zeroWidthSpaceChar = 0x200b;
-	NSString *zero = [NSString stringWithCharacters:&zeroWidthSpaceChar length:1];
-
-	while( ! [scanner isAtEnd] ) {
-		lastLoc = [scanner scanLocation];
-		[scanner scanUpToCharactersFromSet:stopSet intoString:nil];
-		if( ( [scanner scanLocation] - lastLoc ) > 34 ) { // Who says "supercalifragilisticexpialidocious" anyway?
-			unsigned int times = (unsigned int) ( ( [scanner scanLocation] - lastLoc ) / 34 );
-			while( times > 0 ) {
-				[[message mutableString] insertString:zero atIndex:( lastLoc + ( times * 34 ) )];
-				times--;
-			}
-		}
-	}
 }
 
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message {

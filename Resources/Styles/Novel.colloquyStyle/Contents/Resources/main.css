@@ -37,6 +37,7 @@ q:after {
 	padding: 1px 5px 1px 5px;
 	margin-bottom: 5px;
 	line-height: 1.1em;
+	word-wrap: break-word;
 }
 
 .envelopeHighlight {
