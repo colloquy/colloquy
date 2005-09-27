@@ -479,8 +479,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) clearScrollbarMarksWithIdentifier:(NSString *) identifier {
-	JVMarkedScroller *scroller = [self verticalMarkedScroller];
-	[scroller removeMarkWithIdentifier:identifier];
+	[[self verticalMarkedScroller] removeMarkWithIdentifier:identifier];
 }
 
 #pragma mark -
@@ -491,8 +490,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[self setPreferencesIdentifier:[[self style] identifier]];
 	[[self preferences] setJavaScriptEnabled:YES];
 
-	[[self verticalMarkedScroller] removeAllMarks];
-	[[self verticalMarkedScroller] removeAllShadedAreas];
+	[self clearScrollbarMarks];
 
 	if( [[self window] isFlushWindowDisabled] ) [[self window] enableFlushWindow];
 	[[self window] displayIfNeeded];
@@ -690,7 +688,8 @@ quickEnd:
 		transformedMessage = nil;
 
 		// check if we are near the bottom of the chat area, and if we should scroll down later
-		NSNumber *scrollNeeded = [[[self mainFrame] DOMDocument] evaluateWebScript:@"( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.1 ) ) )"];
+		JVMarkedScroller *scroller = [self verticalMarkedScroller];
+		BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.9 );
 		DOMHTMLElement *body = [(DOMHTMLDocument *)[[self mainFrame] DOMDocument] body];
 
 		unsigned int i = 0;
@@ -720,8 +719,7 @@ quickEnd:
 			for( i = 0; [[body childNodes] length] > scrollbackLimit && i < ( [[body childNodes] length] - scrollbackLimit ); i++ )
 				[body removeChild:[[body childNodes] item:0]];
 
-		if( [scrollNeeded respondsToSelector:@selector( boolValue )] && [scrollNeeded boolValue] )
-			[self scrollToBottom];
+		if( scrollNeeded ) [self scrollToBottom];
 	} else {
 		NSMutableString *transformedMessage = [message mutableCopy];
 		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
@@ -740,7 +738,8 @@ quickEnd:
 		[result replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
 
 		// check if we are near the bottom of the chat area, and if we should scroll down later
-		NSNumber *scrollNeeded = [[[self mainFrame] DOMDocument] evaluateWebScript:@"( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.1 ) ) )"];
+		JVMarkedScroller *scroller = [self verticalMarkedScroller];
+		BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.9 );
 
 		// parses the message so we can get the DOM tree
 		DOMHTMLElement *element = (DOMHTMLElement *)[[[self mainFrame] DOMDocument] createElement:@"span"];
@@ -757,7 +756,7 @@ quickEnd:
 			else [body appendChild:[element firstChild]];
 		}
 
-		if( [scrollNeeded boolValue] ) [self scrollToBottom];
+		if( scrollNeeded ) [self scrollToBottom];
 	} else {
 		NSMutableString *result = [messages mutableCopy];
 		[result escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
