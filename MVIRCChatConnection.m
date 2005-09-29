@@ -1193,7 +1193,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 - (void) connect {
 	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
-	if( ! _chatConnectionSettings ) return;
 
 	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 5. ) {
 		// prevents connecting too quick
@@ -1209,9 +1208,16 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	IrssiLock();
 
+	if( ! _chatConnectionSettings ) {
+		IrssiUnlock();
+		[self _didNotConnect];
+		return;
+	}
+
 	CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( _chatConnectionSettings -> chat_type );
 
 	if( ! proto ) {
+		IrssiUnlock();
 		[self _didNotConnect];
 		return;
 	}
@@ -1234,6 +1240,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	SERVER_REC *newConnection = proto -> server_init_connect( _chatConnectionSettings );
 	[self _setIrssiConnection:newConnection];
 	if( ! newConnection ) {
+		IrssiUnlock();
 		[self _didNotConnect];
 		return;
 	}
@@ -1275,12 +1282,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 - (void) setRealName:(NSString *) name {
 	NSParameterAssert( name != nil );
-	if( ! _chatConnectionSettings ) return;
 
 	IrssiLock();
 
-	g_free_not_null( _chatConnectionSettings -> realname );
-	_chatConnectionSettings -> realname = g_strdup( [self encodedBytesWithString:name] );
+	if( _chatConnectionSettings ) {
+		g_free_not_null( _chatConnectionSettings -> realname );
+		_chatConnectionSettings -> realname = g_strdup( [self encodedBytesWithString:name] );
+	}
 
 	IrssiUnlock();
 }
@@ -1295,12 +1303,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) setNickname:(NSString *) nickname {
 	NSParameterAssert( nickname != nil );
 	NSParameterAssert( [nickname length] > 0 );
-	if( ! _chatConnectionSettings ) return;
 
 	IrssiLock();
 
-	g_free_not_null( _chatConnectionSettings -> nick );
-	_chatConnectionSettings -> nick = g_strdup( [self encodedBytesWithString:nickname] );
+	if( _chatConnectionSettings ) {
+		g_free_not_null( _chatConnectionSettings -> nick );
+		_chatConnectionSettings -> nick = g_strdup( [self encodedBytesWithString:nickname] );
+	}
 
 	IrssiUnlock();
 
@@ -1309,8 +1318,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 }
 
 - (NSString *) nickname {
-	if( [self isConnected] && _chatConnection )
-		return [self stringWithEncodedBytes:_chatConnection -> nick];
+	if( [self isConnected] && _chatConnection ) {
+		IrssiLock();
+		NSString *nick = [self stringWithEncodedBytes:_chatConnection -> nick];
+		IrssiUnlock();
+		return nick;
+	}
+
 	if( ! _chatConnectionSettings ) return nil;
 	return [self stringWithEncodedBytes:_chatConnectionSettings -> nick];
 }
@@ -1331,13 +1345,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) setPassword:(NSString *) password {
-	if( ! _chatConnectionSettings ) return;
-
 	IrssiLock();
 
-	g_free_not_null( _chatConnectionSettings -> password );
-	if( [password length] ) _chatConnectionSettings -> password = g_strdup( [self encodedBytesWithString:password] );
-	else _chatConnectionSettings -> password = NULL;
+	if( _chatConnectionSettings ) {
+		g_free_not_null( _chatConnectionSettings -> password );
+		if( [password length] ) _chatConnectionSettings -> password = g_strdup( [self encodedBytesWithString:password] );
+		else _chatConnectionSettings -> password = NULL;
+	}
 
 	IrssiUnlock();
 }
@@ -1354,12 +1368,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) setUsername:(NSString *) username {
 	NSParameterAssert( username != nil );
 	NSParameterAssert( [username length] > 0 );
-	if( ! _chatConnectionSettings ) return;
 
 	IrssiLock();
 
-	g_free_not_null( _chatConnectionSettings -> username );
-	_chatConnectionSettings -> username = g_strdup( [self encodedBytesWithString:username] );
+	if( _chatConnectionSettings ) {
+		g_free_not_null( _chatConnectionSettings -> username );
+		_chatConnectionSettings -> username = g_strdup( [self encodedBytesWithString:username] );
+	}
 
 	IrssiUnlock();
 }
@@ -1374,12 +1389,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) setServer:(NSString *) server {
 	NSParameterAssert( server != nil );
 	NSParameterAssert( [server length] > 0 );
-	if( ! _chatConnectionSettings ) return;
 
 	IrssiLock();
 
-	g_free_not_null( _chatConnectionSettings -> address );
-	_chatConnectionSettings -> address = g_strdup( [self encodedBytesWithString:server] );
+	if( _chatConnectionSettings ) {
+		g_free_not_null( _chatConnectionSettings -> address );
+		_chatConnectionSettings -> address = g_strdup( [self encodedBytesWithString:server] );
+	}
 
 	IrssiUnlock();
 }
@@ -1392,12 +1408,9 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) setServerPort:(unsigned short) port {
-	if( ! _chatConnectionSettings ) return;
-
 	IrssiLock();
-
-	_chatConnectionSettings -> port = ( port ? port : 6667 );
-
+	if( _chatConnectionSettings )
+		_chatConnectionSettings -> port = ( port ? port : 6667 );
 	IrssiUnlock();
 }
 
@@ -1409,9 +1422,14 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) setSecure:(BOOL) ssl {
-	if( ! _chatConnectionSettings ) return;
-	_chatConnectionSettings -> use_ssl = ssl;
-	_chatConnectionSettings -> ssl_verify = NO;
+	IrssiLock();
+
+	if( _chatConnectionSettings ) {
+		_chatConnectionSettings -> use_ssl = ssl;
+		_chatConnectionSettings -> ssl_verify = NO;
+	}
+
+	IrssiUnlock();
 }
 
 - (BOOL) isSecure {
@@ -1422,12 +1440,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) setProxyServer:(NSString *) address {
-	if( ! _chatConnectionSettings ) return;
-
 	IrssiLock();
 
-	g_free_not_null( _chatConnectionSettings -> proxy );
-	_chatConnectionSettings -> proxy = g_strdup( [self encodedBytesWithString:address] );
+	if( _chatConnectionSettings ) {
+		g_free_not_null( _chatConnectionSettings -> proxy );
+		_chatConnectionSettings -> proxy = g_strdup( [self encodedBytesWithString:address] );
+	}
 
 	IrssiUnlock();
 }
@@ -1440,12 +1458,9 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) setProxyServerPort:(unsigned short) port {
-	if( ! _chatConnectionSettings ) return;
-
 	IrssiLock();
-
-	_chatConnectionSettings -> proxy_port = port;
-
+	if( _chatConnectionSettings )
+		_chatConnectionSettings -> proxy_port = port;
 	IrssiUnlock();
 }
 
