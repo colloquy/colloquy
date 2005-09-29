@@ -1262,10 +1262,11 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	IrssiLock();
 
-	_chatConnection -> connection_lost = NO;
-	_chatConnection -> no_reconnect = YES;
-
-	server_disconnect( _chatConnection );
+	if( _chatConnection ) {
+		_chatConnection -> connection_lost = NO;
+		_chatConnection -> no_reconnect = YES;
+		server_disconnect( _chatConnection );
+	}
 
 	IrssiUnlock();
 }
