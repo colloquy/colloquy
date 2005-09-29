@@ -20,6 +20,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	NSString *_styleVariant;
 	NSMutableDictionary *_styleParameters;
 	JVEmoticonSet *_emoticons;
+	DOMHTMLDocument *_domDocument;
 	unsigned int _scrollbackLimit;
 	BOOL _requiresFullMessage;
 	BOOL _rememberScrollPosition;

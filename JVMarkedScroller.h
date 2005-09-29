@@ -38,4 +38,7 @@
 - (void) stopShadedAreaAt:(unsigned long long) location;
 
 - (void) removeAllShadedAreas;
+
+- (float) scaleToContentView;
+- (float) shiftAmountToCenterAlign;
 @end

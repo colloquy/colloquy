@@ -36,7 +36,7 @@ struct _mark {
 	NSAffineTransform *transform = [NSAffineTransform transform];
 	float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
 
-	float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+	float scale = [self scaleToContentView];
 	[transform scaleXBy:( sFlags.isHoriz ? scale : 1. ) yBy:( sFlags.isHoriz ? 1. : scale )];
 
 	float offset = [self rectForPart:NSScrollerKnobSlot].origin.y;
@@ -66,7 +66,7 @@ struct _mark {
 	if( ( [_shades count] % 2 ) == 1 ) {
 		NSRect rect = NSZeroRect;
 		unsigned long long start = [[_shades lastObject] unsignedLongLongValue];
-		unsigned long long stop = ( NSHeight( [self frame] ) / [self knobProportion] );
+		unsigned long long stop = NSHeight( [[(NSScrollView *)[self superview] contentView] documentRect] );
 
 		if( sFlags.isHoriz ) rect = NSMakeRect( start, 0., ( stop - start ), width );
 		else rect = NSMakeRect( 0., start, width, ( stop - start ) );
@@ -87,7 +87,7 @@ struct _mark {
 	enumerator = [_marks objectEnumerator];
 	NSValue *currentMark;
 
-	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * ( NSHeight( [self frame] ) / [self knobProportion] ) );
+	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * NSHeight( [[(NSScrollView *)[self superview] contentView] documentRect] ) );
 	BOOL foundNext = NO, foundPrevious = NO;
 	NSRect knobRect = [self rectForPart:NSScrollerKnob];
 
@@ -195,7 +195,7 @@ struct _mark {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
 	NSRect slotRect = [self rectForPart:NSScrollerKnobSlot];
-	float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+	float scale = [self scaleToContentView];
 	[self removeMarksLessThan:( ( sFlags.isHoriz ? where.x - NSMinX( slotRect ) : where.y - NSMinY( slotRect ) ) / scale )];
 }
 
@@ -203,7 +203,7 @@ struct _mark {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
 	NSRect slotRect = [self rectForPart:NSScrollerKnobSlot];
-	float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
+	float scale = [self scaleToContentView];
 	[self removeMarksGreaterThan:( ( sFlags.isHoriz ? where.x - NSMinX( slotRect ) : where.y - NSMinY( slotRect ) ) / scale )];
 }
 
@@ -213,8 +213,7 @@ struct _mark {
 	if( _nearestPreviousMark != NSNotFound ) {
 		_currentMark = _nearestPreviousMark;
 		_jumpingToMark = YES;
-		float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
-		float shift = ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
+		float shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
 	}
@@ -224,8 +223,7 @@ struct _mark {
 	if( _nearestNextMark != NSNotFound ) {
 		_currentMark = _nearestNextMark;
 		_jumpingToMark = YES;
-		float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
-		float shift = ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
+		float shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
 	}
@@ -233,9 +231,11 @@ struct _mark {
 
 - (void) jumpToMarkWithIdentifier:(NSString *) identifier {
 	_jumpingToMark = YES;
+
 	NSEnumerator *e = [_marks objectEnumerator];
-	NSValue *obj;
+	NSValue *obj = nil;
 	BOOL foundMark = NO;
+
 	while( obj = [e nextObject] ) {
 		struct _mark mark;
 		[obj getValue:&mark];
@@ -245,11 +245,12 @@ struct _mark {
 			break;
 		}
 	}
+	
 	if( foundMark ) {
-		float scale = NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / ( NSHeight( [self frame] ) / [self knobProportion] );
-		float shift = ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
+		float shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];		
 	}
+
 	_jumpingToMark = NO;
 }
 
@@ -436,5 +437,18 @@ struct _mark {
 - (void) removeAllShadedAreas {
 	[_shades removeAllObjects];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
+}
+
+#pragma mark -
+
+- (float) scaleToContentView {
+	if( sFlags.isHoriz ) return NSWidth( [self rectForPart:NSScrollerKnobSlot] ) / NSWidth( [[(NSScrollView *)[self superview] contentView] documentRect] );
+	else return NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / NSHeight( [[(NSScrollView *)[self superview] contentView] documentRect] );
+}
+
+- (float) shiftAmountToCenterAlign {
+	float scale = [self scaleToContentView];
+	if( sFlags.isHoriz ) return ( ( NSWidth( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
+	else return ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
 }
 @end
