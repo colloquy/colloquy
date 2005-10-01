@@ -27,7 +27,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 
 @implementation JVPythonChatPlugin
 + (void) initialize {
-	static tooLate = NO;
+	static BOOL tooLate = NO;
 	if( ! tooLate ) {
 		Py_Initialize();
 		PyObjC_ImportAPI( Py_None );
