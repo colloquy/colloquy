@@ -95,6 +95,7 @@
 		1C9982AE0604BA1F006C6417 /* sound.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1C9982AC0604BA1F006C6417 /* sound.tif */; };
 		1C9982B00604BEAA006C6417 /* notifications.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C9982AF0604BEAA006C6417 /* notifications.plist */; };
 		1C9982B90604D94C006C6417 /* JVNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA7D0F106015DBA00887614 /* JVNotificationController.m */; };
+		1C9C35D208E51B8E00B89A37 /* Colloquy.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1CD9DF6507D934F70006BB99 /* Colloquy.sdef */; };
 		1CA75A270652537A000141D5 /* styleOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CA75A260652537A000141D5 /* styleOptions.plist */; };
 		1CA7CA6605FEC88500887614 /* activity.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CA7CA6305FEC88500887614 /* activity.tif */; };
 		1CA7CA6705FEC88600887614 /* activityNew.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CA7CA6405FEC88500887614 /* activityNew.tif */; };
@@ -2032,6 +2033,7 @@
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
 				1CE6917108B183C9006D9CA0 /* NSCoreSuite.scriptTerminology in Resources */,
 				1CE6917208B183CA006D9CA0 /* NSCoreSuite.scriptSuite in Resources */,
+				1C9C35D208E51B8E00B89A37 /* Colloquy.sdef in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2515,6 +2517,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				OTHER_LDFLAGS = (
@@ -2536,8 +2539,6 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
-					"-weak_framework",
-					Growl,
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -2555,8 +2556,6 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
-					"-weak_framework",
-					Growl,
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -2578,10 +2577,6 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = Importer/Info.plist;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
 			};
@@ -2629,8 +2624,6 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
-					"-weak_framework",
-					Growl,
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -2642,10 +2635,6 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = Importer/Info.plist;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
 			};

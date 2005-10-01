@@ -242,6 +242,7 @@
 					/Library/Frameworks,
 					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "AppleScript Support.pch";
 				HEADER_SEARCH_PATHS = ../..;
 				INFOPLIST_FILE = Info.plist;
