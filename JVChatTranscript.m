@@ -895,7 +895,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return _autoWriteChanges;
 }
 
-- (BOOL) setAutomaticallyWritesChangesToFile:(BOOL) option {
+- (void) setAutomaticallyWritesChangesToFile:(BOOL) option {
 	if( _autoWriteChanges == option ) return;
 
 	_autoWriteChanges = option;

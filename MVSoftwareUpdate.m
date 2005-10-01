@@ -1,5 +1,6 @@
 #import "MVSoftwareUpdate.h"
 #import "MVFileTransferController.h"
+#import <unistd.h>
 
 #define MVSoftwareUpdateURLFormat @"http://colloquy.info/update.php?MVApplicationBuild=%@&MVApplicationName=%@"
 

@@ -28,6 +28,7 @@
 #import "nicklist.h"
 #import "notifylist.h"
 #import "mode-lists.h"
+#import "rawlog.h"
 #import "settings.h"
 
 #import "config.h"
