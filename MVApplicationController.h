@@ -16,6 +16,7 @@ extern NSString *JVMachineStoppedIdlingNotification;
 - (IBAction) connectToSupportRoom:(id) sender;
 - (IBAction) emailDeveloper:(id) sender;
 - (IBAction) productWebsite:(id) sender;
+- (IBAction) bugReportWebsite:(id) sender;
 
 - (IBAction) showPreferences:(id) sender;
 - (IBAction) showTransferManager:(id) sender;

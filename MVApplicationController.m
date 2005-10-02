@@ -146,6 +146,10 @@ static BOOL applicationIsTerminating = NO;
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://colloquy.info"]];
 }
 
+- (IBAction) bugReportWebsite:(id) sender {
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://colloquy.info?bug"]];
+}
+
 #pragma mark -
 
 - (IBAction) showInspector:(id) sender {
