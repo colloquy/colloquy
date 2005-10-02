@@ -30,6 +30,7 @@
 	NSString *source;
 	NSMutableString *content;
 	NSMutableSet *participants;
+	NSCharacterSet *lineBreaks;
 }
 - (id) initWithCapacity:(unsigned) capacity;
 - (NSDictionary *) metadataAttributes;
@@ -40,6 +41,7 @@
 	if( ( self = [super init] ) ) {
 		content = [[NSMutableString alloc] initWithCapacity:capacity];
 		participants = [[NSMutableSet alloc] initWithCapacity:400];
+		lineBreaks = [[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] retain];
 	}
 
 	return self;
@@ -52,6 +54,7 @@
 	[dateStarted release];
 	[lastEventDate release];
 	[source release];
+	[lineBreaks release];
 
 	lastElement = nil;
 	content = nil;
@@ -59,6 +62,7 @@
 	dateStarted = nil;
 	lastEventDate = nil;
 	source = nil;
+	lineBreaks = nil;
 
 	[super dealloc];
 }
@@ -131,9 +135,7 @@
 	if( inEnvelope && [elementName isEqualToString:@"envelope"] ) inEnvelope = NO;
 	else if( inEnvelope && inMessage && [elementName isEqualToString:@"message"] ) {
 		inMessage = NO;
-		[content appendString:@" "]; // append a space after messages
-	} else if( inEnvelope && inMessage ) {
-		[content appendString:@" "]; // append a space after formatting elements since we are still in the message
+		[content appendString:@"\n"]; // append a newline after messages
 	}
 
 	[lastElement release];
@@ -142,7 +144,7 @@
 
 - (void) parser:(NSXMLParser *) parser foundCharacters:(NSString *) string {
 	if( inEnvelope && inMessage ) {
-		NSString *newString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		NSString *newString = [string stringByTrimmingCharactersInSet:lineBreaks];
 		if( [newString length] ) [content appendString:newString];
 	} else if( inEnvelope && [lastElement isEqualToString:@"sender"] ) {
 		if( [string length] ) [participants addObject:string];
