@@ -2574,6 +2574,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
+				GCC_FAST_OBJC_DISPATCH = YES;
 				INFOPLIST_FILE = Importer/Info.plist;
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
@@ -2584,6 +2585,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
+				GCC_FAST_OBJC_DISPATCH = YES;
 				INFOPLIST_FILE = Importer/Info.plist;
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
@@ -2650,6 +2652,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
+				GCC_FAST_OBJC_DISPATCH = YES;
 				INFOPLIST_FILE = Importer/Info.plist;
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
