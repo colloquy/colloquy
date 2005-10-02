@@ -106,7 +106,7 @@
 	lastElement = [elementName retain];
 
 	if( [elementName isEqualToString:@"envelope"] ) inEnvelope = YES;
-	else if( [elementName isEqualToString:@"message"] ) {
+	else if( inEnvelope && [elementName isEqualToString:@"message"] ) {
 		inMessage = YES;
 		NSString *date = [attributes objectForKey:@"received"];
 		if( date ) {
@@ -114,14 +114,14 @@
 			lastEventDate = [date retain];
 			if( ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
 		}
-	} else if( [elementName isEqualToString:@"event"] ) {
+	} else if( ! inEnvelope && [elementName isEqualToString:@"event"] ) {
 		NSString *date = [attributes objectForKey:@"occurred"];
 		if( date ) {
 			[lastEventDate release];
 			lastEventDate = [date retain];
 			if( ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
 		}
-	} else if( [elementName isEqualToString:@"log"] ) {
+	} else if( ! inEnvelope && [elementName isEqualToString:@"log"] ) {
 		NSString *date = [attributes objectForKey:@"began"];
 		if( date && ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
 	}
@@ -145,7 +145,7 @@
 		NSString *newString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		if( [newString length] ) [content appendString:newString];
 	} else if( inEnvelope && [lastElement isEqualToString:@"sender"] ) {
-		[participants addObject:string];
+		if( [string length] ) [participants addObject:string];
 	}
 }
 @end
