@@ -128,6 +128,7 @@
 	} else if( ! inEnvelope && [elementName isEqualToString:@"log"] ) {
 		NSString *date = [attributes objectForKey:@"began"];
 		if( date && ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
+		if( ! source ) source = [[attributes objectForKey:@"source"] retain];
 	}
 }
 
