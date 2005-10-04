@@ -1,5 +1,11 @@
 #import "NSColorAdditions.h"
 
+@interface NSAEDescriptorTranslator : NSObject // Private Foundation Class
++ (id) _descriptorByTranslatingColor:(NSColor *) color ofType:(id) type inSuite:(id) suite;
+@end
+
+#pragma mark -
+
 @implementation NSColor (NSColorAdditions)
 + (NSColor *) colorWithHTMLAttributeValue:(NSString *) attribute {
 	NSCharacterSet *hex = [NSCharacterSet characterSetWithCharactersInString:@"1234567890abcdefABCDEF"];
@@ -148,5 +154,9 @@
 	[color getRed:&red green:&green blue:&blue alpha:&alpha];
 	if( alpha < 1. ) return [NSString stringWithFormat:@"rgba( %d, %d, %d, %.3f )", (int)(red * 255), (int)(green * 255), (int)(blue * 255), alpha];
 	return [NSString stringWithFormat:@"#%02X%02X%02X", (int)(red * 255), (int)(green * 255), (int)(blue * 255)];
+}
+
+- (NSAppleEventDescriptor *) scriptingAnyDescriptor {
+	return [NSAEDescriptorTranslator _descriptorByTranslatingColor:self ofType:nil inSuite:nil];
 }
 @end
