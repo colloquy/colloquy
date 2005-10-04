@@ -24,15 +24,17 @@ body {
 }
 
 .envelope {
-	overflow: hidden;
 	padding: 1px 5px 1px 5px;
 	margin-bottom: 3px;
-	word-wrap: break-word;
 }
 
 .envelope.highlight {
 	background-color: #efefec;
 	background-color: rgba( 0, 0, 0, 0.1 );
+}
+
+.message {
+	word-wrap: break-word;
 }
 
 .member {
@@ -84,4 +86,5 @@ body {
 	float: right;
 	font-size: 80%;
 	color: #888;
+	word-wrap: normal;
 }
