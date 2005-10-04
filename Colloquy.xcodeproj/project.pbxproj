@@ -14,7 +14,6 @@
 		0A6571D40868816B001FF007 /* Standard Commands.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */; };
 		0A6571DD086881A6001FF007 /* ChatCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0A7F23F808556A6C00FA3D9B /* ChatCore.framework */; };
 		0AA8117B0826E08000A3BF2D /* default.js in Resources */ = {isa = PBXBuildFile; fileRef = 0AA811220826DB8800A3BF2D /* default.js */; };
-		1C05E1C808F261E100E097BC /* Colloquy.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1CD9DF6507D934F70006BB99 /* Colloquy.sdef */; };
 		1C05E1EF08F262F500E097BC /* ColloquyScripting.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */; };
 		1C05F4560828727D006FCB72 /* markDisplay.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C05F4550828727D006FCB72 /* markDisplay.png */; };
 		1C06052606471FFB002438AF /* JVMixedTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C06052406471FFB002438AF /* JVMixedTableColumn.m */; };
@@ -2025,7 +2024,6 @@
 				1CE6916E08B183C7006D9CA0 /* Colloquy.scriptSuite in Resources */,
 				1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */,
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
-				1C05E1C808F261E100E097BC /* Colloquy.sdef in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
