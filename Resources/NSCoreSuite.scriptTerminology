@@ -18,7 +18,7 @@
 				<key>scriptingProperties</key>
 				<dict>
 					<key>Description</key>
-					<string>All of the object'</string>
+					<string>All of the object's properties.</string>
 					<key>Name</key>
 					<string>properties</string>
 				</dict>
@@ -30,6 +30,39 @@
 			<key>PluralName</key>
 			<string>items</string>
 		</dict>
+		<key>NSApplication</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>isActive</key>
+				<dict>
+					<key>Description</key>
+					<string>Is this the frontmost (active) application?</string>
+					<key>Name</key>
+					<string>frontmost</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>Description</key>
+					<string>The name of the application.</string>
+					<key>Name</key>
+					<string>name</string>
+				</dict>
+				<key>version</key>
+				<dict>
+					<key>Description</key>
+					<string>The version of the application.</string>
+					<key>Name</key>
+					<string>version</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>An application's top level scripting object.</string>
+			<key>Name</key>
+			<string>application</string>
+			<key>PluralName</key>
+			<string>applications</string>
+		</dict>
 		<key>NSColor</key>
 		<dict>
 			<key>Description</key>
@@ -38,6 +71,116 @@
 			<string>color</string>
 			<key>PluralName</key>
 			<string>colors</string>
+		</dict>
+		<key>NSWindow</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>boundsAsQDRect</key>
+				<dict>
+					<key>Description</key>
+					<string>The bounding rectangle of the window.</string>
+					<key>Name</key>
+					<string>bounds</string>
+				</dict>
+				<key>hasCloseBox</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window has a close box.</string>
+					<key>Name</key>
+					<string>closeable</string>
+				</dict>
+				<key>hasTitleBar</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window has a title bar.</string>
+					<key>Name</key>
+					<string>titled</string>
+				</dict>
+				<key>isFloatingPanel</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window floats.</string>
+					<key>Name</key>
+					<string>floating</string>
+				</dict>
+				<key>isMiniaturizable</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window can be miniaturized.</string>
+					<key>Name</key>
+					<string>miniaturizable</string>
+				</dict>
+				<key>isMiniaturized</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window is currently miniaturized.</string>
+					<key>Name</key>
+					<string>miniaturized</string>
+				</dict>
+				<key>isModalPanel</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window is the application's current modal window.</string>
+					<key>Name</key>
+					<string>modal</string>
+				</dict>
+				<key>isResizable</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window can be resized.</string>
+					<key>Name</key>
+					<string>resizable</string>
+				</dict>
+				<key>isVisible</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window is currently visible.</string>
+					<key>Name</key>
+					<string>visible</string>
+				</dict>
+				<key>isZoomable</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window can be zoomed.</string>
+					<key>Name</key>
+					<string>zoomable</string>
+				</dict>
+				<key>isZoomed</key>
+				<dict>
+					<key>Description</key>
+					<string>Whether the window is currently zoomed.</string>
+					<key>Name</key>
+					<string>zoomed</string>
+				</dict>
+				<key>orderedIndex</key>
+				<dict>
+					<key>Description</key>
+					<string>The index of the window in the back-to-front window ordering.</string>
+					<key>Name</key>
+					<string>index</string>
+				</dict>
+				<key>title</key>
+				<dict>
+					<key>Description</key>
+					<string>The full title of the window.</string>
+					<key>Name</key>
+					<string>name</string>
+				</dict>
+				<key>uniqueID</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the window.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>A window.</string>
+			<key>Name</key>
+			<string>window</string>
+			<key>PluralName</key>
+			<string>windows</string>
 		</dict>
 	</dict>
 	<key>Commands</key>
@@ -261,7 +404,7 @@
 				</dict>
 			</dict>
 			<key>Description</key>
-			<string>Set an object'</string>
+			<string>Set an object's data.</string>
 			<key>Name</key>
 			<string>set</string>
 		</dict>

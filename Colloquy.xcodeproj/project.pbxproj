@@ -14,6 +14,8 @@
 		0A6571D40868816B001FF007 /* Standard Commands.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */; };
 		0A6571DD086881A6001FF007 /* ChatCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0A7F23F808556A6C00FA3D9B /* ChatCore.framework */; };
 		0AA8117B0826E08000A3BF2D /* default.js in Resources */ = {isa = PBXBuildFile; fileRef = 0AA811220826DB8800A3BF2D /* default.js */; };
+		1C05E1C808F261E100E097BC /* Colloquy.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1CD9DF6507D934F70006BB99 /* Colloquy.sdef */; };
+		1C05E1EF08F262F500E097BC /* ColloquyScripting.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */; };
 		1C05F4560828727D006FCB72 /* markDisplay.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C05F4550828727D006FCB72 /* markDisplay.png */; };
 		1C06052606471FFB002438AF /* JVMixedTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C06052406471FFB002438AF /* JVMixedTableColumn.m */; };
 		1C06077C064A5DE8002438AF /* JVColorWellCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C06077A064A5DE8002438AF /* JVColorWellCell.m */; };
@@ -71,7 +73,6 @@
 		1C6EA66205A76038006A559F /* personHeader.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1C6EA66105A76038006A559F /* personHeader.tif */; };
 		1C70377F07E49F25005CEA40 /* JVSmartTranscriptPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C70377D07E49F25005CEA40 /* JVSmartTranscriptPanel.m */; };
 		1C703EF507E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C703EF307E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib */; };
-		1C7B83370810A6D100B1C1E9 /* Colloquy.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */; };
 		1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* WebSearch.scpt */; };
 		1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
 		1C7EF54006B341890037F173 /* roomTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53D06B341890037F173 /* roomTab.png */; };
@@ -95,7 +96,6 @@
 		1C9982AE0604BA1F006C6417 /* sound.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1C9982AC0604BA1F006C6417 /* sound.tif */; };
 		1C9982B00604BEAA006C6417 /* notifications.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C9982AF0604BEAA006C6417 /* notifications.plist */; };
 		1C9982B90604D94C006C6417 /* JVNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA7D0F106015DBA00887614 /* JVNotificationController.m */; };
-		1C9C35D208E51B8E00B89A37 /* Colloquy.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 1CD9DF6507D934F70006BB99 /* Colloquy.sdef */; };
 		1CA75A270652537A000141D5 /* styleOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CA75A260652537A000141D5 /* styleOptions.plist */; };
 		1CA7CA6605FEC88500887614 /* activity.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CA7CA6305FEC88500887614 /* activity.tif */; };
 		1CA7CA6705FEC88600887614 /* activityNew.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CA7CA6405FEC88500887614 /* activityNew.tif */; };
@@ -205,6 +205,7 @@
 		1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */; };
 		1CBC63190548975E009E59E1 /* GeneralPreferences.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC63180548975E009E59E1 /* GeneralPreferences.tif */; };
 		1CBC634905489BEE009E59E1 /* JVGeneralPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC634705489BEE009E59E1 /* JVGeneralPreferences.nib */; };
+		1CC5650708F0CFEE00B8E333 /* Colloquy.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */; };
 		1CC6FC530549FCD80075807C /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */; };
 		1CC6FC570549FDD70075807C /* JVBehaviorPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */; };
 		1CC6FC67054A003C0075807C /* JVAppearancePreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CC6FC62054A003C0075807C /* JVAppearancePreferences.nib */; };
@@ -232,7 +233,6 @@
 		1CDEE47A0583DC58000B9075 /* JVBuddyInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE4780583DC58000B9075 /* JVBuddyInspector.m */; };
 		1CDEE48D0583E268000B9075 /* JVBuddyInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE48B0583E268000B9075 /* JVBuddyInspector.nib */; };
 		1CDEE8C505878D30000B9075 /* InterfacePreferences.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE8260586C723000B9075 /* InterfacePreferences.tif */; };
-		1CE3C4F807E13F4C004931E6 /* JVGetCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3C4F607E13F4C004931E6 /* JVGetCommand.m */; };
 		1CE6916808B183C2006D9CA0 /* Styles in Resources */ = {isa = PBXBuildFile; fileRef = 1C3C116205029E03000001C8 /* Styles */; };
 		1CE6916908B183C2006D9CA0 /* ChatCore.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1C1D19F205992D80000BB31A /* ChatCore.scriptTerminology */; };
 		1CE6916A08B183C3006D9CA0 /* ChatCore.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1C1D19F105992D80000BB31A /* ChatCore.scriptSuite */; };
@@ -242,8 +242,6 @@
 		1CE6916E08B183C7006D9CA0 /* Colloquy.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1CCA510D0598108000F0A4CD /* Colloquy.scriptSuite */; };
 		1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */; };
 		1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */; };
-		1CE6917108B183C9006D9CA0 /* NSCoreSuite.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */; };
-		1CE6917208B183CA006D9CA0 /* NSCoreSuite.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */; };
 		1CE95886063F3BF90071C9C3 /* inspector.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CE95885063F3BF90071C9C3 /* inspector.tif */; };
 		1CECE26006A37BEC00350564 /* JVBehaviorPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CECE22F06A37A8300350564 /* JVBehaviorPreferences.nib */; };
 		1CEE3B010578421400AD6DE2 /* statusAvailable.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CEE3AFE0578421400AD6DE2 /* statusAvailable.tif */; };
@@ -551,7 +549,7 @@
 		1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = NSCoreSuite.scriptTerminology; path = Resources/NSCoreSuite.scriptTerminology; sourceTree = "<group>"; };
 		1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = NSTextSuite.scriptSuite; path = Resources/NSTextSuite.scriptSuite; sourceTree = "<group>"; };
 		1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = NSTextSuite.scriptTerminology; path = Resources/NSTextSuite.scriptTerminology; sourceTree = "<group>"; };
-		1C7C76ED07DBA1D000FB5F83 /* Scripting.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = Scripting.r; path = Resources/Scripting.r; sourceTree = "<group>"; };
+		1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = ColloquyScripting.r; path = Resources/ColloquyScripting.r; sourceTree = "<group>"; };
 		1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = Colloquy.r; path = Resources/Colloquy.r; sourceTree = "<group>"; };
 		1C7EF53D06B341890037F173 /* roomTab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = roomTab.png; path = Resources/roomTab.png; sourceTree = "<group>"; };
 		1C7EF53E06B341890037F173 /* roomTabNewHighlightMessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = roomTabNewHighlightMessage.png; path = Resources/roomTabNewHighlightMessage.png; sourceTree = "<group>"; };
@@ -709,8 +707,6 @@
 		1CE2BC4A042F53AD00000102 /* JVChatRoomPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatRoomPanel.m; sourceTree = "<group>"; };
 		1CE2BC53042F75FB00000102 /* JVChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatController.h; sourceTree = "<group>"; };
 		1CE2BC54042F75FB00000102 /* JVChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatController.m; sourceTree = "<group>"; };
-		1CE3C4F507E13F4C004931E6 /* JVGetCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGetCommand.h; sourceTree = "<group>"; };
-		1CE3C4F607E13F4C004931E6 /* JVGetCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGetCommand.m; sourceTree = "<group>"; };
 		1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "F-Script Support.xcodeproj"; path = "Plug-Ins/F-Script Support/F-Script Support.xcodeproj"; sourceTree = "<group>"; };
 		1CE72A95052C745400A8FE6E /* JVChatConsolePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatConsolePanel.h; sourceTree = "<group>"; };
 		1CE72A96052C745400A8FE6E /* JVChatConsolePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatConsolePanel.m; sourceTree = "<group>"; };
@@ -1350,8 +1346,6 @@
 				1CABF8750656414100801C15 /* NSBundleAdditions.h */,
 				1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */,
 				1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */,
-				1CE3C4F607E13F4C004931E6 /* JVGetCommand.m */,
-				1CE3C4F507E13F4C004931E6 /* JVGetCommand.h */,
 			);
 			name = "Other Sources & Additions";
 			sourceTree = "<group>";
@@ -1380,7 +1374,7 @@
 				1CC6FD38054AF1940075807C /* preview.colloquyTranscript */,
 				1CD9DF6507D934F70006BB99 /* Colloquy.sdef */,
 				1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */,
-				1C7C76ED07DBA1D000FB5F83 /* Scripting.r */,
+				1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */,
 				1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */,
 				1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */,
 				1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */,
@@ -2031,9 +2025,7 @@
 				1CE6916E08B183C7006D9CA0 /* Colloquy.scriptSuite in Resources */,
 				1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */,
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
-				1CE6917108B183C9006D9CA0 /* NSCoreSuite.scriptTerminology in Resources */,
-				1CE6917208B183CA006D9CA0 /* NSCoreSuite.scriptSuite in Resources */,
-				1C9C35D208E51B8E00B89A37 /* Colloquy.sdef in Resources */,
+				1C05E1C808F261E100E097BC /* Colloquy.sdef in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2054,7 +2046,8 @@
 			isa = PBXRezBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C7B83370810A6D100B1C1E9 /* Colloquy.r in Rez */,
+				1CC5650708F0CFEE00B8E333 /* Colloquy.r in Rez */,
+				1C05E1EF08F262F500E097BC /* ColloquyScripting.r in Rez */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2168,7 +2161,6 @@
 				1C5EF35B07B45C1F004E66D3 /* JVChatEvent.m in Sources */,
 				1C5EF36C07B45FBF004E66D3 /* JVChatSession.m in Sources */,
 				1C66913A07BFA76D008400F7 /* JVEmoticonSet.m in Sources */,
-				1CE3C4F807E13F4C004931E6 /* JVGetCommand.m in Sources */,
 				1C70377F07E49F25005CEA40 /* JVSmartTranscriptPanel.m in Sources */,
 				1C3972DE082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m in Sources */,
 				1C6A40CA083FF6C600572AB6 /* JVInterfacePreferences.m in Sources */,

@@ -18,7 +18,7 @@
 				<key>compositeName</key>
 				<dict>
 					<key>Description</key>
-					<string>The buddies full name in the user'</string>
+					<string>The buddy's full name in the user's preferred order.</string>
 					<key>Name</key>
 					<string>name</string>
 				</dict>
@@ -53,7 +53,7 @@
 				<key>preferredName</key>
 				<dict>
 					<key>Description</key>
-					<string>Returns the user'</string>
+					<string>Returns the user's preferred name. Either the active nickname, given nickname, or first and last name.</string>
 					<key>Name</key>
 					<string>preferred name</string>
 				</dict>
@@ -102,7 +102,7 @@
 				<key>body</key>
 				<dict>
 					<key>Description</key>
-					<string>The body of the message. (Default subcontainer.)</string>
+					<string>The body of the message.</string>
 					<key>Name</key>
 					<string>body</string>
 				</dict>
@@ -184,7 +184,7 @@
 				<key>nickname</key>
 				<dict>
 					<key>Description</key>
-					<string>Member'</string>
+					<string>Member's nickname.</string>
 					<key>Name</key>
 					<string>name</string>
 				</dict>
@@ -205,7 +205,7 @@
 				<key>user</key>
 				<dict>
 					<key>Description</key>
-					<string>The chat user for this member. (Default subcontainer.)</string>
+					<string>The chat user for this member.</string>
 					<key>Name</key>
 					<string>chat user</string>
 				</dict>
@@ -339,40 +339,16 @@
 			<key>PluralName</key>
 			<string>direct chat panels</string>
 		</dict>
-		<key>NSApplication</key>
+		<key>JVSmartTranscriptPanel</key>
 		<dict>
-			<key>Attributes</key>
-			<dict>
-				<key>isActive</key>
-				<dict>
-					<key>Description</key>
-					<string>Is this the frontmost (active) application?</string>
-					<key>Name</key>
-					<string>frontmost</string>
-				</dict>
-				<key>name</key>
-				<dict>
-					<key>Description</key>
-					<string>The name of the application.</string>
-					<key>Name</key>
-					<string>name</string>
-				</dict>
-				<key>version</key>
-				<dict>
-					<key>Description</key>
-					<string>The version of the application.</string>
-					<key>Name</key>
-					<string>version</string>
-				</dict>
-			</dict>
 			<key>Description</key>
-			<string>The Colloquy application'</string>
+			<string>A smart log panel with conversation filters.</string>
 			<key>Name</key>
-			<string>application</string>
+			<string>smart transcript panel</string>
 			<key>PluralName</key>
-			<string>applications</string>
+			<string>smart transcript panels</string>
 		</dict>
-		<key>NSObject</key>
+		<key>ListItem</key>
 		<dict>
 			<key>Attributes</key>
 			<dict>
@@ -393,7 +369,7 @@
 				<key>parent</key>
 				<dict>
 					<key>Description</key>
-					<string>This list item'</string>
+					<string>This list item's parent.</string>
 					<key>Name</key>
 					<string>container</string>
 				</dict>
@@ -419,6 +395,15 @@
 			<key>PluralName</key>
 			<string>list items</string>
 		</dict>
+		<key>NSApplication</key>
+		<dict>
+			<key>Description</key>
+			<string>The Colloquy application.</string>
+			<key>Name</key>
+			<string>application</string>
+			<key>PluralName</key>
+			<string>applications</string>
+		</dict>
 		<key>NSWindow</key>
 		<dict>
 			<key>Attributes</key>
@@ -430,110 +415,12 @@
 					<key>Name</key>
 					<string>active panel</string>
 				</dict>
-				<key>boundsAsQDRect</key>
-				<dict>
-					<key>Description</key>
-					<string>The bounding rectangle of the window.</string>
-					<key>Name</key>
-					<string>bounds</string>
-				</dict>
-				<key>hasCloseBox</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the window has a close box.</string>
-					<key>Name</key>
-					<string>closeable</string>
-				</dict>
-				<key>hasTitleBar</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the window has a title bar.</string>
-					<key>Name</key>
-					<string>titled</string>
-				</dict>
-				<key>isFloatingPanel</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the window floats.</string>
-					<key>Name</key>
-					<string>floating</string>
-				</dict>
-				<key>isMiniaturizable</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the window can be miniaturized.</string>
-					<key>Name</key>
-					<string>miniaturizable</string>
-				</dict>
-				<key>isMiniaturized</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the window is currently miniaturized.</string>
-					<key>Name</key>
-					<string>miniaturized</string>
-				</dict>
-				<key>isModalPanel</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the window is the application'</string>
-					<key>Name</key>
-					<string>modal</string>
-				</dict>
-				<key>isResizable</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the window can be resized.</string>
-					<key>Name</key>
-					<string>resizable</string>
-				</dict>
-				<key>isVisible</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the window is currently visible.</string>
-					<key>Name</key>
-					<string>visible</string>
-				</dict>
-				<key>isZoomable</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the window can be zoomed.</string>
-					<key>Name</key>
-					<string>zoomable</string>
-				</dict>
-				<key>isZoomed</key>
-				<dict>
-					<key>Description</key>
-					<string>Whether the window is currently zoomed.</string>
-					<key>Name</key>
-					<string>zoomed</string>
-				</dict>
-				<key>orderedIndex</key>
-				<dict>
-					<key>Description</key>
-					<string>The index of the window in the back-to-front window ordering.</string>
-					<key>Name</key>
-					<string>index</string>
-				</dict>
 				<key>selectedListItem</key>
 				<dict>
 					<key>Description</key>
 					<string>Current selection in the drawer list.</string>
 					<key>Name</key>
 					<string>selected list item</string>
-				</dict>
-				<key>title</key>
-				<dict>
-					<key>Description</key>
-					<string>The full title of the window.</string>
-					<key>Name</key>
-					<string>name</string>
-				</dict>
-				<key>uniqueID</key>
-				<dict>
-					<key>Description</key>
-					<string>The unique identifier of the window.</string>
-					<key>Name</key>
-					<string>id</string>
 				</dict>
 			</dict>
 			<key>Description</key>
@@ -542,6 +429,46 @@
 			<string>window</string>
 			<key>PluralName</key>
 			<string>windows</string>
+		</dict>
+		<key>Panel</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>connection</key>
+				<dict>
+					<key>Description</key>
+					<string>Connection this view uses.</string>
+					<key>Name</key>
+					<string>connection</string>
+				</dict>
+				<key>identifier</key>
+				<dict>
+					<key>Description</key>
+					<string>Consicse description of the chat view and what it represents.</string>
+					<key>Name</key>
+					<string>description</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>Description</key>
+					<string>The unique identifier of the chat view controler.</string>
+					<key>Name</key>
+					<string>id</string>
+				</dict>
+				<key>window</key>
+				<dict>
+					<key>Description</key>
+					<string>Parent window.</string>
+					<key>Name</key>
+					<string>window</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Generic window panel that all panels inherit from (e.g. direct chat panel, chat room panel, etc.)</string>
+			<key>Name</key>
+			<string>panel</string>
+			<key>PluralName</key>
+			<string>panels</string>
 		</dict>
 	</dict>
 	<key>Commands</key>
@@ -686,17 +613,5 @@
 	</dict>
 	<key>Name</key>
 	<string>Colloquy Suite</string>
-	<key>Synonyms</key>
-	<dict>
-		<key>chvC</key>
-		<dict>
-			<key>Description</key>
-			<string>Generic window panel that all panels inherit from (e.g. direct chat panel, chat room panel, etc.)</string>
-			<key>Name</key>
-			<string>panel</string>
-			<key>PluralName</key>
-			<string>panels</string>
-		</dict>
-	</dict>
 </dict>
 </plist>

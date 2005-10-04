@@ -103,7 +103,7 @@
 			<key>AppleEventCode</key>
 			<string>ccoM</string>
 			<key>Superclass</key>
-			<string>Colloquy.NSObject</string>
+			<string>Colloquy.Panel</string>
 		</dict>
 		<key>JVChatMessage</key>
 		<dict>
@@ -228,6 +228,8 @@
 				<dict>
 					<key>AppleEventCode</key>
 					<string>chUs</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
 					<key>Type</key>
 					<string>ChatCore.MVChatUser</string>
 				</dict>
@@ -235,7 +237,7 @@
 			<key>DefaultSubcontainerAttribute</key>
 			<string>user</string>
 			<key>Superclass</key>
-			<string>Colloquy.NSObject</string>
+			<string>Colloquy.ListItem</string>
 		</dict>
 		<key>JVChatRoomPanel</key>
 		<dict>
@@ -327,7 +329,7 @@
 			<key>DefaultSubcontainerAttribute</key>
 			<string>transcript</string>
 			<key>Superclass</key>
-			<string>Colloquy.NSObject</string>
+			<string>Colloquy.Panel</string>
 		</dict>
 		<key>JVDirectChatPanel</key>
 		<dict>
@@ -407,22 +409,47 @@
 				<string></string>
 			</dict>
 		</dict>
-		<key>NSApplication</key>
+		<key>JVSmartTranscriptPanel</key>
 		<dict>
 			<key>AppleEventCode</key>
-			<string>capp</string>
+			<string>strM</string>
+			<key>Superclass</key>
+			<string>Colloquy.JVChatTranscriptPanel</string>
+		</dict>
+		<key>ListItem</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>cliM</string>
 			<key>Attributes</key>
 			<dict>
-				<key>isActive</key>
+				<key>information</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>pisf</string>
+					<string>infA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>isEnabled</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>enBA</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
 					<string>NSNumber&lt;Bool&gt;</string>
 				</dict>
-				<key>name</key>
+				<key>parent</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>pArA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.ListItem</string>
+				</dict>
+				<key>title</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>pnam</string>
@@ -431,10 +458,10 @@
 					<key>Type</key>
 					<string>NSString</string>
 				</dict>
-				<key>version</key>
+				<key>toolTip</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>vers</string>
+					<string>toLA</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
@@ -443,6 +470,27 @@
 			</dict>
 			<key>Superclass</key>
 			<string>NSCoreSuite.AbstractObject</string>
+			<key>ToManyRelationships</key>
+			<dict>
+				<key>children</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>cliM</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.ListItem</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>NSApplication</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>capp</string>
+			<key>Superclass</key>
+			<string>NSCoreSuite.NSApplication</string>
 			<key>SupportedCommands</key>
 			<dict>
 				<key>ChatCore.SendMessage</key>
@@ -451,12 +499,6 @@
 				<string>addEventMessageScriptCommand:</string>
 				<key>Colloquy.newConnection</key>
 				<string>newConnection:</string>
-				<key>NSCoreSuite.Open</key>
-				<string>handleOpenScriptCommand:</string>
-				<key>NSCoreSuite.Print</key>
-				<string>handlePrintScriptCommand:</string>
-				<key>NSCoreSuite.Quit</key>
-				<string>handleQuitScriptCommand:</string>
 			</dict>
 			<key>ToManyRelationships</key>
 			<dict>
@@ -524,7 +566,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.NSObject</string>
+					<string>Colloquy.Panel</string>
 				</dict>
 				<key>directChats</key>
 				<dict>
@@ -548,85 +590,16 @@
 					<key>Type</key>
 					<string>ChatCore.MVFileTransfer</string>
 				</dict>
-				<key>orderedWindows</key>
+				<key>smartTranscripts</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>cwin</string>
+					<string>strM</string>
 					<key>LocationRequiredToCreate</key>
 					<string>NO</string>
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.NSWindow</string>
-				</dict>
-			</dict>
-		</dict>
-		<key>NSObject</key>
-		<dict>
-			<key>AppleEventCode</key>
-			<string>cliM</string>
-			<key>Attributes</key>
-			<dict>
-				<key>information</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>infA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-				<key>isEnabled</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>enBA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>parent</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pArA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>Colloquy.NSObject</string>
-				</dict>
-				<key>title</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pnam</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-				<key>toolTip</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>toLA</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-			</dict>
-			<key>Superclass</key>
-			<string>NSCoreSuite.AbstractObject</string>
-			<key>ToManyRelationships</key>
-			<dict>
-				<key>children</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>cliM</string>
-					<key>LocationRequiredToCreate</key>
-					<string>NO</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>Colloquy.NSObject</string>
+					<string>Colloquy.JVSmartTranscriptPanel</string>
 				</dict>
 			</dict>
 		</dict>
@@ -643,105 +616,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.NSObject</string>
-				</dict>
-				<key>boundsAsQDRect</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pbnd</string>
-					<key>Type</key>
-					<string>NSData&lt;QDRect&gt;</string>
-				</dict>
-				<key>hasCloseBox</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>hclb</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>hasTitleBar</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>ptit</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>isFloatingPanel</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>isfl</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>isMiniaturizable</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>ismn</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>isMiniaturized</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pmnd</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>isModalPanel</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pmod</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>isResizable</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>prsz</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>isVisible</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pvis</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>isZoomable</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>iszm</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>isZoomed</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pzum</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Bool&gt;</string>
-				</dict>
-				<key>orderedIndex</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pidx</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Int&gt;</string>
+					<string>Colloquy.Panel</string>
 				</dict>
 				<key>selectedListItem</key>
 				<dict>
@@ -750,36 +625,11 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.NSObject</string>
-				</dict>
-				<key>title</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>pnam</string>
-					<key>Type</key>
-					<string>NSString</string>
-				</dict>
-				<key>uniqueID</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>ID  </string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSNumber&lt;Int&gt;</string>
+					<string>Colloquy.ListItem</string>
 				</dict>
 			</dict>
 			<key>Superclass</key>
-			<string>NSCoreSuite.AbstractObject</string>
-			<key>SupportedCommands</key>
-			<dict>
-				<key>NSCoreSuite.Close</key>
-				<string>handleCloseScriptCommand:</string>
-				<key>NSCoreSuite.Print</key>
-				<string>handlePrintScriptCommand:</string>
-				<key>NSCoreSuite.Save</key>
-				<string>handleSaveScriptCommand:</string>
-			</dict>
+			<string>NSCoreSuite.NSWindow</string>
 			<key>ToManyRelationships</key>
 			<dict>
 				<key>chatConsoles</key>
@@ -824,7 +674,7 @@
 					<key>ReadOnly</key>
 					<string>YES</string>
 					<key>Type</key>
-					<string>Colloquy.NSObject</string>
+					<string>Colloquy.Panel</string>
 				</dict>
 				<key>directChats</key>
 				<dict>
@@ -837,6 +687,70 @@
 					<key>Type</key>
 					<string>Colloquy.JVDirectChatPanel</string>
 				</dict>
+				<key>smartTranscripts</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>strM</string>
+					<key>LocationRequiredToCreate</key>
+					<string>NO</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.JVSmartTranscriptPanel</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>Panel</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>chvC</string>
+			<key>Attributes</key>
+			<dict>
+				<key>connection</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>conM</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>ChatCore.MVChatConnection</string>
+				</dict>
+				<key>identifier</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>idtA</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+				</dict>
+				<key>uniqueIdentifier</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>ID  </string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Int&gt;</string>
+				</dict>
+				<key>window</key>
+				<dict>
+					<key>AppleEventCode</key>
+					<string>cwin</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>Colloquy.NSWindow</string>
+				</dict>
+			</dict>
+			<key>Superclass</key>
+			<string>Colloquy.ListItem</string>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>ChatCore.SendMessage</key>
+				<string>sendMessageScriptCommand:</string>
+				<key>NSCoreSuite.Close</key>
+				<string>close:</string>
 			</dict>
 		</dict>
 	</dict>
@@ -1002,11 +916,6 @@
 	</dict>
 	<key>Name</key>
 	<string>Colloquy</string>
-	<key>Synonyms</key>
-	<dict>
-		<key>chvC</key>
-		<string>NSObject</string>
-	</dict>
 	<key>UsedFeatures</key>
 	<array>
 		<string>UnnamedArguments</string>

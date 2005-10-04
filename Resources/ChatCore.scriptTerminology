@@ -121,14 +121,14 @@
 				<key>dateJoined</key>
 				<dict>
 					<key>Description</key>
-					<string>Date we joined the room. Missing value if we haven'</string>
+					<string>Date we joined the room. Missing value if we haven't joined yet.</string>
 					<key>Name</key>
 					<string>date joined</string>
 				</dict>
 				<key>dateParted</key>
 				<dict>
 					<key>Description</key>
-					<string>Date we parted the room. Missing value if we haven'</string>
+					<string>Date we parted the room. Missing value if we haven't parted yet.</string>
 					<key>Name</key>
 					<string>date parted</string>
 				</dict>
@@ -245,7 +245,7 @@
 				<key>realName</key>
 				<dict>
 					<key>Description</key>
-					<string>The real name supplied by the user, not always a person'</string>
+					<string>The real name supplied by the user, not always a person's realname.</string>
 					<key>Name</key>
 					<string>real name</string>
 				</dict>

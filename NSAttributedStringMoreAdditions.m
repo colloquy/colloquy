@@ -231,11 +231,11 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	case 's':
 		if( ! strcmp( (char *) node -> name, "span" ) ) {
 			xmlChar *classes = xmlGetProp( node, (xmlChar *) "class" );
+			skipTag = YES;
 			if( classes ) {
 				NSArray *cls = [[NSString stringWithUTF8String:(char *) classes] componentsSeparatedByString:@" "];
 				[newAttributes setObject:[NSSet setWithArray:cls] forKey:@"CSSClasses"];
 				xmlFree( classes );
-				skipTag = YES;
 			}
 		}
 		break;
