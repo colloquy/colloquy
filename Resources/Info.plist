@@ -118,7 +118,7 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>10.3.9</string>
 	<key>CFBundleVersion</key>
-	<string>2D29 source</string>
+	<string>2D30 source</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
 	<string>http://colloquy.info</string>
 	<key>NSAppleScriptEnabled</key>
