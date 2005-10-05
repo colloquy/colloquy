@@ -695,7 +695,7 @@ quickEnd:
 
 		// check if we are near the bottom of the chat area, and if we should scroll down later
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
-		BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.975 );
+		BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.985 );
 		DOMHTMLElement *body = [_domDocument body];
 
 		unsigned int i = 0;
@@ -750,7 +750,7 @@ quickEnd:
 
 		// check if we are near the bottom of the chat area, and if we should scroll down later
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
-		BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.975 );
+		BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.985 );
 
 		// parses the message so we can get the DOM tree
 		DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
