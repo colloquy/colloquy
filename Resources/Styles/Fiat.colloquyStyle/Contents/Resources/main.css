@@ -45,7 +45,7 @@ a:hover {
 .header {
 	display: block;
 	position: relative;
-	height: 22;
+	height: 22px;
 	background: url( "images/h_shadow_left.png" ) left repeat-y;
 	padding-left: 4px;
 }
@@ -58,8 +58,7 @@ a:hover {
 
 .header > span > span {
 	display: block;
-	height: 20;
-	overflow: hidden;
+	height: 20px;
 }
 
 .header .left {
@@ -121,16 +120,16 @@ a:hover {
 }
 
 .messages .time.inline {
+	float: left;
 	margin: 1px 4px 0;
 	padding: 0;
-	overflow: hidden;
 	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
 }
 
 .messages .time[title]:after {
-	margin: 1px 4px 0;
+	float: left;
+	margin: 1px 1px 0 4px;
 	padding: 0;
-	overflow: hidden;
 	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
 	content: attr( title );
 }
@@ -145,7 +144,6 @@ a:hover {
 	display: block;
 	margin: 1px 4px 0;
 	padding: 0;
-	overflow: hidden;
 	word-wrap: break-word;
 }
 
@@ -187,7 +185,6 @@ a:hover {
 .event .time.inline {
 	margin: 0 4px;
 	padding: 0;
-	overflow: hidden;
 	color: #404040;
 }
 
@@ -195,7 +192,6 @@ a:hover {
 	float: left;
 	margin: 0 4px;
 	padding: 0;
-	overflow: hidden;
 	color: #404040;
 	content: attr( title )
 }
@@ -203,7 +199,6 @@ a:hover {
 .event .message {
 	margin: 0 4px;
 	padding: 0;
-	overflow: hidden;
 	color: #303030;
 	word-wrap: break-word;
 }
