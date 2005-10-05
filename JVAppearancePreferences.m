@@ -24,12 +24,6 @@
 
 #pragma mark -
 
-@interface NSWindow (NSWindowPrivate) // new Tiger private method
-- (void) _setContentHasShadow:(BOOL) shadow;
-@end
-
-#pragma mark -
-
 @implementation JVAppearancePreferences
 - (id) init {
 	if( ( self = [super init] ) ) {
@@ -106,9 +100,6 @@
 
 - (void) awakeFromNib {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( styleDidReload: ) name:JVStyleViewDidChangeStylesNotification object:preview];
-
-	if( [[preview window] respondsToSelector:@selector( _setContentHasShadow: )] )
-		[[preview window] _setContentHasShadow:NO]; // this is new in Tiger
 }
 
 - (void) initializeFromDefaults {

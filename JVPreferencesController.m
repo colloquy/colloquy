@@ -1,5 +1,11 @@
 #import "JVPreferencesController.h"
 
+@interface NSWindow (NSWindowPrivate) // new Tiger private method
+- (void) _setContentHasShadow:(BOOL) shadow;
+@end
+
+#pragma mark -
+
 @implementation JVPreferencesController
 - (id) init {
 	_preferenceTitles = [[NSMutableArray array] retain];
@@ -21,6 +27,8 @@
 	[super showPreferencesPanel];
 	// let us poke transparant holes in the window
 	if( NSAppKitVersionNumber >= 700. ) [_preferencesPanel setOpaque:NO];
+	if( [_preferencesPanel respondsToSelector:@selector( _setContentHasShadow: )] )
+		[_preferencesPanel _setContentHasShadow:NO]; // this is new in Tiger
 	if( [_preferencesPanel respondsToSelector:@selector( setShowsToolbarButton: )] )
 		[_preferencesPanel setShowsToolbarButton:NO];
 }
@@ -29,6 +37,8 @@
 	[super showPreferencesPanelForOwner:owner];
 	// let us poke transparant holes in the window
 	if( NSAppKitVersionNumber >= 700. ) [_preferencesPanel setOpaque:NO];
+	if( [_preferencesPanel respondsToSelector:@selector( _setContentHasShadow: )] )
+		[_preferencesPanel _setContentHasShadow:NO]; // this is new in Tiger
 	if( [_preferencesPanel respondsToSelector:@selector( setShowsToolbarButton: )] )
 		[_preferencesPanel setShowsToolbarButton:NO];
 }
