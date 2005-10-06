@@ -146,22 +146,25 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		NSString *htmlStart = [dict objectForKey:@"XHTMLStart"];
 		NSString *htmlEnd = [dict objectForKey:@"XHTMLEnd"];
 		NSSet *classes = [dict objectForKey:@"CSSClasses"];
+		NSString *style = [dict objectForKey:@"CSSText"];
 		NSString *title = [dict objectForKey:@"LinkTitle"];
 		BOOL bold = NO, italic = NO, underline = NO, strikethrough = NO;
 
 		NSMutableString *spanString = [NSMutableString stringWithString:@"<span"];
-		NSMutableString *styleString = [NSMutableString string];
+		NSMutableString *styleString = [NSMutableString stringWithString:( style ? style : @"" )];
 
-		if( foregoundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
+		if( foregoundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
+			if( [styleString length] && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
 			[styleString appendFormat:@"color: %@", [foregoundColor CSSAttributeValue]];
+		}
 
 		if( backgroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
-			if( [styleString length] ) [styleString appendString:@"; "];
+			if( [styleString length] && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
 			[styleString appendFormat:@"background-color: %@", [backgroundColor CSSAttributeValue]];
 		}
 
 		if( ! [[options objectForKey:@"IgnoreFonts"] boolValue] ) {
-			if( [styleString length] ) [styleString appendString:@"; "];
+			if( [styleString length] && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
 			NSString *family = [currentFont familyName];
 			if( [family rangeOfString:@" "].location != NSNotFound )
 				family = [NSString stringWithFormat:@"'%@'", family];
@@ -169,7 +172,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		}
 
 		if( ! [[options objectForKey:@"IgnoreFontSizes"] boolValue] ) {
-			if( [styleString length] ) [styleString appendString:@"; "];
+			if( [styleString length] && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
 			[styleString appendFormat:@"font-size: %.1fpt", [currentFont pointSize]];
 		}
 

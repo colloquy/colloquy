@@ -8,14 +8,12 @@
 static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 	NSFontManager *fm = [NSFontManager sharedFontManager];
 	NSFont *font = [attrs objectForKey:NSFontAttributeName];
-	if( ! font )
-		font = [NSFont userFontOfSize:12];
+	if( ! font ) font = [NSFont userFontOfSize:12];
 	if( ! ( [fm traitsOfFont:font] & NSItalicFontMask ) ) {
 		NSFont *newFont = [fm convertFont:font toHaveTrait:NSItalicFontMask];
 		if( newFont == font ) {
 			// font couldn't be made italic
-			[attrs setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue]
-					  forKey:NSObliquenessAttributeName];
+			[attrs setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue] forKey:NSObliquenessAttributeName];
 		} else {
 			// We got an italic font
 			[attrs setObject:newFont forKey:NSFontAttributeName];
@@ -27,8 +25,7 @@ static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 static void removeItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 	NSFontManager *fm = [NSFontManager sharedFontManager];
 	NSFont *font = [attrs objectForKey:NSFontAttributeName];
-	if( ! font )
-		font = [NSFont userFontOfSize:12];
+	if( ! font ) font = [NSFont userFontOfSize:12];
 	if( [fm traitsOfFont:font] & NSItalicFontMask ) {
 		font = [fm convertFont:font toNotHaveTrait:NSItalicFontMask];
 		[attrs setObject:font forKey:NSFontAttributeName];
@@ -133,7 +130,7 @@ static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary 
 		}
 
 		if( ! handled ) {
-			if( [unhandledStyles length] ) [unhandledStyles appendString:@"; "];
+			if( [unhandledStyles length] ) [unhandledStyles appendString:@";"];
 			[unhandledStyles appendFormat:@"%@: %@", prop, attr];
 		}
 
@@ -144,7 +141,7 @@ static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary 
 }
 
 static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionary *currentAttributes, NSURL *base, BOOL first ) {
-	if( ! node ) return nil;
+	if( ! node || ! node -> name || ! node -> name[0] ) return nil;
 
 	NSMutableAttributedString *ret = [[NSMutableAttributedString new] autorelease];
 	NSMutableDictionary *newAttributes = [[currentAttributes mutableCopy] autorelease];
@@ -153,25 +150,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 
 	switch( node -> name[0] ) {
 	case 'i':
-		/* if( ! strcmp( node -> name, "img" ) ) {
-			xmlBufferPtr buf = xmlBufferCreate();
-			xmlNodeDump( buf, node -> doc, node, 0, 0 );
-
-			NSData *imgCode = [NSData dataWithBytesNoCopy:buf -> content length:buf -> use freeWhenDone:NO];
-			NSAttributedString *newStr = nil;
-
-			if( NSAppKitVersionNumber >= 700. ) newStr = [[NSMutableAttributedString alloc] initWithHTML:imgCode options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", @"utf-8", @"TextEncodingName", ( base ? base : [[NSURL new] autorelease] ), @"BaseURL", nil] documentAttributes:NULL];
-			else newStr = [[NSAttributedString alloc] initWithHTML:imgCode baseURL:base documentAttributes:nil];
-
-			xmlBufferFree( buf );
-
-			if( newStr ) {
-				[ret appendAttributedString:newStr];
-				[newStr release];
-			}
-
-			skipTag = YES;
-		} else */ if( ! strcmp( (char *) node -> name, "i" ) ) {
+		if( ! strcmp( (char *) node -> name, "i" ) ) {
 			setItalicOrObliqueFont( newAttributes );
 			skipTag = YES;
 		}
@@ -229,24 +208,24 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		}
 		break;
 	case 's':
-		if( ! strcmp( (char *) node -> name, "span" ) ) {
-			xmlChar *classes = xmlGetProp( node, (xmlChar *) "class" );
+		if( ! strcmp( (char *) node -> name, "span" ) ) 
 			skipTag = YES;
-			if( classes ) {
-				NSArray *cls = [[NSString stringWithUTF8String:(char *) classes] componentsSeparatedByString:@" "];
-				[newAttributes setObject:[NSSet setWithArray:cls] forKey:@"CSSClasses"];
-				xmlFree( classes );
-			}
-		}
 		break;
 	}
 
 	if( skipTag || first ) {
-		// Parse and inline CSS styles attached to this node, do this last incase the CSS overrides any of the previous attributes
+		xmlChar *classes = xmlGetProp( node, (xmlChar *) "class" );
+		if( classes ) {
+			NSArray *cls = [[NSString stringWithUTF8String:(char *) classes] componentsSeparatedByString:@" "];
+			[newAttributes setObject:[NSSet setWithArray:cls] forKey:@"CSSClasses"];
+			xmlFree( classes );
+		}
+
+		// Parse any inline CSS styles attached to this node, do this last incase the CSS overrides any of the previous attributes
 		xmlChar *style = xmlGetProp( node, (xmlChar *) "style" );
-		NSString *unhandledStyles = nil;
 		if( style ) {
-			unhandledStyles = parseCSSStyleAttribute( (char *) style, newAttributes );
+			NSString *unhandledStyles = parseCSSStyleAttribute( (char *) style, newAttributes );
+			if( unhandledStyles ) [newAttributes setObject:unhandledStyles forKey:@"CSSText"];
 			xmlFree( style );
 		}
 
@@ -273,10 +252,10 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 			[front appendString:string];
 			[newAttributes setObject:front forKey:@"XHTMLStart"];
 
-			unichar zeroWidthSpaceChar = 0x200b;
-			NSString *zero = [NSString stringWithCharacters:&zeroWidthSpaceChar length:1];
+			unichar attachmentChar = NSAttachmentCharacter;
+			NSString *attachment = [NSString stringWithCharacters:&attachmentChar length:1];
 
-			NSAttributedString *new = [[NSAttributedString alloc] initWithString:zero attributes:newAttributes];
+			NSAttributedString *new = [[NSAttributedString alloc] initWithString:attachment attributes:newAttributes];
 			[ret appendAttributedString:new];
 			[new release];
 

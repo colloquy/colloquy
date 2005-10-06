@@ -68,6 +68,15 @@
 	else [self addAttribute:@"CSSClasses" value:[NSSet setWithArray:classes] range:NSMakeRange( 0, [self length] )];
 }
 
+- (NSString *) styleText {
+	return [self attribute:@"CSSText" atIndex:0 effectiveRange:NULL];
+}
+
+- (void) setStyleText:(NSString *) style {
+	if( ! [style isKindOfClass:[NSString class]] || ! [style length] ) [self removeAttribute:@"CSSText" range:NSMakeRange( 0, [self length] )];
+	else [self addAttribute:@"CSSText" value:style range:NSMakeRange( 0, [self length] )];
+}
+
 - (NSString *) XHTMLStart {
 	return [self attribute:@"XHTMLStart" atIndex:0 effectiveRange:NULL];
 }

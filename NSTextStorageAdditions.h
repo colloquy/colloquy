@@ -17,6 +17,9 @@
 - (NSArray *) styleClasses;
 - (void) setStyleClasses:(NSArray *) classes;
 
+- (NSString *) styleText;
+- (void) setStyleText:(NSString *) style;
+
 - (NSString *) XHTMLStart;
 - (void) setXHTMLStart:(NSString *) html;
 
