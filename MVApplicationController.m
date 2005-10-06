@@ -394,7 +394,6 @@ static BOOL applicationIsTerminating = NO;
 	[JVChatController defaultController];
 	[MVFileTransferController defaultController];
 	[MVBuddyListController sharedBuddyList];
-	[JVChatTranscriptBrowserPanel sharedBrowser];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:30] setSubmenu:[JVChatController smartTranscriptMenu]];
