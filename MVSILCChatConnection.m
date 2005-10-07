@@ -534,9 +534,9 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 
 				silc_channel_payload_list_free( list );
 
-				if( [chanArray count] ) [user _setAttribute:chanArray forKey:MVChatUserKnownRoomsAttribute];
+				if( [chanArray count] ) [user setAttribute:chanArray forKey:MVChatUserKnownRoomsAttribute];
 			}
-		} else [user _setAttribute:nil forKey:MVChatUserKnownRoomsAttribute];
+		} else [user setAttribute:nil forKey:MVChatUserKnownRoomsAttribute];
 
 		NSNotification *note = [NSNotification notificationWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];

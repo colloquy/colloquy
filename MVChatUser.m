@@ -407,6 +407,18 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	} return nil;
 }
 
+- (void) setAttribute:(id) attribute forKey:(id) key {
+	NSParameterAssert( key != nil );
+	@synchronized( _attributes ) {
+		if( attribute ) [_attributes setObject:attribute forKey:key];
+		else [_attributes removeObjectForKey:key];
+	}
+
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
+	NSNotification *note = [NSNotification notificationWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+}
+
 #pragma mark -
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
@@ -514,18 +526,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (void) _setDateUpdated:(NSDate *) date {
 	[_dateUpdated autorelease];
 	_dateUpdated = [date copyWithZone:[self zone]];
-}
-
-- (void) _setAttribute:(id) attribute forKey:(id) key {
-	NSParameterAssert( key != nil );
-	@synchronized( _attributes ) {
-		if( attribute ) [_attributes setObject:attribute forKey:key];
-		else [_attributes removeObjectForKey:key];
-	}
-
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
-	NSNotification *note = [NSNotification notificationWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 @end
 

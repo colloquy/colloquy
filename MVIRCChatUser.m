@@ -87,13 +87,13 @@
 	NSString *command = [[notification userInfo] objectForKey:@"command"];
 	NSString *arguments = [[notification userInfo] objectForKey:@"arguments"];
 	if( ! [command caseInsensitiveCompare:@"version"] ) {
-		[self _setAttribute:arguments forKey:MVChatUserClientInfoAttribute];
+		[self setAttribute:arguments forKey:MVChatUserClientInfoAttribute];
 	} else if( ! [command caseInsensitiveCompare:@"time"] ) {
 		NSDate *localThere = [NSDate dateWithNaturalLanguageString:arguments];
 		if( localThere ) {
 			NSTimeInterval diff = [localThere timeIntervalSinceDate:[NSDate date]];
-			[self _setAttribute:[NSNumber numberWithDouble:diff] forKey:MVChatUserLocalTimeDifferenceAttribute];
-		} else [self _setAttribute:nil forKey:MVChatUserLocalTimeDifferenceAttribute];
+			[self setAttribute:[NSNumber numberWithDouble:diff] forKey:MVChatUserLocalTimeDifferenceAttribute];
+		} else [self setAttribute:nil forKey:MVChatUserLocalTimeDifferenceAttribute];
 	}
 }
 @end

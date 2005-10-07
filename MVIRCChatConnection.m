@@ -894,7 +894,7 @@ static void MVChatUserChannels( IRC_SERVER_REC *server, const char *data ) {
 
 	if( [results count] ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		[user _setAttribute:results forKey:MVChatUserKnownRoomsAttribute];
+		[user setAttribute:results forKey:MVChatUserKnownRoomsAttribute];
 	}
 
 	g_free( params );

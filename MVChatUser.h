@@ -133,6 +133,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (NSDictionary *) attributes;
 - (BOOL) hasAttributeForKey:(NSString *) key;
 - (id) attributeForKey:(NSString *) key;
+- (void) setAttribute:(id) attribute forKey:(id) key;
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
 - (MVUploadFileTransfer *) sendFile:(NSString *) path passively:(BOOL) passive;

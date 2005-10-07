@@ -35,5 +35,4 @@
 - (void) _setDateJoined:(NSDate *) date;
 - (void) _setDateParted:(NSDate *) date;
 - (void) _setTopic:(NSData *) topic byAuthor:(MVChatUser *) author withDate:(NSDate *) date;
-- (void) _setAttribute:(id) attribute forKey:(id) key;
 @end

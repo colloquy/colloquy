@@ -278,6 +278,18 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	} return nil;
 }
 
+- (void) setAttribute:(id) attribute forKey:(id) key {
+	NSParameterAssert( key != nil );
+	@synchronized( _attributes ) {
+		if( attribute ) [_attributes setObject:attribute forKey:key];
+		else [_attributes removeObjectForKey:key];
+	}
+	
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
+	NSNotification *note = [NSNotification notificationWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+}
+
 #pragma mark -
 
 - (unsigned long) supportedModes {
@@ -576,18 +588,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	_dateTopicChanged = [date copyWithZone:[self zone]];
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomTopicChangedNotification object:self userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-- (void) _setAttribute:(id) attribute forKey:(id) key {
-	NSParameterAssert( key != nil );
-	@synchronized( _attributes ) {
-		if( attribute ) [_attributes setObject:attribute forKey:key];
-		else [_attributes removeObjectForKey:key];
-	}
-
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
