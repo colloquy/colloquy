@@ -130,7 +130,7 @@
 }
 
 - (JVBuddy *) buddy {
-	return nil; // [[self user] buddy];
+	return [[MVBuddyListController sharedBuddyList] buddyForUser:[self user]];
 }
 
 #pragma mark -
