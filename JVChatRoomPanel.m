@@ -39,7 +39,6 @@
 @implementation JVChatRoomPanel
 - (id) initWithTarget:(id) target {
 	if( ( self = [super initWithTarget:target] ) ) {
-		topicLine = nil;
 		_sortedMembers = [[NSMutableArray arrayWithCapacity:50] retain];
 		_preferredTabCompleteNicknames = [[NSMutableArray arrayWithCapacity:10] retain];
 		_nextMessageAlertMembers = [[NSMutableSet setWithCapacity:5] retain];
@@ -68,8 +67,7 @@
 - (void) awakeFromNib {
 	[super awakeFromNib];
 
-	[topicLine setDrawsBackground:NO];
-	[[topicLine enclosingScrollView] setDrawsBackground:NO];
+	[display setBodyTemplate:@"chatRoom"];
 
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
 	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Chat Rooms/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath];
@@ -133,11 +131,6 @@
 	else if( [self newMessagesWaiting] == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
 	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
 	return [NSString stringWithFormat:NSLocalizedString( @"%@ (%@)\n%d members\n%@", "room status info tooltip in drawer" ), _target, [[self connection] server], [_sortedMembers count], messageCount];
-}
-
-- (NSView *) view {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatRoom" owner:self];
-	return contents;
 }
 
 - (NSString *) identifier {
@@ -226,16 +219,6 @@
 
 - (void) handleDraggedFile:(NSString *) path {
 	[self doesNotRecognizeSelector:_cmd];
-}
-
-#pragma mark -
-
-- (IBAction) toggleTopic:(id) sender {
-	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic] withBaseFont:[NSFont systemFontOfSize:11.]];
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-	NSString *topicString = [topic HTMLFormatWithOptions:options];
-
-	[display toggleTopic:topicString];
 }
 
 #pragma mark -
@@ -1276,9 +1259,9 @@
 
 - (void) _topicChanged:(id) sender {
 	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic] withBaseFont:[NSFont systemFontOfSize:11.]];
+	JVChatRoomMember *author = ( [[self target] topicAuthor] ? [self chatRoomMemberForUser:[[self target] topicAuthor]] : nil );
 
 	if( topic && [[self target] topicAuthor] && sender ) {
-		JVChatRoomMember *author = [self chatRoomMemberForUser:[[self target] topicAuthor]];
 		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
 		NSString *topicString = [topic HTMLFormatWithOptions:options];
 
@@ -1287,13 +1270,6 @@
 		} else {
 			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"Topic changed to \"%@\" by <span class=\"member\">%@</span>.", "topic changed chat room status message" ), topicString, [author title]] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( author ? (id) author : (id) [[self target] topicAuthor] ), @"by", topic, @"topic", nil]];
 		}
-
-		if( [[self target] topicAuthor] ) {
-			NSMutableString *toolTip = [[[topic string] mutableCopy] autorelease];
-			[toolTip appendString:@"\n"];
-			[toolTip appendFormat:NSLocalizedString( @"Topic set by: %@", "topic author tooltip" ), ( author ? [author title] : [[[self target] topicAuthor] displayName] )];
-			[[topicLine enclosingScrollView] setToolTip:toolTip];
-		} else [[topicLine enclosingScrollView] setToolTip:[topic string]];
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSAttributedString * ), @encode( JVChatRoomPanel * ), @encode( JVChatRoomMember * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -1311,13 +1287,7 @@
 		topic = [[[NSMutableAttributedString alloc] initWithString:NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" ) attributes:attributes] autorelease];
 	}
 
-	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-	[paraStyle setMaximumLineHeight:13.];
-	[paraStyle setAlignment:NSCenterTextAlignment];
-//	[paraStyle setLineBreakMode:NSLineBreakByTruncatingTail];
-	[(NSMutableAttributedString *)topic addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange( 0, [topic length] )];
-
-	[[topicLine textStorage] setAttributedString:topic];
+	[display setTopicMessage:topic andAuthor:( author ? [author title] : [[[self target] topicAuthor] displayName] )];
 }
 
 - (void) _startChatWithNonMember:(id) sender {

@@ -62,11 +62,11 @@ extern NSString *JVStyleVariantChangedNotification;
 - (NSURL *) baseLocation;
 - (NSURL *) mainStyleSheetLocation;
 - (NSURL *) variantStyleSheetLocationWithName:(NSString *) name;
-- (NSString *) XMLStyleSheetFilePath;
-- (NSString *) previewTranscriptFilePath;
-- (NSString *) headerFilePath;
+- (NSURL *) bodyTemplateLocationWithName:(NSString *) name;
+- (NSURL *) XMLStyleSheetLocation;
+- (NSURL *) previewTranscriptLocation;
 
 - (NSString *) contentsOfMainStyleSheet;
 - (NSString *) contentsOfVariantStyleSheetWithName:(NSString *) name;
-- (NSString *) contentsOfHeaderFile;
+- (NSString *) contentsOfBodyTemplateWithName:(NSString *) name;
 @end

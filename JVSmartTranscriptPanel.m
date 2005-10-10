@@ -89,6 +89,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	}
 
 	if( ! _nibLoaded ) [super awakeFromNib];
+
+	[display setBodyTemplate:@"smartTranscript"];
 }
 
 #pragma mark -

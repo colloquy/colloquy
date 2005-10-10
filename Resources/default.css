@@ -36,42 +36,6 @@ hr#mark {
 	color: #222222;
 }
 
-/* For the topic floater */
-#topic-floater {
-	z-index: 100;
-	position: fixed;
-	left: 0;
-	right: 0;
-	top: 0;
-	background-color: rgba( 255, 255, 255, 0.9 );
-	color: black;
-	border-bottom: 1px solid rgba( 0, 0, 0, 0.6 );
-	font-family: Lucida Grande;
-	font-size: 11px;
-	padding: 5px 5px 10px 10px;
-	text-align: center;
-}
-
-#topic-floater a {
-	color: blue;
-	text-decoration: underline;
-}
-
-#topic-floater a:active {
-	color: red;
-}
-
-#topic-floater a:visited {
-	color: blue;
-}
-
-#topic-floater .close {
-	float: right;
-	width: 12px;
-	height: 12px;
-	margin: 0 0 5px 5px;
-}
-
 /* The rest of this file is for scripts, this will change in the future!
  * Having script specific things in Colloquy is bad, bad, bad! */
 

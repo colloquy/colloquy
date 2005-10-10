@@ -113,6 +113,13 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 #pragma mark -
 
+@interface JVStyleView (JVStyleViewPrivate)
+- (unsigned long) _visibleMessageCount;
+- (long) _locationOfElementAtIndex:(unsigned long) index;
+@end
+
+#pragma mark -
+
 @implementation JVDirectChatPanel
 - (id) init {
 	if( ( self = [super init] ) ) {
@@ -248,6 +255,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	}
 
 	[super awakeFromNib];
+
+	[display setBodyTemplate:@"directChat"];
 
 	[self changeEncoding:nil];
 
@@ -1139,18 +1148,14 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
 
 	JVMarkedScroller *scroller = [display verticalMarkedScroller];
-	if( ! scroller || [scroller floatValue] == 1. ) _scrollerIsAtBottom = YES;
+	if( ! scroller || [scroller floatValue] >= 0.985 ) _scrollerIsAtBottom = YES;
 	else _scrollerIsAtBottom = NO;
 
 	// Commit the changes
 	[[[send superview] superview] setFrame:sendFrame];
 	[[[display superview] superview] setFrame:webFrame];
 
-	if( _scrollerIsAtBottom ) {
-		NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
-		[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint( 0, [[scrollView documentView] bounds].size.height )]];
-		[scrollView reflectScrolledClipView:[scrollView contentView]];
-	}
+	if( _scrollerIsAtBottom ) [display scrollToBottom];
 
 	[splitView setNeedsDisplay:YES]; // makes the divider redraw correctly later
 	[[display window] enableFlushWindow]; // flush everything we have drawn
@@ -1171,11 +1176,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	NSRect sendFrame = [[[send superview] superview] frame];
 	_sendHeight = sendFrame.size.height;
 
-	if( _scrollerIsAtBottom ) {
-		NSScrollView *scrollView = [[[[display mainFrame] frameView] documentView] enclosingScrollView];
-		[scrollView scrollClipView:[scrollView contentView] toPoint:[[scrollView contentView] constrainScrollPoint:NSMakePoint( 0, [[scrollView documentView] bounds].size.height )]];
-		[scrollView reflectScrolledClipView:[scrollView contentView]];
-	}
+	if( _scrollerIsAtBottom ) [display scrollToBottom];
 
 	if( ! _forceSplitViewPosition && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
 		[(JVSplitView *)[notification object] savePositionUsingName:@"JVChatSplitViewPosition"];
@@ -1483,15 +1484,15 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:messageString, @"away-message", nil]];
 
-/*		unsigned long messageCount = [self visibleMessageCount];
-		long loc = [self locationOfElementByIndex:( messageCount - 1 )];
-		[[self verticalMarkedScroller] startShadedAreaAt:loc]; */
+		unsigned long messageCount = [display _visibleMessageCount];
+		long loc = [display _locationOfElementAtIndex:( messageCount - 1 )];
+		if( loc > 0 && loc != NSNotFound ) [[display verticalMarkedScroller] startShadedAreaAt:loc];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
 
-/*		unsigned long messageCount = [self visibleMessageCount];
-		long loc = [self locationOfElementByIndex:( messageCount - 1 )];
-		[[display verticalMarkedScroller] stopShadedAreaAt:loc]; */
+		unsigned long messageCount = [display _visibleMessageCount];
+		long loc = [display _locationOfElementAtIndex:( messageCount - 1 )];
+		if( loc > 0 && loc != NSNotFound ) [[display verticalMarkedScroller] stopShadedAreaAt:loc];
 	}
 }
 

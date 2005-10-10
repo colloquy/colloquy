@@ -12,7 +12,7 @@
 + (void) _freeXsltParamArray:(const char **) params;
 
 - (void) _setBundle:(NSBundle *) bundle;
-- (void) _setXSLStyle:(NSString *) path;
+- (void) _setXSLStyle:(NSURL *) location;
 - (void) _setStyleOptions:(NSArray *) options;
 - (void) _setVariants:(NSArray *) variants;
 - (void) _setUserVariants:(NSArray *) variants;
@@ -264,7 +264,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	NSParameterAssert( document != NULL );
 
 	@synchronized( self ) {
-		if( ! _XSLStyle ) [self _setXSLStyle:[self XMLStyleSheetFilePath]];
+		if( ! _XSLStyle ) [self _setXSLStyle:[self XMLStyleSheetLocation]];
 		NSAssert( _XSLStyle, @"XSL not allocated." );
 
 		NSMutableDictionary *pms = (NSMutableDictionary *)[self mainParameters];
@@ -443,20 +443,42 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return nil;
 }
 
-- (NSString *) XMLStyleSheetFilePath {
+- (NSURL *) bodyTemplateLocationWithName:(NSString *) name {
+	if( ! [name length] ) name = @"generic";
+
+	NSString *path = [_bundle pathForResource:[name stringByAppendingString:@"Template"] ofType:@"html"];
+	if( path ) return [NSURL fileURLWithPath:path];
+
+	path = [_bundle pathForResource:@"genericTemplate" ofType:@"html"];
+	if( path ) return [NSURL fileURLWithPath:path];
+
+	path = [[NSBundle mainBundle] pathForResource:[name stringByAppendingString:@"Template"] ofType:@"html"];
+	if( path ) return [NSURL fileURLWithPath:path];
+
+	path = [[NSBundle mainBundle] pathForResource:@"genericTemplate" ofType:@"html"];
+	if( path ) return [NSURL fileURLWithPath:path];
+
+	return nil;
+}
+
+- (NSURL *) XMLStyleSheetLocation {
 	NSString *path = [_bundle pathForResource:@"main" ofType:@"xsl"];
-	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"default" ofType:@"xsl"];
-	return path;
+	if( path ) return [NSURL fileURLWithPath:path];
+
+	path = [[NSBundle mainBundle] pathForResource:@"default" ofType:@"xsl"];
+	if( path ) return [NSURL fileURLWithPath:path];
+
+	return nil;
 }
 
-- (NSString *) previewTranscriptFilePath {
+- (NSURL *) previewTranscriptLocation {
 	NSString *path = [_bundle pathForResource:@"preview" ofType:@"colloquyTranscript"];
-	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"preview" ofType:@"colloquyTranscript"];
-	return path;
-}
+	if( path ) return [NSURL fileURLWithPath:path];
 
-- (NSString *) headerFilePath {
-	return [_bundle pathForResource:@"supplement" ofType:@"html"];
+	path = [[NSBundle mainBundle] pathForResource:@"preview" ofType:@"colloquyTranscript"];
+	if( path ) return [NSURL fileURLWithPath:path];
+
+	return nil;
 }
 
 #pragma mark -
@@ -477,11 +499,14 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return ( contents ? contents : @"" );
 }
 
-- (NSString *) contentsOfHeaderFile {
+- (NSString *) contentsOfBodyTemplateWithName:(NSString *) name {
+	NSURL *url = [self bodyTemplateLocationWithName:name];
+	if( ! url ) return @"";
+
 	NSString *contents = nil;
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString stringWithContentsOfFile:[self headerFilePath]];
-	else contents = [NSString stringWithContentsOfFile:[self headerFilePath] encoding:NSUTF8StringEncoding error:NULL];
+		contents = [NSString stringWithContentsOfURL:url];
+	else contents = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
 
@@ -546,10 +571,10 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	[self reload];
 }
 
-- (void) _setXSLStyle:(NSString *) path {
+- (void) _setXSLStyle:(NSURL *) location {
 	@synchronized( self ) {
 		if( _XSLStyle ) xsltFreeStylesheet( _XSLStyle );
-		_XSLStyle = ( [path length] ? xsltParseStylesheetFile( (const xmlChar *)[path fileSystemRepresentation] ) : NULL );
+		_XSLStyle = ( [[location absoluteString] length] ? xsltParseStylesheetFile( (const xmlChar *)[[location absoluteString] fileSystemRepresentation] ) : NULL );
 		if( _XSLStyle ) ((xsltStylesheetPtr) _XSLStyle) -> indent = 0; // this is done because our whitespace escaping causes problems otherwise
 	}
 }

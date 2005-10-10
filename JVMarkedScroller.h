@@ -1,30 +1,21 @@
+@interface JVMarkedScroller : NSScroller
+- (void) setLocationOfCurrentMark:(unsigned long long) location;
+- (unsigned long long) locationOfCurrentMark;
 
-@interface JVMarkedScroller : NSScroller {
-	NSMutableSet *_marks;
-	NSMutableArray *_shades;
-	unsigned long long _nearestPreviousMark;
-	unsigned long long _nearestNextMark;
-	unsigned long long _currentMark;
-	BOOL _jumpingToMark;
-}
-- (IBAction) jumpToPreviousMark:(id) sender;
-- (IBAction) jumpToNextMark:(id) sender;
-- (void) jumpToMarkWithIdentifier:(NSString *) identifier;
+- (unsigned long long) locationOfPreviousMark;
+- (unsigned long long) locationOfNextMark;
+- (unsigned long long) locationOfMarkWithIdentifier:(NSString *) identifier;
 
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement;
 
 - (void) addMarkAt:(unsigned long long) location;
 - (void) addMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier;
 - (void) addMarkAt:(unsigned long long) location withColor:(NSColor *) color;
-- (void) addMarkAt:(unsigned long long) location
-	withIdentifier:(NSString *) identifier
-		 withColor:(NSColor *) color;
+- (void) addMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color;
 - (void) removeMarkAt:(unsigned long long) location;
 - (void) removeMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier;
 - (void) removeMarkAt:(unsigned long long) location withColor:(NSColor *) color;
-- (void) removeMarkAt:(unsigned long long) location
-	   withIdentifier:(NSString *) identifier
-			withColor:(NSColor *) color;
+- (void) removeMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color;
 - (void) removeMarkWithIdentifier:(NSString *) identifier;
 - (void) removeMarksGreaterThan:(unsigned long long) location;
 - (void) removeMarksLessThan:(unsigned long long) location;
@@ -39,6 +30,7 @@
 
 - (void) removeAllShadedAreas;
 
+- (unsigned long long) contentViewLength;
 - (float) scaleToContentView;
-- (float) shiftAmountToCenterAlign;
+- (long) shiftAmountToCenterAlign;
 @end

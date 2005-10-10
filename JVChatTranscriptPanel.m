@@ -78,6 +78,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 - (void) awakeFromNib {
 	[display setTranscript:[self transcript]];
 	[display setScrollbackLimit:1000];
+	[display setBodyTemplate:@"transcript"];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshSearch ) name:JVStyleViewDidChangeStylesNotification object:display];
 

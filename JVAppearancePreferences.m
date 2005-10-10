@@ -86,7 +86,7 @@
 	[_style autorelease];
 	_style = [style retain];
 
-	JVChatTranscript *transcript = [JVChatTranscript chatTranscriptWithContentsOfFile:[_style previewTranscriptFilePath]];
+	JVChatTranscript *transcript = [JVChatTranscript chatTranscriptWithContentsOfURL:[_style previewTranscriptLocation]];
 	[preview setTranscript:transcript];
 
 	[preview setEmoticons:[_style defaultEmoticonSet]];

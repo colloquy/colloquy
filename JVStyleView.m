@@ -14,7 +14,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-@interface WebView (WebViewPrivate) // WebKit 1.3 pending public API
+@interface WebView (WebViewPrivate) // WebKit 1.3/2.0 pending public API
 - (void) setDrawsBackground:(BOOL) draws;
 - (BOOL) drawsBackground;
 @end
@@ -28,7 +28,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 @interface JVStyleView (JVStyleViewPrivate)
-- (void) _setupMarkedScroller;
 - (void) _resetDisplay;
 - (void) _switchStyle;
 - (void) _appendMessage:(NSString *) message;
@@ -38,6 +37,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (unsigned long) _visibleMessageCount;
 - (long) _locationOfMessage:(JVChatMessage *) message;
 - (long) _locationOfElementAtIndex:(unsigned long) index;
+- (void) _reallySetTopicMessage:(NSString *) message andAuthor:(NSString *) author;
+- (void) _tickleForLayout;
 @end
 
 #pragma mark -
@@ -57,36 +58,39 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		_styleParameters = [[NSMutableDictionary dictionary] retain];
 		_emoticons = nil;
 		_domDocument = nil;
-		[self setNextTextView:nil];
+		nextTextView = nil;
 	}
 
 	return self;
 }
 
 - (void) awakeFromNib {
-	_ready = YES;
-	_newWebKit = [[self mainFrame] respondsToSelector:@selector( DOMDocument )];
 	[self setFrameLoadDelegate:self];
-	[self performSelector:@selector( _resetDisplay ) withObject:nil afterDelay:0.];
+	[self performSelector:@selector( _reallyAwakeFromNib ) withObject:nil afterDelay:0.];
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[self setNextTextView:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
 
+	[nextTextView release];
 	[_transcript release];
 	[_style release];
 	[_styleVariant release];
 	[_styleParameters release];
 	[_emoticons release];
 	[_domDocument release];
+	[_body release];
+	[_bodyTemplate release];
 
+	nextTextView = nil;
 	_transcript = nil;
 	_style = nil;
 	_styleVariant = nil;
 	_styleParameters = nil;
 	_emoticons = nil;
 	_domDocument = nil;
+	_body = nil;
+	_bodyTemplate = nil;
 
 	[super dealloc];
 }
@@ -98,6 +102,28 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[[self window] makeFirstResponder:[self nextTextView]];
 		[[self nextTextView] tryToPerform:selector with:object];
 	}
+}
+
+#pragma mark -
+
+- (void) setFrame:(NSRect) frame {
+	[super setFrame:frame];
+	[self _tickleForLayout];
+}
+
+- (void) setFrameSize:(NSSize) size {
+	[super setFrameSize:size];
+	[self _tickleForLayout];
+}
+
+- (void) setBounds:(NSRect) bounds {
+	[super setBounds:bounds];
+	[self _tickleForLayout];
+}
+
+- (void) setBoundsSize:(NSSize) size {
+	[super setBoundsSize:size];
+	[self _tickleForLayout];
 }
 
 #pragma mark -
@@ -130,7 +156,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) setNextTextView:(NSTextView *) textView {
-	nextTextView = textView;
+	[nextTextView autorelease];
+	nextTextView = [textView retain];
 }
 
 #pragma mark -
@@ -193,12 +220,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( _webViewReady ) {
 		[WebCoreCache empty];
 
-		if( _newWebKit ) {
-			NSString *styleSheetLocation = [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString];
-			DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[_domDocument getElementById:@"variantStyle"];
-			if( ! styleSheetLocation ) [element setHref:@""];
-			else [element setHref:styleSheetLocation];
-		} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"variantStyle\", \"%@\" );", [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString]]];
+		NSString *styleSheetLocation = [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString];
+		DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[_domDocument getElementById:@"variantStyle"];
+		if( ! styleSheetLocation ) [element setHref:@""];
+		else [element setHref:styleSheetLocation];
 
 		[self performSelector:@selector( _checkForTransparantStyle ) withObject:nil afterDelay:0.];
 	} else {
@@ -208,6 +233,17 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (NSString *) styleVariant {
 	return _styleVariant;
+}
+
+#pragma mark -
+
+- (void) setBodyTemplate:(NSString *) bodyTemplate {
+	[_bodyTemplate autorelease];
+	_bodyTemplate = [bodyTemplate retain];
+}
+
+- (NSString *) bodyTemplate {
+	return _bodyTemplate;
 }
 
 #pragma mark -
@@ -230,12 +266,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( _webViewReady ) {
 		[WebCoreCache empty];
 
-		if( _newWebKit ) {
-			NSString *styleSheetLocation = [[[self emoticons] styleSheetLocation] absoluteString];
-			DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[_domDocument getElementById:@"emoticonStyle"];
-			if( ! styleSheetLocation ) [element setHref:@""];
-			else [element setHref:styleSheetLocation];
-		} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setStylesheet( \"emoticonStyle\", \"%@\" );", [[[self emoticons] styleSheetLocation] absoluteString]]];
+		NSString *styleSheetLocation = [[[self emoticons] styleSheetLocation] absoluteString];
+		DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[_domDocument getElementById:@"emoticonStyle"];
+		if( ! styleSheetLocation ) [element setHref:@""];
+		else [element setHref:styleSheetLocation];
 	} else {
 		[self performSelector:_cmd withObject:emoticons afterDelay:0.];
 	}
@@ -277,15 +311,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( _webViewReady ) {
 		unsigned int location = 0;
 
-		if( _newWebKit ) {
-			DOMElement *elt = [_domDocument getElementById:@"mark"];
-			if( elt ) [[elt parentNode] removeChild:elt];
-			elt = [_domDocument createElement:@"hr"];
-			[elt setAttribute:@"id" :@"mark"];
-			[[[_domDocument getElementsByTagName:@"body"] item:0] appendChild:elt];
-			[self scrollToBottom];
-			location = [[elt valueForKey:@"offsetTop"] intValue];
-		} else location = [[self stringByEvaluatingJavaScriptFromString:@"mark();"] intValue];
+		DOMElement *elt = [_domDocument getElementById:@"mark"];
+		if( elt ) [[elt parentNode] removeChild:elt];
+		elt = [_domDocument createElement:@"hr"];
+		[elt setAttribute:@"id" :@"mark"];
+		[_body appendChild:elt];
+		[self scrollToBottom];
+		location = [[elt valueForKey:@"offsetTop"] longValue];
 
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
 		[scroller removeMarkWithIdentifier:@"mark"];
@@ -299,47 +331,18 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-- (void) showTopic:(NSString *) topic {
-	if( ! topic ) return; // don't show anything if there is no topic
+- (void) setTopicMessage:(NSAttributedString *) topic andAuthor:(NSString *) author {
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
 
-	if( _webViewReady ) {
-		if( _newWebKit ) {
-			[[self windowScriptObject] callWebScriptMethod:@"showTopic" withArguments:[NSArray arrayWithObject:topic]];
-		} else {
-			NSMutableString *mutTopic = [topic mutableCopy];
-			[mutTopic replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange(0, [mutTopic length])];
-			[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"showTopic( \"%@\" );", mutTopic]];
-		}
-	} else {
-		[self performSelector:_cmd withObject:topic afterDelay:0.];
-	}
-}
+	[_topicMessage release];
+	_topicMessage = [[topic HTMLFormatWithOptions:options] retain];
 
-- (void) hideTopic {
-	if( _webViewReady ) {
-		if( _newWebKit ) [[self windowScriptObject] callWebScriptMethod:@"hideTopic" withArguments:[NSArray array]];
-		else [self stringByEvaluatingJavaScriptFromString:@"hideTopic();"];
-	} else {
-		[self performSelector:_cmd withObject:nil afterDelay:0.];
-	}
-}
+	[_topicAuthor autorelease];
+	_topicAuthor = [author copy];
 
-- (void) toggleTopic:(NSString *) topic {
-	if( _webViewReady ) {
-		BOOL topicShowing = NO;
-		if( _newWebKit ) {
-			DOMHTMLElement *topicElement = (DOMHTMLElement *)[_domDocument getElementById:@"topic-floater"];
-			topicShowing = ( topicElement != nil );
-		} else {
-			NSString *result = [self stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"topic-floater\") != null"];
-			topicShowing = [result isEqualToString:@"true"];
-		}
+	if( ! _webViewReady ) return;
 
-		if( topicShowing ) [self hideTopic];
-		else [self showTopic:topic];
-	} else {
-		[self performSelector:_cmd withObject:topic afterDelay:0.];
-	}
+	[self _reallySetTopicMessage:_topicMessage andAuthor:_topicAuthor];
 }
 
 #pragma mark -
@@ -349,7 +352,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	NSString *result = nil;
 
-	if( _requiresFullMessage && _newWebKit ) {
+	if( _requiresFullMessage ) {
 		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[_domDocument getElementById:@"consecutiveInsert"];
 		if( replaceElement ) _requiresFullMessage = NO; // a full message was assumed, but we can do a consecutive one
 	}
@@ -394,48 +397,36 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) highlightMessage:(JVChatMessage *) message {
-/*	if( _newWebKit ) {
-		DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument getElementById:[message messageIdentifier]];
-		NSString *class = [element className];
-		if( [[element className] rangeOfString:@"searchHighlight"].location != NSNotFound ) return;
-		if( [class length] ) [element setClassName:[class stringByAppendingString:@" searchHighlight"]];
-		else [element setClassName:@"searchHighlight"];
-	} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"highlightMessage('%@');", [message messageIdentifier]]];
+/*	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument getElementById:[message messageIdentifier]];
+	NSString *class = [element className];
+	if( [[element className] rangeOfString:@"searchHighlight"].location != NSNotFound ) return;
+	if( [class length] ) [element setClassName:[class stringByAppendingString:@" searchHighlight"]];
+	else [element setClassName:@"searchHighlight"];
 */}
 
 - (void) clearHighlightForMessage:(JVChatMessage *) message {
-/*	if( _newWebKit ) {
-		DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument getElementById:[message messageIdentifier]];
-		NSMutableString *class = [[[element className] mutableCopy] autorelease];
-		[class replaceOccurrencesOfString:@"searchHighlight" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [class length] )];
-		[element setClassName:class];
-	} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetHighlightMessage('%@');", [message messageIdentifier]]];
+/*	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument getElementById:[message messageIdentifier]];
+	NSMutableString *class = [[[element className] mutableCopy] autorelease];
+	[class replaceOccurrencesOfString:@"searchHighlight" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [class length] )];
+	[element setClassName:class];
 */}
 
 - (void) clearAllMessageHighlights {
-/*	if( _newWebKit ) {
-		[[self windowScriptObject] callWebScriptMethod:@"resetHighlightMessage" withArguments:[NSArray arrayWithObject:[NSNull null]]];
-	} else [self stringByEvaluatingJavaScriptFromString:@"resetHighlightMessage(null);"];
-*/}
+//	[[self windowScriptObject] callWebScriptMethod:@"resetHighlightMessage" withArguments:[NSArray arrayWithObject:[NSNull null]]];
+}
 
 #pragma mark -
 
 - (void) highlightString:(NSString *) string inMessage:(JVChatMessage *) message {
-	if( _newWebKit ) {
-		[[self windowScriptObject] callWebScriptMethod:@"searchHighlight" withArguments:[NSArray arrayWithObjects:[message messageIdentifier], string, nil]];
-	} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"searchHighlight('%@','%@');", [message messageIdentifier], string]];
+	[[self windowScriptObject] callWebScriptMethod:@"searchHighlight" withArguments:[NSArray arrayWithObjects:[message messageIdentifier], string, nil]];
 }
 
 - (void) clearStringHighlightsForMessage:(JVChatMessage *) message {
-	if( _newWebKit ) {
-		[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[message messageIdentifier]]];
-	} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"resetSearchHighlight('%@');", [message messageIdentifier]]];
+	[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[message messageIdentifier]]];
 }
 
 - (void) clearAllStringHighlights {
-	if( _newWebKit ) {
-		[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[NSNull null]]];
-	} else [self stringByEvaluatingJavaScriptFromString:@"resetSearchHighlight(null);"];
+	[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[NSNull null]]];
 }
 
 #pragma mark -
@@ -447,14 +438,14 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	}
 
 	long loc = [self _locationOfMessage:message];
-	if( loc ) [[self verticalMarkedScroller] addMarkAt:loc];
+	if( loc != NSNotFound ) [[self verticalMarkedScroller] addMarkAt:loc];
 }
 
 - (void) markScrollbarForMessage:(JVChatMessage *) message usingMarkIdentifier:(NSString *) identifier andColor:(NSColor *) color {
 	if( _switchingStyles || ! _webViewReady ) return; // can't queue, too many args. NSInvocation?
 
 	long loc = [self _locationOfMessage:message];
-	if( loc ) [[self verticalMarkedScroller] addMarkAt:loc withIdentifier:identifier withColor:color];
+	if( loc != NSNotFound ) [[self verticalMarkedScroller] addMarkAt:loc withIdentifier:identifier withColor:color];
 }
 
 - (void) markScrollbarForMessages:(NSArray *) messages {
@@ -469,7 +460,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	while( ( message = [enumerator nextObject] ) ) {
 		long loc = [self _locationOfMessage:message];
-		if( loc ) [scroller addMarkAt:loc];
+		if( loc != NSNotFound ) [scroller addMarkAt:loc];
 	}
 }
 
@@ -491,7 +482,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_domDocument autorelease];
 	_domDocument = (DOMHTMLDocument *)[[[self mainFrame] DOMDocument] retain];
 
+	[_body autorelease];
+	_body = (DOMHTMLElement *)[[_domDocument getElementById:@"contents"] retain];
+	if( ! _body ) _body = (DOMHTMLElement *)[[_domDocument body] retain];
+
 	[self performSelector:@selector( _checkForTransparantStyle )];
+
+	[self _reallySetTopicMessage:_topicMessage andAuthor:_topicAuthor];
 
 	[self setPreferencesIdentifier:[[self style] identifier]];
 	[[self preferences] setJavaScriptEnabled:YES];
@@ -514,36 +511,59 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark Highlight/Message Jumping
 
 - (JVMarkedScroller *) verticalMarkedScroller {
-	NSScrollView *scrollView = [[[[self mainFrame] frameView] documentView] enclosingScrollView];
-	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller];
-	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
-		[self _setupMarkedScroller];
-		scroller = (JVMarkedScroller *)[scrollView verticalScroller];
-		if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] )
-			return nil; // not sure, but somthing is wrong
+	NSArray *subViews = [[[[self mainFrame] frameView] documentView] subviews];
+	NSEnumerator *enumerator = [subViews objectEnumerator];
+	Class class = NSClassFromString( @"KWQScrollBar" );
+	JVMarkedScroller *view = nil;
+
+	while( ( view = [enumerator nextObject] ) )
+		if( [view isKindOfClass:class] && NSHeight( [view frame] ) > NSWidth( [view frame] ) ) break;
+
+	if( ! view ) {
+		NSScrollView *scrollView = [[[[self mainFrame] frameView] documentView] enclosingScrollView];
+		return (JVMarkedScroller *)[scrollView verticalScroller];		
 	}
 
-	return scroller;
+	return view;
 }
 
 - (IBAction) jumpToMark:(id) sender {
-	[[self verticalMarkedScroller] jumpToMarkWithIdentifier:@"mark"];
+	JVMarkedScroller *scroller = [self verticalMarkedScroller];
+	unsigned long long loc = [scroller locationOfMarkWithIdentifier:@"mark"];
+	if( loc != NSNotFound ) {
+		long shift = [scroller shiftAmountToCenterAlign];
+		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
+		[scroller setLocationOfCurrentMark:loc];
+	}
 }
 
 - (IBAction) jumpToPreviousHighlight:(id) sender {
-	[[self verticalMarkedScroller] jumpToPreviousMark:sender];
+	JVMarkedScroller *scroller = [self verticalMarkedScroller];
+	unsigned long long loc = [scroller locationOfPreviousMark];
+	if( loc != NSNotFound ) {
+		long shift = [scroller shiftAmountToCenterAlign];
+		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
+		[scroller setLocationOfCurrentMark:loc];
+	}
 }
 
 - (IBAction) jumpToNextHighlight:(id) sender {
-	[[self verticalMarkedScroller] jumpToNextMark:sender];
+	JVMarkedScroller *scroller = [self verticalMarkedScroller];
+	unsigned long long loc = [scroller locationOfNextMark];
+	if( loc != NSNotFound ) {
+		long shift = [scroller shiftAmountToCenterAlign];
+		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
+		[scroller setLocationOfCurrentMark:loc];
+	}
 }
 
 - (void) jumpToMessage:(JVChatMessage *) message {
 	unsigned long loc = [self _locationOfMessage:message];
-	if( loc ) {
+	if( loc != NSNotFound ) {
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
-		float shift = [scroller shiftAmountToCenterAlign];
-		[[(NSScrollView *)[scroller superview] documentView] scrollPoint:NSMakePoint( 0., loc - shift )];
+		long shift = [scroller shiftAmountToCenterAlign];
+		[scroller setLocationOfCurrentMark:loc];
+		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
 	}
 }
 
@@ -553,10 +573,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		return;
 	}
 
-	if( _newWebKit ) {
-		DOMHTMLElement *body = [_domDocument body];
-		[body setValue:[body valueForKey:@"offsetHeight"] forKey:@"scrollTop"];
-	} else [self stringByEvaluatingJavaScriptFromString:@"scrollToBottom();"];
+	[_body setValue:[_body valueForKey:@"scrollHeight"] forKey:@"scrollTop"];
 }
 @end
 
@@ -564,20 +581,23 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 @implementation JVStyleView (JVStyleViewPrivate)
 - (void) _checkForTransparantStyle {
-	if( _newWebKit ) {
-		DOMCSSStyleDeclaration *style = [self computedStyleForElement:[_domDocument body] pseudoElement:nil];
-		DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
-		if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
-			[self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
-		else [self setDrawsBackground:YES];
-		[self setNeedsDisplay:YES];
-	}
+	DOMCSSStyleDeclaration *style = [self computedStyleForElement:_body pseudoElement:nil];
+	DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
+	if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
+		[self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
+	else [self setDrawsBackground:YES];
+	[self setNeedsDisplay:YES];
 }
 
 - (void) _webkitIsReady {
 	_webViewReady = YES;
 	if( _switchingStyles )
 		[NSThread detachNewThreadSelector:@selector( _switchStyle ) toTarget:self withObject:nil];
+}
+
+- (void) _reallyAwakeFromNib {
+	_ready = YES;
+	[self _resetDisplay];
 }
 
 - (void) _resetDisplay {
@@ -588,10 +608,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	_webViewReady = NO;
 	if( _rememberScrollPosition ) {
-		if( _newWebKit ) {
-			DOMHTMLElement *body = [_domDocument body];
-			_lastScrollPosition = [[body valueForKey:@"scrollTop"] intValue];
-		} else _lastScrollPosition = [[self stringByEvaluatingJavaScriptFromString:@"document.body.scrollTop"] intValue];
+		_lastScrollPosition = [[_body valueForKey:@"scrollTop"] longValue];
 	} else _lastScrollPosition = 0;
 
 	[[self window] disableFlushWindow];
@@ -660,14 +677,13 @@ quickEnd:
 
 	if( _rememberScrollPosition ) {
 		_rememberScrollPosition = NO;
-		if( _newWebKit ) {
-			DOMHTMLElement *body = [_domDocument body];
-			[body setValue:[NSNumber numberWithUnsignedInt:_lastScrollPosition] forKey:@"scrollTop"];
-		} else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.body.scrollTop = %d", _lastScrollPosition]];
+		[_body setValue:[NSNumber numberWithUnsignedLong:_lastScrollPosition] forKey:@"scrollTop"];
 	}
 }
 
 - (void) _appendMessage:(NSString *) message {
+	if( ! _body ) return;
+
 	unsigned int messageCount = [self _visibleMessageCount];
 	unsigned int scrollbackLimit = [self scrollbackLimit];
 	BOOL subsequent = ( [message rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
@@ -675,107 +691,92 @@ quickEnd:
 	long shiftAmount = 0;
 	if( ! subsequent && ( messageCount + 1 ) > scrollbackLimit ) {
 		shiftAmount = [self _locationOfElementAtIndex:( ( messageCount + 1 ) - scrollbackLimit )];
-		if( shiftAmount > 0 ) [[self verticalMarkedScroller] shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
+		if( shiftAmount > 0 && shiftAmount != NSNotFound )
+			[[self verticalMarkedScroller] shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
 	}
 
-	if( _newWebKit ) {
-		DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
-		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[_domDocument getElementById:@"consecutiveInsert"];
-		if( ! replaceElement ) subsequent = NO;
+	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
+	DOMHTMLElement *insertElement = (DOMHTMLElement *)[_domDocument getElementById:@"insert"];
+	DOMHTMLElement *consecutiveReplaceElement = (DOMHTMLElement *)[_domDocument getElementById:@"consecutiveInsert"];
+	if( ! consecutiveReplaceElement ) subsequent = NO;
 
-		NSMutableString *transformedMessage = [message mutableCopy];
-		[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-		[transformedMessage replaceOccurrencesOfString:@"<?message type=\"subsequent\"?>" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
+	NSMutableString *transformedMessage = [message mutableCopy];
+	[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
+	[transformedMessage replaceOccurrencesOfString:@"<?message type=\"subsequent\"?>" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
 
-		// parses the message so we can get the DOM tree
-		[element setInnerHTML:transformedMessage];
+	// parses the message so we can get the DOM tree
+	[element setInnerHTML:transformedMessage];
 
-		[transformedMessage release];
-		transformedMessage = nil;
+	[transformedMessage release];
+	transformedMessage = nil;
 
-		// check if we are near the bottom of the chat area, and if we should scroll down later
-		JVMarkedScroller *scroller = [self verticalMarkedScroller];
-		BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.985 );
-		DOMHTMLElement *body = [_domDocument body];
+	// check if we are near the bottom of the chat area, and if we should scroll down later
+	JVMarkedScroller *scroller = [self verticalMarkedScroller];
+	BOOL scrollNeeded = ( ! scroller || [scroller floatValue] >= 0.985 );
 
-		unsigned int i = 0;
-		if( ! subsequent ) { // append message normally
-			[[replaceElement parentNode] removeChild:replaceElement];
-			while( [[element childNodes] length] ) { // append all children
-				DOMNode *node = [[element firstChild] retain];
-				[element removeChild:node];
-				[body appendChild:node];
-				[node release];
-			}
-		} else if( [[element childNodes] length] >= 1 ) { // append as a subsequent message
-			DOMNode *parent = [replaceElement parentNode];
-			DOMNode *nextSib = [replaceElement nextSibling];
-			[parent replaceChild:[element firstChild] :replaceElement]; // replaces the consecutiveInsert node
-			while( [[element childNodes] length] ) { // append all remaining children (in reverse order)
-				DOMNode *node = [[element firstChild] retain];
-				[element removeChild:node];
-				if( nextSib ) [parent insertBefore:node :nextSib];
-				else [parent appendChild:node];
-				[node release];
-			}
+	unsigned int i = 0;
+	if( ! subsequent ) { // append message normally
+		[[consecutiveReplaceElement parentNode] removeChild:consecutiveReplaceElement];
+		while( [[element childNodes] length] ) { // append all children
+			DOMNode *node = [[element firstChild] retain];
+			[element removeChild:node];
+			if( insertElement ) [_body insertBefore:node :insertElement];
+			else [_body appendChild:node];
+			[node release];
 		}
-
-		// enforce the scrollback limit
-		if( scrollbackLimit > 0 && [[body childNodes] length] > scrollbackLimit )
-			for( i = 0; [[body childNodes] length] > scrollbackLimit && i < ( [[body childNodes] length] - scrollbackLimit ); i++ )
-				[body removeChild:[[body childNodes] item:0]];
-
-		if( ! scrollNeeded && shiftAmount > 0 ) {
-			NSRect newVisible = NSOffsetRect( [(NSScrollView *)[scroller superview] documentVisibleRect], 0, -1 * shiftAmount );
-			[[(NSScrollView *)[scroller superview] documentView] scrollRectToVisible:newVisible];
+	} else if( [[element childNodes] length] >= 1 ) { // append as a subsequent message
+		DOMNode *parent = [consecutiveReplaceElement parentNode];
+		DOMNode *nextSib = [consecutiveReplaceElement nextSibling];
+		[parent replaceChild:[element firstChild] :consecutiveReplaceElement]; // replaces the consecutiveInsert node
+		while( [[element childNodes] length] ) { // append all remaining children (in reverse order)
+			DOMNode *node = [[element firstChild] retain];
+			[element removeChild:node];
+			if( nextSib ) [parent insertBefore:node :nextSib];
+			else [parent appendChild:node];
+			[node release];
 		}
-
-		if( scrollNeeded ) [self scrollToBottom];
-	} else {
-		NSMutableString *transformedMessage = [message mutableCopy];
-		[transformedMessage escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
-		[transformedMessage replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-		[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-		[transformedMessage replaceOccurrencesOfString:@"<?message type=\"subsequent\"?>" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-		if( subsequent ) [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendConsecutiveMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
-		else [self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollBackLimit = %d; appendMessage( \"%@\" );", scrollbackLimit, transformedMessage]];
-		[transformedMessage release];
 	}
+
+	// enforce the scrollback limit
+	if( scrollbackLimit > 0 && [[_body childNodes] length] > scrollbackLimit )
+		for( i = 0; [[_body childNodes] length] > scrollbackLimit && i < ( [[_body childNodes] length] - scrollbackLimit ); i++ )
+			[_body removeChild:[[_body childNodes] item:0]];
+
+	if( ! scrollNeeded && shiftAmount > 0 ) {
+		unsigned long scrollTop = [[_body valueForKey:@"scrollTop"] longValue];
+		[_body setValue:[NSNumber numberWithUnsignedLong:( scrollTop - shiftAmount )] forKey:@"scrollTop"];
+	}
+
+	[[self verticalMarkedScroller] setNeedsDisplay:YES];
+
+	if( scrollNeeded ) [self scrollToBottom];
 }
 
 - (void) _prependMessages:(NSString *) messages {
-	if( _newWebKit ) {
-		NSMutableString *result = [messages mutableCopy];
-		[result replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
+	if( ! _body ) return;
 
-		// check if we are near the bottom of the chat area, and if we should scroll down later
-		JVMarkedScroller *scroller = [self verticalMarkedScroller];
-		BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.985 );
+	NSMutableString *result = [messages mutableCopy];
+	[result replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
 
-		// parses the message so we can get the DOM tree
-		DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
-		[element setInnerHTML:result];
+	// check if we are near the bottom of the chat area, and if we should scroll down later
+	JVMarkedScroller *scroller = [self verticalMarkedScroller];
+	BOOL scrollNeeded = ( ! scroller || [scroller floatValue] >= 0.985 );
 
-		[result release];
-		result = nil;
+	// parses the message so we can get the DOM tree
+	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
+	[element setInnerHTML:result];
 
-		DOMHTMLElement *body = [_domDocument body];
-		DOMNode *firstMessage = [body firstChild];
+	[result release];
+	result = nil;
 
-		while( [[element childNodes] length] ) { // append all children
-			if( firstMessage ) [body insertBefore:[element firstChild] :firstMessage];
-			else [body appendChild:[element firstChild]];
-		}
+	DOMNode *firstMessage = [_body firstChild];
 
-		if( scrollNeeded ) [self scrollToBottom];
-	} else {
-		NSMutableString *result = [messages mutableCopy];
-		[result escapeCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\\\"'"]];
-		[result replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
-		[result replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
-		[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"prependMessages( \"%@\" );", result]];
-		[result release];
+	while( [[element childNodes] length] ) { // append all children
+		if( firstMessage ) [_body insertBefore:[element firstChild] :firstMessage];
+		else [_body appendChild:[element firstChild]];
 	}
+
+	if( scrollNeeded ) [self scrollToBottom];
 }
 
 - (void) _styleError {
@@ -788,11 +789,18 @@ quickEnd:
 		[self setStyleVariant:variant];
 }
 
+- (void) _tickleForLayout {
+	// nasty hack to make overflow areas resize/reposition their scrollbars
+	// simply calling [[[[self mainFrame] frameView] documentView] layout] wont trigger this
+	DOMElement *node = [_domDocument createElement:@"span"];
+	[_body appendChild:node];
+	[_body removeChild:node];
+}
+
 #pragma mark -
 
 - (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
 	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
-	NSURL *defaultStyleSheetLocation = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"default" ofType:@"css"]];
 	NSString *variantStyleSheetLocation = [[[self style] variantStyleSheetLocationWithName:[self styleVariant]] absoluteString];
 	if( ! variantStyleSheetLocation ) variantStyleSheetLocation = @"";
 
@@ -801,7 +809,7 @@ quickEnd:
 		shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 
-	return [NSString stringWithFormat:shell, @"", [resources absoluteString], [defaultStyleSheetLocation absoluteString], [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], [[self style] contentsOfHeaderFile], html];
+	return [NSString stringWithFormat:shell, @"", [resources absoluteString], [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], [[self style] contentsOfBodyTemplateWithName:[self bodyTemplate]]];
 }
 
 #pragma mark -
@@ -809,13 +817,12 @@ quickEnd:
 - (long) _locationOfMessageWithIdentifier:(NSString *) identifier {
 	if( ! _webViewReady ) return 0;
 	if( ! [identifier length] ) return 0;
-	if( _newWebKit ) {
-		DOMElement *element = [_domDocument getElementById:identifier];
-		id value = [element valueForKey:@"offsetTop"];
-		if( [value respondsToSelector:@selector( intValue )] )
-			return [value intValue];
-		return 0;
-	} else return [[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfMessage( \"%@\" );", identifier]] intValue];
+
+	DOMElement *element = [_domDocument getElementById:identifier];
+	id value = [element valueForKey:@"offsetTop"];
+	if( [value respondsToSelector:@selector( longValue )] )
+		return [value longValue];
+	return NSNotFound;
 }
 
 - (long) _locationOfMessage:(JVChatMessage *) message {
@@ -823,42 +830,24 @@ quickEnd:
 }
 
 - (long) _locationOfElementAtIndex:(unsigned long) index {
-	if( ! _webViewReady ) return 0;
-	if( _newWebKit ) {
-		DOMHTMLElement *body = [_domDocument body];
-		id value = [[[body childNodes] item:index] valueForKey:@"offsetTop"];
-		if( index < [[body childNodes] length] && [value respondsToSelector:@selector( intValue )] )
-			return [value intValue];
-		return 0;
-	} else return [[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"locationOfElementAtIndex( %d );", index]] intValue];
+	if( ! _webViewReady ) return NSNotFound;
+	id value = [[[_body childNodes] item:index] valueForKey:@"offsetTop"];
+	if( index < [[_body childNodes] length] && [value respondsToSelector:@selector( longValue )] )
+		return [value longValue];
+	return NSNotFound;
 }
 
 - (unsigned long) _visibleMessageCount {
 	if( ! _webViewReady ) return 0;
-	if( _newWebKit ) {
-		return [[[_domDocument body] childNodes] length];
-	} else return [[self stringByEvaluatingJavaScriptFromString:@"scrollBackMessageCount();"] intValue];
+	return [[_body childNodes] length];
 }
 
-#pragma mark -
-
-- (void) _setupMarkedScroller {
-	if( ! _webViewReady ) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.];
-		return;
-	}
-
-	NSScrollView *scrollView = [[[[self mainFrame] frameView] documentView] enclosingScrollView];
-	[scrollView setHasHorizontalScroller:NO];
-	[scrollView setAllowsHorizontalScrolling:NO];
-
-	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller];
-	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
-		NSRect scrollerFrame = [[scrollView verticalScroller] frame];
-		NSScroller *oldScroller = scroller;
-		scroller = [[[JVMarkedScroller alloc] initWithFrame:scrollerFrame] autorelease];
-		[scroller setFloatValue:[oldScroller floatValue] knobProportion:[oldScroller knobProportion]];
-		[scrollView setVerticalScroller:scroller];
-	}
+- (void) _reallySetTopicMessage:(NSString *) message andAuthor:(NSString *) author {
+	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument getElementById:@"topicMessage"];
+	[element setInnerHTML:( message ? message : @"" )];
+	[element setTitle:( message ? message : @"" )];
+	element = (DOMHTMLElement *)[_domDocument getElementById:@"topicAuthor"];
+	[element setInnerText:( author ? author : @"" )];
+	[element setTitle:( author ? author : @"" )];
 }
 @end

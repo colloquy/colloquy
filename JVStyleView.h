@@ -13,7 +13,6 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	BOOL _forwarding;
 	BOOL _switchingStyles;
 	BOOL _ready;
-	BOOL _newWebKit;
 	BOOL _webViewReady;
 	JVChatTranscript *_transcript;
 	JVStyle *_style;
@@ -21,10 +20,15 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	NSMutableDictionary *_styleParameters;
 	JVEmoticonSet *_emoticons;
 	DOMHTMLDocument *_domDocument;
+	DOMHTMLElement *_body;
+	JVMarkedScroller *_scroller;
+	NSString *_bodyTemplate;
+	NSString *_topicMessage;
+	NSString *_topicAuthor;
 	unsigned int _scrollbackLimit;
 	BOOL _requiresFullMessage;
 	BOOL _rememberScrollPosition;
-	unsigned int _lastScrollPosition;
+	unsigned long _lastScrollPosition;
 }
 - (void) setTranscript:(JVChatTranscript *) transcript;
 - (JVChatTranscript *) transcript;
@@ -35,6 +39,9 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 
 - (void) setStyleVariant:(NSString *) variant;
 - (NSString *) styleVariant;
+
+- (void) setBodyTemplate:(NSString *) bodyTemplate;
+- (NSString *) bodyTemplate;
 
 - (void) setStyleParameters:(NSDictionary *) parameters;
 - (NSDictionary *) styleParameters;
@@ -49,9 +56,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 - (void) clear;
 - (void) mark;
 
-- (void) showTopic:(NSString *) topic;
-- (void) hideTopic;
-- (void) toggleTopic:(NSString *) topic;
+- (void) setTopicMessage:(NSAttributedString *) topic andAuthor:(NSString *) author;
 
 - (BOOL) appendChatMessage:(JVChatMessage *) message;
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element;
