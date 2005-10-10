@@ -39,12 +39,10 @@ body {
 	text-align: center;
 	padding: 3px 10px 7px 10px;
 	word-wrap: break-word;
-	background-color: white;
 	overflow: hidden;
 	background-color: rgb( 228, 228, 228 );
 	color: black !important;
 }
-
 
 .hidden {
 	position: fixed;
