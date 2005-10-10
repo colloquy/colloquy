@@ -778,7 +778,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		NSString *voiceIdentifier = [[[MVBuddyListController sharedBuddyList] buddyForUser:user] speechVoice];
 		if( [voiceIdentifier length] ) {
 			NSString *text = [cmessage bodyAsPlainText];
-			if( [cmessage isAction] ) text = [NSString stringWithFromat:@"%@ %@", [[cmessage sender] displayName], text];
+			if( [cmessage isAction] ) text = [NSString stringWithFormat:@"%@ %@", [[cmessage sender] displayName], text];
 			[[JVSpeechController sharedSpeechController] startSpeakingString:[cmessage bodyAsPlainText] usingVoice:voiceIdentifier];
 		}
 	}
