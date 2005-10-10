@@ -5,6 +5,12 @@ function toggleTopic() {
 	document.getElementById( "topicBox" ).style.setProperty( 'height', ( topicToggled ? '37px' : '23px' ), null );
 	document.getElementById( "contents" ).style.setProperty( 'top', ( topicToggled ? '47px' : '33px' ), null );
 }
+
+function changeTopic( topic, author, empty ) {
+	topicMessage = document.getElementById( "topicMessage" );
+	topicMessage.innerHTML = topic;
+	topicMessage.title = topicMessage.innerText;
+}
 </script>
 <div id="topicArea">
 	<div id="topicBar">
