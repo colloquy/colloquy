@@ -108,8 +108,8 @@ static MVBuddyListController *sharedInstance = nil;
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
 	[theColumn setDataCell:prototypeCell];
 
-	[pickerView addProperty:@"IRCNickname"];
-	[pickerView setColumnTitle:NSLocalizedString( @"IRC Nickname", "irc nickname buddy picker column title" ) forProperty:@"IRCNickname"];
+	[pickerView addProperty:JVBuddyAddressBookIRCNicknameProperty];
+	[pickerView setColumnTitle:NSLocalizedString( @"IRC Nickname", "irc nickname buddy picker column title" ) forProperty:JVBuddyAddressBookIRCNicknameProperty];
 
 	[pickerView setAllowsMultipleSelection:NO];
 	[pickerView setAllowsGroupSelection:NO];
@@ -219,7 +219,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	ABPerson *person = [[pickerView selectedRecords] lastObject];
 
-	if( ! [(NSDictionary *)[person valueForProperty:@"IRCNickname"] count] ) {
+	if( ! [(NSDictionary *)[person valueForProperty:JVBuddyAddressBookIRCNicknameProperty] count] ) {
 		[_addPerson autorelease];
 		_addPerson = [[person uniqueId] copy];
 		[self showNewPersonSheet:nil];
@@ -268,8 +268,6 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	[ABPerson addPropertiesAndTypes:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:kABMultiStringProperty] forKey:@"IRCNickname"]];
-
 	ABPerson *person = nil;
 	if( _addPerson ) person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:_addPerson];
 	if( ! person ) {
@@ -293,7 +291,7 @@ static MVBuddyListController *sharedInstance = nil;
 		sub = [NSMutableDictionary dictionary];
 		[sub setObject:[NSArray arrayWithObject:[server titleOfSelectedItem]] forKey:@"labels"];
 		[sub setObject:[NSArray arrayWithObject:[nickname objectValue]] forKey:@"values"];
-		[info setObject:sub forKey:@"IRCNickname"];
+		[info setObject:sub forKey:JVBuddyAddressBookIRCNicknameProperty];
 
 		[info setObject:[NSString stringWithFormat:NSLocalizedString( @"IRC Nickname: %@ (%@)", "new buddy card note" ), [nickname objectValue], [server titleOfSelectedItem]] forKey:kABNoteProperty];
 
@@ -306,7 +304,7 @@ static MVBuddyListController *sharedInstance = nil;
 	} else {
 		ABMutableMultiValue *value = [[[ABMutableMultiValue alloc] init] autorelease];
 		[value addValue:[nickname objectValue] withLabel:[server titleOfSelectedItem]];
-		[person setValue:value forProperty:@"IRCNickname"];
+		[person setValue:value forProperty:JVBuddyAddressBookIRCNicknameProperty];
 
 		if( [(NSString *)[firstName objectValue] length] || [(NSString *)[lastName objectValue] length] || [(NSString *)[email objectValue] length] ) {
 			[person setValue:[firstName objectValue] forProperty:kABFirstNameProperty];

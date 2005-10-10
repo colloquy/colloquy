@@ -13,7 +13,16 @@ NSString *JVBuddyActiveUserChangedNotification = @"JVBuddyActiveUserChangedNotif
 
 static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
+NSString* const JVBuddyAddressBookIRCNicknameProperty = @"IRCNickname";
+NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JVBuddy.TTSvoice";
+
 @implementation JVBuddy
++ (void) initialize {
+	[ABPerson addPropertiesAndTypes:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithUnsignedInt:kABMultiStringProperty], JVBuddyAddressBookIRCNicknameProperty,
+		[NSNumber numberWithUnsignedInt:kABStringProperty], JVBuddyAddressBookSpeechVoiceProperty, nil]];
+}
+
 + (JVBuddyName) preferredName {
 	extern JVBuddyName _mainPreferredName;
 	return _mainPreferredName;
@@ -50,7 +59,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		_onlineUsers = [[NSMutableArray array] retain];
 		_activeUser = nil;
 
-		ABMultiValue *value = [person valueForProperty:@"IRCNickname"];
+		ABMultiValue *value = [person valueForProperty:JVBuddyAddressBookIRCNicknameProperty];
 		unsigned int i = 0, count = [value count];
 		MVChatUser *user = nil;
 
@@ -188,9 +197,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (void) addUser:(MVChatUser *) user {
 	if( [_users containsObject:user] ) return;
 
-	ABMutableMultiValue *value = [[[_person valueForProperty:@"IRCNickname"] mutableCopy] autorelease];
+	ABMutableMultiValue *value = [[[_person valueForProperty:JVBuddyAddressBookIRCNicknameProperty] mutableCopy] autorelease];
 	[value addValue:[user nickname] withLabel:[user serverAddress]];
-	[_person setValue:value forProperty:@"IRCNickname"];
+	[_person setValue:value forProperty:JVBuddyAddressBookIRCNicknameProperty];
 
 	if( ! [_users count] || ! [self activeUser] )
 		[self setActiveUser:user];
@@ -205,7 +214,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (void) removeUser:(MVChatUser *) user {
 	if( ! [_users containsObject:user] ) return;
 
-	ABMutableMultiValue *value = [[[_person valueForProperty:@"IRCNickname"] mutableCopy] autorelease];
+	ABMutableMultiValue *value = [[[_person valueForProperty:JVBuddyAddressBookIRCNicknameProperty] mutableCopy] autorelease];
 	int i = 0, count = [value count];
 
 	for( i = count - 1; i >= 0; i-- )
@@ -216,7 +225,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 	[_users removeObject:user];
 	[_onlineUsers removeObject:user];
-	[_person setValue:value forProperty:@"IRCNickname"];
+	[_person setValue:value forProperty:JVBuddyAddressBookIRCNicknameProperty];
 
 	if( [[self activeUser] isEqual:user] )
 		[self setActiveUser:( [_onlineUsers count] ? [_onlineUsers lastObject] : [_users lastObject] )];
@@ -274,6 +283,10 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	return [_person valueForProperty:kABNicknameProperty];
 }
 
+- (NSString *) speechVoice {
+	return [_person valueForProperty:JVBuddyAddressBookSpeechVoiceProperty];
+}
+
 #pragma mark -
 
 - (void) setFirstName:(NSString *) name {
@@ -300,6 +313,12 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (void) setGivenNickname:(NSString *) name {
 	[_person setValue:name forProperty:kABNicknameProperty];
+	[[ABAddressBook sharedAddressBook] save];
+}
+
+- (void) setSpeechVoice:(NSString *) voice {
+	if( [voice length] ) [_person setValue:voice forProperty:JVBuddyAddressBookSpeechVoiceProperty];	
+	else [_person removeValueForProperty:JVBuddyAddressBookSpeechVoiceProperty];	
 	[[ABAddressBook sharedAddressBook] save];
 }
 

@@ -10,6 +10,7 @@
                 changeLastName = id; 
                 changeNickname = id; 
                 changeServer = id; 
+                changeSpeechVoice = id; 
                 editCard = id; 
                 removeNickname = id; 
             }; 
@@ -26,6 +27,7 @@
                 removeNickname = NSButton; 
                 servers = NSPopUpButton; 
                 view = NSView; 
+                voices = NSPopUpButton; 
             }; 
             SUPERCLASS = NSObject; 
         }

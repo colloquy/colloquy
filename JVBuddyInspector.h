@@ -1,7 +1,6 @@
 #import "JVBuddy.h"
 #import "JVInspectorController.h"
 
-
 @interface JVBuddy (JVBuddyInspection) <JVInspection>
 - (id <JVInspector>) inspector;
 @end
@@ -17,6 +16,7 @@
 	IBOutlet NSTableView *nicknames;
 	IBOutlet NSButton *removeNickname;
 	IBOutlet NSButton *addNickname;
+	IBOutlet NSPopUpButton *voices;
 	JVBuddy *_buddy;
 	NSMutableArray *_activeUsers;
 	BOOL _nibLoaded;
@@ -28,6 +28,7 @@
 - (IBAction) changeLastName:(id) sender;
 - (IBAction) changeNickname:(id) sender;
 - (IBAction) changeEmail:(id) sender;
+- (IBAction) changeSpeechVoice:(id) sender;
 
 - (IBAction) changeServer:(id) sender;
 

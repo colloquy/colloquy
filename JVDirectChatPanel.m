@@ -22,6 +22,7 @@
 #import "NSBundleAdditions.h"
 #import "NSURLAdditions.h"
 #import "NSAttributedStringMoreAdditions.h"
+#import "JVSpeechController.h"
 
 static NSArray *JVAutoActionVerbs = nil;
 
@@ -723,7 +724,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 			}
 		}
 	}
-
+	
 	[self processIncomingMessage:cmessage];
 
 	if( [[cmessage sender] isKindOfClass:[JVChatRoomMember class]] )
@@ -771,6 +772,12 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		// the style decided to excluded this message, decrease the new message counts
 		if( [cmessage isHighlighted] ) _newHighlightMessageCount--;
 		_newMessageCount--;
+	}
+
+	if( [cmessage ignoreStatus] == JVNotIgnored ) {
+		NSString *voiceIdentifier = [[[MVBuddyListController sharedBuddyList] buddyForUser:user] speechVoice];
+		if( [voiceIdentifier length] )
+			[[JVSpeechController sharedSpeechController] startSpeakingString:[cmessage bodyAsPlainText] usingVoice:voiceIdentifier];
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatMessageWasProcessedNotification object:self userInfo:[NSDictionary dictionaryWithObject:newMessage forKey:@"message"]];

@@ -507,7 +507,9 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
 		contents = [NSString stringWithContentsOfURL:url];
 	else contents = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
-	return ( contents ? contents : @"" );
+
+	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
+	return ( contents ? [NSString stringWithFormat:contents, [resources absoluteString]] : @"" );
 }
 
 #pragma mark -

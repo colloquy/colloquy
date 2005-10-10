@@ -53,6 +53,19 @@
 		if( [connection type] == MVChatConnectionIRCType )
 			[servers addItemWithTitle:[connection server]];
 
+	while( [voices numberOfItems] > 2 )
+		[voices removeItemAtIndex:2];
+
+	enumerator = [[NSSpeechSynthesizer availableVoices] objectEnumerator];
+	NSString *voiceIdentifier = nil;
+	while( ( voiceIdentifier = [enumerator nextObject] ) ) {
+		[voices addItemWithTitle:[[NSSpeechSynthesizer attributesForVoice:voiceIdentifier] objectForKey:NSVoiceName]];
+		[[voices lastItem] setRepresentedObject:voiceIdentifier];
+	}
+
+	[voices selectItemAtIndex:[[voices menu] indexOfItemWithRepresentedObject:[_buddy speechVoice]]];
+	if( ! [voices selectedItem] ) [voices selectItemAtIndex:0];
+
 	[removeNickname setTransparent:NO];
 	[removeNickname setHidden:YES];
 
@@ -97,8 +110,8 @@
 - (IBAction) addNickname:(id) sender {
 	[_activeUsers addObject:[NSNull null]];
 	[nicknames noteNumberOfRowsChanged];
-	[nicknames selectRow:([_activeUsers count] - 1) byExtendingSelection:NO];
-	[nicknames editColumn:0 row:([_activeUsers count] - 1) withEvent:nil select:NO];
+	[nicknames selectRow:( [_activeUsers count] - 1 ) byExtendingSelection:NO];
+	[nicknames editColumn:0 row:( [_activeUsers count] - 1 ) withEvent:nil select:NO];
 }
 
 - (IBAction) removeNickname:(id) sender {
@@ -134,6 +147,17 @@
 
 - (IBAction) changeEmail:(id) sender {
 	[_buddy setPrimaryEmail:[sender stringValue]];
+}
+
+- (IBAction) changeSpeechVoice:(id) sender {
+	NSString *voiceIdentifier = @"";
+	if( [sender indexOfSelectedItem] != 0 ) {
+		voiceIdentifier = [[sender selectedItem] representedObject];
+		NSSpeechSynthesizer *synth = [[[NSSpeechSynthesizer alloc] initWithVoice:voiceIdentifier] autorelease];
+		[synth startSpeakingString:[[NSSpeechSynthesizer attributesForVoice:voiceIdentifier] objectForKey:NSVoiceDemoText]];
+	}
+
+	[_buddy setSpeechVoice:voiceIdentifier];
 }
 
 #pragma mark -
