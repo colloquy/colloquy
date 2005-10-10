@@ -73,6 +73,11 @@
 		1C70377F07E49F25005CEA40 /* JVSmartTranscriptPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C70377D07E49F25005CEA40 /* JVSmartTranscriptPanel.m */; };
 		1C703EF507E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C703EF307E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib */; };
 		1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7780DC08FA1D81006AD8E5 /* JVSpeechController.m */; };
+		1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77822808FA4101006AD8E5 /* topicBackground.png */; };
+		1C77822B08FA415B006AD8E5 /* chatRoomTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 1C77822A08FA415B006AD8E5 /* chatRoomTemplate.html */; };
+		1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F5394C070378E44D01A35792 /* Credits.rtf */; };
+		1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */; };
+		1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */; };
 		1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* WebSearch.scpt */; };
 		1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
 		1C7EF54006B341890037F173 /* roomTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53D06B341890037F173 /* roomTab.png */; };
@@ -124,7 +129,6 @@
 		1CB2CD2A052DDC560094AAA4 /* Colloquy.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEB0378E23701A35792 /* Colloquy.nib */; };
 		1CB2CD2B052DDC560094AAA4 /* MVCrashCatcher.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEF0378E23701A35792 /* MVCrashCatcher.nib */; };
 		1CB2CD2C052DDC560094AAA4 /* MVSoftwareUpdate.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BF10378E23701A35792 /* MVSoftwareUpdate.nib */; };
-		1CB2CD2D052DDC560094AAA4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F5394C070378E44D01A35792 /* Credits.rtf */; };
 		1CB2CD2E052DDC560094AAA4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F5394C090378E44D01A35792 /* InfoPlist.strings */; };
 		1CB2CD2F052DDC560094AAA4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F5394C0B0378E44D01A35792 /* Localizable.strings */; };
 		1CB2CD30052DDC560094AAA4 /* Chat.clr in Resources */ = {isa = PBXBuildFile; fileRef = F51F91D7037967CB01A35792 /* Chat.clr */; };
@@ -546,6 +550,10 @@
 		1C746A95050CF86B000001C8 /* emoticons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = emoticons.plist; path = Resources/emoticons.plist; sourceTree = "<group>"; };
 		1C7780DB08FA1D81006AD8E5 /* JVSpeechController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVSpeechController.h; sourceTree = "<group>"; };
 		1C7780DC08FA1D81006AD8E5 /* JVSpeechController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVSpeechController.m; sourceTree = "<group>"; };
+		1C77822808FA4101006AD8E5 /* topicBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicBackground.png; path = Resources/topicBackground.png; sourceTree = "<group>"; };
+		1C77822A08FA415B006AD8E5 /* chatRoomTemplate.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = chatRoomTemplate.html; path = Resources/chatRoomTemplate.html; sourceTree = "<group>"; };
+		1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicToggleDown.png; path = Resources/topicToggleDown.png; sourceTree = "<group>"; };
+		1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicToggleUp.png; path = Resources/topicToggleUp.png; sourceTree = "<group>"; };
 		1C7B83C50668D732004F1EFE /* NSNotificationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSNotificationAdditions.h; sourceTree = "<group>"; };
 		1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = NSCoreSuite.scriptSuite; path = Resources/NSCoreSuite.scriptSuite; sourceTree = "<group>"; };
 		1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = NSCoreSuite.scriptTerminology; path = Resources/NSCoreSuite.scriptTerminology; sourceTree = "<group>"; };
@@ -1371,6 +1379,7 @@
 				0A5B683E0810EC9700398D5A /* default.css */,
 				0AA811220826DB8800A3BF2D /* default.js */,
 				1C3C116005029DE1000001C8 /* template.html */,
+				1C77822A08FA415B006AD8E5 /* chatRoomTemplate.html */,
 				1C746A95050CF86B000001C8 /* emoticons.plist */,
 				F5675B8601DB767601EE70DE /* verbs.plist */,
 				1C9982AF0604BEAA006C6417 /* notifications.plist */,
@@ -1483,6 +1492,9 @@
 				1C6A42A608400E7900572AB6 /* targetWindow.png */,
 				1C45BFA4086F4BD80079E014 /* newWindow.png */,
 				1C6A46A50841951200572AB6 /* gearSmall.png */,
+				1C77822808FA4101006AD8E5 /* topicBackground.png */,
+				1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */,
+				1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */,
 			);
 			name = Misc.;
 			sourceTree = "<group>";
@@ -1883,7 +1895,6 @@
 				1CB2CD2A052DDC560094AAA4 /* Colloquy.nib in Resources */,
 				1CB2CD2B052DDC560094AAA4 /* MVCrashCatcher.nib in Resources */,
 				1CB2CD2C052DDC560094AAA4 /* MVSoftwareUpdate.nib in Resources */,
-				1CB2CD2D052DDC560094AAA4 /* Credits.rtf in Resources */,
 				1CB2CD2E052DDC560094AAA4 /* InfoPlist.strings in Resources */,
 				1CB2CD2F052DDC560094AAA4 /* Localizable.strings in Resources */,
 				1CB2CD30052DDC560094AAA4 /* Chat.clr in Resources */,
@@ -2029,6 +2040,11 @@
 				1CE6916E08B183C7006D9CA0 /* Colloquy.scriptSuite in Resources */,
 				1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */,
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
+				1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */,
+				1C77822B08FA415B006AD8E5 /* chatRoomTemplate.html in Resources */,
+				1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */,
+				1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */,
+				1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

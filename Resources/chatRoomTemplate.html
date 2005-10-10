@@ -1,0 +1,78 @@
+<script type="text/ecmascript">
+var topicSize = 0;
+function toggleTopic() {
+	topicSize++;
+	if( topicSize > 3 ) topicSize = 0;
+	document.getElementById( "topicArea" ).style.setProperty( 'height', ( ! topicSize ? '11px' : ( topicSize == 1 ? '26px' : ( topicSize == 2 ? '41px' : '56px' ) ) ), null );
+	document.getElementById( "contents" ).style.setProperty( 'top', ( ! topicSize ? '20px' : ( topicSize == 1 ? '35px' : ( topicSize == 2 ? '50px' : '65px' ) ) ), null );
+	if( topicSize == 3 ) document.getElementById( "toggleButton" ).className = "up";
+	else document.getElementById( "toggleButton" ).className = "";
+}
+
+function changeTopic( topic, author, empty ) {
+	topicMessage = document.getElementById( "topicMessage" );
+	topicMessage.innerHTML = topic;
+	topicMessage.title = topicMessage.innerText;
+}
+</script>
+<style type="text/css">
+#topicArea {
+	top: 0;
+	left: 0;
+	right: 0;
+	position: fixed;
+	z-index: 1;
+	background-image: url( %@/topicBackground.png );
+	background-repeat: repeat-x;
+	background-position: top;
+	height: 11px;
+	font-size: 11px;
+	font-family: Lucida Grande, sans-serif;
+	line-height: 15px;
+	text-align: center;
+	padding: 1px 0 7px 0;
+	word-wrap: break-word;
+	overflow: hidden;
+	color: black !important;
+	border-bottom: 1px solid rgb( 154, 154, 154 );
+}
+
+#topicMessage {
+	padding: 0 10px 0 10px;
+}
+
+#topicMessage a {
+	color: blue !important;
+}
+
+#contents {
+	position: absolute;
+	top: 20px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: auto;
+}
+
+#toggleButton {
+	float: right;
+	margin-left: 4px;
+	margin-right: 1px;
+	background-image: url( %1$@/topicToggleDown.png );
+	width: 17px;
+	height: 16px;
+}
+
+#toggleButton.up {
+	background-image: url( %1$@/topicToggleUp.png );
+}
+
+#toggleButton:hover {
+	background-position: 0 16px;
+}
+</style>
+<div id="topicArea">
+	<div id="toggleButton" onclick="toggleTopic()"></div>
+	<span id="topicMessage"></span>
+</div>
+<div id="contents" class="chatRoom"></div>
