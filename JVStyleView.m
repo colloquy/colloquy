@@ -37,7 +37,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (unsigned long) _visibleMessageCount;
 - (long) _locationOfMessage:(JVChatMessage *) message;
 - (long) _locationOfElementAtIndex:(unsigned long) index;
-- (void) _reallySetTopicMessage:(NSString *) message andAuthor:(NSString *) author;
 - (void) _tickleForLayout;
 @end
 
@@ -331,22 +330,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-- (void) setTopicMessage:(NSAttributedString *) topic andAuthor:(NSString *) author {
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-
-	[_topicMessage release];
-	_topicMessage = [[topic HTMLFormatWithOptions:options] retain];
-
-	[_topicAuthor autorelease];
-	_topicAuthor = [author copy];
-
-	if( ! _webViewReady ) return;
-
-	[self _reallySetTopicMessage:_topicMessage andAuthor:_topicAuthor];
-}
-
-#pragma mark -
-
 - (BOOL) appendChatMessage:(JVChatMessage *) message {
 	if( ! _webViewReady ) return YES; // don't schedule this to fire later since the transcript will be processed
 
@@ -487,8 +470,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( ! _body ) _body = (DOMHTMLElement *)[[_domDocument body] retain];
 
 	[self performSelector:@selector( _checkForTransparantStyle )];
-
-	[self _reallySetTopicMessage:_topicMessage andAuthor:_topicAuthor];
 
 	[self setPreferencesIdentifier:[[self style] identifier]];
 	[[self preferences] setJavaScriptEnabled:YES];
@@ -840,14 +821,5 @@ quickEnd:
 - (unsigned long) _visibleMessageCount {
 	if( ! _webViewReady ) return 0;
 	return [[_body childNodes] length];
-}
-
-- (void) _reallySetTopicMessage:(NSString *) message andAuthor:(NSString *) author {
-	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument getElementById:@"topicMessage"];
-	[element setInnerHTML:( message ? message : @"" )];
-	[element setTitle:( message ? message : @"" )];
-	element = (DOMHTMLElement *)[_domDocument getElementById:@"topicAuthor"];
-	[element setInnerText:( author ? author : @"" )];
-	[element setTitle:( author ? author : @"" )];
 }
 @end

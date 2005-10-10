@@ -80,7 +80,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[display setScrollbackLimit:1000];
 	[display setBodyTemplate:@"transcript"];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshSearch ) name:JVStyleViewDidChangeStylesNotification object:display];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didSwitchStyles: ) name:JVStyleViewDidChangeStylesNotification object:display];
 
 	if( ! [self style] ) {
 		JVStyle *style = [JVStyle defaultStyle];
@@ -709,6 +709,10 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 	while( ( message = [messages nextObject] ) )
 		[self quickSearchMatchMessage:message];
+}
+
+- (void) _didSwitchStyles:(NSNotification *) notification {
+	[self _refreshSearch];
 }
 
 #pragma mark -

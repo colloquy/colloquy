@@ -21,10 +21,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	JVEmoticonSet *_emoticons;
 	DOMHTMLDocument *_domDocument;
 	DOMHTMLElement *_body;
-	JVMarkedScroller *_scroller;
 	NSString *_bodyTemplate;
-	NSString *_topicMessage;
-	NSString *_topicAuthor;
 	unsigned int _scrollbackLimit;
 	BOOL _requiresFullMessage;
 	BOOL _rememberScrollPosition;
@@ -55,8 +52,6 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 - (void) reloadCurrentStyle;
 - (void) clear;
 - (void) mark;
-
-- (void) setTopicMessage:(NSAttributedString *) topic andAuthor:(NSString *) author;
 
 - (BOOL) appendChatMessage:(JVChatMessage *) message;
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element;

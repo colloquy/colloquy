@@ -110,6 +110,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 @interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
 - (void) _refreshWindowFileProxy;
 - (void) _changeEmoticonsMenuSelection;
+- (void) _didSwitchStyles:(NSNotification *) notification;
 @end
 
 #pragma mark -
@@ -242,7 +243,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateInputFont: ) name:JVStyleViewDidChangeStylesNotification object:display];
 
 	if( [self preferenceForKey:@"style"] ) {
 		style = [JVStyle styleWithIdentifier:[self preferenceForKey:@"style"]];
@@ -1603,7 +1603,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	return ( [self preferenceForKey:@"emoticon"] ? YES : NO );
 }
 
-- (void) _updateInputFont:(NSNotification *) notification {
+- (void) _didSwitchStyles:(NSNotification *) notification {
+	[super _didSwitchStyles:notification];
+
 	NSFont *baseFont = nil;
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputUsesStyleFont"] ) {
 		WebPreferences *preferences = [display preferences];

@@ -25,6 +25,7 @@
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
 - (void) _didConnect:(NSNotification *) notification;
 - (void) _didDisconnect:(NSNotification *) notification;
+- (void) _didSwitchStyles:(NSNotification *) notification;
 @end
 
 #pragma mark -
@@ -1258,17 +1259,16 @@
 }
 
 - (void) _topicChanged:(id) sender {
-	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic] withBaseFont:[NSFont systemFontOfSize:11.]];
+	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic]];
 	JVChatRoomMember *author = ( [[self target] topicAuthor] ? [self chatRoomMemberForUser:[[self target] topicAuthor]] : nil );
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSString *topicString = [topic HTMLFormatWithOptions:options];
 
 	if( topic && [[self target] topicAuthor] && sender ) {
-		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-		NSString *topicString = [topic HTMLFormatWithOptions:options];
-
 		if( [[[self target] topicAuthor] isLocalUser] ) {
 			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You changed the topic to \"%@\".", "you changed the topic chat room status message" ), topicString] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( author ? (id) author : (id) [[self target] topicAuthor] ), @"by", topic, @"topic", nil]];
 		} else {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"Topic changed to \"%@\" by <span class=\"member\">%@</span>.", "topic changed chat room status message" ), topicString, [author title]] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( author ? (id) author : (id) [[self target] topicAuthor] ), @"by", topic, @"topic", nil]];
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"Topic changed to \"%@\" by <span class=\"member\">%@</span>.", "topic changed chat room status message" ), topicString, ( author ? [author title] : [[[self target] topicAuthor] displayName] )] withName:@"topicChanged" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( author ? (id) author : (id) [[self target] topicAuthor] ), @"by", topic, @"topic", nil]];
 		}
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSAttributedString * ), @encode( JVChatRoomPanel * ), @encode( JVChatRoomMember * ), nil];
@@ -1282,12 +1282,32 @@
 		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	}
 
+	BOOL emptyTopic = NO;
 	if( ! [topic length] ) {
-		NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor], NSForegroundColorAttributeName, [NSFont systemFontOfSize:11.], NSFontAttributeName, nil];
-		topic = [[[NSMutableAttributedString alloc] initWithString:NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" ) attributes:attributes] autorelease];
+		topicString = NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" );
+		emptyTopic = YES;
 	}
 
-	[display setTopicMessage:topic andAuthor:( author ? [author title] : [[[self target] topicAuthor] displayName] )];
+	NSArray *args = [NSArray arrayWithObjects:topicString, ( author ? [author title] : [[[self target] topicAuthor] displayName] ), [NSNumber numberWithBool:emptyTopic], nil];
+	[[display windowScriptObject] callWebScriptMethod:@"changeTopic" withArguments:args];
+}
+
+- (void) _didSwitchStyles:(NSNotification *) notification {
+	[super _didSwitchStyles:notification];
+
+	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic]];
+	JVChatRoomMember *author = ( [[self target] topicAuthor] ? [self chatRoomMemberForUser:[[self target] topicAuthor]] : nil );
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSString *topicString = [topic HTMLFormatWithOptions:options];
+
+	BOOL emptyTopic = NO;
+	if( ! [topic length] ) {
+		topicString = NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" );
+		emptyTopic = YES;
+	}
+
+	NSArray *args = [NSArray arrayWithObjects:topicString, ( author ? [author title] : [[[self target] topicAuthor] displayName] ), [NSNumber numberWithBool:emptyTopic], nil];
+	[[display windowScriptObject] callWebScriptMethod:@"changeTopic" withArguments:args];	
 }
 
 - (void) _startChatWithNonMember:(id) sender {

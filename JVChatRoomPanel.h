@@ -5,12 +5,9 @@
 
 @interface JVChatRoomPanel : JVDirectChatPanel {
 	@protected
-	IBOutlet NSTextView *topicLine;
-
 	NSMutableArray *_sortedMembers;
 	NSMutableArray *_preferredTabCompleteNicknames;
 	NSMutableSet *_nextMessageAlertMembers;
-
 	BOOL _kickedFromRoom;
 	BOOL _inRoom;
 	BOOL _keepAfterPart;
