@@ -17,12 +17,6 @@ NSString* const JVBuddyAddressBookIRCNicknameProperty = @"IRCNickname";
 NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JVBuddy.TTSvoice";
 
 @implementation JVBuddy
-+ (void) initialize {
-	[ABPerson addPropertiesAndTypes:[NSDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithUnsignedInt:kABMultiStringProperty], JVBuddyAddressBookIRCNicknameProperty,
-		[NSNumber numberWithUnsignedInt:kABStringProperty], JVBuddyAddressBookSpeechVoiceProperty, nil]];
-}
-
 + (JVBuddyName) preferredName {
 	extern JVBuddyName _mainPreferredName;
 	return _mainPreferredName;
