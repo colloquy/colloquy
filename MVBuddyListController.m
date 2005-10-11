@@ -30,6 +30,12 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 @implementation MVBuddyListController
++ (void) initialize {
+	[ABPerson addPropertiesAndTypes:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithUnsignedInt:kABMultiStringProperty], JVBuddyAddressBookIRCNicknameProperty,
+		[NSNumber numberWithUnsignedInt:kABStringProperty], JVBuddyAddressBookSpeechVoiceProperty, nil]];
+}
+
 + (MVBuddyListController *) sharedBuddyList {
 	extern MVBuddyListController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
