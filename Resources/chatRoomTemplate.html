@@ -1,18 +1,47 @@
 <script type="text/ecmascript">
 var topicSize = 0;
-function toggleTopic() {
-	topicSize++;
-	if( topicSize > 3 ) topicSize = 0;
-	document.getElementById( "topicArea" ).style.setProperty( 'height', ( ! topicSize ? '11px' : ( topicSize == 1 ? '26px' : ( topicSize == 2 ? '41px' : '56px' ) ) ), null );
-	document.getElementById( "contents" ).style.setProperty( 'top', ( ! topicSize ? '20px' : ( topicSize == 1 ? '35px' : ( topicSize == 2 ? '50px' : '65px' ) ) ), null );
-	if( topicSize == 3 ) document.getElementById( "toggleButton" ).className = "up";
-	else document.getElementById( "toggleButton" ).className = "";
+var topicToggled = false;
+
+function toggleTopic( e ) {
+	if( e.altKey ) {
+		topicSize++;
+		if( topicSize > 3 ) topicSize = 0;
+		topicAreaSize = ( ! topicSize ? 17 : ( topicSize == 1 ? 32 : ( topicSize == 2 ? 47 : 62 ) ) );
+		if( topicSize == 3 ) document.getElementById( 'toggleButton' ).className = "up";
+		else document.getElementById( 'toggleButton' ).className = "";
+	} else {
+		if( ! topicToggled && topicSize < 3 ) {
+			topicAreaSize = document.getElementById( 'topicMessage' ).clientHeight + 4;
+			if( topicAreaSize > 62 ) topicAreaSize = 62;
+			else if( topicAreaSize < 17 ) topicAreaSize = 17;
+			document.getElementById( 'toggleButton' ).className = "up";
+			topicToggled = true;
+		} else {
+			if( topicSize == 3 ) topicSize = 0;
+			topicAreaSize = ( ! topicSize ? 17 : ( topicSize == 1 ? 32 : ( topicSize == 2 ? 47 : 62 ) ) );
+			document.getElementById( 'toggleButton' ).className = "";
+			topicToggled = false;
+		}
+	}
+
+	document.getElementById( 'topicArea' ).style.setProperty( 'height', topicAreaSize + 'px', null );
+	document.getElementById( 'contents' ).style.setProperty( 'top', topicAreaSize + 'px', null );
 }
 
 function changeTopic( topic, author, empty ) {
-	topicMessage = document.getElementById( "topicMessage" );
+	topicMessage = document.getElementById( 'topicMessage' );
 	topicMessage.innerHTML = topic;
-	topicMessage.title = topicMessage.innerText;
+	topicMessage.title = topicMessage.innerText + ' set by ' + author;
+	if( topicMessage.clientHeight > 13 )
+		document.getElementById( 'toggleButton' ).style.setProperty( 'display', 'block', null );
+	else if( ! topicSize ) document.getElementById( 'toggleButton' ).style.setProperty( 'display', 'none', null );
+	if( topicToggled ) {
+		topicAreaSize = topicMessage.clientHeight + 4;
+		if( topicAreaSize > 62 ) topicAreaSize = 62;
+		else if( topicAreaSize < 17 ) topicAreaSize = 17;
+		document.getElementById( 'topicArea' ).style.setProperty( 'height', topicAreaSize + 'px', null );
+		document.getElementById( 'contents' ).style.setProperty( 'top', topicAreaSize + 'px', null );
+	}
 }
 </script>
 <style type="text/css">
@@ -25,20 +54,16 @@ function changeTopic( topic, author, empty ) {
 	background-image: url( %@/topicBackground.png );
 	background-repeat: repeat-x;
 	background-position: top;
-	height: 11px;
+	height: 17px;
 	font-size: 11px;
 	font-family: Lucida Grande, sans-serif;
 	line-height: 15px;
 	text-align: center;
-	padding: 1px 0 7px 0;
+	padding: 0 20px 0 8px;
 	word-wrap: break-word;
 	overflow: hidden;
 	color: black !important;
 	border-bottom: 1px solid rgb( 154, 154, 154 );
-}
-
-#topicMessage {
-	padding: 0 10px 0 10px;
 }
 
 #topicMessage a {
@@ -47,7 +72,7 @@ function changeTopic( topic, author, empty ) {
 
 #contents {
 	position: absolute;
-	top: 20px;
+	top: 17px;
 	bottom: 0;
 	left: 0;
 	right: 0;
@@ -55,9 +80,9 @@ function changeTopic( topic, author, empty ) {
 }
 
 #toggleButton {
-	float: right;
-	margin-left: 4px;
-	margin-right: 1px;
+	position: absolute;
+	top: 0;
+	right: 1px;
 	background-image: url( %1$@/topicToggleDown.png );
 	width: 17px;
 	height: 16px;
@@ -72,7 +97,7 @@ function changeTopic( topic, author, empty ) {
 }
 </style>
 <div id="topicArea">
-	<div id="toggleButton" onclick="toggleTopic()"></div>
+	<div id="toggleButton" onclick="toggleTopic( event )" style="display: none"></div>
 	<span id="topicMessage"></span>
 </div>
 <div id="contents" class="chatRoom"></div>
