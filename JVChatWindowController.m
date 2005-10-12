@@ -601,6 +601,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		else return NO;
 	}
 
+	if( [[self activeChatViewController] respondsToSelector:@selector( validateMenuItem: )] )
+		return [[self activeChatViewController] validateMenuItem:menuItem];
+	
 	return YES;
 }
 @end

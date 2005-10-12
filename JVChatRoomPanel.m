@@ -223,6 +223,14 @@
 }
 
 #pragma mark -
+
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
+	if( [menuItem action] == @selector( addToFavorites: ) && [menuItem tag] == 10 )
+		[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Add \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
+	return YES;
+}
+
+#pragma mark -
 #pragma mark Miscellaneous
 
 - (IBAction) addToFavorites:(id) sender {

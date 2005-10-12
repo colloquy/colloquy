@@ -100,6 +100,11 @@ static NSMenu *favoritesMenu = nil;
 	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Open Favorites folder...", "open favorites folder menu title" ) action:@selector( _openFavoritesFolder: ) keyEquivalent:@""] autorelease];
 	[menuItem setTarget:self];
 	[favoritesMenu addItem:menuItem];
+
+	menuItem = [[[NSMenuItem alloc] initWithTitle:@"Add to Favorites" action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
+	[menuItem setEnabled:NO];
+	[menuItem setTag:10];
+	[favoritesMenu addItem:menuItem];
 }
 
 #pragma mark -

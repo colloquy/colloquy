@@ -470,6 +470,8 @@ static BOOL applicationIsTerminating = NO;
 		Class controllerClass = [JVDirectChatPanel class];
 		NSSet *viewControllers = [chatController chatViewControllersKindOfClass:controllerClass];
 		return ( [viewControllers count] > 0 );
+	} else if( [menuItem action] == @selector( addToFavorites: ) ) {
+		return NO;
 	}
 	return YES;
 }
