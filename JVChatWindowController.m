@@ -599,10 +599,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	} else if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
 		if( [[menuItem keyEquivalent] length] ) return YES;
 		else return NO;
+	} else if( [menuItem action] == @selector( detachCurrentPanel: ) ) {
+		if( [_views count] > 1 ) return YES;
+		else return NO;
 	}
 
 	if( [[self activeChatViewController] respondsToSelector:@selector( validateMenuItem: )] )
-		return [[self activeChatViewController] validateMenuItem:menuItem];
+		return [(id)[self activeChatViewController] validateMenuItem:menuItem];
 	
 	return YES;
 }
