@@ -403,10 +403,12 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
-	[item setRepresentedObject:self];
-	[item setTarget:[JVChatController defaultController]];
-	[menu addItem:item];
+	if( [[[self windowController] allChatViewControllers] count] > 1 ) {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+		[item setRepresentedObject:self];
+		[item setTarget:[JVChatController defaultController]];
+		[menu addItem:item];
+	}
 
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
