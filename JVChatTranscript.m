@@ -981,7 +981,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	unsigned long limit = [self elementLimit];
 	unsigned long count = [self elementCount];
-	if( count <= limit ) return;
+	if( ! limit || count <= limit ) return;
 
 	unsigned long total = ( count - limit );
 	xmlNode *tmp = NULL;
