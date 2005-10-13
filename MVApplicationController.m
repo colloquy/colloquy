@@ -471,6 +471,7 @@ static BOOL applicationIsTerminating = NO;
 		NSSet *viewControllers = [chatController chatViewControllersKindOfClass:controllerClass];
 		return ( [viewControllers count] > 0 );
 	} else if( [menuItem action] == @selector( addToFavorites: ) ) {
+		[menuItem setTitle:NSLocalizedString( @"Add to Favorites", "add to favorites menu item")];
 		return NO;
 	}
 	return YES;
