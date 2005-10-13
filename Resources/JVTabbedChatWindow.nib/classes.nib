@@ -10,16 +10,21 @@
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {
+                closeCurrentPanel = id; 
                 closeViewsDrawer = id; 
+                detachCurrentPanel = id; 
                 getInfo = id; 
                 joinRoom = id; 
                 openViewsDrawer = id; 
+                selectNextActivePanel = id; 
+                selectNextPanel = id; 
+                selectPreviousActivePanel = id; 
+                selectPreviousPanel = id; 
                 toggleViewsDrawer = id; 
             }; 
             CLASS = JVChatWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                activityToolbarButton = MVMenuButton; 
                 chatViewsOutlineView = NSOutlineView; 
                 favoritesButton = MVMenuButton; 
                 viewActionButton = MVMenuButton; 
@@ -31,7 +36,7 @@
             ACTIONS = {toggleTabBarVisible = id; }; 
             CLASS = JVTabbedChatWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {customTabsView = AICustomTabsView; icon = NSImageView; tabView = NSTabView; }; 
+            OUTLETS = {customTabsView = AICustomTabsView; tabView = NSTabView; }; 
             SUPERCLASS = JVChatWindowController; 
         }, 
         {
