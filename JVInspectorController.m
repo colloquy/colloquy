@@ -64,6 +64,8 @@ static NSMutableSet *inspectors = nil;
 		if( _object == nil )
 			[self _inspectWindow:[[NSApplication sharedApplication] keyWindow]];
 	}
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuitting: ) name:NSApplicationWillTerminateNotification object:nil];
 	return self;
 }
 
@@ -206,5 +208,10 @@ static NSMutableSet *inspectors = nil;
 		id obj = [[window delegate] objectToInspect];
 		if( obj != _object ) [self inspectObject:obj];
 	}
+}
+
+- (void) _applicationQuitting:(NSNotification *) notification {
+	if( [_inspector respondsToSelector:@selector( didUnload )] )
+		[(NSObject *)_inspector didUnload];
 }
 @end
