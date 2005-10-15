@@ -7,10 +7,6 @@
 #import "JVDetailCell.h"
 #import "NSBundleAdditions.h"
 
-#import <libxml/xinclude.h>
-#import <libxslt/transform.h>
-#import <libxslt/xsltutils.h>
-
 @interface WebCoreCache
 + (void) empty;
 @end

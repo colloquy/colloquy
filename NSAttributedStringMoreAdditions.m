@@ -2,7 +2,7 @@
 // Changes by Timothy Hatcher for Colloquy.
 // Copyright Graham Booker and Timothy Hatcher. All rights reserved.
 
-#import <libxml/xinclude.h>
+#import <libxml/tree.h>
 #import "NSAttributedStringMoreAdditions.h"
 
 static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
