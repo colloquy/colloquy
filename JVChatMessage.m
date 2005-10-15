@@ -1,4 +1,4 @@
-#import <libxml/xinclude.h>
+#import <libxml/tree.h>
 
 #import "JVChatMessage.h"
 #import "JVBuddy.h"

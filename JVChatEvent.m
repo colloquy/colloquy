@@ -1,7 +1,7 @@
 #import "JVChatEvent.h"
 #import "NSAttributedStringMoreAdditions.h"
 
-#import <libxml/xinclude.h>
+#import <libxml/tree.h>
 
 @implementation JVChatEvent
 - (id) init {

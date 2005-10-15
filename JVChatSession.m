@@ -1,5 +1,5 @@
 #import "JVChatSession.h"
-#import <libxml/xinclude.h>
+#import <libxml/tree.h>
 
 @implementation JVChatSession
 - (id) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {

@@ -1,4 +1,4 @@
-#import <libxml/xinclude.h>
+#import <libxml/tree.h>
 #import <libxslt/transform.h>
 #import <libxslt/xsltutils.h>
 
