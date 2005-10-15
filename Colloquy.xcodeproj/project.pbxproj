@@ -2587,7 +2587,9 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_FAST_OBJC_DISPATCH = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
+				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
 			};
@@ -2598,7 +2600,9 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_FAST_OBJC_DISPATCH = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
+				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
 			};
@@ -2665,7 +2669,9 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_FAST_OBJC_DISPATCH = YES;
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
+				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
 			};
