@@ -1,0 +1,426 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1C36998308FF75A200F34892 /* JVWebInterfacePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C36998208FF75A200F34892 /* JVWebInterfacePlugin.m */; };
+		1C3699BC08FF768900F34892 /* basic_modules.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699AF08FF768900F34892 /* basic_modules.c */; };
+		1C3699BD08FF768900F34892 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699B008FF768900F34892 /* hash.c */; };
+		1C3699BE08FF768900F34892 /* http_log.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699B108FF768900F34892 /* http_log.c */; };
+		1C3699BF08FF768900F34892 /* http_req.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699B208FF768900F34892 /* http_req.c */; };
+		1C3699C008FF768900F34892 /* http_resp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699B308FF768900F34892 /* http_resp.c */; };
+		1C3699C108FF768900F34892 /* http_server.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699B408FF768900F34892 /* http_server.c */; };
+		1C3699C208FF768900F34892 /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699B508FF768900F34892 /* list.c */; };
+		1C3699C408FF768900F34892 /* mime.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699B708FF768900F34892 /* mime.c */; };
+		1C3699C508FF768900F34892 /* netbuf.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699B908FF768900F34892 /* netbuf.c */; };
+		1C3699C608FF768900F34892 /* url_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699BA08FF768900F34892 /* url_map.c */; };
+		1C3699C708FF768900F34892 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699BB08FF768900F34892 /* utils.c */; };
+		1CC7250C0901A775004651F8 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CC7250B0901A775004651F8 /* index.html */; };
+		1CC726710901BBD2004651F8 /* common.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CC7265F0901BAAE004651F8 /* common.js */; };
+		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		014CEA420018CDE011CA2923 /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		014CEA430018CDE011CA2923 /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXFileReference section */
+		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1C36998108FF75A200F34892 /* JVWebInterfacePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVWebInterfacePlugin.h; sourceTree = "<group>"; };
+		1C36998208FF75A200F34892 /* JVWebInterfacePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVWebInterfacePlugin.m; sourceTree = "<group>"; };
+		1C3699AF08FF768900F34892 /* basic_modules.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = basic_modules.c; path = nanohttpd/basic_modules.c; sourceTree = "<group>"; };
+		1C3699B008FF768900F34892 /* hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hash.c; path = nanohttpd/hash.c; sourceTree = "<group>"; };
+		1C3699B108FF768900F34892 /* http_log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = http_log.c; path = nanohttpd/http_log.c; sourceTree = "<group>"; };
+		1C3699B208FF768900F34892 /* http_req.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = http_req.c; path = nanohttpd/http_req.c; sourceTree = "<group>"; };
+		1C3699B308FF768900F34892 /* http_resp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = http_resp.c; path = nanohttpd/http_resp.c; sourceTree = "<group>"; };
+		1C3699B408FF768900F34892 /* http_server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = http_server.c; path = nanohttpd/http_server.c; sourceTree = "<group>"; };
+		1C3699B508FF768900F34892 /* list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = list.c; path = nanohttpd/list.c; sourceTree = "<group>"; };
+		1C3699B708FF768900F34892 /* mime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mime.c; path = nanohttpd/mime.c; sourceTree = "<group>"; };
+		1C3699B808FF768900F34892 /* nanohttpd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nanohttpd.h; path = nanohttpd/nanohttpd.h; sourceTree = "<group>"; };
+		1C3699B908FF768900F34892 /* netbuf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = netbuf.c; path = nanohttpd/netbuf.c; sourceTree = "<group>"; };
+		1C3699BA08FF768900F34892 /* url_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = url_map.c; path = nanohttpd/url_map.c; sourceTree = "<group>"; };
+		1C3699BB08FF768900F34892 /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utils.c; path = nanohttpd/utils.c; sourceTree = "<group>"; };
+		1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
+		1CC7250B0901A775004651F8 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = index.html; path = Resources/index.html; sourceTree = "<group>"; };
+		1CC7265F0901BAAE004651F8 /* common.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = common.js; path = Resources/common.js; sourceTree = "<group>"; };
+		32DBCF630370AF2F00C91783 /* Web Interface.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Web Interface.pch"; sourceTree = "<group>"; };
+		8D5B49B6048680CD000E48DA /* Web Interface.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Web Interface.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D5B49B3048680CD000E48DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* FScript Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AFFE84173DC02AAC07 /* Classes */,
+				32C88E010371C26100C91783 /* Other Sources */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				1C9AE8FA086A552A008ED7AD /* Configurations */,
+				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				19C28FB8FE9D52D311CA2CBB /* Products */,
+			);
+			name = "FScript Plugin";
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
+				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
+			);
+			name = "Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D5B49B7048680CD000E48DA /* Info.plist */,
+				1CC7250B0901A775004651F8 /* index.html */,
+				1CC7265F0901BAAE004651F8 /* common.js */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AFFE84173DC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				1C36998208FF75A200F34892 /* JVWebInterfacePlugin.m */,
+				1C36998108FF75A200F34892 /* JVWebInterfacePlugin.h */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				089C1672FE841209C02AAC07 /* Foundation.framework */,
+				089C167FFE841241C02AAC07 /* AppKit.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FB8FE9D52D311CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D5B49B6048680CD000E48DA /* Web Interface.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C3699AC08FF765600F34892 /* NanoHTTPD */ = {
+			isa = PBXGroup;
+			children = (
+				1C3699B808FF768900F34892 /* nanohttpd.h */,
+				1C3699B108FF768900F34892 /* http_log.c */,
+				1C3699B208FF768900F34892 /* http_req.c */,
+				1C3699B308FF768900F34892 /* http_resp.c */,
+				1C3699B408FF768900F34892 /* http_server.c */,
+				1C3699AF08FF768900F34892 /* basic_modules.c */,
+				1C3699B008FF768900F34892 /* hash.c */,
+				1C3699B508FF768900F34892 /* list.c */,
+				1C3699B708FF768900F34892 /* mime.c */,
+				1C3699B908FF768900F34892 /* netbuf.c */,
+				1C3699BA08FF768900F34892 /* url_map.c */,
+				1C3699BB08FF768900F34892 /* utils.c */,
+			);
+			name = NanoHTTPD;
+			sourceTree = "<group>";
+		};
+		1C9AE8FA086A552A008ED7AD /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */,
+			);
+			name = Configurations;
+			sourceTree = "<group>";
+		};
+		32C88E010371C26100C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				1C3699AC08FF765600F34892 /* NanoHTTPD */,
+				32DBCF630370AF2F00C91783 /* Web Interface.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D5B49AC048680CD000E48DA /* Web Interface Plugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C7F303E0855482D00D41FB0 /* Build configuration list for PBXNativeTarget "Web Interface Plugin" */;
+			buildPhases = (
+				8D5B49B1048680CD000E48DA /* Sources */,
+				8D5B49B3048680CD000E48DA /* Frameworks */,
+				1CC724E60901A63C004651F8 /* Resources */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks",
+					/Library/Frameworks,
+				);
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppleScript Support.pch";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				HEADER_SEARCH_PATHS = ../..;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				LIBRARY_STYLE = BUNDLE;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OBJROOT = ../../build;
+				OTHER_CFLAGS = (
+					"-fconstant-cfstrings",
+					"-falign-loops=16",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "AppleScript Support";
+				SYMROOT = ../../build;
+				UNSTRIPPED_PRODUCT = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			dependencies = (
+			);
+			name = "Web Interface Plugin";
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = "FScript Plugin";
+			productReference = 8D5B49B6048680CD000E48DA /* Web Interface.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1C7F30420855482D00D41FB0 /* Build configuration list for PBXProject "Web Interface" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				014CEA420018CDE011CA2923 /* Development */,
+				014CEA430018CDE011CA2923 /* Deployment */,
+			);
+			hasScannedForEncodings = 1;
+			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
+			projectDirPath = "";
+			targets = (
+				8D5B49AC048680CD000E48DA /* Web Interface Plugin */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1CC724E60901A63C004651F8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1CC7250C0901A775004651F8 /* index.html in Resources */,
+				1CC726710901BBD2004651F8 /* common.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D5B49B1048680CD000E48DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C36998308FF75A200F34892 /* JVWebInterfacePlugin.m in Sources */,
+				1C3699BC08FF768900F34892 /* basic_modules.c in Sources */,
+				1C3699BD08FF768900F34892 /* hash.c in Sources */,
+				1C3699BE08FF768900F34892 /* http_log.c in Sources */,
+				1C3699BF08FF768900F34892 /* http_req.c in Sources */,
+				1C3699C008FF768900F34892 /* http_resp.c in Sources */,
+				1C3699C108FF768900F34892 /* http_server.c in Sources */,
+				1C3699C208FF768900F34892 /* list.c in Sources */,
+				1C3699C408FF768900F34892 /* mime.c in Sources */,
+				1C3699C508FF768900F34892 /* netbuf.c in Sources */,
+				1C3699C608FF768900F34892 /* url_map.c in Sources */,
+				1C3699C708FF768900F34892 /* utils.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1C7F303F0855482D00D41FB0 /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = "Web Interface.pch";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					HAVE_STRSEP,
+					HAVE_ERRNO_H,
+				);
+				HEADER_SEARCH_PATHS = ../..;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "Web Interface";
+				SYMROOT = ../../build;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Development;
+		};
+		1C7F30410855482D00D41FB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREFIX_HEADER = "Web Interface.pch";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					HAVE_STRSEP,
+					HAVE_ERRNO_H,
+				);
+				HEADER_SEARCH_PATHS = ../..;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "Web Interface";
+				SYMROOT = ../../build;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		1C7F30430855482D00D41FB0 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		1C7F30450855482D00D41FB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		1C7F307A085548E700D41FB0 /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREFIX_HEADER = "Web Interface.pch";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					HAVE_STRSEP,
+					HAVE_ERRNO_H,
+				);
+				HEADER_SEARCH_PATHS = ../..;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "Web Interface";
+				SYMROOT = ../../build;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = "Release (Universal)";
+		};
+		1C7F307B085548E700D41FB0 /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = "Release (Universal)";
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C7F303E0855482D00D41FB0 /* Build configuration list for PBXNativeTarget "Web Interface Plugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C7F303F0855482D00D41FB0 /* Development */,
+				1C7F30410855482D00D41FB0 /* Release */,
+				1C7F307A085548E700D41FB0 /* Release (Universal) */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1C7F30420855482D00D41FB0 /* Build configuration list for PBXProject "Web Interface" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C7F30430855482D00D41FB0 /* Development */,
+				1C7F30450855482D00D41FB0 /* Release */,
+				1C7F307B085548E700D41FB0 /* Release (Universal) */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}
