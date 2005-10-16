@@ -134,7 +134,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		_isActive = NO;
 		_forceSplitViewPosition = YES;
 		_historyIndex = 0;
-		_sendHeight = 30.;
+		_sendHeight = 25.;
 
 		_encoding = NSASCIIStringEncoding;
 		_encodingMenu = nil;
@@ -451,13 +451,11 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[super didUnselect];
 }
 
-- (void) willSelect {
+- (void) didSelect {
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] ) {
 		[(JVSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
 	} else [self textDidChange:nil];
-}
 
-- (void) didSelect {
 	_newMessageCount = 0;
 	_newHighlightMessageCount = 0;
 	_isActive = YES;

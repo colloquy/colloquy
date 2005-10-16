@@ -13,6 +13,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		_sendHistory = [[NSMutableArray array] retain];
 		[_sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
 
+		_sendHeight = 25.;
 		_historyIndex = 0;
 		_paused = NO;
 		_forceSplitViewPosition = YES;
@@ -200,7 +201,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
-- (void) willSelect {
+- (void) didSelect {
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] ) {
 		[(JVSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
 	} else [self textDidChange:nil];
