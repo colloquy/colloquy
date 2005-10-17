@@ -21,6 +21,13 @@ char *getext( char *in ) {
 }
 
 void mod_dir( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
+	if( ! server -> document_root ) {
+		resp -> status_code = 500;
+		resp -> reason_phrase = "No document root defined";
+		resp -> printf( resp, "500: No document root defined" );
+		return;	
+	}
+
 	char filename[1024];
 	char *index = NULL;
 	if( server -> directory_index ) {
@@ -82,7 +89,7 @@ void mod_file( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	if( ! server -> document_root ) {
 		resp -> status_code = 500;
 		resp -> reason_phrase = "No document root defined";
-		resp -> printf(resp, "500: No document root defined" );
+		resp -> printf( resp, "500: No document root defined" );
 		return;	
 	}
 
