@@ -159,7 +159,7 @@ void http_server_run(http_server_t* me)
 	hints.ai_protocol = 0;
 	
 	errcode = getaddrinfo ( me->host, me->svc, &hints, &res);
-	if ( errcode != 0) {
+	if ( errcode != 0 || ! res ) {
 #ifdef LOG_HTTP
 		http_log(LOG_ERR, "getaddrinfo(), errcode=%i:", errcode, gai_strerror(errcode));
 #endif
@@ -190,6 +190,8 @@ void http_server_run(http_server_t* me)
 #ifdef LOG_HTTP
 	http_log ( LOG_INFO, "Listen on %s", res->ai_canonname);
 #endif
+
+	freeaddrinfo( res );
 
 	http_server_fork_process ( me, me->initial_process);
 }

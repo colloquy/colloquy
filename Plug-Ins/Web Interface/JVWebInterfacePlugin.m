@@ -33,6 +33,7 @@ void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *server )
 			id valueObject = ( value ? [NSString stringWithUTF8String:value] : [NSNull null] );
 			if( keyString && valueObject ) [arguments setObject:valueObject forKey:keyString];
 		}
+		parameters -> delete( parameters );
 	}
 
 	NSString *command = [url path];
