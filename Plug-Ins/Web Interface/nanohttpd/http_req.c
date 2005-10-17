@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <nanohttpd.h>
+#include "nanohttpd.h"
 
 
 int	http_req_parse(http_req_t*);
@@ -201,8 +201,8 @@ int http_req_parse(http_req_t *me)
 	me->uri = strdup(uri);
 	me->query = strdup(uri);
 	me->file_name = strsep( &(me->query), "?");
+	url_decode( me->file_name );
 
-	
 	me->method = 0;
 	if ( strncasecmp ( "POST", method, 4)  == 0)
 		me->method = REQ_POST;

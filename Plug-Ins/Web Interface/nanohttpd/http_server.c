@@ -19,7 +19,7 @@
 #	endif
 #endif
 
-#include <nanohttpd.h>
+#include "nanohttpd.h"
 
 #define MSG_ACCEPT	0L
 #define MSG_CONNECTED 1L
@@ -38,13 +38,12 @@ void handle_conn ( int sock, struct sockaddr *from_addr, size_t from_addr_len, h
 	http_resp_t	*resp;
 	http_req_t*	req;
 
-	errcode = getnameinfo( from_addr, from_addr_len, host, NI_MAXHOST, serv, NI_MAXSERV, 0);
-
 #ifdef LOG_HTTP
+	int errcode = getnameinfo( from_addr, from_addr_len, host, NI_MAXHOST, serv, NI_MAXSERV, 0);
 	if ( errcode) http_log (LOG_ERR, "getnameinfo(): %s", gai_strerror(errcode));
 	http_log(LOG_INFO, "Connection from %s:%s", host, serv);
 #endif
-	
+
 	req = http_req_new(sock);
 	resp = http_resp_new(sock, req);
 	
@@ -52,7 +51,7 @@ void handle_conn ( int sock, struct sockaddr *from_addr, size_t from_addr_len, h
 	{
 		http_server_handler handler = NULL;
 		url_map_t*	url_map;
-		
+
 		for (url_map = (url_map_t*) me->url_mappings->first(me->url_mappings); url_map;
 			 url_map = (url_map_t*)	me->url_mappings->next(me->url_mappings)) {
 			if (url_map->is_url_map(url_map, req->uri)) {
@@ -89,7 +88,6 @@ http_server_t* http_server_new(char* host, char* svc)
 	me->directory_index = NULL;
 
 	me->running = 1;
-	me->max_process = 10;
 	me->initial_process = 3;
 	me->nb_process = 0;
 

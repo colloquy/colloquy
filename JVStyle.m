@@ -509,7 +509,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	else contents = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 
 	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
-	return ( contents ? [NSString stringWithFormat:contents, [resources absoluteString]] : @"" );
+	return ( contents ? [NSString stringWithFormat:contents, [resources absoluteString], @""] : @"" );
 }
 
 #pragma mark -

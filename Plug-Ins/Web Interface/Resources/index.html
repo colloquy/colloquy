@@ -1,3 +1,25 @@
-<script type="text/javascript" src="common.js"></script>
-<div id="test">
-</div>
+<script type="text/javascript" src="common.js" defer="defer"></script>
+<style type="text/css">
+#drawer {
+	display: inline-block;
+	width: 150px;
+	height: 350px;
+}
+
+#panels {
+	display: inline-block;
+	position: relative;
+	width: 500px;
+	height: 350px;
+	border: 1px solid grey;
+}
+
+#panels iframe {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+</style>
+<div id="drawer"><ul id="panelList"></ul></div>
+<div id="panels"></div>
+<div id="timer">4000</div>

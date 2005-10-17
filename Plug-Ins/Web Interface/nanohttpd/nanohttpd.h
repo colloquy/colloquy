@@ -45,13 +45,13 @@ typedef struct _hash_item_t {
 typedef struct _hash_t {
 	hash_item_t **slots;
 
-	void ( *set )( struct _hash_t *,char *, void * );
+	void ( *set )( struct _hash_t *, char *, void * );
 	const void *( *get )( struct _hash_t *, const char * );
 	list_t *( *keys )( const struct _hash_t * );
 	void( *delete )( struct _hash_t *, int, int, void(*)( void * ));
 } hash_t;
 
-extern hash_t *	hash_new( );
+extern hash_t *	hash_new();
 
 // netbuf.c
 #ifndef	NETBUF_LEN
@@ -184,7 +184,6 @@ struct _http_server_t {
 	list_t *url_mappings;
 	void *context;
 
-	int	max_process;
 	int	initial_process;
 	int	nb_process;
 	char running;

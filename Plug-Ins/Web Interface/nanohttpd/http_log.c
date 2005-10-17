@@ -9,7 +9,7 @@
 extern int errno;
 #endif
 
-#include <nanohttpd.h>
+#include "nanohttpd.h"
 
 void http_log( int level, char *fmt, ... ) {
 	va_list ap;

@@ -29,6 +29,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 	if( ( self = [super init] ) ) {
 		_plugins = [[NSMutableArray array] retain];
 		[self reloadPlugins];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
 	}
 	return self;
 }
@@ -94,6 +95,14 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 			[plugin performSelector:@selector( unload )];
 		[_plugins removeObject:plugin];
 	}
+}
+
+- (void) applicationWillTerminate:(NSNotification *) notification {
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	[invocation setSelector:@selector( unload )];
+	[self makePluginsPerformInvocation:invocation];
+	[_plugins removeAllObjects];
 }
 
 #pragma mark -

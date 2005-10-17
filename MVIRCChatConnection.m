@@ -1319,7 +1319,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 }
 
 - (NSString *) nickname {
-	if( [self isConnected] && _chatConnection ) {
+	if( [self isConnected] && _chatConnection && _chatConnection -> nick ) {
 		IrssiLock();
 		NSString *nick = [self stringWithEncodedBytes:_chatConnection -> nick];
 		IrssiUnlock();
