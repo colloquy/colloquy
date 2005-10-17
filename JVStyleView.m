@@ -693,7 +693,11 @@ quickEnd:
 
 	// check if we are near the bottom of the chat area, and if we should scroll down later
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
-	BOOL scrollNeeded = ( ! scroller || [scroller floatValue] >= 0.985 );
+	BOOL scrollNeeded = NO;
+
+	if( [_domDocument getElementById:@"contents"] )
+		scrollNeeded = ( ! [scroller isMemberOfClass:NSClassFromString( @"KWQScrollBar" )] || [scroller floatValue] >= 0.985 );
+	else scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.985 );
 
 	unsigned int i = 0;
 	if( ! subsequent ) { // append message normally
