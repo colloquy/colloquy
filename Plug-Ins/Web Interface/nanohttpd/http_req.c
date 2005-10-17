@@ -136,11 +136,11 @@ hash_t*	http_req_parse_parameters(http_req_t *me)
 		param = strsep(&buf,"=&");
 		if ( *param !='\0' )
 		{
-			url_decode(param);
+			url_decode(param, 1);
 			value = strsep(&buf,"&");
 			if ( value)
 			{
-				url_decode(value);
+				url_decode(value, 1);
 				ret->set(ret, strdup(param), strdup(value));
 			}
 			else
@@ -201,7 +201,7 @@ int http_req_parse(http_req_t *me)
 	me->uri = strdup(uri);
 	me->query = strdup(uri);
 	me->file_name = strsep( &(me->query), "?");
-	url_decode( me->file_name );
+	url_decode( me->file_name, 0 );
 
 	me->method = 0;
 	if ( strncasecmp ( "POST", method, 4)  == 0)
@@ -241,7 +241,7 @@ int http_req_parse(http_req_t *me)
 				while  ( *field_value==' ') field_value++;
 				
 				if (buf)
-					http_req_add_header(me, strdup(field_name),strdup( field_value));
+					http_req_add_header(me, field_name,strdup( field_value));
 			}
 			
 			free(orgbuf);			

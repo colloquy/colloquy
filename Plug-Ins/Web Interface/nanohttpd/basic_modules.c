@@ -129,8 +129,7 @@ void mod_file( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	if( fd > 0 ) {
 		char buf[1024];
 		int nread;
-		while( ( nread = read( fd, buf, 1024 ) ) > 0 )
-			resp -> write( resp, buf, nread );
+		while( ( nread = read( fd, buf, 1024 ) ) > 0 && resp -> write( resp, buf, nread ) > 0 );
 		close( fd );
 	}
 }

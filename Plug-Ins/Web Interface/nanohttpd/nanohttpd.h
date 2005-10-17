@@ -87,7 +87,7 @@ extern netbuf_out_t *netbuf_out_new( int fd );
 
 // utils.c
 extern void strtolower( char *string );
-extern void url_decode( char *string );
+extern void url_decode( char *string, int queryString );
 
 // mime.c
 typedef struct _st_mime_message {

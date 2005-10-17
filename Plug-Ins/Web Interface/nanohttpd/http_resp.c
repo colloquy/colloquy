@@ -86,7 +86,7 @@ void http_resp_send_headers( http_resp_t* me)
 			header_name = (char*) headers->next(headers);
 		}
 		if ( headers)
-			headers->delete2(headers);
+			headers->delete(headers);
 
 		for ( cookie = (char*) me->cookies->first(me->cookies);
 		cookie != NULL;

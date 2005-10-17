@@ -25,7 +25,7 @@ static int TwoHex2Int( char *pC ) {
 	return lo + ( 16 * hi );
 }
 
-void url_decode( char *p ) {
+void url_decode( char *p, int queryString ) {
 	char *pD = p;
     while( *p ) {
 		switch( *p ) {
@@ -38,8 +38,10 @@ void url_decode( char *p ) {
 			break;
 
 			case '+':
-				*pD++=' '; p++;		
+			if( queryString ) {
+				*pD++=' '; p++;
 				break;
+			}
 
 			default: 
 			*pD++ = *p++;
