@@ -33,9 +33,9 @@
         }, 
         {
             ACTIONS = {
+                bugReportWebsite = id; 
                 checkForUpdate = id; 
                 connectToSupportRoom = id; 
-                copyStripped = id; 
                 emailDeveloper = id; 
                 markAllDisplays = id; 
                 productWebsite = id; 

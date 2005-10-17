@@ -1,0 +1,68 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addRoom = id; 
+                changeNewConnectionProtocol = id; 
+                connectNewConnection = id; 
+                hideConnectionManager = id; 
+                messageUser = id; 
+                newConnection = id; 
+                openNetworkPreferences = id; 
+                removeRoom = id; 
+                sendCertificatePassword = id; 
+                sendPassword = id; 
+                showConnectionManager = id; 
+                toggleNewConnectionDetails = id; 
+                userSelectionSelected = id; 
+                verifiedPublicKey = id; 
+            }; 
+            CLASS = MVConnectionsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                authAddress = NSTextField; 
+                authKeychain = NSButton; 
+                authNickname = NSTextField; 
+                authPassword = NSTextField; 
+                certificateAuth = NSPanel; 
+                certificateDescription = NSTextField; 
+                certificateKeychain = NSButton; 
+                certificatePassphrase = NSTextField; 
+                connections = NSTableView; 
+                detailsTabView = NSTabView; 
+                messageUser = NSPanel; 
+                newAddress = NSComboBox; 
+                newJoinRooms = NSTableView; 
+                newNickname = NSTextField; 
+                newPort = NSComboBox; 
+                newProxy = NSPopUpButton; 
+                newRealName = NSTextField; 
+                newRemember = NSButton; 
+                newRemoveRoom = NSButton; 
+                newServerPassword = NSTextField; 
+                newType = NSPopUpButton; 
+                newUsername = NSTextField; 
+                nicknameAuth = NSPanel; 
+                openConnection = NSPanel; 
+                publicKeyAlwaysAccept = NSButton; 
+                publicKeyBabbleprint = NSTextField; 
+                publicKeyDescription = NSTextField; 
+                publicKeyFingerprint = NSTextField; 
+                publicKeyName = NSTextField; 
+                publicKeyNameDescription = NSTextField; 
+                publicKeyVerification = NSPanel; 
+                showDetails = NSButton; 
+                sslConnection = NSButton; 
+                userSelectionDescription = NSTextField; 
+                userSelectionPanel = NSPanel; 
+                userSelectionTable = NSTableView; 
+                userToMessage = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

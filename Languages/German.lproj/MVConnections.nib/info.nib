@@ -25,6 +25,10 @@
 	<array>
 		<integer>5</integer>
 	</array>
+	<key>IBOpenObjects</key>
+	<array>
+		<integer>267</integer>
+	</array>
 	<key>IBSystem Version</key>
 	<string>8C46</string>
 </dict>
