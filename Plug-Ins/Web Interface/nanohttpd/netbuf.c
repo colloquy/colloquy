@@ -19,9 +19,8 @@ void netbuf_out_free( netbuf_out_t * );
 int	nebtuf_vprintf( netbuf_out_t *, char *, va_list );
 
 netbuf_in_t *netbuf_in_new( int fd ) {
-	netbuf_in_t *me;
+	netbuf_in_t *me = (netbuf_in_t *) malloc( sizeof( netbuf_in_t ) );
 
-	me = (netbuf_in_t *) malloc( sizeof( netbuf_in_t));
 	me -> fd = fd;
 	me -> buflen = NETBUF_LEN;
 	me -> datalen = 0;
@@ -35,9 +34,8 @@ netbuf_in_t *netbuf_in_new( int fd ) {
 }
 
 netbuf_out_t *netbuf_out_new( int fd ) {
-	netbuf_out_t *me;
+	netbuf_out_t *me = (netbuf_out_t *) malloc( sizeof( netbuf_out_t ) );
 
-	me =(netbuf_out_t *) malloc( sizeof( netbuf_out_t));
 	me -> fd = fd;
 	me -> buflen = NETBUF_LEN;
 	me -> datalen = 0;
@@ -47,6 +45,7 @@ netbuf_out_t *netbuf_out_new( int fd ) {
 	me -> write = netbuf_write;
 	me -> printf = netbuf_printf;
 	me -> vprintf = netbuf_vprintf;
+
 	return me;
 }
 
@@ -57,14 +56,14 @@ int	netbuf_grow( netbuf_in_t *me ) {
 }
 
 int	netbuf_read( netbuf_in_t *me, char *buf, size_t buflen ) {
-	int nread;
+	int nread = 0;
 	
 	if( ! me -> datalen ) {
 		nread = netbuf_grow( me );
 		if( nread <= 0 ) return nread;
 	}
 
-	nread =  ( buflen > me -> datalen ) ? me -> datalen : buflen;
+	nread = ( buflen > me -> datalen ) ? me -> datalen : buflen;
 	memcpy( buf, me -> data, nread );
 	memmove( me -> data, me -> data + nread, ( me -> datalen - nread ) );
 	me -> datalen -= nread;
@@ -73,12 +72,9 @@ int	netbuf_read( netbuf_in_t *me, char *buf, size_t buflen ) {
 }
 
 int	netbuf_search( netbuf_in_t *me, const char *search ) {
-	char *res;
-	char *tok;
-
-	for( tok = (char *) search; (*tok) != '\0'; tok++ ) {
-		res = (char *) memchr( me -> data, *tok, me -> datalen );
-		if( res ) return( res - me -> data );
+	for( char *tok = (char *) search; (*tok) != '\0'; tok++ ) {
+		char *res = (char *) memchr( me -> data, *tok, me -> datalen );
+		if( res ) return( res - ( me -> data ) );
 	}
 
 	return -1;
@@ -89,10 +85,9 @@ int	netbuf_read_line( netbuf_in_t *me, char *buf, size_t buflen ) {
 }
 
 int	netbuf_read_next_token( netbuf_in_t *me, char *token, char *buf, size_t buflen ) {
-	int pos;
-	int nread;
+	int nread = 0;
 
-	pos = netbuf_search( me, token );
+	int pos = netbuf_search( me, token );
 	if( pos < 0 ) {
 		nread = netbuf_grow( me );
 		if( nread <= 0 ) return nread;
@@ -131,5 +126,5 @@ void netbuf_out_free( netbuf_out_t *me ) {
 
 void netbuf_in_free( netbuf_in_t *me ) {
 	free( me -> data );
-	free( me);
+	free( me );
 }
