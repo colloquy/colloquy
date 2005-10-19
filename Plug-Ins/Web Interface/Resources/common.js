@@ -1,3 +1,9 @@
+var panels = new Array();
+var queueCheckInterval = null;
+var queueCheckSpeed = 4000;
+var scrollBackLimit = 300;
+var activePanel = null;
+
 function createRequestObject() {
 	if( navigator.appName == "Microsoft Internet Explorer" )
 		return new ActiveXObject( "Microsoft.XMLHTTP" );
@@ -5,9 +11,9 @@ function createRequestObject() {
 }
 
 var currentRequest = createRequestObject();
+currentRequest.onreadystatechange = processSetup;
 currentRequest.open( "GET", "/command/setup" );
 currentRequest.send( null );
-currentRequest.onreadystatechange = processSetup;
 
 function checkQueue() {
 	currentRequest = createRequestObject();
@@ -17,55 +23,73 @@ function checkQueue() {
 }
 
 function switchPanel( id ) {
-	panels = document.getElementById( "panels" ).childNodes;
-	for( i = 0; i < panels.length; i++ ) {
-		panel = panels[i];
-		if( panel.id == "panel" + id ) {
-			panel.style.setProperty( "visibility", "visible", "" );
+	for( var i = 0; i < panels.length; i++ ) {
+		var panel = panels[i];
+		if( panel.id == id ) {
+			panel.frame.style.setProperty( "visibility", "visible", "" );
+			panel.listItem.className += " selected";
+			panel.active = true;
+			activePanel = panel;
 		} else {
-			panel.style.setProperty( "visibility", "hidden", "" );
+			panel.frame.style.setProperty( "visibility", "hidden", "" );
+			panel.listItem.className = panel.listItem.className.replace( /\s*selected/, "" );
+			panel.active = false;
 		}
 	}
 }
 
 function createPanel( id, name, server, type ) {
-	frame = document.createElement( "iframe" );
-	frame.id = "panel" + id;
-	frame.className = "panel";
-	frame.src = "/command/panelContents?panel=" + id;
-	if( document.getElementById( "panels" ).childNodes.length )
-		frame.style.setProperty( "visibility", "hidden", "" );
-	document.getElementById( "panels" ).appendChild( frame );
+	var panel = new Object();
+	panel.id = id;
+	panel.name = name;
+	panel.server = server;
+	panel.type = type;
+	panel.frame = document.createElement( "iframe" );
+	panel.listItem = document.createElement( "li" );
+	panels.push( panel );
 
-	li = document.createElement( "li" );
-	li.id = "listItem" + id;
-	a = document.createElement( "a" );
-	a.setAttribute( "onclick", "switchPanel( " + id + ")" );
-	text = document.createTextNode( name );
-	a.appendChild( text );
-	li.appendChild( a );
-	document.getElementById( "panelList" ).appendChild( li );
+	panel.frame.id = "panel" + id;
+	panel.frame.className = "panel";
+	panel.frame.src = "/command/panelContents?panel=" + id;
+	if( panels.length > 1 ) panel.frame.style.setProperty( "visibility", "hidden", "" );
+	document.getElementById( "panels" ).appendChild( panel.frame );
+
+	panel.listItem.id = "listItem" + id;
+	panel.listItem.className = "listItem";
+
+	if( type == "JVChatRoomPanel" ) panel.listItem.className += " chatRoom";
+	else if( type == "JVDirectChatPanel" ) panel.listItem.className += " directChat";
+
+	panel.listItem.setAttribute( "onclick", "switchPanel(" + id + ")" );
+	panel.listItem.appendChild( document.createTextNode( name ) );
+	document.getElementById( "panelList" ).appendChild( panel.listItem );
+
+	if( panels.length == 1 ) switchPanel( id );
 }
 
 function closePanel( id ) {
-	panel = document.getElementById( "panel" + id );
-	if( panel ) panel.parentNode.removeChild( panel );
-	listItem = document.getElementById( "listItem" + id );
-	if( listItem ) listItem.parentNode.removeChild( listItem );
-	document.getElementById( "panels" ).childNodes.item(0).style.setProperty( "visibility", "visible", "" );
-}
+	for( var i = 0; i < panels.length; i++ )
+		if( panels[i].id == id ) break;
 
-var queueCheckInterval = null;
-var queueCheckSpeed = 4000;
+	if( i >= panels.length ) return;
+
+	var panel = panels[i];
+	panels.slice( i, 1 );
+
+	panel.frame.parentNode.removeChild( panel.frame );
+	panel.listItem.parentNode.removeChild( panel.listItem );
+
+	switchPanel( panels[0].id );
+}
 
 function processSetup() {
 	if( currentRequest.readyState == 4 && currentRequest.status == 200 ) {
-		xml = currentRequest.responseXML;
-		panels = xml.getElementsByTagName("setup").item(0).getElementsByTagName("panels").item(0).childNodes;
+		var xml = currentRequest.responseXML;
+		var children = xml.documentElement.getElementsByTagName( "panels" ).item( 0 ).childNodes;
 
-		for( i = 0; i < panels.length; i++ ) {
-			panel = panels[i];
-			createPanel( panel.getAttribute("identifier"), panel.getAttribute("name"), panel.getAttribute("server"), panel.getAttribute("class") );
+		for( var i = 0; i < children.length; i++ ) {
+			var panel = children[i];
+			createPanel( panel.getAttribute( "identifier" ), panel.getAttribute( "name" ), panel.getAttribute( "server" ), panel.getAttribute( "class" ) );
 		}
 
 		checkQueue();
@@ -75,32 +99,34 @@ function processSetup() {
 
 function processQueue() {
 	if( currentRequest.readyState == 4 && currentRequest.status == 200 ) {
-		xml = currentRequest.responseXML;
-		queue = xml.getElementsByTagName("queue").item(0);
+		var xml = currentRequest.responseXML;
+		var children = xml.documentElement.childNodes;
 
-		opens = queue.getElementsByTagName("open");
-		for( i = 0; i < opens.length; i++ ) {
-			panel = opens[i];
-			createPanel( panel.getAttribute("identifier"), panel.getAttribute("name"), panel.getAttribute("server"), panel.getAttribute("class") );
+		var messages = 0;
+		for( var i = 0; i < children.length; i++ ) {
+			switch( children[i].tagName ) {
+			case "open":
+				var panel = children[i];
+				createPanel( panel.getAttribute( "identifier" ), panel.getAttribute( "name" ), panel.getAttribute( "server" ), panel.getAttribute( "class" ) );
+				break;
+			case "close":
+				var panel = children[i];
+				closePanel( panel.getAttribute( "identifier" ) );
+				break;
+			case "message":
+				messages++;
+				var message = children[i];
+				appendMessage( message.getAttribute( "panel" ), message.firstChild.nodeValue );
+				break;
+			}
 		}
 
-		closes = queue.getElementsByTagName("close");
-		for( i = 0; i < closes.length; i++ ) {
-			panel = closes[i];
-			closePanel( panel.getAttribute("identifier") );
-		}
-
-		messages = queue.getElementsByTagName("message");
-		for( i = 0; i < messages.length; i++ ) {
-			appendMessage( messages[i].getAttribute("panel"), messages[i].firstChild.nodeValue );
-		}
-
-		if( messages.length >= 1 ) {
-			queueCheckSpeed -= ( 500 * messages.length );
+		if( messages >= 1 ) {
+			queueCheckSpeed -= ( 500 * messages );
 			if( queueCheckSpeed < 500 ) queueCheckSpeed = 500;
 			clearInterval( queueCheckInterval );
 			queueCheckInterval = setInterval( checkQueue, queueCheckSpeed );
-			document.getElementById( "timer" ).innerText = queueCheckSpeed;
+			document.getElementById( "timer" ).innerText = queueCheckSpeed / 1000 + " secs";
 		}
 	} else if( currentRequest.readyState == 4 ) {
 		if( queueCheckSpeed < 4000 ) {
@@ -108,31 +134,29 @@ function processQueue() {
 			if( queueCheckSpeed > 4000 ) queueCheckSpeed = 4000;
 			clearInterval( queueCheckInterval );
 			queueCheckInterval = setInterval( checkQueue, queueCheckSpeed );
-			document.getElementById( "timer" ).innerText = queueCheckSpeed;
+			document.getElementById( "timer" ).innerText = queueCheckSpeed / 1000 + " secs";
 		}
 	}
 }
 
-var scrollBackLimit = 300;
-
 function appendMessage( panel, html ) {
-	frame = document.getElementById("panel" + panel);
-	if( html.indexOf("<?message type=\"subsequent\"?>") != -1 && frame.document.getElementById( "consecutiveInsert" ) ) {
+	var frame = document.getElementById( "panel" + panel );
+	if( html.indexOf( "<?message type=\"subsequent\"?>" ) != -1 && frame.document.getElementById( "consecutiveInsert" ) ) {
 		appendConsecutiveMessage( panel, html );
 		return;
 	}
 
-	needed = checkIfScrollToBottomIsNeeded( frame );
+	var needed = checkIfScrollToBottomIsNeeded( frame );
 
-	bodyNode = frame.document.getElementById("contents");
-	if( ! bodyNode ) bodyNode = frame.document.getElementsByTagName("body").item(0);
+	var bodyNode = frame.document.getElementById( "contents" );
+	if( ! bodyNode ) bodyNode = frame.document.body;
 
-	insert = frame.document.getElementById( "consecutiveInsert" );
+	var insert = frame.document.getElementById( "consecutiveInsert" );
 	if( insert ) insert.parentNode.removeChild( insert );
 
-	range = frame.document.createRange();
+	var range = frame.document.createRange();
 	range.selectNode( bodyNode );
-	documentFragment = range.createContextualFragment( html );
+	var documentFragment = range.createContextualFragment( html );
 	bodyNode.appendChild( documentFragment );
 
 	enforceScrollBackLimit( frame );
@@ -140,18 +164,18 @@ function appendMessage( panel, html ) {
 }
 
 function appendConsecutiveMessage( panel, html ) {
-	needed = checkIfScrollToBottomIsNeeded( frame );
+	var needed = checkIfScrollToBottomIsNeeded( frame );
 
-	frame = document.getElementById("panel" + panel);
-	insert = frame.document.getElementById( "consecutiveInsert" );
+	var frame = document.getElementById( "panel" + panel );
+	var insert = frame.document.getElementById( "consecutiveInsert" );
 	if( ! insert ) {
 		appendMessage( panel, html );
 		return;
 	}
 
-	range =  frame.document.createRange();
+	var range =  frame.document.createRange();
 	range.selectNode( insert.parentNode );
-	documentFragment = range.createContextualFragment( html );
+	var documentFragment = range.createContextualFragment( html );
 	insert.parentNode.replaceChild( documentFragment, insert );
 
 	enforceScrollBackLimit( frame );
@@ -159,22 +183,22 @@ function appendConsecutiveMessage( panel, html ) {
 }
 
 function enforceScrollBackLimit( frame ) {
-	bodyNode = frame.document.getElementById("contents");
-	if( ! bodyNode ) bodyNode = frame.document.getElementsByTagName("body").item(0);
+	var bodyNode = frame.document.getElementById( "contents" );
+	if( ! bodyNode ) bodyNode = frame.document.body;
 	if( scrollBackLimit > 0 && bodyNode.childNodes.length > scrollBackLimit )
-		for( i = 0; bodyNode.childNodes.length > scrollBackLimit && i < ( bodyNode.childNodes.length - scrollBackLimit ); i++ )
+		for( var i = 0; bodyNode.childNodes.length > scrollBackLimit && i < ( bodyNode.childNodes.length - scrollBackLimit ); i++ )
 			bodyNode.removeChild( bodyNode.childNodes[0] );
 }
 
 function scrollToBottom( frame ) {
-	bodyNode = frame.document.getElementById("contents");
-	if( ! bodyNode ) bodyNode = frame.document.getElementsByTagName("body").item(0);
+	var bodyNode = frame.document.getElementById( "contents" );
+	if( ! bodyNode ) bodyNode = frame.document.body;
 	bodyNode.scrollTop = bodyNode.scrollHeight;
 }
 
 function checkIfScrollToBottomIsNeeded( frame ) {
 	return true;
-/*	bodyNode = frame.document.getElementById("contents");
-	if( ! bodyNode ) bodyNode = frame.document.getElementsByTagName("body").item(0);
+/*	var bodyNode = frame.document.getElementById( "contents" );
+	if( ! bodyNode ) bodyNode = frame.document.body;
 	scrollToBottomIsNeeded = ( bodyNode.scrollTop >= ( bodyNode.offsetHeight - ( window.innerHeight * 1.1 ) ) ); */
 }

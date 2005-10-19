@@ -1,0 +1,113 @@
+body {
+	font-family: Lucida Grande, sans-serif;
+	font-size: 11px;
+	padding: 0;
+	margin: 0;
+}
+
+#timer {
+	color: lightgrey;
+	position: absolute;
+	top: 3px;
+	left: 20px;
+}
+
+#main {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	right: 20px;
+	bottom: 20px;
+	background-color: rgb( 235, 235, 235 );
+	border-radius: 12px;
+	padding: 15px;
+}
+
+#drawer {
+	top: 15px;
+	right: 15px;
+	bottom: 15px;
+	position: absolute;
+	width: 175px;
+	margin-left: 4px;
+}
+
+#drawer ul {
+	margin: 0;
+	padding: 0;
+}
+
+#input {
+	border: 1px solid rgb( 145, 145, 145 );
+	background-color: white;
+	padding: 3px;
+	left: 15px;
+	right: 200px;
+	bottom: 15px;
+	height: 30px;
+	position: absolute;
+	overflow: hidden;
+	word-wrap: break-word;
+}
+
+#panels {
+	top: 15px;
+	left: 15px;
+	right: 200px;
+	bottom: 45px;
+	position: absolute;
+	border: 1px solid rgb( 145, 145, 145 );
+	margin: 0;
+	padding: 0;
+}
+
+#panels iframe {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+#panelList {
+	list-style-type: none;
+}
+
+.listItem {
+	padding: 2px 5px 1px 5px;
+	border-radius: 6px;
+	cursor: default;
+	vertical-align: middle;
+	text-shadow: #eee 2px 2px 1px;
+}
+
+.listItem:before {
+	padding-right: 3px;
+	vertical-align: -3px;
+}
+
+.listItem:hover {
+	background-color: rgb( 225, 225, 245 );
+}
+
+.listItem.selected {
+	background-color: rgb( 212, 212, 212 );
+}
+
+.listItem.directChat:before {
+	content: url( /resources/privateChatTab.png );
+}
+
+.listItem.directChat.newMessage:before {
+	content: url( /resources/privateChatTabNewMessage.png );
+}
+
+.listItem.chatRoom:before {
+	content: url( /resources/roomTab.png );
+}
+
+.listItem.chatRoom.newMessage:before {
+	content: url( /resources/roomTabNewMessage.png );
+}
+
+.listItem.chatRoom.newHighlight:before {
+	content: url( /resources/roomTabNewHighlightMessage.png );
+}
