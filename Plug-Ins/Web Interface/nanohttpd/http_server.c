@@ -1,14 +1,6 @@
-#include <sys/types.h>
-#include <sys/socket.h>
 #include <netdb.h>
-#include <sys/wait.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
 #include <string.h>
-#include <stdio.h>
 #include <pthread.h>
-#include <signal.h>
-
 #include "nanohttpd.h"
 
 int http_req_parse( http_req_t * );
