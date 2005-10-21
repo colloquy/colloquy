@@ -108,7 +108,7 @@ typedef struct _st_mime_header {
 	hash_t *params;
 } mime_header_t;
 
-extern mime_message_t *mime_parse_message( char *buf, int *buflen, char *boundary );
+extern mime_message_t *mime_parse_message( char *buf, unsigned long *buflen, char *boundary );
 
 // http_req.c
 #define REQ_GET 1
@@ -132,6 +132,7 @@ typedef struct _http_req_t {
 	char *query;
 	hash_t *headers;
 	char *content;
+	unsigned long content_length;
 	hash_t *parameters;
 	mime_message_t *mime_msg; // mime message attached to the request
 

@@ -12,6 +12,7 @@
 #import "nanohttpd.h"
 
 static NSString *JVWebInterfaceRequest = @"JVWebInterfaceRequest";
+static NSString *JVWebInterfaceRequestContent = @"JVWebInterfaceRequestContent";
 static NSString *JVWebInterfaceResponse = @"JVWebInterfaceResponse";
 static NSString *JVWebInterfaceClientIdentifier = @"JVWebInterfaceClientIdentifier";
 
@@ -34,6 +35,11 @@ void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *server )
 			if( keyString && valueObject ) [arguments setObject:valueObject forKey:keyString];
 		}
 		parameters -> delete( parameters );
+	}
+	
+	if( req -> content ) {
+		NSData *content = [NSData dataWithBytes:req -> content length:req -> content_length];
+		[arguments setObject:content forKey:JVWebInterfaceRequestContent];
 	}
 
 	NSString *command = [url path];
@@ -248,6 +254,18 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 	[self deallocServer];
 }
 
+- (JVDirectChatPanel *) panelForIdentifier:(NSString *) identifier {
+	NSNumber *identifierNum = [NSNumber numberWithUnsignedInt:[identifier intValue]];
+	NSEnumerator *enumerator = [[[JVChatController defaultController] allChatViewControllers] objectEnumerator];
+	JVDirectChatPanel *panel = nil;
+
+	while( ( panel = [enumerator nextObject] ) )
+		if( [panel isKindOfClass:[JVDirectChatPanel class]] &&
+			[[panel uniqueIdentifier] isEqual:identifierNum] ) break;
+
+	return panel;
+}
+
 - (NSString *) displayHTMLForPanel:(JVDirectChatPanel *) panel withContent:(NSString *) content {
 	NSString *variant = [[panel display] styleVariant];
 	if( [variant length] ) {
@@ -327,14 +345,7 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
 
-	NSString *identifier = [arguments objectForKey:@"panel"];
-	NSNumber *identifierNum = [NSNumber numberWithUnsignedInt:[identifier intValue]];
-	NSEnumerator *enumerator = [[[JVChatController defaultController] allChatViewControllers] objectEnumerator];
-	JVDirectChatPanel *panel = nil;
-
-	while( ( panel = [enumerator nextObject] ) )
-		if( [panel isKindOfClass:[JVDirectChatPanel class]] &&
-			[[panel uniqueIdentifier] isEqual:identifierNum] ) break;
+	JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
 
 	if( panel ) {
 		DOMHTMLDocument *document = (DOMHTMLDocument *)[[[panel display] mainFrame] DOMDocument];
@@ -354,6 +365,52 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
 	[_clients removeObjectForKey:identifier];
+}
+
+- (void) sendCommand:(NSDictionary *) arguments {
+	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
+	if( ! resp ) return;
+
+	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	NSDictionary *info = [_clients objectForKey:identifier];
+	if( ! info ) return;
+
+	JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
+
+	if( panel ) {
+		NSString *text = [[[NSString alloc] initWithData:[arguments objectForKey:JVWebInterfaceRequestContent] encoding:NSUTF8StringEncoding] autorelease];
+		NSArray *strings = [text componentsSeparatedByString:@"\n"];
+		NSEnumerator *enumerator = [strings objectEnumerator];
+
+		while( ( text = [enumerator nextObject] ) ) {
+			if( ! [text length] ) continue;
+			if( [text hasPrefix:@"/"] && ! [text hasPrefix:@"//"] ) {
+				BOOL handled = NO;
+				NSScanner *scanner = [NSScanner scannerWithString:text];
+				NSString *command = nil;
+				id arguments = nil;
+
+				[scanner scanString:@"/" intoString:nil];
+				[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&command];
+				if( [text length] >= [scanner scanLocation] + 1 )
+					[scanner setScanLocation:[scanner scanLocation] + 1];
+
+				arguments = [text substringWithRange:NSMakeRange( [scanner scanLocation], [text length] - [scanner scanLocation] )];
+				arguments = [[[NSAttributedString alloc] initWithString:arguments] autorelease];
+
+				if( ! ( handled = [panel processUserCommand:command withArguments:arguments] ) && [[panel connection] isConnected] )
+					[[panel connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
+			} else {
+				if( [text hasPrefix:@"//"] ) text = [text substringWithRange:NSMakeRange( 1, [text length] - 1 )];
+				JVMutableChatMessage *message = [JVMutableChatMessage messageWithText:@"" sender:[[panel connection] localUser]];
+				[message setBodyAsHTML:text];
+				[panel echoSentMessageToDisplay:message];
+				[panel sendMessage:message];
+			}
+		}
+	}
+
+	resp -> printf( resp, "" );
 }
 
 - (void) checkActivityCommand:(NSDictionary *) arguments {

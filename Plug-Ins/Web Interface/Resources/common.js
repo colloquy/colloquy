@@ -4,6 +4,7 @@ var queueCheckSpeed = 4000;
 var scrollBackLimit = 300;
 var activePanel = null;
 var foreground = true;
+var currentRequest = null;
 
 function createRequestObject() {
 	if( navigator.appName == "Microsoft Internet Explorer" )
@@ -11,13 +12,21 @@ function createRequestObject() {
 	return new XMLHttpRequest();
 }
 
-var currentRequest = createRequestObject();
-currentRequest.onreadystatechange = processSetup;
-currentRequest.open( "GET", "/command/setup" );
-currentRequest.send( null );
+function setup() {
+	document.body.addEventListener( "keypress", documentKeyInput, true );
+	document.getElementById( "input" ).addEventListener( "keypress", inputKeyPressed, false );
+	document.body.addEventListener( "blur", windowBlured, false );
+	document.body.addEventListener( "focus", windowFocused, false );
+
+	currentRequest = createRequestObject();
+	currentRequest.onreadystatechange = processSetup;
+	currentRequest.open( "GET", "/command/setup" );
+	currentRequest.send( null );
+}
 
 function windowBlured() {
 	foreground = false;
+	document.getElementById( "timer" ).innerText = "blured";
 }
 
 function windowFocused() {
@@ -27,6 +36,7 @@ function windowFocused() {
 	activePanel.listItem.className = activePanel.listItem.className.replace( /\s*newMessage/g, "" );
 	activePanel.listItem.className = activePanel.listItem.className.replace( /\s*newHighlight/g, "" );
 	activePanel.listItem.title = "No messages waiting";
+	document.getElementById( "timer" ).innerText = "focused";
 }
 
 function checkQueue() {
@@ -177,6 +187,30 @@ function processQueue() {
 			document.getElementById( "timer" ).innerText = queueCheckSpeed / 1000 + " secs";
 		}
 	}
+}
+
+function documentKeyInput( event ) {
+	if( event.target.id == "input" ) return;
+	if( event.keyCode == 13 && ! event.altKey ) inputKeyPressed( event );
+	else if( event.keyCode == 32 ) input.innerHTML += "&nbsp;";
+	else input.innerHTML += String.fromCharCode( event.keyCode );
+}
+
+function inputKeyPressed( event ) {
+	if( event.keyCode == 13 && ! event.altKey ) {
+		var input = document.getElementById( "input" );
+		sendMessage( activePanel.id, input.innerText );
+		input.innerHTML = "";
+	}
+}
+
+function sendMessage( panel, html ) {
+	if( ! html.length ) return;
+	currentRequest = createRequestObject();
+	currentRequest.onreadystatechange = processQueue;
+	currentRequest.open( "POST", "/command/send?panel=" + panel );
+	currentRequest.send( html );
+	setTimeout( checkQueue, 250 );
 }
 
 function appendMessage( panel, html ) {

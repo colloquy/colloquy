@@ -42,7 +42,7 @@ void mime_msg_free ( void *_me)
 
 #define NEXT_LINE(ptr, buflen) if ( (*ptr) =='\n') { (ptr)++; (buflen)--;}
 
-int mime_parse_part(mime_message_t* msg, char** content, int* buflen, char* boundary)
+int mime_parse_part(mime_message_t* msg, char** content, unsigned long* buflen, char* boundary)
 {
 	char* line;
 	mime_part_t* me;
@@ -303,7 +303,7 @@ parse_part:
 	
 }
 
-mime_message_t*	mime_parse_message ( char *buf, int *buflen, char *boundary )
+mime_message_t*	mime_parse_message ( char *buf, unsigned long *buflen, char *boundary )
 {
 	mime_message_t* me;
 	char*	content;

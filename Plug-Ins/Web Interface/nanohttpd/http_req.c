@@ -258,26 +258,25 @@ int http_req_parse(http_req_t *me)
 		 * read it, and try to parse to a mime_message_t structure
 		 *
 		*/
-		
+
 		char* buf;
 		list_t* list = (list_t*) me->headers->get(me->headers, "content-length");
-		
+
 		if  (list) {
-			int buflen = atoi((char*) list->first(list));
+			unsigned long buflen = atol((char*) list->first(list));
 			char*	boundary;
 			int nread;
 			
 #ifdef LOG_HTTP
 			http_log(LOG_DEBUG, "Reading %i (%s) bytes", buflen, (char*)list->first(list));
 #endif
-			
+			me->content_length = buflen;
 			if ( buflen > 0) {
-				me->content = ( char*) malloc ( buflen);
+				me->content = ( char*) malloc( buflen );
 				nread = 0;
 				while ( nread < buflen) 
 					nread += me->netbuf->read ( me->netbuf, me->content + nread, buflen - nread);
-					
-		
+
 				list = (list_t*) me->headers->get  ( me->headers, "content-type");
 				buf = (char*) list->first(list);
 		
@@ -299,7 +298,7 @@ int http_req_parse(http_req_t *me)
 					}
 					
 					me->mime_msg = mime_parse_message ( me->content, &buflen, boundary);
-					
+				
 				}
 #ifdef LOG_HTTP
 				else
