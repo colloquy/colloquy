@@ -47,6 +47,7 @@ body {
 	height: 30px;
 	position: absolute;
 	overflow: hidden;
+	outline: 0;
 	word-wrap: break-word;
 }
 

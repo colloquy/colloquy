@@ -55,7 +55,7 @@ void mod_dir( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 		return;
 	}
 
-	DIR *dir = opendir( filename );
+	DIR *dir = opendir( real );
 	if( ! dir ) {
 #ifdef LOG_HTTP
 		http_log_perror( LOG_ERR, "opendir()" );
@@ -107,7 +107,7 @@ void mod_file( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	}
 
 	struct stat sb;
-	if( stat( filename, &sb ) < 0 ) {
+	if( stat( real, &sb ) < 0 ) {
 		resp -> status_code = 404;
 		resp -> reason_phrase = "Cannot access document";
 		resp -> printf( resp, "404: Cannot access document: %s", strerror( errno ) );
@@ -121,11 +121,11 @@ void mod_file( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	}
 
 	const char *content_type = NULL;
-	char *ext = getext( filename );
+	char *ext = getext( real );
 	if( ext ) content_type = server -> get_mime( server, ext );
 	if( content_type ) resp -> content_type = (char *)content_type;
 
-	int fd = open( filename, O_RDONLY );
+	int fd = open( real, O_RDONLY );
 	if( fd > 0 ) {
 		char buf[1024];
 		int nread;

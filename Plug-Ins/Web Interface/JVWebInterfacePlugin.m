@@ -269,9 +269,13 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 	if( bodyShellLocation )
 		bodyShell = [NSString stringWithContentsOfURL:bodyShellLocation encoding:NSUTF8StringEncoding error:NULL];
 
-	bodyShell = ( [bodyShell length] ? [NSString stringWithFormat:bodyShell, @"/resources", content] : content );	
+	bodyShell = ( [bodyShell length] ? [NSString stringWithFormat:bodyShell, @"/resources", content] : content );
 
-	return [NSString stringWithFormat:shell, @"", @"/resources", emoticonStyleSheet, mainStyleSheet, variant, baseLocation, bodyShell];
+	int fontSize = [[[panel display] preferences] defaultFontSize];
+	NSString *fontFamily = [[[panel display] preferences] sansSerifFontFamily];
+	NSString *header = [NSString stringWithFormat:@"<style type=\"text/css\">body { font-size: %dpx; font-family: %@ }</style>", fontSize, fontFamily];
+
+	return [NSString stringWithFormat:shell, [panel description], header, @"/resources", emoticonStyleSheet, mainStyleSheet, variant, baseLocation, bodyShell];
 }
 
 - (void) setupCommand:(NSDictionary *) arguments {

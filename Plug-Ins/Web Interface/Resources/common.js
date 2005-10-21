@@ -3,6 +3,7 @@ var queueCheckInterval = null;
 var queueCheckSpeed = 4000;
 var scrollBackLimit = 300;
 var activePanel = null;
+var foreground = true;
 
 function createRequestObject() {
 	if( navigator.appName == "Microsoft Internet Explorer" )
@@ -15,6 +16,19 @@ currentRequest.onreadystatechange = processSetup;
 currentRequest.open( "GET", "/command/setup" );
 currentRequest.send( null );
 
+function windowBlured() {
+	foreground = false;
+}
+
+function windowFocused() {
+	foreground = true;
+	activePanel.newMessage = 0;
+	activePanel.newHighlightMessage = 0;
+	activePanel.listItem.className = activePanel.listItem.className.replace( /\s*newMessage/g, "" );
+	activePanel.listItem.className = activePanel.listItem.className.replace( /\s*newHighlight/g, "" );
+	activePanel.listItem.title = "No messages waiting";
+}
+
 function checkQueue() {
 	currentRequest = createRequestObject();
 	currentRequest.onreadystatechange = processQueue;
@@ -22,28 +36,47 @@ function checkQueue() {
 	currentRequest.send( null );	
 }
 
+function panelForIdentifier( id ) {
+	for( var i = 0; i < panels.length; i++ )
+		if( panels[i].id == id )
+			return panels[i];
+	return null;
+}
+
 function switchPanel( id ) {
 	for( var i = 0; i < panels.length; i++ ) {
 		var panel = panels[i];
 		if( panel.id == id ) {
-			panel.frame.style.setProperty( "visibility", "visible", "" );
-			panel.listItem.className += " selected";
-			panel.active = true;
-			activePanel = panel;
+			if( ! panel.active ) {
+				panel.frame.style.setProperty( "visibility", "visible", "" );
+				panel.listItem.className += " selected";
+				panel.active = true;
+				panel.newMessage = 0;
+				panel.newHighlightMessage = 0;
+				panel.listItem.className = panel.listItem.className.replace( /\s*newMessage/g, "" );
+				panel.listItem.className = panel.listItem.className.replace( /\s*newHighlight/g, "" );
+				panel.listItem.title = "No messages waiting";
+				activePanel = panel;
+			}
 		} else {
 			panel.frame.style.setProperty( "visibility", "hidden", "" );
-			panel.listItem.className = panel.listItem.className.replace( /\s*selected/, "" );
+			panel.listItem.className = panel.listItem.className.replace( /\s*selected/g, "" );
 			panel.active = false;
 		}
 	}
 }
 
 function createPanel( id, name, server, type ) {
+	if( panelForIdentifier( id ) ) return;
+
 	var panel = new Object();
 	panel.id = id;
 	panel.name = name;
 	panel.server = server;
 	panel.type = type;
+	panel.newMessage = 0;
+	panel.newHighlightMessage = 0;
+	panel.active = false;
 	panel.frame = document.createElement( "iframe" );
 	panel.listItem = document.createElement( "li" );
 	panels.push( panel );
@@ -116,7 +149,14 @@ function processQueue() {
 			case "message":
 				messages++;
 				var message = children[i];
+				var id = message.getAttribute( "panel" );
 				appendMessage( message.getAttribute( "panel" ), message.firstChild.nodeValue );
+				var panel = panelForIdentifier( id );
+				if( ( ( ! foreground && panel.active ) || ! panel.active ) && panel.listItem.className.indexOf( "newMessage" ) == -1 ) {
+					panel.listItem.className += " newMessage";
+					panel.newMessage++;
+					panel.listItem.title = panel.newMessage + " messages waiting";
+				}
 				break;
 			}
 		}

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C3458F20905FC4F00AC2C16 /* base.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C3458F10905FC4800AC2C16 /* base.css */; };
 		1C36998308FF75A200F34892 /* JVWebInterfacePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C36998208FF75A200F34892 /* JVWebInterfacePlugin.m */; };
 		1C3699BC08FF768900F34892 /* basic_modules.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699AF08FF768900F34892 /* basic_modules.c */; };
 		1C3699BD08FF768900F34892 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699B008FF768900F34892 /* hash.c */; };
@@ -48,6 +49,7 @@
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1C3458F10905FC4800AC2C16 /* base.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = base.css; path = Resources/base.css; sourceTree = "<group>"; };
 		1C36998108FF75A200F34892 /* JVWebInterfacePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVWebInterfacePlugin.h; sourceTree = "<group>"; };
 		1C36998208FF75A200F34892 /* JVWebInterfacePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVWebInterfacePlugin.m; sourceTree = "<group>"; };
 		1C3699AF08FF768900F34892 /* basic_modules.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = basic_modules.c; path = nanohttpd/basic_modules.c; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 				1CC7250B0901A775004651F8 /* index.html */,
 				1CC7265F0901BAAE004651F8 /* common.js */,
+				1C3458F10905FC4800AC2C16 /* base.css */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 			files = (
 				1CC7250C0901A775004651F8 /* index.html in Resources */,
 				1CC726710901BBD2004651F8 /* common.js in Resources */,
+				1C3458F20905FC4F00AC2C16 /* base.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
