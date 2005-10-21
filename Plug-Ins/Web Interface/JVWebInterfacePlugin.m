@@ -328,7 +328,6 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 		[attributes setObject:[[panel target] description] forKey:@"name"];
 		[attributes setObject:[[panel connection] server] forKey:@"server"];
 		[attributes setObject:[panel uniqueIdentifier] forKey:@"identifier"];
-		[attributes setObject:[[panel style] identifier] forKey:@"style"];
 		[chat setAttributesAsDictionary:attributes];
 		[node addChild:chat];
 	}
@@ -467,6 +466,18 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 	JVDirectChatPanel *view = [notification object];
 	if( ! [view isKindOfClass:[JVDirectChatPanel class]] ) return;
 
+	if( [view isMemberOfClass:[JVDirectChatPanel class]] ) {
+		NSXMLElement *element = [NSXMLElement elementWithName:@"open"];
+		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+		[attributes setObject:NSStringFromClass( [view class] ) forKey:@"class"];
+		[attributes setObject:[[view target] description] forKey:@"name"];
+		[attributes setObject:[[view connection] server] forKey:@"server"];
+		[attributes setObject:[view uniqueIdentifier] forKey:@"identifier"];
+		[element setAttributesAsDictionary:attributes];
+
+		[self addElementToClientQueues:element];
+	}
+
 	NSXMLElement *element = [NSXMLElement elementWithName:@"message"];
 
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
@@ -515,7 +526,6 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 	[attributes setObject:[[room target] description] forKey:@"name"];
 	[attributes setObject:[[room connection] server] forKey:@"server"];
 	[attributes setObject:[room uniqueIdentifier] forKey:@"identifier"];
-	[attributes setObject:[[room style] identifier] forKey:@"style"];
 	[element setAttributesAsDictionary:attributes];
 
 	[self addElementToClientQueues:element];
