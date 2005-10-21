@@ -160,12 +160,14 @@ function processQueue() {
 				messages++;
 				var message = children[i];
 				var id = message.getAttribute( "panel" );
-				appendMessage( message.getAttribute( "panel" ), message.firstChild.nodeValue );
-				var panel = panelForIdentifier( id );
-				if( ( ( ! foreground && panel.active ) || ! panel.active ) && panel.listItem.className.indexOf( "newMessage" ) == -1 ) {
-					panel.listItem.className += " newMessage";
-					panel.newMessage++;
-					panel.listItem.title = panel.newMessage + " messages waiting";
+				if( message.firstChild ) {
+					appendMessage( id, message.firstChild.nodeValue );
+					var panel = panelForIdentifier( id );
+					if( ( ( ! foreground && panel.active ) || ! panel.active ) && panel.listItem.className.indexOf( "newMessage" ) == -1 ) {
+						panel.listItem.className += " newMessage";
+						panel.newMessage++;
+						panel.listItem.title = panel.newMessage + " messages waiting";
+					}
 				}
 				break;
 			}
@@ -190,7 +192,7 @@ function processQueue() {
 }
 
 function documentKeyInput( event ) {
-	if( event.target.id == "input" ) return;
+	if( event.target.id == "input" || event.target.parentNode.id == "input" ) return;
 	if( event.keyCode == 13 && ! event.altKey ) inputKeyPressed( event );
 	else if( event.keyCode == 32 ) input.innerHTML += "&nbsp;";
 	else input.innerHTML += String.fromCharCode( event.keyCode );

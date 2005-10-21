@@ -329,7 +329,6 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 		[attributes setObject:[[panel connection] server] forKey:@"server"];
 		[attributes setObject:[panel uniqueIdentifier] forKey:@"identifier"];
 		[attributes setObject:[[panel style] identifier] forKey:@"style"];
-		[styles setObject:[[panel style] identifier] forKey:[panel uniqueIdentifier]];
 		[chat setAttributesAsDictionary:attributes];
 		[node addChild:chat];
 	}
@@ -345,9 +344,16 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
 
+	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	NSDictionary *info = [_clients objectForKey:identifier];
+	if( ! info ) return;
+
 	JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
 
 	if( panel ) {
+		NSMutableDictionary *styles = [info objectForKey:@"originalStyles"];
+		[styles setObject:[[panel style] identifier] forKey:[panel uniqueIdentifier]];
+
 		DOMHTMLDocument *document = (DOMHTMLDocument *)[[[panel display] mainFrame] DOMDocument];
 		DOMHTMLElement *bodyNode = (DOMHTMLElement *)[document getElementById:@"contents"];
 		if( ! bodyNode ) bodyNode = (DOMHTMLElement *)[document body];
