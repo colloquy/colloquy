@@ -5,6 +5,7 @@
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
 
+NSString *JVStyleViewDidClearNotification = @"JVStyleViewDidClearNotification";
 NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesNotification";
 
 @interface WebCoreCache
@@ -572,8 +573,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) _webkitIsReady {
 	_webViewReady = YES;
-	if( _switchingStyles )
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleViewDidClearNotification object:self];
+	if( _switchingStyles ) {
 		[NSThread detachNewThreadSelector:@selector( _switchStyle ) toTarget:self withObject:nil];
+	}
 }
 
 - (void) _reallyAwakeFromNib {

@@ -68,6 +68,8 @@
 - (void) awakeFromNib {
 	[super awakeFromNib];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didClearDisplay: ) name:JVStyleViewDidClearNotification object:display];
+
 	[display setBodyTemplate:@"chatRoom"];
 
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
@@ -234,6 +236,10 @@
 
 #pragma mark -
 #pragma mark Miscellaneous
+
+- (IBAction) clearDisplay:(id) sender {
+	[display clear];
+}
 
 - (IBAction) addToFavorites:(id) sender {
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
@@ -1302,9 +1308,7 @@
 	[[display windowScriptObject] callWebScriptMethod:@"changeTopic" withArguments:args];
 }
 
-- (void) _didSwitchStyles:(NSNotification *) notification {
-	[super _didSwitchStyles:notification];
-
+- (void) _didClearDisplay:(NSNotification *) notification {
 	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic]];
 	JVChatRoomMember *author = ( [[self target] topicAuthor] ? [self chatRoomMemberForUser:[[self target] topicAuthor]] : nil );
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];

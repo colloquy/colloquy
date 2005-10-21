@@ -6,6 +6,7 @@
 
 @protocol JVChatTranscriptElement;
 
+extern NSString *JVStyleViewDidClearNotification;
 extern NSString *JVStyleViewDidChangeStylesNotification;
 
 @interface JVStyleView : WebView {
