@@ -303,6 +303,7 @@
 					/Library/Frameworks,
 					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_FAST_OBJC_DISPATCH = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "Web Interface.pch";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
@@ -330,6 +331,7 @@
 					/Library/Frameworks,
 					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_FAST_OBJC_DISPATCH = YES;
 				GCC_PREFIX_HEADER = "Web Interface.pch";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					HAVE_STRSEP,
@@ -372,6 +374,7 @@
 					/Library/Frameworks,
 					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_FAST_OBJC_DISPATCH = YES;
 				GCC_PREFIX_HEADER = "Web Interface.pch";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					HAVE_STRSEP,
