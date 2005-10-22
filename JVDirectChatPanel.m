@@ -475,7 +475,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (void) handleDraggedFile:(NSString *) path {
 	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
-	[[self target] sendFile:path passively:passive];
+	[[MVFileTransferController defaultController] addFileTransfer:[[self target] sendFile:path passively:passive]];
 }
 
 #pragma mark -
