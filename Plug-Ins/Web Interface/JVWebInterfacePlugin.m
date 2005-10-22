@@ -243,8 +243,8 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 	_httpServer -> mime_types -> set( _httpServer -> mime_types, "xml", "text/xml" );
 	_httpServer -> mime_types -> set( _httpServer -> mime_types, "plist", "text/xml" );
 	_httpServer -> mime_types -> set( _httpServer -> mime_types, "txt", "text/plain" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "css", "text/plain" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "js", "text/plain" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, "css", "text/css" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, "js", "text/javascript" );
 	_httpServer -> mime_types -> set( _httpServer -> mime_types, "rtf", "text/rtf" );
 
 	_httpServer -> run( _httpServer ); // spawns 3 threads to handle incoming requests
