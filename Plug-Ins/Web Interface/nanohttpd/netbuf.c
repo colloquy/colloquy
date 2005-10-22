@@ -51,7 +51,7 @@ netbuf_out_t *netbuf_out_new( int fd ) {
 
 int	netbuf_grow( netbuf_in_t *me ) {
 	int nread = read( me -> fd, me -> data + me -> datalen, me -> buflen - me -> datalen );
-	if( nread > 0) me -> datalen += nread;
+	if( nread > 0 ) me -> datalen += nread;
 	return nread;
 }
 
