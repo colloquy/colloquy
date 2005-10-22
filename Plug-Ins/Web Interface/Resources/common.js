@@ -141,7 +141,7 @@ function processSetup() {
 }
 
 function processQueue() {
-	if( currentRequest.readyState == 4 && currentRequest.status == 200 ) {
+	if( currentRequest.readyState == 4 && currentRequest.status == 200 && currentRequest.responseText.length ) {
 		var xml = currentRequest.responseXML;
 		var children = xml.documentElement.childNodes;
 
