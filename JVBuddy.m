@@ -447,7 +447,6 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyStatusChanged: ) name:MVChatUserStatusChangedNotification object:user];
 
 		BOOL cameOnline = ( ! [_onlineUsers count] ? YES : NO );
-		if( [[self activeUser] isEqualToChatUser:user] ) [self setActiveUser:user]; // will remove the placeholder (wildcard user)
 		[_onlineUsers addObject:user];
 
 		if( [self status] != MVChatUserAvailableStatus || [self status] != MVChatUserAwayStatus ) [self setActiveUser:user];
