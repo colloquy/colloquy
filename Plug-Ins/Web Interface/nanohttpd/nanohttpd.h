@@ -188,6 +188,7 @@ struct _http_server_t {
 	int	initial_process;
 	int	nb_process;
 	char running;
+	char stopped;
 
 	int	( *add_url )( struct _http_server_t *, const char *, http_server_handler );
 	void ( *delete )( void * );

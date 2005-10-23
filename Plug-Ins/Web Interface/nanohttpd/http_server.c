@@ -49,6 +49,7 @@ http_server_t *http_server_new( char *host, char *svc ) {
 	me -> directory_index = NULL;
 
 	me -> running = 1;
+	me -> stopped = 0;
 	me -> initial_process = 3;
 	me -> nb_process = 0;
 
@@ -84,6 +85,8 @@ void *http_server_run_process( void *context ) {
 		handle_conn( from_sock, server );
 		close( from_sock );
 	}
+
+	server -> stopped = 1;
 
 	return NULL;
 }
@@ -163,6 +166,8 @@ void http_server_free( void *_me ) {
 
 	me -> running = 0;
 	close( me -> sock );
+
+	while( ! me -> stopped ); // wait for the threads to stop
 
 	if( me -> mime_types )
 		me -> mime_types -> delete( me -> mime_types, 0, 0, NULL );
