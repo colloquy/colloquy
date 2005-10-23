@@ -217,7 +217,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 
 			const char *reason = "Server signoff";
 			NSData *reasonData = [[NSData allocWithZone:nil] initWithBytes:reason length:strlen( reason )];
-			NSArray *joinedRooms = [self joinedChatRooms];
+			NSSet *joinedRooms = [self joinedChatRooms];
 
 			unsigned int i = 0;
 			for( i = 0; i < clients_count; i++ ) {

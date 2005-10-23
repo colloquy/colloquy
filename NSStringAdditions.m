@@ -205,8 +205,24 @@
 	return nil;
 }
 
+- (id) initWithBytesNoCopy:(void *) bytes encoding:(NSStringEncoding) encoding freeWhenDone:(BOOL) free {
+	if( bytes ) {
+		id ret = [self initWithBytesNoCopy:bytes length:strlen( bytes ) encoding:encoding freeWhenDone:free];
+		if( ! ret ) ret = [self initWithCString:bytes];
+		if( ! ret ) [self release];
+		return ret;
+	}
+
+	[self release];
+	return nil;
+}
+
 + (id) stringWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding {
 	return [[[self allocWithZone:nil] initWithBytes:bytes encoding:encoding] autorelease];
+}
+
++ (id) stringWithBytesNoCopy:(void *) bytes encoding:(NSStringEncoding) encoding freeWhenDone:(BOOL) free {
+	return [[[self allocWithZone:nil] initWithBytesNoCopy:bytes encoding:encoding freeWhenDone:free] autorelease];
 }
 
 #pragma mark -

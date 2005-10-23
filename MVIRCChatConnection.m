@@ -1338,7 +1338,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 }
 
 - (NSString *) nickname {
-	if( [self isConnected] ) {
+	if( _status == MVChatConnectionConnectedStatus ) { // don't call [self isConnected], need speed here
 		IrssiLock();
 		NSString *nick = nil;
 		if( _chatConnection && _chatConnection -> nick )

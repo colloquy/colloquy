@@ -145,6 +145,7 @@ extern NSString *MVChatConnectionErrorDomain;
 - (void) setEncoding:(NSStringEncoding) encoding;
 - (NSStringEncoding) encoding;
 - (NSString *) stringWithEncodedBytes:(const char *) bytes;
+- (NSString *) stringWithEncodedBytesNoCopy:(char *) bytes freeWhenDone:(BOOL) free;
 - (const char *) encodedBytesWithString:(NSString *) string;
 
 #pragma mark -

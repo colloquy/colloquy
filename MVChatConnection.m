@@ -261,11 +261,15 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) stringWithEncodedBytes:(const char *) bytes {
-	return [NSString stringWithBytes:bytes encoding:[self encoding]];
+	return [[[NSString allocWithZone:nil] initWithBytes:bytes encoding:_encoding] autorelease];
+}
+
+- (NSString *) stringWithEncodedBytesNoCopy:(char *) bytes freeWhenDone:(BOOL) free {
+	return [[[NSString allocWithZone:nil] initWithBytesNoCopy:bytes encoding:_encoding freeWhenDone:free] autorelease];
 }
 
 - (const char *) encodedBytesWithString:(NSString *) string {
-	return [string bytesUsingEncoding:[self encoding] allowLossyConversion:YES];
+	return [string bytesUsingEncoding:_encoding allowLossyConversion:YES];
 }
 
 #pragma mark -

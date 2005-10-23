@@ -191,24 +191,34 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser {
+	if( ! anotherUser ) return NO;
 	if( anotherUser == self ) return YES;
-	if( ! anotherUser || ! [anotherUser isKindOfClass:[MVChatUser class]] ) return NO;
 
-	if( _type == MVChatWildcardUserType || [anotherUser type] == MVChatWildcardUserType ) {
-		if( ( [self fingerprint] && [anotherUser fingerprint] ) && ! [[self fingerprint] isEqualToString:[anotherUser fingerprint]] )
+	if( _type == MVChatWildcardUserType || anotherUser -> _type == MVChatWildcardUserType ) {
+		NSString *string1 = [self fingerprint];
+		NSString *string2 = [anotherUser fingerprint];
+		if( string2 && string1 && ! [string1 isEqualToString:string2] )
 			return NO;
-		if( ( [self nickname] && [anotherUser nickname] ) && ! [[self nickname] isEqualToString:[anotherUser nickname]] )
+		string1 = [self nickname];
+		string2 = [anotherUser nickname];
+		if( string2 && string1 && ! [string1 isEqualToString:string2] )
 			return NO;
-		if( ( [self username] && [anotherUser username] ) && ! [[self username] isEqualToString:[anotherUser username]] )
+		string1 = [self username];
+		string2 = [anotherUser username];
+		if( string2 && string1 && ! [string1 isEqualToString:string2] )
 			return NO;
-		if( ( [self address] && [anotherUser address] ) && ! [[self address] isEqualToString:[anotherUser address]] )
+		string1 = [self address];
+		string2 = [anotherUser address];
+		if( string2 && string1 && ! [string1 isEqualToString:string2] )
 			return NO;
-		if( ( [self serverAddress] && [anotherUser serverAddress] ) && ! [[self serverAddress] isEqualToString:[anotherUser serverAddress]] )
+		string1 = [self serverAddress];
+		string2 = [anotherUser serverAddress];
+		if( string2 && string1 && ! [string1 isEqualToString:string2] )
 			return NO;
 		return YES;
 	}
 
-	if( _type != [anotherUser type] ) return NO;
+	if( _type != anotherUser -> _type ) return NO;
 
 	if( ! [[self connection] isEqual:[anotherUser connection]] )
 		return NO;
@@ -297,19 +307,19 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (NSString *) nickname {
-	if( [self isLocalUser] )
+	if( _type == MVChatLocalUserType )
 		return [[self connection] nickname];
 	return [[_nickname retain] autorelease];
 }
 
 - (NSString *) realName {
-	if( [self isLocalUser] )
+	if( _type == MVChatLocalUserType )
 		return [[self connection] realName];
 	return [[_realName retain] autorelease];
 }
 
 - (NSString *) username {
-	if( [self isLocalUser] )
+	if( _type == MVChatLocalUserType )
 		return [[self connection] username];
 	return [[_username retain] autorelease];
 }

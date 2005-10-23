@@ -6,7 +6,9 @@
 + (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding;
 
 - (id) initWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding;
+- (id) initWithBytesNoCopy:(void *) bytes encoding:(NSStringEncoding) encoding freeWhenDone:(BOOL) free;
 + (id) stringWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding;
++ (id) stringWithBytesNoCopy:(void *) bytes encoding:(NSStringEncoding) encoding freeWhenDone:(BOOL) free;
 
 - (const char *) bytesUsingEncoding:(NSStringEncoding) encoding allowLossyConversion:(BOOL) lossy;
 - (const char *) bytesUsingEncoding:(NSStringEncoding) encoding;
