@@ -52,11 +52,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 		_topicData = nil;
 		_topicAuthor = nil;
 		_dateTopicChanged = nil;
-		_attributes = [[NSMutableDictionary dictionaryWithCapacity:2] retain];
-		_memberUsers = [[NSMutableSet setWithCapacity:100] retain];
-		_bannedUsers = [[NSMutableSet setWithCapacity:5] retain];
-		_modeAttributes = [[NSMutableDictionary dictionaryWithCapacity:2] retain];
-		_memberModes = [[NSMutableDictionary dictionaryWithCapacity:100] retain];
+		_attributes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
+		_memberUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:100];
+		_bannedUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_modeAttributes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
+		_memberModes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:100];
 		_encoding = NSUTF8StringEncoding;
 		_modes = 0;
 	}
@@ -285,9 +285,10 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 		else [_attributes removeObjectForKey:key];
 	}
 	
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:key, @"attribute", nil];
+	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:key, @"attribute", nil];
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	[info release];
 }
 
 #pragma mark -
@@ -350,7 +351,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (NSSet *) memberUsersWithModes:(unsigned long) modes {
-	NSMutableSet *users = [NSMutableSet set];
+	NSMutableSet *users = [[NSMutableSet allocWithZone:nil] init];
 
 	@synchronized( _memberUsers ) {
 		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
@@ -360,11 +361,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 				[users addObject:user];
 	}
 
-	return users;
+	return [users autorelease];
 }
 
 - (NSSet *) memberUsersWithNickname:(NSString *) nickname {
-	NSMutableSet *users = [NSMutableSet set];
+	NSMutableSet *users = [[NSMutableSet allocWithZone:nil] init];
 
 	@synchronized( _memberUsers ) {
 		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
@@ -374,11 +375,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 				[users addObject:user];
 	}
 
-	return users;
+	return [users autorelease];
 }
 
 - (NSSet *) memberUsersWithFingerprint:(NSString *) fingerprint {
-	NSMutableSet *users = [NSMutableSet set];
+	NSMutableSet *users = [[NSMutableSet allocWithZone:nil] init];
 
 	@synchronized( _memberUsers ) {
 		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
@@ -388,7 +389,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 				[users addObject:user];
 	}
 
-	return users;
+	return [users autorelease];
 }
 
 - (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier {
@@ -569,23 +570,23 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (void) _setDateJoined:(NSDate *) date {
 	[_dateJoined autorelease];
-	_dateJoined = [date copyWithZone:[self zone]];
+	_dateJoined = [date copyWithZone:nil];
 }
 
 - (void) _setDateParted:(NSDate *) date {
 	[_dateParted autorelease];
-	_dateParted = [date copyWithZone:[self zone]];
+	_dateParted = [date copyWithZone:nil];
 }
 
 - (void) _setTopic:(NSData *) topic byAuthor:(MVChatUser *) author withDate:(NSDate *) date {
 	[_topicData autorelease];
-	_topicData = [topic copyWithZone:[self zone]];
+	_topicData = [topic copyWithZone:nil];
 
 	[_topicAuthor autorelease];
 	_topicAuthor = [author retain];
 
 	[_dateTopicChanged autorelease];
-	_dateTopicChanged = [date copyWithZone:[self zone]];
+	_dateTopicChanged = [date copyWithZone:nil];
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomTopicChangedNotification object:self userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -617,7 +618,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[MVChatConnection class]];
 	NSScriptObjectSpecifier *container = [[self connection] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"joinedChatRoomsArray" uniqueID:[self scriptUniqueIdentifier]] autorelease];
+	return [[[NSUniqueIDSpecifier allocWithZone:nil] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"joinedChatRoomsArray" uniqueID:[self scriptUniqueIdentifier]] autorelease];
 }
 
 #pragma mark -

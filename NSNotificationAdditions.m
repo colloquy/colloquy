@@ -16,13 +16,14 @@
 }
 
 - (void) enqueueNotificationOnMainThread:(NSNotification *) notification postingStyle:(NSPostingStyle) postingStyle coalesceMask:(unsigned) coalesceMask forModes:(NSArray *) modes {
-	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] init];
 	[info setObject:notification forKey:@"notification"];
 	[info setObject:[NSNumber numberWithUnsignedInt:postingStyle] forKey:@"postingStyle"];
 	[info setObject:[NSNumber numberWithUnsignedInt:coalesceMask] forKey:@"coalesceMask"];
 	if( modes ) [info setObject:modes forKey:@"modes"];
 
 	[self performSelectorOnMainThread:@selector( _enqueueNotification: ) withObject:info waitUntilDone:NO];
+	[info release];
 }
 
 - (void) _enqueueNotification:(NSDictionary *) info {

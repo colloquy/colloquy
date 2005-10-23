@@ -286,12 +286,13 @@ static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
 		if( nick -> voice ) [room _setMode:MVChatRoomMemberVoicedMode forMemberUser:member];
 	}
 
-	NSData *topic = ( channel -> topic ? [NSData dataWithBytes:channel -> topic length:strlen( channel -> topic )] : nil );
+	NSData *topic = ( channel -> topic ? [[NSData allocWithZone:nil] initWithBytes:channel -> topic length:strlen( channel -> topic )] : nil );
 	NSString *author = ( channel -> topic_by ? [self stringWithEncodedBytes:channel -> topic_by] : nil );
 	MVChatUser *authorUser = ( author ? [self chatUserWithUniqueIdentifier:author] : nil );
 	NSDate *time = ( channel -> topic_time ? [NSDate dateWithTimeIntervalSince1970:channel -> topic_time] : nil );
 
 	[room _setTopic:topic byAuthor:authorUser withDate:time];
+	[topic release];
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomJoinedNotification object:room userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -351,7 +352,7 @@ static void MVChatRoomTopicChanged( IRC_SERVER_REC *server, const char *data, co
 
 	if( ! topic || ! channel ) return;
 
-	NSData *msgData = [NSData dataWithBytes:topic length:strlen( topic )];
+	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:topic length:strlen( topic )];
 
 	NSString *author = ( nick ? [self stringWithEncodedBytes:nick] : nil );
 	MVChatUser *authorUser = ( author ? [self chatUserWithUniqueIdentifier:author] : nil );
@@ -359,6 +360,7 @@ static void MVChatRoomTopicChanged( IRC_SERVER_REC *server, const char *data, co
 	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
 	[room _setTopic:msgData byAuthor:authorUser withDate:[NSDate date]];
 
+	[msgData release];
 	g_free( params );
 }
 
@@ -375,8 +377,9 @@ static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, cons
 		// this is the local user, create the room object now as early as possible
 		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
 		if( ! room ) {
-			room = [[[MVIRCChatRoom allocWithZone:[self zone]] initWithName:[self stringWithEncodedBytes:channel] andConnection:self] autorelease];
+			room = [[MVIRCChatRoom allocWithZone:nil] initWithName:[self stringWithEncodedBytes:channel] andConnection:self];
 			[self _addJoinedRoom:room];
+			[room release];
 		}
 
 		goto finish; // the rest of this function doesn't apply since it is just the local user
@@ -431,10 +434,11 @@ static void MVChatUserLeftRoom( IRC_SERVER_REC *server, const char *data, const 
 
 	[room _removeMemberUser:member];
 
-	NSData *reasonData = [NSData dataWithBytes:reason length:strlen( reason )];
+	NSData *reasonData = [[NSData allocWithZone:nil] initWithBytes:reason length:strlen( reason )];
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
+	[reasonData release];
 	g_free( params );
 }
 
@@ -447,19 +451,23 @@ static void MVChatUserQuit( IRC_SERVER_REC *server, const char *data, const char
 	if( *data == ':' ) data++;
 
 	MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	NSData *reasonData = [NSData dataWithBytes:data length:strlen( data )];
+	NSData *reasonData = [[NSData allocWithZone:nil] initWithBytes:data length:strlen( data )];
 	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
 	MVChatRoom *room = nil;
 
 	[member _setDateDisconnected:[NSDate date]];
 	[member _setStatus:MVChatUserOfflineStatus];
 
+	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil];
 	while( ( room = [enumerator nextObject] ) ) {
 		if( ! [room isJoined] || ! [room hasUser:member] ) continue;
 		[room _removeMemberUser:member];
-		NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil]];
+		NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:info];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
+
+	[info release];
+	[reasonData release];
 }
 
 static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const char *by, const char *address ) {
@@ -469,7 +477,7 @@ static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const ch
 	char *channel = NULL, *nick = NULL, *reason = NULL;
 	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, &channel, &nick, &reason );
 
-	NSData *msgData = [NSData dataWithBytes:reason length:strlen( reason )];
+	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:reason length:strlen( reason )];
 	NSNotification *note = nil;
 
 	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
@@ -486,6 +494,7 @@ static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const ch
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
+	[msgData release];
 	g_free( params );
 }
 
@@ -515,10 +524,11 @@ static void MVChatUserAway( IRC_SERVER_REC *server, const char *data ) {
 	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
 	[user _setStatus:MVChatUserAwayStatus];
 
-//	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
+//	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:message length:strlen( message )];
 
 //	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", msgData, @"message", nil]];
 //	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+//	[msgData release];
 
 	g_free( params );
 }
@@ -546,7 +556,7 @@ static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const ch
 
 	if( *target == '@' && ischannel( target[1] ) ) target++;
 
-	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
+	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:message length:strlen( message )];
 	NSNotification *note = nil;
 
 	if( ischannel( *target ) ) {
@@ -564,6 +574,7 @@ static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const ch
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
+	[msgData release];
 	g_free( params );
 }
 
@@ -579,7 +590,7 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 	if( *target == '@' && ischannel( target[1] ) ) target++;
 
 	NSNotification *note = nil;
-	NSData *msgData = [NSData dataWithBytes:message length:strlen( message )];
+	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:message length:strlen( message )];
 
 	if( ischannel( *target ) ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
@@ -606,6 +617,7 @@ static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, cons
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
+	[msgData release];
 	g_free( params );
 }
 
@@ -615,7 +627,7 @@ static void MVChatGetActionMessage( IRC_SERVER_REC *server, const char *data, co
 	if( ! nick ) return;
 	if( ! address ) address = "";
 
-	NSData *msgData = [NSData dataWithBytes:data length:strlen( data )];
+	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:data length:strlen( data )];
 	NSNotification *note = nil;
 
 	if( ischannel( *target ) ) {
@@ -632,6 +644,7 @@ static void MVChatGetActionMessage( IRC_SERVER_REC *server, const char *data, co
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	[msgData release];
 }
 
 #pragma mark -
@@ -669,9 +682,10 @@ static void MVChatUserNicknameChanged( IRC_SERVER_REC *server, const char *data,
 	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
 	MVChatRoom *room = nil;
 
+	NSString *oldIdentifier = [oldNickname lowercaseString];
 	while( ( room = [enumerator nextObject] ) ) {
 		if( ! [room isJoined] || ! [room hasUser:user] ) continue;
-		[room _updateMemberUser:user fromOldUniqueIdentifier:[oldNickname lowercaseString]];
+		[room _updateMemberUser:user fromOldUniqueIdentifier:oldIdentifier];
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
@@ -883,12 +897,13 @@ static void MVChatUserChannels( IRC_SERVER_REC *server, const char *data ) {
 	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, NULL, &nick, &chanlist );
 
 	NSArray *chanArray = [[[self stringWithEncodedBytes:chanlist] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
-	NSMutableArray *results = [NSMutableArray arrayWithCapacity:[chanArray count]];
+	NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:[chanArray count]];
 	NSEnumerator *enumerator = [chanArray objectEnumerator];
 	NSString *room = nil;
 
+	NSCharacterSet *modeChars = [NSCharacterSet characterSetWithCharactersInString:@"@\%+ "];
 	while( ( room = [enumerator nextObject] ) ) {
-		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"@\%+ "]];
+		room = [room stringByTrimmingCharactersInSet:modeChars];
 		if( room ) [results addObject:room];
 	}
 
@@ -897,6 +912,7 @@ static void MVChatUserChannels( IRC_SERVER_REC *server, const char *data ) {
 		[user setAttribute:results forKey:MVChatUserKnownRoomsAttribute];
 	}
 
+	[results release];
 	g_free( params );
 }
 
@@ -974,11 +990,13 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	char *params = event_get_params( data, 4 | PARAM_FLAG_GETREST, NULL, &channel, &count, &topic );
 
 	NSString *r = [self stringWithEncodedBytes:channel];
-	NSData *t = [NSData dataWithBytes:topic length:strlen( topic )];
-	NSMutableDictionary *info = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:strtoul( count, NULL, 10 )], @"users", t, @"topic", [NSDate date], @"cached", r, @"room", nil];
+	NSData *t = [[NSData allocWithZone:nil] initWithBytes:topic length:strlen( topic )];
+	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:strtoul( count, NULL, 10 )], @"users", t, @"topic", [NSDate date], @"cached", r, @"room", nil];
 
 	[self performSelectorOnMainThread:@selector( _addRoomToCache: ) withObject:info waitUntilDone:NO];
 
+	[info release];
+	[t release];
 	g_free( params );
 }
 
@@ -1029,9 +1047,10 @@ static void MVChatFileTransferRequest( DCC_REC *dcc ) {
 	if( ! self ) return;
 	if( IS_DCC_GET( dcc ) ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:dcc -> nick]];
-		MVIRCDownloadFileTransfer *transfer = [[[MVIRCDownloadFileTransfer alloc] initWithDCCFileRecord:dcc fromUser:user] autorelease];
+		MVIRCDownloadFileTransfer *transfer = [[MVIRCDownloadFileTransfer allocWithZone:nil] initWithDCCFileRecord:dcc fromUser:user];
 		NSNotification *note = [NSNotification notificationWithName:MVDownloadFileTransferOfferNotification object:transfer];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+		[transfer release];
 	}
 }
 
@@ -1120,7 +1139,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		_chatConnection = NULL;
 		_chatConnectionSettings = NULL;
 
-		_knownUsers = [[NSMutableDictionary dictionaryWithCapacity:200] retain];
+		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
 
 		extern unsigned int connectionCount;
 		connectionCount++;
@@ -1203,7 +1222,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	}
 
 	[_lastConnectAttempt autorelease];
-	_lastConnectAttempt = [[NSDate date] retain];
+	_lastConnectAttempt = [[NSDate allocWithZone:nil] init];
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
@@ -1476,7 +1495,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 - (void) setProxyUsername:(NSString *) username {
 	[_proxyUsername autorelease];
-	_proxyUsername = [username copyWithZone:[self zone]];
+	_proxyUsername = [username copyWithZone:nil];
 }
 
 - (NSString *) proxyUsername {
@@ -1487,7 +1506,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 - (void) setProxyPassword:(NSString *) password {
 	[_proxyPassword autorelease];
-	_proxyPassword = [password copyWithZone:[self zone]];
+	_proxyPassword = [password copyWithZone:nil];
 }
 
 - (NSString *) proxyPassword {
@@ -1512,7 +1531,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	if( ! [rooms count] ) return;
 
-	NSMutableArray *roomList = [NSMutableArray arrayWithCapacity:[rooms count]];
+	NSMutableArray *roomList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[rooms count]];
 	NSEnumerator *enumerator = [rooms objectEnumerator];
 	NSString *room = nil;
 
@@ -1527,9 +1546,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		}
 	}
 
-	if( ! [roomList count] ) return;
-
-	[self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
+	if( [roomList count] ) [self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
+	[roomList release];
 }
 
 - (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
@@ -1572,11 +1590,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		user = [_knownUsers objectForKey:uniqueIdentfier];
 		if( user ) return [[user retain] autorelease];
 
-		user = [[[MVIRCChatUser allocWithZone:[self zone]] initWithNickname:identifier andConnection:self] autorelease];
+		user = [[MVIRCChatUser allocWithZone:nil] initWithNickname:identifier andConnection:self];
 		[_knownUsers setObject:user forKey:uniqueIdentfier];
+		[user release];
 	}
 
-	return [[user retain] autorelease];
+	return user;
 }
 
 #pragma mark -
@@ -1606,7 +1625,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 300. ) {
 		[self sendRawMessage:@"LIST"];
 		[_cachedDate autorelease];
-		_cachedDate = [[NSDate date] retain];
+		_cachedDate = [[NSDate allocWithZone:nil] init];
 	}
 }
 
@@ -1618,13 +1637,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) setAwayStatusWithMessage:(NSAttributedString *) message {
-	[_awayMessage autorelease];
+	[_awayMessage release];
 	_awayMessage = nil;
 
 	if( [[message string] length] ) {
 		[[self localUser] _setStatus:MVChatUserAwayStatus];
 
-		_awayMessage = [message copyWithZone:[self zone]];
+		_awayMessage = [message copyWithZone:nil];
 		const char *msg = [[self class] _flattenedIRCStringForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 
 		IrssiLock();
@@ -1769,7 +1788,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	NSAutoreleasePool *pool = nil;
 	while( ! MVChatApplicationQuitting || connectionCount ) {
-		pool = [[NSAutoreleasePool alloc] init];
+		pool = [[NSAutoreleasePool allocWithZone:nil] init];
 		g_main_iteration( TRUE, &irssiLock ); // this will block until one event occurs
 		[pool release];
 	}
@@ -1846,7 +1865,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 - (void) _didConnect {
 	[_localUser autorelease];
-	_localUser = [[MVIRCChatUser allocWithZone:[self zone]] initLocalUserWithConnection:self];
+	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
 
 	// Identify if we have a user password
 	if( [[self nicknamePassword] length] )

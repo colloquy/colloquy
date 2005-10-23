@@ -55,28 +55,36 @@ void silc_client_file_monitor( SilcClient client, SilcClientConnection conn, Sil
 	switch ( error ) {
 		case SILC_CLIENT_FILE_UNKNOWN_SESSION:
 		case SILC_CLIENT_FILE_ERROR: {
-			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];
-			NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
+			NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];
+			NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
 			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
+			[error release];
+			[info release];
 		}	break;
 
 		case SILC_CLIENT_FILE_ALREADY_STARTED: {
-			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
-			NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
+			NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
+			NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
 			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
+			[error release];
+			[info release];
 		}	break;
 
 		case SILC_CLIENT_FILE_NO_SUCH_FILE:
 		case SILC_CLIENT_FILE_PERMISSION_DENIED: {
-			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
-			NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
+			NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
+			NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
 			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
+			[error release];
+			[info release];
 		}	break;
 
 		case SILC_CLIENT_FILE_KEY_AGREEMENT_FAILED: {
-			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:@"Key agreement failed. Either your key was rejected by the other user or some other error happend during key negotiation.", NSLocalizedDescriptionKey, nil];
-			NSError *error = [NSError errorWithDomain:MVFileTransferErrorDomain code:MVFileTransferKeyAgreementError userInfo:info];
+			NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@"Key agreement failed. Either your key was rejected by the other user or some other error happend during key negotiation.", NSLocalizedDescriptionKey, nil];
+			NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferKeyAgreementError userInfo:info];
 			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
+			[error release];
+			[info release];
 		}	break;
 
 		case SILC_CLIENT_FILE_OK:
@@ -98,8 +106,8 @@ void silc_client_file_monitor( SilcClient client, SilcClientConnection conn, Sil
 	NSMutableData *result = [[[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopy] autorelease];
 	[result appendBytes:"\0" length:1];
 
-	MVSILCUploadFileTransfer *transfer = [[MVSILCUploadFileTransfer alloc] initWithSessionID:0 toUser:user];
-	transfer -> _source = [[path stringByStandardizingPath] copyWithZone:[self zone]];
+	MVSILCUploadFileTransfer *transfer = [[MVSILCUploadFileTransfer allocWithZone:nil] initWithSessionID:0 toUser:user];
+	transfer -> _source = [[path stringByStandardizingPath] copyWithZone:nil];
 
 	SilcClientID *clientID = silc_id_str2id( [(NSData *)[user uniqueIdentifier] bytes], [(NSData *)[user uniqueIdentifier] length], SILC_ID_CLIENT );
 	if( clientID ) {

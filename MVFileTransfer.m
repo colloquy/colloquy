@@ -190,8 +190,9 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 		_lastError = [error retain];
 	}
 
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:error, @"error", nil];
+	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:error, @"error", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
+	[info release];
 }
 @end
 

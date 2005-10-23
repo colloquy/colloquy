@@ -11,23 +11,23 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 @implementation MVChatPluginManager
 + (MVChatPluginManager *) defaultManager {
 	extern MVChatPluginManager *sharedInstance;
-	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
+	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self allocWithZone:nil] init] ) );
 }
 
 + (NSArray *) pluginSearchPaths {
-	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
+	NSMutableArray *paths = [[NSMutableArray allocWithZone:nil] initWithCapacity:4];
 	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/PlugIns", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
 	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/PlugIns", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
 	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/PlugIns", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
 	[paths addObject:[[NSBundle mainBundle] builtInPlugInsPath]];
-	return paths;
+	return [paths autorelease];
 }
 
 #pragma mark -
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_plugins = [[NSMutableArray array] retain];
+		_plugins = [[NSMutableArray allocWithZone:nil] init];
 		[self reloadPlugins];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
 	}
@@ -71,7 +71,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 			if( [[file pathExtension] isEqualToString:@"bundle"] || [[file pathExtension] isEqualToString:@"plugin"] ) {
 				bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]];
 				if( [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
-					id plugin = [[[[bundle principalClass] alloc] initWithManager:self] autorelease];
+					id plugin = [[[[bundle principalClass] allocWithZone:nil] initWithManager:self] autorelease];
 					if( plugin ) [self addPlugin:plugin];
 				}
 			}
@@ -119,7 +119,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 	NSParameterAssert( selector != NULL );
 
 	NSEnumerator *enumerator = [_plugins objectEnumerator];
-	NSMutableArray *qualified = [NSMutableArray array];
+	NSMutableArray *qualified = [[[NSMutableArray allocWithZone:nil] init] autorelease];
 	id plugin = nil;
 
 	while( ( plugin = [enumerator nextObject] ) )
@@ -186,7 +186,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 
 	if( ! enumerator ) return nil;
 
-	NSMutableArray *results = [NSMutableArray array];
+	NSMutableArray *results = [[[NSMutableArray allocWithZone:nil] init] autorelease];
 	NSMethodSignature *sig = [invocation methodSignature];
 
 	while( ( plugin = [enumerator nextObject] ) ) {

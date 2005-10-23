@@ -69,7 +69,7 @@ static const NSStringEncoding supportedEncodings[] = {
 + (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type {
 	if( type == MVChatConnectionIRCType ) return [MVIRCChatConnection defaultServerPorts];
 	else if( type == MVChatConnectionSILCType ) return [MVSILCChatConnection defaultServerPorts];
-	return [NSArray array];
+	return nil;
 }
 
 #pragma mark -
@@ -88,9 +88,9 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
-		_roomsCache = [[NSMutableDictionary dictionaryWithCapacity:500] retain];
-		_persistentInformation = [[NSMutableDictionary dictionaryWithCapacity:2] retain];
-		_joinedRooms = [[NSMutableSet setWithCapacity:5] retain];
+		_roomsCache = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:500];
+		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
+		_joinedRooms = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 		_localUser = nil;
 
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
@@ -103,13 +103,12 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (id) initWithType:(MVChatConnectionType) type {
-	NSZone *zone = [self zone];
 	[self release];
 
 	if( type == MVChatConnectionIRCType ) {
-		self = [[MVIRCChatConnection allocWithZone:zone] init];
+		self = [[MVIRCChatConnection allocWithZone:nil] init];
 	} else if ( type == MVChatConnectionSILCType ) {
-		self = [[MVSILCChatConnection allocWithZone:zone] init];
+		self = [[MVSILCChatConnection allocWithZone:nil] init];
 	} else self = nil;
 
 	return self;
@@ -302,7 +301,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setAlternateNicknames:(NSArray *) nicknames {
 	[_alternateNicks autorelease];
-	_alternateNicks = [nicknames copyWithZone:[self zone]];
+	_alternateNicks = [nicknames copyWithZone:nil];
 	_nextAltNickIndex = 0;
 }
 
@@ -324,7 +323,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setNicknamePassword:(NSString *) password {
 	[_npassword autorelease];
-	if( [password length] ) _npassword = [password copyWithZone:[self zone]];
+	if( [password length] ) _npassword = [password copyWithZone:nil];
 	else _npassword = nil;
 }
 
@@ -524,7 +523,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	va_list ap;
 	va_start( ap, format );
 
-	NSString *command = [[[NSString alloc] initWithFormat:format arguments:ap] autorelease];
+	NSString *command = [[[NSString allocWithZone:nil] initWithFormat:format arguments:ap] autorelease];
 	[self sendRawMessage:command immediately:NO];
 
 	va_end( ap );
@@ -780,7 +779,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _postError:(NSError *) error {
 	[_lastError autorelease];
-	_lastError = [error copyWithZone:[self zone]];
+	_lastError = [error copyWithZone:nil];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
 }
@@ -869,7 +868,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (NSTextStorage *) scriptTypedAwayMessage {
-	return [[[NSTextStorage alloc] initWithAttributedString:_awayMessage] autorelease];
+	return [[[NSTextStorage allocWithZone:nil] initWithAttributedString:_awayMessage] autorelease];
 }
 
 - (void) setScriptTypedAwayMessage:(NSString *) message {
@@ -1079,12 +1078,14 @@ static const NSStringEncoding supportedEncodings[] = {
 					cformat = nil;
 			}
 
-			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
+			NSDictionary *options = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
 			NSData *msgData = [realMessage chatFormatWithOptions:options];
+			[options release];
 
 			if( [target isKindOfClass:[MVChatRoom class]] ) {
-				NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
+				NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
 				[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
+				[info release];
 			} // we can't really echo a private message with our current notifications
 		}
 	}

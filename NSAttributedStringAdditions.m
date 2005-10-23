@@ -104,14 +104,16 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 + (id) attributedStringWithHTMLFragment:(NSString *) fragment baseURL:(NSURL *) url {
 	NSParameterAssert( fragment != nil );
 
-	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", [NSNumber numberWithUnsignedInt:NSUTF8StringEncoding], NSCharacterEncodingDocumentOption, nil];
+	NSMutableDictionary *options = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithInt:1], @"UseWebKit", [NSNumber numberWithUnsignedInt:NSUTF8StringEncoding], NSCharacterEncodingDocumentOption, nil];
 	if( url ) [options setObject:url forKey:@"BaseURL"];
 
 	// we suround the fragment in the #01FE02 green color so we can later key it out and strip it
 	// this will result in colorless areas of our string, letting the color be defined by the interface
 
-	NSString *render = [NSString stringWithFormat:@"<span style=\"color: #01FE02\">%@</span>", fragment];
-	NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:options documentAttributes:NULL];
+	NSString *render = [[NSString allocWithZone:nil] initWithFormat:@"<span style=\"color: #01FE02\">%@</span>", fragment];
+	NSMutableAttributedString *result = [[NSMutableAttributedString allocWithZone:nil] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:options documentAttributes:NULL];
+	[render release];
+	[options release];
 
 	NSRange limitRange, effectiveRange;
 	limitRange = NSMakeRange( 0, [result length] );
@@ -122,7 +124,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 
-	NSAttributedString *ret = [[self alloc] initWithAttributedString:result];
+	NSAttributedString *ret = [[self allocWithZone:nil] initWithAttributedString:result];
 	[result release];
 
 	return [ret autorelease];
@@ -224,7 +226,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 #pragma mark -
 
 + (id) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options {
-	return [[[self alloc] initWithChatFormat:data options:options] autorelease];
+	return [[[self allocWithZone:nil] initWithChatFormat:data options:options] autorelease];
 }
 
 - (id) initWithChatFormat:(NSData *) data options:(NSDictionary *) options {
@@ -291,7 +293,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 					if( ( end - start ) > 0 ) {
 						NSData *subdata = [data subdataWithRange:NSMakeRange(start, end-start)];
 						if( currentEncoding != NSUTF8StringEncoding ) {
-							NSString *tempStr = [[NSString alloc] initWithData:subdata encoding:currentEncoding];
+							NSString *tempStr = [[NSString allocWithZone:nil] initWithData:subdata encoding:currentEncoding];
 							// I'd check for nil, except only UTF-8 could fail since the others all
 							// define values for all bytes 0-255
 							subdata = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -311,7 +313,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		if( start < length ) {
 			NSData *subdata = [data subdataWithRange:NSMakeRange(start, length-start)];
 			if( currentEncoding != NSUTF8StringEncoding ) {
-				NSString *tempStr = [[NSString alloc] initWithData:subdata encoding:currentEncoding];
+				NSString *tempStr = [[NSString allocWithZone:nil] initWithData:subdata encoding:currentEncoding];
 				subdata = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
 			}
 
@@ -322,7 +324,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		data = newData;
 	}
 
-	NSString *message = [[[NSString alloc] initWithData:data encoding:encoding] autorelease];
+	NSString *message = [[[NSString allocWithZone:nil] initWithData:data encoding:encoding] autorelease];
 	if( ! message ) {
 		[self autorelease];
 		return nil;
@@ -560,7 +562,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		NSString *text = nil;
  		[scanner scanUpToCharactersFromSet:formatCharacters intoString:&text];
 		if( [text length] ) {
-			id new = [[[self class] alloc] initWithString:text attributes:attributes];
+			id new = [[[self class] allocWithZone:nil] initWithString:text attributes:attributes];
 			[ret appendAttributedString:new];
 			[new release];
 		}
@@ -754,13 +756,15 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				// with anything since .. is assumed
 				if( ! ( foregroundColor == nil && backgroundColor == nil ) ) {
 					if( foreColorString ) {
-						[ret appendBytes:[foreColorString UTF8String] length:strlen( [foreColorString UTF8String] )];
+						const char *str = [foreColorString UTF8String];
+						[ret appendBytes:str length:strlen( str )];
 					} else {
 						[ret appendBytes:"-" length:1];
 					}
 
 					if( backColorString ) {
-						[ret appendBytes:[backColorString UTF8String] length:strlen( [backColorString UTF8String] )];
+						const char *str = [backColorString UTF8String];
+						[ret appendBytes:str length:strlen( str )];
 					} // If no background, don't bother with "-" since it's assumed
 				}
 

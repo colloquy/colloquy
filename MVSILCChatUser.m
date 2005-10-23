@@ -83,7 +83,7 @@
 
 - (unsigned) hash {
 	// this hash assumes the MVSILCChatConnection will return the same instance for equal users
-	return ( [self type] ^ [[self connection] hash] ^ (unsigned int) self );
+	return ( _type ^ [[self connection] hash] ^ (unsigned int) self );
 }
 
 - (unsigned long) supportedModes {

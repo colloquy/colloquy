@@ -12,7 +12,7 @@
 - (id) initWithName:(NSString *) name andConnection:(MVIRCChatConnection *) connection {
 	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
-		_name = [name copyWithZone:[self zone]];
+		_name = [name copyWithZone:nil];
 		_uniqueIdentifier = [[name lowercaseString] retain];
 	}
 
@@ -191,9 +191,8 @@
 
 - (NSSet *) memberUsersWithNickname:(NSString *) nickname {
 	MVChatUser *user = [self memberUserWithUniqueIdentifier:nickname];
-	if( user != nil )
-		return [NSSet setWithObject:user];
-	return [NSSet set];
+	if( user ) return [NSSet setWithObject:user];
+	return nil;
 }
 
 - (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier {

@@ -20,7 +20,7 @@
 - (id) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection {
 	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
-		_nickname = [nickname copyWithZone:[self zone]];
+		_nickname = [nickname copyWithZone:nil];
 		_uniqueIdentifier = [[nickname lowercaseString] retain];
 		_type = MVChatRemoteUserType;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
@@ -33,7 +33,7 @@
 
 - (unsigned) hash {
 	// this hash assumes the MVIRCChatConnection will return the same instance for equal users
-	return ( [self type] ^ [[self connection] hash] ^ (unsigned int) self );
+	return ( _type ^ [[self connection] hash] ^ (unsigned int) self );
 }
 
 - (unsigned long) supportedModes {

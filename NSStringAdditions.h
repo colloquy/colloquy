@@ -5,8 +5,6 @@
 + (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding;
 + (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding;
 
-- (unsigned long) UTF8StringByteLength;
-
 - (id) initWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding;
 + (id) stringWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding;
 

@@ -56,7 +56,7 @@
 		if( [subject isKindOfClass:[NSArray class]] ) {
 			id subj = nil, result = nil;
 			NSEnumerator *enumerator = [subject objectEnumerator];
-			NSMutableArray *results = [NSMutableArray arrayWithCapacity:[subject count]];
+			NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:[subject count]];
 
 			while( ( subj = [enumerator nextObject] ) ) {
 				result = nil;
@@ -66,7 +66,7 @@
 				else [results addObject:[NSNull null]];
 			}
 
-			return results;
+			return [results autorelease];
 		}
 
 		if( ! [subject respondsToSelector:selector] ) return nil;

@@ -10,7 +10,7 @@
 	unsigned int q = [[NSProcessInfo processInfo] processIdentifier] ^ tv.tv_usec; // input (quotient)
 	unsigned int r = 0; // remainder
 
-	NSMutableString *uniqueId = [NSMutableString stringWithCapacity:10];
+	NSMutableString *uniqueId = [[NSMutableString allocWithZone:nil] initWithCapacity:10];
 	[uniqueId appendFormat:@"%c", 'A' + ( random() % 26 )]; // always have a random letter first (more ambiguity)
 
 	#define baseConvert	do { \
@@ -30,7 +30,7 @@
 
 	#undef baseConvert;
 
-	return [NSString stringWithString:uniqueId];
+	return [uniqueId autorelease];
 }
 
 + (NSString *) mimeCharsetTagFromStringEncoding:(NSStringEncoding) encoding {
@@ -193,19 +193,12 @@
 
 #pragma mark -
 
-- (unsigned long) UTF8StringByteLength {
-	const char *str = [self UTF8String];
-	return ( str ? strlen( str ) : 0 );
-}
-
-#pragma mark -
-
 - (id) initWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding {
-	if( bytes && strlen( bytes ) ) {
+	if( bytes ) {
 		id ret = [self initWithBytes:bytes length:strlen( bytes ) encoding:encoding];
 		if( ! ret ) ret = [self initWithCString:bytes];
 		if( ! ret ) [self release];
-		return ( self = ret );
+		return ret;
 	}
 
 	[self release];
@@ -213,15 +206,13 @@
 }
 
 + (id) stringWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding {
-	if( bytes && strlen( bytes ) )
-		return [[[self alloc] initWithBytes:bytes encoding:encoding] autorelease];
-	return nil;
+	return [[[self allocWithZone:nil] initWithBytes:bytes encoding:encoding] autorelease];
 }
 
 #pragma mark -
 
 - (const char *) bytesUsingEncoding:(NSStringEncoding) encoding allowLossyConversion:(BOOL) lossy {
-	NSMutableData *ret = [[[self dataUsingEncoding:encoding allowLossyConversion:lossy] mutableCopy] autorelease];
+	NSMutableData *ret = [[[self dataUsingEncoding:encoding allowLossyConversion:lossy] mutableCopyWithZone:nil] autorelease];
 	[ret appendBytes:"\0" length:1];
 	return [ret bytes];
 }
@@ -233,29 +224,23 @@
 #pragma mark -
 
 - (NSString *) stringByEncodingXMLSpecialCharactersAsEntities {
-	NSMutableString *result = [self mutableCopy];
+	NSMutableString *result = [self mutableCopyWithZone:nil];
 	[result encodeXMLSpecialCharactersAsEntities];
-	NSString *immutableResult = [NSString stringWithString:result];
-	[result release];
-	return immutableResult;
+	return [result autorelease];
 }
 
 - (NSString *) stringByDecodingXMLSpecialCharacterEntities {
-	NSMutableString *result = [self mutableCopy];
+	NSMutableString *result = [self mutableCopyWithZone:nil];
 	[result decodeXMLSpecialCharacterEntities];
-	NSString *immutableResult = [NSString stringWithString:result];
-	[result release];
-	return immutableResult;
+	return [result autorelease];
 }
 
 #pragma mark -
 
 - (NSString *) stringByEscapingCharactersInSet:(NSCharacterSet *) set {
-	NSMutableString *result = [self mutableCopy];
+	NSMutableString *result = [self mutableCopyWithZone:nil];
 	[result escapeCharactersInSet:set];
-	NSString *immutableResult = [NSString stringWithString:result];
-	[result release];
-	return immutableResult;
+	return [result autorelease];
 }
 
 #pragma mark -
@@ -271,11 +256,9 @@
 #pragma mark -
 
 - (NSString *) stringByStrippingIllegalXMLCharacters {
-	NSMutableString *result = [self mutableCopy];
+	NSMutableString *result = [self mutableCopyWithZone:nil];
 	[result stripIllegalXMLCharacters];
-	NSString *immutableResult = [NSString stringWithString:result];
-	[result release];
-	return immutableResult;
+	return [result autorelease];
 }
 @end
 
@@ -301,7 +284,7 @@
 #pragma mark -
 
 - (void) escapeCharactersInSet:(NSCharacterSet *) set {
-	NSScanner *scanner = [[NSScanner alloc] initWithString:self];
+	NSScanner *scanner = [[NSScanner allocWithZone:nil] initWithString:self];
 	int offset = 0;
 	while( ! [scanner isAtEnd] ) {
 		[scanner scanUpToCharactersFromSet:set intoString:nil];
@@ -326,7 +309,7 @@
 #pragma mark -
 
 - (void) stripIllegalXMLCharacters {
-	NSMutableCharacterSet *illegalSet = [[[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopy] autorelease];
+	NSMutableCharacterSet *illegalSet = [[[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopyWithZone:nil] autorelease];
 	[illegalSet addCharactersInRange:NSMakeRange( 0x7f, 1 )];
 	[illegalSet addCharactersInRange:NSMakeRange( 0xfffe, 1 )];
 	[illegalSet addCharactersInRange:NSMakeRange( 0xffff, 1 )];
