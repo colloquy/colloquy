@@ -940,7 +940,7 @@ static SilcClientOperations silcClientOps = {
 	[self disconnect];
 
 	// if we don't have a scheduler, we don't have a lock. but we don't need to
-	// l	ock anything anyway, because silc can't be connected without scheduler ...
+	// lock anything anyway, because silc can't be connected without scheduler ...
 	if( _silcClient -> schedule ) SilcLock( _silcClient );
 	if( _silcClient -> realname ) free( _silcClient -> realname );
 	if( _silcClient -> username ) free( _silcClient -> username );
