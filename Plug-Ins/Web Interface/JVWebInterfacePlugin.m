@@ -318,18 +318,29 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 	[[doc rootElement] addChild:node];
 
 	NSSet *chats = [[JVChatController defaultController] chatViewControllersKindOfClass:[JVDirectChatPanel class]];
+	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 	NSEnumerator *enumerator = [chats objectEnumerator];
 	JVChatRoomPanel *panel = nil;
 
 	while( ( panel = [enumerator nextObject] ) ) {
 		NSXMLElement *chat = [NSXMLElement elementWithName:@"panel"];
-		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+		[attributes removeAllObjects];
 		[attributes setObject:NSStringFromClass( [panel class] ) forKey:@"class"];
 		[attributes setObject:[[panel target] description] forKey:@"name"];
 		[attributes setObject:[[panel connection] server] forKey:@"server"];
 		[attributes setObject:[panel uniqueIdentifier] forKey:@"identifier"];
 		[chat setAttributesAsDictionary:attributes];
 		[node addChild:chat];
+
+		if( [panel isMemberOfClass:[JVChatRoomPanel class]] ) {
+			NSEnumerator *members = [[panel children] objectEnumerator];
+			JVChatRoomMember *member = nil;
+			while( ( member = [members nextObject] ) ) {
+				NSXMLElement *memberNode = [[NSXMLElement alloc] initWithXMLString:[member xmlDescription] error:NULL];
+				[chat addChild:memberNode];
+				[memberNode release];
+			}
+		}
 	}
 
 	resp -> content_type = "text/xml";
@@ -434,9 +445,7 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 		resp -> content_type = "text/xml";
 		resp -> write( resp, (char *)[xml bytes], [xml length] );
 		[[doc rootElement] setChildren:nil]; // clear the queue
-	} else {
-		resp -> printf( resp, "" );
-	}
+	} else resp -> printf( resp, "" );
 }
 
 - (void) addElementToClientQueues:(NSXMLElement *) element {

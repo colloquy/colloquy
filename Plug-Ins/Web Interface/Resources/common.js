@@ -76,38 +76,77 @@ function switchPanel( id ) {
 	}
 }
 
-function createPanel( id, name, server, type ) {
-	if( panelForIdentifier( id ) ) return;
+function toggleMemberList( event, id ) {
+	var panel = panelForIdentifier( id );
+	panel.memberListVisible = ! panel.memberListVisible;
+	if( panel.memberListVisible ) panel.memberList.style.setProperty( "display", "none", "" );
+	else panel.memberList.style.setProperty( "display", "block", "" );
+	event.preventDefault();
+	event.stopPropagation();
+}
+
+function createPanel( node ) {
+	if( panelForIdentifier( node.getAttribute( "identifier" ) ) ) return;
 
 	var panel = new Object();
-	panel.id = id;
-	panel.name = name;
-	panel.server = server;
-	panel.type = type;
+	panel.id = node.getAttribute( "identifier" );
+	panel.name = node.getAttribute( "name" );
+	panel.server = node.getAttribute( "server" );
+	panel.type = node.getAttribute( "class" );
 	panel.newMessage = 0;
 	panel.newHighlightMessage = 0;
 	panel.active = false;
+	panel.memberListVisible = false;
 	panel.frame = document.createElement( "iframe" );
 	panel.listItem = document.createElement( "li" );
 	panels.push( panel );
 
-	panel.frame.id = "panel" + id;
+	panel.frame.id = "panel" + panel.id;
 	panel.frame.className = "panel";
-	panel.frame.src = "/command/panelContents?panel=" + id;
+	panel.frame.src = "/command/panelContents?panel=" + panel.id;
 	if( panels.length > 1 ) panel.frame.style.setProperty( "visibility", "hidden", "" );
 	document.getElementById( "panels" ).appendChild( panel.frame );
 
-	panel.listItem.id = "listItem" + id;
+	panel.listItem.id = "listItem" + panel.id;
 	panel.listItem.className = "listItem";
 
-	if( type == "JVChatRoomPanel" ) panel.listItem.className += " chatRoom";
-	else if( type == "JVDirectChatPanel" ) panel.listItem.className += " directChat";
+	if( panel.type == "JVChatRoomPanel" ) {
+		panel.listItem.className += " chatRoom";
+		panel.members = new Array();
+		panel.memberList = document.createElement( "ol" );
+		panel.memberList.className = "memberList";
+		panel.memberList.style.setProperty( "display", "none", "" );
 
-	panel.listItem.setAttribute( "onclick", "switchPanel(" + id + ")" );
-	panel.listItem.appendChild( document.createTextNode( name ) );
+		var memberNode = null;
+		var members = node.childNodes;
+		for( var i = 0; i < members.length; i++ ) {
+			memberNode = members[i];
+
+			var member = new Object();
+			member.name = memberNode.firstChild.nodeValue;
+			member.nickname = memberNode.getAttribute( "nickname" );
+			member.hostmask = memberNode.getAttribute( "hostmask" );
+			member.identifier = memberNode.getAttribute( "identifier" );
+			member.buddy = memberNode.getAttribute( "buddy" );
+			member.type = memberNode.getAttribute( "class" );
+			member.self = ( memberNode.getAttribute( "self" ) == "yes" );
+			panel.members.push( member );
+
+			member.listItem = document.createElement( "li" );
+			member.listItem.title = member.hostmask;
+			member.listItem.className = "listItem member" + ( member.type ? " " + member.type : "" );
+			member.listItem.appendChild( document.createTextNode( member.name ) );
+			panel.memberList.appendChild( member.listItem );
+		}
+	} else if( panel.type == "JVDirectChatPanel" ) panel.listItem.className += " directChat";
+
+	panel.listItem.setAttribute( "onclick", "switchPanel(" + panel.id + ")" );
+	panel.listItem.setAttribute( "ondblclick", "toggleMemberList(event," + panel.id + ")" );
+	panel.listItem.appendChild( document.createTextNode( panel.name ) );
 	document.getElementById( "panelList" ).appendChild( panel.listItem );
+	if( panel.memberList ) document.getElementById( "panelList" ).appendChild( panel.memberList );
 
-	if( panels.length == 1 ) switchPanel( id );
+	if( panels.length == 1 ) switchPanel( panel.id );
 }
 
 function closePanel( id ) {
@@ -130,10 +169,8 @@ function processSetup() {
 		var xml = currentRequest.responseXML;
 		var children = xml.documentElement.getElementsByTagName( "panels" ).item( 0 ).childNodes;
 
-		for( var i = 0; i < children.length; i++ ) {
-			var panel = children[i];
-			createPanel( panel.getAttribute( "identifier" ), panel.getAttribute( "name" ), panel.getAttribute( "server" ), panel.getAttribute( "class" ) );
-		}
+		for( var i = 0; i < children.length; i++ )
+			createPanel( children[i] );
 
 		checkQueue();
 		queueCheckInterval = setInterval( checkQueue, queueCheckSpeed );
@@ -149,12 +186,10 @@ function processQueue() {
 		for( var i = 0; i < children.length; i++ ) {
 			switch( children[i].tagName ) {
 			case "open":
-				var panel = children[i];
-				createPanel( panel.getAttribute( "identifier" ), panel.getAttribute( "name" ), panel.getAttribute( "server" ), panel.getAttribute( "class" ) );
+				createPanel( children[i] );
 				break;
 			case "close":
-				var panel = children[i];
-				closePanel( panel.getAttribute( "identifier" ) );
+				closePanel( children[i].getAttribute( "identifier" ) );
 				break;
 			case "message":
 				messages++;
