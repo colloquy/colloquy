@@ -49,8 +49,8 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 //		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyAwayStatusChange: ) name:MVChatConnectionBuddyIsUnawayNotification object:nil];
 
 		_person = [person retain];
-		_users = [[NSMutableArray array] retain];
-		_onlineUsers = [[NSMutableArray array] retain];
+		_users = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
+		_onlineUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 		_activeUser = nil;
 
 		ABMultiValue *value = [person valueForProperty:JVBuddyAddressBookIRCNicknameProperty];
@@ -65,6 +65,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 		[self registerWithApplicableConnections];
 	}
+
 	return self;
 }
 
@@ -121,6 +122,18 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 }
 
 - (void) setActiveUser:(MVChatUser *) user {
+	if( [user isWildcardUser] ) {
+		NSEnumerator *enumerator = [_onlineUsers objectEnumerator];
+		MVChatUser *match = nil;
+
+		while( ( match = [enumerator nextObject] ) ) {
+			if( [match isEqualToChatUser:user] ) {
+				user = match;
+				break;
+			}
+		}
+	}
+
 	[_activeUser autorelease];
 	_activeUser = [user retain];
 }
@@ -179,11 +192,11 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 #pragma mark -
 
 - (NSArray *) users {
-	return [[_users retain] autorelease];
+	return _users;
 }
 
-- (NSArray *) onlineUsers {
-	return [[_onlineUsers retain] autorelease];
+- (NSSet *) onlineUsers {
+	return _onlineUsers;
 }
 
 #pragma mark -
@@ -218,11 +231,15 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:user];
 
 	[_users removeObject:user];
-	[_onlineUsers removeObject:user];
+
+	NSArray *online = [_onlineUsers allObjects];
+	unsigned int index = [online indexOfObject:user];
+	if( index != NSNotFound ) [_onlineUsers removeObject:[online objectAtIndex:index]];
+
 	[_person setValue:value forProperty:JVBuddyAddressBookIRCNicknameProperty];
 
-	if( [[self activeUser] isEqual:user] )
-		[self setActiveUser:( [_onlineUsers count] ? [_onlineUsers lastObject] : [_users lastObject] )];
+	if( [[self activeUser] isEqualToChatUser:user] )
+		[self setActiveUser:( [_onlineUsers count] ? [_onlineUsers anyObject] : [_users lastObject] )];
 
 	[[ABAddressBook sharedAddressBook] save];
 }
@@ -323,7 +340,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 }
 
 - (ABPerson *) person {
-	return [[_person retain] autorelease];
+	return _person;
 }
 
 - (void) editInAddressBook {
@@ -430,9 +447,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyStatusChanged: ) name:MVChatUserStatusChangedNotification object:user];
 
 		BOOL cameOnline = ( ! [_onlineUsers count] ? YES : NO );
-		if( [[self activeUser] isEqual:user] ) [self setActiveUser:user]; // will remove the placeholder (wildcard user)
-		[_users removeObject:user]; // will remove the placeholder (wildcard user)
-		[_users addObject:user];
+		if( [[self activeUser] isEqualToChatUser:user] ) [self setActiveUser:user]; // will remove the placeholder (wildcard user)
 		[_onlineUsers addObject:user];
 
 		if( [self status] != MVChatUserAvailableStatus || [self status] != MVChatUserAwayStatus ) [self setActiveUser:user];
@@ -447,7 +462,11 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 	[_onlineUsers removeObject:user];
 
-	if( [_onlineUsers count] ) [self setActiveUser:[_onlineUsers lastObject]];
+	if( [[self activeUser] isEqualToChatUser:user] ) {
+		if( [_onlineUsers count] ) [self setActiveUser:[_onlineUsers anyObject]];
+		else [self setActiveUser:[_users lastObject]];
+	}
+
 	if( ! [_onlineUsers count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];

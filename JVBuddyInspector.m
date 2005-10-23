@@ -83,12 +83,13 @@
 - (IBAction) changeServer:(id) sender {
 	if( [[sender selectedItem] tag] ) {
 		[_activeUsers autorelease];
-		_activeUsers = [[NSMutableArray arrayWithArray:[_buddy users]] retain];
+		_activeUsers = [[[_buddy users] allObjects] mutableCopyWithZone:nil];
+		[_activeUsers sortUsingSelector:@selector( compareByNickname: )];
 		[[nicknames tableColumnWithIdentifier:@"nickname"] setEditable:NO];
 		[addNickname setEnabled:NO];
 	} else {
 		[_activeUsers autorelease];
-		_activeUsers = [[NSMutableArray array] retain];
+		_activeUsers = [[NSMutableArray allocWithZone:nil] initWithCapacity:[[_buddy users] count]];
 
 		NSEnumerator *enumerator = [[_buddy users] objectEnumerator];
 		MVChatUser *user = nil;
@@ -96,6 +97,8 @@
 		while( ( user = [enumerator nextObject] ) )
 			if( [[servers titleOfSelectedItem] caseInsensitiveCompare:[user serverAddress]] == NSOrderedSame )
 				[_activeUsers addObject:user];
+
+		[_activeUsers sortUsingSelector:@selector( compareByNickname: )];
 
 		[[nicknames tableColumnWithIdentifier:@"nickname"] setEditable:YES];
 		[addNickname setEnabled:YES];

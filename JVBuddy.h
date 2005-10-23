@@ -22,7 +22,7 @@ typedef enum {
 @interface JVBuddy : NSObject {
 	ABPerson *_person;
 	NSMutableArray *_users;
-	NSMutableArray *_onlineUsers;
+	NSMutableSet *_onlineUsers;
 	MVChatUser *_activeUser;
 }
 + (JVBuddyName) preferredName;
@@ -52,7 +52,7 @@ typedef enum {
 - (NSString *) nickname;
 
 - (NSArray *) users;
-- (NSArray *) onlineUsers;
+- (NSSet *) onlineUsers;
 
 - (void) addUser:(MVChatUser *) user;
 - (void) removeUser:(MVChatUser *) user;

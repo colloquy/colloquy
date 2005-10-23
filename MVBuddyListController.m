@@ -53,9 +53,9 @@ static MVBuddyListController *sharedInstance = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserStatusChangedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserIdleTimeUpdatedNotification object:nil];
 
-		_onlineBuddies = [[NSMutableSet set] retain];
-		_buddyList = [[NSMutableSet set] retain];
-		_buddyOrder = [[NSMutableArray array] retain];
+		_onlineBuddies = [[NSMutableSet allocWithZone:nil] initWithCapacity:20];
+		_buddyList = [[NSMutableSet allocWithZone:nil] initWithCapacity:40];
+		_buddyOrder = [[NSMutableArray allocWithZone:nil] initWithCapacity:40];
 
 		[self _loadBuddyList];
 
@@ -160,17 +160,18 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 - (JVBuddy *) buddyForUser:(MVChatUser *) user {
-	NSEnumerator *enumerator = [_buddyList objectEnumerator];
+	NSEnumerator *enumerator = [_onlineBuddies objectEnumerator];
 	JVBuddy *buddy = nil;
 
 	while( ( buddy = [enumerator nextObject] ) )
-		if( [[buddy users] containsObject:user] ) return buddy;
+		if( [[buddy onlineUsers] containsObject:user] )
+			return buddy;
 
 	return nil;
 }
 
 - (NSArray *) buddies {
-	return [[_buddyOrder retain] autorelease];
+	return _buddyOrder;
 }
 
 - (NSArray *) onlineBuddies {
@@ -638,26 +639,34 @@ static MVBuddyListController *sharedInstance = nil;
 		}
 	} else if( [[column identifier] isEqualToString:@"switch"] ) {
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
-		NSArray *onlineUsers = [buddy onlineUsers];
-		NSArray *users = nil;
+		NSSet *onlineUsers = [buddy onlineUsers];
+		id users = nil;
 
 		if( _showOfflineBuddies ) users = [buddy users];
-		else users = [buddy onlineUsers];
+		else users = onlineUsers;
 
 		if( [users count] >= 2 ) {
+			NSMutableArray *ordered = nil;
+			if( [users isKindOfClass:[NSArray class]] ) ordered = [users mutableCopyWithZone:nil];
+			else if( [users isKindOfClass:[NSSet class]] ) ordered = [[users allObjects] mutableCopyWithZone:nil];
+			else return;
+
+			[ordered sortUsingSelector:@selector( compareByNickname: )];
+
 			NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 			NSMenuItem *item = nil;
-			NSEnumerator *userEnumerator = [users objectEnumerator];
+			NSEnumerator *userEnumerator = [ordered objectEnumerator];
 			MVChatUser *activeUser = [buddy activeUser];
 			MVChatUser *user = nil;
 
 			[menu setAutoenablesItems:NO];
 			while( ( user = [userEnumerator nextObject] ) ) {
 				item = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [user nickname], [user serverAddress]] action:NULL keyEquivalent:@""] autorelease];
-				if( [user isEqual:activeUser] ) [item setState:NSOnState];
-				if( ! [onlineUsers containsObject:user] ) [item setEnabled:NO];
+				if( [user isEqualToChatUser:activeUser] ) [item setState:NSOnState];
 				[menu addItem:item];
 			}
+
+			[ordered release];
 
 			[cell setMenu:menu];
 			[cell setArrowPosition:NSPopUpArrowAtCenter];
@@ -674,12 +683,20 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) tableColumn row:(int) row {
 	if( row == -1 || row >= [_buddyOrder count] ) return;
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
-	NSArray *users = nil;
+	id users = nil;
 
 	if( _showOfflineBuddies ) users = [buddy users];
 	else users = [buddy onlineUsers];
 
-	[buddy setActiveUser:[users objectAtIndex:[object unsignedIntValue]]];
+	NSMutableArray *ordered = nil;
+	if( [users isKindOfClass:[NSArray class]] ) ordered = [users mutableCopyWithZone:nil];
+	else if( [users isKindOfClass:[NSSet class]] ) ordered = [[users allObjects] mutableCopyWithZone:nil];
+
+	[ordered sortUsingSelector:@selector( compareByNickname: )];
+
+	[buddy setActiveUser:[ordered objectAtIndex:[object unsignedIntValue]]];
+
+	[ordered release];
 
 	[buddies reloadData];
 	[self _sortBuddiesAnimated:nil];
