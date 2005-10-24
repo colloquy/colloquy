@@ -83,7 +83,7 @@
 - (IBAction) changeServer:(id) sender {
 	if( [[sender selectedItem] tag] ) {
 		[_activeUsers autorelease];
-		_activeUsers = [[[_buddy users] allObjects] mutableCopyWithZone:nil];
+		_activeUsers = [[_buddy users] mutableCopyWithZone:nil];
 		[_activeUsers sortUsingSelector:@selector( compareByNickname: )];
 		[[nicknames tableColumnWithIdentifier:@"nickname"] setEditable:NO];
 		[addNickname setEnabled:NO];
