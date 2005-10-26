@@ -146,6 +146,8 @@ function createPanel( node ) {
 	document.getElementById( "panelList" ).appendChild( panel.listItem );
 	if( panel.memberList ) document.getElementById( "panelList" ).appendChild( panel.memberList );
 
+	setTimeout( scrollToBottom, 50, panel.frame );
+
 	if( panels.length == 1 ) switchPanel( panel.id );
 }
 
