@@ -24,7 +24,7 @@
 #import "NSAttributedStringMoreAdditions.h"
 #import "JVSpeechController.h"
 
-static NSArray *JVAutoActionVerbs = nil;
+static NSSet *actionVerbs = nil;
 
 const NSStringEncoding JVAllowedTextEncodings[] = {
 	/* Universal */
@@ -291,7 +291,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (void) dealloc {
-	extern NSArray *JVAutoActionVerbs;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_target release];
@@ -307,10 +306,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		NSReleaseAlertPanel( alert );
 
 	[_waitingAlerts release];
-
-	[JVAutoActionVerbs autorelease];
-	if( [JVAutoActionVerbs retainCount] == 1 )
-		JVAutoActionVerbs = nil;
 
 	_target = nil;
 	_sendHistory = nil;
@@ -908,21 +903,19 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 			} else {
 				if( [[subMsg string] hasPrefix:@"//"] ) [subMsg deleteCharactersInRange:NSMakeRange( 0, 1 )];
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
-					extern NSArray *JVAutoActionVerbs;
-					if( ! JVAutoActionVerbs ) JVAutoActionVerbs = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]] retain];
-					else [JVAutoActionVerbs retain];
-					NSString *tempString = [[subMsg string] stringByAppendingString:@" "];
-					NSEnumerator *enumerator = [JVAutoActionVerbs objectEnumerator];
-					NSString *verb = nil;
-					while( ( verb = [enumerator nextObject] ) ) {
-						if( [tempString hasPrefix:[verb stringByAppendingString:@" "]] ) {
-							action = YES;
-							break;
-						}
+					extern NSSet *actionVerbs;
+					if( ! actionVerbs ) {
+						NSArray *verbs = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
+						actionVerbs = [[NSSet allocWithZone:nil] initWithArray:verbs];
 					}
+
+					NSString *word = [subMsg string];
+					NSRange range = [[subMsg string] rangeOfString:@" "];
+					if( range.location != NSNotFound ) word = [word substringToIndex:range.location];
+					if( [actionVerbs containsObject:word] ) action = YES;
 				}
 
-				if( [[subMsg string] length] ) {
+				if( [subMsg length] ) {
 					JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] localUser]];
 					[cmessage setAction:action];
 
