@@ -909,10 +909,14 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 						actionVerbs = [[NSSet allocWithZone:nil] initWithArray:verbs];
 					}
 
+					NSMutableCharacterSet *characters = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
+					[characters formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
+
 					NSString *word = [subMsg string];
-					NSRange range = [[subMsg string] rangeOfString:@" "];
+					NSRange range = [[subMsg string] rangeOfCharacterFromSet:characters];
 					if( range.location != NSNotFound ) word = [word substringToIndex:range.location];
 					if( [actionVerbs containsObject:word] ) action = YES;
+					[characters release];
 				}
 
 				if( [subMsg length] ) {
