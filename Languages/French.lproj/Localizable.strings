@@ -1,0 +1,1331 @@
+/* temporary ignore title suffix */
+" (Temporary)" = " (Temporary)";
+
+/* file size measured in kilobytes */
+"%.1f KB" = "%.1f KB";
+
+/* file size measured in megabytes */
+"%.2f MB" = "%.2f MB";
+
+/* file size measured in gigabytes */
+"%.3f GB" = "%.3f GB";
+
+/* file size measured in terabytes */
+"%.4f TB" = "%.4f TB";
+
+/* room status info tooltip in drawer */
+"%@ (%@)\n%d members\n%@" = "%1$@ (%2$@)\n%3$d members\n%4$@";
+
+/* chat transcript/log - window title */
+"%@ - %@ Transcript" = "%1$@ - %2$@ Transcript";
+
+/* chat console - window title */
+"%@ - Console" = "%@ - Console";
+
+/* style already installed title
+   emoticons already installed title */
+"%@ Already Installed" = "%@ Already Installed";
+
+/* someone else don't required op to set topic room status message */
+"%@ changed this room to allow anyone to change the topic." = "%@ changed this room to allow anyone to change the topic.";
+
+/* someone else no longer passworded room status message */
+"%@ changed this room to no longer require a password." = "%@ changed this room to no longer require a password.";
+
+/* someone else permit outside messages room status message */
+"%@ changed this room to permit outside messages." = "%@ changed this room to permit outside messages.";
+
+/* someone else prohibit outside messages room status message */
+"%@ changed this room to prohibit outside messages." = "%@ changed this room to prohibit outside messages.";
+
+/* someone else password required room status message */
+"%@ changed this room to require a password of \"%@\"." = "%1$@ changed this room to require a password of \"%2$@\".";
+
+/* someone else required op to set topic room status message */
+"%@ changed this room to require operator status to change the topic." = "%@ changed this room to require operator status to change the topic.";
+
+/* time that has passed on selected transfer */
+"%@ elapsed" = "%@ elapsed";
+
+/* time that has passed and time that remains on selected transfer */
+"%@ elapsed, %@ remaining" = "%1$@ elapsed, %2$@ remaining";
+
+/* crash message */
+"%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@." = "%1$@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %2$@.";
+
+/* bubble message member lost voice string */
+"%@ had voice removed by %@ in %@." = "%1$@ had voice removed by %2$@ in %3$@.";
+
+/* new room messages bubble text */
+"%@ has %d messages waiting." = "%1$@ has %2$d messages waiting.";
+
+/* new single room message bubble text */
+"%@ has 1 message waiting." = "%@ has 1 message waiting.";
+
+/* new room messages bubble text */
+"%@ has possibly replied to your message." = "%@ has possibly replied to your message.";
+
+/* user not online */
+"%@ is not online. Any messages sent will not be received." = "%@ is not online. Any messages sent will not be received.";
+
+/* user has changed nicknames */
+"%@ is now known as <span class=\"member\">%@</span>." = "%1$@ is now known as <span class=\"member\">%2$@</span>.";
+
+/* would you like to view the style in the Appearance Preferences
+   would you like to view the emoticons in the Appearance Preferences */
+"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?" = "%1$@ is ready to be used in your colloquies. Would you like to view %2$@ and it's options in the Appearance Preferences?";
+
+/* bubble message member joined string */
+"%@ joined the chat room %@." = "%1$@ joined the chat room %2$@.";
+
+/* bubble message member left string */
+"%@ left the chat room %@." = "%1$@ left the chat room %2$@.";
+
+/* someone else invite only room status message */
+"%@ made this room invite only." = "%@ made this room invite only.";
+
+/* someone else moderated for normal users room status message */
+"%@ made this room moderated for normal users." = "%@ made this room moderated for normal users.";
+
+/* someone else moderated for operators room status message */
+"%@ made this room moderated for operators." = "%@ made this room moderated for operators.";
+
+/* someone else no longer secret room status message */
+"%@ made this room no longer a secret." = "%@ made this room no longer a secret.";
+
+/* someone else no longer invite only room status message */
+"%@ made this room no longer invite only." = "%@ made this room no longer invite only.";
+
+/* someone else no longer moderated for normal users room status message */
+"%@ made this room no longer moderated for normal users." = "%@ made this room no longer moderated for normal users.";
+
+/* someone else no longer moderated for operators room status message */
+"%@ made this room no longer moderated for operators." = "%@ made this room no longer moderated for operators.";
+
+/* someone else private room status message */
+"%@ made this room private." = "%@ made this room private.";
+
+/* someone else public room status message */
+"%@ made this room public." = "%@ made this room public.";
+
+/* someone else secret room status message */
+"%@ made this room secret." = "%@ made this room secret.";
+
+/* status of current download file transfer */
+"%@ of %@ downloaded, at %@ per second" = "%1$@ of %2$@ downloaded, at %3$@ per second";
+
+/* status of current upload file transfer */
+"%@ of %@ uploaded, at %@ per second" = "%1$@ of %2$@ uploaded, at %3$@ per second";
+
+/* someone else no member limit room status message */
+"%@ removed the room member limit" = "%@ removed the room member limit";
+
+/* member replied bubble title */
+"%@ Replied" = "%@ Replied";
+
+/* room activity bubble title */
+"%@ Room Activity" = "%@ Room Activity";
+
+/* someone else member limit room status message */
+"%@ set a limit on the number of room members to %@." = "%1$@ set a limit on the number of room members to %2$@.";
+
+/* emoticon installed title
+   style installed title */
+"%@ Successfully Installed" = "%@ Successfully Installed";
+
+/* program update */
+"%@ Update" = "%@ Update";
+
+/* bubble message member operator demotion string */
+"%@ was demoted from half-operator by %@ in %@." = "%1$@ was demoted from half-operator by %2$@ in %3$@.";
+
+/* bubble message member operator demotion string */
+"%@ was demoted from operator by %@ in %@." = "%1$@ was demoted from operator by %2$@ in %3$@.";
+
+/* bubble message member voiced string */
+"%@ was granted voice by %@ in %@." = "%1$@ was granted voice by %2$@ in %3$@.";
+
+/* bubble message member kicked string */
+"%@ was kicked from %@ by %@." = "%1$@ was kicked from %2$@ by %3$@.";
+
+/* user has been removed by force from a chat room status message */
+"%@ was kicked from the chat room by <span class=\"member\">%@</span>." = "%1$@ was kicked from the chat room by <span class=\"member\">%2$@</span>.";
+
+/* bubble message member half-operator promotion string */
+"%@ was promoted to half-operator by %@ in %@." = "%1$@ was promoted to half-operator by %2$@ in %3$@.";
+
+/* bubble message member operator promotion string */
+"%@ was promoted to operator by %@ in %@." = "%1$@ was promoted to operator by %2$@ in %3$@.";
+
+/* bubble message member quieted string */
+"%@ was quieted by %@ in %@." = "%1$@ was quieted by %2$@ in %3$@.";
+
+/* first message bubble text */
+"%@ wrote you a private message." = "%@ wrote you a private message.";
+
+/* chat room user ignored bubble text */
+"%@'s message was ignored in %@." = "%1$@'s message was ignored in %2$@.";
+
+/* direct chat user ignored bubble text */
+"%@'s message was ignored." = "%@'s message was ignored.";
+
+/* console tooltip witg lag (server delay) info in seconds */
+"%@\n%.3f seconds lag" = "%1$@\n%2$.3f seconds lag";
+
+/* number of room members information line */
+"%d members" = "%d members";
+
+/* messages waiting room tooltip */
+"%d messages waiting" = "%d messages waiting";
+
+/* number of rooms found with a filter from the server listing */
+"%d of %d rooms found." = "%1$d of %2$d rooms found.";
+
+/* number of rooms listed on the server */
+"%d rooms indexed." = "%d rooms indexed.";
+
+/* number of rules info label */
+"%d rules" = "%d rules";
+
+/* file size measured in bytes */
+"%lu bytes" = "%lu bytes";
+
+/* number of hidden messages */
+"%u hidden" = "%u hidden";
+
+/* no chat topic is set message */
+"(no chat topic is set)" = "(no chat topic is set)";
+
+/* room list separator */
+", " = ", ";
+
+/* one message waiting room tooltip */
+"1 message waiting" = "1 message waiting";
+
+/* one rule info label */
+"1 rule" = "1 rule";
+
+/* user no longer has special voice status and can't talk in moderated rooms status message */
+"<span class=\"member\">%@</span> had voice removed by <span class=\"member\">%@</span>." = "<span class=\"member\">%1$@</span> had voice removed by <span class=\"member\">%2$@</span>.";
+
+/* we removed user's special voice status and can't talk in moderated rooms status message */
+"<span class=\"member\">%@</span> had voice removed by you." = "<span class=\"member\">%@</span> had voice removed by you.";
+
+/* user is no longer quieted because of someone else in the room status message */
+"<span class=\"member\">%@</span> is no longer quieted because of <span class=\"member\">%@</span>." = "<span class=\"member\">%1$@</span> is no longer quieted because of <span class=\"member\">%2$@</span>.";
+
+/* a user is no longer quieted because of us status message */
+"<span class=\"member\">%@</span> is no longer quieted because of you." = "<span class=\"member\">%@</span> is no longer quieted because of you.";
+
+/* a user has join a chat room status message */
+"<span class=\"member\">%@</span> joined the chat room." = "<span class=\"member\">%@</span> joined the chat room.";
+
+/* a user has left the chat room status message */
+"<span class=\"member\">%@</span> left the chat room." = "<span class=\"member\">%@</span> left the chat room.";
+
+/* user removed a ban chat room status message */
+"<span class=\"member\">%@</span> removed the ban on %@." = "<span class=\"member\">%1$@</span> removed the ban on %2$@.";
+
+/* user set a ban chat room status message */
+"<span class=\"member\">%@</span> set a ban on %@." = "<span class=\"member\">%1$@</span> set a ban on %2$@.";
+
+/* user is no longer a chat room half-operator status message */
+"<span class=\"member\">%@</span> was demoted from half-operator by <span class=\"member\">%@</span>." = "<span class=\"member\">%1$@</span> was demoted from half-operator by <span class=\"member\">%2$@</span>.";
+
+/* we removed user's chat room half-operator status message */
+"<span class=\"member\">%@</span> was demoted from half-operator by you." = "<span class=\"member\">%@</span> was demoted from half-operator by you.";
+
+/* user is no longer a chat room operator status message */
+"<span class=\"member\">%@</span> was demoted from operator by <span class=\"member\">%@</span>." = "<span class=\"member\">%1$@</span> was demoted from operator by <span class=\"member\">%2$@</span>.";
+
+/* we removed user's chat room operator status message */
+"<span class=\"member\">%@</span> was demoted from operator by you." = "<span class=\"member\">%@</span> was demoted from operator by you.";
+
+/* user is no longer a chat room founder status message */
+"<span class=\"member\">%@</span> was demoted from room founder by <span class=\"member\">%@</span>." = "<span class=\"member\">%1$@</span> was demoted from room founder by <span class=\"member\">%2$@</span>.";
+
+/* we removed user's chat room founder status message */
+"<span class=\"member\">%@</span> was demoted from room founder by you." = "<span class=\"member\">%@</span> was demoted from room founder by you.";
+
+/* user now has special voice status to talk in moderated rooms status message */
+"<span class=\"member\">%@</span> was granted voice by <span class=\"member\">%@</span>." = "<span class=\"member\">%1$@</span> was granted voice by <span class=\"member\">%2$@</span>.";
+
+/* we gave user special voice status to talk in moderated rooms status message */
+"<span class=\"member\">%@</span> was granted voice by you." = "<span class=\"member\">%@</span> was granted voice by you.";
+
+/* user is now a chat room half-operator status message */
+"<span class=\"member\">%@</span> was promoted to half-operator by <span class=\"member\">%@</span>." = "<span class=\"member\">%1$@</span> was promoted to half-operator by <span class=\"member\">%2$@</span>.";
+
+/* we gave user chat room half-operator status message */
+"<span class=\"member\">%@</span> was promoted to half-operator by you." = "<span class=\"member\">%@</span> was promoted to half-operator by you.";
+
+/* user is now a chat room operator status message */
+"<span class=\"member\">%@</span> was promoted to operator by <span class=\"member\">%@</span>." = "<span class=\"member\">%1$@</span> was promoted to operator by <span class=\"member\">%2$@</span>.";
+
+/* we gave user chat room operator status message */
+"<span class=\"member\">%@</span> was promoted to operator by you." = "<span class=\"member\">%@</span> was promoted to operator by you.";
+
+/* user is now a chat room founder status message */
+"<span class=\"member\">%@</span> was promoted to room founder by <span class=\"member\">%@</span>." = "<span class=\"member\">%1$@</span> was promoted to room founder by <span class=\"member\">%2$@</span>.";
+
+/* we gave user chat room founder status message */
+"<span class=\"member\">%@</span> was promoted to room founder by you." = "<span class=\"member\">%@</span> was promoted to room founder by you.";
+
+/* user was quieted by someone else in the room status message */
+"<span class=\"member\">%@</span> was quieted by <span class=\"member\">%@</span>." = "<span class=\"member\">%1$@</span> was quieted by <span class=\"member\">%2$@</span>.";
+
+/* we quieted someone else in the room status message */
+"<span class=\"member\">%@</span> was quieted by you." = "<span class=\"member\">%@</span> was quieted by you.";
+
+/* new file transfer dialog message */
+"A file named \"%@\" is being sent to you from %@. This file is %@ in size." = "A file named \"%1$@\" is being sent to you from %2$@. This file is %3$@ in size.";
+
+/* the software needs updated question */
+"A newer version of this software has just been detected, would you like to see what's new?" = "A newer version of this software has just been detected, would you like to see what's new?";
+
+/* accept button name */
+"Accept" = "Accept";
+
+/* add to favorites contextual menu */
+"Add \"%@ (%@)\"" = "Add \"%1$@ (%2$@)\"";
+
+/* add to buddy list contextual menu */
+"Add To Buddy List" = "Add To Buddy List";
+
+/* add to favorites menu item
+   add to favorites contextual menu */
+"Add to Favorites" = "Add to Favorites";
+
+/* alerts preference pane name */
+"Alerts" = "Alerts";
+
+/* already connected dialog title */
+"Already connected" = "Already connected";
+
+/* unknown error dialog title */
+"An error occured" = "An error occured";
+
+/* unknown error dialog message */
+"An error occured when dealing with %@. %@" = "An error occured when dealing with %1$@. %2$@";
+
+/* chat connecting error dialog title */
+"An error occured while connecting" = "An error occured while connecting";
+
+/* the stylesheet parse failed */
+"An internal Style error occurred." = "An internal Style error occurred.";
+
+/* kick reason (secondary) */
+"And reason:" = "And reason:";
+
+/* appearance preference pane name */
+"Appearance" = "Appearance";
+
+/* appearance preferences menu item title */
+"Appearance Preferences..." = "Appearance Preferences...";
+
+/* confirm the delete of a connection */
+"Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted." = "Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted.";
+
+/* delete confirm dialog title */
+"Are you sure you want to delete?" = "Are you sure you want to delete?";
+
+/* are you sure you want to part all chat rooms dialog title */
+"Are you sure you want to part from all chat rooms and close this window?" = "Are you sure you want to part from all chat rooms and close this window?";
+
+/* are you sure you want to quit message */
+"Are you sure you want to quit Colloquy and disconnect from all active connections?" = "Are you sure you want to quit Colloquy and disconnect from all active connections?";
+
+/* are you sure you want to quit title */
+"Are you sure you want to quit?" = "Are you sure you want to quit?";
+
+/* available buddy status */
+"Available" = "Available";
+
+/* away buddy status */
+"Away" = "Away";
+
+/* color panel Background Color button */
+"Background Color" = "Background Color";
+
+/* ban user from room label */
+"Ban %@ from the %@ room." = "Ban %1$@ from the %2$@ room.";
+
+/* ban from room contextual menu - admin only */
+"Ban From Room" = "Ban From Room";
+
+/* ban from room (customized) contextual menu - admin only */
+"Ban From Room..." = "Ban From Room...";
+
+/* ban user button */
+"Ban User" = "Ban User";
+
+/* behavior preference pane name */
+"Behavior" = "Behavior";
+
+/* blank ignore name */
+"Blank Ignore" = "Blank Ignore";
+
+/* buddy inspector type */
+"Buddy" = "Buddy";
+
+/* available buddy bubble title */
+"Buddy Available" = "Buddy Available";
+
+/* unavailable buddy bubble title */
+"Buddy Unavailable" = "Buddy Unavailable";
+
+/* choose style toolbar item tooltip */
+"Change chat style" = "Change chat style";
+
+/* choose emoticons toolbar item tooltip */
+"Change Emoticons" = "Change Emoticons";
+
+/* member invited to room title */
+"Chat Room Invite" = "Chat Room Invite";
+
+/* chat invalid nickname dialog title */
+"Chat Server is blank" = "Chat Server is blank";
+
+/* chat invalid nickname dialog title */
+"Chat Server Port is invalid" = "Chat Server Port is invalid";
+
+/* clear finished transfers toolbar button name
+   clear display toolbar button name
+   clear console toolbar button name */
+"Clear" = "Clear";
+
+/* clear all marks contextual menu item title */
+"Clear All Marks" = "Clear All Marks";
+
+/* clear console tooltip
+   clear console toolbar customize palette name */
+"Clear Console" = "Clear Console";
+
+/* clear display contextual menu
+   clear console contextual menu item title
+   clear display tooltip
+   clear display toolbar customize palette name */
+"Clear Display" = "Clear Display";
+
+/* clear finished transfers toolbar customize palette name */
+"Clear Finished" = "Clear Finished";
+
+/* clear finished transfers tooltip */
+"Clear Finished Transfers" = "Clear Finished Transfers";
+
+/* clear marks from here up contextual menu */
+"Clear Marks from Here Down" = "Clear Marks from Here Down";
+
+/* clear marks from here left contextual menu */
+"Clear Marks from Here Left" = "Clear Marks from Here Left";
+
+/* clear marks from here right contextual menu */
+"Clear Marks from Here Right" = "Clear Marks from Here Right";
+
+/* clear marks from here up contextual menu */
+"Clear Marks from Here Up" = "Clear Marks from Here Up";
+
+/* close contextual menu item title */
+"Close" = "Close";
+
+/* connect to server title */
+"Connect" = "Connect";
+
+/* connect button tooltip */
+"Connect to server" = "Connect to server";
+
+/* connect button tooltip */
+"Connect to Server" = "Connect to Server";
+
+/* connected bubble title */
+"Connected" = "Connected";
+
+/* connection inspector type */
+"Connection" = "Connection";
+
+/* name for connection info button in customize palette */
+"Connection Info" = "Connection Info";
+
+/* connection is disconnected dialog title */
+"Connection is Disconnected" = "Connection is Disconnected";
+
+/* connection failed to the update server */
+"Connection to the Update server failed." = "Connection to the Update server failed.";
+
+/* short toolbar server console button name */
+"Console" = "Console";
+
+/* title of the could not connect error */
+"Could not connect" = "Could not connect";
+
+/* chat invalid password dialog title */
+"Could not connect to Chat server" = "Could not connect to Chat server";
+
+/* current version */
+"currently using %@ (v%@)" = "currently using %1$@ (v%2$@)";
+
+/* singular day */
+"day" = "day";
+
+/* plural days */
+"days" = "days";
+
+/* decline button */
+"Decline" = "Decline";
+
+/* default style menu item title */
+"Default" = "Default";
+
+/* delete item title
+   delete contextual menu item title */
+"Delete" = "Delete";
+
+/* name for delete connection button in customize palette
+   delete connection button tooltip */
+"Delete Connection" = "Delete Connection";
+
+/* demote half-operator contextual menu - admin only */
+"Demote Half Operator" = "Demote Half Operator";
+
+/* demote operator contextual menu - admin only */
+"Demote Operator" = "Demote Operator";
+
+/* detach from window contextual menu item title */
+"Detach From Window" = "Detach From Window";
+
+/* disconnect from server title */
+"Disconnect" = "Disconnect";
+
+/* disconnect button tooltip */
+"Disconnect from Server" = "Disconnect from Server";
+
+/* disconnected bubble title */
+"Disconnected" = "Disconnected";
+
+/* disconnected status info line in drawer */
+"disconnected" = "disconnected";
+
+/* chat panes drawer toolbar item name */
+"Drawer" = "Drawer";
+
+/* error installing emoticons title */
+"Emoticon Installation Error" = "Emoticon Installation Error";
+
+/* choose emoticons contextual menu
+   choose emoticons toolbar item menu representation title
+   choose emoticons toolbar item patlette label
+   choose emoticons toolbar item label */
+"Emoticons" = "Emoticons";
+
+/* encoding contextual menu
+   encoding menu toolbar item */
+"Encoding" = "Encoding";
+
+/* find toolbar item patlette label
+   find toolbar item label */
+"Find" = "Find";
+
+/* focused window label, interface preferences */
+"Focused Window" = "Focused Window";
+
+/* force quiet contextual menu - admin only */
+"Force Quiet" = "Force Quiet";
+
+/* color panel Foreground Color button */
+"Foreground Color" = "Foreground Color";
+
+/* general preference pane name */
+"General" = "General";
+
+/* get info contextual menu item title */
+"Get Info" = "Get Info";
+
+/* grant voice contextual menu - admin only */
+"Grant Voice" = "Grant Voice";
+
+/* hide drawer menu title */
+"Hide Drawer" = "Hide Drawer";
+
+/* hide tab bar menu title */
+"Hide Tab Bar" = "Hide Tab Bar";
+
+/* singular hour */
+"hour" = "hour";
+
+/* plural hours */
+"hours" = "hours";
+
+/* idle buddy status */
+"Idle" = "Idle";
+
+/* ignore user contextual menu */
+"Ignore" = "Ignore";
+
+/* new file transfer dialog title */
+"Incoming File Transfer" = "Incoming File Transfer";
+
+/* encoding of the message different than your current encoding */
+"incompatible encoding" = "incompatible encoding";
+
+/* short toolbar connection info button name */
+"Info" = "Info";
+
+/* short toolbar inspector button name
+   inspector toolbar button in customize palette */
+"Inspector" = "Inspector";
+
+/* interface preference pane name */
+"Interface" = "Interface";
+
+/* bubble title invited to room */
+"Invited to Chat" = "Invited to Chat";
+
+/* irc nickname buddy picker column title */
+"IRC Nickname" = "IRC Nickname";
+
+/* new buddy card note */
+"IRC Nickname: %@ (%@)" = "IRC Nickname: %1$@ (%2$@)";
+
+/* join button */
+"Join" = "Join";
+
+/* join chat room button tooltip */
+"Join a chat room" = "Join a chat room";
+
+/* name for join chat room button in customize palette */
+"Join Chat Room" = "Join Chat Room";
+
+/* short toolbar join chat room button name */
+"Join Room" = "Join Room";
+
+/* join room contextual menu item title */
+"Join Room..." = "Join Room...";
+
+/* chat room joined date label */
+"Joined: %@" = "Joined: %@";
+
+/* joining status info line in drawer */
+"joining..." = "joining...";
+
+/* jump to next mark contextual menu */
+"Jump to Next Mark" = "Jump to Next Mark";
+
+/* jump to previous mark contextual menu */
+"Jump to Previous Mark" = "Jump to Previous Mark";
+
+/* kick user from room */
+"Kick %@ from the %@ room." = "Kick %1$@ from the %2$@ room.";
+
+/* kickban from room contextual menu - admin only */
+"Kick & Ban From Room" = "Kick & Ban From Room";
+
+/* kickban from room (customized) contextual menu - admin only */
+"Kick & Ban From Room..." = "Kick & Ban From Room...";
+
+/* kick and ban user button */
+"Kick & Ban User" = "Kick & Ban User";
+
+/* kickban user from room */
+"Kick and ban %@ from the %@ room." = "Kick and ban %1$@ from the %2$@ room.";
+
+/* kick from room contextual menu - admin only */
+"Kick From Room" = "Kick From Room";
+
+/* kick from room (customized) contextual menu - admin only */
+"Kick From Room..." = "Kick From Room...";
+
+/* kick user button */
+"Kick User" = "Kick User";
+
+/* chat room kicked status line in drawer */
+"kicked out" = "kicked out";
+
+/* leave room contextual menu item title */
+"Leave Room" = "Leave Room";
+
+/* make half-operator contextual menu - admin only */
+"Make Half Operator" = "Make Half Operator";
+
+/* make operator contextual menu - admin only */
+"Make Operator" = "Make Operator";
+
+/* mark display toolbar button name */
+"Mark" = "Mark";
+
+/* mark display tooltip
+   mark display toolbar customize palette name */
+"Mark Display" = "Mark Display";
+
+/* message user button tooltip */
+"Message a user" = "Message a user";
+
+/* message ignored bubble title */
+"Message Ignored" = "Message Ignored";
+
+/* toolbar message user button name */
+"Message User" = "Message User";
+
+/* message user contextual menu item title */
+"Message User..." = "Message User...";
+
+/* toggle private messages toolbar button name */
+"Messages" = "Messages";
+
+/* singular minute */
+"minute" = "minute";
+
+/* plural minutes */
+"minutes" = "minutes";
+
+/* singular month */
+"month" = "month";
+
+/* plural months */
+"months" = "months";
+
+/* multiple user same nickname, user selection description */
+"Multiple users with the name '%@' have been found." = "Multiple users with the name '%@' have been found.";
+
+/* not applicable identifier
+   not applicable or not available */
+"n/a" = "n/a";
+
+/* never answer */
+"Never" = "Never";
+
+/* new connection title */
+"New" = "New";
+
+/* new connection tooltip */
+"New Connection" = "New Connection";
+
+/* first message bubble title */
+"New Private Message" = "New Private Message";
+
+/* member promoted to half-operator title */
+"New Room Half-Operator" = "New Room Half-Operator";
+
+/* member promoted title */
+"New Room Operator" = "New Room Operator";
+
+/* new smart transcript menu title */
+"New Smart Transcript..." = "New Smart Transcript...";
+
+/* new window label, interface preferences */
+"New Window" = "New Window";
+
+/* chat invalid nickname dialog title */
+"Nickname is blank" = "Nickname is blank";
+
+/* no button
+   no answer */
+"No" = "No";
+
+/* no favorites menu title */
+"No Favorites" = "No Favorites";
+
+/* no info inspector title */
+"No Info" = "No Info";
+
+/* no messages waiting room tooltip */
+"no messages waiting" = "no messages waiting";
+
+/* no files have been transfered or in the process of transfering */
+"no recent file transfers" = "no recent file transfers";
+
+/* no rules info label */
+"No rules" = "No rules";
+
+/* no selectable emoticons menu item title */
+"No Selectable Emoticons" = "No Selectable Emoticons";
+
+/* no smart transcripts menu title */
+"No Smart Transcripts" = "No Smart Transcripts";
+
+/* no background image label */
+"None" = "None";
+
+/* normal style variant menu item title */
+"Normal" = "Normal";
+
+/* normal user class */
+"Normal user" = "Normal user";
+
+/* status of pending download file transfer */
+"nothing downloaded yet" = "nothing downloaded yet";
+
+/* status of pending upload file transfer */
+"nothing uploaded yet" = "nothing uploaded yet";
+
+/* notice message from user title */
+"Notice from %@" = "Notice from %@";
+
+/* offline buddy status */
+"Offline" = "Offline";
+
+/* private chat mentioned bubble text */
+"One of your highlight words was mentioned by %@." = "One of your highlight words was mentioned by %@.";
+
+/* chat room mentioned bubble text */
+"One of your highlight words was mentioned in %@." = "One of your highlight words was mentioned in %@.";
+
+/* open favorites folder menu title */
+"Open Favorites folder..." = "Open Favorites folder...";
+
+/* server console button tooltip */
+"Open the server console" = "Open the server console";
+
+/* other image label */
+"Other..." = "Other...";
+
+/* chat panes drawer toolbar customize palette name */
+"Panel Drawer" = "Panel Drawer";
+
+/* chat room parted date label */
+"Parted: %@" = "Parted: %@";
+
+/* preferences menu item title */
+"Preferences" = "Preferences";
+
+/* new message bubble title */
+"Private Message" = "Private Message";
+
+/* bubble message quieted member annulled string */
+"Quieted %@ was annulled by %@ in %@." = "Quieted %1$@ was annulled by %2$@ in %3$@.";
+
+/* quieted member annulled title */
+"Quieted Room Member Annulled" = "Quieted Room Member Annulled";
+
+/* reconnect to server button */
+"Reconnect" = "Reconnect";
+
+/* refuse button name */
+"Refuse" = "Refuse";
+
+/* registered user class */
+"Registered user" = "Registered user";
+
+/* rejoin room contextual menu item title */
+"Rejoin Room" = "Rejoin Room";
+
+/* remove quiet contextual menu - admin only */
+"Remove Quiet" = "Remove Quiet";
+
+/* remove voice contextual menu - admin only */
+"Remove Voice" = "Remove Voice";
+
+/* replace button name */
+"Replace" = "Replace";
+
+/* resume button name */
+"Resume" = "Resume";
+
+/* retry connecting to server */
+"Retry" = "Retry";
+
+/* show file in Finder toolbar button name */
+"Reveal" = "Reveal";
+
+/* show file in Finder toolbar customize palette name */
+"Reveal File" = "Reveal File";
+
+/* reveal button tooltip */
+"Reveal File in Finder" = "Reveal File in Finder";
+
+/* chat room inspector type */
+"Room" = "Room";
+
+/* room half-operator demoted title */
+"Room Half-Operator Demoted" = "Room Half-Operator Demoted";
+
+/* member joined title */
+"Room Member Joined" = "Room Member Joined";
+
+/* member kicked title */
+"Room Member Kicked" = "Room Member Kicked";
+
+/* member left title */
+"Room Member Left" = "Room Member Left";
+
+/* member devoiced title */
+"Room Member Lost Voice" = "Room Member Lost Voice";
+
+/* member quieted title */
+"Room Member Quieted" = "Room Member Quieted";
+
+/* member voiced title */
+"Room Member Voiced" = "Room Member Voiced";
+
+/* room operator demoted title */
+"Room Operator Demoted" = "Room Operator Demoted";
+
+/* save dialog title */
+"Save" = "Save";
+
+/* save as button name */
+"Save As..." = "Save As...";
+
+/* search toolbar item label
+   search patlette label
+   search toolbar item menu representation title */
+"Search" = "Search";
+
+/* search field placeholder string */
+"Search Messages" = "Search Messages";
+
+/* search toolbar item tooltip */
+"Search messages" = "Search messages";
+
+/* singular second */
+"second" = "second";
+
+/* plural seconds */
+"seconds" = "seconds";
+
+/* send file toolbar tooltip
+   send file toolbar customize palette name
+   send file toolbar button name */
+"Send File" = "Send File";
+
+/* send files passively file send open dialog button */
+"Send File Passively" = "Send File Passively";
+
+/* send file contextual menu */
+"Send File..." = "Send File...";
+
+/* send message contextual menu */
+"Send Message" = "Send Message";
+
+/* singular server label */
+"server" = "server";
+
+/* name for server console button in customize palette */
+"Server Console" = "Server Console";
+
+/* server operator class */
+"Server operator" = "Server operator";
+
+/* settings toolbar button name
+   settings toolbar customize palette name */
+"Settings" = "Settings";
+
+/* connection info button tooltip */
+"Show connection info" = "Show connection info";
+
+/* show drawer menu title */
+"Show Drawer" = "Show Drawer";
+
+/* find toolbar item tooltip */
+"Show Find Panel" = "Show Find Panel";
+
+/* connection info button tooltip */
+"Show inspector" = "Show inspector";
+
+/* show tab bar menu title */
+"Show Tab Bar" = "Show Tab Bar";
+
+/* smart transcript settings tooltip */
+"Smart Transcript Settings" = "Smart Transcript Settings";
+
+/* short toolbar stop button name */
+"Stop" = "Stop";
+
+/* stop button tooltip */
+"Stop File Tranfser" = "Stop File Tranfser";
+
+/* name for stop button in customize palette */
+"Stop Tranfser" = "Stop Tranfser";
+
+/* choose style toolbar item patlette label
+   choose style toolbar item menu representation title
+   choose style toolbar menu title
+   choose style contextual menu
+   choose style toolbar item label */
+"Style" = "Style";
+
+/* default style emoticons menu item title */
+"Style Default" = "Style Default";
+
+/* error installing style title */
+"Style Installation Error" = "Style Installation Error";
+
+/* encoding menu toolbar customize palette name */
+"Text Encoding" = "Text Encoding";
+
+/* encoding menu toolbar item tooltip */
+"Text Encoding Options" = "Text Encoding Options";
+
+/* text only emoticons display name */
+"Text Only" = "Text Only";
+
+/* would you like to replace an emoticon bundle with a different version */
+"The %@ emoticons are already installed. Would you like to replace them with this version?" = "The %@ emoticons are already installed. Would you like to replace them with this version?";
+
+/* the style contains and error */
+"The %@ Style has been damaged or has an internal error preventing new messages from displaying. Please contact the %@ author about this." = "The %1$@ Style has been damaged or has an internal error preventing new messages from displaying. Please contact the %2$@ author about this.";
+
+/* would you like to replace a style with a different version */
+"The %@ style is already installed. Would you like to replace it with this version?" = "The %@ style is already installed. Would you like to replace it with this version?";
+
+/* chat server blank dialog message */
+"The chat server is invalid because it was left blank." = "The chat server is invalid because it was left blank.";
+
+/* chat server port invalid dialog message */
+"The chat server port you specified is invalid because it can't be negative or greater than 65535." = "The chat server port you specified is invalid because it can't be negative or greater than 65535.";
+
+/* chat already connected message */
+"The chat server with the nickname you specified is already connected to from this computer. Use another nickname if you desire multiple connections." = "The chat server with the nickname you specified is already connected to from this computer. Use another nickname if you desire multiple connections.";
+
+/* user not on the server */
+"The command \"%@\" is not a valid command on the \"%@\" server." = "The command \"%1$@\" is not a valid command on the \"%2$@\" server.";
+
+/* unknown connection error dialog message */
+"The connection could not be made. %s." = "The connection could not be made. %s.";
+
+/* unknown disconnection error dialog message */
+"The connection was terminated between your computer and the server. %s." = "The connection was terminated between your computer and the server. %s.";
+
+/* emoticons install error message */
+"The emoticons could not be installed, please make sure you have permission to install this item." = "The emoticons could not be installed, please make sure you have permission to install this item.";
+
+/* replace transfer save dialog message */
+"The file %@ in %@ already exists and can't be resumed. Replace it?" = "The file %1$@ in %2$@ already exists and can't be resumed. Replace it?";
+
+/* replace or resume transfer save dialog message */
+"The file %@ in %@ already exists. Would you like to resume from where a previous transfer stopped or replace it?" = "The file %1$@ in %2$@ already exists. Would you like to resume from where a previous transfer stopped or replace it?";
+
+/* chat nickname blank dialog message */
+"The nickname is invalid because it was left blank." = "The nickname is invalid because it was left blank.";
+
+/* chat invalid nickname dialog message */
+"The nickname you specified is in use or invalid on this server." = "The nickname you specified is in use or invalid on this server.";
+
+/* chat invalid nicknames dialog message */
+"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname." = "The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.";
+
+/* chat invalid password dialog message */
+"The password you specified is invalid or a connection could not be made without a proper password. Make sure you have access to the server." = "The password you specified is invalid or a connection could not be made without a proper password. Make sure you have access to the server.";
+
+/* chat invalid password dialog message */
+"The server is disconnected or refusing connections from your computer. Make sure you are connected to the internet and have access to the server." = "The server is disconnected or refusing connections from your computer. Make sure you are connected to the internet and have access to the server.";
+
+/* connection dropped */
+"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again." = "The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.";
+
+/* connection dropped */
+"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again." = "The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.";
+
+/* style install error message */
+"The style could not be installed, please make sure you have permission to install this item." = "The style could not be installed, please make sure you have permission to install this item.";
+
+/* user not on the server */
+"The user \"%@\" is no longer connected (or never was connected) to the \"%@\" server." = "The user \"%1$@\" is no longer connected (or never was connected) to the \"%2$@\" server.";
+
+/* user not online alert dialog message */
+"The user \"%@\" is not online and is unavailable until they reconnect." = "The user \"%@\" is not online and is unavailable until they reconnect.";
+
+/* chat username blank dialog message */
+"The username is invalid because it was left blank." = "The username is invalid because it was left blank.";
+
+/* chat username blank dialog message */
+"The username you specified is invalid because it contains spaces or other non-alphanumeric characters." = "The username you specified is invalid because it contains spaces or other non-alphanumeric characters.";
+
+/* no new version */
+"There are no new versions of %@ currently available." = "There are no new versions of %@ currently available.";
+
+/* new version available */
+"There is a new version of %@ currently available." = "There is a new version of %@ currently available.";
+
+/* chat panes drawer toolbar item tooltip */
+"Toggle Chat Panel Drawer" = "Toggle Chat Panel Drawer";
+
+/* toggle private messages toolbar customize palette name */
+"Toggle Messages" = "Toggle Messages";
+
+/* toggle private messages output tooltip */
+"Toggle Private Messages Output" = "Toggle Private Messages Output";
+
+/* toggle verbose toolbar customize palette name */
+"Toggle Verbose" = "Toggle Verbose";
+
+/* toggle verbose output tooltip */
+"Toggle Verbose Output" = "Toggle Verbose Output";
+
+/* topic changed chat room status message */
+"Topic changed to \"%@\" by <span class=\"member\">%@</span>." = "Topic changed to \"%1$@\" by <span class=\"member\">%2$@</span>.";
+
+/* results final download file transfer */
+"total of %@ downloaded, at %@ per second" = "total of %1$@ downloaded, at %2$@ per second";
+
+/* results final upload file transfer */
+"total of %@ uploaded, at %@ per second" = "total of %1$@ uploaded, at %2$@ per second";
+
+/* chat transcript preference pane name */
+"Transcripts" = "Transcripts";
+
+/* file transfers preference pane name */
+"Transfers" = "Transfers";
+
+/* new variant name */
+"Untitled Variant" = "Untitled Variant";
+
+/* chat user inspector type */
+"User" = "User";
+
+/* user not online alert dialog title */
+"User \"%@\" is not online" = "User \"%@\" is not online";
+
+/* user ignored bubble title */
+"User Ignored" = "User Ignored";
+
+/* chat invalid username dialog title */
+"Username invalid" = "Username invalid";
+
+/* chat blank username dialog title */
+"Username is blank" = "Username is blank";
+
+/* verbose toolbar button name */
+"Verbose" = "Verbose";
+
+/* singular week */
+"week" = "week";
+
+/* plural weeks */
+"weeks" = "weeks";
+
+/* starting window title, window and a number */
+"Window %d" = "Window %d";
+
+/* ban hostmask
+   ban hostmask label */
+"With hostmask:" = "With hostmask:";
+
+/* kick reason label */
+"With reason:" = "With reason:";
+
+/* would you like to connect to get room listing dialog message */
+"Would you like to connect and retrieve the server's chat room listing?" = "Would you like to connect and retrieve the server's chat room listing?";
+
+/* singular year */
+"year" = "year";
+
+/* plural years */
+"years" = "years";
+
+/* yes button
+   yes answer */
+"Yes" = "Yes";
+
+/* we are no longer quieted and can talk status message */
+"You are no longer quieted, thanks to <span class=\"member\">%@</span>." = "You are no longer quieted, thanks to <span class=\"member\">%@</span>.";
+
+/* you changed nicknames */
+"You are now known as <span class=\"member\">%@</span>." = "You are now known as <span class=\"member\">%@</span>.";
+
+/* you changed the topic chat room status message */
+"You changed the topic to \"%@\"." = "You changed the topic to \"%@\".";
+
+/* don't require op to set topic room status message */
+"You changed this room to allow anyone to change the topic." = "You changed this room to allow anyone to change the topic.";
+
+/* no longer passworded room status message */
+"You changed this room to no longer require a password." = "You changed this room to no longer require a password.";
+
+/* permit outside messages room status message */
+"You changed this room to permit outside messages." = "You changed this room to permit outside messages.";
+
+/* prohibit outside messages room status message */
+"You changed this room to prohibit outside messages." = "You changed this room to prohibit outside messages.";
+
+/* password required room status message */
+"You changed this room to require a password of \"%@\"." = "You changed this room to require a password of \"%@\".";
+
+/* require op to set topic room status message */
+"You changed this room to require operator status to change the topic." = "You changed this room to require operator status to change the topic.";
+
+/* we removed our chat room half-operator privilege status message */
+"You demoted yourself from half-operator." = "You demoted yourself from half-operator.";
+
+/* we removed our chat room operator privilege status message */
+"You demoted yourself from operator." = "You demoted yourself from operator.";
+
+/* we removed our chat room founder privilege status message */
+"You demoted yourself from room founder." = "You demoted yourself from room founder.";
+
+/* we gave ourself special voice status to talk in moderated rooms status message */
+"You gave yourself voice." = "You gave yourself voice.";
+
+/* we no longer has special voice status and can't talk in moderated rooms status message */
+"You had voice removed by <span class=\"member\">%@</span>." = "You had voice removed by <span class=\"member\">%@</span>.";
+
+/* new messages bubble text */
+"You have %d messages waiting from %@." = "You have %1$d messages waiting from %2$@.";
+
+/* new single message bubble text */
+"You have 1 message waiting from %@." = "You have 1 message waiting from %@.";
+
+/* title of the you have been disconnected error */
+"You have been disconnected" = "You have been disconnected";
+
+/* identified bubble title */
+"You Have Been Identified" = "You Have Been Identified";
+
+/* you were removed by force from a chat room error message */
+"You have been kicked from the chat room by %@ with the reason \"%@\" and cannot send further messages without rejoining." = "You have been kicked from the chat room by %1$@ with the reason \"%2$@\" and cannot send further messages without rejoining.";
+
+/* you were removed by force from a chat room error message title */
+"You have been kicked from the chat room." = "You have been kicked from the chat room.";
+
+/* new memos bubble title */
+"You Have New Memos" = "You Have New Memos";
+
+/* self away status removed message */
+"You have returned from away." = "You have returned from away.";
+
+/* self away status set message */
+"You have set yourself away with \"%@\"." = "You have set yourself away with \"%@\".";
+
+/* you removed a user by force from a chat room status message */
+"You kicked %@ from the chat room." = "You kicked %@ from the chat room.";
+
+/* disconnect from the server status message */
+"You left the chat by being disconnected from the server." = "You left the chat by being disconnected from the server.";
+
+/* invite only room status message */
+"You made this room invite only." = "You made this room invite only.";
+
+/* moderated for normal users room status message */
+"You made this room moderated for normal users." = "You made this room moderated for normal users.";
+
+/* moderated for operators room status message */
+"You made this room moderated for operators." = "You made this room moderated for operators.";
+
+/* no longer secret room status message */
+"You made this room no longer a secret." = "You made this room no longer a secret.";
+
+/* no longer invite only room status message */
+"You made this room no longer invite only." = "You made this room no longer invite only.";
+
+/* no longer moderated for normal users room status message */
+"You made this room no longer moderated for normal users." = "You made this room no longer moderated for normal users.";
+
+/* no longer moderated for operators room status message */
+"You made this room no longer moderated for operators." = "You made this room no longer moderated for operators.";
+
+/* private room status message */
+"You made this room private." = "You made this room private.";
+
+/* public room status message */
+"You made this room public." = "You made this room public.";
+
+/* secret room status message */
+"You made this room secret." = "You made this room secret.";
+
+/* we are no longer quieted and can talk ourself status message */
+"You made yourself no longer quieted." = "You made yourself no longer quieted.";
+
+/* we gave ourself the chat room half-operator privilege status message */
+"You promoted yourself to half-operator." = "You promoted yourself to half-operator.";
+
+/* we gave ourself the chat room operator privilege status message */
+"You promoted yourself to operator." = "You promoted yourself to operator.";
+
+/* we gave ourself the chat room founder privilege status message */
+"You promoted yourself to room founder." = "You promoted yourself to room founder.";
+
+/* we quieted and can't talk ourself status message */
+"You quieted yourself." = "You quieted yourself.";
+
+/* reconnected to server status message */
+"You reconnected to the server." = "You reconnected to the server.";
+
+/* rejoined the room status message */
+"You rejoined the room." = "You rejoined the room.";
+
+/* you removed a ban chat room status message */
+"You removed the ban on %@." = "You removed the ban on %@.";
+
+/* no member limit room status message */
+"You removed the room member limit." = "You removed the room member limit.";
+
+/* we removed our special voice status to talk in moderated rooms status message */
+"You removed voice from yourself." = "You removed voice from yourself.";
+
+/* you set a ban chat room status message */
+"You set a ban on %@." = "You set a ban on %@.";
+
+/* member limit room status message */
+"You set a limit on the number of room members to %@." = "You set a limit on the number of room members to %@.";
+
+/* we are no longer a chat room half-operator status message */
+"You were demoted from half-operator by <span class=\"member\">%@</span>." = "You were demoted from half-operator by <span class=\"member\">%@</span>.";
+
+/* we are no longer a chat room operator status message */
+"You were demoted from operator by <span class=\"member\">%@</span>." = "You were demoted from operator by <span class=\"member\">%@</span>.";
+
+/* we are no longer a chat room founder status message */
+"You were demoted from room founder by <span class=\"member\">%@</span>." = "You were demoted from room founder by <span class=\"member\">%@</span>.";
+
+/* we now have special voice status to talk in moderated rooms status message */
+"You were granted voice by <span class=\"member\">%@</span>." = "You were granted voice by <span class=\"member\">%@</span>.";
+
+/* bubble message invited to room */
+"You were invited to %@ by %@." = "You were invited to %1$@ by %2$@.";
+
+/* you were invited to join a chat room status message */
+"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?" = "You were invited to join %1$@ by %2$@. Would you like to accept this invitation and join this room?";
+
+/* member kicked title */
+"You Were Kicked" = "You Were Kicked";
+
+/* bubble message member kicked string */
+"You were kicked from %@ by %@." = "You were kicked from %1$@ by %2$@.";
+
+/* you were removed by force from a chat room status message */
+"You were kicked from the chat room by %@." = "You were kicked from the chat room by %@.";
+
+/* mentioned bubble title */
+"You Were Mentioned" = "You Were Mentioned";
+
+/* we are now a chat room half-operator status message */
+"You were promoted to half-operator by <span class=\"member\">%@</span>." = "You were promoted to half-operator by <span class=\"member\">%@</span>.";
+
+/* we are now a chat room operator status message */
+"You were promoted to operator by <span class=\"member\">%@</span>." = "You were promoted to operator by <span class=\"member\">%@</span>.";
+
+/* we are now a chat room founder status message */
+"You were promoted to room founder by <span class=\"member\">%@</span>." = "You were promoted to room founder by <span class=\"member\">%@</span>.";
+
+/* we are now quieted and can't talk status message */
+"You were quieted by <span class=\"member\">%@</span>." = "You were quieted by <span class=\"member\">%@</span>.";
+
+/* confirm close of window message */
+"You will exit all chat rooms and lose any unsaved chat transcripts. Do you want to proceed?" = "You will exit all chat rooms and lose any unsaved chat transcripts. Do you want to proceed?";
+
+/* you are now connected bubble text */
+"You're now connected to %@ as %@." = "You're now connected to %1$@ as %2$@.";
+
+/* you were disconnected bubble text */
+"You're were disconnected from %@." = "You're were disconnected from %@.";
+
+/* unavailable buddy bubble text */
+"Your buddy %@ is now offline." = "Your buddy %@ is now offline.";
+
+/* available buddy bubble text */
+"Your buddy %@ is now online." = "Your buddy %@ is now online.";
+
+/* certificate unlock request, server name inserted */
+"Your certificate is locked with a passphrase. In order to connect to %@, you need to unlock your certificate." = "Your certificate is locked with a passphrase. In order to connect to %@, you need to unlock your certificate.";
+
+/* chat invalid nickname dialog title */
+"Your Chat nickname could not be used" = "Your Chat nickname could not be used";
+
+/* chat invalid password dialog title */
+"Your Chat password is invalid" = "Your Chat password is invalid";
+
+/* the software is all up-to-date */
+"Your software is all up-to-date with the latest version released. Check back at a later date." = "Your software is all up-to-date with the latest version released. Check back at a later date.";
+
+/* no file size */
+"Zero bytes" = "Zero bytes";
+
