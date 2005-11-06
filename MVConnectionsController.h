@@ -70,8 +70,9 @@
 - (IBAction) showConnectionManager:(id) sender;
 - (IBAction) hideConnectionManager:(id) sender;
 
+- (void) newConnectionWithJoinRooms:(NSArray *) rooms;
+
 - (IBAction) newConnection:(id) sender;
-- (IBAction) newConnection:(id) sender withAutoConnect:(BOOL)inFlag;
 - (IBAction) changeNewConnectionProtocol:(id) sender;
 - (IBAction) toggleNewConnectionDetails:(id) sender;
 - (IBAction) addRoom:(id) sender;

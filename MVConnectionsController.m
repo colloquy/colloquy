@@ -112,10 +112,10 @@ static NSMenu *favoritesMenu = nil;
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"MVConnections"] ) ) {
 		_bookmarks = nil;
-		_joinRooms = [[NSMutableArray alloc] init];
 		_passConnection = nil;
 
-		_publicKeyRequestQueue = [[NSMutableSet set] retain];
+		_joinRooms = [[NSMutableArray allocWithZone:nil] init];
+		_publicKeyRequestQueue = [[NSMutableSet allocWithZone:nil] init];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuitting: ) name:NSApplicationWillTerminateNotification object:nil];
 
@@ -241,17 +241,15 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 - (IBAction) newConnection:(id) sender {
-	[self newConnection:sender withAutoConnect:NO];
+	[self newConnectionWithJoinRooms:nil];
 }
 
-- (IBAction) newConnection:(id) sender withAutoConnect:(BOOL)inFlag {
+- (void) newConnectionWithJoinRooms:(NSArray *) rooms {
 	[self _loadInterfaceIfNeeded];
 	if( [openConnection isVisible] ) return;
 
-	if ( ! inFlag ) {
-		[_joinRooms autorelease];
-		_joinRooms = [[NSMutableArray array] retain];
-	}
+	if( rooms ) [_joinRooms setArray:rooms];
+	else [_joinRooms removeAllObjects];
 
 	if( [showDetails state] != NSOffState ) {
 		[showDetails setState:NSOffState];
@@ -298,8 +296,8 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) addRoom:(id) sender {
 	[_joinRooms addObject:@""];
 	[newJoinRooms noteNumberOfRowsChanged];
-	[newJoinRooms selectRow:([_joinRooms count] - 1) byExtendingSelection:NO];
-	[newJoinRooms editColumn:0 row:([_joinRooms count] - 1) withEvent:nil select:NO];
+	[newJoinRooms selectRow:( [_joinRooms count] - 1 ) byExtendingSelection:NO];
+	[newJoinRooms editColumn:0 row:( [_joinRooms count] - 1 ) withEvent:nil select:NO];
 }
 
 - (IBAction) removeRoom:(id) sender {
@@ -720,8 +718,7 @@ static NSMenu *favoritesMenu = nil;
 			unsigned index = [newType indexOfItemWithTag:( [[url scheme] isEqualToString:@"silc"] ? 2 : 1 )];
 			[newType selectItemAtIndex:index];
 
-			if( target ) [_joinRooms addObject:target];
-			[self newConnection:nil withAutoConnect:YES];
+			[self newConnectionWithJoinRooms:( target ? [NSArray arrayWithObject:target] : nil )];
 
 			handled = YES;
 		} else if( ! handled && [url user] ) {
@@ -732,10 +729,8 @@ static NSMenu *favoritesMenu = nil;
 			if( connect ) {
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
 					[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
-				if( target ) [_joinRooms addObject:target];
-
-				[connection connect];
 				if( target ) [connection joinChatRoomNamed:target];
+				[connection connect];
 			}
 
 			[self addConnection:connection keepBookmark:NO];
