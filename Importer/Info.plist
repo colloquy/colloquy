@@ -11,7 +11,7 @@
 			<string>MDImporter</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>cc.javelin.colloquy.colloquytranscript</string>
+				<string>info.colloquy.transcript</string>
 			</array>
 		</dict>
 	</array>
@@ -22,7 +22,7 @@
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string>cc.javelin.colloquyImporter</string>
+	<string>info.colloquy.metadata-importer</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleVersion</key>

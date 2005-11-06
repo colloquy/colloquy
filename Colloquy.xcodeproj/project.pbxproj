@@ -113,7 +113,7 @@
 		1CB2CD12052DDC560094AAA4 /* person.tif in Resources */ = {isa = PBXBuildFile; fileRef = F544999E018E46CB01EE70DE /* person.tif */; };
 		1CB2CD13052DDC560094AAA4 /* voice.tif in Resources */ = {isa = PBXBuildFile; fileRef = F544999F018E46CB01EE70DE /* voice.tif */; };
 		1CB2CD17052DDC560094AAA4 /* encoding.tif in Resources */ = {isa = PBXBuildFile; fileRef = F5D04C03019489B801A35792 /* encoding.tif */; };
-		1CB2CD18052DDC560094AAA4 /* cc.javelin.colloquy.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5BC17DD019655DC01A35792 /* cc.javelin.colloquy.plist */; };
+		1CB2CD18052DDC560094AAA4 /* info.colloquy.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5BC17DD019655DC01A35792 /* info.colloquy.plist */; };
 		1CB2CD19052DDC560094AAA4 /* info.tif in Resources */ = {isa = PBXBuildFile; fileRef = F5BC17DF019656E901A35792 /* info.tif */; };
 		1CB2CD1A052DDC560094AAA4 /* download.tif in Resources */ = {isa = PBXBuildFile; fileRef = F51A4F3101C2ED2C01EE70DE /* download.tif */; };
 		1CB2CD1B052DDC560094AAA4 /* upload.tif in Resources */ = {isa = PBXBuildFile; fileRef = F51A4F3201C2ED2C01EE70DE /* upload.tif */; };
@@ -600,7 +600,7 @@
 		1CABFCB00657F10900801C15 /* JVSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVSplitView.m; sourceTree = "<group>"; };
 		1CABFD0C0658629200801C15 /* JVStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVStyle.h; sourceTree = "<group>"; };
 		1CABFD0D0658629200801C15 /* JVStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVStyle.m; sourceTree = "<group>"; };
-		1CB2CD8C052DDC570094AAA4 /* Colloquy.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CB2CD8C052DDC570094AAA4 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CB3716F060CC7E200F6A81F /* KABubbleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KABubbleWindowController.h; sourceTree = "<group>"; };
 		1CB37170060CC7E200F6A81F /* KABubbleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KABubbleWindowController.m; sourceTree = "<group>"; };
 		1CB37177060CC81C00F6A81F /* KABubbleWindowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KABubbleWindowView.h; sourceTree = "<group>"; };
@@ -900,7 +900,7 @@
 		F5A6089901979C2C01A35792 /* tag.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = tag.tif; path = "Resources/Toolbar Icons/tag.tif"; sourceTree = "<group>"; };
 		F5A6089B0197A3BB01A35792 /* magic.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = magic.tif; path = "Resources/Toolbar Icons/magic.tif"; sourceTree = "<group>"; };
 		F5B425E9038C056701000102 /* edit.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = edit.tif; path = "Resources/Toolbar Icons/edit.tif"; sourceTree = SOURCE_ROOT; };
-		F5BC17DD019655DC01A35792 /* cc.javelin.colloquy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = cc.javelin.colloquy.plist; path = Resources/cc.javelin.colloquy.plist; sourceTree = "<group>"; };
+		F5BC17DD019655DC01A35792 /* info.colloquy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = info.colloquy.plist; path = Resources/info.colloquy.plist; sourceTree = "<group>"; };
 		F5BC17DF019656E901A35792 /* info.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = info.tif; path = Resources/info.tif; sourceTree = "<group>"; };
 		F5BEC20701F13A8601EE70DE /* person-idle.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = "person-idle.tif"; path = "Resources/person-idle.tif"; sourceTree = "<group>"; };
 		F5BEC20901F13AA201EE70DE /* op-idle.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = "op-idle.tif"; path = "Resources/op-idle.tif"; sourceTree = "<group>"; };
@@ -1467,7 +1467,7 @@
 				F5394C070378E44D01A35792 /* Credits.rtf */,
 				F5394C090378E44D01A35792 /* InfoPlist.strings */,
 				F5394C0B0378E44D01A35792 /* Localizable.strings */,
-				F5BC17DD019655DC01A35792 /* cc.javelin.colloquy.plist */,
+				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
 				1CBECDCF0508C8AB000001C8 /* default.xsl */,
 				0A5B683E0810EC9700398D5A /* default.css */,
 				0AA811220826DB8800A3BF2D /* default.js */,
@@ -1973,7 +1973,7 @@
 				1CB2CD12052DDC560094AAA4 /* person.tif in Resources */,
 				1CB2CD13052DDC560094AAA4 /* voice.tif in Resources */,
 				1CB2CD17052DDC560094AAA4 /* encoding.tif in Resources */,
-				1CB2CD18052DDC560094AAA4 /* cc.javelin.colloquy.plist in Resources */,
+				1CB2CD18052DDC560094AAA4 /* info.colloquy.plist in Resources */,
 				1CB2CD19052DDC560094AAA4 /* info.tif in Resources */,
 				1CB2CD1A052DDC560094AAA4 /* download.tif in Resources */,
 				1CB2CD1B052DDC560094AAA4 /* upload.tif in Resources */,

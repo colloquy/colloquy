@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema version="1.0" xmlns="http://www.apple.com/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.apple.com/metadata file:///System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Resources/MetadataSchema.xsd">
-	<note>
-	Schema for additional attributes supplied by the Colloquy importer.	      
-	</note>
-
+	<note>Schema for additional attributes supplied by the Colloquy importer.</note>
 	<types>
-		<type name="cc.javelin.colloquy.colloquytranscript">
+		<type name="info.colloquy.transcript">
 			<allattrs>
 				kMDItemTitle
 				kMDItemCreator
