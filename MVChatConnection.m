@@ -304,8 +304,9 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setAlternateNicknames:(NSArray *) nicknames {
-	[_alternateNicks autorelease];
+	id old = _alternateNicks;
 	_alternateNicks = [nicknames copyWithZone:nil];
+	[old release];
 	_nextAltNickIndex = 0;
 }
 
@@ -326,9 +327,10 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setNicknamePassword:(NSString *) password {
-	[_npassword autorelease];
+	id old = _npassword;
 	if( [password length] ) _npassword = [password copyWithZone:nil];
 	else _npassword = nil;
+	[old release];
 }
 
 - (NSString *) nicknamePassword {
@@ -527,8 +529,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	va_list ap;
 	va_start( ap, format );
 
-	NSString *command = [[[NSString allocWithZone:nil] initWithFormat:format arguments:ap] autorelease];
+	NSString *command = [[NSString allocWithZone:nil] initWithFormat:format arguments:ap];
 	[self sendRawMessage:command immediately:NO];
+	[command release];
 
 	va_end( ap );
 }
@@ -566,16 +569,15 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
-	MVChatRoom *room = nil;
-
 	@synchronized( _joinedRooms ) {
 		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
+		MVChatRoom *room = nil;
 		while( ( room = [enumerator nextObject] ) )
 			if( [name caseInsensitiveCompare:[room name]] == NSOrderedSame )
-				break;
+				return [[room retain] autorelease];
 	}
 
-	return [[room retain] autorelease];
+	return nil;
 }
 
 #pragma mark -
@@ -775,15 +777,17 @@ static const NSStringEncoding supportedEncodings[] = {
 		[room _setDateParted:[NSDate date]];
 	}
 
-	[_localUser autorelease];
+	id old = _localUser;
 	_localUser = nil;
+	[old release];
 
 	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
 }
 
 - (void) _postError:(NSError *) error {
-	[_lastError autorelease];
+	id old = _lastError;
 	_lastError = [error copyWithZone:nil];
+	[old release];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
 }

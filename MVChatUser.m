@@ -59,7 +59,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host {
-	MVChatUser *ret = [[[self allocWithZone:nil] init] autorelease];
+	MVChatUser *ret = [[self allocWithZone:nil] init];
 	ret -> _type = MVChatWildcardUserType;
 
 	NSArray *parts = [nickname componentsSeparatedByString:@"@"];
@@ -74,14 +74,14 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	if( [parts count] >= 2 )
 		ret -> _address = [[parts objectAtIndex:1] copyWithZone:[ret zone]];
 
-	return ret;
+	return [ret autorelease];
 }
 
 + (id) wildcardUserWithFingerprint:(NSString *) fingerprint {
-	MVChatUser *ret = [[[self allocWithZone:nil] init] autorelease];
+	MVChatUser *ret = [[self allocWithZone:nil] init];
 	ret -> _type = MVChatWildcardUserType;
 	ret -> _fingerprint = [fingerprint copyWithZone:[ret zone]];
-	return ret;
+	return [ret autorelease];
 }
 
 #pragma mark -
@@ -462,43 +462,51 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 @implementation MVChatUser (MVChatUserPrivate)
 - (void) _setUniqueIdentifier:(id) identifier {
-	[_uniqueIdentifier autorelease];
+	id old = _uniqueIdentifier;
 	_uniqueIdentifier = ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copyWithZone:nil] : [identifier retain] );
+	[old release];
 }
 
 - (void) _setNickname:(NSString *) name {
-	[_nickname autorelease];
+	id old = _nickname;
 	_nickname = [name copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setRealName:(NSString *) name {
-	[_realName autorelease];
+	id old = _realName;
 	_realName = [name copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setUsername:(NSString *) name {
-	[_username autorelease];
+	id old = _username;
 	_username = [name copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setAddress:(NSString *) address {
-	[_address autorelease];
+	id old = _address;
 	_address = [address copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setServerAddress:(NSString *) address {
-	[_serverAddress autorelease];
+	id old = _serverAddress;
 	_serverAddress = [address copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setPublicKey:(NSData *) key {
-	[_publicKey autorelease];
+	id old = _publicKey;
 	_publicKey = [key copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setFingerprint:(NSString *) fingerprint {
-	[_fingerprint autorelease];
+	id old = _fingerprint;
 	_fingerprint = [fingerprint copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setServerOperator:(BOOL) operator {
@@ -525,18 +533,21 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (void) _setDateConnected:(NSDate *) date {
-	[_dateConnected autorelease];
+	id old = _dateConnected;
 	_dateConnected = [date copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setDateDisconnected:(NSDate *) date {
-	[_dateDisconnected autorelease];
+	id old = _dateDisconnected;
 	_dateDisconnected = [date copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setDateUpdated:(NSDate *) date {
-	[_dateUpdated autorelease];
+	id old = _dateUpdated;
 	_dateUpdated = [date copyWithZone:nil];
+	[old release];
 }
 @end
 

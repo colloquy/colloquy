@@ -1004,8 +1004,8 @@ static SilcClientOperations silcClientOps = {
 		return;
 	}
 
-	[_lastConnectAttempt autorelease];
-	_lastConnectAttempt = [[NSDate date] retain];
+	[_lastConnectAttempt release];
+	_lastConnectAttempt = [[NSDate allocWithZone:nil] init];
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
@@ -1273,7 +1273,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	NSMutableSet *results = [[[NSMutableSet allocWithZone:nil] initWithCapacity:clientsCount] autorelease];
 	for( i = 0; i < clientsCount; i++ ) {
 		MVChatUser *user = [self _chatUserWithClientEntry:clients[i]];
-		[results addObject:user];
+		if( user ) [results addObject:user];
 	}
 
 	SilcUnlock( [self _silcClient] );
@@ -1286,7 +1286,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 	NSData *data = nil;
 	if( [identifier isKindOfClass:[NSString class]] ) {
-		data = [[[NSData allocWithZone:nil] initWithBase64EncodedString:identifier] autorelease];
+		data = [NSData dataWithBase64EncodedString:identifier];
 	} else data = identifier;
 
 	if( [data isEqualToData:[[self localUser] uniqueIdentifier]] )
@@ -1303,13 +1303,13 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 			SilcClientEntry client = silc_client_get_client_by_id( [self _silcClient], [self _silcConn], clientID );
 			SilcUnlock( [self _silcClient] );
 			if( client ) {
-				user = [[[MVSILCChatUser allocWithZone:nil] initWithClientEntry:client andConnection:self] autorelease];
-				[_knownUsers setObject:user forKey:data];
+				user = [[MVSILCChatUser allocWithZone:nil] initWithClientEntry:client andConnection:self];
+				if( user ) [_knownUsers setObject:user forKey:data];
 			}
 		}
 	}
 
-	return [[user retain] autorelease];
+	return [user autorelease];
 }
 
 #pragma mark -
@@ -1317,13 +1317,13 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 - (void) fetchChatRoomList {
 	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 900. ) {
 		[self sendRawMessage:@"LIST"];
-		[_cachedDate autorelease];
-		_cachedDate = [[NSDate date] retain];
+		[_cachedDate release];
+		_cachedDate = [[NSDate allocWithZone:nil] init];
 	}
 }
 
 - (void) setAwayStatusWithMessage:(NSAttributedString *) message {
-	[_awayMessage autorelease];
+	[_awayMessage release];
 	_awayMessage = nil;
 
 	if( [[message string] length] ) {
@@ -1399,8 +1399,9 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 #pragma mark -
 
 - (void) _initLocalUser {
-	[_localUser autorelease];
+	id old = _localUser;
 	_localUser = [[MVSILCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
+	[old release];
 }
 
 #pragma mark -
@@ -1577,11 +1578,11 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 		user = [_knownUsers objectForKey:uniqueIdentfier];
 		if( user ) return [[user retain] autorelease];
 
-		user = [[[MVSILCChatUser allocWithZone:nil] initWithClientEntry:clientEntry andConnection:self] autorelease];
-		[_knownUsers setObject:user forKey:uniqueIdentfier];
+		user = [[MVSILCChatUser allocWithZone:nil] initWithClientEntry:clientEntry andConnection:self];
+		if( user ) [_knownUsers setObject:user forKey:uniqueIdentfier];
 	}
 
-	return [[user retain] autorelease];
+	return [user autorelease];
 }
 
 - (void) _updateKnownUser:(MVChatUser *) user withClientEntry:(SilcClientEntry) clientEntry {

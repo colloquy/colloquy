@@ -326,7 +326,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	NSString *message = [[[NSString allocWithZone:nil] initWithData:data encoding:encoding] autorelease];
 	if( ! message ) {
-		[self autorelease];
+		[self release];
 		return nil;
 	}
 
@@ -341,7 +341,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( [message rangeOfCharacterFromSet:formatCharacters].location == NSNotFound )
 		return ( self = [self initWithString:message attributes:attributes] );
 
-	NSMutableAttributedString *ret = [[NSMutableAttributedString new] autorelease];
+	NSMutableAttributedString *ret = [[[NSMutableAttributedString allocWithZone:nil] init] autorelease];
 	NSScanner *scanner = [NSScanner scannerWithString:message];
 	[scanner setCharactersToBeSkipped:nil]; // don't skip leading whitespace!
 
@@ -573,7 +573,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 - (NSData *) _mIRCFormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
-	NSMutableData *ret = [NSMutableData data];
+	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( [self length] + 20 )];
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
@@ -609,7 +609,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 			int ircColor = colorRGBToMIRCColor( red * 255, green * 255, blue * 255 );
 
-			sprintf( buffer, "\003%02d", ircColor );
+			snprintf( buffer, 6, "\003%02d", ircColor );
 			[ret appendBytes:buffer length:strlen( buffer )];
 
 			if( ! [[backgroundColor colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && ! [[backgroundColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] )
@@ -619,7 +619,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				[backgroundColor getRed:&red green:&green blue:&blue alpha:NULL];
 				ircColor = colorRGBToMIRCColor( red * 255, green * 255, blue * 255 );
 
-				sprintf( buffer, ",%02d", ircColor );
+				snprintf( buffer, 6, ",%02d", ircColor );
 				[ret appendBytes:buffer length:strlen( buffer )];
 			}
 		}
@@ -649,12 +649,12 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( [[options objectForKey:@"NullTerminatedReturn"] boolValue] )
 		[ret appendBytes:"\0" length:1];
 
-	return [[ret retain] autorelease];
+	return [ret autorelease];
 }
 
 - (NSData *) _CTCP2FormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
-	NSMutableData *ret = [NSMutableData data];
+	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( [self length] + 40 )];
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
@@ -824,7 +824,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( [[options objectForKey:@"NullTerminatedReturn"] boolValue] )
 		[ret appendBytes:"\0" length:1];
 
-	return ret;
+	return [ret autorelease];
 }
 
 - (NSData *) chatFormatWithOptions:(NSDictionary *) options {

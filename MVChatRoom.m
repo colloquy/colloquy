@@ -569,35 +569,41 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (void) _setDateJoined:(NSDate *) date {
-	[_dateJoined autorelease];
+	id old = _dateJoined;
 	_dateJoined = [date copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setDateParted:(NSDate *) date {
-	[_dateParted autorelease];
+	id old = _dateParted;
 	_dateParted = [date copyWithZone:nil];
+	[old release];
 }
 
 - (void) _setTopic:(NSData *) topic byAuthor:(MVChatUser *) author withDate:(NSDate *) date {
-	[_topicData autorelease];
+	id old = _topicData;
 	_topicData = [topic copyWithZone:nil];
+	[old release];
 
-	[_topicAuthor autorelease];
+	old = _topicAuthor;
 	_topicAuthor = [author retain];
+	[old release];
 
-	[_dateTopicChanged autorelease];
+	old = _dateTopicChanged;
 	_dateTopicChanged = [date copyWithZone:nil];
+	[old release];
 
 	NSNotification *note = [NSNotification notificationWithName:MVChatRoomTopicChangedNotification object:self userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 - (void) _updateMemberUser:(MVChatUser *) user fromOldUniqueIdentifier:(id) identifier {
-	NSNumber *modes = [[[_memberModes objectForKey:identifier] retain] autorelease];
-	if( ! modes ) return;
 	@synchronized( _memberModes ) {
+		NSNumber *modes = [[_memberModes objectForKey:identifier] retain];
+		if( ! modes ) return;
 		[_memberModes removeObjectForKey:identifier];
 		[_memberModes setObject:modes forKey:[user uniqueIdentifier]];
+		[modes release];
 	}
 }
 @end

@@ -154,8 +154,9 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 - (void) setStartDate:(NSDate *) startDate {
 	@synchronized( self ) {
-		[_startDate autorelease];
+		id old = _startDate;
 		_startDate = [startDate retain];
+		[old release];
 	}
 }
 
@@ -186,8 +187,9 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 	[self _setStatus:MVFileTransferErrorStatus];
 
 	@synchronized( self ) {
-		[_lastError autorelease];
+		id old = _lastError;
 		_lastError = [error retain];
+		[old release];
 	}
 
 	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:error, @"error", nil];
@@ -262,9 +264,12 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 #pragma mark -
 
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
-	[_destination autorelease];
-	_destination = [[path stringByStandardizingPath] copy];
 	// subclass if needed, call super
+	@synchronized( self ) {
+		id old = _destination;
+		_destination = [[path stringByStandardizingPath] copyWithZone:nil];
+		[old release];
+	}
 }
 
 - (NSString *) destination {

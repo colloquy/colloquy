@@ -1221,7 +1221,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		return;
 	}
 
-	[_lastConnectAttempt autorelease];
+	[_lastConnectAttempt release];
 	_lastConnectAttempt = [[NSDate allocWithZone:nil] init];
 
 	[self _willConnect]; // call early so other code has a chance to change our info
@@ -1494,8 +1494,9 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) setProxyUsername:(NSString *) username {
-	[_proxyUsername autorelease];
+	id old = _proxyUsername;
 	_proxyUsername = [username copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) proxyUsername {
@@ -1505,8 +1506,9 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) setProxyPassword:(NSString *) password {
-	[_proxyPassword autorelease];
+	id old = _proxyPassword;
 	_proxyPassword = [password copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) proxyPassword {
@@ -1591,11 +1593,10 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		if( user ) return [[user retain] autorelease];
 
 		user = [[MVIRCChatUser allocWithZone:nil] initWithNickname:identifier andConnection:self];
-		[_knownUsers setObject:user forKey:uniqueIdentfier];
-		[user release];
+		if( user ) [_knownUsers setObject:user forKey:uniqueIdentfier];
 	}
 
-	return user;
+	return [user autorelease];
 }
 
 #pragma mark -
@@ -1624,7 +1625,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) fetchChatRoomList {
 	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 300. ) {
 		[self sendRawMessage:@"LIST"];
-		[_cachedDate autorelease];
+		[_cachedDate release];
 		_cachedDate = [[NSDate allocWithZone:nil] init];
 	}
 }
@@ -1864,8 +1865,9 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) _didConnect {
-	[_localUser autorelease];
+	id old = _localUser;
 	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
+	[old release];
 
 	// Identify if we have a user password
 	if( [[self nicknamePassword] length] )

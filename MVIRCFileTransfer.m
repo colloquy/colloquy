@@ -543,8 +543,9 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
 	@synchronized( self ) {
-		[_destination autorelease];
+		id old = _destination;
 		_destination = [[path stringByStandardizingPath] copyWithZone:nil];
+		[old release];
 
 		if( ! [self _DCCFileRecord] ) return;
 
