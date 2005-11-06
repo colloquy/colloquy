@@ -40,9 +40,9 @@
 @implementation JVChatRoomPanel
 - (id) initWithTarget:(id) target {
 	if( ( self = [super initWithTarget:target] ) ) {
-		_sortedMembers = [[NSMutableArray arrayWithCapacity:50] retain];
-		_preferredTabCompleteNicknames = [[NSMutableArray arrayWithCapacity:10] retain];
-		_nextMessageAlertMembers = [[NSMutableSet setWithCapacity:5] retain];
+		_sortedMembers = [[NSMutableArray allocWithZone:nil] initWithCapacity:100];
+		_preferredTabCompleteNicknames = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
+		_nextMessageAlertMembers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 		_kickedFromRoom = NO;
 		_keepAfterPart = NO;
 		_banListSynced = NO;
