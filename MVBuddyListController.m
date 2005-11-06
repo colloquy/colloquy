@@ -67,6 +67,7 @@ static MVBuddyListController *sharedInstance = nil;
 		[self setShowOfflineBuddies:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowOfflineBuddies"]];
 		[self setSortOrder:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyListSortOrder"]];
 	}
+
 	return self;
 }
 

@@ -119,8 +119,10 @@ static NSMenu *favoritesMenu = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuitting: ) name:NSApplicationWillTerminateNotification object:nil];
 
-		[self performSelector:@selector( _loadBookmarkList ) withObject:nil afterDelay:0];
+		// do this later to catch modifier keys being held down to prevent automatic actions
+		[self performSelector:@selector( _loadBookmarkList ) withObject:nil afterDelay:0.];
 	}
+
 	return self;
 }
 

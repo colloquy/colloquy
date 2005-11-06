@@ -152,6 +152,44 @@ static BOOL applicationIsTerminating = NO;
 
 #pragma mark -
 
+- (void) setupPreferences {
+	static BOOL setupAlready = NO;
+	if( setupAlready ) return;
+
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NSToolbar Configuration NSPreferences"];
+
+	[JVPreferencesController setDefaultPreferencesClass:[JVPreferencesController class]];
+	[[JVPreferencesController sharedPreferences] addPreferenceNamed:NSLocalizedString( @"General", "general preference pane name" ) owner:[JVGeneralPreferences sharedInstance]];
+	[[JVPreferencesController sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Interface", "interface preference pane name" ) owner:[JVInterfacePreferences sharedInstance]];
+	[[JVPreferencesController sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Appearance", "appearance preference pane name" ) owner:[JVAppearancePreferences sharedInstance]];
+	[[JVPreferencesController sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Alerts", "alerts preference pane name" ) owner:[JVNotificationPreferences sharedInstance]];
+	[[JVPreferencesController sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
+	[[JVPreferencesController sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transcripts", "chat transcript preference pane name" ) owner:[JVTranscriptPreferences sharedInstance]];
+	[[JVPreferencesController sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Behavior", "behavior preference pane name" ) owner:[JVBehaviorPreferences sharedInstance]];
+
+	setupAlready = YES;
+}
+
+- (void) setupFolders {
+	NSFileManager *fm = [NSFileManager defaultManager];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Plugins" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Styles/Variants" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Emoticons" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Sounds" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Recent Chat Rooms" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Recent Acquaintances" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc/Client Keys" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc/Server Keys" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications" stringByExpandingTildeInPath] attributes:nil];
+	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications/Colloquy" stringByExpandingTildeInPath] attributes:nil];
+}
+
+#pragma mark -
+
 - (IBAction) showInspector:(id) sender {
 	if( [[[JVInspectorController sharedInspector] window] isKeyWindow] )
 		[[[JVInspectorController sharedInspector] window] orderOut:nil];
@@ -159,7 +197,8 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) showPreferences:(id) sender {
-	[[NSPreferences sharedPreferences] showPreferencesPanel];
+	[self setupPreferences];
+	[[JVPreferencesController sharedPreferences] showPreferencesPanel];
 }
 
 - (IBAction) showTransferManager:(id) sender {
@@ -242,26 +281,6 @@ static BOOL applicationIsTerminating = NO;
 	Class controllerClass = [JVDirectChatPanel class];
 	NSSet *viewControllers = [chatController chatViewControllersKindOfClass:controllerClass];
 	[viewControllers makeObjectsPerformSelector:@selector( markDisplay: ) withObject:sender];
-}
-
-#pragma mark -
-
-- (void) setupPreferences {
-	static BOOL setupAlready = NO;
-	if( setupAlready ) return;
-
-	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NSToolbar Configuration NSPreferences"];
-
-	[NSPreferences setDefaultPreferencesClass:[JVPreferencesController class]];
-	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"General", "general preference pane name" ) owner:[JVGeneralPreferences sharedInstance]];
-	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Interface", "interface preference pane name" ) owner:[JVInterfacePreferences sharedInstance]];
-	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Appearance", "appearance preference pane name" ) owner:[JVAppearancePreferences sharedInstance]];
-	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Alerts", "alerts preference pane name" ) owner:[JVNotificationPreferences sharedInstance]];
-	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
-	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Transcripts", "chat transcript preference pane name" ) owner:[JVTranscriptPreferences sharedInstance]];
-	[[NSPreferences sharedPreferences] addPreferenceNamed:NSLocalizedString( @"Behavior", "behavior preference pane name" ) owner:[JVBehaviorPreferences sharedInstance]];
-
-	setupAlready = YES;
 }
 
 #pragma mark -
@@ -373,24 +392,6 @@ static BOOL applicationIsTerminating = NO;
 
 	[WebCoreCache setDisabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"]];
 
-	[self setupPreferences];
-
-	NSFileManager *fm = [NSFileManager defaultManager];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Plugins" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Styles/Variants" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Emoticons" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Sounds" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Recent Chat Rooms" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Recent Acquaintances" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc/Client Keys" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc/Server Keys" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications" stringByExpandingTildeInPath] attributes:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications/Colloquy" stringByExpandingTildeInPath] attributes:nil];
-
 	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultController];
 	[JVChatController defaultController];
@@ -401,6 +402,8 @@ static BOOL applicationIsTerminating = NO;
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:30] setSubmenu:[JVChatController smartTranscriptMenu]];
 
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( terminateWithoutConfirm: ) name:NSWorkspaceWillPowerOffNotification object:[NSWorkspace sharedWorkspace]];
+
+	[self performSelector:@selector( setupFolders ) withObject:nil afterDelay:5.]; // do this later to speed up launch
 }
 
 - (void) applicationWillBecomeActive:(NSNotification *) notification {

@@ -23,7 +23,6 @@
 - (void) dealloc {
 	[destination release];
 	destination = nil;
-
 	[super dealloc];
 }
 
@@ -49,8 +48,8 @@
 
 @implementation MVColorPanel (MVColorPanelPrivate)
 - (NSView *) _makeAccessoryView {
-	NSView *view = [[[NSView alloc] initWithFrame:NSMakeRect( 0., 0., NSWidth( [self frame] ) - 10., 36. )] autorelease];
-	NSButtonCell *cell = [[NSButtonCell new] autorelease];
+	NSView *view = [[NSView alloc] initWithFrame:NSMakeRect( 0., 0., NSWidth( [self frame] ) - 10., 36. )];
+	NSButtonCell *cell = [[NSButtonCell alloc] init];
 
 	[cell setButtonType:NSRadioButton];
 	[cell setControlSize:NSSmallControlSize];
@@ -59,6 +58,8 @@
 	[destination setAllowsEmptySelection:NO];
 	[destination setAutosizesCells:YES];
 	[destination setState:NSOnState atRow:0 column:0];
+
+	[cell release]; // release the prototype cell
 
 	cell = [destination cellAtRow:0 column:0];
 	[cell setTitle:NSLocalizedString( @"Foreground Color", "color panel Foreground Color button" )];
@@ -70,11 +71,11 @@
 	[cell setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
 	[cell setTag:2];
 
-	[destination setAutoresizingMask:(NSViewWidthSizable | NSViewMaxXMargin)];
-	[view setAutoresizingMask:(NSViewWidthSizable | NSViewMaxXMargin)];
+	[destination setAutoresizingMask:( NSViewWidthSizable | NSViewMaxXMargin )];
+	[view setAutoresizingMask:( NSViewWidthSizable | NSViewMaxXMargin )];
 	[view addSubview:destination];
 	[destination setBoundsOrigin:NSZeroPoint];
 
-	return view;
+	return [view autorelease];
 }
 @end

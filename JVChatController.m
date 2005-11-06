@@ -77,16 +77,18 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_chatWindows = [[NSMutableArray array] retain];
-		_chatControllers = [[NSMutableArray array] retain];
+		_chatWindows = [[NSMutableArray allocWithZone:nil] init];
+		_chatControllers = [[NSMutableArray allocWithZone:nil] init];
 
 		_windowRuleSets = nil;
 		[self _reloadPreferedWindowRuleSets];
 
 		NSEnumerator *smartTranscriptsEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVSmartTranscripts"] objectEnumerator];
 		NSData *archivedSmartTranscript = nil;
-		while( ( archivedSmartTranscript = [smartTranscriptsEnumerator nextObject] ) )
-			[_chatControllers addObject:[NSKeyedUnarchiver unarchiveObjectWithData:archivedSmartTranscript]];
+		while( ( archivedSmartTranscript = [smartTranscriptsEnumerator nextObject] ) ) {
+			id object = [NSKeyedUnarchiver unarchiveObjectWithData:archivedSmartTranscript];
+			if( object ) [_chatControllers addObject:object];
+		}
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatRoomJoinedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToRoom: ) name:MVChatRoomInvitedNotification object:nil];
