@@ -49,27 +49,27 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 #pragma mark -
 
 - (void) reloadPlugins {
-	NSArray *paths = [[self class] pluginSearchPaths];
-	NSEnumerator *enumerator = nil, *denumerator = nil;
-	NSString *file = nil, *path = nil;
-	NSBundle *bundle = nil;
-
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerWillReloadPluginsNotification object:self];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-	[invocation setSelector:@selector( unload )];
-	[self makePluginsPerformInvocation:invocation];
+	if( [_plugins count] ) {
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), nil];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+		[invocation setSelector:@selector( unload )];
+		[self makePluginsPerformInvocation:invocation];
 
-	// unload all plugins, this resets everything and purges plugins that moved since the last load
-	[_plugins removeAllObjects];
+		// unload all plugins, this resets everything and purges plugins that moved since the last load
+		[_plugins removeAllObjects];
+	}
 
-	enumerator = [paths objectEnumerator];
+	NSArray *paths = [[self class] pluginSearchPaths];
+	NSEnumerator *enumerator = [paths objectEnumerator];
+	NSString *file = nil, *path = nil;
+
 	while( ( path = [enumerator nextObject] ) ) {
-		denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
+		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
 		while( ( file = [denumerator nextObject] ) ) {
 			if( [[file pathExtension] isEqualToString:@"bundle"] || [[file pathExtension] isEqualToString:@"plugin"] ) {
-				bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]];
+				NSBundle *bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]];
 				if( [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
 					id plugin = [[[[bundle principalClass] allocWithZone:nil] initWithManager:self] autorelease];
 					if( plugin ) [self addPlugin:plugin];
