@@ -1442,6 +1442,8 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _saveBookmarkList {
+	if( ! _bookmarks ) return; // _loadBookmarkList hasn't fired yet, we have nothing to save
+
 	NSMutableArray *saveList = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
