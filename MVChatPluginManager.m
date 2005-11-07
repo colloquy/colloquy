@@ -69,7 +69,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
 		while( ( file = [denumerator nextObject] ) ) {
 			if( [[file pathExtension] isEqualToString:@"bundle"] || [[file pathExtension] isEqualToString:@"plugin"] ) {
-				NSBundle *bundle = [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", path, file]];
+				NSBundle *bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]];
 				if( [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
 					id plugin = [[[[bundle principalClass] allocWithZone:nil] initWithManager:self] autorelease];
 					if( plugin ) [self addPlugin:plugin];

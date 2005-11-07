@@ -1634,7 +1634,9 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 				silc_free( tmp );
 			}
 
-			filename = [NSString stringWithFormat:@"%@/%@.pub", [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Silc/Server Keys/"] stringByExpandingTildeInPath], host];
+			filename = [@"~/Library/Application Support/Colloquy/Silc/Server Keys" stringByAppendingPathComponent:host];
+			filename = [filename stringByAppendingPathExtension:@"pub"];
+			filename = [filename stringByExpandingTildeInPath];
 		}	break;
 	}
 
