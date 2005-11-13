@@ -131,6 +131,22 @@
 			MVChatUser *user = [[[room target] memberUsersWithNickname:member] anyObject];
 			if( user ) [[room target] kickOutMemberUser:user forReason:reason];
 			return YES;
+		} else if( ! [command caseInsensitiveCompare:@"kickban"] ) {
+			NSString *member = nil;
+			NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
+
+			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&member];
+			if( ! [member length] ) return NO;
+
+			NSAttributedString *reason = nil;
+			if( [arguments length] >= [scanner scanLocation] + 1 )
+				reason = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation] + 1, ( [arguments length] - [scanner scanLocation] - 1 ) )];
+
+			MVChatUser *user = [[[room target] memberUsersWithNickname:member] anyObject];
+			if( user ) [[room target] kickOutMemberUser:user forReason:reason];
+			user = [MVChatUser wildcardUserFromString:member];
+			if( user ) [[room target] addBanForUser:user];
+			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"op"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];

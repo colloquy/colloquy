@@ -381,14 +381,11 @@
 			[menu addItem:item];
 
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick & Ban From Room", "kickban from room contextual menu - admin only" ) action:@selector( kickban: ) keyEquivalent:@""] autorelease];
-			[item setKeyEquivalentModifierMask:NSShiftKeyMask];
-			if( [item respondsToSelector:@selector( setAlternate: )] )
-				[item setAlternate:YES];
 			[item setTarget:self];
 			[menu addItem:item];
 
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kick & Ban From Room..."], "kickban from room (customized) contextual menu - admin only" ) action:@selector( customKickban: ) keyEquivalent:@""] autorelease];
-			[item setKeyEquivalentModifierMask:( NSShiftKeyMask | NSAlternateKeyMask )];
+			[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
 			if( [item respondsToSelector:@selector( setAlternate: )] )
 				[item setAlternate:YES];
 			[item setTarget:self];
