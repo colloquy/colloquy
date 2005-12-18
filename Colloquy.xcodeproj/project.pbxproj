@@ -67,6 +67,7 @@
 		1C6A46A60841951200572AB6 /* gearSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A46A50841951200572AB6 /* gearSmall.png */; };
 		1C6C75460630AD5300698F55 /* AGRegex.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C6C75450630AD5300698F55 /* AGRegex.framework */; };
 		1C6C75490630AD9500698F55 /* AGRegex.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C6C75450630AD5300698F55 /* AGRegex.framework */; };
+		1C6E43C40955EFD7002D22E7 /* serverWindow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6E43C30955EFD7002D22E7 /* serverWindow.png */; };
 		1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C6EA23C05A735D6006A559F /* JVChatRoomBrowser.nib */; };
 		1C6EA24405A738DD006A559F /* JVChatRoomBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6EA24205A738DD006A559F /* JVChatRoomBrowser.m */; };
 		1C6EA66205A76038006A559F /* personHeader.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1C6EA66105A76038006A559F /* personHeader.tif */; };
@@ -539,6 +540,7 @@
 		1C6A455808417C5300572AB6 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVChatViewCriterion.nib; sourceTree = "<group>"; };
 		1C6A46A50841951200572AB6 /* gearSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gearSmall.png; path = Resources/gearSmall.png; sourceTree = "<group>"; };
 		1C6C75450630AD5300698F55 /* AGRegex.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGRegex.framework; path = Frameworks/AGRegex.framework; sourceTree = SOURCE_ROOT; };
+		1C6E43C30955EFD7002D22E7 /* serverWindow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = serverWindow.png; path = Resources/serverWindow.png; sourceTree = "<group>"; };
 		1C6EA23D05A735D6006A559F /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVChatRoomBrowser.nib; sourceTree = "<group>"; };
 		1C6EA24105A738DD006A559F /* JVChatRoomBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatRoomBrowser.h; sourceTree = "<group>"; };
 		1C6EA24205A738DD006A559F /* JVChatRoomBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatRoomBrowser.m; sourceTree = "<group>"; };
@@ -1611,6 +1613,7 @@
 				1C6A429508400BEA00572AB6 /* window.png */,
 				1C6A42A608400E7900572AB6 /* targetWindow.png */,
 				1C45BFA4086F4BD80079E014 /* newWindow.png */,
+				1C6E43C30955EFD7002D22E7 /* serverWindow.png */,
 				1C6A46A50841951200572AB6 /* gearSmall.png */,
 				1C77822808FA4101006AD8E5 /* topicBackground.png */,
 				1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */,
@@ -2166,6 +2169,7 @@
 				1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */,
 				1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */,
 				1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */,
+				1C6E43C40955EFD7002D22E7 /* serverWindow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

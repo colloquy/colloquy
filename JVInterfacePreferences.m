@@ -64,6 +64,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	NSMutableDictionary *info = nil;
 	BOOL haveCurrentWindow = NO;
 	BOOL haveNewWindow = NO;
+	BOOL haveServerWindow = NO;
 
 	while( ( info = [enumerator nextObject] ) ) {
 		NSString *value = [info objectForKey:@"special"];
@@ -73,6 +74,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 			haveCurrentWindow = YES;
 		} else if( [value isEqualToString:@"currentWindow"] ) haveCurrentWindow = YES;
 		else if( [value isEqualToString:@"newWindow"] ) haveNewWindow = YES;
+		else if( [value isEqualToString:@"serverWindow"] ) haveServerWindow = YES;
 	}
 
 	if( ! haveCurrentWindow ) {
@@ -89,6 +91,15 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		[_windowSets addObject:info];
 
 		[info setObject:@"newWindow" forKey:@"special"];
+		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
+		[info setObject:[NSMutableArray array] forKey:@"rules"];
+	}
+
+	if( ! haveServerWindow ) {
+		info = [NSMutableDictionary dictionary];
+		[_windowSets addObject:info];
+		
+		[info setObject:@"serverWindow" forKey:@"special"];
 		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
 		[info setObject:[NSMutableArray array] forKey:@"rules"];
 	}
@@ -163,6 +174,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		NSDictionary *info = [_windowSets objectAtIndex:row];
 		if( [[info objectForKey:@"special"] isEqualToString:@"currentWindow"] ) return [NSImage imageNamed:@"targetWindow"];
 		else if( [[info objectForKey:@"special"] isEqualToString:@"newWindow"] ) return [NSImage imageNamed:@"newWindow"];
+		else if( [[info objectForKey:@"special"] isEqualToString:@"serverWindow"] ) return [NSImage imageNamed:@"serverWindow"];
 		else return [NSImage imageNamed:@"window"];
 	} else if( view == rulesTable ) {
 		NSArray *ruleSets = [self selectedRules];
@@ -178,6 +190,8 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 			[(JVDetailCell *) cell setMainText:NSLocalizedString( @"Focused Window", "focused window label, interface preferences" )];
 		else if( [[info objectForKey:@"special"] isEqualToString:@"newWindow"] )
 			[(JVDetailCell *) cell setMainText:NSLocalizedString( @"New Window", "new window label, interface preferences" )];
+		else if( [[info objectForKey:@"special"] isEqualToString:@"serverWindow"] )
+			[(JVDetailCell *) cell setMainText:NSLocalizedString( @"Server Window", "server window label, interface preferences" )];
 		else [(JVDetailCell *) cell setMainText:[info objectForKey:@"title"]];
 
 		unsigned int c = [[info objectForKey:@"rules"] count];

@@ -165,6 +165,8 @@ static NSMenu *smartTranscriptMenu = nil;
 			if( ! windowController ) windowController = [_chatWindows lastObject];
 		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"newWindow"] ) {
 			windowController = [self newChatWindowController];
+		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"serverWindow"] ) {
+			windowController = [self chatWindowControllerWithIdentifier:[[controller connection] server]];
 		} else if( [[windowSet objectForKey:@"identifier"] length] ) {
 			windowController = [self chatWindowControllerWithIdentifier:[windowSet objectForKey:@"identifier"]];
 		}
