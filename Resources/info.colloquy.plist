@@ -10,6 +10,10 @@
 	<integer>1</integer>
 	<key>JVChatScrollbackLimit</key>
 	<integer>300</integer>
+	<key>JVChatScrollTopTimeThreshold</key>
+	<string>0.5</string>
+	<key>JVChatScrollTopDeferedThreshold</key>
+	<integer>1000</integer>
 	<key>JVAutoAcceptFilesFrom</key>
 	<integer>1</integer>
 	<key>JVChatConsolePanelPreferredOpenMode</key>

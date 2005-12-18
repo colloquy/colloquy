@@ -8,6 +8,7 @@
 
 extern NSString *JVStyleViewDidClearNotification;
 extern NSString *JVStyleViewDidChangeStylesNotification;
+extern NSString *JVStyleViewScrollTopIdleNotification;
 
 @interface JVStyleView : WebView {
 	IBOutlet NSTextView *nextTextView;
@@ -27,6 +28,12 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	BOOL _requiresFullMessage;
 	BOOL _rememberScrollPosition;
 	unsigned long _lastScrollPosition;
+	
+	NSTimeInterval _scrollTopLastTime;
+	NSNumber *_scrollTopLastPos;
+	unsigned int _scrollTopDeferedCount;
+	NSTimeInterval _scrollTopTimeThreshold;
+	unsigned int _scrollTopDeferedThreshold;
 }
 - (void) setTranscript:(JVChatTranscript *) transcript;
 - (JVChatTranscript *) transcript;
@@ -49,6 +56,11 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 
 - (void) setScrollbackLimit:(unsigned int) limit;
 - (unsigned int) scrollbackLimit;
+
+- (void) setScrollTopDeferedThreshold:(unsigned int) threshold;
+- (unsigned int) scrollTopDeferedThreshold;
+- (void) setScrollTopTimeThreshold:(NSTimeInterval) threshold;
+- (NSTimeInterval) scrollTopTimeThreshold;
 
 - (void) reloadCurrentStyle;
 - (void) clear;
