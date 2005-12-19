@@ -997,8 +997,7 @@
 
 	// auto-rejoin on kick
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoRejoinRoomsOnKick"] ) {
-		[self performSelector:@selector(joinChat:) withObject:self afterDelay:[[NSUserDefaults standardUserDefaults] floatForKey:@"JVAutoRejoinRoomsDelay"]];
-		[self joinChat:self];
+		[self performSelector:@selector(joinChat:) withObject:nil afterDelay:[[NSUserDefaults standardUserDefaults] floatForKey:@"JVAutoRejoinRoomsDelay"]];
 	} else {
 		[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You have been kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You have been kicked from the chat room by %@ with the reason \"%@\" and cannot send further messages without rejoining.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, ( byMbr ? [byMbr title] : [byUser nickname] ), ( rstring ? [rstring string] : @"" ) ) withName:nil];
 	}
