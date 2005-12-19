@@ -526,7 +526,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		/* unsigned char *fingerprint = */ va_arg( list, unsigned char * );
 		/* SilcBuffer user_modes = */ va_arg( list, SilcBuffer );
 		/* SilcDList attrs = */ va_arg( list, SilcDList );
-
+		
 		MVSILCChatUser *user = (MVSILCChatUser *)[self _chatUserWithClientEntry:client_entry];
 		[user updateWithClientEntry:client_entry];
 		[user _setIdleTime:idletime];
@@ -544,7 +544,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 				while( ( entry = silc_dlist_get( list ) ) != SILC_LIST_END ) {
 					SilcUInt32 name_len = 0;
 					unsigned char *name = silc_channel_get_name( entry, &name_len );
-					[chanArray addObject:[NSString stringWithCharacters:(const unichar *)name length:name_len]];
+					[chanArray addObject:[NSString stringWithUTF8String:(char *)name]];
 				}
 
 				silc_channel_payload_list_free( list );
@@ -554,7 +554,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 
 			[chanArray release];
 		} else [user setAttribute:nil forKey:MVChatUserKnownRoomsAttribute];
-
+		
 		NSNotification *note = [NSNotification notificationWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}	break;
