@@ -4,6 +4,7 @@
         {
             ACTIONS = {
                 changeMessageScrollback = id; 
+                changeRejoinDelay = id; 
                 changeSendHistory = id; 
                 changeSendOnEnterAction = id; 
                 changeSendOnReturnAction = id; 
@@ -11,9 +12,12 @@
             CLASS = JVBehaviorPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                autoRejoinCheck = NSButton; 
                 enterKeyAction = NSPopUpButton; 
                 messageScrollback = NSTextField; 
                 messageScrollbackStepper = NSStepper; 
+                rejoinDelay = NSTextField; 
+                rejoinDelayStepper = NSStepper; 
                 returnKeyAction = NSPopUpButton; 
                 sendHistory = NSTextField; 
                 sendHistoryStepper = NSStepper; 

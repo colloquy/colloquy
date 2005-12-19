@@ -80,4 +80,11 @@
 	[messageScrollbackStepper setIntValue:size];
 	[[NSUserDefaults standardUserDefaults] setInteger:size forKey:@"JVChatScrollbackLimit"];
 }
+
+- (IBAction) changeRejoinDelay:(id) sender {
+	float delay = [sender floatValue];
+	[rejoinDelay setFloatValue:delay];
+	[rejoinDelayStepper setFloatValue:delay];
+	[[NSUserDefaults standardUserDefaults] setFloat:delay forKey:@"JVAutoRejoinRoomsDelay"];
+}
 @end

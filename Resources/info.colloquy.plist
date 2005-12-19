@@ -328,5 +328,9 @@
 	xALMAtEC0gLUAuIC7QL0AvgC+gL8Av4DAgMEAwYDCAMKAw8DEAMSAxwAAAAAAAACAQAA
 	AAAAAACZAAAAAAAAAAAAAAAAAAADJg==
 	</data>
+	<key>JVAutoRejoinRoomsOnKick</key>
+	<false/>
+	<key>JVAutoRejoinRoomsDelay</key>
+	<real>3</real>
 </dict>
 </plist>
