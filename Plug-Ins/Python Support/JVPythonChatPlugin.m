@@ -107,11 +107,11 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	_scriptModule = LoadArbitraryPythonModule( [moduleName fileSystemRepresentation], [moduleFolder fileSystemRepresentation], [_uniqueModuleName UTF8String] );
 
 	if( ! _scriptModule ) {
-		PyObject *errType, *errValue, *errTrace;
+		PyObject *errType = NULL, *errValue = NULL, *errTrace = NULL;
 		PyErr_Fetch( &errType, &errValue, &errTrace );
+		PyErr_NormalizeException( &errType, &errValue, &errTrace );
 
 		NSString *errorDesc = nil;
-
 		if( errValue && PyTuple_Size( errValue ) >= 2 ) {
 			errorDesc = @"Reason: ";
 
@@ -124,10 +124,10 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 				char *lineNum = PyString_AsString( PyObject_Str( PyTuple_GetItem( info, 1 ) ) );
 				if( lineNum ) errorDesc = [errorDesc stringByAppendingFormat:@" near line %s.", lineNum];
 			}
-
-			PyErr_Print();
-			PyErr_Clear();
 		} else errorDesc = NSLocalizedStringFromTableInBundle( @"Unknown Error", nil, [NSBundle bundleForClass:[self class]], "unknown error" );
+
+		PyErr_Restore( errType, errValue, errTrace );
+		PyErr_Print();
 
 		int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], errorDesc );
 		if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
@@ -196,7 +196,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		Py_XDECREF( ret );
 		Py_DECREF( args );
 
-		PyObject *errType, *errValue, *errTrace;
+		PyObject *errType = NULL, *errValue = NULL, *errTrace = NULL;
 		PyErr_Fetch( &errType, &errValue, &errTrace );
 
 		if( errValue ) {
