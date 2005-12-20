@@ -1,0 +1,56 @@
+{
+    IBClasses = (
+        {CLASS = ASExtendedTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                changeBaseFontSize = id; 
+                changeDefaultChatStyle = id; 
+                changeDefaultEmoticons = id; 
+                changeMinimumFontSize = id; 
+                closeNewVariantSheet = id; 
+                createNewVariant = id; 
+                showOptions = id; 
+            }; 
+            CLASS = JVAppearancePreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                baseFontSize = NSTextField; 
+                baseFontSizeStepper = NSStepper; 
+                emoticons = NSPopUpButton; 
+                minimumFontSize = NSTextField; 
+                minimumFontSizeStepper = NSStepper; 
+                newVariantName = NSTextField; 
+                newVariantPanel = NSPanel; 
+                optionsDrawer = NSDrawer; 
+                optionsTable = NSTableView; 
+                preview = JVStyleView; 
+                standardFont = JVFontPreviewField; 
+                styles = NSPopUpButton; 
+            }; 
+            SUPERCLASS = NSPreferencesModule; 
+        }, 
+        {
+            ACTIONS = {chooseFontWithFontPanel = id; selectFont = id; }; 
+            CLASS = JVFontPreviewField; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {CLASS = JVMixedTableColumn; LANGUAGE = ObjC; SUPERCLASS = NSTableColumn; }, 
+        {
+            ACTIONS = {jumpToNextHighlight = id; jumpToPreviousHighlight = id; }; 
+            CLASS = JVStyleView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {nextTextView = NSTextView; }; 
+            SUPERCLASS = WebView; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {
+            CLASS = NSPreferencesModule; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

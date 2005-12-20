@@ -1,0 +1,19 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changePortRange = id; changeSaveDownloads = id; }; 
+            CLASS = JVFileTransferPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {maxRate = NSTextField; minRate = NSTextField; saveDownloads = NSPopUpButton; }; 
+            SUPERCLASS = NSPreferencesModule; 
+        }, 
+        {
+            CLASS = NSPreferencesModule; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

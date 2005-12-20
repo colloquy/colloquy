@@ -1,0 +1,39 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                bounceIcon = id; 
+                bounceIconUntilFront = id; 
+                keepBubbleOnScreen = id; 
+                playSound = id; 
+                saveHighlightWords = id; 
+                showBubble = id; 
+                showBubbleIfBackground = id; 
+                switchEvent = id; 
+                switchSound = id; 
+            }; 
+            CLASS = JVNotificationPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                bounceIcon = NSButton; 
+                chatActions = NSPopUpButton; 
+                highlightWords = NSTextField; 
+                keepOnScreen = NSButton; 
+                onlyIfBackground = NSButton; 
+                playSound = NSButton; 
+                showBubble = NSButton; 
+                sounds = NSPopUpButton; 
+                untilAttention = NSButton; 
+            }; 
+            SUPERCLASS = NSPreferencesModule; 
+        }, 
+        {
+            CLASS = NSPreferencesModule; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
