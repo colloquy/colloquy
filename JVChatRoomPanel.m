@@ -242,7 +242,7 @@
 }
 
 - (IBAction) addToFavorites:(id) sender {
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], _target]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [_target stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 	NSString *path = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath] retain];
 
 	[url writeToInternetLocationFile:path];
