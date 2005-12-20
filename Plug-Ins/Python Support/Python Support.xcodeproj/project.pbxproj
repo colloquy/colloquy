@@ -49,6 +49,7 @@
 		32DBCF630370AF2F00C91783 /* Python Support.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Python Support.pch"; sourceTree = SOURCE_ROOT; };
 		8D5B49B6048680CD000E48DA /* Python Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Python Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +216,13 @@
 				014CEA430018CDE011CA2923 /* Deployment */,
 			);
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				zh_TW,
+			);
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
 			targets = (
@@ -251,6 +259,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				0A61C7FF07E05F6000C326B4 /* English */,
+				A1F6108B0957E4BB001B65CD /* zh_TW */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
