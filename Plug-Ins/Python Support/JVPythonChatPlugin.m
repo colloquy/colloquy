@@ -151,6 +151,14 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *path = [self scriptFilePath];
 
+	// if we didn't originally load with a human editable file path, 
+	// try to find the human editable version and check it for changes 
+	if( ! [[path pathExtension] isEqualToString:@"py"] ) {
+		path = [[self scriptFilePath] stringByDeletingPathExtension];
+		path = [path stringByAppendingPathExtension:@"py"];
+		if( ! [fm fileExistsAtPath:path] ) path = [self scriptFilePath];
+	}
+
 	if( [fm fileExistsAtPath:path] ) {
 		NSDictionary *info = [fm fileAttributesAtPath:path traverseLink:YES];
 		NSDate *fileModDate = [info fileModificationDate];
