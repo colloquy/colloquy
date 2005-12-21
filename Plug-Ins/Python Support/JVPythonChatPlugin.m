@@ -151,14 +151,6 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *path = [self scriptFilePath];
 
-	// if we didn't originally load with a human editable file path,
-	// try to find the human editable version and check it for changes
-	if( ! [[path pathExtension] isEqualToString:@"py"] ) {
-		path = [[self scriptFilePath] stringByDeletingPathExtension];
-		path = [path stringByAppendingPathExtension:@"py"];
-		if( ! [fm fileExistsAtPath:path] ) path = [self scriptFilePath];
-	}
-
 	if( [fm fileExistsAtPath:path] ) {
 		NSDictionary *info = [fm fileAttributesAtPath:path traverseLink:YES];
 		NSDate *fileModDate = [info fileModificationDate];
@@ -187,9 +179,10 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 
 		for( i = 0; i < count; i++ ) {
 			id object = [arguments objectAtIndex:i];
-			if( [object isKindOfClass:[NSNull class]] )
+			if( [object isKindOfClass:[NSNull class]] ) {
+				Py_INCREF( Py_None );
 				PyTuple_SetItem( args, i, Py_None );
-			else PyTuple_SetItem( args, i, PyObjC_IdToPython( [arguments objectAtIndex:i] ) );
+			} else PyTuple_SetItem( args, i, PyObjC_IdToPython( object ) );
 		}
 
 		PyObject *ret = PyObject_CallObject( func, args );
