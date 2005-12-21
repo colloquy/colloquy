@@ -185,8 +185,12 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		PyObject *args = PyTuple_New( count );
 		if( ! args ) return nil;
 
-		for( i = 0; i < count; i++ )
-			PyTuple_SetItem( args, i, PyObjC_IdToPython( [arguments objectAtIndex:i] ) );
+		for( i = 0; i < count; i++ ) {
+			id object = [arguments objectAtIndex:i];
+			if( [object isKindOfClass:[NSNull class]] )
+				PyTuple_SetItem( args, i, Py_None );
+			else PyTuple_SetItem( args, i, PyObjC_IdToPython( [arguments objectAtIndex:i] ) );
+		}
 
 		PyObject *ret = PyObject_CallObject( func, args );
 
@@ -231,24 +235,24 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 }
 
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:object, view, nil];
+	NSArray *args = [NSArray arrayWithObjects:( object ? (id)object : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
 	id result = [self callScriptFunctionNamed:@"contextualMenuItems" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSArray class]] ? result : nil );
 }
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context andPreferences:(NSDictionary *) preferences {
-	NSArray *args = [NSArray arrayWithObjects:identifier, context, preferences, nil];
+	NSArray *args = [NSArray arrayWithObjects:identifier, ( context ? (id)context : (id)[NSNull null] ), ( preferences ? (id)preferences : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"performNotification" withArguments:args forSelector:_cmd];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:command, arguments, connection, view, nil];
+	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)arguments : (id)[NSNull null] ), ( connection ? (id)connection : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
 	id result = [self callScriptFunctionNamed:@"processUserCommand" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:url, view, nil];
+	NSArray *args = [NSArray arrayWithObjects:url, ( view ? (id)view : (id)[NSNull null] ), nil];
 	id result = [self callScriptFunctionNamed:@"handleClickedLink" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
@@ -269,12 +273,12 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 }
 
 - (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:member, room, reason, nil];
+	NSArray *args = [NSArray arrayWithObjects:member, room, ( reason ? (id)reason : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"memberParted" withArguments:args forSelector:_cmd];
 }
 
 - (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:member, room, by, reason, nil];
+	NSArray *args = [NSArray arrayWithObjects:member, room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)reason : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"memberKicked" withArguments:args forSelector:_cmd];
 }
 
@@ -289,23 +293,23 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 }
 
 - (void) kickedFromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:room, by, reason, nil];
+	NSArray *args = [NSArray arrayWithObjects:room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)reason : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"kickedFromRoom" withArguments:args forSelector:_cmd];
 }
 
 - (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member {
-	NSArray *args = [NSArray arrayWithObjects:topic, room, member, nil];
+	NSArray *args = [NSArray arrayWithObjects:topic, room, ( member ? (id)member : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"topicChanged" withArguments:args forSelector:_cmd];
 }
 
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
-	NSArray *args = [NSArray arrayWithObjects:command, arguments, user, nil];
+	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)arguments : (id)[NSNull null] ), user, nil];
 	id result = [self callScriptFunctionNamed:@"processSubcodeRequest" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
-	NSArray *args = [NSArray arrayWithObjects:command, arguments, user, nil];
+	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)arguments : (id)[NSNull null] ), user, nil];
 	id result = [self callScriptFunctionNamed:@"processSubcodeReply" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
