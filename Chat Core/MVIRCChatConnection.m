@@ -1,9 +1,3 @@
-#import <unistd.h>
-#import <pthread.h>
-
-#define HAVE_IPV6 1
-#define MODULE_NAME "MVIRCChatConnection"
-
 #import "MVIRCChatConnection.h"
 #import "MVIRCChatRoom.h"
 #import "MVIRCChatUser.h"
@@ -16,35 +10,6 @@
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
-
-#import "core.h"
-#import "irc.h"
-#import "signals.h"
-#import "servers.h"
-#import "servers-setup.h"
-#import "chat-protocols.h"
-#import "net-sendbuffer.h"
-#import "channels.h"
-#import "nicklist.h"
-#import "notifylist.h"
-#import "mode-lists.h"
-#import "rawlog.h"
-#import "settings.h"
-
-#import "config.h"
-#import "dcc.h"
-#import "dcc-file.h"
-#import "dcc-get.h"
-
-void irc_init( void );
-void irc_deinit( void );
-
-#pragma mark -
-
-static NSPort *threadConnectionPort = nil;
-static BOOL irssiThreadReady = NO;
-static unsigned int connectionCount = 0;
-pthread_mutex_t irssiLock;
 
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
@@ -182,7 +147,7 @@ typedef struct {
 
 #define ERR_LISTSYNTAX       521
 
-static void MVChatConnecting( SERVER_REC *server ) {
+/* static void MVChatConnecting( SERVER_REC *server ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
 	if( ! self ) return;
 	[self performSelectorOnMainThread:@selector( _willConnect ) withObject:nil waitUntilDone:NO];
@@ -1084,10 +1049,10 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	g_free( params );
 }
 
-#pragma mark -
+#pragma mark - */
 
 @implementation MVIRCChatConnection
-+ (void) initialize {
+/*+ (void) initialize {
 	[super initialize];
 
 	static BOOL tooLate = NO;
@@ -1668,13 +1633,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	IrssiUnlock();
 
 	return lag;
-}
+} */
 @end
 
 #pragma mark -
 
 @implementation MVIRCChatConnection (MVIRCChatConnectionPrivate)
-+ (MVIRCChatConnection *) _connectionForServer:(SERVER_REC *) server {
+/* + (MVIRCChatConnection *) _connectionForServer:(SERVER_REC *) server {
 	if( ! server ) return nil;
 
 	MVIRCChatConnectionModuleData *data = MODULE_DATA( server );
@@ -2038,5 +2003,5 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	}
 
 	IrssiUnlock();
-}
+} */
 @end

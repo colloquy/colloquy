@@ -1,29 +1,10 @@
-#import <pthread.h>
-
-#define HAVE_IPV6 1
-#define MODULE_NAME "MVIRCFileTransfer"
 
 #import "MVIRCFileTransfer.h"
 #import "MVIRCChatConnection.h"
 #import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
 
-#import "signals.h"
-#import "settings.h"
-#import "config.h"
-#import "dcc.h"
-#import "dcc-queue.h"
-
-void dcc_send_resume( GET_DCC_REC *dcc );
-void dcc_queue_send_next( int queue );
-
-typedef struct {
-	MVFileTransfer *transfer;
-} MVFileTransferModuleData;
-
-#pragma mark -
-
-static void MVFileTransferConnected( FILE_DCC_REC *dcc ) {
+/*static void MVFileTransferConnected( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
@@ -136,10 +117,10 @@ static BOOL fileTransferSignalsRegistered = NO;
 }
 @end
 
-#pragma mark -
+#pragma mark - */
 
 @implementation MVIRCUploadFileTransfer
-+ (void) initialize {
+/*+ (void) initialize {
 	[super initialize];
 	if( ! fileTransferSignalsRegistered ) {
 		IrssiLock();
@@ -317,10 +298,10 @@ static BOOL fileTransferSignalsRegistered = NO;
 		// the Irssi thread callbacks check for this and call dcc_close then
 		[self _setStatus:MVFileTransferStoppedStatus];
 	}
-}
+} */
 @end
 
-#pragma mark -
+/* #pragma mark -
 
 @implementation MVIRCUploadFileTransfer (MVIRCUploadFileTransferPrivate)
 - (SEND_DCC_REC *) _DCCFileRecord {
@@ -377,10 +358,10 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	}
 }
 
-#pragma mark -
+#pragma mark - */
 
 @implementation MVIRCDownloadFileTransfer
-+ (void) initialize {
+/* + (void) initialize {
 	[super initialize];
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
@@ -602,9 +583,9 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 
 		IrssiUnlock();
 	}
-}
+} */
 @end
-
+/*
 #pragma mark -
 
 @implementation MVIRCDownloadFileTransfer (MVIRCDownloadFileTransferPrivate)
@@ -650,3 +631,4 @@ static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
 	}
 }
 @end
+*/

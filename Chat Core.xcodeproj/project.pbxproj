@@ -37,119 +37,6 @@
 		1C914D360706148800CBA5F1 /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C914D340706148800CBA5F1 /* MVIRCChatRoom.m */; };
 		1C943AAB063C260800618CD9 /* MVFileTransfer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C943AA9063C260800618CD9 /* MVFileTransfer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C943AAC063C260800618CD9 /* MVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C943AAA063C260800618CD9 /* MVFileTransfer.m */; };
-		1C9AEE67086BA366008ED7AD /* write-buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373EC060E47CB00F6A81F /* write-buffer.c */; };
-		1C9AEE68086BA369008ED7AD /* special-vars.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373F0060E47CB00F6A81F /* special-vars.c */; };
-		1C9AEE69086BA36A008ED7AD /* signals.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373F2060E47CB00F6A81F /* signals.c */; };
-		1C9AEE6B086BA36E008ED7AD /* settings.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373F4060E47CB00F6A81F /* settings.c */; };
-		1C9AEE6C086BA36F008ED7AD /* session.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373F6060E47CB00F6A81F /* session.c */; };
-		1C9AEE6D086BA36F008ED7AD /* servers.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373F8060E47CB00F6A81F /* servers.c */; };
-		1C9AEE6E086BA370008ED7AD /* servers-setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373FA060E47CB00F6A81F /* servers-setup.c */; };
-		1C9AEE6F086BA372008ED7AD /* servers-reconnect.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373FC060E47CB00F6A81F /* servers-reconnect.c */; };
-		1C9AEE70086BA374008ED7AD /* rawlog.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37401060E47CB00F6A81F /* rawlog.c */; };
-		1C9AEE71086BA376008ED7AD /* queries.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37404060E47CB00F6A81F /* queries.c */; };
-		1C9AEE72086BA377008ED7AD /* pidwait.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37406060E47CB00F6A81F /* pidwait.c */; };
-		1C9AEE73086BA378008ED7AD /* nickmatch-cache.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37408060E47CB00F6A81F /* nickmatch-cache.c */; };
-		1C9AEE74086BA379008ED7AD /* nicklist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3740A060E47CB00F6A81F /* nicklist.c */; };
-		1C9AEE75086BA381008ED7AD /* network.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3740D060E47CB00F6A81F /* network.c */; };
-		1C9AEE76086BA381008ED7AD /* network-openssl.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3740E060E47CB00F6A81F /* network-openssl.c */; };
-		1C9AEE77086BA382008ED7AD /* net-sendbuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37410060E47CB00F6A81F /* net-sendbuffer.c */; };
-		1C9AEE78086BA384008ED7AD /* chat-protocols.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37413060E47CB00F6A81F /* chat-protocols.c */; };
-		1C9AEE79086BA385008ED7AD /* chat-commands.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37414060E47CB00F6A81F /* chat-commands.c */; };
-		1C9AEE7A086BA386008ED7AD /* channels.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37416060E47CB00F6A81F /* channels.c */; };
-		1C9AEE7B086BA387008ED7AD /* channels-setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37418060E47CB00F6A81F /* channels-setup.c */; };
-		1C9AEE7C086BA389008ED7AD /* args.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3741C060E47CB00F6A81F /* args.c */; };
-		1C9AEE7D086BA38A008ED7AD /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3741E060E47CB00F6A81F /* core.c */; };
-		1C9AEE7E086BA38C008ED7AD /* commands.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37420060E47CB00F6A81F /* commands.c */; };
-		1C9AEE7F086BA38D008ED7AD /* chatnets.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37422060E47CB00F6A81F /* chatnets.c */; };
-		1C9AEE80086BA38F008ED7AD /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37425060E47CB00F6A81F /* misc.c */; };
-		1C9AEE81086BA390008ED7AD /* masks.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37427060E47CB00F6A81F /* masks.c */; };
-		1C9AEE82086BA395008ED7AD /* log.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37429060E47CB00F6A81F /* log.c */; };
-		1C9AEE83086BA397008ED7AD /* log-away.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3742A060E47CB00F6A81F /* log-away.c */; };
-		1C9AEE84086BA398008ED7AD /* line-split.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3742C060E47CB00F6A81F /* line-split.c */; };
-		1C9AEE85086BA399008ED7AD /* levels.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3742E060E47CB00F6A81F /* levels.c */; };
-		1C9AEE86086BA39A008ED7AD /* ignore.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37430060E47CB00F6A81F /* ignore.c */; };
-		1C9AEE87086BA39B008ED7AD /* expandos.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37432060E47CB00F6A81F /* expandos.c */; };
-		1C9AEE88086BA39C008ED7AD /* modules.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37434060E47CB00F6A81F /* modules.c */; };
-		1C9AEE89086BA39D008ED7AD /* modules-load.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37436060E47CB00F6A81F /* modules-load.c */; };
-		1C9AEE8A086BA39F008ED7AD /* net-nonblock.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37438060E47CB00F6A81F /* net-nonblock.c */; };
-		1C9AEE8B086BA3A0008ED7AD /* net-disconnect.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3743A060E47CB00F6A81F /* net-disconnect.c */; };
-		1C9AEE8C086BA3A7008ED7AD /* servers-redirect.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373BD060E47A500F6A81F /* servers-redirect.c */; };
-		1C9AEE8E086BA3A8008ED7AD /* servers-idle.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373BF060E47A500F6A81F /* servers-idle.c */; };
-		1C9AEE8F086BA3AA008ED7AD /* modes.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373C3060E47A500F6A81F /* modes.c */; };
-		1C9AEE90086BA3AB008ED7AD /* mode-lists.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373C5060E47A500F6A81F /* mode-lists.c */; };
-		1C9AEE91086BA3AC008ED7AD /* massjoin.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373C6060E47A500F6A81F /* massjoin.c */; };
-		1C9AEE92086BA3AD008ED7AD /* lag.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373C7060E47A500F6A81F /* lag.c */; };
-		1C9AEE93086BA3AF008ED7AD /* irc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373C9060E47A500F6A81F /* irc.c */; };
-		1C9AEE94086BA3B0008ED7AD /* irc-session.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373CA060E47A500F6A81F /* irc-session.c */; };
-		1C9AEE95086BA3B1008ED7AD /* irc-servers.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373CC060E47A500F6A81F /* irc-servers.c */; };
-		1C9AEE96086BA3B2008ED7AD /* irc-servers-setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373CE060E47A500F6A81F /* irc-servers-setup.c */; };
-		1C9AEE97086BA3B3008ED7AD /* irc-servers-reconnect.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373CF060E47A500F6A81F /* irc-servers-reconnect.c */; };
-		1C9AEE98086BA3B4008ED7AD /* irc-queries.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D1060E47A500F6A81F /* irc-queries.c */; };
-		1C9AEE99086BA3B5008ED7AD /* netsplit.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D2060E47A500F6A81F /* netsplit.c */; };
-		1C9AEE9A086BA3B6008ED7AD /* irc-nicklist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D4060E47A500F6A81F /* irc-nicklist.c */; };
-		1C9AEE9B086BA3B7008ED7AD /* irc-masks.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D6060E47A500F6A81F /* irc-masks.c */; };
-		1C9AEE9C086BA3B8008ED7AD /* irc-expandos.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D7060E47A500F6A81F /* irc-expandos.c */; };
-		1C9AEE9D086BA3B9008ED7AD /* irc-core.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373D8060E47A500F6A81F /* irc-core.c */; };
-		1C9AEE9E086BA3BE008ED7AD /* irc-commands.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373DA060E47A500F6A81F /* irc-commands.c */; };
-		1C9AEE9F086BA3BF008ED7AD /* irc-chatnets.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373DC060E47A500F6A81F /* irc-chatnets.c */; };
-		1C9AEEA0086BA3C0008ED7AD /* irc-channels.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373DE060E47A500F6A81F /* irc-channels.c */; };
-		1C9AEEA1086BA3C1008ED7AD /* irc-channels-setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373DF060E47A500F6A81F /* irc-channels-setup.c */; };
-		1C9AEEA2086BA3C2008ED7AD /* ctcp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373E1060E47A500F6A81F /* ctcp.c */; };
-		1C9AEEA3086BA3C3008ED7AD /* channels-query.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373E2060E47A500F6A81F /* channels-query.c */; };
-		1C9AEEA4086BA3C4008ED7AD /* channel-rejoin.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373E4060E47A500F6A81F /* channel-rejoin.c */; };
-		1C9AEEA5086BA3C5008ED7AD /* channel-events.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373E5060E47A500F6A81F /* channel-events.c */; };
-		1C9AEEA6086BA3C6008ED7AD /* bans.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB373E7060E47A500F6A81F /* bans.c */; };
-		1C9AEEA7086BA3CE008ED7AD /* dcc-autoget.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3744D060E480400F6A81F /* dcc-autoget.c */; };
-		1C9AEEA8086BA3CE008ED7AD /* dcc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37440060E480400F6A81F /* dcc.c */; };
-		1C9AEEA9086BA3D1008ED7AD /* dcc-server.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37442060E480400F6A81F /* dcc-server.c */; };
-		1C9AEEAA086BA3D3008ED7AD /* dcc-send.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37444060E480400F6A81F /* dcc-send.c */; };
-		1C9AEEAB086BA3D5008ED7AD /* dcc-resume.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37445060E480400F6A81F /* dcc-resume.c */; };
-		1C9AEEAC086BA3D6008ED7AD /* dcc-queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37448060E480400F6A81F /* dcc-queue.c */; };
-		1C9AEEAD086BA3D8008ED7AD /* dcc-get.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3744E060E480400F6A81F /* dcc-get.c */; };
-		1C9AEEAE086BA3D9008ED7AD /* dcc-chat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3744B060E480400F6A81F /* dcc-chat.c */; };
-		1C9AEEAF086BA3DF008ED7AD /* autoignore.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37453060E485500F6A81F /* autoignore.c */; };
-		1C9AEEB1086BA3E1008ED7AD /* flood.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB37454060E485500F6A81F /* flood.c */; };
-		1C9AEEB2086BA3E4008ED7AD /* notify-commands.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3745A060E487600F6A81F /* notify-commands.c */; };
-		1C9AEEB3086BA3E5008ED7AD /* notify-ison.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3745B060E487600F6A81F /* notify-ison.c */; };
-		1C9AEEB4086BA3E6008ED7AD /* notify-setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3745C060E487600F6A81F /* notify-setup.c */; };
-		1C9AEEB5086BA3E7008ED7AD /* notify-whois.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3745E060E487600F6A81F /* notify-whois.c */; };
-		1C9AEEB6086BA3E8008ED7AD /* notifylist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CB3745F060E487600F6A81F /* notifylist.c */; };
-		1C9AF036086BB565008ED7AD /* garray.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01A086BB565008ED7AD /* garray.c */; };
-		1C9AF037086BB565008ED7AD /* gcache.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01B086BB565008ED7AD /* gcache.c */; };
-		1C9AF038086BB565008ED7AD /* gcompletion.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01C086BB565008ED7AD /* gcompletion.c */; };
-		1C9AF039086BB565008ED7AD /* gdataset.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01D086BB565008ED7AD /* gdataset.c */; };
-		1C9AF03A086BB565008ED7AD /* gdate.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01E086BB565008ED7AD /* gdate.c */; };
-		1C9AF03B086BB565008ED7AD /* gerror.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF01F086BB565008ED7AD /* gerror.c */; };
-		1C9AF03C086BB565008ED7AD /* ghash.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF020086BB565008ED7AD /* ghash.c */; };
-		1C9AF03D086BB565008ED7AD /* ghook.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF021086BB565008ED7AD /* ghook.c */; };
-		1C9AF03E086BB565008ED7AD /* giochannel.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF022086BB565008ED7AD /* giochannel.c */; };
-		1C9AF03F086BB565008ED7AD /* giounix.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF023086BB565008ED7AD /* giounix.c */; };
-		1C9AF042086BB565008ED7AD /* glist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF026086BB565008ED7AD /* glist.c */; };
-		1C9AF043086BB565008ED7AD /* gmain.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF027086BB565008ED7AD /* gmain.c */; };
-		1C9AF044086BB565008ED7AD /* gmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF028086BB565008ED7AD /* gmem.c */; };
-		1C9AF045086BB565008ED7AD /* gmessages.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF029086BB565008ED7AD /* gmessages.c */; };
-		1C9AF046086BB565008ED7AD /* gmutex.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02A086BB565008ED7AD /* gmutex.c */; };
-		1C9AF047086BB565008ED7AD /* gnode.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02B086BB565008ED7AD /* gnode.c */; };
-		1C9AF048086BB565008ED7AD /* gprimes.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02C086BB565008ED7AD /* gprimes.c */; };
-		1C9AF049086BB565008ED7AD /* grel.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02D086BB565008ED7AD /* grel.c */; };
-		1C9AF04A086BB565008ED7AD /* gscanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02E086BB565008ED7AD /* gscanner.c */; };
-		1C9AF04B086BB565008ED7AD /* gslist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF02F086BB565008ED7AD /* gslist.c */; };
-		1C9AF04C086BB565008ED7AD /* gstrfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF030086BB565008ED7AD /* gstrfuncs.c */; };
-		1C9AF04D086BB565008ED7AD /* gstring.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF031086BB565008ED7AD /* gstring.c */; };
-		1C9AF04E086BB565008ED7AD /* gtimer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF032086BB565008ED7AD /* gtimer.c */; };
-		1C9AF04F086BB565008ED7AD /* gtree.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF033086BB565008ED7AD /* gtree.c */; };
-		1C9AF050086BB565008ED7AD /* gutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF034086BB565008ED7AD /* gutils.c */; };
-		1C9AF063086BB5C1008ED7AD /* findme.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF05B086BB5C1008ED7AD /* findme.c */; };
-		1C9AF065086BB5C1008ED7AD /* popt.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF05D086BB5C1008ED7AD /* popt.c */; };
-		1C9AF067086BB5C1008ED7AD /* poptconfig.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF05F086BB5C1008ED7AD /* poptconfig.c */; };
-		1C9AF068086BB5C1008ED7AD /* popthelp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF060086BB5C1008ED7AD /* popthelp.c */; };
-		1C9AF06A086BB5C1008ED7AD /* poptparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF062086BB5C1008ED7AD /* poptparse.c */; };
-		1C9AF071086BB5E5008ED7AD /* get.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF06B086BB5E5008ED7AD /* get.c */; };
-		1C9AF074086BB5E5008ED7AD /* parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF06E086BB5E5008ED7AD /* parse.c */; };
-		1C9AF075086BB5E5008ED7AD /* set.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF06F086BB5E5008ED7AD /* set.c */; };
-		1C9AF076086BB5E5008ED7AD /* write.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF070086BB5E5008ED7AD /* write.c */; };
-		1C9AF07A086BB638008ED7AD /* irc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF079086BB638008ED7AD /* irc.c */; };
-		1C9AF0A5086BBA2E008ED7AD /* recode.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AF0A3086BBA2E008ED7AD /* recode.c */; };
 		1C9CF4FE0615091400330D8D /* MVChatPluginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C9CF4FF0615091500330D8D /* MVChatPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */; };
 		1C9CF5010615091700330D8D /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F52D043001873FC401EE70DE /* MVChatConnection.m */; };
@@ -158,6 +45,8 @@
 		1CD020B505759347000F93B4 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD020B305759347000F93B4 /* NSStringAdditions.m */; };
 		1CD020C0057593F9000F93B4 /* NSColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD020BD057593A9000F93B4 /* NSColorAdditions.m */; };
 		1CDDD9AD0718BD2E00FE11C3 /* MVChatRoom.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C5CC07A06FFCB0B0006C5B1 /* MVChatRoom.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1CEEB166095BE36700166A54 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEEB164095BE36700166A54 /* AsyncSocket.m */; };
+		1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEB167095BE3A000166A54 /* CoreServices.framework */; };
 		1CF4E5120698E9E900986498 /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF4E5100698E9E900986498 /* NSDataAdditions.m */; };
 		1CF6513006EA23300073DEA8 /* MVChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F52D043101873FC401EE70DE /* MVChatConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1CF6B82D07122670008ABEFA /* MVSILCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5A230806FA4F2700A51F10 /* MVSILCChatConnection.m */; };
@@ -429,6 +318,9 @@
 		1CD020B305759347000F93B4 /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = Additions/NSStringAdditions.m; sourceTree = "<group>"; };
 		1CD020BC057593A9000F93B4 /* NSColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSColorAdditions.h; path = Additions/NSColorAdditions.h; sourceTree = "<group>"; };
 		1CD020BD057593A9000F93B4 /* NSColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = NSColorAdditions.m; path = Additions/NSColorAdditions.m; sourceTree = "<group>"; };
+		1CEEB163095BE36700166A54 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncSocket.h; path = "Chat Core/AsyncSocket.h"; sourceTree = "<group>"; };
+		1CEEB164095BE36700166A54 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncSocket.m; path = "Chat Core/AsyncSocket.m"; sourceTree = "<group>"; };
+		1CEEB167095BE3A000166A54 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		1CF4E50F0698E9E900986498 /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = Additions/NSDataAdditions.h; sourceTree = "<group>"; };
 		1CF4E5100698E9E900986498 /* NSDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataAdditions.m; path = Additions/NSDataAdditions.m; sourceTree = "<group>"; };
 		1CF6512A06EA22C40073DEA8 /* ChatCore.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatCore.pch; path = "Chat Core/ChatCore.pch"; sourceTree = "<group>"; };
@@ -454,6 +346,7 @@
 				1C51B487052DE0CB00BB459B /* Cocoa.framework in Frameworks */,
 				1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */,
 				1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */,
+				1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,6 +379,7 @@
 			isa = PBXGroup;
 			children = (
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
+				1CEEB167095BE3A000166A54 /* CoreServices.framework */,
 				1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */,
 				1C5A233D06FA4FEE00A51F10 /* libsilc.framework */,
 				1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */,
@@ -829,6 +723,8 @@
 				1C943AA9063C260800618CD9 /* MVFileTransfer.h */,
 				1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */,
 				1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */,
+				1CEEB164095BE36700166A54 /* AsyncSocket.m */,
+				1CEEB163095BE36700166A54 /* AsyncSocket.h */,
 			);
 			name = "Sources & Headers";
 			sourceTree = "<group>";
@@ -1060,119 +956,7 @@
 				431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */,
 				1C668DBA07BF9C4C008400F7 /* NSScannerAdditions.m in Sources */,
 				1C7C776A07DBBA4500FB5F83 /* NSScriptCommandAdditions.m in Sources */,
-				1C9AEE67086BA366008ED7AD /* write-buffer.c in Sources */,
-				1C9AEE68086BA369008ED7AD /* special-vars.c in Sources */,
-				1C9AEE69086BA36A008ED7AD /* signals.c in Sources */,
-				1C9AEE6B086BA36E008ED7AD /* settings.c in Sources */,
-				1C9AEE6C086BA36F008ED7AD /* session.c in Sources */,
-				1C9AEE6D086BA36F008ED7AD /* servers.c in Sources */,
-				1C9AEE6E086BA370008ED7AD /* servers-setup.c in Sources */,
-				1C9AEE6F086BA372008ED7AD /* servers-reconnect.c in Sources */,
-				1C9AEE70086BA374008ED7AD /* rawlog.c in Sources */,
-				1C9AEE71086BA376008ED7AD /* queries.c in Sources */,
-				1C9AEE72086BA377008ED7AD /* pidwait.c in Sources */,
-				1C9AEE73086BA378008ED7AD /* nickmatch-cache.c in Sources */,
-				1C9AEE74086BA379008ED7AD /* nicklist.c in Sources */,
-				1C9AEE75086BA381008ED7AD /* network.c in Sources */,
-				1C9AEE76086BA381008ED7AD /* network-openssl.c in Sources */,
-				1C9AEE77086BA382008ED7AD /* net-sendbuffer.c in Sources */,
-				1C9AEE78086BA384008ED7AD /* chat-protocols.c in Sources */,
-				1C9AEE79086BA385008ED7AD /* chat-commands.c in Sources */,
-				1C9AEE7A086BA386008ED7AD /* channels.c in Sources */,
-				1C9AEE7B086BA387008ED7AD /* channels-setup.c in Sources */,
-				1C9AEE7C086BA389008ED7AD /* args.c in Sources */,
-				1C9AEE7D086BA38A008ED7AD /* core.c in Sources */,
-				1C9AEE7E086BA38C008ED7AD /* commands.c in Sources */,
-				1C9AEE7F086BA38D008ED7AD /* chatnets.c in Sources */,
-				1C9AEE80086BA38F008ED7AD /* misc.c in Sources */,
-				1C9AEE81086BA390008ED7AD /* masks.c in Sources */,
-				1C9AEE82086BA395008ED7AD /* log.c in Sources */,
-				1C9AEE83086BA397008ED7AD /* log-away.c in Sources */,
-				1C9AEE84086BA398008ED7AD /* line-split.c in Sources */,
-				1C9AEE85086BA399008ED7AD /* levels.c in Sources */,
-				1C9AEE86086BA39A008ED7AD /* ignore.c in Sources */,
-				1C9AEE87086BA39B008ED7AD /* expandos.c in Sources */,
-				1C9AEE88086BA39C008ED7AD /* modules.c in Sources */,
-				1C9AEE89086BA39D008ED7AD /* modules-load.c in Sources */,
-				1C9AEE8A086BA39F008ED7AD /* net-nonblock.c in Sources */,
-				1C9AEE8B086BA3A0008ED7AD /* net-disconnect.c in Sources */,
-				1C9AEE8C086BA3A7008ED7AD /* servers-redirect.c in Sources */,
-				1C9AEE8E086BA3A8008ED7AD /* servers-idle.c in Sources */,
-				1C9AEE8F086BA3AA008ED7AD /* modes.c in Sources */,
-				1C9AEE90086BA3AB008ED7AD /* mode-lists.c in Sources */,
-				1C9AEE91086BA3AC008ED7AD /* massjoin.c in Sources */,
-				1C9AEE92086BA3AD008ED7AD /* lag.c in Sources */,
-				1C9AEE93086BA3AF008ED7AD /* irc.c in Sources */,
-				1C9AEE94086BA3B0008ED7AD /* irc-session.c in Sources */,
-				1C9AEE95086BA3B1008ED7AD /* irc-servers.c in Sources */,
-				1C9AEE96086BA3B2008ED7AD /* irc-servers-setup.c in Sources */,
-				1C9AEE97086BA3B3008ED7AD /* irc-servers-reconnect.c in Sources */,
-				1C9AEE98086BA3B4008ED7AD /* irc-queries.c in Sources */,
-				1C9AEE99086BA3B5008ED7AD /* netsplit.c in Sources */,
-				1C9AEE9A086BA3B6008ED7AD /* irc-nicklist.c in Sources */,
-				1C9AEE9B086BA3B7008ED7AD /* irc-masks.c in Sources */,
-				1C9AEE9C086BA3B8008ED7AD /* irc-expandos.c in Sources */,
-				1C9AEE9D086BA3B9008ED7AD /* irc-core.c in Sources */,
-				1C9AEE9E086BA3BE008ED7AD /* irc-commands.c in Sources */,
-				1C9AEE9F086BA3BF008ED7AD /* irc-chatnets.c in Sources */,
-				1C9AEEA0086BA3C0008ED7AD /* irc-channels.c in Sources */,
-				1C9AEEA1086BA3C1008ED7AD /* irc-channels-setup.c in Sources */,
-				1C9AEEA2086BA3C2008ED7AD /* ctcp.c in Sources */,
-				1C9AEEA3086BA3C3008ED7AD /* channels-query.c in Sources */,
-				1C9AEEA4086BA3C4008ED7AD /* channel-rejoin.c in Sources */,
-				1C9AEEA5086BA3C5008ED7AD /* channel-events.c in Sources */,
-				1C9AEEA6086BA3C6008ED7AD /* bans.c in Sources */,
-				1C9AEEA7086BA3CE008ED7AD /* dcc-autoget.c in Sources */,
-				1C9AEEA8086BA3CE008ED7AD /* dcc.c in Sources */,
-				1C9AEEA9086BA3D1008ED7AD /* dcc-server.c in Sources */,
-				1C9AEEAA086BA3D3008ED7AD /* dcc-send.c in Sources */,
-				1C9AEEAB086BA3D5008ED7AD /* dcc-resume.c in Sources */,
-				1C9AEEAC086BA3D6008ED7AD /* dcc-queue.c in Sources */,
-				1C9AEEAD086BA3D8008ED7AD /* dcc-get.c in Sources */,
-				1C9AEEAE086BA3D9008ED7AD /* dcc-chat.c in Sources */,
-				1C9AEEAF086BA3DF008ED7AD /* autoignore.c in Sources */,
-				1C9AEEB1086BA3E1008ED7AD /* flood.c in Sources */,
-				1C9AEEB2086BA3E4008ED7AD /* notify-commands.c in Sources */,
-				1C9AEEB3086BA3E5008ED7AD /* notify-ison.c in Sources */,
-				1C9AEEB4086BA3E6008ED7AD /* notify-setup.c in Sources */,
-				1C9AEEB5086BA3E7008ED7AD /* notify-whois.c in Sources */,
-				1C9AEEB6086BA3E8008ED7AD /* notifylist.c in Sources */,
-				1C9AF036086BB565008ED7AD /* garray.c in Sources */,
-				1C9AF037086BB565008ED7AD /* gcache.c in Sources */,
-				1C9AF038086BB565008ED7AD /* gcompletion.c in Sources */,
-				1C9AF039086BB565008ED7AD /* gdataset.c in Sources */,
-				1C9AF03A086BB565008ED7AD /* gdate.c in Sources */,
-				1C9AF03B086BB565008ED7AD /* gerror.c in Sources */,
-				1C9AF03C086BB565008ED7AD /* ghash.c in Sources */,
-				1C9AF03D086BB565008ED7AD /* ghook.c in Sources */,
-				1C9AF03E086BB565008ED7AD /* giochannel.c in Sources */,
-				1C9AF03F086BB565008ED7AD /* giounix.c in Sources */,
-				1C9AF042086BB565008ED7AD /* glist.c in Sources */,
-				1C9AF043086BB565008ED7AD /* gmain.c in Sources */,
-				1C9AF044086BB565008ED7AD /* gmem.c in Sources */,
-				1C9AF045086BB565008ED7AD /* gmessages.c in Sources */,
-				1C9AF046086BB565008ED7AD /* gmutex.c in Sources */,
-				1C9AF047086BB565008ED7AD /* gnode.c in Sources */,
-				1C9AF048086BB565008ED7AD /* gprimes.c in Sources */,
-				1C9AF049086BB565008ED7AD /* grel.c in Sources */,
-				1C9AF04A086BB565008ED7AD /* gscanner.c in Sources */,
-				1C9AF04B086BB565008ED7AD /* gslist.c in Sources */,
-				1C9AF04C086BB565008ED7AD /* gstrfuncs.c in Sources */,
-				1C9AF04D086BB565008ED7AD /* gstring.c in Sources */,
-				1C9AF04E086BB565008ED7AD /* gtimer.c in Sources */,
-				1C9AF04F086BB565008ED7AD /* gtree.c in Sources */,
-				1C9AF050086BB565008ED7AD /* gutils.c in Sources */,
-				1C9AF063086BB5C1008ED7AD /* findme.c in Sources */,
-				1C9AF065086BB5C1008ED7AD /* popt.c in Sources */,
-				1C9AF067086BB5C1008ED7AD /* poptconfig.c in Sources */,
-				1C9AF068086BB5C1008ED7AD /* popthelp.c in Sources */,
-				1C9AF06A086BB5C1008ED7AD /* poptparse.c in Sources */,
-				1C9AF071086BB5E5008ED7AD /* get.c in Sources */,
-				1C9AF074086BB5E5008ED7AD /* parse.c in Sources */,
-				1C9AF075086BB5E5008ED7AD /* set.c in Sources */,
-				1C9AF076086BB5E5008ED7AD /* write.c in Sources */,
-				1C9AF07A086BB638008ED7AD /* irc.c in Sources */,
-				1C9AF0A5086BBA2E008ED7AD /* recode.c in Sources */,
+				1CEEB166095BE36700166A54 /* AsyncSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,12 +2,6 @@
 #import "MVIRCChatUser.h"
 #import "MVIRCChatConnection.h"
 
-#define MODULE_NAME "MVIRCChatRoom"
-
-#import "core.h"
-#import "irc.h"
-#import "servers.h"
-
 @implementation MVIRCChatRoom
 - (id) initWithName:(NSString *) name andConnection:(MVIRCChatConnection *) connection {
 	if( ( self = [self init] ) ) {
@@ -52,9 +46,9 @@
 
 	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:topic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 
-	IrssiLock();
+/*	IrssiLock();
 	irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "TOPIC %s :%s", [[self connection] encodedBytesWithString:[self name]], msg );
-	IrssiUnlock();
+	IrssiUnlock(); */
 }
 
 #pragma mark -
@@ -216,14 +210,14 @@
 - (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
 	[super kickOutMemberUser:user forReason:reason];
 
-	IrssiLock();
+/*	IrssiLock();
 
 	if( reason ) {
 		const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 		irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "KICK %s %s :%s", [[self connection] encodedBytesWithString:[self name]], [[self connection] encodedBytesWithString:[user nickname]], msg );
 	} else irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "KICK %s %s", [[self connection] encodedBytesWithString:[self name]], [[self connection] encodedBytesWithString:[user nickname]] );
 
-	IrssiUnlock();
+	IrssiUnlock(); */
 }
 
 - (void) addBanForUser:(MVChatUser *) user {

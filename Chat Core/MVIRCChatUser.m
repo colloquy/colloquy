@@ -1,12 +1,6 @@
 #import "MVIRCChatUser.h"
 #import "MVIRCChatConnection.h"
 
-#define MODULE_NAME "MVIRCChatUser"
-
-#import "core.h"
-#import "irc.h"
-#import "servers.h"
-
 @implementation MVIRCChatUser
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) connection {
 	if( ( self = [self initWithNickname:nil andConnection:connection] ) ) {

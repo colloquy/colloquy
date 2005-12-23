@@ -6,9 +6,6 @@
 #import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
 
-#import "common.h"
-#import "settings.h"
-
 NSString *MVDownloadFileTransferOfferNotification = @"MVDownloadFileTransferOfferNotification";
 NSString *MVFileTransferStartedNotification = @"MVFileTransferStartedNotification";
 NSString *MVFileTransferFinishedNotification = @"MVFileTransferFinishedNotification";
@@ -20,13 +17,13 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 + (void) setFileTransferPortRange:(NSRange) range {
 	unsigned short min = (unsigned short)range.location;
 	unsigned short max = (unsigned short)(range.location + range.length);
-	IrssiLock();
+/*	IrssiLock();
 	settings_set_str( "dcc_port", [[NSString stringWithFormat:@"%uh %uh", min, max] UTF8String] );
-	IrssiUnlock();
+	IrssiUnlock(); */
 }
 
 + (NSRange) fileTransferPortRange {
-	IrssiLock();
+/*	IrssiLock();
 	const char *range = settings_get_str( "dcc_port" );
 	IrssiUnlock();
 
@@ -51,7 +48,8 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 		}
 	}
 
-	return NSMakeRange( (unsigned int) min, (unsigned int)( max - min ) );
+	return NSMakeRange( (unsigned int) min, (unsigned int)( max - min ) ); */
+	return NSMakeRange( 0, 0 );
 }
 
 #pragma mark -
