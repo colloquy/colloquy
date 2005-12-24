@@ -1,10 +1,23 @@
 #import "MVChatConnection.h"
 
+@class AsyncSocket;
+
 @interface MVIRCChatConnection : MVChatConnection {
 @private
+	AsyncSocket *_chatConnection;
 	NSMutableDictionary *_knownUsers;
+	NSString *_server;
+	NSString *_currentNickname;
+	NSString *_nickname;
+	NSString *_username;
+	NSString *_password;
+	NSString *_realName;
+	NSString *_proxyServer;
 	NSString *_proxyUsername;
 	NSString *_proxyPassword;
+	unsigned short _serverPort;
+	unsigned short _proxyServerPort;
+	BOOL _secure;
 }
 + (NSArray *) defaultServerPorts;
 @end
@@ -12,6 +25,8 @@
 #pragma mark -
 
 @interface MVChatConnection (MVIRCChatConnectionPrivate)
+- (void) _readNextMessageFromServer;
+
 + (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format;
 - (void) _forceDisconnect;
 

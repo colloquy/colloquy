@@ -3,6 +3,7 @@
 #import "MVIRCChatUser.h"
 #import "MVIRCFileTransfer.h"
 
+#import "AsyncSocket.h"
 #import "MVChatPluginManager.h"
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
@@ -1089,7 +1090,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		[NSThread detachNewThreadSelector:@selector( _irssiRunLoop ) toTarget:self withObject:nil];
 		tooLate = YES;
 	}
-}
+} */
 
 + (NSArray *) defaultServerPorts {
 	return [NSArray arrayWithObjects:[NSNumber numberWithUnsignedShort:6667],[NSNumber numberWithUnsignedShort:6660],[NSNumber numberWithUnsignedShort:6669],[NSNumber numberWithUnsignedShort:7000],[NSNumber numberWithUnsignedShort:994], nil];
@@ -1101,17 +1102,16 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	if( ( self = [super init] ) ) {
 		_proxyUsername = nil;
 		_proxyPassword = nil;
-		_chatConnection = NULL;
-		_chatConnectionSettings = NULL;
+		_chatConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
 
 		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
 
-		extern unsigned int connectionCount;
-		connectionCount++;
+//		extern unsigned int connectionCount;
+//		connectionCount++;
 
-		while( ! irssiThreadReady ) usleep( 50 );
+//		while( ! irssiThreadReady ) usleep( 50 );
 
-		IrssiLock();
+/*		IrssiLock();
 
 		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
 		if( ! proto ) {
@@ -1129,7 +1129,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 		[self _setIrssiConnectSettings:settings];
 
-		IrssiUnlock();
+		IrssiUnlock(); */
 	}
 
 	return self;
@@ -1147,11 +1147,11 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	[_proxyPassword release];
 	_proxyPassword = nil;
 
-	[self _setIrssiConnection:NULL];
-	[self _setIrssiConnectSettings:NULL];
+//	[self _setIrssiConnection:NULL];
+//	[self _setIrssiConnectSettings:NULL];
 
-	extern unsigned int connectionCount;
-	connectionCount--;
+//	extern unsigned int connectionCount;
+//	connectionCount--;
 
 	[super dealloc];
 }
@@ -1191,7 +1191,11 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
-	IrssiLock();
+	if( ! [_chatConnection connectToHost:[self server] onPort:[self serverPort] error:NULL] ) {
+		NSLog( @"failed to connect" );
+	}
+
+/*	IrssiLock();
 
 	if( ! _chatConnectionSettings ) {
 		IrssiUnlock();
@@ -1235,32 +1239,20 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	rawlog_destroy( _chatConnection -> rawlog );
 	_chatConnection -> rawlog = NULL;
 
-	IrssiUnlock();
+	IrssiUnlock(); */
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
 	[self cancelPendingReconnectAttempts];
 
-	if( ! _chatConnection ) return;
-	if( [self status] == MVChatConnectionConnectingStatus ) {
-		[self _forceDisconnect];
-		return;
+	if( [self status] == MVChatConnectionConnectedStatus ) {
+		if( [[reason string] length] ) {
+			const char *msg = [[self class] _flattenedIRCStringForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
+			[self sendRawMessage:[NSString stringWithFormat:@"QUIT :%s", msg] immediately:YES];
+		} else [self sendRawMessage:@"QUIT" immediately:YES];
 	}
 
-	if( [[reason string] length] ) {
-		const char *msg = [[self class] _flattenedIRCStringForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
-		[self sendRawMessage:[NSString stringWithFormat:@"QUIT :%s", msg] immediately:YES];
-	} else [self sendRawMessage:@"QUIT" immediately:YES];
-
-	IrssiLock();
-
-	if( _chatConnection ) {
-		_chatConnection -> connection_lost = NO;
-		_chatConnection -> no_reconnect = YES;
-		server_disconnect( _chatConnection );
-	}
-
-	IrssiUnlock();
+	[_chatConnection disconnectAfterWriting];
 }
 
 #pragma mark -
@@ -1268,19 +1260,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) setRealName:(NSString *) name {
 	NSParameterAssert( name != nil );
 
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> realname );
-		_chatConnectionSettings -> realname = g_strdup( [self encodedBytesWithString:name] );
-	}
-
-	IrssiUnlock();
+	id old = _realName;
+	_realName = [name copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) realName {
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> realname];
+	return [[_realName retain] autorelease];
 }
 
 #pragma mark -
@@ -1289,36 +1275,23 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( nickname != nil );
 	NSParameterAssert( [nickname length] > 0 );
 
-	IrssiLock();
+	id old = _nickname;
+	_nickname = [nickname copyWithZone:nil];
+	[old release];
 
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> nick );
-		_chatConnectionSettings -> nick = g_strdup( [self encodedBytesWithString:nickname] );
-	}
-
-	IrssiUnlock();
+	if( ! _currentNickname )
+		_currentNickname = [_nickname retain];
 
 	if( [self isConnected] && ! [nickname isEqualToString:[self nickname]] )
 		[self sendRawMessageWithFormat:@"NICK %@", nickname];
 }
 
 - (NSString *) nickname {
-	if( _status == MVChatConnectionConnectedStatus ) { // don't call [self isConnected], need speed here
-		IrssiLock();
-		NSString *nick = nil;
-		if( _chatConnection && _chatConnection -> nick )
-			nick = [self stringWithEncodedBytes:_chatConnection -> nick];
-		IrssiUnlock();
-		if( nick ) return nick;
-	}
-
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> nick];
+	return [[_currentNickname retain] autorelease];
 }
 
 - (NSString *) preferredNickname {
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> nick];
+	return [[_nickname retain] autorelease];
 }
 
 #pragma mark -
@@ -1332,22 +1305,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) setPassword:(NSString *) password {
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> password );
-		if( [password length] ) _chatConnectionSettings -> password = g_strdup( [self encodedBytesWithString:password] );
-		else _chatConnectionSettings -> password = NULL;
-	}
-
-	IrssiUnlock();
+	id old = _password;
+	_password = [password copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) password {
-	if( ! _chatConnectionSettings ) return nil;
-	char *pass = _chatConnectionSettings -> password;
-	if( pass ) return [self stringWithEncodedBytes:pass];
-	return nil;
+	return [[_password retain] autorelease];
 }
 
 #pragma mark -
@@ -1356,19 +1320,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( username != nil );
 	NSParameterAssert( [username length] > 0 );
 
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> username );
-		_chatConnectionSettings -> username = g_strdup( [self encodedBytesWithString:username] );
-	}
-
-	IrssiUnlock();
+	id old = _username;
+	_username = [username copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) username {
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> username];
+	return [[_username retain] autorelease];
 }
 
 #pragma mark -
@@ -1377,83 +1335,55 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( server != nil );
 	NSParameterAssert( [server length] > 0 );
 
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> address );
-		_chatConnectionSettings -> address = g_strdup( [self encodedBytesWithString:server] );
-	}
-
-	IrssiUnlock();
+	id old = _server;
+	_server = [server copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) server {
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> address];
+	return [[_server retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setServerPort:(unsigned short) port {
-	IrssiLock();
-	if( _chatConnectionSettings )
-		_chatConnectionSettings -> port = ( port ? port : 6667 );
-	IrssiUnlock();
+	_serverPort = ( port ? port : 6667 );
 }
 
 - (unsigned short) serverPort {
-	if( ! _chatConnectionSettings ) return 0;
-	return _chatConnectionSettings -> port;
+	return _serverPort;
 }
 
 #pragma mark -
 
 - (void) setSecure:(BOOL) ssl {
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		_chatConnectionSettings -> use_ssl = ssl;
-		_chatConnectionSettings -> ssl_verify = NO;
-	}
-
-	IrssiUnlock();
+	_secure = ssl;
 }
 
 - (BOOL) isSecure {
-	if( ! _chatConnectionSettings ) return NO;
-	return _chatConnectionSettings -> use_ssl;
+	return _secure;
 }
 
 #pragma mark -
 
 - (void) setProxyServer:(NSString *) address {
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> proxy );
-		_chatConnectionSettings -> proxy = g_strdup( [self encodedBytesWithString:address] );
-	}
-
-	IrssiUnlock();
+	id old = _proxyServer;
+	_proxyServer = [address copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) proxyServer {
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> proxy];
+	return [[_proxyServer retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setProxyServerPort:(unsigned short) port {
-	IrssiLock();
-	if( _chatConnectionSettings )
-		_chatConnectionSettings -> proxy_port = port;
-	IrssiUnlock();
+	_proxyServerPort = port;
 }
 
 - (unsigned short) proxyServerPort {
-	if( ! _chatConnectionSettings ) return 0;
-	return _chatConnectionSettings -> proxy_port;
+	return _proxyServerPort;
 }
 
 #pragma mark -
@@ -1485,10 +1415,14 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
 
-	IrssiLock();
-	if( _chatConnection )
-		irc_send_cmd_full( (IRC_SERVER_REC *) _chatConnection, [self encodedBytesWithString:raw], now, now, FALSE);
-	IrssiUnlock();
+	const char *rawString = [self encodedBytesWithString:raw];
+	if( ! rawString ) return;
+
+	NSMutableData *data = [[NSMutableData allocWithZone:nil] initWithBytes:(void *)rawString length:strlen( rawString )];
+	[data appendBytes:"\x0D\x0A" length:2];
+
+	[_chatConnection writeData:data withTimeout:-1. tag:0];
+	[data release];
 }
 
 #pragma mark -
@@ -1570,19 +1504,19 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( user != nil );
 	NSParameterAssert( [[user nickname] length] > 0 );
 
-	IrssiLock();
+/*	IrssiLock();
 	const char *mask = [self encodedBytesWithString:[NSString stringWithFormat:@"%@!*@*", [user nickname]]];
 	if( ! notifylist_find( mask, NULL ) ) notifylist_add( mask, NULL, TRUE, 600 );
-	IrssiUnlock();
+	IrssiUnlock(); */
 }
 
 - (void) stopWatchingUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
 	NSParameterAssert( [[user nickname] length] > 0 );
 
-	IrssiLock();
+/*	IrssiLock();
 	notifylist_remove( [self encodedBytesWithString:[NSString stringWithFormat:@"%@!*@*", [user nickname]]] );
-	IrssiUnlock();
+	IrssiUnlock(); */
 }
 
 #pragma mark -
@@ -1610,12 +1544,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		[[self localUser] _setStatus:MVChatUserAwayStatus];
 
 		_awayMessage = [message copyWithZone:nil];
-		const char *msg = [[self class] _flattenedIRCStringForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
+/*		const char *msg = [[self class] _flattenedIRCStringForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 
 		IrssiLock();
 		if( _chatConnection )
 			irc_send_cmdv( (IRC_SERVER_REC *) _chatConnection, "AWAY :%s", msg );
-		IrssiUnlock();
+		IrssiUnlock(); */
 	} else {
 		[[self localUser] _setStatus:MVChatUserAvailableStatus];
 		[self sendRawMessage:@"AWAY"];
@@ -1627,18 +1561,136 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (unsigned int) lag {
 	unsigned int lag = 0;
 
-	IrssiLock();
+/*	IrssiLock();
 	if( _chatConnection )
 		lag = _chatConnection -> lag;
-	IrssiUnlock();
+	IrssiUnlock(); */
 
 	return lag;
-} */
+}
 @end
 
 #pragma mark -
 
 @implementation MVIRCChatConnection (MVIRCChatConnectionPrivate)
+- (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
+	NSLog(@"willDisconnectWithError: %@", error );
+	_status = MVChatConnectionServerDisconnectedStatus;
+	if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
+		[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
+	[self scheduleReconnectAttemptEvery:30.];
+}
+
+- (void) socketDidDisconnect:(AsyncSocket *) sock {
+	if( _status != MVChatConnectionServerDisconnectedStatus )
+		_status = MVChatConnectionDisconnectedStatus;
+	[self _didDisconnect];
+}
+
+- (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
+	[self _didConnect];
+	[self _readNextMessageFromServer];
+}
+
+- (void) _readNextMessageFromServer {
+	static NSData *delimeter = nil;
+	if( ! delimeter ) delimeter = [[NSData allocWithZone:nil] initWithBytes:"\x0D\x0A" length:2];
+	[_chatConnection readDataToData:delimeter withTimeout:-1. tag:0];
+}
+
+- (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
+	NSString *rawString = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
+	char *line = (char *)[(NSMutableData *)data mutableBytes];
+	unsigned int len = [data length];
+
+	char *sender = NULL;
+	char *user = NULL;
+	char *host = NULL;
+	char *command = NULL;
+	char *currentParameter = NULL;
+	NSMutableArray *parameters = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
+
+	if( len <= 2 || len > 512 )
+		goto end; // bad message
+
+	BOOL done = NO;
+	if( *line != '\r' && ! done ) {
+		if( *line == ':' ) {
+			// prefix: ':' <sender> [ '!' <user> ] [ '@' <host> ] ' ' { ' ' }
+			sender = ++line;
+			while( *line != '\r' && *line != ' ' && *line != '!' && *line != '@' ) line++;
+			if( *line == '\r' ) done = YES;
+
+			if( *line == '!' ) {
+				*line++ = '\0';
+				user = line;
+				while( *line != '\r' && *line != ' ' && *line != '@' && ! done ) line++;
+				if( *line == '\r' ) done = YES;
+				if( *line != '@' ) *line = '\0';
+			}
+
+			if( *line == '@' ) {
+				*line++ = '\0';
+				host = line;
+				while( *line != '\r' && *line != ' ' && ! done ) line++;
+				if( *line == '\r' ) done = YES;
+				*line = '\0';
+			}
+
+			if( *line == ' ' ) {
+				*line++ = '\0';
+				while( *line == ' ' && ! done ) line++;
+			}
+		}
+
+		if( *line != '\r' && ! done ) {
+			// command: <letter> { <letter> } | <number> <number> <number>
+			// letter: 'a' ... 'z' | 'A' ... 'Z'
+			// number: '0' ... '9'
+			command = line;
+			while( *line != '\r' && *line != ' ' && ! done ) line++;
+			if( *line == ' ' ) {
+				*line++ = '\0';
+				while( *line == ' ' && ! done ) line++;
+			}
+		}
+
+		NSString *param = nil;
+		while( *line != '\r' && ! done ) {
+			// params: [ ':' <trailing data> | <letter> { <letter> } ] [ ' ' { ' ' } ] [ <params> ]
+			currentParameter = NULL;
+			param = nil;
+			if( *line == ':' ) {
+				currentParameter = ++line;
+				while( *line != '\r' && ! done ) line++;
+				*line = '\0';
+				done = YES;
+			} else {
+				currentParameter = line;
+				while( *line != '\r' && *line != ' ' && ! done ) line++;
+				if( *line == '\r' ) done = YES;
+				*line++ = '\0';
+			}
+
+			if( currentParameter ) 
+				param = [NSString stringWithBytes:currentParameter encoding:NSASCIIStringEncoding];
+			if( param ) [parameters addObject:param];
+
+			while( *line == ' ' && ! done ) line++;
+		}
+	}
+
+end:
+	NSLog(@"%s %s %s %s %@", sender, user, host, command, [parameters description] );
+
+	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+	[[NSNotificationCenter defaultCenter] postNotification:note];
+	[rawString release];
+
+	[parameters release];
+	[self _readNextMessageFromServer];
+}
+
 /* + (MVIRCChatConnection *) _connectionForServer:(SERVER_REC *) server {
 	if( ! server ) return nil;
 

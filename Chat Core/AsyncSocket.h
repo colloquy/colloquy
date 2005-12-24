@@ -1,4 +1,3 @@
-//
 //  AsyncSocket.h
 //
 //  Created by Dustin Voss on Wed Jan 29 2003.
@@ -6,7 +5,6 @@
 //  If used, I'd appreciate it if you credit me.
 //
 //  E-Mail: d-j-v@earthlink.net
-//
 
 /*
  * Make sure to include /System/Library/Frameworks/CoreServices.framework in the project.
@@ -21,46 +19,43 @@
 extern NSString *const AsyncSocketException;
 extern NSString *const AsyncSocketErrorDomain;
 
-enum AsyncSocketError
-{
+enum AsyncSocketError {
 	AsyncSocketCFSocketError = kCFSocketError,	// From CFSocketError enum.
 	AsyncSocketNoError = 0,						// Never used.
 	AsyncSocketCanceledError,					// onSocketWillConnect: returned NO.
 	AsyncSocketReadTimeoutError,
 	AsyncSocketWriteTimeoutError
 };
+
 typedef enum AsyncSocketError AsyncSocketError;
 
-@interface NSObject ( AsyncSocketDelegate )
-
+@interface NSObject (AsyncSocketDelegate)
 /* In the event of an error, the socket is closed. You may call "readDataWithTimeout:tag:" during this call-back to get the last bit of data off the socket. When connecting, this delegate method may be called before "socket:didAcceptNewSocket:" or "socket:didConnectToHost:". */
--(void) socket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err;
+- (void) socket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err;
 
 /* Called when a socket disconnects with or without error. If you want to release a socket after it disconnects, do so here. It is not safe to do that during "socket:willDisconnectWithError:". */
--(void) socketDidDisconnect:(AsyncSocket *)sock;
+- (void) socketDidDisconnect:(AsyncSocket *)sock;
 
 /* Called when a socket accepts a connection. Another socket is spawned to handle it. The new socket will have the same delegate and will call "socket:didConnectToHost:port:". */
--(void) socket:(AsyncSocket *)sock didAcceptNewSocket:(AsyncSocket *)newSocket;
+- (void) socket:(AsyncSocket *)sock didAcceptNewSocket:(AsyncSocket *)newSocket;
 
 /* Called when a new socket is spawned to handle a connection. This method should return the run-loop of the thread on which the new socket and its delegate should operate. If omitted, [NSRunLoop currentRunLoop] is used. */
--(NSRunLoop *) socket:(AsyncSocket *)sock wantsRunLoopForNewSocket:(AsyncSocket *)newSocket;
+- (NSRunLoop *) socket:(AsyncSocket *)sock wantsRunLoopForNewSocket:(AsyncSocket *)newSocket;
 
 /* Called when a socket is about to connect. This method should return YES to continue, or NO to abort. If aborted, will result in AsyncSocketCanceledError. */
--(BOOL) socketWillConnect:(AsyncSocket *)sock;
+- (BOOL) socketWillConnect:(AsyncSocket *)sock;
 
 /* Called when a socket connects and is ready for reading and writing. "host" will be an IP address, not a DNS name. */
--(void) socket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port;
+- (void) socket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port;
 
 /* Called when a socket has completed reading the requested data. Not called if there is an error. */
--(void) socket:(AsyncSocket *)sock didReadData:(NSData*)data withTag:(long)tag;
+- (void) socket:(AsyncSocket *)sock didReadData:(NSData*)data withTag:(long)tag;
 
 /* Called when a socket has completed writing the requested data. Not called if there is an error. */
--(void) socket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag;
-
+- (void) socket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag;
 @end
 
-@interface AsyncSocket : NSObject
-{
+@interface AsyncSocket : NSObject {
 	CFSocketRef theSocket;			// IPv4/IPv6 accept or connect socket.
 	CFSocketRef theSocket6;			// IPv6 accept socket.
 	CFReadStreamRef theReadStream;
@@ -75,7 +70,7 @@ typedef enum AsyncSocketError AsyncSocketError;
 	AsyncReadPacket *theCurrentRead;
 	NSTimer *theReadTimer;
 	NSData *partialReadBuffer;
-	
+
 	NSMutableArray *theWriteQueue;
 	AsyncWritePacket *theCurrentWrite;
 	NSTimer *theWriteTimer;
@@ -83,10 +78,9 @@ typedef enum AsyncSocketError AsyncSocketError;
 	NSTimer *thePollTimer;
 	id theDelegate;
 	Byte theFlags;
-	
+
 	long theUserData;
 }
-
 - (id) init;
 - (id) initWithDelegate:(id)delegate;
 - (id) initWithDelegate:(id)delegate userData:(long)userData;
@@ -153,5 +147,4 @@ typedef enum AsyncSocketError AsyncSocketError;
 + (NSData *) CRData; // 0x0D
 + (NSData *) LFData; // 0x0A
 + (NSData *) ZeroData; // 0x00
-
 @end
