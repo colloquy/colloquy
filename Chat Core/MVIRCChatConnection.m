@@ -1673,7 +1673,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 			}
 
 			if( currentParameter ) 
-				param = [NSString stringWithBytes:currentParameter encoding:NSASCIIStringEncoding];
+				param = [NSString stringWithBytes:currentParameter encoding:[self encoding]];
 			if( param ) [parameters addObject:param];
 
 			while( *line == ' ' && ! done ) line++;
