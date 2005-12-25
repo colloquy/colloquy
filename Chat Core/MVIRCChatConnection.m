@@ -1423,6 +1423,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 	[data release];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 }
 
 #pragma mark -
@@ -1588,14 +1590,11 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 }
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
+	if( [[self password] length] ) [self sendRawMessageWithFormat:@"PASS %@", [self password]];
+	[self sendRawMessageWithFormat:@"NICK %@", [self nickname]];
+	[self sendRawMessageWithFormat:@"USER %@ %@ %@ :%@", [self username], [[NSHost currentHost] name], [self server], [self realName]];
 	[self _didConnect];
 	[self _readNextMessageFromServer];
-}
-
-- (void) _readNextMessageFromServer {
-	static NSData *delimeter = nil;
-	if( ! delimeter ) delimeter = [[NSData allocWithZone:nil] initWithBytes:"\x0D\x0A" length:2];
-	[_chatConnection readDataToData:delimeter withTimeout:-1. tag:0];
 }
 
 - (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
@@ -1608,87 +1607,123 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	char *host = NULL;
 	char *command = NULL;
 	char *currentParameter = NULL;
-	NSMutableArray *parameters = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
+
+	NSString *senderString = nil;
+	NSString *usernameString = nil;
+	NSString *hostString = nil;
+	id commandObject = nil;
+	NSMutableArray *parameters = [[NSMutableArray allocWithZone:nil] initWithCapacity:15];
+
+	// Parsing as defined in 2.3.1 at http://www.irchelp.org/irchelp/rfc/rfc2812.txt
 
 	if( len <= 2 || len > 512 )
 		goto end; // bad message
 
+#define checkAndMarkIfDone() if( *line == '\r' || *line == '\f' || *line == '\0' ) done = YES
+#define consumeWhitespace() while( *line == ' ' && ! done ) line++
+#define notEndOfLine() *line != '\r' && *line != '\f' && *line != '\0' && ! done
+
 	BOOL done = NO;
-	if( *line != '\r' && ! done ) {
+	if( notEndOfLine() ) {
 		if( *line == ':' ) {
 			// prefix: ':' <sender> [ '!' <user> ] [ '@' <host> ] ' ' { ' ' }
 			sender = ++line;
-			while( *line != '\r' && *line != ' ' && *line != '!' && *line != '@' ) line++;
-			if( *line == '\r' ) done = YES;
+			while( notEndOfLine() && *line != ' ' && *line != '!' && *line != '@' ) line++;
+			checkAndMarkIfDone();
 
 			if( *line == '!' ) {
 				*line++ = '\0';
 				user = line;
-				while( *line != '\r' && *line != ' ' && *line != '@' && ! done ) line++;
-				if( *line == '\r' ) done = YES;
+				while( notEndOfLine() && *line != ' ' && *line != '@' ) line++;
+				checkAndMarkIfDone();
 				if( *line != '@' ) *line = '\0';
 			}
 
 			if( *line == '@' ) {
 				*line++ = '\0';
 				host = line;
-				while( *line != '\r' && *line != ' ' && ! done ) line++;
-				if( *line == '\r' ) done = YES;
+				while( notEndOfLine() && *line != ' ' ) line++;
+				checkAndMarkIfDone();
 				*line = '\0';
 			}
 
-			if( *line == ' ' ) {
-				*line++ = '\0';
-				while( *line == ' ' && ! done ) line++;
-			}
+			*line++ = '\0';
+			consumeWhitespace();
 		}
 
-		if( *line != '\r' && ! done ) {
+		if( notEndOfLine() ) {
 			// command: <letter> { <letter> } | <number> <number> <number>
 			// letter: 'a' ... 'z' | 'A' ... 'Z'
 			// number: '0' ... '9'
 			command = line;
-			while( *line != '\r' && *line != ' ' && ! done ) line++;
-			if( *line == ' ' ) {
-				*line++ = '\0';
-				while( *line == ' ' && ! done ) line++;
-			}
+			while( notEndOfLine() && *line != ' ' ) line++;
+			*line++ = '\0';
+			consumeWhitespace();
 		}
 
-		NSString *param = nil;
-		while( *line != '\r' && ! done ) {
+		id param = nil;
+		while( notEndOfLine() ) {
 			// params: [ ':' <trailing data> | <letter> { <letter> } ] [ ' ' { ' ' } ] [ <params> ]
 			currentParameter = NULL;
 			param = nil;
 			if( *line == ':' ) {
 				currentParameter = ++line;
-				while( *line != '\r' && ! done ) line++;
+				while( notEndOfLine() ) line++;
 				*line = '\0';
 				done = YES;
+				param = [[NSData allocWithZone:nil] initWithBytes:currentParameter length:(line - currentParameter)];
 			} else {
 				currentParameter = line;
-				while( *line != '\r' && *line != ' ' && ! done ) line++;
-				if( *line == '\r' ) done = YES;
+				while( notEndOfLine() && *line != ' ' ) line++;
+				checkAndMarkIfDone();
 				*line++ = '\0';
+				param = [[NSString allocWithZone:nil] initWithBytes:currentParameter encoding:[self encoding]];
 			}
 
-			if( currentParameter ) 
-				param = [NSString stringWithBytes:currentParameter encoding:[self encoding]];
 			if( param ) [parameters addObject:param];
+			[param release];
 
-			while( *line == ' ' && ! done ) line++;
+			consumeWhitespace();
 		}
 	}
 
-end:
-	NSLog(@"%s %s %s %s %@", sender, user, host, command, [parameters description] );
+#undef checkAndMarkIfDone()
+#undef consumeWhitespace()
+#undef notEndOfLine()
 
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
-	[[NSNotificationCenter defaultCenter] postNotification:note];
+end:
+	if( sender ) senderString = [[NSString allocWithZone:nil] initWithBytes:sender encoding:[self encoding]];
+	if( user ) usernameString = [[NSString allocWithZone:nil] initWithBytes:user encoding:[self encoding]];
+	if( host ) hostString = [[NSString allocWithZone:nil] initWithBytes:host encoding:[self encoding]];
+	if( command ) {
+		if( strlen( command ) == 3 && isdigit( command[0] ) && isdigit( command[1] ) && isdigit( command[2] ) ) {
+			unsigned long commandNumber = strtoul( command, NULL, 10 );
+			commandObject = [[NSNumber allocWithZone:nil] initWithUnsignedLong:commandNumber];
+		} else commandObject = [[NSString allocWithZone:nil] initWithBytes:command encoding:[self encoding]];
+	}
+
+	[self _handleCommand:commandObject parameters:parameters fromSender:senderString username:usernameString host:hostString];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
 	[rawString release];
 
+	[senderString release];
+	[usernameString release];
+	[hostString release];
+	[commandObject release];
 	[parameters release];
+
 	[self _readNextMessageFromServer];
+}
+
+- (void) _readNextMessageFromServer {
+	static NSData *delimeter = nil;
+	if( ! delimeter ) delimeter = [[NSData allocWithZone:nil] initWithBytes:"\x0D\x0A" length:2];
+	[_chatConnection readDataToData:delimeter withTimeout:-1. tag:0];
+}
+
+- (void) _handleCommand:(id) command parameters:(NSArray *) parameters fromSender:(NSString *) sender username:(NSString *) user host:(NSString *) host {
+	NSLog(@"%@ %@ %@ %@ %@", sender, user, host, command, [parameters description] );
 }
 
 /* + (MVIRCChatConnection *) _connectionForServer:(SERVER_REC *) server {

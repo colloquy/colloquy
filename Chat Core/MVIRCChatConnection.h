@@ -26,6 +26,7 @@
 
 @interface MVChatConnection (MVIRCChatConnectionPrivate)
 - (void) _readNextMessageFromServer;
+- (void) _handleCommand:(id) command parameters:(NSArray *) parameters fromSender:(NSString *) sender username:(NSString *) user host:(NSString *) host;
 
 + (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format;
 - (void) _forceDisconnect;
