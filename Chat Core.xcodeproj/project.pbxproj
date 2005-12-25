@@ -45,6 +45,10 @@
 		1CD020B505759347000F93B4 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD020B305759347000F93B4 /* NSStringAdditions.m */; };
 		1CD020C0057593F9000F93B4 /* NSColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD020BD057593A9000F93B4 /* NSColorAdditions.m */; };
 		1CDDD9AD0718BD2E00FE11C3 /* MVChatRoom.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C5CC07A06FFCB0B0006C5B1 /* MVChatRoom.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1CE4630F095ECCFE00AB7732 /* MVChatUserPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4630E095ECCFE00AB7732 /* MVChatUserPrivate.h */; };
+		1CE4631E095ECD7300AB7732 /* MVChatRoomPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4631D095ECD7300AB7732 /* MVChatRoomPrivate.h */; };
+		1CE4632F095ECDE600AB7732 /* MVFileTransferPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4632E095ECDE600AB7732 /* MVFileTransferPrivate.h */; };
+		1CE4633C095ECE4F00AB7732 /* MVChatConnectionPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4633B095ECE4F00AB7732 /* MVChatConnectionPrivate.h */; };
 		1CEEB166095BE36700166A54 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEEB164095BE36700166A54 /* AsyncSocket.m */; };
 		1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEB167095BE3A000166A54 /* CoreServices.framework */; };
 		1CF4E5120698E9E900986498 /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF4E5100698E9E900986498 /* NSDataAdditions.m */; };
@@ -318,6 +322,10 @@
 		1CD020B305759347000F93B4 /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = Additions/NSStringAdditions.m; sourceTree = "<group>"; };
 		1CD020BC057593A9000F93B4 /* NSColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSColorAdditions.h; path = Additions/NSColorAdditions.h; sourceTree = "<group>"; };
 		1CD020BD057593A9000F93B4 /* NSColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = NSColorAdditions.m; path = Additions/NSColorAdditions.m; sourceTree = "<group>"; };
+		1CE4630E095ECCFE00AB7732 /* MVChatUserPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUserPrivate.h; path = "Chat Core/MVChatUserPrivate.h"; sourceTree = "<group>"; };
+		1CE4631D095ECD7300AB7732 /* MVChatRoomPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoomPrivate.h; path = "Chat Core/MVChatRoomPrivate.h"; sourceTree = "<group>"; };
+		1CE4632E095ECDE600AB7732 /* MVFileTransferPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransferPrivate.h; path = "Chat Core/MVFileTransferPrivate.h"; sourceTree = "<group>"; };
+		1CE4633B095ECE4F00AB7732 /* MVChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatConnectionPrivate.h; path = "Chat Core/MVChatConnectionPrivate.h"; sourceTree = "<group>"; };
 		1CEEB163095BE36700166A54 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncSocket.h; path = "Chat Core/AsyncSocket.h"; sourceTree = "<group>"; };
 		1CEEB164095BE36700166A54 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncSocket.m; path = "Chat Core/AsyncSocket.m"; sourceTree = "<group>"; };
 		1CEEB167095BE3A000166A54 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
@@ -715,12 +723,16 @@
 				1C63E9EC086E59D700A40DD4 /* ChatCore.h */,
 				F52D043001873FC401EE70DE /* MVChatConnection.m */,
 				F52D043101873FC401EE70DE /* MVChatConnection.h */,
+				1CE4633B095ECE4F00AB7732 /* MVChatConnectionPrivate.h */,
 				1C5CC07B06FFCB0B0006C5B1 /* MVChatRoom.m */,
 				1C5CC07A06FFCB0B0006C5B1 /* MVChatRoom.h */,
+				1CE4631D095ECD7300AB7732 /* MVChatRoomPrivate.h */,
 				1C5CBF3406FF986E0006C5B1 /* MVChatUser.m */,
 				1C5CBF3306FF986E0006C5B1 /* MVChatUser.h */,
+				1CE4630E095ECCFE00AB7732 /* MVChatUserPrivate.h */,
 				1C943AAA063C260800618CD9 /* MVFileTransfer.m */,
 				1C943AA9063C260800618CD9 /* MVFileTransfer.h */,
+				1CE4632E095ECDE600AB7732 /* MVFileTransferPrivate.h */,
 				1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */,
 				1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */,
 				1CEEB164095BE36700166A54 /* AsyncSocket.m */,
@@ -787,6 +799,10 @@
 				1C668DC307BF9C6B008400F7 /* NSNotificationAdditions.h in Headers */,
 				1C7C776907DBBA4500FB5F83 /* NSScriptCommandAdditions.h in Headers */,
 				1C63E9ED086E59D700A40DD4 /* ChatCore.h in Headers */,
+				1CE4630F095ECCFE00AB7732 /* MVChatUserPrivate.h in Headers */,
+				1CE4631E095ECD7300AB7732 /* MVChatRoomPrivate.h in Headers */,
+				1CE4632F095ECDE600AB7732 /* MVFileTransferPrivate.h in Headers */,
+				1CE4633C095ECE4F00AB7732 /* MVChatConnectionPrivate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

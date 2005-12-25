@@ -225,3 +225,15 @@
 	[[self connection] sendRawMessageWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 }
 @end
+
+#pragma mark -
+
+@implementation MVIRCChatRoom (MVIRCChatRoomPrivate)
+- (BOOL) _namesSynced {
+	return _namesSynced;
+}
+
+- (void) _setNamesSynced:(BOOL) synced {
+	_namesSynced = synced;
+}
+@end

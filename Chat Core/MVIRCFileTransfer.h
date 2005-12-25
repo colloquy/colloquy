@@ -1,11 +1,10 @@
 #import "MVFileTransfer.h"
+#import "MVFileTransferPrivate.h"
 
-@interface MVIRCUploadFileTransfer : MVUploadFileTransfer {
-}
+@interface MVIRCUploadFileTransfer : MVUploadFileTransfer {}
 @end
 
 #pragma mark -
 
-@interface MVIRCDownloadFileTransfer : MVDownloadFileTransfer {
-}
+@interface MVIRCDownloadFileTransfer : MVDownloadFileTransfer {}
 @end

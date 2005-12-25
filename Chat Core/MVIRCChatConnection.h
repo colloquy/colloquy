@@ -1,4 +1,5 @@
 #import "MVChatConnection.h"
+#import "MVChatConnectionPrivate.h"
 
 @class AsyncSocket;
 
@@ -26,7 +27,6 @@
 
 @interface MVChatConnection (MVIRCChatConnectionPrivate)
 - (void) _readNextMessageFromServer;
-- (void) _handleCommand:(id) command parameters:(NSArray *) parameters fromSender:(NSString *) sender username:(NSString *) user host:(NSString *) host;
 
 + (NSData *) _flattenedIRCDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format;
 - (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action;
@@ -34,19 +34,4 @@
 - (void) _processErrorCode:(int) errorCode withContext:(char *) context;
 
 - (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname;
-@end
-
-#pragma mark -
-
-@interface MVChatConnection (MVIRCChatConnectionPrivateSuper)
-- (void) _willConnect;
-- (void) _didConnect;
-- (void) _didNotConnect;
-- (void) _willDisconnect;
-- (void) _didDisconnect;
-- (void) _postError:(NSError *) error;
-- (void) _setStatus:(MVChatConnectionStatus) status;
-
-- (void) _addJoinedRoom:(MVChatRoom *) room;
-- (void) _removeJoinedRoom:(MVChatRoom *) room;
 @end

@@ -532,6 +532,12 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 }
 
+- (void) _setModes:(unsigned long) modes forMemberUser:(MVChatUser *) user {
+	@synchronized( _memberModes ) {
+		[_memberModes setObject:[NSNumber numberWithUnsignedLong:modes] forKey:[user uniqueIdentifier]];
+	}	
+}
+
 - (void) _setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
 	@synchronized( _memberModes ) {
 		unsigned long modes = ( [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue] | mode );
