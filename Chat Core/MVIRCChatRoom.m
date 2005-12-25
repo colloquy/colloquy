@@ -43,20 +43,17 @@
 
 - (void) setTopic:(NSAttributedString *) topic {
 	NSParameterAssert( topic != nil );
-
-	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:topic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
-
-/*	IrssiLock();
-	irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "TOPIC %s :%s", [[self connection] encodedBytesWithString:[self name]], msg );
-	IrssiUnlock(); */
+	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:topic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
+	NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"TOPIC %@ :", [self name]];
+	[[self connection] sendRawMessageWithComponents:prefix, msg, nil];
+	[prefix release];
 }
 
 #pragma mark -
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
-	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding andChatFormat:[[self connection] outgoingChatFormat]];
-	[[self connection] _sendMessage:msg toTarget:[self name] asAction:action];
+	[[self connection] _sendMessage:message withEncoding:encoding toTarget:[self name] asAction:action];
 }
 
 #pragma mark -
@@ -210,14 +207,12 @@
 - (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
 	[super kickOutMemberUser:user forReason:reason];
 
-/*	IrssiLock();
-
 	if( reason ) {
-		const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
-		irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "KICK %s %s :%s", [[self connection] encodedBytesWithString:[self name]], [[self connection] encodedBytesWithString:[user nickname]], msg );
-	} else irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "KICK %s %s", [[self connection] encodedBytesWithString:[self name]], [[self connection] encodedBytesWithString:[user nickname]] );
-
-	IrssiUnlock(); */
+		NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"KICK %@ %@ :", [self name], [user nickname]];
+		[[self connection] sendRawMessageWithComponents:prefix, msg, nil];
+		[prefix release];
+	} else [[self connection] sendRawMessageWithFormat:@"KICK %@ %@", [self name], [user nickname]];
 }
 
 - (void) addBanForUser:(MVChatUser *) user {

@@ -28,14 +28,12 @@
 - (void) _readNextMessageFromServer;
 - (void) _handleCommand:(id) command parameters:(NSArray *) parameters fromSender:(NSString *) sender username:(NSString *) user host:(NSString *) host;
 
-+ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format;
-- (void) _forceDisconnect;
++ (NSData *) _flattenedIRCDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format;
+- (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action;
 
 - (void) _processErrorCode:(int) errorCode withContext:(char *) context;
 
 - (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname;
-
-- (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action;
 @end
 
 #pragma mark -

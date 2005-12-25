@@ -497,28 +497,11 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action {
-// subclass this method, if used
-	[self doesNotRecognizeSelector:_cmd];
-}
-
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action {
-// subclass this method, if needed
-	[self sendMessage:message withEncoding:encoding toTarget:user asAction:action];
-}
-
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action {
-// subclass this method, if needed
-	[self sendMessage:message withEncoding:encoding toTarget:[room lowercaseString] asAction:action];
-}
-
-#pragma mark -
-
-- (void) sendRawMessage:(NSString *) raw {
+- (void) sendRawMessage:(id) raw {
 	[self sendRawMessage:raw immediately:NO];
 }
 
-- (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
+- (void) sendRawMessage:(id) raw immediately:(BOOL) now {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -530,10 +513,38 @@ static const NSStringEncoding supportedEncodings[] = {
 	va_start( ap, format );
 
 	NSString *command = [[NSString allocWithZone:nil] initWithFormat:format arguments:ap];
-	[self sendRawMessage:command immediately:NO];
-	[command release];
 
 	va_end( ap );
+
+	[self sendRawMessage:command immediately:NO];
+	[command release];
+}
+
+- (void) sendRawMessageWithComponents:(id) firstComponent, ... {
+	NSParameterAssert( firstComponent != nil );
+
+	NSMutableData *data = [[NSMutableData allocWithZone:nil] initWithCapacity:512];
+	id object = firstComponent;
+
+	va_list ap;
+	va_start( ap, firstComponent );
+
+	do {
+		if( [object isKindOfClass:[NSData class]] ) {
+			[data appendData:object];
+		} else if( [firstComponent isKindOfClass:[NSString class]] ) {
+			NSData *stringData = [object dataUsingEncoding:[self encoding] allowLossyConversion:YES];
+			[data appendData:stringData];
+		} else {
+			NSData *stringData = [[object description] dataUsingEncoding:[self encoding] allowLossyConversion:YES];
+			[data appendData:stringData];
+		}
+	} while( object = va_arg( ap, void * ) );
+
+	va_end( ap );
+
+	[self sendRawMessage:data immediately:NO];
+	[data release];
 }
 
 #pragma mark -

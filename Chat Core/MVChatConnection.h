@@ -210,9 +210,10 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (void) sendRawMessage:(NSString *) raw;
-- (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now;
+- (void) sendRawMessage:(id) raw;
+- (void) sendRawMessage:(id) raw immediately:(BOOL) now;
 - (void) sendRawMessageWithFormat:(NSString *) format, ...;
+- (void) sendRawMessageWithComponents:(id) firstComponent, ...;
 
 #pragma mark -
 

@@ -42,8 +42,8 @@
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
-	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding andChatFormat:[[self connection] outgoingChatFormat]];
-	[[self connection] _sendMessage:msg toTarget:[self nickname] asAction:action];
+	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:message withEncoding:encoding andChatFormat:[[self connection] outgoingChatFormat]];
+	[[self connection] _sendMessage:message withEncoding:encoding toTarget:[self nickname] asAction:action];
 }
 
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments {
