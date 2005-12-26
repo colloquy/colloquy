@@ -89,8 +89,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
 		_roomsCache = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:500];
-		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
-		_joinedRooms = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
+		_joinedRooms = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:10];
 		_localUser = nil;
 
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
@@ -575,17 +575,13 @@ static const NSStringEncoding supportedEncodings[] = {
 - (NSSet *) joinedChatRooms {
 	NSSet *ret = nil;
 	@synchronized( _joinedRooms ) {
-		ret = [NSSet setWithSet:_joinedRooms];
+		ret = [NSSet setWithArray:[_joinedRooms allValues]];
 	} return ret;
 }
 
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
 	@synchronized( _joinedRooms ) {
-		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
-		MVChatRoom *room = nil;
-		while( ( room = [enumerator nextObject] ) )
-			if( [name caseInsensitiveCompare:[room name]] == NSOrderedSame )
-				return [[room retain] autorelease];
+		return [_joinedRooms objectForKey:[name lowercaseString]];
 	}
 
 	return nil;
@@ -828,13 +824,13 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _addJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
-		[_joinedRooms addObject:room];
+		[_joinedRooms setObject:room forKey:[[room name] lowercaseString]];
 	}
 }
 
 - (void) _removeJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
-		[_joinedRooms removeObject:room];
+		[_joinedRooms removeObjectForKey:[[room name] lowercaseString]];
 	}
 }
 @end
