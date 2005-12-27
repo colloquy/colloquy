@@ -40,7 +40,7 @@ typedef enum AsyncSocketError AsyncSocketError;
 - (void) socket:(AsyncSocket *)sock didAcceptNewSocket:(AsyncSocket *)newSocket;
 
 /* Called when a new socket is spawned to handle a connection. This method should return the run-loop of the thread on which the new socket and its delegate should operate. If omitted, [NSRunLoop currentRunLoop] is used. */
-- (NSRunLoop *) socket:(AsyncSocket *)sock wantsRunLoopForNewSocket:(AsyncSocket *)newSocket;
+- (NSRunLoop *) socket:(AsyncSocket *)sock runLoopForNewSocket:(AsyncSocket *)newSocket;
 
 /* Called when a socket is about to connect. This method should return YES to continue, or NO to abort. If aborted, will result in AsyncSocketCanceledError. */
 - (BOOL) socketWillConnect:(AsyncSocket *)sock;
@@ -141,10 +141,4 @@ typedef enum AsyncSocketError AsyncSocketError;
 /* Returns progress of current read or write, from 0.0 to 1.0, or NaN if no read/write (use isnan() to check). "tag", "done" and "total" will be filled in if they aren't NULL. */
 - (float) progressOfReadReturningTag:(long *)tag bytesDone:(CFIndex *)done total:(CFIndex *)total;
 - (float) progressOfWriteReturningTag:(long *)tag bytesDone:(CFIndex *)done total:(CFIndex *)total;
-
-/* A few common line separators, for use with "readDataToData:withTimeout:tag:". */
-+ (NSData *) CRLFData; // 0x0D0A
-+ (NSData *) CRData; // 0x0D
-+ (NSData *) LFData; // 0x0A
-+ (NSData *) ZeroData; // 0x00
 @end
