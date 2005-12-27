@@ -13,7 +13,7 @@
 }
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object {
-	if( pthread_main_np() ) return [self postNotificationName:name object:object];
+	if( pthread_main_np() ) return [self postNotificationName:name object:object userInfo:nil];
 	[self postNotificationOnMainThreadWithName:name object:object userInfo:nil waitUntilDone:NO];
 }
 
@@ -45,7 +45,7 @@
 
 @implementation NSNotificationQueue (NSNotificationQueueAdditions)
 - (void) enqueueNotificationOnMainThread:(NSNotification *) notification postingStyle:(NSPostingStyle) postingStyle {
-	if( pthread_main_np() ) return [self enqueueNotification:notification postingStyle:postingStyle];
+	if( pthread_main_np() ) return [self enqueueNotification:notification postingStyle:postingStyle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 	[self enqueueNotificationOnMainThread:notification postingStyle:postingStyle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 }
 
