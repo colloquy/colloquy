@@ -1145,10 +1145,9 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	_connectionThread = [NSThread currentThread];
 	[NSThread prepareForInterThreadMessages];
 
-//	BOOL active = YES;
-//	while( active && ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) )
-//		active = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-	[[NSRunLoop currentRunLoop] run];
+	BOOL active = YES;
+	while( active && ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) )
+		active = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
 
 	_connectionThread = nil;
 
