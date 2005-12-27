@@ -1,9 +1,12 @@
+#import <sched.h>
+
 #import "MVIRCChatConnection.h"
 #import "MVIRCChatRoom.h"
 #import "MVIRCChatUser.h"
 #import "MVIRCFileTransfer.h"
 
 #import "AsyncSocket.h"
+#import "InterThreadMessaging.h"
 #import "MVChatPluginManager.h"
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
@@ -716,13 +719,15 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) dealloc {
 	[self disconnect];
 
+	[_chatConnection release];
 	[_knownUsers release];
-	_knownUsers = nil;
-
 	[_proxyUsername release];
-	_proxyUsername = nil;
-
 	[_proxyPassword release];
+
+	_chatConnection = nil;
+	_connectionThread = nil;
+	_knownUsers = nil;
+	_proxyUsername = nil;
 	_proxyPassword = nil;
 
 	[super dealloc];
@@ -763,8 +768,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
-	if( ! [_chatConnection connectToHost:[self server] onPort:[self serverPort] error:NULL] )
-		[self _didNotConnect];
+	if( ! _connectionThread ) {
+		[NSThread prepareForInterThreadMessages];
+		[NSThread detachNewThreadSelector:@selector( _ircRunloop ) toTarget:self withObject:nil];
+		while( ! _connectionThread ) sched_yield();
+	}
+
+	[self performSelector:@selector( _connect ) inThread:_connectionThread];
 
 /*
 // Setup the proxy header with the most current connection address and port.
@@ -794,7 +804,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		} else [self sendRawMessage:@"QUIT"];
 	}
 
-	[_chatConnection disconnectAfterWriting];
+	_status = MVChatConnectionDisconnectedStatus;
+	[_chatConnection performSelector:@selector( disconnectAfterWriting ) inThread:_connectionThread];
 }
 
 #pragma mark -
@@ -987,7 +998,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	if( [data length] > 510 ) [data setLength:510];
 	[data appendBytes:"\x0D\x0A" length:2];
 
-	[_chatConnection writeData:data withTimeout:-1. tag:0];
+	[self performSelector:@selector( _writeDataToServer: ) withObject:data inThread:_connectionThread];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 
@@ -1122,27 +1133,46 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 @implementation MVIRCChatConnection (MVIRCChatConnectionPrivate)
-- (oneway void) _connectionRunloop {
+- (void) _connect {
+	[_chatConnection disconnect];
+	if( ! [_chatConnection connectToHost:[self server] onPort:[self serverPort] error:NULL] )
+		[self _didNotConnect];
+}
+
+- (oneway void) _ircRunloop {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
+
+	_connectionThread = [NSThread currentThread];
+	[NSThread prepareForInterThreadMessages];
+
+//	BOOL active = YES;
+//	while( active && ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) )
+//		active = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
 	[[NSRunLoop currentRunLoop] run];
+
+	_connectionThread = nil;
+
+	[pool release];
+}
+
+- (void) _didDisconnect {
+	if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
+		[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
+	[self scheduleReconnectAttemptEvery:30.];
+	[super _didDisconnect];
 }
 
 - (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	NSLog(@"willDisconnectWithError: %@", error );
 	_status = MVChatConnectionServerDisconnectedStatus;
-	if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
-		[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
-	[self scheduleReconnectAttemptEvery:30.];
 }
 
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
-	if( _status != MVChatConnectionServerDisconnectedStatus )
-		_status = MVChatConnectionDisconnectedStatus;
-
 	id old = _localUser;
 	_localUser = nil;
 	[old release];
 
-	[self _didDisconnect];
+	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
 }
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
@@ -1154,7 +1184,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
 	[old release];
 
-	[self _didConnect];
+	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 	[self _readNextMessageFromServer];
 }
 
@@ -1290,6 +1320,10 @@ end:
 	[parameters release];
 
 	[self _readNextMessageFromServer];
+}
+
+- (void) _writeDataToServer:(NSData *) data {
+	[_chatConnection writeData:data withTimeout:-1. tag:0];
 }
 
 - (void) _readNextMessageFromServer {
@@ -1509,7 +1543,7 @@ end:
 					if( [msg rangeOfString:@"NickServ"].location != NSNotFound && [msg rangeOfString:@"IDENTIFY"].location != NSNotFound ) {
 						if( ! [self nicknamePassword] ) {
 							[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
-						} else [self sendRawMessageWithFormat:@"PRIVMSG %@ :IDENTIFY %@", [self nickname], [self nicknamePassword]];
+						} else [self sendRawMessageWithFormat:@"PRIVMSG NickServ :IDENTIFY %@", [self nicknamePassword]];
 					} else if( [msg rangeOfString:@"Password accepted"].location != NSNotFound ) {
 						[[self localUser] _setIdentified:YES];
 					} else if( [msg rangeOfString:@"authentication required"].location != NSNotFound ) {

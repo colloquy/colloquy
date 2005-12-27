@@ -6,6 +6,7 @@
 @interface MVIRCChatConnection : MVChatConnection {
 @private
 	AsyncSocket *_chatConnection;
+	NSThread *_connectionThread;
 	NSMutableDictionary *_knownUsers;
 	NSString *_server;
 	NSString *_currentNickname;

@@ -758,7 +758,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) _didDisconnect {
-	BOOL wasConnected = ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionSuspendedStatus );
+	BOOL wasConnected = ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionSuspendedStatus || _status == MVChatConnectionServerDisconnectedStatus );
 
 	[[self localUser] _setStatus:MVChatUserOfflineStatus];
 
