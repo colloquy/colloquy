@@ -23,7 +23,7 @@
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object userInfo:(NSDictionary *) userInfo {
 	if( pthread_main_np() ) return [self postNotificationName:name object:object userInfo:userInfo];
-	[self postNotificationOnMainThreadWithName:name object:object userInfo:nil waitUntilDone:NO];
+	[self postNotificationOnMainThreadWithName:name object:object userInfo:userInfo waitUntilDone:NO];
 }
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object userInfo:(NSDictionary *) userInfo waitUntilDone:(BOOL) wait {
