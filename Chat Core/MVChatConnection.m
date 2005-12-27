@@ -9,6 +9,7 @@
 #import "NSAttributedStringAdditions.h"
 #import "NSMethodSignatureAdditions.h"
 #import "NSScriptCommandAdditions.h"
+#import "NSNotificationAdditions.h"
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
@@ -716,7 +717,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) _willConnect {
 	_nextAltNickIndex = 0;
 	_status = MVChatConnectionConnectingStatus;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionWillConnectNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWillConnectNotification object:self];
 }
 
 - (void) _didConnect {
@@ -727,7 +728,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[[self localUser] _setDateDisconnected:nil];
 
 	_status = MVChatConnectionConnectedStatus;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidConnectNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidConnectNotification object:self];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -740,12 +741,12 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _didNotConnect {
 	_status = MVChatConnectionDisconnectedStatus;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidNotConnectNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidNotConnectNotification object:self];
 	[self scheduleReconnectAttemptEvery:30.];
 }
 
 - (void) _willDisconnect {
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionWillDisconnectNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWillDisconnectNotification object:self];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -776,7 +777,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_localUser = nil;
 	[old release];
 
-	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
+	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidDisconnectNotification object:self];
 }
 
 - (void) _postError:(NSError *) error {
@@ -784,7 +785,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_lastError = [error copyWithZone:nil];
 	[old release];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
 }
 
 - (void) _setStatus:(MVChatConnectionStatus) status {
@@ -805,7 +806,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _sendRoomListUpdatedNotification {
 	_roomListDirty = NO;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionChatRoomListUpdatedNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionChatRoomListUpdatedNotification object:self];
 }
 
 #pragma mark -
