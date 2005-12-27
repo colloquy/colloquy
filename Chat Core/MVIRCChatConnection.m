@@ -1523,13 +1523,14 @@ end:
 	const char *line = (const char *)[data bytes] + 1; // skip the \001 char
 	const char *end = line + [data length] - 2; // minus the first and last \001 char
 	BOOL done = NO;
+	BOOL restAsData = NO;
 
 	while( line != end && ! done ) {
 		// params: [ ':' <trailing data> | <letter> { <letter> } ] [ ' ' { ' ' } ] [ <params> ]
 		const char *currentParameter = NULL;
 		id param = nil;
-		if( *line == ':' ) {
-			currentParameter = ++line;
+		if( *line == ':' || restAsData ) {
+			currentParameter = ( ! restAsData ? ++line : line );
 			param = [[NSMutableData allocWithZone:nil] initWithBytes:currentParameter length:(end - currentParameter)];
 			done = YES;
 		} else {
@@ -1540,13 +1541,26 @@ end:
 			else line++;
 		}
 
-		if( param ) [parameters addObject:param];
-		[param release];
+		if( param ) {
+			[parameters addObject:param];
+			if( [parameters count] == 1 && [param isKindOfClass:[NSString class]] )
+				restAsData = ( [param caseInsensitiveCompare:@"ACTION"] == NSOrderedSame );
+			[param release];
+		}
 
 		while( *line == ' ' && line != end && ! done ) line++;
 	}
 
+	if( [parameters count] == 2 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"ACTION"] == NSOrderedSame ) {
+		// special case ACTION and send it out like a message with the action flag
+		if( room ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", [parameters objectAtIndex:1], @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
+		else [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[parameters objectAtIndex:1], @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
+		[parameters release];
+		return;
+	}
+
 	NSLog(@"ctcp %@ %d %@", sender, request, [parameters description] );
+	[parameters release];
 }
 
 - (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
