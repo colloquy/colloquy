@@ -378,14 +378,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B /* ChatCore.framework */;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
 			remoteInfo = "Chat Core (Framework)";
 		};
 		1CEEAB18095BD24100166A54 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B /* Chat Core (Framework) */;
+			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B;
 			remoteInfo = "Chat Core (Framework)";
 		};
 /* End PBXContainerItemProxy section */
@@ -498,7 +498,7 @@
 		1C2E98C306207AD0000715D8 /* half-op.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = "half-op.tif"; path = "Resources/half-op.tif"; sourceTree = "<group>"; };
 		1C2E98C506207AE1000715D8 /* half-op-idle.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = "half-op-idle.tif"; path = "Resources/half-op-idle.tif"; sourceTree = "<group>"; };
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
-		1C3972DB082D30D200DCF3CF /* JVChatTranscriptPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscriptPanel.h; path = Panels/JVChatTranscriptPanel.h; sourceTree = "<group>"; };
+		1C3972DB082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscriptBrowserPanel.h; path = Panels/JVChatTranscriptBrowserPanel.h; sourceTree = "<group>"; };
 		1C3972DC082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscriptBrowserPanel.m; path = Panels/JVChatTranscriptBrowserPanel.m; sourceTree = "<group>"; };
 		1C397369082D3ED000DCF3CF /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVChatTranscriptBrowserPanel.nib; sourceTree = "<group>"; };
 		1C397390082D4ADA00DCF3CF /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
@@ -1193,7 +1193,7 @@
 				1C70377D07E49F25005CEA40 /* JVSmartTranscriptPanel.m */,
 				1C70377C07E49F25005CEA40 /* JVSmartTranscriptPanel.h */,
 				1C3972DC082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m */,
-				1C3972DB082D30D200DCF3CF /* JVChatTranscriptPanel.h */,
+				1C3972DB082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.h */,
 				1CCB279E04FE93FE00A8FE6E /* JVDirectChatPanel.m */,
 				1CCB279D04FE93FE00A8FE6E /* JVDirectChatPanel.h */,
 				1CE2BC4A042F53AD00000102 /* JVChatRoomPanel.m */,
