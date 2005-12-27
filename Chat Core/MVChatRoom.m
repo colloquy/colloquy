@@ -212,11 +212,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
 // subclass this method, if needed
 }
 
-- (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
 // subclass this method, if needed
 }
 

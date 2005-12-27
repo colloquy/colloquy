@@ -58,16 +58,26 @@
 
 #pragma mark -
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
 	NSParameterAssert( command != nil );
-	NSString *request = ( [arguments length] ? [NSString stringWithFormat:@"%@ %@", command, arguments] : command );
-	[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self name], request];
+	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self name], command];
+		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
+		[prefix release];
+	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
+		[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@ %@\001", [self name], command, arguments];
+	} else [[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self name], command];
 }
 
-- (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
 	NSParameterAssert( command != nil );
-	NSString *request = ( [arguments length] ? [NSString stringWithFormat:@"%@ %@", command, arguments] : command );
-	[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self name], request];
+	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"NOTICE %@ :\001%@ ", [self name], command];
+		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
+		[prefix release];
+	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
+		[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self name], command, arguments];
+	} else [[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self name], command];
 }
 
 #pragma mark -

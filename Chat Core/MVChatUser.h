@@ -138,8 +138,8 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
 - (MVUploadFileTransfer *) sendFile:(NSString *) path passively:(BOOL) passive;
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments;
-- (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments;
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments;
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments;
 @end
 
 #pragma mark -

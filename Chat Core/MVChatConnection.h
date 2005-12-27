@@ -144,9 +144,6 @@ extern NSString *MVChatConnectionErrorDomain;
 
 - (void) setEncoding:(NSStringEncoding) encoding;
 - (NSStringEncoding) encoding;
-- (NSString *) stringWithEncodedBytes:(const char *) bytes;
-- (NSString *) stringWithEncodedBytesNoCopy:(char *) bytes freeWhenDone:(BOOL) free;
-- (const char *) encodedBytesWithString:(NSString *) string;
 
 #pragma mark -
 
@@ -278,8 +275,8 @@ extern NSString *MVChatConnectionErrorDomain;
 #pragma mark -
 
 @interface NSObject (MVChatPluginConnectionSupport)
-- (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user;
-- (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user;
+- (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSData *) arguments fromUser:(MVChatUser *) user;
+- (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSData *) arguments fromUser:(MVChatUser *) user;
 
 - (void) connected:(MVChatConnection *) connection;
 - (void) disconnecting:(MVChatConnection *) connection;

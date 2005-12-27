@@ -1248,6 +1248,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #undef notEndOfLine()
 
 end:
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+
 	if( command && commandLength ) {
 		NSString *commandString = [[NSString allocWithZone:nil] initWithBytes:command length:commandLength encoding:[self encoding]];
 		NSString *selectorString = [[NSString allocWithZone:nil] initWithFormat:@"_handle%@WithParameters:fromSender:", [commandString capitalizedString]];
@@ -1279,8 +1281,6 @@ end:
 			[senderString release];
 		}
 	}
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
 
 	[rawString release];
 	[parameters release];
@@ -1519,48 +1519,73 @@ end:
 }
 
 - (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender forRoom:(MVChatRoom *) room {
-	NSMutableArray *parameters = [[NSMutableArray allocWithZone:nil] initWithCapacity:15];
 	const char *line = (const char *)[data bytes] + 1; // skip the \001 char
 	const char *end = line + [data length] - 2; // minus the first and last \001 char
-	BOOL done = NO;
-	BOOL restAsData = NO;
+	const char *current = line;
 
-	while( line != end && ! done ) {
-		// params: [ ':' <trailing data> | <letter> { <letter> } ] [ ' ' { ' ' } ] [ <params> ]
-		const char *currentParameter = NULL;
-		id param = nil;
-		if( *line == ':' || restAsData ) {
-			currentParameter = ( ! restAsData ? ++line : line );
-			param = [[NSMutableData allocWithZone:nil] initWithBytes:currentParameter length:(end - currentParameter)];
-			done = YES;
-		} else {
-			currentParameter = line;
-			while( line != end && *line != ' ' ) line++;
-			param = [[NSString allocWithZone:nil] initWithBytes:currentParameter length:(line - currentParameter) encoding:[self encoding]];
-			if( line == end ) done = YES;
-			else line++;
-		}
+	while( line != end && *line != ' ' ) line++;
+	NSString *command = [[NSString allocWithZone:nil] initWithBytes:current length:(line - current) encoding:[self encoding]];
+	NSMutableData *arguments = nil;
+	if( line != end ) arguments = [[NSMutableData allocWithZone:nil] initWithBytes:++line length:(end - line)];
 
-		if( param ) {
-			[parameters addObject:param];
-			if( [parameters count] == 1 && [param isKindOfClass:[NSString class]] )
-				restAsData = ( [param caseInsensitiveCompare:@"ACTION"] == NSOrderedSame );
-			[param release];
-		}
-
-		while( *line == ' ' && line != end && ! done ) line++;
-	}
-
-	if( [parameters count] == 2 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"ACTION"] == NSOrderedSame ) {
+	if( [command caseInsensitiveCompare:@"ACTION"] == NSOrderedSame && arguments ) {
 		// special case ACTION and send it out like a message with the action flag
-		if( room ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", [parameters objectAtIndex:1], @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
-		else [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[parameters objectAtIndex:1], @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
-		[parameters release];
+		if( room ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", arguments, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
+		else [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:arguments, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
+		[command release];
+		[arguments release];
 		return;
 	}
 
-	NSLog(@"ctcp %@ %d %@", sender, request, [parameters description] );
-	[parameters release];
+	[[NSNotificationCenter defaultCenter] postNotificationName:( request ? MVChatConnectionSubcodeRequestNotification : MVChatConnectionSubcodeReplyNotification ) object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	if( request ) [invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser: )];
+	else [invocation setSelector:@selector( processSubcodeReply:withArguments:fromUser: )];
+	[invocation setArgument:&command atIndex:2];
+	[invocation setArgument:&arguments atIndex:3];
+	[invocation setArgument:&sender atIndex:4];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+	if( [[results lastObject] boolValue] ) {
+		[command release];
+		[arguments release];
+		return;
+	}
+
+	if( request ) {
+		if( [command caseInsensitiveCompare:@"VERSION"] == NSOrderedSame ) {
+			NSDictionary *systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
+			if( ! [systemVersion count] ) systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+			NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
+
+#if __ppc__
+			NSString *processor = @"PowerPC";
+#elif __i386__
+			NSString *processor = @"Intel";
+#else
+			NSString *processor = @"Unknown Architecture";
+#endif
+
+			NSString *reply = [[NSString allocWithZone:nil] initWithFormat:@"%@ %@ (%@) - %@ %@ (%@) - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], processor, [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
+			[sender sendSubcodeReply:command withArguments:reply];
+
+			[reply release];
+			[systemVersion release];
+		} else if( [command caseInsensitiveCompare:@"TIME"] == NSOrderedSame ) {
+			[sender sendSubcodeReply:command withArguments:[[NSDate date] description]];
+		} else if( [command caseInsensitiveCompare:@"PING"] == NSOrderedSame ) {
+			// only reply with packets less than 100 bytes, anything over that is bad karma
+			if( [arguments length] < 100 ) [sender sendSubcodeReply:command withArguments:arguments];
+		} else if( [command caseInsensitiveCompare:@"CLIENTINFO"] == NSOrderedSame ) {
+			// make this extnesible later with a plugin registration method
+			[sender sendSubcodeReply:command withArguments:@"VERSION TIME PING DCC CLIENTINFO"];
+		}
+	}
+
+	[command release];
+	[arguments release];
 }
 
 - (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
