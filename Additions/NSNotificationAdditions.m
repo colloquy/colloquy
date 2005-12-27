@@ -9,7 +9,11 @@
 
 - (void) postNotificationOnMainThread:(NSNotification *) notification waitUntilDone:(BOOL) wait {
 	if( pthread_main_np() ) return [self postNotification:notification];
-	[self performSelectorOnMainThread:@selector( postNotification: ) withObject:notification waitUntilDone:wait];
+	[[self class] performSelectorOnMainThread:@selector( _postNotification: ) withObject:notification waitUntilDone:wait];
+}
+
++ (void) _postNotification:(NSNotification *) notification {
+	[[self defaultCenter] postNotification:notification];
 }
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object {
@@ -30,11 +34,11 @@
 	if( object ) [info setObject:object forKey:@"object"];
 	if( userInfo ) [info setObject:userInfo forKey:@"userInfo"];
 
-	[[self class] performSelectorOnMainThread:@selector( _postNotification: ) withObject:info waitUntilDone:wait];
+	[[self class] performSelectorOnMainThread:@selector( _postNotificationName: ) withObject:info waitUntilDone:wait];
 	[info release];
 }
 
-+ (void) _postNotification:(NSDictionary *) info {
++ (void) _postNotificationName:(NSDictionary *) info {
 	NSString *name = [info objectForKey:@"name"];
 	id object = [info objectForKey:@"object"];
 	NSDictionary *userInfo = [info objectForKey:@"userInfo"];
