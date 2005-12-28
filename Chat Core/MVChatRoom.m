@@ -553,8 +553,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (void) _clearModes {
-	_modes = 0;
 	@synchronized( _modeAttributes ) {
+		_modes = 0;
 		[_modeAttributes removeAllObjects];
 	}
 }
@@ -568,8 +568,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (void) _removeMode:(MVChatRoomMode) mode {
-	_modes &= ~mode;
 	@synchronized( _modeAttributes ) {
+		_modes &= ~mode;
 		[_modeAttributes removeObjectForKey:[NSNumber numberWithUnsignedLong:mode]];
 	}
 }

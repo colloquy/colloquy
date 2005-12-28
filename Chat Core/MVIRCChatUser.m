@@ -91,7 +91,9 @@
 	NSString *command = [[notification userInfo] objectForKey:@"command"];
 	NSData *arguments = [[notification userInfo] objectForKey:@"arguments"];
 	if( [command caseInsensitiveCompare:@"VERSION"] == NSOrderedSame ) {
-		[self setAttribute:arguments forKey:MVChatUserClientInfoAttribute];
+		NSString *info = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
+		[self setAttribute:info forKey:MVChatUserClientInfoAttribute];
+		[info release];
 	} else if( [command caseInsensitiveCompare:@"TIME"] == NSOrderedSame ) {
 		NSString *date = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
 		NSDate *localThere = [NSDate dateWithNaturalLanguageString:date];

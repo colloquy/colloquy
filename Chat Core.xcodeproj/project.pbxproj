@@ -325,6 +325,7 @@
 		1CD020BD057593A9000F93B4 /* NSColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = NSColorAdditions.m; path = Additions/NSColorAdditions.m; sourceTree = "<group>"; };
 		1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterThreadMessaging.h; path = "Chat Core/InterThreadMessaging.h"; sourceTree = "<group>"; };
 		1CD6290D096118B900BD1DD2 /* InterThreadMessaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InterThreadMessaging.m; path = "Chat Core/InterThreadMessaging.m"; sourceTree = "<group>"; };
+		1CD62AA10962114500BD1DD2 /* MVIRCNumerics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCNumerics.h; path = "Chat Core/MVIRCNumerics.h"; sourceTree = "<group>"; };
 		1CE4630E095ECCFE00AB7732 /* MVChatUserPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUserPrivate.h; path = "Chat Core/MVChatUserPrivate.h"; sourceTree = "<group>"; };
 		1CE4631D095ECD7300AB7732 /* MVChatRoomPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoomPrivate.h; path = "Chat Core/MVChatRoomPrivate.h"; sourceTree = "<group>"; };
 		1CE4632E095ECDE600AB7732 /* MVFileTransferPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransferPrivate.h; path = "Chat Core/MVFileTransferPrivate.h"; sourceTree = "<group>"; };
@@ -423,6 +424,7 @@
 				1C914B130705BFE100CBA5F1 /* MVIRCChatUser.h */,
 				1C74433B06FE3AB3009AA696 /* MVIRCFileTransfer.m */,
 				1C74433A06FE3AB3009AA696 /* MVIRCFileTransfer.h */,
+				1CD62AA10962114500BD1DD2 /* MVIRCNumerics.h */,
 			);
 			name = "IRC Support";
 			sourceTree = "<group>";

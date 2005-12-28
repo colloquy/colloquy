@@ -470,8 +470,10 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setPersistentInformation:(NSDictionary *) information {
-	if( [information count] ) [_persistentInformation setDictionary:information];
-	else [_persistentInformation removeAllObjects];
+	@synchronized( _persistentInformation ) {
+		if( [information count] ) [_persistentInformation setDictionary:information];
+		else [_persistentInformation removeAllObjects];
+	}
 }
 
 - (NSDictionary *) persistentInformation {
@@ -562,18 +564,15 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (NSSet *) joinedChatRooms {
-	NSSet *ret = nil;
 	@synchronized( _joinedRooms ) {
-		ret = [NSSet setWithArray:[_joinedRooms allValues]];
-	} return ret;
+		return [NSSet setWithArray:[_joinedRooms allValues]];
+	} return nil;
 }
 
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
 	@synchronized( _joinedRooms ) {
 		return [_joinedRooms objectForKey:[name lowercaseString]];
-	}
-
-	return nil;
+	} return nil;
 }
 
 #pragma mark -
