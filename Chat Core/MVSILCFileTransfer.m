@@ -19,13 +19,13 @@ void silc_client_file_monitor( SilcClient client, SilcClientConnection conn, Sil
 			NSNotification *note = [NSNotification notificationWithName:MVFileTransferStartedNotification object:transfer];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
-			[transfer setStartDate:[NSDate date]];
+			[transfer _setStartDate:[NSDate date]];
 			break;
 
 		case SILC_CLIENT_FILE_MONITOR_SEND:
 		case SILC_CLIENT_FILE_MONITOR_RECEIVE:
-			[transfer setFinalSize:filesize];
-			[transfer setTransfered:offset];
+			[transfer _setFinalSize:filesize];
+			[transfer _setTransfered:offset];
 
 			if( filesize == offset ) {
 				 [transfer _setStatus:MVFileTransferDoneStatus];

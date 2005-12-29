@@ -506,6 +506,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		_realName = [NSFullUserName() retain];
 
 		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
+		_fileTransfers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 	}
 
 	return self;
@@ -516,12 +517,28 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	[_chatConnection release];
 	[_knownUsers release];
+	[_fileTransfers release];
+	[_server release];
+	[_currentNickname release];
+	[_nickname release];
+	[_username release];
+	[_password release];
+	[_realName release];
+	[_proxyServer release];
 	[_proxyUsername release];
 	[_proxyPassword release];
 
 	_chatConnection = nil;
 	_connectionThread = nil;
 	_knownUsers = nil;
+	_fileTransfers = nil;
+	_server = nil;
+	_currentNickname = nil;
+	_nickname = nil;
+	_username = nil;
+	_password = nil;
+	_realName = nil;
+	_proxyServer = nil;
 	_proxyUsername = nil;
 	_proxyPassword = nil;
 
@@ -1280,6 +1297,18 @@ end:
 		[prefix release];
 	}
 }
+
+- (void) _addFileTransfer:(MVFileTransfer *) transfer {
+	@synchronized( _fileTransfers ) {
+		if( transfer ) [_fileTransfers addObject:transfer];
+	}
+}
+
+- (void) _removeFileTransfer:(MVFileTransfer *) transfer {
+	@synchronized( _fileTransfers ) {
+		if( transfer ) [_fileTransfers removeObject:transfer];
+	}
+}
 @end
 
 #pragma mark -
@@ -1426,6 +1455,51 @@ end:
 		} else if( [command caseInsensitiveCompare:@"PING"] == NSOrderedSame ) {
 			// only reply with packets less than 100 bytes, anything over that is bad karma
 			if( [arguments length] < 100 ) [sender sendSubcodeReply:command withArguments:arguments];
+		} else if( [command caseInsensitiveCompare:@"DCC"] == NSOrderedSame ) {
+			NSString *msg = [[NSString allocWithZone:nil] initWithData:arguments encoding:[self encoding]];
+			NSArray *parameters = [msg componentsSeparatedByString:@" "];
+			[msg release];
+
+			if( [parameters count] >= 5 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"SEND"] == NSOrderedSame ) {
+				long long size = 0;
+				unsigned int port = [[parameters objectAtIndex:3] intValue];
+				NSScanner *scanner = [NSScanner scannerWithString:[parameters objectAtIndex:4]];
+				[scanner scanLongLong:&size];
+
+				NSString *address = [parameters objectAtIndex:2];
+				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
+					unsigned int ip4 = [address intValue];
+					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
+				}
+
+				NSHost *host = [NSHost hostWithAddress:address];
+
+				MVIRCDownloadFileTransfer *transfer = [[MVIRCDownloadFileTransfer allocWithZone:nil] initWithUser:sender];
+				[transfer _setOriginalFileName:[parameters objectAtIndex:1]];
+				[transfer _setFinalSize:(unsigned long long)size];
+				[transfer _setHost:host];
+				[transfer _setPort:port];
+				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDownloadFileTransferOfferNotification object:transfer];
+				[self _addFileTransfer:transfer];
+				[transfer release];
+			} else if( [parameters count] >= 4 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"ACCEPT"] == NSOrderedSame ) {
+				long long size = 0;
+				unsigned int port = [[parameters objectAtIndex:2] intValue];
+				NSScanner *scanner = [NSScanner scannerWithString:[parameters objectAtIndex:3]];
+				[scanner scanLongLong:&size];
+
+				@synchronized( _fileTransfers ) {
+					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
+					MVFileTransfer *transfer = nil;
+					while( ( transfer = [enumerator nextObject] ) ) {
+						if( [transfer isDownload] && [[transfer user] isEqualToChatUser:sender] && [transfer port] == port ) {
+							[transfer _setTransfered:(unsigned long long)size];
+							[transfer _setStartOffset:(unsigned long long)size];
+							[(MVIRCDownloadFileTransfer *)transfer _setupAndStart];
+						}
+					}
+				}
+			}
 		} else if( [command caseInsensitiveCompare:@"CLIENTINFO"] == NSOrderedSame ) {
 			// make this extnesible later with a plugin registration method
 			[sender sendSubcodeReply:command withArguments:@"VERSION TIME PING DCC CLIENTINFO"];

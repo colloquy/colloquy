@@ -58,10 +58,6 @@ typedef enum {
 - (NSHost *) host;
 - (unsigned short) port;
 
-- (void) setFinalSize:(unsigned long long) finalSize;
-- (void) setTransfered:(unsigned long long) transfered;
-- (void) setStartDate:(NSDate *) startDate;
-
 - (MVChatUser *) user;
 
 - (void) cancel;

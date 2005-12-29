@@ -1,28 +1,15 @@
+#import <sched.h>
 
 #import "MVIRCFileTransfer.h"
 #import "MVIRCChatConnection.h"
 #import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
+#import "AsyncSocket.h"
+#import "InterThreadMessaging.h"
 
-/*static void MVFileTransferConnected( FILE_DCC_REC *dcc ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
-	if( ! self ) return;
+#define DCCPacketSize 4096
 
-	[self _setStatus:MVFileTransferNormalStatus];
-
-	NSNotification *note = [NSNotification notificationWithName:MVFileTransferStartedNotification object:self];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVFileTransferUpdate( FILE_DCC_REC *dcc ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
-	if( ! self ) return;
-
-	if( [self status] == MVFileTransferStoppedStatus )
-		dcc_close( (DCC_REC *) dcc );
-}
-
-static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
+/*static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
 
@@ -39,13 +26,6 @@ static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 		NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:self];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
-}
-
-static void MVFileTransferDestroyed( FILE_DCC_REC *dcc ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
-	if( ! self ) return;
-
-	[self performSelector:@selector( _destroying )];
 }
 
 static void MVFileTransferErrorConnect( FILE_DCC_REC *dcc ) {
@@ -100,535 +80,184 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 	[error release];
 	[info release];
-}
+} */
 
 #pragma mark -
 
-static BOOL fileTransferSignalsRegistered = NO;
-
-@implementation MVFileTransfer (MVIRCFileTransferPrivate)
-+ (id) _transferForDCCFileRecord:(FILE_DCC_REC *) record {
-	if( ! record ) return nil;
-
-	MVFileTransferModuleData *data = MODULE_DATA( record );
-	if( data ) return [[(data -> transfer) retain] autorelease];
-
-	return nil;
-}
-@end
-
-#pragma mark - */
-
 @implementation MVIRCUploadFileTransfer
-/*+ (void) initialize {
-	[super initialize];
-	if( ! fileTransferSignalsRegistered ) {
-		IrssiLock();
-		signal_add_last( "dcc connected", (SIGNAL_FUNC) MVFileTransferConnected );
-		signal_add_last( "dcc transfer update", (SIGNAL_FUNC) MVFileTransferUpdate );
-		signal_add_last( "dcc closed", (SIGNAL_FUNC) MVFileTransferClosed );
-		signal_add_last( "dcc destroyed", (SIGNAL_FUNC) MVFileTransferDestroyed );
-		signal_add_last( "dcc error connect", (SIGNAL_FUNC) MVFileTransferErrorConnect );
-		signal_add_last( "dcc error file create", (SIGNAL_FUNC) MVFileTransferErrorFileCreate );
-		signal_add_last( "dcc error file open", (SIGNAL_FUNC) MVFileTransferErrorFileOpen );
-		signal_add_last( "dcc error send exists", (SIGNAL_FUNC) MVFileTransferErrorSendExists );
-		IrssiUnlock();
-		fileTransferSignalsRegistered = YES;
-	}
-}
-
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
-	NSMutableData *result = [[[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopyWithZone:nil] autorelease];
+	NSMutableData *result = [[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopyWithZone:nil];
 	[result appendBytes:"\0" length:1];
+	
+	[result release];
 
-	if( [result length] > 1 ) {
-		IrssiLock();
-		settings_set_str( "dcc_own_ip", [result bytes] );
-		IrssiUnlock();
-	}
+	MVIRCUploadFileTransfer *ret = [[MVIRCUploadFileTransfer allocWithZone:nil] initWithUser:user];
+	[ret _setSource:path];
 
-	IrssiLock();
-
-	int queue = dcc_queue_new();
-	NSString *source = [[path stringByStandardizingPath] copyWithZone:nil];
-
-	char *tag = [(MVIRCChatConnection *)[user connection] _irssiConnection] -> tag;
-
-	if( ! passive ) dcc_queue_add( queue, DCC_QUEUE_NORMAL, [[user connection] encodedBytesWithString:[user nickname]], [source fileSystemRepresentation], tag, NULL );
-	else dcc_queue_add_passive( queue, DCC_QUEUE_NORMAL, [[user connection] encodedBytesWithString:[user nickname]], [source fileSystemRepresentation], tag, NULL );
-
-	dcc_queue_send_next( queue );
-
-	DCC_REC *dcc = dcc_find_request( DCC_SEND_TYPE, [[user connection] encodedBytesWithString:[user nickname]], [[source lastPathComponent] fileSystemRepresentation] );
-
-	MVIRCUploadFileTransfer *ret = [[[MVIRCUploadFileTransfer allocWithZone:nil] initWithDCCFileRecord:dcc toUser:user] autorelease];
-	ret -> _source = [[source stringByStandardizingPath] copyWithZone:nil];
-	ret -> _transferQueue = queue;
-
-	IrssiUnlock();
-
-	return ret;
+	return [ret autorelease];
 }
-
-#pragma mark -
-
-- (id) initWithDCCFileRecord:(void *) record toUser:(MVChatUser *) user {
-	if( ( self = [self initWithUser:user] ) )
-		[self _setDCCFileRecord:record];
-	return self;
-}
-
-- (void) dealloc {
-	[self _setDCCFileRecord:NULL];
-	[super dealloc];
-}
-
-#pragma mark -
-
-- (BOOL) isPassive {
-	if( _passive || ! [self _DCCFileRecord] )
-		return _passive;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_passive = dcc_is_passive( [self _DCCFileRecord] );
-		IrssiUnlock();
-
-		return _passive;
-	}
-}
-
-#pragma mark -
-
-- (unsigned long long) finalSize {
-	if( _finalSize || ! [self _DCCFileRecord] )
-		return _finalSize;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_finalSize = [self _DCCFileRecord] -> size;
-		IrssiUnlock();
-
-		return _finalSize;
-	}
-}
-
-- (unsigned long long) transfered {
-	if( ! [self _DCCFileRecord] )
-		return _transfered;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_transfered = [self _DCCFileRecord] -> transfd;
-		IrssiUnlock();
-
-		return _transfered;
-	}
-}
-
-#pragma mark -
-
-- (NSDate *) startDate {
-	@synchronized( self ) {
-		if( _startDate || ! [self _DCCFileRecord] )
-			return [[_startDate retain] autorelease];
-
-		IrssiLock();
-		if( [self _DCCFileRecord] && [self _DCCFileRecord] -> starttime )
-			_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
-		IrssiUnlock();
-
-		return _startDate;
-	}
-}
-
-- (unsigned long long) startOffset {
-	if( _startOffset || ! [self _DCCFileRecord] )
-		return _startOffset;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_startOffset = [self _DCCFileRecord] -> skipped;
-		IrssiUnlock();
-
-		return _startOffset;
-	}
-}
-
-#pragma mark -
-
-- (NSHost *) host {
-	@synchronized( self ) {
-		if( _host || ! [self _DCCFileRecord] )
-			return [[_host retain] autorelease];
-
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
-		IrssiUnlock();
-
-		return _host;
-	}
-}
-
-- (unsigned short) port {
-	if( _port || ! [self _DCCFileRecord] )
-		return _port;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_port = [self _DCCFileRecord] -> port;
-		IrssiUnlock();
-
-		return _port;
-	}
-}
-
-#pragma mark -
 
 - (void) cancel {
-	@synchronized( self ) {
-		// the Irssi thread callbacks check for this and call dcc_close then
-		[self _setStatus:MVFileTransferStoppedStatus];
-	}
-} */
-@end
-
-/* #pragma mark -
-
-@implementation MVIRCUploadFileTransfer (MVIRCUploadFileTransferPrivate)
-- (SEND_DCC_REC *) _DCCFileRecord {
-	return _dcc;
-}
-
-- (void) _setDCCFileRecord:(FILE_DCC_REC *) record {
-	@synchronized( self ) {
-		IrssiLock();
-
-		if( _dcc ) {
-			MVFileTransferModuleData *data = MODULE_DATA( (DCC_REC *) _dcc );
-			if( data ) data -> transfer = nil;
-			MODULE_DATA_UNSET( (DCC_REC *) _dcc );
-		}
-
-		_dcc = record;
-
-		if( record ) {
-			MVFileTransferModuleData *data = g_new0( MVFileTransferModuleData, 1 );
-			data -> transfer = self;
-			MODULE_DATA_SET( (DCC_REC *) record, data );
-		}
-
-		IrssiUnlock();
-	}
-}
-
-- (void) _destroying {
-	@synchronized( self ) {
-		// load the variables simply by calling the accessor
-		[self isPassive];
-		[self finalSize];
-		[self transfered];
-		[self port];
-		[self startOffset];
-		[self startDate];
-		[self host];
-
-		[self _setDCCFileRecord:NULL];
-	}
+	[self _setStatus:MVFileTransferStoppedStatus];
+	[_connection release];
+	_connection = nil;
 }
 @end
 
 #pragma mark -
-
-static void MVIRCDownloadFileTransferSpecifyPath( GET_DCC_REC *dcc ) {
-	MVIRCDownloadFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:(FILE_DCC_REC *)dcc];
-	if( ! self ) return;
-
-	@synchronized( self ) {
-		g_free_not_null( dcc -> file );
-		dcc -> file = g_strdup( [[self destination] fileSystemRepresentation] );
-	}
-}
-
-#pragma mark - */
 
 @implementation MVIRCDownloadFileTransfer
-/* + (void) initialize {
-	[super initialize];
-	static BOOL tooLate = NO;
-	if( ! tooLate ) {
-		IrssiLock();
-		signal_add_last( "dcc get receive", (SIGNAL_FUNC) MVIRCDownloadFileTransferSpecifyPath );
-		IrssiUnlock();
-		tooLate = YES;
-	}
-
-	if( ! fileTransferSignalsRegistered ) {
-		IrssiLock();
-		signal_add_last( "dcc connected", (SIGNAL_FUNC) MVFileTransferConnected );
-		signal_add_last( "dcc transfer update", (SIGNAL_FUNC) MVFileTransferUpdate );
-		signal_add_last( "dcc closed", (SIGNAL_FUNC) MVFileTransferClosed );
-		signal_add_last( "dcc destroyed", (SIGNAL_FUNC) MVFileTransferDestroyed );
-		signal_add_last( "dcc error connect", (SIGNAL_FUNC) MVFileTransferErrorConnect );
-		signal_add_last( "dcc error file create", (SIGNAL_FUNC) MVFileTransferErrorFileCreate );
-		signal_add_last( "dcc error file open", (SIGNAL_FUNC) MVFileTransferErrorFileOpen );
-		signal_add_last( "dcc error send exists", (SIGNAL_FUNC) MVFileTransferErrorSendExists );
-		IrssiUnlock();
-		fileTransferSignalsRegistered = YES;
-	}
-}
-
-#pragma mark -
-
-- (id) initWithDCCFileRecord:(void *) record fromUser:(MVChatUser *) user {
-	if( ( self = [self initWithUser:user] ) )
-		[self _setDCCFileRecord:record];
-	return self;
-}
-
 - (void) dealloc {
-	[self _setDCCFileRecord:NULL];
+	[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
+
+	[_fileHandle synchronizeFile];
+	[_fileHandle closeFile];
+
+	[_connection release];
+	[_fileHandle release];
+
+	_connection = nil;
+	_connectionThread = nil;
+	_fileHandle = nil;
+
 	[super dealloc];
 }
 
-#pragma mark -
-
-- (BOOL) isPassive {
-	if( _passive || ! [self _DCCFileRecord] )
-		return _passive;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_passive = dcc_is_passive( [self _DCCFileRecord] );
-		IrssiUnlock();
-
-		return _passive;
-	}
-}
-
-#pragma mark -
-
-- (unsigned long long) finalSize {
-	if( _finalSize || ! [self _DCCFileRecord] )
-		return _finalSize;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_finalSize = [self _DCCFileRecord] -> size;
-		IrssiUnlock();
-
-		return _finalSize;
-	}
-}
-
-- (unsigned long long) transfered {
-	if( ! [self _DCCFileRecord] ) return _transfered;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_transfered = [self _DCCFileRecord] -> transfd;
-		IrssiUnlock();
-
-		return _transfered;
-	}
-}
-
-#pragma mark -
-
-- (NSDate *) startDate {
-	@synchronized( self ) {
-		if( _startDate || ! [self _DCCFileRecord] )
-			return [[_startDate retain] autorelease];
-
-		IrssiLock();
-		if( [self _DCCFileRecord] && [self _DCCFileRecord] -> starttime )
-			_startDate = [[NSDate dateWithTimeIntervalSince1970:[self _DCCFileRecord] -> starttime] retain];
-		IrssiUnlock();
-
-		return _startDate;
-	}
-}
-
-- (unsigned long long) startOffset {
-	if( _startOffset || ! [self _DCCFileRecord] )
-		return _startOffset;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_startOffset = [self _DCCFileRecord] -> skipped;
-		IrssiUnlock();
-
-		return _startOffset;
-	}
-}
-
-#pragma mark -
-
-- (NSHost *) host {
-	@synchronized( self ) {
-		if( _host || ! [self _DCCFileRecord] )
-			return [[_host retain] autorelease];
-
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_host = [[NSHost hostWithAddress:[NSString stringWithUTF8String:[self _DCCFileRecord] -> addrstr]] retain];
-		IrssiUnlock();
-
-		return _host;
-	}
-}
-
-- (unsigned short) port {
-	if( _port || ! [self _DCCFileRecord] )
-		return _port;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_port = [self _DCCFileRecord] -> port;
-		IrssiUnlock();
-
-		return _port;
-	}
-}
-
-#pragma mark -
-
-- (NSString *) originalFileName {
-	@synchronized( self ) {
-		if( _originalFileName || ! [self _DCCFileRecord] )
-			return [[_originalFileName retain] autorelease];
-
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			_originalFileName = [[[[self user] connection] stringWithEncodedBytes:[self _DCCFileRecord] -> arg] retain];
-		IrssiUnlock();
-
-		return _originalFileName;
-	}
-}
-
-#pragma mark -
-
-- (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
-	@synchronized( self ) {
-		id old = _destination;
-		_destination = [[path stringByStandardizingPath] copyWithZone:nil];
-		[old release];
-
-		if( ! [self _DCCFileRecord] ) return;
-
-		IrssiLock();
-		if( [self _DCCFileRecord] )
-			[self _DCCFileRecord] -> get_type = ( rename ? DCC_GET_RENAME : DCC_GET_OVERWRITE );
-		IrssiUnlock();
-	}
-}
-
-#pragma mark -
-
 - (void) reject {
-	if( ! [self _DCCFileRecord] ) return;
-
-	@synchronized( self ) {
-		IrssiLock();
-		if( [self _DCCFileRecord] ) {
-			GET_DCC_REC *dcc = [self _DCCFileRecord];
-			[self _destroying];
-			dcc_reject( (DCC_REC *) dcc, dcc -> server );
-		}
-		IrssiUnlock();
-	}
+	if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT \"%@\"", [self originalFileName]]];
+	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT %@", [self originalFileName]]];
 }
 
 - (void) cancel {
-	@synchronized( self ) {
-		// the Irssi thread callbacks check for this and call dcc_close then
-		[self _setStatus:MVFileTransferStoppedStatus];
-	}
-}
-
-#pragma mark -
-
-- (void) accept {
-	[self acceptByResumingIfPossible:YES];
+	[self _setStatus:MVFileTransferStoppedStatus];
+	[_connection release];
+	_connection = nil;
 }
 
 - (void) acceptByResumingIfPossible:(BOOL) resume {
-	if( ! [self _DCCFileRecord] ) return;
+	if( resume ) {
+		NSNumber *size = [[[NSFileManager defaultManager] fileAttributesAtPath:[self destination] traverseLink:YES] objectForKey:NSFileSize];
+		BOOL fileExists = [[NSFileManager defaultManager] isWritableFileAtPath:[self destination]];
 
-	@synchronized( self ) {
-		if( ! [[NSFileManager defaultManager] isReadableFileAtPath:[self destination]] )
-			resume = NO;
-
-		IrssiLock();
-
-		if( [self _DCCFileRecord] ) {
-			if( resume ) dcc_send_resume( [self _DCCFileRecord] );
-			else if( dcc_is_passive( [self _DCCFileRecord] ) ) dcc_get_passive( [self _DCCFileRecord] );
-			else dcc_get_connect( [self _DCCFileRecord] );
+		if( fileExists && [size unsignedLongLongValue] < [self finalSize] ) {
+			if( [self isPassive] ) {
+				if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"RESUME \"%@\" 0 %llu %lu", [self originalFileName], [size unsignedLongLongValue], _passiveId]];
+				else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"RESUME %@ 0 %llu %lu", [self originalFileName], [size unsignedLongLongValue], _passiveId]];
+			} else {
+				if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"RESUME \"%@\" %lu %llu", [self originalFileName], [self port], [size unsignedLongLongValue]]];
+				else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"RESUME %@ %lu %llu", [self originalFileName], [self port], [size unsignedLongLongValue]]];
+			}
+			return; // we need to wait until we get an ACCEPT reply
 		}
-
-		IrssiUnlock();
 	}
-} */
-@end
-/*
+
+	[self _setupAndStart];
+}
+
 #pragma mark -
 
-@implementation MVIRCDownloadFileTransfer (MVIRCDownloadFileTransferPrivate)
-- (GET_DCC_REC *) _DCCFileRecord {
-	return _dcc;
+- (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
+	NSLog(@"DCC willDisconnectWithError: %@", error );
+	[self _setStatus:MVFileTransferErrorStatus];
 }
 
-- (void) _setDCCFileRecord:(FILE_DCC_REC *) record {
-	@synchronized( self ) {
-		IrssiLock();
+- (void) socketDidDisconnect:(AsyncSocket *) sock {
+	if( [self status] != MVFileTransferDoneStatus )
+		[self _setStatus:MVFileTransferErrorStatus];
 
-		if( _dcc ) {
-			MVFileTransferModuleData *data = MODULE_DATA( (DCC_REC *)_dcc );
-			if( data ) data -> transfer = nil;
-			MODULE_DATA_UNSET( (DCC_REC *) _dcc );
-		}
+	[_fileHandle synchronizeFile];
+	[_fileHandle closeFile];
+	[_fileHandle release];
+	_fileHandle = nil;
+}
 
-		_dcc = record;
+- (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
+	[self _setStatus:MVFileTransferNormalStatus];
 
-		if( record ) {
-			MVFileTransferModuleData *data = g_new0( MVFileTransferModuleData, 1 );
-			data -> transfer = self;
-			MODULE_DATA_SET( (DCC_REC *) record, data );
-		}
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
 
-		IrssiUnlock();
+	unsigned long long progress = [self transfered];
+	unsigned long long packet = DCCPacketSize;
+	if( ( progress + packet ) > [self finalSize] )
+		packet = [self finalSize] - progress;
+	[_connection readDataToLength:packet withTimeout:-1. tag:0];
+}
+
+- (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
+	unsigned long long progress = [self transfered] + [data length];
+	[self _setTransfered:progress];
+
+	// dcc only supports a 2 GB limit with these acknowledgment packets, we will acknowledge
+	// that we have all the bytes but keep reading if the file is over 2 GB
+	unsigned long progressToSend = htonl( progress & 0xffffffff );
+	NSData *length = [[NSData allocWithZone:nil] initWithBytes:&progressToSend length:4];
+	[_connection writeData:length withTimeout:-1 tag:0];
+	[length release];
+
+	[_fileHandle writeData:data];
+
+	if( progress < [self finalSize] ) {
+		unsigned long long packet = DCCPacketSize;
+		if( ( progress + packet ) > [self finalSize] )
+			packet = [self finalSize] - progress;
+		[_connection readDataToLength:packet withTimeout:-1. tag:0];
+	} else {
+		[self _setStatus:MVFileTransferDoneStatus];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
+		[_connection disconnect];
 	}
 }
 
-- (void) _destroying {
-	@synchronized( self ) {
-		// load the variables simply by calling the accessor
-		[self isPassive];
-		[self finalSize];
-		[self transfered];
-		[self port];
-		[self startOffset];
-		[self originalFileName];
-		[self startDate];
-		[self host];
+#pragma mark -
 
-		[self _setDCCFileRecord:NULL];
+- (void) _setupAndStart {
+	BOOL directory = NO;
+	BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[self destination] isDirectory:&directory];
+	if( directory ) return;
+	if( ! fileExists ) [[NSData data] writeToFile:[self destination] atomically:NO];
+	fileExists = [[NSFileManager defaultManager] isWritableFileAtPath:[self destination]];
+	if( ! fileExists ) return;
+
+	[_fileHandle release];
+	_fileHandle = [[NSFileHandle fileHandleForWritingAtPath:[self destination]] retain];
+	if( ! _fileHandle ) return;
+	[_fileHandle truncateFileAtOffset:[self startOffset]];
+
+	[_connection release];
+	_connection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+
+	if( ! _connectionThread ) {
+		[NSThread prepareForInterThreadMessages];
+		[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
+		while( ! _connectionThread ) sched_yield();
 	}
+
+	[self performSelector:@selector( _connect ) inThread:_connectionThread];	
+}
+
+- (void) _connect {
+	if( ! [_connection connectToHost:[[self host] address] onPort:[self port] error:NULL] ) {
+		NSLog(@"can't connect to DCC" );
+		return;
+	}
+}
+
+- (oneway void) _dccRunloop {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
+
+	_connectionThread = [NSThread currentThread];
+	[NSThread prepareForInterThreadMessages];
+	[NSThread setThreadPriority:0.75];
+
+	BOOL active = YES;
+	while( active && ( [self status] == MVFileTransferNormalStatus || [self status] == MVFileTransferHoldingStatus ) )
+		active = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+
+	if( [NSThread currentThread] == _connectionThread )
+		_connectionThread = nil;
+
+	[pool release];
 }
 @end
-*/

@@ -2,12 +2,14 @@
 #import "MVChatConnectionPrivate.h"
 
 @class AsyncSocket;
+@class MVFileTransfer;
 
 @interface MVIRCChatConnection : MVChatConnection {
 @private
 	AsyncSocket *_chatConnection;
 	NSThread *_connectionThread;
 	NSMutableDictionary *_knownUsers;
+	NSMutableSet *_fileTransfers;
 	NSString *_server;
 	NSString *_currentNickname;
 	NSString *_nickname;
@@ -37,4 +39,7 @@
 - (void) _processErrorCode:(int) errorCode withContext:(char *) context;
 
 - (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname;
+
+- (void) _addFileTransfer:(MVFileTransfer *) transfer;
+- (void) _removeFileTransfer:(MVFileTransfer *) transfer;
 @end

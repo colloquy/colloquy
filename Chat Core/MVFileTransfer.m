@@ -57,12 +57,6 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 - (id) initWithUser:(MVChatUser *) user {
 	if( ( self = [super init] ) ) {
 		_status = MVFileTransferHoldingStatus;
-		_port = 0;
-		_startOffset = 0;
-		_finalSize = 0;
-		_transfered = 0;
-		_startDate = nil;
-		_host = nil;
 		_user = [user retain];
 	}
 
@@ -94,8 +88,7 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 }
 
 - (BOOL) isPassive {
-// subclass if needed
-	return NO;
+	return _passive;
 }
 
 - (MVFileTransferStatus) status {
@@ -138,28 +131,6 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 #pragma mark -
 
-- (void) setFinalSize:(unsigned long long) finalSize {
-	@synchronized( self ) {
-		_finalSize = finalSize;
-	}
-}
-
-- (void) setTransfered:(unsigned long long) transfered {
-	@synchronized( self ) {
-		_transfered = transfered;
-	}
-}
-
-- (void) setStartDate:(NSDate *) startDate {
-	@synchronized( self ) {
-		id old = _startDate;
-		_startDate = [startDate retain];
-		[old release];
-	}
-}
-
-#pragma mark -
-
 - (MVChatUser *) user {
 	return [[_user retain] autorelease];
 }
@@ -176,22 +147,50 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 @implementation MVFileTransfer (MVFileTransferPrivate)
 - (void) _setStatus:(MVFileTransferStatus) status {
-	@synchronized( self ) {
-		_status = status;
-	}
+	_status = status;
+}
+
+- (void) _setFinalSize:(unsigned long long) finalSize {
+	_finalSize = finalSize;
+}
+
+- (void) _setTransfered:(unsigned long long) transfered {
+	_transfered = transfered;
+}
+
+- (void) _setStartOffset:(unsigned long long) startOffset {
+	_startOffset = startOffset;
+}
+
+- (void) _setStartDate:(NSDate *) startDate {
+	id old = _startDate;
+	_startDate = [startDate retain];
+	[old release];
+}
+
+- (void) _setHost:(NSHost *) host {
+	id old = _host;
+	_host = [host retain];
+	[old release];
+}
+
+- (void) _setPort:(unsigned short) port {
+	_port = port;
+}
+
+- (void) _setPassive:(BOOL) passive {
+	_passive = passive;
 }
 
 - (void) _postError:(NSError *) error {
 	[self _setStatus:MVFileTransferErrorStatus];
 
-	@synchronized( self ) {
-		id old = _lastError;
-		_lastError = [error retain];
-		[old release];
-	}
+	id old = _lastError;
+	_lastError = [error retain];
+	[old release];
 
 	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:error, @"error", nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
 	[info release];
 }
 @end
@@ -210,13 +209,6 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 }
 
 #pragma mark -
-
-- (id) initWithUser:(MVChatUser *) user {
-	if( ( self = [super initWithUser:user] ) )
-		_source = nil;
-
-	return self;
-}
 
 - (void) dealloc {
 	[_source release];
@@ -239,16 +231,17 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 #pragma mark -
 
-@implementation MVDownloadFileTransfer
-- (id) initWithUser:(MVChatUser *) user {
-	if( ( self = [super initWithUser:user] ) ) {
-		_destination = nil;
-		_originalFileName = nil;
-	}
-
-	return self;
+@implementation MVUploadFileTransfer (MVUploadFileTransferPrivate)
+- (void) _setSource:(NSString *) source {
+	id old = _source;
+	_source = [[source stringByStandardizingPath] retain];
+	[old release];
 }
+@end
 
+#pragma mark -
+
+@implementation MVDownloadFileTransfer
 - (void) dealloc {
 	[_destination release];
 	[_originalFileName release];
@@ -263,11 +256,9 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
 	// subclass if needed, call super
-	@synchronized( self ) {
-		id old = _destination;
-		_destination = [[path stringByStandardizingPath] copyWithZone:nil];
-		[old release];
-	}
+	id old = _destination;
+	_destination = [[path stringByStandardizingPath] copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) destination {
@@ -302,5 +293,15 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 - (void) acceptByResumingIfPossible:(BOOL) resume {
 // subclass, don't call super
 	[self doesNotRecognizeSelector:_cmd];
+}
+@end
+
+#pragma mark -
+
+@implementation MVDownloadFileTransfer (MVDownloadFileTransferPrivate)
+- (void) _setOriginalFileName:(NSString *) originalFileName {
+	id old = _originalFileName;
+	_originalFileName = [originalFileName copyWithZone:nil];
+	[old release];
 }
 @end
