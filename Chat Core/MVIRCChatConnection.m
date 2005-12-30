@@ -515,6 +515,8 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) dealloc {
 	[self disconnect];
 
+	[_chatConnection setDelegate:nil];
+
 	[_chatConnection release];
 	[_knownUsers release];
 	[_fileTransfers release];
@@ -947,6 +949,10 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 @implementation MVIRCChatConnection (MVIRCChatConnectionPrivate)
+- (AsyncSocket *) _chatConnection {
+	return _chatConnection;
+}
+
 - (void) _connect {
 	[_chatConnection disconnect];
 	if( ! [_chatConnection connectToHost:[self server] onPort:[self serverPort] error:NULL] )
@@ -1474,7 +1480,7 @@ end:
 
 				NSHost *host = [NSHost hostWithAddress:address];
 
-				MVIRCDownloadFileTransfer *transfer = [[MVIRCDownloadFileTransfer allocWithZone:nil] initWithUser:sender];
+				MVIRCDownloadFileTransfer *transfer = [(MVIRCDownloadFileTransfer *)[MVIRCDownloadFileTransfer allocWithZone:nil] initWithUser:sender];
 				[transfer _setOriginalFileName:[parameters objectAtIndex:1]];
 				[transfer _setFinalSize:(unsigned long long)size];
 				[transfer _setHost:host];
