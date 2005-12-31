@@ -123,6 +123,7 @@ static NSRange portRange;
 }
 
 - (void) dealloc {
+	NSLog(@"u/l dealloc" );
 	id old = _fileHandle;
 	_fileHandle = nil;
 	[old closeFile];
@@ -136,7 +137,7 @@ static NSRange portRange;
 - (void) cancel {
 	[self _setStatus:MVFileTransferStoppedStatus];
 
-	[self performSelector:@selector( _finish ) inThread:_connectionThread];
+	_done = YES; // the thread will disconnect when it ends
 
 	id old = _fileHandle;
 	_fileHandle = nil;
@@ -155,7 +156,8 @@ static NSRange portRange;
 
 - (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	NSLog(@"upload DCC willDisconnectWithError: %@", error );
-	[self _setStatus:MVFileTransferErrorStatus];
+	if( [self status] != MVFileTransferDoneStatus && [self status] != MVFileTransferStoppedStatus )
+		[self _setStatus:MVFileTransferErrorStatus];
 }
 
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
@@ -167,13 +169,15 @@ static NSRange portRange;
 	[old closeFile];
 	[old release];
 
-	[self _finish];
+	_done = YES;
 }
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
 	[self _setStatus:MVFileTransferNormalStatus];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
+
 	[self _sendNextPacket];
+	[_clientConnection readDataToLength:4 withTimeout:-1. tag:0];
 
 	// now that we are connected deregister with the connection
 	// do this last incase the connection is the last thing retaining us
@@ -181,49 +185,59 @@ static NSRange portRange;
 }
 
 - (void) socket:(AsyncSocket *) sock didWriteDataWithTag:(long) tag {
-	unsigned long long progress = [self transfered] + tag;
-	[self _setTransfered:progress];
+	if( ! _readData || [_fileHandle offsetInFile] > 0xffffffff ) {
+		unsigned long long progress = [self transfered] + tag;
+		[self _setTransfered:progress];
+		if( progress == [self finalSize] ) {
+			[self _setStatus:MVFileTransferDoneStatus];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
+		}
+	}
 
-	[_clientConnection readDataToLength:4 withTimeout:-1. tag:( progress == [self finalSize] )];
-	if( progress < [self finalSize] ) [self _sendNextPacket];
+	if( ! _doneSending ) [self _sendNextPacket];
 }
 
 - (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
-	if( tag ) {
+	unsigned long bytes = ntohl( *( (unsigned long *) [data bytes] ) );
+
+	[self _setTransfered:bytes];
+	[_clientConnection readDataToLength:4 withTimeout:-1. tag:0];
+
+	if( bytes == ( [self finalSize] & 0xffffffff ) ) {
 		[self _setStatus:MVFileTransferDoneStatus];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
-		[self _finish];
+		[_connection disconnectAfterWriting];
+		_done = YES;
 	}
+
+	_readData = YES;
 }
 
 #pragma mark -
 
 - (void) _setupAndStart {
+	if( _connectionThread ) return;
+
 	BOOL directory = NO;
 	BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[self source] isDirectory:&directory];
 	if( directory || ! fileExists ) return;
 
-	id old = _fileHandle;
+	[_fileHandle release];
 	_fileHandle = [[NSFileHandle fileHandleForReadingAtPath:[self source]] retain];
-	[old release];
-
 	if( ! _fileHandle ) return;
 	[_fileHandle seekToFileOffset:[self startOffset]];
 
-	old = _connection;
-	_connection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
-	[old release];
-
-	if( ! _connectionThread ) {
-		[NSThread prepareForInterThreadMessages];
-		[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
-		while( ! _connectionThread ) sched_yield();
-	}
+	[NSThread prepareForInterThreadMessages];
+	[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
+	while( ! _connectionThread ) sched_yield();
 
 	if( ! [self isPassive] ) [self performSelector:@selector( _waitForConnection ) inThread:_connectionThread];	
 }
 
 - (void) _waitForConnection {
+	[_connection release];
+	_connection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+
 	unsigned int port = portRange.location;
 	BOOL success = NO;
 	while( ! success ) {
@@ -244,31 +258,30 @@ static NSRange portRange;
 		[self _setPort:[_connection localPort]];
 
 		NSString *fileName = [[self source] lastPathComponent];
-		if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu", fileName, address, [self port], [self finalSize]]];
-		else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu", fileName, address, [self port], [self finalSize]]];
-	}
+		if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
+		else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
+	} else _done = YES;
 }
 
 - (void) _sendNextPacket {
 	NSData *data = [_fileHandle readDataOfLength:DCCPacketSize];
-
-	if( [data length] > 0 ) {
-		[_clientConnection writeData:data withTimeout:-1 tag:[data length]];
-	} else {
-		[self _setStatus:MVFileTransferErrorStatus];
-		[self _finish];
-	}
+	if( [data length] > 0 ) [_clientConnection writeData:data withTimeout:-1 tag:[data length]];
+	else _doneSending = YES;
 }
 
 - (void) _finish {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];	
+
 	id old = _connection;
 	_connection = nil;
 	[old setDelegate:nil];
+	[old disconnect];
 	[old release];
 
 	old = _clientConnection;
 	_clientConnection = nil;
 	[old setDelegate:nil];
+	[old disconnect];
 	[old release];
 
 	_done = YES;
@@ -289,12 +302,21 @@ static NSRange portRange;
 		[timeout release];
 	}
 
-	_connectionThread = nil;
-
 	[self _finish];
 	[self release];
 
+	_connectionThread = nil;
+
 	[pool release];
+}
+
+- (unsigned int) _passiveIdentifier {
+	return _passiveId;
+}
+
+- (void) _setStartOffset:(unsigned long long) startOffset {
+	[_fileHandle seekToFileOffset:startOffset];
+	[super _setStartOffset:startOffset];
 }
 @end
 
@@ -308,6 +330,7 @@ static NSRange portRange;
 }
 
 - (void) dealloc {
+	NSLog(@"d/l dealloc" );
 	id old = _fileHandle;
 	_fileHandle = nil;
 	[old synchronizeFile];
@@ -328,10 +351,11 @@ static NSRange portRange;
 - (void) cancel {
 	[self _setStatus:MVFileTransferStoppedStatus];
 
-	[self performSelector:@selector( _finish ) inThread:_connectionThread];
+	_done = YES; // the thread will disconnect when it ends
 
 	id old = _fileHandle;
 	_fileHandle = nil;
+	[old synchronizeFile];
 	[old closeFile];
 	[old release];
 
@@ -362,7 +386,8 @@ static NSRange portRange;
 
 - (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	NSLog(@"download DCC willDisconnectWithError: %@", error );
-	[self _setStatus:MVFileTransferErrorStatus];
+	if( [self status] != MVFileTransferDoneStatus && [self status] != MVFileTransferStoppedStatus )
+		[self _setStatus:MVFileTransferErrorStatus];
 }
 
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
@@ -383,11 +408,7 @@ static NSRange portRange;
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
 
-	unsigned long long progress = [self transfered];
-	unsigned long long packet = DCCPacketSize;
-	if( ( progress + packet ) > [self finalSize] )
-		packet = [self finalSize] - progress;
-	[_connection readDataToLength:packet withTimeout:-1. tag:0];
+	[_connection readDataWithTimeout:-1. tag:0];
 
 	// now that we are connected deregister with the connection
 	// do this last incase the connection is the last thing retaining us
@@ -398,31 +419,30 @@ static NSRange portRange;
 	unsigned long long progress = [self transfered] + [data length];
 	[self _setTransfered:progress];
 
-	// dcc only supports a 2 GB limit with these acknowledgment packets, we will acknowledge
-	// that we have all the bytes but keep reading if the file is over 2 GB
-	unsigned long progressToSend = htonl( progress & 0xffffffff );
-	NSData *length = [[NSData allocWithZone:nil] initWithBytes:&progressToSend length:4];
-	[_connection writeData:length withTimeout:-1 tag:0];
-	[length release];
-
 	[_fileHandle writeData:data];
 
-	if( progress < [self finalSize] ) {
-		unsigned long long packet = DCCPacketSize;
-		if( ( progress + packet ) > [self finalSize] )
-			packet = [self finalSize] - progress;
-		[_connection readDataToLength:packet withTimeout:-1. tag:0];
-	} else {
+	if( ! _turbo ) {
+		// dcc only supports a 4 GB limit with these acknowledgment packets, we will acknowledge
+		// that we have all the bytes but keep reading if the file is over 4 GB
+		unsigned long progressToSend = htonl( progress & 0xffffffff );
+		NSData *length = [[NSData allocWithZone:nil] initWithBytes:&progressToSend length:4];
+		[_connection writeData:length withTimeout:-1 tag:0];
+		[length release];
+	}
+
+	if( progress == [self finalSize] ) {
 		[self _setStatus:MVFileTransferDoneStatus];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
-		[_connection disconnect];
+		[_connection disconnectAfterWriting];
 		_done = YES;
-	}
+	} else [_connection readDataWithTimeout:-1. tag:0];
 }
 
 #pragma mark -
 
 - (void) _setupAndStart {
+	if( _connectionThread ) return;
+
 	BOOL directory = NO;
 	BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[self destination] isDirectory:&directory];
 	if( directory ) return;
@@ -430,27 +450,21 @@ static NSRange portRange;
 	fileExists = [[NSFileManager defaultManager] isWritableFileAtPath:[self destination]];
 	if( ! fileExists ) return;
 
-	id old = _fileHandle;
+	[_fileHandle release];
 	_fileHandle = [[NSFileHandle fileHandleForWritingAtPath:[self destination]] retain];
-	[old release];
-
 	if( ! _fileHandle ) return;
 	[_fileHandle truncateFileAtOffset:[self startOffset]];
 
-	old = _connection;
-	_connection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
-	[old release];
-
-	if( ! _connectionThread ) {
-		[NSThread prepareForInterThreadMessages];
-		[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
-		while( ! _connectionThread ) sched_yield();
-	}
+	[NSThread prepareForInterThreadMessages];
+	[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
+	while( ! _connectionThread ) sched_yield();
 
 	[self performSelector:@selector( _connect ) inThread:_connectionThread];	
 }
 
 - (void) _connect {
+	_connection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+
 	if( ! [_connection connectToHost:[[self host] address] onPort:[self port] error:NULL] ) {
 		NSLog(@"can't connect to DCC" );
 		return;
@@ -458,9 +472,12 @@ static NSRange portRange;
 }
 
 - (void) _finish {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];	
+
 	id old = _connection;
 	_connection = nil;
 	[old setDelegate:nil];
+	[old disconnect];
 	[old release];
 
 	_done = YES;
@@ -481,11 +498,23 @@ static NSRange portRange;
 		[timeout release];
 	}
 
-	_connectionThread = nil;
-
 	[self _finish];
 	[self release];
 
+	_connectionThread = nil;
+
 	[pool release];
+}
+
+- (void) _setTurbo:(BOOL) turbo {
+	_turbo = turbo;
+}
+
+- (void) _setPassiveIdentifier:(unsigned int) identifier {
+	_passiveId = identifier;
+}
+
+- (unsigned int) _passiveIdentifier {
+	return _passiveId;
 }
 @end

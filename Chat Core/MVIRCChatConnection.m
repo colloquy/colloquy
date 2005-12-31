@@ -1464,7 +1464,6 @@ end:
 		} else if( [command caseInsensitiveCompare:@"DCC"] == NSOrderedSame ) {
 			NSString *msg = [[NSString allocWithZone:nil] initWithData:arguments encoding:[self encoding]];
 			NSArray *parameters = [msg componentsSeparatedByString:@" "];
-			[msg release];
 
 			if( [parameters count] >= 5 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"SEND"] == NSOrderedSame ) {
 				long long size = 0;
@@ -1481,31 +1480,75 @@ end:
 				NSHost *host = [NSHost hostWithAddress:address];
 
 				MVIRCDownloadFileTransfer *transfer = [(MVIRCDownloadFileTransfer *)[MVIRCDownloadFileTransfer allocWithZone:nil] initWithUser:sender];
+				if( port == 0 && [parameters count] >= 6 ) {
+					BOOL turbo = ( [[parameters objectAtIndex:5] rangeOfString:@"T"].location != NSNotFound );
+					[transfer _setTurbo:turbo];
+					[transfer _setPassiveIdentifier:[[parameters objectAtIndex:5] intValue]];
+					[transfer _setPassive:YES];
+				} else if( [parameters count] >= 6 ) {
+					[transfer _setTurbo:[[parameters objectAtIndex:5] isEqualToString:@"T"]];
+				}
+
 				[transfer _setOriginalFileName:[parameters objectAtIndex:1]];
 				[transfer _setFinalSize:(unsigned long long)size];
 				[transfer _setHost:host];
 				[transfer _setPort:port];
+
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDownloadFileTransferOfferNotification object:transfer];
+
 				[self _addFileTransfer:transfer];
 				[transfer release];
 			} else if( [parameters count] >= 4 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"ACCEPT"] == NSOrderedSame ) {
+				BOOL passive = NO;
 				long long size = 0;
 				unsigned int port = [[parameters objectAtIndex:2] intValue];
 				NSScanner *scanner = [NSScanner scannerWithString:[parameters objectAtIndex:3]];
 				[scanner scanLongLong:&size];
 
+				if( [parameters count] >= 5 ) {
+					passive = YES;
+					port = [[parameters objectAtIndex:4] intValue];
+				}
+
 				@synchronized( _fileTransfers ) {
 					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
 					MVFileTransfer *transfer = nil;
 					while( ( transfer = [enumerator nextObject] ) ) {
-						if( [transfer isDownload] && [[transfer user] isEqualToChatUser:sender] && [transfer port] == port ) {
+						if( [transfer isDownload] && [transfer isPassive] == passive && [[transfer user] isEqualToChatUser:sender] &&
+							( ! passive ? [transfer port] == port : [(id)transfer _passiveIdentifier] == port ) ) {
 							[transfer _setTransfered:(unsigned long long)size];
 							[transfer _setStartOffset:(unsigned long long)size];
 							[(MVIRCDownloadFileTransfer *)transfer _setupAndStart];
 						}
 					}
 				}
+			} else if( [parameters count] >= 4 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"RESUME"] == NSOrderedSame ) {
+				BOOL passive = NO;
+				long long size = 0;
+				unsigned int port = [[parameters objectAtIndex:2] intValue];
+				NSScanner *scanner = [NSScanner scannerWithString:[parameters objectAtIndex:3]];
+				[scanner scanLongLong:&size];
+
+				if( [parameters count] >= 5 ) {
+					passive = YES;
+					port = [[parameters objectAtIndex:4] intValue];
+				}
+
+				@synchronized( _fileTransfers ) {
+					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
+					MVFileTransfer *transfer = nil;
+					while( ( transfer = [enumerator nextObject] ) ) {
+						if( [transfer isUpload] && [transfer isPassive] == passive && [[transfer user] isEqualToChatUser:sender] &&
+							( ! passive ? [transfer port] == port : [(id)transfer _passiveIdentifier] == port ) ) {
+							[transfer _setTransfered:(unsigned long long)size];
+							[transfer _setStartOffset:(unsigned long long)size];
+							[sender sendSubcodeRequest:@"DCC ACCEPT" withArguments:[msg substringFromIndex:7]];
+						}
+					}
+				}
 			}
+
+			[msg release];
 		} else if( [command caseInsensitiveCompare:@"CLIENTINFO"] == NSOrderedSame ) {
 			// make this extnesible later with a plugin registration method
 			[sender sendSubcodeReply:command withArguments:@"VERSION TIME PING DCC CLIENTINFO"];
