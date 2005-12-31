@@ -10,6 +10,31 @@
 
 #define DCCPacketSize 4096
 
+static BOOL acceptConnectionOnFirstPortInRange( AsyncSocket *connection, NSRange ports ) {
+	unsigned int port = ports.location;
+	BOOL success = NO;
+	while( ! success ) {
+		if( [connection acceptOnPort:port error:NULL] ) {
+			success = YES;
+			break;
+		} else {
+			if( port == 0 ) break;
+			[connection disconnect];
+			if( ++port > NSMaxRange( ports ) )
+				port = 0; // just use a random port since the user defined range is in use
+		}
+	}
+
+	return success;
+}
+
+static id dccFriendlyAddress( AsyncSocket *connection ) {
+	id address = [connection localHost];
+	if( [address rangeOfString:@"."].location != NSNotFound )
+		address = [NSNumber numberWithUnsignedLong:ntohl( inet_addr( [address UTF8String] ) )];
+	return address;
+}
+
 /*static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
 	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
 	if( ! self ) return;
@@ -87,7 +112,7 @@ static NSRange portRange;
 
 @implementation MVIRCUploadFileTransfer
 + (void) initialize {
-	portRange = NSMakeRange( 1024, 20 );
+	portRange = NSMakeRange( 1024, 24 );
 }
 
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
@@ -163,6 +188,11 @@ static NSRange portRange;
 }
 
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
+	if( [self status] != MVFileTransferDoneStatus && [self transfered] == [self finalSize] ) {
+		[self _setStatus:MVFileTransferDoneStatus];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
+	}
+
 	if( [self status] != MVFileTransferDoneStatus && [self status] != MVFileTransferStoppedStatus )
 		[self _setStatus:MVFileTransferErrorStatus];
 
@@ -190,10 +220,6 @@ static NSRange portRange;
 	if( ! _readData || [_fileHandle offsetInFile] > 0xffffffff ) {
 		unsigned long long progress = [self transfered] + tag;
 		[self _setTransfered:progress];
-		if( progress == [self finalSize] ) {
-			[self _setStatus:MVFileTransferDoneStatus];
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
-		}
 	}
 
 	if( ! _doneSending ) [self _sendNextPacket];
@@ -201,8 +227,8 @@ static NSRange portRange;
 
 - (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
 	unsigned long bytes = ntohl( *( (unsigned long *) [data bytes] ) );
+	if( bytes > [self transfered] ) [self _setTransfered:bytes];
 
-	[self _setTransfered:bytes];
 	[_connection readDataToLength:4 withTimeout:-1. tag:0];
 
 	if( bytes == ( [self finalSize] & 0xffffffff ) ) {
@@ -240,23 +266,10 @@ static NSRange portRange;
 - (void) _waitForConnection {
 	_acceptConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
 
-	unsigned int port = portRange.location;
-	BOOL success = NO;
-	while( ! success ) {
-		if( [_acceptConnection acceptOnPort:port error:NULL] ) {
-			success = YES;
-			break;
-		} else {
-			[_acceptConnection disconnect];
-			if( ++port > NSMaxRange( portRange ) )
-				port = 0; // just use a random port since the user defined range is in use
-		}
-	}
+	BOOL success = acceptConnectionOnFirstPortInRange( _acceptConnection, portRange );
 
 	if( success ) {
-		id address = [[(MVIRCChatConnection *)[[self user] connection] _chatConnection] localHost];
-		if( [address rangeOfString:@"."].location != NSNotFound )
-			address = [NSNumber numberWithUnsignedLong:ntohl( inet_addr( [address UTF8String] ) )];
+		id address = dccFriendlyAddress( [(MVIRCChatConnection *)[[self user] connection] _chatConnection] );
 		[self _setPort:[_acceptConnection localPort]];
 
 		NSString *fileName = [[self source] lastPathComponent];
@@ -490,23 +503,10 @@ static NSRange portRange;
 - (void) _waitForConnection {
 	_acceptConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
 
-	unsigned int port = portRange.location;
-	BOOL success = NO;
-	while( ! success ) {
-		if( [_acceptConnection acceptOnPort:port error:NULL] ) {
-			success = YES;
-			break;
-		} else {
-			[_acceptConnection disconnect];
-			if( ++port > NSMaxRange( portRange ) )
-				port = 0; // just use a random port since the user defined range is in use
-		}
-	}
+	BOOL success = acceptConnectionOnFirstPortInRange( _acceptConnection, portRange );
 
 	if( success ) {
-		id address = [[(MVIRCChatConnection *)[[self user] connection] _chatConnection] localHost];
-		if( [address rangeOfString:@"."].location != NSNotFound )
-			address = [NSNumber numberWithUnsignedLong:ntohl( inet_addr( [address UTF8String] ) )];
+		id address = dccFriendlyAddress( [(MVIRCChatConnection *)[[self user] connection] _chatConnection] );
 		[self _setPort:[_acceptConnection localPort]];
 
 		if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu %lu", [self originalFileName], address, [self port], [self finalSize], [self _passiveIdentifier]]];
