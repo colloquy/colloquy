@@ -30,7 +30,6 @@ extern NSString *JVStyleViewScrollTopIdleNotification;
 	unsigned long _lastScrollPosition;
 	
 	NSTimeInterval _scrollTopLastTime;
-	NSNumber *_scrollTopLastPos;
 	unsigned int _scrollTopDeferedCount;
 	NSTimeInterval _scrollTopTimeThreshold;
 	unsigned int _scrollTopDeferedThreshold;

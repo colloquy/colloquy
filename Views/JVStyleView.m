@@ -64,12 +64,9 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 		nextTextView = nil;
 		
 		_scrollTopLastTime = [NSDate timeIntervalSinceReferenceDate];
-		_scrollTopLastPos = nil;
 		_scrollTopDeferedCount = 0;
 		_scrollTopTimeThreshold = [[NSUserDefaults standardUserDefaults] floatForKey:@"JVChatScrollTopTimeThreshold"];
 		_scrollTopDeferedThreshold = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollTopDeferedThreshold"];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_deferedScrollTop:) name:JVStyleViewScrollTopIdleNotification object:self];
 	}
 
 	return self;
@@ -82,7 +79,6 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleViewScrollTopIdleNotification object:self];
 
 	[nextTextView release];
 	[_transcript release];
@@ -93,7 +89,6 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 	[_domDocument release];
 	[_body release];
 	[_bodyTemplate release];
-	[_scrollTopLastPos release];
 
 	nextTextView = nil;
 	_transcript = nil;
@@ -104,7 +99,6 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 	_domDocument = nil;
 	_body = nil;
 	_bodyTemplate = nil;
-	_scrollTopLastPos = nil;
 
 	[super dealloc];
 }
@@ -792,20 +786,20 @@ quickEnd:
 
 #pragma mark -
 
-- (void) _deferedScrollTop:(NSNotification *)notification {
-	if( _scrollTopDeferedCount ) [self _immediatelySetScrollTop:_scrollTopLastPos];
+- (void) _deferedScrollTop:(NSNumber *) top {
+	if( _scrollTopDeferedCount ) [self _immediatelySetScrollTop:top];
 }
 
 - (void) _setScrollTop:(NSNumber *) top {
 	if( ( abs( [NSDate timeIntervalSinceReferenceDate] - _scrollTopLastTime ) > _scrollTopTimeThreshold ) || ! _scrollTopDeferedThreshold || ( _scrollTopDeferedCount >= _scrollTopDeferedThreshold ) ) {
 		[self _immediatelySetScrollTop:top];
 	} else {
-		if( _scrollTopDeferedCount == 0 )
-			[[NSNotificationQueue defaultQueue] enqueueNotification:[NSNotification notificationWithName:JVStyleViewScrollTopIdleNotification object:self] postingStyle:NSPostWhenIdle];
+		if( _scrollTopDeferedCount == 0 ) {
+			[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _deferedScrollTop: ) object:nil];
+			[self performSelector:@selector( _deferedScrollTop: ) withObject:top afterDelay:0.1];
+		}
 
 		_scrollTopDeferedCount++;
-		[_scrollTopLastPos release];
-		_scrollTopLastPos = [top retain];
 	}
 
 	_scrollTopLastTime = [NSDate timeIntervalSinceReferenceDate];
@@ -840,8 +834,6 @@ quickEnd:
 	if( top ) [_body setValue:top forKey:@"scrollTop"];
 	else [_body setValue:[_body valueForKey:@"scrollHeight"] forKey:@"scrollTop"];
 
-	[_scrollTopLastPos release];
-	_scrollTopLastPos = nil;
 	_scrollTopDeferedCount = 0;
 }
 
