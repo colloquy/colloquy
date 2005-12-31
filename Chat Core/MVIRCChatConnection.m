@@ -1479,25 +1479,44 @@ end:
 
 				NSHost *host = [NSHost hostWithAddress:address];
 
-				MVIRCDownloadFileTransfer *transfer = [(MVIRCDownloadFileTransfer *)[MVIRCDownloadFileTransfer allocWithZone:nil] initWithUser:sender];
-				if( port == 0 && [parameters count] >= 6 ) {
-					BOOL turbo = ( [[parameters objectAtIndex:5] rangeOfString:@"T"].location != NSNotFound );
-					[transfer _setTurbo:turbo];
-					[transfer _setPassiveIdentifier:[[parameters objectAtIndex:5] intValue]];
-					[transfer _setPassive:YES];
-				} else if( [parameters count] >= 6 ) {
-					[transfer _setTurbo:[[parameters objectAtIndex:5] isEqualToString:@"T"]];
+				if( port > 0 && [parameters count] >= 6 && [[parameters objectAtIndex:5] rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound ) {
+					// this is a passive reply, look up the original transfer
+					MVIRCUploadFileTransfer *transfer = nil;
+					unsigned long passiveId = [[parameters objectAtIndex:5] intValue];
+
+					@synchronized( _fileTransfers ) {
+						NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
+						while( ( transfer = [enumerator nextObject] ) )
+							if( [transfer isUpload] && [transfer isPassive] && [[transfer user] isEqualToChatUser:sender] && [(id)transfer _passiveIdentifier] == passiveId )
+								break;
+					}
+
+					if( transfer ) {
+						[transfer _setHost:host];
+						[transfer _setPort:port];
+						[transfer _setupAndStart];
+					}
+				} else {
+					MVIRCDownloadFileTransfer *transfer = [(MVIRCDownloadFileTransfer *)[MVIRCDownloadFileTransfer allocWithZone:nil] initWithUser:sender];
+					if( port == 0 && [parameters count] >= 6 ) {
+						BOOL turbo = ( [[parameters objectAtIndex:5] rangeOfString:@"T"].location != NSNotFound );
+						[transfer _setTurbo:turbo];
+						[transfer _setPassiveIdentifier:[[parameters objectAtIndex:5] intValue]];
+						[transfer _setPassive:YES];
+					} else if( [parameters count] >= 6 ) {
+						[transfer _setTurbo:[[parameters objectAtIndex:5] isEqualToString:@"T"]];
+					}
+
+					[transfer _setOriginalFileName:[parameters objectAtIndex:1]];
+					[transfer _setFinalSize:(unsigned long long)size];
+					[transfer _setHost:host];
+					[transfer _setPort:port];
+
+					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDownloadFileTransferOfferNotification object:transfer];
+
+					[self _addFileTransfer:transfer];
+					[transfer release];
 				}
-
-				[transfer _setOriginalFileName:[parameters objectAtIndex:1]];
-				[transfer _setFinalSize:(unsigned long long)size];
-				[transfer _setHost:host];
-				[transfer _setPort:port];
-
-				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDownloadFileTransferOfferNotification object:transfer];
-
-				[self _addFileTransfer:transfer];
-				[transfer release];
 			} else if( [parameters count] >= 4 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"ACCEPT"] == NSOrderedSame ) {
 				BOOL passive = NO;
 				long long size = 0;

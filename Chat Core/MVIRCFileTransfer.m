@@ -109,6 +109,9 @@ static NSRange portRange;
 		if( passiveId > 1000 )
 			passiveId = 1;
 		ret->_passiveId = passiveId;
+
+		if( ret->_fileNameQuoted ) [user sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" 16843009 0 %llu %luT", fileName, [ret finalSize], passiveId]];
+		else [user sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ 16843009 0 %llu %luT", fileName, [ret finalSize], passiveId]];
 	} else {
 		[ret _setupAndStart];
 	}
@@ -123,7 +126,6 @@ static NSRange portRange;
 }
 
 - (void) dealloc {
-	NSLog(@"u/l dealloc" );
 	id old = _fileHandle;
 	_fileHandle = nil;
 	[old closeFile];
@@ -150,7 +152,7 @@ static NSRange portRange;
 #pragma mark -
 
 - (void) socket:(AsyncSocket *) sock didAcceptNewSocket:(AsyncSocket *) newSocket {
-	if( ! _clientConnection ) _clientConnection = [newSocket retain];
+	if( ! _connection ) _connection = [newSocket retain];
 	else [newSocket disconnect];
 }
 
@@ -177,7 +179,7 @@ static NSRange portRange;
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
 
 	[self _sendNextPacket];
-	[_clientConnection readDataToLength:4 withTimeout:-1. tag:0];
+	[_connection readDataToLength:4 withTimeout:-1. tag:0];
 
 	// now that we are connected deregister with the connection
 	// do this last incase the connection is the last thing retaining us
@@ -201,7 +203,7 @@ static NSRange portRange;
 	unsigned long bytes = ntohl( *( (unsigned long *) [data bytes] ) );
 
 	[self _setTransfered:bytes];
-	[_clientConnection readDataToLength:4 withTimeout:-1. tag:0];
+	[_connection readDataToLength:4 withTimeout:-1. tag:0];
 
 	if( bytes == ( [self finalSize] & 0xffffffff ) ) {
 		[self _setStatus:MVFileTransferDoneStatus];
@@ -231,21 +233,21 @@ static NSRange portRange;
 	[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
 	while( ! _connectionThread ) sched_yield();
 
-	if( ! [self isPassive] ) [self performSelector:@selector( _waitForConnection ) inThread:_connectionThread];	
+	if( ! [self isPassive] ) [self performSelector:@selector( _waitForConnection ) inThread:_connectionThread];
+	else [self performSelector:@selector( _connect ) inThread:_connectionThread];
 }
 
 - (void) _waitForConnection {
-	[_connection release];
-	_connection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+	_acceptConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
 
 	unsigned int port = portRange.location;
 	BOOL success = NO;
 	while( ! success ) {
-		if( [_connection acceptOnPort:port error:NULL] ) {
+		if( [_acceptConnection acceptOnPort:port error:NULL] ) {
 			success = YES;
 			break;
 		} else {
-			[_connection disconnect];
+			[_acceptConnection disconnect];
 			if( ++port > NSMaxRange( portRange ) )
 				port = 0; // just use a random port since the user defined range is in use
 		}
@@ -255,7 +257,7 @@ static NSRange portRange;
 		id address = [[(MVIRCChatConnection *)[[self user] connection] _chatConnection] localHost];
 		if( [address rangeOfString:@"."].location != NSNotFound )
 			address = [NSNumber numberWithUnsignedLong:ntohl( inet_addr( [address UTF8String] ) )];
-		[self _setPort:[_connection localPort]];
+		[self _setPort:[_acceptConnection localPort]];
 
 		NSString *fileName = [[self source] lastPathComponent];
 		if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
@@ -263,23 +265,32 @@ static NSRange portRange;
 	} else _done = YES;
 }
 
+- (void) _connect {
+	_connection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+
+	if( ! [_connection connectToHost:[[self host] address] onPort:[self port] error:NULL] ) {
+		NSLog(@"can't connect to DCC" );
+		return;
+	}
+}
+
 - (void) _sendNextPacket {
 	NSData *data = [_fileHandle readDataOfLength:DCCPacketSize];
-	if( [data length] > 0 ) [_clientConnection writeData:data withTimeout:-1 tag:[data length]];
+	if( [data length] > 0 ) [_connection writeData:data withTimeout:-1 tag:[data length]];
 	else _doneSending = YES;
 }
 
 - (void) _finish {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];	
 
-	id old = _connection;
-	_connection = nil;
+	id old = _acceptConnection;
+	_acceptConnection = nil;
 	[old setDelegate:nil];
 	[old disconnect];
 	[old release];
 
-	old = _clientConnection;
-	_clientConnection = nil;
+	old = _connection;
+	_connection = nil;
 	[old setDelegate:nil];
 	[old disconnect];
 	[old release];
@@ -330,7 +341,6 @@ static NSRange portRange;
 }
 
 - (void) dealloc {
-	NSLog(@"d/l dealloc" );
 	id old = _fileHandle;
 	_fileHandle = nil;
 	[old synchronizeFile];
@@ -383,6 +393,11 @@ static NSRange portRange;
 }
 
 #pragma mark -
+
+- (void) socket:(AsyncSocket *) sock didAcceptNewSocket:(AsyncSocket *) newSocket {
+	if( ! _connection ) _connection = [newSocket retain];
+	else [newSocket disconnect];
+}
 
 - (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	NSLog(@"download DCC willDisconnectWithError: %@", error );
@@ -459,7 +474,8 @@ static NSRange portRange;
 	[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
 	while( ! _connectionThread ) sched_yield();
 
-	[self performSelector:@selector( _connect ) inThread:_connectionThread];	
+	if( ! [self isPassive] ) [self performSelector:@selector( _connect ) inThread:_connectionThread];
+	else [self performSelector:@selector( _waitForConnection ) inThread:_connectionThread];
 }
 
 - (void) _connect {
@@ -471,11 +487,44 @@ static NSRange portRange;
 	}
 }
 
+- (void) _waitForConnection {
+	_acceptConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+
+	unsigned int port = portRange.location;
+	BOOL success = NO;
+	while( ! success ) {
+		if( [_acceptConnection acceptOnPort:port error:NULL] ) {
+			success = YES;
+			break;
+		} else {
+			[_acceptConnection disconnect];
+			if( ++port > NSMaxRange( portRange ) )
+				port = 0; // just use a random port since the user defined range is in use
+		}
+	}
+
+	if( success ) {
+		id address = [[(MVIRCChatConnection *)[[self user] connection] _chatConnection] localHost];
+		if( [address rangeOfString:@"."].location != NSNotFound )
+			address = [NSNumber numberWithUnsignedLong:ntohl( inet_addr( [address UTF8String] ) )];
+		[self _setPort:[_acceptConnection localPort]];
+
+		if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu %lu", [self originalFileName], address, [self port], [self finalSize], [self _passiveIdentifier]]];
+		else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu %lu", [self originalFileName], address, [self port], [self finalSize], [self _passiveIdentifier]]];
+	} else _done = YES;
+}
+
 - (void) _finish {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];	
 
 	id old = _connection;
 	_connection = nil;
+	[old setDelegate:nil];
+	[old disconnect];
+	[old release];
+
+	old = _acceptConnection;
+	_acceptConnection = nil;
 	[old setDelegate:nil];
 	[old disconnect];
 	[old release];

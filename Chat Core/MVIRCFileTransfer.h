@@ -6,7 +6,7 @@
 
 @interface MVIRCUploadFileTransfer : MVUploadFileTransfer {
 	AsyncSocket *_connection;
-	AsyncSocket *_clientConnection;
+	AsyncSocket *_acceptConnection;
 	NSThread *_connectionThread;
 	NSFileHandle *_fileHandle;
 	BOOL _fileNameQuoted;
@@ -25,6 +25,7 @@
 
 @interface MVIRCDownloadFileTransfer : MVDownloadFileTransfer {
 	AsyncSocket *_connection;
+	AsyncSocket *_acceptConnection;
 	NSThread *_connectionThread;
 	NSFileHandle *_fileHandle;
 	BOOL _fileNameQuoted;
