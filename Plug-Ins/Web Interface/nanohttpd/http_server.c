@@ -1,6 +1,7 @@
 #include <netdb.h>
 #include <string.h>
 #include <pthread.h>
+#include <sched.h>
 #include "nanohttpd.h"
 
 int http_req_parse( http_req_t * );
@@ -167,7 +168,7 @@ void http_server_free( void *_me ) {
 	me -> running = 0;
 	close( me -> sock );
 
-	while( ! me -> stopped ); // wait for the threads to stop
+	while( ! me -> stopped ) sched_yield(); // wait for the threads to stop
 
 	if( me -> mime_types )
 		me -> mime_types -> delete( me -> mime_types, 0, 0, NULL );

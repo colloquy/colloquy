@@ -310,7 +310,7 @@
 					HAVE_STRSEP,
 					HAVE_ERRNO_H,
 				);
-				HEADER_SEARCH_PATHS = ../..;
+				HEADER_SEARCH_PATHS = "../../**";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
@@ -337,7 +337,7 @@
 					HAVE_STRSEP,
 					HAVE_ERRNO_H,
 				);
-				HEADER_SEARCH_PATHS = ../..;
+				HEADER_SEARCH_PATHS = "../../**";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
@@ -380,7 +380,7 @@
 					HAVE_STRSEP,
 					HAVE_ERRNO_H,
 				);
-				HEADER_SEARCH_PATHS = ../..;
+				HEADER_SEARCH_PATHS = "../../**";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
