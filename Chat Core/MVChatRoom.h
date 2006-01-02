@@ -65,7 +65,6 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatRoom:(MVChatRoom *) anotherUser;
-- (unsigned) hash;
 
 - (NSComparisonResult) compare:(MVChatRoom *) otherRoom;
 - (NSComparisonResult) compareByUserCount:(MVChatRoom *) otherRoom;

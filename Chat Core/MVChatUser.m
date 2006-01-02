@@ -269,9 +269,8 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _status;
 }
 
-- (NSAttributedString *) awayStatusMessage {
-// subclass this method, if needed
-	return nil;
+- (NSData *) awayStatusMessage {
+	return [[_awayStatusMessage retain] autorelease];
 }
 
 #pragma mark -
@@ -547,6 +546,12 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (void) _setDateUpdated:(NSDate *) date {
 	id old = _dateUpdated;
 	_dateUpdated = [date copyWithZone:nil];
+	[old release];
+}
+
+- (void) _setAwayStatusMessage:(NSData *) awayStatusMessage {
+	id old = _awayStatusMessage;
+	_awayStatusMessage = [awayStatusMessage copyWithZone:nil];
 	[old release];
 }
 @end

@@ -61,6 +61,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 	NSDate *_dateConnected;
 	NSDate *_dateDisconnected;
 	NSDate *_dateUpdated;
+	NSData *_awayStatusMessage;
 	NSMutableDictionary *_attributes;
 	MVChatUserType _type;
 	MVChatUserStatus _status;
@@ -87,7 +88,6 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;
-- (unsigned) hash;
 
 - (NSComparisonResult) compare:(MVChatUser *) otherUser;
 - (NSComparisonResult) compareByNickname:(MVChatUser *) otherUser;
@@ -97,7 +97,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (NSComparisonResult) compareByIdleTime:(MVChatUser *) otherUser;
 
 - (MVChatUserStatus) status;
-- (NSAttributedString *) awayStatusMessage;
+- (NSData *) awayStatusMessage;
 
 - (NSDate *) dateConnected;
 - (NSDate *) dateDisconnected;

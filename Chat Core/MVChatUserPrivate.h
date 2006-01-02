@@ -16,4 +16,5 @@
 - (void) _setDateConnected:(NSDate *) date;
 - (void) _setDateDisconnected:(NSDate *) date;
 - (void) _setDateUpdated:(NSDate *) date;
+- (void) _setAwayStatusMessage:(NSData *) awayStatusMessage;
 @end
