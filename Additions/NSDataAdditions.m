@@ -143,4 +143,17 @@ static char encodingTable[64] = {
 
 	return [NSString stringWithString:result];
 }
+
+#pragma mark -
+
+- (BOOL) hasPrefix:(NSData *) prefix {
+	unsigned int length = [prefix length];
+	if( ! prefix || ! length || [self length] < length ) return NO;
+	return ( memcmp( [self bytes], [prefix bytes], length ) == 0 );
+}
+
+- (BOOL) hasPrefixBytes:(void *) prefix length:(unsigned int) length {
+	if( ! prefix || ! length || [self length] < length ) return NO;
+	return ( memcmp( [self bytes], prefix, length ) == 0 );
+}
 @end

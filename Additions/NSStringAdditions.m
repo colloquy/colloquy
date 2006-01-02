@@ -196,7 +196,6 @@
 - (id) initWithBytes:(const void *) bytes encoding:(NSStringEncoding) encoding {
 	if( bytes ) {
 		id ret = [self initWithBytes:bytes length:strlen( bytes ) encoding:encoding];
-		if( ! ret ) ret = [self initWithCString:bytes];
 		if( ! ret ) [self release];
 		return ret;
 	}
@@ -208,7 +207,6 @@
 - (id) initWithBytesNoCopy:(void *) bytes encoding:(NSStringEncoding) encoding freeWhenDone:(BOOL) free {
 	if( bytes ) {
 		id ret = [self initWithBytesNoCopy:bytes length:strlen( bytes ) encoding:encoding freeWhenDone:free];
-		if( ! ret ) ret = [self initWithCString:bytes];
 		if( ! ret ) [self release];
 		return ret;
 	}
