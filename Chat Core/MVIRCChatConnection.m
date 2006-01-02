@@ -1279,7 +1279,12 @@ end:
 #pragma mark Incoming Message Replies
 
 - (void) _handlePrivmsgWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [parameters count] == 2 ) {
+	// if the sender is a server lets make a user for the server name
+	// this is not ideal but the notifications need user objects
+	if( [sender isKindOfClass:[NSString class]] )
+		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
+
+	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *targetName = [parameters objectAtIndex:0];
 		if( ! [targetName length] ) return;
 
@@ -1312,7 +1317,12 @@ end:
 }
 
 - (void) _handleNoticeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [parameters count] == 2 ) {
+	// if the sender is a server lets make a user for the server name
+	// this is not ideal but the notifications need user objects
+	if( [sender isKindOfClass:[NSString class]] )
+		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
+
+	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *targetName = [parameters objectAtIndex:0];
 		if( ! [targetName length] ) return;
 
