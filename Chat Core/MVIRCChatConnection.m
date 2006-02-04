@@ -1098,19 +1098,6 @@ end:
 	return [message chatFormatWithOptions:options];
 }
 /*
-#pragma mark -
-
-- (void) _didConnect {
-	id old = _localUser;
-	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
-	[old release];
-
-	// Identify if we have a user password
-	if( [[self nicknamePassword] length] )
-		[self sendRawMessageWithFormat:@"PRIVMSG NickServ :IDENTIFY %@", [self nicknamePassword]];
-
-	[super _didConnect];
-}
 
 #pragma mark -
 
@@ -1257,6 +1244,9 @@ end:
 
 - (void) _handle001WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];	
+	// Identify if we have a user password
+	if( [[self nicknamePassword] length] )
+		[self sendRawMessageWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
 	if( [parameters count] >= 1 ) {
 		NSString *nickname = [parameters objectAtIndex:0];
 		if( ! [nickname isEqualToString:[self nickname]] ) {
@@ -1630,6 +1620,15 @@ end:
 	}
 }
 
+- (void) _handleInviteWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [parameters count] == 2 ) {
+		id roomName = [parameters objectAtIndex:1];
+		if( [roomName isKindOfClass:[NSData class]] )
+			roomName = [[[NSString allocWithZone:nil] initWithData:roomName encoding:[self encoding]] autorelease];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", roomName, @"room", nil]];
+	}
+}
+
 - (void) _handleNickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	if( [parameters count] == 1 ) {
 		id nickname = [parameters objectAtIndex:0];
@@ -1746,11 +1745,18 @@ end:
 #pragma mark WHO Replies
 
 - (void) _handle352WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOREPLY
-	if( [parameters count] >= 6 ) {
+	if( [parameters count] >= 7 ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
 		MVChatUser *member = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:5]];
 		[member _setUsername:[parameters objectAtIndex:2]];
 		[member _setAddress:[parameters objectAtIndex:3]];
+
+		unichar status = ( [[parameters objectAtIndex:6] length] ? [[parameters objectAtIndex:6] characterAtIndex:0] : 0 );
+		if( status == 'H' ) {
+			[member _setStatus:MVChatUserAvailableStatus];
+		} else if( status == 'G' ) {
+			[member _setStatus:MVChatUserAwayStatus];
+		}
 	}
 }
 
