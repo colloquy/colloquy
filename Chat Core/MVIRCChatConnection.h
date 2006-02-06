@@ -16,12 +16,7 @@
 	NSString *_username;
 	NSString *_password;
 	NSString *_realName;
-	NSString *_proxyServer;
-	NSString *_proxyUsername;
-	NSString *_proxyPassword;
 	unsigned short _serverPort;
-	unsigned short _proxyServerPort;
-	BOOL _secure;
 }
 + (NSArray *) defaultServerPorts;
 @end

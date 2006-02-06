@@ -157,7 +157,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_lastConnectAttempt release];
 	[_awayMessage release];
 	[_persistentInformation release];
-
+	[_proxyServer release];
+	[_proxyUsername release];
+	[_proxyPassword release];
+	
 	_npassword = nil;
 	_roomsCache = nil;
 	_cachedDate = nil;
@@ -166,7 +169,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	_lastConnectAttempt = nil;
 	_awayMessage = nil;
 	_persistentInformation = nil;
-
+	_proxyServer = nil;
+	_proxyUsername = nil;
+	_proxyPassword = nil;
+	
 	[super dealloc];
 }
 
@@ -405,12 +411,11 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setSecure:(BOOL) ssl {
-// subclass this method, if needed
+	_secure = ssl;
 }
 
 - (BOOL) isSecure {
-// subclass this method, if needed
-	return NO;
+	return _secure;
 }
 
 #pragma mark -
@@ -426,45 +431,47 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setProxyServer:(NSString *) address {
-// subclass this method, if needed
+	id old = _proxyServer;
+	_proxyServer = [address copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) proxyServer {
-// subclass this method, if needed
-	return nil;
+	return [[_proxyServer retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setProxyServerPort:(unsigned short) port {
-// subclass this method, if needed
+	_proxyServerPort = port;
 }
 
 - (unsigned short) proxyServerPort {
-// subclass this method, if needed
-	return 0;
+	return _proxyServerPort;
 }
 
 #pragma mark -
 
 - (void) setProxyUsername:(NSString *) username {
-// subclass this method, if needed
+	id old = _proxyUsername;
+	_proxyUsername = [username copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) proxyUsername {
-// subclass this method, if needed
-	return nil;
+	return [[_proxyUsername retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setProxyPassword:(NSString *) password {
-// subclass this method, if needed
+	id old = _proxyPassword;
+	_proxyPassword = [password copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) proxyPassword {
-// subclass this method, if needed
-	return nil;
+	return [[_proxyPassword retain] autorelease];
 }
 
 #pragma mark -

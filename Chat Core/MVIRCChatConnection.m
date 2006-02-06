@@ -325,9 +325,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	[_username release];
 	[_password release];
 	[_realName release];
-	[_proxyServer release];
-	[_proxyUsername release];
-	[_proxyPassword release];
 
 	_chatConnection = nil;
 	_connectionThread = nil;
@@ -339,9 +336,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	_username = nil;
 	_password = nil;
 	_realName = nil;
-	_proxyServer = nil;
-	_proxyUsername = nil;
-	_proxyPassword = nil;
 
 	[super dealloc];
 }
@@ -524,62 +518,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 - (unsigned short) serverPort {
 	return _serverPort;
-}
-
-#pragma mark -
-
-- (void) setSecure:(BOOL) ssl {
-	_secure = ssl;
-}
-
-- (BOOL) isSecure {
-	return _secure;
-}
-
-#pragma mark -
-
-- (void) setProxyServer:(NSString *) address {
-	id old = _proxyServer;
-	_proxyServer = [address copyWithZone:nil];
-	[old release];
-}
-
-- (NSString *) proxyServer {
-	return [[_proxyServer retain] autorelease];
-}
-
-#pragma mark -
-
-- (void) setProxyServerPort:(unsigned short) port {
-	_proxyServerPort = port;
-}
-
-- (unsigned short) proxyServerPort {
-	return _proxyServerPort;
-}
-
-#pragma mark -
-
-- (void) setProxyUsername:(NSString *) username {
-	id old = _proxyUsername;
-	_proxyUsername = [username copyWithZone:nil];
-	[old release];
-}
-
-- (NSString *) proxyUsername {
-	return [[_proxyUsername retain] autorelease];
-}
-
-#pragma mark -
-
-- (void) setProxyPassword:(NSString *) password {
-	id old = _proxyPassword;
-	_proxyPassword = [password copyWithZone:nil];
-	[old release];
-}
-
-- (NSString *) proxyPassword {
-	return [[_proxyPassword retain] autorelease];
 }
 
 #pragma mark -
@@ -779,6 +717,44 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
 	[self scheduleReconnectAttemptEvery:30.];
 	[super _didDisconnect];
+}
+
+- (BOOL) socketWillConnect:(AsyncSocket *) sock {
+	if( [[self proxyServer] length] && [self proxyServerPort] ) {
+		if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
+			NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
+			if( _proxy == MVChatConnectionHTTPSProxy ) {
+				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPSProxyHost];
+				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPSProxyPort];
+			} else {
+				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPProxyHost];
+				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPProxyPort];
+			}
+
+			CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
+			CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
+			[settings release];
+		} else if( _proxy == MVChatConnectionSOCKS4Proxy || _proxy == MVChatConnectionSOCKS5Proxy ) {
+			NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
+
+			[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertySOCKSProxyHost];
+			[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertySOCKSProxyPort];
+
+			if( [[self proxyUsername] length] )
+				[settings setObject:[self proxyUsername] forKey:(NSString *)kCFStreamPropertySOCKSUser];
+			if( [[self proxyPassword] length] )
+				[settings setObject:[self proxyPassword] forKey:(NSString *)kCFStreamPropertySOCKSPassword];
+
+			if( _proxy == MVChatConnectionSOCKS4Proxy )
+				[settings setObject:(NSString *)kCFStreamSocketSOCKSVersion4 forKey:(NSString *)kCFStreamPropertySOCKSVersion];
+
+			CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySOCKSProxy, (CFDictionaryRef) settings );
+			CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySOCKSProxy, (CFDictionaryRef) settings );
+			[settings release];
+		}
+	}
+
+	return YES;
 }
 
 - (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {

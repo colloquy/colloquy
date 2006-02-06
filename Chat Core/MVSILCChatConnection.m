@@ -1161,8 +1161,9 @@ static SilcClientOperations silcClientOps = {
 #pragma mark -
 
 - (void) setServer:(NSString *) server {
-	[_silcServer release];
-	_silcServer = [server copy];
+	id old = _silcServer;
+	_silcServer = [server copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) server {

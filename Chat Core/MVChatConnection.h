@@ -15,7 +15,8 @@ typedef enum {
 	MVChatConnectionNoProxy = 'nonE',
 	MVChatConnectionHTTPProxy = 'httP',
 	MVChatConnectionHTTPSProxy = 'htpS',
-	MVChatConnectionSOCKSProxy = 'sokS'
+	MVChatConnectionSOCKS4Proxy = 'soK4',
+	MVChatConnectionSOCKS5Proxy = 'soK5'
 } MVChatConnectionProxy;
 
 typedef enum {
@@ -82,7 +83,6 @@ extern NSString *MVChatConnectionErrorDomain;
 @interface MVChatConnection : NSObject {
 @protected
 	MVChatConnectionStatus _status;
-	MVChatConnectionProxy _proxy;
 	MVChatMessageFormat _outgoingChatFormat;
 	NSStringEncoding _encoding;
 
@@ -96,6 +96,15 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSAttributedString *_awayMessage;
 	NSMutableDictionary *_persistentInformation;
 	NSError *_lastError;
+
+	MVChatConnectionProxy _proxy;
+	NSString *_proxyServer;
+	NSString *_proxyUsername;
+	NSString *_proxyPassword;
+	unsigned short _serverPort;
+	unsigned short _proxyServerPort;
+
+	BOOL _secure;
 
 	NSArray *_alternateNicks;
 	unsigned int _nextAltNickIndex;
