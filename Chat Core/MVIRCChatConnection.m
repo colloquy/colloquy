@@ -295,8 +295,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_chatConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
-
 		_serverPort = 6667;
 		_server = @"irc.freenode.net";
 		_username = [NSUserName() retain];
@@ -370,8 +368,14 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		return;
 	}
 
-	[_lastConnectAttempt release];
+	id old = _chatConnection;
+	_chatConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+	[old setDelegate:nil];
+	[old release];
+
+	old = _lastConnectAttempt;
 	_lastConnectAttempt = [[NSDate allocWithZone:nil] init];
+	[old release];
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
@@ -382,23 +386,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	}
 
 	[self performSelector:@selector( _connect ) inThread:_connectionThread];
-
-/*
-// Setup the proxy header with the most current connection address and port.
-	if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
-		NSString *userCombo = [NSString stringWithFormat:@"%@:%@", _proxyUsername, _proxyPassword];
-		NSData *combo = [userCombo dataUsingEncoding:NSASCIIStringEncoding];
-
-		g_free_not_null( _chatConnectionSettings -> proxy_string );
-		if( [combo length] > 1 ) {
-			NSString *userCombo = [combo base64EncodingWithLineLength:0];
-			_chatConnectionSettings -> proxy_string = g_strdup_printf( "CONNECT %s:%d HTTP/1.0\r\nProxy-Authorization: Basic %s\r\n\r\n", _chatConnectionSettings -> address, _chatConnectionSettings -> port, [userCombo UTF8String] );
-		} else _chatConnectionSettings -> proxy_string = g_strdup_printf( "CONNECT %s:%d HTTP/1.0\r\n\r\n", _chatConnectionSettings -> address, _chatConnectionSettings -> port );
-
-		g_free_not_null( _chatConnectionSettings -> proxy_string_after );
-		_chatConnectionSettings -> proxy_string_after = NULL;
-	}
-*/
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
@@ -765,6 +752,11 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
 	id old = _localUser;
 	_localUser = nil;
+	[old release];
+
+	old = _chatConnection;
+	_chatConnection = nil;
+	[old setDelegate:nil];
 	[old release];
 
 	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
