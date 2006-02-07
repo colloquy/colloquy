@@ -250,14 +250,17 @@ static NSRange portRange;
 	BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[self source] isDirectory:&directory];
 	if( directory || ! fileExists ) return;
 
-	[_fileHandle release];
 	_fileHandle = [[NSFileHandle fileHandleForReadingAtPath:[self source]] retain];
 	if( ! _fileHandle ) return;
 	[_fileHandle seekToFileOffset:[self startOffset]];
 
+	_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
+
 	[NSThread prepareForInterThreadMessages];
 	[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
-	while( ! _connectionThread ) sched_yield();
+
+	[_threadWaitLock lockWhenCondition:1];
+	[_threadWaitLock unlockWithCondition:0];
 
 	if( ! [self isPassive] ) [self performSelector:@selector( _waitForConnection ) inThread:_connectionThread];
 	else [self performSelector:@selector( _connect ) inThread:_connectionThread];
@@ -315,9 +318,13 @@ static NSRange portRange;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
 	[self retain];
 
+	[_threadWaitLock lockWhenCondition:0];
+
 	_connectionThread = [NSThread currentThread];
 	[NSThread prepareForInterThreadMessages];
 	[NSThread setThreadPriority:0.75];
+
+	[_threadWaitLock unlockWithCondition:1];
 
 	BOOL active = YES;
 	while( active && ! _done ) {
@@ -478,14 +485,17 @@ static NSRange portRange;
 	fileExists = [[NSFileManager defaultManager] isWritableFileAtPath:[self destination]];
 	if( ! fileExists ) return;
 
-	[_fileHandle release];
 	_fileHandle = [[NSFileHandle fileHandleForWritingAtPath:[self destination]] retain];
 	if( ! _fileHandle ) return;
 	[_fileHandle truncateFileAtOffset:[self startOffset]];
 
+	_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
+
 	[NSThread prepareForInterThreadMessages];
 	[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
-	while( ! _connectionThread ) sched_yield();
+
+	[_threadWaitLock lockWhenCondition:1];
+	[_threadWaitLock unlockWithCondition:0];
 
 	if( ! [self isPassive] ) [self performSelector:@selector( _connect ) inThread:_connectionThread];
 	else [self performSelector:@selector( _waitForConnection ) inThread:_connectionThread];
@@ -536,9 +546,13 @@ static NSRange portRange;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
 	[self retain];
 
+	[_threadWaitLock lockWhenCondition:0];
+
 	_connectionThread = [NSThread currentThread];
 	[NSThread prepareForInterThreadMessages];
 	[NSThread setThreadPriority:0.75];
+
+	[_threadWaitLock unlockWithCondition:1];
 
 	BOOL active = YES;
 	while( active && ! _done ) {

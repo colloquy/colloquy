@@ -16,6 +16,7 @@
 	NSString *_username;
 	NSString *_password;
 	NSString *_realName;
+	NSConditionLock *_threadWaitLock;
 	unsigned short _serverPort;
 }
 + (NSArray *) defaultServerPorts;

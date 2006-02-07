@@ -9,6 +9,7 @@
 	AsyncSocket *_acceptConnection;
 	NSThread *_connectionThread;
 	NSFileHandle *_fileHandle;
+	NSConditionLock *_threadWaitLock;
 	BOOL _fileNameQuoted;
 	BOOL _readData;
 	BOOL _doneSending;
@@ -28,6 +29,7 @@
 	AsyncSocket *_acceptConnection;
 	NSThread *_connectionThread;
 	NSFileHandle *_fileHandle;
+	NSConditionLock *_threadWaitLock;
 	BOOL _fileNameQuoted;
 	BOOL _done;
 	BOOL _turbo;

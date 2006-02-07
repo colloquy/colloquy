@@ -301,6 +301,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		_nickname = [_username retain];
 		_currentNickname = [_nickname retain];
 		_realName = [NSFullUserName() retain];
+		_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
 
 		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
 		_fileTransfers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
@@ -323,6 +324,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	[_username release];
 	[_password release];
 	[_realName release];
+	[_threadWaitLock release];
 
 	_chatConnection = nil;
 	_connectionThread = nil;
@@ -334,6 +336,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	_username = nil;
 	_password = nil;
 	_realName = nil;
+	_threadWaitLock = nil;
 
 	[super dealloc];
 }
@@ -368,22 +371,18 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		return;
 	}
 
-	id old = _chatConnection;
-	_chatConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
-	[old setDelegate:nil];
-	[old release];
-
-	old = _lastConnectAttempt;
+	id old = _lastConnectAttempt;
 	_lastConnectAttempt = [[NSDate allocWithZone:nil] init];
 	[old release];
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
-	if( ! _connectionThread ) {
-		[NSThread prepareForInterThreadMessages];
-		[NSThread detachNewThreadSelector:@selector( _ircRunloop ) toTarget:self withObject:nil];
-		while( ! _connectionThread ) sched_yield();
-	}
+	_connectionThread = nil;
+	[NSThread prepareForInterThreadMessages];
+	[NSThread detachNewThreadSelector:@selector( _ircRunloop ) toTarget:self withObject:nil];
+
+	[_threadWaitLock lockWhenCondition:1];
+	[_threadWaitLock unlockWithCondition:0];
 
 	[self performSelector:@selector( _connect ) inThread:_connectionThread];
 }
@@ -538,7 +537,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	[self performSelector:@selector( _writeDataToServer: ) withObject:data inThread:_connectionThread];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 
 	[string release];
 	[data release];
@@ -678,7 +677,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 }
 
 - (void) _connect {
-	[_chatConnection disconnect];
+	id old = _chatConnection;
+	_chatConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+	[old setDelegate:nil];
+	[old disconnect];
+	[old release];
+
 	if( ! [_chatConnection connectToHost:[self server] onPort:[self serverPort] error:NULL] )
 		[self _didNotConnect];
 }
@@ -686,8 +690,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (oneway void) _ircRunloop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
 
+	[_threadWaitLock lockWhenCondition:0];
+
 	_connectionThread = [NSThread currentThread];
 	[NSThread prepareForInterThreadMessages];
+
+	[_threadWaitLock unlockWithCondition:1];
 
 	BOOL active = YES;
 	while( active && ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) )
@@ -752,11 +760,6 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
 	id old = _localUser;
 	_localUser = nil;
-	[old release];
-
-	old = _chatConnection;
-	_chatConnection = nil;
-	[old setDelegate:nil];
 	[old release];
 
 	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
@@ -868,7 +871,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #undef notEndOfLine()
 
 end:
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
 
 	if( command && commandLength ) {
 		NSString *commandString = [[NSString allocWithZone:nil] initWithBytes:command length:commandLength encoding:[self encoding]];
