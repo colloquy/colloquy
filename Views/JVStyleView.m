@@ -7,7 +7,6 @@
 
 NSString *JVStyleViewDidClearNotification = @"JVStyleViewDidClearNotification";
 NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesNotification";
-NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotification";
 
 @interface WebCoreCache
 + (void) empty;
@@ -40,8 +39,6 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 - (long) _locationOfMessage:(JVChatMessage *) message;
 - (long) _locationOfElementAtIndex:(unsigned long) index;
 - (void) _tickleForLayout;
-- (void) _setScrollTop:(NSNumber *) top;
-- (void) _immediatelySetScrollTop:(NSNumber *) top;
 @end
 
 #pragma mark -
@@ -62,11 +59,6 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 		_emoticons = nil;
 		_domDocument = nil;
 		nextTextView = nil;
-		
-		_scrollTopLastTime = [NSDate timeIntervalSinceReferenceDate];
-		_scrollTopDeferedCount = 0;
-		_scrollTopTimeThreshold = [[NSUserDefaults standardUserDefaults] floatForKey:@"JVChatScrollTopTimeThreshold"];
-		_scrollTopDeferedThreshold = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollTopDeferedThreshold"];
 	}
 
 	return self;
@@ -299,24 +291,6 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 
 #pragma mark -
 
-- (void) setScrollTopDeferedThreshold:(unsigned int) threshold {
-	_scrollTopDeferedThreshold = threshold;
-}
-
-- (unsigned int) scrollTopDeferedThreshold {
-	return _scrollTopDeferedThreshold;
-}
-
-- (void) setScrollTopTimeThreshold:(NSTimeInterval) threshold {
-	_scrollTopTimeThreshold = threshold;
-}
-
-- (NSTimeInterval) scrollTopTimeThreshold {
-	return _scrollTopTimeThreshold;
-}
-
-#pragma mark -
-
 - (void) reloadCurrentStyle {
 	_switchingStyles = YES;
 	_requiresFullMessage = YES;
@@ -540,7 +514,7 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 	unsigned long long loc = [scroller locationOfMarkWithIdentifier:@"mark"];
 	if( loc != NSNotFound ) {
 		long shift = [scroller shiftAmountToCenterAlign];
-		[self _setScrollTop:[NSNumber numberWithUnsignedLong:( loc - shift )]];
+		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
 		[scroller setLocationOfCurrentMark:loc];
 	}
 }
@@ -550,7 +524,7 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 	unsigned long long loc = [scroller locationOfPreviousMark];
 	if( loc != NSNotFound ) {
 		long shift = [scroller shiftAmountToCenterAlign];
-		[self _setScrollTop:[NSNumber numberWithUnsignedLong:( loc - shift )]];
+		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
 		[scroller setLocationOfCurrentMark:loc];
 	}
 }
@@ -560,7 +534,7 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 	unsigned long long loc = [scroller locationOfNextMark];
 	if( loc != NSNotFound ) {
 		long shift = [scroller shiftAmountToCenterAlign];
-		[self _setScrollTop:[NSNumber numberWithUnsignedLong:( loc - shift )]];
+		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
 		[scroller setLocationOfCurrentMark:loc];
 	}
 }
@@ -571,7 +545,7 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
 		long shift = [scroller shiftAmountToCenterAlign];
 		[scroller setLocationOfCurrentMark:loc];
-		[self _setScrollTop:[NSNumber numberWithUnsignedLong:( loc - shift )]];
+		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
 	}
 }
 
@@ -580,8 +554,8 @@ NSString *JVStyleViewScrollTopIdleNotification = @"JVStyleViewScrollTopIdleNotif
 		[self performSelector:_cmd withObject:nil afterDelay:0.];
 		return;
 	}
-	
-	[self _setScrollTop:nil];
+
+	[_body setValue:[_body valueForKey:@"scrollHeight"] forKey:@"scrollTop"];
 }
 @end
 
@@ -687,14 +661,23 @@ quickEnd:
 
 	if( _rememberScrollPosition ) {
 		_rememberScrollPosition = NO;
-		[self _setScrollTop:[NSNumber numberWithUnsignedLong:_lastScrollPosition]];
+		[_body setValue:[NSNumber numberWithUnsignedLong:_lastScrollPosition] forKey:@"scrollTop"];
 	}
 }
 
 - (void) _appendMessage:(NSString *) message {
 	if( ! _body ) return;
 
+	unsigned int messageCount = [self _visibleMessageCount] + 1;
+	unsigned int scrollbackLimit = [self scrollbackLimit];
 	BOOL subsequent = ( [message rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
+
+	long shiftAmount = 0;
+	if( ! subsequent && messageCount > scrollbackLimit ) {
+		shiftAmount = [self _locationOfElementAtIndex:( messageCount - scrollbackLimit )];
+		if( shiftAmount > 0 && shiftAmount != NSNotFound )
+			[[self verticalMarkedScroller] shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
+	}
 
 	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
 	DOMHTMLElement *insertElement = (DOMHTMLElement *)[_domDocument getElementById:@"insert"];
@@ -707,35 +690,46 @@ quickEnd:
 
 	// parses the message so we can get the DOM tree
 	[element setInnerHTML:transformedMessage];
-	
+
 	[transformedMessage release];
 	transformedMessage = nil;
-
-	unsigned int i = 0;
-	if( ! subsequent ) { // append message normally
-		[[consecutiveReplaceElement parentNode] removeChild:consecutiveReplaceElement];
-		while( [element hasChildNodes] ) { // append all children
-			[_body insertBefore:[element firstChild] :insertElement];
-		}
-	} else if( [element hasChildNodes] ) { // append as a subsequent message
-		DOMNode *parent = [consecutiveReplaceElement parentNode];
-		DOMNode *nextSib = [consecutiveReplaceElement nextSibling];
-		[parent replaceChild:[element firstChild] :consecutiveReplaceElement]; // replaces the consecutiveInsert node
-		while( [element hasChildNodes] ) { // append all remaining children (in reverse order)
-			[parent insertBefore:[element firstChild] :nextSib];
-		}
-	}
 
 	// check if we are near the bottom of the chat area, and if we should scroll down later
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
 	BOOL scrollNeeded = NO;
-	
+
 	if( [_domDocument getElementById:@"contents"] )
 		scrollNeeded = ( ! [scroller isMemberOfClass:NSClassFromString( @"KWQScrollBar" )] || [scroller floatValue] >= 0.985 );
 	else scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.985 );
-	
-	[scroller setNeedsDisplay:YES];
-	
+
+	unsigned int i = 0;
+	if( ! subsequent ) { // append message normally
+		[[consecutiveReplaceElement parentNode] removeChild:consecutiveReplaceElement];
+		while( [element hasChildNodes] ) // append all children
+			[_body insertBefore:[element firstChild] :insertElement];
+	} else if( [element hasChildNodes] ) { // append as a subsequent message
+		DOMNode *parent = [consecutiveReplaceElement parentNode];
+		DOMNode *nextSib = [consecutiveReplaceElement nextSibling];
+		[parent replaceChild:[element firstChild] :consecutiveReplaceElement]; // replaces the consecutiveInsert node
+		while( [element hasChildNodes] ) // append all remaining children (in reverse order)
+			[parent insertBefore:[element firstChild] :nextSib];
+	}
+
+	// enforce the scrollback limit
+	if( scrollbackLimit > 0 && messageCount > scrollbackLimit ) {
+		for( i = 0; messageCount > scrollbackLimit && i < ( messageCount - scrollbackLimit ); i++ ) {
+			[_body removeChild:[_body firstChild]];
+			messageCount--;
+		}
+	}
+
+	if( ! scrollNeeded && shiftAmount > 0 ) {
+		unsigned long scrollTop = [[_body valueForKey:@"scrollTop"] longValue];
+		[_body setValue:[NSNumber numberWithUnsignedLong:( scrollTop - shiftAmount )] forKey:@"scrollTop"];
+	}
+
+	[[self verticalMarkedScroller] setNeedsDisplay:YES];
+
 	if( scrollNeeded ) [self scrollToBottom];
 }
 
@@ -758,7 +752,7 @@ quickEnd:
 
 	DOMNode *firstMessage = [_body firstChild];
 
-	while( [[element childNodes] length] ) { // append all children
+	while( [element hasChildNodes] ) { // append all children
 		if( firstMessage ) [_body insertBefore:[element firstChild] :firstMessage];
 		else [_body appendChild:[element firstChild]];
 	}
@@ -782,59 +776,6 @@ quickEnd:
 	DOMElement *node = [_domDocument createElement:@"span"];
 	[_body appendChild:node];
 	[_body removeChild:node];
-}
-
-#pragma mark -
-
-- (void) _deferedScrollTop:(NSNumber *) top {
-	if( _scrollTopDeferedCount ) [self _immediatelySetScrollTop:top];
-}
-
-- (void) _setScrollTop:(NSNumber *) top {
-	if( ( abs( [NSDate timeIntervalSinceReferenceDate] - _scrollTopLastTime ) > _scrollTopTimeThreshold ) || ! _scrollTopDeferedThreshold || ( _scrollTopDeferedCount >= _scrollTopDeferedThreshold ) ) {
-		[self _immediatelySetScrollTop:top];
-	} else {
-		if( _scrollTopDeferedCount == 0 ) {
-			[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _deferedScrollTop: ) object:nil];
-			[self performSelector:@selector( _deferedScrollTop: ) withObject:top afterDelay:0.1];
-		}
-
-		_scrollTopDeferedCount++;
-	}
-
-	_scrollTopLastTime = [NSDate timeIntervalSinceReferenceDate];
-}
-
-- (void) _immediatelySetScrollTop:(NSNumber *) top {
-	unsigned int messageCount = [self _visibleMessageCount];
-	unsigned int scrollbackLimit = [self scrollbackLimit];
-	long shiftAmount = 0;
-	int i = 0;
-
-	// enforce the scrollback limit
-	if( scrollbackLimit > 0 && ( messageCount > scrollbackLimit ) ) {
-		JVMarkedScroller *scroller = [self verticalMarkedScroller];
-		shiftAmount = [self _locationOfElementAtIndex:( messageCount - scrollbackLimit )];
-
-		if( shiftAmount > 0 && shiftAmount != NSNotFound ) {
-			[scroller shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
-
-			if( top ) {
-				unsigned long oldTop = [top longValue];
-				if( oldTop - shiftAmount < 0 ) top = [NSNumber numberWithUnsignedLong:0];
-				else top = [NSNumber numberWithUnsignedLong:( oldTop - shiftAmount )];
-			}
-		}
-
-		for( i = 0; messageCount > scrollbackLimit; i++, messageCount-- )
-			[_body removeChild:[_body firstChild]];
-		[scroller setNeedsDisplay:YES];
-	}
-
-	if( top ) [_body setValue:top forKey:@"scrollTop"];
-	else [_body setValue:[_body valueForKey:@"scrollHeight"] forKey:@"scrollTop"];
-
-	_scrollTopDeferedCount = 0;
 }
 
 #pragma mark -
