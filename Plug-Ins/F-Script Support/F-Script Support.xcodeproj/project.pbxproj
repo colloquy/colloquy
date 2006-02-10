@@ -290,7 +290,16 @@
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
-				HEADER_SEARCH_PATHS = "../../**";
+				HEADER_SEARCH_PATHS = (
+					../../Additions,
+					"../../Chat Core",
+					../../Controllers,
+					../../Inspectors,
+					../../Models,
+					../../Panels,
+					../../Preferences,
+					../../Views,
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
@@ -315,7 +324,16 @@
 					"$(HOME)/Library/Frameworks",
 				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
-				HEADER_SEARCH_PATHS = "../../**";
+				HEADER_SEARCH_PATHS = (
+					../../Additions,
+					"../../Chat Core",
+					../../Controllers,
+					../../Inspectors,
+					../../Models,
+					../../Panels,
+					../../Preferences,
+					../../Views,
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
@@ -340,7 +358,16 @@
 					"$(HOME)/Library/Frameworks",
 				);
 				GCC_PREFIX_HEADER = "F-Script Support.pch";
-				HEADER_SEARCH_PATHS = "../../**";
+				HEADER_SEARCH_PATHS = (
+					../../Additions,
+					"../../Chat Core",
+					../../Controllers,
+					../../Inspectors,
+					../../Models,
+					../../Panels,
+					../../Preferences,
+					../../Views,
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (

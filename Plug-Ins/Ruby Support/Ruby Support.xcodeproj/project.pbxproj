@@ -268,7 +268,14 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "Ruby Support.pch";
 				HEADER_SEARCH_PATHS = (
-					"../../**",
+					../../Additions,
+					"../../Chat Core",
+					../../Controllers,
+					../../Inspectors,
+					../../Models,
+					../../Panels,
+					../../Preferences,
+					../../Views,
 					"/usr/lib/ruby/1.8/powerpc-darwin8.0",
 				);
 				INFOPLIST_FILE = Info.plist;
@@ -296,7 +303,14 @@
 				);
 				GCC_PREFIX_HEADER = "Ruby Support.pch";
 				HEADER_SEARCH_PATHS = (
-					"../../**",
+					../../Additions,
+					"../../Chat Core",
+					../../Controllers,
+					../../Inspectors,
+					../../Models,
+					../../Panels,
+					../../Preferences,
+					../../Views,
 					"/usr/lib/ruby/1.8/powerpc-darwin8.0",
 				);
 				INFOPLIST_FILE = Info.plist;
@@ -324,7 +338,14 @@
 				);
 				GCC_PREFIX_HEADER = "Ruby Support.pch";
 				HEADER_SEARCH_PATHS = (
-					"../../**",
+					../../Additions,
+					"../../Chat Core",
+					../../Controllers,
+					../../Inspectors,
+					../../Models,
+					../../Panels,
+					../../Preferences,
+					../../Views,
 					"/usr/lib/ruby/1.8/powerpc-darwin8.0",
 				);
 				INFOPLIST_FILE = Info.plist;
