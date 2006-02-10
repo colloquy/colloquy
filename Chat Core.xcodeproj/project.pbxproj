@@ -1000,12 +1000,7 @@
 					"G_LOG_DOMAIN=g_log_domain_glib",
 					_REENTRANT,
 				);
-				HEADER_SEARCH_PATHS = (
-					"./**",
-					Core/irssi,
-					Core/irssi/glib,
-					Core/irssi/src,
-				);
+				HEADER_SEARCH_PATHS = "Chat\\ Core";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
@@ -1034,12 +1029,7 @@
 					"G_LOG_DOMAIN=g_log_domain_glib",
 					_REENTRANT,
 				);
-				HEADER_SEARCH_PATHS = (
-					"./**",
-					Core/irssi,
-					Core/irssi/glib,
-					Core/irssi/src,
-				);
+				HEADER_SEARCH_PATHS = "Chat\\ Core";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
@@ -1083,12 +1073,7 @@
 					"G_LOG_DOMAIN=g_log_domain_glib",
 					_REENTRANT,
 				);
-				HEADER_SEARCH_PATHS = (
-					"./**",
-					Core/irssi,
-					Core/irssi/glib,
-					Core/irssi/src,
-				);
+				HEADER_SEARCH_PATHS = "Chat\\ Core";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
