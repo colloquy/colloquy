@@ -101,7 +101,6 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSString *_proxyServer;
 	NSString *_proxyUsername;
 	NSString *_proxyPassword;
-	unsigned short _serverPort;
 	unsigned short _proxyServerPort;
 
 	BOOL _secure;
