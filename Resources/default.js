@@ -9,7 +9,7 @@ function resetSearchHighlight( id ) {
 				var newNode = document.createTextNode( text );
 				var par = node.parentNode;
 				node.parentNode.replaceChild( newNode, node );
-				par.innerHTML = par.innerHTML; // this will merge text nodes
+				par.normalize(); // this will merge text nodes
 				return true;
 			} else if( ! node.nodeName.match( /button|select|textarea/i ) ) {
 				// Recurse into child nodes
