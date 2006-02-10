@@ -282,11 +282,8 @@
 					../../Additions,
 					"../../Chat Core",
 					../../Controllers,
-					../../Inspectors,
 					../../Models,
 					../../Panels,
-					../../Preferences,
-					../../Views,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
@@ -314,11 +311,8 @@
 					../../Additions,
 					"../../Chat Core",
 					../../Controllers,
-					../../Inspectors,
 					../../Models,
 					../../Panels,
-					../../Preferences,
-					../../Views,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
@@ -346,11 +340,8 @@
 					../../Additions,
 					"../../Chat Core",
 					../../Controllers,
-					../../Inspectors,
 					../../Models,
 					../../Panels,
-					../../Preferences,
-					../../Views,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";

@@ -271,11 +271,8 @@
 					../../Additions,
 					"../../Chat Core",
 					../../Controllers,
-					../../Inspectors,
 					../../Models,
 					../../Panels,
-					../../Preferences,
-					../../Views,
 					"/usr/lib/ruby/1.8/powerpc-darwin8.0",
 				);
 				INFOPLIST_FILE = Info.plist;
@@ -306,11 +303,8 @@
 					../../Additions,
 					"../../Chat Core",
 					../../Controllers,
-					../../Inspectors,
 					../../Models,
 					../../Panels,
-					../../Preferences,
-					../../Views,
 					"/usr/lib/ruby/1.8/powerpc-darwin8.0",
 				);
 				INFOPLIST_FILE = Info.plist;
@@ -341,11 +335,8 @@
 					../../Additions,
 					"../../Chat Core",
 					../../Controllers,
-					../../Inspectors,
 					../../Models,
 					../../Panels,
-					../../Preferences,
-					../../Views,
 					"/usr/lib/ruby/1.8/powerpc-darwin8.0",
 				);
 				INFOPLIST_FILE = Info.plist;
