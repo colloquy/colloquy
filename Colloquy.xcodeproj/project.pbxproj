@@ -2816,14 +2816,6 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
-				HEADER_SEARCH_PATHS = (
-					"Chat Core",
-					Controllers,
-					Inspectors,
-					Models,
-					Panels,
-					Views,
-				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -2840,14 +2832,6 @@
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
-				HEADER_SEARCH_PATHS = (
-					"Chat Core",
-					Controllers,
-					Inspectors,
-					Models,
-					Panels,
-					Views,
-				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -2863,17 +2847,7 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				HEADER_SEARCH_PATHS = (
-					Additions,
-					"Chat Core",
-					Controllers,
-					Inspectors,
-					Models,
-					Panels,
-					Preferences,
-					Views,
-					/usr/include/libxml2,
-				);
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Resources/Info.plist;
 				OTHER_LDFLAGS = (
 					"-lxml2",
@@ -2898,17 +2872,7 @@
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				HEADER_SEARCH_PATHS = (
-					Additions,
-					"Chat Core",
-					Controllers,
-					Inspectors,
-					Models,
-					Panels,
-					Preferences,
-					Views,
-					/usr/include/libxml2,
-				);
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Resources/Info.plist;
 				OTHER_LDFLAGS = (
 					"-lxml2",
@@ -2967,14 +2931,6 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
-				HEADER_SEARCH_PATHS = (
-					"Chat Core",
-					Controllers,
-					Inspectors,
-					Models,
-					Panels,
-					Views,
-				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -2990,17 +2946,7 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				HEADER_SEARCH_PATHS = (
-					Additions,
-					"Chat Core",
-					Controllers,
-					Inspectors,
-					Models,
-					Panels,
-					Preferences,
-					Views,
-					/usr/include/libxml2,
-				);
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Resources/Info.plist;
 				OTHER_LDFLAGS = (
 					"-lxml2",
