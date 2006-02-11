@@ -60,6 +60,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSMutableDictionary *_memberModes;
 	NSStringEncoding _encoding;
 	unsigned long _modes;
+	unsigned int _hash;
 }
 - (MVChatConnection *) connection;
 

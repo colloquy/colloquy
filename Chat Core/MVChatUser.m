@@ -230,9 +230,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (unsigned) hash {
-	if( _type == MVChatWildcardUserType )
-		return ( _type ^ [[self nickname] hash] ^ [[self username] hash] ^ [[self address] hash] ^ [[self serverAddress] hash] ^ [[self fingerprint] hash] );
-	return ( _type ^ [[self connection] hash] );
+	if( _type == MVChatWildcardUserType && ! _hash )
+		_hash = ( _type ^ [[self nickname] hash] ^ [[self username] hash] ^ [[self address] hash] ^ [[self serverAddress] hash] ^ [[self fingerprint] hash] );
+	if( ! _hash ) _hash = ( _type ^ [[self connection] hash] ^ [[self uniqueIdentifier] hash] );
+	return _hash;
 }
 
 #pragma mark -

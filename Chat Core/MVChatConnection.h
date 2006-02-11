@@ -108,6 +108,7 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSArray *_alternateNicks;
 	unsigned int _nextAltNickIndex;
 	BOOL _roomListDirty;
+	unsigned int _hash;
 }
 + (BOOL) supportsURLScheme:(NSString *) scheme;
 + (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type;

@@ -68,6 +68,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 	NSTimeInterval _idleTime;
 	NSTimeInterval _lag;
 	unsigned long _modes;
+	unsigned int _hash;
 	BOOL _identified;
 	BOOL _serverOperator;
 }

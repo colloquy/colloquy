@@ -122,7 +122,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (unsigned) hash {
-	return ( [[self uniqueIdentifier] hash] ^ [[self connection] hash] ^ [[self uniqueIdentifier] hash] );
+	if( ! _hash ) _hash = ( [[self connection] hash] ^ [[self uniqueIdentifier] hash] );
+	return _hash;
 }
 
 #pragma mark -

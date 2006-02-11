@@ -79,6 +79,13 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 #pragma mark -
 
+- (unsigned) hash {
+	if( ! _hash ) _hash = ( [[self user] hash] ^ _port );
+	return _hash;
+}
+
+#pragma mark -
+
 - (BOOL) isUpload {
 	return NO;
 }

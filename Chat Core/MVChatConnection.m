@@ -184,6 +184,11 @@ static const NSStringEncoding supportedEncodings[] = {
 	return 0;
 }
 
+- (unsigned) hash {
+	if( ! _hash ) _hash = ( [self type] ^ [[self server] hash] ^ [self serverPort] ^ [[self nickname] hash] );
+	return _hash;
+}
+
 #pragma mark -
 
 - (NSSet *) supportedFeatures {

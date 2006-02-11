@@ -25,11 +25,6 @@
 
 #pragma mark -
 
-- (unsigned) hash {
-	// this hash assumes the MVIRCChatConnection will return the same instance for equal users
-	return ( _type ^ [[self connection] hash] ^ (unsigned int) self );
-}
-
 - (unsigned long) supportedModes {
 	return MVChatUserInvisibleMode;
 }
