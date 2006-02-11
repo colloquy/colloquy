@@ -356,6 +356,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1C041DDA08553AD200A5A5BA /* Build configuration list for PBXNativeTarget "Chat Core (Framework)" */;
 			buildPhases = (
+				1CAF64A8099EAB390036A727 /* Unarchive Frameworks */,
 				1C51B47B052DE0CB00BB459B /* Sources */,
 				1C51B484052DE0CB00BB459B /* Frameworks */,
 				1C51B47A052DE0CB00BB459B /* Resources */,
@@ -487,6 +488,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1CAF64A8099EAB390036A727 /* Unarchive Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Frameworks/frameworks.tar.gz",
+			);
+			name = "Unarchive Frameworks";
+			outputPaths = (
+				"$(SRCROOT)/Frameworks/libsilc.framework",
+				"$(SRCROOT)/Frameworks/libsilcclient.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd $SRCROOT/Frameworks\nrm -rf $SRCROOT/*.framework\ntar xzf frameworks.tar.gz\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1C51B47B052DE0CB00BB459B /* Sources */ = {
