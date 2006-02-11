@@ -1551,6 +1551,12 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 		[self scheduleReconnectAttemptEvery:30.];
 	}
 
+	[_knownUsers removeAllObjects];
+	[_sentCommands removeAllObjects];
+	[_queuedCommands removeAllObjects];
+
+	_lookingUpUsers = NO;
+
 	[super _didDisconnect];
 }
 

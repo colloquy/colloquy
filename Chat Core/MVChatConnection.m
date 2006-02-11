@@ -772,6 +772,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	BOOL wasConnected = ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionSuspendedStatus || _status == MVChatConnectionServerDisconnectedStatus );
 
 	[[self localUser] _setStatus:MVChatUserOfflineStatus];
+	[[self localUser] _setDateDisconnected:[NSDate date]];
 
 	if( _status != MVChatConnectionSuspendedStatus && _status != MVChatConnectionServerDisconnectedStatus )
 		_status = MVChatConnectionDisconnectedStatus;
@@ -784,8 +785,15 @@ static const NSStringEncoding supportedEncodings[] = {
 		[room _setDateParted:[NSDate date]];
 	}
 
+	[_joinedRooms removeAllObjects];
+	[_roomsCache removeAllObjects];
+
 	id old = _localUser;
 	_localUser = nil;
+	[old release];
+
+	old = _cachedDate;
+	_cachedDate = nil;
 	[old release];
 
 	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidDisconnectNotification object:self];
