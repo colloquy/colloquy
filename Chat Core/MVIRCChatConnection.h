@@ -2,6 +2,8 @@
 #import "MVChatConnectionPrivate.h"
 
 @class AsyncSocket;
+@class MVChatUser;
+@class MVChatRoom;
 @class MVFileTransfer;
 
 @interface MVIRCChatConnection : MVChatConnection {

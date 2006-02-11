@@ -1,4 +1,3 @@
-#import <sched.h>
 #import <arpa/inet.h>
 
 #import "MVIRCFileTransfer.h"

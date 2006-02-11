@@ -2,7 +2,6 @@
 #import "MVFileTransferPrivate.h"
 
 @class AsyncSocket;
-@class NSThread;
 
 @interface MVIRCUploadFileTransfer : MVUploadFileTransfer {
 	AsyncSocket *_connection;

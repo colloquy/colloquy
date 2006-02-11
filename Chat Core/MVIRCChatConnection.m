@@ -1,5 +1,3 @@
-#import <sched.h>
-
 #import "MVIRCChatConnection.h"
 #import "MVIRCChatRoom.h"
 #import "MVIRCChatUser.h"
