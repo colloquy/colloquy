@@ -531,18 +531,11 @@
 				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = "Chat Core/ChatCore.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					HAVE_CONFIG_H,
-					"G_LOG_DOMAIN=g_log_domain_glib",
-					_REENTRANT,
-				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
-					"-lssl",
-					"-lcrypto",
 				);
 				PRODUCT_NAME = ChatCore;
 				SKIP_INSTALL = YES;
@@ -559,18 +552,11 @@
 				FRAMEWORK_VERSION = A;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "Chat Core/ChatCore.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					HAVE_CONFIG_H,
-					"G_LOG_DOMAIN=g_log_domain_glib",
-					_REENTRANT,
-				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
-					"-lssl",
-					"-lcrypto",
 				);
 				PRODUCT_NAME = ChatCore;
 				SKIP_INSTALL = YES;
@@ -602,18 +588,11 @@
 				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = "Chat Core/ChatCore.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					HAVE_CONFIG_H,
-					"G_LOG_DOMAIN=g_log_domain_glib",
-					_REENTRANT,
-				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
-					"-lssl",
-					"-lcrypto",
 				);
 				PRODUCT_NAME = ChatCore;
 				SKIP_INSTALL = YES;
