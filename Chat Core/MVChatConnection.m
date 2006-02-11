@@ -145,6 +145,13 @@ static const NSStringEncoding supportedEncodings[] = {
 	return self;
 }
 
+- (void) finalize {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	[self cancelPendingReconnectAttempts];
+	[super finalize];
+}
+
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
@@ -160,7 +167,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_proxyServer release];
 	[_proxyUsername release];
 	[_proxyPassword release];
-	
+
 	_npassword = nil;
 	_roomsCache = nil;
 	_cachedDate = nil;

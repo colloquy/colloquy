@@ -143,6 +143,18 @@ static NSRange portRange;
 	return [ret autorelease];
 }
 
+- (void) finalize {
+	[_connection disconnect];
+	[_connection setDelegate:nil];
+
+	[_fileHandle closeFile];
+	_fileHandle = nil;
+
+	_connectionThread = nil;
+
+	[super finalize];
+}
+
 - (void) release {
 	if( ( [self retainCount] - 1 ) == 1 )
 		[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
@@ -150,6 +162,9 @@ static NSRange portRange;
 }
 
 - (void) dealloc {
+	[_connection disconnect];
+	[_connection setDelegate:nil];
+
 	id old = _fileHandle;
 	_fileHandle = nil;
 	[old closeFile];
@@ -353,6 +368,19 @@ static NSRange portRange;
 #pragma mark -
 
 @implementation MVIRCDownloadFileTransfer
+- (void) finalize {
+	[_connection disconnect];
+	[_connection setDelegate:nil];
+
+	[_fileHandle closeFile];
+	[_fileHandle synchronizeFile];
+	_fileHandle = nil;
+
+	_connectionThread = nil;
+
+	[super finalize];
+}
+
 - (void) release {
 	if( ( [self retainCount] - 1 ) == 1 )
 		[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
@@ -360,6 +388,9 @@ static NSRange portRange;
 }
 
 - (void) dealloc {
+	[_connection disconnect];
+	[_connection setDelegate:nil];
+
 	id old = _fileHandle;
 	_fileHandle = nil;
 	[old synchronizeFile];

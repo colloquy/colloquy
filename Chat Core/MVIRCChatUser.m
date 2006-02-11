@@ -23,6 +23,16 @@
 	return self;
 }
 
+- (void) finalize {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super finalize];
+}
+
+- (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super dealloc];
+}
+
 #pragma mark -
 
 - (unsigned long) supportedModes {

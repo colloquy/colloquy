@@ -270,6 +270,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	return self;
 }
 
+- (void) finalize {
+	[self disconnect];
+	[_chatConnection setDelegate:nil];
+	_connectionThread = nil;
+	[super finalize];
+}
+
 - (void) dealloc {
 	[self disconnect];
 
@@ -322,14 +329,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) connect {
-	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
-
-	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 5. ) {
-		// prevents connecting too quick
-		// cancel any reconnect attempts, this lets a user cancel the attempts with a "double connect"
-		[self cancelPendingReconnectAttempts];
-		return;
-	}
+	if( _status != MVChatConnectionDisconnectedStatus && _status != MVChatConnectionServerDisconnectedStatus && _status != MVChatConnectionSuspendedStatus ) return;
 
 	id old = _lastConnectAttempt;
 	_lastConnectAttempt = [[NSDate allocWithZone:nil] init];
@@ -350,7 +350,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
 	[self cancelPendingReconnectAttempts];
 
-	if( [self status] == MVChatConnectionConnectedStatus ) {
+	if( _status == MVChatConnectionConnectedStatus ) {
 		if( [[reason string] length] ) {
 			NSData *msg = [[self class] _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 			[self sendRawMessageWithComponents:@"QUIT :", msg, nil];
@@ -515,13 +515,16 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) ) {
-		if( [room length] && [room rangeOfString:@" "].location == NSNotFound ) { // join non-password room in bulk
+		if( [room length] && [room rangeOfString:@" "].location == NSNotFound ) { // join non-password rooms in bulk
 			[roomList addObject:[self properNameForChatRoomNamed:room]];
 		} else if( [room length] && [room rangeOfString:@" "].location != NSNotFound ) { // has a password, join separately
-			// join all requested rooms before this one so we do things in order
-			if( [roomList count] ) [self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
+			if( [roomList count] ) {
+				// join all requested rooms before this one so we do things in order
+				[self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
+				[roomList removeAllObjects]; // clear list since we joined them
+			}
+
 			[self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
-			[roomList removeAllObjects]; // clear list since we joined them
 		}
 	}
 
@@ -667,13 +670,21 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	[pool release];
 }
 
+#pragma mark -
+
 - (void) _didDisconnect {
 	[_knownUsers removeAllObjects];
-	if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
-		[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
-	[self scheduleReconnectAttemptEvery:30.];
+
+	if( _status == MVChatConnectionServerDisconnectedStatus ) {
+		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
+			[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
+		[self scheduleReconnectAttemptEvery:30.];
+	}
+
 	[super _didDisconnect];
 }
+
+#pragma mark -
 
 - (BOOL) socketWillConnect:(AsyncSocket *) sock {
 	if( [[self proxyServer] length] && [self proxyServerPort] ) {
@@ -872,6 +883,8 @@ end:
 	[self _readNextMessageFromServer];
 }
 
+#pragma mark -
+
 - (void) _writeDataToServer:(NSData *) data {
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 }
@@ -881,6 +894,8 @@ end:
 	if( ! delimeter ) delimeter = [[NSData allocWithZone:nil] initWithBytes:"\x0D\x0A" length:2];
 	[_chatConnection readDataToData:delimeter withTimeout:-1. tag:0];
 }
+
+#pragma mark -
 
 + (NSData *) _flattenedIRCDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format {
 	NSString *cformat = nil;
@@ -901,6 +916,20 @@ end:
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:enc], @"StringEncoding", cformat, @"FormatType", nil];
 	return [message chatFormatWithOptions:options];
 }
+
+- (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action {
+	NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:encoding andChatFormat:[self outgoingChatFormat]];
+	if( action ) {
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :\001ACTION ", target];
+		[self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
+		[prefix release];
+	} else {
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :", target];
+		[self sendRawMessageWithComponents:prefix, msg, nil];
+		[prefix release];
+	}
+}
+
 /*
 
 #pragma mark -
@@ -933,6 +962,8 @@ end:
 }
 */
 
+#pragma mark -
+
 - (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname {
 	@synchronized( _knownUsers ) {
 		[user retain];
@@ -944,18 +975,13 @@ end:
 	}
 }
 
-- (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action {
-	NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:encoding andChatFormat:[self outgoingChatFormat]];
-	if( action ) {
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :\001ACTION ", target];
-		[self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
-		[prefix release];
-	} else {
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :", target];
-		[self sendRawMessageWithComponents:prefix, msg, nil];
-		[prefix release];
-	}
+- (void) _setCurrentNickname:(NSString *) nickname {
+	id old = _currentNickname;
+	_currentNickname = [nickname copyWithZone:nil];
+	[old release];
 }
+
+#pragma mark -
 
 - (void) _addFileTransfer:(MVFileTransfer *) transfer {
 	@synchronized( _fileTransfers ) {
@@ -967,12 +993,6 @@ end:
 	@synchronized( _fileTransfers ) {
 		if( transfer ) [_fileTransfers removeObject:transfer];
 	}
-}
-
-- (void) _setCurrentNickname:(NSString *) nickname {
-	id old = _currentNickname;
-	_currentNickname = [nickname copyWithZone:nil];
-	[old release];
 }
 @end
 
