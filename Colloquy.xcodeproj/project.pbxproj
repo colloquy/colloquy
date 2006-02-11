@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		0A3187FC067ECEB600271E42 /* TSCustomBan.nib in Resources */ = {isa = PBXBuildFile; fileRef = 0A3187FA067ECEB600271E42 /* TSCustomBan.nib */; };
 		0A5B683F0810EC9700398D5A /* default.css in Resources */ = {isa = PBXBuildFile; fileRef = 0A5B683E0810EC9700398D5A /* default.css */; };
-		0A6571B508687F86001FF007 /* AppleScript Support.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0A7F240F08556A9B00FA3D9B /* AppleScript Support.plugin */; };
-		0A6571BD0868800D001FF007 /* F-Script Support.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0A7F243108556AC100FA3D9B /* F-Script Support.plugin */; };
-		0A6571D40868816B001FF007 /* Standard Commands.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */; };
+		0A6571B508687F86001FF007 /* AppleScript Support.plugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 0A7F240F08556A9B00FA3D9B /* AppleScript Support.plugin */; };
+		0A6571BD0868800D001FF007 /* F-Script Support.plugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 0A7F243108556AC100FA3D9B /* F-Script Support.plugin */; };
+		0A6571D40868816B001FF007 /* Standard Commands.plugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */; };
 		0AA8117B0826E08000A3BF2D /* default.js in Resources */ = {isa = PBXBuildFile; fileRef = 0AA811220826DB8800A3BF2D /* default.js */; };
 		1C05E1EF08F262F500E097BC /* ColloquyScripting.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */; };
 		1C05F4560828727D006FCB72 /* markDisplay.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C05F4550828727D006FCB72 /* markDisplay.png */; };
@@ -23,7 +23,7 @@
 		1C0730D00677765B008D8AD9 /* AICustomTabsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730C80677765B008D8AD9 /* AICustomTabsView.m */; };
 		1C0730D406777678008D8AD9 /* ESFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730D206777678008D8AD9 /* ESFloater.m */; };
 		1C0730E50677A63B008D8AD9 /* NSImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */; };
-		1C0A19B008B041C200324E25 /* Python Support.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C0A19A708B0418600324E25 /* Python Support.plugin */; };
+		1C0A19B008B041C200324E25 /* Python Support.plugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C0A19A708B0418600324E25 /* Python Support.plugin */; };
 		1C0A4C9C0799BDB00093B702 /* JVFind.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C0A4C980799BDAF0093B702 /* JVFind.nib */; };
 		1C0A4C9D0799BDB00093B702 /* JVTranscriptCriterion.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C0A4C9A0799BDAF0093B702 /* JVTranscriptCriterion.nib */; };
 		1C0A4CAC0799BDD00093B702 /* JVTranscriptCriterionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0A4CA80799BDD00093B702 /* JVTranscriptCriterionController.m */; };
@@ -65,7 +65,7 @@
 		1C6A455908417C5300572AB6 /* JVChatViewCriterion.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A455708417C5300572AB6 /* JVChatViewCriterion.nib */; };
 		1C6A46A60841951200572AB6 /* gearSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A46A50841951200572AB6 /* gearSmall.png */; };
 		1C6C75460630AD5300698F55 /* AGRegex.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C6C75450630AD5300698F55 /* AGRegex.framework */; };
-		1C6C75490630AD9500698F55 /* AGRegex.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C6C75450630AD5300698F55 /* AGRegex.framework */; };
+		1C6C75490630AD9500698F55 /* AGRegex.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C6C75450630AD5300698F55 /* AGRegex.framework */; };
 		1C6E43C40955EFD7002D22E7 /* serverWindow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6E43C30955EFD7002D22E7 /* serverWindow.png */; };
 		1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C6EA23C05A735D6006A559F /* JVChatRoomBrowser.nib */; };
 		1C6EA24405A738DD006A559F /* JVChatRoomBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6EA24205A738DD006A559F /* JVChatRoomBrowser.m */; };
@@ -78,14 +78,14 @@
 		1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F5394C070378E44D01A35792 /* Credits.rtf */; };
 		1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */; };
 		1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */; };
-		1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* WebSearch.scpt */; };
-		1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
+		1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* WebSearch.scpt */; };
+		1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
 		1C7EF54006B341890037F173 /* roomTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53D06B341890037F173 /* roomTab.png */; };
 		1C7EF54106B341890037F173 /* roomTabNewHighlightMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53E06B341890037F173 /* roomTabNewHighlightMessage.png */; };
 		1C7EF54206B341890037F173 /* roomTabNewMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53F06B341890037F173 /* roomTabNewMessage.png */; };
 		1C7EF5C206B346E50037F173 /* privateChatTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF5C006B346E50037F173 /* privateChatTab.png */; };
 		1C7EF5C306B346E50037F173 /* privateChatTabNewMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF5C106B346E50037F173 /* privateChatTabNewMessage.png */; };
-		1C7F30160855467F00D41FB0 /* Colloquy.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = CBF685150820186F00F498FB /* Colloquy.mdimporter */; };
+		1C7F30160855467F00D41FB0 /* Colloquy.mdimporter in Copy Spotlight Importer */ = {isa = PBXBuildFile; fileRef = CBF685150820186F00F498FB /* Colloquy.mdimporter */; };
 		1C8BDCF4054345160035B84A /* JVChatMemberInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8BDCF2054345160035B84A /* JVChatMemberInspector.m */; };
 		1C8BDD2205436A030035B84A /* JVChatMemberInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C8BDD2005436A020035B84A /* JVChatMemberInspector.nib */; };
 		1C8D2E72065D0BB600AC28C5 /* Message.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F555208B01F0DE0601EE70DE /* Message.framework */; };
@@ -254,7 +254,7 @@
 		1CEE3B170578491B00AD6DE2 /* statusOffline.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CEE3B160578491B00AD6DE2 /* statusOffline.tif */; };
 		1CEE3F06057AEC0200AD6DE2 /* JVBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEE3F04057AEC0200AD6DE2 /* JVBuddy.m */; };
 		1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
-		1CEEAB1A095BD25500166A54 /* ChatCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
+		1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		1CF16CDF083ADE590037F222 /* deleteWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16CDB083ADE590037F222 /* deleteWidget.png */; };
 		1CF16CE0083ADE590037F222 /* deleteWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16CDC083ADE590037F222 /* deleteWidgetPressed.png */; };
 		1CF16CE1083ADE590037F222 /* editWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16CDD083ADE590037F222 /* editWidget.png */; };
@@ -267,13 +267,13 @@
 		1CF4D38907E54C0C00DB421A /* smartTranscript.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF4D38807E54C0C00DB421A /* smartTranscript.png */; };
 		1CF4D76607E6AD4400DB421A /* smartTranscriptSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF4D76507E6AD4400DB421A /* smartTranscriptSettings.png */; };
 		1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; };
-		1CF5F8DD07D537F70019DC13 /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; };
+		1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; };
 		1CF627CB07558F79005DFCFA /* fileSend.tif in Resources */ = {isa = PBXBuildFile; fileRef = 1CF627CA07558F79005DFCFA /* fileSend.tif */; };
 		1CF79CBF07AC77E600696918 /* JVChatTranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF79CBD07AC77E600696918 /* JVChatTranscript.m */; };
 		1CF8030E070C893500C9B54C /* libsilc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; };
 		1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
-		1CF80310070C894100C9B54C /* libsilc.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; };
-		1CF80311070C894100C9B54C /* libsilcclient.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
+		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; };
+		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
 		1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
@@ -391,43 +391,46 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		1C7F300D085545E600D41FB0 /* CopyFiles */ = {
+		1C7F300D085545E600D41FB0 /* Copy Spotlight Importer */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Contents/Library/Spotlight;
 			dstSubfolderSpec = 1;
 			files = (
-				1C7F30160855467F00D41FB0 /* Colloquy.mdimporter in CopyFiles */,
+				1C7F30160855467F00D41FB0 /* Colloquy.mdimporter in Copy Spotlight Importer */,
 			);
+			name = "Copy Spotlight Importer";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1CB2CD82052DDC560094AAA4 /* CopyFiles */ = {
+		1CB2CD82052DDC560094AAA4 /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1CEEAB1A095BD25500166A54 /* ChatCore.framework in CopyFiles */,
-				1CF80310070C894100C9B54C /* libsilc.framework in CopyFiles */,
-				1CF80311070C894100C9B54C /* libsilcclient.framework in CopyFiles */,
-				1C6C75490630AD9500698F55 /* AGRegex.framework in CopyFiles */,
-				1CF5F8DD07D537F70019DC13 /* Growl.framework in CopyFiles */,
+				1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */,
+				1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */,
+				1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */,
+				1C6C75490630AD9500698F55 /* AGRegex.framework in Copy Frameworks */,
+				1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */,
 			);
+			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1CB2CD88052DDC560094AAA4 /* CopyFiles */ = {
+		1CB2CD88052DDC560094AAA4 /* Copy Plugins */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				0A6571D40868816B001FF007 /* Standard Commands.plugin in CopyFiles */,
-				0A6571B508687F86001FF007 /* AppleScript Support.plugin in CopyFiles */,
-				0A6571BD0868800D001FF007 /* F-Script Support.plugin in CopyFiles */,
-				1C0A19B008B041C200324E25 /* Python Support.plugin in CopyFiles */,
-				1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in CopyFiles */,
-				1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in CopyFiles */,
+				0A6571D40868816B001FF007 /* Standard Commands.plugin in Copy Plugins */,
+				0A6571B508687F86001FF007 /* AppleScript Support.plugin in Copy Plugins */,
+				0A6571BD0868800D001FF007 /* F-Script Support.plugin in Copy Plugins */,
+				1C0A19B008B041C200324E25 /* Python Support.plugin in Copy Plugins */,
+				1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in Copy Plugins */,
+				1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in Copy Plugins */,
 			);
+			name = "Copy Plugins";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -1805,15 +1808,16 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1C041A680854E97700A5A5BA /* Build configuration list for PBXNativeTarget "Colloquy (Application)" */;
 			buildPhases = (
+				1CAF6496099EA9350036A727 /* Unarchive Frameworks */,
 				1CB2CD61052DDC560094AAA4 /* Sources */,
 				1CB2CD78052DDC560094AAA4 /* Frameworks */,
 				1C7C770C07DBA1F700FB5F83 /* Rez */,
 				1CB2CD0F052DDC560094AAA4 /* Resources */,
-				1CB2CD82052DDC560094AAA4 /* CopyFiles */,
-				1CB2CD88052DDC560094AAA4 /* CopyFiles */,
-				1C7F300D085545E600D41FB0 /* CopyFiles */,
-				1CF038FF062F8DBB009774D8 /* ShellScript */,
-				1C91DEAC06972EC0007C1638 /* ShellScript */,
+				1CB2CD82052DDC560094AAA4 /* Copy Frameworks */,
+				1CB2CD88052DDC560094AAA4 /* Copy Plugins */,
+				1C7F300D085545E600D41FB0 /* Copy Spotlight Importer */,
+				1CF038FF062F8DBB009774D8 /* Touch Styles & Emoticons */,
+				1C91DEAC06972EC0007C1638 /* Remove Headers */,
 			);
 			buildRules = (
 			);
@@ -2227,26 +2231,47 @@
 /* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1C91DEAC06972EC0007C1638 /* ShellScript */ = {
+		1C91DEAC06972EC0007C1638 /* Remove Headers */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Remove Headers";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "find \"$TARGET_BUILD_DIR/$WRAPPER_NAME\" -name 'Headers' -print0 | xargs -0 rm -rf\n";
 		};
-		1CF038FF062F8DBB009774D8 /* ShellScript */ = {
+		1CAF6496099EA9350036A727 /* Unarchive Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Frameworks/frameworks.tar.gz",
+			);
+			name = "Unarchive Frameworks";
+			outputPaths = (
+				"$(SRCROOT)/Frameworks/Growl.framework",
+				"$(SRCROOT)/Frameworks/libsilc.framework",
+				"$(SRCROOT)/Frameworks/libsilcclient.framework",
+				"$(SRCROOT)/Frameworks/AGRegex.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd $SRCROOT/Frameworks\nrm -rf $SRCROOT/*.framework\ntar xzf frameworks.tar.gz\n";
+		};
+		1CF038FF062F8DBB009774D8 /* Touch Styles & Emoticons */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Touch Styles & Emoticons";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
