@@ -29,8 +29,8 @@
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object userInfo:(NSDictionary *) userInfo waitUntilDone:(BOOL) wait {
 	if( pthread_main_np() ) return [self postNotificationName:name object:object userInfo:userInfo];
 
-	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] init];
-	[info setObject:name forKey:@"name"];
+	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:3];
+	if( name ) [info setObject:name forKey:@"name"];
 	if( object ) [info setObject:object forKey:@"object"];
 	if( userInfo ) [info setObject:userInfo forKey:@"userInfo"];
 
@@ -56,8 +56,8 @@
 - (void) enqueueNotificationOnMainThread:(NSNotification *) notification postingStyle:(NSPostingStyle) postingStyle coalesceMask:(unsigned) coalesceMask forModes:(NSArray *) modes {
 	if( pthread_main_np() ) return [self enqueueNotification:notification postingStyle:postingStyle coalesceMask:coalesceMask forModes:modes];
 
-	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] init];
-	[info setObject:notification forKey:@"notification"];
+	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:4];
+	if( notification ) [info setObject:notification forKey:@"notification"];
 	[info setObject:[NSNumber numberWithUnsignedInt:postingStyle] forKey:@"postingStyle"];
 	[info setObject:[NSNumber numberWithUnsignedInt:coalesceMask] forKey:@"coalesceMask"];
 	if( modes ) [info setObject:modes forKey:@"modes"];
