@@ -68,71 +68,6 @@ static const NSStringEncoding supportedEncodings[] = {
 };
 
 /*
-static void MVChatGotUserMode( CHANNEL_REC *channel, NICK_REC *nick, char *by, char *mode, char *type ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick -> nick]];
-	MVChatUser *byMember = ( by ? [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:by]] : nil );
-
-	unsigned int m = MVChatRoomMemberNoModes;
-	if( *mode == '@' ) m = MVChatRoomMemberOperatorMode;
-	else if( *mode == '%' ) m = MVChatRoomMemberHalfOperatorMode;
-	else if( *mode == '+' ) m = MVChatRoomMemberVoicedMode;
-
-	if( m == MVChatRoomMemberNoModes ) return;
-
-	if( *type == '+' ) [room _setMode:m forMemberUser:member];
-	else [room _removeMode:m forMemberUser:member];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:( *type == '+' ? YES : NO )], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", byMember, @"by", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	MVChatUser *byMember = ( setby ? [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:setby]] : nil );
-
-	unsigned int oldModes = [room modes];
-
-	[room _clearModes];
-
-	if( strchr( channel -> mode, 'p' ) )
-		[room _setMode:MVChatRoomPrivateMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 's' ) )
-		[room _setMode:MVChatRoomSecretMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 'i' ) )
-		[room _setMode:MVChatRoomInviteOnlyMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 'm' ) )
-		[room _setMode:MVChatRoomNormalUsersSilencedMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 'n' ) )
-		[room _setMode:MVChatRoomNoOutsideMessagesMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 't' ) )
-		[room _setMode:MVChatRoomOperatorsOnlySetTopicMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 'k' ) )
-		[room _setMode:MVChatRoomPassphraseToJoinMode withAttribute:[self stringWithEncodedBytes:channel -> key]];
-
-	if( strchr( channel -> mode, 'l' ) )
-		[room _setMode:MVChatRoomLimitNumberOfMembersMode withAttribute:[NSNumber numberWithInt:channel -> limit]];
-
-	unsigned int changedModes = ( oldModes ^ [room modes] );
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", byMember, @"by", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-#pragma mark -
-
 static void MVChatBanListFinished( IRC_SERVER_REC *server, const char *data ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( ! self ) return;
@@ -213,38 +148,7 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	[t release];
 	g_free( params );
 }
-
-#pragma mark -
-
-static void MVChatErrorNoSuchUser( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	g_return_if_fail( data != NULL );
-
-	char *nick = NULL;
-	char *params = event_get_params( data, 2, NULL, &nick );
-
-	[self _processErrorCode:ERR_NOSUCHNICK withContext:nick];
-
-	g_free( params );
-}
-
-static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	g_return_if_fail( data != NULL );
-
-	char *command = NULL;
-	char *params = event_get_params( data, 2, NULL, &command );
-
-	[self _processErrorCode:ERR_UNKNOWNCOMMAND withContext:command];
-
-	g_free( params );
-}
-
-#pragma mark - */
+*/
 
 @implementation MVIRCChatConnection
 + (NSArray *) defaultServerPorts {
@@ -740,7 +644,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
 	if( [[self password] length] ) [self sendRawMessageWithFormat:@"PASS %@", [self password]];
 	[self sendRawMessageWithFormat:@"NICK %@", [self nickname]];
-	[self sendRawMessageWithFormat:@"USER %@ %@ %@ :%@", [self username], [[NSHost currentHost] name], [self server], [self realName]];
+	[self sendRawMessageWithFormat:@"USER %@ 0 * :%@", [self username], [self realName]];
 
 	id old = _localUser;
 	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
@@ -1507,6 +1411,11 @@ end:
 					}
 				}
 			}
+
+#undef enabledHighBit
+#undef banMode
+#undef banExcludeMode
+#undef inviteExcludeMode
 
 			unsigned int changedModes = ( oldModes ^ [room modes] );
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]];
