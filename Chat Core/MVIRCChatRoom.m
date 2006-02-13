@@ -246,4 +246,12 @@
 - (void) _setNamesSynced:(BOOL) synced {
 	_namesSynced = synced;
 }
+
+- (BOOL) _bansSynced {
+	return _bansSynced;
+}
+
+- (void) _setBansSynced:(BOOL) synced {
+	_bansSynced = synced;
+}
 @end

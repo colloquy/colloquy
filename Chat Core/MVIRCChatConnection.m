@@ -1222,6 +1222,7 @@ end:
 			[room _clearBannedUsers];
 
 			[self sendRawMessageWithFormat:@"WHO %@", name];
+			[self sendRawMessageWithFormat:@"MODE %@ b", name];
 		} else {
 			if( [sender status] != MVChatUserAwayStatus ) [sender _setStatus:MVChatUserAvailableStatus];
 			[sender _setIdleTime:0.];
@@ -1579,6 +1580,25 @@ end:
 	if( [parameters count] >= 2 ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room];
+	}
+}
+
+#pragma mark -
+#pragma mark Ban List Replies
+
+- (void) _handle367WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_BANLIST
+	if( [parameters count] >= 3 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatUser *user = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
+		if( [room _bansSynced] ) [room _clearBannedUsers];
+		[room _addBanForUser:user];
+	}
+}
+
+- (void) _handle368WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFBANLIST
+	if( [parameters count] >= 2 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomBannedUsersSyncedNotification object:room];
 	}
 }
 
