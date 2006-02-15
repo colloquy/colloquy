@@ -792,7 +792,6 @@ static const NSStringEncoding supportedEncodings[] = {
 		[room _setDateParted:[NSDate date]];
 	}
 
-	[_joinedRooms removeAllObjects];
 	[_roomsCache removeAllObjects];
 
 	id old = _localUser;
