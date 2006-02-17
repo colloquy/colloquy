@@ -571,6 +571,7 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	if( [NSThread currentThread] == _connectionThread )
 		_connectionThread = nil;
 
+	[pool drain];
 	[pool release];
 }
 
@@ -898,6 +899,14 @@ end:
 		if( transfer ) [_fileTransfers removeObject:transfer];
 	}
 }
+
+#pragma mark -
+
+- (void) _removeKnownUser:(MVChatUser *) user {
+	@synchronized( _knownUsers ) {
+		if( user ) [_knownUsers removeObjectForKey:[user uniqueIdentifier]];
+	}
+}
 @end
 
 #pragma mark -
@@ -1212,8 +1221,7 @@ end:
 			if( ! room ) {
 				room = [[MVIRCChatRoom allocWithZone:nil] initWithName:name andConnection:self];
 				[self _addJoinedRoom:room];
-				[room release];
-			}
+			} else [room retain];
 
 			[room _setDateJoined:[NSDate date]];
 			[room _setDateParted:nil];
@@ -1553,6 +1561,7 @@ end:
 		if( room && ! [room _namesSynced] ) {
 			[room _setNamesSynced:YES];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification object:room];
+			[room release]; // balance the alloc or retain from _handleJoinWithParameters
 		}
 	}
 }

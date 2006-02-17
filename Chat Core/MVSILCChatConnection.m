@@ -1381,6 +1381,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
 		pool = [[NSAutoreleasePool allocWithZone:nil] init];
 		silc_schedule_one( _silcClient -> schedule, -1 );
+		[pool drain];
 		[pool release];
 	}
 }
@@ -1469,6 +1470,14 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 - (NSMutableDictionary *) _sentCommands {
 	return _sentCommands;
+}
+
+#pragma mark -
+
+- (void) _removeKnownUser:(MVChatUser *) user {
+	@synchronized( _knownUsers ) {
+		if( user ) [_knownUsers removeObjectForKey:[user uniqueIdentifier]];
+	}
 }
 
 #pragma mark -

@@ -29,6 +29,15 @@
 	return self;
 }
 
+- (void) release {
+	if( ! _releasing && [self isRemoteUser] && ( [self retainCount] - 1 ) == 1 ) {
+		_releasing = YES;
+		[[self connection] _removeKnownUser:self];
+	}
+
+	[super release];
+}
+
 #pragma mark -
 
 - (void) updateWithClientEntry:(SilcClientEntry) clientEntry {

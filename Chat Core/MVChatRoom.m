@@ -1,4 +1,5 @@
 #import "MVChatConnection.h"
+#import "MVChatConnectionPrivate.h"
 #import "MVChatRoom.h"
 #import "MVChatUser.h"
 
@@ -62,6 +63,15 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 
 	return self;
+}
+
+- (void) release {
+	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
+		_releasing = YES;
+		[[self connection] _removeJoinedRoom:self];
+	}
+
+	[super release];
 }
 
 - (void) dealloc {

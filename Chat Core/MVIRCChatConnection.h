@@ -42,5 +42,7 @@
 - (void) _addFileTransfer:(MVFileTransfer *) transfer;
 - (void) _removeFileTransfer:(MVFileTransfer *) transfer;
 
+- (void) _removeKnownUser:(MVChatUser *) user;
+
 - (void) _setCurrentNickname:(NSString *) nickname;
 @end

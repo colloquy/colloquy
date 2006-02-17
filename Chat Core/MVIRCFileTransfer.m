@@ -352,6 +352,7 @@ static NSRange portRange;
 
 	_connectionThread = nil;
 
+	[pool drain];
 	[pool release];
 }
 
@@ -596,6 +597,7 @@ static NSRange portRange;
 
 	_connectionThread = nil;
 
+	[pool drain];
 	[pool release];
 }
 

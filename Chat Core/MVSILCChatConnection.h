@@ -51,6 +51,8 @@
 - (NSMutableArray *) _queuedCommands;
 - (NSMutableDictionary *) _sentCommands;
 
+- (void) _removeKnownUser:(MVChatUser *) user;
+
 - (NSData *) _detachInfo;
 - (void) _setDetachInfo:(NSData *) info;
 

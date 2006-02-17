@@ -7,6 +7,7 @@
 
 @interface MVSILCChatUser : MVChatUser {
 	SilcClientEntry _clientEntry;
+	BOOL _releasing;
 }
 - (id) initLocalUserWithConnection:(MVSILCChatConnection *) connection;
 - (id) initWithClientEntry:(SilcClientEntry) clientEntry andConnection:(MVSILCChatConnection *) connection;
