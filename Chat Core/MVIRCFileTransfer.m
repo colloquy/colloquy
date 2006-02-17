@@ -156,8 +156,11 @@ static NSRange portRange;
 }
 
 - (void) release {
-	if( ( [self retainCount] - 1 ) == 1 )
+	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
+		_releasing = YES;
 		[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
+	}
+
 	[super release];
 }
 
@@ -383,8 +386,11 @@ static NSRange portRange;
 }
 
 - (void) release {
-	if( ( [self retainCount] - 1 ) == 1 )
+	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
+		_releasing = YES;
 		[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
+	}
+
 	[super release];
 }
 

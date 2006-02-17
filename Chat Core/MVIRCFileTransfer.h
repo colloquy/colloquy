@@ -13,6 +13,7 @@
 	BOOL _readData;
 	BOOL _doneSending;
 	BOOL _done;
+	BOOL _releasing;
 	unsigned int _passiveId;
 }
 - (void) _setupAndStart;
@@ -32,6 +33,7 @@
 	BOOL _fileNameQuoted;
 	BOOL _done;
 	BOOL _turbo;
+	BOOL _releasing;
 	unsigned int _passiveId;
 }
 - (void) _setupAndStart;
