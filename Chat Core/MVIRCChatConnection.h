@@ -9,6 +9,7 @@
 @interface MVIRCChatConnection : MVChatConnection {
 @private
 	AsyncSocket *_chatConnection;
+	NSTimer *_periodicCleanUpTimer;
 	NSThread *_connectionThread;
 	NSMutableDictionary *_knownUsers;
 	NSMutableSet *_fileTransfers;
@@ -42,7 +43,7 @@
 - (void) _addFileTransfer:(MVFileTransfer *) transfer;
 - (void) _removeFileTransfer:(MVFileTransfer *) transfer;
 
-- (void) _removeKnownUser:(MVChatUser *) user;
-
 - (void) _setCurrentNickname:(NSString *) nickname;
+
+- (void) _periodicCleanUp;
 @end

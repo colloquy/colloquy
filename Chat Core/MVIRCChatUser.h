@@ -3,9 +3,7 @@
 
 @class MVIRCChatConnection;
 
-@interface MVIRCChatUser : MVChatUser {
-	BOOL _releasing;
-}
+@interface MVIRCChatUser : MVChatUser {}
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) connection;
 - (id) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection;
 @end

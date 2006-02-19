@@ -639,6 +639,11 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	_localUser = nil;
 	[old release];
 
+	[self _periodicCleanUp];
+	[_periodicCleanUpTimer invalidate];
+	[_periodicCleanUpTimer release];
+	_periodicCleanUpTimer = nil;
+
 	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
 }
 
@@ -649,6 +654,11 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 
 	id old = _localUser;
 	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
+	[old release];
+
+	old = _periodicCleanUpTimer;
+	_periodicCleanUpTimer = [[NSTimer scheduledTimerWithTimeInterval:600. target:self selector:@selector( _periodicCleanUp ) userInfo:nil repeats:YES] retain];
+	[old invalidate];
 	[old release];
 
 	[self _readNextMessageFromServer];
@@ -888,6 +898,23 @@ end:
 
 #pragma mark -
 
+- (void) _periodicCleanUp {
+	@synchronized( _knownUsers ) {
+		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_knownUsers count]];
+		NSEnumerator *keyEnumerator = [_knownUsers keyEnumerator];
+		NSEnumerator *enumerator = [_knownUsers objectEnumerator];
+		id key = nil, object = nil;
+
+		while( ( key = [keyEnumerator nextObject] ) && ( object = [enumerator nextObject] ) )
+			if( [object retainCount] == 1 ) [removeList addObject:key];
+
+		[_knownUsers removeObjectsForKeys:removeList];
+		[removeList release];
+	}
+}
+
+#pragma mark -
+
 - (void) _addFileTransfer:(MVFileTransfer *) transfer {
 	@synchronized( _fileTransfers ) {
 		if( transfer ) [_fileTransfers addObject:transfer];
@@ -897,14 +924,6 @@ end:
 - (void) _removeFileTransfer:(MVFileTransfer *) transfer {
 	@synchronized( _fileTransfers ) {
 		if( transfer ) [_fileTransfers removeObject:transfer];
-	}
-}
-
-#pragma mark -
-
-- (void) _removeKnownUser:(MVChatUser *) user {
-	@synchronized( _knownUsers ) {
-		if( user ) [_knownUsers removeObjectForKey:[user uniqueIdentifier]];
 	}
 }
 @end
