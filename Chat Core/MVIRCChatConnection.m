@@ -14,6 +14,8 @@
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
 
+#define JVMaximumCommandsSentAtOnce 5
+
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
 	NSUTF8StringEncoding,
@@ -196,6 +198,11 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	[_password release];
 	[_realName release];
 	[_threadWaitLock release];
+	[_periodicCleanUpTimer release];
+	[_sendQueue release];
+	[_sendQueueTimer release];
+	[_queueWait release];
+	[_lastCommand release];
 
 	_chatConnection = nil;
 	_connectionThread = nil;
@@ -208,6 +215,11 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	_password = nil;
 	_realName = nil;
 	_threadWaitLock = nil;
+	_periodicCleanUpTimer = nil;
+	_sendQueue = nil;
+	_sendQueueTimer = nil;
+	_queueWait = nil;
+	_lastCommand = nil;
 
 	[super dealloc];
 }
@@ -239,6 +251,10 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	_lastConnectAttempt = [[NSDate allocWithZone:nil] init];
 	[old release];
 
+	old = _queueWait;
+	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:120.] retain];
+	[old release];
+
 	[self _willConnect]; // call early so other code has a chance to change our info
 
 	_connectionThread = nil;
@@ -253,12 +269,13 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
 	[self cancelPendingReconnectAttempts];
+	if( _sendQueueTimer ) [self performSelector:@selector( _stopSendQueueTimer ) withObject:nil inThread:_connectionThread];
 
 	if( _status == MVChatConnectionConnectedStatus ) {
 		if( [[reason string] length] ) {
 			NSData *msg = [[self class] _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
-			[self sendRawMessageWithComponents:@"QUIT :", msg, nil];
-		} else [self sendRawMessage:@"QUIT"];
+			[self sendRawMessageImmediatelyWithComponents:@"QUIT :", msg, nil];
+		} else [self sendRawMessage:@"QUIT" immediately:YES];
 	}
 
 	_status = MVChatConnectionDisconnectedStatus;
@@ -299,7 +316,7 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	}
 
 	if( [self isConnected] )
-		[self sendRawMessageWithFormat:@"NICK %@", nickname];
+		[self sendRawMessageImmediatelyWithFormat:@"NICK %@", nickname];
 }
 
 - (NSString *) nickname {
@@ -314,7 +331,7 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 
 - (void) setNicknamePassword:(NSString *) password {
 	if( ! [[self localUser] isIdentified] && password && [self isConnected] )
-		[self sendRawMessageWithFormat:@"NickServ IDENTIFY %@", password];
+		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", password];
 	[super setNicknamePassword:password];
 }
 
@@ -376,35 +393,31 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	NSParameterAssert( raw != nil );
 	NSParameterAssert( [raw isKindOfClass:[NSData class]] || [raw isKindOfClass:[NSString class]] );
 
-	NSMutableData *data = nil;
-	NSString *string = nil;
+	if( ! now ) {
+		@synchronized( _sendQueue ) {
+			now = ! [_sendQueue count];
+		}
 
-	if( [raw isKindOfClass:[NSMutableData class]] ) {
-		data = [raw retain];
-		string = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
-	} else if( [raw isKindOfClass:[NSData class]] ) {
-		data = [raw mutableCopyWithZone:nil];
-		string = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
-	} else if( [raw isKindOfClass:[NSString class]] ) {
-		data = [[raw dataUsingEncoding:[self encoding] allowLossyConversion:YES] mutableCopyWithZone:nil];
-		string = [raw retain];
+		if( now ) now = ( ! _queueWait || [_queueWait timeIntervalSinceNow] <= 0. );
+		if( now ) now = ( ! _lastCommand || [_lastCommand timeIntervalSinceNow] <= -0.2 );
 	}
 
-	// IRC messages are always lines of characters terminated with a CR-LF
-	// (Carriage Return - Line Feed) pair, and these messages SHALL NOT
-	// exceed 512 characters in length, counting all characters including
-	// the trailing CR-LF. Thus, there are 510 characters maximum allowed
-	// for the command and its parameters.
+	if( now ) {
+		[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread];
 
-	if( [data length] > 510 ) [data setLength:510];
-	[data appendBytes:"\x0D\x0A" length:2];
+		id old = _lastCommand;
+		_lastCommand = [[NSDate allocWithZone:nil] init];
+		[old release];
+	} else {
+		if( ! _sendQueue ) _sendQueue = [[NSMutableArray allocWithZone:nil] initWithCapacity:20];
 
-	[self performSelector:@selector( _writeDataToServer: ) withObject:data inThread:_connectionThread];
+		@synchronized( _sendQueue ) {
+			[_sendQueue addObject:raw];
+		}
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
-
-	[string release];
-	[data release];
+		if( ! _sendQueueTimer )
+			[self performSelector:@selector( _startQueueTimer ) withObject:nil inThread:_connectionThread];
+	}
 }
 
 #pragma mark -
@@ -506,14 +519,16 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 - (void) fetchChatRoomList {
 	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 300. ) {
 		[self sendRawMessage:@"LIST"];
-		[_cachedDate release];
+
+		id old = _cachedDate;
 		_cachedDate = [[NSDate allocWithZone:nil] init];
+		[old release];
 	}
 }
 
 - (void) stopFetchingChatRoomList {
 	if( _cachedDate && ABS( [_cachedDate timeIntervalSinceNow] ) < 600. )
-		[self sendRawMessage:@"LIST STOP"];
+		[self sendRawMessage:@"LIST STOP" immediately:YES];
 }
 
 #pragma mark -
@@ -528,10 +543,10 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 		_awayMessage = [message copyWithZone:nil];
 
 		NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
-		[self sendRawMessageWithComponents:@"AWAY :", msg, nil];
+		[self sendRawMessageImmediatelyWithComponents:@"AWAY :", msg, nil];
 	} else {
 		[[self localUser] _setStatus:MVChatUserAvailableStatus];
-		[self sendRawMessage:@"AWAY"];
+		[self sendRawMessage:@"AWAY" immediately:YES];
 	}
 }
 @end
@@ -565,8 +580,11 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	[_threadWaitLock unlockWithCondition:1];
 
 	BOOL active = YES;
-	while( active && ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) )
+	while( active && ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus || [_chatConnection isConnected] ) )
 		active = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+
+	// make sure the connection has sent all the delegate calls it has scheduled
+	[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.]];
 
 	if( [NSThread currentThread] == _connectionThread )
 		_connectionThread = nil;
@@ -578,8 +596,6 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 #pragma mark -
 
 - (void) _didDisconnect {
-	[_knownUsers removeAllObjects];
-
 	if( _status == MVChatConnectionServerDisconnectedStatus ) {
 		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
 			[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
@@ -635,11 +651,33 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 }
 
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
-	id old = _localUser;
-	_localUser = nil;
+	if( sock != _chatConnection ) return;
+
+	id old = _chatConnection;
+	_chatConnection = nil;
+	[old setDelegate:nil];
 	[old release];
 
-	[self _periodicCleanUp];
+	NSLog(@"socketDidDisconnect" );
+
+	[self _stopSendQueueTimer];
+
+	@synchronized( _sendQueue ) {
+		[_sendQueue removeAllObjects];
+	}
+
+	old = _lastCommand;
+	_lastCommand = nil;
+	[old release];
+
+	old = _queueWait;
+	_queueWait = nil;
+	[old release];
+
+	@synchronized( _knownUsers ) {
+		[_knownUsers removeAllObjects];
+	}
+
 	[_periodicCleanUpTimer invalidate];
 	[_periodicCleanUpTimer release];
 	_periodicCleanUpTimer = nil;
@@ -648,9 +686,9 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 }
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
-	if( [[self password] length] ) [self sendRawMessageWithFormat:@"PASS %@", [self password]];
-	[self sendRawMessageWithFormat:@"NICK %@", [self nickname]];
-	[self sendRawMessageWithFormat:@"USER %@ 0 * :%@", [self username], [self realName]];
+	if( [[self password] length] ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [self password]];
+	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self nickname]];
+	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", [self username], [self realName]];
 
 	id old = _localUser;
 	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
@@ -800,8 +838,36 @@ end:
 
 #pragma mark -
 
-- (void) _writeDataToServer:(NSData *) data {
+- (void) _writeDataToServer:(id) raw {
+	NSMutableData *data = nil;
+	NSString *string = nil;
+
+	if( [raw isKindOfClass:[NSMutableData class]] ) {
+		data = [raw retain];
+		string = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
+	} else if( [raw isKindOfClass:[NSData class]] ) {
+		data = [raw mutableCopyWithZone:nil];
+		string = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
+	} else if( [raw isKindOfClass:[NSString class]] ) {
+		data = [[raw dataUsingEncoding:[self encoding] allowLossyConversion:YES] mutableCopyWithZone:nil];
+		string = [raw retain];
+	}
+
+	// IRC messages are always lines of characters terminated with a CR-LF
+	// (Carriage Return - Line Feed) pair, and these messages SHALL NOT
+	// exceed 512 characters in length, counting all characters including
+	// the trailing CR-LF. Thus, there are 510 characters maximum allowed
+	// for the command and its parameters.
+
+	if( [data length] > 510 ) [data setLength:510];
+	[data appendBytes:"\x0D\x0A" length:2];
+
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
+
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
+
+	[string release];
+	[data release];
 }
 
 - (void) _readNextMessageFromServer {
@@ -913,6 +979,42 @@ end:
 	}
 }
 
+- (void) _startQueueTimer {
+	if( _sendQueueTimer ) return;
+	_sendQueueTimer = [[NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector( _sendQueue ) userInfo:nil repeats:YES] retain];
+}
+
+- (void) _stopSendQueueTimer {
+	id old = _sendQueueTimer;
+	_sendQueueTimer = nil;
+	[old invalidate];
+	[old release];
+}
+
+- (void) _sendQueue {
+	@synchronized( _sendQueue ) {
+		if( ! [_sendQueue count] ) {
+			[self _stopSendQueueTimer];
+			return;
+		}
+	}
+
+	if( _queueWait && [_queueWait timeIntervalSinceNow] > 0. ) return;
+
+	NSData *data = nil;
+	@synchronized( _sendQueue ) {
+		data = [[_sendQueue objectAtIndex:0] retain];
+		[_sendQueue removeObjectAtIndex:0];
+	}
+
+	[self _writeDataToServer:data];
+	[data release];
+
+	id old = _lastCommand;
+	_lastCommand = [[NSDate allocWithZone:nil] init];
+	[old release];
+}
+
 #pragma mark -
 
 - (void) _addFileTransfer:(MVFileTransfer *) transfer {
@@ -935,10 +1037,14 @@ end:
 #pragma mark Connecting Replies
 
 - (void) _handle001WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	id old = _queueWait;
+	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:0.5] retain];
+	[old release];
+
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];	
 	// Identify if we have a user password
 	if( [[self nicknamePassword] length] )
-		[self sendRawMessageWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
+		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
 	if( [parameters count] >= 1 ) {
 		NSString *nickname = [parameters objectAtIndex:0];
 		if( ! [nickname isEqualToString:[self nickname]] ) {
@@ -1035,7 +1141,7 @@ end:
 					if( [msg rangeOfString:@"NickServ"].location != NSNotFound && [msg rangeOfString:@"IDENTIFY"].location != NSNotFound ) {
 						if( ! [self nicknamePassword] ) {
 							[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
-						} else [self sendRawMessageWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
+						} else [self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
 					} else if( [msg rangeOfString:@"Password accepted"].location != NSNotFound ) {
 						[[self localUser] _setIdentified:YES];
 					} else if( [msg rangeOfString:@"authentication required"].location != NSNotFound ) {
@@ -1248,8 +1354,8 @@ end:
 			[room _clearMemberUsers];
 			[room _clearBannedUsers];
 
-			[self sendRawMessageWithFormat:@"WHO %@", name];
-			[self sendRawMessageWithFormat:@"MODE %@ b", name];
+			[self sendRawMessageImmediatelyWithFormat:@"WHO %@", name];
+			[self sendRawMessageImmediatelyWithFormat:@"MODE %@ b", name];
 		} else {
 			if( [sender status] != MVChatUserAwayStatus ) [sender _setStatus:MVChatUserAvailableStatus];
 			[sender _setIdleTime:0.];
@@ -1458,8 +1564,8 @@ end:
 
 - (void) _handlePingWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	if( [parameters count] >= 1 ) {
-		if( [parameters count] == 1 ) [self sendRawMessageWithComponents:@"PONG :", [parameters objectAtIndex:0], nil];
-		else [self sendRawMessageWithComponents:@"PONG ", [parameters objectAtIndex:1], @" :", [parameters objectAtIndex:0], nil];
+		if( [parameters count] == 1 ) [self sendRawMessageImmediatelyWithComponents:@"PONG :", [parameters objectAtIndex:0], nil];
+		else [self sendRawMessageImmediatelyWithComponents:@"PONG ", [parameters objectAtIndex:1], @" :", [parameters objectAtIndex:0], nil];
 	}
 }
 

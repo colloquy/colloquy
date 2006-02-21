@@ -34,8 +34,8 @@
 
 - (void) partWithReason:(NSAttributedString *) reason {
 	if( ! [self isJoined] ) return;
-	if( ! [reason length] ) [[self connection] sendRawMessage:[NSString stringWithFormat:@"PART %@", [self name]] immediately:YES];
-	else [[self connection] sendRawMessage:[NSString stringWithFormat:@"PART %@ :%@", [self name], [reason string]] immediately:YES];
+	if( ! [reason length] ) [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@", [self name]];
+	else [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@ :%@", [self name], [reason string]];
 	[self _setDateParted:[NSDate date]];
 }
 
@@ -220,19 +220,19 @@
 	if( reason ) {
 		NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"KICK %@ %@ :", [self name], [user nickname]];
-		[[self connection] sendRawMessageWithComponents:prefix, msg, nil];
+		[[self connection] sendRawMessageImmediatelyWithComponents:prefix, msg, nil];
 		[prefix release];
-	} else [[self connection] sendRawMessageWithFormat:@"KICK %@ %@", [self name], [user nickname]];
+	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"KICK %@ %@", [self name], [user nickname]];
 }
 
 - (void) addBanForUser:(MVChatUser *) user {
 	[super addBanForUser:user];
-	[[self connection] sendRawMessageWithFormat:@"MODE %@ +b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
+	[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 }
 
 - (void) removeBanForUser:(MVChatUser *) user {
 	[super removeBanForUser:user];
-	[[self connection] sendRawMessageWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
+	[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 }
 @end
 

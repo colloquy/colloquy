@@ -11,6 +11,10 @@
 	AsyncSocket *_chatConnection;
 	NSTimer *_periodicCleanUpTimer;
 	NSThread *_connectionThread;
+	NSDate *_queueWait;
+	NSDate *_lastCommand;
+	NSMutableArray *_sendQueue;
+	NSTimer *_sendQueueTimer;
 	NSMutableDictionary *_knownUsers;
 	NSMutableSet *_fileTransfers;
 	NSString *_server;
@@ -46,4 +50,6 @@
 - (void) _setCurrentNickname:(NSString *) nickname;
 
 - (void) _periodicCleanUp;
+- (void) _startQueueTimer;
+- (void) _stopSendQueueTimer;
 @end
