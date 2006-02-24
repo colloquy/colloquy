@@ -286,8 +286,13 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 
 			MVChatRoom *room = [self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
 			NSData *msgData = ( topic ? [[NSData allocWithZone:nil] initWithBytes:topic length:strlen( topic )] : nil );
-			[room _setTopic:msgData byAuthor:authorUser withDate:[NSDate date]];
+			[room _setTopic:msgData];
 			[msgData release];
+
+			[room _setTopicAuthor:authorUser];
+			[room _setTopicDate:[NSDate date]];
+
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
 		}	break;
 		case SILC_NOTIFY_TYPE_CMODE_CHANGE:
 			break;
@@ -620,8 +625,10 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		if( ! topic ) topic = "";
 
 		NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:topic length:strlen( topic )];
-		[room _setTopic:msgData byAuthor:nil withDate:nil];
+		[room _setTopic:msgData];
 		[msgData release];
+
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
 
 		silc_client_get_clients_by_list( [self _silcClient], [self _silcConn], list_count, client_id_list, silc_channel_get_clients_per_list_callback, room );
 	}	break;

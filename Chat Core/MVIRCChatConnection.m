@@ -1421,7 +1421,10 @@ end:
 - (void) _handleTopicWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	if( [parameters count] == 2 ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
-		[room _setTopic:[parameters objectAtIndex:1] byAuthor:sender withDate:[NSDate date]];
+		[room _setTopic:[parameters objectAtIndex:1]];
+		[room _setTopicAuthor:sender];
+		[room _setTopicDate:[NSDate date]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
 	}
 }
 
@@ -1738,6 +1741,27 @@ end:
 }
 
 #pragma mark -
+#pragma mark Topic Replies
+
+- (void) _handle332WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_TOPIC
+	if( [parameters count] == 3 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		[room _setTopic:[parameters objectAtIndex:2]];
+	}
+}
+
+- (void) _handle333WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_TOPICWHOTIME_IRCU
+	if( [parameters count] >= 4 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatUser *author = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
+		[room _setTopicAuthor:author];
+		if( [[parameters objectAtIndex:3] doubleValue] > 631138520 )
+			[room _setTopicDate:[NSDate dateWithTimeIntervalSince1970:[[parameters objectAtIndex:3] doubleValue]]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
+	}
+}
+
+#pragma mark -
 #pragma mark WHOIS Replies
 
 - (void) _handle311WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISUSER
@@ -1769,13 +1793,13 @@ end:
 - (void) _handle317WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISIDLE
 	if( [parameters count] >= 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		[user _setIdleTime:[[parameters objectAtIndex:2] intValue]];
+		[user _setIdleTime:[[parameters objectAtIndex:2] doubleValue]];
 		[user _setDateConnected:nil];
 
 		// parameter 4 is connection time on some servers
 		// prevent showing 34+ years connected time, this makes sure it is a viable date
-		if( [parameters count] >= 4 && [[parameters objectAtIndex:3] intValue] > 631138520 )
-			[user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:[[parameters objectAtIndex:3] intValue]]];
+		if( [parameters count] >= 4 && [[parameters objectAtIndex:3] doubleValue] > 631138520 )
+			[user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:[[parameters objectAtIndex:3] doubleValue]]];
 	}
 }
 

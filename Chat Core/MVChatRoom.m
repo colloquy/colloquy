@@ -594,20 +594,22 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[old release];
 }
 
-- (void) _setTopic:(NSData *) topic byAuthor:(MVChatUser *) author withDate:(NSDate *) date {
+- (void) _setTopic:(NSData *) topic {
 	id old = _topicData;
 	_topicData = [topic copyWithZone:nil];
 	[old release];
+}
 
-	old = _topicAuthor;
+- (void) _setTopicAuthor:(MVChatUser *) author {
+	id old = _topicAuthor;
 	_topicAuthor = [author retain];
 	[old release];
+}
 
-	old = _dateTopicChanged;
+- (void) _setTopicDate:(NSDate *) date {
+	id old = _dateTopicChanged;
 	_dateTopicChanged = [date copyWithZone:nil];
 	[old release];
-
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:self userInfo:nil];
 }
 
 - (void) _updateMemberUser:(MVChatUser *) user fromOldUniqueIdentifier:(id) identifier {
