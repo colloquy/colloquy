@@ -1716,9 +1716,6 @@ static NSMenu *favoritesMenu = nil;
 	NSArray *rooms = [self joinRoomsForConnection:connection];
 	NSString *strcommands = [self connectCommandsForConnection:connection];
 
-	if( [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
-		[connection joinChatRoomsNamed:rooms];
-
 	NSEnumerator *commands = [[strcommands componentsSeparatedByString:@"\n"] objectEnumerator];
 	NSMutableString *command = nil;
 
@@ -1758,6 +1755,9 @@ static NSMenu *favoritesMenu = nil;
 			}
 		}
 	}
+
+	if( [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
+		[connection joinChatRoomsNamed:rooms];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Connected", "connected bubble title" ) forKey:@"title"];
