@@ -647,7 +647,9 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 
 - (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	NSLog(@"willDisconnectWithError: %@", error );
-	_status = MVChatConnectionServerDisconnectedStatus;
+	id old = _lastError;
+	_lastError = [error retain];
+	[old release];
 }
 
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
@@ -682,7 +684,14 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	[_periodicCleanUpTimer release];
 	_periodicCleanUpTimer = nil;
 
-	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
+	if( _status == MVChatConnectionConnectingStatus )
+		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
+
+	if( _lastError )
+		_status = MVChatConnectionServerDisconnectedStatus;
+
+	if( _status == MVChatConnectionServerDisconnectedStatus || _status == MVChatConnectionConnectedStatus )
+		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
 }
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {

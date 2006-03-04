@@ -774,6 +774,10 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) _willConnect {
+	id old = _lastError;
+	_lastError = nil;
+	[old release];
+
 	_nextAltNickIndex = 0;
 	_status = MVChatConnectionConnectingStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWillConnectNotification object:self];
