@@ -1,52 +1,44 @@
 #import "MVFileTransfer.h"
-#import "common.h"
-#import "core.h"
-#import "servers.h"
-#import "irc.h"
-#import "dcc-file.h"
-#import "dcc-send.h"
-#import "dcc-get.h"
+#import "MVFileTransferPrivate.h"
+
+@class AsyncSocket;
 
 @interface MVIRCUploadFileTransfer : MVUploadFileTransfer {
-	void *_dcc;
-	int _transferQueue;
+	AsyncSocket *_connection;
+	AsyncSocket *_acceptConnection;
+	NSThread *_connectionThread;
+	NSFileHandle *_fileHandle;
+	NSConditionLock *_threadWaitLock;
+	BOOL _fileNameQuoted;
+	BOOL _readData;
+	BOOL _doneSending;
+	BOOL _done;
+	BOOL _releasing;
+	unsigned int _passiveId;
 }
-- (id) initWithDCCFileRecord:(void *) record toUser:(MVChatUser *) user;
+- (void) _setupAndStart;
+- (void) _sendNextPacket;
+- (void) _finish;
+- (unsigned int) _passiveIdentifier;
 @end
 
 #pragma mark -
 
 @interface MVIRCDownloadFileTransfer : MVDownloadFileTransfer {
-	void *_dcc;
+	AsyncSocket *_connection;
+	AsyncSocket *_acceptConnection;
+	NSThread *_connectionThread;
+	NSFileHandle *_fileHandle;
+	NSConditionLock *_threadWaitLock;
+	BOOL _fileNameQuoted;
+	BOOL _done;
+	BOOL _turbo;
+	BOOL _releasing;
+	unsigned int _passiveId;
 }
-- (id) initWithDCCFileRecord:(void *) record fromUser:(MVChatUser *) user;
-@end
-
-#pragma mark -
-
-@interface MVFileTransfer (MVFileTransferPrivate)
-- (void) _setStatus:(MVFileTransferStatus) status;
-- (void) _postError:(NSError *) error;
-@end
-
-#pragma mark -
-
-@interface MVFileTransfer (MVIRCFileTransferPrivate)
-+ (id) _transferForDCCFileRecord:(FILE_DCC_REC *) record;
-@end
-
-#pragma mark -
-
-@interface MVIRCUploadFileTransfer (MVIRCUploadFileTransferPrivate)
-- (SEND_DCC_REC *) _DCCFileRecord;
-- (void) _setDCCFileRecord:(FILE_DCC_REC *) record;
-- (void) _destroying;
-@end
-
-#pragma mark -
-
-@interface MVIRCDownloadFileTransfer (MVIRCDownloadFileTransferPrivate)
-- (GET_DCC_REC *) _DCCFileRecord;
-- (void) _setDCCFileRecord:(FILE_DCC_REC *) record;
-- (void) _destroying;
+- (void) _setupAndStart;
+- (void) _finish;
+- (void) _setTurbo:(BOOL) turbo;
+- (void) _setPassiveIdentifier:(unsigned int) identifier;
+- (unsigned int) _passiveIdentifier;
 @end

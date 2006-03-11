@@ -34,6 +34,13 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 	return self;
 }
 
+- (void) finalize {
+	extern MVChatPluginManager *sharedInstance;
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	if( self == sharedInstance ) sharedInstance = nil;
+	[super finalize];
+}
+
 - (void) dealloc {
 	extern MVChatPluginManager *sharedInstance;
 

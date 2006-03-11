@@ -1,4 +1,5 @@
 #import "MVChatConnection.h"
+#import "MVChatConnectionPrivate.h"
 #import "MVChatRoom.h"
 #import "MVChatUser.h"
 
@@ -64,9 +65,16 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return self;
 }
 
-- (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+- (void) release {
+	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
+		_releasing = YES;
+		[[self connection] _removeJoinedRoom:self];
+	}
 
+	[super release];
+}
+
+- (void) dealloc {
 	[_name release];
 	[_uniqueIdentifier release];
 	[_dateJoined release];
@@ -122,7 +130,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (unsigned) hash {
-	return ( [[self uniqueIdentifier] hash] ^ [[self connection] hash] ^ [[self uniqueIdentifier] hash] );
+	if( ! _hash ) _hash = ( [[self connection] hash] ^ [[self uniqueIdentifier] hash] );
+	return _hash;
 }
 
 #pragma mark -
@@ -212,11 +221,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
 // subclass this method, if needed
 }
 
-- (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
 // subclass this method, if needed
 }
 
@@ -286,8 +295,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 	
 	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:key, @"attribute", nil];
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
 	[info release];
 }
 
@@ -532,6 +540,12 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 }
 
+- (void) _setModes:(unsigned long) modes forMemberUser:(MVChatUser *) user {
+	@synchronized( _memberModes ) {
+		[_memberModes setObject:[NSNumber numberWithUnsignedLong:modes] forKey:[user uniqueIdentifier]];
+	}	
+}
+
 - (void) _setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
 	@synchronized( _memberModes ) {
 		unsigned long modes = ( [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue] | mode );
@@ -547,8 +561,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (void) _clearModes {
-	_modes = 0;
 	@synchronized( _modeAttributes ) {
+		_modes = 0;
 		[_modeAttributes removeAllObjects];
 	}
 }
@@ -562,8 +576,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (void) _removeMode:(MVChatRoomMode) mode {
-	_modes &= ~mode;
 	@synchronized( _modeAttributes ) {
+		_modes &= ~mode;
 		[_modeAttributes removeObjectForKey:[NSNumber numberWithUnsignedLong:mode]];
 	}
 }
@@ -580,21 +594,22 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[old release];
 }
 
-- (void) _setTopic:(NSData *) topic byAuthor:(MVChatUser *) author withDate:(NSDate *) date {
+- (void) _setTopic:(NSData *) topic {
 	id old = _topicData;
 	_topicData = [topic copyWithZone:nil];
 	[old release];
+}
 
-	old = _topicAuthor;
+- (void) _setTopicAuthor:(MVChatUser *) author {
+	id old = _topicAuthor;
 	_topicAuthor = [author retain];
 	[old release];
+}
 
-	old = _dateTopicChanged;
+- (void) _setTopicDate:(NSDate *) date {
+	id old = _dateTopicChanged;
 	_dateTopicChanged = [date copyWithZone:nil];
 	[old release];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomTopicChangedNotification object:self userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 }
 
 - (void) _updateMemberUser:(MVChatUser *) user fromOldUniqueIdentifier:(id) identifier {

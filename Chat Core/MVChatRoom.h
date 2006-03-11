@@ -60,12 +60,13 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSMutableDictionary *_memberModes;
 	NSStringEncoding _encoding;
 	unsigned long _modes;
+	unsigned int _hash;
+	BOOL _releasing;
 }
 - (MVChatConnection *) connection;
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatRoom:(MVChatRoom *) anotherUser;
-- (unsigned) hash;
 
 - (NSComparisonResult) compare:(MVChatRoom *) otherRoom;
 - (NSComparisonResult) compareByUserCount:(MVChatRoom *) otherRoom;
@@ -89,8 +90,8 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (void) sendMessage:(NSAttributedString *) message asAction:(BOOL) action;
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments;
-- (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments;
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments;
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments;
 
 - (NSData *) topic;
 - (MVChatUser *) topicAuthor;

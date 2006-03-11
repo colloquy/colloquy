@@ -1,14 +1,11 @@
-#import <unistd.h>
-#import <pthread.h>
-
-#define HAVE_IPV6 1
-#define MODULE_NAME "MVIRCChatConnection"
-
 #import "MVIRCChatConnection.h"
 #import "MVIRCChatRoom.h"
 #import "MVIRCChatUser.h"
 #import "MVIRCFileTransfer.h"
+#import "MVIRCNumerics.h"
 
+#import "AsyncSocket.h"
+#import "InterThreadMessaging.h"
 #import "MVChatPluginManager.h"
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
@@ -17,34 +14,7 @@
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
 
-#import "core.h"
-#import "irc.h"
-#import "signals.h"
-#import "servers.h"
-#import "servers-setup.h"
-#import "chat-protocols.h"
-#import "net-sendbuffer.h"
-#import "channels.h"
-#import "nicklist.h"
-#import "notifylist.h"
-#import "mode-lists.h"
-#import "rawlog.h"
-#import "settings.h"
-
-#import "config.h"
-#import "dcc.h"
-#import "dcc-file.h"
-#import "dcc-get.h"
-
-void irc_init( void );
-void irc_deinit( void );
-
-#pragma mark -
-
-static NSPort *threadConnectionPort = nil;
-static BOOL irssiThreadReady = NO;
-static unsigned int connectionCount = 0;
-pthread_mutex_t irssiLock;
+#define JVMaximumCommandsSentAtOnce 5
 
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
@@ -99,703 +69,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	0
 };
 
-typedef struct {
-	MVIRCChatConnection *connection;
-} MVIRCChatConnectionModuleData;
-
-// IRC error codes for most servers (some codes are not supported by all servers)
-#define ERR_NOSUCHNICK       401 // <nickname> :No such nick/channel
-#define ERR_NOSUCHSERVER     402 // <server name> :No such server
-#define ERR_NOSUCHCHANNEL    403 // <channel name> :No such channel
-#define ERR_CANNOTSENDTOCHAN 404 // <channel name> :Cannot send to channel
-#define ERR_TOOMANYCHANNELS  405 // <channel name> :You have joined too many channels
-#define ERR_WASNOSUCHNICK    406 // <nickname> :There was no such nickname
-#define ERR_TOOMANYTARGETS   407 // <target> :Duplicate recipients. No message delivered
-#define ERR_NOSUCHSERVICE    408
-#define	ERR_NOORIGIN         409 // :No origin specified
-#define ERR_CANNOTKNOCK      410
-#define ERR_NORECIPIENT      411 // :No recipient given (<command>)
-#define ERR_NOTEXTTOSEND     412 // :No text to send
-#define ERR_NOTOPLEVEL       413 // <mask> :No toplevel domain specified
-#define ERR_WILDTOPLEVEL     414 // <mask> :Wildcard in toplevel domain
-#define ERR_SERVICESUP       415
-
-#define ERR_UNKNOWNCOMMAND   421 // <command> :Unknown command
-#define	ERR_NOMOTD           422 // :MOTD File is missing
-#define	ERR_NOADMININFO      423 // <server> :No administrative info available
-#define	ERR_FILEERROR        424 // :File error doing <file op> on <file>
-
-#define ERR_NONICKNAMEGIVEN  431 // :No nickname given
-#define ERR_ERRONEUSNICKNAME 432 // <nick> :Erroneus nickname
-#define ERR_NICKNAMEINUSE    433 // <nick> :Nickname is already in use
-#define ERR_SERVICENAMEINUSE 434
-#define ERR_SERVICECONFUSED  435
-#define	ERR_NICKCOLLISION    436 // <nick> :Nickname collision KILL
-#define ERR_BANNICKCHANGE    437
-#define ERR_NCHANGETOOFAST   438
-#define ERR_TARGETTOOFAST    439
-#define ERR_SERVICESDOWN     440
-
-#define ERR_USERNOTINCHANNEL 441 // <nick> <channel> :They aren't on that channel
-#define ERR_NOTONCHANNEL     442 // <channel> :You're not on that channel
-#define	ERR_USERONCHANNEL    443 // <user> <channel> :is already on channel
-#define ERR_NOLOGIN          444 // <user> :User not logged in
-#define	ERR_SUMMONDISABLED   445 // :SUMMON has been disabled
-#define ERR_USERSDISABLED    446 // :USERS has been disabled
-
-#define ERR_NOTREGISTERED    451 // :You have not registered
-
-#define ERR_HOSTILENAME      455
-
-#define ERR_NEEDMOREPARAMS   461 // <command> :Not enough parameters
-#define ERR_ALREADYREGISTRED 462 // :You may not reregister
-#define ERR_NOPERMFORHOST    463 // :Your host isn't among the privileged
-#define ERR_PASSWDMISMATCH   464 // :Password incorrect
-#define ERR_YOUREBANNEDCREEP 465 // :You are banned from this server
-#define ERR_YOUWILLBEBANNED  466
-#define	ERR_KEYSET           467 // <channel> :Channel key already set
-#define ERR_ONLYSERVERSCANCHANGE 468
-
-#define ERR_CHANNELISFULL    471 // <channel> :Cannot join channel (+l)
-#define ERR_UNKNOWNMODE      472 // <char> :is unknown mode char to me
-#define ERR_INVITEONLYCHAN   473 // <channel> :Cannot join channel (+i)
-#define ERR_BANNEDFROMCHAN   474 // <channel> :Cannot join channel (+b)
-#define	ERR_BADCHANNELKEY    475 // <channel> :Cannot join channel (+k)
-#define	ERR_BADCHANMASK      476
-#define ERR_NEEDREGGEDNICK   477
-#define ERR_BANLISTFULL      478
-#define ERR_NOPRIVILEGES     481 // :Permission Denied- You're not an IRC operator
-#define ERR_CHANOPRIVSNEEDED 482 // <channel> :You're not channel operator
-#define	ERR_CANTKILLSERVER   483 // :You cant kill a server!
-#define ERR_CANTKICKOPER     484 // Undernet extension was ERR_ISCHANSERVICE
-#define ERR_CANTKICKADMIN	 485
-
-#define ERR_NOOPERHOST       491 // :No O-lines for your host
-#define ERR_NOSERVICEHOST    492
-
-#define ERR_UMODEUNKNOWNFLAG 501 // :Unknown MODE flag
-#define ERR_USERSDONTMATCH   502 // :Cant change mode for other users
-
-#define ERR_SILELISTFULL     511
-#define ERR_TOOMANYWATCH     512
-#define ERR_NEEDPONG         513
-
-#define ERR_LISTSYNTAX       521
-
-static void MVChatConnecting( SERVER_REC *server ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
-	if( ! self ) return;
-	[self performSelectorOnMainThread:@selector( _willConnect ) withObject:nil waitUntilDone:NO];
-}
-
-static void MVChatConnected( SERVER_REC *server ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
-	if( ! self ) return;
-	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
-}
-
-static void MVChatDisconnect( SERVER_REC *server ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
-	if( ! self ) return;
-
-	if( server -> connection_lost )
-		[self _setStatus:MVChatConnectionServerDisconnectedStatus];
-
-	[self _setIrssiConnection:NULL];
-	[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
-}
-
-static void MVChatConnectFailed( SERVER_REC *server ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
-	if( ! self ) return;
-
-	server_ref( server );
-
-	[self _setIrssiConnection:NULL];
-	[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
-}
-
-static void MVChatRawIncomingMessage( SERVER_REC *server, char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
-	if( ! self ) return;
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:data], @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVChatRawOutgoingMessage( SERVER_REC *server, char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:server];
-	if( ! self ) return;
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:data], @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-#pragma mark -
-
-static void MVChatNickTaken( IRC_SERVER_REC *server, const char *data, const char *by, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	if( ((SERVER_REC *)server) -> connected ) {
-		// error
-		return;
-	} else {
-		NSString *nick = [self nextAlternateNickname];
-		if( nick ) {
-			[self sendRawMessage:[NSString stringWithFormat:@"NICK %@", nick] immediately:YES];
-			signal_stop();
-		}
-	}
-}
-
-static void MVChatNickFinal( IRC_SERVER_REC *server, const char *data, const char *by, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	// incase our nickname changes since we started
-	[[self localUser] _setUniqueIdentifier:[[self nickname] lowercaseString]];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-#pragma mark -
-
-static void MVChatJoinedRoom( CHANNEL_REC *channel ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	[room _setDateJoined:[NSDate date]];
-	[room _setDateParted:nil];
-	[room _clearMemberUsers];
-	[room _clearBannedUsers];
-
-	GSList *nicks = nicklist_getnicks( channel );
-	GSList *nickItem = NULL;
-
-	for( nickItem = nicks; nickItem != NULL; nickItem = g_slist_next( nickItem ) ) {
-		NICK_REC *nick = nickItem -> data;
-		MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick -> nick]];
-
-		[room _addMemberUser:member];
-
-		if( nick -> op ) [room _setMode:MVChatRoomMemberOperatorMode forMemberUser:member];
-		if( nick -> halfop ) [room _setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:member];
-		if( nick -> voice ) [room _setMode:MVChatRoomMemberVoicedMode forMemberUser:member];
-	}
-
-	NSData *topic = ( channel -> topic ? [[NSData allocWithZone:nil] initWithBytes:channel -> topic length:strlen( channel -> topic )] : nil );
-	NSString *author = ( channel -> topic_by ? [self stringWithEncodedBytes:channel -> topic_by] : nil );
-	MVChatUser *authorUser = ( author ? [self chatUserWithUniqueIdentifier:author] : nil );
-	NSDate *time = ( channel -> topic_time ? [NSDate dateWithTimeIntervalSince1970:channel -> topic_time] : nil );
-
-	[room _setTopic:topic byAuthor:authorUser withDate:time];
-	[topic release];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomJoinedNotification object:room userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVChatJoinedWhoList( CHANNEL_REC *channel ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
-
-	GSList *nicks = nicklist_getnicks( channel );
-	GSList *nickItem = NULL;
-
-	for( nickItem = nicks; nickItem != NULL; nickItem = g_slist_next( nickItem ) ) {
-		NICK_REC *nick = nickItem -> data;
-		MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick -> nick]];
-
-		if( nick -> realname ) [member _setRealName:[self stringWithEncodedBytes:nick -> realname]];
-		[member _setServerOperator:nick -> serverop];
-
-		if( nick -> host ) {
-			NSString *hostmask = [self stringWithEncodedBytes:nick -> host];
-			NSArray *parts = [hostmask componentsSeparatedByString:@"@"];
-			if( [parts count] == 2 ) {
-				[member _setUsername:[parts objectAtIndex:0]];
-				[member _setAddress:[parts objectAtIndex:1]];
-			}
-		}
-	}
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	if( ! room ) return;
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVChatLeftRoom( CHANNEL_REC *channel ) {
-	if( channel -> kicked || channel -> server -> disconnected ) return;
-
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	[room _setDateParted:[NSDate date]];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomPartedNotification object:room userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVChatRoomTopicChanged( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self || ! data ) return;
-
-	char *channel = NULL;
-	char *topic = NULL;
-	char *params = event_get_params( data, 2, &channel, &topic );
-
-	if( ! topic || ! channel ) return;
-
-	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:topic length:strlen( topic )];
-
-	NSString *author = ( nick ? [self stringWithEncodedBytes:nick] : nil );
-	MVChatUser *authorUser = ( author ? [self chatUserWithUniqueIdentifier:author] : nil );
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
-	[room _setTopic:msgData byAuthor:authorUser withDate:[NSDate date]];
-
-	[msgData release];
-	g_free( params );
-}
-
-#pragma mark -
-
-static void MVChatUserJoinedRoom( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *channel = NULL;
-	char *params = event_get_params( data, 1, &channel );
-
-	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) {
-		// this is the local user, create the room object now as early as possible
-		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
-		if( ! room ) {
-			room = [[MVIRCChatRoom allocWithZone:nil] initWithName:[self stringWithEncodedBytes:channel] andConnection:self];
-			[self _addJoinedRoom:room];
-			[room release];
-		}
-
-		goto finish; // the rest of this function doesn't apply since it is just the local user
-	}
-
-	CHANNEL_REC *chan = channel_find( (SERVER_REC *) server, channel );
-	NICK_REC *nickname = nicklist_find( chan, nick );
-
-	if( ! nickname ) goto finish;
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
-	MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	if( [member status] != MVChatUserAwayStatus ) [member _setStatus:MVChatUserAvailableStatus];
-
-	[room _addMemberUser:member];
-
-	if( nickname -> op ) [room _setMode:MVChatRoomMemberOperatorMode forMemberUser:member];
-	if( nickname -> halfop ) [room _setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:member];
-	if( nickname -> voice ) [room _setMode:MVChatRoomMemberVoicedMode forMemberUser:member];
-
-	if( nickname -> realname ) [member _setRealName:[self stringWithEncodedBytes:nickname -> realname]];
-	[member _setServerOperator:nickname -> serverop];
-
-	if( nickname -> host ) {
-		NSString *hostmask = [self stringWithEncodedBytes:nickname -> host];
-		NSArray *parts = [hostmask componentsSeparatedByString:@"@"];
-		if( [parts count] == 2 ) {
-			[member _setUsername:[parts objectAtIndex:0]];
-			[member _setAddress:[parts objectAtIndex:1]];
-		}
-	}
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserJoinedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-finish:
-	g_free( params );
-}
-
-static void MVChatUserLeftRoom( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) return;
-
-	char *channel = NULL;
-	char *reason = NULL;
-	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &channel, &reason );
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
-	MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-
-	[room _removeMemberUser:member];
-
-	NSData *reasonData = [[NSData allocWithZone:nil] initWithBytes:reason length:strlen( reason )];
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	[reasonData release];
-	g_free( params );
-}
-
-static void MVChatUserQuit( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) return;
-
-	if( *data == ':' ) data++;
-
-	MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	NSData *reasonData = [[NSData allocWithZone:nil] initWithBytes:data length:strlen( data )];
-	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-	MVChatRoom *room = nil;
-
-	[member _setDateDisconnected:[NSDate date]];
-	[member _setStatus:MVChatUserOfflineStatus];
-
-	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil];
-	while( ( room = [enumerator nextObject] ) ) {
-		if( ! [room isJoined] || ! [room hasUser:member] ) continue;
-		[room _removeMemberUser:member];
-		NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserPartedNotification object:room userInfo:info];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-	}
-
-	[info release];
-	[reasonData release];
-}
-
-static void MVChatUserKicked( IRC_SERVER_REC *server, const char *data, const char *by, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *channel = NULL, *nick = NULL, *reason = NULL;
-	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, &channel, &nick, &reason );
-
-	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:reason length:strlen( reason )];
-	NSNotification *note = nil;
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
-	MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	MVChatUser *byMember = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:by]];
-	[room _removeMemberUser:member];
-
-	if( [[self nickname] isEqualToString:[self stringWithEncodedBytes:nick]] ) {
-		[room _setDateParted:[NSDate date]];
-		note = [NSNotification notificationWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:byMember, @"byUser", msgData, @"reason", nil]];
-	} else {
-		note = [NSNotification notificationWithName:MVChatRoomUserKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"user", byMember, @"byUser", msgData, @"reason", nil]];
-	}
-
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	[msgData release];
-	g_free( params );
-}
-
-static void MVChatInvited( IRC_SERVER_REC *server, const char *data, const char *by, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *channel = NULL;
-	char *params = event_get_params( data, 2, NULL, &channel );
-
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:by]];
-	if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", [self stringWithEncodedBytes:channel], @"room", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	g_free( params );
-}
-
-static void MVChatUserAway( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *nick = NULL, *message = NULL;
-	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, NULL, &nick, &message );
-
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	[user _setStatus:MVChatUserAwayStatus];
-
-//	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:message length:strlen( message )];
-
-//	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionUserAwayStatusNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", msgData, @"message", nil]];
-//	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-//	[msgData release];
-
-	g_free( params );
-}
-
-#pragma mark -
-
-static void MVChatSelfAwayChanged( IRC_SERVER_REC *server ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-#pragma mark -
-
-static void MVChatGetMessage( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-	if( ! nick ) return;
-
-	char *target = NULL, *message = NULL;
-	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &target, &message );
-	if( ! address ) address = "";
-
-	if( *target == '@' && ischannel( target[1] ) ) target++;
-
-	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:message length:strlen( message )];
-	NSNotification *note = nil;
-
-	if( ischannel( *target ) ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
-		[user _setIdleTime:0.];
-		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", nil]];
-	} else {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
-		[user _setIdleTime:0.];
-		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", nil]];
-	}
-
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	[msgData release];
-	g_free( params );
-}
-
-static void MVChatGetAutoMessage( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-	if( ! nick ) return;
-
-	char *target = NULL, *message = NULL;
-	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &target, &message );
-	if( ! address ) address = "";
-
-	if( *target == '@' && ischannel( target[1] ) ) target++;
-
-	NSNotification *note = nil;
-	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:message length:strlen( message )];
-
-	if( ischannel( *target ) ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
-		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", nil]];
-	} else {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
-		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", nil]];
-		if( ! strncasecmp( nick, "NickServ", 8 ) && message ) {
-			if( strstr( message, nick ) && strstr( message, "IDENTIFY" ) ) {
-				if( ! [self nicknamePassword] ) {
-					NSNotification *note = [NSNotification notificationWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
-					[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-				} else irc_send_cmdv( server, "PRIVMSG %s :IDENTIFY %s", nick, [self encodedBytesWithString:[self nicknamePassword]] );
-			} else if( strstr( message, "Password accepted" ) ) {
-				[[self localUser] _setIdentified:YES];
-			} else if( strstr( message, "authentication required" ) ) {
-				[[self localUser] _setIdentified:NO];
-			}
-		}
-	}
-
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	[msgData release];
-	g_free( params );
-}
-
-static void MVChatGetActionMessage( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-	if( ! nick ) return;
-	if( ! address ) address = "";
-
-	NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:data length:strlen( data )];
-	NSNotification *note = nil;
-
-	if( ischannel( *target ) ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:target]];
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
-		[user _setIdleTime:0.];
-		note = [NSNotification notificationWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
-	} else {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
-		[user _setIdleTime:0.];
-		note = [NSNotification notificationWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
-	}
-
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-	[msgData release];
-}
-
-#pragma mark -
-
-static void MVChatUserNicknameChanged( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *newNick = NULL;
-	char *params = event_get_params( data, 1, &newNick );
-
-	NSNotification *note = nil;
-	MVChatUser *user = nil;
-
-	if( ! strcasecmp( ((SERVER_REC *)server) -> nick, newNick ) ) user = [self localUser];
-	else user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-
-	if( ! user ) return;
-
-	NSString *nickname = [self stringWithEncodedBytes:newNick];
-	NSString *oldNickname = [self stringWithEncodedBytes:nick];
-
-	if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
-	[user _setIdleTime:0.];
-
-	if( [user isLocalUser] ) {
-		[user _setIdentified:NO];
-		[user _setUniqueIdentifier:[nickname lowercaseString]];
-		note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
-	} else {
-		[self _updateKnownUser:user withNewNickname:nickname];
-		note = [NSNotification notificationWithName:MVChatUserNicknameChangedNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"oldNickname", nil]];
-	}
-
-	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-	MVChatRoom *room = nil;
-
-	NSString *oldIdentifier = [oldNickname lowercaseString];
-	while( ( room = [enumerator nextObject] ) ) {
-		if( ! [room isJoined] || ! [room hasUser:user] ) continue;
-		[room _updateMemberUser:user fromOldUniqueIdentifier:oldIdentifier];
-	}
-
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	g_free( params );
-}
-
-static void MVChatGotUserMode( CHANNEL_REC *channel, NICK_REC *nick, char *by, char *mode, char *type ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	MVChatUser *member = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick -> nick]];
-	MVChatUser *byMember = ( by ? [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:by]] : nil );
-
-	unsigned int m = MVChatRoomMemberNoModes;
-	if( *mode == '@' ) m = MVChatRoomMemberOperatorMode;
-	else if( *mode == '%' ) m = MVChatRoomMemberHalfOperatorMode;
-	else if( *mode == '+' ) m = MVChatRoomMemberVoicedMode;
-
-	if( m == MVChatRoomMemberNoModes ) return;
-
-	if( *type == '+' ) [room _setMode:m forMemberUser:member];
-	else [room _removeMode:m forMemberUser:member];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:( *type == '+' ? YES : NO )], @"enabled", [NSNumber numberWithUnsignedInt:m], @"mode", byMember, @"by", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVChatGotRoomMode( CHANNEL_REC *channel, const char *setby ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self ) return;
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	MVChatUser *byMember = ( setby ? [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:setby]] : nil );
-
-	unsigned int oldModes = [room modes];
-
-	[room _clearModes];
-
-	if( strchr( channel -> mode, 'p' ) )
-		[room _setMode:MVChatRoomPrivateMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 's' ) )
-		[room _setMode:MVChatRoomSecretMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 'i' ) )
-		[room _setMode:MVChatRoomInviteOnlyMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 'm' ) )
-		[room _setMode:MVChatRoomNormalUsersSilencedMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 'n' ) )
-		[room _setMode:MVChatRoomNoOutsideMessagesMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 't' ) )
-		[room _setMode:MVChatRoomOperatorsOnlySetTopicMode withAttribute:nil];
-
-	if( strchr( channel -> mode, 'k' ) )
-		[room _setMode:MVChatRoomPassphraseToJoinMode withAttribute:[self stringWithEncodedBytes:channel -> key]];
-
-	if( strchr( channel -> mode, 'l' ) )
-		[room _setMode:MVChatRoomLimitNumberOfMembersMode withAttribute:[NSNumber numberWithInt:channel -> limit]];
-
-	unsigned int changedModes = ( oldModes ^ [room modes] );
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", byMember, @"by", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-#pragma mark -
-
-static void MVChatBanNew( CHANNEL_REC *channel, BAN_REC *ban ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self || ! ban || ! ban -> ban ) return;
-
-	NSString *banString = [self stringWithEncodedBytes:ban -> ban];
-	NSArray *parts = [banString componentsSeparatedByString:@"!"];
-	NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
-	NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
-	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	MVChatUser *byMember = ( ban -> setby ? [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:ban -> setby]] : nil );
-
-	[room _addBanForUser:user];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserBannedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", byMember, @"byUser", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVChatBanRemove( CHANNEL_REC *channel, BAN_REC *ban, const char *who ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:channel -> server];
-	if( ! self || ! ban || ! ban -> ban ) return;
-
-	NSString *banString = [self stringWithEncodedBytes:ban -> ban];
-	NSArray *parts = [banString componentsSeparatedByString:@"!"];
-	NSString *nickname = ( [parts count] >= 1 ? [parts objectAtIndex:0] : nil );
-	NSString *host = ( [parts count] >= 2 ? [parts objectAtIndex:1] : nil );
-	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nickname andHostMask:host];
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel -> name]];
-	MVChatUser *byMember = ( who ? [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:who]] : nil );
-
-	[room _removeBanForUser:user];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", byMember, @"byUser", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
+/*
 static void MVChatBanListFinished( IRC_SERVER_REC *server, const char *data ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( ! self ) return;
@@ -859,129 +133,6 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 
 #pragma mark -
 
-static void MVChatUserWhois( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *nick = NULL, *username = NULL, *host = NULL, *realname = NULL;
-	char *params = event_get_params( data, 6 | PARAM_FLAG_GETREST, NULL, &nick, &username, &host, NULL, &realname );
-
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	[user _setServerOperator:NO]; // set these to off/nil now so we get the true values later in the WHOIS
-
-	[user _setRealName:[self stringWithEncodedBytes:realname]];
-	[user _setUsername:[self stringWithEncodedBytes:username]];
-	[user _setAddress:[self stringWithEncodedBytes:host]];
-
-	g_free( params );
-}
-
-static void MVChatUserServer( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *nick = NULL, *serv = NULL, *serverinfo = NULL;
-	char *params = event_get_params( data, 4 | PARAM_FLAG_GETREST, NULL, &nick, &serv, &serverinfo );
-
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	[user _setServerAddress:[self stringWithEncodedBytes:serv]];
-
-	g_free( params );
-}
-
-static void MVChatUserChannels( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *nick = NULL, *chanlist = NULL;
-	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, NULL, &nick, &chanlist );
-
-	NSArray *chanArray = [[[self stringWithEncodedBytes:chanlist] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
-	NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:[chanArray count]];
-	NSEnumerator *enumerator = [chanArray objectEnumerator];
-	NSString *room = nil;
-
-	NSCharacterSet *modeChars = [NSCharacterSet characterSetWithCharactersInString:@"@\%+ "];
-	while( ( room = [enumerator nextObject] ) ) {
-		room = [room stringByTrimmingCharactersInSet:modeChars];
-		if( room ) [results addObject:room];
-	}
-
-	if( [results count] ) {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		[user setAttribute:results forKey:MVChatUserKnownRoomsAttribute];
-	}
-
-	[results release];
-	g_free( params );
-}
-
-static void MVChatUserIdentified( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *nick = NULL, *info = NULL;
-	char *params = event_get_params( data, 3 | PARAM_FLAG_GETREST, NULL, &nick, &info );
-
-	if( info && strstr( info, "identified" ) ) {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		[user _setIdentified:YES];
-	}
-
-	g_free( params );
-}
-
-static void MVChatUserOperator( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *nick = NULL;
-	char *params = event_get_params( data, 2, NULL, &nick );
-
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	[user _setServerOperator:YES];
-
-	g_free( params );
-}
-
-static void MVChatUserIdle( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *nick = NULL, *idle = NULL, *connected = NULL;
-	char *params = event_get_params( data, 4, NULL, &nick, &idle, &connected );
-
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	[user _setIdleTime:[[self stringWithEncodedBytes:idle] intValue]];
-	if( [[self stringWithEncodedBytes:connected] intValue] > 631138520 ) // prevent showing 34+ years connected time, this makes sure it is a viable date
-		[user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:[[self stringWithEncodedBytes:connected] intValue]]];
-	else [user _setDateConnected:nil];
-
-	g_free( params );
-}
-
-static void MVChatUserWhoisComplete( IRC_SERVER_REC *server, const char *data ) {
-	if( data ) {
-		MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-		if( ! self ) return;
-
-		char *nick = NULL;
-		char *params = event_get_params( data, 2, NULL, &nick );
-
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-		[user _setDateUpdated:[NSDate date]];
-
-		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
-
-		NSNotification *note = [NSNotification notificationWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-		g_free( params );
-	}
-}
-
-#pragma mark -
-
 static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( ! self ) return;
@@ -999,133 +150,9 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	[t release];
 	g_free( params );
 }
-
-#pragma mark -
-
-static void MVChatSubcodeRequest( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *command = NULL, *args = NULL;
-	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &command, &args );
-
-	NSString *cmd = [self stringWithEncodedBytes:command];
-	NSString *ags = ( args ? [self stringWithEncodedBytes:args] : nil );
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-
-	g_free( params );
-
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:cmd, @"command", user, @"user", ags, @"arguments", nil];
-	IrssiUnlock(); // prevents a deadlock, since waitUntilDone is required. threads synced
-	[self performSelectorOnMainThread:@selector( _processSubcodeRequest: ) withObject:info waitUntilDone:YES];
-	IrssiLock(); // lock back up like nothing happened
-}
-
-static void MVChatSubcodeReply( IRC_SERVER_REC *server, const char *data, const char *nick, const char *address, const char *target ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *command = NULL, *args = NULL;
-	char *params = event_get_params( data, 2 | PARAM_FLAG_GETREST, &command, &args );
-
-	NSString *cmd = [self stringWithEncodedBytes:command];
-	NSString *ags = ( args ? [self stringWithEncodedBytes:args] : nil );
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-
-	g_free( params );
-
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:cmd, @"command", user, @"user", ags, @"arguments", nil];
-	IrssiUnlock(); // prevents a deadlock, since waitUntilDone is required. threads synced
-	[self performSelectorOnMainThread:@selector( _processSubcodeReply: ) withObject:info waitUntilDone:YES];
-	IrssiLock(); // lock back up like nothing happened
-}
-
-#pragma mark -
-
-static void MVChatFileTransferRequest( DCC_REC *dcc ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)dcc -> server];
-	if( ! self ) return;
-	if( IS_DCC_GET( dcc ) ) {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:dcc -> nick]];
-		MVIRCDownloadFileTransfer *transfer = [[MVIRCDownloadFileTransfer allocWithZone:nil] initWithDCCFileRecord:dcc fromUser:user];
-		NSNotification *note = [NSNotification notificationWithName:MVDownloadFileTransferOfferNotification object:transfer];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-		[transfer release];
-	}
-}
-
-#pragma mark -
-
-static void MVChatErrorNoSuchUser( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	g_return_if_fail( data != NULL );
-
-	char *nick = NULL;
-	char *params = event_get_params( data, 2, NULL, &nick );
-
-	[self _processErrorCode:ERR_NOSUCHNICK withContext:nick];
-
-	g_free( params );
-}
-
-static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	g_return_if_fail( data != NULL );
-
-	char *command = NULL;
-	char *params = event_get_params( data, 2, NULL, &command );
-
-	[self _processErrorCode:ERR_UNKNOWNCOMMAND withContext:command];
-
-	g_free( params );
-}
-
-#pragma mark -
+*/
 
 @implementation MVIRCChatConnection
-+ (void) initialize {
-	[super initialize];
-
-	static BOOL tooLate = NO;
-	if( ! tooLate ) {
-		pthread_mutexattr_t lockAttr;
-		pthread_mutexattr_init( &lockAttr );
-		pthread_mutexattr_settype( &lockAttr, PTHREAD_MUTEX_RECURSIVE );
-
-		extern pthread_mutex_t irssiLock;
-		pthread_mutex_init( &irssiLock, &lockAttr );
-
-		pthread_mutexattr_destroy( &lockAttr );
-
-		irssi_gui = IRSSI_GUI_NONE;
-
-		NSString *temp = NSTemporaryDirectory();
-		temp = [temp stringByAppendingPathComponent:@"Colloquy/Irssi"];
-		temp = [@"--home=" stringByAppendingString:temp];
-		char *args[] = { "Chat Core", (char *)[temp cString] };
-		core_init_paths( sizeof( args ) / sizeof( char * ), args );
-
-		core_init();
-		irc_init();
-
-		settings_set_bool( "override_coredump_limit", FALSE );
-		settings_set_bool( "settings_autosave", FALSE );
-		settings_set_str( "dcc_port", "1024 1048" );
-		signal_emit( "setup changed", 0 );
-
-		signal_emit( "irssi init finished", 0 );
-
-		[self _registerCallbacks];
-
-		[NSThread detachNewThreadSelector:@selector( _irssiRunLoop ) toTarget:self withObject:nil];
-		tooLate = YES;
-	}
-}
-
 + (NSArray *) defaultServerPorts {
 	return [NSArray arrayWithObjects:[NSNumber numberWithUnsignedShort:6667],[NSNumber numberWithUnsignedShort:6660],[NSNumber numberWithUnsignedShort:6669],[NSNumber numberWithUnsignedShort:7000],[NSNumber numberWithUnsignedShort:994], nil];
 }
@@ -1134,59 +161,65 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_proxyUsername = nil;
-		_proxyPassword = nil;
-		_chatConnection = NULL;
-		_chatConnectionSettings = NULL;
+		_serverPort = 6667;
+		_server = @"irc.freenode.net";
+		_username = [NSUserName() retain];
+		_nickname = [_username retain];
+		_currentNickname = [_nickname retain];
+		_realName = [NSFullUserName() retain];
+		_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
 
 		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
-
-		extern unsigned int connectionCount;
-		connectionCount++;
-
-		while( ! irssiThreadReady ) usleep( 50 );
-
-		IrssiLock();
-
-		CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( IRC_PROTOCOL );
-		if( ! proto ) {
-			IrssiUnlock();
-			[self release];
-			return nil;
-		}
-
-		SERVER_CONNECT_REC *settings = server_create_conn( proto -> id, "irc.freenode.net", 6667, NULL, NULL, [self encodedBytesWithString:NSUserName()] );
-		if( ! settings ) {
-			IrssiUnlock();
-			[self release];
-			return nil;
-		}
-
-		[self _setIrssiConnectSettings:settings];
-
-		IrssiUnlock();
+		_fileTransfers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 	}
 
 	return self;
 }
 
+- (void) finalize {
+	[self disconnect];
+	[_chatConnection setDelegate:nil];
+	_connectionThread = nil;
+	[super finalize];
+}
+
 - (void) dealloc {
 	[self disconnect];
 
+	[_chatConnection setDelegate:nil];
+
+	[_chatConnection release];
 	[_knownUsers release];
+	[_fileTransfers release];
+	[_server release];
+	[_currentNickname release];
+	[_nickname release];
+	[_username release];
+	[_password release];
+	[_realName release];
+	[_threadWaitLock release];
+	[_periodicCleanUpTimer release];
+	[_sendQueue release];
+	[_sendQueueTimer release];
+	[_queueWait release];
+	[_lastCommand release];
+
+	_chatConnection = nil;
+	_connectionThread = nil;
 	_knownUsers = nil;
-
-	[_proxyUsername release];
-	_proxyUsername = nil;
-
-	[_proxyPassword release];
-	_proxyPassword = nil;
-
-	[self _setIrssiConnection:NULL];
-	[self _setIrssiConnectSettings:NULL];
-
-	extern unsigned int connectionCount;
-	connectionCount--;
+	_fileTransfers = nil;
+	_server = nil;
+	_currentNickname = nil;
+	_nickname = nil;
+	_username = nil;
+	_password = nil;
+	_realName = nil;
+	_threadWaitLock = nil;
+	_periodicCleanUpTimer = nil;
+	_sendQueue = nil;
+	_sendQueueTimer = nil;
+	_queueWait = nil;
+	_lastCommand = nil;
 
 	[super dealloc];
 }
@@ -1212,90 +245,41 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (void) connect {
-	if( [self status] != MVChatConnectionDisconnectedStatus && [self status] != MVChatConnectionServerDisconnectedStatus && [self status] != MVChatConnectionSuspendedStatus ) return;
+	if( _status != MVChatConnectionDisconnectedStatus && _status != MVChatConnectionServerDisconnectedStatus && _status != MVChatConnectionSuspendedStatus ) return;
 
-	if( _lastConnectAttempt && ABS( [_lastConnectAttempt timeIntervalSinceNow] ) < 5. ) {
-		// prevents connecting too quick
-		// cancel any reconnect attempts, this lets a user cancel the attempts with a "double connect"
-		[self cancelPendingReconnectAttempts];
-		return;
-	}
-
-	[_lastConnectAttempt release];
+	id old = _lastConnectAttempt;
 	_lastConnectAttempt = [[NSDate allocWithZone:nil] init];
+	[old release];
+
+	old = _queueWait;
+	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:120.] retain];
+	[old release];
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
-	IrssiLock();
+	_connectionThread = nil;
+	[NSThread prepareForInterThreadMessages];
+	[NSThread detachNewThreadSelector:@selector( _ircRunloop ) toTarget:self withObject:nil];
 
-	if( ! _chatConnectionSettings ) {
-		IrssiUnlock();
-		[self _didNotConnect];
-		return;
-	}
+	[_threadWaitLock lockWhenCondition:1];
+	[_threadWaitLock unlockWithCondition:0];
 
-	CHAT_PROTOCOL_REC *proto = chat_protocol_find_id( _chatConnectionSettings -> chat_type );
-
-	if( ! proto ) {
-		IrssiUnlock();
-		[self _didNotConnect];
-		return;
-	}
-
-// Setup the proxy header with the most current connection address and port.
-	if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
-		NSString *userCombo = [NSString stringWithFormat:@"%@:%@", _proxyUsername, _proxyPassword];
-		NSData *combo = [userCombo dataUsingEncoding:NSASCIIStringEncoding];
-
-		g_free_not_null( _chatConnectionSettings -> proxy_string );
-		if( [combo length] > 1 ) {
-			NSString *userCombo = [combo base64EncodingWithLineLength:0];
-			_chatConnectionSettings -> proxy_string = g_strdup_printf( "CONNECT %s:%d HTTP/1.0\r\nProxy-Authorization: Basic %s\r\n\r\n", _chatConnectionSettings -> address, _chatConnectionSettings -> port, [userCombo UTF8String] );
-		} else _chatConnectionSettings -> proxy_string = g_strdup_printf( "CONNECT %s:%d HTTP/1.0\r\n\r\n", _chatConnectionSettings -> address, _chatConnectionSettings -> port );
-
-		g_free_not_null( _chatConnectionSettings -> proxy_string_after );
-		_chatConnectionSettings -> proxy_string_after = NULL;
-	}
-
-	SERVER_REC *newConnection = proto -> server_init_connect( _chatConnectionSettings );
-	[self _setIrssiConnection:newConnection];
-	if( ! newConnection ) {
-		IrssiUnlock();
-		[self _didNotConnect];
-		return;
-	}
-
-	proto -> server_connect( _chatConnection );
-
-	rawlog_destroy( _chatConnection -> rawlog );
-	_chatConnection -> rawlog = NULL;
-
-	IrssiUnlock();
+	[self performSelector:@selector( _connect ) inThread:_connectionThread];
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
 	[self cancelPendingReconnectAttempts];
+	if( _sendQueueTimer ) [self performSelector:@selector( _stopSendQueueTimer ) withObject:nil inThread:_connectionThread];
 
-	if( ! _chatConnection ) return;
-	if( [self status] == MVChatConnectionConnectingStatus ) {
-		[self _forceDisconnect];
-		return;
+	if( _status == MVChatConnectionConnectedStatus ) {
+		if( [[reason string] length] ) {
+			NSData *msg = [[self class] _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
+			[self sendRawMessageImmediatelyWithComponents:@"QUIT :", msg, nil];
+		} else [self sendRawMessage:@"QUIT" immediately:YES];
 	}
 
-	if( [[reason string] length] ) {
-		const char *msg = [[self class] _flattenedIRCStringForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
-		[self sendRawMessage:[NSString stringWithFormat:@"QUIT :%s", msg] immediately:YES];
-	} else [self sendRawMessage:@"QUIT" immediately:YES];
-
-	IrssiLock();
-
-	if( _chatConnection ) {
-		_chatConnection -> connection_lost = NO;
-		_chatConnection -> no_reconnect = YES;
-		server_disconnect( _chatConnection );
-	}
-
-	IrssiUnlock();
+	_status = MVChatConnectionDisconnectedStatus;
+	[_chatConnection performSelector:@selector( disconnectAfterWriting ) inThread:_connectionThread];
 }
 
 #pragma mark -
@@ -1303,19 +287,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) setRealName:(NSString *) name {
 	NSParameterAssert( name != nil );
 
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> realname );
-		_chatConnectionSettings -> realname = g_strdup( [self encodedBytesWithString:name] );
-	}
-
-	IrssiUnlock();
+	id old = _realName;
+	_realName = [name copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) realName {
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> realname];
+	return [[_realName retain] autorelease];
 }
 
 #pragma mark -
@@ -1324,65 +302,49 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( nickname != nil );
 	NSParameterAssert( [nickname length] > 0 );
 
-	IrssiLock();
+	if( [nickname isEqualToString:[self nickname]] )
+		return;
 
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> nick );
-		_chatConnectionSettings -> nick = g_strdup( [self encodedBytesWithString:nickname] );
+	id old = _nickname;
+	_nickname = [nickname copyWithZone:nil];
+	[old release];
+
+	if( ! _currentNickname || ! [self isConnected] ) {
+		id old = _currentNickname;
+		_currentNickname = [_nickname retain];
+		[old release];
 	}
 
-	IrssiUnlock();
-
-	if( [self isConnected] && ! [nickname isEqualToString:[self nickname]] )
-		[self sendRawMessageWithFormat:@"NICK %@", nickname];
+	if( [self isConnected] )
+		[self sendRawMessageImmediatelyWithFormat:@"NICK %@", nickname];
 }
 
 - (NSString *) nickname {
-	if( _status == MVChatConnectionConnectedStatus ) { // don't call [self isConnected], need speed here
-		IrssiLock();
-		NSString *nick = nil;
-		if( _chatConnection && _chatConnection -> nick )
-			nick = [self stringWithEncodedBytes:_chatConnection -> nick];
-		IrssiUnlock();
-		if( nick ) return nick;
-	}
-
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> nick];
+	return [[_currentNickname retain] autorelease];
 }
 
 - (NSString *) preferredNickname {
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> nick];
+	return [[_nickname retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setNicknamePassword:(NSString *) password {
 	if( ! [[self localUser] isIdentified] && password && [self isConnected] )
-		[self sendRawMessageWithFormat:@"PRIVMSG NickServ :IDENTIFY %@", password];
+		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", password];
 	[super setNicknamePassword:password];
 }
 
 #pragma mark -
 
 - (void) setPassword:(NSString *) password {
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> password );
-		if( [password length] ) _chatConnectionSettings -> password = g_strdup( [self encodedBytesWithString:password] );
-		else _chatConnectionSettings -> password = NULL;
-	}
-
-	IrssiUnlock();
+	id old = _password;
+	_password = [password copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) password {
-	if( ! _chatConnectionSettings ) return nil;
-	char *pass = _chatConnectionSettings -> password;
-	if( pass ) return [self stringWithEncodedBytes:pass];
-	return nil;
+	return [[_password retain] autorelease];
 }
 
 #pragma mark -
@@ -1391,19 +353,13 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( username != nil );
 	NSParameterAssert( [username length] > 0 );
 
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> username );
-		_chatConnectionSettings -> username = g_strdup( [self encodedBytesWithString:username] );
-	}
-
-	IrssiUnlock();
+	id old = _username;
+	_username = [username copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) username {
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> username];
+	return [[_username retain] autorelease];
 }
 
 #pragma mark -
@@ -1412,118 +368,56 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( server != nil );
 	NSParameterAssert( [server length] > 0 );
 
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> address );
-		_chatConnectionSettings -> address = g_strdup( [self encodedBytesWithString:server] );
-	}
-
-	IrssiUnlock();
+	id old = _server;
+	_server = [server copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) server {
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> address];
+	return [[_server retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setServerPort:(unsigned short) port {
-	IrssiLock();
-	if( _chatConnectionSettings )
-		_chatConnectionSettings -> port = ( port ? port : 6667 );
-	IrssiUnlock();
+	_serverPort = ( port ? port : 6667 );
 }
 
 - (unsigned short) serverPort {
-	if( ! _chatConnectionSettings ) return 0;
-	return _chatConnectionSettings -> port;
+	return _serverPort;
 }
 
 #pragma mark -
 
-- (void) setSecure:(BOOL) ssl {
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		_chatConnectionSettings -> use_ssl = ssl;
-		_chatConnectionSettings -> ssl_verify = NO;
-	}
-
-	IrssiUnlock();
-}
-
-- (BOOL) isSecure {
-	if( ! _chatConnectionSettings ) return NO;
-	return _chatConnectionSettings -> use_ssl;
-}
-
-#pragma mark -
-
-- (void) setProxyServer:(NSString *) address {
-	IrssiLock();
-
-	if( _chatConnectionSettings ) {
-		g_free_not_null( _chatConnectionSettings -> proxy );
-		_chatConnectionSettings -> proxy = g_strdup( [self encodedBytesWithString:address] );
-	}
-
-	IrssiUnlock();
-}
-
-- (NSString *) proxyServer {
-	if( ! _chatConnectionSettings ) return nil;
-	return [self stringWithEncodedBytes:_chatConnectionSettings -> proxy];
-}
-
-#pragma mark -
-
-- (void) setProxyServerPort:(unsigned short) port {
-	IrssiLock();
-	if( _chatConnectionSettings )
-		_chatConnectionSettings -> proxy_port = port;
-	IrssiUnlock();
-}
-
-- (unsigned short) proxyServerPort {
-	if( ! _chatConnectionSettings ) return 0;
-	return _chatConnectionSettings -> proxy_port;
-}
-
-#pragma mark -
-
-- (void) setProxyUsername:(NSString *) username {
-	id old = _proxyUsername;
-	_proxyUsername = [username copyWithZone:nil];
-	[old release];
-}
-
-- (NSString *) proxyUsername {
-	return [[_proxyUsername retain] autorelease];
-}
-
-#pragma mark -
-
-- (void) setProxyPassword:(NSString *) password {
-	id old = _proxyPassword;
-	_proxyPassword = [password copyWithZone:nil];
-	[old release];
-}
-
-- (NSString *) proxyPassword {
-	return [[_proxyPassword retain] autorelease];
-}
-
-#pragma mark -
-
-- (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
+- (void) sendRawMessage:(id) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
+	NSParameterAssert( [raw isKindOfClass:[NSData class]] || [raw isKindOfClass:[NSString class]] );
 
-	IrssiLock();
-	if( _chatConnection )
-		irc_send_cmd_full( (IRC_SERVER_REC *) _chatConnection, [self encodedBytesWithString:raw], now, now, FALSE);
-	IrssiUnlock();
+	if( ! now ) {
+		@synchronized( _sendQueue ) {
+			now = ! [_sendQueue count];
+		}
+
+		if( now ) now = ( ! _queueWait || [_queueWait timeIntervalSinceNow] <= 0. );
+		if( now ) now = ( ! _lastCommand || [_lastCommand timeIntervalSinceNow] <= -0.2 );
+	}
+
+	if( now ) {
+		[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread];
+
+		id old = _lastCommand;
+		_lastCommand = [[NSDate allocWithZone:nil] init];
+		[old release];
+	} else {
+		if( ! _sendQueue ) _sendQueue = [[NSMutableArray allocWithZone:nil] initWithCapacity:20];
+
+		@synchronized( _sendQueue ) {
+			[_sendQueue addObject:raw];
+		}
+
+		if( ! _sendQueueTimer )
+			[self performSelector:@selector( _startQueueTimer ) withObject:nil inThread:_connectionThread];
+	}
 }
 
 #pragma mark -
@@ -1538,13 +432,16 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) ) {
-		if( [room length] && [room rangeOfString:@" "].location == NSNotFound ) { // join non-password room in bulk
+		if( [room length] && [room rangeOfString:@" "].location == NSNotFound ) { // join non-password rooms in bulk
 			[roomList addObject:[self properNameForChatRoomNamed:room]];
 		} else if( [room length] && [room rangeOfString:@" "].location != NSNotFound ) { // has a password, join separately
-			// join all requested rooms before this one so we do things in order
-			if( [roomList count] ) [self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
+			if( [roomList count] ) {
+				// join all requested rooms before this one so we do things in order
+				[self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
+				[roomList removeAllObjects]; // clear list since we joined them
+			}
+
 			[self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
-			[roomList removeAllObjects]; // clear list since we joined them
 		}
 	}
 
@@ -1562,7 +459,9 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (NSCharacterSet *) chatRoomNamePrefixes {
-	return [NSCharacterSet characterSetWithCharactersInString:@"#&+!"];
+	static NSCharacterSet *prefixes = nil;
+	if( ! prefixes ) prefixes = [[NSCharacterSet characterSetWithCharactersInString:@"#&+!"] retain];
+	return prefixes;
 }
 
 - (NSString *) properNameForChatRoomNamed:(NSString *) room {
@@ -1573,7 +472,9 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 #pragma mark -
 
 - (NSSet *) knownChatUsers {
-	return [NSSet setWithArray:[_knownUsers allValues]];
+	@synchronized( _knownUsers ) {
+		return [NSSet setWithArray:[_knownUsers allValues]];
+	}
 }
 
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
@@ -1605,19 +506,12 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	NSParameterAssert( user != nil );
 	NSParameterAssert( [[user nickname] length] > 0 );
 
-	IrssiLock();
-	const char *mask = [self encodedBytesWithString:[NSString stringWithFormat:@"%@!*@*", [user nickname]]];
-	if( ! notifylist_find( mask, NULL ) ) notifylist_add( mask, NULL, TRUE, 600 );
-	IrssiUnlock();
 }
 
 - (void) stopWatchingUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
 	NSParameterAssert( [[user nickname] length] > 0 );
 
-	IrssiLock();
-	notifylist_remove( [self encodedBytesWithString:[NSString stringWithFormat:@"%@!*@*", [user nickname]]] );
-	IrssiUnlock();
 }
 
 #pragma mark -
@@ -1625,14 +519,16 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 - (void) fetchChatRoomList {
 	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 300. ) {
 		[self sendRawMessage:@"LIST"];
-		[_cachedDate release];
+
+		id old = _cachedDate;
 		_cachedDate = [[NSDate allocWithZone:nil] init];
+		[old release];
 	}
 }
 
 - (void) stopFetchingChatRoomList {
 	if( _cachedDate && ABS( [_cachedDate timeIntervalSinceNow] ) < 600. )
-		[self sendRawMessage:@"LIST STOP"];
+		[self sendRawMessage:@"LIST STOP" immediately:YES];
 }
 
 #pragma mark -
@@ -1645,117 +541,353 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		[[self localUser] _setStatus:MVChatUserAwayStatus];
 
 		_awayMessage = [message copyWithZone:nil];
-		const char *msg = [[self class] _flattenedIRCStringForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 
-		IrssiLock();
-		if( _chatConnection )
-			irc_send_cmdv( (IRC_SERVER_REC *) _chatConnection, "AWAY :%s", msg );
-		IrssiUnlock();
+		NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
+		[self sendRawMessageImmediatelyWithComponents:@"AWAY :", msg, nil];
 	} else {
 		[[self localUser] _setStatus:MVChatUserAvailableStatus];
-		[self sendRawMessage:@"AWAY"];
+		[self sendRawMessage:@"AWAY" immediately:YES];
 	}
-}
-
-#pragma mark -
-
-- (unsigned int) lag {
-	unsigned int lag = 0;
-
-	IrssiLock();
-	if( _chatConnection )
-		lag = _chatConnection -> lag;
-	IrssiUnlock();
-
-	return lag;
 }
 @end
 
 #pragma mark -
 
 @implementation MVIRCChatConnection (MVIRCChatConnectionPrivate)
-+ (MVIRCChatConnection *) _connectionForServer:(SERVER_REC *) server {
-	if( ! server ) return nil;
-
-	MVIRCChatConnectionModuleData *data = MODULE_DATA( server );
-	if( data ) return [[(data -> connection) retain] autorelease];
-
-	return nil;
+- (AsyncSocket *) _chatConnection {
+	return _chatConnection;
 }
 
-+ (void) _registerCallbacks {
-	signal_add_last( "server looking", (SIGNAL_FUNC) MVChatConnecting );
-	signal_add_last( "server connected", (SIGNAL_FUNC) MVChatConnected );
-	signal_add_last( "server disconnected", (SIGNAL_FUNC) MVChatDisconnect );
-	signal_add_last( "server connect failed", (SIGNAL_FUNC) MVChatConnectFailed );
+- (void) _connect {
+	id old = _chatConnection;
+	_chatConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+	[old setDelegate:nil];
+	[old disconnect];
+	[old release];
 
-	signal_add( "server incoming", (SIGNAL_FUNC) MVChatRawIncomingMessage );
-	signal_add( "server outgoing", (SIGNAL_FUNC) MVChatRawOutgoingMessage );
-
-	signal_add_last( "channel joined", (SIGNAL_FUNC) MVChatJoinedRoom );
-	signal_add_last( "channel wholist", (SIGNAL_FUNC) MVChatJoinedWhoList );
-	signal_add_last( "event topic", (SIGNAL_FUNC) MVChatRoomTopicChanged );
-	signal_add_last( "channel destroyed", (SIGNAL_FUNC) MVChatLeftRoom );
-	signal_add_last( "channel mode changed", (SIGNAL_FUNC) MVChatGotRoomMode );
-
-	signal_add_last( "ban new", (SIGNAL_FUNC) MVChatBanNew );
-	signal_add_last( "ban remove", (SIGNAL_FUNC) MVChatBanRemove );
-
-	signal_add_last( "event join", (SIGNAL_FUNC) MVChatUserJoinedRoom );
-	signal_add_last( "event part", (SIGNAL_FUNC) MVChatUserLeftRoom );
-	signal_add_last( "event quit", (SIGNAL_FUNC) MVChatUserQuit );
-	signal_add_last( "event kick", (SIGNAL_FUNC) MVChatUserKicked );
-	signal_add_last( "event invite", (SIGNAL_FUNC) MVChatInvited );
-	signal_add_last( "event nick", (SIGNAL_FUNC) MVChatUserNicknameChanged );
-
-	signal_add_last( "event privmsg", (SIGNAL_FUNC) MVChatGetMessage );
-	signal_add_last( "event notice", (SIGNAL_FUNC) MVChatGetAutoMessage );
-	signal_add_last( "ctcp action", (SIGNAL_FUNC) MVChatGetActionMessage );
-
-	signal_add_last( "nick mode changed", (SIGNAL_FUNC) MVChatGotUserMode );
-
-	signal_add_last( "away mode changed", (SIGNAL_FUNC) MVChatSelfAwayChanged );
-
-	signal_add_last( "notifylist joined", (SIGNAL_FUNC) MVChatBuddyOnline );
-	signal_add_last( "notifylist left", (SIGNAL_FUNC) MVChatBuddyOffline );
-	signal_add_last( "notifylist away changed", (SIGNAL_FUNC) MVChatBuddyAway );
-	signal_add_last( "notifylist unidle", (SIGNAL_FUNC) MVChatBuddyUnidle );
-
-	signal_add_last( "event 301", (SIGNAL_FUNC) MVChatUserAway );
-	signal_add_last( "event 311", (SIGNAL_FUNC) MVChatUserWhois );
-	signal_add_last( "event 312", (SIGNAL_FUNC) MVChatUserServer );
-	signal_add_last( "event 313", (SIGNAL_FUNC) MVChatUserOperator );
-	signal_add_last( "event 317", (SIGNAL_FUNC) MVChatUserIdle );
-	signal_add_last( "event 318", (SIGNAL_FUNC) MVChatUserWhoisComplete );
-	signal_add_last( "event 319", (SIGNAL_FUNC) MVChatUserChannels );
-	signal_add_last( "event 320", (SIGNAL_FUNC) MVChatUserIdentified );
-	signal_add_last( "event 322", (SIGNAL_FUNC) MVChatListRoom );
-	signal_add_last( "event 368", (SIGNAL_FUNC) MVChatBanListFinished );
-	signal_add_last( "chanquery ban end", (SIGNAL_FUNC) MVChatBanListFinished );
-	signal_add_first( "event 433", (SIGNAL_FUNC) MVChatNickTaken );
-	signal_add_last( "event 001", (SIGNAL_FUNC) MVChatNickFinal );
-
-	// add all error codes we want to handle
-	signal_add_last( "event 401", (SIGNAL_FUNC) MVChatErrorNoSuchUser );
-	signal_add_last( "event 421", (SIGNAL_FUNC) MVChatErrorUnknownCommand );
-
-	// catch the notifylist whois ones as well
-	signal_add_last( "notifylist event whois end", (SIGNAL_FUNC) MVChatUserWhoisComplete );
-	signal_add_last( "notifylist event whois away", (SIGNAL_FUNC) MVChatUserAway );
-	signal_add_last( "notifylist event whois", (SIGNAL_FUNC) MVChatUserWhois );
-	signal_add_last( "notifylist event whois idle", (SIGNAL_FUNC) MVChatUserIdle );
-
-	signal_add_first( "ctcp msg", (SIGNAL_FUNC) MVChatSubcodeRequest );
-	signal_add_first( "ctcp reply", (SIGNAL_FUNC) MVChatSubcodeReply );
-
-	signal_add_last( "dcc request", (SIGNAL_FUNC) MVChatFileTransferRequest );
+	if( ! [_chatConnection connectToHost:[self server] onPort:[self serverPort] error:NULL] )
+		[self _didNotConnect];
 }
 
-+ (void) _deregisterCallbacks {
-	signals_remove_module( MODULE_NAME );
+- (oneway void) _ircRunloop {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
+
+	[_threadWaitLock lockWhenCondition:0];
+
+	_connectionThread = [NSThread currentThread];
+	[NSThread prepareForInterThreadMessages];
+
+	[_threadWaitLock unlockWithCondition:1];
+
+	BOOL active = YES;
+	while( active && ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus || [_chatConnection isConnected] ) )
+		active = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+
+	// make sure the connection has sent all the delegate calls it has scheduled
+	[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.]];
+
+	if( [NSThread currentThread] == _connectionThread )
+		_connectionThread = nil;
+
+	[pool drain];
+	[pool release];
 }
 
-+ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format {
+#pragma mark -
+
+- (void) _didDisconnect {
+	if( _status == MVChatConnectionServerDisconnectedStatus ) {
+		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
+			[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
+		[self scheduleReconnectAttemptEvery:30.];
+	}
+
+	[super _didDisconnect];
+}
+
+#pragma mark -
+
+- (BOOL) socketWillConnect:(AsyncSocket *) sock {
+	if( [[self proxyServer] length] && [self proxyServerPort] ) {
+		if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
+			NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
+			if( _proxy == MVChatConnectionHTTPSProxy ) {
+				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPSProxyHost];
+				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPSProxyPort];
+			} else {
+				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPProxyHost];
+				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPProxyPort];
+			}
+
+			CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
+			CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
+			[settings release];
+		} else if( _proxy == MVChatConnectionSOCKS4Proxy || _proxy == MVChatConnectionSOCKS5Proxy ) {
+			NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
+
+			[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertySOCKSProxyHost];
+			[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertySOCKSProxyPort];
+
+			if( [[self proxyUsername] length] )
+				[settings setObject:[self proxyUsername] forKey:(NSString *)kCFStreamPropertySOCKSUser];
+			if( [[self proxyPassword] length] )
+				[settings setObject:[self proxyPassword] forKey:(NSString *)kCFStreamPropertySOCKSPassword];
+
+			if( _proxy == MVChatConnectionSOCKS4Proxy )
+				[settings setObject:(NSString *)kCFStreamSocketSOCKSVersion4 forKey:(NSString *)kCFStreamPropertySOCKSVersion];
+
+			CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySOCKSProxy, (CFDictionaryRef) settings );
+			CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySOCKSProxy, (CFDictionaryRef) settings );
+			[settings release];
+		}
+	}
+
+	return YES;
+}
+
+- (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
+	NSLog(@"willDisconnectWithError: %@", error );
+	id old = _lastError;
+	_lastError = [error retain];
+	[old release];
+}
+
+- (void) socketDidDisconnect:(AsyncSocket *) sock {
+	if( sock != _chatConnection ) return;
+
+	id old = _chatConnection;
+	_chatConnection = nil;
+	[old setDelegate:nil];
+	[old release];
+
+	NSLog(@"socketDidDisconnect" );
+
+	[self _stopSendQueueTimer];
+
+	@synchronized( _sendQueue ) {
+		[_sendQueue removeAllObjects];
+	}
+
+	old = _lastCommand;
+	_lastCommand = nil;
+	[old release];
+
+	old = _queueWait;
+	_queueWait = nil;
+	[old release];
+
+	@synchronized( _knownUsers ) {
+		[_knownUsers removeAllObjects];
+	}
+
+	[_periodicCleanUpTimer invalidate];
+	[_periodicCleanUpTimer release];
+	_periodicCleanUpTimer = nil;
+
+	if( _status == MVChatConnectionConnectingStatus )
+		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
+
+	if( _lastError )
+		_status = MVChatConnectionServerDisconnectedStatus;
+
+	if( _status == MVChatConnectionServerDisconnectedStatus || _status == MVChatConnectionConnectedStatus )
+		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
+}
+
+- (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
+	if( [[self password] length] ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [self password]];
+	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self nickname]];
+	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", [self username], [self realName]];
+
+	id old = _localUser;
+	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
+	[old release];
+
+	old = _periodicCleanUpTimer;
+	_periodicCleanUpTimer = [[NSTimer scheduledTimerWithTimeInterval:600. target:self selector:@selector( _periodicCleanUp ) userInfo:nil repeats:YES] retain];
+	[old invalidate];
+	[old release];
+
+	[self _readNextMessageFromServer];
+}
+
+- (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
+	NSString *rawString = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
+	const char *line = (const char *)[data bytes];
+	unsigned int len = [data length];
+	const char *end = line + len - 2; // minus the line endings
+
+	const char *sender = NULL;
+	unsigned senderLength = 0;
+	const char *user = NULL;
+	unsigned userLength = 0;
+	const char *host = NULL;
+	unsigned hostLength = 0;
+	const char *command = NULL;
+	unsigned commandLength = 0;
+
+	NSMutableArray *parameters = [[NSMutableArray allocWithZone:nil] initWithCapacity:15];
+
+	// Parsing as defined in 2.3.1 at http://www.irchelp.org/irchelp/rfc/rfc2812.txt
+
+	if( len <= 2 || len > 512 )
+		goto end; // bad message
+
+#define checkAndMarkIfDone() if( line == end ) done = YES
+#define consumeWhitespace() while( *line == ' ' && line != end && ! done ) line++
+#define notEndOfLine() line != end && ! done
+
+	BOOL done = NO;
+	if( notEndOfLine() ) {
+		if( *line == ':' ) {
+			// prefix: ':' <sender> [ '!' <user> ] [ '@' <host> ] ' ' { ' ' }
+			sender = ++line;
+			while( notEndOfLine() && *line != ' ' && *line != '!' && *line != '@' ) line++;
+			senderLength = (line - sender);
+			checkAndMarkIfDone();
+
+			if( ! done && *line == '!' ) {
+				user = ++line;
+				while( notEndOfLine() && *line != ' ' && *line != '@' ) line++;
+				userLength = (line - host);
+				checkAndMarkIfDone();
+			}
+
+			if( ! done && *line == '@' ) {
+				host = ++line;
+				while( notEndOfLine() && *line != ' ' ) line++;
+				hostLength = (line - host);
+				checkAndMarkIfDone();
+			}
+
+			if( ! done ) line++;
+			consumeWhitespace();
+		}
+
+		if( notEndOfLine() ) {
+			// command: <letter> { <letter> } | <number> <number> <number>
+			// letter: 'a' ... 'z' | 'A' ... 'Z'
+			// number: '0' ... '9'
+			command = line;
+			while( notEndOfLine() && *line != ' ' ) line++;
+			commandLength = (line - command);
+			checkAndMarkIfDone();
+
+			if( ! done ) line++;
+			consumeWhitespace();
+		}
+
+		while( notEndOfLine() ) {
+			// params: [ ':' <trailing data> | <letter> { <letter> } ] [ ' ' { ' ' } ] [ <params> ]
+			const char *currentParameter = NULL;
+			id param = nil;
+			if( *line == ':' ) {
+				currentParameter = ++line;
+				param = [[NSMutableData allocWithZone:nil] initWithBytes:currentParameter length:(end - currentParameter)];
+				done = YES;
+			} else {
+				currentParameter = line;
+				while( notEndOfLine() && *line != ' ' ) line++;
+				param = [[NSString allocWithZone:nil] initWithBytes:currentParameter length:(line - currentParameter) encoding:[self encoding]];
+				checkAndMarkIfDone();
+				if( ! done ) line++;
+			}
+
+			if( param ) [parameters addObject:param];
+			[param release];
+
+			consumeWhitespace();
+		}
+	}
+
+#undef checkAndMarkIfDone()
+#undef consumeWhitespace()
+#undef notEndOfLine()
+
+end:
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+
+	if( command && commandLength ) {
+		NSString *commandString = [[NSString allocWithZone:nil] initWithBytes:command length:commandLength encoding:[self encoding]];
+		NSString *selectorString = [[NSString allocWithZone:nil] initWithFormat:@"_handle%@WithParameters:fromSender:", [commandString capitalizedString]];
+		SEL selector = NSSelectorFromString( selectorString );
+		[selectorString release];
+		[commandString release];
+
+		if( [self respondsToSelector:selector] ) {
+			NSString *senderString = nil;
+			if( sender ) senderString = [[NSString allocWithZone:nil] initWithBytes:sender length:senderLength encoding:[self encoding]];
+
+			MVChatUser *chatUser = nil;
+			if( user && userLength ) {
+				chatUser = [self chatUserWithUniqueIdentifier:senderString];
+				if( ! [chatUser address] && host && hostLength ) {
+					NSString *hostString = [[NSString allocWithZone:nil] initWithBytes:host length:hostLength encoding:[self encoding]];
+					[chatUser _setAddress:hostString];
+					[hostString release];
+				}
+
+				if( ! [chatUser username] ) {
+					NSString *userString = [[NSString allocWithZone:nil] initWithBytes:user length:userLength encoding:[self encoding]];
+					[chatUser _setUsername:userString];
+					[userString release];
+				}
+			}
+
+			[self performSelector:selector withObject:parameters withObject:( chatUser ? (id) chatUser : (id) senderString )];
+			[senderString release];
+		}
+	}
+
+	[rawString release];
+	[parameters release];
+
+	[self _readNextMessageFromServer];
+}
+
+#pragma mark -
+
+- (void) _writeDataToServer:(id) raw {
+	NSMutableData *data = nil;
+	NSString *string = nil;
+
+	if( [raw isKindOfClass:[NSMutableData class]] ) {
+		data = [raw retain];
+		string = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
+	} else if( [raw isKindOfClass:[NSData class]] ) {
+		data = [raw mutableCopyWithZone:nil];
+		string = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
+	} else if( [raw isKindOfClass:[NSString class]] ) {
+		data = [[raw dataUsingEncoding:[self encoding] allowLossyConversion:YES] mutableCopyWithZone:nil];
+		string = [raw retain];
+	}
+
+	// IRC messages are always lines of characters terminated with a CR-LF
+	// (Carriage Return - Line Feed) pair, and these messages SHALL NOT
+	// exceed 512 characters in length, counting all characters including
+	// the trailing CR-LF. Thus, there are 510 characters maximum allowed
+	// for the command and its parameters.
+
+	if( [data length] > 510 ) [data setLength:510];
+	[data appendBytes:"\x0D\x0A" length:2];
+
+	[_chatConnection writeData:data withTimeout:-1. tag:0];
+
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
+
+	[string release];
+	[data release];
+}
+
+- (void) _readNextMessageFromServer {
+	static NSData *delimeter = nil;
+	if( ! delimeter ) delimeter = [[NSData allocWithZone:nil] initWithBytes:"\x0D\x0A" length:2];
+	[_chatConnection readDataToData:delimeter withTimeout:-1. tag:0];
+}
+
+#pragma mark -
+
++ (NSData *) _flattenedIRCDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format {
 	NSString *cformat = nil;
 
 	switch( format ) {
@@ -1771,154 +903,24 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 		cformat = nil;
 	}
 
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:enc], @"StringEncoding", [NSNumber numberWithBool:YES], @"NullTerminatedReturn", cformat, @"FormatType", nil];
-	NSData *data = [message chatFormatWithOptions:options];
-	return [data bytes];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:enc], @"StringEncoding", cformat, @"FormatType", nil];
+	return [message chatFormatWithOptions:options];
 }
 
-#pragma mark -
-
-+ (void) _irssiRunLoop {
-	GMainLoop *glibMainLoop = g_main_new( TRUE );
-
-	extern BOOL irssiThreadReady;
-	irssiThreadReady = YES;
-
-	extern BOOL MVChatApplicationQuitting;
-	extern unsigned int connectionCount;
-
-	NSAutoreleasePool *pool = nil;
-	while( ! MVChatApplicationQuitting || connectionCount ) {
-		pool = [[NSAutoreleasePool allocWithZone:nil] init];
-		g_main_iteration( TRUE, &irssiLock ); // this will block until one event occurs
-		[pool release];
+- (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action {
+	NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:encoding andChatFormat:[self outgoingChatFormat]];
+	if( action ) {
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :\001ACTION ", target];
+		[self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
+		[prefix release];
+	} else {
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :", target];
+		[self sendRawMessageWithComponents:prefix, msg, nil];
+		[prefix release];
 	}
-
-	pool = nil;
-
-	IrssiLock();
-
-	[self _deregisterCallbacks];
-
-	signal_emit( "gui exit", 0 );
-
-	g_main_destroy( glibMainLoop );
-	glibMainLoop = NULL;
-
-	irc_deinit();
-	core_deinit();
-
-	IrssiUnlock();
-
-	pthread_mutex_destroy( &irssiLock );
 }
 
-#pragma mark -
-
-- (SERVER_REC *) _irssiConnection {
-	return _chatConnection;
-}
-
-- (void) _setIrssiConnection:(SERVER_REC *) server {
-	SERVER_REC *old = _chatConnection;
-
-	if( old ) {
-		MVIRCChatConnectionModuleData *data = MODULE_DATA( old );
-		if( data ) data -> connection = nil;
-		MODULE_DATA_UNSET( old );
-	}
-
-	_chatConnection = server;
-
-	if( _chatConnection ) {
-		server_ref( _chatConnection );
-
-		MVIRCChatConnectionModuleData *data = g_new0( MVIRCChatConnectionModuleData, 1 );
-		data -> connection = self;
-
-		MODULE_DATA_SET( server, data );
-
-		_chatConnection -> no_reconnect = 1;
-	}
-
-	if( old ) server_unref( old );
-}
-
-#pragma mark -
-
-- (SERVER_CONNECT_REC *) _irssiConnectSettings {
-	return _chatConnectionSettings;
-}
-
-- (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings {
-	SERVER_CONNECT_REC *old = _chatConnectionSettings;
-	_chatConnectionSettings = settings;
-
-	if( _chatConnectionSettings ) {
-		server_connect_ref( _chatConnectionSettings );
-		_chatConnectionSettings -> no_autojoin_channels = TRUE;
-	}
-
-	if( old ) server_connect_unref( old );
-}
-
-#pragma mark -
-
-- (void) _didConnect {
-	id old = _localUser;
-	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
-	[old release];
-
-	// Identify if we have a user password
-	if( [[self nicknamePassword] length] )
-		[self sendRawMessageWithFormat:@"PRIVMSG NickServ :IDENTIFY %@", [self nicknamePassword]];
-
-	[super _didConnect];
-}
-
-- (void) _didNotConnect {
-	[self _setIrssiConnection:NULL];
-	[super _didNotConnect];
-}
-
-- (void) _didDisconnect {
-	if( _status == MVChatConnectionServerDisconnectedStatus ||
-		( _chatConnection && _chatConnection -> connection_lost ) ) {
-		if( _status != MVChatConnectionSuspendedStatus )
-			_status = MVChatConnectionServerDisconnectedStatus;
-		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
-			[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
-		[self scheduleReconnectAttemptEvery:30.];
-	}
-
-	[self _setIrssiConnection:NULL];
-	[super _didDisconnect];
-}
-
-- (void) _forceDisconnect {
-	if( ! _chatConnection ) return;
-
-	[self _willDisconnect];
-
-	IrssiLock();
-
-	if( _chatConnection -> handle ) {
-		g_io_channel_unref( net_sendbuffer_handle( _chatConnection -> handle ) );
-		net_sendbuffer_destroy( _chatConnection -> handle, FALSE);
-		_chatConnection -> handle = NULL;
-	}
-
-	_chatConnection -> connection_lost = FALSE;
-	_chatConnection -> no_reconnect = FALSE;
-
-	server_disconnect( _chatConnection );
-
-	[super _didDisconnect];
-
-	[self _setIrssiConnection:NULL];
-
-	IrssiUnlock();
-}
+/*
 
 #pragma mark -
 
@@ -1948,71 +950,7 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 
 	if( error ) [self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 }
-
-#pragma mark -
-
-- (void) _processSubcodeRequest:(NSDictionary *) info {
-	NSString *command = [info objectForKey:@"command"];
-	NSString *arguments = [info objectForKey:@"arguments"];
-	MVChatUser *user = [info objectForKey:@"user"];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeRequestNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-	[invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser: )];
-	[invocation setArgument:&command atIndex:2];
-	[invocation setArgument:&arguments atIndex:3];
-	[invocation setArgument:&user atIndex:4];
-
-	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
-	if( [[results lastObject] boolValue] ) {
-		signal_stop();
-		return;
-	}
-
-	if( ! [command caseInsensitiveCompare:@"version"] ) {
-		NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
-		if( ! [systemVersion count] ) systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
-		NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
-
-#if __ppc__
-		NSString *processor = @"PowerPC";
-#elif __i386__
-		NSString *processor = @"Intel";
-#else
-		NSString *processor = @"Unknown Architecture";
-#endif
-
-		NSString *reply = [NSString stringWithFormat:@"%@ %@ (%@) - %@ %@ (%@) - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], processor, [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
-		[user sendSubcodeReply:@"VERSION" withArguments:reply];
-		signal_stop();
-		return;
-	}
-}
-
-- (void) _processSubcodeReply:(NSDictionary *) info {
-	NSString *command = [info objectForKey:@"command"];
-	NSString *arguments = [info objectForKey:@"arguments"];
-	MVChatUser *user = [info objectForKey:@"user"];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionSubcodeReplyNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-	[invocation setSelector:@selector( processSubcodeReply:withArguments:fromUser: )];
-	[invocation setArgument:&command atIndex:2];
-	[invocation setArgument:&arguments atIndex:3];
-	[invocation setArgument:&user atIndex:4];
-
-	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
-	if( [[results lastObject] boolValue] ) {
-		signal_stop();
-		return;
-	}
-}
+*/
 
 #pragma mark -
 
@@ -2027,16 +965,896 @@ static void MVChatErrorUnknownCommand( IRC_SERVER_REC *server, const char *data 
 	}
 }
 
+- (void) _setCurrentNickname:(NSString *) nickname {
+	id old = _currentNickname;
+	_currentNickname = [nickname copyWithZone:nil];
+	[old release];
+}
+
 #pragma mark -
 
-- (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action {
-	IrssiLock();
+- (void) _periodicCleanUp {
+	@synchronized( _knownUsers ) {
+		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_knownUsers count]];
+		NSEnumerator *keyEnumerator = [_knownUsers keyEnumerator];
+		NSEnumerator *enumerator = [_knownUsers objectEnumerator];
+		id key = nil, object = nil;
 
-	if( _chatConnection ) {
-		if( ! action ) _chatConnection -> send_message( _chatConnection, [self encodedBytesWithString:target], msg, 0 );
-		else irc_send_cmdv( (IRC_SERVER_REC *) _chatConnection, "PRIVMSG %s :\001ACTION %s\001", [self encodedBytesWithString:target], msg );
+		while( ( key = [keyEnumerator nextObject] ) && ( object = [enumerator nextObject] ) )
+			if( [object retainCount] == 1 ) [removeList addObject:key];
+
+		[_knownUsers removeObjectsForKeys:removeList];
+		[removeList release];
+	}
+}
+
+- (void) _startQueueTimer {
+	if( _sendQueueTimer ) return;
+	_sendQueueTimer = [[NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector( _sendQueue ) userInfo:nil repeats:YES] retain];
+}
+
+- (void) _stopSendQueueTimer {
+	id old = _sendQueueTimer;
+	_sendQueueTimer = nil;
+	[old invalidate];
+	[old release];
+}
+
+- (void) _sendQueue {
+	@synchronized( _sendQueue ) {
+		if( ! [_sendQueue count] ) {
+			[self _stopSendQueueTimer];
+			return;
+		}
 	}
 
-	IrssiUnlock();
+	if( _queueWait && [_queueWait timeIntervalSinceNow] > 0. ) return;
+
+	NSData *data = nil;
+	@synchronized( _sendQueue ) {
+		data = [[_sendQueue objectAtIndex:0] retain];
+		[_sendQueue removeObjectAtIndex:0];
+	}
+
+	[self _writeDataToServer:data];
+	[data release];
+
+	id old = _lastCommand;
+	_lastCommand = [[NSDate allocWithZone:nil] init];
+	[old release];
+}
+
+#pragma mark -
+
+- (void) _addFileTransfer:(MVFileTransfer *) transfer {
+	@synchronized( _fileTransfers ) {
+		if( transfer ) [_fileTransfers addObject:transfer];
+	}
+}
+
+- (void) _removeFileTransfer:(MVFileTransfer *) transfer {
+	@synchronized( _fileTransfers ) {
+		if( transfer ) [_fileTransfers removeObject:transfer];
+	}
+}
+@end
+
+#pragma mark -
+
+@implementation MVIRCChatConnection (MVIRCChatConnectionProtocolHandlers)
+
+#pragma mark Connecting Replies
+
+- (void) _handle001WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	id old = _queueWait;
+	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:0.5] retain];
+	[old release];
+
+	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];	
+	// Identify if we have a user password
+	if( [[self nicknamePassword] length] )
+		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
+	if( [parameters count] >= 1 ) {
+		NSString *nickname = [parameters objectAtIndex:0];
+		if( ! [nickname isEqualToString:[self nickname]] ) {
+			[self _setCurrentNickname:nickname];
+			[[self localUser] _setUniqueIdentifier:[nickname lowercaseString]];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
+		}
+	}
+}
+
+- (void) _handle433WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender { // ERR_NICKNAMEINUSE
+	if( ! [self isConnected] ) {
+		NSString *nick = [self nextAlternateNickname];
+		if( ! [nick length] ) nick = [[self nickname] stringByAppendingString:@"_"];
+		if( [nick length] ) [self sendRawMessage:[NSString stringWithFormat:@"NICK %@", nick] immediately:YES];
+	}
+}
+
+#pragma mark -
+#pragma mark Incoming Message Replies
+
+- (void) _handlePrivmsgWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	// if the sender is a server lets make a user for the server name
+	// this is not ideal but the notifications need user objects
+	if( [sender isKindOfClass:[NSString class]] )
+		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
+
+	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
+		NSString *targetName = [parameters objectAtIndex:0];
+		if( ! [targetName length] ) return;
+
+		if( [targetName characterAtIndex:0] == '@' ) {
+			// This is a special filtered target.
+			// @#room	sends only to the operators on the room
+			// @%#room	sends to the operators and half-operators on the room
+			// @+#room	sends to the operators and half-operators and voices on the room
+			BOOL subFilter = [targetName length] >= 2 && ( [targetName characterAtIndex:1] == '%' || [targetName characterAtIndex:1] == '+' ); 
+			targetName = [targetName substringFromIndex:( subFilter ? 2 : 1 )];
+			if( ! [targetName length] ) return;
+		}
+
+		NSMutableData *msgData = [parameters objectAtIndex:1];
+		const char *bytes = (const char *)[msgData bytes];
+		BOOL ctcp = ( *bytes == '\001' && [msgData length] > 2 );
+
+		if( [sender status] != MVChatUserAwayStatus ) [sender _setStatus:MVChatUserAvailableStatus];
+		[sender _setIdleTime:0.];
+
+		if( [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
+			MVChatRoom *room = [self joinedChatRoomWithName:targetName];
+			if( ctcp ) [self _handleCTCP:msgData asRequest:YES fromSender:sender forRoom:room];
+			else [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", nil]];
+		} else {
+			if( ctcp ) [self _handleCTCP:msgData asRequest:YES fromSender:sender forRoom:nil];
+			else [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", nil]];
+		}
+	}
+}
+
+- (void) _handleNoticeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	// if the sender is a server lets make a user for the server name
+	// this is not ideal but the notifications need user objects
+	if( [sender isKindOfClass:[NSString class]] )
+		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
+
+	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
+		NSString *targetName = [parameters objectAtIndex:0];
+		if( ! [targetName length] ) return;
+
+		if( [targetName characterAtIndex:0] == '@' ) {
+			// This is a special filtered target.
+			// @#room	sends only to the operators on the room
+			// @%#room	sends to the operators and half-operators on the room
+			// @+#room	sends to the operators and half-operators and voices on the room
+			BOOL subFilter = [targetName length] >= 2 && ( [targetName characterAtIndex:1] == '%' || [targetName characterAtIndex:1] == '+' ); 
+			targetName = [targetName substringFromIndex:( subFilter ? 2 : 1 )];
+			if( ! [targetName length] ) return;
+		}
+
+		NSMutableData *msgData = [parameters objectAtIndex:1];
+		const char *bytes = (const char *)[msgData bytes];
+		BOOL ctcp = ( *bytes == '\001' && [msgData length] > 2 );
+
+		if( [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
+			MVChatRoom *room = [self joinedChatRoomWithName:targetName];
+			if( ctcp ) [self _handleCTCP:msgData asRequest:NO fromSender:sender forRoom:room];
+			else [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", nil]];
+		} else {
+			if( ctcp ) [self _handleCTCP:msgData asRequest:NO fromSender:sender forRoom:nil];
+			else {
+				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", nil]];
+				if( [[sender nickname] isEqualToString:@"NickServ"] ) {
+					NSString *msg = [[NSString allocWithZone:nil] initWithData:msgData encoding:[self encoding]];
+					if( [msg rangeOfString:@"NickServ"].location != NSNotFound && [msg rangeOfString:@"IDENTIFY"].location != NSNotFound ) {
+						if( ! [self nicknamePassword] ) {
+							[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+						} else [self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
+					} else if( [msg rangeOfString:@"Password accepted"].location != NSNotFound ) {
+						[[self localUser] _setIdentified:YES];
+					} else if( [msg rangeOfString:@"authentication required"].location != NSNotFound ) {
+						[[self localUser] _setIdentified:NO];
+					}
+					[msg release];
+				}
+			}
+		}
+	}
+}
+
+- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender forRoom:(MVChatRoom *) room {
+	const char *line = (const char *)[data bytes] + 1; // skip the \001 char
+	const char *end = line + [data length] - 2; // minus the first and last \001 char
+	const char *current = line;
+
+	while( line != end && *line != ' ' ) line++;
+	NSString *command = [[NSString allocWithZone:nil] initWithBytes:current length:(line - current) encoding:[self encoding]];
+	NSMutableData *arguments = nil;
+	if( line != end ) arguments = [[NSMutableData allocWithZone:nil] initWithBytes:++line length:(end - line)];
+
+	if( [command caseInsensitiveCompare:@"ACTION"] == NSOrderedSame && arguments ) {
+		// special case ACTION and send it out like a message with the action flag
+		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", arguments, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
+		else [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:arguments, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
+		[command release];
+		[arguments release];
+		return;
+	}
+
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:( request ? MVChatConnectionSubcodeRequestNotification : MVChatConnectionSubcodeReplyNotification ) object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	if( request ) [invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser: )];
+	else [invocation setSelector:@selector( processSubcodeReply:withArguments:fromUser: )];
+	[invocation setArgument:&command atIndex:2];
+	[invocation setArgument:&arguments atIndex:3];
+	[invocation setArgument:&sender atIndex:4];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+	if( [[results lastObject] boolValue] ) {
+		[command release];
+		[arguments release];
+		return;
+	}
+
+	if( request ) {
+		if( [command caseInsensitiveCompare:@"VERSION"] == NSOrderedSame ) {
+			NSDictionary *systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
+			if( ! [systemVersion count] ) systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+			NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
+
+#if __ppc__
+			NSString *processor = @"PowerPC";
+#elif __i386__
+			NSString *processor = @"Intel";
+#else
+			NSString *processor = @"Unknown Architecture";
+#endif
+
+			NSString *reply = [[NSString allocWithZone:nil] initWithFormat:@"%@ %@ (%@) - %@ %@ (%@) - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], processor, [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
+			[sender sendSubcodeReply:command withArguments:reply];
+
+			[reply release];
+			[systemVersion release];
+		} else if( [command caseInsensitiveCompare:@"TIME"] == NSOrderedSame ) {
+			[sender sendSubcodeReply:command withArguments:[[NSDate date] description]];
+		} else if( [command caseInsensitiveCompare:@"PING"] == NSOrderedSame ) {
+			// only reply with packets less than 100 bytes, anything over that is bad karma
+			if( [arguments length] < 100 ) [sender sendSubcodeReply:command withArguments:arguments];
+		} else if( [command caseInsensitiveCompare:@"DCC"] == NSOrderedSame ) {
+			NSString *msg = [[NSString allocWithZone:nil] initWithData:arguments encoding:[self encoding]];
+			NSArray *parameters = [msg componentsSeparatedByString:@" "];
+
+			if( [parameters count] >= 5 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"SEND"] == NSOrderedSame ) {
+				long long size = 0;
+				unsigned int port = [[parameters objectAtIndex:3] intValue];
+				NSScanner *scanner = [NSScanner scannerWithString:[parameters objectAtIndex:4]];
+				[scanner scanLongLong:&size];
+
+				NSString *address = [parameters objectAtIndex:2];
+				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
+					unsigned int ip4 = [address intValue];
+					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
+				}
+
+				NSHost *host = [NSHost hostWithAddress:address];
+
+				if( port > 0 && [parameters count] >= 6 && [[parameters objectAtIndex:5] rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound ) {
+					// this is a passive reply, look up the original transfer
+					MVIRCUploadFileTransfer *transfer = nil;
+					unsigned long passiveId = [[parameters objectAtIndex:5] intValue];
+
+					@synchronized( _fileTransfers ) {
+						NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
+						while( ( transfer = [enumerator nextObject] ) )
+							if( [transfer isUpload] && [transfer isPassive] && [[transfer user] isEqualToChatUser:sender] && [(id)transfer _passiveIdentifier] == passiveId )
+								break;
+					}
+
+					if( transfer ) {
+						[transfer _setHost:host];
+						[transfer _setPort:port];
+						[transfer _setupAndStart];
+					}
+				} else {
+					MVIRCDownloadFileTransfer *transfer = [(MVIRCDownloadFileTransfer *)[MVIRCDownloadFileTransfer allocWithZone:nil] initWithUser:sender];
+					if( port == 0 && [parameters count] >= 6 ) {
+						BOOL turbo = ( [[parameters objectAtIndex:5] rangeOfString:@"T"].location != NSNotFound );
+						[transfer _setTurbo:turbo];
+						[transfer _setPassiveIdentifier:[[parameters objectAtIndex:5] intValue]];
+						[transfer _setPassive:YES];
+					} else if( [parameters count] >= 6 ) {
+						[transfer _setTurbo:[[parameters objectAtIndex:5] isEqualToString:@"T"]];
+					}
+
+					[transfer _setOriginalFileName:[parameters objectAtIndex:1]];
+					[transfer _setFinalSize:(unsigned long long)size];
+					[transfer _setHost:host];
+					[transfer _setPort:port];
+
+					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDownloadFileTransferOfferNotification object:transfer];
+
+					[self _addFileTransfer:transfer];
+					[transfer release];
+				}
+			} else if( [parameters count] >= 4 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"ACCEPT"] == NSOrderedSame ) {
+				BOOL passive = NO;
+				long long size = 0;
+				unsigned int port = [[parameters objectAtIndex:2] intValue];
+				NSScanner *scanner = [NSScanner scannerWithString:[parameters objectAtIndex:3]];
+				[scanner scanLongLong:&size];
+
+				if( [parameters count] >= 5 ) {
+					passive = YES;
+					port = [[parameters objectAtIndex:4] intValue];
+				}
+
+				@synchronized( _fileTransfers ) {
+					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
+					MVFileTransfer *transfer = nil;
+					while( ( transfer = [enumerator nextObject] ) ) {
+						if( [transfer isDownload] && [transfer isPassive] == passive && [[transfer user] isEqualToChatUser:sender] &&
+							( ! passive ? [transfer port] == port : [(id)transfer _passiveIdentifier] == port ) ) {
+							[transfer _setTransfered:(unsigned long long)size];
+							[transfer _setStartOffset:(unsigned long long)size];
+							[(MVIRCDownloadFileTransfer *)transfer _setupAndStart];
+						}
+					}
+				}
+			} else if( [parameters count] >= 4 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"RESUME"] == NSOrderedSame ) {
+				BOOL passive = NO;
+				long long size = 0;
+				unsigned int port = [[parameters objectAtIndex:2] intValue];
+				NSScanner *scanner = [NSScanner scannerWithString:[parameters objectAtIndex:3]];
+				[scanner scanLongLong:&size];
+
+				if( [parameters count] >= 5 ) {
+					passive = YES;
+					port = [[parameters objectAtIndex:4] intValue];
+				}
+
+				@synchronized( _fileTransfers ) {
+					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
+					MVFileTransfer *transfer = nil;
+					while( ( transfer = [enumerator nextObject] ) ) {
+						if( [transfer isUpload] && [transfer isPassive] == passive && [[transfer user] isEqualToChatUser:sender] &&
+							( ! passive ? [transfer port] == port : [(id)transfer _passiveIdentifier] == port ) ) {
+							[transfer _setTransfered:(unsigned long long)size];
+							[transfer _setStartOffset:(unsigned long long)size];
+							[sender sendSubcodeRequest:@"DCC ACCEPT" withArguments:[msg substringFromIndex:7]];
+						}
+					}
+				}
+			}
+
+			[msg release];
+		} else if( [command caseInsensitiveCompare:@"CLIENTINFO"] == NSOrderedSame ) {
+			// make this extnesible later with a plugin registration method
+			[sender sendSubcodeReply:command withArguments:@"VERSION TIME PING DCC CLIENTINFO"];
+		}
+	}
+
+	[command release];
+	[arguments release];
+}
+
+#pragma mark -
+#pragma mark Room Replies
+
+- (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [parameters count] ) {
+		id name = [parameters objectAtIndex:0];
+		if( [name isKindOfClass:[NSData class]] )
+			name = [[[NSString allocWithZone:nil] initWithData:name encoding:[self encoding]] autorelease];
+
+		MVChatRoom *room = [self joinedChatRoomWithName:name];
+
+		if( [sender isLocalUser] ) {
+			if( ! room ) {
+				room = [[MVIRCChatRoom allocWithZone:nil] initWithName:name andConnection:self];
+				[self _addJoinedRoom:room];
+			} else [room retain];
+
+			[room _setDateJoined:[NSDate date]];
+			[room _setDateParted:nil];
+			[room _setNamesSynced:NO];
+			[room _clearMemberUsers];
+			[room _clearBannedUsers];
+
+			[self sendRawMessageImmediatelyWithFormat:@"WHO %@", name];
+			[self sendRawMessageImmediatelyWithFormat:@"MODE %@ b", name];
+		} else {
+			if( [sender status] != MVChatUserAwayStatus ) [sender _setStatus:MVChatUserAvailableStatus];
+			[sender _setIdleTime:0.];
+			[room _addMemberUser:sender];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserJoinedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
+		}
+	}
+}
+
+- (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [parameters count] == 2 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
+		if( ! room ) return;
+		if( [sender isLocalUser] ) {
+			[room _setDateParted:[NSDate date]];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomPartedNotification object:room];
+		} else {
+			[room _removeMemberUser:sender];
+			NSData *reason = [parameters objectAtIndex:1];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", reason, @"reason", nil]];
+		}
+	}
+}
+
+- (void) _handleQuitWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [sender isLocalUser] ) return;
+	if( [parameters count] ) {
+		[sender _setDateDisconnected:[NSDate date]];
+		[sender _setStatus:MVChatUserOfflineStatus];
+
+		NSData *reason = [parameters objectAtIndex:0];
+		NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:sender, @"user", reason, @"reason", nil];
+
+		MVChatRoom *room = nil;
+		NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
+		while( ( room = [enumerator nextObject] ) ) {
+			if( ! [room isJoined] || ! [room hasUser:sender] ) continue;
+			[room _removeMemberUser:sender];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:info];
+		}
+
+		[info release];
+	}
+}
+
+- (void) _handleKickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [parameters count] >= 2 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		if( ! room || ! user ) return;
+
+		NSData *reason = ( [parameters count] == 3 ? [parameters objectAtIndex:2] : nil );
+		if( [user isLocalUser] ) {
+			[room _setDateParted:[NSDate date]];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"byUser", reason, @"reason", nil]];
+		} else {
+			[room _removeMemberUser:user];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", sender, @"byUser", reason, @"reason", nil]];
+		}
+	}
+}
+
+- (void) _handleTopicWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [parameters count] == 2 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
+		[room _setTopic:[parameters objectAtIndex:1]];
+		[room _setTopicAuthor:sender];
+		[room _setTopicDate:[NSDate date]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
+	}
+}
+
+- (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [parameters count] >= 2 ) {
+		NSString *targetName = [parameters objectAtIndex:0];
+		if( [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
+			MVChatRoom *room = [self joinedChatRoomWithName:targetName];
+
+#define enabledHighBit ( 1 << 31 )
+#define banMode ( 1 << 30 )
+#define banExcludeMode ( 1 << 29 )
+#define inviteExcludeMode ( 1 << 28 )
+
+			unsigned long oldModes = [room modes];
+			unsigned long value = 0;
+			NSMutableArray *argsNeeded = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
+			unsigned int i = 1, count = [parameters count];
+			while( i < count ) {
+				NSString *param = [parameters objectAtIndex:i++];
+				if( [param length] ) {
+					char chr = [param characterAtIndex:0];
+					if( chr == '+' || chr == '-' ) {
+						unsigned enabled = YES;
+						unsigned int j = 0, length = [param length];
+						while( j < length ) {
+							chr = [param characterAtIndex:j++];
+							switch( chr ) {
+								case '+': enabled = YES; break;
+								case '-': enabled = NO; break;
+								case 'i':
+									if( enabled ) [room _setMode:MVChatRoomInviteOnlyMode withAttribute:nil];
+									else [room _removeMode:MVChatRoomInviteOnlyMode];
+									break;
+								case 'p':
+									if( enabled ) [room _setMode:MVChatRoomPrivateMode withAttribute:nil];
+									else [room _removeMode:MVChatRoomPrivateMode];
+									break;
+								case 's':
+									if( enabled ) [room _setMode:MVChatRoomSecretMode withAttribute:nil];
+									else [room _removeMode:MVChatRoomSecretMode];
+									break;
+								case 'm':
+									if( enabled ) [room _setMode:MVChatRoomNormalUsersSilencedMode withAttribute:nil];
+									else [room _removeMode:MVChatRoomNormalUsersSilencedMode];
+									break;
+								case 'n':
+									if( enabled ) [room _setMode:MVChatRoomNoOutsideMessagesMode withAttribute:nil];
+									else [room _removeMode:MVChatRoomNoOutsideMessagesMode];
+									break;
+								case 't':
+									if( enabled ) [room _setMode:MVChatRoomOperatorsOnlySetTopicMode withAttribute:nil];
+									else [room _removeMode:MVChatRoomOperatorsOnlySetTopicMode];
+									break;
+								case 'l':
+									if( ! enabled ) {
+										[room _removeMode:MVChatRoomLimitNumberOfMembersMode];
+										break;
+									}
+									value = MVChatRoomLimitNumberOfMembersMode;
+									goto queue;
+								case 'k':
+									if( ! enabled ) [room _removeMode:MVChatRoomPassphraseToJoinMode];
+									value = MVChatRoomPassphraseToJoinMode;
+									goto queue;
+								case 'b':
+									value = banMode;
+									goto queue;
+								case 'e':
+									value = banExcludeMode;
+									goto queue;
+								case 'I':
+									value = inviteExcludeMode;
+									goto queue;
+								case 'o':
+									value = MVChatRoomMemberOperatorMode;
+									goto queue;
+								case 'h':
+									value = MVChatRoomMemberHalfOperatorMode;
+									goto queue;
+								case 'v':
+									value = MVChatRoomMemberVoicedMode;
+									goto queue;
+								queue:
+									if( enabled ) value |= enabledHighBit;
+									[argsNeeded addObject:[NSNumber numberWithUnsignedLong:value]];
+									break;
+								default:
+									break;
+							}
+						}
+					} else {
+						if( [argsNeeded count] ) {
+							unsigned long value = [[argsNeeded objectAtIndex:0] unsignedLongValue];
+							BOOL enabled = ( ( value & enabledHighBit ) ? YES : NO );
+							unsigned long mode = ( value & ~enabledHighBit );
+
+							if( mode == MVChatRoomMemberOperatorMode || mode == MVChatRoomMemberHalfOperatorMode || mode == MVChatRoomMemberVoicedMode ) {
+								MVChatUser *member = [self chatUserWithUniqueIdentifier:param];
+								if( enabled ) [room _setMode:mode forMemberUser:member];
+								else [room _removeMode:mode forMemberUser:member];
+								[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedLong:mode], @"mode", sender, @"by", nil]];
+							} else if( mode == banMode ) {
+								MVChatUser *user = [MVChatUser wildcardUserFromString:param];
+								if( enabled ) {
+									[room _addBanForUser:user];
+									[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBannedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", sender, @"byUser", nil]];
+								} else {
+									[room _removeBanForUser:user];
+									[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", sender, @"byUser", nil]];
+								}
+							} else if( mode == MVChatRoomLimitNumberOfMembersMode && enabled ) {
+								[room _setMode:MVChatRoomLimitNumberOfMembersMode withAttribute:[NSNumber numberWithInt:[param intValue]]];
+							} else if( mode == MVChatRoomPassphraseToJoinMode ) {
+								if( enabled ) [room _setMode:MVChatRoomPassphraseToJoinMode withAttribute:param];
+								else [room _removeMode:MVChatRoomPassphraseToJoinMode];
+							}
+
+							[argsNeeded removeObjectAtIndex:0];
+						}
+					}
+				}
+			}
+
+#undef enabledHighBit
+#undef banMode
+#undef banExcludeMode
+#undef inviteExcludeMode
+
+			unsigned int changedModes = ( oldModes ^ [room modes] );
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]];
+		} else {
+			// user modes
+		}
+	}
+}
+
+#pragma mark -
+#pragma mark Misc. Replies
+
+- (void) _handlePingWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [parameters count] >= 1 ) {
+		if( [parameters count] == 1 ) [self sendRawMessageImmediatelyWithComponents:@"PONG :", [parameters objectAtIndex:0], nil];
+		else [self sendRawMessageImmediatelyWithComponents:@"PONG ", [parameters objectAtIndex:1], @" :", [parameters objectAtIndex:0], nil];
+	}
+}
+
+- (void) _handleInviteWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [parameters count] == 2 ) {
+		id roomName = [parameters objectAtIndex:1];
+		if( [roomName isKindOfClass:[NSData class]] )
+			roomName = [[[NSString allocWithZone:nil] initWithData:roomName encoding:[self encoding]] autorelease];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", roomName, @"room", nil]];
+	}
+}
+
+- (void) _handleNickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [parameters count] == 1 ) {
+		id nickname = [parameters objectAtIndex:0];
+		if( [nickname isKindOfClass:[NSData class]] )
+			nickname = [[[NSString allocWithZone:nil] initWithData:nickname encoding:[self encoding]] autorelease];
+
+		NSString *oldNickname = [[sender nickname] retain];
+		NSString *oldIdentifier = [[sender uniqueIdentifier] retain];
+
+		if( [sender status] != MVChatUserAwayStatus )
+			[sender _setStatus:MVChatUserAvailableStatus];
+		[sender _setIdleTime:0.];
+
+		NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
+		MVChatRoom *room = nil;
+
+		while( ( room = [enumerator nextObject] ) ) {
+			if( ! [room isJoined] || ! [room hasUser:sender] ) continue;
+			[room _updateMemberUser:sender fromOldUniqueIdentifier:oldIdentifier];
+		}
+
+		if( [sender isLocalUser] ) {
+			[self _setCurrentNickname:nickname];
+			[sender _setIdentified:NO];
+			[sender _setUniqueIdentifier:[nickname lowercaseString]];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
+		} else {
+			[self _updateKnownUser:sender withNewNickname:nickname];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserNicknameChangedNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"oldNickname", nil]];
+		}
+
+		[oldNickname release];
+		[oldIdentifier release];
+	}
+}
+
+#pragma mark -
+#pragma mark Away Replies
+
+- (void) _handle301WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_AWAY
+	if( [parameters count] == 3 ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		if( [[user awayStatusMessage] isEqual:[parameters objectAtIndex:2]] ) {
+			[sender _setStatus:MVChatUserAwayStatus];
+			[user _setAwayStatusMessage:[parameters objectAtIndex:2]];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserAwayStatusMessageChangedNotification object:user userInfo:nil];
+		}
+	}
+}
+
+- (void) _handle305WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_UNAWAY
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
+}
+
+- (void) _handle306WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NOWAWAY
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
+}
+
+#pragma mark -
+#pragma mark NAMES Replies
+
+- (void) _handle353WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NAMREPLY
+	if( [parameters count] == 4 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:2]];
+		if( room && ! [room _namesSynced] ) {
+			NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
+			NSString *names = [[NSString allocWithZone:nil] initWithData:[parameters objectAtIndex:3] encoding:[self encoding]];
+			NSArray *members = [names componentsSeparatedByString:@" "];
+			NSEnumerator *enumerator = [members objectEnumerator];
+			NSString *memberName = nil;
+
+			while( ( memberName = [enumerator nextObject] ) ) {
+				unsigned int i = 0, len = [memberName length];
+				if( ! len ) break;
+
+				unsigned long modes = MVChatRoomMemberNoModes;
+				BOOL done = NO;
+
+				while( i < len && ! done ) {
+					unichar c = [memberName characterAtIndex:i];
+					switch( c ) {
+						case '+': modes |= MVChatRoomMemberVoicedMode; break;
+						case '%': modes |= MVChatRoomMemberHalfOperatorMode; break;
+						case '@': modes |= MVChatRoomMemberOperatorMode; break;
+						default: done = YES; break;
+					}
+					if( ! done ) i++;
+				}
+
+				if( i > 0 ) memberName = [memberName substringFromIndex:i];
+				MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
+				[room _addMemberUser:member];
+				[room _setModes:modes forMemberUser:member];
+			}
+
+			[names release];
+			[pool drain];
+			[pool release];
+		}
+	}
+}
+
+- (void) _handle366WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFNAMES
+	if( [parameters count] >= 2 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		if( room && ! [room _namesSynced] ) {
+			[room _setNamesSynced:YES];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification object:room];
+			[room release]; // balance the alloc or retain from _handleJoinWithParameters
+		}
+	}
+}
+
+#pragma mark -
+#pragma mark WHO Replies
+
+- (void) _handle352WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOREPLY
+	if( [parameters count] >= 7 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatUser *member = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:5]];
+		[member _setUsername:[parameters objectAtIndex:2]];
+		[member _setAddress:[parameters objectAtIndex:3]];
+
+		unichar status = ( [[parameters objectAtIndex:6] length] ? [[parameters objectAtIndex:6] characterAtIndex:0] : 0 );
+		if( status == 'H' ) {
+			[member _setStatus:MVChatUserAvailableStatus];
+		} else if( status == 'G' ) {
+			[member _setStatus:MVChatUserAwayStatus];
+		}
+	}
+}
+
+- (void) _handle315WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFWHO
+	if( [parameters count] >= 2 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room];
+	}
+}
+
+#pragma mark -
+#pragma mark Ban List Replies
+
+- (void) _handle367WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_BANLIST
+	if( [parameters count] >= 3 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatUser *user = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
+		if( [room _bansSynced] ) [room _clearBannedUsers];
+		[room _addBanForUser:user];
+	}
+}
+
+- (void) _handle368WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFBANLIST
+	if( [parameters count] >= 2 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		[room _setBansSynced:YES];
+		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomBannedUsersSyncedNotification object:room];
+	}
+}
+
+#pragma mark -
+#pragma mark Topic Replies
+
+- (void) _handle332WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_TOPIC
+	if( [parameters count] == 3 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		[room _setTopic:[parameters objectAtIndex:2]];
+	}
+}
+
+- (void) _handle333WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_TOPICWHOTIME_IRCU
+	if( [parameters count] >= 4 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatUser *author = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
+		[room _setTopicAuthor:author];
+		if( [[parameters objectAtIndex:3] doubleValue] > 631138520 )
+			[room _setTopicDate:[NSDate dateWithTimeIntervalSince1970:[[parameters objectAtIndex:3] doubleValue]]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
+	}
+}
+
+#pragma mark -
+#pragma mark WHOIS Replies
+
+- (void) _handle311WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISUSER
+	if( [parameters count] == 6 ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		[user _setServerOperator:NO]; // set these to NO now so we get the true values later in the WHOIS
+		[user _setUsername:[parameters objectAtIndex:2]];
+		[user _setAddress:[parameters objectAtIndex:3]];
+		NSString *realName = [[NSString allocWithZone:nil] initWithData:[parameters objectAtIndex:5] encoding:[self encoding]];
+		[user _setRealName:realName];
+		[realName release];
+	}
+}
+
+- (void) _handle312WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISSERVER
+	if( [parameters count] >= 3 ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		[user _setServerAddress:[parameters objectAtIndex:2]];
+	}
+}
+
+- (void) _handle313WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISOPERATOR
+	if( [parameters count] >= 2 ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		[user _setServerOperator:YES];
+	}
+}
+
+- (void) _handle317WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISIDLE
+	if( [parameters count] >= 3 ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		[user _setIdleTime:[[parameters objectAtIndex:2] doubleValue]];
+		[user _setDateConnected:nil];
+
+		// parameter 4 is connection time on some servers
+		// prevent showing 34+ years connected time, this makes sure it is a viable date
+		if( [parameters count] >= 4 && [[parameters objectAtIndex:3] doubleValue] > 631138520 )
+			[user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:[[parameters objectAtIndex:3] doubleValue]]];
+	}
+}
+
+- (void) _handle318WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFWHOIS
+	if( [parameters count] >= 2 ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		[user _setDateUpdated:[NSDate date]];
+
+		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
+
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
+	}
+}
+
+- (void) _handle319WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISCHANNELS
+	if( [parameters count] == 3 ) {
+		NSString *rooms = [[NSString allocWithZone:nil] initWithData:[parameters objectAtIndex:2] encoding:[self encoding]];
+		NSArray *chanArray = [[rooms stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
+		NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:[chanArray count]];
+		NSEnumerator *enumerator = [chanArray objectEnumerator];
+		NSString *room = nil;
+
+		NSCharacterSet *modeChars = [NSCharacterSet characterSetWithCharactersInString:@"@\%+ "];
+		while( ( room = [enumerator nextObject] ) ) {
+			room = [room stringByTrimmingCharactersInSet:modeChars];
+			if( room ) [results addObject:room];
+		}
+
+		if( [results count] ) {
+			MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+			[user setAttribute:results forKey:MVChatUserKnownRoomsAttribute];
+		}
+
+		[rooms release];
+		[results release];
+	}
+}
+
+- (void) _handle320WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISIDENTIFIED
+	if( [parameters count] == 3 ) {
+		NSString *comment = [[NSString allocWithZone:nil] initWithData:[parameters objectAtIndex:2] encoding:[self encoding]];
+		if( [comment rangeOfString:@"identified" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
+			MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+			[user _setIdentified:YES];
+		}
+		[comment release];
+	}
 }
 @end

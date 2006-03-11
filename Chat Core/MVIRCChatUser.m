@@ -1,12 +1,6 @@
 #import "MVIRCChatUser.h"
 #import "MVIRCChatConnection.h"
 
-#define MODULE_NAME "MVIRCChatUser"
-
-#import "core.h"
-#import "irc.h"
-#import "servers.h"
-
 @implementation MVIRCChatUser
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) connection {
 	if( ( self = [self initWithNickname:nil andConnection:connection] ) ) {
@@ -29,12 +23,17 @@
 	return self;
 }
 
-#pragma mark -
-
-- (unsigned) hash {
-	// this hash assumes the MVIRCChatConnection will return the same instance for equal users
-	return ( _type ^ [[self connection] hash] ^ (unsigned int) self );
+- (void) finalize {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super finalize];
 }
+
+- (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super dealloc];
+}
+
+#pragma mark -
 
 - (unsigned long) supportedModes {
 	return MVChatUserInvisibleMode;
@@ -48,20 +47,30 @@
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
-	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding andChatFormat:[[self connection] outgoingChatFormat]];
-	[[self connection] _sendMessage:msg toTarget:[self nickname] asAction:action];
+	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:message withEncoding:encoding andChatFormat:[[self connection] outgoingChatFormat]];
+	[[self connection] _sendMessage:message withEncoding:encoding toTarget:[self nickname] asAction:action];
 }
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
 	NSParameterAssert( command != nil );
-	NSString *request = ( [arguments length] ? [NSString stringWithFormat:@"%@ %@", command, arguments] : command );
-	[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self nickname], request];
+	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self nickname], command];
+		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
+		[prefix release];
+	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
+		[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@ %@\001", [self nickname], command, arguments];
+	} else [[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self nickname], command];
 }
 
-- (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
 	NSParameterAssert( command != nil );
-	NSString *request = ( [arguments length] ? [NSString stringWithFormat:@"%@ %@", command, arguments] : command );
-	[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], request];
+	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
+		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
+		[prefix release];
+	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
+		[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
+	} else [[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
 }
 
 #pragma mark -
@@ -85,15 +94,19 @@
 
 - (void) ctcpReplyNotification:(NSNotification *) notification {
 	NSString *command = [[notification userInfo] objectForKey:@"command"];
-	NSString *arguments = [[notification userInfo] objectForKey:@"arguments"];
-	if( ! [command caseInsensitiveCompare:@"version"] ) {
-		[self setAttribute:arguments forKey:MVChatUserClientInfoAttribute];
-	} else if( ! [command caseInsensitiveCompare:@"time"] ) {
-		NSDate *localThere = [NSDate dateWithNaturalLanguageString:arguments];
+	NSData *arguments = [[notification userInfo] objectForKey:@"arguments"];
+	if( [command caseInsensitiveCompare:@"VERSION"] == NSOrderedSame ) {
+		NSString *info = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
+		[self setAttribute:info forKey:MVChatUserClientInfoAttribute];
+		[info release];
+	} else if( [command caseInsensitiveCompare:@"TIME"] == NSOrderedSame ) {
+		NSString *date = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
+		NSDate *localThere = [NSDate dateWithNaturalLanguageString:date];
 		if( localThere ) {
 			NSTimeInterval diff = [localThere timeIntervalSinceDate:[NSDate date]];
 			[self setAttribute:[NSNumber numberWithDouble:diff] forKey:MVChatUserLocalTimeDifferenceAttribute];
 		} else [self setAttribute:nil forKey:MVChatUserLocalTimeDifferenceAttribute];
+		[date release];
 	}
 }
 @end

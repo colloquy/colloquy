@@ -23,11 +23,19 @@
 	if( ( self = [self init] ) ) {
 		_type = MVChatRemoteUserType;
 		_connection = connection; // prevent circular retain
-
 		[self updateWithClientEntry:clientEntry];
 	}
 
 	return self;
+}
+
+- (void) release {
+	if( ! _releasing && [self isRemoteUser] && ( [self retainCount] - 1 ) == 1 ) {
+		_releasing = YES;
+		[[self connection] _removeKnownUser:self];
+	}
+
+	[super release];
 }
 
 #pragma mark -
@@ -68,7 +76,7 @@
 	unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
 	[self _setUniqueIdentifier:[NSData dataWithBytes:identifier length:len]];
 
-	self -> _clientEntry = clientEntry;
+	_clientEntry = clientEntry;
 
 	SilcUnlock( [[self connection] _silcClient] );
 }

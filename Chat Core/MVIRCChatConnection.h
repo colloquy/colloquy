@@ -1,17 +1,30 @@
 #import "MVChatConnection.h"
-#import "common.h"
+#import "MVChatConnectionPrivate.h"
 
-extern pthread_mutex_t irssiLock;
-#define IrssiLock() pthread_mutex_lock( &irssiLock )
-#define IrssiUnlock() pthread_mutex_unlock( &irssiLock )
+@class AsyncSocket;
+@class MVChatUser;
+@class MVChatRoom;
+@class MVFileTransfer;
 
 @interface MVIRCChatConnection : MVChatConnection {
 @private
+	AsyncSocket *_chatConnection;
+	NSTimer *_periodicCleanUpTimer;
+	NSThread *_connectionThread;
+	NSDate *_queueWait;
+	NSDate *_lastCommand;
+	NSMutableArray *_sendQueue;
+	NSTimer *_sendQueueTimer;
 	NSMutableDictionary *_knownUsers;
-	NSString *_proxyUsername;
-	NSString *_proxyPassword;
-	SERVER_REC *_chatConnection;
-	SERVER_CONNECT_REC *_chatConnectionSettings;
+	NSMutableSet *_fileTransfers;
+	NSString *_server;
+	NSString *_currentNickname;
+	NSString *_nickname;
+	NSString *_username;
+	NSString *_password;
+	NSString *_realName;
+	NSConditionLock *_threadWaitLock;
+	unsigned short _serverPort;
 }
 + (NSArray *) defaultServerPorts;
 @end
@@ -19,41 +32,24 @@ extern pthread_mutex_t irssiLock;
 #pragma mark -
 
 @interface MVChatConnection (MVIRCChatConnectionPrivate)
-+ (MVIRCChatConnection *) _connectionForServer:(SERVER_REC *) server;
+- (AsyncSocket *) _chatConnection;
+- (void) _readNextMessageFromServer;
 
-+ (void) _registerCallbacks;
-+ (void) _deregisterCallbacks;
-
-+ (const char *) _flattenedIRCStringForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format;
-
-- (MVIRCChatConnection *) _irssiThreadProxy;
-
-- (SERVER_REC *) _irssiConnection;
-- (void) _setIrssiConnection:(SERVER_REC *) server;
-
-- (SERVER_CONNECT_REC *) _irssiConnectSettings;
-- (void) _setIrssiConnectSettings:(SERVER_CONNECT_REC *) settings;
-
-- (void) _forceDisconnect;
+- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender forRoom:(MVChatRoom *) room;
+	
++ (NSData *) _flattenedIRCDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format;
+- (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action;
 
 - (void) _processErrorCode:(int) errorCode withContext:(char *) context;
 
 - (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname;
 
-- (oneway void) _sendMessage:(const char *) msg toTarget:(NSString *) target asAction:(BOOL) action;
-@end
+- (void) _addFileTransfer:(MVFileTransfer *) transfer;
+- (void) _removeFileTransfer:(MVFileTransfer *) transfer;
 
-#pragma mark -
+- (void) _setCurrentNickname:(NSString *) nickname;
 
-@interface MVChatConnection (MVIRCChatConnectionPrivateSuper)
-- (void) _willConnect;
-- (void) _didConnect;
-- (void) _didNotConnect;
-- (void) _willDisconnect;
-- (void) _didDisconnect;
-- (void) _postError:(NSError *) error;
-- (void) _setStatus:(MVChatConnectionStatus) status;
-
-- (void) _addJoinedRoom:(MVChatRoom *) room;
-- (void) _removeJoinedRoom:(MVChatRoom *) room;
+- (void) _periodicCleanUp;
+- (void) _startQueueTimer;
+- (void) _stopSendQueueTimer;
 @end

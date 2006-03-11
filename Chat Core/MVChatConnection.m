@@ -9,6 +9,7 @@
 #import "NSAttributedStringAdditions.h"
 #import "NSMethodSignatureAdditions.h"
 #import "NSScriptCommandAdditions.h"
+#import "NSNotificationAdditions.h"
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
@@ -89,8 +90,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
 		_roomsCache = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:500];
-		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
-		_joinedRooms = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
+		_joinedRooms = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:10];
 		_localUser = nil;
 
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
@@ -144,6 +145,13 @@ static const NSStringEncoding supportedEncodings[] = {
 	return self;
 }
 
+- (void) finalize {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	[self cancelPendingReconnectAttempts];
+	[super finalize];
+}
+
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
@@ -156,6 +164,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_lastConnectAttempt release];
 	[_awayMessage release];
 	[_persistentInformation release];
+	[_proxyServer release];
+	[_proxyUsername release];
+	[_proxyPassword release];
 
 	_npassword = nil;
 	_roomsCache = nil;
@@ -165,7 +176,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	_lastConnectAttempt = nil;
 	_awayMessage = nil;
 	_persistentInformation = nil;
-
+	_proxyServer = nil;
+	_proxyUsername = nil;
+	_proxyPassword = nil;
+	
 	[super dealloc];
 }
 
@@ -175,6 +189,11 @@ static const NSStringEncoding supportedEncodings[] = {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 	return 0;
+}
+
+- (unsigned) hash {
+	if( ! _hash ) _hash = ( [self type] ^ [[self server] hash] ^ [self serverPort] ^ [[self nickname] hash] );
+	return _hash;
 }
 
 #pragma mark -
@@ -258,18 +277,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (NSStringEncoding) encoding {
 	return _encoding;
-}
-
-- (NSString *) stringWithEncodedBytes:(const char *) bytes {
-	return [[[NSString allocWithZone:nil] initWithBytes:bytes encoding:_encoding] autorelease];
-}
-
-- (NSString *) stringWithEncodedBytesNoCopy:(char *) bytes freeWhenDone:(BOOL) free {
-	return [[[NSString allocWithZone:nil] initWithBytesNoCopy:bytes encoding:_encoding freeWhenDone:free] autorelease];
-}
-
-- (const char *) encodedBytesWithString:(NSString *) string {
-	return [string bytesUsingEncoding:_encoding allowLossyConversion:YES];
 }
 
 #pragma mark -
@@ -416,12 +423,11 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setSecure:(BOOL) ssl {
-// subclass this method, if needed
+	_secure = ssl;
 }
 
 - (BOOL) isSecure {
-// subclass this method, if needed
-	return NO;
+	return _secure;
 }
 
 #pragma mark -
@@ -437,52 +443,56 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setProxyServer:(NSString *) address {
-// subclass this method, if needed
+	id old = _proxyServer;
+	_proxyServer = [address copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) proxyServer {
-// subclass this method, if needed
-	return nil;
+	return [[_proxyServer retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setProxyServerPort:(unsigned short) port {
-// subclass this method, if needed
+	_proxyServerPort = port;
 }
 
 - (unsigned short) proxyServerPort {
-// subclass this method, if needed
-	return 0;
+	return _proxyServerPort;
 }
 
 #pragma mark -
 
 - (void) setProxyUsername:(NSString *) username {
-// subclass this method, if needed
+	id old = _proxyUsername;
+	_proxyUsername = [username copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) proxyUsername {
-// subclass this method, if needed
-	return nil;
+	return [[_proxyUsername retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setProxyPassword:(NSString *) password {
-// subclass this method, if needed
+	id old = _proxyPassword;
+	_proxyPassword = [password copyWithZone:nil];
+	[old release];
 }
 
 - (NSString *) proxyPassword {
-// subclass this method, if needed
-	return nil;
+	return [[_proxyPassword retain] autorelease];
 }
 
 #pragma mark -
 
 - (void) setPersistentInformation:(NSDictionary *) information {
-	if( [information count] ) [_persistentInformation setDictionary:information];
-	else [_persistentInformation removeAllObjects];
+	@synchronized( _persistentInformation ) {
+		if( [information count] ) [_persistentInformation setDictionary:information];
+		else [_persistentInformation removeAllObjects];
+	}
 }
 
 - (NSDictionary *) persistentInformation {
@@ -497,28 +507,11 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action {
-// subclass this method, if used
-	[self doesNotRecognizeSelector:_cmd];
-}
-
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toUser:(NSString *) user asAction:(BOOL) action {
-// subclass this method, if needed
-	[self sendMessage:message withEncoding:encoding toTarget:user asAction:action];
-}
-
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toChatRoom:(NSString *) room asAction:(BOOL) action {
-// subclass this method, if needed
-	[self sendMessage:message withEncoding:encoding toTarget:[room lowercaseString] asAction:action];
-}
-
-#pragma mark -
-
-- (void) sendRawMessage:(NSString *) raw {
+- (void) sendRawMessage:(id) raw {
 	[self sendRawMessage:raw immediately:NO];
 }
 
-- (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
+- (void) sendRawMessage:(id) raw immediately:(BOOL) now {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -530,10 +523,79 @@ static const NSStringEncoding supportedEncodings[] = {
 	va_start( ap, format );
 
 	NSString *command = [[NSString allocWithZone:nil] initWithFormat:format arguments:ap];
-	[self sendRawMessage:command immediately:NO];
-	[command release];
 
 	va_end( ap );
+
+	[self sendRawMessage:command immediately:NO];
+	[command release];
+}
+
+- (void) sendRawMessageImmediatelyWithFormat:(NSString *) format, ... {
+	NSParameterAssert( format != nil );
+
+	va_list ap;
+	va_start( ap, format );
+
+	NSString *command = [[NSString allocWithZone:nil] initWithFormat:format arguments:ap];
+
+	va_end( ap );
+
+	[self sendRawMessage:command immediately:YES];
+	[command release];
+}
+
+- (void) sendRawMessageWithComponents:(id) firstComponent, ... {
+	NSParameterAssert( firstComponent != nil );
+
+	NSMutableData *data = [[NSMutableData allocWithZone:nil] initWithCapacity:512];
+	id object = firstComponent;
+
+	va_list ap;
+	va_start( ap, firstComponent );
+
+	do {
+		if( [object isKindOfClass:[NSData class]] ) {
+			[data appendData:object];
+		} else if( [firstComponent isKindOfClass:[NSString class]] ) {
+			NSData *stringData = [object dataUsingEncoding:[self encoding] allowLossyConversion:YES];
+			[data appendData:stringData];
+		} else {
+			NSData *stringData = [[object description] dataUsingEncoding:[self encoding] allowLossyConversion:YES];
+			[data appendData:stringData];
+		}
+	} while( object = va_arg( ap, void * ) );
+
+	va_end( ap );
+
+	[self sendRawMessage:data immediately:NO];
+	[data release];
+}
+
+- (void) sendRawMessageImmediatelyWithComponents:(id) firstComponent, ... {
+	NSParameterAssert( firstComponent != nil );
+
+	NSMutableData *data = [[NSMutableData allocWithZone:nil] initWithCapacity:512];
+	id object = firstComponent;
+
+	va_list ap;
+	va_start( ap, firstComponent );
+
+	do {
+		if( [object isKindOfClass:[NSData class]] ) {
+			[data appendData:object];
+		} else if( [firstComponent isKindOfClass:[NSString class]] ) {
+			NSData *stringData = [object dataUsingEncoding:[self encoding] allowLossyConversion:YES];
+			[data appendData:stringData];
+		} else {
+			NSData *stringData = [[object description] dataUsingEncoding:[self encoding] allowLossyConversion:YES];
+			[data appendData:stringData];
+		}
+	} while( object = va_arg( ap, void * ) );
+
+	va_end( ap );
+
+	[self sendRawMessage:data immediately:YES];
+	[data release];
 }
 
 #pragma mark -
@@ -562,22 +624,15 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (NSSet *) joinedChatRooms {
-	NSSet *ret = nil;
 	@synchronized( _joinedRooms ) {
-		ret = [NSSet setWithSet:_joinedRooms];
-	} return ret;
+		return [NSSet setWithArray:[_joinedRooms allValues]];
+	} return nil;
 }
 
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
 	@synchronized( _joinedRooms ) {
-		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
-		MVChatRoom *room = nil;
-		while( ( room = [enumerator nextObject] ) )
-			if( [name caseInsensitiveCompare:[room name]] == NSOrderedSame )
-				return [[room retain] autorelease];
-	}
-
-	return nil;
+		return [_joinedRooms objectForKey:[name lowercaseString]];
+	} return nil;
 }
 
 #pragma mark -
@@ -719,9 +774,13 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) _willConnect {
+	id old = _lastError;
+	_lastError = nil;
+	[old release];
+
 	_nextAltNickIndex = 0;
 	_status = MVChatConnectionConnectingStatus;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionWillConnectNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWillConnectNotification object:self];
 }
 
 - (void) _didConnect {
@@ -732,7 +791,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[[self localUser] _setDateDisconnected:nil];
 
 	_status = MVChatConnectionConnectedStatus;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidConnectNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidConnectNotification object:self];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -745,12 +804,12 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _didNotConnect {
 	_status = MVChatConnectionDisconnectedStatus;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidNotConnectNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidNotConnectNotification object:self];
 	[self scheduleReconnectAttemptEvery:30.];
 }
 
 - (void) _willDisconnect {
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionWillDisconnectNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWillDisconnectNotification object:self];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -762,9 +821,10 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) _didDisconnect {
-	BOOL wasConnected = ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionSuspendedStatus );
+	BOOL wasConnected = ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionSuspendedStatus || _status == MVChatConnectionServerDisconnectedStatus );
 
 	[[self localUser] _setStatus:MVChatUserOfflineStatus];
+	[[self localUser] _setDateDisconnected:[NSDate date]];
 
 	if( _status != MVChatConnectionSuspendedStatus && _status != MVChatConnectionServerDisconnectedStatus )
 		_status = MVChatConnectionDisconnectedStatus;
@@ -777,11 +837,17 @@ static const NSStringEncoding supportedEncodings[] = {
 		[room _setDateParted:[NSDate date]];
 	}
 
+	[_roomsCache removeAllObjects];
+
 	id old = _localUser;
 	_localUser = nil;
 	[old release];
 
-	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionDidDisconnectNotification object:self];
+	old = _cachedDate;
+	_cachedDate = nil;
+	[old release];
+
+	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidDisconnectNotification object:self];
 }
 
 - (void) _postError:(NSError *) error {
@@ -789,7 +855,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_lastError = [error copyWithZone:nil];
 	[old release];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
 }
 
 - (void) _setStatus:(MVChatConnectionStatus) status {
@@ -810,20 +876,20 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _sendRoomListUpdatedNotification {
 	_roomListDirty = NO;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionChatRoomListUpdatedNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionChatRoomListUpdatedNotification object:self];
 }
 
 #pragma mark -
 
 - (void) _addJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
-		[_joinedRooms addObject:room];
+		[_joinedRooms setObject:room forKey:[[room name] lowercaseString]];
 	}
 }
 
 - (void) _removeJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
-		[_joinedRooms removeObject:room];
+		[_joinedRooms removeObjectForKey:[[room name] lowercaseString]];
 	}
 }
 @end

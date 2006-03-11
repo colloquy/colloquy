@@ -15,7 +15,8 @@ typedef enum {
 	MVChatConnectionNoProxy = 'nonE',
 	MVChatConnectionHTTPProxy = 'httP',
 	MVChatConnectionHTTPSProxy = 'htpS',
-	MVChatConnectionSOCKSProxy = 'sokS'
+	MVChatConnectionSOCKS4Proxy = 'soK4',
+	MVChatConnectionSOCKS5Proxy = 'soK5'
 } MVChatConnectionProxy;
 
 typedef enum {
@@ -82,12 +83,11 @@ extern NSString *MVChatConnectionErrorDomain;
 @interface MVChatConnection : NSObject {
 @protected
 	MVChatConnectionStatus _status;
-	MVChatConnectionProxy _proxy;
 	MVChatMessageFormat _outgoingChatFormat;
 	NSStringEncoding _encoding;
 
 	NSString *_npassword;
-	NSMutableSet *_joinedRooms;
+	NSMutableDictionary *_joinedRooms;
 	MVChatUser *_localUser;
 	NSMutableDictionary *_roomsCache;
 	NSDate *_cachedDate;
@@ -97,9 +97,18 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSMutableDictionary *_persistentInformation;
 	NSError *_lastError;
 
+	MVChatConnectionProxy _proxy;
+	NSString *_proxyServer;
+	NSString *_proxyUsername;
+	NSString *_proxyPassword;
+	unsigned short _proxyServerPort;
+
+	BOOL _secure;
+
 	NSArray *_alternateNicks;
 	unsigned int _nextAltNickIndex;
 	BOOL _roomListDirty;
+	unsigned int _hash;
 }
 + (BOOL) supportsURLScheme:(NSString *) scheme;
 + (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type;
@@ -144,9 +153,6 @@ extern NSString *MVChatConnectionErrorDomain;
 
 - (void) setEncoding:(NSStringEncoding) encoding;
 - (NSStringEncoding) encoding;
-- (NSString *) stringWithEncodedBytes:(const char *) bytes;
-- (NSString *) stringWithEncodedBytesNoCopy:(char *) bytes freeWhenDone:(BOOL) free;
-- (const char *) encodedBytesWithString:(NSString *) string;
 
 #pragma mark -
 
@@ -210,9 +216,12 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (void) sendRawMessage:(NSString *) raw;
-- (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now;
+- (void) sendRawMessage:(id) raw;
+- (void) sendRawMessage:(id) raw immediately:(BOOL) now;
 - (void) sendRawMessageWithFormat:(NSString *) format, ...;
+- (void) sendRawMessageImmediatelyWithFormat:(NSString *) format, ...;
+- (void) sendRawMessageWithComponents:(id) firstComponent, ...;
+- (void) sendRawMessageImmediatelyWithComponents:(id) firstComponent, ...;
 
 #pragma mark -
 
@@ -277,8 +286,8 @@ extern NSString *MVChatConnectionErrorDomain;
 #pragma mark -
 
 @interface NSObject (MVChatPluginConnectionSupport)
-- (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user;
-- (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user;
+- (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSData *) arguments fromUser:(MVChatUser *) user;
+- (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSData *) arguments fromUser:(MVChatUser *) user;
 
 - (void) connected:(MVChatConnection *) connection;
 - (void) disconnecting:(MVChatConnection *) connection;

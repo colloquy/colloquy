@@ -2,12 +2,6 @@
 #import "MVIRCChatUser.h"
 #import "MVIRCChatConnection.h"
 
-#define MODULE_NAME "MVIRCChatRoom"
-
-#import "core.h"
-#import "irc.h"
-#import "servers.h"
-
 @implementation MVIRCChatRoom
 - (id) initWithName:(NSString *) name andConnection:(MVIRCChatConnection *) connection {
 	if( ( self = [self init] ) ) {
@@ -40,8 +34,8 @@
 
 - (void) partWithReason:(NSAttributedString *) reason {
 	if( ! [self isJoined] ) return;
-	if( ! [reason length] ) [[self connection] sendRawMessage:[NSString stringWithFormat:@"PART %@", [self name]] immediately:YES];
-	else [[self connection] sendRawMessage:[NSString stringWithFormat:@"PART %@ :%@", [self name], [reason string]] immediately:YES];
+	if( ! [reason length] ) [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@", [self name]];
+	else [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@ :%@", [self name], [reason string]];
 	[self _setDateParted:[NSDate date]];
 }
 
@@ -49,34 +43,41 @@
 
 - (void) setTopic:(NSAttributedString *) topic {
 	NSParameterAssert( topic != nil );
-
-	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:topic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
-
-	IrssiLock();
-	irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "TOPIC %s :%s", [[self connection] encodedBytesWithString:[self name]], msg );
-	IrssiUnlock();
+	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:topic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
+	NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"TOPIC %@ :", [self name]];
+	[[self connection] sendRawMessageWithComponents:prefix, msg, nil];
+	[prefix release];
 }
 
 #pragma mark -
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
-	const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:message withEncoding:encoding andChatFormat:[[self connection] outgoingChatFormat]];
-	[[self connection] _sendMessage:msg toTarget:[self name] asAction:action];
+	[[self connection] _sendMessage:message withEncoding:encoding toTarget:[self name] asAction:action];
 }
 
 #pragma mark -
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
 	NSParameterAssert( command != nil );
-	NSString *request = ( [arguments length] ? [NSString stringWithFormat:@"%@ %@", command, arguments] : command );
-	[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self name], request];
+	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self name], command];
+		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
+		[prefix release];
+	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
+		[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@ %@\001", [self name], command, arguments];
+	} else [[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self name], command];
 }
 
-- (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
 	NSParameterAssert( command != nil );
-	NSString *request = ( [arguments length] ? [NSString stringWithFormat:@"%@ %@", command, arguments] : command );
-	[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self name], request];
+	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"NOTICE %@ :\001%@ ", [self name], command];
+		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
+		[prefix release];
+	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
+		[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self name], command, arguments];
+	} else [[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self name], command];
 }
 
 #pragma mark -
@@ -216,23 +217,41 @@
 - (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
 	[super kickOutMemberUser:user forReason:reason];
 
-	IrssiLock();
-
 	if( reason ) {
-		const char *msg = [MVIRCChatConnection _flattenedIRCStringForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
-		irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "KICK %s %s :%s", [[self connection] encodedBytesWithString:[self name]], [[self connection] encodedBytesWithString:[user nickname]], msg );
-	} else irc_send_cmdv( (IRC_SERVER_REC *) [[self connection] _irssiConnection], "KICK %s %s", [[self connection] encodedBytesWithString:[self name]], [[self connection] encodedBytesWithString:[user nickname]] );
-
-	IrssiUnlock();
+		NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"KICK %@ %@ :", [self name], [user nickname]];
+		[[self connection] sendRawMessageImmediatelyWithComponents:prefix, msg, nil];
+		[prefix release];
+	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"KICK %@ %@", [self name], [user nickname]];
 }
 
 - (void) addBanForUser:(MVChatUser *) user {
 	[super addBanForUser:user];
-	[[self connection] sendRawMessageWithFormat:@"MODE %@ +b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
+	[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 }
 
 - (void) removeBanForUser:(MVChatUser *) user {
 	[super removeBanForUser:user];
-	[[self connection] sendRawMessageWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
+	[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
+}
+@end
+
+#pragma mark -
+
+@implementation MVIRCChatRoom (MVIRCChatRoomPrivate)
+- (BOOL) _namesSynced {
+	return _namesSynced;
+}
+
+- (void) _setNamesSynced:(BOOL) synced {
+	_namesSynced = synced;
+}
+
+- (BOOL) _bansSynced {
+	return _bansSynced;
+}
+
+- (void) _setBansSynced:(BOOL) synced {
+	_bansSynced = synced;
 }
 @end

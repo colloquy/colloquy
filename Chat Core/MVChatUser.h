@@ -61,12 +61,14 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 	NSDate *_dateConnected;
 	NSDate *_dateDisconnected;
 	NSDate *_dateUpdated;
+	NSData *_awayStatusMessage;
 	NSMutableDictionary *_attributes;
 	MVChatUserType _type;
 	MVChatUserStatus _status;
 	NSTimeInterval _idleTime;
 	NSTimeInterval _lag;
 	unsigned long _modes;
+	unsigned int _hash;
 	BOOL _identified;
 	BOOL _serverOperator;
 }
@@ -87,7 +89,6 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;
-- (unsigned) hash;
 
 - (NSComparisonResult) compare:(MVChatUser *) otherUser;
 - (NSComparisonResult) compareByNickname:(MVChatUser *) otherUser;
@@ -97,7 +98,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (NSComparisonResult) compareByIdleTime:(MVChatUser *) otherUser;
 
 - (MVChatUserStatus) status;
-- (NSAttributedString *) awayStatusMessage;
+- (NSData *) awayStatusMessage;
 
 - (NSDate *) dateConnected;
 - (NSDate *) dateDisconnected;
@@ -138,8 +139,8 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
 - (MVUploadFileTransfer *) sendFile:(NSString *) path passively:(BOOL) passive;
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments;
-- (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments;
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments;
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments;
 @end
 
 #pragma mark -

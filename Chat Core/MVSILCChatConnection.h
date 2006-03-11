@@ -1,6 +1,7 @@
+#import "MVChatConnection.h"
+#import "MVChatConnectionPrivate.h"
 #include <libsilc/silcincludes.h>
 #include <libsilcclient/silcclient.h>
-#import "MVChatConnection.h"
 
 #define SilcLock(client) silc_mutex_lock(silc_schedule_get_callback_lock((client)->schedule))
 #define SilcUnlock(client) silc_mutex_unlock(silc_schedule_get_callback_lock((client)->schedule))
@@ -50,6 +51,8 @@
 - (NSMutableArray *) _queuedCommands;
 - (NSMutableDictionary *) _sentCommands;
 
+- (void) _removeKnownUser:(MVChatUser *) user;
+
 - (NSData *) _detachInfo;
 - (void) _setDetachInfo:(NSData *) info;
 
@@ -63,19 +66,4 @@
 - (void) _updateKnownUser:(MVChatUser *) user withClientEntry:(SilcClientEntry) clientEntry;
 
 - (NSString *) _publicKeyFilename:(SilcSocketType) connType andPublicKey:(unsigned char *) pk withLen:(SilcUInt32) pkLen usingSilcConn:(SilcClientConnection) conn;
-@end
-
-#pragma mark -
-
-@interface MVChatConnection (MVSILCChatConnectionPrivateSuper)
-- (void) _willConnect;
-- (void) _didConnect;
-- (void) _didNotConnect;
-- (void) _willDisconnect;
-- (void) _didDisconnect;
-- (void) _postError:(NSError *) error;
-- (void) _setStatus:(MVChatConnectionStatus) status;
-
-- (void) _addJoinedRoom:(MVChatRoom *) room;
-- (void) _removeJoinedRoom:(MVChatRoom *) room;
 @end

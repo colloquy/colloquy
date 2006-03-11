@@ -113,8 +113,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
 	[_uniqueIdentifier release];
 	[_nickname release];
 	[_realName release];
@@ -230,9 +228,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (unsigned) hash {
-	if( _type == MVChatWildcardUserType )
-		return ( _type ^ [[self nickname] hash] ^ [[self username] hash] ^ [[self address] hash] ^ [[self serverAddress] hash] ^ [[self fingerprint] hash] );
-	return ( _type ^ [[self connection] hash] );
+	if( _type == MVChatWildcardUserType && ! _hash )
+		_hash = ( _type ^ [[self nickname] hash] ^ [[self username] hash] ^ [[self address] hash] ^ [[self serverAddress] hash] ^ [[self fingerprint] hash] );
+	if( ! _hash ) _hash = ( _type ^ [[self connection] hash] ^ [[self uniqueIdentifier] hash] );
+	return _hash;
 }
 
 #pragma mark -
@@ -269,9 +268,8 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _status;
 }
 
-- (NSAttributedString *) awayStatusMessage {
-// subclass this method, if needed
-	return nil;
+- (NSData *) awayStatusMessage {
+	return [[_awayStatusMessage retain] autorelease];
 }
 
 #pragma mark -
@@ -425,8 +423,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	}
 
 	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:key, @"attribute", nil];
-	NSNotification *note = [NSNotification notificationWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];
 	[info release];
 }
 
@@ -443,11 +440,11 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
 // subclass this method, if needed
 }
 
-- (void) sendSubcodeReply:(NSString *) command withArguments:(NSString *) arguments {
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
 // subclass this method, if needed
 }
 
@@ -519,17 +516,13 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (void) _setIdleTime:(NSTimeInterval) time {
 	_idleTime = time;
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];
 }
 
 - (void) _setStatus:(MVChatUserStatus) status {
 	if( _status == status ) return;
 	_status = status;
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatUserStatusChangedNotification object:self userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserStatusChangedNotification object:self userInfo:nil];
 }
 
 - (void) _setDateConnected:(NSDate *) date {
@@ -547,6 +540,12 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (void) _setDateUpdated:(NSDate *) date {
 	id old = _dateUpdated;
 	_dateUpdated = [date copyWithZone:nil];
+	[old release];
+}
+
+- (void) _setAwayStatusMessage:(NSData *) awayStatusMessage {
+	id old = _awayStatusMessage;
+	_awayStatusMessage = [awayStatusMessage copyWithZone:nil];
 	[old release];
 }
 @end
