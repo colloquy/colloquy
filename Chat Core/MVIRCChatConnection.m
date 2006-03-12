@@ -1603,6 +1603,17 @@ end:
 			[sender _setStatus:MVChatUserAvailableStatus];
 		[sender _setIdleTime:0.];
 
+		NSNotification *note = nil;
+		if( [sender isLocalUser] ) {
+			[self _setCurrentNickname:nickname];
+			[sender _setIdentified:NO];
+			[sender _setUniqueIdentifier:[nickname lowercaseString]];
+			note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
+		} else {
+			[self _updateKnownUser:sender withNewNickname:nickname];
+			note = [NSNotification notificationWithName:MVChatUserNicknameChangedNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"oldNickname", nil]];
+		}
+
 		NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
 		MVChatRoom *room = nil;
 
@@ -1611,15 +1622,7 @@ end:
 			[room _updateMemberUser:sender fromOldUniqueIdentifier:oldIdentifier];
 		}
 
-		if( [sender isLocalUser] ) {
-			[self _setCurrentNickname:nickname];
-			[sender _setIdentified:NO];
-			[sender _setUniqueIdentifier:[nickname lowercaseString]];
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
-		} else {
-			[self _updateKnownUser:sender withNewNickname:nickname];
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserNicknameChangedNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"oldNickname", nil]];
-		}
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note]; 
 
 		[oldNickname release];
 		[oldIdentifier release];
