@@ -328,8 +328,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[element setInnerHTML:shell];
 
 	[[_mainDocument body] insertBefore:element :[[_mainDocument body] firstChild]];
-
-	NSLog(@"%@", [[_mainDocument documentElement] outerHTML] );
 }
 
 #pragma mark -
