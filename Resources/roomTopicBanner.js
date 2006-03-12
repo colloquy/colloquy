@@ -1,4 +1,3 @@
-<script type="text/ecmascript">
 var topicSize = 0;
 var topicToggled = false;
 
@@ -25,7 +24,6 @@ function toggleTopic( e ) {
 	}
 
 	document.getElementById( 'topicArea' ).style.setProperty( 'height', topicAreaSize + 'px', null );
-	document.getElementById( 'contents' ).style.setProperty( 'top', topicAreaSize + 'px', null );
 }
 
 function changeTopic( topic, author, empty ) {
@@ -40,66 +38,5 @@ function changeTopic( topic, author, empty ) {
 		if( topicAreaSize > 62 ) topicAreaSize = 62;
 		else if( topicAreaSize < 17 ) topicAreaSize = 17;
 		document.getElementById( 'topicArea' ).style.setProperty( 'height', topicAreaSize + 'px', null );
-		document.getElementById( 'contents' ).style.setProperty( 'top', topicAreaSize + 'px', null );
 	}
 }
-</script>
-<style type="text/css">
-#topicArea {
-	top: 0;
-	left: 0;
-	right: 0;
-	position: fixed;
-	z-index: 1;
-	background-image: url( %@/topicBackground.png );
-	background-repeat: repeat-x;
-	background-position: top;
-	height: 17px;
-	font-size: 11px;
-	font-family: Lucida Grande, sans-serif;
-	line-height: 15px;
-	text-align: center;
-	padding: 0 20px 0 8px;
-	word-wrap: break-word;
-	overflow: hidden;
-	color: black !important;
-	border-bottom: 1px solid rgb( 154, 154, 154 );
-}
-
-#topicMessage a {
-	color: blue !important;
-}
-
-#contents {
-	position: absolute;
-	top: 17px;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	overflow: auto;
-}
-
-#toggleButton {
-	position: absolute;
-	top: 0;
-	right: 1px;
-	background-image: url( %1$@/topicToggleDown.png );
-	width: 17px;
-	height: 16px;
-}
-
-#toggleButton.up {
-	background-image: url( %1$@/topicToggleUp.png );
-}
-
-#toggleButton:hover {
-	background-position: 0 16px;
-}
-</style>
-<div id="topicArea">
-	<div id="toggleButton" onclick="toggleTopic( event )" style="display: none"></div>
-	<span id="topicMessage"></span>
-</div>
-<div id="contents" class="chatRoom">
-%@
-</div>

@@ -22,7 +22,6 @@
 #import "JVStyle.h"
 #import "JVDirectChatPanel.h"
 #import "JVChatTranscriptBrowserPanel.h"
-#import "JVMarkedScroller.h"
 
 #import <Foundation/NSDebug.h>
 
@@ -371,7 +370,6 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
-	[JVMarkedScroller poseAsClass:[NSScroller class]];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 #ifdef DEBUG

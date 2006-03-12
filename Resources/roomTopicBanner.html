@@ -1,0 +1,49 @@
+<div id="topicRow">
+<div id="topicArea">
+	<style type="text/css">
+	#topicRow {
+		height: 1px;
+	}
+
+	#topicArea {
+		position: relative;
+		background-image: url( topicBackground.png );
+		background-repeat: repeat-x;
+		background-position: top;
+		height: 17px;
+		font-size: 11px;
+		font-family: Lucida Grande, sans-serif;
+		line-height: 15px;
+		text-align: center;
+		padding: 0 20px 0 8px;
+		word-wrap: break-word;
+		overflow: hidden;
+		color: black !important;
+		border-bottom: 1px solid rgb( 154, 154, 154 );
+	}
+
+	#topicMessage a {
+		color: blue !important;
+	}
+
+	#toggleButton {
+		position: absolute;
+		top: 0;
+		right: 1px;
+		background-image: url( topicToggleDown.png );
+		width: 17px;
+		height: 16px;
+	}
+
+	#toggleButton.up {
+		background-image: url( topicToggleUp.png );
+	}
+
+	#toggleButton:hover {
+		background-position: 0 16px;
+	}
+	</style>
+	<div id="toggleButton" onclick="toggleTopic( event )" style="display: none"></div>
+	<span id="topicMessage"></span>
+</div>
+</div>

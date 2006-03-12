@@ -33,6 +33,9 @@
 		1C1ACE440533943900F71D4E /* JVInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1ACE420533943900F71D4E /* JVInspectorController.m */; };
 		1C1ACFB805344FCC00F71D4E /* JVConnectionInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1ACFB605344FCC00F71D4E /* JVConnectionInspector.m */; };
 		1C1AD00B053487ED00F71D4E /* JVConnectionInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C1AD009053487ED00F71D4E /* JVConnectionInspector.nib */; };
+		1C1AFB3D09C295D900BF3E2A /* base.html in Resources */ = {isa = PBXBuildFile; fileRef = 1C1AFB3C09C295D900BF3E2A /* base.html */; };
+		1C1AFDAB09C3BC5000BF3E2A /* roomTopicBanner.html in Resources */ = {isa = PBXBuildFile; fileRef = 1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */; };
+		1C1AFE8E09C3D92E00BF3E2A /* roomTopicBanner.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */; };
 		1C238F050677B5E5000E89A7 /* JVTabbedChatWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C238F040677B5E5000E89A7 /* JVTabbedChatWindow.nib */; };
 		1C2391AA0677E6B7000E89A7 /* JVChatTabItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2391A80677E6B7000E89A7 /* JVChatTabItem.m */; };
 		1C2391BC0677E8F1000E89A7 /* aquaTabBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C2391B40677E8F1000E89A7 /* aquaTabBackground.png */; };
@@ -74,7 +77,6 @@
 		1C703EF507E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C703EF307E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib */; };
 		1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7780DC08FA1D81006AD8E5 /* JVSpeechController.m */; };
 		1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77822808FA4101006AD8E5 /* topicBackground.png */; };
-		1C77822B08FA415B006AD8E5 /* chatRoomTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 1C77822A08FA415B006AD8E5 /* chatRoomTemplate.html */; };
 		1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F5394C070378E44D01A35792 /* Credits.rtf */; };
 		1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */; };
 		1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */; };
@@ -479,6 +481,9 @@
 		1C1ACFB505344FCC00F71D4E /* JVConnectionInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVConnectionInspector.h; path = Inspectors/JVConnectionInspector.h; sourceTree = "<group>"; };
 		1C1ACFB605344FCC00F71D4E /* JVConnectionInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVConnectionInspector.m; path = Inspectors/JVConnectionInspector.m; sourceTree = "<group>"; };
 		1C1AD00A053487ED00F71D4E /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVConnectionInspector.nib; sourceTree = "<group>"; };
+		1C1AFB3C09C295D900BF3E2A /* base.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = base.html; path = Resources/base.html; sourceTree = "<group>"; };
+		1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = roomTopicBanner.html; path = Resources/roomTopicBanner.html; sourceTree = "<group>"; };
+		1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = roomTopicBanner.js; path = Resources/roomTopicBanner.js; sourceTree = "<group>"; };
 		1C1D19F105992D80000BB31A /* ChatCore.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptSuite; path = Resources/ChatCore.scriptSuite; sourceTree = "<group>"; };
 		1C1D19F205992D80000BB31A /* ChatCore.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptTerminology; path = Resources/ChatCore.scriptTerminology; sourceTree = "<group>"; };
 		1C238F040677B5E5000E89A7 /* JVTabbedChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVTabbedChatWindow.nib; path = Resources/JVTabbedChatWindow.nib; sourceTree = "<group>"; };
@@ -556,7 +561,6 @@
 		1C7780DB08FA1D81006AD8E5 /* JVSpeechController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSpeechController.h; path = Controllers/JVSpeechController.h; sourceTree = "<group>"; };
 		1C7780DC08FA1D81006AD8E5 /* JVSpeechController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSpeechController.m; path = Controllers/JVSpeechController.m; sourceTree = "<group>"; };
 		1C77822808FA4101006AD8E5 /* topicBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicBackground.png; path = Resources/topicBackground.png; sourceTree = "<group>"; };
-		1C77822A08FA415B006AD8E5 /* chatRoomTemplate.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = chatRoomTemplate.html; path = Resources/chatRoomTemplate.html; sourceTree = "<group>"; };
 		1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicToggleDown.png; path = Resources/topicToggleDown.png; sourceTree = "<group>"; };
 		1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicToggleUp.png; path = Resources/topicToggleUp.png; sourceTree = "<group>"; };
 		1C7B83C50668D732004F1EFE /* NSNotificationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNotificationAdditions.h; path = Additions/NSNotificationAdditions.h; sourceTree = "<group>"; };
@@ -1522,8 +1526,10 @@
 				1CBECDCF0508C8AB000001C8 /* default.xsl */,
 				0A5B683E0810EC9700398D5A /* default.css */,
 				0AA811220826DB8800A3BF2D /* default.js */,
+				1C1AFB3C09C295D900BF3E2A /* base.html */,
 				1C3C116005029DE1000001C8 /* template.html */,
-				1C77822A08FA415B006AD8E5 /* chatRoomTemplate.html */,
+				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
+				1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */,
 				1C746A95050CF86B000001C8 /* emoticons.plist */,
 				F5675B8601DB767601EE70DE /* verbs.plist */,
 				1C9982AF0604BEAA006C6417 /* notifications.plist */,
@@ -2022,6 +2028,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C1AFE8E09C3D92E00BF3E2A /* roomTopicBanner.js in Resources */,
 				1CB2CD11052DDC560094AAA4 /* op.tif in Resources */,
 				1CB2CD12052DDC560094AAA4 /* person.tif in Resources */,
 				1CB2CD13052DDC560094AAA4 /* voice.tif in Resources */,
@@ -2187,11 +2194,12 @@
 				1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */,
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
 				1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */,
-				1C77822B08FA415B006AD8E5 /* chatRoomTemplate.html in Resources */,
 				1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */,
 				1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */,
 				1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */,
 				1C6E43C40955EFD7002D22E7 /* serverWindow.png in Resources */,
+				1C1AFB3D09C295D900BF3E2A /* base.html in Resources */,
+				1C1AFDAB09C3BC5000BF3E2A /* roomTopicBanner.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

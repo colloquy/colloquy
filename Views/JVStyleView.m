@@ -34,11 +34,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _appendMessage:(NSString *) message;
 - (void) _prependMessages:(NSString *) messages;
 - (void) _styleError;
-- (NSString *) _fullDisplayHTMLWithBody:(NSString *) html;
+- (NSString *) _baseHTML;
+- (NSString *) _contentHTMLWithBody:(NSString *) html;
 - (unsigned long) _visibleMessageCount;
 - (long) _locationOfMessage:(JVChatMessage *) message;
 - (long) _locationOfElementAtIndex:(unsigned long) index;
-- (void) _tickleForLayout;
+- (void) _setupMarkedScroller;
 @end
 
 #pragma mark -
@@ -49,7 +50,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		_switchingStyles = NO;
 		_forwarding = NO;
 		_ready = NO;
-		_webViewReady = NO;
+		_contentFrameReady = NO;
 		_requiresFullMessage = YES;
 		_scrollbackLimit = 600;
 		_transcript = nil;
@@ -78,6 +79,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_styleVariant release];
 	[_styleParameters release];
 	[_emoticons release];
+	[_mainDocument release];
 	[_domDocument release];
 	[_body release];
 	[_bodyTemplate release];
@@ -88,6 +90,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_styleVariant = nil;
 	_styleParameters = nil;
 	_emoticons = nil;
+	_mainDocument = nil;
 	_domDocument = nil;
 	_body = nil;
 	_bodyTemplate = nil;
@@ -102,28 +105,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[[self window] makeFirstResponder:[self nextTextView]];
 		[[self nextTextView] tryToPerform:selector with:object];
 	}
-}
-
-#pragma mark -
-
-- (void) setFrame:(NSRect) frame {
-	[super setFrame:frame];
-	[self _tickleForLayout];
-}
-
-- (void) setFrameSize:(NSSize) size {
-	[super setFrameSize:size];
-	[self _tickleForLayout];
-}
-
-- (void) setBounds:(NSRect) bounds {
-	[super setBounds:bounds];
-	[self _tickleForLayout];
-}
-
-- (void) setBoundsSize:(NSSize) size {
-	[super setBoundsSize:size];
-	[self _tickleForLayout];
 }
 
 #pragma mark -
@@ -217,7 +198,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_styleVariant autorelease];
 	_styleVariant = [variant copyWithZone:[self zone]];
 
-	if( _webViewReady ) {
+	if( _contentFrameReady ) {
 		[WebCoreCache empty];
 
 		NSString *styleSheetLocation = [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString];
@@ -263,7 +244,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_emoticons autorelease];
 	_emoticons = [emoticons retain];
 
-	if( _webViewReady ) {
+	if( _contentFrameReady ) {
 		[WebCoreCache empty];
 
 		NSString *styleSheetLocation = [[[self emoticons] styleSheetLocation] absoluteString];
@@ -308,7 +289,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) mark {
-	if( _webViewReady ) {
+	if( _contentFrameReady ) {
 		unsigned int location = 0;
 
 		DOMElement *elt = [_domDocument getElementById:@"mark"];
@@ -331,8 +312,30 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
+- (void) addBanner:(NSString *) name {
+	if( ! _mainFrameReady ) {
+		[self performSelector:_cmd withObject:name afterDelay:0.];
+		return;
+	}
+
+	NSString *shell = nil;
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+		shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:@"html"]];
+	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
+
+	DOMHTMLElement *element = (DOMHTMLElement *)[_mainDocument createElement:@"div"];
+	[element setClassName:@"banner"];
+	[element setInnerHTML:shell];
+
+	[[_mainDocument body] insertBefore:element :[[_mainDocument body] firstChild]];
+
+	NSLog(@"%@", [[_mainDocument documentElement] outerHTML] );
+}
+
+#pragma mark -
+
 - (BOOL) appendChatMessage:(JVChatMessage *) message {
-	if( ! _webViewReady ) return YES; // don't schedule this to fire later since the transcript will be processed
+	if( ! _contentFrameReady ) return YES; // don't schedule this to fire later since the transcript will be processed
 
 	NSString *result = nil;
 
@@ -361,7 +364,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element {
-	if( ! _webViewReady ) return YES; // don't schedule this to fire later since the transcript will be processed
+	if( ! _contentFrameReady ) return YES; // don't schedule this to fire later since the transcript will be processed
 
 	NSString *result = nil;
 
@@ -416,7 +419,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) markScrollbarForMessage:(JVChatMessage *) message {
-	if( _switchingStyles || ! _webViewReady ) {
+	if( _switchingStyles || ! _contentFrameReady ) {
 		[self performSelector:_cmd withObject:message afterDelay:0.];
 		return;
 	}
@@ -426,14 +429,14 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) markScrollbarForMessage:(JVChatMessage *) message usingMarkIdentifier:(NSString *) identifier andColor:(NSColor *) color {
-	if( _switchingStyles || ! _webViewReady ) return; // can't queue, too many args. NSInvocation?
+	if( _switchingStyles || ! _contentFrameReady ) return; // can't queue, too many args. NSInvocation?
 
 	long loc = [self _locationOfMessage:message];
 	if( loc != NSNotFound ) [[self verticalMarkedScroller] addMarkAt:loc withIdentifier:identifier withColor:color];
 }
 
 - (void) markScrollbarForMessages:(NSArray *) messages {
-	if( _switchingStyles || ! _webViewReady ) {
+	if( _switchingStyles || ! _contentFrameReady ) {
 		[self performSelector:_cmd withObject:messages afterDelay:0.];
 		return;
 	}
@@ -463,24 +466,33 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
-	[_domDocument autorelease];
-	_domDocument = (DOMHTMLDocument *)[[[self mainFrame] DOMDocument] retain];
+	if( frame == [self mainFrame] ) {
+		_mainFrameReady = YES;
 
-	[_body autorelease];
-	_body = (DOMHTMLElement *)[[_domDocument getElementById:@"contents"] retain];
-	if( ! _body ) _body = (DOMHTMLElement *)[[_domDocument body] retain];
+		[_mainDocument autorelease];
+		_mainDocument = (DOMHTMLDocument *)[[frame DOMDocument] retain];
 
-	[self performSelector:@selector( _checkForTransparantStyle )];
+		WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
+		[contentFrame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:nil];
+	} else if( _mainFrameReady) {
+		[_domDocument autorelease];
+		_domDocument = (DOMHTMLDocument *)[[frame DOMDocument] retain];
 
-	[self setPreferencesIdentifier:[[self style] identifier]];
-	[[self preferences] setJavaScriptEnabled:YES];
+		[_body autorelease];
+		_body = (DOMHTMLElement *)[[_domDocument getElementById:@"contents"] retain];
+		if( ! _body ) _body = (DOMHTMLElement *)[[_domDocument body] retain];
 
-	[self clearScrollbarMarks];
+		[self performSelector:@selector( _checkForTransparantStyle )];
 
-	if( [[self window] isFlushWindowDisabled] ) [[self window] enableFlushWindow];
-	[[self window] displayIfNeeded];
+		[self setPreferencesIdentifier:[[self style] identifier]];
 
-	[self performSelector:@selector( _webkitIsReady ) withObject:nil afterDelay:0.];
+		[self clearScrollbarMarks];
+
+		if( [[self window] isFlushWindowDisabled] ) [[self window] enableFlushWindow];
+		[[self window] displayIfNeeded];
+
+		[self performSelector:@selector( _contentFrameIsReady ) withObject:nil afterDelay:0.];
+	}
 }
 
 - (void) drawRect:(NSRect) rect {
@@ -492,51 +504,30 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 #pragma mark Highlight/Message Jumping
 
-- (JVMarkedScroller *) verticalMarkedScroller {
-	NSArray *subViews = [[[[self mainFrame] frameView] documentView] subviews];
-	NSEnumerator *enumerator = [subViews objectEnumerator];
-	Class class = NSClassFromString( @"KWQScrollBar" );
-	JVMarkedScroller *view = nil;
+- (JVMarkedScroller *) verticalMarkedScroller { 
+	WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
+	NSScrollView *scrollView = [[[contentFrame frameView] documentView] enclosingScrollView]; 
+	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller]; 
+	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) { 
+		[self _setupMarkedScroller]; 
+		scroller = (JVMarkedScroller *)[scrollView verticalScroller]; 
+		if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) 
+			return nil; // not sure, but somthing is wrong 
+	} 
 
-	while( ( view = [enumerator nextObject] ) )
-		if( [view isKindOfClass:class] && NSHeight( [view frame] ) > NSWidth( [view frame] ) ) break;
-
-	if( ! view ) {
-		NSScrollView *scrollView = [[[[self mainFrame] frameView] documentView] enclosingScrollView];
-		return (JVMarkedScroller *)[scrollView verticalScroller];		
-	}
-
-	return view;
+	return scroller; 
 }
 
 - (IBAction) jumpToMark:(id) sender {
-	JVMarkedScroller *scroller = [self verticalMarkedScroller];
-	unsigned long long loc = [scroller locationOfMarkWithIdentifier:@"mark"];
-	if( loc != NSNotFound ) {
-		long shift = [scroller shiftAmountToCenterAlign];
-		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
-		[scroller setLocationOfCurrentMark:loc];
-	}
+    [[self verticalMarkedScroller] jumpToMarkWithIdentifier:@"mark"];
 }
 
 - (IBAction) jumpToPreviousHighlight:(id) sender {
-	JVMarkedScroller *scroller = [self verticalMarkedScroller];
-	unsigned long long loc = [scroller locationOfPreviousMark];
-	if( loc != NSNotFound ) {
-		long shift = [scroller shiftAmountToCenterAlign];
-		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
-		[scroller setLocationOfCurrentMark:loc];
-	}
+    [[self verticalMarkedScroller] jumpToPreviousMark:sender];
 }
 
 - (IBAction) jumpToNextHighlight:(id) sender {
-	JVMarkedScroller *scroller = [self verticalMarkedScroller];
-	unsigned long long loc = [scroller locationOfNextMark];
-	if( loc != NSNotFound ) {
-		long shift = [scroller shiftAmountToCenterAlign];
-		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
-		[scroller setLocationOfCurrentMark:loc];
-	}
+    [[self verticalMarkedScroller] jumpToNextMark:sender];
 }
 
 - (void) jumpToMessage:(JVChatMessage *) message {
@@ -550,7 +541,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) scrollToBottom {
-	if( ! _webViewReady ) {
+	if( ! _contentFrameReady ) {
 		[self performSelector:_cmd withObject:nil afterDelay:0.];
 		return;
 	}
@@ -571,8 +562,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[self setNeedsDisplay:YES];
 }
 
-- (void) _webkitIsReady {
-	_webViewReady = YES;
+- (void) _contentFrameIsReady {
+	_contentFrameReady = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleViewDidClearNotification object:self];
 	if( _switchingStyles ) {
 		[NSThread detachNewThreadSelector:@selector( _switchStyle ) toTarget:self withObject:nil];
@@ -590,13 +581,17 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[self stopLoading:nil];
 	[self clearScrollbarMarks];
 
-	_webViewReady = NO;
+	_contentFrameReady = NO;
 	if( _rememberScrollPosition ) {
 		_lastScrollPosition = [[_body valueForKey:@"scrollTop"] longValue];
 	} else _lastScrollPosition = 0;
 
 	[[self window] disableFlushWindow];
-	[[self mainFrame] loadHTMLString:[self _fullDisplayHTMLWithBody:@""] baseURL:nil];
+
+	if( _mainFrameReady ) {
+		WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
+		[contentFrame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:nil];
+	} else [[self mainFrame] loadHTMLString:[self _baseHTML] baseURL:nil];
 }
 
 - (void) _switchStyle {
@@ -696,11 +691,7 @@ quickEnd:
 
 	// check if we are near the bottom of the chat area, and if we should scroll down later
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
-	BOOL scrollNeeded = NO;
-
-	if( [_domDocument getElementById:@"contents"] )
-		scrollNeeded = ( ! [scroller isMemberOfClass:NSClassFromString( @"KWQScrollBar" )] || [scroller floatValue] >= 0.985 );
-	else scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.985 );
+	BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.985 );
 
 	unsigned int i = 0;
 	if( ! subsequent ) { // append message normally
@@ -770,17 +761,41 @@ quickEnd:
 		[self setStyleVariant:variant];
 }
 
-- (void) _tickleForLayout {
-	// nasty hack to make overflow areas resize/reposition their scrollbars
-	// simply calling [[[[self mainFrame] frameView] documentView] layout] wont trigger this
-	DOMElement *node = [_domDocument createElement:@"span"];
-	[_body appendChild:node];
-	[_body removeChild:node];
-}
+- (void) _setupMarkedScroller { 
+	if( ! _mainFrameReady ) { 
+		[self performSelector:_cmd withObject:nil afterDelay:0.]; 
+		return; 
+	}
+
+	WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
+	NSScrollView *scrollView = [[[contentFrame frameView] documentView] enclosingScrollView]; 
+	[scrollView setHasHorizontalScroller:NO]; 
+	[scrollView setAllowsHorizontalScrolling:NO]; 
+
+	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller]; 
+	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) { 
+		NSRect scrollerFrame = [[scrollView verticalScroller] frame]; 
+		NSScroller *oldScroller = scroller; 
+		scroller = [[[JVMarkedScroller alloc] initWithFrame:scrollerFrame] autorelease]; 
+		[scroller setFloatValue:[oldScroller floatValue] knobProportion:[oldScroller knobProportion]]; 
+		[scrollView setVerticalScroller:scroller]; 
+	} 
+} 
 
 #pragma mark -
 
-- (NSString *) _fullDisplayHTMLWithBody:(NSString *) html {
+- (NSString *) _baseHTML {
+	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
+
+	NSString *shell = nil;
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+		shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"]];
+	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
+
+	return [NSString stringWithFormat:shell, @"", [resources absoluteString]];
+}
+
+- (NSString *) _contentHTMLWithBody:(NSString *) html {
 	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
 	NSString *variantStyleSheetLocation = [[[self style] variantStyleSheetLocationWithName:[self styleVariant]] absoluteString];
 	if( ! variantStyleSheetLocation ) variantStyleSheetLocation = @"";
@@ -796,7 +811,7 @@ quickEnd:
 #pragma mark -
 
 - (long) _locationOfMessageWithIdentifier:(NSString *) identifier {
-	if( ! _webViewReady ) return 0;
+	if( ! _contentFrameReady ) return 0;
 	if( ! [identifier length] ) return 0;
 
 	DOMElement *element = [_domDocument getElementById:identifier];
@@ -811,7 +826,7 @@ quickEnd:
 }
 
 - (long) _locationOfElementAtIndex:(unsigned long) index {
-	if( ! _webViewReady ) return NSNotFound;
+	if( ! _contentFrameReady ) return NSNotFound;
 	id value = [[[_body childNodes] item:index] valueForKey:@"offsetTop"];
 	if( index < [[_body childNodes] length] && [value respondsToSelector:@selector( longValue )] )
 		return [value longValue];
@@ -819,7 +834,7 @@ quickEnd:
 }
 
 - (unsigned long) _visibleMessageCount {
-	if( ! _webViewReady ) return 0;
+	if( ! _contentFrameReady ) return 0;
 	return [[_body childNodes] length];
 }
 @end

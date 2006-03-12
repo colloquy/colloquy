@@ -1,10 +1,18 @@
-@interface JVMarkedScroller : NSScroller
+
+@interface JVMarkedScroller : NSScroller {
+	NSMutableSet *_marks;
+	NSMutableArray *_shades;
+	unsigned long long _nearestPreviousMark;
+	unsigned long long _nearestNextMark;
+	unsigned long long _currentMark;
+	BOOL _jumpingToMark;
+}
 - (void) setLocationOfCurrentMark:(unsigned long long) location;
 - (unsigned long long) locationOfCurrentMark;
 
-- (unsigned long long) locationOfPreviousMark;
-- (unsigned long long) locationOfNextMark;
-- (unsigned long long) locationOfMarkWithIdentifier:(NSString *) identifier;
+- (IBAction) jumpToPreviousMark:(id) sender;
+- (IBAction) jumpToNextMark:(id) sender;
+- (void) jumpToMarkWithIdentifier:(NSString *) identifier;
 
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement;
 
@@ -12,6 +20,7 @@
 - (void) addMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier;
 - (void) addMarkAt:(unsigned long long) location withColor:(NSColor *) color;
 - (void) addMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color;
+
 - (void) removeMarkAt:(unsigned long long) location;
 - (void) removeMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier;
 - (void) removeMarkAt:(unsigned long long) location withColor:(NSColor *) color;
@@ -32,5 +41,5 @@
 
 - (unsigned long long) contentViewLength;
 - (float) scaleToContentView;
-- (long) shiftAmountToCenterAlign;
+- (float) shiftAmountToCenterAlign;
 @end
