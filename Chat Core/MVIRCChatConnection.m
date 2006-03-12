@@ -1375,7 +1375,7 @@ end:
 }
 
 - (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [parameters count] == 2 ) {
+	if( [parameters count] >= 1 ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
 		if( ! room ) return;
 		if( [sender isLocalUser] ) {
@@ -1383,7 +1383,7 @@ end:
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomPartedNotification object:room];
 		} else {
 			[room _removeMemberUser:sender];
-			NSData *reason = [parameters objectAtIndex:1];
+			NSData *reason = ( [parameters count] >= 2 ? [parameters objectAtIndex:1] : nil );
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", reason, @"reason", nil]];
 		}
 	}
