@@ -1206,9 +1206,7 @@ end:
 
 			[scanner scanUpToCharactersFromSet:whitespace intoString:&subCommand];
 
-			if( [scanner scanString:@"\"" intoString:NULL] ) {
-				[scanner scanUpToString:@"\"" intoString:&fileName];
-				[scanner scanString:@"\"" intoString:NULL];
+			if( [scanner scanString:@"\"" intoString:NULL] && [scanner scanUpToString:@"\"" intoString:&fileName] && [scanner scanString:@"\"" intoString:NULL] ) {
 				quotedFileName = YES;
 			} else {
 				[scanner scanUpToCharactersFromSet:whitespace intoString:&fileName];
