@@ -49,6 +49,8 @@ static void silc_channel_get_clients_per_list_callback( SilcClient client, SilcC
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification object:room userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomBannedUsersSyncedNotification object:room userInfo:nil];
+
+	[room release];
 }
 
 static void silc_say( SilcClient client, SilcClientConnection conn, SilcClientMessageType type, char *msg, ... ) {
@@ -630,6 +632,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
 
+		[room retain];
 		silc_client_get_clients_by_list( [self _silcClient], [self _silcConn], list_count, client_id_list, silc_channel_get_clients_per_list_callback, room );
 	}	break;
 	case SILC_COMMAND_MOTD:
