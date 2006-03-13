@@ -13,13 +13,9 @@ NSString *MVFileTransferErrorOccurredNotification = @"MVFileTransferErrorOccurre
 
 NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
-static NSRange portRange;
+static NSRange portRange = { 1024, 24 };
 
 @implementation MVFileTransfer
-+ (void) initialize {
-	portRange = NSMakeRange( 1024, 24 );
-}
-
 + (void) setFileTransferPortRange:(NSRange) range {
 	portRange = range;
 }
