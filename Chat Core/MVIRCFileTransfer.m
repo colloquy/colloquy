@@ -107,13 +107,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	[info release];
 } */
 
-static NSRange portRange;
-
 @implementation MVIRCUploadFileTransfer
-+ (void) initialize {
-	portRange = NSMakeRange( 1024, 24 );
-}
-
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	static unsigned passiveId = 0;
 
@@ -286,7 +280,7 @@ static NSRange portRange;
 - (void) _waitForConnection {
 	_acceptConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
 
-	BOOL success = acceptConnectionOnFirstPortInRange( _acceptConnection, portRange );
+	BOOL success = acceptConnectionOnFirstPortInRange( _acceptConnection, [[self class] fileTransferPortRange] );
 
 	if( success ) {
 		id address = dccFriendlyAddress( [(MVIRCChatConnection *)[[self user] connection] _chatConnection] );
@@ -550,7 +544,7 @@ static NSRange portRange;
 - (void) _waitForConnection {
 	_acceptConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
 
-	BOOL success = acceptConnectionOnFirstPortInRange( _acceptConnection, portRange );
+	BOOL success = acceptConnectionOnFirstPortInRange( _acceptConnection, [[self class] fileTransferPortRange] );
 
 	if( success ) {
 		id address = dccFriendlyAddress( [(MVIRCChatConnection *)[[self user] connection] _chatConnection] );

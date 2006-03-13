@@ -13,43 +13,19 @@ NSString *MVFileTransferErrorOccurredNotification = @"MVFileTransferErrorOccurre
 
 NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
+static NSRange portRange;
+
 @implementation MVFileTransfer
++ (void) initialize {
+	portRange = NSMakeRange( 1024, 24 );
+}
+
 + (void) setFileTransferPortRange:(NSRange) range {
-	unsigned short min = (unsigned short)range.location;
-	unsigned short max = (unsigned short)(range.location + range.length);
-/*	IrssiLock();
-	settings_set_str( "dcc_port", [[NSString stringWithFormat:@"%uh %uh", min, max] UTF8String] );
-	IrssiUnlock(); */
+	portRange = range;
 }
 
 + (NSRange) fileTransferPortRange {
-/*	IrssiLock();
-	const char *range = settings_get_str( "dcc_port" );
-	IrssiUnlock();
-
-	unsigned short min = 1024;
-	unsigned short max = 1048;
-
-	if( range && strlen( range ) ) {
-		min = strtoul( range, NULL, 10 );
-		char *temp = strchr( range, ' ' );
-		if( ! temp ) temp = strchr( range, '-' );
-
-		if( ! temp ) max = min;
-		else {
-			max = strtoul( temp + 1, NULL, 10 );
-			if( ! max ) max = min;
-		}
-
-		if( max < min ) {
-			unsigned int t = min;
-			min = max;
-			max = t;
-		}
-	}
-
-	return NSMakeRange( (unsigned int) min, (unsigned int)( max - min ) ); */
-	return NSMakeRange( 0, 0 );
+	return portRange;
 }
 
 #pragma mark -
