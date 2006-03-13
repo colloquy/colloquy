@@ -70,24 +70,6 @@ static const NSStringEncoding supportedEncodings[] = {
 };
 
 /*
-static void MVChatBanListFinished( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *channel = NULL;
-	char *params = event_get_params( data, 2, NULL, &channel );
-
-	MVChatRoom *room = [self joinedChatRoomWithName:[self stringWithEncodedBytes:channel]];
-	g_free( params );
-
-	if( ! room ) return;
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatRoomBannedUsersSyncedNotification object:room userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-#pragma mark -
-
 static void MVChatBuddyOnline( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
 	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
 	if( ! self ) return;
@@ -129,26 +111,6 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 
 //	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBuddyIsIdleNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", [NSNumber numberWithLong:0], @"idle", nil]];
 //	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-#pragma mark -
-
-static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	char *channel = NULL, *count = NULL, *topic = NULL;
-	char *params = event_get_params( data, 4 | PARAM_FLAG_GETREST, NULL, &channel, &count, &topic );
-
-	NSString *r = [self stringWithEncodedBytes:channel];
-	NSData *t = [[NSData allocWithZone:nil] initWithBytes:topic length:strlen( topic )];
-	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:strtoul( count, NULL, 10 )], @"users", t, @"topic", [NSDate date], @"cached", r, @"room", nil];
-
-	[self performSelectorOnMainThread:@selector( _addRoomToCache: ) withObject:info waitUntilDone:NO];
-
-	[info release];
-	[t release];
-	g_free( params );
 }
 */
 
@@ -640,6 +602,17 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 			CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySOCKSProxy, (CFDictionaryRef) settings );
 			[settings release];
 		}
+	}
+
+	if( [self isSecure] ) {
+		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
+		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
+
+		NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
+		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
+
+		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
+		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
 	}
 
 	return YES;
