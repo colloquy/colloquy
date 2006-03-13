@@ -646,7 +646,7 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 }
 
 - (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
-	NSLog(@"willDisconnectWithError: %@", error );
+	NSLog(@"connection error: %@", error );
 	id old = _lastError;
 	_lastError = [error retain];
 	[old release];
@@ -659,8 +659,6 @@ static void MVChatListRoom( IRC_SERVER_REC *server, const char *data ) {
 	_chatConnection = nil;
 	[old setDelegate:nil];
 	[old release];
-
-	NSLog(@"socketDidDisconnect" );
 
 	[self _stopSendQueueTimer];
 
@@ -1729,6 +1727,21 @@ end:
 	if( [parameters count] >= 2 ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room];
+	}
+}
+
+#pragma mark -
+#pragma mark Channel List Reply
+
+- (void) _handle322WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LIST
+	if( [parameters count] == 4 ) {
+		NSString *room = [parameters objectAtIndex:1];
+		unsigned int users = [[parameters objectAtIndex:2] intValue];
+		NSData *topic = [parameters objectAtIndex:3];
+
+		NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:users], @"users", topic, @"topic", [NSDate date], @"cached", room, @"room", nil];
+		[self performSelectorOnMainThread:@selector( _addRoomToCache: ) withObject:info waitUntilDone:NO];
+		[info release];
 	}
 }
 
