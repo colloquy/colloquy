@@ -1196,15 +1196,34 @@ end:
 			if( [arguments length] < 100 ) [sender sendSubcodeReply:command withArguments:arguments];
 		} else if( [command caseInsensitiveCompare:@"DCC"] == NSOrderedSame ) {
 			NSString *msg = [[NSString allocWithZone:nil] initWithData:arguments encoding:[self encoding]];
-			NSArray *parameters = [msg componentsSeparatedByString:@" "];
 
-			if( [parameters count] >= 5 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"SEND"] == NSOrderedSame ) {
+			NSString *subCommand = nil;
+			NSString *fileName = nil;
+			BOOL quotedFileName = NO;
+
+			NSCharacterSet *whitespace = [NSCharacterSet whitespaceCharacterSet];
+			NSScanner *scanner = [NSScanner scannerWithString:msg];
+
+			[scanner scanUpToCharactersFromSet:whitespace intoString:&subCommand];
+
+			if( [scanner scanString:@"\"" intoString:NULL] ) {
+				[scanner scanUpToString:@"\"" intoString:&fileName];
+				[scanner scanString:@"\"" intoString:NULL];
+				quotedFileName = YES;
+			} else {
+				[scanner scanUpToCharactersFromSet:whitespace intoString:&fileName];
+			}
+
+			if( [subCommand caseInsensitiveCompare:@"SEND"] == NSOrderedSame ) {
+				NSString *address = nil;
+				int port = 0;
 				long long size = 0;
-				unsigned int port = [[parameters objectAtIndex:3] intValue];
-				NSScanner *scanner = [NSScanner scannerWithString:[parameters objectAtIndex:4]];
+				long long passiveId = 0;
+
+				[scanner scanUpToCharactersFromSet:whitespace intoString:&address];
+				[scanner scanInt:&port];
 				[scanner scanLongLong:&size];
 
-				NSString *address = [parameters objectAtIndex:2];
 				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
 					unsigned int ip4 = [address intValue];
 					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
@@ -1212,10 +1231,9 @@ end:
 
 				NSHost *host = [NSHost hostWithAddress:address];
 
-				if( port > 0 && [parameters count] >= 6 && [[parameters objectAtIndex:5] rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound ) {
+				if( [scanner scanLongLong:&passiveId] && port > 0 ) {
 					// this is a passive reply, look up the original transfer
 					MVIRCUploadFileTransfer *transfer = nil;
-					unsigned long passiveId = [[parameters objectAtIndex:5] intValue];
 
 					@synchronized( _fileTransfers ) {
 						NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
@@ -1231,16 +1249,15 @@ end:
 					}
 				} else {
 					MVIRCDownloadFileTransfer *transfer = [(MVIRCDownloadFileTransfer *)[MVIRCDownloadFileTransfer allocWithZone:nil] initWithUser:sender];
-					if( port == 0 && [parameters count] >= 6 ) {
-						BOOL turbo = ( [[parameters objectAtIndex:5] rangeOfString:@"T"].location != NSNotFound );
-						[transfer _setTurbo:turbo];
-						[transfer _setPassiveIdentifier:[[parameters objectAtIndex:5] intValue]];
+
+					if( port == 0 ) {
+						[transfer _setPassiveIdentifier:passiveId];
 						[transfer _setPassive:YES];
-					} else if( [parameters count] >= 6 ) {
-						[transfer _setTurbo:[[parameters objectAtIndex:5] isEqualToString:@"T"]];
 					}
 
-					[transfer _setOriginalFileName:[parameters objectAtIndex:1]];
+					[transfer _setTurbo:[scanner scanString:@"T" intoString:NULL]];
+					[transfer _setOriginalFileName:fileName];
+					[transfer _setFileNameQuoted:quotedFileName];
 					[transfer _setFinalSize:(unsigned long long)size];
 					[transfer _setHost:host];
 					[transfer _setPort:port];
@@ -1250,48 +1267,48 @@ end:
 					[self _addFileTransfer:transfer];
 					[transfer release];
 				}
-			} else if( [parameters count] >= 4 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"ACCEPT"] == NSOrderedSame ) {
+			} else if( [subCommand caseInsensitiveCompare:@"ACCEPT"] == NSOrderedSame ) {
 				BOOL passive = NO;
+				int port = 0;
 				long long size = 0;
-				unsigned int port = [[parameters objectAtIndex:2] intValue];
-				NSScanner *scanner = [NSScanner scannerWithString:[parameters objectAtIndex:3]];
+				long long passiveId = 0;
+
+				[scanner scanInt:&port];
 				[scanner scanLongLong:&size];
 
-				if( [parameters count] >= 5 ) {
+				if( [scanner scanLongLong:&passiveId] )
 					passive = YES;
-					port = [[parameters objectAtIndex:4] intValue];
-				}
 
 				@synchronized( _fileTransfers ) {
 					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
 					MVFileTransfer *transfer = nil;
 					while( ( transfer = [enumerator nextObject] ) ) {
 						if( [transfer isDownload] && [transfer isPassive] == passive && [[transfer user] isEqualToChatUser:sender] &&
-							( ! passive ? [transfer port] == port : [(id)transfer _passiveIdentifier] == port ) ) {
+							( ! passive ? [transfer port] == port : [(id)transfer _passiveIdentifier] == passiveId ) ) {
 							[transfer _setTransfered:(unsigned long long)size];
 							[transfer _setStartOffset:(unsigned long long)size];
 							[(MVIRCDownloadFileTransfer *)transfer _setupAndStart];
 						}
 					}
 				}
-			} else if( [parameters count] >= 4 && [[parameters objectAtIndex:0] caseInsensitiveCompare:@"RESUME"] == NSOrderedSame ) {
+			} else if( [subCommand caseInsensitiveCompare:@"RESUME"] == NSOrderedSame ) {
 				BOOL passive = NO;
+				int port = 0;
 				long long size = 0;
-				unsigned int port = [[parameters objectAtIndex:2] intValue];
-				NSScanner *scanner = [NSScanner scannerWithString:[parameters objectAtIndex:3]];
+				long long passiveId = 0;
+
+				[scanner scanInt:&port];
 				[scanner scanLongLong:&size];
 
-				if( [parameters count] >= 5 ) {
+				if( [scanner scanLongLong:&passiveId] )
 					passive = YES;
-					port = [[parameters objectAtIndex:4] intValue];
-				}
 
 				@synchronized( _fileTransfers ) {
 					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
 					MVFileTransfer *transfer = nil;
 					while( ( transfer = [enumerator nextObject] ) ) {
 						if( [transfer isUpload] && [transfer isPassive] == passive && [[transfer user] isEqualToChatUser:sender] &&
-							( ! passive ? [transfer port] == port : [(id)transfer _passiveIdentifier] == port ) ) {
+							( ! passive ? [transfer port] == port : [(id)transfer _passiveIdentifier] == passiveId ) ) {
 							[transfer _setTransfered:(unsigned long long)size];
 							[transfer _setStartOffset:(unsigned long long)size];
 							[sender sendSubcodeRequest:@"DCC ACCEPT" withArguments:[msg substringFromIndex:7]];

@@ -612,4 +612,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 - (unsigned int) _passiveIdentifier {
 	return _passiveId;
 }
+
+- (void) _setFileNameQuoted:(unsigned int) quoted {
+	_fileNameQuoted = quoted;
+}
 @end

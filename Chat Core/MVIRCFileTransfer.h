@@ -41,4 +41,5 @@
 - (void) _setTurbo:(BOOL) turbo;
 - (void) _setPassiveIdentifier:(unsigned int) identifier;
 - (unsigned int) _passiveIdentifier;
+- (void) _setFileNameQuoted:(unsigned int) quoted;
 @end
