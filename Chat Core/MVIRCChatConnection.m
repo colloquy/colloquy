@@ -720,7 +720,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 			if( ! done && *line == '!' ) {
 				user = ++line;
 				while( notEndOfLine() && *line != ' ' && *line != '@' ) line++;
-				userLength = (line - host);
+				userLength = (line - user);
 				checkAndMarkIfDone();
 			}
 
