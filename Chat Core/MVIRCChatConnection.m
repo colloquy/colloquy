@@ -1362,7 +1362,10 @@ end:
 
 - (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	if( [parameters count] >= 1 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
+		id roomName = [parameters objectAtIndex:0];
+		if( [roomName isKindOfClass:[NSData class]] )
+			roomName = [[[NSString allocWithZone:nil] initWithData:roomName encoding:[self encoding]] autorelease];
+		MVChatRoom *room = [self joinedChatRoomWithName:roomName];
 		if( ! room ) return;
 		if( [sender isLocalUser] ) {
 			[room _setDateParted:[NSDate date]];
