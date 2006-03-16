@@ -240,7 +240,6 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
 	}
 
-	_status = MVChatConnectionDisconnectedStatus;
 	[_chatConnection performSelector:@selector( disconnectAfterWriting ) inThread:_connectionThread];
 }
 
@@ -661,7 +660,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	if( _lastError )
 		_status = MVChatConnectionServerDisconnectedStatus;
 
-	if( _status == MVChatConnectionServerDisconnectedStatus || _status == MVChatConnectionConnectedStatus )
+	if( _status != MVChatConnectionConnectingStatus )
 		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
 }
 
