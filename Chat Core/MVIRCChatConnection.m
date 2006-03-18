@@ -1812,9 +1812,15 @@ end:
 		[user _setDateConnected:nil];
 
 		// parameter 4 is connection time on some servers
-		// prevent showing 34+ years connected time, this makes sure it is a viable date
-		if( [parameters count] >= 4 && [[parameters objectAtIndex:3] doubleValue] > 631138520 )
-			[user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:[[parameters objectAtIndex:3] doubleValue]]];
+		if( [parameters count] >= 4 ) {
+			id connectedTime = [parameters objectAtIndex:3];
+			if( [connectedTime isKindOfClass:[NSData class]] )
+				connectedTime = [[[NSString allocWithZone:nil] initWithData:connectedTime encoding:[self encoding]] autorelease];
+
+			NSTimeInterval time = [connectedTime doubleValue];
+			// prevent showing 34+ years connected time, this makes sure it is a viable date
+			if( time > 631138520 ) [user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:time]];
+		}
 	}
 }
 
