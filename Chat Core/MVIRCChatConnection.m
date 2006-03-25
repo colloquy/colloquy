@@ -1006,6 +1006,14 @@ end:
 		if( transfer ) [_fileTransfers removeObject:transfer];
 	}
 }
+
+#pragma mark -
+
+- (NSString *) _stringFromPossibleData:(id) input {
+	if( [input isKindOfClass:[NSData class]] )
+		return [[[NSString allocWithZone:nil] initWithData:input encoding:[self encoding]] autorelease];
+	return input;
+}
 @end
 
 #pragma mark -
@@ -1344,10 +1352,7 @@ end:
 
 - (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	if( [parameters count] ) {
-		id name = [parameters objectAtIndex:0];
-		if( [name isKindOfClass:[NSData class]] )
-			name = [[[NSString allocWithZone:nil] initWithData:name encoding:[self encoding]] autorelease];
-
+		NSString *name = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self joinedChatRoomWithName:name];
 
 		if( [sender isLocalUser] ) {
@@ -1375,9 +1380,7 @@ end:
 
 - (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	if( [parameters count] >= 1 ) {
-		id roomName = [parameters objectAtIndex:0];
-		if( [roomName isKindOfClass:[NSData class]] )
-			roomName = [[[NSString allocWithZone:nil] initWithData:roomName encoding:[self encoding]] autorelease];
+		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self joinedChatRoomWithName:roomName];
 		if( ! room ) return;
 		if( [sender isLocalUser] ) {
@@ -1585,19 +1588,14 @@ end:
 
 - (void) _handleInviteWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	if( [parameters count] == 2 ) {
-		id roomName = [parameters objectAtIndex:1];
-		if( [roomName isKindOfClass:[NSData class]] )
-			roomName = [[[NSString allocWithZone:nil] initWithData:roomName encoding:[self encoding]] autorelease];
+		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", roomName, @"room", nil]];
 	}
 }
 
 - (void) _handleNickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	if( [parameters count] == 1 ) {
-		id nickname = [parameters objectAtIndex:0];
-		if( [nickname isKindOfClass:[NSData class]] )
-			nickname = [[[NSString allocWithZone:nil] initWithData:nickname encoding:[self encoding]] autorelease];
-
+		NSString *nickname = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		NSString *oldNickname = [[sender nickname] retain];
 		NSString *oldIdentifier = [[sender uniqueIdentifier] retain];
 
@@ -1718,7 +1716,8 @@ end:
 		[member _setUsername:[parameters objectAtIndex:2]];
 		[member _setAddress:[parameters objectAtIndex:3]];
 
-		unichar status = ( [[parameters objectAtIndex:6] length] ? [[parameters objectAtIndex:6] characterAtIndex:0] : 0 );
+		NSString *statusString = [self _stringFromPossibleData:[parameters objectAtIndex:6]];
+		unichar status = ( [statusString length] ? [statusString characterAtIndex:0] : 0 );
 		if( status == 'H' ) {
 			[member _setStatus:MVChatUserAvailableStatus];
 		} else if( status == 'G' ) {
@@ -1827,10 +1826,7 @@ end:
 
 		// parameter 4 is connection time on some servers
 		if( [parameters count] >= 4 ) {
-			id connectedTime = [parameters objectAtIndex:3];
-			if( [connectedTime isKindOfClass:[NSData class]] )
-				connectedTime = [[[NSString allocWithZone:nil] initWithData:connectedTime encoding:[self encoding]] autorelease];
-
+			NSString *connectedTime = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 			NSTimeInterval time = [connectedTime doubleValue];
 			// prevent showing 34+ years connected time, this makes sure it is a viable date
 			if( time > 631138520 ) [user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:time]];

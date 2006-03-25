@@ -52,4 +52,6 @@
 - (void) _periodicCleanUp;
 - (void) _startQueueTimer;
 - (void) _stopSendQueueTimer;
+
+- (NSString *) _stringFromPossibleData:(id) input;
 @end
