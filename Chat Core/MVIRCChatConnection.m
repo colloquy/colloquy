@@ -220,7 +220,6 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	[self _willConnect]; // call early so other code has a chance to change our info
 
 	_connectionThread = nil;
-	[NSThread prepareForInterThreadMessages];
 	[NSThread detachNewThreadSelector:@selector( _ircRunloop ) toTarget:self withObject:nil];
 
 	[_threadWaitLock lockWhenCondition:1];
@@ -1133,7 +1132,12 @@ end:
 	}
 }
 
-- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender forRoom:(MVChatRoom *) room {
+- (void) _handleCTCP:(NSDictionary *) ctcpInfo {
+	BOOL request = [[ctcpInfo objectForKey:@"request"] boolValue];
+	NSData *data = [ctcpInfo objectForKey:@"data"];
+	MVChatUser *sender = [ctcpInfo objectForKey:@"sender"];
+	MVChatRoom *room = [ctcpInfo objectForKey:@"room"];
+
 	const char *line = (const char *)[data bytes] + 1; // skip the \001 char
 	const char *end = line + [data length] - 2; // minus the first and last \001 char
 	const char *current = line;
@@ -1323,6 +1327,16 @@ end:
 
 	[command release];
 	[arguments release];
+}
+
+- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender forRoom:(MVChatRoom *) room {
+	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:3];
+	if( data ) [info setObject:data forKey:@"data"];
+	if( sender ) [info setObject:sender forKey:@"sender"];
+	if( room ) [info setObject:room forKey:@"room"];
+	[info setObject:[NSNumber numberWithBool:request] forKey:@"request"];
+
+	[self performSelectorOnMainThread:@selector( _handleCTCP: ) withObject:info waitUntilDone:NO];
 }
 
 #pragma mark -
