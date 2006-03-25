@@ -219,7 +219,6 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
-	_connectionThread = nil;
 	[NSThread detachNewThreadSelector:@selector( _ircRunloop ) toTarget:self withObject:nil];
 
 	[_threadWaitLock lockWhenCondition:1];

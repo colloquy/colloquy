@@ -267,7 +267,6 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 	_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
 
-	_connectionThread = nil;
 	[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
 
 	[_threadWaitLock lockWhenCondition:1];
@@ -347,7 +346,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	[self _finish];
 	[self release];
 
-	_connectionThread = nil;
+	if( [NSThread currentThread] == _connectionThread )
+		_connectionThread = nil;
 
 	[pool drain];
 	[pool release];
@@ -522,7 +522,6 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 	_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
 
-	_connectionThread = nil;
 	[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
 
 	[_threadWaitLock lockWhenCondition:1];
@@ -595,7 +594,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	[self _finish];
 	[self release];
 
-	_connectionThread = nil;
+	if( [NSThread currentThread] == _connectionThread )
+		_connectionThread = nil;
 
 	[pool drain];
 	[pool release];
