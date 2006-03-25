@@ -224,12 +224,14 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	[_threadWaitLock lockWhenCondition:1];
 	[_threadWaitLock unlockWithCondition:0];
 
-	[self performSelector:@selector( _connect ) inThread:_connectionThread];
+	if( _connectionThread )
+		[self performSelector:@selector( _connect ) inThread:_connectionThread];
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
 	[self cancelPendingReconnectAttempts];
-	if( _sendQueueTimer ) [self performSelector:@selector( _stopSendQueueTimer ) withObject:nil inThread:_connectionThread];
+	if( _sendQueueTimer && _connectionThread )
+		[self performSelector:@selector( _stopSendQueueTimer ) withObject:nil inThread:_connectionThread];
 
 	if( _status == MVChatConnectionConnectedStatus ) {
 		if( [[reason string] length] ) {
@@ -238,7 +240,8 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
 	}
 
-	[_chatConnection performSelector:@selector( disconnectAfterWriting ) inThread:_connectionThread];
+	if( _connectionThread )
+		[_chatConnection performSelector:@selector( disconnectAfterWriting ) inThread:_connectionThread];
 }
 
 #pragma mark -
@@ -362,7 +365,8 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	}
 
 	if( now ) {
-		[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread];
+		if( _connectionThread )
+			[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread];
 
 		id old = _lastCommand;
 		_lastCommand = [[NSDate allocWithZone:nil] init];
@@ -374,7 +378,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 			[_sendQueue addObject:raw];
 		}
 
-		if( ! _sendQueueTimer )
+		if( ! _sendQueueTimer && _connectionThread )
 			[self performSelector:@selector( _startQueueTimer ) withObject:nil inThread:_connectionThread];
 	}
 }
@@ -681,6 +685,8 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 
 - (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
 	NSString *rawString = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
+	if( ! rawString ) rawString = [[NSString allocWithZone:nil] initWithData:data encoding:NSISOLatin1StringEncoding];
+
 	const char *line = (const char *)[data bytes];
 	unsigned int len = [data length];
 	const char *end = line + len - 2; // minus the line endings
@@ -757,6 +763,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 				currentParameter = line;
 				while( notEndOfLine() && *line != ' ' ) line++;
 				param = [[NSString allocWithZone:nil] initWithBytes:currentParameter length:(line - currentParameter) encoding:[self encoding]];
+				if( ! param ) param = [[NSString allocWithZone:nil] initWithBytes:currentParameter length:(line - currentParameter) encoding:NSISOLatin1StringEncoding];
 				checkAndMarkIfDone();
 				if( ! done ) line++;
 			}
@@ -776,7 +783,7 @@ end:
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
 
 	if( command && commandLength ) {
-		NSString *commandString = [[NSString allocWithZone:nil] initWithBytes:command length:commandLength encoding:[self encoding]];
+		NSString *commandString = [[NSString allocWithZone:nil] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding];
 		NSString *selectorString = [[NSString allocWithZone:nil] initWithFormat:@"_handle%@WithParameters:fromSender:", [commandString capitalizedString]];
 		SEL selector = NSSelectorFromString( selectorString );
 		[selectorString release];
@@ -784,19 +791,24 @@ end:
 
 		if( [self respondsToSelector:selector] ) {
 			NSString *senderString = nil;
-			if( sender ) senderString = [[NSString allocWithZone:nil] initWithBytes:sender length:senderLength encoding:[self encoding]];
+			if( sender && senderLength ) {
+				senderString = [[NSString allocWithZone:nil] initWithBytes:sender length:senderLength encoding:[self encoding]];
+				if( ! senderString ) senderString = [[NSString allocWithZone:nil] initWithBytes:sender length:senderLength encoding:NSISOLatin1StringEncoding];
+			}
 
 			MVChatUser *chatUser = nil;
-			if( user && userLength ) {
+			if( senderString && user && userLength ) { // if user is not null that shows it was a user not a server sender 
 				chatUser = [self chatUserWithUniqueIdentifier:senderString];
 				if( ! [chatUser address] && host && hostLength ) {
 					NSString *hostString = [[NSString allocWithZone:nil] initWithBytes:host length:hostLength encoding:[self encoding]];
+					if( ! hostString ) hostString = [[NSString allocWithZone:nil] initWithBytes:host length:hostLength encoding:NSISOLatin1StringEncoding];
 					[chatUser _setAddress:hostString];
 					[hostString release];
 				}
 
 				if( ! [chatUser username] ) {
 					NSString *userString = [[NSString allocWithZone:nil] initWithBytes:user length:userLength encoding:[self encoding]];
+					if( ! userString ) userString = [[NSString allocWithZone:nil] initWithBytes:user length:userLength encoding:NSISOLatin1StringEncoding];
 					[chatUser _setUsername:userString];
 					[userString release];
 				}
@@ -1009,8 +1021,11 @@ end:
 #pragma mark -
 
 - (NSString *) _stringFromPossibleData:(id) input {
-	if( [input isKindOfClass:[NSData class]] )
-		return [[[NSString allocWithZone:nil] initWithData:input encoding:[self encoding]] autorelease];
+	if( [input isKindOfClass:[NSData class]] ) {
+		NSString *ret = [[[NSString allocWithZone:nil] initWithData:input encoding:[self encoding]] autorelease];
+		if( ret ) return ret;
+		return [[[NSString allocWithZone:nil] initWithData:input encoding:NSISOLatin1StringEncoding] autorelease];
+	}
 	return input;
 }
 @end
@@ -1123,6 +1138,7 @@ end:
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", nil]];
 				if( [[sender nickname] isEqualToString:@"NickServ"] ) {
 					NSString *msg = [[NSString allocWithZone:nil] initWithData:msgData encoding:[self encoding]];
+					if( ! msg ) msg = [[NSString allocWithZone:nil] initWithData:msgData encoding:NSISOLatin1StringEncoding];
 					if( [msg rangeOfString:@"NickServ"].location != NSNotFound && [msg rangeOfString:@"IDENTIFY"].location != NSNotFound ) {
 						if( ! [self nicknamePassword] ) {
 							[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
@@ -1151,6 +1167,8 @@ end:
 
 	while( line != end && *line != ' ' ) line++;
 	NSString *command = [[NSString allocWithZone:nil] initWithBytes:current length:(line - current) encoding:[self encoding]];
+	if( ! command ) command = [[NSString allocWithZone:nil] initWithBytes:current length:(line - current) encoding:NSISOLatin1StringEncoding];
+
 	NSMutableData *arguments = nil;
 	if( line != end ) arguments = [[NSMutableData allocWithZone:nil] initWithBytes:++line length:(end - line)];
 
@@ -1206,6 +1224,7 @@ end:
 			if( [arguments length] < 100 ) [sender sendSubcodeReply:command withArguments:arguments];
 		} else if( [command caseInsensitiveCompare:@"DCC"] == NSOrderedSame ) {
 			NSString *msg = [[NSString allocWithZone:nil] initWithData:arguments encoding:[self encoding]];
+			if( ! msg ) msg = [[NSString allocWithZone:nil] initWithData:arguments encoding:NSISOLatin1StringEncoding];
 
 			NSString *subCommand = nil;
 			NSString *fileName = nil;
@@ -1661,7 +1680,7 @@ end:
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:2]];
 		if( room && ! [room _namesSynced] ) {
 			NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
-			NSString *names = [[NSString allocWithZone:nil] initWithData:[parameters objectAtIndex:3] encoding:[self encoding]];
+			NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 			NSArray *members = [names componentsSeparatedByString:@" "];
 			NSEnumerator *enumerator = [members objectEnumerator];
 			NSString *memberName = nil;
@@ -1690,7 +1709,6 @@ end:
 				[room _setModes:modes forMemberUser:member];
 			}
 
-			[names release];
 			[pool drain];
 			[pool release];
 		}
@@ -1801,9 +1819,7 @@ end:
 		[user _setServerOperator:NO]; // set these to NO now so we get the true values later in the WHOIS
 		[user _setUsername:[parameters objectAtIndex:2]];
 		[user _setAddress:[parameters objectAtIndex:3]];
-		NSString *realName = [[NSString allocWithZone:nil] initWithData:[parameters objectAtIndex:5] encoding:[self encoding]];
-		[user _setRealName:realName];
-		[realName release];
+		[user _setRealName:[self _stringFromPossibleData:[parameters objectAtIndex:5]]];
 	}
 }
 
@@ -1850,7 +1866,7 @@ end:
 
 - (void) _handle319WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISCHANNELS
 	if( [parameters count] == 3 ) {
-		NSString *rooms = [[NSString allocWithZone:nil] initWithData:[parameters objectAtIndex:2] encoding:[self encoding]];
+		NSString *rooms = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		NSArray *chanArray = [[rooms stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
 		NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:[chanArray count]];
 		NSEnumerator *enumerator = [chanArray objectEnumerator];
@@ -1867,19 +1883,17 @@ end:
 			[user setAttribute:results forKey:MVChatUserKnownRoomsAttribute];
 		}
 
-		[rooms release];
 		[results release];
 	}
 }
 
 - (void) _handle320WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISIDENTIFIED
 	if( [parameters count] == 3 ) {
-		NSString *comment = [[NSString allocWithZone:nil] initWithData:[parameters objectAtIndex:2] encoding:[self encoding]];
+		NSString *comment = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		if( [comment rangeOfString:@"identified" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 			[user _setIdentified:YES];
 		}
-		[comment release];
 	}
 }
 @end

@@ -272,6 +272,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	[_threadWaitLock lockWhenCondition:1];
 	[_threadWaitLock unlockWithCondition:0];
 
+	if( ! _connectionThread ) return;
+
 	if( ! [self isPassive] ) [self performSelector:@selector( _waitForConnection ) inThread:_connectionThread];
 	else [self performSelector:@selector( _connect ) inThread:_connectionThread];
 }
@@ -526,6 +528,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 	[_threadWaitLock lockWhenCondition:1];
 	[_threadWaitLock unlockWithCondition:0];
+
+	if( ! _connectionThread ) return;
 
 	if( ! [self isPassive] ) [self performSelector:@selector( _connect ) inThread:_connectionThread];
 	else [self performSelector:@selector( _waitForConnection ) inThread:_connectionThread];
