@@ -1388,6 +1388,7 @@ end:
 		} else {
 			[room _removeMemberUser:sender];
 			NSData *reason = ( [parameters count] >= 2 ? [parameters objectAtIndex:1] : nil );
+			if( ! [reason isKindOfClass:[NSData class]] ) return;
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", reason, @"reason", nil]];
 		}
 	}
@@ -1400,6 +1401,7 @@ end:
 		[sender _setStatus:MVChatUserOfflineStatus];
 
 		NSData *reason = [parameters objectAtIndex:0];
+		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 		NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:sender, @"user", reason, @"reason", nil];
 
 		MVChatRoom *room = nil;
@@ -1421,6 +1423,7 @@ end:
 		if( ! room || ! user ) return;
 
 		NSData *reason = ( [parameters count] == 3 ? [parameters objectAtIndex:2] : nil );
+		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 		if( [user isLocalUser] ) {
 			[room _setDateParted:[NSDate date]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomKickedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"byUser", reason, @"reason", nil]];
@@ -1740,8 +1743,9 @@ end:
 		NSString *room = [parameters objectAtIndex:1];
 		unsigned int users = [[parameters objectAtIndex:2] intValue];
 		NSData *topic = [parameters objectAtIndex:3];
+		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
 
-		NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:users], @"users", topic, @"topic", [NSDate date], @"cached", room, @"room", nil];
+		NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:users], @"users", [NSDate date], @"cached", room, @"room", topic, @"topic", nil];
 		[self performSelectorOnMainThread:@selector( _addRoomToCache: ) withObject:info waitUntilDone:NO];
 		[info release];
 	}
