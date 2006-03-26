@@ -165,7 +165,6 @@
 		1CB2CD52052DDC560094AAA4 /* Generic.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1C5959010507803F000001C8 /* Generic.icns */; };
 		1CB2CD53052DDC560094AAA4 /* showdrawer.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECD660508C61B000001C8 /* showdrawer.tiff */; };
 		1CB2CD54052DDC560094AAA4 /* default.xsl in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECDCF0508C8AB000001C8 /* default.xsl */; };
-		1CB2CD55052DDC560094AAA4 /* JVChatRoom.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECE380508D58F000001C8 /* JVChatRoom.nib */; };
 		1CB2CD56052DDC560094AAA4 /* JVChatWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECE390508D58F000001C8 /* JVChatWindow.nib */; };
 		1CB2CD57052DDC560094AAA4 /* JVDirectChat.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECE3A0508D58F000001C8 /* JVDirectChat.nib */; };
 		1CB2CD58052DDC560094AAA4 /* chooseStyle.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECE5D050A8D21000001C8 /* chooseStyle.tiff */; };
@@ -637,7 +636,6 @@
 		1CBC634805489BEE009E59E1 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVGeneralPreferences.nib; sourceTree = "<group>"; };
 		1CBECD660508C61B000001C8 /* showdrawer.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = showdrawer.tiff; path = "Resources/Toolbar Icons/showdrawer.tiff"; sourceTree = SOURCE_ROOT; };
 		1CBECDCF0508C8AB000001C8 /* default.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = default.xsl; path = Resources/default.xsl; sourceTree = SOURCE_ROOT; };
-		1CBECE380508D58F000001C8 /* JVChatRoom.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVChatRoom.nib; path = Resources/JVChatRoom.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE390508D58F000001C8 /* JVChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVChatWindow.nib; path = Resources/JVChatWindow.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE3A0508D58F000001C8 /* JVDirectChat.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVDirectChat.nib; path = Resources/JVDirectChat.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE5D050A8D21000001C8 /* chooseStyle.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = chooseStyle.tiff; path = "Resources/Toolbar Icons/chooseStyle.tiff"; sourceTree = SOURCE_ROOT; };
@@ -1577,7 +1575,6 @@
 				1CE72A99052C79E700A8FE6E /* JVChatConsole.nib */,
 				1CD6C417051E0B3000A8FE10 /* JVChatTranscript.nib */,
 				1CBECE3A0508D58F000001C8 /* JVDirectChat.nib */,
-				1CBECE380508D58F000001C8 /* JVChatRoom.nib */,
 				1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */,
 				1C0A4C980799BDAF0093B702 /* JVFind.nib */,
 				1C0A4C9A0799BDAF0093B702 /* JVTranscriptCriterion.nib */,
@@ -2083,7 +2080,6 @@
 				1CB2CD52052DDC560094AAA4 /* Generic.icns in Resources */,
 				1CB2CD53052DDC560094AAA4 /* showdrawer.tiff in Resources */,
 				1CB2CD54052DDC560094AAA4 /* default.xsl in Resources */,
-				1CB2CD55052DDC560094AAA4 /* JVChatRoom.nib in Resources */,
 				1CB2CD56052DDC560094AAA4 /* JVChatWindow.nib in Resources */,
 				1CB2CD57052DDC560094AAA4 /* JVDirectChat.nib in Resources */,
 				1CB2CD58052DDC560094AAA4 /* chooseStyle.tiff in Resources */,
