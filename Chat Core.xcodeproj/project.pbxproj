@@ -110,6 +110,7 @@
 		1C7B83CA0668D765004F1EFE /* NSNotificationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSNotificationAdditions.m; path = Additions/NSNotificationAdditions.m; sourceTree = "<group>"; };
 		1C7C776707DBBA4500FB5F83 /* NSScriptCommandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSScriptCommandAdditions.h; path = Additions/NSScriptCommandAdditions.h; sourceTree = "<group>"; };
 		1C7C776807DBBA4500FB5F83 /* NSScriptCommandAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSScriptCommandAdditions.m; path = Additions/NSScriptCommandAdditions.m; sourceTree = "<group>"; };
+		1C8AA4B609D60B1100CF29EB /* Chat Core.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = "Chat Core.exp"; sourceTree = "<group>"; };
 		1C914B130705BFE100CBA5F1 /* MVIRCChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatUser.h; path = "Chat Core/MVIRCChatUser.h"; sourceTree = "<group>"; };
 		1C914B140705BFE100CBA5F1 /* MVIRCChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCChatUser.m; path = "Chat Core/MVIRCChatUser.m"; sourceTree = "<group>"; };
 		1C914D330706148800CBA5F1 /* MVIRCChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatRoom.h; path = "Chat Core/MVIRCChatRoom.h"; sourceTree = "<group>"; };
@@ -316,6 +317,7 @@
 				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
 				1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */,
 				1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */,
+				1C8AA4B609D60B1100CF29EB /* Chat Core.exp */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -550,6 +552,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
+				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = "Chat Core/ChatCore.pch";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
@@ -570,6 +573,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
+				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "Chat Core/ChatCore.pch";
@@ -607,6 +611,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
+				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = "Chat Core/ChatCore.pch";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";

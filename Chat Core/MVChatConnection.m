@@ -39,8 +39,6 @@ NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeRe
 
 NSString *MVChatConnectionErrorDomain = @"MVChatConnectionErrorDomain";
 
-BOOL MVChatApplicationQuitting = NO;
-
 static const NSStringEncoding supportedEncodings[] = {
 	NSUTF8StringEncoding,
 	NSNonLossyASCIIStringEncoding,
@@ -766,8 +764,6 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) _applicationWillTerminate:(NSNotification *) notification {
-	extern BOOL MVChatApplicationQuitting;
-	MVChatApplicationQuitting = YES;
 	if( [self isConnected] ) [self disconnect];
 }
 
