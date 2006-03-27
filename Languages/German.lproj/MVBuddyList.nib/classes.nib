@@ -1,5 +1,17 @@
 {
     IBClasses = (
+        {CLASS = ABAddressBook; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                clearSearchField = id; 
+                deselectAll = id; 
+                editInAddressBook = id; 
+                selectInAddressBook = id; 
+            }; 
+            CLASS = ABPeoplePickerView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSView; 
+        }, 
         {CLASS = ASExtendedOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
