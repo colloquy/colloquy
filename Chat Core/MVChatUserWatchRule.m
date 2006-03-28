@@ -1,5 +1,6 @@
 #import "MVChatUserWatchRule.h"
 #import "MVChatUser.h"
+#import "NSNotificationAdditions.h"
 
 #import <AGRegex/AGRegex.h>
 
@@ -25,6 +26,8 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 
 	if( _realNameRegex && ! [_realNameRegex findInString:[user realName]] ) return NO;
 	if( [_realName length] && ! [_realName isEqualToString:[user realName]] ) return NO;
+
+	if( [_publicKey length] && ! [_publicKey isEqualToData:[user publicKey]] ) return NO;
 
 	@synchronized( _matchedChatUsers ) {
 		if( ! [_matchedChatUsers containsObject:user] ) {
@@ -113,16 +116,6 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 - (void) setPublicKey:(NSData *) publicKey {
 	id old = _publicKey;
 	_publicKey = [publicKey copyWithZone:nil];
-	[old release];
-}
-
-- (NSString *) fingerprint {
-	return [[_fingerprint retain] autorelease];
-}
-
-- (void) setFingerprint:(NSString *) fingerprint {
-	id old = _fingerprint;
-	_fingerprint = [fingerprint copyWithZone:nil];
 	[old release];
 }
 @end

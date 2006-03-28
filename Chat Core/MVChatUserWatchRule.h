@@ -34,7 +34,4 @@ extern NSString *MVChatUserWatchRuleMatchedNotification;
 
 - (NSData *) publicKey;
 - (void) setPublicKey:(NSData *) publicKey;
-
-- (NSString *) fingerprint;
-- (void) setFingerprint:(NSString *) fingerprint;
 @end
