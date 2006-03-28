@@ -1407,7 +1407,7 @@ end:
 		} else {
 			[room _removeMemberUser:sender];
 			NSData *reason = ( [parameters count] >= 2 ? [parameters objectAtIndex:1] : nil );
-			if( ! [reason isKindOfClass:[NSData class]] ) return;
+			if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", reason, @"reason", nil]];
 		}
 	}
