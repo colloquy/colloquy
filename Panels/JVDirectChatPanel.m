@@ -262,7 +262,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[self changeEncoding:nil];
 
 	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) {
-		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [self target]]];
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [[[self target] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 
 		NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", [self target], [[self connection] server]] stringByExpandingTildeInPath];
 
@@ -476,7 +476,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 #pragma mark -
 
 - (IBAction) addToFavorites:(id) sender {
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [self target]]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [[[self target] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 	NSString *path = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", [self target], [[self connection] server]] stringByExpandingTildeInPath] retain];
 
 	[url writeToInternetLocationFile:path];
