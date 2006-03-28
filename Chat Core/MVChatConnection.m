@@ -158,6 +158,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_roomsCache release];
 	[_cachedDate release];
 	[_joinedRooms release];
+	[_chatUserWatchRules release];
 	[_localUser release];
 	[_lastConnectAttempt release];
 	[_awayMessage release];
@@ -170,6 +171,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_roomsCache = nil;
 	_cachedDate = nil;
 	_joinedRooms = nil;
+	_chatUserWatchRules = nil;
 	_localUser = nil;
 	_lastConnectAttempt = nil;
 	_awayMessage = nil;
@@ -680,6 +682,26 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) stopWatchingUser:(MVChatUser *) user {
 // subclass this method, if needed
+}
+
+- (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule {
+	if( ! _chatUserWatchRules )
+		_chatUserWatchRules = [[NSMutableSet allowWithZone:nil] initWithCapacity:10];
+	@synchronized( _chatUserWatchRules ) {
+		[_chatUserWatchRules addObject:rule];
+	}
+}
+
+- (void) removeChatUserWatchRule:(MVChatUserWatchRule *) rule {
+	@synchronized( _chatUserWatchRules ) {
+		[_chatUserWatchRules removeObject:rule];
+	}
+}
+
+- (NSSet *) chatUserWatchRules {
+	@synchronized( _chatUserWatchRules ) {
+		return [NSSet setWithSet:_chatUserWatchRules];
+	} return nil;
 }
 
 #pragma mark -

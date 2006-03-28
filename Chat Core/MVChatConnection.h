@@ -50,6 +50,7 @@ typedef enum {
 
 @class MVChatRoom;
 @class MVChatUser;
+@class MVChatUserWatchRule;
 @class MVUploadFileTransfer;
 
 extern NSString *MVChatConnectionWillConnectNotification;
@@ -90,6 +91,7 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSMutableDictionary *_joinedRooms;
 	MVChatUser *_localUser;
 	NSMutableDictionary *_roomsCache;
+	NSMutableSet *_chatUserWatchRules;
 	NSDate *_cachedDate;
 	NSDate *_lastConnectAttempt;
 	NSTimer *_reconnectTimer;
@@ -254,6 +256,12 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
+- (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule;
+- (void) removeChatUserWatchRule:(MVChatUserWatchRule *) rule;
+
+- (NSSet *) chatUserWatchRules;
+
+#pragma mark -
 - (void) fetchChatRoomList;
 - (void) stopFetchingChatRoomList;
 - (NSMutableDictionary *) chatRoomListResults;
