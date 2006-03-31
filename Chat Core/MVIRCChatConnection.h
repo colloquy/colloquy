@@ -10,7 +10,6 @@
 @private
 	AsyncSocket *_chatConnection;
 	NSTimer *_periodicCleanUpTimer;
-	NSTimer *_watchListTimer;
 	NSThread *_connectionThread;
 	NSDate *_queueWait;
 	NSDate *_lastCommand;

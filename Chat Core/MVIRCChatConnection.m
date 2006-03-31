@@ -163,7 +163,6 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	[_password release];
 	[_realName release];
 	[_threadWaitLock release];
-	[_periodicCleanUpTimer release];
 	[_lastSentIsonNicknames release];
 	[_sendQueue release];
 	[_sendQueueTimer release];
@@ -181,7 +180,6 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	_password = nil;
 	_realName = nil;
 	_threadWaitLock = nil;
-	_periodicCleanUpTimer = nil;
 	_lastSentIsonNicknames = nil;
 	_sendQueue = nil;
 	_sendQueueTimer = nil;
@@ -679,10 +677,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 		[_knownUsers removeAllObjects];
 	}
 
-	[_periodicCleanUpTimer invalidate];
-	[_periodicCleanUpTimer release];
-	_periodicCleanUpTimer = nil;
-
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _periodicCleanUp ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _checkWatchedUsers ) object:nil];
 
@@ -705,11 +700,8 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
 	[old release];
 
-	old = _periodicCleanUpTimer;
-	_periodicCleanUpTimer = [[NSTimer scheduledTimerWithTimeInterval:600. target:self selector:@selector( _periodicCleanUp ) userInfo:nil repeats:YES] retain];
-	[old invalidate];
-	[old release];
-
+	[self performSelector:@selector( _periodicCleanUp ) withObject:nil afterDelay:600.];
+	
 	[self _readNextMessageFromServer];
 }
 
@@ -996,6 +988,8 @@ end:
 		[_knownUsers removeObjectsForKeys:removeList];
 		[removeList release];
 	}
+
+	[self performSelector:@selector( _periodicCleanUp ) withObject:nil afterDelay:600.];
 }
 
 - (void) _startQueueTimer {
