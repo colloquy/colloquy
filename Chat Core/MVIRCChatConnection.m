@@ -694,7 +694,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
 	if( [[self password] length] ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [self password]];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self nickname]];
-	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", [self username], [self realName]];
+	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", ( [[self username] length] ? [self username] : @"anonymous" ), ( [[self realName] length] ? [self realName] : @"anonymous" )];
 
 	id old = _localUser;
 	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
