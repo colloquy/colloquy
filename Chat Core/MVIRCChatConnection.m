@@ -1155,17 +1155,33 @@ end:
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
 			_watchSupported = YES;
 
+			NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
+			[request setString:@"WATCH "];
+
 			@synchronized( _chatUserWatchRules ) {
 				NSEnumerator *ruleEnumerator = [_chatUserWatchRules objectEnumerator];
 				MVChatUserWatchRule *rule = nil;
 
 				while( ( rule = [ruleEnumerator nextObject] ) ) {
-					if( ! _watchSupported ) break;
 					NSString *nick = [rule nickname];
-					if( nick && ! [rule nicknameIsRegularExpression] )
-						[self sendRawMessageWithFormat:@"WATCH +%@", nick];
+					if( nick && ! [rule nicknameIsRegularExpression] ) {
+						if( ( [nick length] + [request length] + 1 ) > 510 ) {
+							[self sendRawMessage:request];
+							[request release];
+
+							request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
+							[request setString:@"WATCH "];
+						}
+
+						[request appendFormat:@"+%@ ", nick];
+					}
 				}
 			}
+
+			if( ! [request isEqualToString:@"WATCH "] )
+				[self sendRawMessage:request];
+
+			[request release];
 
 			[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
 
