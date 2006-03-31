@@ -6,6 +6,7 @@
 
 #import "AsyncSocket.h"
 #import "InterThreadMessaging.h"
+#import "MVChatuserWatchRule.h"
 #import "MVChatPluginManager.h"
 #import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
@@ -15,6 +16,8 @@
 #import "NSDataAdditions.h"
 
 #define JVMaximumCommandsSentAtOnce 5
+#define JVWatchedUserWHOISDelay 300.
+#define JVWatchedUserISONDelay 60.
 
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
@@ -161,6 +164,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	[_realName release];
 	[_threadWaitLock release];
 	[_periodicCleanUpTimer release];
+	[_lastSentIsonNicknames release];
 	[_sendQueue release];
 	[_sendQueueTimer release];
 	[_queueWait release];
@@ -178,6 +182,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	_realName = nil;
 	_threadWaitLock = nil;
 	_periodicCleanUpTimer = nil;
+	_lastSentIsonNicknames = nil;
 	_sendQueue = nil;
 	_sendQueueTimer = nil;
 	_queueWait = nil;
@@ -477,6 +482,22 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 
 }
 
+- (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule {
+	[super addChatUserWatchRule:rule];
+
+	if( [self isConnected] && [rule nickname] && ! [rule nicknameIsRegularExpression] ) {
+		if( _watchSupported ) [self sendRawMessageWithFormat:@"WATCH +%@", [rule nickname]];
+		else [self sendRawMessageWithFormat:@"ISON %@", [rule nickname]];
+	}
+}
+
+- (void) removeChatUserWatchRule:(MVChatUserWatchRule *) rule {
+	[super removeChatUserWatchRule:rule];
+
+	if( [self isConnected] && _watchSupported && [rule nickname] && ! [rule nicknameIsRegularExpression] )
+		[self sendRawMessageWithFormat:@"WATCH -%@", [rule nickname]];
+}
+
 #pragma mark -
 
 - (void) fetchChatRoomList {
@@ -648,6 +669,12 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	_queueWait = nil;
 	[old release];
 
+	old = _lastSentIsonNicknames;
+	_lastSentIsonNicknames = nil;
+	[old release];
+
+	_isonSentCount = 0;
+
 	@synchronized( _knownUsers ) {
 		[_knownUsers removeAllObjects];
 	}
@@ -655,6 +682,9 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	[_periodicCleanUpTimer invalidate];
 	[_periodicCleanUpTimer release];
 	_periodicCleanUpTimer = nil;
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _checkWatchedUsers ) object:nil];
 
 	if( _status == MVChatConnectionConnectingStatus )
 		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
@@ -1020,6 +1050,72 @@ end:
 
 #pragma mark -
 
+- (void) _whoisWatchedUsers {
+	@synchronized( _chatUserWatchRules ) {
+		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
+		MVChatUserWatchRule *rule = nil;
+
+		while( ( rule = [enumerator nextObject] ) ) {
+			NSString *nick = [rule nickname];
+			if( nick && ! [rule nicknameIsRegularExpression] )
+				[self sendRawMessageWithFormat:@"WHOIS %@ %1$@", nick];
+		}
+	}
+
+	[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
+}
+
+- (void) _checkWatchedUsers {
+	if( _watchSupported ) return; // we don't need to call this anymore, return before we reschedule
+
+	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:JVWatchedUserISONDelay];
+
+	@synchronized( _chatUserWatchRules ) {
+		if(	! [_chatUserWatchRules count] ) return; // nothing to do, return and wait until the next scheduled fire
+	}
+
+	NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
+	[request setString:@"ISON "];
+
+	_isonSentCount = 0;
+
+	@synchronized( _chatUserWatchRules ) {
+		[_lastSentIsonNicknames release];
+		_lastSentIsonNicknames = [[NSMutableSet allocWithZone:nil] initWithCapacity:[_chatUserWatchRules count]];
+
+		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
+		MVChatUserWatchRule *rule = nil;
+
+		while( ( rule = [enumerator nextObject] ) ) {
+			NSString *nick = [rule nickname];
+			if( nick && ! [rule nicknameIsRegularExpression] ) {
+				if( ( [nick length] + [request length] ) > 510 ) {
+					[self sendRawMessage:request];
+					[request release];
+					_isonSentCount++;
+
+					request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
+					[request setString:@"ISON "];
+				}
+
+				[request appendString:nick];
+				[request appendString:@" "];
+
+				[_lastSentIsonNicknames addObject:nick];
+			}
+		}
+	}
+
+	if( ! [request isEqualToString:@"ISON "] ) {
+		[self sendRawMessage:request];
+		_isonSentCount++;
+	}
+
+	[request release];
+}
+
+#pragma mark -
+
 - (NSString *) _stringFromPossibleData:(id) input {
 	if( [input isKindOfClass:[NSData class]] ) {
 		NSString *ret = [[[NSString allocWithZone:nil] initWithData:input encoding:[self encoding]] autorelease];
@@ -1042,6 +1138,7 @@ end:
 	[old release];
 
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];	
+
 	// Identify if we have a user password
 	if( [[self nicknamePassword] length] )
 		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
@@ -1051,6 +1148,34 @@ end:
 			[self _setCurrentNickname:nickname];
 			[[self localUser] _setUniqueIdentifier:[nickname lowercaseString]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
+		}
+	}
+
+	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:2.];
+}
+
+- (void) _handle005WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender { // RPL_ISUPPORT
+	NSEnumerator *enumerator = [parameters objectEnumerator];
+	NSString *feature = nil;
+	while( ( feature = [enumerator nextObject] ) ) {
+		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
+			_watchSupported = YES;
+
+			@synchronized( _chatUserWatchRules ) {
+				NSEnumerator *ruleEnumerator = [_chatUserWatchRules objectEnumerator];
+				MVChatUserWatchRule *rule = nil;
+
+				while( ( rule = [ruleEnumerator nextObject] ) ) {
+					if( ! _watchSupported ) break;
+					NSString *nick = [rule nickname];
+					if( nick && ! [rule nicknameIsRegularExpression] )
+						[self sendRawMessageWithFormat:@"WATCH +%@", nick];
+				}
+			}
+
+			[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
+
+			return;
 		}
 	}
 }
@@ -1650,6 +1775,36 @@ end:
 	}
 }
 
+- (void) _handle303WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ISON
+	if( [parameters count] == 2 && _isonSentCount > 0 ) {
+		_isonSentCount--;
+
+		NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+		NSArray *users = [names componentsSeparatedByString:@" "];
+		NSEnumerator *enumerator = [users objectEnumerator];
+		NSString *nick = nil;
+
+		while( ( nick = [enumerator nextObject] ) ) {
+			if( ! [nick length] ) continue;
+
+			MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
+			if( [[user dateUpdated] timeIntervalSinceNow] < -240 || ! [user dateUpdated] ) // 4 minutes
+				[user refreshInformation];
+
+			if( [_lastSentIsonNicknames containsObject:nick] ) {
+				// online
+			} else {
+				// offline
+			}
+		}
+
+		if( ! _isonSentCount ) {
+			[_lastSentIsonNicknames release];
+			_lastSentIsonNicknames = nil;
+		}
+	}
+}
+
 #pragma mark -
 #pragma mark Away Replies
 
@@ -1820,6 +1975,7 @@ end:
 		[user _setUsername:[parameters objectAtIndex:2]];
 		[user _setAddress:[parameters objectAtIndex:3]];
 		[user _setRealName:[self _stringFromPossibleData:[parameters objectAtIndex:5]]];
+		[user _setDateDisconnected:nil];
 	}
 }
 
@@ -1894,6 +2050,37 @@ end:
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 			[user _setIdentified:YES];
 		}
+	}
+}
+
+#pragma mark -
+#pragma mark Watch Replies
+
+- (void) _handle604WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NOWON_BAHAMUT_UNREAL
+	if( [parameters count] >= 5 ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		[user _setUsername:[parameters objectAtIndex:2]];
+		[user _setAddress:[parameters objectAtIndex:3]];
+		[user _setDateDisconnected:nil];
+
+		if( [[user dateUpdated] timeIntervalSinceNow] < -240 || ! [user dateUpdated] ) // 4 minutes
+			[user refreshInformation];
+	}
+}
+
+- (void) _handle600WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LOGON_BAHAMUT_UNREAL
+	if( [parameters count] >= 5 ) {
+		[self _handle604WithParameters:parameters fromSender:sender]; // do everything we do above
+
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		// send online notification
+	}
+}
+
+- (void) _handle601WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LOGOFF_BAHAMUT_UNREAL
+	if( [parameters count] >= 5 ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		// send offline notification
 	}
 }
 @end

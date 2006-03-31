@@ -10,6 +10,7 @@
 @private
 	AsyncSocket *_chatConnection;
 	NSTimer *_periodicCleanUpTimer;
+	NSTimer *_watchListTimer;
 	NSThread *_connectionThread;
 	NSDate *_queueWait;
 	NSDate *_lastCommand;
@@ -23,8 +24,11 @@
 	NSString *_username;
 	NSString *_password;
 	NSString *_realName;
+	NSMutableSet *_lastSentIsonNicknames;
 	NSConditionLock *_threadWaitLock;
 	unsigned short _serverPort;
+	unsigned short _isonSentCount;
+	BOOL _watchSupported;
 }
 + (NSArray *) defaultServerPorts;
 @end

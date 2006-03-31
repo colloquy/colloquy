@@ -686,7 +686,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule {
 	if( ! _chatUserWatchRules )
-		_chatUserWatchRules = [[NSMutableSet allowWithZone:nil] initWithCapacity:10];
+		_chatUserWatchRules = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 	@synchronized( _chatUserWatchRules ) {
 		[_chatUserWatchRules addObject:rule];
 	}

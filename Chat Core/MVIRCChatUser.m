@@ -76,7 +76,7 @@
 #pragma mark -
 
 - (void) refreshInformation {
-	[[self connection] sendRawMessageWithFormat:@"WHOIS %@ %@", [self nickname], [self nickname]];
+	[[self connection] sendRawMessageWithFormat:@"WHOIS %@ %1$@", [self nickname]];
 }
 
 - (void) refreshAttributeForKey:(NSString *) key {
