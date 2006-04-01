@@ -1722,7 +1722,7 @@ end:
 		NSString *nickname = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		NSString *oldNickname = [[sender nickname] retain];
 		NSString *oldIdentifier = [[sender uniqueIdentifier] retain];
-		MVChatUserWatchRule *originalRule = [self _watchRuleMatchingUser:sender];
+		MVChatUserWatchRule *originalRule = ( [sender isWatched] ? [self _watchRuleMatchingUser:sender] : nil );
 
 		if( [sender status] != MVChatUserAwayStatus )
 			[sender _setStatus:MVChatUserAvailableStatus];
@@ -1752,8 +1752,8 @@ end:
 		[oldNickname release];
 		[oldIdentifier release];
 
-		MVChatUserWatchRule *newRule = [self _watchRuleMatchingUser:sender];
-		if( [sender isWatched] && originalRule && ! newRule ) {
+		MVChatUserWatchRule *newRule = ( [sender isWatched] ? [self _watchRuleMatchingUser:sender] : nil );
+		if( originalRule && ! newRule ) {
 			if( [originalRule nickname] && ! [originalRule nicknameIsRegularExpression] ) {
 				newRule = [originalRule copyWithZone:nil];
 				[newRule setNickname:[sender nickname]];
