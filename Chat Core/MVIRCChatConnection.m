@@ -91,6 +91,16 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
 		_fileTransfers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+
+		MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] init];
+		[rule setNickname:@"xenon"];
+		[self addChatUserWatchRule:rule];
+		[rule release];
+
+		rule = [[MVChatUserWatchRule allocWithZone:nil] init];
+		[rule setNickname:@"/r.+/"];
+		[self addChatUserWatchRule:rule];
+		[rule release];
 	}
 
 	return self;
@@ -1712,6 +1722,7 @@ end:
 		NSString *nickname = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		NSString *oldNickname = [[sender nickname] retain];
 		NSString *oldIdentifier = [[sender uniqueIdentifier] retain];
+		MVChatUserWatchRule *originalRule = [self _watchRuleMatchingUser:sender];
 
 		if( [sender status] != MVChatUserAwayStatus )
 			[sender _setStatus:MVChatUserAvailableStatus];
@@ -1740,6 +1751,21 @@ end:
 
 		[oldNickname release];
 		[oldIdentifier release];
+
+		MVChatUserWatchRule *newRule = [self _watchRuleMatchingUser:sender];
+		if( [sender isWatched] && originalRule && ! newRule ) {
+			if( [originalRule nickname] && ! [originalRule nicknameIsRegularExpression] ) {
+				newRule = [originalRule copyWithZone:nil];
+				[newRule setNickname:[sender nickname]];
+				[newRule setInterim:YES];
+				[self addChatUserWatchRule:newRule];
+				[newRule release];
+
+				if( [originalRule isInterim] ) [self removeChatUserWatchRule:originalRule];
+			}
+		} else if( originalRule && newRule && [originalRule isInterim] ) {
+			[self removeChatUserWatchRule:originalRule];
+		}
 	}
 }
 

@@ -3,7 +3,7 @@
 
 extern NSString *MVChatUserWatchRuleMatchedNotification;
 
-@interface MVChatUserWatchRule : NSObject {
+@interface MVChatUserWatchRule : NSObject <NSCopying> {
 	NSMutableSet *_matchedChatUsers;
 	NSString *_nickname;
 	AGRegex *_nicknameRegex;
@@ -14,10 +14,12 @@ extern NSString *MVChatUserWatchRuleMatchedNotification;
 	NSString *_address;
 	AGRegex *_addressRegex;
 	NSData *_publicKey;
-	NSString *_fingerprint;
+	BOOL _interim;
 }
 - (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
 - (NSDictionary *) dictionaryRepresentation;
+
+- (BOOL) isEqualToChatUserWatchRule:(MVChatUserWatchRule *) anotherRule;
 
 - (BOOL) matchChatUser:(MVChatUser *) user;
 
@@ -41,4 +43,7 @@ extern NSString *MVChatUserWatchRuleMatchedNotification;
 
 - (NSData *) publicKey;
 - (void) setPublicKey:(NSData *) publicKey;
+
+- (BOOL) isInterim;
+- (void) setInterim:(BOOL) interim;
 @end

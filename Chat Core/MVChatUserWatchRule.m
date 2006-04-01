@@ -15,9 +15,21 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 		[self setRealName:[dictionary objectForKey:@"realName"]];
 		[self setAddress:[dictionary objectForKey:@"address"]];
 		[self setPublicKey:[dictionary objectForKey:@"publicKey"]];
+		[self setInterim:[[dictionary objectForKey:@"interim"] boolValue]];
 	}
 
 	return self;
+}
+
+- (id) copyWithZone:(NSZone *) zone {
+	MVChatUserWatchRule *copy = [[MVChatUserWatchRule allocWithZone:zone] init];
+	[self setUsername:[self username]];
+	[self setNickname:[self nickname]];
+	[self setRealName:[self realName]];
+	[self setAddress:[self address]];
+	[self setPublicKey:[self publicKey]];
+	[self setInterim:[self isInterim]];
+	return copy;
 }
 
 - (NSDictionary *) dictionaryRepresentation {
@@ -27,7 +39,36 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	if( _realName ) [dictionary setObject:_nickname forKey:@"realName"];
 	if( _address ) [dictionary setObject:_nickname forKey:@"address"];
 	if( _publicKey ) [dictionary setObject:_nickname forKey:@"publicKey"];
+	if( _interim ) [dictionary setObject:[NSNumber numberWithBool:_interim] forKey:@"interim"];
 	return [dictionary autorelease];
+}
+
+- (BOOL) isEqual:(id) object {
+	if( object == self ) return YES;
+	if( ! object || ! [object isKindOfClass:[self class]] ) return NO;
+	return [self isEqualToChatUserWatchRule:object];
+}
+
+- (BOOL) isEqualToChatUserWatchRule:(MVChatUserWatchRule *) anotherRule {
+	if( ! anotherRule ) return NO;
+	if( anotherRule == self ) return YES;
+
+	if( ( ! [self nickname] && ! [anotherRule nickname] ) || ! [[self nickname] isEqualToString:[anotherRule nickname]] )
+		return NO;
+
+	if( ( ! [self username] && ! [anotherRule username] ) || ! [[self username] isEqualToString:[anotherRule username]] )
+		return NO;
+
+	if( ( ! [self realName] && ! [anotherRule realName] ) || ! [[self realName] isEqualToString:[anotherRule realName]] )
+		return NO;
+
+	if( ( ! [self address] && ! [anotherRule address] ) || ! [[self address] isEqualToString:[anotherRule address]] )
+		return NO;
+
+	if( ( ! [self publicKey] && ! [anotherRule publicKey] ) || ! [[self publicKey] isEqualToData:[anotherRule publicKey]] )
+		return NO;
+
+	return YES;
 }
 
 - (BOOL) matchChatUser:(MVChatUser *) user {
@@ -162,5 +203,13 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	id old = _publicKey;
 	_publicKey = [publicKey copyWithZone:nil];
 	[old release];
+}
+
+- (BOOL) isInterim {
+	return _interim;
+}
+
+- (void) setInterim:(BOOL) interim {
+	_interim = interim;
 }
 @end
