@@ -1,5 +1,6 @@
 #import "MVChatUserWatchRule.h"
 #import "MVChatUser.h"
+#import "MVChatUserPrivate.h"
 #import "NSNotificationAdditions.h"
 
 #import <AGRegex/AGRegex.h>
@@ -37,22 +38,28 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 			return YES;
 	}
 
-	if( _nicknameRegex && ! [_nicknameRegex findInString:[user nickname]] ) return NO;
-	if( [_nickname length] && ! [_nickname isEqualToString:[user nickname]] ) return NO;
+	NSString *string = [user nickname];
+	if( _nicknameRegex && string && ! [_nicknameRegex findInString:string] ) return NO;
+	if( ! _nicknameRegex && _nickname && string && [_nickname length] && ! [_nickname isEqualToString:string] ) return NO;
 
-	if( _usernameRegex && ! [_usernameRegex findInString:[user username]] ) return NO;
-	if( [_username length] && ! [_username isEqualToString:[user username]] ) return NO;
+	string = [user username];
+	if( _usernameRegex && string && ! [_usernameRegex findInString:string] ) return NO;
+	if( ! _usernameRegex && _username && string && [_username length] && ! [_username isEqualToString:string] ) return NO;
 
-	if( _addressRegex && ! [_addressRegex findInString:[user address]] ) return NO;
-	if( [_address length] && ! [_address isEqualToString:[user address]] ) return NO;
+	string = [user address];
+	if( _addressRegex && string && ! [_addressRegex findInString:string] ) return NO;
+	if( ! _addressRegex && _address && string && [_address length] && ! [_address isEqualToString:string] ) return NO;
 
-	if( _realNameRegex && ! [_realNameRegex findInString:[user realName]] ) return NO;
-	if( [_realName length] && ! [_realName isEqualToString:[user realName]] ) return NO;
+	string = [user realName];
+	if( _realNameRegex && string && ! [_realNameRegex findInString:string] ) return NO;
+	if( ! _realNameRegex && _realName && string && [_realName length] && ! [_realName isEqualToString:string] ) return NO;
 
-	if( [_publicKey length] && ! [_publicKey isEqualToData:[user publicKey]] ) return NO;
+	NSData *data = [user publicKey];
+	if( _publicKey && data && [_publicKey length] && ! [_publicKey isEqualToData:data] ) return NO;
 
 	@synchronized( _matchedChatUsers ) {
 		if( ! [_matchedChatUsers containsObject:user] ) {
+			[user _setWatched:YES];
 			[_matchedChatUsers addObject:user];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleMatchedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
 		}

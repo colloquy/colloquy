@@ -72,51 +72,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	0
 };
 
-/*
-static void MVChatBuddyOnline( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	[user _setRealName:[self stringWithEncodedBytes:realname]];
-	[user _setUsername:[self stringWithEncodedBytes:username]];
-	[user _setAddress:[self stringWithEncodedBytes:host]];
-	if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionWatchedUserOnlineNotification object:user userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVChatBuddyOffline( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:nick]];
-	[user _setStatus:MVChatUserOfflineStatus];
-
-	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionWatchedUserOfflineNotification object:user userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVChatBuddyAway( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-//	NSNotification *note = nil;
-//	if( awaymsg ) note = [NSNotification notificationWithName:MVChatConnectionBuddyIsAwayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", [self stringWithEncodedBytes:awaymsg], @"msg", nil]];
-//	else note = [NSNotification notificationWithName:MVChatConnectionBuddyIsUnawayNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", nil]];
-//	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-
-static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const char *username, const char *host, const char *realname, const char *awaymsg ) {
-	MVIRCChatConnection *self = [MVIRCChatConnection _connectionForServer:(SERVER_REC *)server];
-	if( ! self ) return;
-
-//	NSNotification *note = [NSNotification notificationWithName:MVChatConnectionBuddyIsIdleNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[self stringWithEncodedBytes:nick], @"who", [NSNumber numberWithLong:0], @"idle", nil]];
-//	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-}
-*/
-
 @implementation MVIRCChatConnection
 + (NSArray *) defaultServerPorts {
 	return [NSArray arrayWithObjects:[NSNumber numberWithUnsignedShort:6667],[NSNumber numberWithUnsignedShort:6660],[NSNumber numberWithUnsignedShort:6669],[NSNumber numberWithUnsignedShort:7000],[NSNumber numberWithUnsignedShort:994], nil];
@@ -484,7 +439,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 	[super addChatUserWatchRule:rule];
 
 	if( [self isConnected] && [rule nickname] && ! [rule nicknameIsRegularExpression] ) {
-		if( _watchSupported ) [self sendRawMessageWithFormat:@"WATCH +%@", [rule nickname]];
+		if( _watchCommandSupported ) [self sendRawMessageWithFormat:@"WATCH +%@", [rule nickname]];
 		else [self sendRawMessageWithFormat:@"ISON %@", [rule nickname]];
 	}
 }
@@ -492,7 +447,7 @@ static void MVChatBuddyUnidle( IRC_SERVER_REC *server, const char *nick, const c
 - (void) removeChatUserWatchRule:(MVChatUserWatchRule *) rule {
 	[super removeChatUserWatchRule:rule];
 
-	if( [self isConnected] && _watchSupported && [rule nickname] && ! [rule nicknameIsRegularExpression] )
+	if( [self isConnected] && _watchCommandSupported && [rule nickname] && ! [rule nicknameIsRegularExpression] )
 		[self sendRawMessageWithFormat:@"WATCH -%@", [rule nickname]];
 }
 
@@ -1060,7 +1015,7 @@ end:
 }
 
 - (void) _checkWatchedUsers {
-	if( _watchSupported ) return; // we don't need to call this anymore, return before we reschedule
+	if( _watchCommandSupported ) return; // we don't need to call this anymore, return before we reschedule
 
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:JVWatchedUserISONDelay];
 
@@ -1153,7 +1108,7 @@ end:
 	NSString *feature = nil;
 	while( ( feature = [enumerator nextObject] ) ) {
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
-			_watchSupported = YES;
+			_watchCommandSupported = YES;
 
 			NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
 			[request setString:@"WATCH "];
@@ -1527,6 +1482,7 @@ end:
 			[sender _setIdleTime:0.];
 			[room _addMemberUser:sender];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserJoinedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
+			[self _sendPossibleOnlineNotificationForUser:sender];
 		}
 	}
 }
@@ -1567,6 +1523,8 @@ end:
 		}
 
 		[info release];
+
+		[self _sendPossibleOfflineNotificationForUser:sender];
 	}
 }
 
@@ -1802,9 +1760,11 @@ end:
 				[user refreshInformation];
 
 			if( [_lastSentIsonNicknames containsObject:nick] ) {
-				// online
+				if( ! [user dateConnected] ) [user _setDateConnected:[NSDate date]];
+				[self _sendPossibleOnlineNotificationForUser:user];
 			} else {
-				// offline
+				if( ! [user dateDisconnected] ) [user _setDateDisconnected:[NSDate date]];
+				[self _sendPossibleOfflineNotificationForUser:user];
 			}
 		}
 
@@ -1908,6 +1868,8 @@ end:
 		} else if( status == 'G' ) {
 			[member _setStatus:MVChatUserAwayStatus];
 		}
+
+		[self _sendPossibleOnlineNotificationForUser:member];
 	}
 }
 
@@ -1986,6 +1948,8 @@ end:
 		[user _setAddress:[parameters objectAtIndex:3]];
 		[user _setRealName:[self _stringFromPossibleData:[parameters objectAtIndex:5]]];
 		[user _setDateDisconnected:nil];
+
+		[self _sendPossibleOnlineNotificationForUser:user];
 	}
 }
 
@@ -2072,6 +2036,8 @@ end:
 		[user _setUsername:[parameters objectAtIndex:2]];
 		[user _setAddress:[parameters objectAtIndex:3]];
 		[user _setDateDisconnected:nil];
+
+		[self _sendPossibleOnlineNotificationForUser:user];
 
 		if( [[user dateUpdated] timeIntervalSinceNow] < -240 || ! [user dateUpdated] ) // 4 minutes
 			[user refreshInformation];

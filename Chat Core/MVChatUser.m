@@ -177,6 +177,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _serverOperator;
 }
 
+- (BOOL) isWatched {
+	return _watched;
+}
+
 #pragma mark -
 
 - (BOOL) isEqual:(id) object {
@@ -514,6 +518,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	_identified = identified;
 }
 
+- (void) _setWatched:(BOOL) watched {
+	_watched = watched;
+}
+
 - (void) _setIdleTime:(NSTimeInterval) time {
 	_idleTime = time;
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];
@@ -547,6 +555,14 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	id old = _awayStatusMessage;
 	_awayStatusMessage = [awayStatusMessage copyWithZone:nil];
 	[old release];
+}
+
+- (BOOL) _onlineNotificationSent {
+	return _onlineNotificationSent;
+}
+
+- (void) _setOnlineNotificationSent:(BOOL) sent {
+	_onlineNotificationSent = sent;
 }
 @end
 

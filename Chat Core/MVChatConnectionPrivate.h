@@ -11,4 +11,8 @@
 
 - (void) _addJoinedRoom:(MVChatRoom *) room;
 - (void) _removeJoinedRoom:(MVChatRoom *) room;
+
+- (MVChatUserWatchRule *) _watchRuleMatchingUser:(MVChatUser *) user;
+- (void) _sendPossibleOnlineNotificationForUser:(MVChatUser *) user;
+- (void) _sendPossibleOfflineNotificationForUser:(MVChatUser *) user;
 @end

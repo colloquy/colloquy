@@ -1,10 +1,13 @@
 #import "MVChatConnection.h"
 #import "MVChatRoom.h"
+#import "MVChatRoomPrivate.h"
 #import "MVChatUser.h"
+#import "MVChatUserPrivate.h"
 #import "MVIRCChatConnection.h"
 #import "MVSILCChatConnection.h"
 #import "MVFileTransfer.h"
 #import "MVChatPluginManager.h"
+#import "MVChatUserWatchRule.h"
 #import "NSStringAdditions.h"
 #import "NSAttributedStringAdditions.h"
 #import "NSMethodSignatureAdditions.h"
@@ -44,20 +47,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSNonLossyASCIIStringEncoding,
 	NSASCIIStringEncoding, 0
 };
-
-@interface MVChatRoom (MVChatRoomPrivate)
-- (void) _setDateParted:(NSDate *) date;
-@end
-
-#pragma mark -
-
-@interface MVChatUser (MVChatUserPrivate)
-- (void) _setStatus:(MVChatUserStatus) status;
-- (void) _setDateConnected:(NSDate *) date;
-- (void) _setDateDisconnected:(NSDate *) date;
-@end
-
-#pragma mark -
 
 @implementation MVChatConnection
 + (BOOL) supportsURLScheme:(NSString *) scheme {
@@ -908,6 +897,37 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) _removeJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
 		[_joinedRooms removeObjectForKey:[[room name] lowercaseString]];
+	}
+}
+
+#pragma mark -
+
+- (MVChatUserWatchRule *) _watchRuleMatchingUser:(MVChatUser *) user {
+	@synchronized( _chatUserWatchRules ) {
+		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
+		MVChatUserWatchRule *rule = nil;
+		while( ( rule = [enumerator nextObject] ) ) {
+			if( [rule matchChatUser:user] )
+				return rule;
+		}
+	}
+
+	return nil;
+}
+
+- (void) _sendPossibleOnlineNotificationForUser:(MVChatUser *) user {
+	if( [user _onlineNotificationSent] ) return;
+	if( [user isWatched] || [self _watchRuleMatchingUser:user] ) {
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWatchedUserOnlineNotification object:user userInfo:nil];
+		[user _setOnlineNotificationSent:YES];
+	}
+}
+
+- (void) _sendPossibleOfflineNotificationForUser:(MVChatUser *) user {
+	if( ! [user _onlineNotificationSent] ) return;
+	if( [user isWatched] || [self _watchRuleMatchingUser:user] ) {
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWatchedUserOfflineNotification object:user userInfo:nil];
+		[user _setOnlineNotificationSent:NO];
 	}
 }
 @end

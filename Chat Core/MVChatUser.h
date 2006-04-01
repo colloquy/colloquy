@@ -69,8 +69,10 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 	NSTimeInterval _lag;
 	unsigned long _modes;
 	unsigned int _hash;
-	BOOL _identified;
-	BOOL _serverOperator;
+	BOOL _identified : 1;
+	BOOL _serverOperator : 1;
+	BOOL _watched : 1;
+	BOOL _onlineNotificationSent : 1;
 }
 + (id) wildcardUserFromString:(NSString *) mask;
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host;
@@ -86,6 +88,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 - (BOOL) isIdentified;
 - (BOOL) isServerOperator;
+- (BOOL) isWatched;
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;
