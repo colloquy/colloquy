@@ -91,16 +91,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
 		_fileTransfers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
-
-		MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] init];
-		[rule setNickname:@"xenon"];
-		[self addChatUserWatchRule:rule];
-		[rule release];
-
-		rule = [[MVChatUserWatchRule allocWithZone:nil] init];
-		[rule setNickname:@"/r.+/"];
-		[self addChatUserWatchRule:rule];
-		[rule release];
 	}
 
 	return self;
