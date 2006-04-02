@@ -232,8 +232,8 @@ static MVBuddyListController *sharedInstance = nil;
 		_addPerson = [[person uniqueId] copy];
 		[self showNewPersonSheet:nil];
 	} else {
-		JVBuddy *buddy = [JVBuddy buddyWithPerson:person];
-		[self _addBuddyToList:buddy];
+//		JVBuddy *buddy = [JVBuddy buddyWithPerson:person];
+//		[self _addBuddyToList:buddy];
 		[self _saveBuddyList];
 	}
 }
@@ -337,8 +337,8 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 
 	if( person ) {
-		JVBuddy *buddy = [JVBuddy buddyWithPerson:person];
-		[self _addBuddyToList:buddy];
+//		JVBuddy *buddy = [JVBuddy buddyWithPerson:person];
+//		[self _addBuddyToList:buddy];
 		[self _saveBuddyList];
 	}
 
@@ -973,26 +973,29 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) _saveBuddyList {
-	NSMutableArray *list = [NSMutableArray arrayWithCapacity:[_buddyList count]];
+	NSMutableArray *list = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_buddyList count]];
 	NSEnumerator *enumerator = [_buddyList objectEnumerator];
 	JVBuddy *buddy = nil;
 
 	while( ( buddy = [enumerator nextObject] ) )
-		[list addObject:[buddy uniqueIdentifier]];
+		[list addObject:[buddy dictionaryRepresentation]];
 
-	[[NSUserDefaults standardUserDefaults] setObject:list forKey:@"JVChatBuddies"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+	[list writeToFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath] atomically:YES];
+	[list release];
 }
 
 - (void) _loadBuddyList {
-	NSArray *list = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatBuddies"];
+	NSArray *list = [[NSArray allocWithZone:nil] initWithContentsOfFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath]];
 	NSEnumerator *enumerator = [list objectEnumerator];
-	NSString *identifier = nil;
+	NSDictionary *buddyDictionary = nil;
 
-	while( ( identifier = [enumerator nextObject] ) ) {
-		JVBuddy *buddy = [JVBuddy buddyWithUniqueIdentifier:identifier];
-		if( [[buddy users] count] ) [self _addBuddyToList:buddy];
+	while( ( buddyDictionary = [enumerator nextObject] ) ) {
+		JVBuddy *buddy = [[JVBuddy allocWithZone:[self zone]] initWithDictionaryRepresentation:buddyDictionary];
+		if( buddy ) [self _addBuddyToList:buddy];
+		[buddy release];
 	}
+
+	[list release];
 }
 @end
 

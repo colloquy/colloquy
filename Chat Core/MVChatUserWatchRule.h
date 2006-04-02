@@ -14,6 +14,7 @@ extern NSString *MVChatUserWatchRuleMatchedNotification;
 	NSString *_address;
 	AGRegex *_addressRegex;
 	NSData *_publicKey;
+	NSArray *_applicableServerDomains;
 	BOOL _interim;
 }
 - (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
@@ -46,4 +47,7 @@ extern NSString *MVChatUserWatchRuleMatchedNotification;
 
 - (BOOL) isInterim;
 - (void) setInterim:(BOOL) interim;
+
+- (NSArray *) applicableServerDomains;
+- (void) setApplicableServerDomains:(NSArray *) serverDomains;
 @end

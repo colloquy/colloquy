@@ -423,24 +423,20 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) startWatchingUser:(MVChatUser *) user {
-	NSParameterAssert( user != nil );
-	NSParameterAssert( [[user nickname] length] > 0 );
-
-}
-
-- (void) stopWatchingUser:(MVChatUser *) user {
-	NSParameterAssert( user != nil );
-	NSParameterAssert( [[user nickname] length] > 0 );
-
-}
-
 - (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule {
+	@synchronized( _chatUserWatchRules ) {
+		if( [_chatUserWatchRules containsObject:rule] ) return;
+	}
+
 	[super addChatUserWatchRule:rule];
 
-	if( [self isConnected] && [rule nickname] && ! [rule nicknameIsRegularExpression] ) {
-		if( _watchCommandSupported ) [self sendRawMessageWithFormat:@"WATCH +%@", [rule nickname]];
-		else [self sendRawMessageWithFormat:@"ISON %@", [rule nickname]];
+	if( [rule nickname] && ! [rule nicknameIsRegularExpression] ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[rule nickname]];
+		[rule matchChatUser:user];
+		if( [self isConnected] ) {
+			if( _watchCommandSupported ) [self sendRawMessageWithFormat:@"WATCH +%@", [rule nickname]];
+			else [self sendRawMessageWithFormat:@"ISON %@", [rule nickname]];
+		}
 	}
 }
 
@@ -627,10 +623,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	[old release];
 
 	_isonSentCount = 0;
-
-	@synchronized( _knownUsers ) {
-		[_knownUsers removeAllObjects];
-	}
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _periodicCleanUp ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];

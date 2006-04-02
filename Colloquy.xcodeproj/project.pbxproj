@@ -474,6 +474,7 @@
 		1C0A4CE40799BE660093B702 /* JVTranscriptFindWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVTranscriptFindWindowController.m; path = Controllers/JVTranscriptFindWindowController.m; sourceTree = "<group>"; };
 		1C0A4CF40799BEA70093B702 /* JVViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVViewCell.h; path = Views/JVViewCell.h; sourceTree = "<group>"; };
 		1C0A4CF50799BEA70093B702 /* JVViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVViewCell.m; path = Views/JVViewCell.m; sourceTree = "<group>"; };
+		1C0B2F0809DF8A8B009952E7 /* MVChatUserWatchRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUserWatchRule.h; path = "Chat Core/MVChatUserWatchRule.h"; sourceTree = "<group>"; };
 		1C18CD100528DBBA000001C8 /* NSColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSColorAdditions.h; path = Additions/NSColorAdditions.h; sourceTree = "<group>"; };
 		1C1ACE410533943900F71D4E /* JVInspectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVInspectorController.h; path = Controllers/JVInspectorController.h; sourceTree = "<group>"; };
 		1C1ACE420533943900F71D4E /* JVInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVInspectorController.m; path = Controllers/JVInspectorController.m; sourceTree = "<group>"; };
@@ -1653,6 +1654,7 @@
 				1C5A1A1106F8F42C00A51F10 /* MVChatConnection.h */,
 				1CDDCF830716208300FE11C3 /* MVChatRoom.h */,
 				1CDDCF840716208300FE11C3 /* MVChatUser.h */,
+				1C0B2F0809DF8A8B009952E7 /* MVChatUserWatchRule.h */,
 				1C8CF8E1066530D60080A2F5 /* MVFileTransfer.h */,
 				1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */,
 				1C18CD100528DBBA000001C8 /* NSColorAdditions.h */,

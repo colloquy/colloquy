@@ -16,6 +16,7 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 		[self setAddress:[dictionary objectForKey:@"address"]];
 		[self setPublicKey:[dictionary objectForKey:@"publicKey"]];
 		[self setInterim:[[dictionary objectForKey:@"interim"] boolValue]];
+		[self setApplicableServerDomains:[dictionary objectForKey:@"applicableServerDomains"]];
 	}
 
 	return self;
@@ -29,6 +30,7 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	[self setAddress:[self address]];
 	[self setPublicKey:[self publicKey]];
 	[self setInterim:[self isInterim]];
+	[self setApplicableServerDomains:[self applicableServerDomains]];
 	return copy;
 }
 
@@ -40,6 +42,7 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	if( _address ) [dictionary setObject:_nickname forKey:@"address"];
 	if( _publicKey ) [dictionary setObject:_nickname forKey:@"publicKey"];
 	if( _interim ) [dictionary setObject:[NSNumber numberWithBool:_interim] forKey:@"interim"];
+	if( _applicableServerDomains ) [dictionary setObject:_applicableServerDomains forKey:@"applicableServerDomains"];
 	return [dictionary autorelease];
 }
 
@@ -80,23 +83,27 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	}
 
 	NSString *string = [user nickname];
-	if( _nicknameRegex && string && ! [_nicknameRegex findInString:string] ) return NO;
-	if( ! _nicknameRegex && _nickname && string && [_nickname length] && ! [_nickname isEqualToString:string] ) return NO;
+	if( _nicknameRegex && ! string ) return NO;
+	if( _nicknameRegex && ! [_nicknameRegex findInString:string] ) return NO;
+	if( ! _nicknameRegex && _nickname && [_nickname length] && ! [_nickname isEqualToString:string] ) return NO;
 
 	string = [user username];
-	if( _usernameRegex && string && ! [_usernameRegex findInString:string] ) return NO;
-	if( ! _usernameRegex && _username && string && [_username length] && ! [_username isEqualToString:string] ) return NO;
+	if( _usernameRegex && ! string ) return NO;
+	if( _usernameRegex && ! [_usernameRegex findInString:string] ) return NO;
+	if( ! _usernameRegex && _username && [_username length] && ! [_username isEqualToString:string] ) return NO;
 
 	string = [user address];
-	if( _addressRegex && string && ! [_addressRegex findInString:string] ) return NO;
-	if( ! _addressRegex && _address && string && [_address length] && ! [_address isEqualToString:string] ) return NO;
+	if( _addressRegex && ! string ) return NO;
+	if( _addressRegex && ! [_addressRegex findInString:string] ) return NO;
+	if( ! _addressRegex && _address && [_address length] && ! [_address isEqualToString:string] ) return NO;
 
 	string = [user realName];
-	if( _realNameRegex && string && ! [_realNameRegex findInString:string] ) return NO;
-	if( ! _realNameRegex && _realName && string && [_realName length] && ! [_realName isEqualToString:string] ) return NO;
+	if( _realNameRegex && ! string ) return NO;
+	if( _realNameRegex && ! [_realNameRegex findInString:string] ) return NO;
+	if( ! _realNameRegex && _realName && [_realName length] && ! [_realName isEqualToString:string] ) return NO;
 
 	NSData *data = [user publicKey];
-	if( _publicKey && data && [_publicKey length] && ! [_publicKey isEqualToData:data] ) return NO;
+	if( _publicKey && [_publicKey length] && ! [_publicKey isEqualToData:data] ) return NO;
 
 	@synchronized( _matchedChatUsers ) {
 		if( ! [_matchedChatUsers containsObject:user] ) {
@@ -211,5 +218,15 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 
 - (void) setInterim:(BOOL) interim {
 	_interim = interim;
+}
+
+- (NSArray *) applicableServerDomains {
+	return [[_applicableServerDomains retain] autorelease];
+}
+
+- (void) setApplicableServerDomains:(NSArray *) serverDomains {
+	id old = _applicableServerDomains;
+	_applicableServerDomains = [serverDomains copyWithZone:nil];
+	[old release];
 }
 @end

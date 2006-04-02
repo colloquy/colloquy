@@ -1,6 +1,7 @@
 .objc_class_name_MVChatConnection
 .objc_class_name_MVChatRoom
 .objc_class_name_MVChatUser
+.objc_class_name_MVChatUserWatchRule
 .objc_class_name_MVFileTransfer
 .objc_class_name_MVDownloadFileTransfer
 .objc_class_name_MVUploadFileTransfer
@@ -66,6 +67,7 @@ _MVChatUserIdleTimeUpdatedNotification
 _MVChatUserModeChangedNotification
 _MVChatUserInformationUpdatedNotification
 _MVChatUserAttributeUpdatedNotification
+_MVChatUserWatchRuleMatchedNotification
 _MVDownloadFileTransferOfferNotification
 _MVFileTransferStartedNotification
 _MVFileTransferFinishedNotification

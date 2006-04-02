@@ -30,7 +30,7 @@
 		1C7B83CC0668D765004F1EFE /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7B83CA0668D765004F1EFE /* NSNotificationAdditions.m */; };
 		1C7C776907DBBA4500FB5F83 /* NSScriptCommandAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C7C776707DBBA4500FB5F83 /* NSScriptCommandAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C7C776A07DBBA4500FB5F83 /* NSScriptCommandAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C776807DBBA4500FB5F83 /* NSScriptCommandAdditions.m */; };
-		1C8AAEFE09D69F2700CF29EB /* MVChatUserWatchRule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C8AAEFC09D69F2700CF29EB /* MVChatUserWatchRule.h */; };
+		1C8AAEFE09D69F2700CF29EB /* MVChatUserWatchRule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C8AAEFC09D69F2700CF29EB /* MVChatUserWatchRule.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C8AAEFF09D69F2700CF29EB /* MVChatUserWatchRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8AAEFD09D69F2700CF29EB /* MVChatUserWatchRule.m */; };
 		1C8AAF2B09D6A0A100CF29EB /* AGRegex.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C8AAF2609D6A0A100CF29EB /* AGRegex.framework */; };
 		1C913FA30704FE7D00CBA5F1 /* MVChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5CC07B06FFCB0B0006C5B1 /* MVChatRoom.m */; };

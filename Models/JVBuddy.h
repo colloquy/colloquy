@@ -9,6 +9,7 @@ extern NSString *JVBuddyUserIdleTimeUpdatedNotification;
 extern NSString *JVBuddyActiveUserChangedNotification;
 
 @class ABPerson;
+@class MVChatUserWatchRule;
 
 extern NSString * const JVBuddyAddressBookIRCNicknameProperty;
 extern NSString* const JVBuddyAddressBookSpeechVoiceProperty;
@@ -21,6 +22,7 @@ typedef enum {
 
 @interface JVBuddy : NSObject {
 	ABPerson *_person;
+	NSMutableArray *_rules;
 	NSMutableArray *_users;
 	NSMutableSet *_onlineUsers;
 	MVChatUser *_activeUser;
@@ -28,10 +30,8 @@ typedef enum {
 + (JVBuddyName) preferredName;
 + (void) setPreferredName:(JVBuddyName) preferred;
 
-+ (id) buddyWithPerson:(ABPerson *) person;
-+ (id) buddyWithUniqueIdentifier:(NSString *) identifier;
-
-- (id) initWithPerson:(ABPerson *) person;
+- (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
+- (NSDictionary *) dictionaryRepresentation;
 
 - (void) registerWithApplicableConnections;
 - (void) unregisterWithApplicableConnections;
@@ -54,9 +54,8 @@ typedef enum {
 - (NSArray *) users;
 - (NSSet *) onlineUsers;
 
-- (void) addUser:(MVChatUser *) user;
-- (void) removeUser:(MVChatUser *) user;
-- (void) replaceUser:(MVChatUser *) oldUser withUser:(MVChatUser *) newUser;
+- (void) addWatchRule:(MVChatUserWatchRule *) rule;
+- (void) removeWatchRule:(MVChatUserWatchRule *) rule;
 
 - (NSImage *) picture;
 - (void) setPicture:(NSImage *) picture;

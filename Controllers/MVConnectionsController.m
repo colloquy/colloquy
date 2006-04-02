@@ -558,7 +558,7 @@ static NSMenu *favoritesMenu = nil;
 	id info = nil;
 
 	while( ( info = [enumerator nextObject] ) ) {
-		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] caseInsensitiveCompare:address] == NSOrderedSame ) {
+		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] compare:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch )] == NSOrderedSame ) {
 			ret = [info objectForKey:@"connection"];
 			if( [ret isConnected] ) return ret;
 		}
@@ -573,7 +573,7 @@ static NSMenu *favoritesMenu = nil;
 	id info = nil;
 
 	while( ( info = [enumerator nextObject] ) )
-		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] caseInsensitiveCompare:address] == NSOrderedSame )
+		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] compare:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch )] == NSOrderedSame )
 			[ret addObject:[info objectForKey:@"connection"]];
 
 	return [[ret retain] autorelease];

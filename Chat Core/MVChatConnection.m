@@ -665,23 +665,18 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) startWatchingUser:(MVChatUser *) user {
-// subclass this method, if needed
-}
-
-- (void) stopWatchingUser:(MVChatUser *) user {
-// subclass this method, if needed
-}
-
 - (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule {
+	NSParameterAssert( rule != nil );
 	if( ! _chatUserWatchRules )
 		_chatUserWatchRules = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 	@synchronized( _chatUserWatchRules ) {
-		[_chatUserWatchRules addObject:rule];
+		if( ! [_chatUserWatchRules containsObject:rule] )
+			[_chatUserWatchRules addObject:rule];
 	}
 }
 
 - (void) removeChatUserWatchRule:(MVChatUserWatchRule *) rule {
+	NSParameterAssert( rule != nil );
 	@synchronized( _chatUserWatchRules ) {
 		[_chatUserWatchRules removeObject:rule];
 	}

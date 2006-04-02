@@ -251,11 +251,6 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (void) startWatchingUser:(MVChatUser *) user;
-- (void) stopWatchingUser:(MVChatUser *) user;
-
-#pragma mark -
-
 - (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule;
 - (void) removeChatUserWatchRule:(MVChatUserWatchRule *) rule;
 
