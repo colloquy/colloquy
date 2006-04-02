@@ -119,7 +119,7 @@
 
 - (IBAction) removeNickname:(id) sender {
 	if( [nicknames selectedRow] == -1 || [nicknames editedRow] != -1 ) return;
-	[_buddy removeUser:[_activeUsers objectAtIndex:[nicknames selectedRow]]];
+//	[_buddy removeUser:[_activeUsers objectAtIndex:[nicknames selectedRow]]];
 	[_activeUsers removeObjectAtIndex:[nicknames selectedRow]];
 	[nicknames noteNumberOfRowsChanged];
 }
@@ -187,10 +187,10 @@
 	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:[NSString stringWithFormat:@"%@@%@", object, server] andHostMask:nil];
 
 	if( [[_activeUsers objectAtIndex:row] isMemberOfClass:[NSNull class]] ) {
-		[_buddy addUser:user];
+//		[_buddy addUser:user];
 		[_activeUsers replaceObjectAtIndex:row withObject:user];
 	} else {
-		[_buddy replaceUser:[_activeUsers objectAtIndex:row] withUser:user];
+//		[_buddy replaceUser:[_activeUsers objectAtIndex:row] withUser:user];
 		[_activeUsers replaceObjectAtIndex:row withObject:user];
 	}
 }
