@@ -123,6 +123,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_sendQueueTimer release];
 	[_queueWait release];
 	[_lastCommand release];
+	[_matchedUsers release];
 
 	_chatConnection = nil;
 	_connectionThread = nil;
@@ -140,6 +141,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_sendQueueTimer = nil;
 	_queueWait = nil;
 	_lastCommand = nil;
+	_matchedUsers = nil;
 
 	[super dealloc];
 }
@@ -620,6 +622,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	old = _lastSentIsonNicknames;
 	_lastSentIsonNicknames = nil;
+	[old release];
+
+	old = _matchedUsers;
+	_matchedUsers = nil;
 	[old release];
 
 	_isonSentCount = 0;
