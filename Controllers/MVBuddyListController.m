@@ -165,7 +165,7 @@ static MVBuddyListController *sharedInstance = nil;
 	JVBuddy *buddy = nil;
 
 	while( ( buddy = [enumerator nextObject] ) )
-		if( [[buddy onlineUsers] containsObject:user] )
+		if( [[buddy users] containsObject:user] )
 			return buddy;
 
 	return nil;
@@ -640,11 +640,7 @@ static MVBuddyListController *sharedInstance = nil;
 		}
 	} else if( [[column identifier] isEqualToString:@"switch"] ) {
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
-		NSSet *onlineUsers = [buddy onlineUsers];
-		id users = nil;
-
-		if( _showOfflineBuddies ) users = [buddy users];
-		else users = onlineUsers;
+		id users = [buddy users];
 
 		if( [users count] >= 2 ) {
 			NSMutableArray *ordered = nil;
@@ -684,10 +680,7 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) tableColumn row:(int) row {
 	if( row == -1 || row >= [_buddyOrder count] ) return;
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
-	id users = nil;
-
-	if( _showOfflineBuddies ) users = [buddy users];
-	else users = [buddy onlineUsers];
+	id users = [buddy users];
 
 	NSMutableArray *ordered = nil;
 	if( [users isKindOfClass:[NSArray class]] ) ordered = [users mutableCopyWithZone:nil];

@@ -24,7 +24,6 @@ typedef enum {
 	ABPerson *_person;
 	NSMutableArray *_rules;
 	NSMutableArray *_users;
-	NSMutableSet *_onlineUsers;
 	MVChatUser *_activeUser;
 }
 + (JVBuddyName) preferredName;
@@ -52,7 +51,6 @@ typedef enum {
 - (NSString *) nickname;
 
 - (NSArray *) users;
-- (NSSet *) onlineUsers;
 
 - (void) addWatchRule:(MVChatUserWatchRule *) rule;
 - (void) removeWatchRule:(MVChatUserWatchRule *) rule;

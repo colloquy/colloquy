@@ -897,22 +897,23 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (MVChatUserWatchRule *) _watchRuleMatchingUser:(MVChatUser *) user {
+- (unsigned int) _watchRulesMatchingUser:(MVChatUser *) user {
+	unsigned int count = 0;
 	@synchronized( _chatUserWatchRules ) {
 		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
 		MVChatUserWatchRule *rule = nil;
 		while( ( rule = [enumerator nextObject] ) ) {
 			if( [rule matchChatUser:user] )
-				return rule;
+				count++;
 		}
 	}
 
-	return nil;
+	return count;
 }
 
 - (void) _sendPossibleOnlineNotificationForUser:(MVChatUser *) user {
 	if( [user _onlineNotificationSent] ) return;
-	if( [user isWatched] || [self _watchRuleMatchingUser:user] ) {
+	if( [user isWatched] || [self _watchRulesMatchingUser:user] ) {
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWatchedUserOnlineNotification object:user userInfo:nil];
 		[user _setOnlineNotificationSent:YES];
 	}
@@ -920,7 +921,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _sendPossibleOfflineNotificationForUser:(MVChatUser *) user {
 	if( ! [user _onlineNotificationSent] ) return;
-	if( [user isWatched] || [self _watchRuleMatchingUser:user] ) {
+	if( [user isWatched] ) {
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWatchedUserOfflineNotification object:user userInfo:nil];
 		[user _setOnlineNotificationSent:NO];
 	}

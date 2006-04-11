@@ -16,6 +16,7 @@
 	NSMutableArray *_sendQueue;
 	NSTimer *_sendQueueTimer;
 	NSMutableDictionary *_knownUsers;
+	NSMutableSet *_matchedUsers;
 	NSMutableSet *_fileTransfers;
 	NSString *_server;
 	NSString *_currentNickname;

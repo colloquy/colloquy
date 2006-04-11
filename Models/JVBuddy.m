@@ -35,7 +35,6 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	if( ( self = [super init] ) ) {
 		_rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
 		_users = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
-		_onlineUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 		_activeUser = nil;
 
 		NSEnumerator *enumerator = [[dictionary objectForKey:@"rules"] objectEnumerator];
@@ -63,13 +62,11 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	[_person release];
 	[_rules release];
 	[_users release];
-	[_onlineUsers release];
 	[_activeUser release];
 
 	_person = nil;
 	_users = nil;
 	_rules = nil;
-	_onlineUsers = nil;
 	_activeUser = nil;
 
 	[super dealloc];
@@ -161,7 +158,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 #pragma mark -
 
 - (BOOL) isOnline {
-	return ( [_onlineUsers count] > 0 ? YES : NO );
+	return ( [_users count] > 0 ? YES : NO );
 }
 
 - (NSDate *) dateConnected {
@@ -203,10 +200,6 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 - (NSArray *) users {
 	return _users;
-}
-
-- (NSSet *) onlineUsers {
-	return _onlineUsers;
 }
 
 #pragma mark -
@@ -417,27 +410,23 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 @implementation JVBuddy (JVBuddyPrivate)
 - (void) _buddyOnline:(NSNotification *) notification {
 	MVChatUser *user = [notification object];
-	BOOL cameOnline = ( ! [_onlineUsers count] ? YES : NO );
-	[_onlineUsers addObject:user];
+	BOOL cameOnline = ( ! [_users count] ? YES : NO );
+	[_users addObject:user];
 
 	if( [self status] != MVChatUserAvailableStatus || [self status] != MVChatUserAwayStatus ) [self setActiveUser:user];
 	if( cameOnline ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserCameOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
 }
 
 - (void) _buddyOffline:(NSNotification *) notification {
 	MVChatUser *user = [notification object];
-
-	[_onlineUsers removeObject:user];
+	[_users removeObject:user];
 
 	if( [[self activeUser] isEqualToChatUser:user] ) {
-		if( [_onlineUsers count] ) [self setActiveUser:[_onlineUsers anyObject]];
-		else [self setActiveUser:[_users lastObject]];
+		if( [_users count] ) [self setActiveUser:[_users lastObject]];
+		else [self setActiveUser:nil];
 	}
 
-	if( ! [_onlineUsers count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+	if( ! [_users count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 }
 
 - (void) _buddyIdleUpdate:(NSNotification *) notification {
@@ -472,13 +461,13 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 - (void) _disconnected:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
-	NSEnumerator *enumerator = [[[_onlineUsers copy] autorelease] objectEnumerator];
+	NSEnumerator *enumerator = [[[_users copy] autorelease] objectEnumerator];
 	MVChatUser *user = nil;
 
 	while( ( user = [enumerator nextObject] ) ) {
 		if( [[user connection] isEqual:connection] ) {
-			[_onlineUsers removeObject:user];
-			if( ! [_onlineUsers count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
+			[_users removeObject:user];
+			if( ! [_users count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 		}
 	}
 }
@@ -522,7 +511,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 - (NSArray *) onlineNicknamesArray {
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_users count]];
-	NSEnumerator *enumerator = [_onlineUsers objectEnumerator];
+	NSEnumerator *enumerator = [_users objectEnumerator];
 	NSURL *nick = nil;
 
 	while( ( nick = [enumerator nextObject] ) ) {
