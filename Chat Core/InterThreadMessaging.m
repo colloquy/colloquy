@@ -275,6 +275,11 @@ static void
 performSelector (InterThreadMessageType type, SEL selector, id receiver,
                  id object1, id object2, NSThread *thread, NSDate *limitDate)
 {
+	if( [thread isEqual:[NSThread currentThread]] ) {
+		[receiver performSelector:selector withObject:object1 withObject:object2];
+		return;
+	}
+
     InterThreadMessage *msg;
 
     assert(NULL != selector);
@@ -296,6 +301,11 @@ static void
 postNotification (NSNotification *notification, NSThread *thread,
                   NSDate *limitDate)
 {
+	if( [thread isEqual:[NSThread currentThread]] ) {
+		[[NSNotificationCenter defaultCenter] postNotification:notification];
+		return;
+	}
+
     InterThreadMessage *msg;
 
     assert(nil != notification);
