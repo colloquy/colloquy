@@ -1011,6 +1011,14 @@ end:
 	return count;
 }
 
+- (void) _sendPossibleOfflineNotificationForUser:(MVChatUser *) user {
+	@synchronized( _matchedUsers ) {
+		if( [user isWatched] ) [_matchedUsers removeObject:user];
+	}
+
+	[super _sendPossibleOfflineNotificationForUser:user];
+}
+
 - (void) _whoisWatchedUsers {
 	[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
 
@@ -2041,6 +2049,24 @@ end:
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 			[user _setIdentified:YES];
 		}
+	}
+}
+
+#pragma mark -
+#pragma mark Watch Replies
+
+- (void) _handle401WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOSUCHNICK
+	if( [parameters count] >= 2 ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		[self _sendPossibleOfflineNotificationForUser:user];
+	}
+}
+
+- (void) _handle402WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOSUCHSERVER
+	// some servers send back 402 (No such server) when we send our double nickname WHOIS requests, treat as a user
+	if( [parameters count] >= 2 ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		[self _sendPossibleOfflineNotificationForUser:user];
 	}
 }
 
