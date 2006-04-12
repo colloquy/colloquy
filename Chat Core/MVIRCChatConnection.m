@@ -1077,6 +1077,30 @@ end:
 		}
 	}
 
+	@synchronized( _chatUserWatchRules ) {
+		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
+		MVChatUserWatchRule *rule = nil;
+
+		while( ( rule = [enumerator nextObject] ) ) {
+			NSString *nick = [rule nickname];
+            if( nick && ! [rule nicknameIsRegularExpression] && ! [_lastSentIsonNicknames containsObject:nick] ) { 
+				if( ( [nick length] + [request length] ) > 510 ) {
+					[self sendRawMessage:request];
+					[request release];
+					_isonSentCount++;
+
+					request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
+					[request setString:@"ISON "];
+				}
+
+				[request appendString:nick];
+				[request appendString:@" "];
+
+				[_lastSentIsonNicknames addObject:nick];
+			}
+		}
+	}
+
 	if( ! [request isEqualToString:@"ISON "] ) {
 		[self sendRawMessage:request];
 		_isonSentCount++;
