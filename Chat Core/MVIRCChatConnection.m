@@ -15,7 +15,9 @@
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
 
-#define JVMaximumCommandsSentAtOnce 5
+#define JVMinimumSendQueueDelay 0.2
+#define JVMaximumSendQueueDelay 3.0
+#define JVSendQueueDelayIncrement 0.05
 #define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
 
@@ -120,10 +122,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_threadWaitLock release];
 	[_lastSentIsonNicknames release];
 	[_sendQueue release];
-	[_sendQueueTimer release];
 	[_queueWait release];
 	[_lastCommand release];
 	[_matchedUsers release];
+	[_pendingWhoisUsers release];
 
 	_chatConnection = nil;
 	_connectionThread = nil;
@@ -138,10 +140,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	_threadWaitLock = nil;
 	_lastSentIsonNicknames = nil;
 	_sendQueue = nil;
-	_sendQueueTimer = nil;
 	_queueWait = nil;
 	_lastCommand = nil;
 	_matchedUsers = nil;
+	_pendingWhoisUsers = nil;
 
 	[super dealloc];
 }
@@ -177,6 +179,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:120.] retain];
 	[old release];
 
+	[self _resetSendQueueInterval];
+
 	[self _willConnect]; // call early so other code has a chance to change our info
 
 	[NSThread detachNewThreadSelector:@selector( _ircRunloop ) toTarget:self withObject:nil];
@@ -190,8 +194,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
 	[self cancelPendingReconnectAttempts];
-	if( _sendQueueTimer && _connectionThread )
-		[self performSelector:@selector( _stopSendQueueTimer ) withObject:nil inThread:_connectionThread];
+	if( _sendQueueProcessing && _connectionThread )
+		[self performSelector:@selector( _stopSendQueue ) withObject:nil inThread:_connectionThread];
 
 	if( _status == MVChatConnectionConnectedStatus ) {
 		if( [[reason string] length] ) {
@@ -321,7 +325,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 
 		if( now ) now = ( ! _queueWait || [_queueWait timeIntervalSinceNow] <= 0. );
-		if( now ) now = ( ! _lastCommand || [_lastCommand timeIntervalSinceNow] <= -0.2 );
+		if( now ) now = ( ! _lastCommand || [_lastCommand timeIntervalSinceNow] <= -JVMinimumSendQueueDelay );
 	}
 
 	if( now ) {
@@ -338,8 +342,8 @@ static const NSStringEncoding supportedEncodings[] = {
 			[_sendQueue addObject:raw];
 		}
 
-		if( ! _sendQueueTimer && _connectionThread )
-			[self performSelector:@selector( _startQueueTimer ) withObject:nil inThread:_connectionThread];
+		if( ! _sendQueueProcessing && _connectionThread )
+			[self performSelector:@selector( _startSendQueue ) withObject:nil inThread:_connectionThread];
 	}
 }
 
@@ -606,7 +610,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[old setDelegate:nil];
 	[old release];
 
-	[self _stopSendQueueTimer];
+	[self _stopSendQueue];
 
 	@synchronized( _sendQueue ) {
 		[_sendQueue removeAllObjects];
@@ -626,6 +630,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	old = _matchedUsers;
 	_matchedUsers = nil;
+	[old release];
+
+	old = _pendingWhoisUsers;
+	_pendingWhoisUsers = nil;
 	[old release];
 
 	_isonSentCount = 0;
@@ -945,32 +953,48 @@ end:
 	[self performSelector:@selector( _periodicCleanUp ) withObject:nil afterDelay:600.];
 }
 
-- (void) _startQueueTimer {
-	if( _sendQueueTimer ) return;
-	_sendQueueTimer = [[NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector( _sendQueue ) userInfo:nil repeats:YES] retain];
+- (void) _startSendQueue {
+	if( _sendQueueProcessing ) return;
+	_sendQueueProcessing = YES;
+	if( _queueWait && [_queueWait timeIntervalSinceNow] > 0. )
+		[self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:[_queueWait timeIntervalSinceNow]];
+	else [self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:JVMinimumSendQueueDelay];
 }
 
-- (void) _stopSendQueueTimer {
-	id old = _sendQueueTimer;
-	_sendQueueTimer = nil;
-	[old invalidate];
-	[old release];
+- (void) _stopSendQueue {
+	_sendQueueProcessing = NO;
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _sendQueue ) object:nil];
+}
+
+- (void) _resetSendQueueInterval {
+	[self _stopSendQueue];
+	@synchronized( _sendQueue ) {
+		if( [_sendQueue count] )
+			[self _startSendQueue];
+	}
 }
 
 - (void) _sendQueue {
 	@synchronized( _sendQueue ) {
 		if( ! [_sendQueue count] ) {
-			[self _stopSendQueueTimer];
+			_sendQueueProcessing = NO;
 			return;
 		}
 	}
 
-	if( _queueWait && [_queueWait timeIntervalSinceNow] > 0. ) return;
+	if( _queueWait && [_queueWait timeIntervalSinceNow] > 0. ) {
+		[self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:[_queueWait timeIntervalSinceNow]];
+		return;
+	}
 
 	NSData *data = nil;
 	@synchronized( _sendQueue ) {
 		data = [[_sendQueue objectAtIndex:0] retain];
 		[_sendQueue removeObjectAtIndex:0];
+
+		if( [_sendQueue count] )
+			[self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:MIN( JVMinimumSendQueueDelay + ( [_sendQueue count] * JVSendQueueDelayIncrement ), JVMaximumSendQueueDelay )];
+		else _sendQueueProcessing = NO;
 	}
 
 	[self _writeDataToServer:data];
@@ -1025,6 +1049,21 @@ end:
 	[super _sendPossibleOfflineNotificationForUser:user];
 }
 
+- (void) _scheduleWhoisForUser:(MVChatUser *) user {
+	if( ! _pendingWhoisUsers )
+		_pendingWhoisUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:50];
+	[_pendingWhoisUsers addObject:user];
+	if( [_pendingWhoisUsers count] == 1 )
+		[self _whoisNextScheduledUser];
+}
+
+- (void) _whoisNextScheduledUser {
+	if( [_pendingWhoisUsers count] ) {
+		MVChatUser *user = [_pendingWhoisUsers anyObject];
+		[user refreshInformation];
+	}
+}
+
 - (void) _whoisWatchedUsers {
 	[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
 
@@ -1034,7 +1073,7 @@ end:
 		NSEnumerator *enumerator = [_matchedUsers objectEnumerator];
 		MVChatUser *user = nil;
 		while( ( user = [enumerator nextObject] ) )
-			[self sendRawMessageWithFormat:@"WHOIS %@ %1$@", [user nickname]];
+			[self _scheduleWhoisForUser:user];
 	}
 }
 
@@ -1043,8 +1082,13 @@ end:
 
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:JVWatchedUserISONDelay];
 
+	if( [_lastSentIsonNicknames count] ) return; // there is already pending ISON requests, skip this round to catch up
+
 	@synchronized( _matchedUsers ) {
-		if( ! [_matchedUsers count] ) return; // nothing to do, return and wait until the next scheduled fire
+		@synchronized( _chatUserWatchRules ) {
+			if( ! [_matchedUsers count] && ! [_chatUserWatchRules count] )
+				return; // nothing to do, return and wait until the next scheduled fire
+		}
 	}
 
 	NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
@@ -1131,6 +1175,8 @@ end:
 	id old = _queueWait;
 	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:0.5] retain];
 	[old release];
+
+	[self _resetSendQueueInterval];
 
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];	
 
@@ -1571,6 +1617,8 @@ end:
 		[info release];
 
 		[self _sendPossibleOfflineNotificationForUser:sender];
+
+		[_pendingWhoisUsers removeObject:sender];
 	}
 }
 
@@ -1805,11 +1853,11 @@ end:
 		while( ( nick = [enumerator nextObject] ) ) {
 			if( ! [nick length] ) continue;
 
-			MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
-			if( [[user dateUpdated] timeIntervalSinceNow] < -240 || ! [user dateUpdated] ) // 4 minutes
-				[user refreshInformation];
-
 			if( [_lastSentIsonNicknames containsObject:nick] ) {
+				MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
+				if( [[user dateUpdated] timeIntervalSinceNow] < -240. || ! [user dateUpdated] ) // 4 minutes
+					[self _scheduleWhoisForUser:user];
+
 				if( ! [user dateConnected] ) [user _setDateConnected:[NSDate date]];
 				[self _sendPossibleOnlineNotificationForUser:user];
 				[_lastSentIsonNicknames removeObject:nick];
@@ -2046,6 +2094,11 @@ end:
 		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
+
+		if( [_pendingWhoisUsers containsObject:user] ) {
+			[_pendingWhoisUsers removeObject:user];
+			[self _whoisNextScheduledUser];
+		}
 	}
 }
 
@@ -2083,12 +2136,16 @@ end:
 }
 
 #pragma mark -
-#pragma mark Watch Replies
+#pragma mark Error Replies
 
 - (void) _handle401WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOSUCHNICK
 	if( [parameters count] >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[self _sendPossibleOfflineNotificationForUser:user];
+		if( [_pendingWhoisUsers containsObject:user] ) {
+			[_pendingWhoisUsers removeObject:user];
+			[self _whoisNextScheduledUser];
+		}
 	}
 }
 
@@ -2097,6 +2154,10 @@ end:
 	if( [parameters count] >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[self _sendPossibleOfflineNotificationForUser:user];
+		if( [_pendingWhoisUsers containsObject:user] ) {
+			[_pendingWhoisUsers removeObject:user];
+			[self _whoisNextScheduledUser];
+		}
 	}
 }
 
@@ -2112,24 +2173,14 @@ end:
 
 		[self _sendPossibleOnlineNotificationForUser:user];
 
-		if( [[user dateUpdated] timeIntervalSinceNow] < -240 || ! [user dateUpdated] ) // 4 minutes
-			[user refreshInformation];
+		if( [[user dateUpdated] timeIntervalSinceNow] < -240. || ! [user dateUpdated] ) // 4 minutes
+			[self _scheduleWhoisForUser:user];
 	}
 }
 
 - (void) _handle600WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LOGON_BAHAMUT_UNREAL
 	if( [parameters count] >= 5 ) {
 		[self _handle604WithParameters:parameters fromSender:sender]; // do everything we do above
-
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		// send online notification
-	}
-}
-
-- (void) _handle601WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LOGOFF_BAHAMUT_UNREAL
-	if( [parameters count] >= 5 ) {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		// send offline notification
 	}
 }
 @end

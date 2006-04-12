@@ -76,7 +76,14 @@
 #pragma mark -
 
 - (void) refreshInformation {
+	if( _hasPendingRefreshInformationRequest ) return;
+	_hasPendingRefreshInformationRequest = YES;
 	[[self connection] sendRawMessageWithFormat:@"WHOIS %@ %1$@", [self nickname]];
+}
+
+- (void) _setDateUpdated:(NSDate *) date {
+	_hasPendingRefreshInformationRequest = NO;
+	[super _setDateUpdated:date];
 }
 
 - (void) refreshAttributeForKey:(NSString *) key {

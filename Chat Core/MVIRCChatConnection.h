@@ -14,9 +14,9 @@
 	NSDate *_queueWait;
 	NSDate *_lastCommand;
 	NSMutableArray *_sendQueue;
-	NSTimer *_sendQueueTimer;
 	NSMutableDictionary *_knownUsers;
 	NSMutableSet *_matchedUsers;
+	NSMutableSet *_pendingWhoisUsers;
 	NSMutableSet *_fileTransfers;
 	NSString *_server;
 	NSString *_currentNickname;
@@ -28,7 +28,8 @@
 	NSConditionLock *_threadWaitLock;
 	unsigned short _serverPort;
 	unsigned short _isonSentCount;
-	BOOL _watchCommandSupported;
+	BOOL _watchCommandSupported : 1;
+	BOOL _sendQueueProcessing : 1;
 }
 + (NSArray *) defaultServerPorts;
 @end
@@ -54,8 +55,12 @@
 - (void) _setCurrentNickname:(NSString *) nickname;
 
 - (void) _periodicCleanUp;
-- (void) _startQueueTimer;
-- (void) _stopSendQueueTimer;
+- (void) _startSendQueue;
+- (void) _stopSendQueue;
+- (void) _resetSendQueueInterval;
+
+- (void) _scheduleWhoisForUser:(MVChatUser *) user;
+- (void) _whoisNextScheduledUser;
 
 - (NSString *) _stringFromPossibleData:(id) input;
 @end
