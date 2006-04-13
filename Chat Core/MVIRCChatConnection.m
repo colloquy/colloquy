@@ -16,8 +16,8 @@
 #import "NSDataAdditions.h"
 
 #define JVMinimumSendQueueDelay 0.2
-#define JVMaximumSendQueueDelay 3.0
-#define JVSendQueueDelayIncrement 0.05
+#define JVMaximumSendQueueDelay 2.0
+#define JVSendQueueDelayIncrement 0.01
 #define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
 
