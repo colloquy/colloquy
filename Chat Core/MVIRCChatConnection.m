@@ -90,9 +90,6 @@ static const NSStringEncoding supportedEncodings[] = {
 		_currentNickname = [_nickname retain];
 		_realName = [NSFullUserName() retain];
 		_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
-
-		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
-		_fileTransfers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 	}
 
 	return self;
@@ -336,7 +333,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		_lastCommand = [[NSDate allocWithZone:nil] init];
 		[old release];
 	} else {
-		if( ! _sendQueue ) _sendQueue = [[NSMutableArray allocWithZone:nil] initWithCapacity:20];
+		if( ! _sendQueue )
+			_sendQueue = [[NSMutableArray allocWithZone:nil] initWithCapacity:20];
 
 		@synchronized( _sendQueue ) {
 			[_sendQueue addObject:raw];
@@ -414,6 +412,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSString *uniqueIdentfier = [identifier lowercaseString];
 	if( [uniqueIdentfier isEqualToString:[[self localUser] uniqueIdentifier]] )
 		return [self localUser];
+
+	if( ! _knownUsers )
+		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
 
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
@@ -1008,6 +1009,8 @@ end:
 #pragma mark -
 
 - (void) _addFileTransfer:(MVFileTransfer *) transfer {
+	if( ! _fileTransfers )
+		_fileTransfers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 	@synchronized( _fileTransfers ) {
 		if( transfer ) [_fileTransfers addObject:transfer];
 	}
@@ -1022,7 +1025,8 @@ end:
 #pragma mark -
 
 - (unsigned int) _watchRulesMatchingUser:(MVChatUser *) user {
-	if( ! _matchedUsers ) _matchedUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:25];
+	if( ! _matchedUsers )
+		_matchedUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:25];
 
 	unsigned int count = 0;
 	@synchronized( _chatUserWatchRules ) {
