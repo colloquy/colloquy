@@ -916,6 +916,11 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [user isWatched] || [self _watchRulesMatchingUser:user] ) {
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWatchedUserOnlineNotification object:user userInfo:nil];
 		[user _setOnlineNotificationSent:YES];
+		[user _setDateDisconnected:nil];
+		if( [user status] != MVChatUserAwayStatus )
+			[user _setStatus:MVChatUserAvailableStatus];
+		if( ! [user dateDisconnected] )
+			[user _setDateConnected:[NSDate date]];
 	}
 }
 
@@ -924,6 +929,18 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [user isWatched] ) {
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWatchedUserOfflineNotification object:user userInfo:nil];
 		[user _setOnlineNotificationSent:NO];
+		[user _setWatched:NO];
+
+		if( ! [user dateDisconnected] )
+			[user _setDateDisconnected:[NSDate date]];
+		[user _setStatus:MVChatUserOfflineStatus];
+
+		@synchronized( _chatUserWatchRules ) {
+			NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
+			MVChatUserWatchRule *rule = nil;
+			while( ( rule = [enumerator nextObject] ) )
+				[rule removeMatchedUser:user];
+		}
 	}
 }
 @end

@@ -122,6 +122,12 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	} return nil;
 }
 
+- (void) removeMatchedUser:(MVChatUser *) user {
+	@synchronized( _matchedChatUsers ) {
+		[_matchedChatUsers removeObject:user];
+	}
+}
+
 - (NSString *) nickname {
 	return [[_nickname retain] autorelease];
 }

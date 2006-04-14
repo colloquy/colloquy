@@ -25,6 +25,7 @@ extern NSString *MVChatUserWatchRuleMatchedNotification;
 - (BOOL) matchChatUser:(MVChatUser *) user;
 
 - (NSSet *) matchedChatUsers;
+- (void) removeMatchedUser:(MVChatUser *) user;
 
 - (NSString *) nickname;
 - (void) setNickname:(NSString *) nickname;

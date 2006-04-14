@@ -1276,7 +1276,8 @@ end:
 		const char *bytes = (const char *)[msgData bytes];
 		BOOL ctcp = ( *bytes == '\001' && [msgData length] > 2 );
 
-		if( [sender status] != MVChatUserAwayStatus ) [sender _setStatus:MVChatUserAvailableStatus];
+		if( [sender status] != MVChatUserAwayStatus )
+			[sender _setStatus:MVChatUserAvailableStatus];
 		[sender _setIdleTime:0.];
 
 		if( [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
@@ -1574,7 +1575,8 @@ end:
 			[self sendRawMessageImmediatelyWithFormat:@"WHO %@", name];
 			[self sendRawMessageImmediatelyWithFormat:@"MODE %@ b", name];
 		} else {
-			if( [sender status] != MVChatUserAwayStatus ) [sender _setStatus:MVChatUserAvailableStatus];
+			if( [sender status] != MVChatUserAwayStatus )
+				[sender _setStatus:MVChatUserAvailableStatus];
 			[sender _setIdleTime:0.];
 			[room _addMemberUser:sender];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserJoinedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
@@ -1862,7 +1864,6 @@ end:
 				if( [[user dateUpdated] timeIntervalSinceNow] < -240. || ! [user dateUpdated] ) // 4 minutes
 					[self _scheduleWhoisForUser:user];
 
-				if( ! [user dateConnected] ) [user _setDateConnected:[NSDate date]];
 				[self _sendPossibleOnlineNotificationForUser:user];
 				[_lastSentIsonNicknames removeObject:nick];
 			}
@@ -1872,7 +1873,6 @@ end:
 			enumerator = [_lastSentIsonNicknames objectEnumerator];
 			while( ( nick = [enumerator nextObject] ) ) {
 				MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
-				if( ! [user dateDisconnected] ) [user _setDateDisconnected:[NSDate date]];
 				[self _sendPossibleOfflineNotificationForUser:user];
 			}
 
@@ -2095,7 +2095,8 @@ end:
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[user _setDateUpdated:[NSDate date]];
 
-		if( [user status] != MVChatUserAwayStatus ) [user _setStatus:MVChatUserAvailableStatus];
+		if( [user status] != MVChatUserAwayStatus )
+			[user _setStatus:MVChatUserAvailableStatus];
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
 
