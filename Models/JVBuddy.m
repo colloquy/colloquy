@@ -470,6 +470,9 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 			if( ! [_users count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 		}
 	}
+
+	if( [[[self activeUser] connection] isEqual:connection] )
+		[self setActiveUser:[_users lastObject]];
 }
 
 - (void) _ruleMatched:(NSNotification *) notification {
