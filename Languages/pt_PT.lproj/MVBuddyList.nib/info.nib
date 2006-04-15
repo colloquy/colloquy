@@ -12,14 +12,18 @@
 		<string>167 481 163 87 0 0 1024 746 </string>
 	</dict>
 	<key>IBFramework Version</key>
-	<string>439.0</string>
+	<string>443.0</string>
 	<key>IBLockedObjects</key>
 	<array>
 		<integer>115</integer>
 		<integer>80</integer>
 		<integer>41</integer>
 	</array>
+	<key>IBOpenObjects</key>
+	<array>
+		<integer>41</integer>
+	</array>
 	<key>IBSystem Version</key>
-	<string>8C46</string>
+	<string>8I1119</string>
 </dict>
 </plist>
