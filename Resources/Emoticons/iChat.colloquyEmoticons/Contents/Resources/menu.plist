@@ -1,12 +1,12 @@
 (
-	{name = Smile; image = "smile.tiff"; insert = ":)";},
-	{name = Frown; image = "frown.tiff"; insert = ":(";},
-	{name = Wink; image = "wink.tiff"; insert = ";)";},
-	{name = Laugh; image = "laugh.tiff"; insert = ":D";},
-	{name = Undecided; image = "slant.tiff"; insert = ":\\";},
-	{name = Cool; image = "cool.tiff"; insert = "8)";},
-	{name = Tongue; image = "yuck.tiff"; insert = ":P";},
-	{name = Gasp; image = "gasp.tiff"; insert = ":O";},
-	{name = Angry; image = "angry.tiff"; insert = ":x";},
-	{name = Innocent; image = "innocent.tiff"; insert = "O:)";}
+	{name = Smile; image = "smile.png"; insert = ":)";},
+	{name = Frown; image = "frown.png"; insert = ":(";},
+	{name = Wink; image = "wink.png"; insert = ";)";},
+	{name = Laugh; image = "laugh.png"; insert = ":D";},
+	{name = Undecided; image = "slant.png"; insert = ":\\";},
+	{name = Cool; image = "cool.png"; insert = "8)";},
+	{name = Tongue; image = "yuck.png"; insert = ":P";},
+	{name = Gasp; image = "gasp.png"; insert = ":O";},
+	{name = Angry; image = "angry.png"; insert = ":x";},
+	{name = Innocent; image = "innocent.png"; insert = "O:)";}
 )
