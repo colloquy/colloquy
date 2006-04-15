@@ -19,49 +19,49 @@
 }
 
 .emoticon.smile:after {
-	content: url( "smile.tiff" );
+	content: url( "smile.png" );
 }
 
 .emoticon.wink:after {
-	content: url( "wink.tiff" );
+	content: url( "wink.png" );
 }
 
 .emoticon.happy:after {
-	content: url( "laugh.tiff" );
+	content: url( "laugh.png" );
 }
 
 .emoticon.frown:after {
-	content: url( "frown.tiff" );
+	content: url( "frown.png" );
 }
 
 .emoticon.annoyed:after {
-	content: url( "slant.tiff" );
+	content: url( "slant.png" );
 }
 
 .emoticon.razz:after {
-	content: url( "yuck.tiff" );
+	content: url( "yuck.png" );
 }
 
 .emoticon.angry:after {
-	content: url( "angry.tiff" );
+	content: url( "angry.png" );
 }
 
 .emoticon.cool:after {
-	content: url( "cool.tiff" );
+	content: url( "cool.png" );
 }
 
 .emoticon.angel:after {
-	content: url( "innocent.tiff" );
+	content: url( "innocent.png" );
 }
 
 .emoticon.anime:after {
-	content: url( "smile.tiff" );
+	content: url( "smile.png" );
 }
 
 .emoticon.suprised:after, .emoticon.shocked:after {
-	content: url( "gasp.tiff" );
+	content: url( "gasp.png" );
 }
 
 .emoticon.cry:after {
-	content: url( "cry.tiff" );
+	content: url( "cry.png" );
 }
