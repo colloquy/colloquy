@@ -1,0 +1,48 @@
+{
+    IBClasses = (
+        {CLASS = ASExtendedOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                closeCurrentPanel = id; 
+                closeViewsDrawer = id; 
+                detachCurrentPanel = id; 
+                getInfo = id; 
+                joinRoom = id; 
+                openViewsDrawer = id; 
+                selectNextActivePanel = id; 
+                selectNextPanel = id; 
+                selectPreviousActivePanel = id; 
+                selectPreviousPanel = id; 
+                toggleViewsDrawer = id; 
+            }; 
+            CLASS = JVChatWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                chatViewsOutlineView = NSOutlineView; 
+                favoritesButton = MVMenuButton; 
+                viewActionButton = MVMenuButton; 
+                viewsDrawer = NSDrawer; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = JVSideOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {CLASS = JVSideSplitView; LANGUAGE = ObjC; SUPERCLASS = JVSplitView; }, 
+        {
+            CLASS = JVSideStatusView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {splitView = NSSplitView; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
+            CLASS = JVSidebarChatWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {bodyView = NSView; sideView = NSView; splitView = JVSideSplitView; }; 
+            SUPERCLASS = JVChatWindowController; 
+        }, 
+        {CLASS = JVSplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
+        {CLASS = MVMenuButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {ACTIONS = {doubleClicked = id; }; CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

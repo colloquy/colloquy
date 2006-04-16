@@ -75,6 +75,20 @@
 		1C6EA66205A76038006A559F /* personHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6EA66105A76038006A559F /* personHeader.png */; };
 		1C70377F07E49F25005CEA40 /* JVSmartTranscriptPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C70377D07E49F25005CEA40 /* JVSmartTranscriptPanel.m */; };
 		1C703EF507E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C703EF307E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib */; };
+		1C710A0209F23730007B4515 /* JVSidebarChatWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A0009F23730007B4515 /* JVSidebarChatWindowController.m */; };
+		1C710A2009F2396C007B4515 /* JVSidebarChatWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C710A1F09F2396C007B4515 /* JVSidebarChatWindow.nib */; };
+		1C710A6B09F23AF0007B4515 /* JVSideSplitView.h in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C710A6509F23AF0007B4515 /* JVSideSplitView.h */; };
+		1C710A6C09F23AF0007B4515 /* JVSideSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6609F23AF0007B4515 /* JVSideSplitView.m */; };
+		1C710A6D09F23AF0007B4515 /* JVSideStatusView.h in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C710A6709F23AF0007B4515 /* JVSideStatusView.h */; };
+		1C710A6E09F23AF0007B4515 /* JVSideStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6809F23AF0007B4515 /* JVSideStatusView.m */; };
+		1C710A6F09F23AF0007B4515 /* JVSideOutlineView.h in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C710A6909F23AF0007B4515 /* JVSideOutlineView.h */; };
+		1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6A09F23AF0007B4515 /* JVSideOutlineView.m */; };
+		1C710ABE09F23D9C007B4515 /* sidebarActionWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710ABA09F23D9C007B4515 /* sidebarActionWidget.png */; };
+		1C710ABF09F23D9C007B4515 /* sidebarActionWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710ABB09F23D9C007B4515 /* sidebarActionWidgetPressed.png */; };
+		1C710AC009F23D9D007B4515 /* sidebarResizeWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710ABC09F23D9C007B4515 /* sidebarResizeWidget.png */; };
+		1C710AC109F23D9D007B4515 /* sidebarStatusAreaBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710ABD09F23D9C007B4515 /* sidebarStatusAreaBackground.png */; };
+		1C710B4C09F247AC007B4515 /* sidebarFavoritesWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710B4A09F247AC007B4515 /* sidebarFavoritesWidget.png */; };
+		1C710B4D09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710B4B09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png */; };
 		1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7780DC08FA1D81006AD8E5 /* JVSpeechController.m */; };
 		1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77822808FA4101006AD8E5 /* topicBackground.png */; };
 		1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F5394C070378E44D01A35792 /* Credits.rtf */; };
@@ -409,6 +423,9 @@
 				1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */,
 				1C6C75490630AD9500698F55 /* AGRegex.framework in Copy Frameworks */,
 				1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */,
+				1C710A6B09F23AF0007B4515 /* JVSideSplitView.h in Copy Frameworks */,
+				1C710A6D09F23AF0007B4515 /* JVSideStatusView.h in Copy Frameworks */,
+				1C710A6F09F23AF0007B4515 /* JVSideOutlineView.h in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,6 +569,21 @@
 		1C70377D07E49F25005CEA40 /* JVSmartTranscriptPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSmartTranscriptPanel.m; path = Panels/JVSmartTranscriptPanel.m; sourceTree = "<group>"; };
 		1C703EF407E4B956005CEA40 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		1C705701051A830200A8FE6E /* newMessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = newMessage.png; path = Resources/newMessage.png; sourceTree = SOURCE_ROOT; };
+		1C7109FF09F23730007B4515 /* JVSidebarChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSidebarChatWindowController.h; path = Controllers/JVSidebarChatWindowController.h; sourceTree = "<group>"; };
+		1C710A0009F23730007B4515 /* JVSidebarChatWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSidebarChatWindowController.m; path = Controllers/JVSidebarChatWindowController.m; sourceTree = "<group>"; };
+		1C710A1F09F2396C007B4515 /* JVSidebarChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVSidebarChatWindow.nib; path = Resources/JVSidebarChatWindow.nib; sourceTree = "<group>"; };
+		1C710A6509F23AF0007B4515 /* JVSideSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSideSplitView.h; path = Views/JVSideSplitView.h; sourceTree = "<group>"; };
+		1C710A6609F23AF0007B4515 /* JVSideSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSideSplitView.m; path = Views/JVSideSplitView.m; sourceTree = "<group>"; };
+		1C710A6709F23AF0007B4515 /* JVSideStatusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSideStatusView.h; path = Views/JVSideStatusView.h; sourceTree = "<group>"; };
+		1C710A6809F23AF0007B4515 /* JVSideStatusView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSideStatusView.m; path = Views/JVSideStatusView.m; sourceTree = "<group>"; };
+		1C710A6909F23AF0007B4515 /* JVSideOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSideOutlineView.h; path = Views/JVSideOutlineView.h; sourceTree = "<group>"; };
+		1C710A6A09F23AF0007B4515 /* JVSideOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSideOutlineView.m; path = Views/JVSideOutlineView.m; sourceTree = "<group>"; };
+		1C710ABA09F23D9C007B4515 /* sidebarActionWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sidebarActionWidget.png; path = Resources/sidebarActionWidget.png; sourceTree = "<group>"; };
+		1C710ABB09F23D9C007B4515 /* sidebarActionWidgetPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sidebarActionWidgetPressed.png; path = Resources/sidebarActionWidgetPressed.png; sourceTree = "<group>"; };
+		1C710ABC09F23D9C007B4515 /* sidebarResizeWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sidebarResizeWidget.png; path = Resources/sidebarResizeWidget.png; sourceTree = "<group>"; };
+		1C710ABD09F23D9C007B4515 /* sidebarStatusAreaBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sidebarStatusAreaBackground.png; path = Resources/sidebarStatusAreaBackground.png; sourceTree = "<group>"; };
+		1C710B4A09F247AC007B4515 /* sidebarFavoritesWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sidebarFavoritesWidget.png; path = Resources/sidebarFavoritesWidget.png; sourceTree = "<group>"; };
+		1C710B4B09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sidebarFavoritesWidgetPressed.png; path = Resources/sidebarFavoritesWidgetPressed.png; sourceTree = "<group>"; };
 		1C746A95050CF86B000001C8 /* emoticons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = emoticons.plist; path = Resources/emoticons.plist; sourceTree = "<group>"; };
 		1C7780DB08FA1D81006AD8E5 /* JVSpeechController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSpeechController.h; path = Controllers/JVSpeechController.h; sourceTree = "<group>"; };
 		1C7780DC08FA1D81006AD8E5 /* JVSpeechController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSpeechController.m; path = Controllers/JVSpeechController.m; sourceTree = "<group>"; };
@@ -1154,6 +1186,19 @@
 			name = Configurations;
 			sourceTree = "<group>";
 		};
+		1C710AB009F23D84007B4515 /* Sidebar Interface Images */ = {
+			isa = PBXGroup;
+			children = (
+				1C710ABA09F23D9C007B4515 /* sidebarActionWidget.png */,
+				1C710ABB09F23D9C007B4515 /* sidebarActionWidgetPressed.png */,
+				1C710B4A09F247AC007B4515 /* sidebarFavoritesWidget.png */,
+				1C710B4B09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png */,
+				1C710ABC09F23D9C007B4515 /* sidebarResizeWidget.png */,
+				1C710ABD09F23D9C007B4515 /* sidebarStatusAreaBackground.png */,
+			);
+			name = "Sidebar Interface Images";
+			sourceTree = "<group>";
+		};
 		1CA56CCD042A713E00000102 /* iTunes */ = {
 			isa = PBXGroup;
 			children = (
@@ -1259,6 +1304,12 @@
 				1CC6FD62054B70BC0075807C /* JVFontPreviewField.h */,
 				1CABFCB00657F10900801C15 /* JVSplitView.m */,
 				1CABFCAF0657F10900801C15 /* JVSplitView.h */,
+				1C710A6609F23AF0007B4515 /* JVSideSplitView.m */,
+				1C710A6509F23AF0007B4515 /* JVSideSplitView.h */,
+				1C710A6809F23AF0007B4515 /* JVSideStatusView.m */,
+				1C710A6709F23AF0007B4515 /* JVSideStatusView.h */,
+				1C710A6A09F23AF0007B4515 /* JVSideOutlineView.m */,
+				1C710A6909F23AF0007B4515 /* JVSideOutlineView.h */,
 				F5E2538503882A8501000102 /* MVColorPanel.m */,
 				F5E2538403882A8501000102 /* MVColorPanel.h */,
 				1C06052406471FFB002438AF /* JVMixedTableColumn.m */,
@@ -1403,6 +1454,8 @@
 				1CE2BC53042F75FB00000102 /* JVChatController.h */,
 				1CE2BC1E042F4AD300000102 /* JVChatWindowController.m */,
 				1CE2BC1D042F4AD300000102 /* JVChatWindowController.h */,
+				1C710A0009F23730007B4515 /* JVSidebarChatWindowController.m */,
+				1C7109FF09F23730007B4515 /* JVSidebarChatWindowController.h */,
 				1C0A4CB90799BE000093B702 /* JVTabbedChatWindowController.m */,
 				1C0A4CA50799BDD00093B702 /* JVTabbedChatWindowController.h */,
 				1C0A4CE40799BE660093B702 /* JVTranscriptFindWindowController.m */,
@@ -1537,6 +1590,7 @@
 				F5ED0F46017CD77701EE70DE /* Toolbar Icons */,
 				1CBC6317054896CB009E59E1 /* Preference Icons */,
 				1C2391B30677E8D2000E89A7 /* Tabs Interface Images */,
+				1C710AB009F23D84007B4515 /* Sidebar Interface Images */,
 				F5C3D42203973E7B01000102 /* Widget Images */,
 				F52955590181EB5901EE70DE /* Misc. Icons */,
 			);
@@ -1554,6 +1608,7 @@
 				F5394BF10378E23701A35792 /* MVSoftwareUpdate.nib */,
 				1CBECE390508D58F000001C8 /* JVChatWindow.nib */,
 				1C238F040677B5E5000E89A7 /* JVTabbedChatWindow.nib */,
+				1C710A1F09F2396C007B4515 /* JVSidebarChatWindow.nib */,
 				1CE72A99052C79E700A8FE6E /* JVChatConsole.nib */,
 				1CD6C417051E0B3000A8FE10 /* JVChatTranscript.nib */,
 				1CBECE3A0508D58F000001C8 /* JVDirectChat.nib */,
@@ -2162,6 +2217,13 @@
 				1C6E43C40955EFD7002D22E7 /* serverWindow.png in Resources */,
 				1C1AFB3D09C295D900BF3E2A /* base.html in Resources */,
 				1C1AFDAB09C3BC5000BF3E2A /* roomTopicBanner.html in Resources */,
+				1C710A2009F2396C007B4515 /* JVSidebarChatWindow.nib in Resources */,
+				1C710ABE09F23D9C007B4515 /* sidebarActionWidget.png in Resources */,
+				1C710ABF09F23D9C007B4515 /* sidebarActionWidgetPressed.png in Resources */,
+				1C710AC009F23D9D007B4515 /* sidebarResizeWidget.png in Resources */,
+				1C710AC109F23D9D007B4515 /* sidebarStatusAreaBackground.png in Resources */,
+				1C710B4C09F247AC007B4515 /* sidebarFavoritesWidget.png in Resources */,
+				1C710B4D09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2323,6 +2385,10 @@
 				1C6A40CA083FF6C600572AB6 /* JVInterfacePreferences.m in Sources */,
 				1C6A45210841746500572AB6 /* JVChatViewCriterionController.m in Sources */,
 				1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */,
+				1C710A0209F23730007B4515 /* JVSidebarChatWindowController.m in Sources */,
+				1C710A6C09F23AF0007B4515 /* JVSideSplitView.m in Sources */,
+				1C710A6E09F23AF0007B4515 /* JVSideStatusView.m in Sources */,
+				1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

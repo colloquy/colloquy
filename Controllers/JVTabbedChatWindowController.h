@@ -1,4 +1,4 @@
-#import <JVChatWindowController.h>
+#import "JVChatWindowController.h"
 
 @class AICustomTabsView;
 
