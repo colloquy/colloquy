@@ -32,11 +32,14 @@
 	NSRect sideFrame = [sideView frame];
 	_sideWidth = sideFrame.size.width;
 
+	[chatViewsOutlineView setAllowsEmptySelection:NO];
+
+	[splitView adjustSubviews];
 	[splitView setPositionUsingName:@"JVSidebarSplitViewPosition"];
 }
 
 - (float) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
-	return ( [outlineView levelForItem:item] || _usesSmallIcons ? 18 : 36 );
+	return ( [outlineView levelForItem:item] || _usesSmallIcons ? 16. : 34. );
 }
 
 - (void) splitViewDidResizeSubviews:(NSNotification *) notification {
@@ -83,6 +86,10 @@
 
 - (float) splitView:(NSSplitView *) sender constrainMaxCoordinate:(float) proposedMax ofSubviewAt:(int) offset {
 	return 300.;
+}
+
+- (NSToolbarItem *) toggleChatDrawerToolbarItem {
+	return nil;
 }
 
 - (void) _refreshWindow {

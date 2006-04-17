@@ -348,7 +348,7 @@
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView heightOfRow:(int) row {
-	return 18;
+	return 16;
 }
 
 #pragma mark -

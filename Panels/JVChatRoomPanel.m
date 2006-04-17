@@ -144,7 +144,8 @@
 #pragma mark -
 
 - (NSImage *) icon {
-	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
+	BOOL smallIcons = [[[self windowController] preferenceForKey:@"small drawer icons"] boolValue];
+	if( smallIcons || [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
 		return [NSImage imageNamed:@"roomTab"];
 	return [NSImage imageNamed:@"room"];
 }

@@ -413,7 +413,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (NSImage *) icon {
-	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
+	BOOL smallIcons = [[[self windowController] preferenceForKey:@"small drawer icons"] boolValue];
+	if( smallIcons || [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
 		return [NSImage imageNamed:@"privateChatTab"];
 	return [NSImage imageNamed:@"messageUser"];
 }

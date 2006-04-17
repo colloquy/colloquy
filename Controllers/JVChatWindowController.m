@@ -70,6 +70,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[column setDataCell:prototypeCell];
 
 	[chatViewsOutlineView setRefusesFirstResponder:YES];
+	[chatViewsOutlineView setAutoresizesOutlineColumn:NO];
 	[chatViewsOutlineView setDoubleAction:@selector( _doubleClickedListItem: )];
 	[chatViewsOutlineView setAutoresizesOutlineColumn:YES];
 	[chatViewsOutlineView setMenu:[[[NSMenu alloc] initWithTitle:@""] autorelease]];
@@ -734,7 +735,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (int) outlineView:(NSOutlineView *) outlineView heightOfRow:(int) row {
-	return ( [outlineView levelForRow:row] || _usesSmallIcons ? 18 : 36 );
+	return ( [outlineView levelForRow:row] || _usesSmallIcons ? 16 : 34 );
 }
 
 - (void) outlineViewSelectionDidChange:(NSNotification *) notification {
