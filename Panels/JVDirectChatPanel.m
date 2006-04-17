@@ -1143,7 +1143,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	if( newContentHeight == NSHeight( sendFrame ) ) return;
 
-	NSRect webFrame = [[[display superview] superview] frame];
+	NSRect webFrame = [display frame];
 
 	// Set size of the web view to the maximum size possible
 	webFrame.size.height = NSHeight( splitViewFrame ) - dividerThickness - newContentHeight;
@@ -1161,7 +1161,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	// Commit the changes
 	[[[send superview] superview] setFrame:sendFrame];
-	[[[display superview] superview] setFrame:webFrame];
+	[display setFrame:webFrame];
 
 	if( _scrollerIsAtBottom ) [display scrollToBottom];
 
@@ -1207,7 +1207,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	// We need to resize the scroll view frames of the webview and the textview.
 	// The scroll views are two superviews up: NSTextView(WebView) -> NSClipView -> NSScrollView
 	NSRect sendFrame = [[[send superview] superview] frame];
-	NSRect webFrame = [[[display superview] superview] frame];
+	NSRect webFrame = [display frame];
 
 	// Set size of the web view to the maximum size possible
 	webFrame.size.height = NSHeight( newFrame ) - dividerThickness - _sendHeight;
@@ -1221,7 +1221,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	// Commit the changes
 	[[[send superview] superview] setFrame:sendFrame];
-	[[[display superview] superview] setFrame:webFrame];
+	[display setFrame:webFrame];
 }
 
 #pragma mark -

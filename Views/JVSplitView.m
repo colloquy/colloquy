@@ -1,4 +1,5 @@
 #import "JVSplitView.h"
+#import "NSImageAdditions.h"
 
 @implementation JVSplitView
 - (NSString *) stringWithSavedPosition {
@@ -60,11 +61,17 @@
 
 - (float) dividerThickness {
 	if( [self isPaneSplitter] ) return 4.;
+	if( ! [self isVertical] ) return 10.;
 	return [super dividerThickness];
 }
 
 - (void) drawDividerInRect:(NSRect) rect {
-	if( ! [self isPaneSplitter] )
-		[super drawDividerInRect:rect];
+	if( ! [self isPaneSplitter] ) {
+		if( ! [self isVertical] ) {
+			rect.origin.y += 10.;
+			[[NSImage imageNamed:@"splitviewDividerBackground"] tileInRect:rect];
+			[[NSImage imageNamed:@"splitviewDimple"] compositeToPoint:NSMakePoint( ( NSWidth( rect ) / 2. ) - 3., rect.origin.y ) operation:NSCompositeCopy];
+		} else [super drawDividerInRect:rect];
+	}
 }
 @end
