@@ -675,6 +675,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	unsigned int len = [data length];
 	const char *end = line + len - 2; // minus the line endings
 
+	if( *( line + len - 2 ) != '\x0D' )
+		end = line + len - 1; // this server only uses \x0A for the message line ending, lets work with it
+
 	const char *sender = NULL;
 	unsigned senderLength = 0;
 	const char *user = NULL;
@@ -845,7 +848,8 @@ end:
 
 - (void) _readNextMessageFromServer {
 	static NSData *delimeter = nil;
-	if( ! delimeter ) delimeter = [[NSData allocWithZone:nil] initWithBytes:"\x0D\x0A" length:2];
+	// IRC messages end in \x0D\x0A, but some non-compliant servers only use \x0A during the connecting phase
+	if( ! delimeter ) delimeter = [[NSData allocWithZone:nil] initWithBytes:"\x0A" length:1];
 	[_chatConnection readDataToData:delimeter withTimeout:-1. tag:0];
 }
 
