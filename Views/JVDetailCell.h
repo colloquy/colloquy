@@ -5,6 +5,8 @@
 	NSString *_mainText;
 	NSString *_infoText;
 	NSLineBreakMode _lineBreakMode;
+	unsigned _statusNumber;
+	unsigned _importantStatusNumber;
 }
 - (void) setStatusImage:(NSImage *) image;
 - (NSImage *) statusImage;
@@ -20,4 +22,10 @@
 
 - (void) setLineBreakMode:(NSLineBreakMode) mode;
 - (NSLineBreakMode) lineBreakMode;
+
+- (void) setStatusNumber:(unsigned) number;
+- (unsigned) statusNumber;
+
+- (void) setImportantStatusNumber:(unsigned) number;
+- (unsigned) importantStatusNumber;
 @end

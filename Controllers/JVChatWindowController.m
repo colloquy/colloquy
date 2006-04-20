@@ -674,6 +674,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( [item respondsToSelector:@selector( isEnabled )] ) {
 		[cell setEnabled:[item isEnabled]];
 	} else [cell setEnabled:YES];
+
+	if( [item respondsToSelector:@selector( newMessagesWaiting )] ) {
+		[(JVDetailCell *) cell setStatusNumber:[item newMessagesWaiting]];
+	} else [(JVDetailCell *) cell setStatusNumber:0];
+
+	if( [item respondsToSelector:@selector( newHighlightMessagesWaiting )] ) {
+		[(JVDetailCell *) cell setImportantStatusNumber:[item newHighlightMessagesWaiting]];
+	} else [(JVDetailCell *) cell setImportantStatusNumber:0];
 }
 
 - (NSString *) outlineView:(NSOutlineView *) outlineView toolTipForCell:(NSCell *) cell rect:(NSRectPointer) rect tableColumn:(NSTableColumn *) tableColumn item:(id) item mouseLocation:(NSPoint) mouseLocation {

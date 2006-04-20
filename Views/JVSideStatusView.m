@@ -63,7 +63,7 @@
 		float max = [delegate splitView:splitView constrainMaxCoordinate:0. ofSubviewAt:0];
 		newFrame.size.width = MIN( max, newFrame.size.width );
 	}
-	
+
 	[[self superview] setFrame:newFrame];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:NSSplitViewDidResizeSubviewsNotification object:splitView];

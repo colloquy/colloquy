@@ -54,6 +54,26 @@
 
 #pragma mark -
 
+- (void) setStatusNumber:(unsigned) number {
+	_statusNumber = number;
+}
+
+- (unsigned) statusNumber {
+	return _statusNumber;
+}
+
+#pragma mark -
+
+- (void) setImportantStatusNumber:(unsigned) number {
+	_importantStatusNumber = number;
+}
+
+- (unsigned) importantStatusNumber {
+	return _importantStatusNumber;
+}
+
+#pragma mark -
+
 - (void) setHighlightedImage:(NSImage *) image {
 	[_altImage autorelease];
 	_altImage = [image retain];
@@ -128,48 +148,130 @@
 		[mainImage autorelease];
 	}
 
-	if( [self image] ) switch( [self imageScaling] ) {
-	case NSScaleProportionally:
-		if( NSHeight( cellFrame ) < [[self image] size].height )
-			imageWidth = ( NSHeight( cellFrame ) / [[self image] size].height ) * [[self image] size].width;
-		else imageWidth = [[self image] size].width;
-		break;
-	default:
-	case NSScaleNone:
-		imageWidth = [[self image] size].width;
-		break;
-	case NSScaleToFit:
-		imageWidth = [[self image] size].width;
-		break;
+	if( [self image] ) {
+		switch( [self imageScaling] ) {
+		case NSScaleProportionally:
+			if( NSHeight( cellFrame ) < [[self image] size].height )
+				imageWidth = ( NSHeight( cellFrame ) / [[self image] size].height ) * [[self image] size].width;
+			else imageWidth = [[self image] size].width;
+			break;
+		default:
+		case NSScaleNone:
+			imageWidth = [[self image] size].width;
+			break;
+		case NSScaleToFit:
+			imageWidth = [[self image] size].width;
+			break;
+		}
 	}
 
-#define JVDetailCellLabelPadding 2.
+#define JVDetailCellLabelPadding 3.
 #define JVDetailCellImageLabelPadding 5.
-#define JVDetailCellTextLeading 2.
+#define JVDetailCellTextLeading 3.
 #define JVDetailCellStatusImageLeftPadding 2.
 #define JVDetailCellStatusImageRightPadding JVDetailCellStatusImageLeftPadding
+
+	float statusWidth = ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. );
+	if( ! _statusImage && _statusNumber || _importantStatusNumber ) {
+		NSColor *textColor = [NSColor whiteColor];
+		NSColor *backgroundColor = [NSColor colorWithCalibratedRed:0.5803921568627451 green:0.6705882352941176 blue:0.7882352941176471 alpha:1.];
+		NSColor *importantColor = [NSColor colorWithCalibratedRed:0.831372549019608 green:0.572549019607843 blue:0.541176470588235 alpha:1.];
+
+		if( ! _statusNumber && _importantStatusNumber )
+			backgroundColor = importantColor;
+
+		if( [self isHighlighted] ) {
+			textColor = [backgroundColor shadowWithLevel:0.2];
+			backgroundColor = [backgroundColor highlightWithLevel:0.7];
+		}
+
+		NSFont *font = [[NSFontManager sharedFontManager] fontWithFamily:@"Helvetica" traits:NSBoldFontMask weight:9 size:11.];
+		NSMutableParagraphStyle *numberParaStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+		[numberParaStyle setAlignment:NSCenterTextAlignment];
+
+		NSDictionary *statusNumberAttributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, numberParaStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, [NSNumber numberWithFloat:1.0], NSKernAttributeName, nil];
+
+		NSString *statusText = [NSString stringWithFormat:@"%d", ( _statusNumber ? _statusNumber : _importantStatusNumber )];
+		NSSize numberSize = [statusText sizeWithAttributes:statusNumberAttributes];
+		statusWidth = numberSize.width + 12.;
+
+		if( imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ) + statusWidth < NSWidth( cellFrame ) ) {
+			float radius = 8.;
+			NSRect mainRect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2., NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - 8 ), statusWidth, 16. );
+			NSRect pathRect = NSInsetRect( mainRect, radius, radius );
+
+			NSBezierPath *mainPath = [NSBezierPath bezierPath];
+			[mainPath appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( pathRect ), NSMinY( pathRect ) ) radius:radius startAngle:180. endAngle:270.];
+			[mainPath appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( pathRect ), NSMinY( pathRect ) ) radius:radius startAngle:270. endAngle:360.];
+			[mainPath appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( pathRect ), NSMaxY( pathRect ) ) radius:radius startAngle:0. endAngle:90.];
+			[mainPath appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( pathRect ), NSMaxY( pathRect ) ) radius:radius startAngle:90. endAngle:180.];
+			[mainPath closePath];
+
+			if( _importantStatusNumber ) {
+				NSString *importantStatusText = [NSString stringWithFormat:@"%d", _importantStatusNumber];
+				numberSize = [importantStatusText sizeWithAttributes:statusNumberAttributes];
+				float mainStatusWidth = statusWidth;
+				statusWidth += numberSize.width + 10.;
+				radius = 7.;
+
+				NSRect rect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2., NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - 7 ), statusWidth - mainStatusWidth + 10., 14. );
+				pathRect = NSInsetRect( rect, radius, radius );
+
+				NSBezierPath *path = [NSBezierPath bezierPath];
+				[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( pathRect ), NSMinY( pathRect ) ) radius:radius startAngle:180. endAngle:270.];
+				[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( pathRect ), NSMinY( pathRect ) ) radius:radius startAngle:270. endAngle:360.];
+				[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( pathRect ), NSMaxY( pathRect ) ) radius:radius startAngle:0. endAngle:90.];
+				[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( pathRect ), NSMaxY( pathRect ) ) radius:radius startAngle:90. endAngle:180.];
+				[path closePath];
+
+				if( [self isHighlighted] ) [[NSColor whiteColor] set];
+				else [[NSColor colorWithCalibratedRed:0.92156862745098 green:0.231372549019608 blue:0.243137254901961 alpha:0.85] set];
+				[path fill];
+
+				rect.origin.x -= 3.;
+				[importantStatusText drawInRect:rect withAttributes:statusNumberAttributes];
+			}
+
+			[backgroundColor set];
+			[mainPath fill];
+
+			if( _importantStatusNumber ) {
+				if( [self isHighlighted] ) [[NSColor colorWithCalibratedRed:0.5803921568627451 green:0.6705882352941176 blue:0.7882352941176471 alpha:1.] set];
+				else [[NSColor whiteColor] set];
+
+				[mainPath setLineWidth:1.25];
+				[mainPath stroke];
+			}
+
+			mainRect.origin.y += 1.;
+			[statusText drawInRect:mainRect withAttributes:statusNumberAttributes];
+
+			statusWidth += JVDetailCellStatusImageRightPadding + 3.;
+
+		} else statusWidth = 0.;
+	}
 
 	if( ( ! [_infoText length] && [_mainText length] ) || ( ( subStringSize.height + mainStringSize.height ) >= NSHeight( cellFrame ) - 2. ) ) {
 		float mainYLocation = 0.;
 
 		if( NSHeight( cellFrame ) >= mainStringSize.height ) {
 			mainYLocation = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2 ) - ( mainStringSize.height / 2 );
-			[_mainText drawInRect:NSMakeRect( NSMinX( cellFrame ) + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ), mainYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 1. ) - ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. ), [_mainText sizeWithAttributes:attributes].height ) withAttributes:attributes];
+			[_mainText drawInRect:NSMakeRect( NSMinX( cellFrame ) + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ), mainYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 1. ) - statusWidth, [_mainText sizeWithAttributes:attributes].height ) withAttributes:attributes];
 		}
 	} else if( [_infoText length] && [_mainText length] ) {
 		float mainYLocation = 0., subYLocation = 0.;
 
 		if( NSHeight( cellFrame ) >= mainStringSize.height ) {
 			mainYLocation = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2 ) - mainStringSize.height + ( JVDetailCellTextLeading / 2. );
-			[_mainText drawInRect:NSMakeRect( cellFrame.origin.x + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ), mainYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 1. ) - ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. ), [_mainText sizeWithAttributes:attributes].height ) withAttributes:attributes];
+			[_mainText drawInRect:NSMakeRect( cellFrame.origin.x + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ), mainYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 1. ) - statusWidth, [_mainText sizeWithAttributes:attributes].height ) withAttributes:attributes];
 
 			subYLocation = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2 ) + subStringSize.height - mainStringSize.height + ( JVDetailCellTextLeading / 2. );
-			[_infoText drawInRect:NSMakeRect( NSMinX( cellFrame ) + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ), subYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 1. ) - ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. ), [_infoText sizeWithAttributes:subAttributes].height ) withAttributes:subAttributes];
+			[_infoText drawInRect:NSMakeRect( NSMinX( cellFrame ) + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ), subYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 1. ) - statusWidth, [_infoText sizeWithAttributes:subAttributes].height ) withAttributes:subAttributes];
 		}
 	}
 
 	if( _statusImage && NSHeight( cellFrame ) >= [_statusImage size].height ) {
-		[_statusImage compositeToPoint:NSMakePoint( NSMinX( cellFrame ) + NSWidth( cellFrame ) - [_statusImage size].width - JVDetailCellStatusImageRightPadding, NSMaxY( cellFrame ) - ( ( NSHeight( cellFrame ) / 2 ) - ( [_statusImage size].height / 2 ) ) ) operation:NSCompositeSourceAtop fraction:( [self isEnabled] ? 1. : 0.5)];
+		[_statusImage compositeToPoint:NSMakePoint( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth, NSMaxY( cellFrame ) - ( ( NSHeight( cellFrame ) / 2 ) - ( [_statusImage size].height / 2 ) ) ) operation:NSCompositeSourceAtop fraction:( [self isEnabled] ? 1. : 0.5)];
 	}
 }
 
@@ -191,6 +293,10 @@
 	return _lineBreakMode;
 }
 
+- (void) setStringValue:(NSString *) string {
+	[self setMainText:string];
+}
+
 - (void) setObjectValue:(id <NSCopying>) obj {
 	if( ! obj || [(NSObject *)obj isKindOfClass:[NSImage class]] ) {
 		[super setObjectValue:obj];
@@ -201,9 +307,5 @@
 
 - (NSString *) stringValue {
 	return _mainText;
-}
-
-- (void) setStringValue:(NSString *) string {
-	[self setMainText:string];
 }
 @end

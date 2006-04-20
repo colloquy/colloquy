@@ -649,8 +649,8 @@
 		1CB4DCAF0536282B0080D36F /* JVChatRoomInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatRoomInspector.m; path = Inspectors/JVChatRoomInspector.m; sourceTree = "<group>"; };
 		1CBA4E64062CCDA90082D1BF /* infoWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = infoWidget.png; path = Resources/infoWidget.png; sourceTree = SOURCE_ROOT; };
 		1CBA4E65062CCDA90082D1BF /* infoWidgetPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = infoWidgetPressed.png; path = Resources/infoWidgetPressed.png; sourceTree = SOURCE_ROOT; };
-		1CBB23CD04EFE233000001C8 /* actionWidget.png */ = {isa = PBXFileReference; lastKnownFileType = file; name = actionWidget.png; path = Resources/actionWidget.png; sourceTree = SOURCE_ROOT; };
-		1CBB23CE04EFE233000001C8 /* actionWidgetPressed.png */ = {isa = PBXFileReference; lastKnownFileType = file; name = actionWidgetPressed.png; path = Resources/actionWidgetPressed.png; sourceTree = SOURCE_ROOT; };
+		1CBB23CD04EFE233000001C8 /* actionWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = actionWidget.png; path = Resources/actionWidget.png; sourceTree = SOURCE_ROOT; };
+		1CBB23CE04EFE233000001C8 /* actionWidgetPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = actionWidgetPressed.png; path = Resources/actionWidgetPressed.png; sourceTree = SOURCE_ROOT; };
 		1CBB23D504EFE24C000001C8 /* viewAlert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = viewAlert.png; path = Resources/viewAlert.png; sourceTree = SOURCE_ROOT; };
 		1CBB23D604EFE24C000001C8 /* viewAlertSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = viewAlertSelected.png; path = Resources/viewAlertSelected.png; sourceTree = SOURCE_ROOT; };
 		1CBB23D904F03CA7000001C8 /* JVDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVDetailCell.h; path = Views/JVDetailCell.h; sourceTree = "<group>"; };
@@ -2913,6 +2913,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -2923,6 +2924,7 @@
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
 			};
 			name = Development;
 		};

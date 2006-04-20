@@ -429,7 +429,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
 		return ( [_waitingAlerts count] ? [NSImage imageNamed:@"AlertCautionIcon"] : ( _newMessageCount ? ( _newHighlightMessageCount ? [NSImage imageNamed:@"privateChatTabNewMessage"] : [NSImage imageNamed:@"privateChatTabNewMessage"] ) : nil ) );
 
-	return ( [_waitingAlerts count] ? [NSImage imageNamed:@"viewAlert"] : ( _newMessageCount ? ( _newHighlightMessageCount ? [NSImage imageNamed:@"newHighlightMessage"] : [NSImage imageNamed:@"newMessage"] ) : nil ) );
+	return ( [_waitingAlerts count] ? [NSImage imageNamed:@"viewAlert"] : nil );
 }
 
 #pragma mark -
@@ -447,6 +447,11 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[super didUnselect];
 }
 
+- (void) willSelect {
+	_newMessageCount = 0;
+	_newHighlightMessageCount = 0;
+}
+
 - (void) didSelect {
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] ) {
 		[(JVSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
@@ -455,9 +460,12 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	_newMessageCount = 0;
 	_newHighlightMessageCount = 0;
 	_isActive = YES;
+
 	[super didSelect];
+
 	[_windowController reloadListItem:self andChildren:NO];
 	[[[self view] window] makeFirstResponder:send];
+
 	if( [_waitingAlerts count] )
 		[[NSApplication sharedApplication] beginSheet:[_waitingAlerts objectAtIndex:0] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
 }
