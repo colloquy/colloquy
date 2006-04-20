@@ -196,8 +196,8 @@
 		statusWidth = numberSize.width + 12.;
 
 		if( imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ) + statusWidth < NSWidth( cellFrame ) ) {
-			float radius = 8.;
-			NSRect mainRect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2., NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - 8 ), statusWidth, 16. );
+			float radius = ( _importantStatusNumber ? 8. : 7. );
+			NSRect mainRect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2., NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - radius ), statusWidth, radius * 2 );
 			NSRect pathRect = NSInsetRect( mainRect, radius, radius );
 
 			NSBezierPath *mainPath = [NSBezierPath bezierPath];
@@ -214,7 +214,7 @@
 				statusWidth += numberSize.width + 10.;
 				radius = 7.;
 
-				NSRect rect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2., NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - 7 ), statusWidth - mainStatusWidth + 10., 14. );
+				NSRect rect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2., NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - radius ), statusWidth - mainStatusWidth + 10., radius * 2 );
 				pathRect = NSInsetRect( rect, radius, radius );
 
 				NSBezierPath *path = [NSBezierPath bezierPath];
@@ -243,7 +243,7 @@
 				[mainPath stroke];
 			}
 
-			mainRect.origin.y += 1.;
+			if( _importantStatusNumber ) mainRect.origin.y += 1.;
 			[statusText drawInRect:mainRect withAttributes:statusNumberAttributes];
 
 			statusWidth += JVDetailCellStatusImageRightPadding + 3.;
