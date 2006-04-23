@@ -1565,13 +1565,16 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	[super _didDisconnect];
 }
 
+// FIXME optional detach/reattach support
+/*
 - (void) _systemWillSleep:(NSNotification *) notification {
-/*	if( [self isConnected] ) {
+	if( [self isConnected] ) {
 		[self sendRawMessage:@"DETACH"];
 		_status = MVChatConnectionSuspendedStatus;
 		usleep( 2500000 );
-	} */
+	}
 }
+*/
 
 #pragma mark -
 
