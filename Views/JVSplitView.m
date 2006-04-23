@@ -23,10 +23,10 @@
 	NSView *subview = nil;
 	NSString *frame = nil;
 
-	while( ( subview = [subviews nextObject] ) ) {
-		frame = [frames nextObject];
-		if( [frame length] ) [subview setFrame:NSRectFromString( frame )];
-		else [subview setFrame:NSZeroRect];
+	while( ( subview = [subviews nextObject] ) && ( frame = [frames nextObject] ) ) {
+		NSRect rect = NSRectFromString( frame );
+		if( [self isVertical] ) [subview setFrame:NSMakeRect( NSMinX( rect ), NSMinY( [subview frame] ), NSWidth( rect ), NSHeight( [subview frame] ) )];
+		else [subview setFrame:NSMakeRect( NSMinX( [subview frame] ), NSMinY( rect ), NSWidth( [subview frame] ), NSHeight( rect ) )];
 	}
 
 	[self adjustSubviews];
