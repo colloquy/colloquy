@@ -162,7 +162,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			wenumerator = [_chatWindows objectEnumerator];
 			while( ( windowController = [wenumerator nextObject] ) )
 				if( [[windowController window] isMainWindow] ) break;
-			if( ! windowController ) windowController = [_chatWindows lastObject];
+			if( ! windowController ) windowController = [_chatWindows anyObject];
 		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"newWindow"] ) {
 			windowController = [self newChatWindowController];
 		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"serverWindow"] ) {
