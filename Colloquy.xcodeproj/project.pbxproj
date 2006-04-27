@@ -57,6 +57,7 @@
 		1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */; };
 		1C51B4C7052DE14B00BB459B /* JVStandardCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3B4D570427BD5200000102 /* JVStandardCommands.m */; };
 		1C51B4C9052DE14B00BB459B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
+		1C59A92009FDEBA3000682B8 /* JVChatWindowControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C59A91F09FDEBA3000682B8 /* JVChatWindowControllerTests.m */; };
 		1C5EF35B07B45C1F004E66D3 /* JVChatEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5EF35907B45C1F004E66D3 /* JVChatEvent.m */; };
 		1C5EF36C07B45FBF004E66D3 /* JVChatSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5EF36A07B45FBF004E66D3 /* JVChatSession.m */; };
 		1C66913A07BFA76D008400F7 /* JVEmoticonSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C66913807BFA76D008400F7 /* JVEmoticonSet.m */; };
@@ -372,6 +373,13 @@
 			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
 			remoteInfo = "Python Support Plugin";
 		};
+		1C59A9A309FDF148000682B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1CB2CCF5052DDC560094AAA4;
+			remoteInfo = "Colloquy (Application)";
+		};
 		1C7F30000855456D00D41FB0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -539,6 +547,7 @@
 		1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Standard Commands.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C51B89D052DF91E00BB459B /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		1C5959010507803F000001C8 /* Generic.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Generic.icns; path = Resources/Generic.icns; sourceTree = SOURCE_ROOT; };
+		1C59A91F09FDEBA3000682B8 /* JVChatWindowControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatWindowControllerTests.m; path = Tests/JVChatWindowControllerTests.m; sourceTree = "<group>"; };
 		1C59BD61059E2E02001487E2 /* ChatPlugIn.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatPlugIn.scriptSuite; path = Resources/ChatPlugIn.scriptSuite; sourceTree = "<group>"; };
 		1C59BD63059E2E16001487E2 /* ChatPlugIn.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatPlugIn.scriptTerminology; path = Resources/ChatPlugIn.scriptTerminology; sourceTree = "<group>"; };
 		1C5A1A1106F8F42C00A51F10 /* MVChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatConnection.h; path = "Chat Core/MVChatConnection.h"; sourceTree = "<group>"; };
@@ -594,6 +603,7 @@
 		1C77822808FA4101006AD8E5 /* topicBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicBackground.png; path = Resources/topicBackground.png; sourceTree = "<group>"; };
 		1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicToggleDown.png; path = Resources/topicToggleDown.png; sourceTree = "<group>"; };
 		1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicToggleUp.png; path = Resources/topicToggleUp.png; sourceTree = "<group>"; };
+		1C7A60B709FDE8560029AC64 /* Colloquy Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Colloquy Tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C7B83C50668D732004F1EFE /* NSNotificationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNotificationAdditions.h; path = Additions/NSNotificationAdditions.h; sourceTree = "<group>"; };
 		1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = NSCoreSuite.scriptSuite; path = Resources/NSCoreSuite.scriptSuite; sourceTree = "<group>"; };
 		1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = NSCoreSuite.scriptTerminology; path = Resources/NSCoreSuite.scriptTerminology; sourceTree = "<group>"; };
@@ -1035,6 +1045,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1C7A60B409FDE8560029AC64 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1CB2CD78052DDC560094AAA4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1073,6 +1090,7 @@
 				0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */,
 				F50B0A9F0170C89301A84BDE /* Sources & Headers */,
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
+				1C59A92909FDEBC6000682B8 /* Unit Tests */,
 				F5185C82018626F701EE70DE /* Interfaces */,
 				F50B0AA10170C89301A84BDE /* Resources */,
 				1C6A13E608666DDC009EE6D2 /* Configurations */,
@@ -1182,6 +1200,14 @@
 			name = "Tabs Interface Images";
 			sourceTree = "<group>";
 		};
+		1C59A92909FDEBC6000682B8 /* Unit Tests */ = {
+			isa = PBXGroup;
+			children = (
+				1C59A91F09FDEBA3000682B8 /* JVChatWindowControllerTests.m */,
+			);
+			name = "Unit Tests";
+			sourceTree = "<group>";
+		};
 		1C6A13E608666DDC009EE6D2 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
@@ -1242,6 +1268,7 @@
 				1CB2CD8C052DDC570094AAA4 /* Colloquy.app */,
 				1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */,
 				CBF685150820186F00F498FB /* Colloquy.mdimporter */,
+				1C7A60B709FDE8560029AC64 /* Colloquy Tests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1828,6 +1855,65 @@
 			productReference = 1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		1C7A60B609FDE8560029AC64 /* Colloquy Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C7A60BB09FDE8580029AC64 /* Build configuration list for PBXNativeTarget "Colloquy Tests" */;
+			buildPhases = (
+				1C7A60B209FDE8560029AC64 /* Resources */,
+				1C7A60B309FDE8560029AC64 /* Sources */,
+				1C7A60B409FDE8560029AC64 /* Frameworks */,
+				1C7A60B509FDE8560029AC64 /* Run Tests */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "Colloquy Tests-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Colloquy Tests";
+				WRAPPER_EXTENSION = octest;
+				ZERO_LINK = NO;
+			};
+			dependencies = (
+				1C59A9A409FDF148000682B8 /* PBXTargetDependency */,
+			);
+			name = "Colloquy Tests";
+			productName = "Colloquy Tests";
+			productReference = 1C7A60B709FDE8560029AC64 /* Colloquy Tests.octest */;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.yourcompany.Colloquy Tests</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
 		1CB2CCF5052DDC560094AAA4 /* Colloquy (Application) */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1C041A680854E97700A5A5BA /* Build configuration list for PBXNativeTarget "Colloquy (Application)" */;
@@ -2009,6 +2095,7 @@
 				1CB2CCF5052DDC560094AAA4 /* Colloquy (Application) */,
 				1C51B4BB052DE14B00BB459B /* Standard Commands (Plug-In) */,
 				CBF685140820186F00F498FB /* Colloquy (Metadata Importer) */,
+				1C7A60B609FDE8560029AC64 /* Colloquy Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -2052,6 +2139,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1C7A60B209FDE8560029AC64 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1CB2CD0F052DDC560094AAA4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2260,6 +2354,20 @@
 /* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1C7A60B509FDE8560029AC64 /* Run Tests */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Tests";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
 		1C91DEAC06972EC0007C1638 /* Remove Headers */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
@@ -2315,6 +2423,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C51B4C7052DE14B00BB459B /* JVStandardCommands.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C7A60B309FDE8560029AC64 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C59A92009FDEBA3000682B8 /* JVChatWindowControllerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2431,6 +2547,11 @@
 			isa = PBXTargetDependency;
 			name = "Python Support Plugin";
 			targetProxy = 1C0A19AE08B041A800324E25 /* PBXContainerItemProxy */;
+		};
+		1C59A9A409FDF148000682B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1CB2CCF5052DDC560094AAA4 /* Colloquy (Application) */;
+			targetProxy = 1C59A9A309FDF148000682B8 /* PBXContainerItemProxy */;
 		};
 		1C7F30010855456D00D41FB0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2856,7 +2977,6 @@
 /* Begin XCBuildConfiguration section */
 		1C041A650854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
@@ -2871,9 +2991,7 @@
 		};
 		1C041A660854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				OTHER_LDFLAGS = (
@@ -2887,7 +3005,6 @@
 		};
 		1C041A690854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -2911,10 +3028,7 @@
 		};
 		1C041A6A0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Resources/Info.plist;
@@ -2924,13 +3038,11 @@
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		1C041A6D0854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_FAST_OBJC_DISPATCH = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -2943,7 +3055,6 @@
 		};
 		1C041A6E0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_FAST_OBJC_DISPATCH = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -2956,24 +3067,22 @@
 		};
 		1C041A710854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		1C041A720854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
-				PREBINDING = NO;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		1C041DC90855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = "Plug-Ins/Standard Commands/Standard Commands.pch";
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
@@ -2988,7 +3097,6 @@
 		};
 		1C041DCA0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -3012,7 +3120,6 @@
 		};
 		1C041DCB0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_FAST_OBJC_DISPATCH = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -3025,6 +3132,7 @@
 		};
 		1C041DCC0855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				ARCHS = (
 					ppc,
@@ -3033,6 +3141,60 @@
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = "Release (Universal)";
+		};
+		1C7A60BC09FDE8580029AC64 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_FAST_OBJC_DISPATCH = YES;
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "Colloquy Tests";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+		1C7A60BD09FDE8580029AC64 /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_FAST_OBJC_DISPATCH = YES;
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "Colloquy Tests";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Release (Universal)";
+		};
+		1C7A60BE09FDE8580029AC64 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_FAST_OBJC_DISPATCH = YES;
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "Colloquy Tests";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Development;
 		};
 /* End XCBuildConfiguration section */
 
@@ -3073,6 +3235,16 @@
 				1C041A710854E97700A5A5BA /* Release */,
 				1C041DCC0855377900A5A5BA /* Release (Universal) */,
 				1C041A720854E97700A5A5BA /* Development */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1C7A60BB09FDE8580029AC64 /* Build configuration list for PBXNativeTarget "Colloquy Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C7A60BC09FDE8580029AC64 /* Release */,
+				1C7A60BD09FDE8580029AC64 /* Release (Universal) */,
+				1C7A60BE09FDE8580029AC64 /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

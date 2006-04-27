@@ -78,10 +78,9 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_chatWindows = [[NSMutableArray allocWithZone:nil] init];
-		_chatControllers = [[NSMutableArray allocWithZone:nil] init];
+		_chatWindows = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_chatControllers = [[NSMutableSet allocWithZone:nil] initWithCapacity:50];
 
-		_windowRuleSets = nil;
 		[self _reloadPreferedWindowRuleSets];
 
 		NSEnumerator *smartTranscriptsEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVSmartTranscripts"] objectEnumerator];
@@ -189,7 +188,7 @@ static NSMenu *smartTranscriptMenu = nil;
 #pragma mark -
 
 - (NSSet *) allChatWindowControllers {
-	return [NSSet setWithArray:_chatWindows];
+	return [NSSet setWithSet:_chatWindows];
 }
 
 - (JVChatWindowController *) newChatWindowController {
@@ -234,7 +233,7 @@ static NSMenu *smartTranscriptMenu = nil;
 #pragma mark -
 
 - (NSSet *) allChatViewControllers {
-	return [NSSet setWithArray:_chatControllers];
+	return [NSSet setWithSet:_chatControllers];
 }
 
 - (NSSet *) chatViewControllersWithConnection:(MVChatConnection *) connection {

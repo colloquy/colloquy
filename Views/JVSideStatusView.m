@@ -66,8 +66,8 @@
 
 	[[self superview] setFrame:newFrame];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:NSSplitViewDidResizeSubviewsNotification object:splitView];
-
 	[splitView adjustSubviews];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:NSSplitViewDidResizeSubviewsNotification object:splitView];
 }
 @end

@@ -54,6 +54,16 @@
 
 #pragma amrk -
 
+- (void) setMainSubviewIndex:(long) index {
+	_mainSubviewIndex = index;
+}
+
+- (BOOL) mainSubviewIndex {
+	return _mainSubviewIndex;
+}
+
+#pragma amrk -
+
 - (void) resetCursorRects {
 	if( ! [self isPaneSplitter] )
 		[super resetCursorRects];
@@ -71,5 +81,55 @@
 		if( ! [self isPaneSplitter] )
 			[[NSImage imageNamed:@"splitviewDimple"] compositeToPoint:NSMakePoint( ( NSWidth( rect ) / 2. ) - 3., rect.origin.y ) operation:NSCompositeCopy];
 	} else [super drawDividerInRect:rect];
+}
+
+#pragma mark -
+
+- (void) adjustSubviews {
+	if( _mainSubviewIndex == -1 || [[self subviews] count] != 2 ) {
+		[super adjustSubviews];
+		return;
+	}
+
+	float dividerThickness = [self dividerThickness];
+	NSRect newFrame = [self frame];
+
+	NSView *mainView = [[self subviews] objectAtIndex:_mainSubviewIndex];
+	NSView *otherView = ( _mainSubviewIndex ? [[self subviews] objectAtIndex:0] : [[self subviews] objectAtIndex:1] );
+
+	NSRect mainFrame = [mainView frame];
+	NSRect otherFrame = [otherView frame];
+
+	if( [self isVertical] ) {
+		mainFrame.size.width = NSWidth( newFrame ) - dividerThickness - NSWidth( otherFrame );
+		mainFrame.size.height = NSHeight( newFrame );
+		mainFrame.origin.x = ( _mainSubviewIndex ? NSWidth( otherFrame ) + dividerThickness : 0. );
+		mainFrame.origin.y = 0.;
+	} else {
+		mainFrame.size.width = NSWidth( newFrame );
+		mainFrame.size.height = NSHeight( newFrame ) - dividerThickness - NSHeight( otherFrame );
+		mainFrame.origin.x = 0.;
+		mainFrame.origin.y = ( _mainSubviewIndex ? NSHeight( otherFrame ) + dividerThickness : 0. );
+	}
+
+	if( [self isVertical] ) {
+		otherFrame.size.width = NSWidth( otherFrame );
+		otherFrame.size.height = NSHeight( newFrame );
+		otherFrame.origin.x = ( _mainSubviewIndex ? 0. : NSWidth( mainFrame ) + dividerThickness );
+		otherFrame.origin.y = 0.;
+	} else {
+		otherFrame.size.width = NSWidth( newFrame );
+		otherFrame.size.height = NSHeight( otherFrame );
+		otherFrame.origin.x = 0.;
+		otherFrame.origin.y = ( _mainSubviewIndex ? 0. : NSWidth( mainFrame ) + dividerThickness );
+	}
+
+	[mainView setFrame:mainFrame];
+	[otherView setFrame:otherFrame];
+
+	NSLog( @"%f  %@   %@", dividerThickness, NSStringFromRect( otherFrame ), NSStringFromRect( mainFrame ) );
+
+	if( ! ( [self inLiveResize] && [self preservesContentDuringLiveResize] ) )
+		[self setNeedsDisplay:YES];
 }
 @end

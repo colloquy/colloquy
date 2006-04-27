@@ -2,13 +2,7 @@
 #import "JVSideSplitView.h"
 
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
-- (void) _claimMenuCommands;
-- (void) _resignMenuCommands;
-- (void) _refreshSelectionMenu;
-- (void) _refreshWindow;
 - (void) _refreshWindowTitle;
-- (void) _refreshList;
-- (void) _refreshPreferences;
 @end
 
 #pragma mark -
@@ -19,22 +13,17 @@
 }
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {
-	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
+	if( ( self = [super initWithWindowNibName:windowNibName] ) )
 		_forceSplitViewPosition = YES;
-	}
-
 	return self;
 }
 
 - (void) windowDidLoad {
 	[super windowDidLoad];
 
-	NSRect sideFrame = [sideView frame];
-	_sideWidth = sideFrame.size.width;
-
 	[chatViewsOutlineView setAllowsEmptySelection:NO];
 
-	[splitView adjustSubviews];
+	[splitView setMainSubviewIndex:1];
 	[splitView setPositionUsingName:@"JVSidebarSplitViewPosition"];
 }
 
@@ -43,39 +32,9 @@
 }
 
 - (void) splitViewDidResizeSubviews:(NSNotification *) notification {
-	// Cache the height of the send box so we can keep it constant during window resizes.
-	NSRect sideFrame = [sideView frame];
-	_sideWidth = sideFrame.size.width;
-
 	if( ! _forceSplitViewPosition )
 		[splitView savePositionUsingName:@"JVSidebarSplitViewPosition"];
-
 	_forceSplitViewPosition = NO;
-}
-
-- (void) splitView:(NSSplitView *) sender resizeSubviewsWithOldSize:(NSSize) oldSize {
-	float dividerThickness = [sender dividerThickness];
-	NSRect newFrame = [sender frame];
-
-	// Keep the size of the send box constant during window resizes
-
-	// We need to resize the scroll view frames of the webview and the textview.
-	// The scroll views are two superviews up: NSTextView(WebView) -> NSClipView -> NSScrollView
-	NSRect sideFrame = [sideView frame];
-	NSRect bodyFrame = [bodyView frame];
-
-	// Set size of the web view to the maximum size possible
-	bodyFrame.size.height = NSHeight( newFrame );
-	bodyFrame.size.width = NSWidth( newFrame ) - dividerThickness - _sideWidth;
-	bodyFrame.origin.x = _sideWidth + dividerThickness;
-
-	// Keep the send box the same size
-	sideFrame.size.height = NSHeight( newFrame );
-	sideFrame.size.width = _sideWidth;
-
-	// Commit the changes
-	[sideView setFrame:sideFrame];
-	[bodyView setFrame:bodyFrame];
 }
 
 - (float) splitView:(NSSplitView *) sender constrainMinCoordinate:(float) proposedMin ofSubviewAt:(int) offset {

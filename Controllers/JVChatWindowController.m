@@ -49,15 +49,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
-		viewsDrawer = nil;
-		chatViewsOutlineView = nil;
-		viewActionButton = nil;
-		favoritesButton = nil;
-		_activeViewController = nil;
-		_identifier = nil;
-		_views = [[NSMutableArray array] retain];
-		_usesSmallIcons = NO;
-		_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]] retain];
+		_views = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
+		_settings = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
 	}
 
 	return self;
@@ -65,16 +58,17 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) windowDidLoad {
 	NSTableColumn *column = [chatViewsOutlineView outlineTableColumn];
-	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
+	JVDetailCell *prototypeCell = [[JVDetailCell allocWithZone:nil] init];
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
 	[column setDataCell:prototypeCell];
+	[prototypeCell release];
 
 	[chatViewsOutlineView setRefusesFirstResponder:YES];
 	[chatViewsOutlineView setAutoresizesOutlineColumn:NO];
 	[chatViewsOutlineView setDoubleAction:@selector( _doubleClickedListItem: )];
 	[chatViewsOutlineView setAutoresizesOutlineColumn:YES];
-	[chatViewsOutlineView setMenu:[[[NSMenu alloc] initWithTitle:@""] autorelease]];
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
+	[chatViewsOutlineView setMenu:nil];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 
@@ -103,14 +97,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) dealloc {
-	[[self window] setDelegate:nil];
-	[[self window] setToolbar:nil];
-
-	[viewsDrawer setDelegate:nil];
-	[chatViewsOutlineView setDelegate:nil];
-	[chatViewsOutlineView setDataSource:nil];
-	[favoritesButton setMenu:nil];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	NSEnumerator *enumerator = [_views objectEnumerator];
@@ -158,11 +144,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) setIdentifier:(NSString *) identifier {
-	[_identifier autorelease];
+	id old = _identifier;
 	_identifier = [identifier copyWithZone:[self zone]];
+	[old release];
 
-	[_settings autorelease];
-	_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]] retain];
+	old = _settings;
+	_settings = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
+	[old release];
 
 	if( [[self identifier] length] ) {
 		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
@@ -480,7 +468,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (NSToolbarItem *) toggleChatDrawerToolbarItem {
-	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:JVToolbarToggleChatDrawerItemIdentifier] autorelease];
+	NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:JVToolbarToggleChatDrawerItemIdentifier];
 
 	[toolbarItem setLabel:NSLocalizedString( @"Drawer", "chat panes drawer toolbar item name" )];
 	[toolbarItem setPaletteLabel:NSLocalizedString( @"Panel Drawer", "chat panes drawer toolbar customize palette name" )];
@@ -491,7 +479,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[toolbarItem setTarget:self];
 	[toolbarItem setAction:@selector( toggleViewsDrawer: )];
 
-	return toolbarItem;
+	return [toolbarItem autorelease];
 }
 
 - (IBAction) toggleViewsDrawer:(id) sender {
@@ -718,7 +706,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSImage *org = [item icon];
 
 	if( [org size].width > maxSideSize || [org size].height > maxSideSize ) {
-		NSImage *ret = [[[item icon] copy] autorelease];
+		NSImage *ret = [[[item icon] copyWithZone:nil] autorelease];
 		[ret setScalesWhenResized:YES];
 		[ret setSize:NSMakeSize( maxSideSize, maxSideSize )];
 		org = ret;
@@ -803,8 +791,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		NSData *pointerData = [board dataForType:JVChatViewPboardType];
 		id <JVChatViewController> dragedController = nil;
 		[pointerData getBytes:&dragedController];
-
-		[[dragedController retain] autorelease];
+		[dragedController retain];
 
 		if( [_views containsObject:dragedController] ) {
 			if( index != NSOutlineViewDropOnItemIndex && index >= [_views indexOfObjectIdenticalTo:dragedController] ) index--;
@@ -816,6 +803,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( index == NSOutlineViewDropOnItemIndex ) [self addChatViewController:dragedController];
 		else [self insertChatViewController:dragedController atIndex:index];
 
+		[dragedController release];
 		return YES;
 	}
 
@@ -867,13 +855,19 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	id menuItem = nil;
 	NSMenu *menu = [chatViewsOutlineView menu];
-	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
-	NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
+	if( ! menu ) {
+		menu = [[NSMenu allocWithZone:nil] initWithTitle:@""];
+		[chatViewsOutlineView setMenu:menu];
+		[menu release];
+	}
 
+	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
+
+	NSEnumerator *enumerator = [[[[menu itemArray] copyWithZone:nil] autorelease] objectEnumerator];
 	while( ( menuItem = [enumerator nextObject] ) )
 		[menu removeItem:menuItem];
 
-	enumerator = [[[[newMenu itemArray] copy] autorelease] objectEnumerator];
+	enumerator = [[[[newMenu itemArray] copyWithZone:nil] autorelease] objectEnumerator];
 	while( ( menuItem = [enumerator nextObject] ) ) {
 		[newMenu removeItem:menuItem];
 		[menu addItem:menuItem];
@@ -924,8 +918,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [item respondsToSelector:@selector( willSelect )] )
 			[(NSObject *)item willSelect];
 
-		[_activeViewController autorelease];
+		id old = _activeViewController;
 		_activeViewController = [item retain];
+		[old release];
 
 		[[self window] setContentView:[_activeViewController view]];
 		[[self window] setToolbar:[_activeViewController toolbar]];
@@ -936,7 +931,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [_activeViewController respondsToSelector:@selector( didSelect )] )
 			[(NSObject *)_activeViewController didSelect];
 	} else if( ! [_views count] || ! _activeViewController ) {
-		[[self window] setContentView:[[[NSView alloc] initWithFrame:[[[self window] contentView] frame]] autorelease]];
+		NSView *placeHolder = [[NSView alloc] initWithFrame:[[[self window] contentView] frame]];
+		[[self window] setContentView:placeHolder];
+		[placeHolder release];
+
 		[[[self window] toolbar] setDelegate:nil];
 		[[self window] setToolbar:nil];
 		[[self window] makeFirstResponder:nil];
