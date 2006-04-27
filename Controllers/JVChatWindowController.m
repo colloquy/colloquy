@@ -68,7 +68,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView setDoubleAction:@selector( _doubleClickedListItem: )];
 	[chatViewsOutlineView setAutoresizesOutlineColumn:YES];
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
-	[chatViewsOutlineView setMenu:nil];
+	[chatViewsOutlineView setMenu:[[[NSMenu allocWithZone:nil] initWithTitle:@""] autorelease]];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 
@@ -855,12 +855,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	id menuItem = nil;
 	NSMenu *menu = [chatViewsOutlineView menu];
-	if( ! menu ) {
-		menu = [[NSMenu allocWithZone:nil] initWithTitle:@""];
-		[chatViewsOutlineView setMenu:menu];
-		[menu release];
-	}
-
 	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
 
 	NSEnumerator *enumerator = [[[[menu itemArray] copyWithZone:nil] autorelease] objectEnumerator];
