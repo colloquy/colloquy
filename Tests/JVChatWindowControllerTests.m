@@ -250,6 +250,13 @@
 	STAssertTrue( [panelTwo isEqual:[windowController selectedListItem]], nil );
 	STAssertTrue( [[windowController allChatViewControllers] count] == 1, nil );
 
+	[windowController removeAllChatViewControllers];
+
+	// there should be no active panel
+	STAssertNil( [windowController activeChatViewController], nil );
+	STAssertNil( [windowController activeChatViewController], nil );
+	STAssertTrue( [[windowController allChatViewControllers] count] == 0, nil );
+
 	[panel release];
 	[panelTwo release];
 	[panelThree release];
