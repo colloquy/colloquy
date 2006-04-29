@@ -123,6 +123,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_lastCommand release];
 	[_matchedUsers release];
 	[_pendingWhoisUsers release];
+	[_roomPrefixes release];
+	[_serverInformation release];
 
 	_chatConnection = nil;
 	_connectionThread = nil;
@@ -141,6 +143,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	_lastCommand = nil;
 	_matchedUsers = nil;
 	_pendingWhoisUsers = nil;
+	_roomPrefixes = nil;
+	_serverInformation = nil;
 
 	[super dealloc];
 }
@@ -384,9 +388,11 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (NSCharacterSet *) chatRoomNamePrefixes {
-	static NSCharacterSet *prefixes = nil;
-	if( ! prefixes ) prefixes = [[NSCharacterSet characterSetWithCharactersInString:@"#&+!"] retain];
-	return prefixes;
+	static NSCharacterSet *defaultPrefixes = nil;
+	if( ! _roomPrefixes && ! defaultPrefixes )
+		defaultPrefixes = [[NSCharacterSet characterSetWithCharactersInString:@"#&+!"] retain];
+	if( ! _roomPrefixes ) return defaultPrefixes;
+	return _roomPrefixes;
 }
 
 - (NSString *) properNameForChatRoomNamed:(NSString *) room {
@@ -1204,6 +1210,9 @@ end:
 }
 
 - (void) _handle005WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender { // RPL_ISUPPORT
+	if( ! _serverInformation )
+		_serverInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
+
 	NSEnumerator *enumerator = [parameters objectEnumerator];
 	NSString *feature = nil;
 	while( ( feature = [enumerator nextObject] ) ) {
@@ -1239,8 +1248,77 @@ end:
 			[request release];
 
 			[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
+		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"CHANTYPES="] ) {
+			NSString *types = [feature substringFromIndex:10]; // length of "CHANTYPES="
+			if( [types length] ) {
+				id old = _roomPrefixes;
+				_roomPrefixes = [[NSCharacterSet characterSetWithCharactersInString:types] retain];
+				[old release];
+			}
+		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"PREFIX="] ) {
+			NSScanner *scanner = [NSScanner scannerWithString:feature];
+			[scanner setScanLocation:7]; // length of "PREFIX="
+			if( [scanner scanString:@"(" intoString:NULL] ) {
+				NSString *modes = nil;
+				if( [scanner scanUpToString:@")" intoString:&modes] ) {
+					[scanner scanString:@")" intoString:NULL];
 
-			return;
+					NSMutableDictionary *modesTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:[modes length]];
+					unsigned length = [modes length];
+					unsigned i = 0;
+					for( i = 0; i < length; i++ ) {
+						MVChatRoomMemberMode mode = MVChatRoomMemberNoModes;
+						switch( [modes characterAtIndex:i] ) {
+							case 'v': mode = MVChatRoomMemberVoicedMode; break;
+							case 'h': mode = MVChatRoomMemberHalfOperatorMode; break;
+							case 'o': mode = MVChatRoomMemberOperatorMode; break;
+							case 'a': mode = MVChatRoomMemberAdministratorMode; break;
+							case 'u': mode = MVChatRoomMemberAdministratorMode; break;
+							case 'q': mode = MVChatRoomMemberFounderMode; break;
+							default: break;
+						}
+
+						if( mode != MVChatRoomMemberNoModes ) {
+							NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [modes characterAtIndex:i]];
+							[modesTable setObject:[NSNumber numberWithUnsignedLong:mode] forKey:key];
+							[key release];
+						}
+					}
+
+					if( [modesTable count] ) [_serverInformation setObject:modesTable forKey:@"roomMemberModeTable"];
+					[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:modes] forKey:@"roomMemberModes"];
+
+					NSString *prefixes = [feature substringFromIndex:[scanner scanLocation]];
+					if( [prefixes length] ) {
+						NSMutableDictionary *prefixTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:[modes length]];
+						unsigned length = [prefixes length];
+						unsigned i = 0;
+						for( i = 0; i < length; i++ ) {
+							MVChatRoomMemberMode mode = MVChatRoomMemberNoModes;
+							switch( [prefixes characterAtIndex:i] ) {
+								case '+': mode = MVChatRoomMemberVoicedMode; break;
+								case '%': mode = MVChatRoomMemberHalfOperatorMode; break;
+								case '@': mode = MVChatRoomMemberOperatorMode; break;
+								case '&': mode = MVChatRoomMemberAdministratorMode; break;
+								case '!': mode = MVChatRoomMemberAdministratorMode; break;
+								case '*': mode = MVChatRoomMemberAdministratorMode; break;
+								case '~': mode = MVChatRoomMemberFounderMode; break;
+								case '.': mode = MVChatRoomMemberFounderMode; break;
+								default: break;
+							}
+
+							if( mode != MVChatRoomMemberNoModes ) {
+								NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [prefixes characterAtIndex:i]];
+								[prefixTable setObject:[NSNumber numberWithUnsignedLong:mode] forKey:key];
+								[key release];
+							}
+						}
+
+						if( [prefixTable count] ) [_serverInformation setObject:prefixTable forKey:@"roomMemberPrefixTable"];
+						[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:prefixes] forKey:@"roomMemberPrefixes"];
+					}
+				}
+			}
 		}
 	}
 }
@@ -1734,9 +1812,6 @@ end:
 								case 'o':
 									value = MVChatRoomMemberOperatorMode;
 									goto queue;
-								case 'h':
-									value = MVChatRoomMemberHalfOperatorMode;
-									goto queue;
 								case 'v':
 									value = MVChatRoomMemberVoicedMode;
 									goto queue;
@@ -1744,8 +1819,13 @@ end:
 									if( enabled ) value |= enabledHighBit;
 									[argsNeeded addObject:[NSNumber numberWithUnsignedLong:value]];
 									break;
-								default:
-									break;
+								default: {
+									if( _serverInformation ) {
+										NSMutableDictionary *supportedModes = [_serverInformation objectForKey:@"roomMemberModeTable"];
+										value = [[supportedModes objectForKey:[NSString stringWithFormat:@"%c", chr]] unsignedLongValue];
+										if( value ) goto queue;
+									}
+								}
 							}
 						}
 					} else {
@@ -1922,24 +2002,25 @@ end:
 			NSString *memberName = nil;
 
 			while( ( memberName = [enumerator nextObject] ) ) {
-				unsigned int i = 0, len = [memberName length];
-				if( ! len ) break;
+				if( ! [memberName length] ) break;
 
-				unsigned long modes = MVChatRoomMemberNoModes;
-				BOOL done = NO;
-
-				while( i < len && ! done ) {
-					unichar c = [memberName characterAtIndex:i];
-					switch( c ) {
-						case '+': modes |= MVChatRoomMemberVoicedMode; break;
-						case '%': modes |= MVChatRoomMemberHalfOperatorMode; break;
-						case '@': modes |= MVChatRoomMemberOperatorMode; break;
-						default: done = YES; break;
+				MVChatRoomMemberMode modes = MVChatRoomMemberNoModes;
+				if( _serverInformation ) {
+					NSMutableDictionary *prefixes = [_serverInformation objectForKey:@"roomMemberPrefixTable"];
+					NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [memberName characterAtIndex:0]];
+					modes = [[prefixes objectForKey:key] unsignedLongValue];
+					[key release];
+				} else {
+					switch( [memberName characterAtIndex:0] ) {
+						case '+': modes = MVChatRoomMemberVoicedMode; break;
+						case '@': modes = MVChatRoomMemberOperatorMode; break;
+						default: break;
 					}
-					if( ! done ) i++;
 				}
 
-				if( i > 0 ) memberName = [memberName substringFromIndex:i];
+				if( modes != MVChatRoomMemberNoModes )
+					memberName = [memberName substringFromIndex:1];
+
 				MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
 				[room _addMemberUser:member];
 				[room _setModes:modes forMemberUser:member];
@@ -2119,10 +2200,14 @@ end:
 		NSEnumerator *enumerator = [chanArray objectEnumerator];
 		NSString *room = nil;
 
-		NSCharacterSet *modeChars = [NSCharacterSet characterSetWithCharactersInString:@"@\%+ "];
+		NSCharacterSet *modeChars = nil;
+		if( _serverInformation ) modeChars = [[_serverInformation objectForKey:@"roomMemberPrefixes"] retain];
+		if( ! modeChars ) modeChars = [[NSCharacterSet characterSetWithCharactersInString:@"@+"] retain];
+
 		while( ( room = [enumerator nextObject] ) ) {
 			room = [room stringByTrimmingCharactersInSet:modeChars];
-			if( room ) [results addObject:room];
+			room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			if( [room length] ) [results addObject:room];
 		}
 
 		if( [results count] ) {
@@ -2130,6 +2215,7 @@ end:
 			[user setAttribute:results forKey:MVChatUserKnownRoomsAttribute];
 		}
 
+		[modeChars release];
 		[results release];
 	}
 }

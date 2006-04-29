@@ -18,6 +18,7 @@
 	NSMutableSet *_matchedUsers;
 	NSMutableSet *_pendingWhoisUsers;
 	NSMutableSet *_fileTransfers;
+	NSMutableDictionary *_serverInformation;
 	NSString *_server;
 	NSString *_currentNickname;
 	NSString *_nickname;
@@ -25,6 +26,7 @@
 	NSString *_password;
 	NSString *_realName;
 	NSMutableSet *_lastSentIsonNicknames;
+	NSCharacterSet *_roomPrefixes;
 	NSConditionLock *_threadWaitLock;
 	unsigned short _serverPort;
 	unsigned short _isonSentCount;

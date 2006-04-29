@@ -17,7 +17,8 @@ typedef enum {
 	MVChatRoomMemberVoicedMode = 1 << 1,
 	MVChatRoomMemberHalfOperatorMode = 1 << 2,
 	MVChatRoomMemberOperatorMode = 1 << 3,
-	MVChatRoomMemberFounderMode = 1 << 4
+	MVChatRoomMemberAdministratorMode = 1 << 4,
+	MVChatRoomMemberFounderMode = 1 << 5
 } MVChatRoomMemberMode;
 
 extern NSString *MVChatRoomJoinedNotification;
