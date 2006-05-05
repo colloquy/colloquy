@@ -1447,6 +1447,7 @@ end:
 		else [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:arguments, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
 		[command release];
 		[arguments release];
+		[ctcpInfo release];
 		return;
 	}
 
@@ -1464,6 +1465,7 @@ end:
 	if( [[results lastObject] boolValue] ) {
 		[command release];
 		[arguments release];
+		[ctcpInfo release];
 		return;
 	}
 
@@ -1622,10 +1624,11 @@ end:
 
 	[command release];
 	[arguments release];
+	[ctcpInfo release];
 }
 
 - (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender forRoom:(MVChatRoom *) room {
-	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:3];
+	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:4];
 	if( data ) [info setObject:data forKey:@"data"];
 	if( sender ) [info setObject:sender forKey:@"sender"];
 	if( room ) [info setObject:room forKey:@"room"];
