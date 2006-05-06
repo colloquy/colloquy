@@ -21,6 +21,13 @@ typedef enum {
 	MVChatRoomMemberFounderMode = 1 << 5
 } MVChatRoomMemberMode;
 
+extern NSString *MVChatRoomMemberQuietedFeature;
+extern NSString *MVChatRoomMemberVoicedFeature;
+extern NSString *MVChatRoomMemberHalfOperatorFeature;
+extern NSString *MVChatRoomMemberOperatorFeature;
+extern NSString *MVChatRoomMemberAdministratorFeature;
+extern NSString *MVChatRoomMemberFounderFeature;
+
 extern NSString *MVChatRoomJoinedNotification;
 extern NSString *MVChatRoomPartedNotification;
 extern NSString *MVChatRoomKickedNotification;

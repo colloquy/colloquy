@@ -75,10 +75,10 @@
 
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member {
 	NSComparisonResult retVal = NSOrderedSame;
-	unsigned myStatus = 0, yourStatus = 0;
+	unsigned long myStatus = 0, yourStatus = 0;
 
-	myStatus = ( [self serverOperator] ? 50 : ( [self operator] ? 10 : ( [self halfOperator] ? 5 : ( [self voice] ? 1 : 0 ) ) ) );
-	yourStatus = ( [member serverOperator] ? 50 : ( [member operator] ? 10 : ( [member halfOperator] ? 5 : ( [member voice] ? 1 : 0 ) ) ) );
+	myStatus = ( [self serverOperator] ? 1 << 8 : [[[self room] target] modesForMemberUser:[self user]] & ~MVChatRoomMemberQuietedMode );
+	yourStatus = ( [member serverOperator] ? 1 << 8 : [[[member room] target] modesForMemberUser:[member user]] & ~MVChatRoomMemberQuietedMode );
 
 	if( myStatus > yourStatus ) {
 		retVal = NSOrderedAscending;
@@ -180,6 +180,10 @@
 	return ( [[[self room] target] modesForMemberUser:[self user]] & MVChatRoomMemberHalfOperatorMode );
 }
 
+- (BOOL) roomAdministrator {
+	return ( [[[self room] target] modesForMemberUser:[self user]] & MVChatRoomMemberAdministratorMode );
+}
+
 - (BOOL) roomFounder {
 	return ( [[[self room] target] modesForMemberUser:[self user]] & MVChatRoomMemberFounderMode );
 }
@@ -251,21 +255,13 @@
 
 - (NSImage *) icon {
 	NSImage *icon = nil;
-	if( [self serverOperator] ) icon = [NSImage imageNamed:@"admin"];
-	else if( [self operator] ) icon = [NSImage imageNamed:@"op"];
-	else if( [self halfOperator] ) icon = [NSImage imageNamed:@"half-op"];
-	else if( [self voice] ) icon = [NSImage imageNamed:@"voice"];
-	else icon = [NSImage imageNamed:@"person"];
+	unsigned long modes = [[[self room] target] modesForMemberUser:[self user]];
 
-/*	if( [[self user] isIdentified] ) {
-		NSImage *badge = [NSImage imageNamed:@"identified-badge"];
-		NSImage *new = [[[NSImage alloc] initWithSize:[icon size]] autorelease];
-		[new lockFocus];
-        [icon compositeToPoint:NSMakePoint( 0., 0. ) operation:NSCompositeCopy];
-        [badge compositeToPoint:NSMakePoint( 0., 0. ) operation:NSCompositeSourceOver];
-		[new unlockFocus];
-		icon = new;
-	} */
+	if( [[self user] isServerOperator] ) icon = [NSImage imageNamed:@"admin"];
+	else if( modes & MVChatRoomMemberOperatorMode ) icon = [NSImage imageNamed:@"op"];
+	else if( modes & MVChatRoomMemberHalfOperatorMode ) icon = [NSImage imageNamed:@"half-op"];
+	else if( modes & MVChatRoomMemberVoicedMode ) icon = [NSImage imageNamed:@"voice"];
+	else icon = [NSImage imageNamed:@"person"];
 
 	return icon;
 }
@@ -394,21 +390,35 @@
 
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" ) action:@selector( toggleOperatorStatus: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
+		NSSet *features = [[self connection] supportedFeatures];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Make Half Operator", "make half-operator contextual menu - admin only" ) action:@selector( toggleHalfOperatorStatus: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
+		if( [features containsObject:MVChatRoomMemberOperatorFeature] ) {
+			// correct title is added later in validateMenuItem:
+			item = [[[NSMenuItem alloc] initWithTitle:@"" action:@selector( toggleOperatorStatus: ) keyEquivalent:@""] autorelease];
+			[item setTarget:self];
+			[menu addItem:item];
+		}
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" ) action:@selector( toggleVoiceStatus: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
+		if( [features containsObject:MVChatRoomMemberHalfOperatorFeature] ) {
+			// correct title is added later in validateMenuItem:
+			item = [[[NSMenuItem alloc] initWithTitle:@"" action:@selector( toggleHalfOperatorStatus: ) keyEquivalent:@""] autorelease];
+			[item setTarget:self];
+			[menu addItem:item];
+		}
 
-/*		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Force Quiet", "force quiet contextual menu - admin only" ) action:@selector( toggleQuietedStatus: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item]; */
+		if( [features containsObject:MVChatRoomMemberVoicedFeature] ) {
+			// correct title is added later in validateMenuItem:
+			item = [[[NSMenuItem alloc] initWithTitle:@"" action:@selector( toggleVoiceStatus: ) keyEquivalent:@""] autorelease];
+			[item setTarget:self];
+			[menu addItem:item];
+		}
+
+		if( [features containsObject:MVChatRoomMemberQuietedFeature] ) {
+			// correct title is added later in validateMenuItem:
+			item = [[[NSMenuItem alloc] initWithTitle:@"" action:@selector( toggleQuietedStatus: ) keyEquivalent:@""] autorelease];
+			[item setTarget:self];
+			[menu addItem:item];
+		}
 	}
 
 	return menu;

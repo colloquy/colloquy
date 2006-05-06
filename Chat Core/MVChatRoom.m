@@ -7,6 +7,13 @@
 #import "NSDataAdditions.h"
 #import "NSNotificationAdditions.h"
 
+NSString *MVChatRoomMemberQuietedFeature = @"MVChatRoomMemberQuietedFeature";
+NSString *MVChatRoomMemberVoicedFeature = @"MVChatRoomMemberVoicedFeature";
+NSString *MVChatRoomMemberHalfOperatorFeature = @"MVChatRoomMemberHalfOperatorFeature";
+NSString *MVChatRoomMemberOperatorFeature = @"MVChatRoomMemberOperatorFeature";
+NSString *MVChatRoomMemberAdministratorFeature = @"MVChatRoomMemberAdministratorFeature";
+NSString *MVChatRoomMemberFounderFeature = @"MVChatRoomMemberFounderFeature";
+
 NSString *MVChatRoomJoinedNotification = @"MVChatRoomJoinedNotification";
 NSString *MVChatRoomPartedNotification = @"MVChatRoomPartedNotification";
 NSString *MVChatRoomKickedNotification = @"MVChatRoomKickedNotification";

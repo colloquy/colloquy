@@ -570,6 +570,7 @@
 	if( [[self sender] isKindOfClass:[JVChatRoomMember class]] ) {
 		if( [(JVChatRoomMember *)[self sender] serverOperator] ) return @"server operator";
 		else if( [(JVChatRoomMember *)[self sender] roomFounder] ) return @"room founder";
+		else if( [(JVChatRoomMember *)[self sender] roomAdministrator] ) return @"room administrator";
 		else if( [(JVChatRoomMember *)[self sender] operator] ) return @"operator";
 		else if( [(JVChatRoomMember *)[self sender] halfOperator] ) return @"half operator";
 		else if( [(JVChatRoomMember *)[self sender] voice] ) return @"voice";

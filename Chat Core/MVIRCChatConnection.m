@@ -90,6 +90,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		_currentNickname = [_nickname retain];
 		_realName = [NSFullUserName() retain];
 		_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
+		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
+		[self _resetSupportedFeatures];
 	}
 
 	return self;
@@ -125,6 +127,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_pendingWhoisUsers release];
 	[_roomPrefixes release];
 	[_serverInformation release];
+	[_supportedFeatures release];
 
 	_chatConnection = nil;
 	_connectionThread = nil;
@@ -145,6 +148,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_pendingWhoisUsers = nil;
 	_roomPrefixes = nil;
 	_serverInformation = nil;
+	_supportedFeatures = nil;
 
 	[super dealloc];
 }
@@ -160,7 +164,16 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSSet *) supportedFeatures {
-	return nil;
+	@synchronized( _supportedFeatures ) {
+		return [NSSet setWithSet:_supportedFeatures];
+	} return nil;
+}
+
+- (BOOL) supportsFeature:(NSString *) key {
+	NSParameterAssert( key != nil );
+	@synchronized( _supportedFeatures ) {
+		return [_supportedFeatures containsObject:key];
+	} return NO;
 }
 
 - (const NSStringEncoding *) supportedStringEncodings {
@@ -181,6 +194,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[old release];
 
 	[self _resetSendQueueInterval];
+	[self _resetSupportedFeatures];
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
@@ -1032,6 +1046,16 @@ end:
 	}
 }
 
+- (void) _resetSupportedFeatures {
+	@synchronized( _supportedFeatures ) {
+		[_supportedFeatures removeAllObjects];
+
+		// all server should support these features per RFC 1459
+		[_supportedFeatures addObject:MVChatRoomMemberVoicedFeature];
+		[_supportedFeatures addObject:MVChatRoomMemberOperatorFeature];
+	}
+}
+
 #pragma mark -
 
 - (unsigned int) _watchRulesMatchingUser:(MVChatUser *) user {
@@ -1263,18 +1287,25 @@ end:
 				if( [scanner scanUpToString:@")" intoString:&modes] ) {
 					[scanner scanString:@")" intoString:NULL];
 
+					@synchronized( _supportedFeatures ) {
+						// remove these in case the server does not support them when we parse the modes
+						[_supportedFeatures removeObject:MVChatRoomMemberVoicedFeature];
+						[_supportedFeatures removeObject:MVChatRoomMemberOperatorFeature];
+					}
+
 					NSMutableDictionary *modesTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:[modes length]];
 					unsigned length = [modes length];
 					unsigned i = 0;
 					for( i = 0; i < length; i++ ) {
 						MVChatRoomMemberMode mode = MVChatRoomMemberNoModes;
+						NSString *modeFeature = nil;
 						switch( [modes characterAtIndex:i] ) {
-							case 'v': mode = MVChatRoomMemberVoicedMode; break;
-							case 'h': mode = MVChatRoomMemberHalfOperatorMode; break;
-							case 'o': mode = MVChatRoomMemberOperatorMode; break;
-							case 'a': mode = MVChatRoomMemberAdministratorMode; break;
-							case 'u': mode = MVChatRoomMemberAdministratorMode; break;
-							case 'q': mode = MVChatRoomMemberFounderMode; break;
+							case 'v': mode = MVChatRoomMemberVoicedMode; modeFeature = MVChatRoomMemberVoicedFeature; break;
+							case 'h': mode = MVChatRoomMemberHalfOperatorMode; modeFeature = MVChatRoomMemberHalfOperatorFeature; break;
+							case 'o': mode = MVChatRoomMemberOperatorMode; modeFeature = MVChatRoomMemberOperatorFeature; break;
+							case 'a':
+							case 'u': mode = MVChatRoomMemberAdministratorMode; modeFeature = MVChatRoomMemberAdministratorFeature; break;
+							case 'q': mode = MVChatRoomMemberFounderMode; modeFeature = MVChatRoomMemberFounderFeature; break;
 							default: break;
 						}
 
@@ -1282,6 +1313,12 @@ end:
 							NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [modes characterAtIndex:i]];
 							[modesTable setObject:[NSNumber numberWithUnsignedLong:mode] forKey:key];
 							[key release];
+
+							if( modeFeature ) {
+								@synchronized( _supportedFeatures ) {
+									 [_supportedFeatures addObject:modeFeature];
+								}
+							}
 						}
 					}
 

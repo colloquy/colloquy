@@ -18,6 +18,7 @@
 	NSMutableSet *_matchedUsers;
 	NSMutableSet *_pendingWhoisUsers;
 	NSMutableSet *_fileTransfers;
+	NSMutableSet *_supportedFeatures;
 	NSMutableDictionary *_serverInformation;
 	NSString *_server;
 	NSString *_currentNickname;
@@ -63,6 +64,8 @@
 
 - (void) _scheduleWhoisForUser:(MVChatUser *) user;
 - (void) _whoisNextScheduledUser;
+
+- (void) _resetSupportedFeatures;
 
 - (NSString *) _stringFromPossibleData:(id) input;
 @end

@@ -43,6 +43,7 @@
 - (BOOL) quieted;
 - (BOOL) operator;
 - (BOOL) halfOperator;
+- (BOOL) roomAdministrator;
 - (BOOL) roomFounder;
 - (BOOL) serverOperator;
 - (BOOL) isLocalUser;
