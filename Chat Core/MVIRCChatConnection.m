@@ -2259,6 +2259,18 @@ end:
 	}
 }
 
+- (void) _handle421WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_UNKNOWNCOMMAND
+	if( [parameters count] >= 2 ) {
+		NSString *command = [parameters objectAtIndex:1];
+		if( [command caseInsensitiveCompare:@"NickServ"] == NSOrderedSame ) {
+			// the NickServ command isn't supported, this is an older server
+			// lets send a private message to NickServ to identify
+			if( [[self nicknamePassword] length] )
+				[self sendRawMessageWithFormat:@"PRIVMSG NickServ :IDENTIFY %@", [self nicknamePassword]];
+		}
+	}
+}
+
 #pragma mark -
 #pragma mark Watch Replies
 
