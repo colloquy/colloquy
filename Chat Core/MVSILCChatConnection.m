@@ -982,7 +982,7 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (NSSet *) supportedFeatures {
-	return nil;
+	return [NSSet setWithObjects:MVChatRoomMemberQuietedFeature, MVChatRoomMemberVoicedFeature, MVChatRoomMemberOperatorFeature, MVChatRoomMemberFounderFeature, nil];
 }
 
 - (const NSStringEncoding *) supportedStringEncodings {
