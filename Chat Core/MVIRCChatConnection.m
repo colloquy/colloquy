@@ -659,6 +659,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	_isonSentCount = 0;
 
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _pingServer ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _periodicCleanUp ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _checkWatchedUsers ) object:nil];
@@ -683,7 +684,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	[old release];
 
 	[self performSelector:@selector( _periodicCleanUp ) withObject:nil afterDelay:600.];
-	
+	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:120.];
+
 	[self _readNextMessageFromServer];
 }
 
@@ -976,6 +978,11 @@ end:
 	}
 
 	[self performSelector:@selector( _periodicCleanUp ) withObject:nil afterDelay:600.];
+}
+
+- (void) _pingServer {
+	[self sendRawMessageImmediatelyWithFormat:@"PING %@", [self server]];
+	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:120.];
 }
 
 - (void) _startSendQueue {
