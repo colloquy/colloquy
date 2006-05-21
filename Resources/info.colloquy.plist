@@ -334,5 +334,9 @@
 	<false/>
 	<key>JVAutoRejoinRoomsDelay</key>
 	<real>3</real>
+	<key>WebKitThrottleWindowDisplay</key>
+	<true/>
+	<key>WebKitEnableDeferredUpdates</key>
+	<true/>
 </dict>
 </plist>
