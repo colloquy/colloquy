@@ -2,6 +2,8 @@
 #import "JVFScriptChatPlugin.h"
 #import "JVChatController.h"
 
+#import <FScript/FScript.h>
+
 @implementation JVFScriptConsolePanel
 - (id) init {
 	if( ( self = [super init] ) ) {

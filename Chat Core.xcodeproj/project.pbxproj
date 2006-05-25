@@ -125,7 +125,6 @@
 		1CEEB167095BE3A000166A54 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		1CF4E50F0698E9E900986498 /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = Additions/NSDataAdditions.h; sourceTree = "<group>"; };
 		1CF4E5100698E9E900986498 /* NSDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataAdditions.m; path = Additions/NSDataAdditions.m; sourceTree = "<group>"; };
-		1CF6512A06EA22C40073DEA8 /* ChatCore.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatCore.pch; path = "Chat Core/ChatCore.pch"; sourceTree = "<group>"; };
 		1CF6B4960710894D008ABEFA /* MVSILCChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVSILCChatRoom.h; path = "Chat Core/MVSILCChatRoom.h"; sourceTree = "<group>"; };
 		1CF6B4970710894D008ABEFA /* MVSILCChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVSILCChatRoom.m; path = "Chat Core/MVSILCChatRoom.m"; sourceTree = "<group>"; };
 		1CF6B4980710894D008ABEFA /* MVSILCChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVSILCChatUser.h; path = "Chat Core/MVSILCChatUser.h"; sourceTree = "<group>"; };
@@ -251,7 +250,6 @@
 			children = (
 				1C5CBF2D06FF92C90006C5B1 /* IRC Support */,
 				1C5CBF3006FF93550006C5B1 /* SILC Support */,
-				1CF6512A06EA22C40073DEA8 /* ChatCore.pch */,
 				1C63E9EC086E59D700A40DD4 /* ChatCore.h */,
 				F52D043001873FC401EE70DE /* MVChatConnection.m */,
 				F52D043101873FC401EE70DE /* MVChatConnection.h */,
@@ -479,7 +477,7 @@
 					"$(SRCROOT)/Frameworks",
 				);
 				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Chat Core/ChatCore.pch";
+				GCC_PREFIX_HEADER = Basic.pch;
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
@@ -504,7 +502,7 @@
 				);
 				FRAMEWORK_VERSION = A;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREFIX_HEADER = "Chat Core/ChatCore.pch";
+				GCC_PREFIX_HEADER = Basic.pch;
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
@@ -546,7 +544,7 @@
 					"$(SRCROOT)/Frameworks",
 				);
 				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Chat Core/ChatCore.pch";
+				GCC_PREFIX_HEADER = Basic.pch;
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (

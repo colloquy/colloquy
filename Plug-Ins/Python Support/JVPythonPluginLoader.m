@@ -2,6 +2,7 @@
 #import "JVPythonChatPlugin.h"
 #import "MVChatConnection.h"
 #import "JVChatWindowController.h"
+#import "pyobjc-api.h"
 
 @implementation JVPythonPluginLoader
 - (id) initWithManager:(MVChatPluginManager *) manager {

@@ -2,6 +2,8 @@
 
 extern NSString *JVFScriptErrorDomain;
 
+@class FSInterpreter;
+
 @interface JVFScriptChatPlugin : NSObject <MVChatPlugin> {
 	MVChatPluginManager *_manager;
 	FSInterpreter *_scriptInterpreter;

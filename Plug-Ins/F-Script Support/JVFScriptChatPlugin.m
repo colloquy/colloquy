@@ -4,6 +4,8 @@
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 
+#import <FScript/FScript.h>
+
 NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 
 @interface BlockStackElem : NSObject <NSCoding> {}

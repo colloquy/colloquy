@@ -14,26 +14,6 @@
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXBuildStyle section */
-		014CEA420018CDE011CA2923 /* Development */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				ZERO_LINK = YES;
-			};
-			name = Development;
-		};
-		014CEA430018CDE011CA2923 /* Deployment */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-			};
-			name = Deployment;
-		};
-/* End PBXBuildStyle section */
-
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -46,7 +26,6 @@
 		1C4FD36507C6BC25000EA451 /* JVPythonPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVPythonPluginLoader.h; sourceTree = SOURCE_ROOT; };
 		1C4FD36607C6BC25000EA451 /* JVPythonPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVPythonPluginLoader.m; sourceTree = SOURCE_ROOT; };
 		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
-		32DBCF630370AF2F00C91783 /* Python Support.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Python Support.pch"; sourceTree = SOURCE_ROOT; };
 		8D5B49B6048680CD000E48DA /* Python Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Python Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -145,7 +124,6 @@
 			isa = PBXGroup;
 			children = (
 				1C0A141508B0380800324E25 /* pyobjc-api.h */,
-				32DBCF630370AF2F00C91783 /* Python Support.pch */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -163,38 +141,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(HOME)/Library/Frameworks",
-					/Library/Frameworks,
-				);
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "F-Script Support.pch";
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				HEADER_SEARCH_PATHS = ../..;
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
-				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OBJROOT = ../../build;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-				);
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-					"-weak_framework",
-					FScript,
-				);
-				PRODUCT_NAME = "F-Script Support";
-				SYMROOT = ../../build;
-				WRAPPER_EXTENSION = plugin;
-			};
 			dependencies = (
 			);
 			name = "Python Support Plugin";
@@ -209,12 +155,6 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "Python Support" */;
-			buildSettings = {
-			};
-			buildStyles = (
-				014CEA420018CDE011CA2923 /* Development */,
-				014CEA430018CDE011CA2923 /* Deployment */,
-			);
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -269,22 +209,21 @@
 /* Begin XCBuildConfiguration section */
 		1C7F306C0855489300D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
 					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
 					"$(HOME)/Library/Frameworks",
 				);
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREFIX_HEADER = "Python Support.pch";
+				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"../../Chat Core",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
@@ -299,21 +238,21 @@
 		};
 		1C7F306D0855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
 					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
 					"$(HOME)/Library/Frameworks",
 				);
-				GCC_PREFIX_HEADER = "Python Support.pch";
+				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"../../Chat Core",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
@@ -328,21 +267,21 @@
 		};
 		1C7F306E0855489300D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
 					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
 					"$(HOME)/Library/Frameworks",
 				);
-				GCC_PREFIX_HEADER = "Python Support.pch";
+				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"../../Chat Core",
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
@@ -357,6 +296,7 @@
 		};
 		1C7F30700855489300D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -367,12 +307,14 @@
 		};
 		1C7F30710855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		1C7F30720855489300D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				ARCHS = (
 					ppc,

@@ -4,6 +4,7 @@
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "NSStringAdditions.h"
+#import "pyobjc-api.h"
 
 static PyObject *LoadArbitraryPythonModule( const char *name, const char *directory, const char *newname ) {
 	if( ! name || ! directory ) return NULL;

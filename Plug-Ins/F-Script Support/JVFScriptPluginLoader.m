@@ -4,6 +4,8 @@
 #import "MVChatConnection.h"
 #import "JVChatWindowController.h"
 
+#import <FScript/FScript.h>
+
 #ifndef __FScript_FSNSObject_H__
 #error STOP: You need F-Script installed to build Colloquy. F-Script can be found at: http://www.fscript.org
 #endif

@@ -1,4 +1,5 @@
 #import "MVChatPluginManager.h"
+#import <RubyCocoa/RubyCocoa.h>
 
 extern NSString *JVRubyErrorDomain;
 

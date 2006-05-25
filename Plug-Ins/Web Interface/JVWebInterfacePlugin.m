@@ -1,4 +1,5 @@
 #import "JVWebInterfacePlugin.h"
+#import <WebKit/WebKit.h>
 #import "NSStringAdditions.h"
 #import "JVChatController.h"
 #import "JVDirectChatPanel.h"
