@@ -63,24 +63,6 @@
 		431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXBuildStyle section */
-		014CEA420018CDE011CA2923 /* Development */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PREBINDING = NO;
-			};
-			name = Development;
-		};
-		F52BA31C037C62E801A35792 /* Deployment */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-			};
-			name = Deployment;
-		};
-/* End PBXBuildStyle section */
-
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -377,72 +359,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				DYLIB_COMPATIBILITY_VERSION = 2;
-				DYLIB_CURRENT_VERSION = 2;
-				FRAMEWORK_SEARCH_PATHS = Frameworks;
-				FRAMEWORK_VERSION = A;
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_PASCAL_STRINGS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = ChatCore.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				HEADER_SEARCH_PATHS = (
-					Core/irssi,
-					Core/irssi/glib,
-					Core/irssi/glib/gmodule,
-					Core/irssi/src,
-					Core/irssi/src/irc,
-					Core/irssi/src/irc/core,
-					Core/irssi/src/irc/dcc,
-					Core/irssi/src/irc/flood,
-					Core/irssi/src/irc/notifylist,
-					Core/irssi/src/core,
-					"Core/irssi/src/fe-common/core",
-					"Core/irssi/src/fe-common/irc",
-					"Core/irssi/src/fe-common/irc/dcc",
-					"Core/irssi/src/fe-common/irc/notifylist",
-				);
-				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					Core/irssi/src/irc,
-					Core/irssi/src/irc/core,
-					Core/irssi/src/irc/dcc,
-					Core/irssi/src/irc/flood,
-					Core/irssi/src/irc/notifylist,
-					Core/irssi/src/core,
-					Core/irssi/glib/.libs,
-					"Core/irssi/src/lib-config",
-					"Core/irssi/src/lib-popt",
-					"Core/irssi/src/fe-common/core",
-					"Core/irssi/src/fe-common/irc",
-					"Core/irssi/src/fe-common/irc/dcc",
-					"Core/irssi/src/fe-common/irc/notifylist",
-				);
-				LIBRARY_STYLE = DYNAMIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-falign-loops=16",
-					"-DHAVE_CONFIG_H",
-				);
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0xa10000,
-					"-lssl",
-					"-lcrypto",
-				);
-				PRODUCT_NAME = ChatCore;
-				SKIP_INSTALL = YES;
-				UNSTRIPPED_PRODUCT = YES;
-				WRAPPER_EXTENSION = framework;
-			};
 			dependencies = (
 			);
 			name = "Chat Core (Framework)";
@@ -457,12 +373,6 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C041DDE08553AD200A5A5BA /* Build configuration list for PBXProject "Chat Core" */;
-			buildSettings = {
-			};
-			buildStyles = (
-				F52BA31C037C62E801A35792 /* Deployment */,
-				014CEA420018CDE011CA2923 /* Development */,
-			);
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -560,7 +470,6 @@
 /* Begin XCBuildConfiguration section */
 		1C041DDB08553AD200A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -585,7 +494,6 @@
 		};
 		1C041DDC08553AD200A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -611,12 +519,14 @@
 		};
 		1C041DDF08553AD200A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		1C041DE008553AD200A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -627,7 +537,6 @@
 		};
 		1C7F2DB408553C1900D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -652,6 +561,7 @@
 		};
 		1C7F2DB508553C1900D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				ARCHS = (
 					ppc,
