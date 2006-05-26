@@ -4,23 +4,6 @@
 #import <libxml/tree.h>
 
 @implementation JVChatEvent
-- (id) init {
-	if( ( self = [super init] ) ) {
-		_loadedMessage = NO;
-		_loadedAttributes = NO;
-		_loadedSmall = NO;
-		_objectSpecifier = nil;
-		_transcript = nil;
-		_eventIdentifier = nil;
-		_message = nil;
-		_date = nil;
-		_name = nil;
-		_attributes = nil;
-	}
-
-	return self;
-}
-
 - (id) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) ) {
 		_node = node;

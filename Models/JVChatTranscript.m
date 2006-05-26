@@ -3,6 +3,7 @@
 #import "JVChatMessage.h"
 #import "JVChatEvent.h"
 #import "KAIgnoreRule.h"
+#import "NSAttributedStringMoreAdditions.h"
 
 #import <libxml/tree.h>
 
@@ -38,9 +39,11 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 #pragma mark -
 
 @interface JVChatMessage (JVChatMessagePrivate)
-+ (id) messageWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
-- (id) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
-- (void) setNode:(xmlNode *) node;
+- (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
+- (void) _setNode:(xmlNode *) node;
+- (void) _loadFromXML;
+- (void) _loadSenderFromXML;
+- (void) _loadBodyFromXML;
 @end
 
 #pragma mark -
@@ -284,7 +287,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	@synchronized( self ) {
 		unsigned long i = 0;
-		NSMutableArray *ret = [NSMutableArray arrayWithCapacity:( range.length - range.location )];
+		NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:range.length];
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
@@ -293,8 +296,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 				do {
 					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) ) {
 						if( NSLocationInRange( i, range ) ) {
-							JVChatMessage *msg = [JVChatMessage messageWithNode:subNode andTranscript:self];
+							JVChatMessage *msg = [[JVChatMessage allocWithZone:nil] _initWithNode:subNode andTranscript:self];
 							if( msg ) [ret addObject:msg];
+							[msg release];
 						}
 
 						if( ++i > ( range.location + range.length ) ) goto done;
@@ -318,7 +322,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		} while( node && ( node = node -> next ) );
 
 	done:
-		return [NSArray arrayWithArray:ret];
+		return [ret autorelease];
 	}
 }
 
@@ -334,7 +338,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 				xmlNode *subNode = xmlGetLastChild( node );
 				do {
 					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) )
-						return [JVChatMessage messageWithNode:subNode andTranscript:self];
+						return [[[JVChatMessage allocWithZone:nil] _initWithNode:subNode andTranscript:self] autorelease];
 				} while( subNode && ( subNode = subNode -> prev ) );
 			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) ) {
 				return [JVChatSession sessionWithNode:node andTranscript:self];
@@ -350,7 +354,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 #pragma mark -
 
 - (NSArray *) appendElements:(NSArray *) elements {
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[elements count]];
+	NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:[elements count]];
 	NSEnumerator *enumerator = [elements objectEnumerator];
 	id element = nil;
 
@@ -365,7 +369,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		}
 	}
 
-	return [NSArray arrayWithArray:ret];
+	return [ret autorelease];
 }
 
 - (void) appendChatTranscript:(JVChatTranscript *) transcript {
@@ -389,16 +393,14 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 			}
 		}
 
-		unsigned long i = 0;
-
 		if( [_messages count] < range.location )
-			for( i = [_messages count]; i < range.location; i++ )
+			for( unsigned long i = [_messages count]; i < range.location; i++ )
 				[_messages insertObject:[NSNull null] atIndex:i];
 
-		NSMutableArray *ret = [NSMutableArray arrayWithCapacity:( range.length - range.location )];
+		NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:range.length];
 		JVChatMessage *msg = nil;
 
-		i = 0;
+		unsigned long i = 0;
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
@@ -408,19 +410,20 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 7 ) ) {
 						if( NSLocationInRange( i, range ) ) {
 							if( [_messages count] > i && [[_messages objectAtIndex:i] isKindOfClass:[JVChatMessage class]] ) {
-								msg = [_messages objectAtIndex:i];
+								msg = [[_messages objectAtIndex:i] retain];
 							} else if( [_messages count] > i && [[_messages objectAtIndex:i] isKindOfClass:[NSNull class]] ) {
-								msg = [JVChatMessage messageWithNode:subNode andTranscript:self];
+								msg = [[JVChatMessage allocWithZone:nil] _initWithNode:subNode andTranscript:self];
 								id classDesc = [NSClassDescription classDescriptionForClass:[self class]];
 								[msg setObjectSpecifier:[[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[self objectSpecifier] key:@"messages" uniqueID:[msg messageIdentifier]] autorelease]];
 								[_messages replaceObjectAtIndex:i withObject:msg];
 							} else if( [_messages count] == i ) {
-								msg = [JVChatMessage messageWithNode:subNode andTranscript:self];
+								msg = [[JVChatMessage allocWithZone:nil] _initWithNode:subNode andTranscript:self];
 								id classDesc = [NSClassDescription classDescriptionForClass:[self class]];
 								[msg setObjectSpecifier:[[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[self objectSpecifier] key:@"messages" uniqueID:[msg messageIdentifier]] autorelease]];
 								[_messages insertObject:msg atIndex:i];
 							} else continue;
 							if( msg ) [ret addObject:msg];
+							[msg release];
 						}
 
 						if( ++i > ( range.location + range.length ) ) goto done;
@@ -430,7 +433,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		} while( node && ( node = node -> next ) );
 
 	done:
-		return [NSArray arrayWithArray:ret];
+		return [ret autorelease];
 	}
 }
 
@@ -470,7 +473,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 			}
 		} while( node && ( node = node -> next ) );
 
-		return ( foundNode ? [JVChatMessage messageWithNode:foundNode andTranscript:self] : nil );
+		return ( foundNode ? [[[JVChatMessage allocWithZone:nil] _initWithNode:foundNode andTranscript:self] autorelease] : nil );
 	}
 }
 
@@ -485,12 +488,13 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 		do {
 			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) node -> name, 7 ) ) {
-				JVChatMessage *msg = [JVChatMessage messageWithNode:node andTranscript:self];
+				JVChatMessage *msg = [[JVChatMessage allocWithZone:nil] _initWithNode:node andTranscript:self];
 				if( msg ) [results addObject:msg];
+				[msg release];
 			}
 		} while( node && ( node = node -> next ) );
 
-		return [NSArray arrayWithArray:results];
+		return results;
 	}
 
 	return nil;
@@ -513,7 +517,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 			}
 		} while( node && ( node = node -> prev ) );
 
-		return ( foundNode ? [JVChatMessage messageWithNode:foundNode andTranscript:self] : nil );
+		return ( foundNode ? [[[JVChatMessage allocWithZone:nil] _initWithNode:foundNode andTranscript:self] autorelease] : nil );
 	}
 }
 
@@ -639,7 +643,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 		_requiresNewEnvelope = NO;
 
-		return [JVChatMessage messageWithNode:child andTranscript:self];
+		return [[[JVChatMessage allocWithZone:nil] _initWithNode:child andTranscript:self] autorelease];
 	}
 }
 
@@ -650,7 +654,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 - (NSArray *) appendMessages:(NSArray *) messages forceNewEnvelope:(BOOL) forceEnvelope {
 	NSEnumerator *enumerator = [messages objectEnumerator];
 	JVChatMessage *message = nil;
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[messages count]];
+	NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:[messages count]];
 
 	if( forceEnvelope ) _requiresNewEnvelope = YES;
 
@@ -662,7 +666,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		}
 	}
 
-	return [NSArray arrayWithArray:ret];
+	return [ret autorelease];
 }
 
 #pragma mark -
@@ -676,7 +680,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	@synchronized( self ) {
 		unsigned long i = 0;
-		NSMutableArray *ret = [NSMutableArray arrayWithCapacity:( range.length - range.location )];
+		NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:range.length];
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
@@ -691,7 +695,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		} while( node && ( node = node -> next ) );
 
 	done:
-		return [NSArray arrayWithArray:ret];
+		return [ret autorelease];
 	}
 }
 
@@ -737,7 +741,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	@synchronized( self ) {
 		unsigned long i = 0;
-		NSMutableArray *ret = [NSMutableArray arrayWithCapacity:( range.length - range.location )];
+		NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:range.length];
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
@@ -752,7 +756,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		} while( node && ( node = node -> next ) );
 
 	done:
-		return [NSArray arrayWithArray:ret];
+		return [ret autorelease];
 	}
 }
 
@@ -1151,6 +1155,18 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		if( [lastDateString length] ) fsetxattr( [_logFile fileDescriptor], "lastMessageDate", [lastDateString UTF8String], [lastDateString length], 0, 0 );
 	}
 }
+
+- (void) _loadMessage:(JVChatMessage *) message {
+	[message _loadFromXML];
+}
+
+- (void) _loadSenderForMessage:(JVChatMessage *) message {
+	[message _loadSenderFromXML];
+}
+
+- (void) _loadBodyForMessage:(JVChatMessage *) message {
+	[message _loadBodyFromXML];
+}
 @end
 
 #pragma mark -
@@ -1251,5 +1267,129 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 - (void) replaceInMessages:(JVChatMessage *) message atIndex:(unsigned) index {
 	[self scriptErrorCantRemoveMessageException];
+}
+@end
+
+#pragma mark -
+
+@implementation JVChatMessage (JVChatMessageChatTranscriptPrivate)
+- (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
+	if( ( self = [self init] ) ) {
+		_node = node;
+		_transcript = transcript; // weak reference
+
+		if( ! _node || node -> type != XML_ELEMENT_NODE ) {
+			[self release];
+			return nil;
+		}
+
+		@synchronized( _transcript ) {
+			xmlChar *idStr = xmlGetProp( (xmlNode *) _node, (xmlChar *) "id" );
+			_messageIdentifier = ( idStr ? [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) idStr] : nil );
+			xmlFree( idStr );
+		}
+	}
+
+	return self;
+}
+
+- (void) _loadFromXML {
+	if( _loaded || ! _node ) return;
+
+	@synchronized( _transcript ) {
+		xmlChar *prop = xmlGetProp( _node, (xmlChar *) "received" );
+		[_date autorelease];
+		_date = ( prop ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
+		xmlFree( prop );
+
+		prop = xmlGetProp( _node, (xmlChar *) "action" );
+		_action = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? YES : NO );
+		xmlFree( prop );
+
+		prop = xmlGetProp( _node, (xmlChar *) "highlight" );
+		_highlighted = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? YES : NO );
+		xmlFree( prop );
+
+		prop = xmlGetProp( _node, (xmlChar *) "ignored" );
+		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVMessageIgnored : _ignoreStatus );
+		xmlFree( prop );
+
+		prop = xmlGetProp( _node, (xmlChar *) "type" );
+		_type = ( ( prop && ! strcmp( (char *) prop, "notice" ) ) ? JVChatMessageNoticeType : JVChatMessageNormalType );
+		xmlFree( prop );
+
+		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "ignored" );
+		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVUserIgnored : _ignoreStatus );
+		xmlFree( prop );
+
+		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "source" );
+		[_source autorelease];
+		_source = ( prop ? [[NSURL allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
+		xmlFree( prop );
+	}
+
+	_loaded = YES;
+}
+
+- (void) _loadSenderFromXML {
+	if( _senderLoaded || ! _node ) return;
+
+	@synchronized( _transcript ) {
+		xmlNode *subNode = ((xmlNode *) _node) -> parent -> children;
+
+		do {
+			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
+				xmlChar *prop = xmlNodeGetContent( subNode );
+				[_senderName autorelease];
+				if( prop ) _senderName = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				else _senderName = nil;
+				xmlFree( prop );
+
+				prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
+				[_senderNickname autorelease];
+				if( prop ) _senderNickname = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				else _senderNickname = nil;
+				xmlFree( prop );
+
+				prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
+				[_senderIdentifier autorelease];
+				if( prop ) _senderIdentifier = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				else _senderIdentifier = nil;
+				xmlFree( prop );
+
+				prop = xmlGetProp( subNode, (xmlChar *) "hostmask" );
+				[_senderHostmask autorelease];
+				if( prop ) _senderHostmask = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				else _senderHostmask = nil;
+				xmlFree( prop );
+
+				prop = xmlGetProp( subNode, (xmlChar *) "class" );
+				[_senderClass autorelease];
+				if( prop ) _senderClass = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
+				else _senderClass = nil;
+				xmlFree( prop );
+
+				prop = xmlGetProp( subNode, (xmlChar *) "self" );
+				if( prop && ! strcmp( (char *) prop, "yes" ) ) _senderIsLocalUser = YES;
+				else _senderIsLocalUser = NO;
+				xmlFree( prop );
+
+				break;
+			}
+		} while( ( subNode = subNode -> next ) );
+	}
+
+	_senderLoaded = YES;
+}
+
+- (void) _loadBodyFromXML {
+	if( _bodyLoaded || ! _node ) return;
+
+	@synchronized( _transcript ) {
+		[_attributedMessage autorelease];
+		_attributedMessage = [[NSTextStorage allocWithZone:[self zone]] initWithXHTMLTree:_node baseURL:nil defaultAttributes:nil];
+	}
+
+	_bodyLoaded = YES;
 }
 @end

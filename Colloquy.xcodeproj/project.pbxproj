@@ -260,6 +260,9 @@
 		1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */; };
 		1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */; };
 		1CE95886063F3BF90071C9C3 /* inspector.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CE95885063F3BF90071C9C3 /* inspector.png */; };
+		1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */ = {isa = PBXBuildFile; fileRef = 1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */; };
+		1CEC00540A20F030004C2B86 /* JVSQLChatTranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEC00530A20F030004C2B86 /* JVSQLChatTranscript.m */; };
+		1CEC00570A20F05F004C2B86 /* JVSQLChatTranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEC00530A20F030004C2B86 /* JVSQLChatTranscript.m */; };
 		1CECE26006A37BEC00350564 /* JVBehaviorPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CECE22F06A37A8300350564 /* JVBehaviorPreferences.nib */; };
 		1CEE3B010578421400AD6DE2 /* statusAvailable.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CEE3AFE0578421400AD6DE2 /* statusAvailable.png */; };
 		1CEE3B020578421400AD6DE2 /* statusAway.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CEE3AFF0578421400AD6DE2 /* statusAway.png */; };
@@ -626,7 +629,7 @@
 		1CABFCB00657F10900801C15 /* JVSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSplitView.m; path = Views/JVSplitView.m; sourceTree = "<group>"; };
 		1CABFD0C0658629200801C15 /* JVStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVStyle.h; path = Models/JVStyle.h; sourceTree = "<group>"; };
 		1CABFD0D0658629200801C15 /* JVStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVStyle.m; path = Models/JVStyle.m; sourceTree = "<group>"; };
-		1CB2CD8C052DDC570094AAA4 /* Colloquy.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CB2CD8C052DDC570094AAA4 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CB3716F060CC7E200F6A81F /* KABubbleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KABubbleWindowController.h; path = Controllers/KABubbleWindowController.h; sourceTree = "<group>"; };
 		1CB37170060CC7E200F6A81F /* KABubbleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KABubbleWindowController.m; path = Controllers/KABubbleWindowController.m; sourceTree = "<group>"; };
 		1CB37177060CC81C00F6A81F /* KABubbleWindowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KABubbleWindowView.h; path = Views/KABubbleWindowView.h; sourceTree = "<group>"; };
@@ -743,6 +746,9 @@
 		1CE72A96052C745400A8FE6E /* JVChatConsolePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatConsolePanel.m; path = Panels/JVChatConsolePanel.m; sourceTree = "<group>"; };
 		1CE72A99052C79E700A8FE6E /* JVChatConsole.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVChatConsole.nib; path = Resources/JVChatConsole.nib; sourceTree = "<group>"; };
 		1CE95885063F3BF90071C9C3 /* inspector.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = inspector.png; path = Resources/inspector.png; sourceTree = "<group>"; };
+		1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = transcriptSchema.sql; path = Resources/transcriptSchema.sql; sourceTree = "<group>"; };
+		1CEC00520A20F030004C2B86 /* JVSQLChatTranscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSQLChatTranscript.h; path = Models/JVSQLChatTranscript.h; sourceTree = "<group>"; };
+		1CEC00530A20F030004C2B86 /* JVSQLChatTranscript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSQLChatTranscript.m; path = Models/JVSQLChatTranscript.m; sourceTree = "<group>"; };
 		1CECE23006A37A8300350564 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVBehaviorPreferences.nib; sourceTree = "<group>"; };
 		1CEE3AFE0578421400AD6DE2 /* statusAvailable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = statusAvailable.png; path = Resources/statusAvailable.png; sourceTree = "<group>"; };
 		1CEE3AFF0578421400AD6DE2 /* statusAway.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = statusAway.png; path = Resources/statusAway.png; sourceTree = "<group>"; };
@@ -765,7 +771,6 @@
 		1CF5F8D107D537E50019DC13 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = Frameworks/Growl.framework; sourceTree = SOURCE_ROOT; };
 		1CF627CA07558F79005DFCFA /* fileSend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fileSend.png; path = "Resources/Toolbar Icons/fileSend.png"; sourceTree = "<group>"; };
 		1CF6511406EA22480073DEA8 /* Colloquy.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colloquy.pch; sourceTree = "<group>"; };
-		1CF651BB06EA29D10073DEA8 /* Standard Commands.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Standard Commands.pch"; path = "Plug-Ins/Standard Commands/Standard Commands.pch"; sourceTree = "<group>"; };
 		1CF79CBC07AC77E600696918 /* JVChatTranscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscript.h; path = Models/JVChatTranscript.h; sourceTree = "<group>"; };
 		1CF79CBD07AC77E600696918 /* JVChatTranscript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscript.m; path = Models/JVChatTranscript.m; sourceTree = "<group>"; };
 		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = Frameworks/libsilc.framework; sourceTree = SOURCE_ROOT; };
@@ -1359,7 +1364,6 @@
 		1CC478480427BB5500000102 /* Standard Commands */ = {
 			isa = PBXGroup;
 			children = (
-				1CF651BB06EA29D10073DEA8 /* Standard Commands.pch */,
 				1C3B4D570427BD5200000102 /* JVStandardCommands.m */,
 				1C3B4D560427BD5200000102 /* JVStandardCommands.h */,
 			);
@@ -1420,6 +1424,8 @@
 				1C66913707BFA76D008400F7 /* JVEmoticonSet.h */,
 				1CF79CBD07AC77E600696918 /* JVChatTranscript.m */,
 				1CF79CBC07AC77E600696918 /* JVChatTranscript.h */,
+				1CEC00530A20F030004C2B86 /* JVSQLChatTranscript.m */,
+				1CEC00520A20F030004C2B86 /* JVSQLChatTranscript.h */,
 				1C5EF36A07B45FBF004E66D3 /* JVChatSession.m */,
 				1C5EF36907B45FBF004E66D3 /* JVChatSession.h */,
 				1CD733CA05A0E2470080F952 /* JVChatMessage.m */,
@@ -1565,6 +1571,7 @@
 				F5394C070378E44D01A35792 /* Credits.rtf */,
 				F5394C0B0378E44D01A35792 /* Localizable.strings */,
 				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
+				1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */,
 				1CBECDCF0508C8AB000001C8 /* default.xsl */,
 				0A5B683E0810EC9700398D5A /* default.css */,
 				0AA811220826DB8800A3BF2D /* default.js */,
@@ -2154,6 +2161,7 @@
 				1C710B4D09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png in Resources */,
 				1C710C4F09F323F8007B4515 /* splitviewDimple.png in Resources */,
 				1C710C5009F323F8007B4515 /* splitviewDividerBackground.png in Resources */,
+				1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2259,6 +2267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C59A92009FDEBA3000682B8 /* JVChatWindowControllerTests.m in Sources */,
+				1CEC00540A20F030004C2B86 /* JVSQLChatTranscript.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2341,6 +2350,7 @@
 				1C710A6C09F23AF0007B4515 /* JVSideSplitView.m in Sources */,
 				1C710A6E09F23AF0007B4515 /* JVSideStatusView.m in Sources */,
 				1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */,
+				1CEC00570A20F05F004C2B86 /* JVSQLChatTranscript.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2840,6 +2850,7 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
+					"-lsqlite3",
 				);
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (
@@ -2863,6 +2874,7 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
+					"-lsqlite3",
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -2932,6 +2944,7 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
+					"-lsqlite3",
 				);
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (

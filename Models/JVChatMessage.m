@@ -8,6 +8,14 @@
 #import "JVChatRoomMember.h"
 #import "NSAttributedStringMoreAdditions.h"
 
+@interface JVChatTranscript (JVChatTranscriptPrivate)
+- (void) _loadMessage:(JVChatMessage *) message;
+- (void) _loadSenderForMessage:(JVChatMessage *) message;
+- (void) _loadBodyForMessage:(JVChatMessage *) message;
+@end
+
+#pragma mark -
+
 @implementation JVChatMessage
 + (void) initialize {
 	[super initialize];
@@ -22,7 +30,7 @@
 }
 
 + (id) coerceString:(id) value toMessage:(Class) class {
-	return [[[JVMutableChatMessage alloc] initWithText:value sender:nil] autorelease];
+	return [[[JVMutableChatMessage allocWithZone:nil] initWithText:value sender:nil] autorelease];
 }
 
 + (id) coerceMessage:(id) value toString:(Class) class {
@@ -30,7 +38,7 @@
 }
 
 + (id) coerceTextStorage:(id) value toMessage:(Class) class {
-	return [[[JVMutableChatMessage alloc] initWithText:value sender:nil] autorelease];
+	return [[[JVMutableChatMessage allocWithZone:nil] initWithText:value sender:nil] autorelease];
 }
 
 + (id) coerceMessage:(id) value toTextStorage:(Class) class {
@@ -40,122 +48,24 @@
 #pragma mark -
 
 - (void) load {
-	if( _loaded || ! _node ) return;
-
-	@synchronized( [self transcript] ) {
-		xmlChar *prop = xmlGetProp( _node, (xmlChar *) "received" );
-		[_date autorelease];
-		_date = ( prop ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
-		xmlFree( prop );
-
-		prop = xmlGetProp( _node, (xmlChar *) "action" );
-		_action = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? YES : NO );
-		xmlFree( prop );
-
-		prop = xmlGetProp( _node, (xmlChar *) "highlight" );
-		_highlighted = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? YES : NO );
-		xmlFree( prop );
-
-		prop = xmlGetProp( _node, (xmlChar *) "ignored" );
-		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVMessageIgnored : _ignoreStatus );
-		xmlFree( prop );
-
-		prop = xmlGetProp( _node, (xmlChar *) "type" );
-		_type = ( ( prop && ! strcmp( (char *) prop, "notice" ) ) ? JVChatMessageNoticeType : JVChatMessageNormalType );
-		xmlFree( prop );
-
-		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "ignored" );
-		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVUserIgnored : _ignoreStatus );
-		xmlFree( prop );
-
-		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "source" );
-		[_source autorelease];
-		_source = ( prop ? [[NSURL allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
-		xmlFree( prop );
-	}
-
-	_loaded = YES;
+	if( _loaded ) return;
+	[_transcript _loadMessage:self];
 }
 
 - (void) loadBody {
-	if( _bodyLoaded || ! _node ) return;
-
-	@synchronized( [self transcript] ) {
-		[_attributedMessage autorelease];
-		_attributedMessage = [[NSTextStorage allocWithZone:[self zone]] initWithXHTMLTree:_node baseURL:nil defaultAttributes:nil];
-	}
-
-	_bodyLoaded = YES;
+	if( _bodyLoaded ) return;
+	[_transcript _loadBodyForMessage:self];
 }
 
 - (void) loadSender {
-	if( _senderLoaded || ! _node ) return;
-
-	@synchronized( [self transcript] ) {
-		xmlNode *subNode = ((xmlNode *) _node) -> parent -> children;
-
-		do {
-			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
-				xmlChar *prop = xmlNodeGetContent( subNode );
-				[_senderName autorelease];
-				if( prop ) _senderName = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
-				else _senderName = nil;
-				xmlFree( prop );
-
-				prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
-				[_senderNickname autorelease];
-				if( prop ) _senderNickname = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
-				else _senderNickname = nil;
-				xmlFree( prop );
-
-				prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
-				[_senderIdentifier autorelease];
-				if( prop ) _senderIdentifier = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
-				else _senderIdentifier = nil;
-				xmlFree( prop );
-
-				prop = xmlGetProp( subNode, (xmlChar *) "hostmask" );
-				[_senderHostmask autorelease];
-				if( prop ) _senderHostmask = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
-				else _senderHostmask = nil;
-				xmlFree( prop );
-
-				prop = xmlGetProp( subNode, (xmlChar *) "class" );
-				[_senderClass autorelease];
-				if( prop ) _senderClass = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
-				else _senderClass = nil;
-				xmlFree( prop );
-
-				prop = xmlGetProp( subNode, (xmlChar *) "self" );
-				if( prop && ! strcmp( (char *) prop, "yes" ) ) _senderIsLocalUser = YES;
-				else _senderIsLocalUser = NO;
-				xmlFree( prop );
-
-				break;
-			}
-		} while( ( subNode = subNode -> next ) );
-	}
-
-	_senderLoaded = YES;
+	if( _senderLoaded ) return;
+	[_transcript _loadSenderForMessage:self];
 }
 
 #pragma mark -
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_loaded = NO;
-		_bodyLoaded = NO;
-		_senderLoaded = NO;
-		_objectSpecifier = nil;
-		_transcript = nil;
-		_messageIdentifier = nil;
-		_htmlMessage = nil;
-		_attributedMessage = nil;
-		_date = nil;
-		_source = nil;
-		_action = NO;
-		_highlighted = NO;
-		_senderIsLocalUser = NO;
 		_ignoreStatus = JVNotIgnored;
 		_type = JVChatMessageNormalType;
 	}
@@ -163,37 +73,29 @@
 	return self;
 }
 
-- (id) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
-	if( ( self = [self init] ) ) {
-		_node = node;
-		_transcript = transcript; // weak reference
-
-		if( ! _node || node -> type != XML_ELEMENT_NODE ) {
-			[self release];
-			return nil;
-		}
-
-		@synchronized( [self transcript] ) {
-			xmlChar *idStr = xmlGetProp( (xmlNode *) _node, (xmlChar *) "id" );
-			_messageIdentifier = ( idStr ? [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) idStr] : nil );
-			xmlFree( idStr );
-		}
-	}
-
-	return self;
-}
-
 - (id) mutableCopyWithZone:(NSZone *) zone {
-	JVChatMessage *ret =  nil;
+	JVMutableChatMessage *ret =  nil;
 
-	@synchronized( [self transcript] ) {
-		ret = [[JVMutableChatMessage allocWithZone:zone] initWithNode:[self node] andTranscript:nil];
+	@synchronized( _transcript ) {
+		ret = [[JVMutableChatMessage allocWithZone:zone] init];
 
-		[ret load];
-		[ret loadBody];
-		[ret loadSender];
+		ret -> _loaded = YES;
+		ret -> _senderLoaded = YES;
+		ret -> _bodyLoaded = YES;
 
-		[ret performSelector:@selector( setNode: ) withObject:NULL]; // remove the node association
+		ret -> _senderIsLocalUser = [self senderIsLocalUser];
+		ret -> _senderIdentifier = [[self senderIdentifier] copyWithZone:zone];
+		ret -> _senderName = [[self senderName] copyWithZone:zone];
+		ret -> _senderHostmask = [[self senderHostmask] copyWithZone:zone];
+		ret -> _senderClass = [[self senderClass] copyWithZone:zone];
+		ret -> _senderBuddyIdentifier = [[self senderBuddyIdentifier] copyWithZone:zone];
+		ret -> _attributedMessage = [[self body] mutableCopyWithZone:zone];
+		ret -> _source = [[self source] copyWithZone:zone];
+		ret -> _date = [[self date] copyWithZone:zone];
+		ret -> _action = [self isAction];
+		ret -> _highlighted = [self isHighlighted];
+		ret -> _ignoreStatus = [self ignoreStatus];
+		ret -> _type = [self type];
 	}
 
 	return ret;
@@ -201,7 +103,6 @@
 
 - (void) dealloc {
 	[_messageIdentifier release];
-	[_htmlMessage release];
 	[_attributedMessage release];
 	[_date release];
 	[_source release];
@@ -217,7 +118,6 @@
 	_node = NULL;
 	_transcript = nil;
 	_messageIdentifier = nil;
-	_htmlMessage = nil;
 	_attributedMessage = nil;
 	_date = nil;
 	_source = nil;
@@ -235,17 +135,11 @@
 
 #pragma mark -
 
-+ (id) messageWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
-	return [[[self alloc] initWithNode:node andTranscript:transcript] autorelease];
-}
-
-#pragma mark -
-
 - (void *) node {
 	return _node;
 }
 
-- (void) setNode:(xmlNode *) node {
+- (void) _setNode:(xmlNode *) node {
 	_node = node;
 }
 
@@ -353,8 +247,9 @@
 }
 
 - (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier {
-	[_objectSpecifier autorelease];
+	id old = _objectSpecifier;
 	_objectSpecifier = [objectSpecifier retain];
+	[old release];
 }
 
 #pragma mark -
@@ -364,7 +259,7 @@
 }
 
 - (NSString *) debugDescription {
-	return [NSString stringWithFormat:@"<%@ 0x%x: (%@) %@>", NSStringFromClass( [self class] ), (unsigned long) self, [self senderNickname], [self body]];
+	return [NSString stringWithFormat:@"<%@ 0x%x [%@]: (%@) %@>", NSStringFromClass( [self class] ), (unsigned long) self, _messageIdentifier, [self senderNickname], [self body]];
 }
 
 #pragma mark -
@@ -407,15 +302,10 @@
 }
 
 + (id) messageWithText:(id) body sender:(id) sender {
-	return [[[self alloc] initWithText:body sender:sender] autorelease];
+	return [[[self allocWithZone:nil] initWithText:body sender:sender] autorelease];
 }
 
 #pragma mark -
-
-- (id) init {
-	if( ( self = [super init] ) ) _doc = NULL;
-	return self;
-}
 
 - (id) initWithText:(id) body sender:(id) sender {
 	if( ( self = [self init] ) ) {
@@ -502,7 +392,7 @@
 	return _node;
 }
 
-- (void) setNode:(xmlNode *) node {
+- (void) _setNode:(xmlNode *) node {
 	if( _doc ) {
 		xmlFreeDoc( _doc );
 		_doc = NULL;
@@ -514,17 +404,19 @@
 #pragma mark -
 
 - (void) setDate:(NSDate *) date {
-	[self setNode:NULL];
-	[_date autorelease];
+	[self _setNode:NULL];
+	id old = _date;
 	_date = [date copyWithZone:[self zone]];
+	[old release];
 }
 
 #pragma mark -
 
 - (void) setSender:(id) sender {
-	[self setNode:NULL];
-	[_sender autorelease];
+	[self _setNode:NULL];
+	id old = _sender;
 	_sender = [sender retain];
+	[old release];
 }
 
 - (id) sender {
@@ -596,16 +488,17 @@
 #pragma mark -
 
 - (void) setBody:(id) message {
-	[self setNode:NULL];
+	[self _setNode:NULL];
 	if( ! _attributedMessage ) {
-		if( [message isKindOfClass:[NSTextStorage class]] ) _attributedMessage = [message retain];
-		else if( [message isKindOfClass:[NSAttributedString class]] ) _attributedMessage = [[NSTextStorage alloc] initWithAttributedString:message];
-		else if( [message isKindOfClass:[NSString class]] ) _attributedMessage = [[NSTextStorage alloc] initWithString:(NSString *)message];
+		if( [message isKindOfClass:[NSTextStorage class]] ) _attributedMessage = [message mutableCopyWithZone:nil];
+		else if( [message isKindOfClass:[NSAttributedString class]] ) _attributedMessage = [[NSTextStorage allocWithZone:nil] initWithAttributedString:message];
+		else if( [message isKindOfClass:[NSString class]] ) _attributedMessage = [[NSTextStorage allocWithZone:nil] initWithString:(NSString *)message];
 	} else if( _attributedMessage && [message isKindOfClass:[NSAttributedString class]] ) {
 		[_attributedMessage setAttributedString:message];
 	} else if( _attributedMessage && [message isKindOfClass:[NSString class]] ) {
-		id string = [[[NSAttributedString alloc] initWithString:(NSString *)message] autorelease];
+		id string = [[NSAttributedString allocWithZone:nil] initWithString:(NSString *)message];
 		[_attributedMessage setAttributedString:string];
+		[string release];
 	}
 }
 
@@ -620,37 +513,39 @@
 #pragma mark -
 
 - (void) setAction:(BOOL) action {
-	[self setNode:NULL];
+	[self _setNode:NULL];
 	_action = action;
 }
 
 - (void) setHighlighted:(BOOL) highlighted {
-	[self setNode:NULL];
+	[self _setNode:NULL];
 	_highlighted = highlighted;
 }
 
 - (void) setIgnoreStatus:(JVIgnoreMatchResult) ignoreStatus {
-	[self setNode:NULL];
+	[self _setNode:NULL];
 	_ignoreStatus = ignoreStatus;
 }
 
 - (void) setType:(JVChatMessageType) type {
-	[self setNode:NULL];
+	[self _setNode:NULL];
 	_type = type;
 }
 
 #pragma mark -
 
 - (void) setSource:(NSURL *) source {
-	[self setNode:NULL];
-	[_source autorelease];
+	[self _setNode:NULL];
+	id old = _source;
 	_source = [source copyWithZone:[self zone]];
+	[old release];
 }
 
 - (void) setMessageIdentifier:(NSString *) identifier {
-	[self setNode:NULL];
-	[_messageIdentifier autorelease];
+	[self _setNode:NULL];
+	id old = _messageIdentifier;
 	_messageIdentifier = [identifier copyWithZone:[self zone]];
+	[old release];
 }
 
 #pragma mark -

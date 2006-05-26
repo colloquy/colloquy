@@ -7,7 +7,7 @@ typedef enum _JVChatMessageType {
 } JVChatMessageType;
 
 @interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement> {
-	@protected
+	@public
 	/* xmlNode */ void *_node;
 	NSString *_messageIdentifier;
 	NSScriptObjectSpecifier *_objectSpecifier;
@@ -20,7 +20,6 @@ typedef enum _JVChatMessageType {
 	NSString *_senderClass;
 	NSString *_senderBuddyIdentifier;
 
-	NSString *_htmlMessage;
 	NSTextStorage *_attributedMessage;
 	NSDate *_date;
 	NSURL *_source;
