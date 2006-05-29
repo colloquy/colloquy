@@ -222,6 +222,7 @@
 		1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */; };
 		1CBC63190548975E009E59E1 /* GeneralPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC63180548975E009E59E1 /* GeneralPreferences.png */; };
 		1CBC634905489BEE009E59E1 /* JVGeneralPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC634705489BEE009E59E1 /* JVGeneralPreferences.nib */; };
+		1CC1AE630A2987E20000A797 /* sqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC1AE400A2987230000A797 /* sqlite3.a */; };
 		1CC5650708F0CFEE00B8E333 /* Colloquy.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */; };
 		1CC6FC530549FCD80075807C /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */; };
 		1CC6FC570549FDD70075807C /* JVBehaviorPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */; };
@@ -658,6 +659,7 @@
 		1CBECE390508D58F000001C8 /* JVChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVChatWindow.nib; path = Resources/JVChatWindow.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE3A0508D58F000001C8 /* JVDirectChat.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVDirectChat.nib; path = Resources/JVDirectChat.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE5D050A8D21000001C8 /* chooseStyle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chooseStyle.png; path = "Resources/Toolbar Icons/chooseStyle.png"; sourceTree = SOURCE_ROOT; };
+		1CC1AE400A2987230000A797 /* sqlite3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = sqlite3.a; path = Frameworks/sqlite3.a; sourceTree = "<group>"; };
 		1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVAppearancePreferences.h; path = Preferences/JVAppearancePreferences.h; sourceTree = "<group>"; };
 		1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVAppearancePreferences.m; path = Preferences/JVAppearancePreferences.m; sourceTree = "<group>"; };
 		1CC6FC540549FDD70075807C /* JVBehaviorPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVBehaviorPreferences.h; path = Preferences/JVBehaviorPreferences.h; sourceTree = "<group>"; };
@@ -1050,6 +1052,7 @@
 				1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */,
 				1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */,
 				1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */,
+				1CC1AE630A2987E20000A797 /* sqlite3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1121,6 +1124,7 @@
 				1CF8030C070C893500C9B54C /* libsilc.framework */,
 				1CF8030D070C893500C9B54C /* libsilcclient.framework */,
 				1CF5F8D107D537E50019DC13 /* Growl.framework */,
+				1CC1AE400A2987230000A797 /* sqlite3.a */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -2232,10 +2236,11 @@
 				"$(SRCROOT)/Frameworks/libsilc.framework",
 				"$(SRCROOT)/Frameworks/libsilcclient.framework",
 				"$(SRCROOT)/Frameworks/AGRegex.framework",
+				"$(SRCROOT)/Frameworks/sqlite3.a",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd $SRCROOT/Frameworks\nrm -rf $SRCROOT/*.framework\ntar xzf frameworks.tar.gz\n";
+			shellScript = "cd $SRCROOT/Frameworks\nrm -rf $SRCROOT/*.framework\ntar xzf frameworks.tar.gz\nranlib $SRCROOT/Frameworks/*.a\n";
 		};
 		1CF038FF062F8DBB009774D8 /* Touch Styles & Emoticons */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2850,7 +2855,6 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
-					"-lsqlite3",
 				);
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (
@@ -2874,7 +2878,6 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
-					"-lsqlite3",
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -2944,7 +2947,6 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
-					"-lsqlite3",
 				);
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (

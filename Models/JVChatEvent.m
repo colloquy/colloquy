@@ -4,30 +4,6 @@
 #import <libxml/tree.h>
 
 @implementation JVChatEvent
-- (id) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
-	if( ( self = [self init] ) ) {
-		_node = node;
-		_transcript = transcript; // weak reference
-
-		if( ! _node || node -> type != XML_ELEMENT_NODE ) {
-			[self release];
-			return nil;
-		}
-
-		@synchronized( [self transcript] ) {
-			xmlChar *prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "id" );
-			_eventIdentifier = ( prop ? [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop] : nil );
-			xmlFree( prop );
-		}
-	}
-
-	return self;
-}
-
-+ (id) eventWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
-	return [[[self alloc] initWithNode:node andTranscript:transcript] autorelease];
-}
-
 - (void) dealloc {
 	[_eventIdentifier release];
 	[_date release];
@@ -52,7 +28,7 @@
 - (void) loadSmall {
 	if( _loadedSmall || ! _node ) return;
 
-	@synchronized( [self transcript] ) {
+	@synchronized( _transcript ) {
 		xmlChar *prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "name" );
 		_name = ( prop ? [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop] : nil );
 		xmlFree( prop );
@@ -68,7 +44,7 @@
 - (void) loadMessage {
 	if( _loadedMessage || ! _node ) return;
 
-	@synchronized( [self transcript] ) {
+	@synchronized( _transcript ) {
 		xmlNode *subNode = ((xmlNode *) _node) -> children;
 
 		do {
@@ -85,7 +61,7 @@
 - (void) loadAttributes {
 	if( _loadedAttributes || ! _node ) return;
 
-	@synchronized( [self transcript] ) {
+	@synchronized( _transcript ) {
 		xmlNode *subNode = ((xmlNode *) _node) -> children;
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 
@@ -136,7 +112,7 @@
 	return _node;
 }
 
-- (void) setNode:(xmlNode *) node {
+- (void) _setNode:(xmlNode *) node {
 	_node = node;
 }
 

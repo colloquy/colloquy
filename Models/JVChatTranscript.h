@@ -94,7 +94,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 - (BOOL) automaticallyWritesChangesToFile;
 - (void) setAutomaticallyWritesChangesToFile:(BOOL) option;
 
-- (BOOL) writeToFile:(NSString *) path atomically:(BOOL) useAuxiliaryFile;
+- (BOOL) writeToFile:(NSString *) path atomically:(BOOL) atomically;
 - (BOOL) writeToURL:(NSURL *) url atomically:(BOOL) atomically;
 
 - (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier;

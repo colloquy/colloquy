@@ -6,6 +6,7 @@
 @class JVEmoticonSet;
 @class JVChatMessage;
 @class JVChatTranscript;
+@class JVSQLChatTranscript;
 
 extern NSString *JVToolbarChooseStyleItemIdentifier;
 extern NSString *JVToolbarEmoticonsItemIdentifier;
@@ -22,6 +23,7 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 	JVChatWindowController *_windowController;
 
 	JVChatTranscript *_transcript;
+	JVSQLChatTranscript *_sqlTestTranscript;
 
 	NSMenu *_styleMenu;
 	NSMenu *_emoticonMenu;

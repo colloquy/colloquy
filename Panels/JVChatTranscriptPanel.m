@@ -101,10 +101,18 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[contents release];
 	[_styleMenu release];
 	[_emoticonMenu release];
+	[_transcript release];
+	[_sqlTestTranscript release];
+	[_searchQuery release];
+	[_searchQueryRegex release];
 
 	contents = nil;
 	_styleMenu = nil;
 	_emoticonMenu = nil;
+	_transcript = nil;
+	_sqlTestTranscript = nil;
+	_searchQuery = nil;
+	_searchQueryRegex = nil;
 	_windowController = nil;
 
 	[super dealloc];

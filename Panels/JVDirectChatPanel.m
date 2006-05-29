@@ -214,6 +214,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 			logs = [logs stringByAppendingPathComponent:logName];
 
+			_sqlTestTranscript = [[JVSQLChatTranscript alloc] initWithContentsOfFile:[[logs stringByDeletingPathExtension] stringByAppendingPathExtension:@"colloquySQLTranscript"]];
+
 			if( [fileManager fileExistsAtPath:logs] )
 				[[self transcript] startNewSession];
 
@@ -641,6 +643,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
 
 	JVChatEvent *newEvent = [[self transcript] appendEvent:event];
+	[_sqlTestTranscript appendEvent:event];
 	[display appendChatTranscriptElement:newEvent];
 
 	if( ! [[[_windowController window] representedFilename] length] )
@@ -767,6 +770,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
 
 	JVChatMessage *newMessage = [[self transcript] appendMessage:cmessage];
+	[_sqlTestTranscript appendMessage:cmessage];
 
 	if( [display appendChatMessage:newMessage] ) {
 		if( [cmessage isHighlighted] ) [display markScrollbarForMessage:newMessage];

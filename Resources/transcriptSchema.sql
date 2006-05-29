@@ -1,15 +1,21 @@
-CREATE TABLE session (
+PRAGMA fullfsync = 0;
+PRAGMA synchronous = FULL;
+PRAGMA page_size = 4096;
+
+BEGIN EXCLUSIVE TRANSACTION;
+
+CREATE TABLE IF NOT EXISTS session (
     id INTEGER PRIMARY KEY ON CONFLICT ROLLBACK AUTOINCREMENT,
     context INTEGER NOT NULL ON CONFLICT ROLLBACK,
-    start TEXT NOT NULL ON CONFLICT ROLLBACK DEFAULT CURRENT_TIMESTAMP,
+    start TEXT DEFAULT CURRENT_TIMESTAMP,
     end TEXT,
     identifier TEXT,
     comments TEXT
 );
 
-CREATE INDEX session_context_index ON session (context);
+CREATE INDEX IF NOT EXISTS session_context_index ON session (context);
 
-CREATE TABLE digest (
+CREATE TABLE IF NOT EXISTS digest (
     position INTEGER PRIMARY KEY ON CONFLICT ROLLBACK AUTOINCREMENT,
     session INTEGER NOT NULL ON CONFLICT ROLLBACK,
     context INTEGER NOT NULL ON CONFLICT ROLLBACK,
@@ -17,42 +23,40 @@ CREATE TABLE digest (
     link INTEGER NOT NULL ON CONFLICT ROLLBACK
 );
 
-CREATE INDEX digest_session_index ON digest (session);
-CREATE INDEX digest_context_index ON digest (context);
-CREATE INDEX digest_entity_link_index ON digest (entity, link);
+CREATE INDEX IF NOT EXISTS digest_session_index ON digest (session);
+CREATE INDEX IF NOT EXISTS digest_context_index ON digest (context);
+CREATE INDEX IF NOT EXISTS digest_entity_link_index ON digest (entity, link);
 
-CREATE TABLE message (
+CREATE TABLE IF NOT EXISTS message (
     id INTEGER PRIMARY KEY ON CONFLICT ROLLBACK AUTOINCREMENT,
     context INTEGER NOT NULL ON CONFLICT ROLLBACK,
     session INTEGER NOT NULL ON CONFLICT ROLLBACK,
     user INTEGER NOT NULL ON CONFLICT ROLLBACK,
-    received TEXT NOT NULL ON CONFLICT ROLLBACK DEFAULT CURRENT_TIMESTAMP,
-    action INTEGER NOT NULL ON CONFLICT ROLLBACK DEFAULT 0,
-    highlighted INTEGER NOT NULL ON CONFLICT ROLLBACK DEFAULT 0,
+    received TEXT DEFAULT CURRENT_TIMESTAMP,
+    action INTEGER DEFAULT 0,
+    highlighted INTEGER DEFAULT 0,
     ignored TEXT,
     type TEXT,
     content TEXT NOT NULL ON CONFLICT ROLLBACK
 );
 
-CREATE INDEX message_session_index ON message (session);
-CREATE INDEX message_context_index ON message (context);
-CREATE INDEX message_user_index ON message (user);
+CREATE INDEX IF NOT EXISTS message_session_index ON message (session);
+CREATE INDEX IF NOT EXISTS message_context_index ON message (context);
+CREATE INDEX IF NOT EXISTS message_user_index ON message (user);
 
-CREATE VIEW message_combined AS SELECT message.id, user, context, session, protocol, server, name, url, nickname, hostmask, identifier, class, buddy, received, content FROM message LEFT JOIN user ON user.id = message.user LEFT JOIN context ON context.id = message.context;
-
-CREATE TABLE event (
+CREATE TABLE IF NOT EXISTS event (
     id INTEGER PRIMARY KEY ON CONFLICT ROLLBACK AUTOINCREMENT,
     context INTEGER NOT NULL ON CONFLICT ROLLBACK,
     session INTEGER NOT NULL ON CONFLICT ROLLBACK,
     name TEXT NOT NULL ON CONFLICT ROLLBACK,
-    occurred TEXT NOT NULL ON CONFLICT ROLLBACK DEFAULT CURRENT_TIMESTAMP,
+    occurred TEXT DEFAULT CURRENT_TIMESTAMP,
     content TEXT NOT NULL ON CONFLICT ROLLBACK
 );
 
-CREATE INDEX event_session_index ON event (session);
-CREATE INDEX event_context_index ON event (context);
+CREATE INDEX IF NOT EXISTS event_session_index ON event (session);
+CREATE INDEX IF NOT EXISTS event_context_index ON event (context);
 
-CREATE TABLE context (
+CREATE TABLE IF NOT EXISTS context (
     id INTEGER PRIMARY KEY ON CONFLICT ROLLBACK AUTOINCREMENT,
     protocol TEXT NOT NULL ON CONFLICT ROLLBACK,
     server TEXT NOT NULL ON CONFLICT ROLLBACK,
@@ -60,13 +64,11 @@ CREATE TABLE context (
     url TEXT
 );
 
-CREATE INDEX context_server_index ON context (protocol, server);
-CREATE INDEX context_name_index ON context (name);
-CREATE INDEX context_server_name_index ON context (protocol, server, name);
+CREATE INDEX IF NOT EXISTS context_protocol_server_name_index ON context (protocol, server, name);
 
-CREATE TABLE user (
+CREATE TABLE IF NOT EXISTS user (
     id INTEGER PRIMARY KEY ON CONFLICT ROLLBACK AUTOINCREMENT,
-    self INTEGER NOT NULL ON CONFLICT ROLLBACK DEFAULT 0,
+    self INTEGER DEFAULT 0,
     name TEXT NOT NULL ON CONFLICT ROLLBACK,
     identifier TEXT,
     nickname TEXT,
@@ -75,21 +77,22 @@ CREATE TABLE user (
     buddy TEXT
 );
 
-CREATE INDEX user_name_index ON user (name);
-CREATE INDEX user_identifier_index ON user (identifier);
-CREATE INDEX user_nickname_index ON user (nickname);
-CREATE INDEX user_hostmask_index ON user (hostmask);
-CREATE INDEX user_all_index ON user (self, name, identifier, nickname, hostmask, class, buddy);
+CREATE INDEX IF NOT EXISTS user_index ON user (self, name, identifier, nickname, hostmask, class, buddy);
 
-CREATE TABLE attribute (
+CREATE TABLE IF NOT EXISTS attribute (
     id INTEGER PRIMARY KEY ON CONFLICT ROLLBACK AUTOINCREMENT,
     entity TEXT NOT NULL ON CONFLICT ROLLBACK,
     link INTEGER,
     identifier TEXT NOT NULL ON CONFLICT ROLLBACK,
+    type TEXT DEFAULT "text/plain",
     value TEXT
 );
 
-CREATE INDEX attribute_entity_link_index ON attribute (entity, link);
+CREATE INDEX IF NOT EXISTS attribute_entity_link_index ON attribute (entity, link);
+
+COMMIT TRANSACTION;
+
+BEGIN EXCLUSIVE TRANSACTION;
 
 CREATE TRIGGER session_id_change AFTER UPDATE OF id ON session
 	FOR EACH ROW BEGIN
@@ -184,3 +187,5 @@ CREATE TRIGGER user_delete AFTER DELETE ON user
 	FOR EACH ROW BEGIN
 		DELETE FROM message WHERE user = old.id;
 	END;
+
+COMMIT TRANSACTION;
