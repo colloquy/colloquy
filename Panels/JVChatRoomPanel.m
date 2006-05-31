@@ -602,6 +602,12 @@
 	NSMutableArray *possibleNicks = [NSMutableArray array];
 	NSString *name = nil;
 
+	if( [prefix isEqualToString:@""] ) {
+		if( [_preferredTabCompleteNicknames count] )
+			[possibleNicks addObject:[_preferredTabCompleteNicknames objectAtIndex:0]];
+		return possibleNicks;
+	}
+
 	enumerator = [_preferredTabCompleteNicknames objectEnumerator];
 	while( ( name = [enumerator nextObject] ) )
 		if( [name rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == NSOrderedSame )

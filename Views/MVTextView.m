@@ -11,7 +11,7 @@
 @implementation MVTextView
 - (id)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer {
 	if( (self = [super initWithFrame:frameRect textContainer:aTextContainer] ) )
-		defaultTypingAttributes = [[NSDictionary alloc] init];
+		defaultTypingAttributes = [[NSDictionary allocWithZone:nil] init];
 	return self;
 }
 
@@ -31,7 +31,7 @@
 #pragma mark -
 
 - (void) interpretKeyEvents:(NSArray *) eventArray {
-	NSMutableArray *newArray = [NSMutableArray array];
+	NSMutableArray *newArray = [[NSMutableArray allocWithZone:nil] init];
 	NSEnumerator *e = [eventArray objectEnumerator];
 	NSEvent *anEvent = nil;
 
@@ -55,6 +55,8 @@
 
 	if( [newArray count] > 0 )
 		[super interpretKeyEvents:newArray];
+
+	[newArray release];
 }
 
 - (BOOL) checkKeyEvent:(NSEvent *) event {
@@ -123,8 +125,8 @@
 	[defaultTypingAttributes release];
 	if( ! font ) {
 		font = [NSFont userFontOfSize:0.];
-		defaultTypingAttributes = [[NSDictionary alloc] init];
-	} else defaultTypingAttributes = [[NSDictionary dictionaryWithObject: font forKey: NSFontAttributeName] retain];
+		defaultTypingAttributes = [[NSDictionary allocWithZone:nil] init];
+	} else defaultTypingAttributes = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:font, NSFontAttributeName, nil];
 	[self setTypingAttributes:defaultTypingAttributes];
 	[self setFont:font];
 }
@@ -159,7 +161,7 @@
 	NSRange limitRange, effectiveRange;
 	unsigned int count = 0, i = 0;
 	NSRectArray rects = NULL;
-	NSCursor *linkCursor = [[[NSCursor alloc] initWithImage:[NSImage imageNamed:@"MVLinkCursor"] hotSpot:NSMakePoint( 6., 0. )] autorelease];
+	NSCursor *linkCursor = [[[NSCursor allocWithZone:nil] initWithImage:[NSImage imageNamed:@"MVLinkCursor"] hotSpot:NSMakePoint( 6., 0. )] autorelease];
 
 	[super resetCursorRects];
 	limitRange = NSMakeRange( 0, [[self string] length] );
@@ -206,7 +208,7 @@
 			limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 		}
 	} else {
-		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self typingAttributes]];
+		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopyWithZone:nil];
 		NSFont *font = [attributes objectForKey:NSFontAttributeName];
 		if( ! font ) font = [NSFont userFontOfSize:0.];
 		if( [[NSFontManager sharedFontManager] traitsOfFont:font] & NSBoldFontMask )
@@ -214,6 +216,7 @@
 		else font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
 		[attributes setObject:font forKey:NSFontAttributeName];
 		[self setTypingAttributes:attributes];
+		[attributes release];
 	}
 }
 
@@ -238,7 +241,7 @@
 			limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 		}
 	} else {
-		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self typingAttributes]];
+		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopyWithZone:nil];
 		NSFont *font = [attributes objectForKey:NSFontAttributeName];
 		if( ! font ) font = [NSFont userFontOfSize:0.];
 		if( [[NSFontManager sharedFontManager] traitsOfFont:font] & NSItalicFontMask )
@@ -246,6 +249,7 @@
 		else font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSItalicFontMask];
 		[attributes setObject:font forKey:NSFontAttributeName];
 		[self setTypingAttributes:attributes];
+		[attributes release];
 	}
 }
 
@@ -257,9 +261,10 @@
 	if( ! [self isEditable] ) return;
 	if( [color alphaComponent] == 0. ) color = nil;
 	if( ! range.length ) {
-		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self typingAttributes]];
+		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopyWithZone:nil];
 		[attributes setObject:color forKey:NSBackgroundColorAttributeName];
 		[self setTypingAttributes:attributes];
+		[attributes release];
 	} else [[self textStorage] addAttribute:NSBackgroundColorAttributeName value:color range:range];
 }
 
@@ -295,6 +300,12 @@
 		[self complete:nil];
 		return YES;
 	}
+	
+	[_lastCompletionMatch release];
+	_lastCompletionMatch = nil;
+
+	[_lastCompletionPrefix release];
+	_lastCompletionPrefix = nil;
 
 	NSMutableCharacterSet *allowedCharacters = (NSMutableCharacterSet *)[NSMutableCharacterSet alphanumericCharacterSet];
 	[allowedCharacters addCharactersInString:@"`_-|^{}[]"];
@@ -312,78 +323,75 @@
 	NSRange theRange = NSMakeRange( NSMaxRange( wordStart ), curPos.location - NSMaxRange( wordStart ) );
 	partialCompletion = [[self string] substringWithRange:theRange];
 
-	// continue if necessary
-	if( ! [partialCompletion isEqualToString:@""] ) {
-		// compile list of possible completions
-		NSArray *possibleNicks = [[self delegate] textView:self stringCompletionsForPrefix:partialCompletion];
-		NSString *name = nil;
+	// only allow an empty tab completion if the current position is zero, this feels best in practice
+	if( curPos.location && ! [partialCompletion length] ) {
+		NSBeep();
+		return YES;
+	}
 
-		// insert word or suggestion
-		if( [possibleNicks count] == 1 && ( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) ) {
-			name = [possibleNicks objectAtIndex:0];
-			NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
+	// compile list of possible completions
+	NSArray *possibleNicks = [[self delegate] textView:self stringCompletionsForPrefix:partialCompletion];
+	NSString *name = nil;
 
-			_ignoreSelectionChanges = YES;
-			[self replaceCharactersInRange:replacementRange withString:name];
+	// insert word or suggestion
+	if( [possibleNicks count] == 1 && ( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) ) {
+		name = [possibleNicks objectAtIndex:0];
+		NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
 
-			if( suffix && replacementRange.location == 0 ) [self insertText:@": "];
-			else if( suffix ) [self insertText:@" "];
-			_tabCompletting = NO;
-			_ignoreSelectionChanges = NO;
+		_ignoreSelectionChanges = YES;
+		[self replaceCharactersInRange:replacementRange withString:name];
 
-			if( [[self delegate] respondsToSelector:@selector( textView:selectedCompletion:fromPrefix: )] )
-				[[self delegate] textView:self selectedCompletion:name fromPrefix:partialCompletion];
-		} else if( [possibleNicks count] > 1 ) {
-			// since several are available, we highlight the modified text
-			NSRange wordRange;
-			BOOL full = YES;
+		if( suffix && replacementRange.location == 0 ) [self insertText:@": "];
+		else if( suffix ) [self insertText:@" "];
+		_tabCompletting = NO;
+		_ignoreSelectionChanges = NO;
 
-			[_lastCompletionPrefix release];
-			_lastCompletionPrefix = [partialCompletion retain];
-
-			if( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) {
-				wordRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
-				name = [possibleNicks objectAtIndex:0];
-			} else {
-				wordRange = [[self string] rangeOfCharacterFromSet:illegalCharacters options:0 range:NSMakeRange( curPos.location, [[self string] length] - curPos.location )];
-				if( wordRange.location == NSNotFound )
-					wordRange = NSMakeRange( NSMaxRange( wordStart ), [[self string] length] - NSMaxRange( wordStart )) ;
-				else wordRange = NSMakeRange( NSMaxRange( wordStart ), wordRange.location - NSMaxRange( wordStart ));
-
-				NSString *tempWord = [[self string] substringWithRange:wordRange];
-				BOOL keepSearching = YES;
-				int count = 0;
-
-				do {
-					keepSearching = ! [[possibleNicks objectAtIndex:count] isEqualToString:tempWord];
-				} while ( ++count < [possibleNicks count] && keepSearching );
-
-				if( count == [possibleNicks count] ) count = 0;
-
-				name = [possibleNicks objectAtIndex:count];
-				full = NO;
-			}
-
-			[_lastCompletionMatch release];
-			_lastCompletionMatch = [name retain];
-
-			if( suffix && wordRange.location == 0 ) name = [name stringByAppendingString:@": "];
-			else if( suffix ) name = [name stringByAppendingString:@" "];
-
-			_ignoreSelectionChanges = YES;
-			[self replaceCharactersInRange:wordRange withString:( full ? name : _lastCompletionMatch )];
-			[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
-			_ignoreSelectionChanges = NO;
-		} else {
-			NSBeep(); // no matches
-			_tabCompletting = NO;
-		}
-	} else {
-		[_lastCompletionMatch release];
-		_lastCompletionMatch = nil;
+		if( [[self delegate] respondsToSelector:@selector( textView:selectedCompletion:fromPrefix: )] )
+			[[self delegate] textView:self selectedCompletion:name fromPrefix:partialCompletion];
+	} else if( [possibleNicks count] > 1 ) {
+		// since several are available, we highlight the modified text
+		NSRange wordRange;
+		BOOL full = YES;
 
 		[_lastCompletionPrefix release];
-		_lastCompletionPrefix = nil;
+		_lastCompletionPrefix = [partialCompletion copyWithZone:nil];
+
+		if( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) {
+			wordRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
+			name = [possibleNicks objectAtIndex:0];
+		} else {
+			wordRange = [[self string] rangeOfCharacterFromSet:illegalCharacters options:0 range:NSMakeRange( curPos.location, [[self string] length] - curPos.location )];
+			if( wordRange.location == NSNotFound )
+				wordRange = NSMakeRange( NSMaxRange( wordStart ), [[self string] length] - NSMaxRange( wordStart )) ;
+			else wordRange = NSMakeRange( NSMaxRange( wordStart ), wordRange.location - NSMaxRange( wordStart ));
+
+			NSString *tempWord = [[self string] substringWithRange:wordRange];
+			BOOL keepSearching = YES;
+			int count = 0;
+
+			do {
+				keepSearching = ! [[possibleNicks objectAtIndex:count] isEqualToString:tempWord];
+			} while ( ++count < [possibleNicks count] && keepSearching );
+
+			if( count == [possibleNicks count] ) count = 0;
+
+			name = [possibleNicks objectAtIndex:count];
+			full = NO;
+		}
+
+		[_lastCompletionMatch release];
+		_lastCompletionMatch = [name copyWithZone:nil];
+
+		if( suffix && wordRange.location == 0 ) name = [name stringByAppendingString:@": "];
+		else if( suffix ) name = [name stringByAppendingString:@" "];
+
+		_ignoreSelectionChanges = YES;
+		[self replaceCharactersInRange:wordRange withString:( full ? name : _lastCompletionMatch )];
+		[self setSelectedRange:NSMakeRange( curPos.location, [name length] - [partialCompletion length] )];
+		_ignoreSelectionChanges = NO;
+	} else {
+		NSBeep(); // no matches
+		_tabCompletting = NO;
 	}
 
 	return YES;
