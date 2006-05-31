@@ -230,7 +230,8 @@
 
 	NSString *class = nil;
 	if( [self serverOperator] ) class = @"server operator";
-	else if( [self roomFounder] ) class = @"room founder";
+	else if( [self roomFounder] ) class = @"founder";
+	else if( [self roomAdministrator] ) class = @"administrator";
 	else if( [self operator] ) class = @"operator";
 	else if( [self halfOperator] ) class = @"half operator";
 	else if( [self voice] ) class = @"voice";
@@ -258,6 +259,8 @@
 	unsigned long modes = [[[self room] target] modesForMemberUser:[self user]];
 
 	if( [[self user] isServerOperator] ) icon = [NSImage imageNamed:@"admin"];
+	else if( modes & MVChatRoomMemberFounderMode ) icon = [NSImage imageNamed:@"founder"];
+	else if( modes & MVChatRoomMemberAdministratorMode ) icon = [NSImage imageNamed:@"super-op"];
 	else if( modes & MVChatRoomMemberOperatorMode ) icon = [NSImage imageNamed:@"op"];
 	else if( modes & MVChatRoomMemberHalfOperatorMode ) icon = [NSImage imageNamed:@"half-op"];
 	else if( modes & MVChatRoomMemberVoicedMode ) icon = [NSImage imageNamed:@"voice"];

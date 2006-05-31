@@ -223,6 +223,8 @@
 		1CBC63190548975E009E59E1 /* GeneralPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC63180548975E009E59E1 /* GeneralPreferences.png */; };
 		1CBC634905489BEE009E59E1 /* JVGeneralPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC634705489BEE009E59E1 /* JVGeneralPreferences.nib */; };
 		1CC1AE630A2987E20000A797 /* sqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC1AE400A2987230000A797 /* sqlite3.a */; };
+		1CC1B76F0A2D70DF0000A797 /* super-op.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC1B76D0A2D70DF0000A797 /* super-op.png */; };
+		1CC1B77D0A2D70FB0000A797 /* founder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC1B77B0A2D70FB0000A797 /* founder.png */; };
 		1CC5650708F0CFEE00B8E333 /* Colloquy.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */; };
 		1CC6FC530549FCD80075807C /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */; };
 		1CC6FC570549FDD70075807C /* JVBehaviorPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */; };
@@ -660,6 +662,10 @@
 		1CBECE3A0508D58F000001C8 /* JVDirectChat.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVDirectChat.nib; path = Resources/JVDirectChat.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE5D050A8D21000001C8 /* chooseStyle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chooseStyle.png; path = "Resources/Toolbar Icons/chooseStyle.png"; sourceTree = SOURCE_ROOT; };
 		1CC1AE400A2987230000A797 /* sqlite3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = sqlite3.a; path = Frameworks/sqlite3.a; sourceTree = "<group>"; };
+		1CC1B76C0A2D70DF0000A797 /* super-op-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "super-op-idle.png"; path = "Resources/super-op-idle.png"; sourceTree = "<group>"; };
+		1CC1B76D0A2D70DF0000A797 /* super-op.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "super-op.png"; path = "Resources/super-op.png"; sourceTree = "<group>"; };
+		1CC1B77A0A2D70FB0000A797 /* founder-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "founder-idle.png"; path = "Resources/founder-idle.png"; sourceTree = "<group>"; };
+		1CC1B77B0A2D70FB0000A797 /* founder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = founder.png; path = Resources/founder.png; sourceTree = "<group>"; };
 		1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVAppearancePreferences.h; path = Preferences/JVAppearancePreferences.h; sourceTree = "<group>"; };
 		1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVAppearancePreferences.m; path = Preferences/JVAppearancePreferences.m; sourceTree = "<group>"; };
 		1CC6FC540549FDD70075807C /* JVBehaviorPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVBehaviorPreferences.h; path = Preferences/JVBehaviorPreferences.h; sourceTree = "<group>"; };
@@ -1728,6 +1734,10 @@
 			children = (
 				F5BEC20D01F1EF1901EE70DE /* admin.png */,
 				F5BEC20E01F1EF1901EE70DE /* admin-idle.png */,
+				1CC1B76D0A2D70DF0000A797 /* super-op.png */,
+				1CC1B76C0A2D70DF0000A797 /* super-op-idle.png */,
+				1CC1B77B0A2D70FB0000A797 /* founder.png */,
+				1CC1B77A0A2D70FB0000A797 /* founder-idle.png */,
 				F544999E018E46CB01EE70DE /* person.png */,
 				F5BEC20701F13A8601EE70DE /* person-idle.png */,
 				F544999F018E46CB01EE70DE /* voice.png */,
@@ -2166,6 +2176,8 @@
 				1C710C4F09F323F8007B4515 /* splitviewDimple.png in Resources */,
 				1C710C5009F323F8007B4515 /* splitviewDividerBackground.png in Resources */,
 				1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */,
+				1CC1B76F0A2D70DF0000A797 /* super-op.png in Resources */,
+				1CC1B77D0A2D70FB0000A797 /* founder.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
