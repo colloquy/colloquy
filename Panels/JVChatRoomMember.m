@@ -296,8 +296,15 @@
 }
 
 - (NSString *) toolTip {
-	if( ! [self address] ) return nil;
-	return [NSString stringWithFormat:@"%@\n%@@%@", [self title], [self username], [self address]];
+	if( ! [[self address] length] || ! [[self username] length] ) {
+		if( [[self realName] length] )
+			return [NSString stringWithFormat:@"%@ (%@)", [self nickname], [self realName]];
+		return [self nickname];
+	}
+
+	if( [[self realName] length] )
+		return [NSString stringWithFormat:@"%@ (%@)\n%@@%@", [self nickname], [self realName], [self username], [self address]];
+	return [NSString stringWithFormat:@"%@\n%@@%@", [self nickname], [self username], [self address]];
 }
 
 - (BOOL) isEnabled {
