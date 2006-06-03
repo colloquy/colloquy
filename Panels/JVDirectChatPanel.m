@@ -263,14 +263,14 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	[self changeEncoding:nil];
 
-	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) {
-		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [[[self target] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+/*	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) {
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], [[[self target] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 
 		NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", [self target], [[self connection] server]] stringByExpandingTildeInPath];
 
 		[url writeToInternetLocationFile:path];
 		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
-	}
+	} */
 
 	[send setHorizontallyResizable:YES];
 	[send setVerticallyResizable:YES];
@@ -487,7 +487,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 #pragma mark -
 
 - (IBAction) addToFavorites:(id) sender {
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [[[self target] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], [[[self target] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 	NSString *path = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", [self target], [[self connection] server]] stringByExpandingTildeInPath] retain];
 
 	[url writeToInternetLocationFile:path];
@@ -1417,7 +1417,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	while( ( match = [enumerator nextObject] ) ) {
 		NSRange foundRange = [match range];
 		id currentLink = [message attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
-		if( ! currentLink ) [message addAttribute:NSLinkAttributeName value:[NSString stringWithFormat:@"irc://%@/%@", [[self connection] server], [match group]] range:foundRange];
+		if( ! currentLink ) [message addAttribute:NSLinkAttributeName value:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], [match group]] range:foundRange];
 	}
 }
 
