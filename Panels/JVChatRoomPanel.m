@@ -60,8 +60,8 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _membersSynced: ) name:MVChatRoomMemberUsersSyncedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _bannedMembersSynced: ) name:MVChatRoomBannedUsersSyncedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberNicknameChanged: ) name:MVChatUserNicknameChangedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _reloadMemberListItem: ) name:MVChatUserStatusChangedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _reloadMemberListItem: ) name:MVChatUserIdleTimeUpdatedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _reloadMemberListItem: ) name:MVChatUserStatusChangedNotification object:target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _reloadMemberListItem: ) name:MVChatUserIdleTimeUpdatedNotification object:target];
 	}
 
 	return self;
@@ -187,37 +187,42 @@
 #pragma mark -
 
 - (NSMenu *) menu {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""];
 	[item setTarget:_windowController];
 	[menu addItem:item];
+	[item release];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
+	[item release];
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	if( [[[self windowController] allChatViewControllers] count] > 1 ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""];
 		[item setRepresentedObject:self];
 		[item setTarget:[JVChatController defaultController]];
 		[menu addItem:item];
+		[item release];
 	}
 
 	if( [[self target] isJoined] ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Room", "leave room contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Room", "leave room contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
+		[item release];
 	} else {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Rejoin Room", "rejoin room contextual menu item title" ) action:@selector( joinChat: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Rejoin Room", "rejoin room contextual menu item title" ) action:@selector( joinChat: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
+		[item release];
 	}
 
-	return [[menu retain] autorelease];
+	return [menu autorelease];
 }
 
 #pragma mark -
@@ -365,8 +370,9 @@
 	MVChatUser *member = nil;
 
 	while( ( member = [enumerator nextObject] ) ) {
-		JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] initWithRoom:self andUser:member] autorelease];
+		JVChatRoomMember *listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:member];
 		[_sortedMembers addObject:listItem];
+		[listItem release];
 	}
 
 	[self resortMembers];
@@ -532,7 +538,11 @@
 
 		if( mbr ) {
 			NSEnumerator *enumerator = [[[mbr menu] itemArray] objectEnumerator];
-			while( ( item = [enumerator nextObject] ) ) [ret addObject:[[item copy] autorelease]];
+			while( ( item = [enumerator nextObject] ) ) {
+				item = [item copy];
+				[ret addObject:item];
+				[item release];
+			}
 
 			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -561,11 +571,12 @@
 			MVChatUser *user = [[[self connection] chatUsersWithNickname:nick] anyObject];
 			if( ! user ) return ret;
 
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:NULL keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:NULL keyEquivalent:@""];
 			[item setRepresentedObject:user];
 			[item setTarget:self];
 			[item setAction:@selector( _startChatWithNonMember: )];
 			[ret addObject:item];
+			[item release];
 		}
 
 		return ret;
@@ -894,6 +905,8 @@
 	[self resortMembers];
 
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[notification object]];
+	if( ! member ) return;
+
 	NSString *oldNickname = [[notification userInfo] objectForKey:@"oldNickname"];
 
 	unsigned int index = [_preferredTabCompleteNicknames indexOfObject:oldNickname];
@@ -906,12 +919,12 @@
 	if( ! [[self target] hasUser:[notification object]] ) return;
 
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[notification object]];
-	[_windowController reloadListItem:member andChildren:NO];
+	if( member ) [_windowController reloadListItem:member andChildren:NO];
 }
 
 - (void) _memberJoined:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
-	JVChatRoomMember *listItem = [[[JVChatRoomMember alloc] initWithRoom:self andUser:user] autorelease];
+	JVChatRoomMember *listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:user];
 	[_sortedMembers addObject:listItem];
 
 	[self resortMembers];
@@ -935,6 +948,8 @@
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
+
+	[listItem release];
 }
 
 - (void) _memberParted:(NSNotification *) notification {
@@ -993,7 +1008,7 @@
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
-	JVChatRoomMember *mbr = [[[self localChatRoomMember] retain] autorelease];
+	JVChatRoomMember *mbr = [[self localChatRoomMember] retain];
 	if( [_windowController selectedListItem] == mbr )
 		[_windowController showChatViewController:[_windowController activeChatViewController]];
 
@@ -1018,11 +1033,13 @@
 	} else {
 		[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You have been kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You have been kicked from the chat room by %@ with the reason \"%@\" and cannot send further messages without rejoining.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, ( byMbr ? [byMbr title] : [byUser nickname] ), ( rstring ? [rstring string] : @"" ) ) withName:nil];
 	}
+
+	[mbr release];
 }
 
 - (void) _memberKicked:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
-	JVChatRoomMember *mbr = [[[self chatRoomMemberForUser:user] retain] autorelease];
+	JVChatRoomMember *mbr = [[self chatRoomMemberForUser:user] retain];
 	if( ! mbr ) return;
 
 	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
@@ -1063,6 +1080,8 @@
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatMemberKicked" withContextInfo:context];
+
+	[mbr release];
 }
 
 - (void) _memberBanned:(NSNotification *) notification {
@@ -1355,7 +1374,7 @@
 
 @implementation JVChatRoomPanel (JVChatRoomScripting)
 - (NSArray *) chatMembers {
-	return [[_sortedMembers retain] autorelease];
+	return _sortedMembers;
 }
 
 - (JVChatRoomMember *) valueInChatMembersWithName:(NSString *) name {
