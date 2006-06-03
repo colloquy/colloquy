@@ -2113,7 +2113,7 @@ end:
 		NSString *lastParam = [self _stringFromPossibleData:[parameters objectAtIndex:7]];
 		NSRange range = [lastParam rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
 		if( range.location != NSNotFound ) {
-			NSString *realName = [lastParam substringFromIndex:range.location + 1];
+			NSString *realName = [lastParam substringFromIndex:range.location + range.length];
 			if( [realName length] ) [member _setRealName:realName];
 			else [member _setRealName:nil];
 		} else [member _setRealName:nil];
