@@ -660,7 +660,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_isonSentCount = 0;
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _pingServer ) object:nil];
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _periodicCleanUp ) object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _periodicEvents ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _checkWatchedUsers ) object:nil];
 
@@ -683,7 +683,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
 	[old release];
 
-	[self performSelector:@selector( _periodicCleanUp ) withObject:nil afterDelay:600.];
+	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:600.];
 	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:120.];
 
 	[self _readNextMessageFromServer];
@@ -963,7 +963,7 @@ end:
 
 #pragma mark -
 
-- (void) _periodicCleanUp {
+- (void) _periodicEvents {
 	@synchronized( _knownUsers ) {
 		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_knownUsers count]];
 		NSEnumerator *keyEnumerator = [_knownUsers keyEnumerator];
@@ -977,7 +977,15 @@ end:
 		[removeList release];
 	}
 
-	[self performSelector:@selector( _periodicCleanUp ) withObject:nil afterDelay:600.];
+	@synchronized( _joinedRooms ) {
+		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
+		MVChatRoom *room = nil;
+
+		while( ( room = [enumerator nextObject] ) )
+			[self sendRawMessageWithFormat:@"WHO %@", [room name]];
+	}
+
+	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:600.];
 }
 
 - (void) _pingServer {

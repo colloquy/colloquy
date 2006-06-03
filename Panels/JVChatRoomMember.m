@@ -255,18 +255,20 @@
 }
 
 - (NSImage *) icon {
-	NSImage *icon = nil;
 	unsigned long modes = [[[self room] target] modesForMemberUser:[self user]];
+	NSString *iconName = @"person";
 
-	if( [[self user] isServerOperator] ) icon = [NSImage imageNamed:@"admin"];
-	else if( modes & MVChatRoomMemberFounderMode ) icon = [NSImage imageNamed:@"founder"];
-	else if( modes & MVChatRoomMemberAdministratorMode ) icon = [NSImage imageNamed:@"super-op"];
-	else if( modes & MVChatRoomMemberOperatorMode ) icon = [NSImage imageNamed:@"op"];
-	else if( modes & MVChatRoomMemberHalfOperatorMode ) icon = [NSImage imageNamed:@"half-op"];
-	else if( modes & MVChatRoomMemberVoicedMode ) icon = [NSImage imageNamed:@"voice"];
-	else icon = [NSImage imageNamed:@"person"];
+	if( [[self user] isServerOperator] ) iconName = @"admin";
+	else if( modes & MVChatRoomMemberFounderMode ) iconName = @"founder";
+	else if( modes & MVChatRoomMemberAdministratorMode ) iconName = @"super-op";
+	else if( modes & MVChatRoomMemberOperatorMode ) iconName = @"op";
+	else if( modes & MVChatRoomMemberHalfOperatorMode ) iconName = @"half-op";
+	else if( modes & MVChatRoomMemberVoicedMode ) iconName = @"voice";
 
-	return icon;
+	if( [[self user] status] == MVChatUserAwayStatus || [[self user] idleTime] > 600. )
+		iconName = [iconName stringByAppendingString:@"-idle"];
+
+	return [NSImage imageNamed:iconName];
 }
 
 - (NSImage *) statusImage {
