@@ -2108,6 +2108,8 @@ end:
 			[member _setStatus:MVChatUserAwayStatus];
 		}
 
+		[member _setServerOperator:( [statusString length] >= 2 && [statusString characterAtIndex:1] == '*' )];
+
 		[self _sendPossibleOnlineNotificationForUser:member];
 	}
 }
