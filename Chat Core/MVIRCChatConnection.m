@@ -2111,9 +2111,12 @@ end:
 		[member _setServerOperator:( [statusString length] >= 2 && [statusString characterAtIndex:1] == '*' )];
 
 		NSString *lastParam = [self _stringFromPossibleData:[parameters objectAtIndex:7]];
-		NSArray *lastParams = [lastParam componentsSeparatedByString:@" "];
-		if( [lastParams count] >= 2 ) [member _setRealName:[lastParams objectAtIndex:1]];
-		else [member _setRealName:nil];
+		NSRange range = [lastParam rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
+		if( range.location != NSNotFound ) {
+			NSString *realName = [lastParam substringFromIndex:range.location + 1];
+			if( [realName length] ) [member _setRealName:realName];
+			else [member _setRealName:nil];
+		} else [member _setRealName:nil];
 
 		[self _sendPossibleOnlineNotificationForUser:member];
 	}
