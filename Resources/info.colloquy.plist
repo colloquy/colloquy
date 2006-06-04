@@ -2,8 +2,8 @@
 <!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
 <plist version="0.9">
 <dict>
-	<key>JVSidebarSplitViewPosition</key>
-	<string>{{0, 0}, {173, 378}};{{174, 0}, {437, 378}}</string>
+	<key>JVChatWindowInterface</key>
+	<integer>2</integer>
 	<key>JVChatTranscriptFolder</key>
 	<string>~/Documents/Colloquy Transcripts</string>
 	<key>JVChatTranscriptFolderOrganization</key>

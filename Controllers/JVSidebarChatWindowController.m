@@ -31,20 +31,33 @@
 	return ( [outlineView levelForItem:item] || _usesSmallIcons ? 16. : 34. );
 }
 
+- (float) splitView:(NSSplitView *) splitView constrainSplitPosition:(float) proposedPosition ofSubviewAt:(int) index {
+	// don't do anything here
+	return proposedPosition;
+}
+
+- (void) splitViewWillResizeSubviews:(NSNotification *) notification {
+	// don't do anything here
+}
+
 - (void) splitViewDidResizeSubviews:(NSNotification *) notification {
 	if( ! _forceSplitViewPosition )
 		[splitView savePositionUsingName:@"JVSidebarSplitViewPosition"];
 	_forceSplitViewPosition = NO;
 }
 
-- (float) splitView:(NSSplitView *) sender constrainMinCoordinate:(float) proposedMin ofSubviewAt:(int) offset {
-	if( ! [[[chatViewsOutlineView enclosingScrollView] verticalScroller] isHidden] )
-		return 55. + NSWidth( [[[chatViewsOutlineView enclosingScrollView] verticalScroller] frame] );
-	return 55.;
+- (float) splitView:(NSSplitView *) splitView constrainMinCoordinate:(float) proposedMin ofSubviewAt:(int) offset {
+//	if( ! [[[chatViewsOutlineView enclosingScrollView] verticalScroller] isHidden] )
+//		return 55. + NSWidth( [[[chatViewsOutlineView enclosingScrollView] verticalScroller] frame] );
+	return 100.;
 }
 
-- (float) splitView:(NSSplitView *) sender constrainMaxCoordinate:(float) proposedMax ofSubviewAt:(int) offset {
+- (float) splitView:(NSSplitView *) splitView constrainMaxCoordinate:(float) proposedMax ofSubviewAt:(int) offset {
 	return 300.;
+}
+
+- (BOOL) splitView:(NSSplitView *) splitView canCollapseSubview:(NSView *) subview {
+	return NO;
 }
 
 - (NSToolbarItem *) toggleChatDrawerToolbarItem {
